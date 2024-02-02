@@ -57,7 +57,7 @@ export default function ShareScreen({navigation}) {
             <Icon
               name="pluscircleo"
               size={30}
-              style={{ left: 15, bottom: 2, color: "red" }}
+              style={{ left: 15, bottom: 2, color: "#ea2a28" }}
             />
           </View>
           <View
@@ -140,7 +140,7 @@ export default function ShareScreen({navigation}) {
             <Icon
               name="pluscircleo"
               size={30}
-              style={{ left: 15, bottom: 2, color: "red" }}
+              style={{ left: 15, bottom: 2, color: "#ea2a28" }}
             />
           </View>
           <View

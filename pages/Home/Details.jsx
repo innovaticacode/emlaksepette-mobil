@@ -156,7 +156,7 @@ export default function Details() {
          onPress={() => setTabs(0)}
             style={{
                 width: "23%",
-             backgroundColor:tabs ===0? "red": "#EFEFEF",
+             backgroundColor:tabs ===0? "#ea2a28": "#EFEFEF",
               alignItems: "center",
               justifyContent:'center',
               height:40
@@ -169,7 +169,7 @@ export default function Details() {
           onPress={() => setTabs(1)}
             style={{
               width: "23%",
-              backgroundColor: tabs ===1? "red": "#EFEFEF",
+              backgroundColor: tabs ===1? "#ea2a28": "#EFEFEF",
               alignItems: "center",
               justifyContent:'center',
               height:40
@@ -183,7 +183,7 @@ export default function Details() {
           onPress={() => setTabs(2)}
             style={{
                 width: "23%",
-              backgroundColor: tabs ===2? "red": "#EFEFEF",
+              backgroundColor: tabs ===2? "#ea2a28": "#EFEFEF",
               alignItems: "center",
               justifyContent:'center',
               height:40
@@ -196,7 +196,7 @@ export default function Details() {
           onPress={() => setTabs(3)}
             style={{
                 width: "23%",
-              backgroundColor: tabs ===3? "red": "#EFEFEF",
+              backgroundColor: tabs ===3? "#ea2a28": "#EFEFEF",
               alignItems: "center",
               justifyContent:'center',
               height:40
