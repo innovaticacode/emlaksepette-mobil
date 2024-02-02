@@ -199,7 +199,7 @@ export default function Details() {
               backgroundColor: tabs ===3? "#ea2a28": "#EFEFEF",
               alignItems: "center",
               justifyContent:'center',
-              height:40
+              height:50
               
             }}
           >
