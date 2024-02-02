@@ -34,7 +34,7 @@ export default function Details() {
           source={require("./home.jpg")}
           style={{ width: "100%", height: "100%" }}
           resizeMode="cover"
-          imageStyle={{ borderRadius: 20 }}
+          imageStyle={{ borderRadius: 30 }}
         />
         <View
           style={{
