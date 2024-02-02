@@ -1,20 +1,45 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TextInput ,TouchableWithoutFeedback,Keyboard,ScrollView } from 'react-native';
+import Header from './components/Header';
+import SliderBar from './components/SliderBar';
+import Posts from './components/Posts';
 
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import Home from './pages/Home/Home'
+import Login from './pages/Login/Login';
+import Emlakİlanı from './pages/Home/İlanYükleme/Emlakİlanı';
+import Projeİlanı from './pages/Home/İlanYükleme/Projeİlanı';
+import Details from './pages/Home/Details';
+const Stack = createNativeStackNavigator();
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+  <Stack.Navigator>
+  <Stack.Screen name="Home" component={Home}options={{
+    headerShown:false
+  }} />
+  <Stack.Screen name="Login"  component={Login} options={{
+    headerShown:false
+  }} />
+  <Stack.Screen name="Emlak"  component={Emlakİlanı} options={{
+    headerShown:false
+  }} />
+  <Stack.Screen name="Proje"  component={Projeİlanı} options={{
+    headerShown:false
+  }} />
+  <Stack.Screen name="Details"  component={Details} options={{
+    
+  }} />
+</Stack.Navigator>
+</NavigationContainer>
   );
+   
+  
+
+
+
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  
+
