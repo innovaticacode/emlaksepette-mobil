@@ -6,7 +6,7 @@ import Posts from '../../components/Posts';
 import SliderBar from '../../components/SliderBar';
 import Header from '../../components/Header';
 
-export default function App({navigation}) {
+export default function App() {
   return (
     <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
    <View style={{flex:1}}>
