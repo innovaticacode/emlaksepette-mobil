@@ -43,7 +43,7 @@ export default function Posts() {
 
             <TouchableOpacity
               style={{
-                backgroundColor: "#27ABB",
+                backgroundColor: "#264ABB",
                 padding: 6,
                 width: 130,
                 alignItems: "center",

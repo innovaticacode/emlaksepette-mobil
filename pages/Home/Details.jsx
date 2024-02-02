@@ -12,10 +12,7 @@ import {React,useState} from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Caption from "../../components/Caption";
 import Settings from "../../components/Settings";
-import Captionbtn from "../../components/Captionbtn";
-import Settingsbtn from "../../components/Settingsbtn";
-import Mapbtn from "../../components/Mapbtn";
-import Commentbtn from "../../components/Commentbtn";
+
 import Comment from "../../components/Comment";
 import Map from "../../components/Map";
 import Icon2 from 'react-native-vector-icons/Feather';
