@@ -3,26 +3,7 @@ import { React } from "react";
 import { useNavigation } from "@react-navigation/native";
 import EntypoIcon from "react-native-vector-icons/Entypo";
 import Bookmark from "react-native-vector-icons/Feather";
-// Posts =[
-//     {
-//         id: '1',
-//         title: 'New York',
-//         price:'950$',
-//         url:require("../images/home.jpg")
-//       },
-//       {
-//         id: '2',
-//         title: 'Hamburg',
-//         price:'350$',
-//         url:require("../images/home.jpg")
-//       },
-//       {
-//         id: '3',
-//         title: 'Copenhagen',
-//         price:'450$',
-//         url:require("../images/home.jpg")
-//       },
-//     ]
+
 export default function Posts() {
   const navigation = useNavigation();
   return (
@@ -62,7 +43,9 @@ export default function Posts() {
 
             <TouchableOpacity
               style={{
-                width: 120,
+                backgroundColor: "#264ABB",
+                padding: 6,
+                width: 130,
                 alignItems: "center",
                 top: 22,
               }}

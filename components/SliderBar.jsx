@@ -3,30 +3,6 @@ import React from 'react'
 import SliderItem from './SliderItem'
 
 
-const MenuItem=[
-    {
-        text:'Villa',
-        id:1
-      
-    },
-    {
-        text:'Villa',
-        id:2
-    },
-    {
-        text:'Villa',
-        id:3
-    },
-    {
-        text:'Villa',
-        id:4
-    },
-    {
-        text:'Villa',
-        id:5
-    }
-    
-]
 
 export default function SliderBar() {
   return (
