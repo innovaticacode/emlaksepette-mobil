@@ -74,7 +74,7 @@ export default function Posts() {
                   padding: 6,
                   alignItems: "center",
                   justifyContent: "center",
-                  borderRadius: "50%",
+                  borderRadius: 18,
                 }}
               >
                 <Bookmark name="bookmark" style={{ fontSize: 20 }} />
@@ -87,7 +87,7 @@ export default function Posts() {
                   padding: 4,
                   alignItems: "center",
                   justifyContent: "center",
-                  borderRadius: "50%",
+                  borderRadius: 18,
                 }}
               >
                 <EntypoIcon name="heart-outlined" style={{ fontSize: 20 }} />

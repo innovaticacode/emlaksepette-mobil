@@ -55,7 +55,7 @@ export default function Details() {
                 width: 40,
                 height: 40,
                 alignItems: "center",
-                borderRadius: "50%",
+                borderRadius: 20,
               }}
             >
               <Icon name="sharealt" size={20} />
@@ -69,7 +69,7 @@ export default function Details() {
                 height: 40,
                 alignItems: "center",
                 justifyContent: "center",
-                borderRadius: "50%",
+                borderRadius: 20,
               }}
             >
               <Icon name="hearto" size={20}  />
@@ -84,7 +84,7 @@ export default function Details() {
                 height: 40,
                 alignItems: "center",
                 justifyContent: "center",
-                borderRadius: "50%",
+                borderRadius: 20,
               }}
             >
               <Icon2 name="bookmark" size={20}  />

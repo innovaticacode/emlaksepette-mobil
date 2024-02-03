@@ -6,7 +6,7 @@ export default function SliderItem() {
     <TouchableOpacity>
     <View style={{backgroundColor:'transparent',width:65,
     height:65,
-    borderRadius:'50%',
+    borderRadius:30,
     margin:6
 }}>
 <ImageBackground source={require('../images/Logo.jpeg')} resizeMode='cover'  style={{

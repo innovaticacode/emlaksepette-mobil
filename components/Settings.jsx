@@ -1,8 +1,6 @@
 import { View, Text ,ScrollView} from 'react-native'
 import React from 'react'
 import SettingsItem from './SettingsItem'
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 
 export default function Settings() {
   return (
