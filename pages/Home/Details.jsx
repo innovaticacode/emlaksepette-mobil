@@ -12,10 +12,11 @@ import {React,useState} from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Caption from "../../components/Caption";
 import Settings from "../../components/Settings";
-
+import PagerView from 'react-native-pager-view';
 import Comment from "../../components/Comment";
 import Map from "../../components/Map";
 import Icon2 from 'react-native-vector-icons/Feather';
+import DetailsPicture from "../../components/DetailsPicture";
 export default function Details() {
     const [tabs, setTabs] = useState(0);
    
@@ -24,79 +25,22 @@ export default function Details() {
     
     <ScrollView style={{backgroundColor:'white'}}>
     <View style={{flex:1,height:1200}}>
-      <View
-        style={{ width: "100%", height: 250, borderRadius: 20, padding: 5 }}
-      >
-        <ImageBackground
-          source={require("./home.jpg")}
-          style={{ width: "100%", height: "100%" }}
-          resizeMode="cover"
-          imageStyle={{ borderRadius: 20 }}
-        />
-        <View
-          style={{
-            width: 50,
-            height: 150,
-            backgroundColor: "transparent",
-            position: "absolute",
-            right: 20,
-            top: 43,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-around",
-            gap: 20,
-          }}
-        >
-          <TouchableOpacity>
-            <View
-              style={{
-                backgroundColor: "#FFFFFFAD",
-                justifyContent: "center",
-                width: 40,
-                height: 40,
-                alignItems: "center",
-                borderRadius: 20,
-              }}
-            >
-              <Icon name="sharealt" size={20} />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View
-              style={{
-                backgroundColor: "#FFFFFFAD",
-                width: 40,
-                height: 40,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 20,
-              }}
-            >
-              <Icon name="hearto" size={20}  />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <View
-              style={{
-                backgroundColor: "#FFFFFFAD",
-                width: 40,
-                height: 40,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 20,
-              }}
-            >
-              <Icon2 name="bookmark" size={20}  />
-            </View>
-          </TouchableOpacity>
+    <PagerView style={styles.viewPager} initialPage={0}>
+        <View style={styles.page} key="1">
+       <DetailsPicture/>
         </View>
-      </View>
+        <View style={styles.page} key="2">
+        <DetailsPicture/>
+        </View>
+        <View style={styles.page} key="3">
+        <DetailsPicture/>
+        </View>
+      </PagerView>
       <View
         style={{
           width: "100%",
           height: 500,
-           
+         
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -238,4 +182,7 @@ const styles = StyleSheet.create({
     segmentText: {
       color: '#2c3e50', // Segment text color
     },
+    viewPager:{
+        height:250
+    }
   });
