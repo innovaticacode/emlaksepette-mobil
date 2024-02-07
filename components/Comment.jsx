@@ -6,10 +6,10 @@ import CommentItem from './CommentItem'
 import UploadIcon from 'react-native-vector-icons/AntDesign'
 import { CheckBox } from '@rneui/themed';
 export default function Comment() {
-  const [clicked, setclicked] = useState('')
-  const [checked, setChecked] = React.useState(true);
+  
+  const [checked, setChecked] = React.useState(false);
   const toggleCheckbox = () => setChecked(!checked);
-  const [checked2, setChecked2] = React.useState(true);
+  const [checked2, setChecked2] = React.useState(false);
   const toggleCheckbox2 = () => setChecked2(!checked2);
   const comments = [
     {

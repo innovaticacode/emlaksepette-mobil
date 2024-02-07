@@ -73,7 +73,7 @@ export default function App() {
 
         </View>
        
-        <ScrollView style={{ padding: 10, marginTop: 10, display: 'flex', flexDirection: 'column' }} indicatorStyle='white'>
+        <ScrollView style={{ marginTop: 10, display: 'flex', flexDirection: 'column' }} indicatorStyle='white'>
           {Home.map((item, index) => (
             <Posts key={item.id}
             caption={item.Acıklama} 
