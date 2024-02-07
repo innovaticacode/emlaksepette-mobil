@@ -1,12 +1,14 @@
 import { View, Text,StyleSheet,TextInput, ImageBackground, TouchableOpacity } from 'react-native'
 import React from 'react'
 import AddBtn from 'react-native-vector-icons/AntDesign'
-
+import Icon from 'react-native-vector-icons/EvilIcons'
+import { useNavigation } from "@react-navigation/native";
 export default function Header() {
+  const navigation = useNavigation();
   return (
     <View style={styles.header}>
      <View style={{
-      
+       
         width:50,
         height:50,
      }}>
@@ -16,18 +18,20 @@ export default function Header() {
         
     }}/>
      </View>
-     <View>
-        <Text style={{fontSize:20,fontWeight:'bold',left:22,}}>Emlak Sepette</Text>
+     <View style={{alignItems:'center',left:12}}>
+        <Text style={{fontSize:20,fontWeight:'bold',}}>Emlak Sepette</Text>
      </View>
      <View>
       <TouchableOpacity style={{
-        backgroundColor:'red',
-        width:90,
+        
+        width:50,
         alignItems: 'center',
         padding:6,
         borderRadius:15
-      }}>
-        <Text style={{color:'white',fontWeight:'bold'}}>Giriş Yap</Text>
+      }}
+        onPress={()=>navigation.navigate('Login')}
+      >
+       <Icon name='user' size={42}/>
       </TouchableOpacity>
      </View>
      
@@ -37,12 +41,14 @@ export default function Header() {
 const styles = StyleSheet.create({
    header:{
     alignItems: 'center',
-    height:100,
+    height:90,
     display: 'flex',
     flexDirection:'row',
     justifyContent:"space-between",
-    padding:15,
-    paddingTop:35,
+    padding:12,
+    width:'100%',
+  
+  
   
    }
   })

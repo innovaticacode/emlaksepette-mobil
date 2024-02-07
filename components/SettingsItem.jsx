@@ -6,7 +6,7 @@ export default function SettingsItem({info,numbers}) {
     <View
       style={{
         width: "100%",
-        height: 50,
+        height: 40,
         backgroundColor: "transparent",
         display: "flex",
         flexDirection: "row",

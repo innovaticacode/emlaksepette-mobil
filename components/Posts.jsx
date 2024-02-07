@@ -1,183 +1,160 @@
-import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
-import { React } from "react";
+import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet, ImageBackground } from "react-native";
+import { React,useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import EntypoIcon from "react-native-vector-icons/Entypo";
-import Bookmark from "react-native-vector-icons/Feather";
+import Heart from "react-native-vector-icons/AntDesign";
+import Bookmark from "react-native-vector-icons/FontAwesome";
+import Info from "./Info";
 
-export default function Posts() {
+export default function Posts({caption,price,ımage,odaSayısı,metre,katSayısı,location}) {
+  const [heart, setHeart] = useState('hearto');
+  const [bookmark, setbookmark] = useState('bookmark-o')
   const navigation = useNavigation();
+  const changeColor = () => {
+    setHeart(heart === 'hearto' ? 'heart' : 'hearto');
+   
+  };
+  const changeBookmark=()=>{
+    setbookmark(bookmark==='bookmark-o' ? 'bookmark': 'bookmark-o')
+  }
+  
   return (
     <TouchableOpacity onPress={() => navigation.navigate("Details")}>
-      <View
-        style={{
-          width: "100%",
-          top: 30,
-          height: 200,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-around",
-        }}
-      >
-        <View
-          style={{
-            height: 120,
-            width: "100%",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
-          <View>
-            <Image
-              source={require("../images/home.jpg")}
-              style={{
-                width: 100,
-                height: 100,
-              }}
-            />
-          </View>
-          <View>
-            <View style={{ width: 150, overflow: "hidden" }}>
-              <Text>Master Realtor'den Kuruçeşme Hatip Köyde 2+1 daire</Text>
-            </View>
+        <View style={styles.container}>
+        <TouchableOpacity style={[styles.card, styles.shadowProp,styles.Icons]}
+                      onPress={changeColor}
+                    >
+                      <Heart name={heart} size={19} color={heart=='hearto'?'black':'red'}  />
+                    </TouchableOpacity>
+                  
+          <View style={styles.post}>
+                <View style={styles.Image}>
+                  
+                  <ImageBackground
+                    source={ımage}
+                    style={{width:'100%',height:'100%'}}
+                    borderRadius={'5'}
+                    />
+                 
+                </View>
+                <View style={styles.Caption}>
+                  <Text style={{color:'black',fontSize:15}}>{caption}...</Text>
+                 <View style={{width:'100%',display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
 
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#264ABB",
-                padding: 6,
-                width: 130,
-                alignItems: "center",
-                top: 22,
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  width: "100%",
-                  textAlign: "center",
-                  padding: 6,
-                  backgroundColor: "#274abb",
-                  fontWeight: "bold",
-                }}
-              >
-                Sepete Ekle
-              </Text>
-            </TouchableOpacity>
+                 <TouchableOpacity style={{
+                    width:'40%',
+                    height:'60%',
+                    borderRadius:5,
+                    top:15,
+                    backgroundColor:'#264ABB',
+                    alignItems:'center',
+                    justifyContent:'center',
+                    padding:5
+                  }}>
+                    <Text style={{color:'white'}}>Sepete Ekle</Text>
+                  </TouchableOpacity>
+                  <View style={{width:'50%', alignItems:'flex-end',justifyContent:'center'}}>
+                  <Text style={{fontWeight:'bold',top:5 ,color:'#264ABB'}}>{price}</Text>
+                  </View>
+                    
+                 </View>
+                 
+                </View>
+                {/* */}
+
           </View>
-          <View style={{ display: "flex", flexDirection: "column", gap: 43 }}>
-            <View style={{ display: "flex", flexDirection: "row", gap: 16 }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#E8E8E8",
-                  height: 36,
-                  width: 36,
-                  padding: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 18,
-                }}
-              >
-                <Bookmark name="bookmark" style={{ fontSize: 20 }} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#E8E8E8",
-                  height: 35,
-                  width: 36,
-                  padding: 4,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 18,
-                }}
-              >
-                <EntypoIcon name="heart-outlined" style={{ fontSize: 20 }} />
-              </TouchableOpacity>
-            </View>
-            <View>
-              <Text style={{ color: "#27ABB", fontWeight: "bold" }}>
-                2.550.000
-              </Text>
-            </View>
+          <View style={styles.infotmationArea}>
+              <View style={{width:'55%',display:'flex',flexDirection:'row',justifyContent:'space-around'}}>
+                 <Info text={metre}/>
+                 <Info text={odaSayısı} />
+                 <Info text={katSayısı}/>
+              </View>
+              <View style={{width:'45%',justifyContent:'center',padding:5}}>
+                <Text style={{textAlign:'right'}}>{location}</Text>
+              </View>
           </View>
+                    <View style={{
+                        width:'100%',
+                        backgroundColor:'#E5E5E5',
+                        height:2,
+                        bottom:10
+                    }}></View>
         </View>
-        <View
-          style={{
-            backgroundColor: "#E8E8E8",
-            height: 40,
-            bottom: 20,
-            width: "100%",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <View
-            style={{
-              width: 200,
-              alignItems: "center",
-              display: "flex",
-              flexDirection: "row",
-            }}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              <EntypoIcon
-                name="dot-single"
-                style={{
-                  color: "red",
-                  top: -2,
-                  fontSize: 20,
-                }}
-              />
-              <Text>60 m2</Text>
-            </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              <EntypoIcon
-                name="dot-single"
-                style={{
-                  color: "red",
-                  top: -2,
-                  fontSize: 20,
-                }}
-              />
-              <Text>1+1</Text>
-            </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              <EntypoIcon
-                name="dot-single"
-                style={{
-                  color: "red",
-                  top: -2,
-                  fontSize: 20,
-                }}
-              />
-              <Text>60 m2</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              justifyContent: "center",
-              paddingRight: 10,
-            }}
-          >
-            <Text>KOCAELİ/İZMİT</Text>
-          </View>
-        </View>
-      </View>
     </TouchableOpacity>
   );
 }
+const styles=StyleSheet.create({
+  container:{
+    width:'100%',
+    height:160,
+   
+    marginTop:0,
+    justifyContent:'center',
+    padding:5,
+    overflow:'hidden',
+    display:'flex',
+    
+    
+
+   
+  },
+  post:{
+    width:'90%',
+    height:'75%',
+    padding:4,
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-between'
+  },
+  Image:{
+        alignItems:'center',
+        width:'30%',
+        height:80
+  },
+  Caption:{
+      
+    width:'80%',
+    marginLeft:'3%'
+  },
+  Icons:{
+    height:'19%',
+    borderRadius:'50%',
+    width:'8%',
+   position:'absolute',
+    paddingLeft:4,
+    paddingTop:2,
+  top:-2,
+  left:'20%',  
+   zIndex:9999,
+   
+   
+  },
+  card: {  
+    backgroundColor: '#FFFFFF9E',  
+    borderRadius: '50%',  
+    
+    paddingHorizontal: 3,  
+    width: '100%',  
+    marginVertical: 10,  
+    height:30,
+    width:30,
+    alignItems:'center',
+    justifyContent:'center',
+   
+  },  
+  shadowProp: {  
+    shadowOffset: {width: -2, height: 4},  
+    shadowColor: '#171717',  
+    shadowOpacity: 0.2,  
+    shadowRadius: 3,  
+  },
+  infotmationArea:{
+    width:'100%',
+    height:40,
+    backgroundColor:'#EFEFEF',
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-between',
+    bottom:15
+  }
+
+})

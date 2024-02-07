@@ -1,10 +1,12 @@
-import { View, Text ,ScrollView} from 'react-native'
+import { View, Text ,ScrollView, StyleSheet} from 'react-native'
 import React from 'react'
 import SettingsItem from './SettingsItem'
+import ShoppinInfo from './ShoppinInfo'
 
 export default function Settings() {
   return (
-    <View style={{borderWidth:0.3}}>
+    <View style={{padding:8}}>
+    <View style={[styles.card, styles.shadowProp]}>
         <SettingsItem info='İlan No' numbers='0000000'/>
         <SettingsItem info='Peşin Fiyat' numbers='2.500.000'/>
         <SettingsItem info='Taksitli Toplam Fiyat' numbers='3.500.000'/>
@@ -19,7 +21,40 @@ export default function Settings() {
         <SettingsItem info='Eşyalı' numbers='Evet'/>
         <SettingsItem info='Banyo Sayısı' numbers='1'/>
         <SettingsItem info='Kullanım Durumu' numbers='Boş'/>
- 
+       
+    </View>
+    <View style={styles.Info}>
+        <ShoppinInfo/>
+        </View>
+       
     </View>
   )
 }
+const styles=StyleSheet.create({
+  card: {  
+    backgroundColor: '#FFFFFF',  
+    
+    paddingVertical: 20,  
+    paddingHorizontal: 10,  
+    width: '100%',  
+    marginVertical: 10,  
+    height:'auto',
+    borderWidth:0.7,
+    borderColor:'grey',
+   top:20
+  
+    
+  },  
+  shadowProp: {  
+    shadowOffset: {width: -1, height: 1},  
+    shadowColor: 'grey',  
+    shadowOpacity: 0.1,  
+    shadowRadius: 1,  
+  },
+  Info: {
+    
+    width: '100%',
+    top: 20,
+    height: 240
+  }
+})

@@ -1,9 +1,20 @@
 import { View, Text ,ImageBackground,TouchableOpacity} from 'react-native'
-import React from 'react'
+import {React,useState} from 'react'
 import Icon from "react-native-vector-icons/AntDesign";
-import Icon2 from 'react-native-vector-icons/Feather';
+
 import PagerView from 'react-native-pager-view';
+import Heart from "react-native-vector-icons/AntDesign";
+import Bookmark from "react-native-vector-icons/FontAwesome";
 export default function DetailsPicture() {
+  const [heart, setHeart] = useState('hearto');
+  const [bookmark, setbookmark] = useState('bookmark-o')
+  const changeHeart = () => {
+    setHeart(heart === 'hearto' ? 'heart' : 'hearto');
+   
+  };
+  const changeBookmark=()=>{
+    setbookmark(bookmark==='bookmark-o' ? 'bookmark': 'bookmark-o')
+  }
   return (
     <View
         style={{ width: "100%", height: 250, borderRadius: 20, padding: 5}}
@@ -42,7 +53,7 @@ export default function DetailsPicture() {
               <Icon name="sharealt" size={20} />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={changeHeart}>
             <View
               style={{
                 backgroundColor: "#FFFFFFAD",
@@ -53,11 +64,11 @@ export default function DetailsPicture() {
                 borderRadius: 20,
               }}
             >
-              <Icon name="hearto" size={20}  />
+              <Heart name={heart} size={20} color={heart=='hearto'?'black':'red'} />
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={changeBookmark}>
             <View
               style={{
                 backgroundColor: "#FFFFFFAD",
@@ -68,7 +79,7 @@ export default function DetailsPicture() {
                 borderRadius: 20,
               }}
             >
-              <Icon2 name="bookmark" size={20}  />
+              <Bookmark name={bookmark} size={20} color={bookmark=='bookmark-o'?'black':'red'} />
             </View>
           </TouchableOpacity>
         </View>
