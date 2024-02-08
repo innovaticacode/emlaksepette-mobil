@@ -63,6 +63,7 @@ export default function Comment() {
 
           <ScrollView style={{ height: '20%', }}>
             <View>
+              <Text style={{display:comments.length===0? 'flex':'none'}}>Bu konut içi henüz yorum yapılmadı</Text>
               {
                 comments.map((item,index)=>(
                   <CommentItem username={item.username} comment={item.comment} date={item.date} key={item.id}/>

@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  FlatList
+
+  Button, Modal,
 } from "react-native";
 import { React, useRef, useState } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -18,11 +19,12 @@ import Map from "../../components/Map";
 import Icon2 from 'react-native-vector-icons/Feather';
 import DetailsPicture from "../../components/DetailsPicture";
 import ShoppinInfo from "../../components/ShoppinInfo";
+import { FAB } from 'react-native-elements';
 
 export default function Details() {
   const [tabs, setTabs] = useState(0);
-  const ref = useRef();
-
+ 
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
 
@@ -95,8 +97,8 @@ export default function Details() {
             </View>
            
             </View>
-
-            
+    
+          
           </View>
           <View
             style={{
@@ -165,19 +167,55 @@ export default function Details() {
             >
               <Text style={{ color: tabs === 3 ? "white" : "black" }}>Yorumlar</Text>
             </TouchableOpacity>
+            
           </View>
 
-          <View style={{ width: '100%', height: 750}}>
+          <View style={{ width: '100%', height:tabs===2 ?400:740}}>
             {tabs === 0 && <Settings />}
             {tabs === 1 && <Caption />}
             {tabs === 2 && <Map />}
             {tabs === 3 && <Comment />}
           </View>
           <View style={styles.Info}>
-          <ShoppinInfo top={tabs===0? 'none':'flex'}/>
+          <ShoppinInfo top={tabs===0? 'none':'flex' && tabs===2? 'none':'flex'} />
 
           </View>
          
+        </View>
+        <View style={{
+          width:'100%',
+          display:'flex',
+          justifyContent:'space-between',
+          flexDirection:'row',
+          alignItems:'center',
+          padding:10,
+          position:'absolute',
+          bottom:790
+        }}>
+        <TouchableOpacity style={{width:'40%',height:50,
+        backgroundColor:'red',
+          alignItems:'center',
+          justifyContent:'center'
+          
+
+      }}>
+          <Text  style={{
+        fontSize:20,
+        color:'white'
+      }}>Ara</Text>
+
+        </TouchableOpacity>
+        <TouchableOpacity style={{width:'40%',height:50,
+        backgroundColor:'red',
+        alignItems:'center',
+        justifyContent:'center'
+
+      }}>
+      <Text style={{
+        fontSize:20,
+        color:'white'
+      }}>Sepete Ekle</Text>
+        </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
