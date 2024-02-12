@@ -26,9 +26,21 @@ import FloorPlan from "../../components/FloorPlan";
 import Information from "../../components/Information";
 
 
+
+import Heart from "react-native-vector-icons/AntDesign";
+import Bookmark from "react-native-vector-icons/FontAwesome";
+
 export default function Details() {
   const [tabs, setTabs] = useState(0);
- 
+  const [heart, setHeart] = useState('hearto');
+  const [bookmark, setbookmark] = useState('bookmark-o')
+  const changeHeart = () => {
+    setHeart(heart === 'hearto' ? 'heart' : 'hearto');
+   
+  };
+  const changeBookmark=()=>{
+    setbookmark(bookmark==='bookmark-o' ? 'bookmark': 'bookmark-o')
+  }
 
   return (
       <View>
@@ -70,8 +82,67 @@ export default function Details() {
         
     <ScrollView style={{ backgroundColor: 'white' }} indicatorStyle="white">
       <View style={{ flex: 1, height:tabs===4 ?1100:1590 }}>
-      
+      <View
+          style={{
+            width: 50,
+            height: 150,
+            backgroundColor: "transparent",
+            position: "absolute",
+            right: 20,
+            top: 43,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-around",
+            gap: 20,
+            zIndex:1
+          }}
+        >
+          <TouchableOpacity>
+            <View
+              style={{
+                backgroundColor: "#FFFFFFAD",
+                justifyContent: "center",
+                width: 40,
+                height: 40,
+                alignItems: "center",
+                borderRadius: 20,
+              }}
+            >
+              <Icon name="sharealt" size={20} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={changeHeart}>
+            <View
+              style={{
+                backgroundColor: "#FFFFFFAD",
+                width: 40,
+                height: 40,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 20,
+              }}
+            >
+              <Heart name={heart} size={20} color={heart=='hearto'?'black':'red'} />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={changeBookmark}>
+            <View
+              style={{
+                backgroundColor: "#FFFFFFAD",
+                width: 40,
+                height: 40,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 20,
+              }}
+            >
+              <Bookmark name={bookmark} size={20} color={bookmark=='bookmark-o'?'black':'red'} />
+            </View>
+          </TouchableOpacity>
+        </View>
         <PagerView style={styles.viewPager} >
+      
           <View style={styles.page} key="1">
             <DetailsPicture />
           </View>
@@ -221,7 +292,7 @@ export default function Details() {
             <TouchableOpacity
               onPress={() => setTabs(5)}
               style={{
-                width: '10%',
+                width: '14%',
                 backgroundColor: tabs ===5? "#ea2a28" : "#EFEFEF",
                 alignItems: "center",
                 justifyContent: 'center',
@@ -245,7 +316,7 @@ export default function Details() {
             {tabs===5&& <FloorPlan/>}
           </View>
           <View style={styles.Info}>
-          <ShoppinInfo flex={  tabs===1? 'none':'flex'} />
+          <ShoppinInfo flex={  tabs===3? 'none':'flex'} bottom={tabs ===2 ?120:0} />
 
           </View>
          
