@@ -1,4 +1,4 @@
-import { View, Text ,ImageBackground,TouchableOpacity} from 'react-native'
+import { View, Text ,ImageBackground,TouchableOpacity,StyleSheet} from 'react-native'
 import {React,useState} from 'react'
 import Icon from "react-native-vector-icons/AntDesign";
 
