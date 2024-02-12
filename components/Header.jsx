@@ -8,19 +8,17 @@ export default function Header() {
   return (
     <View style={styles.header}>
      <View style={{
-       
-        width:50,
-        height:50,
+       width:200,
+      height:50
      }}>
-     <ImageBackground source={require('../images/Logo2.jpeg')} resizeMode='cover'  style={{
+     <ImageBackground source={require('./emlaksepettelogo.png')} resizeMode='contain'  style={{
+      width:'100%',
         flex: 1,
         justifyContent: 'center',
         
     }}/>
      </View>
-     <View style={{alignItems:'center',left:12}}>
-        <Text style={{fontSize:20,fontWeight:'bold',}}>Emlak Sepette</Text>
-     </View>
+    
      <View>
       <TouchableOpacity style={{
         

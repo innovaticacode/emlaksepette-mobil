@@ -25,7 +25,7 @@ export default function DetailsPicture() {
           resizeMode="cover"
           imageStyle={{ borderRadius: 20 }}
         />
-        <View
+        {/* <View
           style={{
             width: 50,
             height: 150,
@@ -82,7 +82,7 @@ export default function DetailsPicture() {
               <Bookmark name={bookmark} size={20} color={bookmark=='bookmark-o'?'black':'red'} />
             </View>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
   )
 }

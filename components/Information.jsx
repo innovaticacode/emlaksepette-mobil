@@ -1,12 +1,13 @@
 import { View, Text,StyleSheet } from 'react-native'
 import React from 'react'
+import SettingsItem from './SettingsItem'
 
 export default function Information() {
   return (
     <View style={{padding:8}}>
     <View style={[styles.card, styles.shadowProp]}>
-        <SettingsItem info='İlan No' numbers='0000000'/>
-        <SettingsItem info='Peşin Fiyat' numbers='2.500.000'/>
+        <SettingsItem info='Proje Adı' numbers='Master Sonsuz Tatil Köyü'/>
+        <SettingsItem info='Proje Durumu' numbers='Devam Eden Projeler'/>
         <SettingsItem info='Taksitli Toplam Fiyat' numbers='3.500.000'/>
         <SettingsItem info='Peşinat' numbers='490.000'/>
         <SettingsItem info='Taksit Sayısı' numbers='36'/>
@@ -21,9 +22,7 @@ export default function Information() {
         <SettingsItem info='Kullanım Durumu' numbers='Boş'/>
        
     </View>
-    <View style={styles.Info}>
-        <ShoppinInfo/>
-        </View>
+   
        
     </View>
   )
