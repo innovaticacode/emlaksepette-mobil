@@ -1,10 +1,14 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 
 import Icon from "react-native-vector-icons/AntDesign";
 export default function ShareScreen({navigation}) {
   return (
+    <ScrollView>
     <View style={{ alignItems: "center", gap: 50 }}>
+      
       <View
+
+
         style={{
           width: "90%",
           height: 310,
@@ -170,6 +174,8 @@ export default function ShareScreen({navigation}) {
           </View>
         </TouchableOpacity>
       </View>
+    
     </View>
+    </ScrollView>
   );
 }
