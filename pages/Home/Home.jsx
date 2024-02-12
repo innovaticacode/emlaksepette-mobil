@@ -4,14 +4,17 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
 import HomePage from "../Home/HomePage";
-import Profile from "./Profile";
+import Search from "./Search";
 import ShareScreen from "./ShareScreen";
 import Test from "./Test";
-import Test2 from "./Test2";
+import Basket from "./Basket";
 
 const Tab = createBottomTabNavigator();
 
+
+
 const Home = () => {
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -26,7 +29,7 @@ const Home = () => {
         tabBarStyle: {
           backgroundColor: "white",
           padding: 6,
-          height: 60,
+          height: 80,
         },
       }}
     >
@@ -47,9 +50,9 @@ const Home = () => {
 
       <Tab.Screen
         name="Arama"
-        component={Profile}
+        component={Search}
         options={{
-          headerStyle: { backgroundColor: "#ea2a28" },
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name="search-outline"
@@ -93,7 +96,7 @@ const Home = () => {
       />
       <Tab.Screen
         name="Sepetim"
-        component={Test2}
+        component={Basket}
         options={{
           tabBarIcon: ({ color, focused }) => (
             <Feather
@@ -102,6 +105,11 @@ const Home = () => {
               size={20}
             />
           ),
+          tabBarBadge: '0',
+
+          tabBarBadgeStyle: {
+            fontSize: 10, height: 17, width: 20, position: 'absolute', top: 0, right: 0, paddingBottom: 9,
+          }
         }}
       />
     </Tab.Navigator>
@@ -121,8 +129,9 @@ const styles = StyleSheet.create({
   },
   ilanVerIcon: {
     borderRadius: 20,
-    left: 1.3,
-    fontWeight: 700,
+    left:1.3,
+    fontWeight: 700
+ 
   },
 });
 

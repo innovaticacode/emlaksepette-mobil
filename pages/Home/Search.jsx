@@ -1,22 +1,29 @@
-import { View, Text, TextInput, TouchableOpacity,TouchableWithoutFeedback,Keyboard, ScrollView } from "react-native";
+import { View, Text, TextInput, TouchableOpacity,TouchableWithoutFeedback,Keyboard, ScrollView, SafeAreaView } from "react-native";
 import React from "react";
 import Icon from "react-native-vector-icons/EvilIcons";
 import Categories from "../../components/Categories";
+import Header from "../../components/Header";
 
-export default function Profile() {
+export default function Search() {
   return (
     <TouchableWithoutFeedback  onPress={()=>Keyboard.dismiss()}>
+      <SafeAreaView>
+        <TouchableWithoutFeedback  onPress={()=>Keyboard.dismiss()}>
+      <ScrollView>
+       
     <View style={{flex:1}}>
+      <Header/>
       <View
         style={{
           display: "flex",
-          
+         
           flexDirection: "row",
-          top:10,
+          
           backgroundColor: "#D8D8D8",
           width: "100%",
           height: 40,
           alignItems: "center",
+          
           
         }}
       >
@@ -36,7 +43,9 @@ export default function Profile() {
       </View>
       <View style={{backgroundColor:'black',width:'100%',height:0.4,top:20}}></View>
       <View style={{
-        top:30
+        top:30,
+        height:600,
+      
       }}>
           <Categories category='Projeler'/>
           <Categories category='Konut'/>
@@ -49,7 +58,9 @@ export default function Profile() {
     
     
     </View>
-    
+    </ScrollView>
+    </TouchableWithoutFeedback>
+    </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 }
