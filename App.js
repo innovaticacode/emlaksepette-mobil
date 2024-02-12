@@ -22,7 +22,7 @@ export default function App() {
     headerShown:false
   }} />
   <Stack.Screen name="Login"  component={Login} options={{
-    headerShown:false
+      title:'Giriş Yap'
   }} />
   <Stack.Screen name="Emlak"  component={Emlakİlanı} options={{
     headerShown:false

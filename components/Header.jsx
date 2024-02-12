@@ -31,7 +31,7 @@ export default function Header() {
       }}
         onPress={()=>navigation.navigate('Login')}
       >
-       <Icon name='user' size={42}/>
+       <Icon name='user' size={45}/>
       </TouchableOpacity>
      </View>
      

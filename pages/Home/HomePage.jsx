@@ -11,35 +11,36 @@ import { useState } from 'react';
 import Posts from '../../components/Posts';
 import SliderBar from '../../components/SliderBar';
 import Header from '../../components/Header';
+import ProjectPost from '../../components/ProjectPost';
 
 export default function App() {
 
   const Home = [
     {
-      Acıklama: 'Master Realtor Den Cevi̇zli Toki 8.Etapta Satilik 3+1 Dai̇re',
+      Acıklama: 'MASTER SONSUZ TATİL KÖYÜ',
       fiyat: '5.150.000 ₺',
       resim: require('../Home/home.jpg'),
-      konum: 'İstanbul/Kartal',
+      konum: 'İstanbul/Kartal/Cevizli',
       metre: '60m2',
       odaSayısı: '3+1',
       katsayısı: `${4} Katlı`,
       id: 1
     },
     {
-      Acıklama: 'Master Realtor Den Cevi̇zli Toki 8.Etapta Satilik 3+1 Dai̇re',
+      Acıklama: 'MALİYETİNE EV DEN MASTER VİLLA VAN',
       fiyat: '5.150.000 ₺',
       resim: require('../Home/home.jpg'),
-      konum: 'İstanbul/Kartal',
+      konum: 'İstanbul/Kartal/Cevizli',
       metre: '60m2',
       odaSayısı: '3+1',
       katsayısı: `${4} Katlı`,
       id: 2
     },
     {
-      Acıklama: 'Master Realtor Den Cevi̇zli Toki 8.Etapta Satilik 3+1 Dai̇re',
+      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
       fiyat: '5.150.000 ₺',
       resim: require('../Home/home.jpg'),
-      konum: 'İstanbul/Kartal',
+      konum: 'İstanbul/Kartal/Cevizli',
       metre: '60m2',
       odaSayısı: '3+1',
       katsayısı: `${4} Katlı`,
@@ -74,7 +75,7 @@ export default function App() {
         </View>
        
         <ScrollView style={{ marginTop: 10, display: 'flex', flexDirection: 'column' }} indicatorStyle='white'>
-          {Home.map((item, index) => (
+          {/* {Home.map((item, index) => (
             <Posts key={item.id}
             caption={item.Acıklama} 
             price={item.fiyat}
@@ -83,7 +84,11 @@ export default function App() {
              odaSayısı={item.odaSayısı}
              metre={item.metre}
              katSayısı={item.katsayısı} />
+          ))} */}
+          {Home.map((item,index)=>(
+            <ProjectPost key={item.id} caption={item.Acıklama} ımage={item.resim} location={item.konum}/>
           ))}
+          
         </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>

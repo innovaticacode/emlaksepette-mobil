@@ -20,16 +20,57 @@ import Icon2 from 'react-native-vector-icons/Feather';
 import DetailsPicture from "../../components/DetailsPicture";
 import ShoppinInfo from "../../components/ShoppinInfo";
 import { FAB } from 'react-native-elements';
+import OtherHomeInProject from "../../components/OtherHomeInProject";
+import PaymentDetail from "../../components/PaymentDetail";
+import FloorPlan from "../../components/FloorPlan";
+import Information from "../../components/Information";
+
 
 export default function Details() {
   const [tabs, setTabs] = useState(0);
  
-  const [modalVisible, setModalVisible] = useState(false);
 
   return (
-
+      <View>
+       <View style={{
+          position:'absolute',
+          zIndex:1,
+          width:'100%',
+          height:'7%',
+        
+          bottom:30,
+          display:'flex',
+          flexDirection:'row',
+          justifyContent:'space-between',
+          paddingRight:20,
+          paddingLeft:20
+       }}>
+          <TouchableOpacity 
+         
+          style={{
+            width:'40%',
+            height:'90%',
+            backgroundColor:'#284ABB',
+          
+            justifyContent:'center'
+          }}>
+            <Text style={styles.btnText}>Ara</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{
+            width:'40%',
+            height:'90%',
+            backgroundColor:'#284ABB',
+           
+            justifyContent:'center'
+          }}>
+            <Text style={styles.btnText}>Sepete Ekle</Text>
+          </TouchableOpacity>
+          
+       </View>
+        
     <ScrollView style={{ backgroundColor: 'white' }} indicatorStyle="white">
-      <View style={{ flex: 1, height: 1590, }}>
+      <View style={{ flex: 1, height:tabs===4 ?1100:1590 }}>
+      
         <PagerView style={styles.viewPager} >
           <View style={styles.page} key="1">
             <DetailsPicture />
@@ -56,21 +97,17 @@ export default function Details() {
           }}
         >
           <View
-            style={{ width: '100%', height: 100, gap: 10 }}
+            style={{ width: '100%', height: 40, gap: 10 }}
           >
            
             <View style={{ }}>
               <View style={{ width: '100%',paddingLeft:10,paddingRight:6 }}>
                 <Text style={{ fontSize: 20,  }}>
-                  Master Realtor'den Kuruçeşme Hatip Köyde 2+1 daire
+                  MASTER SONSUZ TATİL KÖYÜ
                 </Text>
               </View>
             </View>
-            <View style={{ padding:7 }}>
-              <Text style={{ color: "#3A811D", fontSize: 21, fontWeight: "bold" }}>
-                2.500.000 ₺
-              </Text>
-            </View>
+          
             <View
               style={{
                 backgroundColor: "grey",
@@ -100,6 +137,7 @@ export default function Details() {
     
           
           </View>
+         
           <View
             style={{
               width: "100%",
@@ -114,28 +152,28 @@ export default function Details() {
               gap: 5
             }}
           >
+            <ScrollView horizontal indicatorStyle="white" >
+              <View style={{width:850,display:'flex',flexDirection:'row',gap:5,}}>
             <TouchableOpacity
               onPress={() => setTabs(0)}
               style={{
-                width: "23%",
+                width: '20%',
                 backgroundColor: tabs === 0 ? "#ea2a28" : "#EFEFEF",
                 alignItems: "center",
                 justifyContent: 'center',
                 height: 40
               }}
             >
-              <Text  style={{ color: tabs === 0 ? "white" : "black" }}>Özellikler</Text>
+              <Text  style={{ color: tabs === 0 ? "white" : "black" }}>Projedeki Konutlar</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               onPress={() => setTabs(1)}
               style={{
-                width: "23%",
+                width: '15%',
                 backgroundColor: tabs === 1 ? "#ea2a28" : "#EFEFEF",
                 alignItems: "center",
                 justifyContent: 'center',
                 height: 40
-
               }}
             >
               <Text  style={{ color: tabs === 1 ? "white" : "black" }}>Açıklama</Text>
@@ -144,81 +182,80 @@ export default function Details() {
             <TouchableOpacity
               onPress={() => setTabs(2)}
               style={{
-                width: "23%",
+                width: '10%',
                 backgroundColor: tabs === 2 ? "#ea2a28" : "#EFEFEF",
                 alignItems: "center",
                 justifyContent: 'center',
                 height: 40
+
               }}
             >
-              <Text  style={{ color: tabs === 2 ? "white" : "black" }}>Harita</Text>
+              <Text  style={{ color: tabs === 2? "white" : "black" }}>Genel Bilgi</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={() => setTabs(3)}
               style={{
-                width: "23%",
+                width: '15%',
                 backgroundColor: tabs === 3 ? "#ea2a28" : "#EFEFEF",
+                alignItems: "center",
+                justifyContent: 'center',
+                height: 40
+              }}
+            >
+              <Text  style={{ color: tabs === 3 ? "white" : "black" }}>Özellikler</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setTabs(4)}
+              style={{
+                width: '10%',
+                backgroundColor: tabs === 4 ? "#ea2a28" : "#EFEFEF",
                 alignItems: "center",
                 justifyContent: 'center',
                 height: 40
 
               }}
             >
-              <Text style={{ color: tabs === 3 ? "white" : "black" }}>Yorumlar</Text>
+              <Text style={{ color: tabs === 4 ? "white" : "black" }}>Harita</Text>
             </TouchableOpacity>
-            
-          </View>
+            <TouchableOpacity
+              onPress={() => setTabs(5)}
+              style={{
+                width: '10%',
+                backgroundColor: tabs ===5? "#ea2a28" : "#EFEFEF",
+                alignItems: "center",
+                justifyContent: 'center',
+                height: 40
 
-          <View style={{ width: '100%', height:tabs===2 ?400:740}}>
-            {tabs === 0 && <Settings />}
-            {tabs === 1 && <Caption />}
-            {tabs === 2 && <Map />}
-            {tabs === 3 && <Comment />}
+              }}
+            >
+              <Text style={{ color: tabs === 5? "white" : "black" }}>Vaziyet&Kat planı</Text>
+            </TouchableOpacity>
+        
+            </View>
+            </ScrollView>
+          </View>
+       
+          <View style={{ width: '100%', height:tabs===4 ?700:740}}>
+            {tabs === 0 && <OtherHomeInProject/>}
+            {tabs === 1 && <Caption/>}
+            {tabs === 2 && <Information/>}
+            {tabs === 3 && <Settings/> }
+            {tabs === 4 && <Map/>}
+            {tabs===5&& <FloorPlan/>}
           </View>
           <View style={styles.Info}>
-          <ShoppinInfo top={tabs===0? 'none':'flex' && tabs===2? 'none':'flex'} />
+          <ShoppinInfo flex={  tabs===1? 'none':'flex'} />
 
           </View>
          
         </View>
-        <View style={{
-          width:'100%',
-          display:'flex',
-          justifyContent:'space-between',
-          flexDirection:'row',
-          alignItems:'center',
-          padding:10,
-          position:'absolute',
-          bottom:790
-        }}>
-        <TouchableOpacity style={{width:'40%',height:50,
-        backgroundColor:'red',
-          alignItems:'center',
-          justifyContent:'center'
-          
-
-      }}>
-          <Text  style={{
-        fontSize:20,
-        color:'white'
-      }}>Ara</Text>
-
-        </TouchableOpacity>
-        <TouchableOpacity style={{width:'40%',height:50,
-        backgroundColor:'red',
-        alignItems:'center',
-        justifyContent:'center'
-
-      }}>
-      <Text style={{
-        fontSize:20,
-        color:'white'
-      }}>Sepete Ekle</Text>
-        </TouchableOpacity>
-        </View>
+      
       </View>
+
     </ScrollView>
+  
+    </View>
 
   );
 }
@@ -256,5 +293,12 @@ const styles = StyleSheet.create({
     fontWeight:'500',
     fontFamily:'Verdana',
     color:'grey'
+  },
+  btnText:{
+    fontSize:20,
+    textAlign:'center',
+    color:'white',
+    fontWeight:'400',
+    letterSpacing:1
   }
 });
