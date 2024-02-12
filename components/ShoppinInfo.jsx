@@ -3,11 +3,11 @@ import React from 'react'
 import SliderItem from './SliderItem'
 import SettingsItem from './SettingsItem'
 
-export default function ShoppinInfo({flex}) {
+export default function ShoppinInfo({flex,bottom}) {
     return (
         <View style={{padding:6,display:flex}}>
 
-        <View style={[styles.card, styles.shadowProp]}>
+        <View style={[styles.card, styles.shadowProp, {bottom:bottom}]}>
             <Text style={{
                 fontSize: 20,
                 bottom:5,
