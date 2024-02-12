@@ -7,10 +7,12 @@ import Posts from './components/Posts';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Home from './pages/Home/Home'
-import Login from './pages/Login/Login';
+
 import Emlakİlanı from './pages/Home/İlanYükleme/Emlakİlanı';
 import Projeİlanı from './pages/Home/İlanYükleme/Projeİlanı';
 import Details from './pages/Home/Details';
+import Login from './pages/Home/Login&Register/Login';
+import Register from './pages/Home/Login&Register/Register';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -20,7 +22,7 @@ export default function App() {
     headerShown:false
   }} />
   <Stack.Screen name="Login"  component={Login} options={{
-    headerShown:false
+      title:'Giriş Yap'
   }} />
   <Stack.Screen name="Emlak"  component={Emlakİlanı} options={{
     headerShown:false
@@ -31,6 +33,10 @@ export default function App() {
   <Stack.Screen name="Details"  component={Details} options={{
     
   }} />
+   <Stack.Screen name="Register"  component={Register}options={{
+    headerShown:false
+  }} />
+   
 </Stack.Navigator>
 </NavigationContainer>
   );

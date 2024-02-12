@@ -1,9 +1,7 @@
-import { View, Text ,ScrollView, StyleSheet} from 'react-native'
+import { View, Text,StyleSheet } from 'react-native'
 import React from 'react'
-import SettingsItem from './SettingsItem'
-import ShoppinInfo from './ShoppinInfo'
 
-export default function Settings() {
+export default function Information() {
   return (
     <View style={{padding:8}}>
     <View style={[styles.card, styles.shadowProp]}>
@@ -30,31 +28,31 @@ export default function Settings() {
     </View>
   )
 }
+
 const styles=StyleSheet.create({
-  card: {  
-    backgroundColor: '#FFFFFF',  
+    card: {  
+      backgroundColor: '#FFFFFF',   
+      paddingVertical: 20,  
+      paddingHorizontal: 10,  
+      width: '100%',  
+      marginVertical: 10,  
+      height:'auto',
+      borderWidth:0.7,
+      borderColor:'grey',
+     top:20
     
-    paddingVertical: 20,  
-    paddingHorizontal: 10,  
-    width: '100%',  
-    marginVertical: 10,  
-    height:'auto',
-    borderWidth:0.7,
-    borderColor:'grey',
-   top:20
-  
-    
-  },  
-  shadowProp: {  
-    shadowOffset: {width: -1, height: 1},  
-    shadowColor: 'grey',  
-    shadowOpacity: 0.1,  
-    shadowRadius: 1,  
-  },
-  Info: {
-    
-    width: '100%',
-    top: 20,
-    height: 240
-  }
-})
+      
+    },  
+    shadowProp: {  
+      shadowOffset: {width: -1, height: 1},  
+      shadowColor: 'grey',  
+      shadowOpacity: 0.1,  
+      shadowRadius: 1,  
+    },
+    Info: {
+      
+      width: '100%',
+      top: 20,
+      height: 240
+    }
+  })

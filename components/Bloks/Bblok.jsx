@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export default function Commentbtn() {
+export default function Bblok() {
   return (
     <View>
-      <Text>Yorumlar</Text>
+      <Text>Bblok</Text>
     </View>
   )
 }

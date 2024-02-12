@@ -1,198 +1,288 @@
-import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
-import { React } from "react";
+import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet, ImageBackground } from "react-native";
+import { React, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import EntypoIcon from "react-native-vector-icons/Entypo";
-import Bookmark from "react-native-vector-icons/Feather";
-// Posts =[
-//     {
-//         id: '1',
-//         title: 'New York',
-//         price:'950$',
-//         url:require("../images/home.jpg")
-//       },
-//       {
-//         id: '2',
-//         title: 'Hamburg',
-//         price:'350$',
-//         url:require("../images/home.jpg")
-//       },
-//       {
-//         id: '3',
-//         title: 'Copenhagen',
-//         price:'450$',
-//         url:require("../images/home.jpg")
-//       },
-//     ]
-export default function Posts() {
+import Heart from "react-native-vector-icons/AntDesign";
+import Share from "react-native-vector-icons/Entypo"
+import Bookmark from "react-native-vector-icons/FontAwesome";
+import Info from "./Info";
+
+export default function Posts({ caption, price, ımage, odaSayısı, metre, katSayısı, location }) {
+  const [heart, setHeart] = useState('hearto');
+  const [bookmark, setbookmark] = useState('bookmark-o')
   const navigation = useNavigation();
+  const changeColor = () => {
+    setHeart(heart === 'hearto' ? 'heart' : 'hearto');
+
+  };
+  const changeBookmark = () => {
+    setbookmark(bookmark === 'bookmark-o' ? 'bookmark' : 'bookmark-o')
+  }
+
   return (
     <TouchableOpacity onPress={() => navigation.navigate("Details")}>
-      <View
-        style={{
-          width: "100%",
-          top: 30,
-          height: 200,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-around",
-        }}
-      >
-        <View
+      <View style={styles.container}>
+     
+        <View style={styles.post}>
+        
+          <View style={styles.Image}>
+          <TouchableOpacity
+            onPress={changeColor}
           style={{
-            height: 120,
-            width: "100%",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
-          <View>
-            <Image
-              source={require("../images/home.jpg")}
-              style={{
-                width: 100,
-                height: 100,
-              }}
+        position:'absolute',
+        zIndex:1,
+        right:2,
+        top:-5
+        
+      }}>
+          <View style={styles.IconContainer2}>
+            <Heart name={heart} size={18} color={heart=='hearto'? 'black':'red'} />
+          </View>
+        </TouchableOpacity>
+
+            <ImageBackground source={ımage}
+              style={{ width: '100%', height: '100%' }}
             />
           </View>
-          <View>
-            <View style={{ width: 150, overflow: "hidden" }}>
-              <Text>Master Realtor'den Kuruçeşme Hatip Köyde 2+1 daire</Text>
+          <View style={styles.CaptionAndButtons}>
+            <View style={styles.Caption}>
+              <Text style={{
+                fontSize: 12,
+                fontWeight: '400'
+
+
+              }}>{caption}</Text>
+            </View>
+            <View style={styles.buttons}>
+              <View style={styles.priceAndAddBasketDiv}>
+                <View style={styles.priceAndAddBasket}>
+
+
+                  <View style={styles.btnPrice}>
+                    <Text style={{
+                      color: '#274ABA',
+                      fontWeight: 700,
+                      fontSize: 13
+                    }}>{price}</Text>
+                  </View>
+
+                  <TouchableOpacity style={styles.btnbasket}>
+                    <Text style={{
+                      color: 'white',
+                      fontSize: 13,
+
+                    }} numberOfLines={1}>Sepete Ekle</Text>
+                  </TouchableOpacity>
+                </View>
+
+              </View>
+              <View style={styles.Icons}>
+                <TouchableOpacity>
+                  <View style={styles.IconContainer}>
+                    <Share name="share" size={18} />
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={changeBookmark}>
+                  <View style={styles.IconContainer}>
+                    <Bookmark name={bookmark} size={18} color={bookmark=='bookmark-o'?'black':'red'}/>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          <View style={styles.infotmationArea}>
+            <View style={{ display: 'flex', flexDirection: 'row', gap: 15, width: '50%' }}>
+              <Info text={metre} />
+              <Info text={odaSayısı} />
+              <Info text={katSayısı} />
+            </View>
+            <View style={{ paddingRight: 10, width: '50%', alignItems: 'flex-end' }}>
+              <Text>{location}</Text>
             </View>
 
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#27ABB",
-                padding: 6,
-                width: 130,
-                alignItems: "center",
-                top: 22,
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  fontWeight: "bold",
-                }}
-              >
-                Sepete Ekle
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ display: "flex", flexDirection: "column", gap: 43 }}>
-            <View style={{ display: "flex", flexDirection: "row", gap: 16 }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#E8E8E8",
-                  height: 36,
-                  width: 36,
-                  padding: 6,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "50%",
-                }}
-              >
-                <Bookmark name="bookmark" style={{ fontSize: 20 }} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#E8E8E8",
-                  height: 35,
-                  width: 36,
-                  padding: 4,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: "50%",
-                }}
-              >
-                <EntypoIcon name="heart-outlined" style={{ fontSize: 20 }} />
-              </TouchableOpacity>
-            </View>
-            <View>
-              <Text style={{ color: "#27ABB", fontWeight: "bold" }}>
-                2.550.000
-              </Text>
-            </View>
+
+
           </View>
         </View>
-        <View
-          style={{
-            backgroundColor: "#E8E8E8",
-            height: 40,
-            bottom: 20,
-            width: "100%",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <View
-            style={{
-              width: 200,
-              alignItems: "center",
-              display: "flex",
-              flexDirection: "row",
-            }}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              <EntypoIcon
-                name="dot-single"
-                style={{
-                  color: "red",
-                  top: -2,
-                  fontSize: 20,
-                }}
-              />
-              <Text>60 m2</Text>
-            </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              <EntypoIcon
-                name="dot-single"
-                style={{
-                  color: "red",
-                  top: -2,
-                  fontSize: 20,
-                }}
-              />
-              <Text>1+1</Text>
-            </View>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              <EntypoIcon
-                name="dot-single"
-                style={{
-                  color: "red",
-                  top: -2,
-                  fontSize: 20,
-                }}
-              />
-              <Text>60 m2</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              justifyContent: "center",
-              paddingRight: 10,
-            }}
-          >
-            <Text>KOCAELİ/İZMİT</Text>
-          </View>
-        </View>
+
       </View>
     </TouchableOpacity>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+
+    height: 129,
+    marginTop: 20,
+    paddingLeft: 7,
+    paddingRight: 7,
+
+    borderColor: '#e6e6e6',
+    ...Platform.select({
+      ios: {
+        shadowColor: ' #e6e6e6',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  post: {
+    width: '100%',
+    height: '90%',
+
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+
+  },
+  Image: {
+    width: '40%',
+    height: '100%',
+
+  },
+  Caption: {
+    width: '100%',
+    height: '50%',
+
+    overflow: 'hidden'
+  },
+
+
+  infotmationArea: {
+    width: '100%',
+    height: 23,
+    backgroundColor: '#E8E8E8',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    bottom: 15
+  },
+  CaptionAndButtons: {
+    width: '60%',
+    height: '100%',
+
+    paddingLeft: 8,
+    paddingRight: 8,
+    paddingTop: 8,
+    paddingBottom: 5
+
+  },
+  buttons: {
+    width: '100%',
+    height: '50%',
+
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    bottom: 20
+
+  },
+  Icons: {
+    width: '50%',
+    height: '100%',
+    top: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 16
+
+  },
+  priceAndAddBasketDiv: {
+    width: '50%',
+    height: '100%',
+
+    alignItems: 'center',
+    justifyContent: 'center'
+
+  },
+  priceAndAddBasket: {
+    width: 94,
+    height: 40,
+
+
+
+  },
+  btnPrice: {
+    backgroundColor: '#DBDBDB',
+    alignItems: 'center',
+
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+    borderWidth: 2,
+    borderColor: '#DBDBDB',
+    padding: 5,
+    width: 100,
+    height: 30,
+    justifyContent: 'center',
+
+  },
+  btnbasket: {
+    backgroundColor: '#274ABA',
+    alignItems: 'center',
+
+    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 5,
+    width: 100,
+    height: 30,
+    padding: 5,
+    justifyContent: 'center',
+    borderColor: '#DBDBDB',
+
+
+  },
+  IconContainer: {
+    padding: 2,
+    backgroundColor: '#FFFFFF',
+    borderRadius: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 30,
+    height: 30,
+    marginVertical: 8,
+
+    borderWidth: 0.7,
+    borderColor: '#e6e6e6',
+    ...Platform.select({
+      ios: {
+        shadowColor: ' #e6e6e6',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+
+
+  },
+  IconContainer2:{
+    padding: 3,
+    backgroundColor: '#FFFFFF99',
+    borderRadius: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 25,
+    height: 25,
+    marginVertical: 8,
+
+    borderWidth: 0.7,
+    borderColor: '#e6e6e6',
+    ...Platform.select({
+      ios: {
+        shadowColor: ' #e6e6e6',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  }
+
+})

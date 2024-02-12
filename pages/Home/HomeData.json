@@ -1,0 +1,31 @@
+[
+   
+    {
+        "Acıklama":"Master Realtor Den Cevi̇zli Toki 8.Etapta Satilik 3+1 Dai̇re",
+        "price":"5.150.000 ₺",
+        "ımage" :"https://emlaksepette.com/project_housing_images/master-sonsuz-tatil-koyu-project_housing-image-0.jpg",
+        "location":"İstanbul/Kartal",
+        "metre":"60m2",
+        "roomNumber":"3+1",
+        "floor":"4 Katlı",
+        "id":"1",
+        "category":"Tatil Evleri",
+        "status":"Satıldı",
+        "type":"Emlak"
+    },
+    {
+        "Acıklama":"Master Realtor Den Cevi̇zli Toki 7.Etapta Satilik 2+1 Dai̇re",
+        "price":"4.150.000 ₺",
+        "ımage" :"https://emlaksepette.com/project_housing_images/master-sonsuz-tatil-koyu-project_housing-image-0.jpg",
+        "location":"İstanbul/Kartal",
+        "metre":"60m2",
+        "roomNumber":"2+1",
+        "floor":"4 Katlı",
+        "id":"2",
+        "category":"Tatil Evleri",
+        "status":"Satılmadı",
+        "type":"Proje"
+    }
+
+
+]
