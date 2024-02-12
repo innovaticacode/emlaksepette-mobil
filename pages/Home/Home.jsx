@@ -26,7 +26,7 @@ const Home = () => {
         tabBarStyle: {
           backgroundColor: "white",
           padding: 6,
-          height: 80,
+          height: 60,
         },
       }}
     >
@@ -121,11 +121,9 @@ const styles = StyleSheet.create({
   },
   ilanVerIcon: {
     borderRadius: 20,
-    left:1.3,
-    fontWeight: 700
- 
+    left: 1.3,
+    fontWeight: 700,
   },
 });
-
 
 export default Home;
