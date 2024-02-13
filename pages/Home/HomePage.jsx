@@ -3,7 +3,8 @@ import {
   StyleSheet, Text, View, TextInput,
   TouchableWithoutFeedback, Keyboard, ScrollView,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
+  FlatList
 
 } from 'react-native';
 
@@ -20,7 +21,7 @@ export default function App() {
       Acıklama: 'MASTER SONSUZ TATİL KÖYÜ',
       fiyat: '5.150.000 ₺',
       resim: require('../Home/home.jpg'),
-      konum: 'İstanbul/Kartal/Cevizli',
+      konum: 'İstanbul / Kartal / Cevizli',
       metre: '60m2',
       odaSayısı: '3+1',
       katsayısı: `${4} Katlı`,
@@ -30,7 +31,7 @@ export default function App() {
       Acıklama: 'MALİYETİNE EV DEN MASTER VİLLA VAN',
       fiyat: '5.150.000 ₺',
       resim: require('../Home/home.jpg'),
-      konum: 'İstanbul/Kartal/Cevizli',
+      konum: 'İstanbul / Sultangazi / ismetpaşa',
       metre: '60m2',
       odaSayısı: '3+1',
       katsayısı: `${4} Katlı`,
@@ -40,13 +41,69 @@ export default function App() {
       Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
       fiyat: '5.150.000 ₺',
       resim: require('../Home/home.jpg'),
-      konum: 'İstanbul/Kartal/Cevizli',
+      konum: 'İstanbul / Kartal / Cevizli',
       metre: '60m2',
       odaSayısı: '3+1',
       katsayısı: `${4} Katlı`,
-      id: 3
+      id: 3,
+      blok:'A'
+    },
+    {
+      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
+      fiyat: '5.150.000 ₺',
+      resim: require('../Home/home.jpg'),
+      konum: 'İstanbul / Kartal / Cevizli',
+      metre: '60m2',
+      odaSayısı: '3+1',
+      katsayısı: `${4} Katlı`,
+      id: 4,
+      blok:'A'
     },
 
+    {
+      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
+      fiyat: '5.150.000 ₺',
+      resim: require('../Home/home.jpg'),
+      konum: 'İstanbul / Kartal / Cevizli',
+      metre: '60m2',
+      odaSayısı: '3+1',
+      katsayısı: `${4} Katlı`,
+      id: 5,
+      blok:'A'
+    },
+    {
+      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
+      fiyat: '5.150.000 ₺',
+      resim: require('../Home/home.jpg'),
+      konum: 'İstanbul / Kartal / Cevizli',
+      metre: '60m2',
+      odaSayısı: '3+1',
+      katsayısı: `${4} Katlı`,
+      id: 6,
+      blok:'A'
+    },
+    {
+      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
+      fiyat: '5.150.000 ₺',
+      resim: require('../Home/home.jpg'),
+      konum: 'İstanbul / Kartal / Cevizli',
+      metre: '60m2',
+      odaSayısı: '3+1',
+      katsayısı: `${4} Katlı`,
+      id: 7,
+      blok:'A'
+    },
+    {
+      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
+      fiyat: '5.150.000 ₺',
+      resim: require('../Home/home.jpg'),
+      konum: 'İstanbul / Kartal /Cevizli',
+      metre: '60m2',
+      odaSayısı: '3+1',
+      katsayısı: `${4} Katlı`,
+      id: 8,
+      blok:'A'
+    },
 
 
   ]
@@ -54,28 +111,45 @@ export default function App() {
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, } }>
         <Header />
-
+            <ScrollView>
         <View>
           <SliderBar />
         </View>
 
-        <View style={{ top: 20, padding: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ top: 30, padding: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
           <View>
-            <Text style={{ fontSize: 19, fontWeight: '500', top: 10 }}>Öne Çıkan Projeler</Text>
+            <Text style={{ fontSize: 12, fontWeight: '500', top: 10 }}>ÖNE ÇIKAN PROJELER</Text>
           </View>
          
           <TouchableOpacity>
-            <View style={{ backgroundColor: 'red', padding: 10, borderRadius: 10 }}>
-              <Text style={{ fontSize: 14, fontWeight: '600', color: 'white' }} >Tümünü gör</Text>
+            <View style={{ backgroundColor: '#EA2A29',paddingLeft:10, paddingRight:10, paddingTop:5,paddingBottom:5,  }}>
+              <Text style={{ fontSize: 12, fontWeight: '600', color: 'white' }} >Tümünü gör</Text>
             </View>
           </TouchableOpacity>
 
         </View>
        
-        <ScrollView style={{ marginTop: 10, display: 'flex', flexDirection: 'column' }} indicatorStyle='white'>
-          {/* {Home.map((item, index) => (
+        {/* <ScrollView style={{ marginTop: 15, display: 'flex', flexDirection: 'column' }} indicatorStyle='white'>
+       
+          {Home.map((item,index)=>(
+            <ProjectPost key={item.id} caption={item.Acıklama} ımage={item.resim} location={item.konum} blok={item.blok}/>
+          ))}
+          
+        </ScrollView> */}
+        <FlatList
+  data={Home}
+  renderItem={({ item }) =>  <ProjectPost key={item.id} caption={item.Acıklama} ımage={item.resim} location={item.konum} blok={item.blok}/>}
+   scrollEnabled={false}
+/>
+       
+      </ScrollView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
+  );
+}
+   {/* {Home.map((item, index) => (
             <Posts key={item.id}
             caption={item.Acıklama} 
             price={item.fiyat}
@@ -85,12 +159,3 @@ export default function App() {
              metre={item.metre}
              katSayısı={item.katsayısı} />
           ))} */}
-          {Home.map((item,index)=>(
-            <ProjectPost key={item.id} caption={item.Acıklama} ımage={item.resim} location={item.konum}/>
-          ))}
-          
-        </ScrollView>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
-  );
-}
