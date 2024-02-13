@@ -19,9 +19,7 @@ export default function Favorite() {
         marginTop: 0,
       }}
     >
-      <View
-        style={styles.cards}
-      >
+      <View style={styles.cards}>
         <View style={{ width: "25%", height: 100, flex: 1 }}>
           <ImageBackground
             source={require("../images/home.jpg")}
@@ -48,6 +46,7 @@ export default function Favorite() {
         <View
           style={{
             flex: 1,
+            display:"flex",
             justifyContent: "space-between",
             padding: 10,
             alignItems: "center",
@@ -58,7 +57,7 @@ export default function Favorite() {
               fontSize: 16,
               fontWeight: 400,
               borderWidth: 1,
-              borderColor: "red",
+              borderColor: "#FF7373",
               width: 100,
               paddingLeft: 10,
               paddingRight: 10,
@@ -66,6 +65,7 @@ export default function Favorite() {
               paddingBottom: 5,
               color: "white",
               textAlign: "center",
+              borderRadius: 5,
             }}
           >
             <Text
@@ -73,10 +73,10 @@ export default function Favorite() {
                 display: "flex",
                 justifyContent: "space-between",
                 width: "100%",
-                fontWeight:600,
+                fontWeight: 600,
               }}
             >
-              Sil <Icon name="delete" size={20} color={"red"} />
+              Sil <Icon name="delete" size={20} color={"#FF7373"} />
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={{}}>
@@ -86,7 +86,7 @@ export default function Favorite() {
                 fontWeight: 400,
                 backgroundColor: "blue",
                 width: 100,
-
+                borderRadius: 5,
                 paddingLeft: 10,
                 paddingRight: 10,
                 paddingTop: 5,
@@ -104,23 +104,25 @@ export default function Favorite() {
   );
 }
 
-
-
 const styles = StyleSheet.create({
   cards: {
     display: "flex",
     flexDirection: "row",
     backgroundColor: "white",
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
+    borderWidth: 1,
+    borderColor: "#E6E7EC",
+    borderRadius: 5,
+    padding: 10,
+    // ...Platform.select({
+    //   ios: {
+    //     shadowColor: " #e6e6e6",
+    //     shadowOffset: { width: 1, height: 1 },
+    //     shadowOpacity: 0.1,
+    //     shadowRadius: 5,
+    //   },
+    //   android: {
+    //     elevation: 5,
+    //   },
+    // }),
   },
 });
