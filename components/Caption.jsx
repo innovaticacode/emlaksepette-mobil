@@ -86,20 +86,28 @@ export default function Caption() {
 }
 const styles=StyleSheet.create({
   card: {  
-    backgroundColor: 'white',  
-    borderRadius: 8,  
-    paddingVertical: 25,  
-    paddingHorizontal: 25,  
+        
+    backgroundColor: '#FFFFFF',  
+    borderRadius: 10,  
+    paddingVertical: 22,  
+    paddingHorizontal: 5,  
     width: '100%',  
     marginVertical: 10,  
-    height:'auto',
-    top:10
-  },  
-  shadowProp: {  
-    shadowOffset: {width: -2, height: 4},  
-    shadowColor: '#171717',  
-    shadowOpacity: 0.2,  
-    shadowRadius: 3,  
+    height:440,
+    borderWidth:0.7,
+    borderColor:'#e6e6e6',
+    ...Platform.select({
+        ios: {
+          shadowColor: ' #e6e6e6',
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+  
     
   },  
   Info: {

@@ -1,27 +1,30 @@
 import { View, Text ,ScrollView, StyleSheet} from 'react-native'
-import React from 'react'
+import {React} from 'react'
+import { useRoute } from '@react-navigation/native';
 import SettingsItem from './SettingsItem'
 import ShoppinInfo from './ShoppinInfo'
 
 export default function Settings() {
+  const route = useRoute();
+  const { itemId, otherParam ,konum} = route.params;
   return (
     <View style={{padding:8}}>
     <View style={[styles.card, styles.shadowProp]}>
-        <SettingsItem info='İlan No' numbers='0000000'/>
-        <SettingsItem info='Peşin Fiyat' numbers='2.500.000'/>
-        <SettingsItem info='Taksitli Toplam Fiyat' numbers='3.500.000'/>
-        <SettingsItem info='Peşinat' numbers='490.000'/>
-        <SettingsItem info='Taksit Sayısı' numbers='36'/>
-        <SettingsItem info='m2 (Brüt)' numbers='120'/>
-        <SettingsItem info='m2 (Net)' numbers='120'/>
-        <SettingsItem info='Oda Sayıs' numbers='3+1'/>
-        <SettingsItem info='Kat Sayısı' numbers='2'/>
-        <SettingsItem info='Isıtma Şömine' numbers='3.500.000'/>
-        <SettingsItem info='Tapı Durumu' numbers='Hisseli Tapu'/>
+        <SettingsItem info='İlan No:' numbers='00000000'/>
+        <SettingsItem info='Kullanım Durumu' numbers='Boş'/>
+        <SettingsItem info='m2 (Brüt:)' numbers='90'/>
+        <SettingsItem info='m2 (Net):' numbers='90'/>
+        <SettingsItem info='Bina Yaşı:' numbers='0'/>
+        <SettingsItem info='Isıtma:' numbers='Doğalgaz Sobası'/>
+        <SettingsItem info='Banyo Sayısı:' numbers='1'/>
+        <SettingsItem info='Eşyalı:' numbers='Hayır'/>
+        <SettingsItem info='Krediye Uygun:' numbers='Evet'/>
+        <SettingsItem info='Tapı Durumu:' numbers='Hisseli Tapu'/>
+        <SettingsItem info='Bahçe Metrekaresi:' numbers='100'/>
         <SettingsItem info='Eşyalı' numbers='Evet'/>
         <SettingsItem info='Banyo Sayısı' numbers='1'/>
         <SettingsItem info='Kullanım Durumu' numbers='Boş'/>
-       
+         
     </View>
     <View style={styles.Info}>
         <ShoppinInfo/>

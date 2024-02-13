@@ -20,7 +20,7 @@ export default function Info({text}) {
               />
         </View>
         <View>
-            <Text>{text}</Text>
+            <Text style={{fontSize:12}}>{text}</Text>
         </View>
     </View>
   )

@@ -1,26 +1,28 @@
 import { View, Text,StyleSheet } from 'react-native'
 import React from 'react'
 import SettingsItem from './SettingsItem'
-
+import { useRoute } from '@react-navigation/native';
 export default function Information() {
+  const route = useRoute();
+  const { itemId, otherParam ,konum} = route.params;
   return (
     <View style={{padding:8}}>
     <View style={[styles.card, styles.shadowProp]}>
-        <SettingsItem info='Proje Adı' numbers='Master Sonsuz Tatil Köyü'/>
+        <SettingsItem info='Proje Adı' numbers={otherParam}/>
         <SettingsItem info='Proje Durumu' numbers='Devam Eden Projeler'/>
-        <SettingsItem info='Taksitli Toplam Fiyat' numbers='3.500.000'/>
-        <SettingsItem info='Peşinat' numbers='490.000'/>
-        <SettingsItem info='Taksit Sayısı' numbers='36'/>
-        <SettingsItem info='m2 (Brüt)' numbers='120'/>
-        <SettingsItem info='m2 (Net)' numbers='120'/>
-        <SettingsItem info='Oda Sayıs' numbers='3+1'/>
-        <SettingsItem info='Kat Sayısı' numbers='2'/>
-        <SettingsItem info='Isıtma Şömine' numbers='3.500.000'/>
-        <SettingsItem info='Tapı Durumu' numbers='Hisseli Tapu'/>
+        <SettingsItem info='Mağaza' numbers='Maliyetine Ev'/>
+        <SettingsItem info='İl/İlçe/Mahalle' numbers='İstanbul/Kartal/Cevizli'/>
+        <SettingsItem info='Telefon' numbers='444444'/>
+        <SettingsItem info='E-Posta' numbers='fsdfsdf@fds.com'/>
+        <SettingsItem info='Konut Tipi' numbers='Villa'/>
+        <SettingsItem info='Toplam Konut Sayısı' numbers='50'/>
+        <SettingsItem info='Satışa Açık Konut Sayfası' numbers='50'/>
+        <SettingsItem info='Satılan Konut Sayısı' numbers='0'/>
+        <SettingsItem info='Satışa Kapalı İlan Sayısı' numbers='Hisseli Tapu'/>
         <SettingsItem info='Eşyalı' numbers='Evet'/>
         <SettingsItem info='Banyo Sayısı' numbers='1'/>
         <SettingsItem info='Kullanım Durumu' numbers='Boş'/>
-       
+
     </View>
    
        

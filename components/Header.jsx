@@ -24,12 +24,12 @@ export default function Header() {
         
         width:50,
         alignItems: 'center',
-        padding:6,
+      
         borderRadius:15
       }}
         onPress={()=>navigation.navigate('Login')}
       >
-       <Icon name='user' size={45}/>
+       <Icon name='user' size={50}/>
       </TouchableOpacity>
      </View>
      

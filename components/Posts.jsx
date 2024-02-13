@@ -1,288 +1,191 @@
-import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet, ImageBackground } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet ,Dimensions } from "react-native";
 import { React, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
-import Share from "react-native-vector-icons/Entypo"
 import Bookmark from "react-native-vector-icons/FontAwesome";
 import Info from "./Info";
 
-export default function Posts({ caption, price, ımage, odaSayısı, metre, katSayısı, location }) {
+export default function Posts({ caption, location, price, ımage ,metre,odaSayısı,katSayısı,No}) {
+  const navigation = useNavigation();
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
-  const navigation = useNavigation();
-  const changeColor = () => {
+  const changeHeart = () => {
     setHeart(heart === 'hearto' ? 'heart' : 'hearto');
 
   };
   const changeBookmark = () => {
     setbookmark(bookmark === 'bookmark-o' ? 'bookmark' : 'bookmark-o')
   }
-
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("Details")}>
+    <TouchableOpacity onPress={() => navigation.navigate("PostDetails", { caption: caption, location: location, price: price ,metre:metre,odaSayısı:odaSayısı,katSayısı:katSayısı})}>
       <View style={styles.container}>
-     
-        <View style={styles.post}>
         
-          <View style={styles.Image}>
-          <TouchableOpacity
-            onPress={changeColor}
-          style={{
-        position:'absolute',
-        zIndex:1,
-        right:2,
-        top:-5
-        
-      }}>
-          <View style={styles.IconContainer2}>
-            <Heart name={heart} size={18} color={heart=='hearto'? 'black':'red'} />
+        <View style={styles.İlan}>
+          <View style={{ width: '35%' }}>
+          <View style={{
+            position:'absolute',
+            zIndex:1,
+            left:0,
+            backgroundColor:'#EA2C2E',
+            padding:2
+            }}>
+          <Text style={{color:'white',fontWeight:'500'}}>No {No}</Text>
           </View>
-        </TouchableOpacity>
-
-            <ImageBackground source={ımage}
-              style={{ width: '100%', height: '100%' }}
-            />
+            <Image source={ımage}
+              style={{ width: '90%', height: '90%', }} />
           </View>
-          <View style={styles.CaptionAndButtons}>
-            <View style={styles.Caption}>
-              <Text style={{
-                fontSize: 12,
-                fontWeight: '400'
-
-
-              }}>{caption}</Text>
-            </View>
-            <View style={styles.buttons}>
-              <View style={styles.priceAndAddBasketDiv}>
-                <View style={styles.priceAndAddBasket}>
-
-
-                  <View style={styles.btnPrice}>
-                    <Text style={{
-                      color: '#274ABA',
-                      fontWeight: 700,
-                      fontSize: 13
-                    }}>{price}</Text>
-                  </View>
-
-                  <TouchableOpacity style={styles.btnbasket}>
-                    <Text style={{
-                      color: 'white',
-                      fontSize: 13,
-
-                    }} numberOfLines={1}>Sepete Ekle</Text>
-                  </TouchableOpacity>
-                </View>
-
+          <View style={styles.container2}>
+            <View style={styles.captionAndIcons}>
+              <View style={styles.caption}>
+                <Text style={{fontSize:12}}>{caption.substring(0, 40)}...</Text>
               </View>
-              <View style={styles.Icons}>
-                <TouchableOpacity>
-                  <View style={styles.IconContainer}>
-                    <Share name="share" size={18} />
-                  </View>
-                </TouchableOpacity>
+              <View style={styles.ıcons}>
                 <TouchableOpacity onPress={changeBookmark}>
-                  <View style={styles.IconContainer}>
-                    <Bookmark name={bookmark} size={18} color={bookmark=='bookmark-o'?'black':'red'}/>
+                  <View
+                    style={styles.ıconContainer}
+                  >
+                    <Bookmark name={bookmark} size={18} color={bookmark == 'bookmark-o' ? 'black' : 'red'} />
                   </View>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={changeHeart}>
+            <View
+              style={styles.ıconContainer}
+            >
+              <Heart name={heart} size={18} color={heart=='hearto'?'black':'red'} />
+            </View>
+          </TouchableOpacity>
               </View>
             </View>
-          </View>
-          <View style={styles.infotmationArea}>
-            <View style={{ display: 'flex', flexDirection: 'row', gap: 15, width: '50%' }}>
-              <Info text={metre} />
-              <Info text={odaSayısı} />
-              <Info text={katSayısı} />
+
+            <View style={styles.PriceAndButtons}>
+                <View><Text style={{color:'#264ABB',fontWeight:'600',fontSize:12}}>{price}</Text></View>
+                <View style={styles.btns}>
+                    <TouchableOpacity style={styles.addBasket}>
+                      <Text style={{color:'white',fontWeight:'500',fontSize:12}}>Sepete Ekle</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.PayDetailBtn}>
+                      <Text style={{fontWeight:'500',fontSize:12}}>Ödeme Detayı</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-            <View style={{ paddingRight: 10, width: '50%', alignItems: 'flex-end' }}>
-              <Text>{location}</Text>
-            </View>
-
-
-
           </View>
+
+
         </View>
+        <View style={{backgroundColor:'#E8E8E8',height:30,display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
+          <View style={{display:'flex',flexDirection:'row'}} >
+          <Info text={metre}/>
+          <Info text={odaSayısı}/>
+          <Info text={katSayısı}/>
+          </View>
+         <View style={{justifyContent:'center'}}>
+          <Text style={{fontSize:12}}>{location}</Text>
+         </View>
 
+        </View>
       </View>
     </TouchableOpacity>
   );
 }
+const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
+    height: 150,
+   
+    marginTop: 10,
+   
     display: 'flex',
     flexDirection: 'column',
-    width: '100%',
+    borderBottomWidth:1,
+    borderBottomColor:'#E5E5E5'
 
-    height: 129,
-    marginTop: 20,
-    paddingLeft: 7,
-    paddingRight: 7,
-
-    borderColor: '#e6e6e6',
-    ...Platform.select({
-      ios: {
-        shadowColor: ' #e6e6e6',
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
   },
-  post: {
-    width: '100%',
-    height: '90%',
-
+  İlan: {
+    padding: 5,
     display: 'flex',
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flex: 1,
+   
+    justifyContent: 'space-between'
+  },
+  container2: {
+    flex: 1,
+   
+    display: 'flex',
+    flexDirection: 'column',
 
   },
-  Image: {
-    width: '40%',
-    height: '100%',
-
-  },
-  Caption: {
-    width: '100%',
+  captionAndIcons: {
     height: '50%',
-
-    overflow: 'hidden'
-  },
-
-
-  infotmationArea: {
-    width: '100%',
-    height: 23,
-    backgroundColor: '#E8E8E8',
+    
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    bottom: 15
+
   },
-  CaptionAndButtons: {
+  PriceAndButtons: {
+    height: '50%',
+   
+    
+  },
+  caption: {
     width: '60%',
-    height: '100%',
-
-    paddingLeft: 8,
-    paddingRight: 8,
-    paddingTop: 8,
-    paddingBottom: 5
-
+   
   },
-  buttons: {
-    width: '100%',
-    height: '50%',
-
-    display: 'flex',
-    flexDirection: 'row-reverse',
-    bottom: 20
-
+  ıcons:{
+    display:'flex',
+    flexDirection:'row',
+      gap:width>400? 20:15,
+    alignItems:'center',
+    justifyContent:'center',
+    padding:width>400? 10:3
   },
-  Icons: {
-    width: '50%',
-    height: '100%',
-    top: 20,
-    display: 'flex',
-    flexDirection: 'row',
-    gap: 16
-
+  btns:{
+    display:'flex',
+    flexDirection:'row',
+   
   },
-  priceAndAddBasketDiv: {
-    width: '50%',
-    height: '100%',
-
-    alignItems: 'center',
-    justifyContent: 'center'
-
+  addBasket:{
+    width:'50%',
+    alignItems:'center',
+    backgroundColor:'#264ABB',
+    padding:6
   },
-  priceAndAddBasket: {
-    width: 94,
-    height: 40,
-
-
-
+  PayDetailBtn:{
+    width:'50%',
+    alignItems:'center',
+    backgroundColor:'transparent',
+    padding:6, 
+    borderWidth:0.5
   },
-  btnPrice: {
-    backgroundColor: '#DBDBDB',
-    alignItems: 'center',
-
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-    borderWidth: 2,
-    borderColor: '#DBDBDB',
-    padding: 5,
-    width: 100,
-    height: 30,
-    justifyContent: 'center',
-
-  },
-  btnbasket: {
-    backgroundColor: '#274ABA',
-    alignItems: 'center',
-
-    borderBottomRightRadius: 5,
-    borderBottomLeftRadius: 5,
-    width: 100,
-    height: 30,
-    padding: 5,
-    justifyContent: 'center',
-    borderColor: '#DBDBDB',
-
-
-  },
-  IconContainer: {
-    padding: 2,
-    backgroundColor: '#FFFFFF',
-    borderRadius: '50%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 30,
-    height: 30,
-    marginVertical: 8,
-
-    borderWidth: 0.7,
-    borderColor: '#e6e6e6',
-    ...Platform.select({
-      ios: {
-        shadowColor: ' #e6e6e6',
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-
-
-  },
-  IconContainer2:{
-    padding: 3,
-    backgroundColor: '#FFFFFF99',
-    borderRadius: '50%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 25,
-    height: 25,
-    marginVertical: 8,
-
-    borderWidth: 0.7,
-    borderColor: '#e6e6e6',
-    ...Platform.select({
-      ios: {
-        shadowColor: ' #e6e6e6',
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
+  ıconContainer:{
+    
+      width: 35,
+      height: 35,
+      alignItems: "center",
+      justifyContent: "center",
+      borderRadius: 20,
+      backgroundColor: '#FFFF',  
+     
+       
+   
+     
+      
+      borderColor:'#e6e6e6',
+      ...Platform.select({
+          ios: {
+            shadowColor: ' #e6e6e6',
+            shadowOffset: { width: 1, height: 1 },
+            shadowOpacity: 0.1,
+            shadowRadius: 5,
+          },
+          android: {
+            elevation: 5,
+          },
+        }),
+    
+      
+    
   }
 
 })

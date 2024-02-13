@@ -1,37 +1,39 @@
 import {
-  View,
-  Text,
-  ImageBackground,
-  SafeAreaView,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-
-  Button, Modal,
-} from "react-native";
-import { React, useRef, useState } from "react";
-import Icon from "react-native-vector-icons/AntDesign";
-import Caption from "../../components/Caption";
-import Settings from "../../components/Settings";
-import PagerView from 'react-native-pager-view';
-
-import Map from "../../components/Map";
-import Icon2 from 'react-native-vector-icons/Feather';
-import DetailsPicture from "../../components/DetailsPicture";
-import ShoppinInfo from "../../components/ShoppinInfo";
-
-import OtherHomeInProject from "../../components/OtherHomeInProject";
-import PaymentDetail from "../../components/PaymentDetail";
-import FloorPlan from "../../components/FloorPlan";
-import Information from "../../components/Information";
+    View,
+    Text,
+    ImageBackground,
+    SafeAreaView,
+    TouchableOpacity,
+    StyleSheet,
+    ScrollView,
+  
+    Button, Modal,
+  } from "react-native";
+  import { React, useRef, useState } from "react";
+  import Icon from "react-native-vector-icons/AntDesign";
 
 
-import { useRoute } from '@react-navigation/native';
-import Heart from "react-native-vector-icons/AntDesign";
-import Bookmark from "react-native-vector-icons/FontAwesome";
+  import PagerView from 'react-native-pager-view';
+  import { useRoute ,Dimensions } from '@react-navigation/native';
+  import Heart from "react-native-vector-icons/AntDesign";
+  import Bookmark from "react-native-vector-icons/FontAwesome";
+import OtherHomeInProject from "../components/OtherHomeInProject";
+import Information from "../components/Information";
+import Map from "../components/Map";
+import FloorPlan from "../components/FloorPlan";
+import Settings from "../components/Settings";
+import Caption from "../components/Caption";
+import DetailsPicture from "../components/DetailsPicture";
+import ShoppinInfo from "../components/ShoppinInfo";
+import Comment from "../components/Comment";
+import DetailsSettings from "../components/PostDetailsSettings/DetailsSettings";
+import PaymentDetail from "../components/PaymentDetail";
 
-export default function Details() {
-  const [tabs, setTabs] = useState(0);
+
+
+
+export default function PostDetail() {
+    const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
   const changeHeart = () => {
@@ -42,13 +44,49 @@ export default function Details() {
     setbookmark(bookmark==='bookmark-o' ? 'bookmark': 'bookmark-o')
   }
   const route = useRoute();
-  const {  otherParam ,konum} = route.params;
+  const {   konum ,caption,location,price} = route.params;
+ 
   return (
-      <View>
-     
+    
+    <SafeAreaView>
+      <View style={{
+    position:'absolute',
+    zIndex:1,
+    width:'100%',
+    height:'7%',
+  
+    bottom:30,
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-around',
+    paddingRight:20,
+    paddingLeft:20
+ }}>
+    <TouchableOpacity 
+   
+    style={{
+      width:'30%',
+      height:'80%',
+      backgroundColor:'#284ABB',
+    
+      justifyContent:'center'
+    }}>
+      <Text style={styles.btnText}>Ara</Text>
+    </TouchableOpacity>
+    <TouchableOpacity style={{
+      width:'35%',
+      height:'80%',
+      backgroundColor:'#284ABB',
+    
+      justifyContent:'center'
+    }}>
+      <Text style={styles.btnText}>Sepete Ekle</Text>
+    </TouchableOpacity>
+    
+ </View>
         
-    <ScrollView style={{ backgroundColor: 'white' }} indicatorStyle="white">
-      <View style={{ flex: 1, height:tabs===4 ?1100:1590 }}>
+    <ScrollView style={{ backgroundColor:'white' }} indicatorStyle="white">
+      <View style={{ flex: 1, height:tabs===3 ?1000: 1590 }}>
       <View
           style={{
             width: 50,
@@ -111,7 +149,7 @@ export default function Details() {
         <PagerView style={styles.viewPager} >
       
           <View style={styles.page} key="1">
-            <DetailsPicture />
+           <DetailsPicture/>
           </View>
           <View style={styles.page} key="2">
             <DetailsPicture />
@@ -135,14 +173,20 @@ export default function Details() {
           }}
         >
           <View
-            style={{ width: '100%', height: 40, gap: 10 }}
+            style={{ width: '100%', height: 80, gap: 20 }}
           >
            
             <View style={{ }}>
               <View style={{ width: '100%',paddingLeft:10,paddingRight:6 }}>
                 <Text style={{ fontSize: 16,  }}>
-                  {otherParam}
+                 {caption}
                 </Text>
+                <Text style={{
+                    fontSize:16,
+                    color:'#264ABB',
+                    fontWeight:'bold',
+                    top:10
+                }}>{price}</Text>
               </View>
             </View>
           
@@ -165,7 +209,7 @@ export default function Details() {
               >
 
             <View style={{width:'50%',paddingLeft:10,}}>
-              <Text style={styles.text}>{konum}</Text>
+              <Text style={styles.text}>{location}</Text>
             </View>
             <View style={{width:'50%',paddingRight:10, alignItems:'flex-end'}}>
               <Text style={styles.text} >İlan No:0000000</Text>
@@ -179,19 +223,20 @@ export default function Details() {
           <View
             style={{
               width: "100%",
-              height: 70,
+              height: 80,
 
               justifyContent: 'center',
-              top: 35,
-              bottom:10,
+              top: 40,
+             
 
               display: "flex",
               flexDirection: "row",
               gap: 5
             }}
           >
-            <ScrollView horizontal indicatorStyle="white" >
-              <View style={{width:800,display:'flex',flexDirection:'row',gap:5,marginLeft:10,marginRight:-130}}>
+            <ScrollView horizontal indicatorStyle="white" style={{marginLeft:-20,marginRight:-20,top:10}}>
+              <View style={{width:800,display:'flex',flexDirection:'row',gap:5,justifyContent:'center'}}>
+         
             <TouchableOpacity
               onPress={() => setTabs(0)}
               style={{
@@ -202,8 +247,11 @@ export default function Details() {
                 height: 40
               }}
             >
-              <Text  style={{ color: tabs === 0 ? "white" : "black",fontSize:12 }}>Projedeki Konutlar</Text>
+              <Text  style={{ color: tabs === 0 ? "white" : "black" }}>Özellikler</Text>
             </TouchableOpacity>
+
+            
+
             <TouchableOpacity
               onPress={() => setTabs(1)}
               style={{
@@ -214,13 +262,12 @@ export default function Details() {
                 height: 40
               }}
             >
-              <Text  style={{ color: tabs === 1 ? "white" : "black",fontSize:12  }}>Açıklama</Text>
+              <Text  style={{ color: tabs === 1 ? "white" : "black" }}>Açıklama</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               onPress={() => setTabs(2)}
               style={{
-                width: '10%',
+                width: '15%',
                 backgroundColor: tabs === 2 ? "#ea2a28" : "#EFEFEF",
                 alignItems: "center",
                 justifyContent: 'center',
@@ -228,9 +275,8 @@ export default function Details() {
 
               }}
             >
-              <Text  style={{ color: tabs === 2? "white" : "black",fontSize:12  }}>Genel Bilgi</Text>
+              <Text style={{ color: tabs === 2? "white" : "black" }}>Ödeme Planı</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
               onPress={() => setTabs(3)}
               style={{
@@ -239,14 +285,15 @@ export default function Details() {
                 alignItems: "center",
                 justifyContent: 'center',
                 height: 40
+
               }}
             >
-              <Text  style={{ color: tabs === 3 ? "white" : "black" ,fontSize:12 }}>Özellikler</Text>
+              <Text style={{ color: tabs === 3 ? "white" : "black" }}>Harita</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setTabs(4)}
               style={{
-                width: '10%',
+                width: '15%',
                 backgroundColor: tabs === 4 ? "#ea2a28" : "#EFEFEF",
                 alignItems: "center",
                 justifyContent: 'center',
@@ -254,20 +301,20 @@ export default function Details() {
 
               }}
             >
-              <Text style={{ color: tabs === 4 ? "white" : "black" ,fontSize:12 }}>Harita</Text>
+              <Text style={{ color: tabs === 4? "white" : "black" }}>Vaziyet&Kat Planı</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setTabs(5)}
               style={{
-                width: '14%',
-                backgroundColor: tabs ===5? "#ea2a28" : "#EFEFEF",
+                width: '15%',
+                backgroundColor: tabs === 5 ? "#ea2a28" : "#EFEFEF",
                 alignItems: "center",
                 justifyContent: 'center',
                 height: 40
 
               }}
             >
-              <Text style={{ color: tabs === 5? "white" : "black",fontSize:12  }}>Vaziyet&Kat planı</Text>
+              <Text style={{ color: tabs === 5? "white" : "black" }}>Yorumlar</Text>
             </TouchableOpacity>
         
             </View>
@@ -275,16 +322,17 @@ export default function Details() {
           </View>
        
           <View style={{ width: '100%', height:tabs===4 ?700:740}}>
-            {tabs === 0 && <OtherHomeInProject/>}
+            {tabs === 0 && <DetailsSettings/>}
             {tabs === 1 && <Caption/>}
-            {tabs === 2 && <Information/>}
-            {tabs === 3 && <Settings/> }
-            {tabs === 4 && <Map/>}
-            {tabs===5&& <FloorPlan/>}
+            {tabs === 2 && <PaymentDetail/>}
+            {tabs === 3 && <Map/>}
+            {tabs === 4 && <FloorPlan/>}
+            {tabs === 5 && <Comment/>}
+           
           </View>
           <View style={styles.Info}>
-          <ShoppinInfo flex={  tabs===3? 'none':'flex'} bottom={tabs ===2 ?120:0} />
-      
+          <ShoppinInfo flex={  tabs===0? 'none':'flex' && tabs===3?'none':'flex'} bottom={tabs ===2 ?400:0} />
+              
           </View>
          
         </View>
@@ -293,50 +341,51 @@ export default function Details() {
 
     </ScrollView>
   
-    </View>
-
-  );
+    </SafeAreaView>
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    height: 50,
-    backgroundColor: '#ecf0f1', // Top bar background color
-  },
-  segment: {
-    flex: 1,
-    padding: 10,
-    alignItems: 'center',
-  },
-  selectedSegment: {
-    backgroundColor: '#3498db', // Selected segment color
-  },
-  segmentText: {
-    color: '#2c3e50', // Segment text color
-  },
-  viewPager: {
-    height: 250
-  },
-  Info: {
-    
-    width: '100%',
-    top: 20,
-    height: 240
-  },
-  text:{
-    fontSize:11,
-    fontWeight:'500',
-    fontFamily:'Verdana',
-    color:'grey'
-  },
-  btnText:{
-    fontSize:20,
-    textAlign:'center',
-    color:'white',
-    fontWeight:'400',
-    letterSpacing:1
-  }
-});
+    container: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      height: 50,
+      backgroundColor: '#ecf0f1', // Top bar background color
+    },
+    segment: {
+      flex: 1,
+      padding: 10,
+      alignItems: 'center',
+    },
+    selectedSegment: {
+      backgroundColor: '#3498db', // Selected segment color
+    },
+    segmentText: {
+      color: '#2c3e50', // Segment text color
+    },
+    viewPager: {
+      height: 250
+    },
+    Info: {
+      
+      width: '100%',
+      top: 20,
+      height: 240
+    },
+    text:{
+      fontSize:11,
+      fontWeight:'500',
+      fontFamily:'Verdana',
+      color:'grey'
+    },
+    btnText:{
+      fontSize:15,
+      textAlign:'center',
+      color:'white',
+      fontWeight:'400',
+      letterSpacing:1
+    }
+  });
+
+{/* */}

@@ -5,6 +5,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import PagerView from 'react-native-pager-view';
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
+
 export default function DetailsPicture() {
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
@@ -15,15 +16,17 @@ export default function DetailsPicture() {
   const changeBookmark=()=>{
     setbookmark(bookmark==='bookmark-o' ? 'bookmark': 'bookmark-o')
   }
+
+ 
   return (
     <View
-        style={{ width: "100%", height: 250, borderRadius: 20, padding: 5}}
+        style={{ width: "100%", height: 250, borderRadius: 20, padding: 1}}
       >
         <ImageBackground
           source={require('./images/home.jpg')}
           style={{ width: "100%", height: "100%" }}
           resizeMode="cover"
-          imageStyle={{ borderRadius: 20 }}
+          imageStyle={{ borderRadius: 0, borderBottomLeftRadius:20,borderBottomRightRadius:20 }}
         />
         {/* <View
           style={{

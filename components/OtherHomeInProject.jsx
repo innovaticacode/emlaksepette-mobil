@@ -6,6 +6,7 @@ export default function OtherHomeInProject() {
     const [tabs, setTabs] = useState(0);
     return (
         <SafeAreaView>
+            <View style={{alignItems:'center',padding:10}}>
             <View style={styles.container}>
                 <View style={styles.tabBar}>
                     <TouchableOpacity
@@ -18,7 +19,7 @@ export default function OtherHomeInProject() {
                             justifyContent: 'center',
                         }}>
                         <Text style={{
-                            fontSize: 16,
+                            fontSize: 12,
                             color:tabs===0? 'white':'black'
                         }}>A BLOK</Text>
                     </TouchableOpacity>
@@ -33,7 +34,7 @@ export default function OtherHomeInProject() {
                             justifyContent: 'center',
                         }}>
                         <Text style={{
-                            fontSize: 16,
+                            fontSize: 12,
                             color:tabs===1? 'white':'black'
                         }}>B BLOK</Text>
                     </TouchableOpacity>
@@ -43,20 +44,45 @@ export default function OtherHomeInProject() {
                 {tabs === 1 && <Bblok />}
 
             </View>
+            </View>
         </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
-        height: '100%',
+        
+        
+        padding:10,
+        top: 5,
+     
+        backgroundColor: '#FFFFFF',  
+      
+         marginTop:10,
+        
+       
+       
+        width: '100%',  
+        
+        height:'100%',
+        borderWidth:0.7,
+        borderColor:'#e6e6e6',
+        ...Platform.select({
+            ios: {
+              shadowColor: ' #e6e6e6',
+              shadowOffset: { width: 1, height: 1 },
+              shadowOpacity: 0.1,
+              shadowRadius: 5,
+            },
+            android: {
+              elevation: 5,
+            },
+          }),
 
-        top: 5
     },
     tabBar: {
         width: '100%',
-        height: '8%',
-        padding: 5,
+        height: '6%',
+        
         top: 5,
         display: 'flex',
         flexDirection: 'row',
