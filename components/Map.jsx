@@ -24,7 +24,7 @@ export default function Map() {
 
   return (
   
-    <View style={{flex:1,top:20}}>   
+    <View style={{flex:1,top:14,padding:10}}>   
     <MapView
   initialRegion={{
     latitude: 40.909087177287915,

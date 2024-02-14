@@ -4,8 +4,8 @@ import ShoppinInfo from './ShoppinInfo'
 
 export default function Caption() {
   return (
-    <View>
-    <ScrollView style={[styles.card, styles.shadowProp]}>
+    <View style={{paddingLeft:10,paddingRight:10}}>
+    <ScrollView style={[styles.card, styles.shadowProp]} indicatorStyle='white'>
       <View>
         <Text>
           ORMAN VE DOĞANIN İÇİNDE NEFES ALACAKSINIZ
@@ -86,14 +86,15 @@ export default function Caption() {
 }
 const styles=StyleSheet.create({
   card: {  
+        top:14,
         
     backgroundColor: '#FFFFFF',  
-    borderRadius: 10,  
-    paddingVertical: 22,  
-    paddingHorizontal: 5,  
+    
+     paddingTop:10,
+    paddingHorizontal: 15,  
     width: '100%',  
     marginVertical: 10,  
-    height:440,
+  
     borderWidth:0.7,
     borderColor:'#e6e6e6',
     ...Platform.select({

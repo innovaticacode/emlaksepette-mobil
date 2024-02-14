@@ -234,7 +234,7 @@ export default function PostDetail() {
               gap: 5
             }}
           >
-            <ScrollView horizontal indicatorStyle="white" style={{marginLeft:-20,marginRight:-20,top:10}}>
+            <ScrollView horizontal indicatorStyle="white" style={{marginLeft:-20,marginRight:-14,top:10}}>
               <View style={{width:800,display:'flex',flexDirection:'row',gap:5,justifyContent:'center'}}>
          
             <TouchableOpacity
@@ -331,7 +331,7 @@ export default function PostDetail() {
            
           </View>
           <View style={styles.Info}>
-          <ShoppinInfo flex={  tabs===0? 'none':'flex' && tabs===3?'none':'flex'} bottom={tabs ===2 ?400:0} />
+          <ShoppinInfo flex={  tabs===0? 'none':'flex' && tabs===3?'none':'flex'} bottom={tabs ===2 ?350:0} />
               
           </View>
          

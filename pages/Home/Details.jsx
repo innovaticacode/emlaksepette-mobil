@@ -183,7 +183,7 @@ export default function Details() {
 
               justifyContent: 'center',
               top: 35,
-              bottom:10,
+             
 
               display: "flex",
               flexDirection: "row",

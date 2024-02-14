@@ -31,25 +31,31 @@ export default function Information() {
 }
 
 const styles=StyleSheet.create({
-    card: {  
-      backgroundColor: '#FFFFFF',   
-      paddingVertical: 20,  
-      paddingHorizontal: 10,  
-      width: '100%',  
-      marginVertical: 10,  
-      height:'auto',
-      borderWidth:0.7,
-      borderColor:'grey',
-     top:20
+  card: {  
+      top:6,
+    backgroundColor: '#FFFFFF',  
+ 
+    paddingVertical: 22,  
+    paddingHorizontal: 5,  
+    width: '100%',  
+    marginVertical: 10,  
+    height:340,
+    borderWidth:0.7,
+    borderColor:'#e6e6e6',
+    ...Platform.select({
+        ios: {
+          shadowColor: ' #e6e6e6',
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+  
     
-      
-    },  
-    shadowProp: {  
-      shadowOffset: {width: -1, height: 1},  
-      shadowColor: 'grey',  
-      shadowOpacity: 0.1,  
-      shadowRadius: 1,  
-    },
+  },
     Info: {
       
       width: '100%',
