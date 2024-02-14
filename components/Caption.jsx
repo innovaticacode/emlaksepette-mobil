@@ -4,8 +4,8 @@ import ShoppinInfo from './ShoppinInfo'
 
 export default function Caption() {
   return (
-    <View>
-    <ScrollView style={[styles.card, styles.shadowProp]}>
+    <View style={{paddingLeft:10,paddingRight:10}}>
+    <ScrollView style={[styles.card, styles.shadowProp]} indicatorStyle='white'>
       <View>
         <Text>
           ORMAN VE DOĞANIN İÇİNDE NEFES ALACAKSINIZ
@@ -86,20 +86,29 @@ export default function Caption() {
 }
 const styles=StyleSheet.create({
   card: {  
-    backgroundColor: 'white',  
-    borderRadius: 8,  
-    paddingVertical: 25,  
-    paddingHorizontal: 25,  
+        top:14,
+        
+    backgroundColor: '#FFFFFF',  
+    
+     paddingTop:10,
+    paddingHorizontal: 15,  
     width: '100%',  
     marginVertical: 10,  
-    height:'auto',
-    top:10
-  },  
-  shadowProp: {  
-    shadowOffset: {width: -2, height: 4},  
-    shadowColor: '#171717',  
-    shadowOpacity: 0.2,  
-    shadowRadius: 3,  
+  
+    borderWidth:0.7,
+    borderColor:'#e6e6e6',
+    ...Platform.select({
+        ios: {
+          shadowColor: ' #e6e6e6',
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+  
     
   },  
   Info: {

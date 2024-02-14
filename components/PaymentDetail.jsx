@@ -4,6 +4,7 @@ import PaymentItem from './PaymentItem'
 
 export default function PaymentDetail() {
   return (
+    <View style={{padding:10}}>
     <View style={styles.container}>
       <View style={styles.PaymentPlan}>
         <PaymentItem header='Peşin Fiyat:' price='3.500.400' align='center' top='7'/>
@@ -16,6 +17,7 @@ export default function PaymentDetail() {
 
       </View>
     </View>
+    </View>
   )
 
 }
@@ -23,13 +25,34 @@ const styles=StyleSheet.create({
     container:{
         width:'100%',
         height:'100%',
+       
+        top:5,
+        backgroundColor: '#FFFFFF',  
+     
         
-        top:15
+        width: '100%',  
+        marginVertical: 10,  
+        height:450,
+        borderWidth:0.7,
+        borderColor:'#e6e6e6',
+        ...Platform.select({
+            ios: {
+              shadowColor: ' #e6e6e6',
+              shadowOffset: { width: 1, height: 1 },
+              shadowOpacity: 0.1,
+              shadowRadius: 5,
+            },
+            android: {
+              elevation: 5,
+            },
+          }),
+
     },
     PaymentPlan:{
       width:'100%',
       height:'25%',
       gap:3,
+      padding:15
     
     }
 })

@@ -6,9 +6,8 @@ export default function PaymentItem({header,price,dFlex,date,align,top}) {
     <View style={{
         width:'100%',
         
-     
-       borderTopWidth:1,
-        borderTopColor:'black',
+           borderBottomWidth:1,
+       borderBottomColor:'#EBEBEB',
         justifyContent:'center',
       padding:4
 

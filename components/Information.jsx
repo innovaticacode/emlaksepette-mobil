@@ -1,55 +1,61 @@
-import { View, Text } from 'react-native'
+import { View, Text,StyleSheet } from 'react-native'
 import React from 'react'
-
+import SettingsItem from './SettingsItem'
+import { useRoute } from '@react-navigation/native';
 export default function Information() {
+  const route = useRoute();
+  const { itemId, otherParam ,konum} = route.params;
   return (
     <View style={{padding:8}}>
     <View style={[styles.card, styles.shadowProp]}>
-        <SettingsItem info='İlan No' numbers='0000000'/>
-        <SettingsItem info='Peşin Fiyat' numbers='2.500.000'/>
-        <SettingsItem info='Taksitli Toplam Fiyat' numbers='3.500.000'/>
-        <SettingsItem info='Peşinat' numbers='490.000'/>
-        <SettingsItem info='Taksit Sayısı' numbers='36'/>
-        <SettingsItem info='m2 (Brüt)' numbers='120'/>
-        <SettingsItem info='m2 (Net)' numbers='120'/>
-        <SettingsItem info='Oda Sayıs' numbers='3+1'/>
-        <SettingsItem info='Kat Sayısı' numbers='2'/>
-        <SettingsItem info='Isıtma Şömine' numbers='3.500.000'/>
-        <SettingsItem info='Tapı Durumu' numbers='Hisseli Tapu'/>
+        <SettingsItem info='Proje Adı' numbers={otherParam}/>
+        <SettingsItem info='Proje Durumu' numbers='Devam Eden Projeler'/>
+        <SettingsItem info='Mağaza' numbers='Maliyetine Ev'/>
+        <SettingsItem info='İl/İlçe/Mahalle' numbers='İstanbul/Kartal/Cevizli'/>
+        <SettingsItem info='Telefon' numbers='444444'/>
+        <SettingsItem info='E-Posta' numbers='fsdfsdf@fds.com'/>
+        <SettingsItem info='Konut Tipi' numbers='Villa'/>
+        <SettingsItem info='Toplam Konut Sayısı' numbers='50'/>
+        <SettingsItem info='Satışa Açık Konut Sayfası' numbers='50'/>
+        <SettingsItem info='Satılan Konut Sayısı' numbers='0'/>
+        <SettingsItem info='Satışa Kapalı İlan Sayısı' numbers='Hisseli Tapu'/>
         <SettingsItem info='Eşyalı' numbers='Evet'/>
         <SettingsItem info='Banyo Sayısı' numbers='1'/>
         <SettingsItem info='Kullanım Durumu' numbers='Boş'/>
-       
+
     </View>
-    <View style={styles.Info}>
-        <ShoppinInfo/>
-        </View>
+   
        
     </View>
   )
 }
 
 const styles=StyleSheet.create({
-    card: {  
-      backgroundColor: '#FFFFFF',  
-      
-      paddingVertical: 20,  
-      paddingHorizontal: 10,  
-      width: '100%',  
-      marginVertical: 10,  
-      height:'auto',
-      borderWidth:0.7,
-      borderColor:'grey',
-     top:20
+  card: {  
+      top:6,
+    backgroundColor: '#FFFFFF',  
+ 
+    paddingVertical: 22,  
+    paddingHorizontal: 5,  
+    width: '100%',  
+    marginVertical: 10,  
+    height:340,
+    borderWidth:0.7,
+    borderColor:'#e6e6e6',
+    ...Platform.select({
+        ios: {
+          shadowColor: ' #e6e6e6',
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+  
     
-      
-    },  
-    shadowProp: {  
-      shadowOffset: {width: -1, height: 1},  
-      shadowColor: 'grey',  
-      shadowOpacity: 0.1,  
-      shadowRadius: 1,  
-    },
+  },
     Info: {
       
       width: '100%',
