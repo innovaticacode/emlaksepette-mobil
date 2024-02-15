@@ -1,23 +1,25 @@
-import { View, Text, StyleSheet, ImageBackground } from 'react-native'
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native'
 import React from 'react'
 import SliderItem from './SliderItem'
 import SettingsItem from './SettingsItem'
-
-export default function ShoppinInfo({flex,bottom}) {
+import { useNavigation } from '@react-navigation/native'
+export default function ShoppinInfo({flex,bottom,top}) {
+    const navigation=useNavigation()
     return (
-        <View style={{padding:6,display:flex}}>
+        <TouchableOpacity onPress={()=>navigation.navigate('ShopProfile')}>
+        <View style={{padding:0,display:flex,}}>
 
-        <View style={[styles.card, styles.shadowProp, {bottom:bottom}]}>
+        <View style={[styles.card, styles.shadowProp, {bottom:bottom},{top:0}]}>
             <Text style={{
-                fontSize: 20,
+                fontSize: 12,
                 bottom:5,
                 left:10
             }}>Mağaza Bilgileri</Text>
              
             <View style={styles.InfoView}>
                 <View style={{
-                    width: 85,
-                    height: 85,
+                    width: 70,
+                    height: 70,
                     borderRadius: 30,
                     margin: 6,
                     bottom:4
@@ -31,13 +33,13 @@ export default function ShoppinInfo({flex,bottom}) {
 
                     }} />
                 </View>
-                <View style={{ width:'100%' }}>
+                <View style={{ width:'100%', left:10}}>
                     <Text style={{
-                        fontSize: 15,
+                        fontSize: 12,
                         color: '#222222'
                     }}>Master Realtor Apex Gayrimenkul</Text>
                     <Text style={{
-                        fontSize: 13,
+                        fontSize: 11,
                         color: '#666666'
                     }}
                     >Gayrimenkul Ofisi</Text>
@@ -53,6 +55,7 @@ export default function ShoppinInfo({flex,bottom}) {
             </View>
         </View>
         </View>
+        </TouchableOpacity>
     )
 }
 const styles = StyleSheet.create({
@@ -69,7 +72,7 @@ const styles = StyleSheet.create({
     card: {  
         
         backgroundColor: '#FFFFFF',  
-        borderRadius: 10,  
+        
         paddingVertical: 22,  
         paddingHorizontal: 5,  
         width: '100%',  

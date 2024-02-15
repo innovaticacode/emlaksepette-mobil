@@ -7,14 +7,31 @@ import {
   FlatList
 
 } from 'react-native';
-
-import { useState } from 'react';
+import axios from 'axios';
+import { useState,useEffect } from 'react';
 import Posts from '../../components/Posts';
 import SliderBar from '../../components/SliderBar';
 import Header from '../../components/Header';
 import ProjectPost from '../../components/ProjectPost';
 
 export default function App() {
+  const apiUrl='https://emlaksepette.com/'
+  const [featuredProjects, setFeaturedProjects] = useState([]);
+
+  const fetchFeaturedProjects = async () => {
+    try {
+      const response = await axios.get('https://emlaksepette.com/api/featured-projects');
+      
+      setFeaturedProjects(response);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+   fetchFeaturedProjects()
+   console.log(featuredProjects)
+  }, []);
 
   const Home = [
     {
@@ -139,8 +156,8 @@ export default function App() {
           
         </ScrollView> */}
         <FlatList
-  data={Home}
-  renderItem={({ item }) =>  <ProjectPost key={item.id} caption={item.Acıklama} ımage={item.resim} location={item.konum} blok={item.blok}/>}
+  data={featuredProjects}
+  renderItem={({ item }) =>  <ProjectPost key={item.id} caption={item.description}/>}
    scrollEnabled={false}
 />
        

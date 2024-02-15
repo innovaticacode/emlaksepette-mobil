@@ -29,7 +29,7 @@ const Home = () => {
         tabBarStyle: {
           backgroundColor: "white",
           padding: 6,
-          height: 80,
+          height: '9%',
         },
       }}
     >

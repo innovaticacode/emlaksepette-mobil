@@ -1,11 +1,11 @@
 import { View, Text ,StyleSheet,ScrollView} from 'react-native'
 import React from 'react'
-import ShoppinInfo from './ShoppinInfo'
+import ShoppinInfo from '../ShoppinInfo'
 
-export default function Caption() {
+
+export default function PostCaption() {
   return (
-    
-    <View style={{paddingLeft:10,paddingRight:10}}>
+    <View style={{paddingLeft:8,paddingRight:8}}>
     <ScrollView style={[styles.card, styles.shadowProp]} indicatorStyle='white'>
       <View>
         <Text>
@@ -86,18 +86,17 @@ export default function Caption() {
         
         </View>
     </View>
-   
   )
 }
 const styles=StyleSheet.create({
   card: {  
-        top:1,
+        top:-14,
         
     backgroundColor: '#FFFFFF',  
     
      paddingTop:10,
-    paddingHorizontal: 15,  
-    width: '100%',  
+    paddingHorizontal: 12,  
+    height:'auto',  
     marginVertical: 10,  
   
     borderWidth:0.7,
@@ -117,9 +116,7 @@ const styles=StyleSheet.create({
     
   },  
   Info: {
-
-    width: '100%',
-   
-  
+        bottom:19
+    
   }
 })

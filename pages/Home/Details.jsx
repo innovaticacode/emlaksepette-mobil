@@ -48,7 +48,9 @@ export default function Details() {
      
         
     <ScrollView style={{ backgroundColor: 'white' }} indicatorStyle="white">
-      <View style={{ flex: 1, height:tabs===4 ?1100:1590 }}>
+      <View style={{ flex: 1, height:tabs===4 ?1000:1590 && tabs===3 ?1370:1590 && tabs===2?1360:1590 && tabs===1?1580:1490 && tabs===0 ? 1600:1590
+      && tabs===5 ? 'auto':1500
+      }}>
       <View
           style={{
             width: 50,
@@ -139,21 +141,24 @@ export default function Details() {
           >
            
             <View style={{ }}>
-              <View style={{ width: '100%',paddingLeft:10,paddingRight:6 }}>
-                <Text style={{ fontSize: 16,  }}>
+            <View style={{width:'100%',paddingLeft:10, alignItems:'center',top:3}}>
+              <Text style={styles.text}>{konum}</Text>
+            </View>
+              <View style={{ width: '100%',paddingLeft:10,paddingRight:6 ,top:15}}>
+                <Text style={{ fontSize: 17, textAlign:'center', color:'#264ABB' }}>
                   {otherParam}
                 </Text>
               </View>
             </View>
           
-            <View
+            {/* <View
               style={{
                 backgroundColor: "grey",
                 width: "100%",
                 height: 0.4,
                 bottom: 5,
               }}
-            ></View>
+            ></View> */}
 
             <View style={{
               width:'100%',
@@ -163,13 +168,13 @@ export default function Details() {
               bottom:7
             }}
               >
-
+{/* 
             <View style={{width:'50%',paddingLeft:10,}}>
               <Text style={styles.text}>{konum}</Text>
-            </View>
-            <View style={{width:'50%',paddingRight:10, alignItems:'flex-end'}}>
+            </View> */}
+            {/* <View style={{width:'50%',paddingRight:10, alignItems:'flex-end'}}>
               <Text style={styles.text} >İlan No:0000000</Text>
-            </View>
+            </View> */}
            
             </View>
     
@@ -191,7 +196,7 @@ export default function Details() {
             }}
           >
             <ScrollView horizontal indicatorStyle="white" >
-              <View style={{width:800,display:'flex',flexDirection:'row',gap:5,marginLeft:10,marginRight:-130}}>
+              <View style={{width:800,display:'flex',flexDirection:'row',gap:5,marginLeft:10,marginRight:-90}}>
             <TouchableOpacity
               onPress={() => setTabs(0)}
               style={{
@@ -202,7 +207,7 @@ export default function Details() {
                 height: 40
               }}
             >
-              <Text  style={{ color: tabs === 0 ? "white" : "black",fontSize:12 }}>Projedeki Konutlar</Text>
+              <Text  style={{ color: tabs === 0 ? "white" : "black",fontSize:12 }}>Projedeki İlanlar</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setTabs(1)}
@@ -220,7 +225,7 @@ export default function Details() {
             <TouchableOpacity
               onPress={() => setTabs(2)}
               style={{
-                width: '10%',
+                width: '15%',
                 backgroundColor: tabs === 2 ? "#ea2a28" : "#EFEFEF",
                 alignItems: "center",
                 justifyContent: 'center',
@@ -259,7 +264,7 @@ export default function Details() {
             <TouchableOpacity
               onPress={() => setTabs(5)}
               style={{
-                width: '14%',
+                width: '15%',
                 backgroundColor: tabs ===5? "#ea2a28" : "#EFEFEF",
                 alignItems: "center",
                 justifyContent: 'center',
@@ -267,7 +272,7 @@ export default function Details() {
 
               }}
             >
-              <Text style={{ color: tabs === 5? "white" : "black",fontSize:12  }}>Vaziyet&Kat planı</Text>
+              <Text style={{ color: tabs === 5? "white" : "black",fontSize:12  }}>Vaziyet & Kat Planı</Text>
             </TouchableOpacity>
         
             </View>
@@ -282,10 +287,10 @@ export default function Details() {
             {tabs === 4 && <Map/>}
             {tabs===5&& <FloorPlan/>}
           </View>
-          <View style={styles.Info}>
-          <ShoppinInfo flex={  tabs===3? 'none':'flex'} bottom={tabs ===2 ?120:0} />
+           {/* <View style={styles.Info}>
+          <ShoppinInfo flex={  tabs===0? 'none':'flex'}  />
       
-          </View>
+          </View>  */}
          
         </View>
       
@@ -328,7 +333,7 @@ const styles = StyleSheet.create({
   },
   text:{
     fontSize:11,
-    fontWeight:'500',
+    fontWeight:'300',
     fontFamily:'Verdana',
     color:'grey'
   },

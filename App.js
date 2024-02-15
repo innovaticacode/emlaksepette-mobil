@@ -9,6 +9,9 @@ import Details from './pages/Home/Details';
 import Login from './pages/Home/Login&Register/Login';
 import Register from './pages/Home/Login&Register/Register';
 import PostDetail from './pages/PostDetail';
+import Profile from './pages/Home/Profile';
+import ShoppingProfile from './pages/Home/ShoppingProfile';
+import RealtorDetails from './pages/Home/RealtorPages/RealtorDetails';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -35,6 +38,17 @@ export default function App() {
   }} />
    <Stack.Screen name="Register"  component={Register}options={{
     headerShown:false
+  }} />
+    <Stack.Screen name="Profile"  component={Profile}options={{
+      title:'Profil'
+  }} />
+    <Stack.Screen name="ShopProfile"  component={ShoppingProfile}options={{
+        title:'Mağaza Profili'
+   
+  }} />
+    <Stack.Screen name="Realtor details"  component={RealtorDetails}options={{
+        title:'Emlak İlanı'
+   
   }} />
    
 </Stack.Navigator>

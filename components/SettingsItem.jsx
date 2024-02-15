@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-export default function SettingsItem({info,numbers}) {
+export default function SettingsItem({info,numbers,border,color,bold}) {
   return (
     <View
       style={{
@@ -12,16 +12,16 @@ export default function SettingsItem({info,numbers}) {
         flexDirection: "row",
         justifyContent: "space-between",
         padding:10,
-        borderBottomWidth:0.3,
-       borderColor:'black'
+        borderBottomWidth:border==='0'? 0 : 1,
+       borderColor:'#EBEBEB'
        
       }}
     >
       <View style={{justifyContent:'center'}}>
-        <Text>{info}</Text>
+        <Text style={{fontSize:11,}}>{info}</Text>
       </View>
       <View style={{justifyContent:'center'}}>
-        <Text>{numbers}</Text>
+        <Text style={{fontSize:11,color: color==='#264ABB'? '#264ABB':'black',fontWeight:bold==='bold'? 'bold':'normal'}}>{numbers}</Text>
       
       </View>
       

@@ -3,6 +3,7 @@ import React from 'react'
 import { useNavigation } from "@react-navigation/native";
 export default function ProjectPost({caption,ımage,location}) {
     const navigation = useNavigation();
+   
   return (
     <TouchableOpacity style={{marginTop:10}} onPress={() =>  navigation.navigate('Details', { 
        otherParam: caption,

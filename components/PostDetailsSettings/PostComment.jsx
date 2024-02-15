@@ -2,10 +2,12 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, ScrollVi
 import React, { useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { TouchableWithoutFeedback, Keyboard, } from 'react-native'
-import CommentItem from './CommentItem'
+
 import UploadIcon from 'react-native-vector-icons/AntDesign'
 import { CheckBox } from '@rneui/themed';
-export default function Comment() {
+import CommentItem from '../CommentItem'
+import ShoppinInfo from '../ShoppinInfo'
+export default function PostComment() {
   
   const [checked, setChecked] = React.useState(false);
   const toggleCheckbox = () => setChecked(!checked);
@@ -45,7 +47,9 @@ export default function Comment() {
 
 
   return (
-    
+    <View style={{ width: '100%',
+    height: '100%',
+    top: 5,}}>
     <View style={styles.container} onTouchMove={()=>Keyboard.dismiss()}>
       <View style={styles.commentArea}>
         <View style={styles.card}>
@@ -70,7 +74,7 @@ export default function Comment() {
                 ))
               }
             
-             
+          
             </View>
 
           </ScrollView>
@@ -166,8 +170,13 @@ export default function Comment() {
           </TouchableOpacity>
         </View>
       </View>
+      
     </View>
-   
+    <View style={{bottom:18}}>
+      <ShoppinInfo/>
+        
+        </View>
+    </View>
   )
 }
 const styles = StyleSheet.create({
@@ -175,7 +184,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
-    top: 5,
+    top: -17,
  
     alignItems: 'center'
   },

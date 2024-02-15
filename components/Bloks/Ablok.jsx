@@ -1,6 +1,7 @@
 import { View, Text,ScrollView } from 'react-native'
 import React from 'react'
 import Posts from '../Posts'
+import ShoppinInfo from '../ShoppinInfo'
 
 export default function Ablok() {
   const Home = [
@@ -67,10 +68,21 @@ export default function Ablok() {
       katsayısı: `${8} Katlı`,
       id: 6,
       blok:'A'
+    },
+    {
+      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
+      fiyat: '6.150.000 ₺',
+      resim: require('../images/home.jpg'),
+      konum: 'İstanbul / Beyoğlu / Çukurcuma',
+      metre: '60m2',
+      odaSayısı: '3+1',
+      katsayısı: `${8} Katlı`,
+      id: 7,
+      blok:'A'
     }
   ]
   return (
-            
+          
            <ScrollView style={{ marginTop: 10, display: 'flex', flexDirection: 'column' }} indicatorStyle='white'>
             {Home.map((item, index) => (
             <Posts key={item.id}
@@ -87,8 +99,13 @@ export default function Ablok() {
              
           ))}  
           
-          
+          {/* <View style={{}}>
+     <ShoppinInfo/>
+        
+        </View> */}
         </ScrollView>
+     
+        
   
   )
 }

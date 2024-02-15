@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 export default function ShareScreen({navigation}) {
   return (
-    <ScrollView>
+    <ScrollView indicatorStyle="white">
     <View style={{ alignItems: "center", gap: 50 }}>
       
       <View
@@ -31,12 +31,12 @@ export default function ShareScreen({navigation}) {
           />
         </View>
         <View>
-          <Text style={{ fontSize: 22, fontWeight: "bold", bottom: 10 }}>
+          <Text style={{ fontSize: 18, fontWeight: "bold", bottom: 10 }}>
             Proje İlanı Ekle
           </Text>
         </View>
-        <View style={{ width: 250, bottom: 20, left: 10 }}>
-          <Text style={{ fontSize: 18 }}>
+        <View style={{ width: 250, bottom: 20, alignItems:'center'}}>
+          <Text style={{ fontSize: 14 }}>
             Kendi proje ilanınızı ekleyin ve hayalinizdeki projenizi
             paylaşın.Binlerce kişiye ulaşın!
           </Text>
@@ -44,10 +44,11 @@ export default function ShareScreen({navigation}) {
         <TouchableOpacity
         onPress={()=>navigation.navigate('Proje')}
           style={{
-            width: 250,
-            height: 55,
+            width: 200,
+            height: 45,
             backgroundColor: "#F5A941",
-            borderRadius: 20,
+           borderRadius:10,
+           bottom:20,
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-around",
@@ -60,29 +61,31 @@ export default function ShareScreen({navigation}) {
           >
             <Icon
               name="pluscircleo"
-              size={30}
-              style={{ left: 15, bottom: 2, color: "#ea2a28" }}
+              size={25}
+              style={{ left: 20, bottom: 0, color: "#ea2a28" }}
             />
           </View>
           <View
             style={{
               height: 30,
-              width: 0.4,
+              width: 0.5,
               backgroundColor: "white",
-              top: 10,
+              top: 9,
+              left:5
             }}
           ></View>
           <View
             style={{
               justifyContent: "center",
+              
             }}
           >
             <Text
               style={{
-                fontSize: 19,
+                fontSize: 15,
                 color: "white",
                 fontWeight: "bold",
-                bottom: 3,
+             
                 right: 10,
               }}
             >
@@ -114,12 +117,12 @@ export default function ShareScreen({navigation}) {
           />
         </View>
         <View>
-          <Text style={{ fontSize: 22, fontWeight: "bold", bottom: 10 }}>
+          <Text style={{ fontSize: 18, fontWeight: "bold", bottom: 10 }}>
             Emlak İlanı Ekle
           </Text>
         </View>
-        <View style={{ width: 250, bottom: 20, left: 10 }}>
-          <Text style={{ fontSize: 18 }}>
+        <View style={{ width: 250, bottom: 20,alignItems:'center'}}>
+          <Text style={{ fontSize: 14 }}>
             Kendi emlak ilanınızı ekleyin ve ev, daire veya arsa satışınızı
             hızlandırın. Hemen ilan verin!
           </Text>
@@ -127,10 +130,11 @@ export default function ShareScreen({navigation}) {
         <TouchableOpacity
         onPress={()=>navigation.navigate('Emlak')}
           style={{
-            width: 250,
-            height: 55,
+            width: 200,
+            height: 45,
             backgroundColor: "#F5A941",
-            borderRadius: 20,
+            borderRadius:10,
+            bottom:15,
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-around",
@@ -143,8 +147,8 @@ export default function ShareScreen({navigation}) {
           >
             <Icon
               name="pluscircleo"
-              size={30}
-              style={{ left: 15, bottom: 2, color: "#ea2a28" }}
+              size={25}
+              style={{ left: 15, bottom: 0, color: "#ea2a28" }}
             />
           </View>
           <View
@@ -162,10 +166,10 @@ export default function ShareScreen({navigation}) {
           >
             <Text
               style={{
-                fontSize: 19,
+                fontSize: 15,
                 color: "white",
                 fontWeight: "bold",
-                bottom: 3,
+               
                 right: 10,
               }}
             >

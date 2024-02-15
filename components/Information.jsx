@@ -2,11 +2,12 @@ import { View, Text,StyleSheet } from 'react-native'
 import React from 'react'
 import SettingsItem from './SettingsItem'
 import { useRoute } from '@react-navigation/native';
+import ShoppinInfo from './ShoppinInfo';
 export default function Information() {
   const route = useRoute();
   const { itemId, otherParam ,konum} = route.params;
   return (
-    <View style={{padding:8}}>
+    <View style={{padding:10}}>
     <View style={[styles.card, styles.shadowProp]}>
         <SettingsItem info='Proje Adı' numbers={otherParam}/>
         <SettingsItem info='Proje Durumu' numbers='Devam Eden Projeler'/>
@@ -21,10 +22,13 @@ export default function Information() {
         <SettingsItem info='Satışa Kapalı İlan Sayısı' numbers='Hisseli Tapu'/>
         <SettingsItem info='Eşyalı' numbers='Evet'/>
         <SettingsItem info='Banyo Sayısı' numbers='1'/>
-        <SettingsItem info='Kullanım Durumu' numbers='Boş'/>
+        <SettingsItem info='Kullanım Durumu' numbers='Boş' border='0'/>
 
     </View>
-   
+    <View style={styles.Info}>
+       <ShoppinInfo/>
+        
+        </View>
        
     </View>
   )
@@ -32,14 +36,14 @@ export default function Information() {
 
 const styles=StyleSheet.create({
   card: {  
-      top:6,
+      top:-9,
     backgroundColor: '#FFFFFF',  
  
-    paddingVertical: 22,  
-    paddingHorizontal: 5,  
+    paddingVertical: 5,  
+    paddingHorizontal: 6,  
     width: '100%',  
     marginVertical: 10,  
-    height:340,
+    height:'auto',
     borderWidth:0.7,
     borderColor:'#e6e6e6',
     ...Platform.select({
@@ -59,7 +63,7 @@ const styles=StyleSheet.create({
     Info: {
       
       width: '100%',
-      top: 20,
-      height: 240
+      bottom:25
+    
     }
   })

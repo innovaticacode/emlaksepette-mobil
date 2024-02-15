@@ -1,10 +1,12 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import PaymentItem from './PaymentItem'
+import PaymentItem from '../PaymentItem'
+import ShoppinInfo from '../ShoppinInfo'
 
-export default function PaymentDetail() {
+
+export default function PostPayment() {
   return (
-    <View style={{padding:10}}>
+    <View style={{padding:8}}>
     <View style={styles.container}>
       <View style={styles.PaymentPlan}>
         <PaymentItem header='Peşin Fiyat:' price='3.500.400' align='center' top='7'/>
@@ -12,11 +14,15 @@ export default function PaymentDetail() {
         <PaymentItem header='Peşinat:' price='690.000' align='center' top='7'/>
         <PaymentItem header='1.Ara Ödeme Tutarı :' price='690.000' dFlex='column' date='Aralık 30 2025'/>
         <PaymentItem header='2.Ara Ödeme Tutarı :'price='690.000' dFlex='column'date='Aralık 30 2026' />
-        <PaymentItem header='3.Ara Ödeme Tutarı :' price='690.000' dFlex='column' date='Aralık 30 2027'/>
-       
+        <PaymentItem header='3.Ara Ödeme Tutarı :' price='690.000' dFlex='column' date='Aralık 30 2027' border='0'/>
+        
 
       </View>
     </View>
+    <View style={styles.Info}>
+       <ShoppinInfo/>
+        
+        </View>
     </View>
   )
 
@@ -24,15 +30,15 @@ export default function PaymentDetail() {
 const styles=StyleSheet.create({
     container:{
         width:'100%',
-        height:'100%',
        
-        top:-4,
+       
+        top:-20,
         backgroundColor: '#FFFFFF',  
      
         
-        width: '100%',  
+       
         marginVertical: 10,  
-        height:450,
+        height:'auto',
         borderWidth:0.7,
         borderColor:'#e6e6e6',
         ...Platform.select({
@@ -50,9 +56,12 @@ const styles=StyleSheet.create({
     },
     PaymentPlan:{
       width:'100%',
-      height:'25%',
+     
       gap:3,
-      padding:15
+      padding:8
     
+    },
+    Info:{
+        bottom:35
     }
 })

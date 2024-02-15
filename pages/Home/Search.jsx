@@ -1,66 +1,95 @@
-import { View, Text, TextInput, TouchableOpacity,TouchableWithoutFeedback,Keyboard, ScrollView, SafeAreaView } from "react-native";
-import React from "react";
+import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView,StyleSheet,  Keyboard,Image } from "react-native";
+import {React,useState}from "react";
 import Icon from "react-native-vector-icons/EvilIcons";
 import Categories from "../../components/Categories";
 import Header from "../../components/Header";
-
+import { SearchBar } from '@rneui/themed';
 export default function Search() {
+  const [search, setSearch] = useState("");
+
+const updateSearch = (search) => {
+  setSearch(search);
+};
+
   return (
-    <TouchableWithoutFeedback  onPress={()=>Keyboard.dismiss()}>
+    <ScrollView onScroll={()=>Keyboard.dismiss() }>
       <SafeAreaView>
-        <TouchableWithoutFeedback  onPress={()=>Keyboard.dismiss()}>
-      <ScrollView>
-       
+        <Header/>
+    
+     
     <View style={{flex:1}}>
-      <Header/>
-      <View
-        style={{
-          display: "flex",
-         
-          flexDirection: "row",
-          
-          backgroundColor: "#D8D8D8",
-          width: "100%",
-          height: 40,
-          alignItems: "center",
-          
-          
-        }}
-      >
-        <View>
-          <Icon name="search" size={30} style={{backgroundColor:'#D8D8D8'}}color={'grey'} />
-        </View>
-        <View>
-          <TextInput placeholder="Ara" style={{
-            backgroundColor:'#D8D8D8',
-            width:400,
-            height:'100%',
-            padding:5,
-            fontSize:15,
-            borderRadius:10
-          }}/>
-        </View>
+      <View style={styles.Input}>
+        <SearchBar
+          placeholder="Ara..."
+          onChangeText={updateSearch}
+          value={search}
+        containerStyle={{
+          backgroundColor:'transparent',
+          width:'100%',
+          borderTopColor:'#e5e5e5',
+          borderBottomColor:'#e5e5e5',
+          height:60
+          }}
+          searchIcon={{size:25}}
+         inputContainerStyle={{backgroundColor:'#e5e5e5',borderRadius:7,height:'100%'}}
+          inputStyle={{fontSize:15}}
+         showCancel='false'/>
       </View>
-      <View style={{backgroundColor:'black',width:'100%',height:0.4,top:20}}></View>
-      <View style={{
-        top:30,
-        height:600,
+       </View>
+
       
-      }}>
-          <Categories category='Projeler'/>
+      <View style={{bottom:20}}>
+           <Categories category='Projeler'/>
           <Categories category='Konut'/>
           <Categories category='İş Yeri'/>
           <Categories category='Arsa'/>
           <Categories category='Prefabrik'/>
           <Categories category='Müstakil Tatil'/>
-          <Categories category='Al Sat Acil'/>
-    </View>
+          <Categories category='Al Sat Acil' ıconDisplay='none'/> 
+          </View>
+          <TouchableOpacity>
+          <View style={styles.RealtorClub}>
+            <Image source={require('./emlakkulüplogo.png')} style={{position:'absolute',width:50,height:30,top:4}}/>
+              <Text style={{fontWeight:'500',color:'white'}}>EMLAK KULÜP</Text>
+              <Text style={{color:'white'}}>Hemen Keşfet</Text>
+          </View>
+          </TouchableOpacity>
     
-    
-    </View>
-    </ScrollView>
-    </TouchableWithoutFeedback>
+  
+  
+   
+
     </SafeAreaView>
-    </TouchableWithoutFeedback>
+    </ScrollView>
   );
 }
+const styles=StyleSheet.create({
+  Input:{
+    alignItems:'center',
+    height:'30%',
+    bottom:18,
+   
+  },
+  RealtorClub:{
+    width:'100%',
+    padding:15,
+   
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-between',
+   
+    backgroundColor: 'black',  
+    borderColor:'#e6e6e6',
+    ...Platform.select({
+        ios: {
+          shadowColor: ' #e6e6e6',
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+  }
+})

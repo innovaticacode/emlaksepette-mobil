@@ -9,7 +9,7 @@ export default function DetailsSettings() {
   return (
     <View style={{padding:8}}>
     <View style={[styles.card, styles.shadowProp]}>
-        <SettingsItem info='İlan No:' numbers='000000'/>
+        <SettingsItem info='İlan No:' numbers='000000' color='#264ABB' bold='bold'/>
         <SettingsItem info='Kullanım Durumu' numbers='Boş'/>
         <SettingsItem info='m2 (Brüt:)' numbers={metre}/>
         <SettingsItem info='m2 (Net):' numbers={metre}/>
@@ -17,12 +17,13 @@ export default function DetailsSettings() {
         <SettingsItem info='Isıtma:' numbers='Doğalgaz Sobası'/>
         <SettingsItem info='Banyo Sayısı:' numbers='1'/>
         <SettingsItem info='Krediye Uygun:' numbers='Evet'/>
-        <SettingsItem info='Tapı Durumu:' numbers='Hisseli Tapu'/>
+        <SettingsItem info='Tapı Durumu:' numbers='Hisseli Tapu' border='0'/>
        
         
     </View>
     <View style={styles.Info}>
         <ShoppinInfo/>
+        
         </View>
        
     </View>
@@ -33,12 +34,12 @@ const styles=StyleSheet.create({
   card: {  
         
     backgroundColor: '#FFFFFF',  
-     top:6,
-    paddingVertical: 22,  
+     top:-20,
+    paddingVertical: 10,  
     paddingHorizontal: 5,  
     width: '100%',  
     marginVertical: 10,  
-    height:340,
+    height:'auto',
     borderWidth:0.7,
     borderColor:'#e6e6e6',
     ...Platform.select({
@@ -58,7 +59,7 @@ const styles=StyleSheet.create({
     Info: {
         
       width: '100%',
-      top: 20,
-      height: 240
+      top: -35,
+    
     }
   })
