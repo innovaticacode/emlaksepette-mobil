@@ -19,7 +19,7 @@ export default function Header() {
     }}/>
      </View>
     
-     <View>
+     <View style={{display:'flex',flexDirection:'row-reverse'}}>
       <TouchableOpacity style={{
         
         width:50,
@@ -27,9 +27,20 @@ export default function Header() {
       
         borderRadius:15
       }}
-        onPress={()=>navigation.navigate('Login')}
+        onPress={()=>navigation.navigate('Profile')}
       >
-       <Icon name='user' size={50}/>
+       <Icon name='user' size={40}/>
+      </TouchableOpacity>
+      <TouchableOpacity style={{
+        
+        width:50,
+        alignItems: 'center',
+      
+        borderRadius:15
+      }}
+      
+      >
+       <Icon name='bell' size={40}/>
       </TouchableOpacity>
      </View>
      

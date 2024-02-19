@@ -42,7 +42,7 @@ export default function PostDetail() {
     setbookmark(bookmark==='bookmark-o' ? 'bookmark': 'bookmark-o')
   }
   const route = useRoute();
-  const {   konum ,caption,location,price} = route.params;
+  const {   konum ,caption,location,price,name} = route.params;
   const windowWidth = Dimensions.get('window').width;
   return (
     

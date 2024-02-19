@@ -16,7 +16,7 @@ export default function Emlakİlanı() {
     </TouchableOpacity>
       <TouchableOpacity onPress={toggleVisibility} style={{height:60,backgroundColor:'red'}}><Text>tıkla</Text></TouchableOpacity>
     <View style={{flex: 1 ,height:0, display:isVisible ?'flex':'none'}}>
-    <View><Text>wferfr</Text></View>
+  
   
     <BottomSheet  ref={ref => panelRef.current = ref} >
       <View style={{width:'100%',height:300,backgroundColor:'red'}}>

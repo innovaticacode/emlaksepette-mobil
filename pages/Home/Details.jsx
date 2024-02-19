@@ -9,6 +9,7 @@ import {
 
   Button, Modal,
 } from "react-native";
+import BottomSheet from  "react-native-simple-bottom-sheet";
 import { React, useRef, useState } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Caption from "../../components/Caption";
@@ -30,7 +31,7 @@ import { useRoute } from '@react-navigation/native';
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
 
-export default function Details() {
+export default function Details({navigation}) {
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
@@ -42,7 +43,16 @@ export default function Details() {
     setbookmark(bookmark==='bookmark-o' ? 'bookmark': 'bookmark-o')
   }
   const route = useRoute();
-  const {  otherParam ,konum} = route.params;
+ 
+  const {  otherParam ,konum,ımage,sehir,acıklama, ShoppingName,ShoppingMail,ShopingInfo, Phone} = route.params;
+  const [isVisible, setIsVisible] = useState(false);
+
+  const openBottomSheet = () => {
+    setIsVisible(!isVisible);
+  };
+
+
+
   return (
       <View>
      
@@ -66,7 +76,7 @@ export default function Details() {
             zIndex:1
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity onPress={openBottomSheet}>
             <View
               style={{
                 backgroundColor: "#FFFFFFAD",
@@ -113,7 +123,7 @@ export default function Details() {
         <PagerView style={styles.viewPager} >
       
           <View style={styles.page} key="1">
-            <DetailsPicture />
+            <DetailsPicture ımage={ımage}/>
           </View>
           <View style={styles.page} key="2">
             <DetailsPicture />
@@ -142,7 +152,7 @@ export default function Details() {
            
             <View style={{ }}>
             <View style={{width:'100%',paddingLeft:10, alignItems:'center',top:3}}>
-              <Text style={styles.text}>{konum}</Text>
+              <Text style={styles.text}>{konum} / {sehir}</Text>
             </View>
               <View style={{ width: '100%',paddingLeft:10,paddingRight:6 ,top:15}}>
                 <Text style={{ fontSize: 17, textAlign:'center', color:'#264ABB' }}>
@@ -281,8 +291,8 @@ export default function Details() {
        
           <View style={{ width: '100%', height:tabs===4 ?700:740}}>
             {tabs === 0 && <OtherHomeInProject/>}
-            {tabs === 1 && <Caption/>}
-            {tabs === 2 && <Information/>}
+            {tabs === 1 && <Caption acıklama={acıklama}/>}
+            {tabs === 2 && <Information ShoppingName={ShoppingName} ShopingInfo={ShopingInfo} ShoppingMail={ShoppingMail} Phone={Phone}/>}
             {tabs === 3 && <Settings/> }
             {tabs === 4 && <Map/>}
             {tabs===5&& <FloorPlan/>}
@@ -297,7 +307,17 @@ export default function Details() {
       </View>
 
     </ScrollView>
-  
+   
+    <TouchableOpacity style={styles.openButton} onPress={openBottomSheet}>
+        <Text style={styles.textStyle}>Alt Sayfayı Aç</Text>
+      </TouchableOpacity>
+
+      {isVisible && (
+        <View style={styles.bottomSheet}>
+          <View style={{width:'100%',height:300,backgroundColor:'red'}}></View>
+        
+        </View>
+      )}
     </View>
 
   );
@@ -343,5 +363,43 @@ const styles = StyleSheet.create({
     color:'white',
     fontWeight:'400',
     letterSpacing:1
-  }
+  },
+  openButton: {
+    backgroundColor: '#f194ff',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  bottomSheet: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: '#f0f0f0',
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -3,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  bottomSheetText: {
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  closeButton: {
+    backgroundColor: '#f194ff',
+    borderRadius: 20,
+    padding: 10,
+    alignSelf: 'flex-end',
+  },
 });

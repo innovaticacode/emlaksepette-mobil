@@ -12,8 +12,10 @@ import PostDetail from './pages/PostDetail';
 import Profile from './pages/Home/Profile';
 import ShoppingProfile from './pages/Home/ShoppingProfile';
 import RealtorDetails from './pages/Home/RealtorPages/RealtorDetails';
+
 const Stack = createNativeStackNavigator();
-export default function App() {
+
+export default function App({route}) {
   return (
     
     <NavigationContainer>
@@ -30,17 +32,21 @@ export default function App() {
   <Stack.Screen name="Proje"  component={Projeİlanı} options={{
     headerShown:false
   }} />
-  <Stack.Screen name="Details"  component={Details} options={{
-      title:'Proje Detay'
-  }} />
-    <Stack.Screen name="PostDetails"  component={PostDetail} options={{
-      title:'Proje Konut Detay'
-  }} />
+  <Stack.Screen name="Details"  component={Details} options={({route})=>({
+    title:route.params.name
+  })} 
+ 
+  />
+    <Stack.Screen name="PostDetails"  component={PostDetail}options={({route})=>({
+      headerBackTitle:'.',
+        title:route.params.name
+        
+    })} />
    <Stack.Screen name="Register"  component={Register}options={{
     headerShown:false
   }} />
     <Stack.Screen name="Profile"  component={Profile}options={{
-      title:'Profil'
+    headerShown:false
   }} />
     <Stack.Screen name="ShopProfile"  component={ShoppingProfile}options={{
         title:'Mağaza Profili'

@@ -17,7 +17,7 @@ export default function Posts({ caption, location, price, ımage ,metre,odaSayı
     setbookmark(bookmark === 'bookmark-o' ? 'bookmark' : 'bookmark-o')
   }
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("PostDetails", { caption: caption, location: location, price: price ,metre:metre,odaSayısı:odaSayısı,katSayısı:katSayısı})}>
+    <TouchableOpacity onPress={() => navigation.navigate("PostDetails", { caption: caption, location: location, price: price ,metre:metre,odaSayısı:odaSayısı,katSayısı:katSayısı,name:caption})}>
       <View style={styles.container}>
         
         <View style={styles.İlan}>
