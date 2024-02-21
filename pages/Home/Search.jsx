@@ -12,8 +12,8 @@ const updateSearch = (search) => {
 };
 
   return (
-    <ScrollView onScroll={()=>Keyboard.dismiss() }>
-      <SafeAreaView>
+    <ScrollView>
+      <SafeAreaView onTouchStart={()=>Keyboard.dismiss()}>
         <Header/>
     
      
@@ -33,7 +33,9 @@ const updateSearch = (search) => {
           searchIcon={{size:25}}
          inputContainerStyle={{backgroundColor:'#e5e5e5',borderRadius:7,height:'100%'}}
           inputStyle={{fontSize:15}}
-         showCancel='false'/>
+         showCancel='false'
+         placeholderTextColor={'grey'}
+         />
       </View>
        </View>
 

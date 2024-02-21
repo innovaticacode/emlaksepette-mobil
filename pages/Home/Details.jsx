@@ -6,16 +6,18 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-
-  Button, Modal,
+  Animated,
+  Button, 
+  Modal,
+  
 } from "react-native";
-import BottomSheet from  "react-native-simple-bottom-sheet";
+
+
 import { React, useRef, useState } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Caption from "../../components/Caption";
 import Settings from "../../components/Settings";
 import PagerView from 'react-native-pager-view';
-
 import Map from "../../components/Map";
 import Icon2 from 'react-native-vector-icons/Feather';
 import DetailsPicture from "../../components/DetailsPicture";
@@ -25,8 +27,10 @@ import OtherHomeInProject from "../../components/OtherHomeInProject";
 import PaymentDetail from "../../components/PaymentDetail";
 import FloorPlan from "../../components/FloorPlan";
 import Information from "../../components/Information";
-
-
+import LinkIcon3 from "react-native-vector-icons/Feather"
+import LinkIcon4 from "react-native-vector-icons/Fontisto"
+import LinkIcon2 from "react-native-vector-icons/FontAwesome"
+import LinkIcon from "react-native-vector-icons/Entypo"
 import { useRoute } from '@react-navigation/native';
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
@@ -45,19 +49,31 @@ export default function Details({navigation}) {
   const route = useRoute();
  
   const {  otherParam ,konum,ımage,sehir,acıklama, ShoppingName,ShoppingMail,ShopingInfo, Phone} = route.params;
-  const [isVisible, setIsVisible] = useState(false);
+ 
+  const translateY = useRef(new Animated.Value(400)).current;
 
-  const openBottomSheet = () => {
-    setIsVisible(!isVisible);
+  const openSheet = () => {
+    Animated.timing(translateY, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
   };
 
-
+  const closeSheet = () => {
+    Animated.timing(translateY, {
+      toValue: 400,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }; 
+ 
 
   return (
       <View>
      
         
-    <ScrollView style={{ backgroundColor: 'white' }} indicatorStyle="white">
+    <ScrollView style={{ backgroundColor: 'white' }} indicatorStyle="white" onTouchStart={closeSheet}>
       <View style={{ flex: 1, height:tabs===4 ?1000:1590 && tabs===3 ?1370:1590 && tabs===2?1360:1590 && tabs===1?1580:1490 && tabs===0 ? 1600:1590
       && tabs===5 ? 'auto':1500
       }}>
@@ -76,7 +92,7 @@ export default function Details({navigation}) {
             zIndex:1
           }}
         >
-          <TouchableOpacity onPress={openBottomSheet}>
+          <TouchableOpacity onPress={openSheet}>
             <View
               style={{
                 backgroundColor: "#FFFFFFAD",
@@ -308,16 +324,73 @@ export default function Details({navigation}) {
 
     </ScrollView>
    
-    <TouchableOpacity style={styles.openButton} onPress={openBottomSheet}>
-        <Text style={styles.textStyle}>Alt Sayfayı Aç</Text>
-      </TouchableOpacity>
+    <View style={{ flex: 1 }}>
+     
+      <Animated.View
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: '#eeeeee',
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+         paddingTop:20,
+         paddingBottom:30,
+         paddingLeft:10,
+          paddingRight:10,
+          
+          transform: [{ translateY }],
+        }}
+      >
+     
+          <ScrollView horizontal  style={{padding:5}}   showsHorizontalScrollIndicator={false}>
+            <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',gap:27}}>
+            <TouchableOpacity style={{alignItems:'center'}}>
+            <View style={styles.shareIcons}>
+             <LinkIcon name="link" size={23}/>
+            
+            </View>
+            <Text>Kopyala</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{alignItems:'center'}}>
+            <View style={styles.shareIcons}>
+             <LinkIcon2 name="whatsapp" size={23}/>
+            </View>
+            <Text>Whatsapp</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{alignItems:'center'}}>
+            <View style={styles.shareIcons}>
+             <LinkIcon name="instagram" size={23}/>
+            </View>
+            <Text>İnstagram</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{alignItems:'center'}}>
+            <View style={styles.shareIcons}>
+             <LinkIcon2 name="facebook" size={23}/>
+            </View>
+            <Text>Facebook</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{alignItems:'center'}}>
+            <View style={styles.shareIcons}>
+             <LinkIcon3 name="message-circle" size={23}/>
+            </View>
+            <Text>Mesajlar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{alignItems:'center'}}>
+            <View style={styles.shareIcons}>
+             <LinkIcon4 name="messenger" size={23}/>
+            </View>
+            <Text>Messenger</Text>
+          </TouchableOpacity>
+            </View>
+          </ScrollView>
+    
+       
+      </Animated.View>
+    </View>
 
-      {isVisible && (
-        <View style={styles.bottomSheet}>
-          <View style={{width:'100%',height:300,backgroundColor:'red'}}></View>
-        
-        </View>
-      )}
+    
     </View>
 
   );
@@ -402,4 +475,13 @@ const styles = StyleSheet.create({
     padding: 10,
     alignSelf: 'flex-end',
   },
+  shareIcons:{
+    backgroundColor: "#dbdbdb",
+    justifyContent: "center",
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    borderRadius: 30,
+    bottom:2
+  }
 });

@@ -1,16 +1,16 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-export default function Categories({category,ıconDisplay}) {
+export default function Categories({category,ıconDisplay,displayIcon}) {
   return (
     <TouchableOpacity>
       <View style={styles.category}>
       <View style={styles.IconContainer}>
     
                   <View
-                    style={styles.ıcons}
+                    style={[styles.ıcons ,{display:displayIcon==='none'?'none':'flex'}]}
                   >
-                    <Icon name='home' size={18} color={'white'}/>
+                    <Icon name='home' size={18} color={'white'} />
                   </View>
                 
       </View>

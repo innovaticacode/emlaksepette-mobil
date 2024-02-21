@@ -3,9 +3,10 @@ import { React, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
+import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
 
-export default function Posts({ caption, location, price, ımage ,metre,odaSayısı,katSayısı,No}) {
+export default function Posts({ caption, location, price, ımage ,metre,odaSayısı,katSayısı,No,isFavorited,setModalVisible}) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
@@ -47,14 +48,42 @@ export default function Posts({ caption, location, price, ımage ,metre,odaSayı
                   >
                     <Bookmark name={bookmark} size={15} color={bookmark == 'bookmark-o' ? 'black' : 'red'} />
                   </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={changeHeart}>
+                  </TouchableOpacity>
+                  {!isFavorited?
+                      <TouchableOpacity onPress={()=>{
+                        changeHeart();
+                       
+                          setModalVisible(true)
+                        
+                       
+                      }}>
+                  <View
+                    style={styles.ıconContainer}
+                  >
+                   <Heart name={heart} size={15} color={heart=='hearto'?'black':'red'} /> 
+                   
+                  </View>
+                </TouchableOpacity>:
+                  <TouchableOpacity onPress={()=>{
+                  
+                 
+                    setModalVisible(true)
+                  
+                 
+                }}>
             <View
               style={styles.ıconContainer}
             >
-              <Heart name={heart} size={15} color={heart=='hearto'?'black':'red'} />
+              <Trash name='trash' size={15} color='red' />
+             
             </View>
           </TouchableOpacity>
+                  }
+               
+                
+            
+        
+
               </View>
             </View>
 
