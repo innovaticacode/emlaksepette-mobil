@@ -9,13 +9,14 @@ import LinkIcon3 from "react-native-vector-icons/Feather"
 import LinkIcon4 from "react-native-vector-icons/Fontisto"
 import LinkIcon2 from "react-native-vector-icons/FontAwesome"
 import LinkIcon from "react-native-vector-icons/Entypo"
-
+import Arrow from "react-native-vector-icons/MaterialIcons"
 import Team from './ProfilePageItem/Team'
+import { useNavigation } from '@react-navigation/native'
 export default function Profile() {
   const [tab, settab] = useState(0)
   const { width, height ,fontScale} = Dimensions.get('window');
   const translateY = useRef(new Animated.Value(400)).current;
-
+  const navigation=useNavigation();
   const openSheet = () => {
     Animated.timing(translateY, {
       toValue: 0,
@@ -37,10 +38,16 @@ export default function Profile() {
       Keyboard.dismiss()
      closeSheet()
     }} >
+      <TouchableOpacity style={{position:'absolute',zIndex:2,top:width>400? 50 :25 ,left:20, backgroundColor:'#FFFFFF3b',paddingLeft:6,paddingRight:6,padding:2,alignItems:'center',borderRadius:4}} onPress={()=>navigation.goBack()}>
+      <View>
+        <Arrow name='arrow-back-ios' size={width>400?25:20} color={'white'} style={{left:4}}/>
+      </View>
+      </TouchableOpacity>
          <SafeAreaView style={styles.ProfileInfoDiv}>
-      
-      <View style={{display:'flex',flexDirection:'column',top:20,width:'60%'}}>
+       
+      <View style={{display:'flex',flexDirection:'column',top:35,width:'60%'}}>
       <Text style={{fontSize:width>400?12:11,color:'white',fontWeight:'400',bottom:10,left:10,top:5}}>Gayrimenkul Ofisi</Text>
+     
           <View style={styles.ProfileName}>
           
             <Text style={{fontSize:width>400?25:18 ,color:'white',fontWeight:'500'}}>Master Realtor</Text>
@@ -49,12 +56,7 @@ export default function Profile() {
             <View style={{display:'flex',flexDirection:'column'}}></View>
             <Icon name='check'style={{position:'absolute',left:7,top:6}} size={15}/>
            </View>
-           {/* <View style={{width:26,height:26,left:10}}>
-            <ImageBackground source={require('./BadgeYellow.png')} style={{flex:1}}/>
-            <View style={{display:'flex',flexDirection:'column'}}></View>
-            <Text style={{position:'absolute',fontSize:9,left:10,top:5}}>6</Text>
-            <Text style={{position:'absolute',fontSize:9, bottom:3,left:9}}>yıl</Text>
-           </View> */}
+         
           </View>
           <View style={{left:10,width:'100%',justifyContent:'center'}}>
            <TextInput placeholder='Mağazda Ara...'
@@ -64,10 +66,11 @@ export default function Profile() {
             borderRadius:50,
             width:'100%',
            }}/>
+           <TouchableOpacity>
            <View style={{
             position:'absolute',
             right:5,
-           
+           bottom:4,
             backgroundColor: "#FFFFFF",
             justifyContent: "center",
             width: 30,
@@ -77,7 +80,7 @@ export default function Profile() {
            }}>
            <Icon name='search1'  size={15}/>
            </View>
-         
+           </TouchableOpacity>
           </View>
           </View>
 
@@ -231,7 +234,7 @@ const styles=StyleSheet.create({
   },
   headerProfile:{
     width:'100%',
-    height:'23%',
+    height:'25%',
   
   
    borderBottomLeftRadius:50,

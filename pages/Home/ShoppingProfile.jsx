@@ -16,9 +16,9 @@ export default function ShoppingProfile({İsLoggedIn}) {
   return (
    <View style={style.container}>
         <View style={style.header}>
-          <View style={{position:'absolute',zIndex:2,top:'20%',left:15}}>
+          <View style={{position:'absolute',zIndex:2,top:'20%',left:15, backgroundColor:'#FFFFFF3b',paddingLeft:5,paddingRight:5,padding:1,borderRadius:4}}>
             <TouchableOpacity onPress={()=>navigation.goBack()}>
-            <BackIcon name='arrow-back-ios' size={25} color={'white'}/>
+            <BackIcon name='arrow-back-ios' size={23} color={'white'} style={{left:5}}/>
             </TouchableOpacity>
               
           </View>
@@ -87,12 +87,12 @@ export default function ShoppingProfile({İsLoggedIn}) {
 
                    {İsLoggedIn? 
                    <TouchableOpacity onPress={()=>navigation.navigate('MyProject')}>
-                   <ProfileSettingsItem text='Proje İlanlarım' ıconName='home-work'/>
+                   <ProfileSettingsItem text='Proje İlanlarım' ıconName='home-work' IconType={true}/>
                    </TouchableOpacity>:''}
                  
                   {İsLoggedIn? 
                    <TouchableOpacity onPress={()=>navigation.navigate('MyRealtor')}>
-                   <ProfileSettingsItem text='Emlak İlanlarım' ıconName='home-work'/>
+                   <ProfileSettingsItem text='Emlak İlanlarım'  IconType={true}/>
                    </TouchableOpacity>:''}
                  
                   {İsLoggedIn? '':  <TouchableOpacity onPress={()=>navigation.navigate('Forms')}>
@@ -109,7 +109,7 @@ export default function ShoppingProfile({İsLoggedIn}) {
                   </TouchableOpacity>
                   {İsLoggedIn? 
                   <TouchableOpacity onPress={()=>navigation.navigate('Offer')}>
-                  <ProfileSettingsItem text='İlanda Kampanya Yap' ıconName='shopping-bag' />
+                  <ProfileSettingsItem text='İlanda Kampanya Yap' ıconName='arrow-downward' />
                   </TouchableOpacity>:''}
                   
                 </View>
@@ -126,15 +126,15 @@ export default function ShoppingProfile({İsLoggedIn}) {
                   
                {İsLoggedIn? 
                   <TouchableOpacity onPress={()=>navigation.navigate('CreateUserType')}>
-                  <ProfileSettingsItem text='Kullanıcı Tipi Oluştur' ıconName='shopping-bag' />
+                  <ProfileSettingsItem text='Kullanıcı Tipi Oluştur' ıconName='person-add-alt-1' />
                   </TouchableOpacity> : ''}
                   {İsLoggedIn? 
                   <TouchableOpacity onPress={()=>navigation.navigate('CreateUser')}>
-                  <ProfileSettingsItem text='Alt Kullanıcı Oluştur' ıconName='shopping-bag' />
+                  <ProfileSettingsItem text='Alt Kullanıcı Oluştur' ıconName='person-add-alt-1' />
                   </TouchableOpacity> : ''}
                   {İsLoggedIn? 
                   <TouchableOpacity onPress={()=>navigation.navigate('AdsPicture')}>
-                  <ProfileSettingsItem text='Reklam Görselleri' ıconName='shopping-bag' />
+                  <ProfileSettingsItem text='Reklam Görselleri' ıconName='image' />
                   </TouchableOpacity> : ''}
                  
               

@@ -35,8 +35,8 @@ export default function Favorite() {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Ürünü favorilerden kaldırmak istiyormusunuz</Text>
-            <View style={{display:'flex',flexDirection:'row',gap:10,justifyContent:'center'}}>
+            <Text style={styles.modalText}>Ürünü favorilerden kaldırmak istiyormusunuz?</Text>
+            <View style={{display:'flex',flexDirection:'row',gap:25,}}>
             <TouchableOpacity style={{backgroundColor:'red',paddingLeft:20,paddingRight:20,paddingTop:10,paddingBottom:10,borderRadius:10}}>
               <Text style={{color:'white'}}>Evet</Text>
             </TouchableOpacity>

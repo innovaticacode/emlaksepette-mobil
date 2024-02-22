@@ -53,7 +53,7 @@ export default function Posts({ caption, location, price, ımage ,metre,odaSayı
                       <TouchableOpacity onPress={()=>{
                         changeHeart();
                        
-                          setModalVisible(true)
+                         
                         
                        
                       }}>
