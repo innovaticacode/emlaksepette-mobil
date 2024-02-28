@@ -9,6 +9,7 @@ import { SearchBar } from '@rneui/themed';
 export default function Collections() {
   const [searchColection, setSearchColection] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
+  const [display, setdisplay] = useState(false)
   const updateSearch = (searchColection) => {
     setSearchColection(searchColection);
   };
@@ -16,15 +17,17 @@ export default function Collections() {
 
   const openSheet = () => {
     setIsDisabled(true)
+    setdisplay(true)
     Animated.timing(translateY, {
       toValue: 0,
       duration: 300,
       useNativeDriver: true,
     }).start();
   };
-
+    
   const closeSheet = () => {
 setIsDisabled(false)
+setdisplay(false)
     Animated.timing(translateY, {
       toValue: 400,
       duration: 300,
@@ -61,7 +64,7 @@ setIsDisabled(false)
   
     </View>
    
-    <View style={{ flex: 1,position:'absolute' ,bottom:0,width:'100%'}}>
+    <View style={{ flex: 1,position:'absolute' ,bottom:0,width:'100%', display: display==false? 'none':'flex'}}>
      
      <Animated.View
        style={ [styles.animatedView,{transform: [{ translateY }],}] }>

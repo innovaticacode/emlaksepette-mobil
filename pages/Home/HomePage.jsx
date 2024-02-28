@@ -38,7 +38,7 @@ export default function App() {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-    }, 2000); 
+    }, 1000); 
   };
 
 
@@ -46,7 +46,7 @@ export default function App() {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <SafeAreaView style={{ flex: 1, } }>
         <Header />
-            <ScrollView scrollEventThrottle={20}
+            <ScrollView scrollEventThrottle={20} 
              refreshControl={
               <RefreshControl
                 refreshing={refreshing}

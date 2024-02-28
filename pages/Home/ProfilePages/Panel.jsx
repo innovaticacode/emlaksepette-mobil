@@ -4,10 +4,11 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 import Coin from "react-native-vector-icons/FontAwesome5"
 import Loading  from "react-native-vector-icons/EvilIcons"
 import Icon2  from "react-native-vector-icons/Entypo"
+import { useNavigation } from '@react-navigation/native'
 export default function Panel({options,onSelect}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
-
+  const navigation=useNavigation()
   const handleSelect = (option) => {
     setModalVisible(false);
     onSelect(option);
@@ -23,7 +24,7 @@ export default function Panel({options,onSelect}) {
   const buttonRef = useRef();
   const { width, height } = Dimensions.get('window');
   return (
-    <ScrollView>
+    <ScrollView style={{flex:1}}>
     <View style={style.container}>
      
       <View style={style.header}>
@@ -191,32 +192,39 @@ export default function Panel({options,onSelect}) {
         <View style={{width:'100%',padding:12,top:5,}}>
         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                 <Text style={{fontSize:18,fontFamily:'Verdana',letterSpacing:0.2}}>Koleksiyonlarım</Text>
-                <TouchableOpacity style={{justifyContent:'center',backgroundColor:'red',paddingLeft:6,paddingRight:6,padding:5}}>
+                <TouchableOpacity style={{justifyContent:'center',backgroundColor:'red',paddingLeft:6,paddingRight:6,padding:5}} onPress={()=>navigation.navigate('Collecitons')}>
                   <Text style={{fontFamily:'Verdana',letterSpacing:0.2,fontSize:12,color:'white',fontWeight:'200'}}>
                     Tümünü Gör
                   </Text>
                 </TouchableOpacity>
               </View>
           <View style={style.ShadowCard}>
-                  
-                <View style={{
-                  width:'100%',
-                  padding:4,
-                  backgroundColor:'red',
-                  display:'flex',
-                  flexDirection:'row'
-                }}>
-                    <View style={{flex:1.2/2,backgroundColor:'grey',display:'flex',flexDirection:'row',gap:10,padding:10}}>
-                    <View style={{flex:1/2 , backgroundColor:'black', height:'70%'}}>
-                          <Image source={require('../home.jpg')} style={{width:'100%',height:'100%'}}/>
+                  <TouchableOpacity    style={style.CollecitonShadow}>
+             
+                    <View style={{flex:1/2,height:'100%',display:'flex',flexDirection:'row',gap:7,padding:8,top:10}}>
+                    <View style={{flex:1/2 , height:'100%'}}>
+                          <Image source={require('../home.jpg')} style={{width:'100%',height:'80%'}}/>
                     </View>
-                    <View style={{flex:1/2,backgroundColor:'green',height:'70%'}}>
-                    <Image source={require('../home.jpg')} style={{width:'100%',height:'100%'}}/>
+                    <View style={{flex:1/2,height:'100%'}}>
+                    <Image source={require('../home.jpg')} style={{width:'100%',height:'80%'}}/>
                     </View>
                     </View>
 
-                    <View style={{flex:0.8/2,backgroundColor:'blue'}}>
-                    <Text>sdad</Text>
+                    <View style={{flex:1/2,gap:10,paddingTop:8,top:10}}>
+                    <View style={{flexDirection:'row'}}>
+                      <Text>Koleksiyon Adı:</Text>
+                      <Text style={{color:"#E54242"}}> Kartal</Text>
+                    </View>
+                    <View style={{flexDirection:'row'}}>
+                      <Text>İlan Sayısı:</Text>
+                      <Text style={{color:"#E54242"}}>5</Text>
+                    </View>
+                    <View style={{flexDirection:'row',gap:6,}}>
+                    <Text style={{color:"#E54242"}}>20</Text>
+                    <Icon2 name='eye' size={15}/>
+                   
+                
+                    </View>
                     </View>
 
 
@@ -224,7 +232,8 @@ export default function Panel({options,onSelect}) {
 
 
 
-                </View>
+              
+                </TouchableOpacity>
             
 
           </View>
@@ -238,11 +247,12 @@ const { width, height } = Dimensions.get('window');
 const style=StyleSheet.create({
     container:{
       flex:1,
-        backgroundColor:'#F7F7F9'
+        backgroundColor:'#F7F7F9',
+        height:1500
     },
     header:{
       width:'100%',
-      height:width>400? '16%':'11%',
+      height:width>400? '5.5%':'4%',
       
       display:'flex',
       flexDirection:'row',
@@ -346,7 +356,7 @@ const style=StyleSheet.create({
 
     },
     ShadowCard:{
-      backgroundColor: '#FFFFFF',  
+      backgroundColor:'#F7F7F9', 
       borderRadius: 10,  
       paddingVertical: 22,  
       paddingHorizontal: 10,  
@@ -370,7 +380,7 @@ const style=StyleSheet.create({
     },
     CollectionItem:{
       width:'100%',
-      backgroundColor:'red',
+    
       padding:4
     },
     CollectionImage:{
@@ -382,5 +392,33 @@ const style=StyleSheet.create({
         display:'flex',
         flexDirection:'row',
         gap:5
+    },
+    CollecitonShadow:{
+      width:'100%',
+   
+   
+      display:'flex',
+      flexDirection:'row',
+      height:'45%',
+      backgroundColor:'white', 
+      borderRadius: 10,  
+      paddingVertical: 10,  
+      paddingHorizontal: 10,  
+      width: '100%',  
+      marginVertical: 0,  
+    
+      borderWidth:0.7,
+      borderColor:'#e6e6e6',
+      ...Platform.select({
+          ios: {
+            shadowColor: ' #e6e6e6',
+            shadowOffset: { width: 1, height: 1 },
+            shadowOpacity: 0.1,
+            shadowRadius: 5,
+          },
+          android: {
+            elevation: 5,
+          },
+        }),
     }
 })

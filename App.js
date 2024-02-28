@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput ,TouchableWithoutFeedback,Keyboard,ScrollView } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator} from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
+import { TransitionPresets } from '@react-navigation/stack';
 import Home from './pages/Home/Home'
 import Emlakİlanı from './pages/Home/İlanYükleme/Emlakİlanı';
 import Projeİlanı from './pages/Home/İlanYükleme/Projeİlanı';
@@ -27,6 +28,10 @@ import Offer from './pages/Home/ProfilePages/Offer';
 import CreateUserType from './pages/Home/ProfilePages/CreateUserType';
 import CreateUser from './pages/Home/ProfilePages/CreateUser';
 import AdsPictures from './pages/Home/ProfilePages/AdsPictures';
+import SeeCollection from './pages/Home/ProfilePages/SeeCollection';
+import EditCollection from './pages/Home/ProfilePages/EditCollection';
+import PasswordVerify from './pages/Home/ProfilePages/PasswordVerify';
+import OrderDetails from './pages/Home/ProfilePages/OrderDetails';
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
@@ -34,10 +39,17 @@ export default function App({route}) {
   return (
     
     <NavigationContainer>
-  <Stack.Navigator>
+  <Stack.Navigator screenOptions={{
+      gestureEnabled: true,
+      ...TransitionPresets.SlideFromRightIOS,
+      
+  }}>
   <Stack.Screen name="Home" component={Home}options={{
-    headerShown:false
-  }} />
+    headerShown:false,
+   
+  }} 
+    
+  />
   <Stack.Screen name="Login"  component={Login} options={{
       title:'Giriş Yap'
   }} />
@@ -78,16 +90,13 @@ export default function App({route}) {
 
 {(props) => <ShoppingProfile {...props} İsLoggedIn={İsLoggedIn} />}
 </Stack.Screen>
-
-
-
-    <Stack.Screen name="Realtor details"  component={RealtorDetails}options={{
+ <Stack.Screen name="Realtor details"  component={RealtorDetails}options={{
         title:'Emlak İlanı'
    
   }} />
     <Stack.Screen name="Collecitons"  component={Collections}options={{
-        title:'Koleksiyonlarım'
-   
+        title:'Koleksiyonlarım',
+      headerBackTitle:'Panel'
   }} />
     <Stack.Screen name="DashBord"  component={Panel}options={{
         title:'Gösterge Paneli'
@@ -98,17 +107,21 @@ export default function App({route}) {
    
   }} />
     <Stack.Screen name="Sell"  component={Sell}options={{
-        title:'Satış'
-   
+        title:'Siparişlerim'
+
   }} />
     <Stack.Screen name="Rent"  component={Rent}options={{
         title:'Kiralık'
    
   }} />
      <Stack.Screen name="UpdateProfile"  component={UpdateProfile}options={{
-        title:'Profili Güncelle'
-   
-  }} />
+        title:'Profili Güncelle',
+          headerStyle:{
+            backgroundColor:'#F7F7F9',
+          }
+  }} 
+  
+  />
     <Stack.Screen name="ChangePas"  component={ChangePassword}options={{
         title:'Şifreyi Değiştir'
    
@@ -131,15 +144,44 @@ export default function App({route}) {
         <Stack.Screen name="Offer"  component={Offer}options={{
             title:'İlanda Kampanya Yap'
         }} />
-         <Stack.Screen name="CreateUserType"  component={CreateUserType}options={{
-            title:'Kullanıcı Tipi Oluştur'
-        }} />
-        <Stack.Screen name="CreateUser"  component={CreateUser}options={{
-            title:'Alt Kullanıcı Oluştur'
-        }} />
+         <Stack.Screen name="CreateUserType"  component={CreateUserType} 
+            options={({route})=>({
+            
+                title:route.params.name
+                
+                
+            })}
+         />
+        <Stack.Screen name="CreateUser"  component={CreateUser}
+         options={({route})=>({
+          animationTypeForReplace:'pop',
+          title:route.params.name
+          
+          
+      })}
+        />
           <Stack.Screen name="AdsPicture"  component={AdsPictures}options={{
             title:'Reklam Görselleri'
         }} />
+          <Stack.Screen name="SeeColleciton"  component={SeeCollection}options={{
+            headerShown:false, 
+        }} />
+           <Stack.Screen name="EditColection"  component={EditCollection}options={{
+            title:'Koleksiyonu Düzenle',
+            headerBackTitle:'.'
+            
+        }} />
+            <Stack.Screen name="PassVerify"  component={PasswordVerify}options={{
+            title:'Şifre Doğrulama',
+            headerBackTitle:'.'
+            
+        }} />
+           <Stack.Screen name="OrderDetail"  component={OrderDetails}options={{
+            title:'Sipariş Detayı',
+            headerBackTitle:'.'
+            
+        }} />
+
 </Stack.Navigator>
 </NavigationContainer>
 

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Keyboard, Alert } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Keyboard, Alert, TouchableWithoutFeedback } from 'react-native'
 import { useState } from 'react'
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
@@ -31,7 +31,7 @@ export default function RegisterRealtorClub({setİsLoggedIn}) {
       // Temizlenmiş metni 3-3-2-2 formatında düzenle
       let formattedPhoneNumber = '';
       for (let i = 0; i < cleanedText.length; i++) {
-        if (i === 3 || i === 6) {
+        if (i === 4 || i === 7 || i === 9)  {
           formattedPhoneNumber += ' ';
         }
         formattedPhoneNumber += cleanedText[i];
@@ -70,7 +70,8 @@ export default function RegisterRealtorClub({setİsLoggedIn}) {
     setFullName(capitalizedText);
   };
     return (
-        <View style={styles.container} onTouchStart={()=>Keyboard.dismiss()}>
+      <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Emlak Sepette | Emlak Kulüp Başvurusu</Text>
             </View>
@@ -129,6 +130,7 @@ export default function RegisterRealtorClub({setİsLoggedIn}) {
                 </View>
             </View>
         </View>
+        </TouchableWithoutFeedback>
     )
 }
 const styles = StyleSheet.create({

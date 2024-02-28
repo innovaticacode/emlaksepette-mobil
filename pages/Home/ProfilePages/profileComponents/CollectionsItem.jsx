@@ -7,11 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 export default function CollectionsItem({openBottom, disabled}) {
     const navigation=useNavigation()
   return (
-    <TouchableOpacity style={{alignItems:'center'}} onPress={()=>{
-           
-        }} 
-        
-        disabled={disabled}>
+    <View style={{alignItems:'center'}}>
     <View style={style.container}>
 
      <View style={style.header}>
@@ -38,13 +34,21 @@ export default function CollectionsItem({openBottom, disabled}) {
      </View>
      <View style={{gap:10}}>
         <View>
-            <TouchableOpacity style={{width:'100%',backgroundColor:'#FFEFCA',padding:8,flexDirection:'row',justifyContent:'center',gap:6}}>
+            <TouchableOpacity style={{width:'100%',backgroundColor:'#FFEFCA',padding:8,flexDirection:'row',justifyContent:'center',gap:6}}
+             onPress={()=>{
+                navigation.navigate('EditColection')
+            }}
+            >
                 <Icon name='pencil' size={15} color={'#BD3803'}/>
                 <Text style={{textAlign:'center',color:'#BD3803',fontWeight:'500'}}>DÜZENLE</Text>
             </TouchableOpacity>
         </View>
         <View>
-        <TouchableOpacity style={{width:'100%',backgroundColor:'#C7EBFF', padding:8,flexDirection:'row',justifyContent:'center',gap:10}}>
+        <TouchableOpacity style={{width:'100%',backgroundColor:'#C7EBFF', padding:8,flexDirection:'row',justifyContent:'center',gap:10}} 
+        onPress={()=>{
+            navigation.navigate('SeeColleciton')
+        }}
+        >
             <Dot name='eye' size={15} style={{textAlign:'center'}}color={'#025787'}/>
                 <Text style={{textAlign:'center',color:'#025787',fontWeight:'500'}}>ÖNİZLE</Text>
             </TouchableOpacity>
@@ -65,7 +69,7 @@ export default function CollectionsItem({openBottom, disabled}) {
      </View>
         
     </View>
-    </TouchableOpacity>
+    </View>
   )
 }
 const style=StyleSheet.create({
