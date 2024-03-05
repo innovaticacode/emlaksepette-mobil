@@ -11,7 +11,7 @@ export default function Sell() {
     setSearch(search);
   };
   const route = useRoute();
-  const {displayInfo} = route.params;
+  const {displayInfo,text} = route.params;
 
   const [products, setProducts] = useState([
     { id: 1,  date: '2023-01-15' },
@@ -19,17 +19,17 @@ export default function Sell() {
     { id: 3,  date: '2022-12-05' }
   ])
 
- const date = new Date();
- const dayName = date.toLocaleDateString('tr-TR', { weekday: 'long' });
- const monthName = date.toLocaleDateString('tr-TR', { month: 'long' });
+//  const date = new Date();
+//  const dayName = date.toLocaleDateString('tr-TR', { weekday: 'long' });
+//  const monthName = date.toLocaleDateString('tr-TR', { month: 'long' });
   
- console.log("Gün: ", dayName);
+//  console.log("Gün: ", dayName);
 
  
 
   return ( 
     <View style={style.container} onTouchStart={()=>Keyboard.dismiss()}>
-     
+      
         <View style={style.Navbar}>
             <View style={style.SearchInput}>
               <SearchBar
@@ -84,13 +84,13 @@ export default function Sell() {
         </View>
         <ScrollView>
         <View style={style.orders}>
-                  <Order display={displayInfo}/>
-                  <Order display={displayInfo}/>
-                  <Order display={displayInfo}/>
-                  <Order display={displayInfo}/>
-                  <Order display={displayInfo}/>
-                  <Order display={displayInfo}/>
-                  <Order display={displayInfo}/>
+                  <Order display={displayInfo} text={text}/>
+                  <Order display={displayInfo} text={text}/>
+                  <Order display={displayInfo} text={text}/>
+                  <Order display={displayInfo} text={text}/>
+                  <Order display={displayInfo} text={text}/>
+                  <Order display={displayInfo} text={text}/>
+                  <Order display={displayInfo} text={text}/>
                  
 
         </View>

@@ -32,6 +32,13 @@ import SeeCollection from './pages/Home/ProfilePages/SeeCollection';
 import EditCollection from './pages/Home/ProfilePages/EditCollection';
 import PasswordVerify from './pages/Home/ProfilePages/PasswordVerify';
 import OrderDetails from './pages/Home/ProfilePages/OrderDetails';
+import RentOrderDetails from './pages/Home/ProfilePages/RentOrderDetails';
+import Suggests from './pages/Home/ProfilePages/Suggests';
+import OfferList from './pages/Home/ProfilePages/OfferList';
+import CategoryChoose from './pages/Home/İlanYükleme/ProjectAdvertsAdd/CategoryChoose';
+import CategorieStatus from './pages/Home/İlanYükleme/ProjectAdvertsAdd/CategorieStatus';
+import AdvertsPlace from './pages/Home/İlanYükleme/ProjectAdvertsAdd/AdvertsPlace';
+import ShareScreenProject from './pages/Home/İlanYükleme/ProjectAdvertsAdd/ShareScreenProject';
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
@@ -56,9 +63,11 @@ export default function App({route}) {
   <Stack.Screen name="Emlak"  component={Emlakİlanı} options={{
     headerShown:false
   }} />
-  <Stack.Screen name="Proje"  component={Projeİlanı} options={{
-    headerShown:false
-  }} />
+  <Stack.Screen name="Proje"  component={Projeİlanı}
+   options={({route})=>({
+    title:route.params.name
+  })} 
+  />
   <Stack.Screen name="Details"  component={Details} options={({route})=>({
     title:route.params.name
   })} 
@@ -110,10 +119,15 @@ export default function App({route}) {
         title:'Siparişlerim'
 
   }} />
-    <Stack.Screen name="Rent"  component={Rent}options={{
-        title:'Kiralık'
-   
-  }} />
+    <Stack.Screen name="Rent"  component={Rent}
+       options={({route})=>({
+        animationTypeForReplace:'pop',
+        title:route.params.name
+        
+        
+    })}
+  
+  />
      <Stack.Screen name="UpdateProfile"  component={UpdateProfile}options={{
         title:'Profili Güncelle',
           headerStyle:{
@@ -141,9 +155,14 @@ export default function App({route}) {
    <Stack.Screen name="MyRealtor"  component={MyRealtorAdverts}options={{
       title:'Emlak ilanlarım'
       }} />
-        <Stack.Screen name="Offer"  component={Offer}options={{
-            title:'İlanda Kampanya Yap'
-        }} />
+        <Stack.Screen name="Offer"  component={Offer}
+         options={({route})=>({
+          headerBackTitle:'.',
+          title:route.params.name
+          
+})}
+        
+        />
          <Stack.Screen name="CreateUserType"  component={CreateUserType} 
             options={({route})=>({
             
@@ -181,7 +200,70 @@ export default function App({route}) {
             headerBackTitle:'.'
             
         }} />
-
+         <Stack.Screen name="RentOrderDetail"  component={RentOrderDetails}options={{
+          title:'Rezervasyon Detayı',
+          headerBackTitle:'.'
+          
+      }} />
+      <Stack.Screen name="Suggest"  component={Suggests} 
+            options={({route})=>({
+              animationTypeForReplace:'pop',
+              title:route.params.name
+              
+              
+          })}
+      
+      />
+         <Stack.Screen name="OfferList"  component={OfferList} 
+            options={({route})=>({
+              headerBackTitle:'.',
+              animationTypeForReplace:'pop',
+              title:route.params.name
+              
+              
+          })}
+      
+      />
+        <Stack.Screen name="CategorieChoose"  component={CategoryChoose} 
+            options={({route})=>({
+              headerBackTitle:'.',
+              animationTypeForReplace:'pop',
+              title:route.params.name
+              
+              
+          })}
+      
+      />
+          <Stack.Screen name="CategorieStatu"  component={CategorieStatus} 
+            options={({route})=>({
+              headerBackTitle:'.',
+              animationTypeForReplace:'pop',
+              title:route.params.name
+              
+              
+          })}
+      
+      />
+        <Stack.Screen name="AdvertPlace"  component={AdvertsPlace} 
+            options={({route})=>({
+              headerBackTitle:'.',
+              animationTypeForReplace:'pop',
+              title:route.params.name
+                
+              
+          })}
+      
+      />
+         <Stack.Screen name="ShareAdvert"  component={ShareScreenProject}
+       options={({route})=>({
+        headerBackTitle:'.',
+        animationTypeForReplace:'pop',
+        title:''
+        
+        
+    })}
+  
+  />
 </Stack.Navigator>
 </NavigationContainer>
 

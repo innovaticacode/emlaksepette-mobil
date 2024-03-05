@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Icon2 from 'react-native-vector-icons/Feather'
-export default function ProfileSettingsItem({text,ıconName,IconType}) {
+export default function ProfileSettingsItem({text,ıconName,IconType,IconFeather}) {
   return (
     
     <View style={style.ıtem}>
@@ -10,7 +10,7 @@ export default function ProfileSettingsItem({text,ıconName,IconType}) {
         <View style={{flex:1.3/2,display:'flex',flexDirection:'row',gap:10}}>
          {
           IconType===true?
-          <Icon2 name='plus' size={18}/>:
+          <Icon2 name={IconFeather} size={18}/>:
           <Icon name={ıconName} size={18}/>
          
          }

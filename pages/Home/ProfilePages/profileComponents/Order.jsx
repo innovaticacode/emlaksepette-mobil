@@ -5,12 +5,12 @@ import FeatherIcon from 'react-native-vector-icons/Feather'
 import StarIcon from 'react-native-vector-icons/FontAwesome'
 import { useNavigation } from '@react-navigation/native'
 
-export default function Order({display}) {
+export default function Order({display,text}) {
     const navigation=useNavigation()
   return (
-    <TouchableOpacity onPress={()=>navigation.navigate('OrderDetail',{display})}>
+    <TouchableOpacity onPress={()=>navigation.navigate('OrderDetail',{display,text})}>
     <View style={style.container}>
-      
+
    
         <View style={style.InfoDateButton}>
             <View style={style.Info}>

@@ -42,7 +42,7 @@ export default function ShareScreen({navigation}) {
           </Text>
         </View>
         <TouchableOpacity
-        onPress={()=>navigation.navigate('Proje')}
+        onPress={()=>navigation.navigate('Proje',{name:'Proje'})}
           style={{
             width: 200,
             height: 45,

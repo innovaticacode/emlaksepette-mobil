@@ -12,7 +12,6 @@ export default function ShoppingProfile({ İsLoggedIn }) {
   const route = useRoute();
   const navigation = useNavigation();
 
-  const [currentPage, setCurrentPage] = useState('ScreenA');
   const translateY = useRef(new Animated.Value(400)).current;
   const translateY2 = useRef(new Animated.Value(400)).current;
   // const { isLoggedIn,setisLoggedIn } = route.params;
@@ -44,7 +43,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
   const handlePres = (text) => {
     setisSelected(text)
     openSheet()
- 
+
   }
 
 
@@ -109,6 +108,12 @@ export default function ShoppingProfile({ İsLoggedIn }) {
                 </View>
                 <View>
                   <Text style={style.headerText}>Mağazam Emlak Sepette</Text>
+                  <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Alınan Teklifler'})}>
+                    <ProfileSettingsItem text='Alınan Teklifler' IconFeather='users' IconType={true} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Verilen Teklifler'})}>
+                    <ProfileSettingsItem text='Verilen Teklifler' IconFeather='users'IconType={true} />
+                  </TouchableOpacity>
 
                   <TouchableOpacity onPress={() => navigation.navigate('DashBord')}>
                     <ProfileSettingsItem text='Gösterge Paneli' ıconName='home-work' />
@@ -117,13 +122,13 @@ export default function ShoppingProfile({ İsLoggedIn }) {
 
 
                   {İsLoggedIn ?
-                    <TouchableOpacity onPress={() => navigation.navigate('MyProject',{header2:'Proje İlanları'})}>
-                      <ProfileSettingsItem text='Proje İlanlarım' ıconName='home-work' IconType={true} />
+                    <TouchableOpacity onPress={() => navigation.navigate('MyProject', { header2: 'Proje İlanları' })}>
+                      <ProfileSettingsItem text='Proje İlanlarım'  IconType={true} IconFeather='plus' />
                     </TouchableOpacity> : ''}
 
                   {İsLoggedIn ?
-                    <TouchableOpacity onPress={() => navigation.navigate('MyRealtor',{header:'Emlak İlanları',hidden:'none'})}>
-                      <ProfileSettingsItem text='Emlak İlanlarım' IconType={true} />
+                    <TouchableOpacity onPress={() => navigation.navigate('MyRealtor', { header: 'Emlak İlanları', hidden: 'none' })}>
+                      <ProfileSettingsItem text='Emlak İlanlarım' IconType={true} IconFeather='plus' />
                     </TouchableOpacity> : ''}
 
                   {İsLoggedIn ? '' : <TouchableOpacity onPress={() => navigation.navigate('Forms')}>
@@ -132,7 +137,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
 
 
                   <TouchableOpacity onPress={() => {
-                     handlePres('MyBasket')
+                    handlePres('MyBasket')
 
                   }}>
                     <ProfileSettingsItem text='Satış' ıconName='shopping-bag' />
@@ -141,7 +146,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
                   <TouchableOpacity onPress={() => {
                     handlePres('Rent')
                   }}
-                  
+
                   >
                     <ProfileSettingsItem text='Kiralık' ıconName='shopping-bag' />
                   </TouchableOpacity>
@@ -211,13 +216,13 @@ export default function ShoppingProfile({ İsLoggedIn }) {
 
               </TouchableOpacity>
             </View>
-            <View style={{ paddingBottom: 10,  }}>
+            <View style={{ paddingBottom: 10, }}>
 
               {
                 isSelected == "userType" ?
                   <>
                     <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                        onPress={()=>navigation.navigate('CreateUserType',{header:'Listeleden geldi',hidden:'none',name:'Kullanıcılar'})}
+                      onPress={() => navigation.navigate('CreateUserType', { header: 'Listeleden geldi', hidden: 'none', name: 'Kullanıcılar' })}
                     >
                       <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
 
@@ -225,153 +230,153 @@ export default function ShoppingProfile({ İsLoggedIn }) {
                       </View>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                        onPress={()=>navigation.navigate('CreateUserType',{header:'yeni ekleden geldi',name:'Kullanıcı Ekle',hidden2:'none'})}
+                      onPress={() => navigation.navigate('CreateUserType', { header: 'yeni ekleden geldi', name: 'Kullanıcı Ekle', hidden2: 'none' })}
                     >
                       <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
 
                         <Text style={{ textAlign: 'center', top: 2, }}>Yeni Ekle</Text>
 
                       </View>
-                    </TouchableOpacity></> :''
-               
-                  
+                    </TouchableOpacity></> : ''
+
+
 
               }
               {
-                isSelected=="createUser"?
-                <>
-                <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                  onPress={()=>navigation.navigate('CreateUser',{header:'Listeleden  geldi',hidden3:'none',name:'Kullanıcılar',changeSlectedState:'false'})}
-                >
-                  <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
+                isSelected == "createUser" ?
+                  <>
+                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
+                      onPress={() => navigation.navigate('CreateUser', { header: 'Listeleden  geldi', hidden3: 'none', name: 'Kullanıcılar', changeSlectedState: 'false' })}
+                    >
+                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
 
-                    <Text style={{ textAlign: 'center', top: 2, }}>Listele</Text>
+                        <Text style={{ textAlign: 'center', top: 2, }}>Listele</Text>
 
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                  onPress={()=>navigation.navigate('CreateUser',{header:'Yeni Ekleden geldi',name:'Kullanıcı Oluştur',hidden4:'none',})}
-                >
-                  <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3,hidden4:'none'}}>
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
+                      onPress={() => navigation.navigate('CreateUser', { header: 'Yeni Ekleden geldi', name: 'Kullanıcı Oluştur', hidden4: 'none', })}
+                    >
+                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, hidden4: 'none' }}>
 
-                    <Text style={{ textAlign: 'center', top: 2, }}>Yeni Ekle</Text>
+                        <Text style={{ textAlign: 'center', top: 2, }}>Yeni Ekle</Text>
 
-                  </View>
-                </TouchableOpacity>
+                      </View>
+                    </TouchableOpacity>
 
-              </> :''
+                  </> : ''
               }
 
 
 
 
               {
-                isSelected == "MyBasket"?
-                <>
-                <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                  onPress={()=>navigation.navigate('Sell',{displayInfo:'none'})}
-                >
-                  <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
+                isSelected == "MyBasket" ?
+                  <>
+                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
+                      onPress={() => navigation.navigate('Sell', { displayInfo: 'none' })}
+                    >
+                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
 
-                    <Text style={{ textAlign: 'center', top: 2, }}>Gayrimenkul Alış</Text>
+                        <Text style={{ textAlign: 'center', top: 2, }}>Gayrimenkul Alış</Text>
 
-                  </View>
-                </TouchableOpacity>
-                {İsLoggedIn ?
- <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
- onPress={()=>navigation.navigate('Sell',{})}
->
-<View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3,hidden4:'none'}}>
+                      </View>
+                    </TouchableOpacity>
+                    {İsLoggedIn ?
+                      <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
+                        onPress={() => navigation.navigate('Sell', {text:'Satılmıştır'})}
+                      >
+                        <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, hidden4: 'none' }}>
 
-  <Text style={{ textAlign: 'center', top: 2, }}>Gayrimenkul Satış</Text>
+                          <Text style={{ textAlign: 'center', top: 2, }}>Gayrimenkul Satış</Text>
 
-</View>
-</TouchableOpacity>:''
-                }
-               
+                        </View>
+                      </TouchableOpacity> : ''
+                    }
 
-              </>:''
-               
+
+                  </> : ''
+
               }
-              
-                {
-                  isSelected=="Rent"?
+
+              {
+                isSelected == "Rent" ?
                   <>
 
-                  {
-                    İsLoggedIn?
-                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                        onPress={()=>navigation.navigate('Rent',{text:'Kiraya Verdiklerim'})}
-                    >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
-    
-                        <Text style={{ textAlign: 'center', top: 2, }}>Kiraya Verdiklerim</Text>
-    
-                      </View>
-                    </TouchableOpacity>:''
-                  }
-                 
-                  <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                     onPress={()=>navigation.navigate('Rent',{text:'Kiraladıklarım'})}
-                  >
-                    <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3,hidden4:'none'}}>
-  
-                      <Text style={{ textAlign: 'center', top: 2, }}>Kiraladıklarım</Text>
-  
-                    </View>
-                  </TouchableOpacity>
-  
-                </>:''
-                }
-
-                  {
-                    isSelected=="Offer"?
-                    <>
-                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                      
-                    >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
-    
-                        <Text style={{ textAlign: 'center', top: 2, }}>Oluştur</Text>
-    
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                      
-                    >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3,hidden4:'none'}}>
-    
-                        <Text style={{ textAlign: 'center', top: 2, }}>Listele</Text>
-    
-                      </View>
-                    </TouchableOpacity>
-    
-                  </>:''
-                  }
                     {
-                    isSelected=="Ads"?
-                    <>
+                      İsLoggedIn ?
+                        <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
+                          onPress={() => navigation.navigate('Rent', { text: 'Kiraya Verdiklerim' ,display:'none',name:'Kiraya Verdiklerim'})}
+                        >
+                          <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
+
+                            <Text style={{ textAlign: 'center', top: 2, }}>Kiraya Verdiklerim</Text>
+
+                          </View>
+                        </TouchableOpacity> : ''
+                    }
+
                     <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                      
+                      onPress={() => navigation.navigate('Rent', { text: 'Kiraladıklarım',name:'Kiraladıklarım' })}
+                    >
+                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, hidden4: 'none' }}>
+
+                        <Text style={{ textAlign: 'center', top: 2, }}>Kiraladıklarım</Text>
+
+                      </View>
+                    </TouchableOpacity>
+
+                  </> : ''
+              }
+
+              {
+                isSelected == "Offer" ?
+                  <>
+                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
+                          onPress={()=>navigation.navigate('Offer',{name:'Kampanya Oluştur'})}
                     >
                       <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
-    
+
                         <Text style={{ textAlign: 'center', top: 2, }}>Oluştur</Text>
-    
+
                       </View>
                     </TouchableOpacity>
                     <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                      
+                          onPress={()=>navigation.navigate('OfferList',{name:'Kampanya Listele'})}
                     >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3,hidden4:'none'}}>
-    
+                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, hidden4: 'none' }}>
+
                         <Text style={{ textAlign: 'center', top: 2, }}>Listele</Text>
-    
+
                       </View>
                     </TouchableOpacity>
-                        
-                  </>:''
-                  }
+
+                  </> : ''
+              }
+              {
+                isSelected == "Ads" ?
+                  <>
+                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
+
+                    >
+                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
+
+                        <Text style={{ textAlign: 'center', top: 2, }}>Oluştur</Text>
+
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
+
+                    >
+                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, hidden4: 'none' }}>
+
+                        <Text style={{ textAlign: 'center', top: 2, }}>Listele</Text>
+
+                      </View>
+                    </TouchableOpacity>
+
+                  </> : ''
+              }
 
 
             </View>
