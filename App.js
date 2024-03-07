@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput ,TouchableWithoutFeedback,Keyboard,ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TextInput ,TouchableWithoutFeedback,Keyboard,ScrollView, Alert } from 'react-native';
 import { createNativeStackNavigator} from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { TransitionPresets } from '@react-navigation/stack';
@@ -39,10 +39,20 @@ import CategoryChoose from './pages/Home/İlanYükleme/ProjectAdvertsAdd/Categor
 import CategorieStatus from './pages/Home/İlanYükleme/ProjectAdvertsAdd/CategorieStatus';
 import AdvertsPlace from './pages/Home/İlanYükleme/ProjectAdvertsAdd/AdvertsPlace';
 import ShareScreenProject from './pages/Home/İlanYükleme/ProjectAdvertsAdd/ShareScreenProject';
+import AdvertForm from './pages/Home/İlanYükleme/ProjectAdvertsAdd/AdvertForm';
+
+import AdvertStatu from './pages/Home/İlanYükleme/RealtorAdvertsAdd/AdvertStatu';
+import AdvertType from './pages/Home/İlanYükleme/RealtorAdvertsAdd/AdvertType';
+import RealtorAdvertAdd from './pages/Home/İlanYükleme/RealtorAdvertsAdd/RealtorAdvertAdd';
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
+  
   const [İsLoggedIn, setİsLoggedIn] = useState(false)
+
+
+
+
   return (
     
     <NavigationContainer>
@@ -60,9 +70,11 @@ export default function App({route}) {
   <Stack.Screen name="Login"  component={Login} options={{
       title:'Giriş Yap'
   }} />
-  <Stack.Screen name="Emlak"  component={Emlakİlanı} options={{
-    headerShown:false
-  }} />
+  <Stack.Screen name="Emlak"  component={Emlakİlanı} 
+   options={({route})=>({
+   
+  })} 
+  />
   <Stack.Screen name="Proje"  component={Projeİlanı}
    options={({route})=>({
     title:route.params.name
@@ -253,8 +265,25 @@ export default function App({route}) {
               
           })}
       
+
+
       />
-         <Stack.Screen name="ShareAdvert"  component={ShareScreenProject}
+         <Stack.Screen name="AdvertForm"  
+            options={({route})=>({
+              headerBackTitle:'.',
+              animationTypeForReplace:'pop',
+              
+                
+              
+          })}
+      
+            
+
+      >
+        {(props) => <AdvertForm />}
+      </Stack.Screen>
+
+         <Stack.Screen name="ShareAdvert" 
        options={({route})=>({
         headerBackTitle:'.',
         animationTypeForReplace:'pop',
@@ -263,7 +292,31 @@ export default function App({route}) {
         
     })}
   
-  />
+  >
+
+{(props) => <ShareScreenProject {...props} />}
+  </Stack.Screen>
+
+
+  <Stack.Screen name="AdvertStatu"  component={AdvertStatu} options={({route})=>({
+    headerBackTitle:'.',
+    title:route.params.name
+  })} 
+ 
+  />  
+
+<Stack.Screen name="AdvertType"  component={AdvertType} options={({route})=>({
+   headerBackTitle:'.',
+    title:route.params.name
+  })} 
+ 
+  /> 
+  <Stack.Screen name="RealtorAdd"  component={RealtorAdvertAdd} options={({route})=>({
+     headerBackTitle:'.',
+    title:'İlanı Paylaş'
+  })} 
+ 
+  /> 
 </Stack.Navigator>
 </NavigationContainer>
 

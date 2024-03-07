@@ -2,7 +2,7 @@ import { View, Text, StyleSheet,TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import CategoryAdverts from './CategoryAdverts';
-
+import Icon2 from 'react-native-vector-icons/AntDesign'
 
 export default function AdvertsPlace() {
   const propertyTypes = [
@@ -76,7 +76,13 @@ const Prefabric=[
   const {name,previousName,beforName,antesName}=route.params;
   return (
     <View style={styles.container}>
-      <Text style={{fontWeight:'bold'}}>{previousName + ' > '+ beforName + ' > ' + antesName +' > '+name}</Text>
+       <View style={[styles.card,{}]}>
+      <View style={{backgroundColor:'#ebebeb4d',padding:10,borderRadius:'50%'}}>
+            <Icon2 name='home' color={'red'} size={17}/>
+            </View>
+            <Text style={{fontWeight:'bold',fontSize:12}}>{previousName + ' > '+ beforName + ' > ' + antesName +' > '+name}</Text>
+      </View>
+   
       {propertyTypes.map((item,index)=>(
         <TouchableOpacity key={index} onPress={()=>navigation.navigate('ShareAdvert',{name:item,previousName:previousName,beforName:beforName,antesName:antesName,AndName:name})}>
         <CategoryAdverts text={item} key={index}/>
@@ -89,5 +95,31 @@ const  styles = StyleSheet.create({
         container: {
             flex:1,
             backgroundColor:'white'
+        },
+        card:{
+          flexDirection:'row',
+          alignItems:'center',
+          gap:8,
+          backgroundColor: '#FFFFFF',  
+          borderRadius: 10,  
+          paddingVertical: 12,  
+          paddingHorizontal: 10,  
+          width: '100%',  
+          marginVertical: 5,  
+        
+          borderWidth:0.7,
+          borderColor:'#CED4DA',
+          ...Platform.select({
+              ios: {
+                shadowColor: ' #e6e6e6',
+                shadowOffset: { width: 1, height: 1 },
+                shadowOpacity: 0.1,
+                shadowRadius: 5,
+              },
+              android: {
+                elevation: 5,
+              },
+            }),
         }
+
 })

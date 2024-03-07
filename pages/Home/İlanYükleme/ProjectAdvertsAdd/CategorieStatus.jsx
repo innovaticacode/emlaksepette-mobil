@@ -2,7 +2,7 @@ import { View, Text ,StyleSheet, TouchableOpacity} from 'react-native'
 import React, { useState } from 'react'
 import CategoryAdverts from './CategoryAdverts'
 import { useRoute ,useNavigation} from '@react-navigation/native'
-
+import Icon2 from 'react-native-vector-icons/AntDesign'
 export default function CategorieStatus() {
  const [display, setdisplay] = useState(true)
  const route=useRoute()
@@ -14,7 +14,13 @@ export default function CategorieStatus() {
   return (
     <View style={styles.container}>
     <View style={styles.categoryContainer}>
-      <Text style={{fontWeight:'bold'}}>{previousName + ' > '+beforName +' > '  + name }</Text>
+    <View style={[styles.card,{}]}>
+      <View style={{backgroundColor:'#ebebeb4d',padding:10,borderRadius:'50%'}}>
+            <Icon2 name='home' color={'red'} size={17}/>
+            </View>
+            <Text style={{fontWeight:'bold',fontSize:12}}>{previousName + ' > '+beforName +' > '  + name }</Text>
+      </View>
+    
    {
     name=='İş Yeri'?<>
     <TouchableOpacity onPress={()=>navigation.navigate('AdvertPlace',{name:'Satılık',previousName:previousName,beforName:beforName,antesName:name})}>
@@ -53,5 +59,30 @@ const  styles = StyleSheet.create({
     container: {
         flex:1,
         backgroundColor:'white'
+    },
+    card:{
+      flexDirection:'row',
+      alignItems:'center',
+      gap:8,
+      backgroundColor: '#FFFFFF',  
+      borderRadius: 10,  
+      paddingVertical: 12,  
+      paddingHorizontal: 10,  
+      width: '100%',  
+      marginVertical: 5,  
+    
+      borderWidth:0.7,
+      borderColor:'#CED4DA',
+      ...Platform.select({
+          ios: {
+            shadowColor: ' #e6e6e6',
+            shadowOffset: { width: 1, height: 1 },
+            shadowOpacity: 0.1,
+            shadowRadius: 5,
+          },
+          android: {
+            elevation: 5,
+          },
+        }),
     }
 })

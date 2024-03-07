@@ -1,4 +1,4 @@
-import { View, Text,TouchableWithoutFeedback,Keyboard,ScrollView } from 'react-native'
+import { View, Text,TouchableWithoutFeedback,Keyboard,ScrollView, StyleSheet } from 'react-native'
 import React from 'react'
 import BasketItem from '../../components/BasketItem'
 
@@ -6,11 +6,18 @@ import BasketItem from '../../components/BasketItem'
 export default function Basket() {
   return (
     <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
-      <ScrollView>
-    <View style={{alignItems:'center',height:800}}>
-     <BasketItem/>
+      <View style={styles.container}>
+  
+      <BasketItem/>
+
     </View>
-    </ScrollView>
     </TouchableWithoutFeedback>
   )
 }
+const styles=StyleSheet.create({
+  container:{
+    backgroundColor:'white',
+    flex:1,
+    padding:13
+  }
+})
