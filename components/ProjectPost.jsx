@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity ,Dimensions,Image} from 'react-native'
 import React from 'react'
 import { useNavigation } from "@react-navigation/native";
-export default function ProjectPost({caption,ımage,location,city, mahalle,acıklama,ShoppingName,ShoppingMail,ShopingInfo,Phone, ProfilImage}) {
+export default function ProjectPost({caption,ımage,location,city, mahalle,acıklama,ShoppingName,ShoppingMail,ShopingInfo,Phone, ProfilImage,slug}) {
     const navigation = useNavigation();
     const generateRandomColorCode = () => {
       const letters = '0123456789ABCDEF';
@@ -25,7 +25,8 @@ export default function ProjectPost({caption,ımage,location,city, mahalle,acık
       ShoppingName:ShoppingName,
       ShoppingMail:ShoppingMail,
       ShopingInfo:ShopingInfo,
-      Phone:Phone
+      Phone:Phone,
+      slug:slug
        })}>
 
         

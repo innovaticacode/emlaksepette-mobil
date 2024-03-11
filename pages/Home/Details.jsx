@@ -39,6 +39,7 @@ import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
 
 export default function Details({navigation}) {
+  const [showAlert, setshowAlert] = useState(false)
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
@@ -51,7 +52,7 @@ export default function Details({navigation}) {
   }
   const route = useRoute();
  
-  const {  otherParam ,konum,ımage,sehir,acıklama, ShoppingName,ShoppingMail,ShopingInfo, Phone} = route.params;
+  const {  otherParam ,konum,ımage,sehir,acıklama, ShoppingName,ShoppingMail,ShopingInfo, Phone,slug} = route.params;
  
   const translateY = useRef(new Animated.Value(400)).current;
 
@@ -97,9 +98,10 @@ export default function Details({navigation}) {
       .then(() => console.log('Instagram açıldı ve link paylaşıldı'))
       .catch((error) => console.error('Instagram açılamadı:', error));
   };
-  const copyToClipboard = (text) => {
-    
-    Clipboard.setStringAsync(text);
+  const copyToClipboard = () => {
+    const url=`https://emlaksepette.com/proje/${slug}/1000381/detay`
+    Clipboard.setStringAsync(url);
+    ShowAlert()
   };
   const handleShareViaSMS = (text) => {
     const url = text; // Paylaşmak istediğiniz link
@@ -108,10 +110,18 @@ export default function Details({navigation}) {
     // Linking.openURL, SMS uygulamasını başlatmak için kullanılabilir
     Linking.openURL(`sms:?body=${encodeURIComponent(message)}`);
   };
+  const ShowAlert = ()=>{
+        setshowAlert(true)
+        setTimeout(() => {
+          setshowAlert(false)
+        }, 1000);
+  }
+
   return (
       <View>
-          <View style={{position:'absolute',zIndex:1,backgroundColor:'red',top:310,left:150,padding:20}}>
-            <Text>Link Kopyalandı</Text>
+          <View style={{padding:15, position:'absolute',zIndex:1,backgroundColor:'#6fdb4e',top:310,left:110,display:showAlert? 'flex':'none' , flexDirection:'row',alignItems:'center',gap:15}}>
+            <Text style={{textAlign:'center',color:'white'}}>Bağlantı Panoya Kopyalandı</Text>
+            <Heart name="check" size={20} color={'white'}/>
           </View>
         
     <ScrollView style={{ backgroundColor: 'white' }} indicatorStyle="white" onTouchStart={closeSheet}>
@@ -389,7 +399,7 @@ export default function Details({navigation}) {
             <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',gap:27}}>
             <TouchableOpacity style={{alignItems:'center'}}
               onPress={()=>{
-                copyToClipboard(konum)
+                copyToClipboard()
               }}
             >
             <View style={styles.shareIcons}>

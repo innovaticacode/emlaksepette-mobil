@@ -85,7 +85,7 @@ export default function App() {
    ımage={`${apiUrl}/${item.image.replace('public/', 'storage/')}`} 
   location={item.city.title}
    city={item.county.ilce_title}
-   
+   slug={item.slug}
    acıklama={item.description.replace(/<\/?[^>]+(>|$)/g , '').replace(/&nbsp;/g, ' ')}
    ShoppingName={item.user.name}
    ShoppingMail={item.user.email}
