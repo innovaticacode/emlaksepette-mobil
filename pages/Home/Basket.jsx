@@ -90,7 +90,7 @@ export default function Basket() {
      <View style={{flexDirection:'row'}}> 
         <View style={{flex:0.8/2,paddingLeft:15,padding:4,gap:4}}>
           <Text style={{color:'grey',fontSize:12}}>Toplam</Text>
-          <Text style={{fontFamily:'Verdana',fontWeight:'200'}}>25.000 ₺</Text>
+          <Text style={{fontWeight:'200'}}>25.000 ₺</Text>
           </View>  
          <TouchableOpacity style={{flex:1.2/2,backgroundColor:'#ea2b2e',justifyContent:'center',borderRadius:5}}> 
             <Text style={{textAlign:'center',color:'white'}}>Sepeti Onayla</Text>

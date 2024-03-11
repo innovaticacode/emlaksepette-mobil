@@ -26,7 +26,7 @@ export default function DetailsPicture({ımage}) {
          source={{uri:ımage}}
           style={{ width: "100%", height: "100%" }}
           resizeMode="cover"
-          imageStyle={{ borderRadius: 0, borderBottomLeftRadius:20,borderBottomRightRadius:20 }}
+          imageStyle={{  borderBottomLeftRadius:20,borderBottomRightRadius:20 }}
         />
         {/* <View
           style={{

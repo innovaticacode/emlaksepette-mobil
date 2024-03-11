@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
     text:{
       fontSize:11,
       fontWeight:'300',
-      fontFamily:'Verdana',
+     
       color:'grey'
     },
     btnText:{

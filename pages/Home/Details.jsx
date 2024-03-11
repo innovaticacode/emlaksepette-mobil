@@ -52,7 +52,7 @@ export default function Details({navigation}) {
   }
   const route = useRoute();
  
-  const {  otherParam ,konum,ımage,sehir,acıklama, ShoppingName,ShoppingMail,ShopingInfo, Phone,slug} = route.params;
+  const {  otherParam ,konum,ımage,sehir,acıklama, ShoppingName,ShoppingMail,ShopingInfo, Phone,slug,ProjectId} = route.params;
  
   const translateY = useRef(new Animated.Value(400)).current;
 
@@ -74,12 +74,12 @@ export default function Details({navigation}) {
   // const copyToClipboard = async (text) => {
   //   await Linking.openURL(`sms:&body=${encodeURIComponent(text)}`);
   // };
-  const shareLinkOnWhatsApp = (link) => {
+  const shareLinkOnWhatsApp = () => {
     // Paylaşılacak link
-    const linkToShare = link;
+    const url=`https://emlaksepette.com/proje/${slug}//1000${ProjectId}/detay`
   
     // WhatsApp paylaşım linki
-    const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(linkToShare)}`;
+    const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
   
     // WhatsApp'ı aç ve linki paylaş
     Linking.openURL(whatsappShareURL)
@@ -88,10 +88,10 @@ export default function Details({navigation}) {
   };
   const shareLinkOnInstagram = (text) => {
     // Paylaşılacak link
-    const linkToShare = text;
+    const url=`https://emlaksepette.com/proje/${slug}/100${ProjectId}/detay`
   
     // Instagram profil veya hikaye paylaşım linki
-    const instagramShareURL = `instagram://story/?text=${encodeURIComponent(linkToShare)}`;
+    const instagramShareURL = `instagram://story/?text=${encodeURIComponent(url)}`;
   
     // Instagram'ı aç ve linki paylaş
     Linking.openURL(instagramShareURL)
@@ -99,7 +99,7 @@ export default function Details({navigation}) {
       .catch((error) => console.error('Instagram açılamadı:', error));
   };
   const copyToClipboard = () => {
-    const url=`https://emlaksepette.com/proje/${slug}/1000381/detay`
+    const url=`https://emlaksepette.com/proje/${slug}/1000${ProjectId}/detay`
     Clipboard.setStringAsync(url);
     ShowAlert()
   };

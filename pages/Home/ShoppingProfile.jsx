@@ -414,7 +414,7 @@ const style = StyleSheet.create({
   profileImage: {
     width: '100%',
     height: width > 400 ? 90 : 80,
-    borderRadius: '50%',
+    borderRadius: 50,
     backgroundColor: 'blue'
   },
   UserInfo: {

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity ,Dimensions,Image} from 'react-native'
 import React from 'react'
 import { useNavigation } from "@react-navigation/native";
-export default function ProjectPost({caption,ımage,location,city, mahalle,acıklama,ShoppingName,ShoppingMail,ShopingInfo,Phone, ProfilImage,slug}) {
+export default function ProjectPost({caption,ımage,location,city, mahalle,acıklama,ShoppingName,ShoppingMail,ShopingInfo,Phone, ProfilImage,slug,ProjectNo}) {
     const navigation = useNavigation();
     const generateRandomColorCode = () => {
       const letters = '0123456789ABCDEF';
@@ -26,7 +26,9 @@ export default function ProjectPost({caption,ımage,location,city, mahalle,acık
       ShoppingMail:ShoppingMail,
       ShopingInfo:ShopingInfo,
       Phone:Phone,
-      slug:slug
+      slug:slug,
+      ProjectId:ProjectNo
+      
        })}>
 
         
@@ -35,7 +37,7 @@ export default function ProjectPost({caption,ımage,location,city, mahalle,acık
                          style={{ width: '100%', height: '100%' }}/>
      <View style={styles.ShoppingName}>
      <View style={styles.ShopImage}>
-     <Image source={{uri:ProfilImage}} style={{width:'50%',height:'90%',}} resizeMode='cover' borderRadius={'50%'}/>
+     <Image source={{uri:ProfilImage}} style={{width:'50%',height:'90%',}} resizeMode='cover' />
      </View>
      <View style={styles.ShopText}>
         <Text style={{color:'white',fontSize:8,textAlign:'center',fontWeight:'500'}}>{location} / {city}</Text>
