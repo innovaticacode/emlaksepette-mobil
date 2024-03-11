@@ -14,7 +14,7 @@ import {
  
 } from "react-native";
 
-import Clipboard from '@react-native-community/clipboard';
+
 import { React, useRef, useState } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Caption from "../../components/Caption";
@@ -24,6 +24,7 @@ import Map from "../../components/Map";
 import Icon2 from 'react-native-vector-icons/Feather';
 import DetailsPicture from "../../components/DetailsPicture";
 import ShoppinInfo from "../../components/ShoppinInfo";
+import * as Clipboard from 'expo-clipboard';
 
 import OtherHomeInProject from "../../components/OtherHomeInProject";
 import PaymentDetail from "../../components/PaymentDetail";
@@ -97,11 +98,21 @@ export default function Details({navigation}) {
       .catch((error) => console.error('Instagram açılamadı:', error));
   };
   const copyToClipboard = (text) => {
-    Clipboard.setString(text);
+    
+    Clipboard.setStringAsync(text);
+  };
+  const handleShareViaSMS = (text) => {
+    const url = text; // Paylaşmak istediğiniz link
+    const message = `Bu linki kontrol et: ${url}`;
+
+    // Linking.openURL, SMS uygulamasını başlatmak için kullanılabilir
+    Linking.openURL(`sms:?body=${encodeURIComponent(message)}`);
   };
   return (
       <View>
-     
+          <View style={{position:'absolute',zIndex:1,backgroundColor:'red',top:310,left:150,padding:20}}>
+            <Text>Link Kopyalandı</Text>
+          </View>
         
     <ScrollView style={{ backgroundColor: 'white' }} indicatorStyle="white" onTouchStart={closeSheet}>
       <View style={{ flex: 1, height:tabs===4 ?1000:1590 && tabs===3 ?1370:1590 && tabs===2?1360:1590 && tabs===1?1580:1490 && tabs===0 ? 1600:1590
@@ -378,7 +389,7 @@ export default function Details({navigation}) {
             <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',gap:27}}>
             <TouchableOpacity style={{alignItems:'center'}}
               onPress={()=>{
-                copyToClipboard('kddlsjfldsjf')
+                copyToClipboard(konum)
               }}
             >
             <View style={styles.shareIcons}>
@@ -413,7 +424,11 @@ export default function Details({navigation}) {
             </View>
             <Text>Facebook</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{alignItems:'center'}}>
+          <TouchableOpacity style={{alignItems:'center'}}
+              onPress={()=>{
+                handleShareViaSMS(konum)
+              }}
+          >
             <View style={styles.shareIcons}>
              <LinkIcon3 name="message-circle" size={23}/>
             </View>
