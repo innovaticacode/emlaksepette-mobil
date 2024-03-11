@@ -92,7 +92,7 @@ gap:10,
    width:60,
    height:60,
     backgroundColor:'red',
-    borderRadius:'50%',
+  
     alignItems:'center',
     justifyContent:'center',
   

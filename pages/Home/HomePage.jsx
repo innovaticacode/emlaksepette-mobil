@@ -44,8 +44,9 @@ export default function App() {
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <SafeAreaView style={{ flex: 1, } }>
-        <Header />
+       
+      <SafeAreaView style={{ flex: 1, paddingTop:25}}>
+      <Header />
             <ScrollView scrollEventThrottle={20} 
              refreshControl={
               <RefreshControl
@@ -54,7 +55,9 @@ export default function App() {
               />
             }
             >
+             
         <View>
+          
           <SliderBar />
         </View>
 

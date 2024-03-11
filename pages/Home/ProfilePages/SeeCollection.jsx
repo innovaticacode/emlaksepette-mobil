@@ -90,7 +90,7 @@ export default function SeeCollection() {
                  borderRadius: 20,
                }}
              >
-              <Image source={require('../home.jpg')} style={{width:'100%',height:'100%'}} borderRadius={'50%'}/>
+              <Image source={require('../home.jpg')} style={{width:'100%',height:'100%'}}/>
              </View>
          <View>
 
@@ -226,7 +226,7 @@ const style=StyleSheet.create({
       profileImage:{
         width:'100%',
         height: width>400?90:80,
-        borderRadius:'50%',
+       
         backgroundColor:'blue'
       },
       UserInfo:{

@@ -60,7 +60,7 @@ export default function Profile() {
            </View>
          
           </View>
-          <View style={{left:10,width:'100%',justifyContent:'center'}}>
+          <View style={{left:10,width:'100%',justifyContent:'center',flexDirection:'row'}}>
            <TextInput placeholder='Mağazda Ara...'
             style={{
             backgroundColor:'#FFFFFF3b',
@@ -68,28 +68,14 @@ export default function Profile() {
             borderRadius:50,
             width:'100%',
            }}/>
-           <TouchableOpacity>
-           <View style={{
-            position:'absolute',
-            right:5,
-           bottom:4,
-            backgroundColor: "#FFFFFF",
-            justifyContent: "center",
-            width: 30,
-            height: 30,
-            alignItems: "center",
-            borderRadius: 20,
-           }}>
-           <Icon name='search1'  size={15}/>
-           </View>
-           </TouchableOpacity>
+         
           </View>
           </View>
 
 
             <View style={styles.ProfileImageAndIcon}>
             <View style={styles.ProfileImage}>
-              <Image source={require('./home.jpg')} style={{width:'100%',height:'100%'}} borderRadius={'50%'} />
+              <Image source={require('./home.jpg')} style={{width:'100%',height:'100%'}} borderRadius={20} />
         </View> 
         <View>
         <TouchableOpacity onPress={openSheet}>
@@ -112,7 +98,7 @@ export default function Profile() {
               
         </SafeAreaView>
       <View style={[styles.headerProfile]}>
-        <View style={{width:'100%',height:'100%',backgroundColor:'#DE4241E6',position:'absolute',zIndex:1,borderBottomLeftRadius:50,borderBottomRightRadius:50}}></View>
+        <View style={{width:'100%',height:'100%',backgroundColor:'#DE4241E6',position:'absolute',zIndex:1,borderBottomLeftRadius:50,borderBottomRightRadius:50,overflow:'hidden'}}></View>
       <ImageBackground source={require('./profilePhoto.jpg')} style={{width:'100%',height:'100%'}} imageStyle={{borderBottomLeftRadius:50,borderBottomRightRadius:50}} />
 
        
@@ -121,7 +107,7 @@ export default function Profile() {
        
       </View>
       <View>
-      <ScrollView horizontal style={{padding:10}} indicatorStyle='white'>
+      <ScrollView horizontal style={{padding:10}} showsHorizontalScrollIndicator={false}>
       <View style={styles.tabBar}>
         
 
@@ -164,7 +150,7 @@ export default function Profile() {
      
      <Animated.View
        style={{
-      
+        
          zIndex:1,
          backgroundColor: '#eeeeee',
          borderTopLeftRadius: 20,
@@ -236,7 +222,7 @@ const styles=StyleSheet.create({
   },
   headerProfile:{
     width:'100%',
-    height:'25%',
+    height:width>400? 220:170,
   
   
    borderBottomLeftRadius:50,

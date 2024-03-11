@@ -6,7 +6,7 @@ import SliderItem from './SliderItem'
 
 export default function SliderBar() {
   return (
-    <ScrollView horizontal={true}  indicatorStyle={"white"} style={{
+    <ScrollView horizontal={true}  showsHorizontalScrollIndicator={false} style={{
         
       top:10,
     }}>

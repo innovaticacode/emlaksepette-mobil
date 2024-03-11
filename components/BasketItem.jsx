@@ -44,7 +44,7 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
           onPress={()=>navigation.navigate('Profile',{name:shopName})}
         >
           <TouchableOpacity
-            style={{borderWidth:0.9,borderColor:'grey',padding:2,borderRadius:'50%',backgroundColor:chechked? '#EA2C2E':'white'}}
+            style={{borderWidth:0.9,borderColor:'grey',padding:2,backgroundColor:chechked? '#EA2C2E':'white'}}
             onPress={()=>setchechked(!chechked)}
           >
             <Icon name="check" size={12} color={'white'} />
@@ -64,7 +64,7 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
           <View style={{flexDirection:'row',gap:10}}>
             <View style={{justifyContent:'center'}}>
             <TouchableOpacity
-            style={{borderWidth:0.9,borderColor:'grey',padding:2,borderRadius:'50%',backgroundColor:chechked? '#EA2C2E':'white'}}
+            style={{borderWidth:0.9,borderColor:'grey',padding:2,backgroundColor:chechked? '#EA2C2E':'white'}}
             onPress={()=>setchechked(!chechked)}
           >
             <Icon name="check" size={12} color={'white'} />
@@ -85,7 +85,7 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
                    <TouchableOpacity onPress={decreaseProductCount}>
                     <Icon3 name="minus" color={'grey'}/>
                    </TouchableOpacity>
-                   <View style={{backgroundColor:'#efbdbd',paddingLeft:8,paddingRight:8, paddingTop:4, paddingBottom:4,borderRadius:'50%',}}>
+                   <View style={{backgroundColor:'#efbdbd',paddingLeft:8,paddingRight:8, paddingTop:4, paddingBottom:4,}}>
                     <Text style={{fontSize:12,fontWeight:'bold',color:'#FFF'}}>{productCount}</Text>
                    </View>
                    <TouchableOpacity onPress={()=>{

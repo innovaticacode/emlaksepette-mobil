@@ -8,7 +8,7 @@ export default function SuggestItem({openModal}) {
         <View style={{borderBottomWidth:1,paddingBottom:15,borderBottomColor:'#ebebeb'}}>
         <View style={{flexDirection:'row',alignItems:'center',gap:18,}}>
                 <View style={style.profileImage}>
-                    <Image source={require('./home.jpg')} style={{width:'100%',height:'100%'}} borderRadius={'50%'} />
+                    <Image source={require('./home.jpg')} style={{width:'100%',height:'100%'}} />
                 </View>
                 <View style={style.ProfileName}>
                     <Text>Jonathan Elcott</Text>

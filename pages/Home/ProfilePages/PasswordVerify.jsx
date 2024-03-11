@@ -36,7 +36,7 @@ export default function PasswordVerify() {
     <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
     <View style={styles.container}>
         <View style={styles.Body}>
-            <View style={{width:'100%',height:'40%',borderRadius:'50%',right:10}}>
+            <View style={{width:'100%',height:'40%',right:10}}>
               <Image source={require('./logo.png')} style={{width:'100%',height:'100%',tintColor:'#EA2C2E'}} resizeMode='contain' />
             </View>
 

@@ -92,7 +92,7 @@ export default function PostDetail() {
     <TouchableOpacity style={{
       width:'14%',
       backgroundColor:'#E54242',
-      borderRadius:'50%',
+      
       justifyContent:'center',
       bottom:2,
       height:'90%'

@@ -15,7 +15,7 @@ export default function CategorieStatus() {
     <View style={styles.container}>
     <View style={styles.categoryContainer}>
     <View style={[styles.card,{}]}>
-      <View style={{backgroundColor:'#ebebeb4d',padding:10,borderRadius:'50%'}}>
+      <View style={{backgroundColor:'#ebebeb4d',padding:10,}}>
             <Icon2 name='home' color={'red'} size={17}/>
             </View>
             <Text style={{fontWeight:'bold',fontSize:12}}>{previousName + ' > '+beforName +' > '  + name }</Text>

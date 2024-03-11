@@ -35,16 +35,6 @@ const style=StyleSheet.create({
     borderBottomColor:'#bebebe',
    
   
-    ...Platform.select({
-        ios: {
-          shadowColor: ' #e6e6e6',
-          shadowOffset: { width: 1, height: 1 },
-          shadowOpacity: 0.1,
-          shadowRadius: 5,
-        },
-        android: {
-          elevation: 5,
-        },
-      }),
+ 
   }
 })

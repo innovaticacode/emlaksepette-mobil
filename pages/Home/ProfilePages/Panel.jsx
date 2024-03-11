@@ -42,7 +42,7 @@ export default function Panel({options,onSelect}) {
         </View>
         <View style={style.ProfileImage}>
             
-              <Image source={require('../home.jpg')} style={{width:'100%',height:'100%'}} borderRadius={'50%'}/>
+              <Image source={require('../home.jpg')} style={{width:'100%',height:'100%'}} />
             
           </View>  
       </View>

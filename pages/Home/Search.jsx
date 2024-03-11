@@ -13,11 +13,12 @@ const updateSearch = (search) => {
 
   return (
     <ScrollView>
-      <SafeAreaView onTouchStart={()=>Keyboard.dismiss()}>
-        <Header/>
-    
+      
+      <SafeAreaView onTouchStart={()=>Keyboard.dismiss()} style={{top:30}}>
+       
+      <Header/>
      
-    <View style={{flex:1}}>
+    <View style={{flex:1,}}>
       <View style={styles.Input}>
         <SearchBar
           placeholder="Ara..."
@@ -40,7 +41,7 @@ const updateSearch = (search) => {
        </View>
 
       
-      <View style={{bottom:20}}>
+      <View style={{bottom:10}}>
            <Categories category='Projeler'/>
           <Categories category='Konut'/>
           <Categories category='İş Yeri'/>

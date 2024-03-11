@@ -9,7 +9,7 @@ export default function ShopComment() {
             <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit mollitia quibusdam dolorum cupiditate nesciunt similique quidem, accusamus pariatur laudantium odio facilis, ut consequatur quisquam aspernatur eius officia, repudiandae ipsa doloribus.</Text>
         </View>
         <View style={{display:'flex',flexDirection:'row',top:10,gap:15}}>
-                <View style={{width:34,height:34,backgroundColor:'blue',borderRadius:'50%'}}></View>
+                <View style={{width:34,height:34,backgroundColor:'blue',}}></View>
                 <View style={{justifyContent:'center'}}>
                     <Text>Jonathan Greene</Text>
                     <Text style={{fontSize:11,color:'grey'}}>Bireysel Üye | 20 gün önce</Text>

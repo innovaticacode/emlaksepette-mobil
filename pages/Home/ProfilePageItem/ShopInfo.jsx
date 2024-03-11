@@ -13,7 +13,7 @@ export default function ShopInfo({progress}) {
                 <View style={{display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
                 <View style={[styles.ınformation,{top:10},styles.commentArea]}>
 
-                    <View style={{ padding: 10, backgroundColor: '#E92C2A', width: width>400?  '10%':'11%', left: 10, alignItems: 'center', borderRadius: '50%' }}>
+                    <View style={{ padding: 10, backgroundColor: '#E92C2A', width: width>400?  '10%':'11%', left: 10, alignItems: 'center',  }}>
                         <Icon name='calendar' size={20} color={'white'}  />
                     </View>
 
@@ -25,7 +25,7 @@ export default function ShopInfo({progress}) {
                 </View>
                 <View style={[styles.ınformation,styles.commentArea]}>
 
-                    <View style={{ padding: 10, backgroundColor: '#E92C2A', width: width>400?  '10%':'12%', height: '70%', left: 10, alignItems: 'center', borderRadius: '50%', }}>
+                    <View style={{ padding: 10, backgroundColor: '#E92C2A', width: width>400?  '10%':'12%', height: '70%', left: 10, alignItems: 'center',  }}>
                         <Icon name='phone' size={20} color={'white'} />
                     </View>
                     <View style={{ gap: 5 }}>
@@ -39,7 +39,7 @@ export default function ShopInfo({progress}) {
                
                 <View style={[styles.ınformation,{top:50},styles.commentArea]}>
 
-                    <View style={{ padding: 10, backgroundColor: '#E92C2A', width: width>400?  '10%':'12%', height: '100%', left: 10, alignItems: 'center', borderRadius: '50%', }}>
+                    <View style={{ padding: 10, backgroundColor: '#E92C2A', width: width>400?  '10%':'12%', height: '100%', left: 10, alignItems: 'center', }}>
                         <Icon name='map-pin' size={20} color={'white'} />
                     </View>
                     <View style={{ gap: 5 }}>

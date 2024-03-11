@@ -81,7 +81,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
 
           <View style={{ width: width > 400 ? 90 : 80, position: 'absolute', bottom: -45, zIndex: 1, left: '40%' }}>
             <View style={style.profileImage}>
-              <Image source={require('./profil.jpg')} style={{ width: '100%', height: '100%' }} borderRadius={'50%'} />
+              <Image source={require('./profil.jpg')} style={{ width: '100%', height: '100%' }}  />
             </View>
 
 
@@ -462,7 +462,12 @@ const style = StyleSheet.create({
         shadowRadius: 5,
       },
       android: {
-        elevation: 5,
+        elevation:5,
+        shadowColor: ' #e6e6e6',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 1,
+        shadowRadius: 1,
+      
       },
     }),
     backgroundColor: 'white',

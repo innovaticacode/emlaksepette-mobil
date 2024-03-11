@@ -10,7 +10,7 @@ export default function AdvertStatu() {
   return (
     <View style={{backgroundColor:'white',flex:1}}>
            <View style={[styles.Card,{paddingVertical:11,paddingHorizontal:15,flexDirection:'row',alignItems:'center',gap:10}]}>
-            <View style={{backgroundColor:'#ebebeb4d',padding:10,borderRadius:'50%'}}>
+            <View style={{backgroundColor:'#ebebeb4d',padding:10,}}>
             <Icon name='home' color={'red'} size={17}/>
             </View>
           

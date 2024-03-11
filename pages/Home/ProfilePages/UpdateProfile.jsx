@@ -67,8 +67,8 @@ export default function UpdateProfile() {
       }}>
   <View style={styles.ProfileEditArea}>
       <TouchableOpacity style={styles.ProfilImage} onPress={openSheet}>
-            <Image source={require('.././profil.jpg')} style={{width:'100%',height:'100%'}} borderRadius={'50%'}/>
-            <TouchableOpacity style={{position:'absolute',bottom:0,right:0,backgroundColor:'#EA2A29',padding:4,borderRadius:'50%'}} onPress={openSheet}>
+            <Image source={require('.././profil.jpg')} style={{width:'100%',height:'100%'}} />
+            <TouchableOpacity style={{position:'absolute',bottom:0,right:0,backgroundColor:'#EA2A29',padding:4,}} onPress={openSheet}>
       <Editıcon name='account-edit' size={20} color={'white'}/>
       </TouchableOpacity>
       </TouchableOpacity> 
@@ -155,7 +155,7 @@ const styles=StyleSheet.create({
       width:width>400 ?'25%':'22%',
       height: '100%',
       
-      borderRadius:'50%'
+      
     },
     Form:{
       gap:30,

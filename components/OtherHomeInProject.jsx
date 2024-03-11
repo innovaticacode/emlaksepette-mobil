@@ -19,6 +19,7 @@ export default function OtherHomeInProject() {
                             backgroundColor:'#EFEFEF',
                             alignItems: 'center',
                             justifyContent: 'center',
+                            borderBottomWidth: tabs===0? 1:0
                         }}>
                         <Text style={{
                             fontSize: 12,
@@ -35,6 +36,7 @@ export default function OtherHomeInProject() {
                             backgroundColor:'#EFEFEF',
                             alignItems: 'center',
                             justifyContent: 'center',
+                            borderBottomWidth:tabs===1? 1:0
                         }}>
                         <Text style={{
                             fontSize: 12,
