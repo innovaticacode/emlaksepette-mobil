@@ -11,8 +11,10 @@ import LinkIcon2 from "react-native-vector-icons/FontAwesome"
 import LinkIcon from "react-native-vector-icons/Entypo"
 import Arrow from "react-native-vector-icons/MaterialIcons"
 import Team from './ProfilePageItem/Team'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation,useRoute } from '@react-navigation/native'
 export default function Profile() {
+  const route=useRoute();
+  const {name}=route.params
   const [tab, settab] = useState(0)
   const { width, height ,fontScale} = Dimensions.get('window');
   const translateY = useRef(new Animated.Value(400)).current;
@@ -50,7 +52,7 @@ export default function Profile() {
      
           <View style={styles.ProfileName}>
           
-            <Text style={{fontSize:width>400?25:18 ,color:'white',fontWeight:'500'}}>Master Realtor</Text>
+            <Text style={{fontSize:width>400?25:18 ,color:'white',fontWeight:'500'}}>{name}</Text>
             <View style={{width:26,height:26,left:10}}>
             <ImageBackground source={require('./BadgeYellow.png')} style={{flex:1}}/>
             <View style={{display:'flex',flexDirection:'column'}}></View>

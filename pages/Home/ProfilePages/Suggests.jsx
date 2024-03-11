@@ -1,12 +1,20 @@
-import { View, Text, StyleSheet ,TouchableOpacity,ScrollView } from 'react-native'
+import { View, Text, StyleSheet ,TouchableOpacity,ScrollView ,Modal,TextInput,Linking} from 'react-native'
 import {useState} from 'react'
 import { useRoute } from '@react-navigation/native'
 import SuggestItem from './profileComponents/SuggestItem';
 
 export default function Suggests() {
+ 
+  const [modalVisible, setModalVisible] = useState(false);
     const route = useRoute();
     const { header,name} = route.params;
     const [Tabs, setTabs] = useState(0)
+    const openModal=()=>{
+      setModalVisible(!modalVisible)
+    }
+    const closeModal=()=>{
+      setModalVisible(!modalVisible)
+    }
   return (
     
     <View style={styles.container}>
@@ -16,7 +24,7 @@ export default function Suggests() {
             <TouchableOpacity style={[styles.TabBarBtn,{backgroundColor:Tabs==0? '#ebebeb':'#E54242'}]}
               onPress={()=>setTabs(0)}
             >
-              <Text style={[styles.tabBarText,{color:Tabs===0? 'red':'white',fontWeight:Tabs===0?'600':'normal'}]}>Alınan Teklifler (1)</Text>
+              <Text style={[styles.tabBarText,{color:Tabs===0? 'red':'white',fontWeight:Tabs===0?'600':'normal'}]}>{name} (1)</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.TabBarBtn,{backgroundColor:Tabs==1? '#ebebeb':'#E54242'}]}
             onPress={()=>setTabs(1)}
@@ -30,12 +38,45 @@ export default function Suggests() {
       </View>
     <ScrollView>
         <View style={{padding:15}}>
-            <SuggestItem/>
-            <SuggestItem/>
+            <SuggestItem openModal={openModal}/>
+            <SuggestItem openModal={openModal}/>
           
         </View>
     </ScrollView>
-
+    <Modal
+        animationType="slide" // veya "fade", "none" gibi
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+          <View style={{gap:5}}>
+            <Text>Yanıtınız</Text>
+            <TextInput style={[styles.Input,{width:'100%'}]}
+              multiline
+            />
+          </View>
+         
+           <View style={{flexDirection:'row',justifyContent:'space-around'}}>
+            <TouchableOpacity style={{backgroundColor:'green',padding:15,paddingLeft:20,paddingRight:20,borderRadius:5}}
+           
+            >
+              <Text style={{color:'white',fontSize:15,fontFamily:'Verdana'}}>Yanıtla</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{backgroundColor:'red',padding:15,paddingLeft:20,paddingRight:20,borderRadius:5}}
+            onPress={()=>setModalVisible(!modalVisible)}
+            >
+              <Text style={{color:'white',fontSize:15,fontFamily:'Verdana'}}>İptal</Text>
+            </TouchableOpacity>
+           </View>
+       
+         
+          </View>
+        </View>
+      </Modal>
     </View>
  
   )
@@ -74,5 +115,42 @@ const styles=StyleSheet.create({
       tabBarText:{
         color:'white',
         fontWeight:'500'
-      }
+      },
+      centeredView: {
+        padding:20,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)', // modal dışı koyu arkaplan
+      },
+      modalView: {
+        width:'100%',
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+       gap:20,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+      },
+      modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+      },
+      Input: {
+        backgroundColor: '#ebebebba',
+        marginTop: 0,
+       padding:10,
+       height:100,
+        fontSize: 17,
+        borderRadius: 4,
+          
+    },
+      
 })

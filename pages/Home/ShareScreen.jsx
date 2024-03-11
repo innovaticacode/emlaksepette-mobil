@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 export default function ShareScreen({navigation}) {
   return (
     <ScrollView indicatorStyle="white">
-    <View style={{ alignItems: "center", gap: 50 }}>
+    <View style={{ alignItems: "center", gap: 50 ,backgroundColor:'white'}}>
       
       <View
 

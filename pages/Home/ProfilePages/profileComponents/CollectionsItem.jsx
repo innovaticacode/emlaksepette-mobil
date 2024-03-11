@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity,Image } from 'react-native'
 import React from 'react'
 import Dot from "react-native-vector-icons/Entypo"
 import Icon from "react-native-vector-icons/Ionicons"
@@ -22,6 +22,7 @@ export default function CollectionsItem({openBottom, disabled}) {
            
         </View>
      </View>
+     <View style={{flexDirection:'row'}}>
      <View style={{padding:20,gap:10}}>
         <View style={{flexDirection:'row',gap:5}}>
             <Text>Koleksiyon Adı:</Text>
@@ -31,6 +32,15 @@ export default function CollectionsItem({openBottom, disabled}) {
             <Text>İlan Sayısı:</Text>
             <Text style={{color:'#EA6361'}}>3</Text>
         </View>
+     </View>
+     <View style={{padding:2,flex:2/2,flexDirection:'row',gap:5,height:80,alignItems:'center'}}>
+            <View style={{flex:1/2,justifyContent:'center',height:50}}>
+                    <Image source={require('./home.jpg')} style={{width:'100%',height:'100%'}}/>
+            </View>
+            <View style={{flex:1/2,height:50}}>
+            <Image source={require('./home.jpg')} style={{width:'100%',height:'100%'}}/>
+                </View>
+     </View>
      </View>
      <View style={{gap:10}}>
         <View>

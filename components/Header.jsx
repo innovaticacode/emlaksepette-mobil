@@ -31,7 +31,9 @@ export default function Header() {
       >
        <Icon name='user' size={40}/>
       </TouchableOpacity>
-      <TouchableOpacity style={{
+      <TouchableOpacity 
+        onPress={()=>navigation.navigate('Notifications')}
+      style={{
         
         width:50,
         alignItems: 'center',
@@ -40,6 +42,9 @@ export default function Header() {
       }}
       
       >
+      <View style={{position:'absolute',backgroundColor:'red',paddingLeft:6,paddingRight:6,padding:1,borderRadius:'50%',bottom:22,left:23,zIndex:1}}>
+        <Text style={{color:'white'}}>1</Text>
+      </View>
        <Icon name='bell' size={40}/>
       </TouchableOpacity>
      </View>

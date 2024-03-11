@@ -44,6 +44,7 @@ import AdvertForm from './pages/Home/İlanYükleme/ProjectAdvertsAdd/AdvertForm'
 import AdvertStatu from './pages/Home/İlanYükleme/RealtorAdvertsAdd/AdvertStatu';
 import AdvertType from './pages/Home/İlanYükleme/RealtorAdvertsAdd/AdvertType';
 import RealtorAdvertAdd from './pages/Home/İlanYükleme/RealtorAdvertsAdd/RealtorAdvertAdd';
+import Notifications from './pages/Home/Notifications';
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
@@ -67,9 +68,13 @@ export default function App({route}) {
   }} 
     
   />
-  <Stack.Screen name="Login"  component={Login} options={{
-      title:'Giriş Yap'
-  }} />
+ {İsLoggedIn ? (
+  <Stack.Group>
+    <Stack.Screen name="Login" component={Login} options={{ title: 'Giriş Yap' }} />
+    <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+  </Stack.Group>
+) : null}
+ 
   <Stack.Screen name="Emlak"  component={Emlakİlanı} 
    options={({route})=>({
    
@@ -93,9 +98,7 @@ export default function App({route}) {
         
         
     })} />
-   <Stack.Screen name="Register"  component={Register}options={{
-    headerShown:false
-  }} />
+ 
     <Stack.Screen name="Profile"  component={Profile}
     
     options={{
@@ -317,7 +320,13 @@ export default function App({route}) {
   })} 
  
   /> 
+  <Stack.Screen name="Notifications"  component={Notifications} options={({route})=>({
+    title:'Bildirimler'
+  })} 
+ 
+  /> 
 </Stack.Navigator>
+
 </NavigationContainer>
 
   );

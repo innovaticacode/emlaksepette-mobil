@@ -9,10 +9,12 @@ import {
   Animated,
   Button, 
   Modal,
+  Linking,
   
+ 
 } from "react-native";
 
-
+import Clipboard from '@react-native-community/clipboard';
 import { React, useRef, useState } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Caption from "../../components/Caption";
@@ -67,8 +69,36 @@ export default function Details({navigation}) {
       useNativeDriver: true,
     }).start();
   }; 
- 
-
+  // const copyToClipboard = async (text) => {
+  //   await Linking.openURL(`sms:&body=${encodeURIComponent(text)}`);
+  // };
+  const shareLinkOnWhatsApp = (link) => {
+    // Paylaşılacak link
+    const linkToShare = link;
+  
+    // WhatsApp paylaşım linki
+    const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(linkToShare)}`;
+  
+    // WhatsApp'ı aç ve linki paylaş
+    Linking.openURL(whatsappShareURL)
+      .then(() => console.log('WhatsApp açıldı ve link paylaşıldı'))
+      .catch((error) => console.error('WhatsApp açılamadı:', error));
+  };
+  const shareLinkOnInstagram = (text) => {
+    // Paylaşılacak link
+    const linkToShare = text;
+  
+    // Instagram profil veya hikaye paylaşım linki
+    const instagramShareURL = `instagram://story/?text=${encodeURIComponent(linkToShare)}`;
+  
+    // Instagram'ı aç ve linki paylaş
+    Linking.openURL(instagramShareURL)
+      .then(() => console.log('Instagram açıldı ve link paylaşıldı'))
+      .catch((error) => console.error('Instagram açılamadı:', error));
+  };
+  const copyToClipboard = (text) => {
+    Clipboard.setString(text);
+  };
   return (
       <View>
      
@@ -346,20 +376,32 @@ export default function Details({navigation}) {
      
           <ScrollView horizontal  style={{padding:5}}   showsHorizontalScrollIndicator={false}>
             <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',gap:27}}>
-            <TouchableOpacity style={{alignItems:'center'}}>
+            <TouchableOpacity style={{alignItems:'center'}}
+              onPress={()=>{
+                copyToClipboard('kddlsjfldsjf')
+              }}
+            >
             <View style={styles.shareIcons}>
              <LinkIcon name="link" size={23}/>
             
             </View>
             <Text>Kopyala</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{alignItems:'center'}}>
+          <TouchableOpacity style={{alignItems:'center'}}
+          onPress={()=>{
+            shareLinkOnWhatsApp(acıklama)
+          }} 
+          >
             <View style={styles.shareIcons}>
              <LinkIcon2 name="whatsapp" size={23}/>
             </View>
             <Text>Whatsapp</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{alignItems:'center'}}>
+          <TouchableOpacity style={{alignItems:'center'}}
+          onPress={()=>{
+            shareLinkOnInstagram('dlkflksdf')
+          }}
+          >
             <View style={styles.shareIcons}>
              <LinkIcon name="instagram" size={23}/>
             </View>

@@ -7,6 +7,7 @@ import DeleteIcon from "react-native-vector-icons/MaterialIcons"
 import PencilIcon from "react-native-vector-icons/FontAwesome5"
 import { SearchBar } from '@rneui/themed';
 export default function Collections() {
+  const [modalVisible, setModalVisible] = useState(false);
   const [searchColection, setSearchColection] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
   const [display, setdisplay] = useState(false)
@@ -76,7 +77,9 @@ setdisplay(false)
         </TouchableOpacity>
        </View>
        <View style={{paddingBottom:10}}>
-       <TouchableOpacity style={{padding:15,borderBottomWidth:1,borderBottomColor:'#ebebeb'}}>
+       <TouchableOpacity style={{padding:15,borderBottomWidth:1,borderBottomColor:'#ebebeb'}}
+        onPress={()=>setModalVisible(!modalVisible)}
+       >
           <View style={{flexDirection:'row',gap:15,justifyContent:'flex-start',padding:3,}}>
             <PencilIcon name='pencil-alt' size={17}/>
             <Text style={{textAlign:'center',}}>Koleksiyonun Adını Düzenle</Text>
@@ -103,7 +106,40 @@ setdisplay(false)
       
      </Animated.View>
    </View>
-   
+   <Modal
+        animationType="slide" // veya "fade", "none" gibi
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+          <View style={{gap:5}}>
+            <Text>Koleksiyon Adı</Text>
+            <TextInput style={[styles.Input,{width:'100%'}]}
+  
+            />
+          </View>
+         
+           <View style={{flexDirection:'row',justifyContent:'space-around'}}>
+            <TouchableOpacity style={{backgroundColor:'green',padding:15,paddingLeft:20,paddingRight:20,borderRadius:5}}
+       
+            >
+              <Text style={{color:'white',fontSize:15,fontFamily:'Verdana'}}>Kaydet</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{backgroundColor:'red',padding:15,paddingLeft:20,paddingRight:20,borderRadius:5}}
+            onPress={()=>setModalVisible(!modalVisible)}
+            >
+              <Text style={{color:'white',fontSize:15,fontFamily:'Verdana'}}>İptal</Text>
+            </TouchableOpacity>
+           </View>
+       
+         
+          </View>
+        </View>
+      </Modal> 
     </View>
   )
 }
@@ -154,6 +190,33 @@ const styles=StyleSheet.create({
        paddingBottom:20,
        paddingLeft:10,
         paddingRight:20,
-      }
+      },
+      centeredView: {
+        padding:20,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)', // modal dışı koyu arkaplan
+      },
+      modalView: {
+        width:'100%',
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+       gap:20,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+      },
+      modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+      },
       
 })

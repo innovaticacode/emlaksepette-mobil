@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-export default function SuggestItem() {
+export default function SuggestItem({openModal}) {
   return (
     <View style={style.container}>
     <View>
@@ -36,7 +36,11 @@ export default function SuggestItem() {
              </View>
 
             </View>
-           <TouchableOpacity style={{flexDirection:'row',backgroundColor:'#E54242',padding:10,paddingLeft:25,paddingRight:25,borderRadius:5}}>
+           <TouchableOpacity style={{flexDirection:'row',backgroundColor:'#E54242',padding:10,paddingLeft:25,paddingRight:25,borderRadius:5}}
+            onPress={()=>{
+              openModal()
+            }}
+           >
             <Text style={{textAlign:'center',fontSize:13,color:'white',fontWeight:'bold'}}>Yanıtla</Text>
            </TouchableOpacity>
         </View>

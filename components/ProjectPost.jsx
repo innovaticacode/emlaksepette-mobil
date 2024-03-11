@@ -37,12 +37,12 @@ export default function ProjectPost({caption,ımage,location,city, mahalle,acık
      <Image source={{uri:ProfilImage}} style={{width:'50%',height:'90%',}} resizeMode='cover' borderRadius={'50%'}/>
      </View>
      <View style={styles.ShopText}>
-        <Text style={{color:'white',fontSize:9,textAlign:'center',fontWeight:'500'}}>{location} / {city}</Text>
+        <Text style={{color:'white',fontSize:8,textAlign:'center',fontWeight:'500'}}>{location} / {city}</Text>
      </View>
      </View>
 
      <View style={[styles.Description,{backgroundColor:RandomColor+'CC',padding:10}]}>
-       <Text style={{color:'#FFFFFF',fontWeight:'800',fontSize:19,textAlign:'center'}}>{caption}</Text>
+       <Text style={{color:'#FFFFFF',fontWeight:'800',fontSize:17,textAlign:'center'}}>{caption}</Text>
      </View>
       
    
