@@ -20,7 +20,7 @@ const Home = () => {
       screenOptions={{
         tabBarLabelStyle: {
           fontSize: 12,
-          fontFamily: "Verdana",
+  
           fontWeight: "200",
         },
         tabBarActiveTintColor: "black",

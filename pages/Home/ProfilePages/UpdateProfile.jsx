@@ -187,7 +187,7 @@ const styles=StyleSheet.create({
       left:2,
       fontWeight:'300',
       letterSpacing:0.5,
-      fontFamily:'Verdana'
+      
     },
     animatedView:{
       
@@ -226,7 +226,7 @@ const styles=StyleSheet.create({
     btnText:{
         textAlign:'center',
         color:'white',
-        fontFamily:'Verdana',
+      
         fontSize:13,
         fontWeight:'500'
     }

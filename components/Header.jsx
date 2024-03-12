@@ -1,4 +1,4 @@
-import { View, Text,StyleSheet,TextInput, ImageBackground, TouchableOpacity } from 'react-native'
+import { View, Text,StyleSheet,TextInput, ImageBackground, TouchableOpacity ,Platform} from 'react-native'
 import React from 'react'
 import AddBtn from 'react-native-vector-icons/AntDesign'
 import Icon from 'react-native-vector-icons/EvilIcons'
@@ -55,12 +55,14 @@ export default function Header() {
 const styles = StyleSheet.create({
    header:{
     alignItems: 'center',
-    height:90,
+  
     display: 'flex',
     flexDirection:'row',
     justifyContent:"space-between",
-    padding:12,
+    padding:10,
+   paddingTop:Platform.OS === 'android' ? 20 : 0,
     width:'100%',
+  
    
   
   

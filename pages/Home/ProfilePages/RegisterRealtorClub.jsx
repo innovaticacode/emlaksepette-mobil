@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 16,
         fontWeight: '300',
-        fontFamily: 'Verdana',
+       
         textAlign: 'center'
     },
     FormContainer: {

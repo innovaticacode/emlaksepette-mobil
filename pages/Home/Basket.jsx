@@ -84,7 +84,7 @@ export default function Basket() {
         }}/>
       </View>
       <TouchableOpacity style={{flex:0.5/2,backgroundColor:'#ea2b2e',justifyContent:'center',borderTopRightRadius:10,borderBottomRightRadius:10}}>
-          <Text style={{textAlign:'center',color:'white',fontFamily:'Verdana'}}>Uygula</Text>
+          <Text style={{textAlign:'center',color:'white',}}>Uygula</Text>
       </TouchableOpacity>
     </View>
      <View style={{flexDirection:'row'}}> 

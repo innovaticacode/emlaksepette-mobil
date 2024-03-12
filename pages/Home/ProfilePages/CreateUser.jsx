@@ -261,7 +261,7 @@ const style = StyleSheet.create({
     left: 6,
     fontWeight: '300',
     letterSpacing: 0.5,
-    fontFamily: 'Verdana'
+  
   },
   bottomSheetItem: {
     width: '100%',
@@ -300,7 +300,7 @@ const style = StyleSheet.create({
    
     fontWeight:'300',
     letterSpacing:0.5,
-    fontFamily:'Verdana'
+   
   },
   card: {  
  
@@ -383,7 +383,7 @@ Btn:{
 },
 btnText:{
   color:'white',
-  fontFamily:'Verdana',
+
   letterSpacing:0.5
 }
 })

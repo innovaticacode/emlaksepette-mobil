@@ -64,12 +64,12 @@ export default function Suggests() {
             <TouchableOpacity style={{backgroundColor:'green',padding:15,paddingLeft:20,paddingRight:20,borderRadius:5}}
            
             >
-              <Text style={{color:'white',fontSize:15,fontFamily:'Verdana'}}>Yanıtla</Text>
+              <Text style={{color:'white',fontSize:15,}}>Yanıtla</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{backgroundColor:'red',padding:15,paddingLeft:20,paddingRight:20,borderRadius:5}}
             onPress={()=>setModalVisible(!modalVisible)}
             >
-              <Text style={{color:'white',fontSize:15,fontFamily:'Verdana'}}>İptal</Text>
+              <Text style={{color:'white',fontSize:15,}}>İptal</Text>
             </TouchableOpacity>
            </View>
        

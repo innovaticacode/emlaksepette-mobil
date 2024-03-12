@@ -109,9 +109,9 @@ const Realtor=[
         }} >
           <View style={styles.Offer}>
             <View style={styles.Ticket1}>
-              <Text style={{ fontFamily: 'Verdana', fontSize: 17, textAlign: 'center', color: '#EA2C2E', fontWeight: '400' }}>Kampanya Tutarı</Text>
+              <Text style={{ fontSize: 17, textAlign: 'center', color: '#EA2C2E', fontWeight: '400' }}>Kampanya Tutarı</Text>
               <View style={{ backgroundColor: 'transparent', width: '100%', padding: 10, }}>
-                <Text style={{ fontSize: 19, fontFamily: 'Verdana', textAlign: 'center', fontWeight: 'bold', color: 'green' }}>{OfferPrice === 0 ? 0 : OfferPrice} ₺</Text>
+                <Text style={{ fontSize: 19,  textAlign: 'center', fontWeight: 'bold', color: 'green' }}>{OfferPrice === 0 ? 0 : OfferPrice} ₺</Text>
               </View>
 
             </View>
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
     left: 6,
     fontWeight: '300',
     letterSpacing: 0.5,
-    fontFamily: 'Verdana'
+  
   },
   animatedView: {
 

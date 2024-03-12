@@ -92,7 +92,7 @@ const styles=StyleSheet.create({
     left:2,
     fontWeight:'300',
     letterSpacing:0.5,
-    fontFamily:'Verdana'
+
   },
   updatebtn:{
     width:'50%',
@@ -104,7 +104,7 @@ const styles=StyleSheet.create({
   btnText:{
     textAlign:'center',
     color:'white',
-    fontFamily:'Verdana',
+  
     fontSize:12,
     fontWeight:'500'
 }

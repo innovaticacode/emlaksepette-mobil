@@ -88,14 +88,14 @@ const styles=StyleSheet.create({
       left:6,
       fontWeight:'300',
       letterSpacing:0.5,
-      fontFamily:'Verdana'
+    
     },
     label2:{
       fontSize:14,
      
       fontWeight:'300',
       letterSpacing:0.5,
-      fontFamily:'Verdana'
+    
     },
     userContainer:{
       backgroundColor: '#FFFFFF',  

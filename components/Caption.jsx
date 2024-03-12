@@ -1,14 +1,14 @@
-import { View, Text ,StyleSheet,ScrollView} from 'react-native'
+import { View, Text ,StyleSheet} from 'react-native'
 import React from 'react'
 import ShoppinInfo from './ShoppinInfo'
-import { GestureHandlerRootView,} from 'react-native-gesture-handler';
+import { GestureHandlerRootView,ScrollView} from 'react-native-gesture-handler';
 export default function Caption({acıklama}) {
   return (
   
     <View style={[styles.card,{paddingLeft:10,paddingRight:10,zIndex:2}]}>
-{/* <View style={{height:500}}>
+<View style={{height:500}}>
     <GestureHandlerRootView>
-  <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}d>
+  <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
  
   <Text>
 
@@ -18,20 +18,8 @@ export default function Caption({acıklama}) {
 
 </ScrollView>
 </GestureHandlerRootView>
-</View> */}
+</View> 
 
-<ScrollView>
-      <View style={{ height: 200 }}>
-        <Text>Birinci bölüm</Text>
-      </View>
-      <View style={{ height: 200 }}>
-        <Text>İkinci bölüm</Text>
-      </View>
-      <View style={{ height: 200 }}>
-        <Text>Üçüncü bölüm</Text>
-      </View>
-      </ScrollView>
-  
    
     
   

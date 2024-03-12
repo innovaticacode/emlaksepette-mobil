@@ -81,7 +81,7 @@ export default function PasswordVerify() {
             </KeyboardAvoidingView>
             <View style={{alignItems:'center', paddingBottom:width>400? 10:0}}>
               <TouchableOpacity style={{width:'40%'}} onPress={handleSendCode}>
-                <Text style={{textAlign:'center',fontSize:15,fontFamily:'Verdana',color:'#264ABB'}}>Yeni Kod Gönder</Text>
+                <Text style={{textAlign:'center',fontSize:15,color:'#264ABB'}}>Yeni Kod Gönder</Text>
               </TouchableOpacity>
             </View>
             <View style={{width:'100%', alignItems:'center',top:10,justifyContent:'center'}}>
@@ -91,7 +91,7 @@ export default function PasswordVerify() {
             </View>
           <View style={{top:30,alignItems:'center'}}>
             <TouchableOpacity style={styles.BtnAccept}  >
-              <Text style={{textAlign:'center',fontSize:17,fontFamily:'Verdana',color:'white'}}>Onayla</Text>
+              <Text style={{textAlign:'center',fontSize:17,color:'white'}}>Onayla</Text>
             </TouchableOpacity>
           </View>
 

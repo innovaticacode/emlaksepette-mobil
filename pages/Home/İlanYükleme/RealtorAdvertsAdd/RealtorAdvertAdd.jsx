@@ -57,7 +57,7 @@ export default function RealtorAdvertAdd() {
             </View>
         </View>
         <View style={{gap:13,padding:10}}>
-        <Text style={[{fontFamily:'Verdana'}]}>Taksitli Satış</Text>
+        <Text style={[{}]}>Taksitli Satış</Text>
         <View style={{flexDirection:'row',alignItems:'center',gap:10}}>
         <Switch
               
@@ -71,7 +71,7 @@ export default function RealtorAdvertAdd() {
               } }
               value={isEnabled2}
             />
-            <Text style={{fontFamily:'Verdana'}}>Var</Text>
+            <Text style={{}}>Var</Text>
         </View>
            
          
@@ -129,7 +129,7 @@ const styles=StyleSheet.create({
         fontSize: 15,
         color: '#495057',
         fontWeight: '400',
-        fontFamily: 'Verdana',
+    
       
     },
     label:{

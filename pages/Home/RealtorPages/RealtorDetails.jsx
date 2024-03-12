@@ -296,7 +296,7 @@ import Comment from "../../../components/Comment";
     text:{
       fontSize:11,
       fontWeight:'500',
-      fontFamily:'Verdana',
+   
       color:'grey'
     },
     btnText:{

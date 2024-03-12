@@ -116,7 +116,7 @@ export default function ShareScreenProject({}) {
       <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={false}>
         <View style={{paddingBottom:80,padding:20}}>
         <View style={{}}>
-          <Text style={{ fontSize: 20, fontFamily: 'Verdana', fontWeight: '400' }}>Proje Detayları</Text>
+          <Text style={{ fontSize: 20, fontWeight: '400' }}>Proje Detayları</Text>
         </View>
         <View style={styles.Form}>
           <View style={{ gap: 10 }}>
@@ -338,12 +338,12 @@ export default function ShareScreenProject({}) {
             <TouchableOpacity style={{backgroundColor:'green',padding:15,paddingLeft:20,paddingRight:20,borderRadius:5}}
          onPress={handleAddBlock} 
             >
-              <Text style={{color:'white',fontSize:15,fontFamily:'Verdana'}}>Bloğu Ekle</Text>
+              <Text style={{color:'white',fontSize:15,}}>Bloğu Ekle</Text>
             </TouchableOpacity>
             <TouchableOpacity style={{backgroundColor:'red',padding:15,paddingLeft:20,paddingRight:20,borderRadius:5}}
             onPress={()=>setModalVisible(!modalVisible)}
             >
-              <Text style={{color:'white',fontSize:15,fontFamily:'Verdana'}}>Kapat</Text>
+              <Text style={{color:'white',fontSize:15,}}>Kapat</Text>
             </TouchableOpacity>
            </View>
        
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#495057',
     fontWeight: '400',
-    fontFamily: 'Verdana',
+
     justifyContent: 'center'
   },
   InputArea:{
@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#495057',
     fontWeight: '400',
-    fontFamily: 'Verdana',
+   
     justifyContent: 'center'
   },
   swtichs:{

@@ -16,46 +16,46 @@ export default function OrderDetails() {
     <View style={style.container}>
    <View style={style.orderInfo}>
         <View style={{flexDirection:'row'}}>
-            <Text style={{fontWeight:'400',fontFamily:'Verdana',fontSize:13}}>İlan No: </Text>
-            <Text style={{fontFamily:'Verdana',fontSize:13,color:'grey'}}>#12345678</Text>
+            <Text style={{fontWeight:'400',fontSize:13}}>İlan No: </Text>
+            <Text style={{fontSize:13,color:'grey'}}>#12345678</Text>
         </View>
         <View style={{flexDirection:'row'}}>
-            <Text style={{fontWeight:'400',fontFamily:'Verdana',fontSize:13}}>Sipariş Tarihi: </Text>
-            <Text style={{fontFamily:'Verdana',fontSize:13,color:'grey'}}>28 Şubat 2024</Text>
+            <Text style={{fontWeight:'400',fontSize:13}}>Sipariş Tarihi: </Text>
+            <Text style={{fontSize:13,color:'grey'}}>28 Şubat 2024</Text>
         </View>
         <View style={{flexDirection:'row'}}>
-            <Text style={{fontWeight:'400',fontFamily:'Verdana',fontSize:13}}>Sipariş Özeti: </Text>
-            <Text style={{fontFamily:'Verdana',fontSize:13,color:'grey'}}>
+            <Text style={{fontWeight:'400',fontSize:13}}>Sipariş Özeti: </Text>
+            <Text style={{fontSize:13,color:'grey'}}>
                 <Text style={{color:'green'}}>1 Onay, </Text>
                 <Text>1 Ürün</Text>
             </Text>
         </View>
         <View style={{flexDirection:'row'}}>
-            <Text style={{fontWeight:'400',fontFamily:'Verdana',fontSize:13}}>Sipariş Detayı: </Text>
-            <Text style={{fontFamily:'Verdana',fontSize:13,color:'green'}}>1 Ürün Onaylandı</Text>
+            <Text style={{fontWeight:'400',fontSize:13}}>Sipariş Detayı: </Text>
+            <Text style={{fontSize:13,color:'green'}}>1 Ürün Onaylandı</Text>
         </View>
         <View style={{flexDirection:'row'}}>
-            <Text style={{fontWeight:'400',fontFamily:'Verdana',fontSize:13}}>Toplam: </Text>
-            <Text style={{fontFamily:'Verdana',fontSize:13,color:'green'}}>2.500.100</Text>
+            <Text style={{fontWeight:'400',fontSize:13}}>Toplam: </Text>
+            <Text style={{fontSize:13,color:'green'}}>2.500.100</Text>
         </View>
    </View>
    <View style={style.orderDetail}>
         <View style={{gap:10}}>
         <View style={{flexDirection:'row'}}>
-            <Text style={{fontWeight:'400',fontFamily:'Verdana',fontSize:13}}>Tahmini Teslimat:</Text>
-            <Text style={{fontFamily:'Verdana',fontSize:13,color:'grey'}}>
+            <Text style={{fontWeight:'400',fontSize:13}}>Tahmini Teslimat:</Text>
+            <Text style={{fontSize:13,color:'grey'}}>
                 <Text style={{color:'green'}}> 8 Mart</Text>
                 
             </Text>
         </View>
         <View style={{flexDirection:'row'}}>
-            <Text style={{fontWeight:'400',fontFamily:'Verdana',fontSize:13}}>Teslimat No: </Text>
-            <Text style={{fontFamily:'Verdana',fontSize:13,color:'green'}}>12314343</Text>
+            <Text style={{fontWeight:'400',fontSize:13}}>Teslimat No: </Text>
+            <Text style={{fontSize:13,color:'green'}}>12314343</Text>
         </View>
         <View style={{flexDirection:'row',alignItems:'center',gap:5}}>
-            <Text style={{fontWeight:'400',fontFamily:'Verdana',fontSize:13}}>Satıcı:</Text>
+            <Text style={{fontWeight:'400',fontSize:13}}>Satıcı:</Text>
             <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:5}}>
-            <Text style={{fontFamily:'Verdana',fontSize:13,color:'green'}}>Maliyetine Ev</Text>
+            <Text style={{fontSize:13,color:'green'}}>Maliyetine Ev</Text>
             <Icon name='arrow-right' size={10} color={'green'} style={{top:1}}/>
             </TouchableOpacity>
            

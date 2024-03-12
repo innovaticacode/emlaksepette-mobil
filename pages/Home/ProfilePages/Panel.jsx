@@ -31,13 +31,13 @@ export default function Panel({options,onSelect}) {
         <View style={style.NameInfo}>
         <Text style={{
           fontSize:width>400?16:14,
-          fontFamily:'Verdana',
+      
           color:'#C7C7CA'
         }}>Hoşgeldin</Text>
           <Text style={{
             fontSize:width>400? 24:20,
             fontWeight:'400',
-            fontFamily:'Verdana'
+         
           }}>Maliyetine Ev</Text>
         </View>
         <View style={style.ProfileImage}>
@@ -191,9 +191,9 @@ export default function Panel({options,onSelect}) {
         </View>
         <View style={{width:'100%',padding:12,top:5,}}>
         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                <Text style={{fontSize:18,fontFamily:'Verdana',letterSpacing:0.2}}>Koleksiyonlarım</Text>
+                <Text style={{fontSize:18,letterSpacing:0.2}}>Koleksiyonlarım</Text>
                 <TouchableOpacity style={{justifyContent:'center',backgroundColor:'red',paddingLeft:6,paddingRight:6,padding:5}} onPress={()=>navigation.navigate('Collecitons')}>
-                  <Text style={{fontFamily:'Verdana',letterSpacing:0.2,fontSize:12,color:'white',fontWeight:'200'}}>
+                  <Text style={{letterSpacing:0.2,fontSize:12,color:'white',fontWeight:'200'}}>
                     Tümünü Gör
                   </Text>
                 </TouchableOpacity>

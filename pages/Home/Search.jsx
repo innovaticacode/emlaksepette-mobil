@@ -12,13 +12,15 @@ const updateSearch = (search) => {
 };
 
   return (
+    <SafeAreaView onTouchStart={()=>Keyboard.dismiss()} style={{top:30}}>
+         <Header/>
     <ScrollView>
-      
-      <SafeAreaView onTouchStart={()=>Keyboard.dismiss()} style={{top:30}}>
-       
-      <Header/>
      
-    <View style={{flex:1,}}>
+    
+       
+    
+     
+    <View style={{flex:1}}>
       <View style={styles.Input}>
         <SearchBar
           placeholder="Ara..."
@@ -62,8 +64,9 @@ const updateSearch = (search) => {
   
    
 
-    </SafeAreaView>
+
     </ScrollView>
+    </SafeAreaView>
   );
 }
 const styles=StyleSheet.create({
@@ -71,7 +74,7 @@ const styles=StyleSheet.create({
     alignItems:'center',
     height:'30%',
     bottom:18,
-   
+    zIndex:1
   },
   RealtorClub:{
     width:'100%',

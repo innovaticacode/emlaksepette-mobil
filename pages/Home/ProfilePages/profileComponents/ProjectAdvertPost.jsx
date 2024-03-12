@@ -31,7 +31,7 @@ export default function ProjectAdvertPost({Onpress}) {
                             fontSize:16,
                             color:'#141824',
                             fontWeight:'400',
-                            fontFamily:'Verdana'
+                          
                         }}>Master Sonsuz Tatil Evleri</Text>
                         <View style={{flexDirection:'row'}}>
                             <Icon name='location' size={11}/>

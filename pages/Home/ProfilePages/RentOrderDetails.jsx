@@ -17,7 +17,7 @@ export default function RentOrderDetails() {
             <Text style={{color:'green'}}>Tamamlandı</Text>
           </View>
           <View style={styles.Header}>
-                <Text style={{fontSize:20,fontFamily:'Verdana',color:'#264ABB'}}>{display==='none'? 'Rezervasyon Bilgileri':'Rezervasyonunuz'}</Text>
+                <Text style={{fontSize:20,color:'#264ABB'}}>{display==='none'? 'Rezervasyon Bilgileri':'Rezervasyonunuz'}</Text>
                <View style={styles.Codes}>
                     <View style={{flexDirection:'row',gap:4,alignItems:'center'}}>
                         <Text style={{color:'white'}}>Onay Numarası: </Text>
@@ -42,7 +42,7 @@ export default function RentOrderDetails() {
           </View>
           <View style={{gap:30,borderBottomWidth:1,paddingBottom:10,borderBottomColor:'#ebebeb'}}>
           <View style={{paddingTop:15,gap:20,}}>
-            <Text style={{fontSize:17,fontFamily:'Verdana',color:'#264ABB',fontWeight:'400',}}>MASTER ORMAN KÖY PROJE ARSALARI</Text>
+            <Text style={{fontSize:17,color:'#264ABB',fontWeight:'400',}}>MASTER ORMAN KÖY PROJE ARSALARI</Text>
             <View style={{flexDirection:'row'}}>
                 <View style={{flex:0.2/2,}}>
                     <CopyIcon name='calendar' size={19}/>
@@ -71,7 +71,7 @@ export default function RentOrderDetails() {
           </View>
 
             <View style={{paddingTop:15,gap:20,borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:15}}>
-                    <Text style={{fontSize:15,fontFamily:'Verdana',color:'#264ABB',fontWeight:'400'}}>{display==='none'?'Müşteri İle İletişime Geçin':'Acente İle iletişime geçin'}</Text>
+                    <Text style={{fontSize:15,color:'#264ABB',fontWeight:'400'}}>{display==='none'?'Müşteri İle İletişime Geçin':'Acente İle iletişime geçin'}</Text>
                     <Text>Rezervasyonun değişiklikleriyle ilgili görüşün ya da ödemeler ve iadeler hakkında soru sorun</Text>
                     <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}}>
                         <CopyIcon name='phone-alt' size={13}/>
@@ -80,7 +80,7 @@ export default function RentOrderDetails() {
             </View>
 
             <View style={{paddingTop:20,gap:20,borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:20}}>
-                <Text style={{fontSize:15,color:'#264ABB',fontFamily:'Verdana',}}>{display=='none'? '32432432 No lu konutunuz rezerve edildi':'32423423 No lu Konutu rezerve ettiniz'}</Text>
+                <Text style={{fontSize:15,color:'#264ABB',}}>{display=='none'? '32432432 No lu konutunuz rezerve edildi':'32423423 No lu Konutu rezerve ettiniz'}</Text>
                 <View style={{flexDirection:'row'}}>
                     <View style={{flex:0.2/2}}>
                     <CopyIcon name='user-alt' size={16}/>
