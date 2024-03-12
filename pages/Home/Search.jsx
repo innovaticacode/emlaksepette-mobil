@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView,StyleSheet,  Keyboard,Image } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView,StyleSheet,  Keyboard,Image,Platform } from "react-native";
 import {React,useState}from "react";
 import Icon from "react-native-vector-icons/EvilIcons";
 import Categories from "../../components/Categories";
@@ -73,7 +73,7 @@ const styles=StyleSheet.create({
   Input:{
     alignItems:'center',
     height:'30%',
-    bottom:18,
+    bottom:8,
     zIndex:1
   },
   RealtorClub:{

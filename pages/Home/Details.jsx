@@ -71,29 +71,27 @@ export default function Details({navigation}) {
       useNativeDriver: true,
     }).start();
   }; 
-  // const copyToClipboard = async (text) => {
-  //   await Linking.openURL(`sms:&body=${encodeURIComponent(text)}`);
-  // };
+
   const shareLinkOnWhatsApp = () => {
-    // Paylaşılacak link
+ 
     const url=`https://emlaksepette.com/proje/${slug}//1000${ProjectId}/detay`
   
-    // WhatsApp paylaşım linki
+ 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
   
-    // WhatsApp'ı aç ve linki paylaş
+   
     Linking.openURL(whatsappShareURL)
       .then(() => console.log('WhatsApp açıldı ve link paylaşıldı'))
       .catch((error) => console.error('WhatsApp açılamadı:', error));
   };
   const shareLinkOnInstagram = (text) => {
-    // Paylaşılacak link
+ 
     const url=`https://emlaksepette.com/proje/${slug}/100${ProjectId}/detay`
   
-    // Instagram profil veya hikaye paylaşım linki
+   
     const instagramShareURL = `instagram://story/?text=${encodeURIComponent(url)}`;
   
-    // Instagram'ı aç ve linki paylaş
+   
     Linking.openURL(instagramShareURL)
       .then(() => console.log('Instagram açıldı ve link paylaşıldı'))
       .catch((error) => console.error('Instagram açılamadı:', error));
@@ -104,10 +102,10 @@ export default function Details({navigation}) {
     ShowAlert()
   };
   const handleShareViaSMS = (text) => {
-    const url = text; // Paylaşmak istediğiniz link
+    const url = text; 
     const message = `Bu linki kontrol et: ${url}`;
 
-    // Linking.openURL, SMS uygulamasını başlatmak için kullanılabilir
+ 
     Linking.openURL(`sms:?body=${encodeURIComponent(message)}`);
   };
   const ShowAlert = ()=>{
@@ -228,14 +226,7 @@ export default function Details({navigation}) {
               </View>
             </View>
           
-            {/* <View
-              style={{
-                backgroundColor: "grey",
-                width: "100%",
-                height: 0.4,
-                bottom: 5,
-              }}
-            ></View> */}
+          
 
             <View style={{
               width:'100%',
@@ -245,13 +236,7 @@ export default function Details({navigation}) {
               bottom:7
             }}
               >
-{/* 
-            <View style={{width:'50%',paddingLeft:10,}}>
-              <Text style={styles.text}>{konum}</Text>
-            </View> */}
-            {/* <View style={{width:'50%',paddingRight:10, alignItems:'flex-end'}}>
-              <Text style={styles.text} >İlan No:0000000</Text>
-            </View> */}
+
            
             </View>
     
@@ -364,10 +349,7 @@ export default function Details({navigation}) {
             {tabs === 4 && <Map/>}
             {tabs===5&& <FloorPlan/>}
           </View>
-           {/* <View style={styles.Info}>
-          <ShoppinInfo flex={  tabs===0? 'none':'flex'}  />
-      
-          </View>  */}
+         
          
         </View>
       
@@ -469,7 +451,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     height: 50,
-    backgroundColor: '#ecf0f1', // Top bar background color
+    backgroundColor: '#ecf0f1', 
   },
   segment: {
     flex: 1,
@@ -477,10 +459,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   selectedSegment: {
-    backgroundColor: '#3498db', // Selected segment color
+    backgroundColor: '#3498db',
   },
   segmentText: {
-    color: '#2c3e50', // Segment text color
+    color: '#2c3e50', 
   },
   viewPager: {
     height: 250

@@ -267,7 +267,7 @@ export default function PostDetail() {
               gap: 5
             }}
           >
-            <ScrollView horizontal indicatorStyle="white" style={{marginLeft:-20,marginRight:-14,top:10}}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{marginLeft:-20,marginRight:-14,top:10}}>
               <View style={{width:800,display:'flex',flexDirection:'row',gap:5,justifyContent:'center'}}>
          
             <TouchableOpacity
