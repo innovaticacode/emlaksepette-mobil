@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 13,
     fontWeight: '500',
-    fontFamily: 'Verdana',
+  
     color: 'grey'
   },
   btnLogin: {
@@ -258,7 +258,7 @@ otherSections:{
 IconContainer: {
   padding: 2,
  
-  borderRadius: '50%',
+ 
   alignItems: 'center',
   justifyContent: 'center',
   width: width<400? '16%':'15%',
@@ -285,7 +285,7 @@ IconContainer: {
 IconContainer2: {
   
  
-  borderRadius: '50%',
+ 
   alignItems: 'center',
   justifyContent: 'center',
   width: width<400? '16%':'15%',

@@ -1,0 +1,67 @@
+import { View, Text, StyleSheet } from 'react-native'
+import React from 'react'
+import PaymentItem from '../PaymentItem'
+import ShoppinInfo from '../ShoppinInfo'
+
+
+export default function PostPayment() {
+  return (
+    <View style={{padding:8}}>
+    <View style={styles.container}>
+      <View style={styles.PaymentPlan}>
+        <PaymentItem header='Peşin Fiyat:' price='3.500.400' align='center' top='7'/>
+        <PaymentItem header='36 ay Taksitli Fiyat:' price='4.500.400' align='center' top='7'/>
+        <PaymentItem header='Peşinat:' price='690.000' align='center' top='7'/>
+        <PaymentItem header='1.Ara Ödeme Tutarı :' price='690.000' dFlex='column' date='Aralık 30 2025'/>
+        <PaymentItem header='2.Ara Ödeme Tutarı :'price='690.000' dFlex='column'date='Aralık 30 2026' />
+        <PaymentItem header='3.Ara Ödeme Tutarı :' price='690.000' dFlex='column' date='Aralık 30 2027' border='0'/>
+        
+
+      </View>
+    </View>
+    <View style={styles.Info}>
+       <ShoppinInfo/>
+        
+        </View>
+    </View>
+  )
+
+}
+const styles=StyleSheet.create({
+    container:{
+        width:'100%',
+       
+       
+        top:-20,
+        backgroundColor: '#FFFFFF',  
+     
+        
+       
+        marginVertical: 10,  
+        height:'auto',
+        borderWidth:0.7,
+        borderColor:'#e6e6e6',
+        ...Platform.select({
+            ios: {
+              shadowColor: ' #e6e6e6',
+              shadowOffset: { width: 1, height: 1 },
+              shadowOpacity: 0.1,
+              shadowRadius: 5,
+            },
+            android: {
+              elevation: 5,
+            },
+          }),
+
+    },
+    PaymentPlan:{
+      width:'100%',
+     
+      gap:3,
+      padding:8
+    
+    },
+    Info:{
+        bottom:35
+    }
+})

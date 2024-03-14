@@ -6,217 +6,152 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  StyleSheet
 } from "react-native";
-import React from "react";
-import Icon from "react-native-vector-icons/EvilIcons";
-export default function BasketItem() {
+import {useState} from "react";
+import Icon from "react-native-vector-icons/Entypo";
+import Icon2 from "react-native-vector-icons/SimpleLineIcons";
+import Icon3 from "react-native-vector-icons/FontAwesome"
+import { useNavigation } from "@react-navigation/native";
+
+export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
+  const navigation=useNavigation()
+
+  const [chechked, setchechked] = useState(false)
+  const [productCount, setProductCount] = useState(1); // Ürün sayısı
+  const unitPrice = 2500000; // Ürün birim fiyatı
+  const totalPrice = price * productCount; // Toplam fiyat
+
+  // Ürün sayısını arttırma işlevi
+  const increaseProductCount = () => {
+    setProductCount(prevCount => prevCount + 1);
+   
+  };
+  const formattedNumber = totalPrice.toLocaleString('tr-TR')
+  const decreaseProductCount = () => {
+    // Minimum ürün sayısı kontrolü yap
+    if (productCount > 1) {
+      setProductCount(prevCount => prevCount - 1);
+    }
+  };
+
   return (
+   
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View
-        style={{
-          backgroundColor: "white",
-          width: "90%",
-          height: 300,
-          top: 10,
-          alignItems: "center",
-        }}
-      >
-        <View
-          style={{ width: "50%", height: 130, alignItems: "center", top: 10 }}
+   <View style={styles.container}>
+      <View style={styles.CartItem}>
+        <View style={{flexDirection:'row',justifyContent:'space-between',borderBottomWidth:1,paddingBottom:8,borderBottomColor:'#ebebeb'}}>
+        <View style={{width:'55%'}}>
+        <TouchableOpacity style={{display:'flex',flexDirection:'row',alignItems:'center',gap:9,}}
+          onPress={()=>navigation.navigate('Profile',{name:shopName})}
         >
-          <Image
-            source={require("../images/home.jpg")}
-            resizeMode="cover"
-            style={{ width: "100%", height: 130 }}
-          />
+          <TouchableOpacity
+            style={{borderWidth:0.9,borderColor:'grey',padding:2,backgroundColor:chechked? '#EA2C2E':'white',borderRadius:20}}
+            onPress={()=>setchechked(!chechked)}
+          >
+            <Icon name="check" size={12} color={'white'} />
+
+          </TouchableOpacity>
+          <View>
+            <Text>{shopName}</Text>
+          </View>
+          <View style={{backgroundColor:'#6ce24f',padding:1,paddingLeft:8,paddingRight:8,borderRadius:5}}>
+            <Text style={{color:'white'}}>{shopPoint}</Text>
+          </View>
+          <View>
+            <Icon2 name="arrow-right" size={10}/>
+          </View>
+         
+        </TouchableOpacity>
+        </View>
+       <TouchableOpacity>
+        <Icon3 name="trash" size={20} color={'#EA2A29'}/>
+       </TouchableOpacity>
         </View>
 
-        <View
-          style={{
-            backgroundColor: "grey",
-            width: "100%",
-            height: 0.4,
-            top: 18,
-          }}
-        ></View>
-        <View
-          style={{
-            alignItems: "center",
-            width: 300,
-            height: 80,
-            top: 25,
-            gap: 10,
-          }}
-        >
-          <Text style={{ fontSize: 15 }}>İlan No:0000000</Text>
-          <Text style={{ fontSize: 15 }}>
-            MASTER REALTOR'DEN KURUÇEŞME HATİPKÖYDE 2+1 0 DAİRE
-          </Text>
-          <View
-            style={{
-              backgroundColor: "grey",
-              width: 400,
-              height: 0.4,
-              top: 18,
-            }}
-          ></View>
-          <Text
-            style={{
-              fontSize: 17,
-              top: 15,
-              fontWeight: "bold",
-              color: "#3A811D",
-            }}
+
+          <View style={{flexDirection:'row',gap:10}}>
+            <View style={{justifyContent:'center'}}>
+            <TouchableOpacity
+            style={{borderWidth:0.9,borderColor:'grey',padding:2,backgroundColor:chechked? '#EA2C2E':'white',borderRadius:20}}
+            onPress={()=>setchechked(!chechked)}
           >
-            2.400.000₺
-          </Text>
-        </View>
-        <View
-          style={{
-            backgroundColor: "white",
-            width: "100%",
-            height: 300,
-            top: 150,
-            alignItems: "center",
-          }}
-        >
-          <View
-            style={{
-              width: "90%",
-              height: 300,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-around",
-            }}
-          >
-            <View
-              style={{
-                width: "100%",
-                height: 40,
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <View>
-                <Icon name="star" size={20} />
-              </View>
-              <View>
-                <Text>Sepet Özeti</Text>
-              </View>
+            <Icon name="check" size={12} color={'white'} />
+
+          </TouchableOpacity>
             </View>
-            <View
-              style={{
-                backgroundColor: "grey",
-                width: "100%",
-                height: 0.4,
-                bottom: 5,
-              }}
-            ></View>
-            <View
-              style={{
-                width: "100%",
-                height: 30,
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <View>
-                <Text>İlan Fiyatı</Text>
-              </View>
-              <View>
-                <Text>2.500.000 TL</Text>
-              </View>
+         
+            <View style={{flex:0.6/2,height:90}}>
+              <Image source={require('./images/home.jpg')} style={{width:'100%',height:'100%'}}/>
+
             </View>
-            <View
-              style={{
-                width: "100%",
-                height: 30,
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <View>
-                <Text>Toplam Fiyat</Text>
+            <View style={{flex:1.4/2,padding:7,flexDirection:'column'}}>
+              <View style={{flex:1.5/2,}}>
+              <Text style={{fontSize:14}}>{name}</Text>
               </View>
-              <View>
-                <Text>2.500.000 TL</Text>
-              </View>
+                <View style={{flex:0.7/2,flexDirection:'row',justifyContent: hisse?'space-between':'flex-end'}}>
+                  <View style={{ borderWidth:1,borderColor:'#ebebeb', paddingLeft:7,paddingRight:7,borderRadius:10,display:hisse? 'flex':'none',flexDirection:'row',alignItems:'center',gap:10}}>
+                   <TouchableOpacity onPress={decreaseProductCount}>
+                    <Icon3 name="minus" color={'grey'}/>
+                   </TouchableOpacity>
+                   <View style={{backgroundColor:'#efbdbd',paddingLeft:8,paddingRight:8, paddingTop:4, paddingBottom:4,}}>
+                    <Text style={{fontSize:12,fontWeight:'bold',color:'#FFF'}}>{productCount}</Text>
+                   </View>
+                   <TouchableOpacity onPress={()=>{
+                 increaseProductCount()
+                    }}>
+                    <Icon3 name="plus" color={'red'}/>
+                   </TouchableOpacity>
+                  </View>
+                  <View style={{paddingLeft:0,paddingRight:0,justifyContent:'center',alignItems:'flex-end'}}>
+                    <Text style={{fontSize:13,color:'green',fontWeight:'bold'}}>{formattedNumber}</Text>
+                    <View style={{backgroundColor:'green',padding:5,display:hisse?'flex':'none'}}>
+                    <Text style={{fontSize:10,color:'white'}}>{productCount} Hisse Satın Aldınız</Text>
+                    </View>
+                   
+                  </View>
+                </View>
+
+
             </View>
-            <View
-              style={{
-                width: "100%",
-                height: 30,
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <View>
-                <Text>Toplam Fiyatın %2 Kaporası</Text>
-              </View>
-              <View>
-                <Text>53.000 TL</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                width: "100%",
-                height: 120,
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-              }}
-            >
-              <TextInput
-                placeholder="Kupon Kodu"
-                style={{
-                  backgroundColor: "transparent",
-                  borderWidth: 0.3,
-                  height: 50,
-                  padding: 5,
-                  width: "75%",
-                  fontSize: 20,
-                }}
-              />
-              <TouchableOpacity
-                style={{
-                  width: "25%",
-                  backgroundColor: "#274ABB",
-                  height: 50,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
-                  style={{ fontSize: 16, color: "white", fontWeight: "bold" }}
-                >
-                  Uygula
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  width: "100%",
-                  backgroundColor: "#274ABB",
-                  height: 50,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginTop: 10,
-                }}
-              >
-                <Text
-                  style={{ fontSize: 16, color: "white", fontWeight: "bold" }}
-                >
-                  53.000₺ Kapora Öde
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View></View>
           </View>
-        </View>
+
       </View>
+   </View>
     </TouchableWithoutFeedback>
+   
   );
 }
+
+const styles=StyleSheet.create({
+  container:{
+    backgroundColor:'white',
+  
+  },
+  CartItem:{
+  
+    
+      gap:8,
+      backgroundColor: '#FFFFFF',  
+      borderRadius: 4,  
+      paddingVertical: 15,  
+      paddingHorizontal: 10,  
+      width: '100%',  
+  
+    
+      borderWidth:0.7,
+      borderColor:'#CED4DA',
+      ...Platform.select({
+          ios: {
+            shadowColor: ' #e6e6e6',
+            shadowOffset: { width: 1, height: 1 },
+            shadowOpacity: 0.1,
+            shadowRadius: 5,
+          },
+          android: {
+            elevation: 5,
+          },
+        }),
+  },
+
+})

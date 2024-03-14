@@ -14,7 +14,7 @@ export default function Map() {
           }
           let currentLocation = await Location.getCurrentPositionAsync({})
           setlocation(currentLocation);
-          
+        
       };
       getLocation();
     
@@ -24,22 +24,18 @@ export default function Map() {
 
   return (
   
-    <View style={{flex:1,top:14,padding:10}}>   
+    <View style={{flex:1,top:3,padding:8}}>   
     <MapView
   initialRegion={{
-    latitude: 40.909087177287915,
-    longitude: 29.180233967506933,
+    latitude: 40.908912269486486,
+    longitude:29.180268198251724,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
     altidute:50.03281021118164,
   }}
   style={{flex:1}}
   />
-  <Marker
-        coordinate={{ latitude: 39.9255, longitude: 32.8662 }}
-        title="Türkiye"
-        description="Burada olmak istiyorum"
-      />
+
   </View>
  
   

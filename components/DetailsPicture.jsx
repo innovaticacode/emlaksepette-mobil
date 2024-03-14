@@ -6,7 +6,7 @@ import PagerView from 'react-native-pager-view';
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
 
-export default function DetailsPicture() {
+export default function DetailsPicture({ımage}) {
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
   const changeHeart = () => {
@@ -23,10 +23,10 @@ export default function DetailsPicture() {
         style={{ width: "100%", height: 250, borderRadius: 20, padding: 1}}
       >
         <ImageBackground
-          source={require('./images/home.jpg')}
+         source={{uri:ımage}}
           style={{ width: "100%", height: "100%" }}
           resizeMode="cover"
-          imageStyle={{ borderRadius: 0, borderBottomLeftRadius:20,borderBottomRightRadius:20 }}
+          imageStyle={{  borderBottomLeftRadius:20,borderBottomRightRadius:20 }}
         />
         {/* <View
           style={{

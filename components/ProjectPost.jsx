@@ -1,64 +1,108 @@
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity} from 'react-native'
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity ,Dimensions,Image} from 'react-native'
 import React from 'react'
 import { useNavigation } from "@react-navigation/native";
-export default function ProjectPost({caption,ımage,location}) {
+export default function ProjectPost({caption,ımage,location,city, mahalle,acıklama,ShoppingName,ShoppingMail,ShopingInfo,Phone, ProfilImage,slug,ProjectNo}) {
     const navigation = useNavigation();
+    const generateRandomColorCode = () => {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    };
+    
+    const RandomColor=generateRandomColorCode()
   return (
-    <TouchableOpacity style={{marginTop:10}} onPress={() =>  navigation.navigate('Details', { 
+    <TouchableOpacity style={{marginTop:10,padding:10}} onPress={() =>  navigation.navigate('Details', { 
+     name:caption,
        otherParam: caption,
        konum:location ,
-       ımage:ımage})}>
+       ımage:ımage,
+      sehir:city,
+      mahalle:mahalle,
+      acıklama:acıklama,
+      ShoppingName:ShoppingName,
+      ShoppingMail:ShoppingMail,
+      ShopingInfo:ShopingInfo,
+      Phone:Phone,
+      slug:slug,
+      ProjectId:ProjectNo
+      
+       })}>
 
         
     <View style={styles.container}>
-      <View style={styles.ProjectPost}>
-                <View style={styles.ımageBackground}>
-                        <ImageBackground source={ımage} 
+      <ImageBackground source={{uri:ımage}} 
                          style={{ width: '100%', height: '100%' }}/>
-                </View>
-                <View style={styles.captionArea}>
-                    <View>
-                      <Text style={{fontSize:12,fontWeight:'500' }}>{caption}</Text>
-                      </View>
-                    <View>
-                        <Text style={{fontSize:11,fontWeight:'300'}}>{location}</Text>
-                    </View>
-                </View>
-      </View>
+     <View style={styles.ShoppingName}>
+     <View style={styles.ShopImage}>
+     <Image source={{uri:ProfilImage}} style={{width:'50%',height:'90%',}} resizeMode='cover' />
+     </View>
+     <View style={styles.ShopText}>
+        <Text style={{color:'white',fontSize:8,textAlign:'center',fontWeight:'500'}}>{location} / {city}</Text>
+     </View>
+     </View>
+
+     <View style={[styles.Description,{backgroundColor:RandomColor+'CC',padding:10}]}>
+       <Text style={{color:'#FFFFFF',fontWeight:'800',fontSize:17,textAlign:'center'}}>{caption}</Text>
+     </View>
+      
+   
+         
     </View>
+      
+
     </TouchableOpacity>
   )
 }
+const { width, height } = Dimensions.get('window');
 const styles=StyleSheet.create({
     container:{
-            width:'100%',
-            height:90,
+            
+            height:width>400? 250:200,
             alignItems:'center',
-            top:8,
-            marginTop:10,
-          
-    },
-    ProjectPost:{
-        width:'95%',
-        height:'100%',
-        borderWidth:1,
-          
+            top:10,
+        
+            display:'flex',
+            flexDirection:'row',
            
-            borderColor:'#EBEBEB',
-        display:'flex',
-        flexDirection:'row',
-        justifyContent:'space-between'
     },
-    ımageBackground:{
-        width:'35%',
-        height:'100%'
-    },
-    captionArea:{
-        display:'flex',
-        flexDirection:'column',
-         width:'60%',
-        gap:10,
-         justifyContent:'center'
-    },
+   ShoppingName:{
+   position:'absolute',
+   width:'30%',
+   backgroundColor:'#FFFFFF',
+  left:0,
+  height:'40%',
+  display:'flex',
+  flexDirection:'column',
   
+   },
+   ShopImage:{
+
+    height:'75%',
+   alignItems:'center',
+   justifyContent:'center'
+   },
+   ShopText:{
+  height:'25%',
+    backgroundColor:'black',
+    justifyContent:'center'
+   },
+   Description:{
+    width:'40%',
+    height:'100%',
+    position:'absolute',
+    right:0,
+      alignItems:'center',
+      justifyContent:'center'
+   }
 })
+{/* <Text style={{fontSize:11,fontWeight:'300'}}>{location} / {city} / {mahalle}</Text> */}
+{/* <View style={styles.ımageBackground}>
+                       
+                </View> */}
+                 {/* <View>
+                      <Text style={{fontSize:12,fontWeight:'500' }}>{caption}</Text>
+                      // // </View> */}
+                      // <Text style={{fontSize:11,fontWeight:'300'}}> {location}/{city} </Text>

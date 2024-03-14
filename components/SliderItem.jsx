@@ -1,9 +1,10 @@
 import { View, Text,Image,ImageBackground, TouchableOpacity} from 'react-native'
 import React from 'react'
-
+import { useNavigation } from "@react-navigation/native";
 export default function SliderItem() {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity>
+    <TouchableOpacity  onPress={()=>navigation.navigate('Profile')}>
     <View style={{backgroundColor:'transparent',width:65,
     height:65,
     borderRadius:30,

@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text,StyleSheet,Dimensions } from 'react-native'
 import React from 'react'
 import EntypoIcon from "react-native-vector-icons/Entypo"
 export default function Info({text}) {
@@ -20,8 +20,14 @@ export default function Info({text}) {
               />
         </View>
         <View>
-            <Text style={{fontSize:12}}>{text}</Text>
+            <Text style={styles.text}>{text}</Text>
         </View>
     </View>
   )
 }
+const { width, height } = Dimensions.get('window');
+const styles=StyleSheet.create({
+  text:{
+      fontSize:width>400 ? 12:10
+  }
+})

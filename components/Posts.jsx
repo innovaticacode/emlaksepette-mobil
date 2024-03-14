@@ -3,9 +3,10 @@ import { React, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
+import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
 
-export default function Posts({ caption, location, price, ımage ,metre,odaSayısı,katSayısı,No}) {
+export default function Posts({ caption, location, price, ımage ,metre,odaSayısı,katSayısı,No,isFavorited,setModalVisible,openmodal}) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
@@ -17,7 +18,7 @@ export default function Posts({ caption, location, price, ımage ,metre,odaSayı
     setbookmark(bookmark === 'bookmark-o' ? 'bookmark' : 'bookmark-o')
   }
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("PostDetails", { caption: caption, location: location, price: price ,metre:metre,odaSayısı:odaSayısı,katSayısı:katSayısı})}>
+    <TouchableOpacity onPress={() => navigation.navigate("PostDetails", { caption: caption, location: location, price: price ,metre:metre,odaSayısı:odaSayısı,katSayısı:katSayısı,name:caption})}>
       <View style={styles.container}>
         
         <View style={styles.İlan}>
@@ -27,9 +28,10 @@ export default function Posts({ caption, location, price, ımage ,metre,odaSayı
             zIndex:1,
             left:0,
             backgroundColor:'#EA2C2E',
-            padding:2
+            padding:4,
+            
             }}>
-          <Text style={{color:'white',fontWeight:'500'}}>No {No}</Text>
+          <Text style={{color:'white',fontWeight:'500',fontSize:12}}>No {No}</Text>
           </View>
             <Image source={ımage}
               style={{ width: '90%', height: '90%', }} />
@@ -37,33 +39,63 @@ export default function Posts({ caption, location, price, ımage ,metre,odaSayı
           <View style={styles.container2}>
             <View style={styles.captionAndIcons}>
               <View style={styles.caption}>
-                <Text style={{fontSize:12}}>{caption.substring(0, 40)}...</Text>
+                <Text style={{fontSize:11}}>{caption}</Text>
               </View>
               <View style={styles.ıcons}>
                 <TouchableOpacity onPress={changeBookmark}>
                   <View
                     style={styles.ıconContainer}
                   >
-                    <Bookmark name={bookmark} size={18} color={bookmark == 'bookmark-o' ? 'black' : 'red'} />
+                    <Bookmark name={bookmark} size={15} color={bookmark == 'bookmark-o' ? 'black' : 'red'} />
                   </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={changeHeart}>
+                  </TouchableOpacity>
+                  {!isFavorited?
+                      <TouchableOpacity onPress={()=>{
+                        changeHeart();
+                       
+                         
+                        
+                       
+                      }}>
+                  <View
+                    style={styles.ıconContainer}
+                  >
+                   <Heart name={heart} size={15} color={heart=='hearto'?'black':'red'} /> 
+                   
+                  </View>
+                </TouchableOpacity>:
+                  <TouchableOpacity onPress={()=>{
+                  
+                 
+                    setModalVisible(true)
+                  
+                 
+                }}>
             <View
               style={styles.ıconContainer}
             >
-              <Heart name={heart} size={18} color={heart=='hearto'?'black':'red'} />
+              <Trash name='trash' size={15} color='red' />
+             
             </View>
           </TouchableOpacity>
+                  }
+               
+                
+            
+        
+
               </View>
             </View>
 
             <View style={styles.PriceAndButtons}>
-                <View><Text style={{color:'#264ABB',fontWeight:'600',fontSize:12}}>{price}</Text></View>
+                <View><Text style={{color:'#264ABB',fontWeight:'600',fontSize:12, left:20} }>{price}</Text></View>
                 <View style={styles.btns}>
                     <TouchableOpacity style={styles.addBasket}>
                       <Text style={{color:'white',fontWeight:'500',fontSize:12}}>Sepete Ekle</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.PayDetailBtn}>
+                    <TouchableOpacity style={styles.PayDetailBtn} onPress={()=>{
+                      openmodal()
+                    }}>
                       <Text style={{fontWeight:'500',fontSize:12}}>Ödeme Detayı</Text>
                     </TouchableOpacity>
                 </View>
@@ -73,13 +105,13 @@ export default function Posts({ caption, location, price, ımage ,metre,odaSayı
 
         </View>
         <View style={{backgroundColor:'#E8E8E8',height:30,display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
-          <View style={{display:'flex',flexDirection:'row'}} >
+          <View style={{display:'flex',flexDirection:'row' }} >
           <Info text={metre}/>
           <Info text={odaSayısı}/>
           <Info text={katSayısı}/>
           </View>
-         <View style={{justifyContent:'center'}}>
-          <Text style={{fontSize:12}}>{location}</Text>
+         <View style={{justifyContent:'center',}}>
+          <Text style={styles.InformationText}>{location}</Text>
          </View>
 
         </View>
@@ -102,7 +134,7 @@ const styles = StyleSheet.create({
 
   },
   İlan: {
-    padding: 5,
+    padding: 3,
     display: 'flex',
     flexDirection: 'row',
     flex: 1,
@@ -135,10 +167,12 @@ const styles = StyleSheet.create({
   ıcons:{
     display:'flex',
     flexDirection:'row',
-      gap:width>400? 20:15,
-    alignItems:'center',
-    justifyContent:'center',
-    padding:width>400? 10:3
+    justifyContent:'space-between',
+      gap:width>400? 13:15,
+   bottom:5,
+   paddingLeft:width>400? 5:3,
+    padding:width>400? 0:3,
+    left: width >400?18:11
   },
   btns:{
     display:'flex',
@@ -159,18 +193,13 @@ const styles = StyleSheet.create({
     borderWidth:0.5
   },
   ıconContainer:{
-    
-      width: 35,
-      height: 35,
+      
+      width: 28,
+      height: 28,
       alignItems: "center",
       justifyContent: "center",
       borderRadius: 20,
       backgroundColor: '#FFFF',  
-     
-       
-   
-     
-      
       borderColor:'#e6e6e6',
       ...Platform.select({
           ios: {
@@ -186,6 +215,10 @@ const styles = StyleSheet.create({
     
       
     
+  },
+  InformationText:{
+      fontSize:width>400 ? 12:10,
+      right:width>400 ? 10:5
   }
 
 })

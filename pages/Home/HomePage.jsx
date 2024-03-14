@@ -4,117 +4,88 @@ import {
   TouchableWithoutFeedback, Keyboard, ScrollView,
   TouchableOpacity,
   SafeAreaView,
-  FlatList
+  FlatList,
+  RefreshControl ,
+  Animated
 
 } from 'react-native';
-
-import { useState } from 'react';
+import axios from 'axios';
+import { useState,useEffect,useRef } from 'react';
 import Posts from '../../components/Posts';
 import SliderBar from '../../components/SliderBar';
 import Header from '../../components/Header';
 import ProjectPost from '../../components/ProjectPost';
 
 export default function App() {
+  const apiUrl='https://emlaksepette.com/';
+  const [featuredProjects, setFeaturedProjects] = useState([]);
 
-  const Home = [
-    {
-      Acıklama: 'MASTER SONSUZ TATİL KÖYÜ',
-      fiyat: '5.150.000 ₺',
-      resim: require('../Home/home.jpg'),
-      konum: 'İstanbul / Kartal / Cevizli',
-      metre: '60m2',
-      odaSayısı: '3+1',
-      katsayısı: `${4} Katlı`,
-      id: 1
-    },
-    {
-      Acıklama: 'MALİYETİNE EV DEN MASTER VİLLA VAN',
-      fiyat: '5.150.000 ₺',
-      resim: require('../Home/home.jpg'),
-      konum: 'İstanbul / Sultangazi / ismetpaşa',
-      metre: '60m2',
-      odaSayısı: '3+1',
-      katsayısı: `${4} Katlı`,
-      id: 2
-    },
-    {
-      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
-      fiyat: '5.150.000 ₺',
-      resim: require('../Home/home.jpg'),
-      konum: 'İstanbul / Kartal / Cevizli',
-      metre: '60m2',
-      odaSayısı: '3+1',
-      katsayısı: `${4} Katlı`,
-      id: 3,
-      blok:'A'
-    },
-    {
-      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
-      fiyat: '5.150.000 ₺',
-      resim: require('../Home/home.jpg'),
-      konum: 'İstanbul / Kartal / Cevizli',
-      metre: '60m2',
-      odaSayısı: '3+1',
-      katsayısı: `${4} Katlı`,
-      id: 4,
-      blok:'A'
-    },
-
-    {
-      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
-      fiyat: '5.150.000 ₺',
-      resim: require('../Home/home.jpg'),
-      konum: 'İstanbul / Kartal / Cevizli',
-      metre: '60m2',
-      odaSayısı: '3+1',
-      katsayısı: `${4} Katlı`,
-      id: 5,
-      blok:'A'
-    },
-    {
-      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
-      fiyat: '5.150.000 ₺',
-      resim: require('../Home/home.jpg'),
-      konum: 'İstanbul / Kartal / Cevizli',
-      metre: '60m2',
-      odaSayısı: '3+1',
-      katsayısı: `${4} Katlı`,
-      id: 6,
-      blok:'A'
-    },
-    {
-      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
-      fiyat: '5.150.000 ₺',
-      resim: require('../Home/home.jpg'),
-      konum: 'İstanbul / Kartal / Cevizli',
-      metre: '60m2',
-      odaSayısı: '3+1',
-      katsayısı: `${4} Katlı`,
-      id: 7,
-      blok:'A'
-    },
-    {
-      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
-      fiyat: '5.150.000 ₺',
-      resim: require('../Home/home.jpg'),
-      konum: 'İstanbul / Kartal /Cevizli',
-      metre: '60m2',
-      odaSayısı: '3+1',
-      katsayısı: `${4} Katlı`,
-      id: 8,
-      blok:'A'
-    },
+  const fetchFeaturedProjects = async () => {
+    try {
+      const response = await axios.get('https://emlaksepette.com/api/featured-projects');
+      setFeaturedProjects(response.data)
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 
-  ]
+  useEffect(() => {
+   fetchFeaturedProjects()
 
+  }, []);
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, ); 
+  };
+
+
+
+const FadeInView = (props) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(
+      fadeAnim,
+      {
+        toValue: 1,
+        duration: 1500, // Animasyon süresi (ms cinsinden)
+        useNativeDriver: false // Performans için native sürücüyü kullan
+      }
+    ).start();
+  }, [fadeAnim]);
+
+  return (
+    <Animated.View
+      style={{
+        ...props.style,
+        opacity: fadeAnim, // Opaklık animasyonu
+      }}
+    >
+      {props.children}
+    </Animated.View>
+  );
+};
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <SafeAreaView style={{ flex: 1, } }>
-        <Header />
-            <ScrollView>
+       
+      <SafeAreaView style={{ flex: 1, paddingTop:25}}>
+      <Header />
+            <ScrollView scrollEventThrottle={20} 
+             refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />
+            }
+            >
+             
         <View>
+          
           <SliderBar />
         </View>
 
@@ -124,7 +95,7 @@ export default function App() {
           </View>
          
           <TouchableOpacity>
-            <View style={{ backgroundColor: '#EA2A29',paddingLeft:10, paddingRight:10, paddingTop:5,paddingBottom:5,  }}>
+            <View style={{ backgroundColor: '#EA2A29',paddingLeft:10, paddingRight:10, paddingTop:7,paddingBottom:5,  }}>
               <Text style={{ fontSize: 12, fontWeight: '600', color: 'white' }} >Tümünü gör</Text>
             </View>
           </TouchableOpacity>
@@ -139,8 +110,27 @@ export default function App() {
           
         </ScrollView> */}
         <FlatList
-  data={Home}
-  renderItem={({ item }) =>  <ProjectPost key={item.id} caption={item.Acıklama} ımage={item.resim} location={item.konum} blok={item.blok}/>}
+  data={featuredProjects}
+  renderItem={({ item }) => 
+  <FadeInView>
+  <ProjectPost key={item.id} 
+  caption={item.project_title}
+   ımage={`${apiUrl}/${item.image.replace('public/', 'storage/')}`} 
+  location={item.city.title}
+   city={item.county.ilce_title}
+   ProjectNo={item.id}
+   slug={item.slug}
+   acıklama={item.description.replace(/<\/?[^>]+(>|$)/g , '').replace(/&nbsp;/g, ' ')}
+   ShoppingName={item.user.name}
+   ShoppingMail={item.user.email}
+   Phone={item.user.phone}
+   ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
+   ShopingInfo={item.user.corporate_type}
+
+  />
+  </FadeInView>
+  }
+ 
    scrollEnabled={false}
 />
        

@@ -2,11 +2,13 @@ import { View, Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-na
 import { React, useState } from 'react'
 import Ablok from "./Bloks/Ablok"
 import Bblok from "./Bloks/Bblok"
-export default function OtherHomeInProject() {
+import ShoppinInfo from './ShoppinInfo';
+export default function OtherHomeInProject({openmodal}) {
     const [tabs, setTabs] = useState(0);
     return (
+        <View >
         <SafeAreaView>
-            <View style={{alignItems:'center',padding:10}}>
+            <View style={{padding:10}}>
             <View style={styles.container}>
                 <View style={styles.tabBar}>
                     <TouchableOpacity
@@ -17,6 +19,7 @@ export default function OtherHomeInProject() {
                             backgroundColor:'#EFEFEF',
                             alignItems: 'center',
                             justifyContent: 'center',
+                            borderBottomWidth: tabs===0? 1:0
                         }}>
                         <Text style={{
                             fontSize: 12,
@@ -33,6 +36,7 @@ export default function OtherHomeInProject() {
                             backgroundColor:'#EFEFEF',
                             alignItems: 'center',
                             justifyContent: 'center',
+                            borderBottomWidth:tabs===1? 1:0
                         }}>
                         <Text style={{
                             fontSize: 12,
@@ -42,12 +46,19 @@ export default function OtherHomeInProject() {
                     </TouchableOpacity>
                             
                 </View>
-                {tabs === 0 && <Ablok />}
+                {tabs === 0 && <Ablok openmodal={openmodal}/>}
                 {tabs === 1 && <Bblok />}
-
+         
             </View>
+           
             </View>
+          
         </SafeAreaView>
+         <View style={styles.Info}>
+        <ShoppinInfo/>
+        
+        </View> 
+        </View>
     )
 }
 const styles = StyleSheet.create({
@@ -55,17 +66,17 @@ const styles = StyleSheet.create({
         
         
         padding:10,
-        top: 5,
+        top: 0,
      
         backgroundColor: '#FFFFFF',  
       
-         marginTop:10,
+         marginTop:0,
         
        
        
         width: '100%',  
         
-        height:'100%',
+        height:'auto',
         borderWidth:0.7,
         borderColor:'#e6e6e6',
         ...Platform.select({
@@ -92,4 +103,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#EFEFEF',
     },
     
+    Info: {
+        position:'absolute',
+        bottom:-470,
+        
+       left:10,
+       right:10
+      }
 })

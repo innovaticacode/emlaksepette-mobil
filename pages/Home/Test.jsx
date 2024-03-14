@@ -4,12 +4,10 @@ import Favorite from '../../components/Favorite'
 
 export default function Test() {
   return (
-    <ScrollView>
+    <ScrollView style={{backgroundColor:'white'}}>
 
      <Favorite/>
-     <Favorite/>
-     <Favorite/>
-     <Favorite/>
+    
     </ScrollView>
   )
 }

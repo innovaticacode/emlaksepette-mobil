@@ -23,7 +23,7 @@ export default function Settings() {
         <SettingsItem info='Bahçe Metrekaresi:' numbers='100'/>
         <SettingsItem info='Eşyalı' numbers='Evet'/>
         <SettingsItem info='Banyo Sayısı' numbers='1'/>
-        <SettingsItem info='Kullanım Durumu' numbers='Boş'/>
+        <SettingsItem info='Kullanım Durumu' numbers='Boş' border='0'/>
          
     </View>
     <View style={styles.Info}>
@@ -35,10 +35,10 @@ export default function Settings() {
 }
 const styles=StyleSheet.create({
   card: {  
-      top:7,
+      top:-6,
     backgroundColor: '#FFFFFF',  
     
-    paddingVertical: 22,  
+    paddingVertical: 8,  
     paddingHorizontal: 5,  
     width: '100%',  
     marginVertical: 10,  
@@ -62,7 +62,6 @@ const styles=StyleSheet.create({
   Info: {
     
     width: '100%',
-    top: 20,
-    height: 240
+   bottom:20
   }
 })

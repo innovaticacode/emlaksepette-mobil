@@ -1,8 +1,9 @@
-import { View, Text,ScrollView } from 'react-native'
+import { View, Text,ScrollView,FlatList } from 'react-native'
 import React from 'react'
 import Posts from '../Posts'
+import ShoppinInfo from '../ShoppinInfo'
 
-export default function Ablok() {
+export default function Ablok({openmodal}) {
   const Home = [
     {
       Acıklama: 'MASTER SONSUZ TATİL KÖYÜ SATILIK EV PAYI MASTER REALTOR',
@@ -67,13 +68,27 @@ export default function Ablok() {
       katsayısı: `${8} Katlı`,
       id: 6,
       blok:'A'
+    },
+    {
+      Acıklama: 'Master VİLLAS KARTEPE KOCAELİ',
+      fiyat: '6.150.000 ₺',
+      resim: require('../images/home.jpg'),
+      konum: 'İstanbul / Beyoğlu / Çukurcuma',
+      metre: '60m2',
+      odaSayısı: '3+1',
+      katsayısı: `${8} Katlı`,
+      id: 7,
+      blok:'A'
     }
   ]
   return (
-            
-           <ScrollView style={{ marginTop: 10, display: 'flex', flexDirection: 'column' }} indicatorStyle='white'>
+          
+
+  
+           <ScrollView style={{ marginTop: 10, display: 'flex', flexDirection: 'column' }} showsVerticalScrollIndicator={false}nestedScrollEnabled={true}>
             {Home.map((item, index) => (
             <Posts key={item.id}
+            openmodal={openmodal}
             No={item.id}
             caption={item.Acıklama} 
             price={item.fiyat}
@@ -87,8 +102,13 @@ export default function Ablok() {
              
           ))}  
           
-          
+          {/* <View style={{}}>
+     <ShoppinInfo/>
+        
+        </View> */}
         </ScrollView>
+     
+        
   
   )
 }
