@@ -50,7 +50,7 @@ export default function PostDetail() {
     // Telefon uygulamasını açmak için
     Linking.openURL('tel:+905537064474');
   };
-
+  
   return (
     
     <SafeAreaView>

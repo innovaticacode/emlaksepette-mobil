@@ -28,6 +28,7 @@ import * as Clipboard from 'expo-clipboard';
 
 import OtherHomeInProject from "../../components/OtherHomeInProject";
 import PaymentDetail from "../../components/PaymentDetail";
+import Alert from "../../components/Alert";
 import FloorPlan from "../../components/FloorPlan";
 import Information from "../../components/Information";
 import LinkIcon3 from "react-native-vector-icons/Feather"
@@ -45,7 +46,7 @@ export default function Details({navigation}) {
   const [bookmark, setbookmark] = useState('bookmark-o')
   const changeHeart = () => {
     setHeart(heart === 'hearto' ? 'heart' : 'hearto');
-   
+
   };
   const changeBookmark=()=>{
     setbookmark(bookmark==='bookmark-o' ? 'bookmark': 'bookmark-o')
@@ -114,7 +115,12 @@ export default function Details({navigation}) {
           setshowAlert(false)
         }, 2000);
   }
+  const [alert, setalert] = useState(false)
+const getAlert = ()=>{
+ 
+ setalert(!alert)
 
+}
   return (
       <View>
       
@@ -122,6 +128,10 @@ export default function Details({navigation}) {
       <View style={{ flex: 1, height:tabs===4 ?1000:1590 && tabs===3 ?1370:1590 && tabs===2?1360:1590 && tabs===1?1100:1490 && tabs===0 ? 1600:1590
       && tabs===5 ? 'auto':1500
       }}>
+    <View style={{position:'absolute',zIndex:1,display:heart=='heart-o'?'flex':'none'}}>
+
+      <Alert text= {alert===true?'Favorilere Eklendi':'Favorilerden Kaldırıldı'}/>
+      </View>
       <View
           style={{
             width: 50,
@@ -151,7 +161,10 @@ export default function Details({navigation}) {
               <Icon name="sharealt" size={20} />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={changeHeart}>
+          <TouchableOpacity onPress={()=>{
+            getAlert()
+            changeHeart()
+          }}>
             <View
               style={{
                 backgroundColor: "#FFFFFFAD",
