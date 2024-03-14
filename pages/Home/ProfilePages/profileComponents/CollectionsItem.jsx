@@ -3,8 +3,9 @@ import React from 'react'
 import Dot from "react-native-vector-icons/Entypo"
 import Icon from "react-native-vector-icons/Ionicons"
 import Icon2 from "react-native-vector-icons/FontAwesome5"
+import Icon3 from "react-native-vector-icons/FontAwesome"
 import { useNavigation } from '@react-navigation/native'
-export default function CollectionsItem({openBottom, disabled}) {
+export default function CollectionsItem({openBottom, disabled,shareWp,copy}) {
     const navigation=useNavigation()
   return (
     <View style={{alignItems:'center'}}>
@@ -64,14 +65,22 @@ export default function CollectionsItem({openBottom, disabled}) {
             </TouchableOpacity>
         </View>
         <View>
-        <TouchableOpacity style={{width:'100%',backgroundColor:'#DAFBD0',padding:8,flexDirection:'row',justifyContent:'center',gap:10}}>
+        <TouchableOpacity style={{width:'100%',backgroundColor:'#DAFBD0',padding:8,flexDirection:'row',justifyContent:'center',gap:10}}
+            onPress={()=>{
+                copy()
+            }}
+        >
             <Icon2 name='copy'size={15} color={'#1F6F11'}/>
                 <Text style={{textAlign:'center', color:'#1F6F11',fontWeight:'600'}}>LİNKİ KOPYALA</Text>
             </TouchableOpacity>
         </View>
         <View>
-        <TouchableOpacity style={{width:'100%',backgroundColor:'#DAFBD0',padding:8,flexDirection:'row',justifyContent:'center',gap:10}}>
-            <Icon name='logo-whatsapp' size={18} color={'#1F6F11'}/>
+        <TouchableOpacity style={{width:'100%',backgroundColor:'#DAFBD0',padding:8,flexDirection:'row',justifyContent:'center',gap:10}}
+                onPress={()=>{
+                    shareWp()
+                }}
+        >
+            <Icon3 name='whatsapp'size={15} color={'#1F6F11'}/>
                 <Text style={{textAlign:'center' ,color:'#1F6F11',fontWeight:'600'}}>WHATSAPPTA PAYLAŞ</Text>
         </TouchableOpacity>
         </View>

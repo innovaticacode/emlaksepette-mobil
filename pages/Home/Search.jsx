@@ -4,7 +4,10 @@ import Icon from "react-native-vector-icons/EvilIcons";
 import Categories from "../../components/Categories";
 import Header from "../../components/Header";
 import { SearchBar } from '@rneui/themed';
+import { useNavigation } from "@react-navigation/native";
+
 export default function Search() {
+  const navigation=useNavigation();
   const [search, setSearch] = useState("");
 
 const updateSearch = (search) => {
@@ -52,7 +55,11 @@ const updateSearch = (search) => {
           <Categories category='Müstakil Tatil'/>
           <Categories category='Al Sat Acil' ıconDisplay='none'/> 
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity 
+            onPress={()=>{
+              navigation.navigate('RealtorClubExplore')
+            }}
+          >
           <View style={styles.RealtorClub}>
             <Image source={require('./emlakkulüplogo.png')} style={{position:'absolute',width:50,height:30,top:4}}/>
               <Text style={{fontWeight:'500',color:'white'}}>EMLAK KULÜP</Text>

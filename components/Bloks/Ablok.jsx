@@ -1,4 +1,4 @@
-import { View, Text,ScrollView } from 'react-native'
+import { View, Text,ScrollView,FlatList } from 'react-native'
 import React from 'react'
 import Posts from '../Posts'
 import ShoppinInfo from '../ShoppinInfo'
@@ -83,7 +83,9 @@ export default function Ablok() {
   ]
   return (
           
-           <ScrollView style={{ marginTop: 10, display: 'flex', flexDirection: 'column' }} indicatorStyle='white'>
+
+  
+           <ScrollView style={{ marginTop: 10, display: 'flex', flexDirection: 'column' }} showsVerticalScrollIndicator={false}nestedScrollEnabled={true}>
             {Home.map((item, index) => (
             <Posts key={item.id}
             No={item.id}

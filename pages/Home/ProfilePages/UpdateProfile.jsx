@@ -1,11 +1,16 @@
 import { View, Text, StyleSheet,Dimensions, TouchableOpacity, Image,TextInput, Keyboard,Animated, TouchableWithoutFeedback} from 'react-native'
-import {useRef,useState} from 'react'
+import {useRef,useState,useEffect} from 'react'
 import Editıcon from "react-native-vector-icons/MaterialCommunityIcons"
 
 import ShareIcon from "react-native-vector-icons/Entypo"
 import DeleteIcon from "react-native-vector-icons/MaterialIcons"
 import PencilIcon from "react-native-vector-icons/FontAwesome5"
 export default function UpdateProfile() {
+ 
+
+
+
+
   const translateY = useRef(new Animated.Value(400)).current;
 
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -67,8 +72,8 @@ export default function UpdateProfile() {
       }}>
   <View style={styles.ProfileEditArea}>
       <TouchableOpacity style={styles.ProfilImage} onPress={openSheet}>
-            <Image source={require('.././profil.jpg')} style={{width:'100%',height:'100%'}} />
-            <TouchableOpacity style={{position:'absolute',bottom:0,right:0,backgroundColor:'#EA2A29',padding:4,}} onPress={openSheet}>
+            <Image source={require('.././profil.jpg')} style={{width:'100%',height:'100%'}} borderRadius={50} />
+            <TouchableOpacity style={{position:'absolute',bottom:0,right:0,backgroundColor:'#EA2A29',padding:4,borderRadius:50}} onPress={openSheet} >
       <Editıcon name='account-edit' size={20} color={'white'}/>
       </TouchableOpacity>
       </TouchableOpacity> 
@@ -135,6 +140,7 @@ export default function UpdateProfile() {
      </Animated.View>
    </View>
     </View>
+  
     </TouchableWithoutFeedback>
   )
 }

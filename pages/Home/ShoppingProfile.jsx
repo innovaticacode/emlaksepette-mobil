@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StyleSheet, Image, ImageBackground, Dimensions, TouchableOpacity, ScrollView, Animated, Alert } from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, Image, ImageBackground, Dimensions, TouchableOpacity, ScrollView, Animated,} from 'react-native'
 import React, { useState, useRef } from 'react'
 import Icon from 'react-native-vector-icons/AntDesign'
 import LogOut from 'react-native-vector-icons/Entypo'
@@ -46,7 +46,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
 
   }
 
-
+ 
   return (
     <View style={{ flex: 1 }} >
       <View style={style.container} onTouchStart={() => closeSheet()}>
@@ -81,7 +81,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
 
           <View style={{ width: width > 400 ? 90 : 80, position: 'absolute', bottom: -45, zIndex: 1, left: '40%' }}>
             <View style={style.profileImage}>
-              <Image source={require('./profil.jpg')} style={{ width: '100%', height: '100%' }}  />
+              <Image source={require('./profil.jpg')} style={{ width: '100%', height: '100%' }} borderRadius={50}  />
             </View>
 
 
@@ -90,7 +90,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
         </View>
         <View style={style.body}>
           <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={{ height: İsLoggedIn ? 1650 : 1200 }}>
+            <View style={style.ScrollSetting}>
 
               <View style={style.Settings}>
                 <View>
@@ -478,4 +478,7 @@ const style = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 20,
   },
+  ScrollSetting:{
+    height:width>400?1670:1410
+  }
 })

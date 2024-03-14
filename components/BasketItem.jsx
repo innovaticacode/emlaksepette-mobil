@@ -40,11 +40,13 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
    <View style={styles.container}>
       <View style={styles.CartItem}>
-        <TouchableOpacity style={{display:'flex',flexDirection:'row',alignItems:'center',gap:9,borderBottomWidth:1,paddingBottom:8,borderBottomColor:'#ebebeb'}}
+        <View style={{flexDirection:'row',justifyContent:'space-between',borderBottomWidth:1,paddingBottom:8,borderBottomColor:'#ebebeb'}}>
+        <View style={{width:'55%'}}>
+        <TouchableOpacity style={{display:'flex',flexDirection:'row',alignItems:'center',gap:9,}}
           onPress={()=>navigation.navigate('Profile',{name:shopName})}
         >
           <TouchableOpacity
-            style={{borderWidth:0.9,borderColor:'grey',padding:2,backgroundColor:chechked? '#EA2C2E':'white'}}
+            style={{borderWidth:0.9,borderColor:'grey',padding:2,backgroundColor:chechked? '#EA2C2E':'white',borderRadius:20}}
             onPress={()=>setchechked(!chechked)}
           >
             <Icon name="check" size={12} color={'white'} />
@@ -61,10 +63,17 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
           </View>
          
         </TouchableOpacity>
+        </View>
+       <TouchableOpacity>
+        <Icon3 name="trash" size={20} color={'#EA2A29'}/>
+       </TouchableOpacity>
+        </View>
+
+
           <View style={{flexDirection:'row',gap:10}}>
             <View style={{justifyContent:'center'}}>
             <TouchableOpacity
-            style={{borderWidth:0.9,borderColor:'grey',padding:2,backgroundColor:chechked? '#EA2C2E':'white'}}
+            style={{borderWidth:0.9,borderColor:'grey',padding:2,backgroundColor:chechked? '#EA2C2E':'white',borderRadius:20}}
             onPress={()=>setchechked(!chechked)}
           >
             <Icon name="check" size={12} color={'white'} />

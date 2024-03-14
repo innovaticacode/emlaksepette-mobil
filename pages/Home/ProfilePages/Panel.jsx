@@ -193,7 +193,7 @@ export default function Panel({options,onSelect}) {
         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                 <Text style={{fontSize:18,letterSpacing:0.2}}>Koleksiyonlarım</Text>
                 <TouchableOpacity style={{justifyContent:'center',backgroundColor:'red',paddingLeft:6,paddingRight:6,padding:5}} onPress={()=>navigation.navigate('Collecitons')}>
-                  <Text style={{letterSpacing:0.2,fontSize:12,color:'white',fontWeight:'200'}}>
+                  <Text style={{letterSpacing:0.2,fontSize:12,color:'white',fontWeight:'500'}}>
                     Tümünü Gör
                   </Text>
                 </TouchableOpacity>

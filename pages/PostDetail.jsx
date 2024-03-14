@@ -7,14 +7,15 @@ import {
     StyleSheet,
     ScrollView,
   Image,
-   Dimensions
+   Dimensions,
+   Linking
   } from "react-native";
   import { React, useRef, useState } from "react";
   import Icon from "react-native-vector-icons/AntDesign";
   import Phone from "react-native-vector-icons/Entypo" 
 
   import PagerView from 'react-native-pager-view';
-  import { useRoute  } from '@react-navigation/native';
+  import { useNavigation, useRoute  } from '@react-navigation/native';
   import Heart from "react-native-vector-icons/AntDesign";
   import Bookmark from "react-native-vector-icons/FontAwesome";
 
@@ -43,7 +44,13 @@ export default function PostDetail() {
   }
   const route = useRoute();
   const {   konum ,caption,location,price,name} = route.params;
+  const navigation=useNavigation();
   const windowWidth = Dimensions.get('window').width;
+  const handleOpenPhone = () => {
+    // Telefon uygulamasını açmak için
+    Linking.openURL('tel:+905537064474');
+  };
+
   return (
     
     <SafeAreaView>
@@ -64,18 +71,20 @@ export default function PostDetail() {
     paddingRight:10
  
  }}>
-    <TouchableOpacity style={{
+    <TouchableOpacity
+    onPress={handleOpenPhone} 
+    style={{
    flex:1.3/2,
       backgroundColor:'#284ABB',
       height:'80%',
       justifyContent:'center',
-    
+      
       
     }}>
       <Text style={styles.btnText}>Ara</Text>
     </TouchableOpacity>
     <TouchableOpacity 
-   
+   onPress={()=>navigation.navigate('Sepetim')}
     style={{
       flex:1.3/2,
       backgroundColor:'#284ABB',
@@ -92,7 +101,7 @@ export default function PostDetail() {
     <TouchableOpacity style={{
       width:'14%',
       backgroundColor:'#E54242',
-      
+      borderRadius:50,
       justifyContent:'center',
       bottom:2,
       height:'90%'

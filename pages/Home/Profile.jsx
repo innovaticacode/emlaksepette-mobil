@@ -107,7 +107,7 @@ export default function Profile() {
        
       </View>
       <View>
-      <ScrollView horizontal style={{padding:10}} showsHorizontalScrollIndicator={false}>
+      <ScrollView horizontal style={{padding:10}} showsHorizontalScrollIndicator={false} nestedScrollEnabled={true}>
       <View style={styles.tabBar}>
         
 

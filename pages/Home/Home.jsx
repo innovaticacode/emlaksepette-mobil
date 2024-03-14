@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet,Platform ,Dimensions} from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
@@ -8,15 +8,17 @@ import Search from "./Search";
 import ShareScreen from "./ShareScreen";
 import Test from "./Test";
 import Basket from "./Basket";
+import { useNavigation } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 
 
 
 const Home = () => {
-
+  const {width,height}=Dimensions.get("window")
   return (
     <Tab.Navigator
+    
       screenOptions={{
         tabBarLabelStyle: {
           fontSize: 12,
@@ -29,7 +31,7 @@ const Home = () => {
         tabBarStyle: {
           backgroundColor: "white",
           padding: 6,
-          height: '9%',
+          height: Platform.OS === "android" ? '7%' :'9%'
         },
       }}
     >
@@ -94,24 +96,28 @@ const Home = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="Sepetim"
-        component={Basket}
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <Feather
-              name="shopping-cart"
-              color={focused ? "black" : "grey"}
-              size={20}
-            />
-          ),
-          tabBarBadge: '0',
-
-          tabBarBadgeStyle: {
-            fontSize: 10, height: 17, width: 20, position: 'absolute', top: 0, right: 0, paddingBottom: 9,
-          }
-        }}
+  <Tab.Screen
+  
+  name="Sepetim"
+  options={({ route }) => ({
+    
+    tabBarIcon: ({ color, focused }) => (
+      <Feather
+        name="shopping-cart"
+        color={focused ? "black" : "grey"}
+        size={20}
       />
+    ),
+    tabBarBadge: 0,
+    tabBarBadgeStyle: {
+      fontSize: 10, height: 17, width: 20, position: 'absolute', top: 0, right: 0, borderRadius:6
+    },
+  
+    
+  })}
+>
+  {(props) => <Basket {...props}/>} 
+</Tab.Screen>
     </Tab.Navigator>
   );
 };

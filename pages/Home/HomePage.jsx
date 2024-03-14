@@ -5,11 +5,12 @@ import {
   TouchableOpacity,
   SafeAreaView,
   FlatList,
-  RefreshControl 
+  RefreshControl ,
+  Animated
 
 } from 'react-native';
 import axios from 'axios';
-import { useState,useEffect } from 'react';
+import { useState,useEffect,useRef } from 'react';
 import Posts from '../../components/Posts';
 import SliderBar from '../../components/SliderBar';
 import Header from '../../components/Header';
@@ -38,9 +39,36 @@ export default function App() {
     setRefreshing(true);
     setTimeout(() => {
       setRefreshing(false);
-    }, 1000); 
+    }, ); 
   };
 
+
+
+const FadeInView = (props) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(
+      fadeAnim,
+      {
+        toValue: 1,
+        duration: 1500, // Animasyon süresi (ms cinsinden)
+        useNativeDriver: false // Performans için native sürücüyü kullan
+      }
+    ).start();
+  }, [fadeAnim]);
+
+  return (
+    <Animated.View
+      style={{
+        ...props.style,
+        opacity: fadeAnim, // Opaklık animasyonu
+      }}
+    >
+      {props.children}
+    </Animated.View>
+  );
+};
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -83,7 +111,9 @@ export default function App() {
         </ScrollView> */}
         <FlatList
   data={featuredProjects}
-  renderItem={({ item }) =>  <ProjectPost key={item.id} 
+  renderItem={({ item }) => 
+  <FadeInView>
+  <ProjectPost key={item.id} 
   caption={item.project_title}
    ımage={`${apiUrl}/${item.image.replace('public/', 'storage/')}`} 
   location={item.city.title}
@@ -97,7 +127,9 @@ export default function App() {
    ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
    ShopingInfo={item.user.corporate_type}
 
-  />}
+  />
+  </FadeInView>
+  }
  
    scrollEnabled={false}
 />

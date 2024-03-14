@@ -112,18 +112,14 @@ export default function Details({navigation}) {
         setshowAlert(true)
         setTimeout(() => {
           setshowAlert(false)
-        }, 1000);
+        }, 2000);
   }
 
   return (
       <View>
-          <View style={{padding:15, position:'absolute',zIndex:1,backgroundColor:'#6fdb4e',top:310,left:110,display:showAlert? 'flex':'none' , flexDirection:'row',alignItems:'center',gap:15}}>
-            <Text style={{textAlign:'center',color:'white'}}>Bağlantı Panoya Kopyalandı</Text>
-            <Heart name="check" size={20} color={'white'}/>
-          </View>
-        
-    <ScrollView style={{ backgroundColor: 'white' }} indicatorStyle="white" onTouchStart={closeSheet}>
-      <View style={{ flex: 1, height:tabs===4 ?1000:1590 && tabs===3 ?1370:1590 && tabs===2?1360:1590 && tabs===1?1580:1490 && tabs===0 ? 1600:1590
+      
+    <ScrollView style={{ backgroundColor: 'white' }} indicatorStyle="white" onTouchStart={closeSheet} >
+      <View style={{ flex: 1, height:tabs===4 ?1000:1590 && tabs===3 ?1370:1590 && tabs===2?1360:1590 && tabs===1?1100:1490 && tabs===0 ? 1600:1590
       && tabs===5 ? 'auto':1500
       }}>
       <View
@@ -257,7 +253,7 @@ export default function Details({navigation}) {
               gap: 5
             }}
           >
-            <ScrollView horizontal indicatorStyle="white" >
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={{width:800,display:'flex',flexDirection:'row',gap:5,marginLeft:10,marginRight:-90}}>
             <TouchableOpacity
               onPress={() => setTabs(0)}
@@ -358,7 +354,7 @@ export default function Details({navigation}) {
     </ScrollView>
    
     <View style={{ flex: 1 }}>
-     
+   
       <Animated.View
         style={{
           position: 'absolute',
@@ -372,11 +368,16 @@ export default function Details({navigation}) {
          paddingBottom:30,
          paddingLeft:10,
           paddingRight:10,
-          
+         
           transform: [{ translateY }],
         }}
       >
-     
+         <View style={{display:showAlert? 'flex':'none', justifyContent:'center',alignItems:'center',paddingBottom:15}}>
+          <View style={{padding:11, backgroundColor:'#6fdb4e97',display:showAlert? 'flex':'none' , flexDirection:'row',alignItems:'center',gap:15,borderRadius:10,}}>
+            <Text style={{textAlign:'center',color:'white'}}>Bağlantı Panoya Kopyalandı</Text>
+            <Heart name="check" size={20} color={'white'}/>
+       </View>  
+       </View>
           <ScrollView horizontal  style={{padding:5}}   showsHorizontalScrollIndicator={false}>
             <View style={{display:'flex',flexDirection:'row',justifyContent:'space-around',gap:27}}>
             <TouchableOpacity style={{alignItems:'center'}}

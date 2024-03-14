@@ -42,7 +42,7 @@ export default function Header() {
       }}
       
       >
-      <View style={{position:'absolute',backgroundColor:'red',paddingLeft:6,paddingRight:6,padding:1,bottom:22,left:23,zIndex:1}}>
+      <View style={{position:'absolute',backgroundColor:'red',paddingLeft:6,paddingRight:6,padding:1,bottom:22,left:23,zIndex:1,borderRadius:20}}>
         <Text style={{color:'white'}}>1</Text>
       </View>
        <Icon name='bell' size={40}/>

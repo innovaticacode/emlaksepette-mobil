@@ -45,12 +45,14 @@ import AdvertStatu from './pages/Home/İlanYükleme/RealtorAdvertsAdd/AdvertStat
 import AdvertType from './pages/Home/İlanYükleme/RealtorAdvertsAdd/AdvertType';
 import RealtorAdvertAdd from './pages/Home/İlanYükleme/RealtorAdvertsAdd/RealtorAdvertAdd';
 import Notifications from './pages/Home/Notifications';
+import RealtorClub from './pages/Home/RealtorClub';
+import Basket from './pages/Home/Basket';
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
   
   const [İsLoggedIn, setİsLoggedIn] = useState(false)
-
+  const [showBackIcon, setshowBackIcon] = useState(false)
 
 
 
@@ -62,12 +64,14 @@ export default function App({route}) {
       ...TransitionPresets.SlideFromRightIOS,
       
   }}>
-  <Stack.Screen name="Home" component={Home}options={{
+  <Stack.Screen name="Home" options={{
     headerShown:false,
    
   }} 
     
-  />
+  >
+    {(props) => <Home {...props}  showBackIcon={showBackIcon} setshowBackIcon={setshowBackIcon}/>}
+  </Stack.Screen>
  {İsLoggedIn ? (
   <Stack.Group>
     <Stack.Screen name="Login" component={Login} options={{ title: 'Giriş Yap' }} />
@@ -325,6 +329,12 @@ export default function App({route}) {
   })} 
  
   /> 
+   <Stack.Screen name='RealtorClubExplore'  component={RealtorClub} options={({route})=>({
+    title:'Emlak Kulübü Keşfet'
+  })} 
+ 
+  /> 
+  
 </Stack.Navigator>
 
 </NavigationContainer>

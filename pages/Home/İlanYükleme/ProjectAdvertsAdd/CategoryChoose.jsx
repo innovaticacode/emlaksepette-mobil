@@ -23,7 +23,7 @@ export default function CategoryChoose() {
     <View style={style.container}>
     <View style={style.categoryContainer}>
     <View style={[style.card,{}]}>
-      <View style={{backgroundColor:'#ebebeb4d',padding:10,}}>
+      <View style={{backgroundColor:'#ebebeb4d',padding:10, borderRadius:20}}>
             <Icon2 name='home' color={'red'} size={17}/>
             </View>
             <Text style={{fontWeight:'bold',fontSize:12}}>{ previousName +' > ' +name}</Text>

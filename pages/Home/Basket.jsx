@@ -3,8 +3,13 @@ import React, { useState } from 'react'
 import BasketItem from '../../components/BasketItem'
 import { Swipeable,GestureHandlerRootView } from "react-native-gesture-handler";
 import TrashIcon from 'react-native-vector-icons/EvilIcons'
+import { useRoute,useNavigation } from '@react-navigation/native';
 
 export default function Basket() {
+  const route=useRoute()
+
+  const navigation=useNavigation()
+ 
   const renderRightActions = () => (
     <TouchableOpacity style={styles.deleteButton} onPress={()=>{
       
@@ -22,29 +27,14 @@ export default function Basket() {
         id:1,
         hisse:true
       },
-     {
-       name:'Master Sonsuz Tatil Köyü',
-       price:3500000,
-       shopName:'Master Realtor',
-       shopPoint:7.5,
-       id:2,
-       hisse:false
-     },
-     {
-       name:'Master Realtorden Kocaeli Kandıra Projesi',
-       price:1500000,
-       shopName:'Master Realtor',
-       shopPoint:5.5,
-       id:3,
-       hisse:false
-     }
+    
     ])
 
 
   return (
     <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
       <View style={styles.container}>
-     
+    
         {
           Basket.map((item,index)=>(
             <GestureHandlerRootView key={index}>

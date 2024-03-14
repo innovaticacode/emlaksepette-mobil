@@ -3,8 +3,8 @@ import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 export default function ShareScreen({navigation}) {
   return (
-    <ScrollView indicatorStyle="white">
-    <View style={{ alignItems: "center", gap: 50 ,backgroundColor:'white'}}>
+    <ScrollView showsVerticalScrollIndicator={false} style={{backgroundColor:'white'}} nestedScrollEnabled={true}>
+    <View style={{ alignItems: "center", gap: 40 ,backgroundColor:'white',height:700}}>
       
       <View
 
