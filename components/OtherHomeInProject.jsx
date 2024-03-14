@@ -3,7 +3,7 @@ import { React, useState } from 'react'
 import Ablok from "./Bloks/Ablok"
 import Bblok from "./Bloks/Bblok"
 import ShoppinInfo from './ShoppinInfo';
-export default function OtherHomeInProject() {
+export default function OtherHomeInProject({openmodal}) {
     const [tabs, setTabs] = useState(0);
     return (
         <View >
@@ -46,7 +46,7 @@ export default function OtherHomeInProject() {
                     </TouchableOpacity>
                             
                 </View>
-                {tabs === 0 && <Ablok />}
+                {tabs === 0 && <Ablok openmodal={openmodal}/>}
                 {tabs === 1 && <Bblok />}
          
             </View>

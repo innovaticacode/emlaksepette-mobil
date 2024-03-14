@@ -44,19 +44,23 @@ export default function Details({navigation}) {
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
+  const [modalVisible, setModalVisible] = useState(false);
   const changeHeart = () => {
     setHeart(heart === 'hearto' ? 'heart' : 'hearto');
 
   };
   const changeBookmark=()=>{
     setbookmark(bookmark==='bookmark-o' ? 'bookmark': 'bookmark-o')
+  
   }
   const route = useRoute();
  
   const {  otherParam ,konum,ımage,sehir,acıklama, ShoppingName,ShoppingMail,ShopingInfo, Phone,slug,ProjectId} = route.params;
  
   const translateY = useRef(new Animated.Value(400)).current;
-
+const openModal=()=>{
+  setModalVisible(!modalVisible)
+}
   const openSheet = () => {
     Animated.timing(translateY, {
       toValue: 0,
@@ -115,12 +119,8 @@ export default function Details({navigation}) {
           setshowAlert(false)
         }, 2000);
   }
-  const [alert, setalert] = useState(false)
-const getAlert = ()=>{
- 
- setalert(!alert)
 
-}
+
   return (
       <View>
       
@@ -128,10 +128,7 @@ const getAlert = ()=>{
       <View style={{ flex: 1, height:tabs===4 ?1000:1590 && tabs===3 ?1370:1590 && tabs===2?1360:1590 && tabs===1?1100:1490 && tabs===0 ? 1600:1590
       && tabs===5 ? 'auto':1500
       }}>
-    <View style={{position:'absolute',zIndex:1,display:heart=='heart-o'?'flex':'none'}}>
 
-      <Alert text= {alert===true?'Favorilere Eklendi':'Favorilerden Kaldırıldı'}/>
-      </View>
       <View
           style={{
             width: 50,
@@ -162,7 +159,7 @@ const getAlert = ()=>{
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>{
-            getAlert()
+        
             changeHeart()
           }}>
             <View
@@ -351,7 +348,7 @@ const getAlert = ()=>{
           </View>
        
           <View style={{ width: '100%', height:tabs===4 ?700:740}}>
-            {tabs === 0 && <OtherHomeInProject/>}
+            {tabs === 0 && <OtherHomeInProject openmodal={openModal}/>}
             {tabs === 1 && <Caption acıklama={acıklama}/>}
             {tabs === 2 && <Information ShoppingName={ShoppingName} ShopingInfo={ShopingInfo} ShoppingMail={ShoppingMail} Phone={Phone}/>}
             {tabs === 3 && <Settings/> }
@@ -452,7 +449,26 @@ const getAlert = ()=>{
        
       </Animated.View>
     </View>
-
+    <Modal
+        animationType="slide" // veya "fade", "none" gibi
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+         <TouchableOpacity onPress={()=>setModalVisible(!modalVisible)}>
+          <Text>Kapat</Text>
+         </TouchableOpacity>
+         
+         
+       
+         
+          </View>
+        </View>
+      </Modal>
     
     </View>
 
@@ -546,5 +562,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 30,
     bottom:2
-  }
+  },
+  centeredView: {
+    padding:20,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)', // modal dışı koyu arkaplan
+  },
+  modalView: {
+    width:'100%',
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+   gap:20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
 });

@@ -3,7 +3,7 @@ import React from 'react'
 import Posts from '../Posts'
 import ShoppinInfo from '../ShoppinInfo'
 
-export default function Ablok() {
+export default function Ablok({openmodal}) {
   const Home = [
     {
       Acıklama: 'MASTER SONSUZ TATİL KÖYÜ SATILIK EV PAYI MASTER REALTOR',
@@ -88,6 +88,7 @@ export default function Ablok() {
            <ScrollView style={{ marginTop: 10, display: 'flex', flexDirection: 'column' }} showsVerticalScrollIndicator={false}nestedScrollEnabled={true}>
             {Home.map((item, index) => (
             <Posts key={item.id}
+            openmodal={openmodal}
             No={item.id}
             caption={item.Acıklama} 
             price={item.fiyat}

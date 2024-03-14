@@ -6,7 +6,7 @@ import Bookmark from "react-native-vector-icons/FontAwesome";
 import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
 
-export default function Posts({ caption, location, price, ımage ,metre,odaSayısı,katSayısı,No,isFavorited,setModalVisible}) {
+export default function Posts({ caption, location, price, ımage ,metre,odaSayısı,katSayısı,No,isFavorited,setModalVisible,openmodal}) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
@@ -93,7 +93,9 @@ export default function Posts({ caption, location, price, ımage ,metre,odaSayı
                     <TouchableOpacity style={styles.addBasket}>
                       <Text style={{color:'white',fontWeight:'500',fontSize:12}}>Sepete Ekle</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.PayDetailBtn}>
+                    <TouchableOpacity style={styles.PayDetailBtn} onPress={()=>{
+                      openmodal()
+                    }}>
                       <Text style={{fontWeight:'500',fontSize:12}}>Ödeme Detayı</Text>
                     </TouchableOpacity>
                 </View>
