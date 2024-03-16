@@ -1,11 +1,11 @@
 import { View, Text,Image,ImageBackground, TouchableOpacity} from 'react-native'
 import React from 'react'
 import { useNavigation } from "@react-navigation/native";
-export default function SliderItem({image,name}) {
+export default function SliderItemSkeleton({image,name}) {
   const navigation = useNavigation();
   return (
     <TouchableOpacity  onPress={()=>navigation.navigate('Profile',{name:'Master Realtor'})}>
-    <View style={{backgroundColor:'transparent',width:65,
+    <View style={{backgroundColor:'black',width:65,
     height:65,
    flexWrap:'wrap',
     borderRadius:50,

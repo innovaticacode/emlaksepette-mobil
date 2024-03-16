@@ -226,7 +226,7 @@ const openModal=()=>{
               <Text style={styles.text}>{konum} / {sehir}</Text>
             </View>
               <View style={{ width: '100%',paddingLeft:10,paddingRight:6 ,top:15}}>
-                <Text style={{ fontSize: 17, textAlign:'center', color:'#264ABB' }}>
+                <Text style={{ fontSize: 15, textAlign:'center', color:'#264ABB' }} numberOfLines={2}>
                   {otherParam}
                 </Text>
               </View>

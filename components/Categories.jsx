@@ -3,7 +3,7 @@ import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 export default function Categories({category,ıconDisplay,displayIcon}) {
   return (
-    <TouchableOpacity>
+   
       <View style={styles.category}>
       <View style={styles.IconContainer}>
     
@@ -22,7 +22,7 @@ export default function Categories({category,ıconDisplay,displayIcon}) {
       </View>
       </View>
  
-    </TouchableOpacity>
+   
   )
 }
 const styles=StyleSheet.create({

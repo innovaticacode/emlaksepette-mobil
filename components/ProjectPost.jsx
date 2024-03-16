@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity ,Dimensions,Image} from 'react-native'
 import React from 'react'
 import { useNavigation } from "@react-navigation/native";
-export default function ProjectPost({caption,ımage,location,city, mahalle,acıklama,ShoppingName,ShoppingMail,ShopingInfo,Phone, ProfilImage,slug,ProjectNo}) {
+export default function ProjectPost({caption,ımage,location,city, mahalle,acıklama,ShoppingName,ShoppingMail,ShopingInfo,Phone, ProfilImage,slug,ProjectNo,loading}) {
     const navigation = useNavigation();
     const generateRandomColorCode = () => {
       const letters = '0123456789ABCDEF';
@@ -31,8 +31,8 @@ export default function ProjectPost({caption,ımage,location,city, mahalle,acık
       
        })}>
 
-        
-    <View style={styles.container}>
+      
+           <View style={styles.container}>
       <ImageBackground source={{uri:ımage}} 
                          style={{ width: '100%', height: '100%' }}/>
      <View style={styles.ShoppingName}>
@@ -51,6 +51,10 @@ export default function ProjectPost({caption,ımage,location,city, mahalle,acık
    
          
     </View>
+        
+         
+        
+   
       
 
     </TouchableOpacity>

@@ -14,6 +14,102 @@ const updateSearch = (search) => {
   setSearch(search);
 };
 
+const searchData = {
+  "propertyTypes": [
+    {
+      "name": "Projeler",
+      "categories": [
+        {
+          "name": "Topraktan",
+          "subcategories": ["Konut", "İş yeri", "Turizm"]
+        },
+        {
+          "name": "Devam Eden",
+          "subcategories": ["Konut", "İş yeri", "Turizm"]
+        },
+        {
+          "name": "Tamamlanan",
+          "subcategories": {
+            "Konut":[""], 
+            "İş yeri":[],
+             "Turizm":[]}
+        },
+        {
+          "name": "Tüm Projeler",
+          "subcategories": ["Konut", "İş yeri", "Turizm"]
+        }
+      ]
+    },
+    {
+      "name": "Konut",
+      "categories": [
+        {
+          "name": "Satılık",
+          "subcategories": ["Dükkan", "Ofis Binasi"]
+        },
+        {
+          "name": "Kiralık",
+          "subcategories": ["Dükkan", "Ofis Binasi"]
+        }
+      ]
+    },
+    {
+      "name": "İş yeri",
+      "categories": [
+        {
+          "name": "Satılık",
+          "subcategories": ["Dükkan", "Ofis Binasi"]
+        },
+        {
+          "name": "Kiralık",
+          "subcategories": ["Dükkan", "Ofis Binasi"]
+        }
+      ]
+    },
+    {
+      "name": "Arsa",
+      "categories": [
+        {
+          "name": "Satılık",
+          "subcategories": ["İmarlı", "İmarsız"]
+        },
+        {
+          "name": "Kiralık",
+          "subcategories": ["İmarlı", "İmarsız"]
+        }
+      ]
+    },
+    {
+      "name": "Prefabrik",
+      "categories": [
+        {
+          "name": "Satılık",
+          "subcategories": ["İmarlı", "İmarsız"]
+        },
+        {
+          "name": "Kiralık",
+          "subcategories": ["İmarlı", "İmarsız"]
+        }
+      ]
+    },
+    {
+      "name": "Tatilini Kirala",
+      "categories": [
+        {
+          "name": "Satılık",
+          "subcategories": ["İmarlı", "İmarsız"]
+        },
+        {
+          "name": "Kiralık",
+          "subcategories": ["İmarlı", "İmarsız"]
+        }
+      ]
+    }
+  ]
+};
+const goToPublicPage = (category) => {
+  navigation.navigate('PublicPage', { category });
+};
   return (
     <SafeAreaView onTouchStart={()=>Keyboard.dismiss()} style={{top:30}}>
          <Header/>
@@ -45,16 +141,45 @@ const updateSearch = (search) => {
       </View>
        </View>
 
-      
-      <View style={{bottom:10}}>
-           <Categories category='Projeler'/>
-          <Categories category='Konut'/>
-          <Categories category='İş Yeri'/>
+
+         <View>
+            {
+              searchData.propertyTypes.map((item,index)=>(
+                <TouchableOpacity 
+                onPress={()=>navigation.navigate('Public',{name:item.name, categories: item.categories })} key={index}>
+                <Categories category={item.name}/>
+                </TouchableOpacity>
+              ))
+            }
+       
+
+         </View>
+
+
+       {/* <View style={{bottom:10}}>
+        <TouchableOpacity onPress={()=>navigation.navigate('Public',{name:'Projeler', })}>
+        <Categories category='Projeler'/>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('Public',{name:'Konut'})}>
+        <Categories category='Konut'/>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigation.navigate('Public',{name:'İş Yeri'})}>
+        <Categories category='İş Yeri'/>
+        </TouchableOpacity>
+          <TouchableOpacity onPress={()=>navigation.navigate('Public',{name:'Arsa'})}>
           <Categories category='Arsa'/>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>navigation.navigate('Public',{name:'Prefabrik'})}>
           <Categories category='Prefabrik'/>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={()=>navigation.navigate('Public',{name:'Müstakil Tatil'})}>
           <Categories category='Müstakil Tatil'/>
+          </TouchableOpacity>
+          <TouchableOpacity>
           <Categories category='Al Sat Acil' ıconDisplay='none'/> 
-          </View>
+          </TouchableOpacity>
+        
+          </View>  */}
           <TouchableOpacity 
             onPress={()=>{
               navigation.navigate('RealtorClubExplore')

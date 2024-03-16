@@ -47,6 +47,9 @@ import RealtorAdvertAdd from './pages/Home/İlanYükleme/RealtorAdvertsAdd/Realt
 import Notifications from './pages/Home/Notifications';
 import RealtorClub from './pages/Home/RealtorClub';
 import Basket from './pages/Home/Basket';
+import PublicPage from './pages/Home/SearchPageItem/PublicPage';
+import SubCategory from './pages/Home/SearchPageItem/SubCategory';
+import HomeList from './pages/Home/SearchPageItem/HomeList';
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
@@ -72,12 +75,12 @@ export default function App({route}) {
   >
     {(props) => <Home {...props}  showBackIcon={showBackIcon} setshowBackIcon={setshowBackIcon}/>}
   </Stack.Screen>
- {İsLoggedIn ? (
+
   <Stack.Group>
     <Stack.Screen name="Login" component={Login} options={{ title: 'Giriş Yap' }} />
     <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
   </Stack.Group>
-) : null}
+
  
   <Stack.Screen name="Emlak"  component={Emlakİlanı} 
    options={({route})=>({
@@ -331,6 +334,21 @@ export default function App({route}) {
   /> 
    <Stack.Screen name='RealtorClubExplore'  component={RealtorClub} options={({route})=>({
     title:'Emlak Kulübü Keşfet'
+  })} 
+ 
+  /> 
+     <Stack.Screen name='Public'  component={PublicPage} options={({route})=>({
+        title:route.params.name
+  })} 
+ 
+  /> 
+     <Stack.Screen name='SubCategory'  component={SubCategory} options={({route})=>({
+        title:route.params.name
+  })} 
+ 
+  /> 
+      <Stack.Screen name='HomeList'  component={HomeList} options={({route})=>({
+        headerShown:false
   })} 
  
   /> 

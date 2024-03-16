@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export default function Projects() {
+export default function SubCategoryPage() {
   return (
     <View>
-      <Text>Projects</Text>
+      <Text>SubCategoryPage</Text>
     </View>
   )
 }

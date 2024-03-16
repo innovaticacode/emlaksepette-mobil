@@ -15,15 +15,20 @@ import Posts from '../../components/Posts';
 import SliderBar from '../../components/SliderBar';
 import Header from '../../components/Header';
 import ProjectPost from '../../components/ProjectPost';
+import RealtorPost from '../../components/RealtorPost';
+import Splash from '../../components/Splash';
 
 export default function App() {
   const apiUrl='https://emlaksepette.com/';
+  const [loadingPrjoects, setloadingPrjoects] = useState(false)
+  const [loadingEstates, setloadingEstates] = useState(false)
   const [featuredProjects, setFeaturedProjects] = useState([]);
 
   const fetchFeaturedProjects = async () => {
     try {
       const response = await axios.get('https://emlaksepette.com/api/featured-projects');
       setFeaturedProjects(response.data)
+      setloadingPrjoects(true)
     } catch (error) {
       console.log(error);
     }
@@ -34,6 +39,26 @@ export default function App() {
    fetchFeaturedProjects()
 
   }, []);
+  const [featuredEstates, setFeaturedEstates] = useState([]);
+
+  const fetchFeaturedEstates = async () => {
+    try {
+      const response = await axios.get('https://emlaksepette.com/api/real-estates');
+      setFeaturedEstates(response.data)
+      setloadingEstates(true)
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  useEffect(() => {
+   fetchFeaturedEstates()
+   
+  }, []);
+  
+
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {
     setRefreshing(true);
@@ -44,36 +69,16 @@ export default function App() {
 
 
 
-const FadeInView = (props) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    Animated.timing(
-      fadeAnim,
-      {
-        toValue: 1,
-        duration: 1500, // Animasyon süresi (ms cinsinden)
-        useNativeDriver: false // Performans için native sürücüyü kullan
-      }
-    ).start();
-  }, [fadeAnim]);
+
 
   return (
-    <Animated.View
-      style={{
-        ...props.style,
-        opacity: fadeAnim, // Opaklık animasyonu
-      }}
-    >
-      {props.children}
-    </Animated.View>
-  );
-};
+    
 
-  return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-       
-      <SafeAreaView style={{ flex: 1, paddingTop:25}}>
+     
+        
+        <SafeAreaView style={{ flex: 1, paddingTop:25,backgroundColor:'white'}}>
       <Header />
             <ScrollView scrollEventThrottle={20} 
              refreshControl={
@@ -82,11 +87,12 @@ const FadeInView = (props) => {
                 onRefresh={onRefresh}
               />
             }
-            >
+            showsVerticalScrollIndicator={false}
+            > 
              
         <View>
           
-          <SliderBar />
+          <SliderBar loading={loadingPrjoects} />
         </View>
 
         <View style={{ top: 30, padding: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -102,17 +108,25 @@ const FadeInView = (props) => {
 
         </View>
        
-        {/* <ScrollView style={{ marginTop: 15, display: 'flex', flexDirection: 'column' }} indicatorStyle='white'>
        
-          {Home.map((item,index)=>(
-            <ProjectPost key={item.id} caption={item.Acıklama} ımage={item.resim} location={item.konum} blok={item.blok}/>
-          ))}
+        <View>
           
-        </ScrollView> */}
+           <View style={{alignItems:'center',justifyContent:'center'}}>
+              <Text>
+                {
+                  loadingPrjoects==false?
+                  <Text>Yükleniyor</Text>:''
+                }
+              </Text>
+          
+           </View>
+                
+             
+
         <FlatList
   data={featuredProjects}
   renderItem={({ item }) => 
-  <FadeInView>
+
   <ProjectPost key={item.id} 
   caption={item.project_title}
    ımage={`${apiUrl}/${item.image.replace('public/', 'storage/')}`} 
@@ -126,16 +140,41 @@ const FadeInView = (props) => {
    Phone={item.user.phone}
    ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
    ShopingInfo={item.user.corporate_type}
-
+   loading={loadingPrjoects}
   />
-  </FadeInView>
+
   }
  
-   scrollEnabled={false}
+ scrollEnabled={false}
 />
-       
-      </ScrollView>
+</View>  
+  <View style={{paddingTop:20,padding:10}}>
+    <Text>Emlak İlanları</Text>
+      <View>
+      <FlatList
+  data={featuredEstates}
+  renderItem={({ item }) => 
+  <RealtorPost
+  price={`${JSON.parse(item.housing_type_data)['price']} `}
+ 
+    title={item.housing_title}
+    loading={loadingEstates}
+  />
+ 
+
+  
+
+  }
+ 
+ scrollEnabled={false}
+/>
+      </View>
+   </View>
+     </ScrollView> 
       </SafeAreaView>
+        
+      
+      
     </TouchableWithoutFeedback>
   );
 }
