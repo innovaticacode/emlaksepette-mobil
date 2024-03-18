@@ -118,7 +118,7 @@ export default function Company() {
         // <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.container}>
             <View style={styles.form}>
-                <ScrollView indicatorStyle='white'>
+                <ScrollView showsVerticalScrollIndicator={false}>
                     {/* Normal İnputlar*/}
                     <View style={styles.ınputs}>
                         <View>
@@ -538,5 +538,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         bottom: 30
     }
-
+   
 })

@@ -1,10 +1,12 @@
 import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView,StyleSheet,  Keyboard,Image,Platform } from "react-native";
-import {React,useState}from "react";
+import {React,useState,useEffect}from "react";
 import Icon from "react-native-vector-icons/EvilIcons";
 import Categories from "../../components/Categories";
 import Header from "../../components/Header";
 import { SearchBar } from '@rneui/themed';
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+
 
 export default function Search() {
   const navigation=useNavigation();
@@ -12,115 +14,38 @@ export default function Search() {
 
 const updateSearch = (search) => {
   setSearch(search);
+
+}
+
+
+const [menuItems, setMenuItems] = useState([]);
+
+const fetchmenuItems = async () => {
+  try {
+    const response = await axios.get('https://emlaksepette.com/api/menu-list');
+    setMenuItems(response.data)
+    const submenus = response.data[0].submenus;
+    console.log(response.data[3].submenus);
+    
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-const searchData = {
-  "propertyTypes": [
-    {
-      "name": "Projeler",
-      "categories": [
-        {
-          "name": "Topraktan",
-          "subcategories": ["Konut", "İş yeri", "Turizm"]
-        },
-        {
-          "name": "Devam Eden",
-          "subcategories": ["Konut", "İş yeri", "Turizm"]
-        },
-        {
-          "name": "Tamamlanan",
-          "subcategories": {
-            "Konut":[""], 
-            "İş yeri":[],
-             "Turizm":[]}
-        },
-        {
-          "name": "Tüm Projeler",
-          "subcategories": ["Konut", "İş yeri", "Turizm"]
-        }
-      ]
-    },
-    {
-      "name": "Konut",
-      "categories": [
-        {
-          "name": "Satılık",
-          "subcategories": ["Dükkan", "Ofis Binasi"]
-        },
-        {
-          "name": "Kiralık",
-          "subcategories": ["Dükkan", "Ofis Binasi"]
-        }
-      ]
-    },
-    {
-      "name": "İş yeri",
-      "categories": [
-        {
-          "name": "Satılık",
-          "subcategories": ["Dükkan", "Ofis Binasi"]
-        },
-        {
-          "name": "Kiralık",
-          "subcategories": ["Dükkan", "Ofis Binasi"]
-        }
-      ]
-    },
-    {
-      "name": "Arsa",
-      "categories": [
-        {
-          "name": "Satılık",
-          "subcategories": ["İmarlı", "İmarsız"]
-        },
-        {
-          "name": "Kiralık",
-          "subcategories": ["İmarlı", "İmarsız"]
-        }
-      ]
-    },
-    {
-      "name": "Prefabrik",
-      "categories": [
-        {
-          "name": "Satılık",
-          "subcategories": ["İmarlı", "İmarsız"]
-        },
-        {
-          "name": "Kiralık",
-          "subcategories": ["İmarlı", "İmarsız"]
-        }
-      ]
-    },
-    {
-      "name": "Tatilini Kirala",
-      "categories": [
-        {
-          "name": "Satılık",
-          "subcategories": ["İmarlı", "İmarsız"]
-        },
-        {
-          "name": "Kiralık",
-          "subcategories": ["İmarlı", "İmarsız"]
-        }
-      ]
-    }
-  ]
-};
-const goToPublicPage = (category) => {
-  navigation.navigate('PublicPage', { category });
-};
+
+useEffect(() => {
+fetchmenuItems()
+
+}, []);
+
   return (
     <SafeAreaView onTouchStart={()=>Keyboard.dismiss()} style={{top:30}}>
          <Header/>
     <ScrollView>
-     
-    
-       
-    
-     
+
     <View style={{flex:1}}>
       <View style={styles.Input}>
+      
         <SearchBar
           placeholder="Ara..."
           onChangeText={updateSearch}
@@ -143,43 +68,34 @@ const goToPublicPage = (category) => {
 
 
          <View>
-            {
-              searchData.propertyTypes.map((item,index)=>(
+           
+            {/* {
+            menuItems.map((item,index)=>(
                 <TouchableOpacity 
-                onPress={()=>navigation.navigate('Public',{name:item.name, categories: item.categories })} key={index}>
-                <Categories category={item.name}/>
+                onPress={()=>navigation.navigate('Public',{name:item.text,data:menuItems,id:item.parent_id})}
+           key={index}>
+                <Categories category={item.text}/>
+                </TouchableOpacity>
+              ))
+            } */}
+          
+            {
+              menuItems.map((item,index)=>(
+                <TouchableOpacity 
+                onPress={()=>navigation.navigate('Public',{name:item.text,data:item.submenus,})}
+           key={index}>
+                <Categories category={item.text}/>
+
+
                 </TouchableOpacity>
               ))
             }
-       
+            
 
          </View>
 
 
-       {/* <View style={{bottom:10}}>
-        <TouchableOpacity onPress={()=>navigation.navigate('Public',{name:'Projeler', })}>
-        <Categories category='Projeler'/>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={()=>navigation.navigate('Public',{name:'Konut'})}>
-        <Categories category='Konut'/>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={()=>navigation.navigate('Public',{name:'İş Yeri'})}>
-        <Categories category='İş Yeri'/>
-        </TouchableOpacity>
-          <TouchableOpacity onPress={()=>navigation.navigate('Public',{name:'Arsa'})}>
-          <Categories category='Arsa'/>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={()=>navigation.navigate('Public',{name:'Prefabrik'})}>
-          <Categories category='Prefabrik'/>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={()=>navigation.navigate('Public',{name:'Müstakil Tatil'})}>
-          <Categories category='Müstakil Tatil'/>
-          </TouchableOpacity>
-          <TouchableOpacity>
-          <Categories category='Al Sat Acil' ıconDisplay='none'/> 
-          </TouchableOpacity>
-        
-          </View>  */}
+      
           <TouchableOpacity 
             onPress={()=>{
               navigation.navigate('RealtorClubExplore')

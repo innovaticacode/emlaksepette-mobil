@@ -1,4 +1,4 @@
-import { View, Text ,SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native'
+import { View, Text ,SafeAreaView, StyleSheet, TouchableOpacity,Platform} from 'react-native'
 import{ React,useState }from 'react'
 import Personal from './Personal';
 import Company from './Company';
@@ -13,7 +13,7 @@ export default function Register() {
                 onPress={() => setTabs(0)}
               style={{
                 width:'40%',
-               
+                padding:10,
                 alignItems:'center',
                 justifyContent:'center',
                 backgroundColor:tabs==0? 'white':'#F2F2F2'
@@ -28,7 +28,7 @@ export default function Register() {
               onPress={() => setTabs(1)}
               style={{
                  width:'40%',
-                 
+                 padding:10,
                   backgroundColor:tabs==1? 'white':'#F2F2F2',
                  alignItems:'center',
                  justifyContent:'center'
@@ -54,12 +54,20 @@ const styles=StyleSheet.create({
   },
     TabBar:{
       width:'100%',
-      height:'7%',
+     
       justifyContent:'center',
       display:'flex',
       flexDirection:'row',
       gap:42,
-      marginTop:10
+    
+      ...Platform.select({
+        ios: {
+         padding:10
+        },
+        android: {
+     paddingTop:50
+        },
+      })
     },
   
   

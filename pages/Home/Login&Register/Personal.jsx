@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput,TouchableOpacity ,TouchableWithoutFeedback, Keyboard, ScrollView,} from 'react-native'
+import { View, Text, StyleSheet, TextInput,TouchableOpacity ,TouchableWithoutFeedback, Keyboard, ScrollView,Platform} from 'react-native'
 import {React,useState}from 'react'
 import EyeIcon from "react-native-vector-icons/Ionicons"
 import { CheckBox } from '@rneui/themed';
@@ -18,7 +18,7 @@ export default function Personal() {
     }
   return (
     <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
- <ScrollView>
+ <ScrollView showsVerticalScrollIndicator={false}>
     <View style={styles.container}>
        
         <View style={styles.Form}>
@@ -126,7 +126,14 @@ const styles=StyleSheet.create({
             height:1000,
             
             alignItems:'center',
-            
+            ...Platform.select({
+              ios: {
+                
+              },
+              android: {
+             
+              },
+            })
     },
     Form: {
         width: '90%',

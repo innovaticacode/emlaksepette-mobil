@@ -8,21 +8,23 @@ export default function PublicPage() {
 
     const navigation=useNavigation()
     const route=useRoute();
-    const{name,categories,subcategories}=route.params;
+    const{id,data,name}=route.params;
     const goToSubCategoriesPage = (subcategories) => {
-        navigation.navigate('SubCategory', { subcategories });
+       
       };
+    
   return (
     <View style={{backgroundColor:'white',flex:1}}>
           <View>
-      {categories.map((category, index) => (
-                <TouchableOpacity key={index}onPress={()=>navigation.navigate('HomeList',{})} >
-                    <CategoryAdverts text={category.name}/>
-                  
-            </TouchableOpacity>
+          {
+            data.map((item,index)=>(
+              <TouchableOpacity onPress={()=>navigation.navigate('SubCategory',{name:item.text, Submenu:item.submenus})} key={index}>
+              <CategoryAdverts text={item.text}  />
+           
+      </TouchableOpacity>
 
-       
-      ))}
+            ))
+          }     
     </View>
            
           

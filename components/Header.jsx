@@ -3,7 +3,7 @@ import React from 'react'
 import AddBtn from 'react-native-vector-icons/AntDesign'
 import Icon from 'react-native-vector-icons/EvilIcons'
 import { useNavigation } from "@react-navigation/native";
-export default function Header() {
+export default function Header({loading}) {
   const navigation = useNavigation();
   return (
     <View style={styles.header}>

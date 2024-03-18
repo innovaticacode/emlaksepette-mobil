@@ -6,7 +6,7 @@ import Bookmark from "react-native-vector-icons/FontAwesome";
 import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
 
-export default function Posts({title,loading,price,image}) {
+export default function Posts({title,loading,price,image,location,m2,roomCount,floor}) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
@@ -85,12 +85,12 @@ export default function Posts({title,loading,price,image}) {
         </View>
         <View style={{backgroundColor:'#E8E8E8',height:30,display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
           <View style={{display:'flex',flexDirection:'row' }} >
-          <Info text='2'/>
-          <Info text='3'/>
-          <Info text='5'/>
+          <Info text={m2 + 'm2'}/>
+          <Info text={roomCount}/>
+          <Info text={floor + 'Katlı'}/>
           </View>
          <View style={{justifyContent:'center',}}>
-          <Text style={styles.InformationText}>İstanbul / Kartal / Cevizli</Text>
+          <Text style={styles.InformationText}>{location}</Text>
          </View>
 
         </View>

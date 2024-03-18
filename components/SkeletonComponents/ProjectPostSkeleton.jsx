@@ -1,63 +1,47 @@
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity ,Dimensions,Image} from 'react-native'
 import React from 'react'
 import { useNavigation } from "@react-navigation/native";
-export default function ProjectPost({caption,ımage,location,city, mahalle,acıklama,ShoppingName,ShoppingMail,ShopingInfo,Phone, ProfilImage,slug,ProjectNo,loading}) {
-    const navigation = useNavigation();
-    const generateRandomColorCode = () => {
-      const letters = '0123456789ABCDEF';
-      let color = '#';
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    };
-    
-    const RandomColor=generateRandomColorCode()
+import { Skeleton } from '@rneui/themed';
+import ProjectPost from '../ProjectPost';
+export default function ProjectPostSkeleton({}) {
+   
   return (
-    <TouchableOpacity style={{}} onPress={() =>  navigation.navigate('Details', { 
-     name:caption,
-       otherParam: caption,
-       konum:location ,
-       ımage:ımage,
-      sehir:city,
-      mahalle:mahalle,
-      acıklama:acıklama,
-      ShoppingName:ShoppingName,
-      ShoppingMail:ShoppingMail,
-      ShopingInfo:ShopingInfo,
-      Phone:Phone,
-      slug:slug,
-      ProjectId:ProjectNo
-      
-       })}>
+    <Skeleton animation='pulse'  height={250}  skeletonStyle={{backgroundColor:'#ebebeb',padding:5}}>
+    <TouchableOpacity style={{marginTop:10,padding:10}}>
 
-      
+
            <View style={styles.container}>
-      <ImageBackground source={{uri:ımage}} 
-                         style={{ width: '100%', height: '100%' }}/>
+        <Skeleton animation='pulse' skeletonStyle={{backgroundColor:'#ebebeb'}} >
      <View style={styles.ShoppingName}>
+       
      <View style={styles.ShopImage}>
-     <Image source={{uri:ProfilImage}} style={{width:'50%',height:'90%',}} resizeMode='cover' />
-     </View>
-     <View style={styles.ShopText}>
-        <Text style={{color:'white',fontSize:8,textAlign:'center',fontWeight:'500'}}>{location} / {city}</Text>
-     </View>
-     </View>
 
-     <View style={[styles.Description,{backgroundColor:RandomColor+'CC',padding:10}]}>
-       <Text style={{color:'#FFFFFF',fontWeight:'800',fontSize:17,textAlign:'center'}}>{caption}</Text>
      </View>
+   
+
+     <View style={styles.ShopText}>
+        <Text style={{color:'white',fontSize:8,textAlign:'center',fontWeight:'500'}}></Text>
+     </View>
+   
+     </View>
+     </Skeleton>
+    <Skeleton animation='pulse' skeletonStyle={{backgroundColor:'#ebebeb'}} >
+     <View style={[styles.Description,{padding:10}]}>
+       <Text style={{color:'#FFFFFF',fontWeight:'800',fontSize:17,textAlign:'center'}}></Text>
+     </View>
+     </Skeleton>
       
    
          
     </View>
-        
+
          
         
    
       
 
     </TouchableOpacity>
+    </Skeleton>
   )
 }
 const { width, height } = Dimensions.get('window');
