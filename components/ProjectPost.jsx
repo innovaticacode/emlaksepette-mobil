@@ -66,7 +66,7 @@ const styles=StyleSheet.create({
             
             height:width>400? 250:200,
             alignItems:'center',
-            top:10,
+         
         
             display:'flex',
             flexDirection:'row',
@@ -102,11 +102,3 @@ const styles=StyleSheet.create({
       justifyContent:'center'
    }
 })
-{/* <Text style={{fontSize:11,fontWeight:'300'}}>{location} / {city} / {mahalle}</Text> */}
-{/* <View style={styles.ımageBackground}>
-                       
-                </View> */}
-                 {/* <View>
-                      <Text style={{fontSize:12,fontWeight:'500' }}>{caption}</Text>
-                      // // </View> */}
-                      // <Text style={{fontSize:11,fontWeight:'300'}}> {location}/{city} </Text>

@@ -188,7 +188,7 @@ export default function HomeList() {
                 setSelectedIndex={setSelectedIndex}
 
               >
-                <ScrollView style={{height:100,}}>
+                <ScrollView style={{height:100,}} nestedScrollEnabled={true}>
                     <View style={{gap:10}}>
                     <Text>dfdsdfs</Text>
                     <Text>dfdsdfs</Text>
@@ -215,7 +215,7 @@ export default function HomeList() {
                 setSelectedIndex={setSelectedIndex}
 
               >
-                <ScrollView style={{height:100,}}>
+                <ScrollView style={{height:100,}} nestedScrollEnabled={true}>
                     <View style={{gap:10}}>
                     <Text>dfdsdfs</Text>
                     <Text>dfdsdfs</Text>
@@ -242,7 +242,7 @@ export default function HomeList() {
                 setSelectedIndex={setSelectedIndex}
 
               >
-                <ScrollView style={{height:100,}}>
+                <ScrollView style={{height:100,}} nestedScrollEnabled={true}>
                     <View style={{gap:10}}>
                     <Text>dfdsdfs</Text>
                     <Text>dfdsdfs</Text>
@@ -272,7 +272,7 @@ export default function HomeList() {
                 setSelectedIndex={setSelectedIndex}
 
               >
-                <ScrollView style={{height:100}}>
+                <ScrollView style={{height:100}} nestedScrollEnabled={true}>
                     <View style={{gap:10}}>
                     <Text>dfdsdfs</Text>
                     <Text>dfdsdfs</Text>
@@ -419,7 +419,7 @@ export default function HomeList() {
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={'Gelişmiş Sıralama'}
-       containerStyle={{padding:6}}
+       containerStyle={{padding:6,backgroundColor:'transparent',borderWidth:0, }}
          />
             <CheckBox
            checked={selectedIndexRadio === 1}
@@ -427,7 +427,7 @@ export default function HomeList() {
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={'Fiyata göre (Önce en yüksek)'}  
-             containerStyle={{padding:6}}
+           containerStyle={{padding:6,backgroundColor:'transparent',borderWidth:0, borderTopWidth:1}}
          />
           <CheckBox
            checked={selectedIndexRadio === 2}
@@ -435,7 +435,7 @@ export default function HomeList() {
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={'Fiyata göre (Önce en düşük)'}
-           containerStyle={{padding:6}}
+           containerStyle={{padding:6,backgroundColor:'transparent',borderWidth:0, borderTopWidth:1}}
          />
             <CheckBox
            checked={selectedIndexRadio === 3}
@@ -443,7 +443,7 @@ export default function HomeList() {
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={'Tarihe göre (Önce en yeni ilan)'}
-           containerStyle={{padding:6}}
+           containerStyle={{padding:6,backgroundColor:'transparent',borderWidth:0, borderTopWidth:1}}
          />
           <CheckBox
            checked={selectedIndexRadio === 4}
@@ -451,7 +451,7 @@ export default function HomeList() {
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={'Tarihe göre (Önce en eski ilan)'}
-           containerStyle={{padding:6}}
+           containerStyle={{padding:6,backgroundColor:'transparent',borderWidth:0, borderTopWidth:1}}
          />
             <CheckBox
            checked={selectedIndexRadio === 5}
@@ -459,7 +459,7 @@ export default function HomeList() {
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={'Adrese göre(A-Z)'}
-           containerStyle={{padding:6}}
+           containerStyle={{padding:6,backgroundColor:'transparent',borderWidth:0, borderTopWidth:1}}
          />
            <CheckBox
            checked={selectedIndexRadio === 6}
@@ -467,7 +467,7 @@ export default function HomeList() {
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={'Adrese göre(Z-A)'}
-           containerStyle={{padding:6}}
+           containerStyle={{padding:6,backgroundColor:'transparent',borderWidth:0, borderTopWidth:1}}
          />
 
 
@@ -520,7 +520,8 @@ const styles=StyleSheet.create({
         padding: 13,
       borderWidth:1,
       borderRadius:5,
-      borderColor:'#D1D5DB'
+      borderColor:'#ebebeb',
+     
     
     
       },
@@ -586,29 +587,4 @@ const styles=StyleSheet.create({
         textAlign: 'center',
       },
 })  
-        {/* <View style={{ flex: 1 }}>
-   
-   <Animated.View
-     style={{
-       position: 'absolute',
-       bottom: 0,
-       left: 0,
-       right: 0,
-       backgroundColor: 'white',
-     
-      paddingTop:20,
-      paddingBottom:30,
-      paddingLeft:10,
-       paddingRight:10,
-        height:400,
-     
-       transform: [{ translateY }],
-     }}
-   >
-  
-    <View style={{alignItems:'center'}}>
-    <TouchableOpacity style={{backgroundColor:'grey',padding:3,width:'25%',borderRadius:20}} onPress={closeSheet}/>
-    </View>
-   
-   </Animated.View>
-    </View>*/}
+      

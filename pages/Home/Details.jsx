@@ -460,6 +460,11 @@ const openModal=()=>{
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
+            <TouchableOpacity style={{position:'absolute',right:-5,backgroundColor:'#333',padding:6,zIndex:1,borderRadius:30,top:-15}}
+            onPress={()=>setModalVisible(!modalVisible)}
+            >
+              <Heart name="close" size={20} color={'white'}/>
+            </TouchableOpacity>
             <View style={{backgroundColor:'#EEEEEE',padding:10}}>
               <Text style={{fontWeight:'bold',fontSize:12}}>{otherParam} projesinde 1 No'lu ilan Ödeme Planı</Text>
             </View>
@@ -471,10 +476,10 @@ const openModal=()=>{
             </View>
 
 
-         <TouchableOpacity onPress={()=>setModalVisible(!modalVisible)}
+         <TouchableOpacity 
           style={{backgroundColor:'#EA2C2E',padding:10,borderRadius:10}}
           >
-          <Text style={{textAlign:'center',color:'white',fontSize:15,fontWeight:'bold'}}>Kapat</Text>
+          <Text style={{textAlign:'center',color:'white',fontSize:15,fontWeight:'bold'}}>Sepete Ekle</Text>
          </TouchableOpacity>
          
          
