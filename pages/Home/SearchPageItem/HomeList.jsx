@@ -8,6 +8,7 @@ import ıcon from "react-native-vector-icons/SimpleLineIcons"
 import { useNavigation } from '@react-navigation/native'
 import Modal from 'react-native-modal';
 import Check from './Check'
+import { CheckBox } from 'react-native-elements'
 
 
 
@@ -73,12 +74,13 @@ const Accordion2 = ({ title, children, index, selectedIndex, setSelectedIndex })
 
 export default function HomeList() {
      
-
+  const [selectedIndexRadio, setIndexRadio] = useState(0);
 
 
     const navigation=useNavigation()
     const [isRealtorAdvert, setisRealtorAdvert] = useState(false)
     const [selectedIndex, setSelectedIndex] = useState(-1);
+    const [modalVisible2, setModalVisible2] = useState(false);
     const closeOthers = (index) => {
       setSelectedIndex(!selectedIndex);
     };
@@ -113,7 +115,10 @@ export default function HomeList() {
                     <Text style={{textAlign:'center',fontWeight:'500'}}>Filtrele</Text>
                     <Filter name='filter' size={15}/>
                 </TouchableOpacity>
-                <TouchableOpacity style={{flex:1/2,paddingTop:12,paddingBottom:12,backgroundColor:'#ebebeb'}}>
+                
+                <TouchableOpacity style={{flex:1/2,paddingTop:12,paddingBottom:12,backgroundColor:'#ebebeb'}}
+                  onPress={()=>setModalVisible2(!modalVisible2)}
+                >
                     <Text style={{textAlign:'center',fontWeight:'500'}}>Sırala</Text>
                 </TouchableOpacity>
             </View>
@@ -397,7 +402,91 @@ export default function HomeList() {
       </Modal>
     
       </View>
-     
+      <Modal
+        animationType="slide" // veya "fade", "none" gibi
+        transparent={true}
+        visible={modalVisible2}
+        onRequestClose={() => {
+          setModalVisible2(!modalVisible2);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+
+          <CheckBox
+           checked={selectedIndexRadio === 0}
+           onPress={() => setIndexRadio(0)}
+           checkedIcon="dot-circle-o"
+           uncheckedIcon="circle-o"
+           title={'Gelişmiş Sıralama'}
+       containerStyle={{padding:6}}
+         />
+            <CheckBox
+           checked={selectedIndexRadio === 1}
+           onPress={() => setIndexRadio(1)}
+           checkedIcon="dot-circle-o"
+           uncheckedIcon="circle-o"
+           title={'Fiyata göre (Önce en yüksek)'}  
+             containerStyle={{padding:6}}
+         />
+          <CheckBox
+           checked={selectedIndexRadio === 2}
+           onPress={() => setIndexRadio(2)}
+           checkedIcon="dot-circle-o"
+           uncheckedIcon="circle-o"
+           title={'Fiyata göre (Önce en düşük)'}
+           containerStyle={{padding:6}}
+         />
+            <CheckBox
+           checked={selectedIndexRadio === 3}
+           onPress={() => setIndexRadio(3)}
+           checkedIcon="dot-circle-o"
+           uncheckedIcon="circle-o"
+           title={'Tarihe göre (Önce en yeni ilan)'}
+           containerStyle={{padding:6}}
+         />
+          <CheckBox
+           checked={selectedIndexRadio === 4}
+           onPress={() => setIndexRadio(4)}
+           checkedIcon="dot-circle-o"
+           uncheckedIcon="circle-o"
+           title={'Tarihe göre (Önce en eski ilan)'}
+           containerStyle={{padding:6}}
+         />
+            <CheckBox
+           checked={selectedIndexRadio === 5}
+           onPress={() => setIndexRadio(5)}
+           checkedIcon="dot-circle-o"
+           uncheckedIcon="circle-o"
+           title={'Adrese göre(A-Z)'}
+           containerStyle={{padding:6}}
+         />
+           <CheckBox
+           checked={selectedIndexRadio === 6}
+           onPress={() => setIndexRadio(6)}
+           checkedIcon="dot-circle-o"
+           uncheckedIcon="circle-o"
+           title={'Adrese göre(Z-A)'}
+           containerStyle={{padding:6}}
+         />
+
+
+         <TouchableOpacity onPress={()=>setModalVisible2(!modalVisible2)}
+          style={{backgroundColor:'#EA2C2E',padding:10,borderRadius:10}}
+          >
+          <Text style={{textAlign:'center',color:'white',fontSize:15,fontWeight:'bold'}}>Kapat</Text>
+         </TouchableOpacity>
+         
+         
+       
+         
+          </View>
+        </View>
+      </Modal>
+    
+
+
+
     </View>
 
   )
@@ -468,7 +557,34 @@ const styles=StyleSheet.create({
         padding:5,
       borderWidth:1,
       borderColor:'#ebebeb'
-      }
+      },
+      centeredView: {
+      
+     
+        justifyContent: 'center',
+        alignItems: 'center',
+      // modal dışı koyu arkaplan
+      },
+      modalView: {
+        width:'100%',
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 20,
+      
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+      },
+      modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+      },
 })  
         {/* <View style={{ flex: 1 }}>
    

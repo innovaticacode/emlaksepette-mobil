@@ -17,6 +17,9 @@ import Header from '../../components/Header';
 import ProjectPost from '../../components/ProjectPost';
 import RealtorPost from '../../components/RealtorPost';
 import Splash from '../../components/Splash';
+import ProjectPostSkeleton from '../../components/SkeletonComponents/ProjectPostSkeleton';
+import { Skeleton } from '@rneui/themed';
+import SliderItemSkeleton from '../../components/SkeletonComponents/SliderItemSkeleton';
 
 export default function App() {
   const apiUrl='https://emlaksepette.com/';
@@ -68,7 +71,7 @@ export default function App() {
   };
 
 
-
+ 
 
 
 
@@ -79,7 +82,7 @@ export default function App() {
      
         
         <SafeAreaView style={{ flex: 1, paddingTop:25,backgroundColor:'white'}}>
-      <Header />
+      <Header loading ={loadingPrjoects} />
             <ScrollView scrollEventThrottle={20} 
              refreshControl={
               <RefreshControl
@@ -99,75 +102,100 @@ export default function App() {
           <View>
             <Text style={{ fontSize: 12, fontWeight: '500', top: 10 }}>ÖNE ÇIKAN PROJELER</Text>
           </View>
-         
-          <TouchableOpacity>
-            <View style={{ backgroundColor: '#EA2A29',paddingLeft:10, paddingRight:10, paddingTop:7,paddingBottom:5,  }}>
+    
+          <TouchableOpacity style={{ backgroundColor: '#EA2A29',paddingLeft:10, paddingRight:10, paddingTop:7,paddingBottom:5,zIndex:1  }}>
+        
               <Text style={{ fontSize: 12, fontWeight: '600', color: 'white' }} >Tümünü gör</Text>
-            </View>
+            
           </TouchableOpacity>
+       
 
         </View>
        
        
-        <View>
+        <View style={{}}>
+         {
+          loadingPrjoects==false?
           
-           <View style={{alignItems:'center',justifyContent:'center'}}>
-              <Text>
-                {
-                  loadingPrjoects==false?
-                  <Text>Yükleniyor</Text>:''
-                }
-              </Text>
-          
-           </View>
-                
+        
+            <View style={{top:40,padding:10}}>
              
+                  <ProjectPostSkeleton  />
+             
+          
+         </View>
+       
+      
+        
+      
+       
+        
+         :
+          <FlatList
+          data={featuredProjects}
+          renderItem={({ item }) => 
+          <View style={{marginTop:10,padding:10}}>
+            <ProjectPost key={item.id} 
+                caption={item.project_title}
+                 ımage={`${apiUrl}/${item.image.replace('public/', 'storage/')}`} 
+                location={item.city.title}
+                 city={item.county.ilce_title}
+                 ProjectNo={item.id}
+                 slug={item.slug}
+                 acıklama={item.description.replace(/<\/?[^>]+(>|$)/g , '').replace(/&nbsp;/g, ' ')}
+                 ShoppingName={item.user.name}
+                 ShoppingMail={item.user.email}
+                 Phone={item.user.phone}
+                 ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
+                 ShopingInfo={item.user.corporate_type}
+                 loading={loadingPrjoects}
+                />
+                </View>
+          }
+         
+         scrollEnabled={false}
+        />
+         }
+          
 
-        <FlatList
-  data={featuredProjects}
-  renderItem={({ item }) => 
-
-  <ProjectPost key={item.id} 
-  caption={item.project_title}
-   ımage={`${apiUrl}/${item.image.replace('public/', 'storage/')}`} 
-  location={item.city.title}
-   city={item.county.ilce_title}
-   ProjectNo={item.id}
-   slug={item.slug}
-   acıklama={item.description.replace(/<\/?[^>]+(>|$)/g , '').replace(/&nbsp;/g, ' ')}
-   ShoppingName={item.user.name}
-   ShoppingMail={item.user.email}
-   Phone={item.user.phone}
-   ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-   ShopingInfo={item.user.corporate_type}
-   loading={loadingPrjoects}
-  />
-
-  }
- 
- scrollEnabled={false}
-/>
 </View>  
+
+
   <View style={{paddingTop:20,padding:10}}>
-    <Text>Emlak İlanları</Text>
-      <View>
-      <FlatList
-  data={featuredEstates}
-  renderItem={({ item }) => 
-  <RealtorPost
-  price={`${JSON.parse(item.housing_type_data)['price']} `}
- 
-    title={item.housing_title}
-    loading={loadingEstates}
-  />
- 
-
+    {
+      loadingPrjoects==false?
+       <>
+      
+      </>
+      :
+      <Text>Emlak İlanları</Text>
+    }
   
-
-  }
- 
- scrollEnabled={false}
-/>
+      <View>
+        {
+          loadingPrjoects==false?
+          '':
+          <FlatList
+          data={featuredEstates}
+          renderItem={({ item }) => 
+          <RealtorPost
+          price={`${JSON.parse(item.housing_type_data)['price']} `}
+            title={item.housing_title}
+            loading={loadingEstates}
+            location={item.city_title +  ' / ' + item.county_title}
+            image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image}`}
+            m2={`${JSON.parse(item.housing_type_data)['squaremeters']} `}
+            roomCount={`${JSON.parse(item.housing_type_data)['room_count']} `}
+            floor={`${JSON.parse(item.housing_type_data)['floorlocation']} `}
+       
+          />
+        
+          }
+         
+         scrollEnabled={false}
+        />
+        }
+  
       </View>
    </View>
      </ScrollView> 

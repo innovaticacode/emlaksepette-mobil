@@ -38,6 +38,7 @@ import LinkIcon from "react-native-vector-icons/Entypo"
 import { useRoute } from '@react-navigation/native';
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
+import SettingsItem from "../../components/SettingsItem";
 
 export default function Details({navigation}) {
   const [showAlert, setshowAlert] = useState(false)
@@ -459,8 +460,21 @@ const openModal=()=>{
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-         <TouchableOpacity onPress={()=>setModalVisible(!modalVisible)}>
-          <Text>Kapat</Text>
+            <View style={{backgroundColor:'#EEEEEE',padding:10}}>
+              <Text style={{fontWeight:'bold',fontSize:12}}>{otherParam} projesinde 1 No'lu ilan Ödeme Planı</Text>
+            </View>
+            <View>
+              <SettingsItem info='Peşin Fiyat' numbers='2.000.000' />
+              <SettingsItem info='Taksitli 12 Ay Fiyat' numbers='2.500.000' />
+              <SettingsItem info='Peşinat' numbers='1.000.000' />
+              <SettingsItem info='Aylık Ödenecek Tutar' numbers='100.000' />
+            </View>
+
+
+         <TouchableOpacity onPress={()=>setModalVisible(!modalVisible)}
+          style={{backgroundColor:'#EA2C2E',padding:10,borderRadius:10}}
+          >
+          <Text style={{textAlign:'center',color:'white',fontSize:15,fontWeight:'bold'}}>Kapat</Text>
          </TouchableOpacity>
          
          
@@ -575,7 +589,7 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
+    padding: 25,
    gap:20,
     shadowColor: '#000',
     shadowOffset: {

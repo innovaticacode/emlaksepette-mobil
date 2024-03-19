@@ -2,16 +2,19 @@ import { View, Text ,StyleSheet,ScrollView, FlatList} from 'react-native'
 import React,{useState,useEffect} from 'react'
 import SliderItem from './SliderItem'
 import axios from 'axios';
+import SliderItemSkeleton from './SkeletonComponents/SliderItemSkeleton';
 
 
-export default function SliderBar({loading}) {
+export default function SliderBar() {
   const apiUrl='https://emlaksepette.com/';
+  const [loading, setloading] = useState(false)
   const [featuredStores, setFeaturedStores] = useState([]);
 
   const fetchFeaturedStores = async () => {
     try {
       const response = await axios.get('https://emlaksepette.com/api/featured-stores');
       setFeaturedStores(response.data)
+      setloading(true)
     } catch (error) {
       console.log(error);
     }
@@ -32,35 +35,24 @@ export default function SliderBar({loading}) {
 
       {
         featuredStores.map((item,index)=>(
-        
+       
           <View style={{width:100,alignItems:'center'}} key={index}>
-            
-<SliderItem key={index} image={`${apiUrl}/storage/profile_images/${item.profile_image}`} />
+            {
+              loading==false?
+              <>
+              <SliderItemSkeleton/>
+          </>:
+              <>
+              <SliderItem key={index} image={`${apiUrl}/storage/profile_images/${item.profile_image}`} color={item.banner_hex_code} />
           <Text numberOfLines={2} style={{fontSize:12}}>{item.name}</Text>
+          </>
+            }
+
           </View>
            
         ))
       }
-      {/* <FlatList
-        data={featuredStores}
-        renderItem={({ item }) => 
-
-  
-      
-        }
-
-      /> */}
-       
-        {/* <SliderItem/>
-        <SliderItem/>
-        <SliderItem/>
-        <SliderItem/>
-        <SliderItem/>
-        <SliderItem/>
-        <SliderItem/>
-        <SliderItem/>
-        <SliderItem/>
-        <SliderItem/> */}
+    
     </ScrollView>  
    
    

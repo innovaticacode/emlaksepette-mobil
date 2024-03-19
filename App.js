@@ -50,6 +50,7 @@ import Basket from './pages/Home/Basket';
 import PublicPage from './pages/Home/SearchPageItem/PublicPage';
 import SubCategory from './pages/Home/SearchPageItem/SubCategory';
 import HomeList from './pages/Home/SearchPageItem/HomeList';
+import SubCategoryChild from './pages/Home/SearchPageItem/SubCategoryChild';
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
@@ -347,11 +348,17 @@ export default function App({route}) {
   })} 
  
   /> 
+   
       <Stack.Screen name='HomeList'  component={HomeList} options={({route})=>({
         headerShown:false
   })} 
  
   /> 
+     <Stack.Screen name='SubCategoryChild'  component={SubCategoryChild} options={({route})=>({
+        title:route.params.name
+  })} 
+ 
+  />
   
 </Stack.Navigator>
 
