@@ -79,7 +79,7 @@ export default function App({route}) {
 
   <Stack.Group>
     <Stack.Screen name="Login" component={Login} options={{ title: 'Giriş Yap' }} />
-    <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+    <Stack.Screen name="Register" component={Register} options={{title:'Üye Ol',headerBackTitle:'.' }} />
   </Stack.Group>
 
  

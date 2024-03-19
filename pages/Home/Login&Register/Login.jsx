@@ -1,157 +1,112 @@
-import { View, Text, SafeAreaView, StyleSheet, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity ,Dimensions,} from 'react-native'
+import { View, Text, SafeAreaView, StyleSheet, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity ,Dimensions,Image} from 'react-native'
 import { React, useState } from 'react'
 import BackIcon from "react-native-vector-icons/AntDesign"
 import EyeIcon from "react-native-vector-icons/Ionicons"
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import IconSocialMedia from "react-native-vector-icons/AntDesign"
+import Icon from "react-native-vector-icons/Entypo"
+import { CheckBox } from 'react-native-elements';
 
 export default function Login({navigation}) {
-    const [eye, seteye] = useState('eye-off-outline')
+    const [eye, seteye] = useState('eye-off-sharp')
     const [Show, setShow] = useState(false)
     const show=()=>{
         setShow(!Show)
     }
+    const [checked, setChecked] =useState(false);
+    const toggleCheckbox = () => setChecked(!checked);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    
+   <View style={styles.container}>
+        <View style={styles.header}>
 
-      <SafeAreaView style={{backgroundColor:'white'}}>
-      
-        <View style={styles.container}>
-
-          <View style={styles.Form}>
-
-            <View style={styles.header}>
-              <Text style={{
-                fontSize: 30,
-                color: '#274ABA',
-                fontWeight: '500',
-                letterSpacing: 1
-              }}>Hoşgeldiniz</Text>
-              <Text style={{
-                color: 'grey'
-              }}>Hayalinizdeki evi bizimle bulun</Text>
-            </View>
-
-            <View style={styles.formControl}>
-              <View>
-                <Text style={styles.label}>E-Posta</Text>
-                <TextInput style={styles.ınput} />
-              </View>
-               
-              <View>
-              <Text style={styles.labelPass}>Şifre</Text>
-              <View style={{display:'flex',flexDirection:'row',}}>
-                <TextInput style={styles.ınput} secureTextEntry={!Show} />
-                <TouchableOpacity
-                onPress={show}
-                style={{alignItems:'center',justifyContent:'center',width:30,position:'absolute',right:10,bottom:10}}>
-                  <EyeIcon name={Show? 'eye-outline':'eye-off-outline'}size={30}/>
-                </TouchableOpacity>
-              </View>
-              </View>
-            </View>
-            <View style={styles.butons}>
-              <View style={styles.forgotPassAndOtherLogin}>
-                <View style={{ width: '50%', alignItems: 'flex-start' }}>
-                  <TouchableOpacity>
-                    <Text style={styles.text}>Kurumsal Giriş</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={{ width: '50%', alignItems: 'flex-end' }}>
-                  <TouchableOpacity>
-                    <Text style={styles.text}>Şifremi Unuttum</Text>
-                  </TouchableOpacity>
-                </View>
-
-                <View style={styles.forgotpass}></View>
-              </View>
-              <View style={{ width: '100%', height: 45, }}>
-                <TouchableOpacity style={styles.btnLogin}>
-                  <Text style={{
-                    color: 'white',
-                    fontSize: 20,
-                    fontWeight: '500',
-                    letterSpacing: 1
-                  }}>Giriş Yap</Text>
-                </TouchableOpacity>
-              </View>
-                  
-             
-                  
-            </View>
-
-            <View style={styles.otherSections}>
-            <View style={{width:'100%',display:'flex',flexDirection:'row',justifyContent:'center',bottom:8}}>
-              <View style={styles.hr}/>
-              <View><Text style={{top:10,margin:10,opacity:0.5}}>OR</Text></View>  
-              <View style={styles.hr}/>
-              </View>
-
-              <View style={{display:'flex',flexDirection:'column',height:100,gap:6,}}>
-                    <TouchableOpacity style={{
-                     flex:1,
-                     borderColor:'grey',
-                     borderRadius:6,
-                     backgroundColor:'transparent',
-                     borderWidth:1,
-                    padding:5,
-                    display:'flex',
-                    flexDirection:'row'
-                    }}>
-                      <View style={styles.IconContainer}>
-                      <IconSocialMedia name='google' size={30} color={'black'}/>
-                      </View>
-                      <View style={{alignItems:'center',justifyContent:'center',width:'60%',left:40}}>
-                      <Text style={{
-                        fontSize:18,
-                        fontWeight:'600'
-                      }}>Google ile giriş yap</Text>
-                      </View>
-                      
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={{
-                     flex:1,
-                     backgroundColor:'transparent',
-                     borderWidth:1,
-                     borderColor:'grey',
-                     borderRadius:6,
-                     
-                     padding:5,
-                     display:'flex',
-                     flexDirection:'row'
-                    }}>
-                      <View style={styles.IconContainer2}>
-                      <IconSocialMedia name='facebook-square' size={30} color={'black'}/>
-                      </View>
-                      <View style={{justifyContent:'center',width:'60%',left:40}}>
-                      <Text style={{
-                        fontSize:18,
-                        fontWeight:'600'
-                      }}>Facebook ile giriş yap</Text>
-                        </View>
-                     
-                    </TouchableOpacity>
-                  
-          </View>
-            </View>
-            <View style={{alignItems:'center'}}>
-                <Text style={{
-                    fontSize:15,
-                    margin:5,
-                    color:'grey',
-                    fontWeight:500
-                }}>Henüz bir hesabınız yokmu?
-                 <Text onPress={()=>navigation.navigate('Register')} style={{
-                  color:'blue',
-                  textDecorationLine:'underline',
-                 }}> Kayıt Ol</Text>
-
-                 </Text>
-              </View> 
-          </View>
         </View>
-      </SafeAreaView>
+        <View style={styles.logIn}>
+          <KeyboardAwareScrollView>
+          <View style={styles.form}>
+           
+            <View>
+              <Text style={{color:'#17243e',fontSize:20,fontWeight:'bold'}}>Giriş Yap</Text>
+            </View>
+
+              <View style={{gap:10}}>
+                <View style={{paddingLeft:10}}>
+                <Text style={{fontSize:15,color:'grey',fontWeight:600}}>E-Mail</Text>
+                </View>
+              
+                <TextInput style={styles.Input} placeholder='example@gmail.com'/>
+              </View>
+              <View style={{gap:10}}>
+                <View style={{paddingLeft:10}}>
+                <Text style={{fontSize:15,color:'grey',fontWeight:600}}>Şifre</Text>
+                </View>
+                  <View>
+                   
+                <TextInput style={styles.Input} placeholder='Şifrenizi Girin' secureTextEntry={Show? false:true}/>
+                <TouchableOpacity style={{position:'absolute',right:10,bottom:10}} onPress={show}>
+                      <EyeIcon name={Show? 'eye':'eye-off-sharp'} size={20} color={'#333'}/>
+                    </TouchableOpacity>
+                </View>
+                <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',gap:15}}>
+                  <View>
+                  <CheckBox
+           checked={checked}
+           onPress={toggleCheckbox}
+           // Use ThemeProvider to make change for all checkbox
+           iconType="material-community"
+           checkedIcon="checkbox-marked"
+           uncheckedIcon="checkbox-blank-outline"
+           checkedColor="#EA2C2E"
+           title={'Beni Hatırla'}
+          textStyle={{fontSize:13,fontWeight:400}}
+            size={22}
+           containerStyle={{padding:0,backgroundColor:'transparent',borderWidth:0,}}
+         />
+                  </View>
+          <TouchableOpacity style={{}}>
+            <Text style={{fontSize:13,letterSpacing:0.5,color:'#5D96F1',textDecorationLine:'underline'}}>Şifrenimi Unuttun?</Text>
+          </TouchableOpacity>
+        
+              </View>
+              </View>
+              <TouchableOpacity style={{backgroundColor:'#EA2C2E',padding:8,borderRadius:10}}>
+            <Text style={{textAlign:'center',color:'white',fontWeight:'600'}}>Giriş Yap</Text>
+          </TouchableOpacity>
+          <View style={{flexDirection:'row',justifyContent:'space-evenly',alignItems:'center',gap:5}}>
+            <View style={{backgroundColor:'#E7EBEE',height:1,padding:1,width:'40%'}}/>
+            <Text>OR</Text>
+            <View style={{backgroundColor:'#E7EBEE',height:1,padding:1,width:'40%'}}/>
+          </View>
+
+              <View style={{flexDirection:'row',justifyContent:'space-around'}}>
+                <TouchableOpacity style={{backgroundColor:'#EEF4FE',padding:5,width:'40%',height:40,borderRadius:10,flexDirection:'row',alignItems:'center',gap:10}}>
+                    <Image source={require('../../../assets/gogle.png')} style={{width:'25%',height:'100%'}} resizeMode='contain'/>
+                    <Text style={{fontWeight:'bold',color:'#333'}}>Google</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{backgroundColor:'#EEF4FE',padding:5,width:'40%',height:40,borderRadius:10,flexDirection:'row',alignItems:'center',gap:10}}>
+                    <Icon name='facebook-with-circle'size={30} color={'#1A77F3'}/>
+                    <Text style={{fontWeight:'bold',color:'#333'}}>Facebook</Text>
+               </TouchableOpacity>
+              </View>
+
+          </View>
+          <View >
+            <Text style={{textAlign:'center'}}>
+              <Text style={{fontSize:13,color:'#333'}}>Henüz Üye Değilmisiniz? </Text>
+           
+              <Text style={{fontWeight:'bold',}} onPress={()=>{
+              navigation.navigate('Register')
+              }}>Üye Ol</Text>
+            
+            
+            </Text>
+          </View>
+          </KeyboardAwareScrollView>
+        
+        </View>
+   </View>
+  
     </TouchableWithoutFeedback>
   )
 }
@@ -159,150 +114,32 @@ const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   
   container: {
-    width: '100%',
-    height: '100%',
-    bottom:25,
-    alignItems: 'center',
-    justifyContent: 'center'
+      flex:1,
+     backgroundColor:'white'
   },
-  Form: {
-    width: '90%',
-    height: '90%',
+  header:{
+    flex:0.2,
 
   },
-  header: {
-    width: '100%',
-    height: '10%',
-
+  logIn:{
+    backgroundColor:'#FFFFFF',
+    flex:1.8,
+    borderTopLeftRadius:20,
+    borderTopRightRadius:20,
+    position:''
   },
-  formControl: {
-    width: '100%',
-    height: width>400?'25%':'30%',
-    display:'flex',
-    flexDirection:'column',
-    justifyContent:'space-around',
-    
-    
+  form:{
+    padding:40,
+    gap:20
   },
-  butons: {
-    width: '100%',
-    height: '19%',
-    
-  },
-  ınput: {
-    backgroundColor: '#FAFAFA',
-  
-    width:'100%',
-    padding: 12,
-    fontSize: 20,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#EEEEEE'
-  },
-  label: {
-    fontSize: 16,
-    margin: 5,
-    fontWeight: '600'
-  },
-  forgotPassAndOtherLogin: {
-    width: '100%',
-    height: 40,
-
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 7
-  },
-  text: {
-    fontSize: 13,
-    fontWeight: '500',
-  
-    color: 'grey'
-  },
-  btnLogin: {
-    flex: 1,
-    backgroundColor: '#264ABB',
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-   backgroundColor:'#264ABB'
-  },
-labelPass:{
-  
-  fontSize: 16,
- 
-  margin:5,
-  fontWeight: '600'
-},
-hr:{
-  width:'40%',
-    height:1,
-    backgroundColor:'grey',
-    opacity:0.5,
-    top:30,
-   
-},
-otherSections:{
-  width:'100%',
-  height:150,
-    bottom: width>400? 60:30,
-   
-    
-  
-  display:'flex',
-  flexDirection:'column',
- 
- justifyContent:'center'
- 
-},
-IconContainer: {
-  padding: 2,
+  Input:{
+    padding:10,
+    borderWidth:1,
+    borderColor:'#ebebeb',
+    borderRadius:10,
+    fontSize:14
+  }
  
  
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: width<400? '16%':'15%',
-  height:'100%',
-
-  
-
- 
-  borderColor: '#e6e6e6',
-  ...Platform.select({
-    ios: {
-      shadowColor: ' #e6e6e6',
-      shadowOffset: { width: 1, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 5,
-    },
-    android: {
-      elevation: 5,
-    },
-  }),
-
-
-},
-IconContainer2: {
-  
- 
- 
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: width<400? '16%':'15%',
-  height:'100%',
-  ...Platform.select({
-    ios: {
-      shadowColor: ' #e6e6e6',
-      shadowOffset: { width: 1, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 5,
-    },
-    android: {
-      elevation: 5,
-    },
-  }),
-
-
-},
 
 })
