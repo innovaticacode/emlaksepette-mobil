@@ -33,7 +33,7 @@ const Accordion = ({ title, children, index, selectedIndex, setSelectedIndex }) 
     };
 
     return (
-        <View style={[styles.container2]}>
+        <View>
             <TouchableOpacity style={styles.row} onPress={toggleExpand}>
                 <View style={{ flex: 1.8 / 2 }}>
                     <Text style={[styles.title, { color: '#333' }]}>{title}</Text>
@@ -50,6 +50,8 @@ const Accordion = ({ title, children, index, selectedIndex, setSelectedIndex }) 
 };
 
 export default function Company() {
+    const [accounttype, setaccounttype] = useState('')
+    const [focusArea, setfocusArea] = useState('')
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [eye, seteye] = useState('eye-off-sharp')
     const [Show, setShow] = useState(false)
@@ -64,6 +66,21 @@ export default function Company() {
     const toggleCheked1 = () => setChecked1(!checked1)
     const toggleCheked2 = () => setChecked2(!checked2)
     const toggleCheked3 = () => setChecked3(!checked3)
+    
+    const chooseAccount=(text)=>{
+            setaccounttype(text)
+    }
+    const chooseArea=(text)=>{
+        setfocusArea(text)
+}
+    const focusarea=[
+        {title:'İnşaat'},
+        {title:'Emlak'}
+    ]
+    const chooseAccountItems=[
+        {title:'İnşaat'},
+        {title:'Emlak'}
+    ]
 
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -128,7 +145,7 @@ export default function Company() {
                             </View>
                        
             <Accordion
-             
+                title={accounttype}
                 index={0}
                 selectedIndex={selectedIndex}
                 setSelectedIndex={setSelectedIndex}
@@ -136,8 +153,56 @@ export default function Company() {
               >
                 <ScrollView style={{height:100,}} nestedScrollEnabled={true}>
                     <View style={{gap:10}}>
-                  <AccordionItem/>
-                  <AccordionItem/>
+
+                        {
+                            chooseAccountItems.map((item,index)=>(
+                                <TouchableOpacity key={index} onPress={()=>{
+                                       chooseAccount(item.title)
+                                }}>
+                                <AccordionItem text={item.title}/>
+                                </TouchableOpacity>
+                            ))
+                        }
+                      
+                
+               
+                
+
+                  
+                    </View>
+                </ScrollView>
+                
+              </Accordion>
+              </View>
+              <View style={{gap:5}}>
+                            <View style={{paddingLeft:5}}>
+                            <Text style={{ fontSize: 14, color: 'grey', fontWeight: 600 }}>Faailyet Alanınız</Text>  
+                            </View>
+                       
+            <Accordion
+                title={focusArea}
+                index={1}
+                selectedIndex={selectedIndex}
+                setSelectedIndex={setSelectedIndex}
+
+              >
+                <ScrollView style={{height:100,}} nestedScrollEnabled={true}>
+
+                    <View style={{gap:10}}>
+                        {
+                            focusarea.map((item,index)=>(
+                                <TouchableOpacity key={index}
+                                    onPress={()=>{
+                                        chooseArea(item.title)
+                                    }}
+                                >
+                                <AccordionItem  text={item.title}/>
+                                </TouchableOpacity>
+                            ))
+                        }
+                    
+                 
+                
                 
 
                   
@@ -257,7 +322,7 @@ const styles = StyleSheet.create({
         paddingLeft: 8,
         paddingRight: 8,
         alignItems: 'center',
-        padding: 13,
+        padding: 11,
       borderWidth:1,
       borderRadius:5,
       borderColor:'#ebebeb',

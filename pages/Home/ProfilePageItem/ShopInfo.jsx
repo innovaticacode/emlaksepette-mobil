@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Feather'
 import Star from 'react-native-vector-icons/FontAwesome'
 import Map from '../../../components/Map';
 import ShopComment from './ShopComment';
-export default function ShopInfo({progress}) {
+export default function ShopInfo({progress,map,maplo}) {
     const { width, height } = Dimensions.get('window');
   
     return (
@@ -55,7 +55,7 @@ export default function ShopInfo({progress}) {
              
                 </View>
                 <View style={[{width:'100%',height:150,top:60},styles.shadow]}>
-                        <Map/>
+                        <Map map={map} maplo={maplo}/>
                 </View> 
             </View>
            <View style={styles.comment}>
