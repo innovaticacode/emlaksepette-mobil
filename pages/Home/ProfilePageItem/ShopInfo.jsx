@@ -55,7 +55,7 @@ export default function ShopInfo({progress,map,maplo}) {
              
                 </View>
                 <View style={[{width:'100%',height:150,top:60},styles.shadow]}>
-                        <Map map={map} maplo={maplo}/>
+                        <Map />
                 </View> 
             </View>
            <View style={styles.comment}>

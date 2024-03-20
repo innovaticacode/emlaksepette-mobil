@@ -44,7 +44,9 @@ export default function Profile() {
       <View style={{position:'absolute',zIndex:1,width:'100%',height:'100%',backgroundColor:'#EA2B2E94',borderBottomLeftRadius:40,borderBottomRightRadius:40}}>
          <View style={styles.InfoContainer}>
     
-          <TouchableOpacity style={{backgroundColor:'#ebebeb94',paddingLeft:10, paddingRight:10,borderRadius:5,justifyContent:'center',width:45,height:30,alignItems:'center'}}>        
+          <TouchableOpacity style={{backgroundColor:'#ebebeb94',paddingLeft:10, paddingRight:10,borderRadius:5,justifyContent:'center',width:45,height:30,alignItems:'center'}}
+            onPress={()=>navigation.goBack()}
+          >        
             <Arrow name='arrow-back-ios' size={20} style={{left:3}} color={'white'}/>
           </TouchableOpacity>
         
@@ -55,20 +57,27 @@ export default function Profile() {
 
          </View>
           <View style={{paddingLeft:15,paddingRight:15,}}>
-            <View>
-              <Text style={{color:'white',fontSize:12}}>Gayrimenkul Ofisi</Text>
-              </View>
+           
             <View style={{paddingTop:10}}>
               <View  style={{flexDirection:'row',alignItems:'center',gap:10}}>
                 <View style={{width:40,height:40,borderRadius:20}}>
                     <Image source={require('./profil.jpg')} style={{width:'100%',height:'100%',borderRadius:20}}/>
                 </View>
                 <View>
-                  <Text style={{fontSize:19,color:'white'}}>Master Realtor</Text>
+                  <Text style={{fontSize:19,color:'white'}}>Master Realtor</Text>       
+                  <Text style={{color:'white',fontSize:11}}>Gayrimenkul Ofisi</Text>
+                </View>
+              
+                <View style={{width:22,height:22}}>
+                  <ImageBackground source={require('./BadgeYellow.png')} style={{width:'100%',height:'100%'}}/>
+                  <LinkIcon name='check' size={14} style={{position:'absolute',left:4,top:4 }} color={'blue'}/>
                 </View>
               </View>
-            </View>
-
+             
+              </View>
+                <View style={{width:'60%',paddingTop:10}}>
+                  <TextInput style={{padding:9,backgroundColor:'transparent',borderWidth:0.4,borderColor:'#ebebeb',borderRadius:10}} placeholder='Ara...'placeholderTextColor={'#333'}/>
+                </View>
 
           </View>
         </View>
@@ -80,7 +89,7 @@ export default function Profile() {
 
               
       
-      {/*  */}
+    
 
        
        
@@ -121,7 +130,7 @@ export default function Profile() {
     
       
       </View>
-      {tab===0 && <ShopInfo map={map} maplo={maplo} />}
+      {tab===0 && <ShopInfo  />}
       {tab===1 && <ProjectAdverts/>}
       {tab===2 && <RealtorAdverts/>}
       {tab===3 && <Team/>}
@@ -212,31 +221,9 @@ const styles=StyleSheet.create({
   
    
   },
-  ProfileInfoDiv:{
-   
   
-    
-  
-    
-  },  
-  ProfileImage:{
-    width:35,
-    height:35,
-   
-  
-  },
-  ProfileName:{
-    alignItems:'center',
-    justifyContent:'left',
-    padding:10,
-    display:'flex',
-    flexDirection:'row',
-   
-   
-    bottom:2,
-    
-    
-  },
+ 
+
   tabBar:{
   
     padding:3,

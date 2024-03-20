@@ -27,8 +27,8 @@ export default function Map({map,maplo}) {
     <View style={{flex:1,top:3,padding:8}}>   
     <MapView
   initialRegion={{
-    latitude:map,
-    longitude:maplo,
+    latitude:40.908912269486486,
+    longitude:29.180268198251724,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
     altidute:50.03281021118164,

@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function SliderItem({image,name,color,maplo,mapla}) {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity  onPress={()=>navigation.navigate('Profile',{name:'Master Realtor',map:mapla,maplo:maplo})}>
+    <TouchableOpacity  onPress={()=>navigation.navigate('Profile',{name:'Master Realtor',})}>
     <View style={{backgroundColor:'transparent',width:65,
     height:65,
    flexWrap:'wrap',

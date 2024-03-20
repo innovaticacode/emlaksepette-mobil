@@ -43,7 +43,7 @@ export default function SliderBar() {
               <SliderItemSkeleton/>
           </>:
               <>
-              <SliderItem key={index} image={`${apiUrl}/storage/profile_images/${item.profile_image}`} mapla={item.latitude} maplo={item.longitude}  />
+              <SliderItem key={index} image={`${apiUrl}/storage/profile_images/${item.profile_image}`} />
           <Text numberOfLines={2} style={{fontSize:12}}>{item.name}</Text>
           
           </>
