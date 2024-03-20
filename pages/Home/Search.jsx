@@ -25,7 +25,7 @@ const fetchmenuItems = async () => {
     const response = await axios.get('https://emlaksepette.com/api/menu-list');
     setMenuItems(response.data)
     const submenus = response.data[0].submenus;
-    console.log(response.data[3].submenus);
+
     
   } catch (error) {
     console.log(error);

@@ -167,7 +167,7 @@ export default function App() {
             }
 
             <View>
-              {
+              {/* {
                 loadingPrjoects == false ?
                   '' :
                   <FlatList
@@ -189,7 +189,7 @@ export default function App() {
 
                     scrollEnabled={false}
                   />
-              }
+              } */}
 
             </View>
           </View>

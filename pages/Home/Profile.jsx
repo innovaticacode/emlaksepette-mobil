@@ -16,7 +16,7 @@ export default function Profile() {
   const route=useRoute();
   const {name}=route.params
   const [tab, settab] = useState(0)
-  const { width, height ,fontScale} = Dimensions.get('window');
+  const { width, height ,fontScale,map,maplo} = Dimensions.get('window');
   const translateY = useRef(new Animated.Value(400)).current;
   const navigation=useNavigation();
   const openSheet = () => {
@@ -40,72 +40,62 @@ export default function Profile() {
       Keyboard.dismiss()
      closeSheet()
     }} >
-      <TouchableOpacity style={{position:'absolute',zIndex:2,top:width>400? 50 :25 ,left:20, backgroundColor:'#FFFFFF3b',paddingLeft:6,paddingRight:6,padding:2,alignItems:'center',borderRadius:4}} onPress={()=>navigation.goBack()}>
-      <View>
-        <Arrow name='arrow-back-ios' size={width>400?25:20} color={'white'} style={{left:4}}/>
-      </View>
-      </TouchableOpacity>
-         <SafeAreaView style={styles.ProfileInfoDiv}>
-       
-      <View style={{display:'flex',flexDirection:'column',top:35,width:'60%'}}>
-      <Text style={{fontSize:width>400?12:11,color:'white',fontWeight:'400',bottom:10,left:10,top:5}}>Gayrimenkul Ofisi</Text>
-     
-          <View style={styles.ProfileName}>
-          
-            <Text style={{fontSize:width>400?25:18 ,color:'white',fontWeight:'500'}}>{name}</Text>
-            <View style={{width:26,height:26,left:10}}>
-            <ImageBackground source={require('./BadgeYellow.png')} style={{flex:1}}/>
-            <View style={{display:'flex',flexDirection:'column'}}></View>
-            <Icon name='check'style={{position:'absolute',left:7,top:6}} size={15}/>
-           </View>
-         
-          </View>
-          <View style={{left:10,width:'100%',justifyContent:'center',flexDirection:'row'}}>
-           <TextInput placeholder='Mağazda Ara...'
-            style={{
-            backgroundColor:'#FFFFFF3b',
-            padding:10,
-            borderRadius:50,
-            width:'100%',
-           }}/>
-         
-          </View>
-          </View>
-
-
-            <View style={styles.ProfileImageAndIcon}>
-            <View style={styles.ProfileImage}>
-              <Image source={require('./home.jpg')} style={{width:'100%',height:'100%'}} borderRadius={20} />
-        </View> 
-        <View>
-        <TouchableOpacity onPress={openSheet}>
-            <View
-              style={{
-                backgroundColor: "#FFFFFF",
-                justifyContent: "center",
-                width: 35,
-                height: 35,
-                alignItems: "center",
-                borderRadius: 20,
-              }}
-            >
-              <Icon name="sharealt" size={17} />
-            </View>
+     <View style={{width:'100%',height:'25%'}}>
+      <View style={{position:'absolute',zIndex:1,width:'100%',height:'100%',backgroundColor:'#EA2B2E94',borderBottomLeftRadius:40,borderBottomRightRadius:40}}>
+         <View style={styles.InfoContainer}>
+    
+          <TouchableOpacity style={{backgroundColor:'#ebebeb94',paddingLeft:10, paddingRight:10,borderRadius:5,justifyContent:'center',width:45,height:30,alignItems:'center'}}
+            onPress={()=>navigation.goBack()}
+          >        
+            <Arrow name='arrow-back-ios' size={20} style={{left:3}} color={'white'}/>
           </TouchableOpacity>
+        
+
+     <TouchableOpacity style={styles.shareIcons}>
+      <Icon name='sharealt' size={18}/>
+     </TouchableOpacity>
+
+         </View>
+          <View style={{paddingLeft:15,paddingRight:15,}}>
+           
+            <View style={{paddingTop:10}}>
+              <View  style={{flexDirection:'row',alignItems:'center',gap:10}}>
+                <View style={{width:40,height:40,borderRadius:20}}>
+                    <Image source={require('./profil.jpg')} style={{width:'100%',height:'100%',borderRadius:20}}/>
+                </View>
+                <View>
+                  <Text style={{fontSize:19,color:'white'}}>Master Realtor</Text>       
+                  <Text style={{color:'white',fontSize:11}}>Gayrimenkul Ofisi</Text>
+                </View>
+              
+                <View style={{width:22,height:22}}>
+                  <ImageBackground source={require('./BadgeYellow.png')} style={{width:'100%',height:'100%'}}/>
+                  <LinkIcon name='check' size={14} style={{position:'absolute',left:4,top:4 }} color={'blue'}/>
+                </View>
+              </View>
+             
+              </View>
+                <View style={{width:'60%',paddingTop:10}}>
+                  <TextInput style={{padding:9,backgroundColor:'transparent',borderWidth:0.4,borderColor:'#ebebeb',borderRadius:10}} placeholder='Ara...'placeholderTextColor={'#333'}/>
+                </View>
+
+          </View>
         </View>
-            </View>
+        
+   
+     <ImageBackground source={require('./profilePhoto.jpg')} style={{width:'100%',height:'100%'}} imageStyle={{borderBottomLeftRadius:40,borderBottomRightRadius:40}} />
+   
+     </View>
 
               
-        </SafeAreaView>
-      <View style={[styles.headerProfile]}>
-        <View style={{width:'100%',height:'100%',backgroundColor:'#DE4241E6',position:'absolute',zIndex:1,borderBottomLeftRadius:50,borderBottomRightRadius:50,overflow:'hidden'}}></View>
-      <ImageBackground source={require('./profilePhoto.jpg')} style={{width:'100%',height:'100%'}} imageStyle={{borderBottomLeftRadius:50,borderBottomRightRadius:50}} />
+      
+    
 
        
        
       
        
-      </View>
+   
       <View>
       <ScrollView horizontal style={{padding:10}} showsHorizontalScrollIndicator={false} nestedScrollEnabled={true}>
       <View style={styles.tabBar}>
@@ -140,7 +130,7 @@ export default function Profile() {
     
       
       </View>
-      {tab===0 && <ShopInfo/>}
+      {tab===0 && <ShopInfo  />}
       {tab===1 && <ProjectAdverts/>}
       {tab===2 && <RealtorAdverts/>}
       {tab===3 && <Team/>}
@@ -231,37 +221,9 @@ const styles=StyleSheet.create({
   
    
   },
-  ProfileInfoDiv:{
-    width:'100%',
-    display:'flex',
-    flexDirection:'row',
-    justifyContent:'space-between',
-    position:'absolute',
-  top:width>400? 50:20,
-  zIndex:1,
-    left:20,
-    
   
-    
-  },  
-  ProfileImage:{
-    width:35,
-    height:35,
-   
-  
-  },
-  ProfileName:{
-    alignItems:'center',
-    justifyContent:'left',
-    padding:10,
-    display:'flex',
-    flexDirection:'row',
-   
-   
-    bottom:2,
-    
-    
-  },
+ 
+
   tabBar:{
   
     padding:3,
@@ -300,11 +262,19 @@ const styles=StyleSheet.create({
   shareIcons:{
     backgroundColor: "#dbdbdb",
     justifyContent: "center",
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     alignItems: "center",
     borderRadius: 30,
     bottom:2
+  },
+  InfoContainer:{
+    paddingTop:width<400? 30:50,
+    padding:15,
+  
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center'
   }
 
 })
