@@ -22,6 +22,7 @@ export default function Login({ navigation }) {
   const [eye, seteye] = useState("eye-off-sharp");
   const [Show, setShow] = useState(false);
   const show = () => {
+    git;
     setShow(!Show);
   };
   const [checked, setChecked] = useState(false);
