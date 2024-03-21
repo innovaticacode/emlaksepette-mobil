@@ -21,7 +21,8 @@ import ProjectPostSkeleton from '../../components/SkeletonComponents/ProjectPost
 import { Skeleton } from '@rneui/themed';
 import SliderItemSkeleton from '../../components/SkeletonComponents/SliderItemSkeleton';
 
-export default function App() {
+export default function HomePage() {
+
   const apiUrl = 'https://emlaksepette.com/';
   const [loadingPrjoects, setloadingPrjoects] = useState(false)
   const [loadingEstates, setloadingEstates] = useState(false)
@@ -69,6 +70,9 @@ export default function App() {
       setRefreshing(false);
     },);
   };
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [animation] = useState(new Animated.Value(0));
+
 
 
 
@@ -82,7 +86,12 @@ export default function App() {
 
 
       <SafeAreaView style={{ flex: 1, paddingTop: 25, backgroundColor: 'white' }}>
+     
+
+      {/* Çekme menüsü */}
+    
         <Header loading={loadingPrjoects} />
+      
         <ScrollView scrollEventThrottle={20}
           refreshControl={
             <RefreshControl
@@ -97,7 +106,7 @@ export default function App() {
 
             <SliderBar loading={loadingPrjoects} />
           </View>
-
+        
           <View style={{ top: 30, padding: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-between',paddingBottom:30 }}>
             <View style={{ justifyContent: 'center' }}>
               <Text style={{ fontSize: 12, fontWeight: '500', }}>ÖNE ÇIKAN PROJELER</Text>
@@ -194,6 +203,7 @@ export default function App() {
             </View>
           </View>
         </ScrollView>
+       
       </SafeAreaView>
 
 
@@ -201,3 +211,6 @@ export default function App() {
     </TouchableWithoutFeedback>
   );
 }
+const styles=StyleSheet.create({
+
+})

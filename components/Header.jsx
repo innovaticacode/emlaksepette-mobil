@@ -27,7 +27,7 @@ export default function Header({loading}) {
       
         borderRadius:15
       }}
-        onPress={()=>navigation.navigate('Login')}
+        onPress={()=>navigation.navigate('ShopProfile')}
       >
        <Icon name='user' size={40}/>
       </TouchableOpacity>

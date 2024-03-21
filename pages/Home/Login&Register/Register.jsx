@@ -54,7 +54,7 @@ const styles=StyleSheet.create({
    },
    tabBarBtn:{
     width:'50%',
-   
+    
     padding:10,
    borderRadius:10
    
