@@ -14,7 +14,7 @@ export default function ProjectPost({caption,ımage,location,city, mahalle,acık
     
     const RandomColor=generateRandomColorCode()
   return (
-    <TouchableOpacity style={{}} onPress={() =>  navigation.navigate('Details', { 
+    <TouchableOpacity style={{marginTop:10}} onPress={() =>  navigation.navigate('Details', { 
      name:caption,
        otherParam: caption,
        konum:location ,
@@ -64,7 +64,7 @@ const { width, height } = Dimensions.get('window');
 const styles=StyleSheet.create({
     container:{
             
-            height:width>400? 250:200,
+            height:width>400? 230:180,
             alignItems:'center',
          
         

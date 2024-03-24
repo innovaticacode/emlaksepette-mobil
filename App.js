@@ -51,6 +51,8 @@ import PublicPage from './pages/Home/SearchPageItem/PublicPage';
 import SubCategory from './pages/Home/SearchPageItem/SubCategory';
 import HomeList from './pages/Home/SearchPageItem/HomeList';
 import SubCategoryChild from './pages/Home/SearchPageItem/SubCategoryChild';
+
+import Search from './pages/Home/Search';
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
@@ -78,6 +80,7 @@ export default function App({route}) {
   >
     {(props) => <Home {...props}  showBackIcon={showBackIcon} setshowBackIcon={setshowBackIcon}/>}
   </Stack.Screen>
+  
 
   <Stack.Group>
     <Stack.Screen name="Login"  options={{ title: 'Giriş Yap' }} >
@@ -363,6 +366,11 @@ export default function App({route}) {
   })} 
  
   />
+      <Stack.Screen name='Search'  component={Search} options={({route})=>({
+        headerShown:false
+  })} 
+ 
+  /> 
   
 </Stack.Navigator>
 

@@ -5,7 +5,7 @@ export default function Categories({category,ıconDisplay,displayIcon}) {
   return (
    
       <View style={styles.category}>
-      <View style={styles.IconContainer}>
+      {/* <View style={styles.IconContainer}>
     
                   <View
                     style={[styles.ıcons ,{display:displayIcon==='none'?'none':'flex'}]}
@@ -13,12 +13,19 @@ export default function Categories({category,ıconDisplay,displayIcon}) {
                     <Icon name='home' size={18} color={'white'} />
                   </View>
                 
-      </View>
-      <View style={[styles.CategoryItem,{borderBottomWidth:ıconDisplay==='none'? 0:1}]}>
-      <Text>{category}</Text>
+      </View> */}
+      {/* <View style={[styles.CategoryItem,{borderBottomWidth:ıconDisplay==='none'? 0:1 ,}]}>
+    
       </View>
       <View style={[styles.IconContainer2,{borderBottomWidth:ıconDisplay==='none'? 0:1}]}>
-        <Icon name='arrow-forward-ios'size={16} color={'#bebebe'} style={{display:ıconDisplay==='none'? 'none':'flex', left:7}}/>
+       
+      </View> */}
+      <View style={{flex:1.7/2,flexDirection:'row',}}>
+         
+      <Text style={{fontSize:19,color:'#333',fontWeight:'500'}}>{category}</Text>
+      </View>
+      <View style={{flex:0.3/2,alignItems:'center',justifyContent:'center'}}>
+      <Icon name='arrow-forward-ios'size={18} color={'#bebebe'} style={{display:ıconDisplay==='none'? 'none':'flex',}}/>
       </View>
       </View>
  
@@ -27,54 +34,16 @@ export default function Categories({category,ıconDisplay,displayIcon}) {
 }
 const styles=StyleSheet.create({
   category:{
-     
-      margin:2,
-     
+   
+      margin:5,
+     padding:8,
       display:'flex',
       flexDirection:'row',
+    borderBottomWidth:1,
+    borderBottomColor:'#ebebeb'
      
   },
-  IconContainer:{
-   padding:5,
-    
-    width:'11%'
-  },
-  CategoryItem:{
-    width:'75%',
-   
-    justifyContent:'center',
-    borderBottomWidth:1, 
-    borderBottomColor:'#e5e5e5',
-    left:15
-  },
-  IconContainer2:{
-    padding:11,
-     
-     width:'10%',
-     borderBottomWidth:1, 
-     borderBottomColor:'#e5e5e5',
-     alignItems:'center',
-     justifyContent:'center'
-   },
-   ıcons:{
-    width: 40,
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-    backgroundColor: 'green',  
-    borderColor:'#e6e6e6',
-    ...Platform.select({
-        ios: {
-          shadowColor: ' #e6e6e6',
-          shadowOffset: { width: 1, height: 1 },
-          shadowOpacity: 0.1,
-          shadowRadius: 5,
-        },
-        android: {
-          elevation: 5,
-        },
-      }),
-  
-   }
+
+
+ 
 })

@@ -10,6 +10,9 @@ import Test from "./Test";
 import Basket from "./Basket";
 import { useNavigation } from "@react-navigation/native";
 
+import ShoppingProfile from "./ShoppingProfile";
+import Login from "./Login&Register/Login";
+
 const Tab = createBottomTabNavigator();
 
 
@@ -49,21 +52,20 @@ const Home = () => {
           ),
         }}
       />
-
-      <Tab.Screen
-        name="Arama"
-        component={Search}
+ <Tab.Screen
+        name="Favoriler"
+        component={Test}
         options={{
-          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name="search-outline"
+              name="heart-outline"
               color={focused ? "black" : "grey"}
               size={20}
             />
           ),
         }}
       />
+     
 
       <Tab.Screen
         name="İlan Ver"
@@ -83,19 +85,7 @@ const Home = () => {
         }}
       />
 
-      <Tab.Screen
-        name="Favoriler"
-        component={Test}
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name="heart-outline"
-              color={focused ? "black" : "grey"}
-              size={20}
-            />
-          ),
-        }}
-      />
+     
   <Tab.Screen
   
   name="Sepetim"
@@ -118,6 +108,21 @@ const Home = () => {
 >
   {(props) => <Basket {...props}/>} 
 </Tab.Screen>
+<Tab.Screen
+        name="Hesabım"
+        component={Login}
+        options={{
+          headerShown:false,
+          tabBarIcon: ({ color, focused }) => (
+
+            <Feather
+              name="user"
+              color={focused ? "black" : "grey"}
+              size={23}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };

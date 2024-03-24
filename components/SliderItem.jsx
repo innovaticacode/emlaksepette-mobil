@@ -5,8 +5,8 @@ export default function SliderItem({image,name,color,maplo,mapla}) {
   const navigation = useNavigation();
   return (
     <TouchableOpacity  onPress={()=>navigation.navigate('Profile',{name:'Master Realtor',})}>
-    <View style={{backgroundColor:'transparent',width:65,
-    height:65,
+    <View style={{backgroundColor:'transparent',width:50,
+    height:50,
    flexWrap:'wrap',
     borderRadius:50,
     margin:6,
