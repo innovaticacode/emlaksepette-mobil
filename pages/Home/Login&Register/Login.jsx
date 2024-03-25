@@ -16,21 +16,8 @@ import EyeIcon from "react-native-vector-icons/Ionicons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import IconSocialMedia from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/Entypo";
-<<<<<<< HEAD
-import { CheckBox } from "react-native-elements";
-
-export default function Login({ navigation }) {
-  const [eye, seteye] = useState("eye-off-sharp");
-  const [Show, setShow] = useState(false);
-  const show = () => {
-    git;
-    setShow(!Show);
-  };
-  const [checked, setChecked] = useState(false);
-  const toggleCheckbox = () => setChecked(!checked);
-=======
-import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
-import { CheckBox } from "react-native-elements";
+// import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
+// import { CheckBox } from "react-native-elements";
 import Modal from "react-native-modal";
 export default function Login({ navigation }) {
   const [eye, seteye] = useState("eye-off-sharp");
@@ -77,11 +64,10 @@ export default function Login({ navigation }) {
       setTimeout(() => {
         setshowMailSendAlert(false);
       }, 9000);
-      setEmail('')
-      setPassword('')
+      setEmail("");
+      setPassword("");
     }
   };
-
 
   const [showLengthAlert, setShowLengthAlert] = useState(false);
   const [showUpperAlert, setShowUpperAlert] = useState(false);
@@ -126,7 +112,6 @@ export default function Login({ navigation }) {
   {
     /* ınput control*/
   }
->>>>>>> keremDev
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
@@ -140,199 +125,6 @@ export default function Login({ navigation }) {
                 >
                   Giriş Yap
                 </Text>
-<<<<<<< HEAD
-              </View>
-
-              <View style={{ gap: 10 }}>
-                <View style={{ paddingLeft: 10 }}>
-                  <Text
-                    style={{ fontSize: 15, color: "grey", fontWeight: 600 }}
-                  >
-                    E-Mail
-                  </Text>
-                </View>
-
-                <TextInput
-                  style={styles.Input}
-                  placeholder="example@gmail.com"
-                />
-              </View>
-              <View style={{ gap: 10 }}>
-                <View style={{ paddingLeft: 10 }}>
-                  <Text
-                    style={{ fontSize: 15, color: "grey", fontWeight: 600 }}
-                  >
-                    Şifre
-                  </Text>
-                </View>
-                <View>
-                  <TextInput
-                    style={styles.Input}
-                    placeholder="Şifrenizi Girin"
-                    secureTextEntry={Show ? false : true}
-                  />
-                  <TouchableOpacity
-                    style={{ position: "absolute", right: 10, bottom: 10 }}
-                    onPress={show}
-                  >
-                    <EyeIcon
-                      name={Show ? "eye" : "eye-off-sharp"}
-                      size={20}
-                      color={"#333"}
-                    />
-                  </TouchableOpacity>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: 15,
-                  }}
-                >
-                  <View>
-                    <CheckBox
-                      checked={checked}
-                      onPress={toggleCheckbox}
-                      // Use ThemeProvider to make change for all checkbox
-                      iconType="material-community"
-                      checkedIcon="checkbox-marked"
-                      uncheckedIcon="checkbox-blank-outline"
-                      checkedColor="#EA2C2E"
-                      title={"Beni Hatırla"}
-                      textStyle={{ fontSize: 13, fontWeight: 400 }}
-                      size={22}
-                      containerStyle={{
-                        padding: 0,
-                        backgroundColor: "transparent",
-                        borderWidth: 0,
-                      }}
-                    />
-                  </View>
-                  <TouchableOpacity style={{}}>
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        letterSpacing: 0.5,
-                        color: "#5D96F1",
-                        textDecorationLine: "underline",
-                      }}
-                    >
-                      Şifrenimi Unuttun?
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#EA2C2E",
-                  padding: 8,
-                  borderRadius: 10,
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "white",
-                    fontWeight: "600",
-                  }}
-                >
-                  Giriş Yap
-                </Text>
-              </TouchableOpacity>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                  gap: 5,
-                }}
-              >
-                <View
-                  style={{
-                    backgroundColor: "#E7EBEE",
-                    height: 1,
-                    padding: 1,
-                    width: "40%",
-                  }}
-                />
-                <Text>OR</Text>
-                <View
-                  style={{
-                    backgroundColor: "#E7EBEE",
-                    height: 1,
-                    padding: 1,
-                    width: "40%",
-                  }}
-                />
-              </View>
-
-              <View
-                style={{ flexDirection: "row", justifyContent: "space-around" }}
-              >
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#EEF4FE",
-                    padding: 5,
-                    width: "40%",
-                    height: 40,
-                    borderRadius: 10,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <Image
-                    source={require("../../../assets/gogle.png")}
-                    style={{ width: "25%", height: "100%" }}
-                    resizeMode="contain"
-                  />
-                  <Text style={{ fontWeight: "bold", color: "#333" }}>
-                    Google
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#EEF4FE",
-                    padding: 5,
-                    width: "40%",
-                    height: 40,
-                    borderRadius: 10,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <Icon
-                    name="facebook-with-circle"
-                    size={30}
-                    color={"#1A77F3"}
-                  />
-                  <Text style={{ fontWeight: "bold", color: "#333" }}>
-                    Facebook
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View>
-              <Text style={{ textAlign: "center" }}>
-                <Text style={{ fontSize: 13, color: "#333" }}>
-                  Henüz Üye Değilmisiniz?{" "}
-                </Text>
-
-                <Text
-                  style={{ fontWeight: "bold" }}
-                  onPress={() => {
-                    navigation.navigate("Register");
-                  }}
-                >
-                  Üye Ol
-                </Text>
-              </Text>
-            </View>
-          </KeyboardAwareScrollView>
-        </View>
-=======
               </View>
 
               <View style={{ gap: 10 }}>
@@ -601,22 +393,27 @@ export default function Login({ navigation }) {
               </TouchableOpacity>
             </View>
 
-            <View style={{gap:10}}>
+            <View style={{ gap: 10 }}>
               <View style={{ alignItems: "center" }}>
                 <MailCheck name="email-check" size={55} color={"green"} />
               </View>
               <View>
-                <Text style={{textAlign:'center',fontSize:14,color:'#333',letterSpacing:0.5}}>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontSize: 14,
+                    color: "#333",
+                    letterSpacing: 0.5,
+                  }}
+                >
                   Hesabınız oluşturuldu. Hesabınızı etkinleştirmek için lütfen
                   e-posta adresinize gönderilen doğrulama bağlantısını
                   tıklayarak e-postanızı onaylayın.
                 </Text>
               </View>
             </View>
-
           </View>
         </Modal>
->>>>>>> keremDev
       </View>
     </TouchableWithoutFeedback>
   );
@@ -629,22 +426,15 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 0.2,
-<<<<<<< HEAD
-=======
     justifyContent: "center",
     paddingLeft: 35,
     paddingRight: 35,
->>>>>>> keremDev
   },
   logIn: {
     backgroundColor: "#FFFFFF",
     flex: 1.8,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-<<<<<<< HEAD
-    position: "",
-=======
->>>>>>> keremDev
   },
   form: {
     padding: 40,
@@ -657,8 +447,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 14,
   },
-<<<<<<< HEAD
-=======
   modal: {
     justifyContent: "center",
     margin: 0,
@@ -674,5 +462,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 20,
   },
->>>>>>> keremDev
 });
