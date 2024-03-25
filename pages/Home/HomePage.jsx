@@ -72,7 +72,9 @@ export default function HomePage() {
       console.log(error);
     }
   };
-
+  const filteredEstates = featuredEstates.filter(estate => estate.step1_slug =='is-yeri');
+  const filteredHomes = featuredEstates.filter(estate => estate.step1_slug =='konut').slice(0,5);
+  
   useEffect(() => {
     fetchFeaturedEstates();
   }, []);
@@ -266,37 +268,44 @@ export default function HomePage() {
                 <ProjectPostSkeleton />
               </View>
             ) : (
-              <FlatList
-                data={featuredProjects}
-                renderItem={({ item }) => (
-                  <View style={{paddingLeft:10,paddingRight:10,width:'100%' }}>
-                    <ProjectPost
-                      key={item.id}
-                      caption={item.project_title}
-                      ımage={`${apiUrl}/${item.image.replace(
-                        "public/",
-                        "storage/"
-                      )}`}
-                      location={item.city.title}
-                      city={item.county.ilce_title}
-                      ProjectNo={item.id}
-                      slug={item.slug}
-                      acıklama={item.description
-                        .replace(/<\/?[^>]+(>|$)/g, "")
-                        .replace(/&nbsp;/g, " ")}
-                      ShoppingName={item.user.name}
-                      ShoppingMail={item.user.email}
-                      Phone={item.user.phone}
-                      ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                      ShopingInfo={item.user.corporate_type}
-                      loading={loadingPrjoects}
-                    />
-                  </View>
-                )}
-                scrollEnabled={false}
-              />
+              
+                filteredHomes.map((item,index)=>(
+                  <RealtorPost
+                  key={index}
+                  price={`${JSON.parse(item.housing_type_data)['price']} `}
+                  title={item.housing_title}
+                  loading={loadingEstates}
+                  location={item.city_title + ' / ' + item.county_title}
+                  image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image}`}
+                  m2={`${JSON.parse(item.housing_type_data)['squaremeters']} `}
+                  roomCount={`${JSON.parse(item.housing_type_data)['room_count']} `}
+                  floor={`${JSON.parse(item.housing_type_data)['floorlocation']} `}
+    
+                />
+                ))
+              
             )}
           </View> }
+          </ScrollView>
+          </View>
+          <View style={styles.slide3}>
+            <ScrollView>
+          {
+            filteredEstates.map((item,index)=>(
+              <RealtorPost
+              key={index}
+              price={`${JSON.parse(item.housing_type_data)['price']} `}
+              title={item.housing_title}
+              loading={loadingEstates}
+              location={item.city_title + ' / ' + item.county_title}
+              image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image}`}
+              m2={`${JSON.parse(item.housing_type_data)['squaremeters']} `}
+              roomCount={`${JSON.parse(item.housing_type_data)['room_count']} `}
+              floor={`${JSON.parse(item.housing_type_data)['floorlocation']} `}
+
+            />
+            ))
+          }
           </ScrollView>
           </View>
           </Swiper>
@@ -351,9 +360,7 @@ flex:1,
   },
   slide3: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#92BBD9',
+  
   },
   text: {
     color: '#fff',

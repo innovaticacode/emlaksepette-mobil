@@ -31,8 +31,14 @@ export default function SliderMenu({goToSlide,tab,settab}) {
        >
         <Text style={{textAlign:'center',color:tab==1?'white':'#EA2C2E'}}>Konut</Text>
        </TouchableOpacity>
-       <TouchableOpacity style={styles.tabBtn}>
-        <Text style={{textAlign:'center',color:'#EA2C2E'}}>İş Yeri</Text>
+       <TouchableOpacity style={[styles.tabBtn,{
+          backgroundColor:tab==2 ?'#EA2C2E':'#ebebeb',
+          borderWidth:tab==2 ? 0 :1
+       }]}
+       onPress={()=>{
+        goToSlide(2)
+       }}>
+        <Text style={{textAlign:'center',color:tab==2?'white':'#EA2C2E'}}>İş Yeri</Text>
        </TouchableOpacity>
        <TouchableOpacity style={styles.tabBtn}>
         <Text style={{textAlign:'center',color:'#EA2C2E'}}>Arsa</Text>
