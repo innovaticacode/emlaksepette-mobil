@@ -26,7 +26,7 @@ export default function SliderBar() {
 
   }, []);
   return (
-    <ScrollView horizontal={true}  showsHorizontalScrollIndicator={false} style={{
+    <ScrollView horizontal={true}  showsHorizontalScrollIndicator={false} nestedScrollEnabled={true} style={{
         
       top:10,
     }}>

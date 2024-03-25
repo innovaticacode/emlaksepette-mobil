@@ -51,12 +51,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
     <View style={{ flex: 1 }} >
       <View style={style.container} onTouchStart={() => closeSheet()}>
         <View style={style.header}>
-          <View style={{ position: 'absolute', zIndex: 2, top: '20%', left: 15, backgroundColor: '#FFFFFF3b', paddingLeft: 5, paddingRight: 5, padding: 1, borderRadius: 4 }}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <BackIcon name='arrow-back-ios' size={23} color={'white'} style={{ left: 5 }} />
-            </TouchableOpacity>
-
-          </View>
+       
           <View style={style.opacity}></View>
 
           <ImageBackground source={require('./profilePhoto.jpg')} style={{ width: '100%', height: '100%', }} imageStyle={{ borderBottomLeftRadius: 30, borderBottomRightRadius: 30 }} />

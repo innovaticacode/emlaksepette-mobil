@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
 
-export default function Search() {
+export default function Search({onpres}) {
   const navigation=useNavigation();
   const [search, setSearch] = useState("");
 
@@ -40,30 +40,11 @@ fetchmenuItems()
 
   return (
     <SafeAreaView onTouchStart={()=>Keyboard.dismiss()} style={{top:30}}>
-         <Header/>
+       
     <ScrollView>
 
     <View style={{flex:1}}>
-      <View style={styles.Input}>
-      
-        <SearchBar
-          placeholder="Ara..."
-          onChangeText={updateSearch}
-          value={search}
-        containerStyle={{
-          backgroundColor:'transparent',
-          width:'100%',
-          borderTopColor:'#e5e5e5',
-          borderBottomColor:'#e5e5e5',
-          height:60
-          }}
-          searchIcon={{size:25}}
-         inputContainerStyle={{backgroundColor:'#e5e5e5',borderRadius:7,height:'100%'}}
-          inputStyle={{fontSize:15}}
-         showCancel='false'
-         placeholderTextColor={'grey'}
-         />
-      </View>
+     
        </View>
 
 
@@ -82,7 +63,9 @@ fetchmenuItems()
             {
               menuItems.map((item,index)=>(
                 <TouchableOpacity 
-                onPress={()=>navigation.navigate('Public',{name:item.text,data:item.submenus,})}
+                onPress={()=>{
+                  onpres()
+                  navigation.navigate('Public',{name:item.text,data:item.submenus,})}}
            key={index}>
                 <Categories category={item.text}/>
 
@@ -96,7 +79,7 @@ fetchmenuItems()
 
 
       
-          <TouchableOpacity 
+          {/* <TouchableOpacity 
             onPress={()=>{
               navigation.navigate('RealtorClubExplore')
             }}
@@ -106,7 +89,7 @@ fetchmenuItems()
               <Text style={{fontWeight:'500',color:'white'}}>EMLAK KULÜP</Text>
               <Text style={{color:'white'}}>Hemen Keşfet</Text>
           </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
     
   
   

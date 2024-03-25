@@ -51,13 +51,16 @@ import PublicPage from './pages/Home/SearchPageItem/PublicPage';
 import SubCategory from './pages/Home/SearchPageItem/SubCategory';
 import HomeList from './pages/Home/SearchPageItem/HomeList';
 import SubCategoryChild from './pages/Home/SearchPageItem/SubCategoryChild';
+
+import Search from './pages/Home/Search';
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
   
   const [İsLoggedIn, setİsLoggedIn] = useState(false)
+  const [isLogIn, setisLogIn] = useState(false)
   const [showBackIcon, setshowBackIcon] = useState(false)
-
+  const [İsloading, setİsloading] = useState(false)
 
 
   return (
@@ -68,6 +71,7 @@ export default function App({route}) {
       ...TransitionPresets.SlideFromRightIOS,
       
   }}>
+ 
   <Stack.Screen name="Home" options={{
     headerShown:false,
    
@@ -76,9 +80,12 @@ export default function App({route}) {
   >
     {(props) => <Home {...props}  showBackIcon={showBackIcon} setshowBackIcon={setshowBackIcon}/>}
   </Stack.Screen>
+  
 
   <Stack.Group>
-    <Stack.Screen name="Login" component={Login} options={{ title: 'Giriş Yap' }} />
+    <Stack.Screen name="Login"  options={{ title: 'Giriş Yap' }} >
+      {(props=> <Login {...props}/>)}
+    </Stack.Screen>
     <Stack.Screen name="Register" component={Register} options={{title:'Üye Ol',headerBackTitle:'.' }} />
   </Stack.Group>
 
@@ -359,6 +366,11 @@ export default function App({route}) {
   })} 
  
   />
+      <Stack.Screen name='Search'  component={Search} options={({route})=>({
+        headerShown:false
+  })} 
+ 
+  /> 
   
 </Stack.Navigator>
 
