@@ -12,7 +12,9 @@ import {
   FlatList,
   RefreshControl,
   Animated,
-  PanResponder
+  PanResponder,
+  Image,
+  ImageBackground
 } from "react-native";
 import axios from "axios";
 
@@ -33,6 +35,7 @@ import { SearchBar } from "react-native-elements";
 import SliderMenu from "../../components/SliderMenu";
 
 import Swiper from 'react-native-swiper';
+import PagerView from "react-native-pager-view";
 
 
 
@@ -91,13 +94,7 @@ export default function HomePage() {
   const toggleDrawer=()=>{
     setIsDrawerOpen(!isDrawerOpen)
   }
-  const renderPagination = (index, total, context) => {
-    return (
-      <View style={{ position: 'absolute', bottom: 10, right: 10 }}>
-        <Text>{index + 1} / {total}</Text>
-      </View>
-    );
-  };
+
   const swiperRef = useRef(null);
 
 
@@ -113,6 +110,7 @@ export default function HomePage() {
   };
 
   const [tab, settab] = useState(0)
+  const scrollViewRef = useRef(null);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <SafeAreaView
@@ -152,26 +150,28 @@ export default function HomePage() {
           <SliderMenu goToSlide={goToSlide} tab={tab} setTab={settab} />
         
          </View>
-    
-{/*       
-        <ScrollView
-          scrollEventThrottle={20}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-          showsVerticalScrollIndicator={false}
-        > */}
-        
-       
+         
         <Swiper  showsButtons={false}  showsPagination={false}  loop={false} ref={swiperRef} onIndexChanged={handleIndexChanged} >
           <View style={styles.slide1} >
-           <ScrollView>
+           <ScrollView ref={scrollViewRef}
+          
+           
+           >
        
-       
+       <View style={{padding:8}}>
+          <PagerView style={{height:90}}>
+            <View style={{backgroundColor:'red',borderRadius:15,width:'100%',height:'100%'}}>
+             <ImageBackground source={require('./slider.png')} style={{width:'100%',height:'100%'}} resizeMode='cover' borderRadius={15}/>
+            </View>
+            <View style={{backgroundColor:'red',borderRadius:15}}>
+              <Text>fskljfklds</Text>
+            </View>
+          </PagerView>
+          </View>
         
           { 
          
-          <View style={{width:'100%',}}>
+          <View>
          
            <View>
            <SliderBar loading={loadingPrjoects} />
@@ -197,6 +197,8 @@ export default function HomePage() {
               </Text>
             </View>
 
+          
+          
             <TouchableOpacity
               style={{
                 backgroundColor: "#EA2A29",
@@ -367,6 +369,20 @@ flex:1,
     fontSize: 30,
     fontWeight: 'bold',
   },
+  stickyHeader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+    zIndex: 1000,
+    elevation: 2, // Android için z-index yerine kullanılır
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: 'gray',
+  }
 
 });
   {/*   */}
