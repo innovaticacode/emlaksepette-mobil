@@ -26,35 +26,37 @@ export default function SliderBar() {
 
   }, []);
   return (
-    <ScrollView horizontal={true}  showsHorizontalScrollIndicator={false} nestedScrollEnabled={true} style={{
+
+ 
+   <ScrollView horizontal showsHorizontalScrollIndicator={false}  style={{
         
-      top:10,
-    }}>
+    top:10
+   }}>
 
 
 
-      {
-        featuredStores.map((item,index)=>(
+     {
+       featuredStores.map((item,index)=>(
        
-          <View style={{width:100,alignItems:'center'}} key={index}>
-            {
-              loading==false?
-              <>
-              <SliderItemSkeleton/>
-          </>:
-              <>
-              <SliderItem key={index} image={`${apiUrl}/storage/profile_images/${item.profile_image}`} />
-          <Text numberOfLines={2} style={{fontSize:12}}>{item.name}</Text>
+         <View style={{width:100,alignItems:'center'}} key={index}>
+           {
+             loading==false?
+             <>
+             <SliderItemSkeleton/>
+         </>:
+             <>
+             <SliderItem key={index} image={`${apiUrl}/storage/profile_images/${item.profile_image}`} />
+         <Text numberOfLines={2} style={{fontSize:12}}>{item.name}</Text>
           
-          </>
-            }
+         </>
+           }
 
-          </View>
+         </View>
            
-        ))
-      }
+       ))
+     }
     
-    </ScrollView>  
+   </ScrollView>  
    
    
   )
