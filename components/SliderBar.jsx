@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, ScrollView, FlatList } from "react-native";
-import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
 import SliderItem from "./SliderItem";
 import axios from "axios";
 import SliderItemSkeleton from "./SkeletonComponents/SliderItemSkeleton";
@@ -24,6 +24,7 @@ export default function SliderBar() {
   useEffect(() => {
     fetchFeaturedStores();
   }, []);
+
   return (
     <ScrollView
       horizontal

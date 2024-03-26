@@ -102,7 +102,7 @@ export default function SliderMenu({ goToSlide, tab, settab }) {
 }
 const styles = StyleSheet.create({
   tabBtn: {
-    backgroundColor: "#ebebeb",
+    backgroundColor: "white",
     paddingLeft: 15,
     paddingRight: 15,
     padding: 5,
