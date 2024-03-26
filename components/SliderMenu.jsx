@@ -10,7 +10,7 @@ export default function SliderMenu({goToSlide,tab,settab}) {
       }}>
       <View style={{padding:10,flexDirection:'row',gap:10}}>
       <TouchableOpacity style={[styles.tabBtn,{
-        backgroundColor:tab==0 ?'#EA2C2E':'#ebebeb',
+        backgroundColor:tab==0 ?'#EA2C2E':'white',
         borderWidth:tab==0 ? 0 :1
       }]} 
         onPress={()=>{
@@ -18,10 +18,10 @@ export default function SliderMenu({goToSlide,tab,settab}) {
          
         }}
       >
-        <Text style={{textAlign:'center',color:tab==0?'white':'#EA2C2E'}}>Projeler</Text>
+        <Text style={{textAlign:'center',color:tab==0?'white':'#333'}}>Projeler</Text>
        </TouchableOpacity>
        <TouchableOpacity style={[styles.tabBtn,{
-         backgroundColor:tab==1 ?'#EA2C2E':'#ebebeb',
+         backgroundColor:tab==1 ?'#EA2C2E':'white',
          borderWidth:tab==1 ? 0 :1
        }]}
         onPress={()=>{
@@ -29,28 +29,28 @@ export default function SliderMenu({goToSlide,tab,settab}) {
       
         }}
        >
-        <Text style={{textAlign:'center',color:tab==1?'white':'#EA2C2E'}}>Konut</Text>
+        <Text style={{textAlign:'center',color:tab==1?'white':'#333'}}>Konut</Text>
        </TouchableOpacity>
        <TouchableOpacity style={[styles.tabBtn,{
-          backgroundColor:tab==2 ?'#EA2C2E':'#ebebeb',
+          backgroundColor:tab==2 ?'#EA2C2E':'white',
           borderWidth:tab==2 ? 0 :1
        }]}
        onPress={()=>{
         goToSlide(2)
        }}>
-        <Text style={{textAlign:'center',color:tab==2?'white':'#EA2C2E'}}>İş Yeri</Text>
+        <Text style={{textAlign:'center',color:tab==2?'white':'#333'}}>İş Yeri</Text>
        </TouchableOpacity>
        <TouchableOpacity style={styles.tabBtn}>
-        <Text style={{textAlign:'center',color:'#EA2C2E'}}>Arsa</Text>
+        <Text style={{textAlign:'center',color:'#333'}}>Arsa</Text>
        </TouchableOpacity>
        <TouchableOpacity style={styles.tabBtn}>
-        <Text style={{textAlign:'center',color:'#EA2C2E'}}>Prefabrik</Text>
+        <Text style={{textAlign:'center',color:'#333'}}>Prefabrik</Text>
        </TouchableOpacity>
        <TouchableOpacity style={styles.tabBtn}>
-        <Text style={{textAlign:'center',color:'#EA2C2E'}}>Tatilini Kirala</Text>
+        <Text style={{textAlign:'center',color:'#333'}}>Tatilini Kirala</Text>
        </TouchableOpacity>
        <TouchableOpacity style={styles.tabBtn}>
-        <Text style={{textAlign:'center',color:'#EA2C2E'}}>Al Sat Acil</Text>
+        <Text style={{textAlign:'center',color:'#333'}}>Al Sat Acil</Text>
        </TouchableOpacity>
      
 
@@ -66,7 +66,7 @@ export default function SliderMenu({goToSlide,tab,settab}) {
 }
 const styles=StyleSheet.create({
     tabBtn:{
-        backgroundColor:'#ebebeb',
+        backgroundColor:'white',
         paddingLeft:15,
         paddingRight:15,
         padding:5,

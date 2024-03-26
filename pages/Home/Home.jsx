@@ -39,9 +39,10 @@ const Home = () => {
       }}
     >
       <Tab.Screen
-        name="Vitrin"
+        name="HomePage"
         component={HomePage}
         options={{
+          title:'Ana Sayfa',
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
@@ -56,6 +57,7 @@ const Home = () => {
         name="Favoriler"
         component={Test}
         options={{
+          headerShown:false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name="heart-outline"

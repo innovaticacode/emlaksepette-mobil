@@ -1,8 +1,9 @@
-import { View, Text ,StyleSheet,ScrollView, FlatList} from 'react-native'
-import React,{useState,useEffect} from 'react'
+import { View, Text ,StyleSheet,ScrollView } from 'react-native'
+import React,{useState,useEffect,useRef} from 'react'
 import SliderItem from './SliderItem'
 import axios from 'axios';
 import SliderItemSkeleton from './SkeletonComponents/SliderItemSkeleton';
+
 
 
 export default function SliderBar() {
@@ -25,16 +26,15 @@ export default function SliderBar() {
    fetchFeaturedStores()
 
   }, []);
+
   return (
 
- 
-   <ScrollView horizontal showsHorizontalScrollIndicator={false}  style={{
-        
-    top:10
-   }}>
 
+   <ScrollView horizontal showsHorizontalScrollIndicator={false}  style={{ top:10}} contentContainerStyle={{flexDirection:'row'} }  
+    
+      >
 
-
+    
      {
        featuredStores.map((item,index)=>(
        
@@ -57,7 +57,7 @@ export default function SliderBar() {
      }
     
    </ScrollView>  
-   
+
    
   )
 }

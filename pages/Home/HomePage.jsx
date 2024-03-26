@@ -11,9 +11,8 @@ import {
   SafeAreaView,
   FlatList,
   RefreshControl,
-  Animated,
-  PanResponder,
-  Image,
+ Animated,
+ 
   ImageBackground
 } from "react-native";
 import axios from "axios";
@@ -33,15 +32,16 @@ import Modal from "react-native-modal";
 import Search from "./Search";
 import { SearchBar } from "react-native-elements";
 import SliderMenu from "../../components/SliderMenu";
-
+import * as Animatable from 'react-native-animatable';
 import Swiper from 'react-native-swiper';
 import PagerView from "react-native-pager-view";
-
+import Categories from "../../components/Categories";
 
 
 
 export default function HomePage() {
   const navigation = useNavigation();
+ 
   const apiUrl = "https://emlaksepette.com/";
   const [loadingPrjoects, setloadingPrjoects] = useState(false);
   const [loadingEstates, setloadingEstates] = useState(false);
@@ -111,12 +111,32 @@ export default function HomePage() {
 
   const [tab, settab] = useState(0)
   const scrollViewRef = useRef(null);
+  const [isHidden, setIsHidden] = useState(false);
+  const translateYAnim = useRef(new Animated.Value(0)).current;
+  const handleScroll = (event) => {
+   
+    const scrollPosition = event.nativeEvent.contentOffset.y;
+    // Sayfanın 200px aşağısına inildiğinde gizlenmesi gerekiyor
+    if (scrollPosition >10) {
+    
+      setIsHidden(true);
+    } else {
+      setIsHidden(false);
+    }
+  };
+
+  const [searchText, setSearchText] = useState('');
+
+  const handleSearch = (text) => {
+    setSearchText(text);
+    // Burada arama işlemleri yapılabilir
+  };
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <SafeAreaView
         style={{ flex: 1, paddingTop: 25, backgroundColor: "white" }}
       >
-        {/* Çekme menüsü */}
+      
         <Modal
           isVisible={isDrawerOpen}
           onBackdropPress={()=>setIsDrawerOpen(false)}
@@ -128,7 +148,29 @@ export default function HomePage() {
           <View style={styles.modalContent}>
            <View style={{backgroundColor:'red',padding:10,flex:0.7/2,borderBottomLeftRadius:30, borderBottomRightRadius:30}}>
             <SafeAreaView>
-              <Text>dkfsdkfl</Text>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <TouchableOpacity onPress={()=>{
+                  navigation.navigate('HomePage')
+                  setIsDrawerOpen(false)
+                  }}>
+                <Categories category='Ana Sayfa' bordernone='none' ıconName='home' />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{
+                  navigation.navigate('Hesabım')
+                  setIsDrawerOpen(false)
+                  }}>
+                <Categories category='Hesabım' bordernone='none' ıconName='user' />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                <Categories category='Emlak Kulüp' bordernone='none' showImage={true} />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                <Categories category='İlan Ver' bordernone='none' ıconName='plus'/>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                <Categories category='Sat Kirala' bordernone='none' ıconName='search-plus'/>
+                </TouchableOpacity>
+                </ScrollView>
             </SafeAreaView>
            </View>
            <View style={{backgroundColor:'white', flex:1.3/2}}>
@@ -136,90 +178,95 @@ export default function HomePage() {
            </View>
           </View>
         </Modal>
+
         <Header loading={loadingPrjoects} onPress={toggleDrawer} />
+        
+        <View style={{flexDirection:'row',height:'5%',alignItems:'center',justifyContent:'space-between',paddingRight:5}}> 
         <SearchBar
-            containerStyle={{backgroundColor:'transparent',borderTopWidth:0,borderWidth:0,borderBottomWidth:0,padding:10}}
+            containerStyle={{backgroundColor:'transparent',borderTopWidth:0,borderWidth:0,borderBottomWidth:0,padding:10,flex:1.6/2}}
             inputContainerStyle={{backgroundColor:'#ebebeb',borderRadius:10}}
             placeholder="Kelime veya ilan no ile ara..."
             inputStyle={{fontSize:15,}}
             showLoading={false}
-            
+            onChangeText={handleSearch}
+            value={searchText}
           />
+   <TouchableOpacity style={[styles.allBtn,{flex:0.4/2,height:'100%',justifyContent:'center'}]}>
+                    <Text style={{color:'white',fontSize:13,textAlign:'center'}}>Sat Kirala</Text>
+                  </TouchableOpacity>
+        </View>
+       
           
-        <View>
+        <View style={{paddingTop:10}}>
+          
           <SliderMenu goToSlide={goToSlide} tab={tab} setTab={settab} />
         
          </View>
-         
-        <Swiper  showsButtons={false}  showsPagination={false}  loop={false} ref={swiperRef} onIndexChanged={handleIndexChanged} >
-          <View style={styles.slide1} >
-           <ScrollView ref={scrollViewRef}
+      
+         {/* <View style={{flexDirection:'row',justifyContent:'center',gap:20,paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:10}}>
+              <TouchableOpacity style={styles.btn}>
+                <Text style={{textAlign:'center'}}>Filtrele</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btn}>
+                <Text style={{textAlign:'center'}}>Sırala</Text>
+                </TouchableOpacity>
+              </View> */}
+      
           
-           
-           >
-       
-       <View style={{padding:8}}>
-          <PagerView style={{height:90}}>
-            <View style={{backgroundColor:'red',borderRadius:15,width:'100%',height:'100%'}}>
-             <ImageBackground source={require('./slider.png')} style={{width:'100%',height:'100%'}} resizeMode='cover' borderRadius={15}/>
-            </View>
-            <View style={{backgroundColor:'red',borderRadius:15}}>
-              <Text>fskljfklds</Text>
-            </View>
-          </PagerView>
+              {
+                tab==0?
+                <>
+                  <Animatable.View animation={isHidden ? "fadeOutDown" : 'fadeInDown'} delay={1000} duration={1000} style={{ opacity: isHidden ? 1 : 0, display:  isHidden?'none':'flex' }}>
+          <View style={{ padding: 8 }}>
+            <PagerView style={{ height: 100 }}>
+              <View style={{ backgroundColor: 'red', borderRadius: 15, width: '100%', height: '100%' }}>
+                <ImageBackground source={require('./slider.png')} style={{ width: '100%', height: '100%' }} resizeMode='cover' borderRadius={15} />
+              </View>
+              <View style={{ backgroundColor: 'red', borderRadius: 15 }}>
+                <Text>fskljfklds</Text>
+              </View>
+            </PagerView>
           </View>
-        
-          { 
-         
-          <View>
-         
-           <View>
-           <SliderBar loading={loadingPrjoects} />
-         </View> 
-          
-         
-         
-        
-          <View
-            style={{
-              top: 30,
-              padding: 10,
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingBottom: 30,
-            }}
-          >
-     
-            <View style={{ justifyContent: "center" }}>
-              <Text style={{ fontSize: 12, fontWeight: "500" }}>
-                ÖNE ÇIKAN PROJELER
-              </Text>
-            </View>
+          <Animatable.View  animation={isHidden ? "slideOutDown" : 'slideInDown'} duration={1500} style={{ display: isHidden ? 'none' : 'flex' }}>
+          <View style={{ height: 100 }}>
+            <SliderBar loading={loadingPrjoects} />
+          </View>
+          </Animatable.View>
+        </Animatable.View>
+                </>:''
+              }
+            
 
+        <Swiper  showsButtons={false}  showsPagination={false}  loop={false} ref={swiperRef} onIndexChanged={handleIndexChanged} >
+       
+          <View style={styles.slide1} >
+         
+           <ScrollView ref={scrollViewRef} onScroll={handleScroll} scrollEventThrottle={16} nestedScrollEnabled={false} >
+       
+        
+          <View style={{gap:20,paddingTop:25}}>
+              <View>
+                <View style={{flexDirection:'row',justifyContent:'space-between',paddingLeft:10,paddingRight:10,alignItems:'center'}}>
+                  <Text style={{fontSize:12}}>ÖNE ÇIKAN PROJELER</Text>
+                  <TouchableOpacity style={styles.allBtn}>
+                    <Text style={{color:'white',fontSize:13}}>Tümünü Gör</Text>
+                  </TouchableOpacity>
+                </View>
+
+              </View>
           
-          
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#EA2A29",
-                paddingLeft: 10,
-                paddingRight: 10,
-                paddingTop: 7,
-                paddingBottom: 5,
-                zIndex: 1,
-              }}
-            >
-              <Text style={{ fontSize: 12, fontWeight: "600", color: "white" }}>
-                Tümünü gör
-              </Text>
-            </TouchableOpacity>
-          </View>
-            {loadingPrjoects == false ? (
+         
+        
+              {loadingPrjoects == false ? (
               <View style={{ top: 40, padding: 10 }}>
                 <ProjectPostSkeleton />
               </View>
             ) : (
-              <FlatList
+                <>
+               
+             
+                 <FlatList
+                 
                 data={featuredProjects}
                 renderItem={({ item }) => (
                   <View style={{paddingLeft:10,paddingRight:10,width:'100%' }}>
@@ -248,21 +295,18 @@ export default function HomePage() {
                 )}
                 scrollEnabled={false}
               />
-            )}
-          </View> }
-       
-    
-    
+                </>
 
-    
-    
-   
-                  
-         
+             
+            )}
+
+          </View>
+ 
           </ScrollView>
       
           </View>
           <View style={styles.slide2}>
+       
           <ScrollView>
           { <View style={{width:'100%'}}>
             {loadingPrjoects == false ? (
@@ -291,6 +335,7 @@ export default function HomePage() {
           </ScrollView>
           </View>
           <View style={styles.slide3}>
+       
             <ScrollView>
           {
             filteredEstates.map((item,index)=>(
@@ -352,8 +397,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   slide1: {
-   flex:1
-    
+   flex:1,
+    top:10
   },
   slide2: {
 flex:1,
@@ -369,19 +414,32 @@ flex:1,
     fontSize: 30,
     fontWeight: 'bold',
   },
-  stickyHeader: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'white',
-    zIndex: 1000,
-    elevation: 2, // Android için z-index yerine kullanılır
-    height: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: 'gray',
+
+  filterBtn:{
+    backgroundColor:'#ebebeb',
+    paddingLeft:15,
+    paddingRight:15,
+    padding:5,
+      borderRadius:4,
+      borderWidth:1,
+      borderColor:'#c7c7ca'
+  },
+  btn:{
+    backgroundColor:'#ebebeb',
+     width:'45%',
+      paddingTop:8,
+      paddingBottom:8,
+      borderRadius:5,
+      borderWidth:1,
+      borderColor:'#c7c7ca',
+
+  },
+  allBtn:{
+    backgroundColor:'#EA2C2E',
+    paddingLeft:15,
+    paddingRight:15,
+    padding:5,
+    borderRadius:4
   }
 
 });
@@ -417,4 +475,4 @@ flex:1,
               } 
        
             </View>
-          </View> */}
+          </View> */}    {/*  */}
