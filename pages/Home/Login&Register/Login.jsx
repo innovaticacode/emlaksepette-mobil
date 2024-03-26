@@ -16,8 +16,8 @@ import EyeIcon from "react-native-vector-icons/Ionicons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import IconSocialMedia from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/Entypo";
-import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
-import { CheckBox } from "react-native-elements";
+// import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
+// import { CheckBox } from "react-native-elements";
 import Modal from "react-native-modal";
 export default function Login({ navigation }) {
   const [eye, seteye] = useState("eye-off-sharp");
@@ -64,11 +64,10 @@ export default function Login({ navigation }) {
       setTimeout(() => {
         setshowMailSendAlert(false);
       }, 9000);
-      setEmail('')
-      setPassword('')
+      setEmail("");
+      setPassword("");
     }
   };
-
 
   const [showLengthAlert, setShowLengthAlert] = useState(false);
   const [showUpperAlert, setShowUpperAlert] = useState(false);
@@ -394,19 +393,25 @@ export default function Login({ navigation }) {
               </TouchableOpacity>
             </View>
 
-            <View style={{gap:10}}>
+            <View style={{ gap: 10 }}>
               <View style={{ alignItems: "center" }}>
                 <MailCheck name="email-check" size={55} color={"green"} />
               </View>
               <View>
-                <Text style={{textAlign:'center',fontSize:14,color:'#333',letterSpacing:0.5}}>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontSize: 14,
+                    color: "#333",
+                    letterSpacing: 0.5,
+                  }}
+                >
                   Hesabınız oluşturuldu. Hesabınızı etkinleştirmek için lütfen
                   e-posta adresinize gönderilen doğrulama bağlantısını
                   tıklayarak e-postanızı onaylayın.
                 </Text>
               </View>
             </View>
-
           </View>
         </Modal>
       </View>

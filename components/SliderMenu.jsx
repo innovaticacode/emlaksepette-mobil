@@ -1,8 +1,13 @@
-import { View, Text,ScrollView, TouchableOpacity, StyleSheet } from 'react-native'
-import React,{useState} from 'react'
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import React, { useState } from "react";
 
-export default function SliderMenu({goToSlide,tab,settab}) {
-
+export default function SliderMenu({ goToSlide, tab, settab }) {
   return (
     <ScrollView horizontal={true}  showsHorizontalScrollIndicator={false} style={{
         
@@ -55,14 +60,8 @@ export default function SliderMenu({goToSlide,tab,settab}) {
      
 
       </View>
-     
-      
-  
-      
-      
-      
-      </ScrollView> 
-  )
+    </ScrollView>
+  );
 }
 const styles=StyleSheet.create({
     tabBtn:{
