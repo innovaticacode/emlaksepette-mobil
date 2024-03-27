@@ -474,6 +474,7 @@ export default function Company() {
         <Modal
       isVisible={modalVisible}
       onBackdropPress={toggleAccountModal}
+      backdropColor="transparent"
       style={styles.modal}
     >
       <View style={styles.modalContent}>
@@ -497,6 +498,7 @@ export default function Company() {
         isVisible={focusAreaModal}
         onBackdropPress={toggleFocusAreaModal}
         swipeDirection={['down']}
+        backdropColor="transparent"
         style={styles.modal}
       >
         <View style={styles.modalContent}>
@@ -521,6 +523,7 @@ export default function Company() {
         isVisible={cityModal}
         onBackdropPress={toggleCityModal}
         swipeDirection={['down']}
+        backdropColor="transparent"
         style={styles.modal}
       >
         <View style={styles.modalContent}>
@@ -532,6 +535,7 @@ export default function Company() {
         isVisible={countyModal}
         onBackdropPress={toggleCountyModal}
         swipeDirection={['down']}
+        backdropColor="transparent"
         style={styles.modal}
       >
         <View style={styles.modalContent}>
@@ -543,6 +547,7 @@ export default function Company() {
         isVisible={neigbourhoodModal}
         onBackdropPress={toggleNeigbourhoodModal}
         swipeDirection={['down']}
+        backdropColor="transparent"
         style={styles.modal}
       >
         <View style={styles.modalContent}>
@@ -554,6 +559,7 @@ export default function Company() {
         isVisible={TaxCityModal}
         onBackdropPress={toggleTaxCityModal}
         swipeDirection={['down']}
+        backdropColor="transparent"
         style={styles.modal}
       >
         <View style={styles.modalContent}>
@@ -565,6 +571,7 @@ export default function Company() {
         isVisible={TaxPlaceModal}
         onBackdropPress={toggleTaxplaceModal}
         swipeDirection={['down']}
+        backdropColor="transparent"
         style={styles.modal}
       >
         <View style={styles.modalContent}>

@@ -4,7 +4,8 @@ import Editıcon from "react-native-vector-icons/MaterialCommunityIcons"
 
 import ShareIcon from "react-native-vector-icons/Entypo"
 import DeleteIcon from "react-native-vector-icons/MaterialIcons"
-import PencilIcon from "react-native-vector-icons/FontAwesome5"
+
+
 export default function UpdateProfile() {
  
 
@@ -12,7 +13,7 @@ export default function UpdateProfile() {
 
 
   const translateY = useRef(new Animated.Value(400)).current;
-
+  const [sheetDisplay, setsheetDisplay] = useState(false)
   const [phoneNumber, setPhoneNumber] = useState('');
 
   const onChangeText = (text2) => {
@@ -49,6 +50,7 @@ export default function UpdateProfile() {
     } 
   };
   const openSheet = () => {
+    setsheetDisplay(true)
     Animated.timing(translateY, {
       toValue: 0,
       duration: 300,
@@ -57,6 +59,7 @@ export default function UpdateProfile() {
   };
 
   const closeSheet = () => {
+    setsheetDisplay(false)
     Animated.timing(translateY, {
       toValue: 400,
       duration: 300,
@@ -72,7 +75,7 @@ export default function UpdateProfile() {
       }}>
   <View style={styles.ProfileEditArea}>
       <TouchableOpacity style={styles.ProfilImage} onPress={openSheet}>
-            <Image source={require('.././profil.jpg')} style={{width:'100%',height:'100%'}} borderRadius={50} />
+       <Image source={require('.././profil.jpg')} style={{width:'100%',height:'100%'}} borderRadius={50} />   
             <TouchableOpacity style={{position:'absolute',bottom:0,right:0,backgroundColor:'#EA2A29',padding:4,borderRadius:50}} onPress={openSheet} >
       <Editıcon name='account-edit' size={20} color={'white'}/>
       </TouchableOpacity>
@@ -92,7 +95,7 @@ export default function UpdateProfile() {
             <Text style={styles.label}>Iban Numarası</Text>
             <TextInput style={styles.Input} value={iban} onChangeText={onChangeText2} onFocus={onFocus}  maxLength={28} keyboardType='number-pad'/>
           </View>
-          <View style={{alignItems:'center'}}>
+          <View style={{alignItems:'center',marginBottom:40,zIndex:2}}>
             <TouchableOpacity style={styles.updatebtn}>
               <Text style={styles.btnText}>Güncelle</Text>
             </TouchableOpacity>
@@ -100,7 +103,7 @@ export default function UpdateProfile() {
     </View>
     </View>
     </View>
-    <View style={{ flex: 1,position:'absolute' ,bottom:0,width:'100%', }}>
+    <View style={{ flex: 1,position:'absolute' ,bottom:0,width:'100%',display:sheetDisplay?'flex':'none' }}>
      
      <Animated.View
        style={ [styles.animatedView,{transform: [{ translateY }],}] }>
@@ -112,7 +115,9 @@ export default function UpdateProfile() {
         </TouchableOpacity>
        </View>
        <View style={{paddingBottom:10}}>
-       <TouchableOpacity style={{padding:15,borderBottomWidth:1,borderBottomColor:'#ebebeb'}}>
+       <TouchableOpacity style={{padding:15,borderBottomWidth:1,borderBottomColor:'#ebebeb'}}
+ 
+       >
           <View style={{flexDirection:'row',gap:15,justifyContent:'flex-start',padding:3,}}>
             <ShareIcon name='folder-images' size={17}/>
             <Text style={{textAlign:'center',}}>Galeriden Seç</Text>

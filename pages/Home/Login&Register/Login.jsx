@@ -16,8 +16,8 @@ import EyeIcon from "react-native-vector-icons/Ionicons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import IconSocialMedia from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/Entypo";
-// import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
-// import { CheckBox } from "react-native-elements";
+import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
+ import { CheckBox } from "react-native-elements";
 import Modal from "react-native-modal";
 export default function Login({ navigation }) {
   const [eye, seteye] = useState("eye-off-sharp");
@@ -163,7 +163,7 @@ export default function Login({ navigation }) {
                 </View>
                 <View>
                   <TouchableOpacity
-                    style={{ position: "absolute", right: 10, top: 7 }}
+                    style={{ position: "absolute", right: 10, top: 7,zIndex:1 }}
                     onPress={show}
                   >
                     <EyeIcon

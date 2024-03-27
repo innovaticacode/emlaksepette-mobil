@@ -103,11 +103,11 @@ export default function ShoppingProfile({ İsLoggedIn }) {
                 </View>
                 <View>
                   <Text style={style.headerText}>Mağazam Emlak Sepette</Text>
-                  <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Alınan Teklifler'})}>
-                    <ProfileSettingsItem text='Alınan Teklifler' IconFeather='users' IconType={true} />
+                  <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Gelen Başvurular',color:true})}>
+                    <ProfileSettingsItem text='Gelen Başvurular' IconFeather='users' IconType={true} />
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Verilen Teklifler'})}>
-                    <ProfileSettingsItem text='Verilen Teklifler' IconFeather='users'IconType={true} />
+                  <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Başvurularım',color:false})}>
+                    <ProfileSettingsItem text='Başvurularım' IconFeather='users'IconType={true} />
                   </TouchableOpacity>
 
                   <TouchableOpacity onPress={() => navigation.navigate('DashBord')}>

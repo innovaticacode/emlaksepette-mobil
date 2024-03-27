@@ -53,6 +53,8 @@ import HomeList from './pages/Home/SearchPageItem/HomeList';
 import SubCategoryChild from './pages/Home/SearchPageItem/SubCategoryChild';
 
 import Search from './pages/Home/Search';
+import AllProjects from './pages/Home/AllProjects';
+import FilterScreen from './pages/Home/FilterScreen';
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
@@ -368,6 +370,18 @@ export default function App({route}) {
   />
       <Stack.Screen name='Search'  component={Search} options={({route})=>({
         headerShown:false
+  })} 
+ 
+  /> 
+      <Stack.Screen name='AllProject'  component={AllProjects} options={({route})=>({
+        headerShown:false,
+    title:route.params.name
+  })} 
+ 
+  /> 
+      <Stack.Screen name='FilterScrenn'  component={FilterScreen} options={({route})=>({
+      
+    title:route.params.name
   })} 
  
   /> 

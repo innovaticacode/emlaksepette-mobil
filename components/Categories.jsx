@@ -16,7 +16,7 @@ export default function Categories({category,ıconDisplay,showImage,bordernone, 
         showImage?
         <>
         <View style={{width:40,height:40,position:'absolute',zIndex:1,bottom:-7,left:-5}}>
-        <Image source={require('../pages/Home/emlakkulüplogo.png')} style={{tintColor:'black',width:'100%',height:'100%'}} resizeMode='cover'/>
+        <Image source={require('../pages/Home/emlakkulüplogo.png')} style={{tintColor:'white',width:'100%',height:'100%'}} resizeMode='cover'/>
         </View>
        
         </>

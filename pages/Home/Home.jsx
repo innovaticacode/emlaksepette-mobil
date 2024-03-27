@@ -70,9 +70,10 @@ const Home = () => {
      
 
       <Tab.Screen
-        name="İlan Ver"
+        name="ShareAdvert"
         component={ShareScreen}
         options={{
+          headerShown:false,
           tabBarLabel: "İlan Ver",
           tabBarIcon: ({ color, focused }) => (
             <View style={styles.ilanVerIconContainer}>
@@ -92,7 +93,7 @@ const Home = () => {
   
   name="Sepetim"
   options={({ route }) => ({
-    
+    headerShown:false,
     tabBarIcon: ({ color, focused }) => (
       <Feather
         name="shopping-cart"
@@ -112,7 +113,7 @@ const Home = () => {
 </Tab.Screen>
 <Tab.Screen
         name="Hesabım"
-        component={Login}
+        component={ShoppingProfile}
         options={{
           headerShown:false,
           tabBarIcon: ({ color, focused }) => (

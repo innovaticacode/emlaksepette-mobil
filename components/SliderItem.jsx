@@ -10,6 +10,7 @@ export default function SliderItem({image,name,color,maplo,mapla}) {
    flexWrap:'wrap',
     borderRadius:50,
     margin:6,
+  
     padding:1,
     borderWidth:1,
     borderColor:'#E6E6E6'

@@ -1,8 +1,9 @@
-import { View, Text ,StyleSheet,ScrollView } from 'react-native'
+import { View, Text ,StyleSheet} from 'react-native'
 import React,{useState,useEffect,useRef} from 'react'
 import SliderItem from './SliderItem'
 import axios from 'axios';
 import SliderItemSkeleton from './SkeletonComponents/SliderItemSkeleton';
+import {GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 
 
 
@@ -28,9 +29,11 @@ export default function SliderBar() {
   }, []);
 
   return (
+  <GestureHandlerRootView>
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
+      
       style={{
         top: 0,
       }}
@@ -55,6 +58,7 @@ export default function SliderBar() {
         </View>
       ))}
     </ScrollView>
+    </GestureHandlerRootView>
   );
 }
 const styles = StyleSheet.create({
