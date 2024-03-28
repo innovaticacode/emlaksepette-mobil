@@ -25,7 +25,7 @@ export default function ProjectPostSkeleton({}) {
    
      </View>
      </Skeleton>
-    <Skeleton animation='pulse' skeletonStyle={{backgroundColor:'#ebebeb'}} >
+    <Skeleton  animation='pulse' skeletonStyle={{backgroundColor:'#ebebeb'}} >
      <View style={[styles.Description,{padding:10}]}>
        <Text style={{color:'#FFFFFF',fontWeight:'800',fontSize:17,textAlign:'center'}}></Text>
      </View>

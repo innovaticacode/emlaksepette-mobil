@@ -423,7 +423,7 @@ export default function HomePage() {
 
                 {loadingPrjoects == false ? (
                   <View style={{ top: 40, padding: 10 }}>
-                    <ProjectPostSkeleton />
+                    <ProjectPostSkeleton  />
                   </View>
                   
                 ) : (
