@@ -2,11 +2,17 @@ import { View, Text,StyleSheet,TextInput, ImageBackground, TouchableOpacity ,Pla
 import React from 'react'
 import AddBtn from 'react-native-vector-icons/AntDesign'
 import Icon from 'react-native-vector-icons/EvilIcons'
+import IconMenu from 'react-native-vector-icons/Entypo'
 import { useNavigation } from "@react-navigation/native";
-export default function Header() {
+export default function Header({loading,onPress}) {
   const navigation = useNavigation();
   return (
     <View style={styles.header}>
+         <TouchableOpacity onPress={()=>{
+            onPress()
+      }}>
+          <IconMenu name='menu' size={40} color={'#333'}/>
+      </TouchableOpacity>
      <View style={{
        width:200,
       height:50
@@ -18,9 +24,9 @@ export default function Header() {
         
     }}/>
      </View>
-    
+   
      <View style={{display:'flex',flexDirection:'row-reverse'}}>
-      <TouchableOpacity style={{
+      {/* <TouchableOpacity style={{
         
         width:50,
         alignItems: 'center',
@@ -30,7 +36,7 @@ export default function Header() {
         onPress={()=>navigation.navigate('ShopProfile')}
       >
        <Icon name='user' size={40}/>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity 
         onPress={()=>navigation.navigate('Notifications')}
       style={{
@@ -58,7 +64,8 @@ const styles = StyleSheet.create({
   
     display: 'flex',
     flexDirection:'row',
-    justifyContent:"space-between",
+    justifyContent:'space-between',
+   gap:15,
     padding:10,
    paddingTop:Platform.OS === 'android' ? 20 : 0,
     width:'100%',

@@ -1,4 +1,4 @@
-import { View, Text , StyleSheet } from 'react-native'
+import { View, Text , StyleSheet, ScrollView } from 'react-native'
 import React from 'react'
 import SettingsItem from '../SettingsItem'
 import ShoppinInfo from '../ShoppinInfo'
@@ -9,6 +9,9 @@ export default function DetailsSettings() {
   return (
     <View style={{padding:8}}>
     <View style={[styles.card, styles.shadowProp]}>
+    <View style={{height:400,}}>
+      <ScrollView contentContainerStyle={{flexGrow:1}} nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
+  
         <SettingsItem info='İlan No:' numbers='000000' color='#264ABB' bold='bold'/>
         <SettingsItem info='Kullanım Durumu' numbers='Boş'/>
         <SettingsItem info='m2 (Brüt:)' numbers={metre}/>
@@ -17,7 +20,21 @@ export default function DetailsSettings() {
         <SettingsItem info='Isıtma:' numbers='Doğalgaz Sobası'/>
         <SettingsItem info='Banyo Sayısı:' numbers='1'/>
         <SettingsItem info='Krediye Uygun:' numbers='Evet'/>
-        <SettingsItem info='Tapı Durumu:' numbers='Hisseli Tapu' border='0'/>
+        <SettingsItem info='Tapı Durumu:' numbers='Hisseli Tapu' />
+        <SettingsItem info='Isıtma:' numbers='Doğalgaz Sobası'/>
+        <SettingsItem info='Banyo Sayısı:' numbers='1'/>
+        <SettingsItem info='Krediye Uygun:' numbers='Evet'/>
+        <SettingsItem info='Tapı Durumu:' numbers='Hisseli Tapu' />
+        <SettingsItem info='Krediye Uygun:' numbers='Evet'/>
+        <SettingsItem info='Tapı Durumu:' numbers='Hisseli Tapu' />
+        <SettingsItem info='Isıtma:' numbers='Doğalgaz Sobası'/>
+        <SettingsItem info='Banyo Sayısı:' numbers='1'/>
+        <SettingsItem info='Krediye Uygun:' numbers='Evet'/>
+        <SettingsItem info='Tapı Durumu:' numbers='Hisseli Tapu' />
+     
+        
+        </ScrollView>
+        </View>
        
         
     </View>
@@ -32,7 +49,7 @@ export default function DetailsSettings() {
 }
 const styles=StyleSheet.create({
   card: {  
-        
+      
     backgroundColor: '#FFFFFF',  
      top:-20,
     paddingVertical: 10,  

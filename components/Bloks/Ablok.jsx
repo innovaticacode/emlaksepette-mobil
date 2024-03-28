@@ -85,7 +85,7 @@ export default function Ablok({openmodal}) {
           
 
   
-           <ScrollView style={{ marginTop: 10, display: 'flex', flexDirection: 'column' }} showsVerticalScrollIndicator={false}nestedScrollEnabled={true}>
+    <View>
             {Home.map((item, index) => (
             <Posts key={item.id}
             openmodal={openmodal}
@@ -101,12 +101,9 @@ export default function Ablok({openmodal}) {
              />
              
           ))}  
-          
-          {/* <View style={{}}>
-     <ShoppinInfo/>
-        
-        </View> */}
-        </ScrollView>
+         </View> 
+       
+       
      
         
   

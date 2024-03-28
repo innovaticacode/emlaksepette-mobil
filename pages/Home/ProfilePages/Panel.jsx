@@ -5,6 +5,7 @@ import Coin from "react-native-vector-icons/FontAwesome5"
 import Loading  from "react-native-vector-icons/EvilIcons"
 import Icon2  from "react-native-vector-icons/Entypo"
 import { useNavigation } from '@react-navigation/native'
+import CollectionItemPanel from './profileComponents/CollectionItemPanel'
 export default function Panel({options,onSelect}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
@@ -198,43 +199,14 @@ export default function Panel({options,onSelect}) {
                   </Text>
                 </TouchableOpacity>
               </View>
-          <View style={style.ShadowCard}>
-                  <TouchableOpacity    style={style.CollecitonShadow}>
-             
-                    <View style={{flex:1/2,height:'100%',display:'flex',flexDirection:'row',gap:7,padding:8,top:10}}>
-                    <View style={{flex:1/2 , height:'100%'}}>
-                          <Image source={require('../home.jpg')} style={{width:'100%',height:'80%'}}/>
-                    </View>
-                    <View style={{flex:1/2,height:'100%'}}>
-                    <Image source={require('../home.jpg')} style={{width:'100%',height:'80%'}}/>
-                    </View>
-                    </View>
-
-                    <View style={{flex:1/2,gap:10,paddingTop:8,top:10}}>
-                    <View style={{flexDirection:'row'}}>
-                      <Text>Koleksiyon Adı:</Text>
-                      <Text style={{color:"#E54242"}}> Kartal</Text>
-                    </View>
-                    <View style={{flexDirection:'row'}}>
-                      <Text>İlan Sayısı:</Text>
-                      <Text style={{color:"#E54242"}}>5</Text>
-                    </View>
-                    <View style={{flexDirection:'row',gap:6,}}>
-                    <Text style={{color:"#E54242"}}>20</Text>
-                    <Icon2 name='eye' size={15}/>
-                   
-                
-                    </View>
-                    </View>
-
-
-
-
-
-
+          <View style={{paddingTop:10,gap:10}}>
+                  <CollectionItemPanel/>
+                  <CollectionItemPanel/>
+                  <CollectionItemPanel/>
+                 
               
-                </TouchableOpacity>
-            
+
+                
 
           </View>
         </View>
@@ -248,12 +220,12 @@ const style=StyleSheet.create({
     container:{
       flex:1,
         backgroundColor:'#F7F7F9',
-        height:1500
+     
     },
     header:{
       width:'100%',
-      height:width>400? '5.5%':'4%',
-      
+      height:width>400? '12%':'9%',
+   
       display:'flex',
       flexDirection:'row',
       padding:8,
@@ -355,32 +327,10 @@ const style=StyleSheet.create({
         }),
 
     },
-    ShadowCard:{
-      backgroundColor:'#F7F7F9', 
-      borderRadius: 10,  
-      paddingVertical: 22,  
-      paddingHorizontal: 10,  
-      width: '100%',  
-      marginVertical: 10,  
-    
-      borderWidth:0.7,
-      borderColor:'#e6e6e6',
-      ...Platform.select({
-          ios: {
-            shadowColor: ' #e6e6e6',
-            shadowOffset: { width: 1, height: 1 },
-            shadowOpacity: 0.1,
-            shadowRadius: 5,
-          },
-          android: {
-            elevation: 5,
-          },
-        }),
-
-    },
+  
     CollectionItem:{
       width:'100%',
-    
+   
       padding:4
     },
     CollectionImage:{
@@ -399,12 +349,12 @@ const style=StyleSheet.create({
    
       display:'flex',
       flexDirection:'row',
-      height:'45%',
+ 
       backgroundColor:'white', 
       borderRadius: 10,  
       paddingVertical: 10,  
       paddingHorizontal: 10,  
-      width: '100%',  
+     
       marginVertical: 0,  
     
       borderWidth:0.7,

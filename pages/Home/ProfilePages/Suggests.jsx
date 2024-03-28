@@ -7,7 +7,7 @@ export default function Suggests() {
  
   const [modalVisible, setModalVisible] = useState(false);
     const route = useRoute();
-    const { header,name} = route.params;
+    const { header,name,color} = route.params;
     const [Tabs, setTabs] = useState(0)
     const openModal=()=>{
       setModalVisible(!modalVisible)
@@ -15,6 +15,19 @@ export default function Suggests() {
     const closeModal=()=>{
       setModalVisible(!modalVisible)
     }
+
+    const suggests=[
+      {
+        title:'Master Sonsuz Tatil Köyü 2 No lu Daire',
+        username:'Maliiyetine Ev',
+        mail:'maliyetine@gmail.com',
+        location:'İstanbul / Kartal',
+        status:false,
+        job:'Engineer',
+        suggest:'            Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam, praesentium. Laboriosam fugiat reprehenderit tenetur, iure consectetur esse eius mollitia exercitationem accusa'
+      }
+    ]
+
   return (
     
     <View style={styles.container}>
@@ -29,7 +42,7 @@ export default function Suggests() {
             <TouchableOpacity style={[styles.TabBarBtn,{backgroundColor:Tabs==1? '#ebebeb':'#E54242'}]}
             onPress={()=>setTabs(1)}
             >
-              <Text style={[styles.tabBarText,{color:Tabs===1? 'red':'white',fontWeight:Tabs===1?'600':'normal'}]}>Yanıtlanan Teklifler (0)</Text>
+              <Text style={[styles.tabBarText,{color:Tabs===1? 'red':'white',fontWeight:Tabs===1?'600':'normal'}]}> {name=='Başvurularım'?'Yanıtlananlar (0)':'Yanıtladıklarım (0)'}</Text>
             </TouchableOpacity>
            
           
@@ -38,8 +51,17 @@ export default function Suggests() {
       </View>
     <ScrollView>
         <View style={{padding:15}}>
-            <SuggestItem openModal={openModal}/>
-            <SuggestItem openModal={openModal}/>
+          {
+            suggests.map((item,index)=>(
+              <SuggestItem openModal={openModal} name={name} color={color}
+                title={item.title} username={item.username} mail={item.mail}
+                location={item.location} status={item.status} job={item.job} key={index}
+                
+              />
+            ))
+          }
+        
+        
           
         </View>
     </ScrollView>

@@ -1,23 +1,39 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-export default function SuggestItem({openModal}) {
+export default function SuggestItem({openModal,name,color,title,username,mail,location,status,job}) {
   return (
     <View style={style.container}>
     <View>
         <View style={{borderBottomWidth:1,paddingBottom:15,borderBottomColor:'#ebebeb'}}>
-        <View style={{flexDirection:'row',alignItems:'center',gap:18,}}>
+
+        <View style={{flexDirection:'row',alignItems:'center',}}>
+        <View style={{flexDirection:'row',alignItems:'center',gap:8,}}>
                 <View style={style.profileImage}>
                     <Image source={require('./home.jpg')} style={{width:'100%',height:'100%'}} />
                 </View>
                 <View style={style.ProfileName}>
-                    <Text>Jonathan Elcott</Text>
-                    <Text style={{fontSize:11,color:'grey'}}>jElcott@gmail.com</Text>
+                    <Text>{username}</Text>
+                    <Text style={{fontSize:11,color:'grey'}}>{mail}</Text>
                 </View>
+                </View>
+                <View style={{}}>
+               
+                  <TouchableOpacity style={{flexDirection:'row',backgroundColor: color?'#E54242':'green',padding:9,paddingLeft:12,paddingRight:12,borderRadius:5}}
+                  onPress={()=>{
+                    openModal()
+                  }}
+                 >
+                 
+                  <Text style={{textAlign:'center',fontSize:13,color:'white',fontWeight:'bold'}}>{name=='Başvurularım'?'Yanıtı Gör':'Yanıtla'}</Text>
+                 </TouchableOpacity>
                 
+         </View>
+             
+         
         </View>
         <View style={{paddingTop:15}}>
-        <Text>Master Sonsuz Tatil Köyü 2 No'lu Daire</Text>
+        <Text>{title}</Text>
         </View>
       
         </View>
@@ -29,20 +45,18 @@ export default function SuggestItem({openModal}) {
 
         <View style={{flexDirection:'row',justifyContent:'space-between',paddingTop:10}}>
             <View style={{gap:6}}>
-             <Text>Teklif Aralığı</Text>
-             <View style={{flexDirection:'row'}}>
-             <Text style={{color:'red',fontSize:13}}>2.000.000₺ - </Text>
-                <Text style={{color:'green',fontSize:13}}>2.500.000₺</Text>
-             </View>
+           <Text>{location}</Text>
+           <Text>
+            <Text>Telefon : </Text>
+            <Text>05537064474</Text>
+           </Text>
+           <Text>
+            <Text>Meslek : </Text>
+            <Text>{job}</Text>
+           </Text>
 
             </View>
-           <TouchableOpacity style={{flexDirection:'row',backgroundColor:'#E54242',padding:10,paddingLeft:25,paddingRight:25,borderRadius:5}}
-            onPress={()=>{
-              openModal()
-            }}
-           >
-            <Text style={{textAlign:'center',fontSize:13,color:'white',fontWeight:'bold'}}>Yanıtla</Text>
-           </TouchableOpacity>
+        
         </View>
      
     </View>
@@ -77,6 +91,7 @@ const style =StyleSheet.create({
             height:50
     },
     ProfileName:{
-        flex:1.2/2
+        flex:1.3/2,
+      
     }
 })
