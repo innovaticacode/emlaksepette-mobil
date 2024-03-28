@@ -85,7 +85,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
         </View>
         <View style={style.body}>
           <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={style.ScrollSetting}>
+          {/*   <View style={style.ScrollSetting}>
 
               <View style={style.Settings}>
                 <View>
@@ -196,7 +196,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
                   <Text style={{ textAlign: 'center', color: 'white', fontSize: 15 }}>Çıkış Yap</Text>
                 </View>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </ScrollView>
         </View>
       </View>
@@ -474,6 +474,6 @@ const style = StyleSheet.create({
     paddingRight: 20,
   },
   ScrollSetting:{
-    height:width>400?1670:1410
+
   }
 })

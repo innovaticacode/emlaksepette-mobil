@@ -17,8 +17,11 @@ export default function SliderBar() {
       const response = await axios.get(
         "https://emlaksepette.com/api/featured-stores"
       );
-      setFeaturedStores(response.data);
+      if (response.data.length > 0) {
+        setFeaturedStores(response.data);
       setloading(true);
+      }
+      
     } catch (error) {
       console.log(error);
     }
@@ -38,8 +41,9 @@ export default function SliderBar() {
         top: 0,
       }}
     >
+      
       {featuredStores.map((item, index) => (
-        <View style={{ width: 80, alignItems: "center" }} key={index}>
+        <View style={{ width: 80,marginLeft:3, alignItems: "center" }} key={index}>
           {loading == false ? (
             <>
               <SliderItemSkeleton />

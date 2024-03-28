@@ -159,7 +159,7 @@ export default function AllProjects() {
           }}
         >
           <View style={{ padding: 0 }}>
-            <Animatable.View animation={isHidden ? "zoomInUp" : "fadeInUp"}>
+            <Animatable.View animation={isHidden ? "fadeInUp" : "zoomInUp"}>
               <Text
                 style={[
                   styles.headerText,
