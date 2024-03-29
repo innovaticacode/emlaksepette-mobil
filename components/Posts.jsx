@@ -13,6 +13,7 @@ import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
 import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
+import { addDotEveryThreeDigits } from "./methods/merhod";
 
 export default function Posts({
   data,
@@ -29,36 +30,10 @@ export default function Posts({
   setModalVisible,
   openmodal,
 }) {
-  console.log(data.project.listItemValues);
-  const column1 = data.project.roomInfo.find((roomInfoTemp) => {
-    if (
-      roomInfoTemp.name == data.project.listItemValues.column1_name + "[]" &&
-      roomInfoTemp.room_order == roomOrder
-    ) {
-      return roomInfoTemp;
-    }
-  });
-  const column2 = data.project.roomInfo.find((roomInfoTemp) => {
-    if (
-      roomInfoTemp.name == data.project.listItemValues.column2_name + "[]" &&
-      roomInfoTemp.room_order == roomOrder
-    ) {
-      return roomInfoTemp;
-    }
-  });
-  const column3 = data.project.roomInfo.find((roomInfoTemp) => {
-    if (
-      roomInfoTemp.name == data.project.listItemValues.column3_name + "[]" &&
-      roomInfoTemp.room_order == roomOrder
-    ) {
-      return roomInfoTemp;
-    }
-  });
-
-  console.log(column1);
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
   const [bookmark, setbookmark] = useState("bookmark-o");
+  var roomData = data.projectHousingsList[roomOrder];
   const changeHeart = () => {
     setHeart(heart === "hearto" ? "heart" : "hearto");
   };
@@ -92,21 +67,14 @@ export default function Posts({
               }}
             >
               <Text style={{ color: "white", fontWeight: "500", fontSize: 12 }}>
-                No {No}
+                No {roomOrder}
               </Text>
             </View>
             <Image
               source={{
                 uri:
                   "https://emlaksepette.com/project_housing_images/" +
-                  data.project.roomInfo.find((roomInfoTemp) => {
-                    if (
-                      roomInfoTemp.room_order == roomOrder &&
-                      roomInfoTemp.name == "image[]"
-                    ) {
-                      return roomInfoTemp;
-                    }
-                  }).value,
+                  roomData["image[]"],
               }}
               style={{ width: "90%", height: "90%" }}
             />
@@ -115,16 +83,7 @@ export default function Posts({
             <View style={styles.captionAndIcons}>
               <View style={styles.caption}>
                 <Text style={{ fontSize: 11 }}>
-                  {
-                    data.project.roomInfo.find((roomInfoTemp) => {
-                      if (
-                        roomInfoTemp.room_order == roomOrder &&
-                        roomInfoTemp.name == "advertise_title[]"
-                      ) {
-                        return roomInfoTemp;
-                      }
-                    }).value
-                  }
+                  {roomData["advertise_title[]"]}
                 </Text>
               </View>
               <View style={styles.ıcons}>
@@ -172,30 +131,101 @@ export default function Posts({
                     color: "#264ABB",
                     fontWeight: "600",
                     fontSize: 12,
-                    left: 20,
+                    left: 0,
                   }}
                 >
-                  {price}
+                  {addDotEveryThreeDigits(
+                    data.projectHousingsList[roomOrder]["price[]"]
+                  ) + " ₺"}
                 </Text>
               </View>
               <View style={styles.btns}>
-                <TouchableOpacity style={styles.addBasket}>
-                  <Text
-                    style={{ color: "white", fontWeight: "500", fontSize: 12 }}
+                {data.projectCartOrders[roomOrder] ? (
+                  <TouchableOpacity style={styles.offSale}>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "500",
+                        fontSize: 12,
+                      }}
+                    >
+                      Satıldı
+                    </Text>
+                  </TouchableOpacity>
+                ) : roomData["off_sale[]"] != "[]" ? (
+                  <TouchableOpacity style={styles.offSale}>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "500",
+                        fontSize: 12,
+                      }}
+                    >
+                      Satışa Kapalı
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity style={styles.addBasket}>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "500",
+                        fontSize: 12,
+                      }}
+                    >
+                      Sepete Ekle
+                    </Text>
+                  </TouchableOpacity>
+                )}
+
+                {data.projectCartOrders[roomOrder] ? (
+                  data.projectCartOrders[roomOrder].is_show_user == "on" ? (
+                    <TouchableOpacity style={styles.showCustomer}>
+                      <Text
+                        style={{
+                          color: "white",
+                          fontWeight: "500",
+                          fontSize: 12,
+                        }}
+                      >
+                        Komşumu Gör
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.PayDetailBtn}
+                      onPress={() => {
+                        openmodal();
+                      }}
+                    >
+                      <Text style={{ fontWeight: "500", fontSize: 12 }}>
+                        Ödeme Detayı
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                ) : roomData["off_sale[]"] != "[]" ? (
+                  <TouchableOpacity
+                    style={styles.PayDetailBtn}
+                    onPress={() => {
+                      openmodal();
+                    }}
                   >
-                    Sepete Ekle
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.PayDetailBtn}
-                  onPress={() => {
-                    openmodal();
-                  }}
-                >
-                  <Text style={{ fontWeight: "500", fontSize: 12 }}>
-                    Ödeme Detayı
-                  </Text>
-                </TouchableOpacity>
+                    <Text style={{ fontWeight: "500", fontSize: 12 }}>
+                      Başvuru Yap
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.PayDetailBtn}
+                    onPress={() => {
+                      openmodal(roomOrder);
+                    }}
+                  >
+                    <Text style={{ fontWeight: "500", fontSize: 12 }}>
+                      Ödeme Detayı
+                    </Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
           </View>
@@ -212,28 +242,34 @@ export default function Posts({
           <View style={{ display: "flex", flexDirection: "row" }}>
             <Info
               text={
-                column1.value +
+                data?.projectHousingsList[roomOrder][
+                  data?.project?.list_item_values?.column1_name + "[]"
+                ] +
                 " " +
-                (data.project.listItemValues.column1_additional != null
-                  ? data.project.listItemValues.column1_additional
+                (data.project.list_item_values.column1_additional != null
+                  ? data.project.list_item_values.column1_additional
                   : "")
               }
             />
             <Info
               text={
-                column2.value +
+                data?.projectHousingsList[roomOrder][
+                  data?.project?.list_item_values?.column2_name + "[]"
+                ] +
                 " " +
-                (data.project.listItemValues.column2_additional != null
-                  ? data.project.listItemValues.column2_additional
+                (data.project.list_item_values.column2_additional != null
+                  ? data.project.list_item_values.column2_additional
                   : "")
               }
             />
             <Info
               text={
-                column3.value +
+                data?.projectHousingsList[roomOrder][
+                  data?.project?.list_item_values?.column3_name + "[]"
+                ] +
                 " " +
-                (data.project.listItemValues.column3_additional != null
-                  ? data.project.listItemValues.column3_additional
+                (data.project.list_item_values.column3_additional != null
+                  ? data.project.list_item_values.column3_additional
                   : "")
               }
             />
@@ -303,6 +339,18 @@ const styles = StyleSheet.create({
     width: "50%",
     alignItems: "center",
     backgroundColor: "#264ABB",
+    padding: 6,
+  },
+  offSale: {
+    width: "50%",
+    alignItems: "center",
+    backgroundColor: "#EA2B2E",
+    padding: 6,
+  },
+  showCustomer: {
+    width: "50%",
+    alignItems: "center",
+    backgroundColor: "green",
     padding: 6,
   },
   PayDetailBtn: {

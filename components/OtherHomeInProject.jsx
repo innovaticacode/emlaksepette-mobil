@@ -12,10 +12,19 @@ import Bblok from "./Bloks/Bblok";
 import ShoppinInfo from "./ShoppinInfo";
 import Posts from "./Posts";
 import { apiRequestGet } from "./methods/apiRequest";
-export default function OtherHomeInProject({ openmodal, data }) {
+export default function OtherHomeInProject({
+  selectedTab,
+  getBlockItems,
+  setSelectedTab,
+  itemCount,
+  openmodal,
+  data,
+  getLastItemCount,
+}) {
   const [tabs, setTabs] = useState(0);
   const [rooms, setRooms] = useState([]);
   const Home = [];
+  console.log(getLastItemCount, "last");
   return (
     <SafeAreaView>
       <View style={{ paddingLeft: 10, paddingRight: 10 }}>
@@ -31,57 +40,56 @@ export default function OtherHomeInProject({ openmodal, data }) {
             }}
             bounces={false}
           >
-            <TouchableOpacity
-              onPress={() => setTabs(0)}
-              style={[
-                styles.blockBtn,
-                {
-                  borderBottomWidth: tabs == 0 ? 1 : 0,
-                },
-              ]}
-            >
-              <Text
-                style={{
-                  fontWeight: tabs == 0 ? "700" : "normal",
-                  color: "#333",
-                }}
-              >
-                A Blok
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setTabs(1)}
-              style={[
-                styles.blockBtn,
-                {
-                  borderBottomWidth: tabs == 1 ? 1 : 0,
-                },
-              ]}
-            >
-              <Text
-                style={{
-                  fontWeight: tabs == 1 ? "700" : "normal",
-                  color: "#333",
-                }}
-              >
-                B Blok
-              </Text>
-            </TouchableOpacity>
+            {data.project.have_blocks
+              ? data.project.blocks.map((block, blockIndex) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setTabs(blockIndex);
+                        getBlockItems(blockIndex);
+                        setSelectedTab(blockIndex);
+                      }}
+                      style={[
+                        styles.blockBtn,
+                        {
+                          borderBottomWidth: tabs == blockIndex ? 1 : 0,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={{
+                          fontWeight: tabs == blockIndex ? "700" : "normal",
+                          color: "#333",
+                        }}
+                      >
+                        {block.block_name}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })
+              : ""}
           </ScrollView>
 
           <View>
-            {Array.from({ length: data.project.room_count }).map(
-              (index, _index) => {
-                return (
-                  <Posts
-                    key={_index}
-                    data={data}
-                    openmodal={openmodal}
-                    roomOrder={_index + 1}
-                  />
-                );
-              }
-            )}
+            {Array.from({
+              length:
+                data.project.room_count > 10
+                  ? itemCount
+                  : data.project.room_count,
+            }).map((index, _index) => {
+              return (
+                <Posts
+                  key={_index}
+                  data={data}
+                  openmodal={openmodal}
+                  roomOrder={
+                    data.project.have_blocks
+                      ? getLastItemCount() + _index + 1
+                      : _index + 1
+                  }
+                />
+              );
+            })}
           </View>
         </View>
       </View>
