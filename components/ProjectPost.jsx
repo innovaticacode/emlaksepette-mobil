@@ -55,6 +55,7 @@ export default function ProjectPost({
           Phone: Phone,
           slug: slug,
           ProjectId: ProjectNo,
+        ShopingImage:ProfilImage
         })
       }
     >

@@ -5,10 +5,10 @@ import ShoppinInfo from './ShoppinInfo'
 export default function Caption({acıklama}) {
   return (
 
-    <View style={[styles.card,{paddingLeft:10,paddingRight:10,flex:1}]}>
+    <View style={[styles.card,{paddingLeft:20,paddingRight:20,flex:1}]}>
 
    
-  <ScrollView  showsVerticalScrollIndicator={false}contentContainerStyle={{flexGrow:1}} nestedScrollEnabled={true} >
+
    
     
     <Text>
@@ -19,32 +19,17 @@ export default function Caption({acıklama}) {
    
 
 
-</ScrollView>
 
 
-
-   
-    
-  
-   
-
-
-   
-  
-  
-    <View style={styles.Info}>
-        <ShoppinInfo/>
-        
-        </View>
         </View>
   )
 }
 const styles=StyleSheet.create({
   card: {  
-        top:10,
+      
   
     backgroundColor: '#FFFFFF',  
-    paddingBottom:20,
+    paddingBottom:10,
      paddingTop:10,
     paddingHorizontal: 15,  
     width: '100%',  

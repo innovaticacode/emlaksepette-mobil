@@ -5,26 +5,26 @@ import * as Location from 'expo-location'
 export default function Map({map,maplo}) {
   const [location, setlocation] = useState()
 
-    useEffect(() => {
-      const getLocation= async ()=>{
-          let {status}=await Location.requestForegroundPermissionsAsync();
-          if (status !== 'granted') {
+    // useEffect(() => {
+    //   const getLocation= async ()=>{
+    //       let {status}=await Location.requestForegroundPermissionsAsync();
+    //       if (status !== 'granted') {
               
-              return;
-          }
-          let currentLocation = await Location.getCurrentPositionAsync({})
-          setlocation(currentLocation);
+    //           return;
+    //       }
+    //       let currentLocation = await Location.getCurrentPositionAsync({})
+    //       setlocation(currentLocation);
         
-      };
-      getLocation();
+    //   };
+    //   getLocation();
     
       
-    }, [])
+    // }, [])
     
 
   return (
   
-    <View style={{flex:1,top:3,padding:8}}>   
+    <View style={{height:'100%'}}>   
     <MapView
   initialRegion={{
     latitude:40.908912269486486,
