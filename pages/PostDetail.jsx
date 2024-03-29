@@ -426,6 +426,15 @@ const styles = StyleSheet.create({
       letterSpacing:1,
     
     },
+    shareIcons:{
+      backgroundColor: "#dbdbdb",
+      justifyContent: "center",
+      width: 50,
+      height: 50,
+      alignItems: "center",
+      borderRadius: 30,
+      bottom:2
+    },
 
   
   });

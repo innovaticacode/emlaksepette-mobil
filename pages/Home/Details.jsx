@@ -44,6 +44,7 @@ import Search from "./Search";
 import SliderMenuDetails from "../../components/SliderMenuDetails";
 import { apiRequestGet } from "../../components/methods/apiRequest";
 export default function Details({ navigation }) {
+  const apiUrl = "https://emlaksepette.com/";
   const [ColectionSheet, setColectionSheet] = useState(false)
   const [IsOpenSheet, setIsOpenSheet] = useState(false)
   const [showAlert, setshowAlert] = useState(false);
@@ -66,15 +67,9 @@ export default function Details({ navigation }) {
   const route = useRoute();
 
   const {
-    otherParam,
-    konum,
-    ımage,
-    sehir,
-    acıklama,
- 
-    slug,
+
     ProjectId,
-    ShopingImage,
+  
   } = route.params;
 
   const translateY = useRef(new Animated.Value(400)).current;
@@ -141,6 +136,7 @@ export default function Details({ navigation }) {
   const changeTab = (tabs) => {
     setTabs(tabs);
   };
+  console.log(data.project.description)
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -236,7 +232,7 @@ export default function Details({ navigation }) {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          backgroundColor: "#619AE5",
+          backgroundColor: data?.project.user?.banner_hex_code,
         }}
       >
         <TouchableOpacity
@@ -251,12 +247,12 @@ export default function Details({ navigation }) {
           <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
             <View style={{ height: 35, width: 35 }}>
               <ImageBackground
-                source={{ uri: ShopingImage }}
+                 source={{ uri:`${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`}}
                 style={{ width: "100%", height: "100%" }}
                 borderRadius={20}
               />
             </View>
-            <Text style={{ color: "white" }}>Maliyetine Ev</Text>
+            <Text style={{ color: "white" }}>  {data?.project?.user?.name ? `${data?.project?.user?.name} ` : ''}</Text>
             <View
               style={{
                 width: 18,
@@ -335,7 +331,7 @@ export default function Details({ navigation }) {
           <PagerView style={{ height: 250 }}>
             <View key="1">
               <ImageBackground
-                source={{ uri: ımage }}
+                // source={{ uri: ımage }}
                 style={{ width: "100%", height: "100%" }}
                 borderBottomLeftRadius={20}
                 borderBottomRightRadius={20}
@@ -360,10 +356,10 @@ export default function Details({ navigation }) {
               fontWeight: "400",
             }}
           >
-            {konum} / {sehir}
+           {data?.project?.city?.title ? `${data.project.city.title} / ${data.project.county.ilce_title}` : ''}
           </Text>
           <Text style={{ textAlign: "center", fontSize: 16, color: "#264ABB" }}>
-            {otherParam}
+          {data?.project?.project_title}
           </Text>
         </View>
         <View>
@@ -375,7 +371,7 @@ export default function Details({ navigation }) {
         </View>
         {tabs == 0 && <OtherHomeInProject data={data} openmodal={openModal} />}
         <View style={{ paddingLeft: 10, paddingRight: 10 }}>
-          {tabs == 1 && <Caption acıklama={acıklama} />}
+          {tabs == 1 && <Caption data={data} />}
         </View>
         {tabs == 2 && <Information />}
         <View style={{}}>{tabs === 3 && <Map />}</View>
@@ -408,7 +404,7 @@ export default function Details({ navigation }) {
               </TouchableOpacity>
               <View style={{ backgroundColor: "#EEEEEE", padding: 10 }}>
                 <Text style={{ fontWeight: "bold", fontSize: 12 }}>
-                  {otherParam} projesinde 1 No'lu ilan Ödeme Planı
+               
                 </Text>
               </View>
               <View>
@@ -444,10 +440,14 @@ export default function Details({ navigation }) {
         onBackdropPress={ToggleSheet}
         swipeDirection={['down']}
         backdropColor="transparent"
-        style={styles.modal2}
+        style={styles.modal3}
       >
-        <View style={styles.modalContent2}>
-          <Text style={styles.modalText2}>Paylaş</Text>
+        <View style={styles.modalContent3}>
+        <ScrollView horizontal  style={{padding:5}}   showsHorizontalScrollIndicator={false}>
+  
+    
+
+            </ScrollView>
       
         </View>
       </Modal>
@@ -458,10 +458,52 @@ export default function Details({ navigation }) {
         backdropColor="transparent"
         style={styles.modal2}
       >
+     
         <View style={styles.modalContent2}>
-          <Text style={styles.modalText2}>Kaydet</Text>
+               
+                <View style={{backgroundColor:'#ebebeb',padding:10,borderTopLeftRadius:20,borderTopRightRadius:20}}>
+                <View style={{alignItems:'center'}}>
+                <View style={{width:'10%',padding:3,backgroundColor:'grey',borderRadius:50}}/>
+                  </View>
+               
+                <View style={{flexDirection:'row',justifyContent:'space-between',paddingTop:10,alignItems:'center',paddingLeft:10,paddingRight:10}}>
+               
+                  <View style={{flexDirection:'row',gap:10,alignItems:'center'}}>
+                    <View style={{backgroundColor:'red',width:50,height:50,borderRadius:5}}></View>
+                    <Text style={{color:'#333',fontSize:15,fontWeight:'500'}}>Kaydedildi</Text>
+                  </View>
+                  <View>
+                    <TouchableOpacity onPress={changeBookmark}>
+                    <Bookmark
+                  name={bookmark}
+                  size={25}
+                  color={bookmark == "bookmark-o" ? "black" : "red"}
+                />
+                    </TouchableOpacity>
+                
+                  </View>
+                </View>
+                </View>
+                <View>
+                  <View style={{padding:10}}>
+                <View style={{flexDirection:'row',justifyContent:'space-between',paddingTop:10,alignItems:'center',paddingLeft:10,paddingRight:10}}>
+               
+               <View style={{flexDirection:'row',gap:10,alignItems:'center'}}>
+                 <View style={{backgroundColor:'blue',width:40,height:40,borderRadius:5}}></View>
+                 <Text style={{color:'#333',fontSize:15,fontWeight:'500'}}>Kartal</Text>
+               </View>
+               <View>
+                 <TouchableOpacity>
+            <Icon name="pluscircle" size={20} color={'grey'}/>
+                 </TouchableOpacity>
+             
+               </View>
+             </View>
+             </View>
+                </View>
       
         </View>
+   
       </Modal>
       </ScrollView>
     </SafeAreaView>
@@ -528,6 +570,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  
     // modal dışı koyu arkaplan
   },
   modalView: {
@@ -549,13 +592,39 @@ const styles = StyleSheet.create({
   modal2: {
     justifyContent: 'flex-end',
     margin: 0,
+   
   },
   modalContent2: {
-    backgroundColor: 'white',
-    padding: 20,
-    height:'30%',
+    backgroundColor: '#FAFAFA',
+ 
+    height:'50%',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+ 
     
-  }
+  },
+  modal3: {
+    justifyContent: 'flex-end',
+    margin: 0,
+   
+  },
+  modalContent3: {
+    backgroundColor: '#FAFAFA',
+ 
+    height:'20%',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+ 
+    
+  },
+  shareIcons:{
+    backgroundColor: "#dbdbdb",
+    justifyContent: "center",
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    borderRadius: 30,
+    bottom:2
+  },
+
 });

@@ -37,7 +37,7 @@ export default function OtherHomeInProject({openmodal,data}) {
                 </ScrollView>
               
                 <View>
-                {
+                {/* {
                   Array.from({length:data.project.room_count}).map((index,_index) => {
                     return(
                       <Posts key={_index}
@@ -47,7 +47,7 @@ export default function OtherHomeInProject({openmodal,data}) {
                       />
                     )
                   })
-                }
+                } */}
          </View> 
          
             </View>
