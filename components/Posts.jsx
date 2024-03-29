@@ -6,7 +6,13 @@ import Bookmark from "react-native-vector-icons/FontAwesome";
 import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
 
-export default function Posts({ caption, location, price, ımage ,metre,odaSayısı,katSayısı,No,isFavorited,setModalVisible,openmodal}) {
+export default function Posts({ data,roomOrder,caption, location, price, ımage ,metre,odaSayısı,katSayısı,No,isFavorited,setModalVisible,openmodal}) {
+  console.log(data.project.listItemValues)
+  const column1 = data.project.roomInfo.find((roomInfoTemp) => { if(roomInfoTemp.name == data.project.listItemValues.column1_name+'[]' && roomInfoTemp.room_order == roomOrder){return roomInfoTemp}});
+  const column2 = data.project.roomInfo.find((roomInfoTemp) => { if(roomInfoTemp.name == data.project.listItemValues.column2_name+'[]' && roomInfoTemp.room_order == roomOrder){return roomInfoTemp}});
+  const column3 = data.project.roomInfo.find((roomInfoTemp) => { if(roomInfoTemp.name == data.project.listItemValues.column3_name+'[]' && roomInfoTemp.room_order == roomOrder){return roomInfoTemp}});
+
+  console.log(column1);
   const navigation = useNavigation();
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
@@ -33,13 +39,13 @@ export default function Posts({ caption, location, price, ımage ,metre,odaSayı
             }}>
           <Text style={{color:'white',fontWeight:'500',fontSize:12}}>No {No}</Text>
           </View>
-            <Image source={ımage}
+            <Image source={ {uri:'https://emlaksepette.com/project_housing_images/'+data.project.roomInfo.find((roomInfoTemp) => {if(roomInfoTemp.room_order == roomOrder && roomInfoTemp.name == 'image[]'){return roomInfoTemp}}).value}}
               style={{ width: '90%', height: '90%', }} />
           </View>
           <View style={styles.container2}>
             <View style={styles.captionAndIcons}>
               <View style={styles.caption}>
-                <Text style={{fontSize:11}}>{caption}</Text>
+                <Text style={{fontSize:11}}>{data.project.roomInfo.find((roomInfoTemp) => {if(roomInfoTemp.room_order == roomOrder && roomInfoTemp.name == 'advertise_title[]'){return roomInfoTemp}}).value}</Text>
               </View>
               <View style={styles.ıcons}>
                 <TouchableOpacity onPress={changeBookmark}>
@@ -106,9 +112,9 @@ export default function Posts({ caption, location, price, ımage ,metre,odaSayı
         </View>
         <View style={{backgroundColor:'#E8E8E8',height:30,display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
           <View style={{display:'flex',flexDirection:'row' }} >
-          <Info text={metre}/>
-          <Info text={odaSayısı}/>
-          <Info text={katSayısı}/>
+          <Info text={column1.value+' '+(data.project.listItemValues.column1_additional != null ? data.project.listItemValues.column1_additional : '')}/>
+          <Info text={column2.value+' '+(data.project.listItemValues.column2_additional != null ? data.project.listItemValues.column2_additional : '')}/>
+          <Info text={column3.value+' '+(data.project.listItemValues.column3_additional != null ? data.project.listItemValues.column3_additional : '')}/>
           </View>
          <View style={{justifyContent:'center',}}>
           <Text style={styles.InformationText}>{location}</Text>

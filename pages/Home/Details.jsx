@@ -12,7 +12,7 @@ import {
   Linking,
 } from "react-native";
 
-import { React, useRef, useState } from "react";
+import { React, useEffect, useRef, useState } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Caption from "../../components/Caption";
 import Settings from "../../components/Settings";
@@ -42,6 +42,7 @@ import Modal from "react-native-modal";
 import Categories from "../../components/Categories";
 import Search from "./Search";
 import SliderMenuDetails from "../../components/SliderMenuDetails";
+import { apiRequestGet } from "../../components/methods/apiRequest";
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false)
   const [IsOpenSheet, setIsOpenSheet] = useState(false)
@@ -50,6 +51,12 @@ export default function Details({ navigation }) {
   const [heart, setHeart] = useState("hearto");
   const [bookmark, setbookmark] = useState("bookmark-o");
   const [modalVisible, setModalVisible] = useState(false);
+  const [data,setData] = useState({
+    project : {
+      room_count : 0,
+      roomInfo : []
+    }
+  });
   const changeHeart = () => {
     setHeart(heart === "hearto" ? "heart" : "hearto");
   };
@@ -64,10 +71,7 @@ export default function Details({ navigation }) {
     ımage,
     sehir,
     acıklama,
-    ShoppingName,
-    ShoppingMail,
-    ShopingInfo,
-    Phone,
+ 
     slug,
     ProjectId,
     ShopingImage,
@@ -77,21 +81,13 @@ export default function Details({ navigation }) {
   const openModal = () => {
     setModalVisible(!modalVisible);
   };
-  const openSheet = () => {
-    Animated.timing(translateY, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
 
-  const closeSheet = () => {
-    Animated.timing(translateY, {
-      toValue: 400,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
+
+  useEffect(() => {
+    apiRequestGet("project/"+ProjectId).then((res) => {
+      setData(res.data);
+    })
+  },[])
 
   const shareLinkOnWhatsApp = () => {
     const url = `https://emlaksepette.com/proje/${slug}//1000${ProjectId}/detay`;
@@ -377,7 +373,7 @@ export default function Details({ navigation }) {
             changeTab={changeTab}
           />
         </View>
-        {tabs == 0 && <OtherHomeInProject openmodal={openModal} />}
+        {tabs == 0 && <OtherHomeInProject data={data} openmodal={openModal} />}
         <View style={{ paddingLeft: 10, paddingRight: 10 }}>
           {tabs == 1 && <Caption acıklama={acıklama} />}
         </View>

@@ -449,15 +449,13 @@ export default function HomePage() {
                             location={item.city.title}
                             city={item.county.ilce_title}
                             ProjectNo={item.id}
-                            slug={item.slug}
-                            acıklama={item.description
-                              .replace(/<\/?[^>]+(>|$)/g, "")
-                              .replace(/&nbsp;/g, " ")}
-                            ShoppingName={item.user.name}
-                            ShoppingMail={item.user.email}
-                            Phone={item.user.phone}
+                           
+                            // acıklama={item.description
+                            //   .replace(/<\/?[^>]+(>|$)/g, "")
+                            //   .replace(/&nbsp;/g, " ")}
+                          
                             ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                            ShopingInfo={item.user.corporate_type}
+                           
                             loading={loadingPrjoects}
                           />
                         </View>
