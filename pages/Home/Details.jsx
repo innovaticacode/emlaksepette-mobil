@@ -43,19 +43,26 @@ import Categories from "../../components/Categories";
 import Search from "./Search";
 import SliderMenuDetails from "../../components/SliderMenuDetails";
 import { apiRequestGet } from "../../components/methods/apiRequest";
+import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 export default function Details({ navigation }) {
-  const [ColectionSheet, setColectionSheet] = useState(false)
-  const [IsOpenSheet, setIsOpenSheet] = useState(false)
+  const [ColectionSheet, setColectionSheet] = useState(false);
+  const [IsOpenSheet, setIsOpenSheet] = useState(false);
+  const [selectedTab, setSelectedTab] = useState(0);
   const [showAlert, setshowAlert] = useState(false);
+  const [page, setPage] = useState(0);
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState("hearto");
   const [bookmark, setbookmark] = useState("bookmark-o");
   const [modalVisible, setModalVisible] = useState(false);
-  const [data,setData] = useState({
-    project : {
-      room_count : 0,
-      roomInfo : []
-    }
+  const [isLoading, setIsLoading] = useState(false);
+  const [itemCount, setItemCount] = useState(10);
+  const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
+  const [data, setData] = useState({
+    project: {
+      room_count: 0,
+      roomInfo: [],
+    },
+    projectHousingsList: [],
   });
   const changeHeart = () => {
     setHeart(heart === "hearto" ? "heart" : "hearto");
@@ -64,30 +71,130 @@ export default function Details({ navigation }) {
     setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
   };
   const route = useRoute();
-
+  let debounceTimeout;
   const {
     otherParam,
     konum,
     ımage,
     sehir,
     acıklama,
- 
+
     slug,
     ProjectId,
     ShopingImage,
   } = route.params;
 
   const translateY = useRef(new Animated.Value(400)).current;
-  const openModal = () => {
+  const openModal = (roomOrder) => {
+    setPaymentModalShowOrder(roomOrder);
     setModalVisible(!modalVisible);
   };
 
-
   useEffect(() => {
-    apiRequestGet("project/"+ProjectId).then((res) => {
+    apiRequestGet("project/" + ProjectId).then((res) => {
       setData(res.data);
-    })
-  },[])
+    });
+  }, []);
+
+  const getLastItemCount = () => {
+    var lastBlockItemsCount = 0;
+    for (var i = 0; i < selectedTab; i++) {
+      lastBlockItemsCount += data.project.blocks[i].housing_count;
+    }
+
+    return lastBlockItemsCount;
+  };
+
+  const getBlockItems = (selectedOrder) => {
+    var lastBlockItemsCount = 0;
+
+    for (var i = 0; i < selectedOrder; i++) {
+      lastBlockItemsCount += data.project.blocks[i].housing_count;
+    }
+    apiRequestGet(
+      "project_housings/" +
+        ProjectId +
+        "?start=" +
+        lastBlockItemsCount +
+        "&end=" +
+        (lastBlockItemsCount + 10)
+    ).then((res) => {
+      setData({
+        ...data,
+        projectHousingsList: res.data.housings,
+      });
+
+      setItemCount(10);
+    });
+  };
+
+  const fetchHousings = (page) => {
+    if (data.project.have_blocks) {
+      if (page * 10 <= data.project.blocks[selectedTab].housing_count) {
+        setIsLoading(true);
+        apiRequestGet(
+          "project_housings/" +
+            ProjectId +
+            "?start=" +
+            page * 10 +
+            "&end=" +
+            ((page + 1) * 10 > data.project.blocks[selectedTab].housing_count
+              ? data.project.blocks[selectedTab].housing_count
+              : (page + 1) * 10)
+        ).then((res) => {
+          setData({
+            ...data,
+            projectHousingsList: {
+              ...data.projectHousingsList,
+              ...res.data.housings,
+            },
+          });
+          setItemCount(
+            (page + 1) * 10 > data.project.blocks[selectedTab].housing_count
+              ? data.project.blocks[selectedTab].housing_count
+              : (page + 1) * 10
+          );
+          setIsLoading(false);
+        });
+      }
+    } else {
+      if (page * 10 <= data.project.room_count) {
+        setIsLoading(true);
+        apiRequestGet(
+          "project_housings/" +
+            ProjectId +
+            "?start=" +
+            page * 10 +
+            "&end=" +
+            (page + 1) * 10
+        ).then((res) => {
+          setData({
+            ...data,
+            projectHousingsList: {
+              ...data.projectHousingsList,
+              ...res.data.housings,
+            },
+          });
+          console.log(
+            (page + 1) * 10 > data.project.room_count
+              ? data.project.room_count
+              : (page + 1) * 10
+          );
+          setItemCount(
+            (page + 1) * 10 > data.project.room_count
+              ? data.project.room_count
+              : (page + 1) * 10
+          );
+          console.log("asd123123", page);
+          setIsLoading(false);
+        });
+      }
+    }
+  };
+
+  console.log(itemCount);
+
+  console.log(data.projectHousingsList["11"]);
 
   const shareLinkOnWhatsApp = () => {
     const url = `https://emlaksepette.com/proje/${slug}//1000${ProjectId}/detay`;
@@ -127,17 +234,29 @@ export default function Details({ navigation }) {
     }, 2000);
   };
 
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    const paddingToBottom = 20;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
   const ToggleSheet = () => {
-   setIsOpenSheet(!IsOpenSheet)
+    setIsOpenSheet(!IsOpenSheet);
   };
   const ToggleColSheet = () => {
- setColectionSheet(!ColectionSheet)
-   };
+    setColectionSheet(!ColectionSheet);
+  };
   const changeTab = (tabs) => {
     setTabs(tabs);
   };
@@ -281,7 +400,20 @@ export default function Details({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <ScrollView>
+      <ScrollView
+        scrollEventThrottle={16}
+        onScroll={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => {
+              if (!isLoading) {
+                fetchHousings(page + 1);
+                setPage(page + 1);
+              }
+            }, 1000); // 500ms içinde yeni bir istek yapılmazsa gerçekleştir
+          }
+        }}
+      >
         <View style={{ height: 250 }}>
           <View style={styles.pagination}>
             <View
@@ -298,7 +430,7 @@ export default function Details({ navigation }) {
           </View>
 
           <View style={styles.ıconContainer}>
-            <TouchableOpacity onPress={()=>setIsOpenSheet(true)}>
+            <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
               <View style={styles.ıcon}>
                 <Icon name="sharealt" size={18} />
               </View>
@@ -317,12 +449,12 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={()=>
-              {
-                changeBookmark()
-                setColectionSheet(true)
-              
-              }}>
+            <TouchableOpacity
+              onPress={() => {
+                changeBookmark();
+                setColectionSheet(true);
+              }}
+            >
               <View style={styles.ıcon}>
                 <Bookmark
                   name={bookmark}
@@ -373,7 +505,17 @@ export default function Details({ navigation }) {
             changeTab={changeTab}
           />
         </View>
-        {tabs == 0 && <OtherHomeInProject data={data} openmodal={openModal} />}
+        {tabs == 0 && (
+          <OtherHomeInProject
+            itemCount={itemCount}
+            data={data}
+            getLastItemCount={getLastItemCount}
+            setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
+            openmodal={openModal}
+            getBlockItems={getBlockItems}
+          />
+        )}
         <View style={{ paddingLeft: 10, paddingRight: 10 }}>
           {tabs == 1 && <Caption acıklama={acıklama} />}
         </View>
@@ -408,14 +550,113 @@ export default function Details({ navigation }) {
               </TouchableOpacity>
               <View style={{ backgroundColor: "#EEEEEE", padding: 10 }}>
                 <Text style={{ fontWeight: "bold", fontSize: 12 }}>
-                  {otherParam} projesinde 1 No'lu ilan Ödeme Planı
+                  {otherParam} projesinde {paymentModalShowOrder} No'lu ilan
+                  Ödeme Planı
                 </Text>
               </View>
               <View>
-                <SettingsItem info="Peşin Fiyat" numbers="2.000.000" />
-                <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="2.500.000" />
-                <SettingsItem info="Peşinat" numbers="1.000.000" />
-                <SettingsItem info="Aylık Ödenecek Tutar" numbers="100.000" />
+                <SettingsItem
+                  info="Peşin Fiyat"
+                  numbers={
+                    paymentModalShowOrder != null
+                      ? addDotEveryThreeDigits(
+                          data.projectHousingsList[paymentModalShowOrder][
+                            "price[]"
+                          ]
+                        ) + " ₺"
+                      : "0"
+                  }
+                />
+                {paymentModalShowOrder != null ? (
+                  JSON.parse(
+                    data.projectHousingsList[paymentModalShowOrder][
+                      "payment-plan[]"
+                    ]
+                  ) &&
+                  JSON.parse(
+                    data.projectHousingsList[paymentModalShowOrder][
+                      "payment-plan[]"
+                    ]
+                  ).includes("taksitli") ? (
+                    <SettingsItem
+                      info="Taksitli 12 Ay Fiyat"
+                      numbers={
+                        addDotEveryThreeDigits(
+                          data.projectHousingsList[paymentModalShowOrder][
+                            "installments-price[]"
+                          ]
+                        ) + "₺"
+                      }
+                    />
+                  ) : (
+                    <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="0" />
+                  )
+                ) : (
+                  <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="0" />
+                )}
+                {paymentModalShowOrder != null ? (
+                  JSON.parse(
+                    data.projectHousingsList[paymentModalShowOrder][
+                      "payment-plan[]"
+                    ]
+                  ) &&
+                  JSON.parse(
+                    data.projectHousingsList[paymentModalShowOrder][
+                      "payment-plan[]"
+                    ]
+                  ).includes("taksitli") ? (
+                    <SettingsItem
+                      info="Peşinat"
+                      numbers={
+                        addDotEveryThreeDigits(
+                          data.projectHousingsList[paymentModalShowOrder][
+                            "advance[]"
+                          ]
+                        ) + "₺"
+                      }
+                    />
+                  ) : (
+                    <SettingsItem info="Peşinat" numbers="0" />
+                  )
+                ) : (
+                  <SettingsItem info="Peşinat" numbers="0" />
+                )}
+
+                {paymentModalShowOrder != null ? (
+                  JSON.parse(
+                    data.projectHousingsList[paymentModalShowOrder][
+                      "payment-plan[]"
+                    ]
+                  ) &&
+                  JSON.parse(
+                    data.projectHousingsList[paymentModalShowOrder][
+                      "payment-plan[]"
+                    ]
+                  ).includes("taksitli") ? (
+                    <SettingsItem
+                      info="Aylık Ödenecek Tutar"
+                      numbers={
+                        addDotEveryThreeDigits(
+                          (
+                            (data.projectHousingsList[paymentModalShowOrder][
+                              "installments-price[]"
+                            ] -
+                              data.projectHousingsList[paymentModalShowOrder][
+                                "advance[]"
+                              ]) /
+                            data.projectHousingsList[paymentModalShowOrder][
+                              "installments[]"
+                            ]
+                          ).toFixed(0)
+                        ) + "₺"
+                      }
+                    />
+                  ) : (
+                    <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
+                  )
+                ) : (
+                  <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
+                )}
               </View>
 
               <TouchableOpacity
@@ -440,29 +681,27 @@ export default function Details({ navigation }) {
           </View>
         </Modal>
         <Modal
-        isVisible={IsOpenSheet}
-        onBackdropPress={ToggleSheet}
-        swipeDirection={['down']}
-        backdropColor="transparent"
-        style={styles.modal2}
-      >
-        <View style={styles.modalContent2}>
-          <Text style={styles.modalText2}>Paylaş</Text>
-      
-        </View>
-      </Modal>
-      <Modal
-        isVisible={ColectionSheet}
-        onBackdropPress={ToggleColSheet}
-        swipeDirection={['down']}
-        backdropColor="transparent"
-        style={styles.modal2}
-      >
-        <View style={styles.modalContent2}>
-          <Text style={styles.modalText2}>Kaydet</Text>
-      
-        </View>
-      </Modal>
+          isVisible={IsOpenSheet}
+          onBackdropPress={ToggleSheet}
+          swipeDirection={["down"]}
+          backdropColor="transparent"
+          style={styles.modal2}
+        >
+          <View style={styles.modalContent2}>
+            <Text style={styles.modalText2}>Paylaş</Text>
+          </View>
+        </Modal>
+        <Modal
+          isVisible={ColectionSheet}
+          onBackdropPress={ToggleColSheet}
+          swipeDirection={["down"]}
+          backdropColor="transparent"
+          style={styles.modal2}
+        >
+          <View style={styles.modalContent2}>
+            <Text style={styles.modalText2}>Kaydet</Text>
+          </View>
+        </Modal>
       </ScrollView>
     </SafeAreaView>
   );
@@ -547,15 +786,14 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modal2: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     margin: 0,
   },
   modalContent2: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 20,
-    height:'30%',
+    height: "30%",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    
-  }
+  },
 });
