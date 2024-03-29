@@ -214,6 +214,7 @@ export default function AllProjects() {
                   style={{ paddingLeft: 10, paddingRight: 10, width: "100%" }}
                 >
                   <ProjectPost
+                  project={item}
                     key={item.id}
                     caption={item.project_title}
                     ımage={`${apiUrl}/${item.image.replace(

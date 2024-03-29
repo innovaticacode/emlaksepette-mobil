@@ -20,10 +20,7 @@ export default function FloorPlan() {
         }}>Vaziyet planı belirtilmedi</Text>
       </View>
     </View>
-    <View style={{bottom:15}}>
-    <ShoppinInfo/>
-        
-        </View>
+   
     </View>
   )
 }
@@ -36,11 +33,10 @@ const styles=StyleSheet.create({
       backgroundColor: '#FFFFFF',  
      
     
-      paddingVertical: 10,  
-      paddingHorizontal: 5,  
+      
       width: '100%',  
      
-      height:'auto',
+  
       borderWidth:0.7,
       borderColor:'#e6e6e6',
       ...Platform.select({

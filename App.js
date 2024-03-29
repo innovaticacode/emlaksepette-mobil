@@ -103,6 +103,7 @@ export default function App({route}) {
   })} 
   />
   <Stack.Screen name="Details"  component={Details} options={({route})=>({
+    headerShown:false,
     title:route.params.name
   })} 
  
