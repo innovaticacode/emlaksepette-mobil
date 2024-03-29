@@ -44,18 +44,18 @@ import Search from "./Search";
 import SliderMenuDetails from "../../components/SliderMenuDetails";
 import { apiRequestGet } from "../../components/methods/apiRequest";
 export default function Details({ navigation }) {
-  const [ColectionSheet, setColectionSheet] = useState(false)
-  const [IsOpenSheet, setIsOpenSheet] = useState(false)
+  const [ColectionSheet, setColectionSheet] = useState(false);
+  const [IsOpenSheet, setIsOpenSheet] = useState(false);
   const [showAlert, setshowAlert] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState("hearto");
   const [bookmark, setbookmark] = useState("bookmark-o");
   const [modalVisible, setModalVisible] = useState(false);
-  const [data,setData] = useState({
-    project : {
-      room_count : 0,
-      roomInfo : []
-    }
+  const [data, setData] = useState({
+    project: {
+      room_count: 0,
+      roomInfo: [],
+    },
   });
   const changeHeart = () => {
     setHeart(heart === "hearto" ? "heart" : "hearto");
@@ -71,7 +71,7 @@ export default function Details({ navigation }) {
     ımage,
     sehir,
     acıklama,
- 
+
     slug,
     ProjectId,
     ShopingImage,
@@ -82,12 +82,11 @@ export default function Details({ navigation }) {
     setModalVisible(!modalVisible);
   };
 
-
   useEffect(() => {
-    apiRequestGet("project/"+ProjectId).then((res) => {
+    apiRequestGet("project/" + ProjectId).then((res) => {
       setData(res.data);
-    })
-  },[])
+    });
+  }, []);
 
   const shareLinkOnWhatsApp = () => {
     const url = `https://emlaksepette.com/proje/${slug}//1000${ProjectId}/detay`;
@@ -133,11 +132,11 @@ export default function Details({ navigation }) {
     setIsDrawerOpen(!isDrawerOpen);
   };
   const ToggleSheet = () => {
-   setIsOpenSheet(!IsOpenSheet)
+    setIsOpenSheet(!IsOpenSheet);
   };
   const ToggleColSheet = () => {
- setColectionSheet(!ColectionSheet)
-   };
+    setColectionSheet(!ColectionSheet);
+  };
   const changeTab = (tabs) => {
     setTabs(tabs);
   };
@@ -298,7 +297,7 @@ export default function Details({ navigation }) {
           </View>
 
           <View style={styles.ıconContainer}>
-            <TouchableOpacity onPress={()=>setIsOpenSheet(true)}>
+            <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
               <View style={styles.ıcon}>
                 <Icon name="sharealt" size={18} />
               </View>
@@ -317,12 +316,12 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={()=>
-              {
-                changeBookmark()
-                setColectionSheet(true)
-              
-              }}>
+            <TouchableOpacity
+              onPress={() => {
+                changeBookmark();
+                setColectionSheet(true);
+              }}
+            >
               <View style={styles.ıcon}>
                 <Bookmark
                   name={bookmark}
@@ -440,29 +439,27 @@ export default function Details({ navigation }) {
           </View>
         </Modal>
         <Modal
-        isVisible={IsOpenSheet}
-        onBackdropPress={ToggleSheet}
-        swipeDirection={['down']}
-        backdropColor="transparent"
-        style={styles.modal2}
-      >
-        <View style={styles.modalContent2}>
-          <Text style={styles.modalText2}>Paylaş</Text>
-      
-        </View>
-      </Modal>
-      <Modal
-        isVisible={ColectionSheet}
-        onBackdropPress={ToggleColSheet}
-        swipeDirection={['down']}
-        backdropColor="transparent"
-        style={styles.modal2}
-      >
-        <View style={styles.modalContent2}>
-          <Text style={styles.modalText2}>Kaydet</Text>
-      
-        </View>
-      </Modal>
+          isVisible={IsOpenSheet}
+          onBackdropPress={ToggleSheet}
+          swipeDirection={["down"]}
+          backdropColor="transparent"
+          style={styles.modal2}
+        >
+          <View style={styles.modalContent2}>
+            <Text style={styles.modalText2}>Paylaş</Text>
+          </View>
+        </Modal>
+        <Modal
+          isVisible={ColectionSheet}
+          onBackdropPress={ToggleColSheet}
+          swipeDirection={["down"]}
+          backdropColor="transparent"
+          style={styles.modal2}
+        >
+          <View style={styles.modalContent2}>
+            <Text style={styles.modalText2}>Kaydet</Text>
+          </View>
+        </Modal>
       </ScrollView>
     </SafeAreaView>
   );
@@ -547,15 +544,14 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modal2: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     margin: 0,
   },
   modalContent2: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 20,
-    height:'30%',
+    height: "30%",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    
-  }
+  },
 });
