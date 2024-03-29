@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export default function Projects() {
+export default function FilterScreen() {
   return (
     <View>
-      <Text>Projects</Text>
+      <Text>FilterScreen</Text>
     </View>
   )
 }

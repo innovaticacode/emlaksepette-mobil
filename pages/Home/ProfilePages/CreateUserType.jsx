@@ -14,6 +14,9 @@ export default function CreateUserType() {
         {
           'title':'Satış Departmanı'
         },
+        {
+          'title':'Satış Danışmanı'
+        },
       
      
 
@@ -32,8 +35,8 @@ export default function CreateUserType() {
       <View style={{display:hidden }}>
         <Text style={styles.label}>İzinler</Text>
         <View style={{gap:10}}>
-          {ızın.map((item)=>(
-         <Checkbox title={item.title}/>
+          {ızın.map((item,index)=>(
+         <Checkbox title={item.title} key={index}/>
           ))}
       
         </View>
@@ -50,8 +53,8 @@ export default function CreateUserType() {
           <Text>Kullanıcı Tipi</Text>
           <Text>İşlemler</Text>
         </View>
-      {ızın.map((item)=>(
-           <Users name={item.title}/>
+      {ızın.map((item,index)=>(
+           <Users name={item.title} key={index}/>
           ))}
     
       </View>

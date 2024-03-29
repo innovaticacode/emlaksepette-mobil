@@ -1,7 +1,9 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { useNavigation } from '@react-navigation/native'
 
 export default function Users({name}) {
+    const navigation =useNavigation()
   return (
     <View style={style.container}>
      <View style={style.UserContainer}>
@@ -9,7 +11,9 @@ export default function Users({name}) {
                 <Text>{name}</Text>
         </View>
         <View style={style.buttons}>
-                <TouchableOpacity style={style.butons}>
+                <TouchableOpacity style={style.butons}
+                    onPress={()=>navigation.navigate('CreateUserType',{ header: 'yeni ekleden geldi', name: 'Kullanıcı Güncelle', hidden2: 'none'  ,hidden4: 'none' })}
+                >
                     <Text style={style.btnText}>Güncelle</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={style.butons}>

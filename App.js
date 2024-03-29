@@ -47,13 +47,22 @@ import RealtorAdvertAdd from './pages/Home/İlanYükleme/RealtorAdvertsAdd/Realt
 import Notifications from './pages/Home/Notifications';
 import RealtorClub from './pages/Home/RealtorClub';
 import Basket from './pages/Home/Basket';
+import PublicPage from './pages/Home/SearchPageItem/PublicPage';
+import SubCategory from './pages/Home/SearchPageItem/SubCategory';
+import HomeList from './pages/Home/SearchPageItem/HomeList';
+import SubCategoryChild from './pages/Home/SearchPageItem/SubCategoryChild';
+
+import Search from './pages/Home/Search';
+import AllProjects from './pages/Home/AllProjects';
+import FilterScreen from './pages/Home/FilterScreen';
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
   
   const [İsLoggedIn, setİsLoggedIn] = useState(false)
+  const [isLogIn, setisLogIn] = useState(false)
   const [showBackIcon, setshowBackIcon] = useState(false)
-
+  const [İsloading, setİsloading] = useState(false)
 
 
   return (
@@ -64,6 +73,7 @@ export default function App({route}) {
       ...TransitionPresets.SlideFromRightIOS,
       
   }}>
+ 
   <Stack.Screen name="Home" options={{
     headerShown:false,
    
@@ -72,12 +82,15 @@ export default function App({route}) {
   >
     {(props) => <Home {...props}  showBackIcon={showBackIcon} setshowBackIcon={setshowBackIcon}/>}
   </Stack.Screen>
- {İsLoggedIn ? (
+  
+
   <Stack.Group>
-    <Stack.Screen name="Login" component={Login} options={{ title: 'Giriş Yap' }} />
-    <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+    <Stack.Screen name="Login"  options={{ title: 'Giriş Yap' }} >
+      {(props=> <Login {...props}/>)}
+    </Stack.Screen>
+    <Stack.Screen name="Register" component={Register} options={{title:'Üye Ol',headerBackTitle:'.' }} />
   </Stack.Group>
-) : null}
+
  
   <Stack.Screen name="Emlak"  component={Emlakİlanı} 
    options={({route})=>({
@@ -331,6 +344,44 @@ export default function App({route}) {
   /> 
    <Stack.Screen name='RealtorClubExplore'  component={RealtorClub} options={({route})=>({
     title:'Emlak Kulübü Keşfet'
+  })} 
+ 
+  /> 
+     <Stack.Screen name='Public'  component={PublicPage} options={({route})=>({
+        title:route.params.name
+  })} 
+ 
+  /> 
+     <Stack.Screen name='SubCategory'  component={SubCategory} options={({route})=>({
+        title:route.params.name
+  })} 
+ 
+  /> 
+   
+      <Stack.Screen name='HomeList'  component={HomeList} options={({route})=>({
+        headerShown:false
+  })} 
+ 
+  /> 
+     <Stack.Screen name='SubCategoryChild'  component={SubCategoryChild} options={({route})=>({
+        title:route.params.name
+  })} 
+ 
+  />
+      <Stack.Screen name='Search'  component={Search} options={({route})=>({
+        headerShown:false
+  })} 
+ 
+  /> 
+      <Stack.Screen name='AllProject'  component={AllProjects} options={({route})=>({
+        headerShown:false,
+    title:route.params.name
+  })} 
+ 
+  /> 
+      <Stack.Screen name='FilterScrenn'  component={FilterScreen} options={({route})=>({
+      
+    title:route.params.name
   })} 
  
   /> 

@@ -2,7 +2,7 @@ import { View, Text } from 'react-native'
 import{ React,useEffect,useState} from 'react'
 import MapView ,{ Marker }from 'react-native-maps';
 import * as Location from 'expo-location'
-export default function Map() {
+export default function Map({map,maplo}) {
   const [location, setlocation] = useState()
 
     useEffect(() => {
@@ -27,7 +27,7 @@ export default function Map() {
     <View style={{flex:1,top:3,padding:8}}>   
     <MapView
   initialRegion={{
-    latitude: 40.908912269486486,
+    latitude:40.908912269486486,
     longitude:29.180268198251724,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,

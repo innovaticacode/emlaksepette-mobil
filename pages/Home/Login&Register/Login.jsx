@@ -1,308 +1,465 @@
-import { View, Text, SafeAreaView, StyleSheet, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity ,Dimensions,} from 'react-native'
-import { React, useState } from 'react'
-import BackIcon from "react-native-vector-icons/AntDesign"
-import EyeIcon from "react-native-vector-icons/Ionicons"
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
+  TouchableOpacity,
+  Dimensions,
+  Image,
+} from "react-native";
+import { React, useState } from "react";
+import BackIcon from "react-native-vector-icons/AntDesign";
+import EyeIcon from "react-native-vector-icons/Ionicons";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import IconSocialMedia from "react-native-vector-icons/AntDesign";
+import Icon from "react-native-vector-icons/Entypo";
+import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
+ import { CheckBox } from "react-native-elements";
+import Modal from "react-native-modal";
+export default function Login({ navigation }) {
+  const [eye, seteye] = useState("eye-off-sharp");
+  const [Show, setShow] = useState(false);
+  const show = () => {
+    setShow(!Show);
+  };
+  const [checked, setChecked] = useState(false);
+  const toggleCheckbox = () => setChecked(!checked);
 
-import IconSocialMedia from "react-native-vector-icons/AntDesign"
+  {
+    /* ınput states*/
+  }
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailControl, setemailControl] = useState(false);
+  const [passControl, setpassControl] = useState(false);
+  const [showMailSendAlert, setshowMailSendAlert] = useState(false);
+  {
+    /* ınput states*/
+  }
 
-export default function Login({navigation}) {
-    const [eye, seteye] = useState('eye-off-outline')
-    const [Show, setShow] = useState(false)
-    const show=()=>{
-        setShow(!Show)
+  {
+    /* ınput control*/
+  }
+
+  const handleTextInputChange = (text) => {
+    setEmail(text);
+  };
+
+  const Submit = () => {
+    if (!(email.trim() !== "" && email.includes("@"))) {
+      setemailControl(true);
+      setTimeout(() => {
+        setemailControl(false);
+      }, 2000);
+    } else if (password.length < 1) {
+      setpassControl(true);
+      setTimeout(() => {
+        setpassControl(false);
+      }, 2000);
+    } else {
+      setshowMailSendAlert(true);
+      setTimeout(() => {
+        setshowMailSendAlert(false);
+      }, 9000);
+      setEmail("");
+      setPassword("");
     }
+  };
+
+  const [showLengthAlert, setShowLengthAlert] = useState(false);
+  const [showUpperAlert, setShowUpperAlert] = useState(false);
+  const [showSymbolAlert, setShowSymbolAlert] = useState(false);
+  const [showNumberAlert, setShowNumberAlert] = useState(false);
+  const [textfull, settextfull] = useState(false);
+
+  const [submitDisabled, setsubmitDisabled] = useState(false);
+  const handlePasswordChange = (text) => {
+    setPassword(text);
+    // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
+
+    if (text.length < 6) {
+      setShowLengthAlert(true);
+    } else {
+      setShowLengthAlert(false);
+    }
+
+    //rakam kontrölü
+    const numberRegex = /[0-9]/;
+    if (!numberRegex.test(text)) {
+      setShowNumberAlert(true);
+    } else {
+      setShowNumberAlert(false);
+    }
+    //Büyük harf kontrolü
+    const upperCaseRegex = /[A-Z]/;
+    if (!upperCaseRegex.test(text)) {
+      setShowUpperAlert(true);
+    } else {
+      setShowUpperAlert(false);
+    }
+    // Sembole kontrolü
+    const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    if (!symbolRegex.test(text)) {
+      setShowSymbolAlert(true);
+    } else {
+      setShowSymbolAlert(false);
+    }
+  };
+
+  {
+    /* ınput control*/
+  }
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-
-      <SafeAreaView style={{backgroundColor:'white'}}>
-      
-        <View style={styles.container}>
-
-          <View style={styles.Form}>
-
-            <View style={styles.header}>
-              <Text style={{
-                fontSize: 30,
-                color: '#274ABA',
-                fontWeight: '500',
-                letterSpacing: 1
-              }}>Hoşgeldiniz</Text>
-              <Text style={{
-                color: 'grey'
-              }}>Hayalinizdeki evi bizimle bulun</Text>
-            </View>
-
-            <View style={styles.formControl}>
+      <View style={styles.container}>
+        <View style={styles.header}></View>
+        <View style={styles.logIn}>
+          <KeyboardAwareScrollView>
+            <View style={styles.form}>
               <View>
-                <Text style={styles.label}>E-Posta</Text>
-                <TextInput style={styles.ınput} />
+                <Text
+                  style={{ color: "#17243e", fontSize: 20, fontWeight: "bold" }}
+                >
+                  Giriş Yap
+                </Text>
               </View>
-               
-              <View>
-              <Text style={styles.labelPass}>Şifre</Text>
-              <View style={{display:'flex',flexDirection:'row',}}>
-                <TextInput style={styles.ınput} secureTextEntry={!Show} />
+
+              <View style={{ gap: 10 }}>
+                <View style={{ paddingLeft: 10 }}>
+                  <Text
+                    style={{ fontSize: 15, color: "grey", fontWeight: 600 }}
+                  >
+                    E-Mail
+                  </Text>
+                </View>
+
+                <TextInput
+                  style={styles.Input}
+                  placeholder="example@gmail.com"
+                  value={email}
+                  onChangeText={handleTextInputChange}
+                />
+                <Text
+                  style={{
+                    color: "red",
+                    fontWeight: "500",
+                    fontSize: 12,
+                    display: emailControl ? "flex" : "none",
+                  }}
+                >
+                  Lütfen Geçerli Bir E-Posta Adresi Giriniz!
+                </Text>
+              </View>
+              <View style={{ gap: 10 }}>
+                <View style={{ paddingLeft: 10 }}>
+                  <Text
+                    style={{ fontSize: 15, color: "grey", fontWeight: 600 }}
+                  >
+                    Şifre
+                  </Text>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    style={{ position: "absolute", right: 10, top: 7,zIndex:1 }}
+                    onPress={show}
+                  >
+                    <EyeIcon
+                      name={Show ? "eye" : "eye-off-sharp"}
+                      size={20}
+                      color={"#333"}
+                    />
+                  </TouchableOpacity>
+                  <TextInput
+                    style={styles.Input}
+                    placeholder="Şifrenizi Girin"
+                    secureTextEntry={Show ? false : true}
+                    value={password}
+                    onChangeText={handlePasswordChange}
+                  />
+
+                  {passControl && (
+                    <Text
+                      style={{ color: "red", fontWeight: "500", fontSize: 12 }}
+                    >
+                      Lütfen Şifrenizi girin!
+                    </Text>
+                  )}
+                  {showLengthAlert && (
+                    <Text style={{ color: "red" }}>
+                      Şifreniz en az 6 karakter olmalıdır!
+                    </Text>
+                  )}
+                  {showNumberAlert && (
+                    <Text style={{ color: "red" }}>
+                      Şifrenizde en az bir rakam olmalıdır.
+                    </Text>
+                  )}
+                  {showUpperAlert && (
+                    <Text style={{ color: "red" }}>
+                      Şifrenizde en az bir büyük harf olmalıdır!
+                    </Text>
+                  )}
+                  {showSymbolAlert && (
+                    <Text style={{ color: "red" }}>
+                      Şifrenizde en az bir sembol olmalıdır!
+                    </Text>
+                  )}
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: 15,
+                  }}
+                >
+                  <View>
+                    <CheckBox
+                      checked={checked}
+                      onPress={toggleCheckbox}
+                      // Use ThemeProvider to make change for all checkbox
+                      iconType="material-community"
+                      checkedIcon="checkbox-marked"
+                      uncheckedIcon="checkbox-blank-outline"
+                      checkedColor="#EA2C2E"
+                      title={"Beni Hatırla"}
+                      textStyle={{ fontSize: 13, fontWeight: 400 }}
+                      size={22}
+                      containerStyle={{
+                        padding: 0,
+                        backgroundColor: "transparent",
+                        borderWidth: 0,
+                      }}
+                    />
+                  </View>
+                  <TouchableOpacity style={{}}>
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        letterSpacing: 0.5,
+                        color: "#5D96F1",
+                        textDecorationLine: "underline",
+                      }}
+                    >
+                      Şifremi Unuttum?
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={{
+                  opacity:
+                    showLengthAlert == true ||
+                    showNumberAlert == true ||
+                    showSymbolAlert == true ||
+                    showUpperAlert == true ||
+                    textfull == true ||
+                    submitDisabled == true
+                      ? 0.3
+                      : 1,
+                  backgroundColor: "#EA2C2E",
+                  padding: 8,
+                  borderRadius: 10,
+                }}
+                onPress={Submit}
+                disabled={
+                  showLengthAlert == true ||
+                  showNumberAlert == true ||
+                  showSymbolAlert == true ||
+                  showUpperAlert == true
+                    ? true
+                    : false
+                }
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: "white",
+                    fontWeight: "600",
+                  }}
+                >
+                  Giriş Yap
+                </Text>
+              </TouchableOpacity>
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                  alignItems: "center",
+                  gap: 5,
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "#E7EBEE",
+                    height: 1,
+                    padding: 1,
+                    width: "40%",
+                  }}
+                />
+                <Text>OR</Text>
+                <View
+                  style={{
+                    backgroundColor: "#E7EBEE",
+                    height: 1,
+                    padding: 1,
+                    width: "40%",
+                  }}
+                />
+              </View>
+
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-around" }}
+              >
                 <TouchableOpacity
-                onPress={show}
-                style={{alignItems:'center',justifyContent:'center',width:30,position:'absolute',right:10,bottom:10}}>
-                  <EyeIcon name={Show? 'eye-outline':'eye-off-outline'}size={30}/>
+                  style={{
+                    backgroundColor: "#EEF4FE",
+                    padding: 10,
+                    width: "45%",
+                    height: 50,
+                    borderRadius: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                >
+                  <Image
+                    source={require("../../../assets/gogle.png")}
+                    style={{ width: "25%", height: "100%" }}
+                    resizeMode="contain"
+                  />
+                  <Text style={{ fontWeight: "bold", color: "#333" }}>
+                    Google
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#EEF4FE",
+                    padding: 8,
+                    width: "45%",
+                    height: 50,
+                    borderRadius: 10,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                >
+                  <Icon
+                    name="facebook-with-circle"
+                    size={35}
+                    color={"#1A77F3"}
+                  />
+                  <Text style={{ fontWeight: "bold", color: "#333" }}>
+                    Facebook
+                  </Text>
                 </TouchableOpacity>
               </View>
-              </View>
             </View>
-            <View style={styles.butons}>
-              <View style={styles.forgotPassAndOtherLogin}>
-                <View style={{ width: '50%', alignItems: 'flex-start' }}>
-                  <TouchableOpacity>
-                    <Text style={styles.text}>Kurumsal Giriş</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={{ width: '50%', alignItems: 'flex-end' }}>
-                  <TouchableOpacity>
-                    <Text style={styles.text}>Şifremi Unuttum</Text>
-                  </TouchableOpacity>
-                </View>
+            <View>
+              <Text style={{ textAlign: "center" }}>
+                <Text style={{ fontSize: 13, color: "#333" }}>
+                  Henüz Üye Değilmisiniz?{" "}
+                </Text>
 
-                <View style={styles.forgotpass}></View>
-              </View>
-              <View style={{ width: '100%', height: 45, }}>
-                <TouchableOpacity style={styles.btnLogin}>
-                  <Text style={{
-                    color: 'white',
-                    fontSize: 20,
-                    fontWeight: '500',
-                    letterSpacing: 1
-                  }}>Giriş Yap</Text>
-                </TouchableOpacity>
-              </View>
-                  
-             
-                  
+                <Text
+                  style={{ fontWeight: "bold", color: "#1A77F3" }}
+                  onPress={() => {
+                    navigation.navigate("Register");
+                  }}
+                >
+                  Üye Ol
+                </Text>
+              </Text>
             </View>
-
-            <View style={styles.otherSections}>
-            <View style={{width:'100%',display:'flex',flexDirection:'row',justifyContent:'center',bottom:8}}>
-              <View style={styles.hr}/>
-              <View><Text style={{top:10,margin:10,opacity:0.5}}>OR</Text></View>  
-              <View style={styles.hr}/>
-              </View>
-
-              <View style={{display:'flex',flexDirection:'column',height:100,gap:6,}}>
-                    <TouchableOpacity style={{
-                     flex:1,
-                     borderColor:'grey',
-                     borderRadius:6,
-                     backgroundColor:'transparent',
-                     borderWidth:1,
-                    padding:5,
-                    display:'flex',
-                    flexDirection:'row'
-                    }}>
-                      <View style={styles.IconContainer}>
-                      <IconSocialMedia name='google' size={30} color={'black'}/>
-                      </View>
-                      <View style={{alignItems:'center',justifyContent:'center',width:'60%',left:40}}>
-                      <Text style={{
-                        fontSize:18,
-                        fontWeight:'600'
-                      }}>Google ile giriş yap</Text>
-                      </View>
-                      
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={{
-                     flex:1,
-                     backgroundColor:'transparent',
-                     borderWidth:1,
-                     borderColor:'grey',
-                     borderRadius:6,
-                     
-                     padding:5,
-                     display:'flex',
-                     flexDirection:'row'
-                    }}>
-                      <View style={styles.IconContainer2}>
-                      <IconSocialMedia name='facebook-square' size={30} color={'black'}/>
-                      </View>
-                      <View style={{justifyContent:'center',width:'60%',left:40}}>
-                      <Text style={{
-                        fontSize:18,
-                        fontWeight:'600'
-                      }}>Facebook ile giriş yap</Text>
-                        </View>
-                     
-                    </TouchableOpacity>
-                  
-          </View>
-            </View>
-            <View style={{alignItems:'center'}}>
-                <Text style={{
-                    fontSize:15,
-                    margin:5,
-                    color:'grey',
-                    fontWeight:500
-                }}>Henüz bir hesabınız yokmu?
-                 <Text onPress={()=>navigation.navigate('Register')} style={{
-                  color:'blue',
-                  textDecorationLine:'underline',
-                 }}> Kayıt Ol</Text>
-
-                 </Text>
-              </View> 
-          </View>
+          </KeyboardAwareScrollView>
         </View>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
-  )
-}
-const { width, height } = Dimensions.get('window');
-const styles = StyleSheet.create({
-  
-  container: {
-    width: '100%',
-    height: '100%',
-    bottom:25,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  Form: {
-    width: '90%',
-    height: '90%',
+        <Modal isVisible={showMailSendAlert} style={styles.modal}>
+          <View style={styles.modalContent}>
+            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#333",
+                  padding: 5,
+                  borderRadius: 20,
+                }}
+                onPress={() => setshowMailSendAlert(false)}
+              >
+                <IconSocialMedia name="close" size={20} color={"white"} />
+              </TouchableOpacity>
+            </View>
 
+            <View style={{ gap: 10 }}>
+              <View style={{ alignItems: "center" }}>
+                <MailCheck name="email-check" size={55} color={"green"} />
+              </View>
+              <View>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontSize: 14,
+                    color: "#333",
+                    letterSpacing: 0.5,
+                  }}
+                >
+                  Hesabınız oluşturuldu. Hesabınızı etkinleştirmek için lütfen
+                  e-posta adresinize gönderilen doğrulama bağlantısını
+                  tıklayarak e-postanızı onaylayın.
+                </Text>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    </TouchableWithoutFeedback>
+  );
+}
+const { width, height } = Dimensions.get("window");
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
   },
   header: {
-    width: '100%',
-    height: '10%',
-
+    flex: 0.2,
+    justifyContent: "center",
+    paddingLeft: 35,
+    paddingRight: 35,
   },
-  formControl: {
-    width: '100%',
-    height: width>400?'25%':'30%',
-    display:'flex',
-    flexDirection:'column',
-    justifyContent:'space-around',
-    
-    
+  logIn: {
+    backgroundColor: "#FFFFFF",
+    flex: 1.8,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
-  butons: {
-    width: '100%',
-    height: '19%',
-    
+  form: {
+    padding: 40,
+    gap: 20,
   },
-  ınput: {
-    backgroundColor: '#FAFAFA',
-  
-    width:'100%',
-    padding: 12,
-    fontSize: 20,
-    borderRadius: 6,
+  Input: {
+    padding: 10,
     borderWidth: 1,
-    borderColor: '#EEEEEE'
+    borderColor: "#ebebeb",
+    borderRadius: 10,
+    fontSize: 14,
   },
-  label: {
-    fontSize: 16,
-    margin: 5,
-    fontWeight: '600'
+  modal: {
+    justifyContent: "center",
+    margin: 0,
+    padding: 30,
   },
-  forgotPassAndOtherLogin: {
-    width: '100%',
-    height: 40,
-
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 7
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    height: 300,
+    borderRadius: 20,
   },
-  text: {
-    fontSize: 13,
-    fontWeight: '500',
-  
-    color: 'grey'
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
   },
-  btnLogin: {
-    flex: 1,
-    backgroundColor: '#264ABB',
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-   backgroundColor:'#264ABB'
-  },
-labelPass:{
-  
-  fontSize: 16,
- 
-  margin:5,
-  fontWeight: '600'
-},
-hr:{
-  width:'40%',
-    height:1,
-    backgroundColor:'grey',
-    opacity:0.5,
-    top:30,
-   
-},
-otherSections:{
-  width:'100%',
-  height:150,
-    bottom: width>400? 60:30,
-   
-    
-  
-  display:'flex',
-  flexDirection:'column',
- 
- justifyContent:'center'
- 
-},
-IconContainer: {
-  padding: 2,
- 
- 
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: width<400? '16%':'15%',
-  height:'100%',
-
-  
-
- 
-  borderColor: '#e6e6e6',
-  ...Platform.select({
-    ios: {
-      shadowColor: ' #e6e6e6',
-      shadowOffset: { width: 1, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 5,
-    },
-    android: {
-      elevation: 5,
-    },
-  }),
-
-
-},
-IconContainer2: {
-  
- 
- 
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: width<400? '16%':'15%',
-  height:'100%',
-  ...Platform.select({
-    ios: {
-      shadowColor: ' #e6e6e6',
-      shadowOffset: { width: 1, height: 1 },
-      shadowOpacity: 0.1,
-      shadowRadius: 5,
-    },
-    android: {
-      elevation: 5,
-    },
-  }),
-
-
-},
-
-})
+});

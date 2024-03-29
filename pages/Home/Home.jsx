@@ -10,6 +10,9 @@ import Test from "./Test";
 import Basket from "./Basket";
 import { useNavigation } from "@react-navigation/native";
 
+import ShoppingProfile from "./ShoppingProfile";
+import Login from "./Login&Register/Login";
+
 const Tab = createBottomTabNavigator();
 
 
@@ -36,9 +39,10 @@ const Home = () => {
       }}
     >
       <Tab.Screen
-        name="Vitrin"
+        name="HomePage"
         component={HomePage}
         options={{
+          title:'Ana Sayfa',
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
@@ -49,26 +53,27 @@ const Home = () => {
           ),
         }}
       />
-
-      <Tab.Screen
-        name="Arama"
-        component={Search}
+ <Tab.Screen
+        name="Favoriler"
+        component={Test}
         options={{
-          headerShown: false,
+          headerShown:false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name="search-outline"
+              name="heart-outline"
               color={focused ? "black" : "grey"}
               size={20}
             />
           ),
         }}
       />
+     
 
       <Tab.Screen
-        name="İlan Ver"
+        name="ShareAdvert"
         component={ShareScreen}
         options={{
+          headerShown:false,
           tabBarLabel: "İlan Ver",
           tabBarIcon: ({ color, focused }) => (
             <View style={styles.ilanVerIconContainer}>
@@ -83,24 +88,12 @@ const Home = () => {
         }}
       />
 
-      <Tab.Screen
-        name="Favoriler"
-        component={Test}
-        options={{
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name="heart-outline"
-              color={focused ? "black" : "grey"}
-              size={20}
-            />
-          ),
-        }}
-      />
+     
   <Tab.Screen
   
   name="Sepetim"
   options={({ route }) => ({
-    
+    headerShown:false,
     tabBarIcon: ({ color, focused }) => (
       <Feather
         name="shopping-cart"
@@ -118,6 +111,21 @@ const Home = () => {
 >
   {(props) => <Basket {...props}/>} 
 </Tab.Screen>
+<Tab.Screen
+        name="Hesabım"
+        component={ShoppingProfile}
+        options={{
+          headerShown:false,
+          tabBarIcon: ({ color, focused }) => (
+
+            <Feather
+              name="user"
+              color={focused ? "black" : "grey"}
+              size={23}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };

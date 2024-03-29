@@ -1,80 +1,49 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-export default function Categories({category,ıconDisplay,displayIcon}) {
+import UserIcon from 'react-native-vector-icons/FontAwesome5'
+export default function Categories({category,ıconDisplay,showImage,bordernone, ıconName}) {
   return (
-    <TouchableOpacity>
-      <View style={styles.category}>
-      <View style={styles.IconContainer}>
+   
+      <View style={[styles.category,{
+        borderBottomWidth: bordernone ? 0:1
+      }]}>
     
-                  <View
-                    style={[styles.ıcons ,{display:displayIcon==='none'?'none':'flex'}]}
-                  >
-                    <Icon name='home' size={18} color={'white'} />
-                  </View>
-                
+      <View style={{flex:1.7/2,flexDirection:'row',alignItems:'center',gap:5}}>
+      {/* <Icon name={ıconName}size={25} color={ bordernone? 'white':'#bebebe'} style={{display:ıconDisplay==='none'? 'none':'flex',}}/> */}
+      <UserIcon name={ıconName}size={23} color={ bordernone? 'white':'#bebebe'} style={{display:ıconDisplay==='none'? 'none':'flex',}}/>
+      {
+        showImage?
+        <>
+        <View style={{width:40,height:40,position:'absolute',zIndex:1,bottom:-7,left:-5}}>
+        <Image source={require('../pages/Home/emlakkulüplogo.png')} style={{tintColor:'white',width:'100%',height:'100%'}} resizeMode='cover'/>
+        </View>
+       
+        </>
+       :''
+      }
+      <Text style={{fontSize:19,color: bordernone? 'white' :'#333',fontWeight:'500'}}>{category}</Text>
       </View>
-      <View style={[styles.CategoryItem,{borderBottomWidth:ıconDisplay==='none'? 0:1}]}>
-      <Text>{category}</Text>
-      </View>
-      <View style={[styles.IconContainer2,{borderBottomWidth:ıconDisplay==='none'? 0:1}]}>
-        <Icon name='arrow-forward-ios'size={16} color={'#bebebe'} style={{display:ıconDisplay==='none'? 'none':'flex', left:7}}/>
+      <View style={{flex:0.3/2,alignItems:'center',justifyContent:'center'}}>
+      <Icon name='arrow-forward-ios'size={18} color={ bordernone? 'white':'#bebebe'} style={{display:ıconDisplay==='none'? 'none':'flex',}}/>
       </View>
       </View>
  
-    </TouchableOpacity>
+   
   )
 }
 const styles=StyleSheet.create({
   category:{
-     
-      margin:2,
-     
+ 
+      margin:5,
+     padding:8,
       display:'flex',
       flexDirection:'row',
+    borderBottomWidth:1,
+    borderBottomColor:'#ebebeb'
      
   },
-  IconContainer:{
-   padding:5,
-    
-    width:'11%'
-  },
-  CategoryItem:{
-    width:'75%',
-   
-    justifyContent:'center',
-    borderBottomWidth:1, 
-    borderBottomColor:'#e5e5e5',
-    left:15
-  },
-  IconContainer2:{
-    padding:11,
-     
-     width:'10%',
-     borderBottomWidth:1, 
-     borderBottomColor:'#e5e5e5',
-     alignItems:'center',
-     justifyContent:'center'
-   },
-   ıcons:{
-    width: 40,
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-    backgroundColor: 'green',  
-    borderColor:'#e6e6e6',
-    ...Platform.select({
-        ios: {
-          shadowColor: ' #e6e6e6',
-          shadowOffset: { width: 1, height: 1 },
-          shadowOpacity: 0.1,
-          shadowRadius: 5,
-        },
-        android: {
-          elevation: 5,
-        },
-      }),
-  
-   }
+
+
+ 
 })

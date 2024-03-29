@@ -150,8 +150,8 @@ const [isShowSheet, setisShowSheet] = useState(false)
                 
               {
                 isSelected?
-              Types.map((item)=>(     
-          <UserTypes rol={item.Role} key={item.id} onPress={() => handleButtonPress(item.Role)} />  
+              Types.map((item,index)=>(     
+          <UserTypes rol={item.Role} key={index} onPress={() => handleButtonPress(item.Role)} />  
           )):
           
           

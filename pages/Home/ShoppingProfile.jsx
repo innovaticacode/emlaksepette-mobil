@@ -51,12 +51,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
     <View style={{ flex: 1 }} >
       <View style={style.container} onTouchStart={() => closeSheet()}>
         <View style={style.header}>
-          <View style={{ position: 'absolute', zIndex: 2, top: '20%', left: 15, backgroundColor: '#FFFFFF3b', paddingLeft: 5, paddingRight: 5, padding: 1, borderRadius: 4 }}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-              <BackIcon name='arrow-back-ios' size={23} color={'white'} style={{ left: 5 }} />
-            </TouchableOpacity>
-
-          </View>
+       
           <View style={style.opacity}></View>
 
           <ImageBackground source={require('./profilePhoto.jpg')} style={{ width: '100%', height: '100%', }} imageStyle={{ borderBottomLeftRadius: 30, borderBottomRightRadius: 30 }} />
@@ -90,7 +85,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
         </View>
         <View style={style.body}>
           <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={style.ScrollSetting}>
+          {/*   <View style={style.ScrollSetting}>
 
               <View style={style.Settings}>
                 <View>
@@ -108,11 +103,11 @@ export default function ShoppingProfile({ İsLoggedIn }) {
                 </View>
                 <View>
                   <Text style={style.headerText}>Mağazam Emlak Sepette</Text>
-                  <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Alınan Teklifler'})}>
-                    <ProfileSettingsItem text='Alınan Teklifler' IconFeather='users' IconType={true} />
+                  <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Gelen Başvurular',color:true})}>
+                    <ProfileSettingsItem text='Gelen Başvurular' IconFeather='users' IconType={true} />
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Verilen Teklifler'})}>
-                    <ProfileSettingsItem text='Verilen Teklifler' IconFeather='users'IconType={true} />
+                  <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Başvurularım',color:false})}>
+                    <ProfileSettingsItem text='Başvurularım' IconFeather='users'IconType={true} />
                   </TouchableOpacity>
 
                   <TouchableOpacity onPress={() => navigation.navigate('DashBord')}>
@@ -201,7 +196,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
                   <Text style={{ textAlign: 'center', color: 'white', fontSize: 15 }}>Çıkış Yap</Text>
                 </View>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </ScrollView>
         </View>
       </View>
@@ -479,6 +474,6 @@ const style = StyleSheet.create({
     paddingRight: 20,
   },
   ScrollSetting:{
-    height:width>400?1670:1410
+
   }
 })
