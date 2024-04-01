@@ -43,7 +43,8 @@ export default function OtherHomeInProject({
             {data.project.have_blocks
               ? data.project.blocks.map((block, blockIndex) => {
                   return (
-                    <TouchableOpacity key={blockIndex}
+                    <TouchableOpacity
+                      key={blockIndex}
                       onPress={() => {
                         setTabs(blockIndex);
                         getBlockItems(blockIndex);
