@@ -10,7 +10,7 @@ import {
   Button,
   Platform,
   Linking,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 
 import { React, useEffect, useRef, useState } from "react";
@@ -58,7 +58,7 @@ export default function Details({ navigation }) {
     project: {
       room_count: 0,
       roomInfo: [],
-      images : []
+      images: [],
     },
     projectHousingsList: [],
   });
@@ -73,10 +73,8 @@ export default function Details({ navigation }) {
   const {
     otherParam,
 
-
     slug,
     ProjectId,
-  
   } = route.params;
 
   const translateY = useRef(new Animated.Value(400)).current;
@@ -255,10 +253,10 @@ export default function Details({ navigation }) {
   const changeTab = (tabs) => {
     setTabs(tabs);
   };
-  const [pagination, setpagination] = useState(0)
-// console.log(data?.project?.user?.housings?.housing_type_data)
-// const parsed=JSON.parse(data.project.user.housings['housing_type_data'])["price"] 
-// console.log(parsed)
+  const [pagination, setpagination] = useState(0);
+  // console.log(data?.project?.user?.housings?.housing_type_data)
+  // const parsed=JSON.parse(data.project.user.housings['housing_type_data'])["price"]
+  // console.log(parsed)
 
   return (
     <SafeAreaView style={styles.container}>
@@ -370,12 +368,17 @@ export default function Details({ navigation }) {
           <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
             <View style={{ height: 35, width: 35 }}>
               <ImageBackground
-                 source={{ uri:`${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`}}
+                source={{
+                  uri: `${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`,
+                }}
                 style={{ width: "100%", height: "100%" }}
                 borderRadius={20}
               />
             </View>
-            <Text style={{ color: "white" }}>  {data?.project?.user?.name ? `${data?.project?.user?.name} ` : ''}</Text>
+            <Text style={{ color: "white" }}>
+              {" "}
+              {data?.project?.user?.name ? `${data?.project?.user?.name} ` : ""}
+            </Text>
             <View
               style={{
                 width: 18,
@@ -425,7 +428,9 @@ export default function Details({ navigation }) {
                 borderRadius: 10,
               }}
             >
-              <Text style={{ color: "white", fontSize: 12 }}>{pagination+1} / {data.project.images.length}</Text>
+              <Text style={{ color: "white", fontSize: 12 }}>
+                {pagination + 1} / {data.project.images.length}
+              </Text>
             </View>
           </View>
 
@@ -464,23 +469,27 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
           </View>
-          <PagerView style={{ height: 250 }} >
-            {
-              data.project.images.map((image,index) => {
-                console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
-                return(
-                  <View key={index+1}>
-                    <ImageBackground
-                      source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
-                      style={{ width: "100%", height: "100%" }}
-                      borderBottomLeftRadius={20}
-                      borderBottomRightRadius={20}
-                    />
-                  </View>
-                )
-              })
-            }
-            
+          <PagerView style={{ height: 250 }}>
+            {data.project.images.map((image, index) => {
+              console.log(
+                `${apiUrl}${image.image.replace("public", "storage")}`
+              );
+              return (
+                <View key={index + 1}>
+                  <ImageBackground
+                    source={{
+                      uri: `${apiUrl}${image.image.replace(
+                        "public",
+                        "storage"
+                      )}`,
+                    }}
+                    style={{ width: "100%", height: "100%" }}
+                    borderBottomLeftRadius={20}
+                    borderBottomRightRadius={20}
+                  />
+                </View>
+              );
+            })}
           </PagerView>
         </View>
         <View style={{ paddingTop: 8, gap: 10 }}>
@@ -492,10 +501,12 @@ export default function Details({ navigation }) {
               fontWeight: "400",
             }}
           >
-           {data?.project?.city?.title ? `${data.project.city.title} / ${data.project.county.ilce_title}` : ''}
+            {data?.project?.city?.title
+              ? `${data.project.city.title} / ${data.project.county.ilce_title}`
+              : ""}
           </Text>
           <Text style={{ textAlign: "center", fontSize: 16, color: "#264ABB" }}>
-          {data?.project?.project_title}
+            {data?.project?.project_title}
           </Text>
         </View>
         <View>
@@ -550,8 +561,8 @@ export default function Details({ navigation }) {
               </TouchableOpacity>
               <View style={{ backgroundColor: "#EEEEEE", padding: 10 }}>
                 <Text style={{ fontWeight: "bold", fontSize: 12 }}>
-                {data?.project?.project_title} projesinde {paymentModalShowOrder} No'lu ilan
-                  Ödeme Planı
+                  {data?.project?.project_title} projesinde{" "}
+                  {paymentModalShowOrder} No'lu ilan Ödeme Planı
                 </Text>
               </View>
               <View>
@@ -702,10 +713,14 @@ export default function Details({ navigation }) {
             <Text style={styles.modalText2}>Kaydet</Text>
           </View>
         </Modal>
-        
-      <View style={{padding:10}}>
-                    <ActivityIndicator size="large" color="grey" style={{display:isLoading? 'none':'flex'}} / >
-      </View>
+
+        <View style={{ padding: 10 }}>
+          <ActivityIndicator
+            size="large"
+            color="grey"
+            style={{ display: isLoading ? "none" : "flex" }}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -771,7 +786,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  
+
     // modal dışı koyu arkaplan
   },
   modalView: {
@@ -793,7 +808,6 @@ const styles = StyleSheet.create({
   modal2: {
     justifyContent: "flex-end",
     margin: 0,
-   
   },
   modalContent2: {
     backgroundColor: "white",
