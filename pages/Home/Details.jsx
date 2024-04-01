@@ -58,9 +58,10 @@ export default function Details({ navigation }) {
     project: {
       room_count: 0,
       roomInfo: [],
-      images : []
+      images : [],
+   
     },
-    projectHousingsList: [],
+    projectHousingsList: {},
   });
   const changeHeart = () => {
     setHeart(heart === "hearto" ? "heart" : "hearto");
@@ -256,9 +257,9 @@ export default function Details({ navigation }) {
     setTabs(tabs);
   };
   const [pagination, setpagination] = useState(0)
-// console.log(data?.project?.user?.housings?.housing_type_data)
-// const parsed=JSON.parse(data.project.user.housings['housing_type_data'])["price"] 
-// console.log(parsed)
+  const handlePageChange = (pageNumber) => {
+    setpagination(pageNumber);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -464,7 +465,9 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
           </View>
-          <PagerView style={{ height: 250 }} >
+          <PagerView style={{ height: 250 }}
+            onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
+          >
             {
               data.project.images.map((image,index) => {
                 console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
@@ -519,7 +522,7 @@ export default function Details({ navigation }) {
         <View style={{ paddingLeft: 10, paddingRight: 10 }}>
           {tabs == 1 && <Caption data={data} />}
         </View>
-        {tabs == 2 && <Information />}
+        {tabs == 2 && <Information settings={data} />}
         <View style={{}}>{tabs === 3 && <Map />}</View>
 
         {tabs == 4 && <FloorPlan />}
