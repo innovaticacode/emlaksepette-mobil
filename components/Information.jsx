@@ -3,85 +3,85 @@ import React from "react";
 import SettingsItem from "./SettingsItem";
 import { useRoute } from "@react-navigation/native";
 import ShoppinInfo from "./ShoppinInfo";
-import CheckIcon from 'react-native-vector-icons/AntDesign';
+import CheckIcon from "react-native-vector-icons/AntDesign";
 import { CheckBox } from "react-native-elements";
 import CheckSetting from "./CheckSetting";
 export default function Information({ settings }) {
   const route = useRoute();
   const { itemId, otherParam, konum } = route.params;
-  console.log(settings.projectHousingsList[1]['price[]'])
+  console.log(settings.projectHousingsList[1]["price[]"]);
 
   function veriParseEt(veri) {
     try {
-        // Veriyi JSON olarak parse et
-        var jsonVeri = JSON.parse(veri);
-        return true;
+      // Veriyi JSON olarak parse et
+      var jsonVeri = JSON.parse(veri);
+      return true;
     } catch (hata) {
-        // Eğer veri JSON formatında değilse, hata alırız
-        return false;
-        // Burada başka bir işlem yapabiliriz, örneğin orijinal veriyi geri döndürebiliriz
-        // veya hiçbir işlem yapmayabiliriz.
+      // Eğer veri JSON formatında değilse, hata alırız
+      return false;
+      // Burada başka bir işlem yapabiliriz, örneğin orijinal veriyi geri döndürebiliriz
+      // veya hiçbir işlem yapmayabiliriz.
     }
-}
+  }
 
   return (
     <View style={{ paddingLeft: 10, paddingRight: 10 }}>
-
-   
       <View style={[styles.card, styles.shadowProp]}>
-        {
-          settings.projectHousingSetting.map((setting) => {
-            if(!setting.is_array){
-              if(settings.projectHousingsList[1][setting.column_name+'[]']){
-                return(
-                  <Text>
-                    <SettingsItem info={setting.label} numbers={settings.projectHousingsList[1][setting.column_name+'[]']} />
-                  </Text>
-                )
-              }
-              
-            }else{
-              
+        {settings.projectHousingSetting.map((setting) => {
+          if (!setting.is_array) {
+            if (settings.projectHousingsList[1][setting.column_name + "[]"]) {
+              return (
+                <Text>
+                  <SettingsItem
+                    info={setting.label}
+                    numbers={
+                      settings.projectHousingsList[1][
+                        setting.column_name + "[]"
+                      ]
+                    }
+                  />
+                </Text>
+              );
             }
-             
-          })
-        }
-           <View>
-        {
-          settings.projectHousingSetting.map((setting) => {
-            if(setting.is_array){
-              if(settings.projectHousingsList[1][setting.column_name+'[]']){
-                if(veriParseEt(settings.projectHousingsList[1][setting.column_name+'[]'])){
-                  var arrayData = JSON.parse(settings.projectHousingsList[1][setting.column_name+'[]']);
+          } else {
+          }
+        })}
+        <View>
+          {settings.projectHousingSetting.map((setting) => {
+            if (setting.is_array) {
+              if (settings.projectHousingsList[1][setting.column_name + "[]"]) {
+                if (
+                  veriParseEt(
+                    settings.projectHousingsList[1][setting.column_name + "[]"]
+                  )
+                ) {
+                  var arrayData = JSON.parse(
+                    settings.projectHousingsList[1][setting.column_name + "[]"]
+                  );
 
-                  if(arrayData.length > 0){
-                    return(
+                  if (arrayData.length > 0) {
+                    return (
                       
-                      <View key={setting.id}>
-                        <Text>{setting.label}</Text>
-                        {
-                          arrayData.map((arrayD) => {
-                            return(
+                      <View style={{ display: "flex", flexDirection: "row" }}>
+                        <View key={setting.id} style={{}}>
+                          <Text>{setting.label}</Text>
+                          {arrayData.map((arrayD) => {
+                            return (
+                              <View style={{display:'flex'}}>
                                 <CheckSetting text={arrayD} />
-                             
-                            )
-                          })
-                        }
+                              </View>
+                            ) 
+                          })}
+                        </View>
                       </View>
-                      
-                    )
+                    );
                   }
                 }
-                
               }
-              
-            }else{
-              
+            } else {
             }
-             
-          })
-        }
-      </View>
+          })}
+        </View>
       </View>
     </View>
   );
