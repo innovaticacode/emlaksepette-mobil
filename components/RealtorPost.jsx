@@ -31,7 +31,9 @@ export default function Posts({title,loading,price,image,location,m2,roomCount,f
             
            
             <View style={{ width: '35%' }}>
-        
+         <View style={{backgroundColor:'#E54242',padding:2,width:'90%'}}>
+          <Text style={{fontSize:9,color:'white',}}>42342343243</Text>
+         </View>
         <Image source={{uri:image}}
           style={{ width: '90%', height: '90%', }} />
       </View>
