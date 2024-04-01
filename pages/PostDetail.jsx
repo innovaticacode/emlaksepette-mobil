@@ -27,7 +27,15 @@ import PostFloorPlan from "../components/PostDetailsSettings/PostFloorPlan";
 import PostMap from "../components/PostDetailsSettings/Postmap";
 import PostPayment from "../components/PostDetailsSettings/PostPayment";
 import PostCaption from "../components/PostDetailsSettings/PostCaption";
-
+import Header from "../components/Header";
+import Modal from "react-native-modal";
+import Categories from "../components/Categories";
+import Search from "./Home/Search";
+import LinkIcon from "react-native-vector-icons/Entypo";
+import Arrow from "react-native-vector-icons/MaterialIcons";
+import SliderMenuDetails from "../components/SliderMenuDetails";
+import OtherHomeInProject from "../components/OtherHomeInProject";
+import SliderMenuPostDetails from "../components/PostDetailsSettings/SliderMenuPostDetails";
 
 
 
@@ -35,6 +43,8 @@ export default function PostDetail() {
     const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
+  const [ColectionSheet, setColectionSheet] = useState(false);
+  const [IsOpenSheet, setIsOpenSheet] = useState(false);
   const changeHeart = () => {
     setHeart(heart === 'hearto' ? 'heart' : 'hearto');
    
@@ -51,334 +61,333 @@ export default function PostDetail() {
     Linking.openURL('tel:+905537064474');
   };
   
+  const changeTab = (tabs) => {
+    setTabs(tabs);
+  };
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
+  const ToggleSheet = () => {
+    setIsOpenSheet(!IsOpenSheet);
+  };
+  const ToggleColSheet = () => {
+    setColectionSheet(!ColectionSheet);
+  };
+  
+  
   return (
     
-    <SafeAreaView>
-    
-      
-      <View style={{
-    position:'absolute',
-    zIndex:1,
-    width:'100%',
-    height: windowWidth>400?'7%':'8.5%',
-
-    bottom:windowWidth>400? 30:10,
-    display:'flex',
-    flexDirection:'row',
-  
-    gap:10,
-    paddingLeft:20,
-    paddingRight:10
+    <SafeAreaView style={{backgroundColor:'white',flex:1}}>
  
- }}>
-    <TouchableOpacity
-    onPress={handleOpenPhone} 
-    style={{
-   flex:1.3/2,
-      backgroundColor:'#284ABB',
-      height:'80%',
-      justifyContent:'center',
-      
-      
-    }}>
-      <Text style={styles.btnText}>Ara</Text>
-    </TouchableOpacity>
-    <TouchableOpacity 
-   onPress={()=>navigation.navigate('Sepetim')}
-    style={{
-      flex:1.3/2,
-      backgroundColor:'#284ABB',
-      height:'80%',
-      display:'flex',
-      flexDirection:'row',
-      justifyContent:'space-between'
-    }}>
-       
-        <View style={{flex:1,justifyContent:'center'}}><Text style={[styles.btnText ,{textAlign:'center'}]}>Sepete Ekle</Text></View>
-      
-      
-    </TouchableOpacity>
-    <TouchableOpacity style={{
-      width:'14%',
-      backgroundColor:'#E54242',
-      borderRadius:50,
-      justifyContent:'center',
-      bottom:2,
-      height:'90%'
-      
-    }}>
-      <Text style={styles.btnText}>M</Text>
-    </TouchableOpacity>
-    
- </View>
-        
-    <ScrollView style={{ backgroundColor:'white' }} indicatorStyle="white">
-      <View style={{ flex: 1, height:tabs===3 ?1000: 1190 && tabs===1?1500: 1190 && tabs===2 ?1100: 1190 && tabs===5 ?1550: 1190  }}>
-      <View
-          style={{
-            width: 50,
-            height: 150,
-            backgroundColor: "transparent",
-            position: "absolute",
-            right: 20,
-            top: 43,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-around",
-            gap: 20,
-            zIndex:1
-          }}
-        >
-          <TouchableOpacity>
-            <View
-              style={{
-                backgroundColor: "#FFFFFFAD",
-                justifyContent: "center",
-                width: 40,
-                height: 40,
-                alignItems: "center",
-                borderRadius: 20,
-              }}
-            >
-              <Icon name="sharealt" size={20} />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={changeHeart}>
-            <View
-              style={{
-                backgroundColor: "#FFFFFFAD",
-                width: 40,
-                height: 40,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 20,
-              }}
-            >
-              <Heart name={heart} size={20} color={heart=='hearto'?'black':'red'} />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={changeBookmark}>
-            <View
-              style={{
-                backgroundColor: "#FFFFFFAD",
-                width: 40,
-                height: 40,
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 20,
-              }}
-            >
-              <Bookmark name={bookmark} size={20} color={bookmark=='bookmark-o'?'black':'red'} />
-            </View>
-          </TouchableOpacity>
-        </View>
-        <PagerView style={styles.viewPager} >
-      
-          <View style={styles.page} key="1">
-           <DetailsPicture/>
-          </View>
-          <View style={styles.page} key="2">
-            <DetailsPicture />
-          </View>
-          <View style={styles.page} key="3">
-            <DetailsPicture />
-          </View>
-          <View style={styles.page} key="4">
-            <DetailsPicture />
-          </View>
-        </PagerView>
-        <View
-          style={{
-            width: "100%",
-            height: 500,
-
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            top: 5,
-          }}
-        >
-           <View style={{
-              width:'100%',
-              display:'flex',
-              top:5,
-              bottom:3
-            }}
-              >
-
-            <View style={{width:'100%', alignItems:'center'}}>
-              <Text style={styles.text}>{location}</Text>
-            </View>
-          
-           
-            </View> 
-          <View
-            style={{ width: '100%', height: 80,top:20 ,}}
-          >
-           
-            <View style={{ }}>
-              <View style={{ width: '100%',paddingLeft:10,paddingRight:6 }}>
-                <Text style={{ fontSize: 17, textAlign:'center',color:'#264ABB', }}>
-                 {caption}
-                </Text>
-                <Text style={{
-                    fontSize:18,
-                    color:'#264ABB',
-                    fontWeight:'bold',
-                    top:10,
-                    textAlign:'center'
-                }}>{price}</Text>
-              </View>
-            </View>
-          
-            {/* <View
-              style={{
-                backgroundColor: "grey",
-                width: "100%",
-                height: 0.4,
-                bottom: 5,
-              }}
-            ></View> */}
-
-            {/* <View style={{
-              width:'100%',
-              display:'flex',
-              flexDirection:'row',
-              justifyContent:'space-between',
-              bottom:7
-            }}
-              >
-
-            <View style={{width:'55%',paddingLeft:10,}}>
-              <Text style={styles.text}>{location}</Text>
-            </View>
-            <View style={{width:'40%',paddingRight:10, alignItems:'flex-end'}}>
-              <Text style={styles.text} >İlan No:0000000</Text>
-            </View>
-           
-            </View> */}
-    
-          
-          </View>
-         
+    <Header onPress={toggleDrawer} />
+      <Modal
+        isVisible={isDrawerOpen}
+        onBackdropPress={() => setIsDrawerOpen(false)}
+        animationIn="bounceInLeft"
+        animationOut="bounceOutLeft"
+        style={styles.modal}
+      >
+        <View style={styles.modalContent}>
           <View
             style={{
-              width: "100%",
-              height: 80,
-
-              justifyContent: 'center',
-              top: 20,
-             
-
-              display: "flex",
-              flexDirection: "row",
-              gap: 5
+              backgroundColor: "#EA2C2E",
+              flex: 0.7 / 2,
+              borderBottomLeftRadius: 30,
+              borderBottomRightRadius: 30,
             }}
           >
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{marginLeft:-20,marginRight:-14,top:10}}>
-              <View style={{width:800,display:'flex',flexDirection:'row',gap:5,justifyContent:'center'}}>
-         
-            <TouchableOpacity
-              onPress={() => setTabs(0)}
+            <SafeAreaView style={{ zIndex: 1 }}>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("HomePage");
+                    setIsDrawerOpen(false);
+                  }}
+                >
+                  <Categories
+                    category="Ana Sayfa"
+                    bordernone="none"
+                    ıconName="home"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("Hesabım");
+                    setIsDrawerOpen(false);
+                  }}
+                >
+                  <Categories
+                    category="Hesabım"
+                    bordernone="none"
+                    ıconName="user"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("RealtorClubExplore");
+                    setIsDrawerOpen(false);
+                  }}
+                >
+                  <Categories
+                    category="Emlak Kulüp"
+                    bordernone="none"
+                    showImage={true}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Categories
+                    category="İlan Ver"
+                    bordernone="none"
+                    ıconName="plus"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Categories
+                    category="Sat Kirala"
+                    bordernone="none"
+                    ıconName="search-plus"
+                  />
+                </TouchableOpacity>
+              </ScrollView>
+            </SafeAreaView>
+            <ImageBackground
+              source={require("../pages/Home/MenuBg.jpg")}
               style={{
-                width: '15%',
-                backgroundColor: tabs === 0 ? "#ea2a28" : "#EFEFEF",
-                alignItems: "center",
-                justifyContent: 'center',
-                height: 40
+                width: "100%",
+                height: "100%",
+                position: "absolute",
+                opacity: 0.2,
               }}
-            >
-              <Text  style={{ color: tabs === 0 ? "white" : "black" }}>Özellikler</Text>
-            </TouchableOpacity>
-
-            
-
-            <TouchableOpacity
-              onPress={() => setTabs(1)}
-              style={{
-                width: '15%',
-                backgroundColor: tabs === 1 ? "#ea2a28" : "#EFEFEF",
-                alignItems: "center",
-                justifyContent: 'center',
-                height: 40
-              }}
-            >
-              <Text  style={{ color: tabs === 1 ? "white" : "black" }}>Açıklama</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setTabs(2)}
-              style={{
-                width: '15%',
-                backgroundColor: tabs === 2 ? "#ea2a28" : "#EFEFEF",
-                alignItems: "center",
-                justifyContent: 'center',
-                height: 40
-
-              }}
-            >
-              <Text style={{ color: tabs === 2? "white" : "black" }}>Ödeme Planı</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setTabs(3)}
-              style={{
-                width: '15%',
-                backgroundColor: tabs === 3 ? "#ea2a28" : "#EFEFEF",
-                alignItems: "center",
-                justifyContent: 'center',
-                height: 40
-
-              }}
-            >
-              <Text style={{ color: tabs === 3 ? "white" : "black" }}>Harita</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setTabs(4)}
-              style={{
-                width: '16%',
-                backgroundColor: tabs === 4 ? "#ea2a28" : "#EFEFEF",
-                alignItems: "center",
-                justifyContent: 'center',
-                height: 40
-
-              }}
-            >
-              <Text style={{ color: tabs === 4? "white" : "black" }}>Vaziyet & Kat Planı</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setTabs(5)}
-              style={{
-                width: '15%',
-                backgroundColor: tabs === 5 ? "#ea2a28" : "#EFEFEF",
-                alignItems: "center",
-                justifyContent: 'center',
-                height: 40
-
-              }}
-            >
-              <Text style={{ color: tabs === 5? "white" : "black" }}>Yorumlar</Text>
-            </TouchableOpacity>
-        
-            </View>
-            </ScrollView>
+              resizeMode="cover"
+              borderBottomLeftRadius={30}
+              borderBottomRightRadius={30}
+            />
           </View>
-       
-          <View style={{ width: '100%', height:tabs===4 ?700:740}}>
-            {tabs === 0 && <DetailsSettings/>}
-            {tabs === 1 && <PostCaption/>}
-            {tabs === 2 && <PostPayment/>}
-            {tabs === 3 && <PostMap/>}
-            {tabs === 4 && <PostFloorPlan/>}
-            {tabs === 5 && <PostComment/>}
-           
+          <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
+            <Search onpres={toggleDrawer} />
           </View>
-        
-         
         </View>
-      
-      </View>
+      </Modal>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          backgroundColor: 'blue'
+        }}
+      >
+        <TouchableOpacity
+          style={{
+            paddingLeft: 15,
+            padding: 10,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
+            <View style={{ height: 35, width: 35 }}>
+              <ImageBackground
+                // source={{
+                //   uri: `${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`,
+                // }}
+                style={{ width: "100%", height: "100%" }}
+                borderRadius={20}
+              />
+            </View>
+            <Text style={{ color: "white" }}>
+           Maliyetine ev
+            </Text>
+            <View
+              style={{
+                width: 18,
+                height: 18,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <LinkIcon
+                name="check"
+                style={{ position: "absolute", zIndex: 1 }}
+                color={"#333"}
+              />
+              <ImageBackground
+                source={require('../pages/Home/BadgeYellow.png')}
+                style={{ width: "100%", height: "100%" }}
+              />
+            </View>
+          </View>
 
-    </ScrollView>
+          <Arrow name="arrow-forward-ios" size={16} color={"white"} />
+        </TouchableOpacity>
+      </View>
+      <ScrollView
+        scrollEventThrottle={16}
+        // onScroll={({ nativeEvent }) => {
+        //   if (isCloseToBottom(nativeEvent)) {
+        //     clearTimeout(debounceTimeout);
+        //     debounceTimeout = setTimeout(() => {
+        //       if (!isLoading) {
+        //         fetchHousings(page + 1);
+        //         setPage(page + 1);
+        //       }
+        //     }, 1000); // 500ms içinde yeni bir istek yapılmazsa gerçekleştir
+        //   }
+        // }}
+      >
+        <View style={{ height: 250 }}>
+          <View style={styles.pagination}>
+            <View
+              style={{
+                backgroundColor: "#333",
+                padding: 5,
+                paddingLeft: 8,
+                paddingRight: 8,
+                borderRadius: 10,
+              }}
+            >
+              <Text style={{ color: "white", fontSize: 12 }}>
+              1/10
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.ıconContainer}>
+            <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
+              <View style={styles.ıcon}>
+                <Icon name="sharealt" size={18} />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                changeHeart();
+              }}
+            >
+              <View style={styles.ıcon}>
+                <Heart
+                  name={heart}
+                  size={18}
+                  color={heart == "hearto" ? "black" : "red"}
+                />
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                changeBookmark();
+                setColectionSheet(true);
+              }}
+            >
+              <View style={styles.ıcon}>
+                <Bookmark
+                  name={bookmark}
+                  size={18}
+                  color={bookmark == "bookmark-o" ? "black" : "red"}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <PagerView style={{ height: 250 }}
+            onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
+          >
+            {/* {
+              data.project.images.map((image,index) => {
+              
+                return(
+                  <View key={index+1}>
+                     <ImageBackground
+                      source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
+                      style={{ width: "100%", height: "100%" }}
+                      borderBottomLeftRadius={20}
+                      borderBottomRightRadius={20}
+                    /> 
+                  </View>
+                )
+              })
+            } */}
+            
+          </PagerView>
+        </View>
+        <View style={{ paddingTop: 8, gap: 10 }}>
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 12,
+              color: "#333",
+              fontWeight: "400",
+            }}
+          >
+            {/* {data?.project?.city?.title
+              ? `${data.project.city.title} / ${data.project.county.ilce_title}`
+              : ""} */}
+          </Text>
+          <Text style={{ textAlign: "center", fontSize: 16, color: "#264ABB" }}>
+            deneme
+            {/* {data?.project?.project_title} */}
+          </Text>
+        </View>
+        <View>
+        
+          <SliderMenuPostDetails
+            tab={tabs}
+            setTab={setTabs}
+            changeTab={changeTab}
+          />
+        </View>
+     
+
+
+       
+        {/* {tabs == 0 && (
+          <OtherHomeInProject
+            // itemCount={itemCount}
+            // data={data}
+            // getLastItemCount={getLastItemCount}
+            // setSelectedTab={setSelectedTab}
+            // selectedTab={selectedTab}
+            // openmodal={openModal}
+            // getBlockItems={getBlockItems}
+          />
+        )}
+        <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+          {tabs == 1 && <Caption  />}
+        </View>
+        {tabs == 2 && <Information  />}
+        <View style={{}}>{tabs === 3 && <Map  />}</View>
+
+        {tabs == 4 && <FloorPlan />} */}
+
+        <Modal
+          isVisible={IsOpenSheet}
+          onBackdropPress={ToggleSheet}
+          swipeDirection={["down"]}
+          backdropColor="transparent"
+          style={styles.modal2}
+        >
+          <View style={styles.modalContent2}>
+            <Text style={styles.modalText2}>Paylaş</Text>
+          </View>
+        </Modal>
+        <Modal
+          isVisible={ColectionSheet}
+          onBackdropPress={ToggleColSheet}
+          swipeDirection={["down"]}
+          backdropColor="transparent"
+          style={styles.modal2}
+        >
+          <View style={styles.modalContent2}>
+            <Text style={styles.modalText2}>Kaydet</Text>
+          </View>
+        </Modal>
+
+        <View style={{ padding: 10 }}>
+       
+        </View>
+      </ScrollView>
+
+
+
   
     </SafeAreaView>
   )
@@ -435,6 +444,85 @@ const styles = StyleSheet.create({
       borderRadius: 30,
       bottom:2
     },
+    modal: {
+      margin: 0,
+    },
+    modalContent: {
+      backgroundColor: "white",
+  
+      flex: 1,
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      width: 320,
+    },
+      ıconContainer: {
+    width: 50,
+    height: 150,
+    backgroundColor: "transparent",
+    position: "absolute",
+    right: 7,
+    top: 43,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-around",
+    gap: 20,
+    zIndex: 1,
+  },
+  ıcon: {
+    backgroundColor: "#FFFFFFAD",
+    width: 35,
+    height: 35,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+  },
+  centeredView: {
+    padding: 10,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+
+    // modal dışı koyu arkaplan
+  },
+  modalView: {
+    width: "100%",
+
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 25,
+    gap: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modal2: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContent2: {
+    backgroundColor: "white",
+    padding: 20,
+    height: "30%",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  pagination: {
+    position: "absolute",
+    zIndex: 1,
+    padding: 3,
+    paddingLeft: 8,
+    paddingRight: 8,
+    borderRadius: 10,
+    bottom: 0,
+    alignItems: "center",
+
+    width: "100%",
+  }
 
   
   });

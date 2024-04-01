@@ -111,6 +111,7 @@ export default function App({route}) {
     <Stack.Screen name="PostDetails"  component={PostDetail}
   
     options={({route})=>({
+      headerShown:false,
       headerBackTitle:'.',
         title:route.params.name
         

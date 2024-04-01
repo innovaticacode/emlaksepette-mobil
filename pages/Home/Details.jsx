@@ -59,7 +59,7 @@ export default function Details({ navigation }) {
       room_count: 0,
       roomInfo: [],
       images : [],
-   
+      location : "0,0"
     },
     projectHousingsList: {},
   });
@@ -72,8 +72,6 @@ export default function Details({ navigation }) {
   const route = useRoute();
   let debounceTimeout;
   const {
-    otherParam,
-
     slug,
     ProjectId,
   } = route.params;
@@ -530,7 +528,7 @@ export default function Details({ navigation }) {
           {tabs == 1 && <Caption data={data} />}
         </View>
         {tabs == 2 && <Information settings={data} />}
-        <View style={{}}>{tabs === 3 && <Map />}</View>
+        <View style={{}}>{tabs === 3 && <Map mapData={data} />}</View>
 
         {tabs == 4 && <FloorPlan />}
 
@@ -717,7 +715,7 @@ export default function Details({ navigation }) {
           <ActivityIndicator
             size="large"
             color="grey"
-            style={{ display: isLoading ? "none" : "flex" }}
+            style={{ display: isLoading ? "flex" : "none" }}
           />
         </View>
       </ScrollView>
