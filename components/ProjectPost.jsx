@@ -11,18 +11,13 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 export default function ProjectPost({
   project,
-  caption,
+
   ımage,
   location,
   city,
-  mahalle,
-  acıklama,
-  ShoppingName,
-  ShoppingMail,
-  ShopingInfo,
-  Phone,
+
   ProfilImage,
-  slug,
+
   ProjectNo,
   loading,
 }) {
@@ -42,20 +37,9 @@ export default function ProjectPost({
       style={{ marginTop: 10 }}
       onPress={() =>
         navigation.navigate("Details", {
-          name: caption,
-          otherParam: caption,
-          konum: location,
-          ımage: ımage,
-          sehir: city,
-          mahalle: mahalle,
-          acıklama: acıklama,
-          ShoppingName: ShoppingName,
-          ShoppingMail: ShoppingMail,
-          ShopingInfo: ShopingInfo,
-          Phone: Phone,
-          slug: slug,
+        
           ProjectId: ProjectNo,
-        ShopingImage:ProfilImage
+      
         })
       }
     >
