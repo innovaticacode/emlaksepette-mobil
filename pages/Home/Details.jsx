@@ -10,6 +10,7 @@ import {
   Button,
   Platform,
   Linking,
+  ActivityIndicator
 } from "react-native";
 
 import { React, useEffect, useRef, useState } from "react";
@@ -18,19 +19,14 @@ import Caption from "../../components/Caption";
 import Settings from "../../components/Settings";
 import PagerView from "react-native-pager-view";
 import Map from "../../components/Map";
-import Icon2 from "react-native-vector-icons/Feather";
-import DetailsPicture from "../../components/DetailsPicture";
-import ShoppinInfo from "../../components/ShoppinInfo";
+
 import * as Clipboard from "expo-clipboard";
 
 import OtherHomeInProject from "../../components/OtherHomeInProject";
-import PaymentDetail from "../../components/PaymentDetail";
-import Alert from "../../components/Alert";
+
 import FloorPlan from "../../components/FloorPlan";
 import Information from "../../components/Information";
-import LinkIcon3 from "react-native-vector-icons/Feather";
-import LinkIcon4 from "react-native-vector-icons/Fontisto";
-import LinkIcon2 from "react-native-vector-icons/FontAwesome";
+
 import LinkIcon from "react-native-vector-icons/Entypo";
 import { useRoute } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
@@ -57,10 +53,12 @@ export default function Details({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
+  const apiUrl = "https://emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
       roomInfo: [],
+      images : []
     },
     projectHousingsList: [],
   });
@@ -74,10 +72,7 @@ export default function Details({ navigation }) {
   let debounceTimeout;
   const {
     otherParam,
-    konum,
-    ımage,
-    sehir,
-    acıklama,
+
 
     slug,
     ProjectId,
@@ -260,7 +255,11 @@ export default function Details({ navigation }) {
   const changeTab = (tabs) => {
     setTabs(tabs);
   };
-  console.log(data.project.description)
+  const [pagination, setpagination] = useState(0)
+// console.log(data?.project?.user?.housings?.housing_type_data)
+// const parsed=JSON.parse(data.project.user.housings['housing_type_data'])["price"] 
+// console.log(parsed)
+
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -426,7 +425,7 @@ export default function Details({ navigation }) {
                 borderRadius: 10,
               }}
             >
-              <Text style={{ color: "white", fontSize: 12 }}>1/10</Text>
+              <Text style={{ color: "white", fontSize: 12 }}>{pagination+1} / {data.project.images.length}</Text>
             </View>
           </View>
 
@@ -465,23 +464,23 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
           </View>
-          <PagerView style={{ height: 250 }}>
-            <View key="1">
-              <ImageBackground
-                // source={{ uri: ımage }}
-                style={{ width: "100%", height: "100%" }}
-                borderBottomLeftRadius={20}
-                borderBottomRightRadius={20}
-              />
-            </View>
-            <View key="2">
-              <ImageBackground
-                source={require("./home.jpg")}
-                style={{ width: "100%", height: "100%" }}
-                borderBottomLeftRadius={20}
-                borderBottomRightRadius={20}
-              />
-            </View>
+          <PagerView style={{ height: 250 }} >
+            {
+              data.project.images.map((image,index) => {
+                console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
+                return(
+                  <View key={index+1}>
+                    <ImageBackground
+                      source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
+                      style={{ width: "100%", height: "100%" }}
+                      borderBottomLeftRadius={20}
+                      borderBottomRightRadius={20}
+                    />
+                  </View>
+                )
+              })
+            }
+            
           </PagerView>
         </View>
         <View style={{ paddingTop: 8, gap: 10 }}>
@@ -551,7 +550,7 @@ export default function Details({ navigation }) {
               </TouchableOpacity>
               <View style={{ backgroundColor: "#EEEEEE", padding: 10 }}>
                 <Text style={{ fontWeight: "bold", fontSize: 12 }}>
-                  {otherParam} projesinde {paymentModalShowOrder} No'lu ilan
+                {data?.project?.project_title} projesinde {paymentModalShowOrder} No'lu ilan
                   Ödeme Planı
                 </Text>
               </View>
@@ -703,6 +702,10 @@ export default function Details({ navigation }) {
             <Text style={styles.modalText2}>Kaydet</Text>
           </View>
         </Modal>
+        
+      <View style={{padding:10}}>
+                    <ActivityIndicator size="large" color="grey" style={{display:isLoading? 'none':'flex'}} / >
+      </View>
       </ScrollView>
     </SafeAreaView>
   );
