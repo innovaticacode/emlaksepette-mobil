@@ -27,12 +27,13 @@ export default function Information({ settings }) {
   return (
     <View style={{ paddingLeft: 10, paddingRight: 10 }}>
       <View style={[styles.card, styles.shadowProp]}>
-        {settings.projectHousingSetting.map((setting) => {
+        {settings.projectHousingSetting.map((setting,index) => {
           if (!setting.is_array) {
             if (settings.projectHousingsList[1][setting.column_name + "[]"]) {
               return (
-                <Text>
+              
                   <SettingsItem
+                  key={index}
                     info={setting.label}
                     numbers={
                       settings.projectHousingsList[1][
@@ -40,7 +41,7 @@ export default function Information({ settings }) {
                       ]
                     }
                   />
-                </Text>
+             
               );
             }
           } else {

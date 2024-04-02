@@ -20,19 +20,19 @@ export default function PaymentItem({header,price,dFlex,date,align,top,border}) 
         
       }}>
             <View>
+              <Text style={{
+                  fontSize:12,
+                  fontWeight:'700',
+                  
+              }}>{header}</Text>
+            </View>
+            <View>
                 <Text style={{
-                    fontSize:12,
-                    fontWeight:'700',
-                    
-                }}>{header}</Text>
-                </View>
-                <View>
-                <Text style={{
-                    fontSize:11,
+                    fontSize:14,
                     top:top=='7'?7.8:0
-                }}> {price} </Text>
+                }}>{price} ₺ </Text>
                 <Text>{date}</Text>
-                </View>
+            </View>
       </View>
     </View>
   )
