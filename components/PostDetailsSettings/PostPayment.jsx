@@ -35,6 +35,20 @@ export default function PostPayment({data,roomOrder}) {
     <PaymentItem header='Peşin Fiyat:' price={addDotEveryThreeDigits(data.projectHousingsList[roomOrder]['price[]'])} align='center' top='7'/>
         <PaymentItem header={`${data.projectHousingsList[roomOrder]['installments[]']} Ay takstitli fiyat: `} price={addDotEveryThreeDigits(data.projectHousingsList[roomOrder]['installments-price[]'])} align='center' top='7'/>
         <PaymentItem header='Peşinat:' price={addDotEveryThreeDigits(data.projectHousingsList[roomOrder]['advance[]'])} align='center' top='7'/>
+        {/* {data.projectHousingsList[roomOrder]} */}
+        <PaymentItem header='Aylık Ödenecek Miktar: ' price={   addDotEveryThreeDigits(
+                          (
+                            (data.projectHousingsList[roomOrder][
+                              "installments-price[]"
+                            ] -
+                              data.projectHousingsList[roomOrder][
+                                "advance[]"
+                              ]) /
+                            data.projectHousingsList[roomOrder][
+                              "installments[]"
+                            ]
+                          ).toFixed(0)
+                        )}/>
         {
          paymentItems
         }

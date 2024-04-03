@@ -21,9 +21,9 @@ export default function Posts({title,loading,price,image,location,m2,roomCount,f
      style: 'currency',
      currency: 'TRY',
    });
-  formattedPrice=formattedPriceZero.replace(/,00$/,'')
+ const formattedPrice=formattedPriceZero.replace(/,00$/,'')
   return (
-    <TouchableOpacity >
+    <TouchableOpacity  onPress={()=>navigation.navigate('Realtor details')}>
       <View style={styles.container}>
         
         <View style={styles.İlan}>

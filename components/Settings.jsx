@@ -6,7 +6,7 @@ import ShoppinInfo from './ShoppinInfo'
 
 export default function Settings() {
   const route = useRoute();
-  const { itemId, otherParam ,konum} = route.params;
+
   return (
     <View style={{padding:8}}>
     <View style={[styles.card, styles.shadowProp]}>
@@ -26,9 +26,7 @@ export default function Settings() {
         <SettingsItem info='Kullanım Durumu' numbers='Boş' border='0'/>
          
     </View>
-    <View style={styles.Info}>
-        <ShoppinInfo/>
-        </View>
+  
        
     </View>
   )
