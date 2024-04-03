@@ -61,16 +61,15 @@ export default function Information({ settings }) {
 
                   if (arrayData.length > 0) {
                     return (
-                      
                       <View style={{ display: "flex", flexDirection: "row" }}>
                         <View key={setting.id} style={{}}>
                           <Text>{setting.label}</Text>
                           {arrayData.map((arrayD) => {
                             return (
-                              <View style={{display:'flex'}}>
+                              <View style={{ display: "flex" }}>
                                 <CheckSetting text={arrayD} />
                               </View>
-                            ) 
+                            );
                           })}
                         </View>
                       </View>
