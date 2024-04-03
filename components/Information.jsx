@@ -62,19 +62,17 @@ export default function Information({ settings }) {
 
                   if (arrayData.length > 0) {
                     return (
-                      
-                      <View style={{margin:10}} key={index}>
+                      <View style={{ display: "flex", flexDirection: "row" }}>
+                        <View key={setting.id} style={{}}>
                           <Text>{setting.label}</Text>
                         <View key={setting.id} style={{marginTop:10,display:'flex',flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}}>
                         
                           {arrayData.map((arrayD,index2)=> {
                             return (
-                              <View style={{width:'50%',marginTop:10,display:'flex',}}key={index2}>
-                                <View>
-                                  <CheckSetting text={arrayD} />
-                                </View>
+                              <View style={{ display: "flex" }}>
+                                <CheckSetting text={arrayD} />
                               </View>
-                            ) 
+                            );
                           })}
                         </View>
                       </View>
