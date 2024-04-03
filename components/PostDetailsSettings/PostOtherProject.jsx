@@ -7,84 +7,50 @@ import {
   ScrollView,
 } from "react-native";
 import { React, useEffect, useState } from "react";
-import Ablok from "./Bloks/Ablok";
-import Bblok from "./Bloks/Bblok";
-import ShoppinInfo from "./ShoppinInfo";
-import Posts from "./Posts";
-import { apiRequestGet } from "./methods/apiRequest";
+
+
+
+
+import Posts from "../Posts";
+import { apiRequestGet } from "../methods/apiRequest";
 export default function OtherHomeInProject({
   selectedTab,
   getBlockItems,
   setSelectedTab,
   itemCount,
   openmodal,
-  OpenFormModal,
   data,
   getLastItemCount,
+  openFormModal,
+ 
+
+  
 }) {
   const [tabs, setTabs] = useState(0);
   const [rooms, setRooms] = useState([]);
   const Home = [];
+
   console.log(getLastItemCount, "last");
   return (
     <SafeAreaView>
       <View style={{ paddingLeft: 10, paddingRight: 10 }}>
         <View style={styles.container}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              flexGrow: 1,
-              backgroundColor: "#ebebeb",
-              padding: 3,
-              gap: 10,
-            }}
-            bounces={false}
-          >
-            {data.project.have_blocks
-              ? data.project.blocks.map((block, blockIndex) => {
-                  return (
-                    <TouchableOpacity
-                      key={blockIndex}
-                      onPress={() => {
-                        setTabs(blockIndex);
-                        getBlockItems(blockIndex);
-                        setSelectedTab(blockIndex);
-                      }}
-                      style={[
-                        styles.blockBtn,
-                        {
-                          borderBottomWidth: tabs == blockIndex ? 1 : 0,
-                        },
-                      ]}
-                    >
-                      <Text
-                        style={{
-                          fontWeight: tabs == blockIndex ? "700" : "normal",
-                          color: "#333",
-                        }}
-                      >
-                        {block.block_name}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })
-              : ""}
-          </ScrollView>
+      
 
           <View>
             {Array.from({
               length:
                 data.project.room_count > 10
                   ? itemCount
-                  : data.project.room_count
+                  : data.project.room_count,
             }).map((index, _index) => {
               return (
+            
                 <Posts
                   key={_index}
                   data={data}
-                  openFormModal={OpenFormModal}
                   openmodal={openmodal}
+                  openFormModal={openFormModal}
                   roomOrder={
                     data.project.have_blocks
                       ? getLastItemCount() + _index + 1

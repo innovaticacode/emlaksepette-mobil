@@ -1,11 +1,12 @@
 import { View, Text,ScrollView,TouchableOpacity,StyleSheet } from 'react-native'
 import React from 'react'
 
-export default function SliderMenuDetails({tab,setTab,changeTab}) {
+export default function SliderMenuPostDetails({tab,setTab,changeTab}) {
     const menuItems=[
-        {text:'Projedeki Konutlar'},
+        {text:'Projedeki Diğer Konutlar'},
         {text:'Açıklama'},
         {text:'Özellikler'},
+        {text:'Ödeme Planı'},
         {text:'Harita'},
         {text:'Vaziyet & Kat Planı'}
     ]

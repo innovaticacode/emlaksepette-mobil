@@ -11,6 +11,7 @@ import {
   Platform,
   Linking,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
 
 import { React, useEffect, useRef, useState } from "react";
@@ -40,6 +41,7 @@ import Search from "./Search";
 import SliderMenuDetails from "../../components/SliderMenuDetails";
 import { apiRequestGet } from "../../components/methods/apiRequest";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [IsOpenSheet, setIsOpenSheet] = useState(false);
@@ -53,13 +55,14 @@ export default function Details({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
+  const [FormVisible, setFormVisible] = useState(false)
   const apiUrl = "https://emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
       roomInfo: [],
       images : [],
-   
+      location : "0,0"
     },
     projectHousingsList: {},
   });
@@ -72,8 +75,6 @@ export default function Details({ navigation }) {
   const route = useRoute();
   let debounceTimeout;
   const {
-    otherParam,
-
     slug,
     ProjectId,
   } = route.params;
@@ -83,6 +84,10 @@ export default function Details({ navigation }) {
     setPaymentModalShowOrder(roomOrder);
     setModalVisible(!modalVisible);
   };
+  const OpenFormModal=(no)=>{
+    setPaymentModalShowOrder(no)
+    setFormVisible(!FormVisible)
+  }
 
   useEffect(() => {
     apiRequestGet("project/" + ProjectId).then((res) => {
@@ -258,7 +263,7 @@ export default function Details({ navigation }) {
   const handlePageChange = (pageNumber) => {
     setpagination(pageNumber);
   };
-
+  
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -475,7 +480,7 @@ export default function Details({ navigation }) {
           >
             {
               data.project.images.map((image,index) => {
-                console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
+                // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
                 return(
                   <View key={index+1}>
                     <ImageBackground
@@ -524,13 +529,14 @@ export default function Details({ navigation }) {
             selectedTab={selectedTab}
             openmodal={openModal}
             getBlockItems={getBlockItems}
+            OpenFormModal={OpenFormModal}
           />
         )}
         <View style={{ paddingLeft: 10, paddingRight: 10 }}>
           {tabs == 1 && <Caption data={data} />}
         </View>
         {tabs == 2 && <Information settings={data} />}
-        <View style={{}}>{tabs === 3 && <Map />}</View>
+        <View style={{}}>{tabs === 3 && <Map mapData={data} />}</View>
 
         {tabs == 4 && <FloorPlan />}
 
@@ -712,12 +718,73 @@ export default function Details({ navigation }) {
             <Text style={styles.modalText2}>Kaydet</Text>
           </View>
         </Modal>
+        <Modal
+          animationType="slide" 
+          transparent={true}
+          onBackdropPress={()=>setFormVisible(false)}
+          visible={FormVisible}
+          onRequestClose={() => {
+            setFormVisible(false);
+          }}
+        >
+          <View style={[styles.centeredView,{padding:0}]}>
+            <View style={[styles.modalView,{height:'90%'}]}>
+            <Text style={{ fontWeight: "bold", fontSize: 12,textAlign:'center' }}>
+                  {data?.project?.project_title}{" "}projesinde {" "}
+                  {paymentModalShowOrder} No'lu Konut Başvuru Formu
+                </Text>
+                <KeyboardAwareScrollView showsVerticalScrollIndicator={false}> 
+            <View style={{gap:15}}>
+         
+              <View style={{gap:7}}>
+                <Text style={styles.label}>Ad Soyad</Text>
+                <TextInput style={styles.Input}/>
+              </View>
+              <View style={{gap:7}}>
+                <Text style={styles.label}>Telefon Numarası</Text>
+                <TextInput style={styles.Input}/>
+              </View>
+              <View style={{gap:7}}>
+                <Text style={styles.label}>E-Posta</Text>
+                <TextInput style={styles.Input}/>
+              </View>
+              <View style={{gap:7}}>
+                <Text style={styles.label}>Meslek</Text>
+                <TextInput style={styles.Input}/>
+              </View>
+              <View style={{gap:7}}>
+                <Text style={styles.label}>İl</Text>
+                <TextInput style={styles.Input}/>
+              </View>
+              <View style={{gap:7}}>
+                <Text style={styles.label}>İlçe</Text>
+                <TextInput style={styles.Input}/>
+              </View>
+           
+        
+            </View>
+            </KeyboardAwareScrollView>
+            <View style={{flexDirection:'row',justifyContent:'space-around'}}>
+              <TouchableOpacity style={{backgroundColor:'#28A745',width:'40%',padding:15,borderRadius:10}}>
+                <Text style={{color:'white',textAlign:'center'}}>Gönder</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{backgroundColor:'#DC3545',width:'40%',padding:15,borderRadius:10}}
+                onPress={()=>{
+                  setFormVisible(false)
+                }}
+              >
+                <Text style={{color:'white',textAlign:'center'}}>Kapat</Text>
+              </TouchableOpacity>
+            </View>
+            </View>
+          </View>
+        </Modal>
 
         <View style={{ padding: 10 }}>
           <ActivityIndicator
             size="large"
             color="grey"
-            style={{ display: isLoading ? "none" : "flex" }}
+            style={{ display: isLoading ? "flex" : "none" }}
           />
         </View>
       </ScrollView>
@@ -815,4 +882,14 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
+  Input:{
+    borderWidth:1,
+    padding:10,
+    borderRadius:6,
+    borderColor:'#ebebeb'
+  },
+  label:{
+    color:'grey',
+    fontWeight:'500'
+  }
 });

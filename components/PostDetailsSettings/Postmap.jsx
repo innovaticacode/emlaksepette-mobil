@@ -1,45 +1,49 @@
-import { View, Text } from 'react-native'
+import { View, Text,TouchableOpacity } from 'react-native'
 import{ React,useEffect,useState} from 'react'
-import MapView ,{ Marker }from 'react-native-maps';
+import openMap from 'react-native-open-maps'
+import MapView ,{ Marker ,PROVIDER_GOOGLE}from 'react-native-maps';
 import * as Location from 'expo-location'
-export default function PostMap() {
-  const [location, setlocation] = useState()
+export default function PostMap({data}) {
+  var locationCoords = data.project.location.split(',');
+  console.log(locationCoords)
+  const handleGetDirections = () => {
+    // Harita uygulamasını açmak ve seçilen konuma yönlendirme yapmak için openMap fonksiyonunu kullanıyoruz
+    if (locationCoords && locationCoords[0] && locationCoords[1]) {
+      openMap({
+        latitude: parseFloat(locationCoords[0]),
+        longitude: parseFloat(locationCoords[1]),
+        query: data.project.city.title + '/' + data.project.county.ilce_title,
+      });
+    } else {
+      Alert.alert('Hata', 'Konum bilgisi bulunamadı.');
+    }
+  };
 
-    useEffect(() => {
-      const getLocation= async ()=>{
-          let {status}=await Location.requestForegroundPermissionsAsync();
-          if (status !== 'granted') {
-              
-              return;
-          }
-          let currentLocation = await Location.getCurrentPositionAsync({})
-          setlocation(currentLocation);
-          
-      };
-      getLocation();
-    
-      
-    }, [])
-    
+
 
   return (
   
-    <View style={{flex:1,top:-13,padding:8}}>   
+    <View style={{height:400}}>  
+       <TouchableOpacity onPress={handleGetDirections} style={{position:'absolute',zIndex:2,backgroundColor:'red',padding:10,borderRadius:5,right:0}}>
+      <Text style={{color:'white'}}>Yol Tarifi Al</Text>
+      </TouchableOpacity>  
     <MapView
+    provider={PROVIDER_GOOGLE}
   initialRegion={{
-    latitude: 40.909087177287915,
-    longitude: 29.180233967506933,
+    latitude:locationCoords[0],
+    longitude:locationCoords[1],
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
     altidute:50.03281021118164,
   }}
   style={{flex:1}}
-  />
+  >
   <Marker
-        coordinate={{ latitude: 39.9255, longitude: 32.8662 }}
-        title="Türkiye"
-        description="Burada olmak istiyorum"
+       coordinate={{ latitude:locationCoords[0], longitude:locationCoords[1]}}
+       title={data.project.city.title + '/' +data.project.county.ilce_title}
+        description="Proje Konumu"
       />
+      </MapView>
   </View>
  
   

@@ -1,28 +1,67 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import PaymentItem from '../PaymentItem'
-import ShoppinInfo from '../ShoppinInfo'
+import { addDotEveryThreeDigits } from '../methods/merhod'
 
 
-export default function PostPayment() {
+export default function PostPayment({data,roomOrder}) {
+  // console.log(data.projectHousingsList[roomOrder]['pay-dec-count2'])
+  var months = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+
+  const paymentItems = [];
+
+  // for döngüsü kullanarak PaymentItem bileşenlerini oluşturuyoruz
+  for (let _index = 0; _index < data.projectHousingsList[roomOrder]['pay-dec-count' + roomOrder]; _index++) {
+    const item = data.projectHousingsList[roomOrder]['pay-dec-count' + roomOrder][_index];
+    const date = new Date(data.projectHousingsList[roomOrder]['pay_desc_date' + roomOrder + _index]);
+
+    paymentItems.push(
+      <View key={_index}>
+        <PaymentItem header={`${_index+1} . Ara Ödeme`} price={addDotEveryThreeDigits(data.projectHousingsList[roomOrder][`pay_desc_price${roomOrder}` + _index])} date={months[date.getMonth()] + ', ' + date.getDate() + ' ' + date.getFullYear()}  dFlex="column"/>
+      
+      </View>
+    );
+  }
   return (
     <View style={{padding:8}}>
     <View style={styles.container}>
       <View style={styles.PaymentPlan}>
-        <PaymentItem header='Peşin Fiyat:' price='3.500.400' align='center' top='7'/>
-        <PaymentItem header='36 ay Taksitli Fiyat:' price='4.500.400' align='center' top='7'/>
-        <PaymentItem header='Peşinat:' price='690.000' align='center' top='7'/>
-        <PaymentItem header='1.Ara Ödeme Tutarı :' price='690.000' dFlex='column' date='Aralık 30 2025'/>
-        <PaymentItem header='2.Ara Ödeme Tutarı :'price='690.000' dFlex='column'date='Aralık 30 2026' />
-        <PaymentItem header='3.Ara Ödeme Tutarı :' price='690.000' dFlex='column' date='Aralık 30 2027' border='0'/>
+       
+{
+  data.projectHousingsList[roomOrder]['off_sale[]'] !='[]'? 
+  <><Text style={{textAlign:'center',fontSize:12,color:'grey',fontWeight:'bold'}}>Bu ürün için ödeme detay bilgisi gösterilemiyor!</Text></>:
+
+  <>
+    <PaymentItem header='Peşin Fiyat:' price={addDotEveryThreeDigits(data.projectHousingsList[roomOrder]['price[]'])} align='center' top='7'/>
+        <PaymentItem header={`${data.projectHousingsList[roomOrder]['installments[]']} Ay takstitli fiyat: `} price={addDotEveryThreeDigits(data.projectHousingsList[roomOrder]['installments-price[]'])} align='center' top='7'/>
+        <PaymentItem header='Peşinat:' price={addDotEveryThreeDigits(data.projectHousingsList[roomOrder]['advance[]'])} align='center' top='7'/>
+        {/* {data.projectHousingsList[roomOrder]} */}
+        <PaymentItem header='Aylık Ödenecek Miktar: ' price={   addDotEveryThreeDigits(
+                          (
+                            (data.projectHousingsList[roomOrder][
+                              "installments-price[]"
+                            ] -
+                              data.projectHousingsList[roomOrder][
+                                "advance[]"
+                              ]) /
+                            data.projectHousingsList[roomOrder][
+                              "installments[]"
+                            ]
+                          ).toFixed(0)
+                        )}/>
+        {
+         paymentItems
+        }
+  </>
+    
+  
+}
+      
         
 
       </View>
     </View>
-    <View style={styles.Info}>
-       <ShoppinInfo/>
-        
-        </View>
+   
     </View>
   )
 

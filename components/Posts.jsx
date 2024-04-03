@@ -29,6 +29,9 @@ export default function Posts({
   isFavorited,
   setModalVisible,
   openmodal,
+  openFormModal,
+ 
+
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -40,17 +43,13 @@ export default function Posts({
   const changeBookmark = () => {
     setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
   };
+  console.log(data.projectHousingsList[1])
   return (
     <TouchableOpacity
       onPress={() =>
         navigation.navigate("PostDetails", {
-          caption: caption,
-          location: location,
-          price: price,
-          metre: metre,
-          odaSayısı: odaSayısı,
-          katSayısı: katSayısı,
-          name: caption,
+              HomeId:roomOrder,
+              projectId : data.project.id
         })
       }
     >
@@ -153,7 +152,7 @@ export default function Posts({
                     </Text>
                   </TouchableOpacity>
                 ) : roomData["off_sale[]"] != "[]" ? (
-                  <TouchableOpacity style={styles.offSale}>
+                  <TouchableOpacity style={styles.offSale} disabled={true}>
                     <Text
                       style={{
                         color: "white",
@@ -205,10 +204,12 @@ export default function Posts({
                   )
                 ) : roomData["off_sale[]"] != "[]" ? (
                   <TouchableOpacity
+                  onPress={()=>{
+                    openFormModal(roomOrder)
+                
+                  }}
                     style={styles.PayDetailBtn}
-                    onPress={() => {
-                      openmodal();
-                    }}
+                  
                   >
                     <Text style={{ fontWeight: "500", fontSize: 12 }}>
                       Başvuru Yap
