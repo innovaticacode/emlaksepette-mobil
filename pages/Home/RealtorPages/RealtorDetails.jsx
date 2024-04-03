@@ -32,6 +32,10 @@ import SliderMenuPostDetails from "../../../components/PostDetailsSettings/Slide
 import { apiRequestGet } from "../../../components/methods/apiRequest";
 import Header from "../../../components/Header";
 import Search from "../Search";
+import SliderMenuRealtorDetails from "../../../components/SliderMenuRealtorDetail";
+import RealtorCaption from "./RealtorCaption";
+import Settings from "./Settings";
+import RealtorMap from "./RealtorMap";
 
 
 
@@ -51,7 +55,7 @@ const changeBookmark=()=>{
   setbookmark(bookmark==='bookmark-o' ? 'bookmark': 'bookmark-o')
 }
 const route = useRoute();
-
+const {houseId}=route.params
 const navigation=useNavigation();
 const windowWidth = Dimensions.get('window').width;
 const handleOpenPhone = () => {
@@ -88,6 +92,13 @@ const openFormModal=(no)=>{
   setPaymentModalShowOrder(no)
   setFormVisible(!FormVisible)
 }
+const [data, setData] = useState([])
+useEffect(() => {
+  apiRequestGet("housing/" + houseId).then((res) => {
+    setData(res.data);
+  });
+}, []);
+console.log(data?.housing?.user?.name +'dasfdsfsd');
 return (
   
   <SafeAreaView style={{backgroundColor:'white',flex:1}}>
@@ -185,7 +196,7 @@ return (
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        backgroundColor:'red'
+        backgroundColor:  data?.housing?.user?.banner_hex_code
       }}
     >
       <TouchableOpacity
@@ -199,17 +210,27 @@ return (
       >
         <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
           <View style={{ height: 35, width: 35 }}>
-            <Text>Firma resmi</Text>
-            {/* <ImageBackground
-               source={{
-                uri: `${apiUrl}/storage/profile_images/${ProjectHomeData?.project?.user?.profile_image}`,
-               }}
-              style={{ width: "100%", height: "100%" }}
-              borderRadius={20}
-            /> */}
+            {
+              data?.housing?.user?.profile_image ? 
+              <ImageBackground
+              source={{
+               uri: `${apiUrl}/storage/profile_images/${data?.housing?.user?.profile_image}`,
+              }}
+             style={{ width: "100%", height: "100%" }}
+             borderRadius={20}
+           /> :
+           <ImageBackground
+           source={{
+            uri: `${apiUrl}/storage/profile_images/indir.png`,
+           }}
+          style={{ width: "100%", height: "100%" }}
+          borderRadius={20}
+        />
+            }
+          
           </View>
           <Text style={{ color: "white" }}>
-               Firma Adı
+            {data?.housing?.user?.name }
           </Text>
           <View
             style={{
@@ -309,21 +330,24 @@ return (
             fontWeight: "400",
           }}
         >
-        Konum
+        {data?.housing?.city?.title} / {data?.housing?.county?.title}
         </Text>
         <Text style={{ textAlign: "center", fontSize: 16, color: "#264ABB" }}>
-            Başlık
+       {data?.pageInfo?.meta_title} 
      
         </Text>
       </View>
-      <View>
-      
-        <SliderMenuPostDetails
+     
+      <View style={{justifyContent:'center',alignItems:'center'}}>
+      <SliderMenuRealtorDetails
           tab={tabs}
           setTab={setTabs}
           changeTab={changeTab}
         />
       </View>
+          {tabs==0 && <RealtorCaption data={data}/>}
+          {tabs == 1 && <Settings data={data} />}
+          {tabs== 2 && <RealtorMap/>}
       
    
 {/* 

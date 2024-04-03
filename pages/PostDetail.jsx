@@ -23,7 +23,7 @@ import {
 import DetailsPicture from "../components/DetailsPicture";
 import ShoppinInfo from "../components/ShoppinInfo";
 import DetailsSettings from "../components/PostDetailsSettings/DetailsSettings";
-import PostComment from "../components/PostDetailsSettings/PostComment";
+
 import PostFloorPlan from "../components/PostDetailsSettings/PostFloorPlan";
 import PostMap from "../components/PostDetailsSettings/Postmap";
 import PostPayment from "../components/PostDetailsSettings/PostPayment";
@@ -271,7 +271,7 @@ export default function PostDetail() {
         //   }
         // }}
       >
-        <View style={{ height: 250 }}>
+        <View style={{ height: 200 }}>
           <View style={styles.pagination}>
             <View
               style={{
@@ -323,7 +323,7 @@ export default function PostDetail() {
               </View>
             </TouchableOpacity>
           </View>
-          <PagerView style={{ height: 250 }}
+          <PagerView style={{ height: 200 }}
           
             onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
           >
@@ -720,7 +720,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     position: "absolute",
     right: 7,
-    top: 43,
+    top: 22,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-around",

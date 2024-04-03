@@ -17,7 +17,7 @@ import {
 import { React, useEffect, useRef, useState } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Caption from "../../components/Caption";
-import Settings from "../../components/Settings";
+import Settings from "./RealtorPages/Settings";
 import PagerView from "react-native-pager-view";
 import Map from "../../components/Map";
 
@@ -403,10 +403,13 @@ export default function Details({ navigation }) {
                 style={{ width: "100%", height: "100%" }}
               />
             </View>
+           
           </View>
 
           <Arrow name="arrow-forward-ios" size={16} color={"white"} />
+          <Text style={{color:'white',fontSize:15}}> 1000{data.project.id} No'lu proje</Text>
         </TouchableOpacity>
+        
       </View>
 
       <ScrollView
@@ -423,7 +426,7 @@ export default function Details({ navigation }) {
           }
         }}
       >
-        <View style={{ height: 250 }}>
+        <View style={{ height: 200 }}>
           <View style={styles.pagination}>
             <View
               style={{
@@ -475,7 +478,7 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
           </View>
-          <PagerView style={{ height: 250 }}
+          <PagerView style={{ height: 200 }}
             onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
           >
             {
@@ -832,10 +835,11 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     position: "absolute",
     right: 7,
-    top: 43,
+    top: 22,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-around",
+    alignItems:'center',
     gap: 20,
     zIndex: 1,
   },

@@ -369,7 +369,7 @@ export default function HomePage() {
                               uri: `${apiUrl}/storage/sliders/${item.image}`,
                             }}
                             style={{ width: "100%", height: "100%" }}
-                            resizeMode="cover"
+                            resizeMode="contain"
                             borderRadius={10}
                           />
                         </View>
@@ -498,6 +498,7 @@ export default function HomePage() {
                     filteredHomes.map((item, index) => (
                       <RealtorPost
                         key={index}
+                        HouseId={item.id}
                         price={`${
                           JSON.parse(item.housing_type_data)["price"]
                         } `}
