@@ -27,13 +27,12 @@ export default function Information({ settings }) {
   return (
     <View style={{ paddingLeft: 10, paddingRight: 10 }}>
       <View style={[styles.card, styles.shadowProp]}>
-        {settings.projectHousingSetting.map((setting,index) => {
+        {settings.projectHousingSetting.map((setting) => {
           if (!setting.is_array) {
             if (settings.projectHousingsList[1][setting.column_name + "[]"]) {
               return (
-              
+                <Text>
                   <SettingsItem
-                  key={index}
                     info={setting.label}
                     numbers={
                       settings.projectHousingsList[1][
@@ -41,7 +40,7 @@ export default function Information({ settings }) {
                       ]
                     }
                   />
-             
+                </Text>
               );
             }
           } else {
@@ -62,17 +61,19 @@ export default function Information({ settings }) {
 
                   if (arrayData.length > 0) {
                     return (
-                      <View style={{ display: "flex", flexDirection: "row" }}>
-                        <View key={setting.id} style={{}}>
+                      
+                      <View style={{margin:10}} key={index}>
                           <Text>{setting.label}</Text>
                         <View key={setting.id} style={{marginTop:10,display:'flex',flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}}>
                         
                           {arrayData.map((arrayD,index2)=> {
                             return (
-                              <View style={{ display: "flex" }}>
-                                <CheckSetting text={arrayD} />
+                              <View style={{width:'50%',marginTop:10,display:'flex',}}key={index2}>
+                                <View>
+                                  <CheckSetting text={arrayD} />
+                                </View>
                               </View>
-                            );
+                            ) 
                           })}
                         </View>
                       </View>
