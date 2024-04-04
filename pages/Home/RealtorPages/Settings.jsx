@@ -7,32 +7,61 @@ import CheckSetting from "../../../components/CheckSetting";
 
 export default function Settings({ data }) {
   const route = useRoute();
-  console.log(data?.housingSetting['is_array'] + "dsfdsfdgdfgd");
+
   return (
     <View style={{ paddingRight: 8, paddingLeft: 8 }}>
       <View style={[styles.card, styles.shadowProp]}>
-      {
-        data.housingSetting.map((housingS) => {
-          if(housingS.is_array){
+      <View key={0}>
+  <SettingsItem info="İlan No" numbers={parseInt(data.housing.id) + 2000000}/>
+</View>
+
+        {Object.keys(data.labels).map((item, idx) => {
+          if (data.labels[item].length == 1 && item != "Peşin Fiyat" && item != "Fiyat" && item != "Günlük Fiyat") {
+            return(
+              <View key={idx}>
+              <SettingsItem info={item} numbers={data.labels[item]} />
+            </View>
+            )
+           
+          }
+
+         
+          
+    
+        })}
+
+      
+
+        {data.housingSetting.map((housingS) => {
+          if (housingS.is_array) {
             return Object.keys(data.labels).map((label, index) => {
-                if(housingS.label == label){
-                  return(
-                    <View key={index}>
-                      <Text style={{ fontWeight: 'bold' }}>{label}</Text>
-                      <View>
-                        { data.labels[label].map((item, idx) => (
-                          <CheckSetting text={item} key={idx}/>
-                      
+              if (housingS.label == label) {
+                return (
+                  <View key={index} style={{ margin: 10 }}>
+                    <Text style={{ fontWeight: "bold" }}>{label}</Text>
+                    <View style={{}}>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          flexWrap: "wrap",
+                          width: "100%",
+                          marginTop: 5,
+                          paddingBottom: 5,
+                        }}
+                      >
+                        {data.labels[label].map((item, idx) => (
+                          <View key={idx} style={{ width: "50%" }}>
+                            <CheckSetting text={item} />
+                          </View>
                         ))}
                       </View>
                     </View>
-                  )
-                }
-              })
-            
+                  </View>
+                );
+              }
+            });
           }
-        })
-      }
+        })}
 
         {/* <SettingsItem info='Kullanım Durumu' numbers='Boş'/>
         <SettingsItem info='m2 (Brüt:)' numbers='90'/>
@@ -59,7 +88,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     width: "100%",
 
-  
     borderWidth: 0.7,
     borderColor: "#e6e6e6",
     ...Platform.select({

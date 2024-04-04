@@ -17,6 +17,7 @@ export default function SettingsItem({info,numbers,border,color,bold}) {
        
       }}
     >
+      
       <View style={{justifyContent:'center'}}>
         <Text style={{fontSize:11,}}>{info}</Text>
       </View>

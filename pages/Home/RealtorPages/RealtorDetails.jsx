@@ -36,6 +36,8 @@ import SliderMenuRealtorDetails from "../../../components/SliderMenuRealtorDetai
 import RealtorCaption from "./RealtorCaption";
 import Settings from "./Settings";
 import RealtorMap from "./RealtorMap";
+import Comment from "./Comment";
+import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 
 
 
@@ -43,6 +45,7 @@ export default function PostDetail() {
 const apiUrl = "https://emlaksepette.com/";
 const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
+const [images,setImages] = useState([]);
 const [heart, setHeart] = useState('hearto');
 const [bookmark, setbookmark] = useState('bookmark-o')
 const [ColectionSheet, setColectionSheet] = useState(false);
@@ -92,13 +95,17 @@ const openFormModal=(no)=>{
   setPaymentModalShowOrder(no)
   setFormVisible(!FormVisible)
 }
-const [data, setData] = useState([])
+const [data, setData] = useState({})
 useEffect(() => {
   apiRequestGet("housing/" + houseId).then((res) => {
     setData(res.data);
+    setImages(JSON.parse(res.data.housing.housing_type_data).images);
   });
 }, []);
-console.log(data?.housing?.user?.name +'dasfdsfsd');
+
+//  console.log( JSON.parse(data?.housing?.housing_type_data)['price'])
+
+
 return (
   
   <SafeAreaView style={{backgroundColor:'white',flex:1}}>
@@ -245,14 +252,14 @@ return (
               style={{ position: "absolute", zIndex: 1 }}
               color={"#333"}
             />
-            {/* <ImageBackground
-              source={require('../pages/Home/BadgeYellow.png')}
+             <ImageBackground
+              source={require('../BadgeYellow.png')}
               style={{ width: "100%", height: "100%" }}
-            /> */}
+            /> 
           </View>
         </View>
 
-        <Arrow name="arrow-forward-ios" size={16} color={"white"} />
+       
       </TouchableOpacity>
     </View>
     <ScrollView
@@ -271,7 +278,7 @@ return (
             }}
           >
             <Text style={{ color: "white", fontSize: 12 }}>
-       1/10
+               {pagination +1} / {images.length}
             </Text>
           </View>
         </View>
@@ -315,9 +322,18 @@ return (
         
           onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
         >
-         <View>
-          <Text>dsff</Text>
-         </View>
+
+
+          {
+            images.map((item,_index) => [
+               
+              <View key={_index}>
+            
+                <ImageBackground source={{uri:`${apiUrl}housing_images/${item}`}} style={{width:'100%',height:'100%'}}/>
+              </View>
+            ])
+          }
+        
           
         </PagerView>
       </View>
@@ -332,10 +348,12 @@ return (
         >
         {data?.housing?.city?.title} / {data?.housing?.county?.title}
         </Text>
-        <Text style={{ textAlign: "center", fontSize: 16, color: "#264ABB" }}>
+        {/* <Text style={{textAlign:'center',color: "#264A" ,fontSize:15}}>{JSON.parse(data?.housing?.housing_type_data)['price']} ₺</Text> */}
+        <Text style={{ textAlign: "center", fontSize: 15, color: "#264ABB" }}>
        {data?.pageInfo?.meta_title} 
      
         </Text>
+       
       </View>
      
       <View style={{justifyContent:'center',alignItems:'center'}}>
@@ -347,7 +365,8 @@ return (
       </View>
           {tabs==0 && <RealtorCaption data={data}/>}
           {tabs == 1 && <Settings data={data} />}
-          {tabs== 2 && <RealtorMap/>}
+          {tabs== 2 && <RealtorMap mapData={data}/>}
+          {tabs==3 && <Comment/> }
       
    
 {/* 

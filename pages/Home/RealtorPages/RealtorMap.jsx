@@ -4,35 +4,31 @@ import MapView ,{ Marker,PROVIDER_GOOGLE }from 'react-native-maps';
 import * as Location from 'expo-location'
 import openMap from 'react-native-open-maps'
 export default function RealtorMap({mapData}) {
-//   var locationCoords = mapData.project.location.split(',');
-//   console.log(locationCoords)
-//   const handleGetDirections = () => {
-//     // Harita uygulamasını açmak ve seçilen konuma yönlendirme yapmak için openMap fonksiyonunu kullanıyoruz
-//     if (locationCoords && locationCoords[0] && locationCoords[1]) {
-//       openMap({
-//         latitude: parseFloat(locationCoords[0]),
-//         longitude: parseFloat(locationCoords[1]),
-//         query: mapData.project.city.title + '/' + mapData.project.county.ilce_title,
-//       });
-//     } else {
-//       Alert.alert('Hata', 'Konum bilgisi bulunamadı.');
-//     }
-//   };
+
+ 
+  const handleGetDirections = () => {
+ 
+   
+      openMap({
+        latitude:mapData.housing?.latitude,
+        longitude: mapData.housing?.longitude,
+        query: mapData?.housing?.city?.title / mapData?.housing?.county?.title,
+      });
+ 
+  };
     
 
   return (
   
     <View style={{height:400,paddingLeft:9,paddingRight:8}}>  
-    {/* <TouchableOpacity onPress={handleGetDirections} style={{position:'absolute',zIndex:2,backgroundColor:'red',padding:10,borderRadius:5,right:0}}>
-      <Text style={{color:'white'}}>Yol Tarifi Al</Text>
-      </TouchableOpacity>  */}
+
     
     <MapView
     
     provider={PROVIDER_GOOGLE} 
   initialRegion={{
-    latitude:40.2423423432,
-    longitude:37.23423423422,
+    latitude:mapData.housing?.latitude,
+    longitude:mapData?.housing?.longitude,
     
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
@@ -41,11 +37,11 @@ export default function RealtorMap({mapData}) {
   }}
   style={{flex:1}}
   >
-       {/* <Marker
-          coordinate={{ latitude:locationCoords[0], longitude:locationCoords[1]}}
-          title={mapData.project.city.title + '/' +mapData.project.county.ilce_title}
-          description="Projenin Konumu"
-        />  */}
+        <Marker
+          coordinate={{ latitude:mapData.housing?.latitude, longitude:mapData?.housing?.longitude}}
+          // title={mapData?.housing?.city?.title / mapData?.housing?.county?.title}
+          description="Konutun Konumu"
+        />  
 </MapView>
   </View>
  
