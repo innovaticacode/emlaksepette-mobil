@@ -24,9 +24,18 @@ export default function Comment({data}) {
 
 
 console.log(data.housingComments[0].comment)
-const dateObject = new Date(data.housingComments.created_at)
+const dateString = data.housingComments.created_at;
+
+// API'den gelen tarih stringini Date nesnesine dönüştürme
+const dateObject = new Date(dateString);
+
+// Gün, ay ve yıl bilgisini alarak string olarak oluşturma
 const formattedDate = `${dateObject.getDate()}/${dateObject.getMonth() + 1}/${dateObject.getFullYear()}`;
-console.log(formattedDate)
+
+// Formatlanmış tarih bilgisini konsola yazdırma
+console.log(formattedDate);
+
+
   return (
     
     <View style={styles.container} onTouchMove={()=>Keyboard.dismiss()}>
@@ -48,7 +57,7 @@ console.log(formattedDate)
             <ScrollView horizontal contentContainerStyle={{padding:10,gap:10}} showsHorizontalScrollIndicator={false} >
               {
                 data.housingComments.map((itemComment,_index)=>(
-                  <CommentItem username={itemComment.user.name} key={_index} comment={itemComment.comment} date={`${dateObject.getDate()}/${dateObject.getMonth() + 1}/${dateObject.getFullYear()}`}/>
+                  <CommentItem username={itemComment.user.name} key={_index} comment={itemComment.comment} date={itemComment.created_at}/>
                 ))
               }
         
