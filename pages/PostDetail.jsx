@@ -1,24 +1,24 @@
 import {
-    View,
-    Text,
-    ImageBackground,
-    SafeAreaView,
-    TouchableOpacity,
-    StyleSheet,
-    ScrollView,
+  View,
+  Text,
+  ImageBackground,
+  SafeAreaView,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
   Image,
-   Dimensions,
-   Linking,
-   TextInput
-  } from "react-native";
-  import { React, useRef, useState,useEffect } from "react";
-  import Icon from "react-native-vector-icons/AntDesign";
-  import Phone from "react-native-vector-icons/Entypo" 
+  Dimensions,
+  Linking,
+  TextInput,
+} from "react-native";
+import { React, useRef, useState, useEffect } from "react";
+import Icon from "react-native-vector-icons/AntDesign";
+import Phone from "react-native-vector-icons/Entypo";
 
-  import PagerView from 'react-native-pager-view';
-  import { useNavigation, useRoute  } from '@react-navigation/native';
-  import Heart from "react-native-vector-icons/AntDesign";
-  import Bookmark from "react-native-vector-icons/FontAwesome";
+import PagerView from "react-native-pager-view";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import Heart from "react-native-vector-icons/AntDesign";
+import Bookmark from "react-native-vector-icons/FontAwesome";
 
 import DetailsPicture from "../components/DetailsPicture";
 import ShoppinInfo from "../components/ShoppinInfo";
@@ -44,31 +44,30 @@ import SettingsItem from "../components/SettingsItem";
 import { addDotEveryThreeDigits } from "../components/methods/merhod";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-
 export default function PostDetail() {
   const apiUrl = "https://emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
-    const [tabs, setTabs] = useState(0);
-  const [heart, setHeart] = useState('hearto');
-  const [bookmark, setbookmark] = useState('bookmark-o')
+  const [tabs, setTabs] = useState(0);
+  const [heart, setHeart] = useState("hearto");
+  const [bookmark, setbookmark] = useState("bookmark-o");
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [IsOpenSheet, setIsOpenSheet] = useState(false);
+
   const changeHeart = () => {
-    setHeart(heart === 'hearto' ? 'heart' : 'hearto');
-   
+    setHeart(heart === "hearto" ? "heart" : "hearto");
   };
-  const changeBookmark=()=>{
-    setbookmark(bookmark==='bookmark-o' ? 'bookmark': 'bookmark-o')
-  }
+  const changeBookmark = () => {
+    setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
+  };
   const route = useRoute();
-  const {HomeId,projectId} = route.params;
-  const navigation=useNavigation();
-  const windowWidth = Dimensions.get('window').width;
+  const { HomeId, projectId } = route.params;
+  const navigation = useNavigation();
+  const windowWidth = Dimensions.get("window").width;
   const handleOpenPhone = () => {
     // Telefon uygulamasını açmak için
-    Linking.openURL('tel:+905537064474');
+    Linking.openURL("tel:+905537064474");
   };
-  
+
   const changeTab = (tabs) => {
     setTabs(tabs);
   };
@@ -87,36 +86,34 @@ export default function PostDetail() {
     project: {
       room_count: 0,
       roomInfo: [],
-      images : [],
-      location : "0,0"
+      images: [],
+      location: "0,0",
     },
     projectHousingsList: {},
   });
   useEffect(() => {
     apiRequestGet("project/" + projectId).then((res) => {
-      console.log(ProjectHomeData.projectHousingsList)
+      console.log(ProjectHomeData.projectHousingsList);
       setProjectHomeData(res.data);
     });
   }, []);
-  const [pagination, setpagination] = useState(0)
+  const [pagination, setpagination] = useState(0);
   const handlePageChange = (pageNumber) => {
     setpagination(pageNumber);
-  }
+  };
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const openModal = (roomOrder) => {
     setPaymentModalShowOrder(roomOrder);
     setModalVisible(!modalVisible);
   };
-  const [FormVisible, setFormVisible] = useState(false)
-  const openFormModal=(no)=>{
-    setPaymentModalShowOrder(no)
-    setFormVisible(!FormVisible)
-  }
+  const [FormVisible, setFormVisible] = useState(false);
+  const openFormModal = (no) => {
+    setPaymentModalShowOrder(no);
+    setFormVisible(!FormVisible);
+  };
   return (
-    
-    <SafeAreaView style={{backgroundColor:'white',flex:1}}>
-
-    <Header onPress={toggleDrawer} />
+    <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
+      <Header onPress={toggleDrawer} />
       <Modal
         isVisible={isDrawerOpen}
         onBackdropPress={() => setIsDrawerOpen(false)}
@@ -209,7 +206,7 @@ export default function PostDetail() {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          backgroundColor: ProjectHomeData?.project?.user?.banner_hex_code
+          backgroundColor: ProjectHomeData?.project?.user?.banner_hex_code,
         }}
       >
         <TouchableOpacity
@@ -224,15 +221,15 @@ export default function PostDetail() {
           <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
             <View style={{ height: 35, width: 35 }}>
               <ImageBackground
-                 source={{
+                source={{
                   uri: `${apiUrl}/storage/profile_images/${ProjectHomeData?.project?.user?.profile_image}`,
-                 }}
+                }}
                 style={{ width: "100%", height: "100%" }}
                 borderRadius={20}
               />
             </View>
             <Text style={{ color: "white" }}>
-         {ProjectHomeData?.project?.user?.name}
+              {ProjectHomeData?.project?.user?.name}
             </Text>
             <View
               style={{
@@ -248,7 +245,7 @@ export default function PostDetail() {
                 color={"#333"}
               />
               <ImageBackground
-                source={require('../pages/Home/BadgeYellow.png')}
+                source={require("../pages/Home/BadgeYellow.png")}
                 style={{ width: "100%", height: "100%" }}
               />
             </View>
@@ -283,7 +280,7 @@ export default function PostDetail() {
               }}
             >
               <Text style={{ color: "white", fontSize: 12 }}>
-           {pagination+1} / { ProjectHomeData.project.images.length}
+                {pagination + 1} / {ProjectHomeData.project.images.length}
               </Text>
             </View>
           </View>
@@ -323,26 +320,29 @@ export default function PostDetail() {
               </View>
             </TouchableOpacity>
           </View>
-          <PagerView style={{ height: 250 }}
-          
-            onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
+          <PagerView
+            style={{ height: 250 }}
+            onPageSelected={(event) =>
+              handlePageChange(event.nativeEvent.position)
+            }
           >
-             {
-              ProjectHomeData.project.images.map((image,index) => {
-              
-                return(
-                  <View key={index+1}>
-                     <ImageBackground
-                      source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
-                      style={{ width: "100%", height: "100%" }}
-                      borderBottomLeftRadius={20}
-                      borderBottomRightRadius={20}
-                    /> 
-                  </View>
-                )
-              })
-            } 
-            
+            {ProjectHomeData.project.images.map((image, index) => {
+              return (
+                <View key={index + 1}>
+                  <ImageBackground
+                    source={{
+                      uri: `${apiUrl}${image.image.replace(
+                        "public",
+                        "storage"
+                      )}`,
+                    }}
+                    style={{ width: "100%", height: "100%" }}
+                    borderBottomLeftRadius={20}
+                    borderBottomRightRadius={20}
+                  />
+                </View>
+              );
+            })}
           </PagerView>
         </View>
         <View style={{ paddingTop: 8, gap: 10 }}>
@@ -354,26 +354,25 @@ export default function PostDetail() {
               fontWeight: "400",
             }}
           >
-             {ProjectHomeData?.project?.city?.title
+            {ProjectHomeData?.project?.city?.title
               ? `${ProjectHomeData.project.city.title} / ${ProjectHomeData.project.county.ilce_title}`
-              : ""} 
+              : ""}
           </Text>
           <Text style={{ textAlign: "center", fontSize: 16, color: "#264ABB" }}>
-              {ProjectHomeData.projectHousingsList[HomeId] ? ProjectHomeData.projectHousingsList[HomeId]['advertise_title[]'] : ""}
-       
+            {ProjectHomeData.projectHousingsList[HomeId]
+              ? ProjectHomeData.projectHousingsList[HomeId]["advertise_title[]"]
+              : ""}
           </Text>
         </View>
         <View>
-        
           <SliderMenuPostDetails
             tab={tabs}
             setTab={setTabs}
             changeTab={changeTab}
           />
         </View>
-        
-     
-{/* 
+
+        {/* 
                 {
                   ProjectHomeData.projectHousingsList((item,index)=>(
                     <Text>asd</Text>
@@ -382,21 +381,20 @@ export default function PostDetail() {
                       // />
                   ))
                 } */}
-       
-          {tabs==0 &&
-          <PostOtherProject data={ProjectHomeData} openmodal={openModal} openFormModal={openFormModal} />}
-            {
-              tabs==1 && <PostCaption data={ProjectHomeData}/>
-            }
-              {
-              tabs==2 &&<DetailsSettings roomOrder={HomeId} data={ProjectHomeData}/>
-            }
-              {
-              tabs==3 &&<PostPayment roomOrder={HomeId} data={ProjectHomeData}/>
-            }
-               {
-              tabs==4 &&<PostMap  data={ProjectHomeData}/>
-            }
+
+        {tabs == 0 && (
+          <PostOtherProject
+            data={ProjectHomeData}
+            openmodal={openModal}
+            openFormModal={openFormModal}
+          />
+        )}
+        {tabs == 1 && <PostCaption data={ProjectHomeData} />}
+        {tabs == 2 && (
+          <DetailsSettings roomOrder={HomeId} data={ProjectHomeData} />
+        )}
+        {tabs == 3 && <PostPayment roomOrder={HomeId} data={ProjectHomeData} />}
+        {tabs == 4 && <PostMap data={ProjectHomeData} />}
 
         <Modal
           isVisible={IsOpenSheet}
@@ -421,9 +419,7 @@ export default function PostDetail() {
           </View>
         </Modal>
 
-        <View style={{ padding: 10 }}>
-       
-        </View>
+        <View style={{ padding: 10 }}></View>
 
         <Modal
           animationType="slide" // veya "fade", "none" gibi
@@ -461,12 +457,11 @@ export default function PostDetail() {
                   numbers={
                     paymentModalShowOrder != null
                       ? addDotEveryThreeDigits(
-                          ProjectHomeData.projectHousingsList[paymentModalShowOrder][
-                            "price[]"
-                          ]
+                          ProjectHomeData.projectHousingsList[
+                            paymentModalShowOrder
+                          ]["price[]"]
                         ) + " ₺"
                       : "0"
-                  
                   }
                 />
                 {paymentModalShowOrder != null ? (
@@ -484,9 +479,9 @@ export default function PostDetail() {
                       info="Taksitli 12 Ay Fiyat"
                       numbers={
                         addDotEveryThreeDigits(
-                          ProjectHomeData.projectHousingsList[paymentModalShowOrder][
-                            "installments-price[]"
-                          ]
+                          ProjectHomeData.projectHousingsList[
+                            paymentModalShowOrder
+                          ]["installments-price[]"]
                         ) + "₺"
                       }
                     />
@@ -511,9 +506,9 @@ export default function PostDetail() {
                       info="Peşinat"
                       numbers={
                         addDotEveryThreeDigits(
-                          ProjectHomeData.projectHousingsList[paymentModalShowOrder][
-                            "advance[]"
-                          ]
+                          ProjectHomeData.projectHousingsList[
+                            paymentModalShowOrder
+                          ]["advance[]"]
                         ) + "₺"
                       }
                     />
@@ -540,15 +535,15 @@ export default function PostDetail() {
                       numbers={
                         addDotEveryThreeDigits(
                           (
-                            (ProjectHomeData.projectHousingsList[paymentModalShowOrder][
-                              "installments-price[]"
-                            ] -
-                              ProjectHomeData.projectHousingsList[paymentModalShowOrder][
-                                "advance[]"
-                              ]) /
-                            ProjectHomeData.projectHousingsList[paymentModalShowOrder][
-                              "installments[]"
-                            ]
+                            (ProjectHomeData.projectHousingsList[
+                              paymentModalShowOrder
+                            ]["installments-price[]"] -
+                              ProjectHomeData.projectHousingsList[
+                                paymentModalShowOrder
+                              ]["advance[]"]) /
+                            ProjectHomeData.projectHousingsList[
+                              paymentModalShowOrder
+                            ]["installments[]"]
                           ).toFixed(0)
                         ) + "₺"
                       }
@@ -583,138 +578,154 @@ export default function PostDetail() {
           </View>
         </Modal>
         <Modal
-          animationType="slide" 
+          animationType="slide"
           transparent={true}
-          onBackdropPress={()=>setFormVisible(false)}
+          onBackdropPress={() => setFormVisible(false)}
           visible={FormVisible}
           onRequestClose={() => {
             setFormVisible(false);
           }}
         >
-          <View style={[styles.centeredView,{padding:0}]}>
-            <View style={[styles.modalView,{height:'90%'}]}>
-            <Text style={{ fontWeight: "bold", fontSize: 12,textAlign:'center' }}>
-                  {ProjectHomeData?.project?.project_title}{" "}projesinde {" "}
-                  {paymentModalShowOrder} No'lu Konut Başvuru Formu
-                </Text>
-                <KeyboardAwareScrollView showsVerticalScrollIndicator={false}> 
-            <View style={{gap:15}}>
-         
-              <View style={{gap:7}}>
-                <Text style={styles.label}>Ad Soyad</Text>
-                <TextInput style={styles.Input}/>
-              </View>
-              <View style={{gap:7}}>
-                <Text style={styles.label}>Telefon Numarası</Text>
-                <TextInput style={styles.Input}/>
-              </View>
-              <View style={{gap:7}}>
-                <Text style={styles.label}>E-Posta</Text>
-                <TextInput style={styles.Input}/>
-              </View>
-              <View style={{gap:7}}>
-                <Text style={styles.label}>Meslek</Text>
-                <TextInput style={styles.Input}/>
-              </View>
-              <View style={{gap:7}}>
-                <Text style={styles.label}>İl</Text>
-                <TextInput style={styles.Input}/>
-              </View>
-              <View style={{gap:7}}>
-                <Text style={styles.label}>İlçe</Text>
-                <TextInput style={styles.Input}/>
-              </View>
-           
-        
-            </View>
-            </KeyboardAwareScrollView>
-            <View style={{flexDirection:'row',justifyContent:'space-around'}}>
-              <TouchableOpacity style={{backgroundColor:'#28A745',width:'40%',padding:15,borderRadius:10}}>
-                <Text style={{color:'white',textAlign:'center'}}>Gönder</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{backgroundColor:'#DC3545',width:'40%',padding:15,borderRadius:10}}
-                onPress={()=>{
-                  setFormVisible(false)
+          <View style={[styles.centeredView, { padding: 0 }]}>
+            <View style={[styles.modalView, { height: "90%" }]}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 12,
+                  textAlign: "center",
                 }}
               >
-                <Text style={{color:'white',textAlign:'center'}}>Kapat</Text>
-              </TouchableOpacity>
-            </View>
+                {ProjectHomeData?.project?.project_title} projesinde{" "}
+                {paymentModalShowOrder} No'lu Konut Başvuru Formu
+              </Text>
+              <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+                <View style={{ gap: 15 }}>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styles.label}>Ad Soyad</Text>
+                    <TextInput style={styles.Input} />
+                  </View>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styles.label}>Telefon Numarası</Text>
+                    <TextInput style={styles.Input} />
+                  </View>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styles.label}>E-Posta</Text>
+                    <TextInput style={styles.Input} />
+                  </View>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styles.label}>Meslek</Text>
+                    <TextInput style={styles.Input} />
+                  </View>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styles.label}>İl</Text>
+                    <TextInput style={styles.Input} />
+                  </View>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styles.label}>İlçe</Text>
+                    <TextInput style={styles.Input} />
+                  </View>
+                </View>
+              </KeyboardAwareScrollView>
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-around" }}
+              >
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#28A745",
+                    width: "40%",
+                    padding: 15,
+                    borderRadius: 10,
+                  }}
+                >
+                  <Text style={{ color: "white", textAlign: "center" }}>
+                    Gönder
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#DC3545",
+                    width: "40%",
+                    padding: 15,
+                    borderRadius: 10,
+                  }}
+                  onPress={() => {
+                    setFormVisible(false);
+                  }}
+                >
+                  <Text style={{ color: "white", textAlign: "center" }}>
+                    Kapat
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>
       </ScrollView>
-
-
-
-  
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      alignItems: 'center',
-      height: 50,
-      backgroundColor: '#ecf0f1', // Top bar background color
-    },
-    segment: {
-      flex: 1,
-      padding: 10,
-      alignItems: 'center',
-    },
-    selectedSegment: {
-      backgroundColor: '#3498db', // Selected segment color
-    },
-    segmentText: {
-      color: '#2c3e50', // Segment text color
-    },
-    viewPager: {
-      height: 250
-    },
-    Info: {
-      
-      width: '100%',
-      top: 20,
-      height: 240
-    },
-    text:{
-      fontSize:11,
-      fontWeight:'300',
-     
-      color:'grey'
-    },
-    btnText:{
-      fontSize:15,
-      textAlign:'center',
-      color:'white',
-      fontWeight:'500',
-      letterSpacing:1,
-    
-    },
-    shareIcons:{
-      backgroundColor: "#dbdbdb",
-      justifyContent: "center",
-      width: 50,
-      height: 50,
-      alignItems: "center",
-      borderRadius: 30,
-      bottom:2
-    },
-    modal: {
-      margin: 0,
-    },
-    modalContent: {
-      backgroundColor: "white",
-  
-      flex: 1,
-      borderTopLeftRadius: 10,
-      borderTopRightRadius: 10,
-      width: 320,
-    },
-      ıconContainer: {
+  container: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    height: 50,
+    backgroundColor: "#ecf0f1", // Top bar background color
+  },
+  segment: {
+    flex: 1,
+    padding: 10,
+    alignItems: "center",
+  },
+  selectedSegment: {
+    backgroundColor: "#3498db", // Selected segment color
+  },
+  segmentText: {
+    color: "#2c3e50", // Segment text color
+  },
+  viewPager: {
+    height: 250,
+  },
+  Info: {
+    width: "100%",
+    top: 20,
+    height: 240,
+  },
+  text: {
+    fontSize: 11,
+    fontWeight: "300",
+
+    color: "grey",
+  },
+  btnText: {
+    fontSize: 15,
+    textAlign: "center",
+    color: "white",
+    fontWeight: "500",
+    letterSpacing: 1,
+  },
+  shareIcons: {
+    backgroundColor: "#dbdbdb",
+    justifyContent: "center",
+    width: 50,
+    height: 50,
+    alignItems: "center",
+    borderRadius: 30,
+    bottom: 2,
+  },
+  modal: {
+    margin: 0,
+  },
+  modalContent: {
+    backgroundColor: "white",
+
+    flex: 1,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    width: 320,
+  },
+  ıconContainer: {
     width: 50,
     height: 150,
     backgroundColor: "transparent",
@@ -781,7 +792,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
 
     width: "100%",
-  },other:{
+  },
+  other: {
     padding: 5,
     top: 0,
 
@@ -805,8 +817,5 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
-  }
-
-  
-  });
-
+  },
+});
