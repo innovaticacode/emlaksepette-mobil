@@ -78,7 +78,7 @@ export default function HomePage() {
     (estate) => estate.step1_slug == "is-yeri"
   );
   const filteredHomes = featuredEstates
-    .filter((estate) => estate.step1_slug == "konut")
+    .filter((estate) => estate.id == 201)
     .slice(0, 5);
   const filteredProject = featuredProjects.slice(0, 5);
 

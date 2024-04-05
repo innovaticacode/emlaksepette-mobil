@@ -18,18 +18,32 @@ export default function CommentItem({username,comment,date}) {
   
   return (
     <View style={styles.commentContainer}>
-        <View style={{flexDirection:'row',justifyContent:'space-between',flex:1/2}}>
-        {stars.map((selected, index) => (
+        <View style={{width:'100%',backgroundColor:'#ebebeb',padding:10,borderRadius:10,height:120}}>
+          <View style={{flex:0.4/2,flexDirection:'row',justifyContent:'space-between'}}>
+          <View style={{flex:1/2,flexDirection:'row'}}>
+          {stars.map((selected, index) => (
      
-          <Ionicons
-          key={index}
-            name={'md-star'}
-            size={10}
-            color={'yellow'}
-          />
-     
-      ))}
+     <Ionicons
+     key={index}
+       name={'md-star'}
+       size={9}
+       color={'gold'}
+     />
+   
+   ))}
   
+          </View>
+          <View style={{flex:1/2,alignItems:'flex-end'}}>
+                <Text style={{fontSize:13,color:'grey'}}>{date}</Text>
+            </View>
+          </View>
+          <View style={{flex:0.3/2, width:'100%'}}>
+          <Text style={{fontSize:12,color:'#333'}}>{username}</Text>
+          </View>
+          <View style={{flex:1.5/2,paddingTop:5}}>
+              <Text numberOfLines={3}>{comment}</Text>
+          </View>
+         
 
         </View>
     </View>
@@ -37,6 +51,17 @@ export default function CommentItem({username,comment,date}) {
 }
 const styles=StyleSheet.create({
     commentContainer:{
-      width:'100%'
+      width:250,
+    
     }
-})
+})     
+ {/* {stars.map((selected, index) => (
+     
+  <Ionicons
+  key={index}
+    name={'md-star'}
+    size={10}
+    color={'yellow'}
+  />
+
+))}   */}

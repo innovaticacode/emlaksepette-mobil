@@ -366,7 +366,7 @@ return (
           {tabs==0 && <RealtorCaption data={data}/>}
           {tabs == 1 && <Settings data={data} />}
           {tabs== 2 && <RealtorMap mapData={data}/>}
-          {tabs==3 && <Comment/> }
+          {tabs==3 && <Comment data={data}/> }
       
    
 {/* 

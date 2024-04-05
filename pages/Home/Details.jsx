@@ -284,7 +284,7 @@ export default function Details({ navigation }) {
             }}
           >
             <SafeAreaView style={{ zIndex: 1 }}>
-              <ScrollView showsVerticalScrollIndicator={false}>
+              <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("HomePage");
@@ -413,6 +413,7 @@ export default function Details({ navigation }) {
       </View>
 
       <ScrollView
+    
         scrollEventThrottle={16}
         onScroll={({ nativeEvent }) => {
           if (isCloseToBottom(nativeEvent)) {

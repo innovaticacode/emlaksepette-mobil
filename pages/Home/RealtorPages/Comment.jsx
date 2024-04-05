@@ -5,33 +5,13 @@ import { TouchableWithoutFeedback, Keyboard, } from 'react-native'
 import CommentItem from './CommentItem'
 import UploadIcon from 'react-native-vector-icons/AntDesign'
 import { CheckBox } from '@rneui/themed';
-export default function Comment() {
+export default function Comment({data}) {
   
   const [checked, setChecked] = React.useState(false);
   const toggleCheckbox = () => setChecked(!checked);
   const [checked2, setChecked2] = React.useState(false);
   const toggleCheckbox2 = () => setChecked2(!checked2);
-  const comments = [
-    {
-      username: 'user',
-      comment: 'sdfsldfsdlfsd',
-      date: '05/03/2000',
-      id: 1
-    },
-    {
-      username: 'user',
-      comment: 'sdfsldfsdlfsd',
-      date: '05/03/2000',
-      id: 2
-    },
-    {
-      username: 'user',
-      comment: 'sdfsldfsdlfsd',
-      date: '05/03/2000',
-      id: 3
-    }
 
-  ]
 
 
 
@@ -43,7 +23,10 @@ export default function Comment() {
   };
 
 
-
+console.log(data.housingComments[0].comment)
+const dateObject = new Date(data.housingComments.created_at)
+const formattedDate = `${dateObject.getDate()}/${dateObject.getMonth() + 1}/${dateObject.getFullYear()}`;
+console.log(formattedDate)
   return (
     
     <View style={styles.container} onTouchMove={()=>Keyboard.dismiss()}>
@@ -62,8 +45,14 @@ export default function Comment() {
                 <Text>5 Yorum</Text>
               </View>
             </View>
-            <ScrollView horizontal contentContainerStyle={{padding:10,backgroundColor:'red'}} >
-            <CommentItem username='user'/>
+            <ScrollView horizontal contentContainerStyle={{padding:10,gap:10}} showsHorizontalScrollIndicator={false} >
+              {
+                data.housingComments.map((itemComment,_index)=>(
+                  <CommentItem username={itemComment.user.name} key={_index} comment={itemComment.comment} date={`${dateObject.getDate()}/${dateObject.getMonth() + 1}/${dateObject.getFullYear()}`}/>
+                ))
+              }
+        
+         
       
 
             </ScrollView>
