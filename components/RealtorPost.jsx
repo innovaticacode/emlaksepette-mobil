@@ -6,7 +6,7 @@ import Bookmark from "react-native-vector-icons/FontAwesome";
 import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
 
-export default function Posts({title,loading,price,image,location,m2,roomCount,floor}) {
+export default function Posts({title,loading,price,image,location,m2,roomCount,floor, HouseId}) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState('hearto');
   const [bookmark, setbookmark] = useState('bookmark-o')
@@ -23,11 +23,11 @@ export default function Posts({title,loading,price,image,location,m2,roomCount,f
    });
  const formattedPrice=formattedPriceZero.replace(/,00$/,'')
   return (
-    <TouchableOpacity  onPress={()=>navigation.navigate('Realtor details')}>
+    <TouchableOpacity  onPress={()=>navigation.navigate('Realtor details',{houseId:HouseId})}>
       <View style={styles.container}>
         
         <View style={styles.İlan}>
-         
+        
             
            
             <View style={{ width: '35%' }}>

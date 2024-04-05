@@ -55,8 +55,5 @@ const styles=StyleSheet.create({
   
     
   },  
-  Info: {
-        bottom:19
-    
-  }
+
 })

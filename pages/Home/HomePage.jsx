@@ -78,7 +78,7 @@ export default function HomePage() {
     (estate) => estate.step1_slug == "is-yeri"
   );
   const filteredHomes = featuredEstates
-    .filter((estate) => estate.step1_slug == "konut")
+    .filter((estate) => estate.id == 201)
     .slice(0, 5);
   const filteredProject = featuredProjects.slice(0, 5);
 
@@ -369,7 +369,7 @@ export default function HomePage() {
                               uri: `${apiUrl}/storage/sliders/${item.image}`,
                             }}
                             style={{ width: "100%", height: "100%" }}
-                            resizeMode="cover"
+                            resizeMode="contain"
                             borderRadius={10}
                           />
                         </View>
@@ -498,6 +498,7 @@ export default function HomePage() {
                     filteredHomes.map((item, index) => (
                       <RealtorPost
                         key={index}
+                        HouseId={item.id}
                         price={`${
                           JSON.parse(item.housing_type_data)["price"]
                         } `}
