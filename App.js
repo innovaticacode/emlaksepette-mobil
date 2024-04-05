@@ -134,7 +134,7 @@ export default function App({route}) {
 {(props) => <ShoppingProfile {...props} İsLoggedIn={İsLoggedIn} />}
 </Stack.Screen>
  <Stack.Screen name="Realtor details"  component={RealtorDetails}options={{
-        title:'Emlak İlanı'
+      headerShown:false
    
   }} />
     <Stack.Screen name="Collecitons"  component={Collections}options={{

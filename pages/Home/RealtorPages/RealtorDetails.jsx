@@ -32,6 +32,12 @@ import SliderMenuPostDetails from "../../../components/PostDetailsSettings/Slide
 import { apiRequestGet } from "../../../components/methods/apiRequest";
 import Header from "../../../components/Header";
 import Search from "../Search";
+import SliderMenuRealtorDetails from "../../../components/SliderMenuRealtorDetail";
+import RealtorCaption from "./RealtorCaption";
+import Settings from "./Settings";
+import RealtorMap from "./RealtorMap";
+import Comment from "./Comment";
+import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 
 
 
@@ -39,6 +45,7 @@ export default function PostDetail() {
 const apiUrl = "https://emlaksepette.com/";
 const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
+const [images,setImages] = useState([]);
 const [heart, setHeart] = useState('hearto');
 const [bookmark, setbookmark] = useState('bookmark-o')
 const [ColectionSheet, setColectionSheet] = useState(false);
@@ -51,7 +58,7 @@ const changeBookmark=()=>{
   setbookmark(bookmark==='bookmark-o' ? 'bookmark': 'bookmark-o')
 }
 const route = useRoute();
-
+const {houseId}=route.params
 const navigation=useNavigation();
 const windowWidth = Dimensions.get('window').width;
 const handleOpenPhone = () => {
@@ -88,6 +95,17 @@ const openFormModal=(no)=>{
   setPaymentModalShowOrder(no)
   setFormVisible(!FormVisible)
 }
+const [data, setData] = useState({})
+useEffect(() => {
+  apiRequestGet("housing/" + houseId).then((res) => {
+    setData(res.data);
+    setImages(JSON.parse(res.data.housing.housing_type_data).images);
+  });
+}, []);
+
+//  console.log( JSON.parse(data?.housing?.housing_type_data)['price'])
+
+
 return (
   
   <SafeAreaView style={{backgroundColor:'white',flex:1}}>
@@ -185,7 +203,7 @@ return (
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        backgroundColor:'red'
+        backgroundColor:  data?.housing?.user?.banner_hex_code
       }}
     >
       <TouchableOpacity
@@ -199,17 +217,27 @@ return (
       >
         <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
           <View style={{ height: 35, width: 35 }}>
-            <Text>Firma resmi</Text>
-            {/* <ImageBackground
-               source={{
-                uri: `${apiUrl}/storage/profile_images/${ProjectHomeData?.project?.user?.profile_image}`,
-               }}
-              style={{ width: "100%", height: "100%" }}
-              borderRadius={20}
-            /> */}
+            {
+              data?.housing?.user?.profile_image ? 
+              <ImageBackground
+              source={{
+               uri: `${apiUrl}/storage/profile_images/${data?.housing?.user?.profile_image}`,
+              }}
+             style={{ width: "100%", height: "100%" }}
+             borderRadius={20}
+           /> :
+           <ImageBackground
+           source={{
+            uri: `${apiUrl}/storage/profile_images/indir.png`,
+           }}
+          style={{ width: "100%", height: "100%" }}
+          borderRadius={20}
+        />
+            }
+          
           </View>
           <Text style={{ color: "white" }}>
-               Firma Adı
+            {data?.housing?.user?.name }
           </Text>
           <View
             style={{
@@ -224,14 +252,14 @@ return (
               style={{ position: "absolute", zIndex: 1 }}
               color={"#333"}
             />
-            {/* <ImageBackground
-              source={require('../pages/Home/BadgeYellow.png')}
+             <ImageBackground
+              source={require('../BadgeYellow.png')}
               style={{ width: "100%", height: "100%" }}
-            /> */}
+            /> 
           </View>
         </View>
 
-        <Arrow name="arrow-forward-ios" size={16} color={"white"} />
+       
       </TouchableOpacity>
     </View>
     <ScrollView
@@ -250,7 +278,7 @@ return (
             }}
           >
             <Text style={{ color: "white", fontSize: 12 }}>
-       1/10
+               {pagination +1} / {images.length}
             </Text>
           </View>
         </View>
@@ -294,9 +322,18 @@ return (
         
           onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
         >
-         <View>
-          <Text>dsff</Text>
-         </View>
+
+
+          {
+            images.map((item,_index) => [
+               
+              <View key={_index}>
+            
+                <ImageBackground source={{uri:`${apiUrl}housing_images/${item}`}} style={{width:'100%',height:'100%'}}/>
+              </View>
+            ])
+          }
+        
           
         </PagerView>
       </View>
@@ -309,21 +346,27 @@ return (
             fontWeight: "400",
           }}
         >
-        Konum
+        {data?.housing?.city?.title} / {data?.housing?.county?.title}
         </Text>
-        <Text style={{ textAlign: "center", fontSize: 16, color: "#264ABB" }}>
-            Başlık
+        {/* <Text style={{textAlign:'center',color: "#264A" ,fontSize:15}}>{JSON.parse(data?.housing?.housing_type_data)['price']} ₺</Text> */}
+        <Text style={{ textAlign: "center", fontSize: 15, color: "#264ABB" }}>
+       {data?.pageInfo?.meta_title} 
      
         </Text>
+       
       </View>
-      <View>
-      
-        <SliderMenuPostDetails
+     
+      <View style={{justifyContent:'center',alignItems:'center'}}>
+      <SliderMenuRealtorDetails
           tab={tabs}
           setTab={setTabs}
           changeTab={changeTab}
         />
       </View>
+          {tabs==0 && <RealtorCaption data={data}/>}
+          {tabs == 1 && <Settings data={data} />}
+          {tabs== 2 && <RealtorMap mapData={data}/>}
+          {tabs==3 && <Comment data={data}/> }
       
    
 {/* 

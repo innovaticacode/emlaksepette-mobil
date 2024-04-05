@@ -1,13 +1,13 @@
 import { View, Text,ScrollView,TouchableOpacity,StyleSheet } from 'react-native'
 import React from 'react'
 
-export default function SliderMenuDetails({tab,setTab,changeTab}) {
+export default function SliderMenuRealtorDetails({tab,setTab,changeTab}) {
     const menuItems=[
-        {text:'Projedeki Konutlar'},
+      
         {text:'Açıklama'},
         {text:'Özellikler'},
         {text:'Harita'},
-        {text:'Vaziyet & Kat Planı'}
+        {text:'Yorumlar'}
     ]
   return (
     <ScrollView
@@ -15,8 +15,9 @@ export default function SliderMenuDetails({tab,setTab,changeTab}) {
       showsHorizontalScrollIndicator={false}
       style={{}}
       bounces={false}
+      contentContainerStyle={{justifyContent:'center'}}
     >
-      <View style={{ padding: 10, flexDirection: "row", gap: 10 }}>
+      <View style={{ padding: 10, flexDirection: "row", gap: 10, alignItems:'center',width:'100%'}}>
         {menuItems.map((item, index) => (
           <TouchableOpacity
             key={index}

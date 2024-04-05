@@ -10,17 +10,17 @@ export default function ProfileSettingsItem({text,ıconName,IconType,IconFeather
         <View style={{flex:1.3/2,display:'flex',flexDirection:'row',gap:10}}>
          {
           IconType===true?
-          <Icon2 name={IconFeather} size={18} color={'#333'}/>:
-          <Icon name={ıconName} size={18} color={'#333'}/>
+          <Icon2 name={IconFeather} size={18} color={'#525B75'}/>:
+          <Icon name={ıconName} size={18} color={'#525B75'}/>
          
          }
           
           
           
-          <Text style={{fontSize:15,color:'#333'}}>{text}</Text>
+          <Text style={{fontSize:15,color:'#525B75'}}>{text}</Text>
         </View>
         <View style={{flex:0.7/2,alignItems:'flex-end'}}>         
-          <Icon name='arrow-forward-ios' size={16} color={'#bebebe'}/>
+          <Icon name='arrow-forward-ios' size={16} color={'#525B75'}/>
         </View>
      </View>
     </View>
