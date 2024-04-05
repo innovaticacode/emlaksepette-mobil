@@ -1,14 +1,26 @@
-import { View, Text, SafeAreaView, StyleSheet, Image, ImageBackground, Dimensions, TouchableOpacity, ScrollView, Animated,} from 'react-native'
-import React, { useState, useRef } from 'react'
-import Icon from 'react-native-vector-icons/AntDesign'
-import LogOut from 'react-native-vector-icons/Entypo'
-import Categories from '../../components/Categories';
-import SettingsItem from '../../components/SettingsItem';
-import BackIcon from "react-native-vector-icons/MaterialIcons"
-import ProfileSettingsItem from '../../components/ProfileSettingsItem';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  Image,
+  ImageBackground,
+  Dimensions,
+  TouchableOpacity,
+  ScrollView,
+  Animated,
+} from "react-native";
+import React, { useState, useRef } from "react";
+import Icon from "react-native-vector-icons/AntDesign";
+import LogOut from "react-native-vector-icons/Entypo";
+import Categories from "../../components/Categories";
+import SettingsItem from "../../components/SettingsItem";
+import BackIcon from "react-native-vector-icons/MaterialIcons";
+import Modal from 'react-native-modal';
+import ProfileSettingsItem from "../../components/ProfileSettingsItem";
+import { useRoute, useNavigation } from "@react-navigation/native";
 export default function ShoppingProfile({ İsLoggedIn }) {
-  const { width, height, fontScale } = Dimensions.get('window');
+  const { width, height, fontScale } = Dimensions.get("window");
   const route = useRoute();
   const navigation = useNavigation();
 
@@ -16,191 +28,443 @@ export default function ShoppingProfile({ İsLoggedIn }) {
   const translateY2 = useRef(new Animated.Value(400)).current;
   // const { isLoggedIn,setisLoggedIn } = route.params;
   // const [isLoggedIn, setisLoggedIn] = useState(false)
-  const [display, setdisplay] = useState(false)
+  const [display, setdisplay] = useState(false);
 
   const openSheet = () => {
-    setdisplay(true)
+    setdisplay(true);
 
     Animated.timing(translateY, {
-
       toValue: 0,
       duration: 300,
       useNativeDriver: true,
     }).start();
   };
 
-
   const closeSheet = () => {
-    setdisplay(false)
+    setdisplay(false);
     Animated.timing(translateY, {
       toValue: 400,
       duration: 300,
       useNativeDriver: true,
     }).start();
   };
-  const [isSelected, setisSelected] = useState(false)
+  const [isSelected, setisSelected] = useState(false);
 
   const handlePres = (text) => {
-    setisSelected(text)
-    openSheet()
-
+    setisSelected(text);
+    openSheet();
+  };
+  {
+    /* Modal Visible States */
+  } 
+const [SellModalVisible, setSellModalVisible] = useState(false)
+const [RentModalVisible, setRentModalVisible] = useState(false)
+const [OfferModalVisible, setOfferModalVisible] = useState(false)
+const [UserTypeModalVisible, setUserTypeModalVisible] = useState(false)
+const [UserModalVisible, setUserModalVisible] = useState(false)
+const [AdsPictureVisible, setAdsPictureVisible] = useState(false)
+  {
+    /* Modal Visible States */
   }
-
- 
+  {
+    /* Modal Functions*/
+  }
+    const toggleSellModal=()=>{
+      setSellModalVisible(!SellModalVisible)
+    }
+    const toggleRentModal=()=>{
+        setRentModalVisible(!RentModalVisible)
+    }
+    const toggleOfferModal=()=>{
+        setOfferModalVisible(!OfferModalVisible)
+    }
+    const toggleUserModal=()=>{
+      setUserModalVisible(!UserModalVisible)
+    }
+    const toggleUserTypeModal=()=>{
+      setUserTypeModalVisible(!UserModalVisible)
+    }
+    const toggleAdsPictureModal=()=>{
+      setAdsPictureVisible(!AdsPictureVisible)
+    }
+  {
+    /* Modal Functions*/
+  }
   return (
-    <View style={{ flex: 1 }} >
-      <View style={style.container} onTouchStart={() => closeSheet()}>
-        <View style={style.header}>
+    <View style={style.container} onTouchStart={() => closeSheet()}>
+
+      <View style={style.header}>
+        <View style={style.opacity}></View>
+    
+        <ImageBackground
+          source={require("./profilePhoto.jpg")}
+          style={{ width: "100%", height: "100%" }}
+          imageStyle={{
+            borderBottomLeftRadius: 30,
+            borderBottomRightRadius: 30,
+          }}
+        />
+        <View style={style.UserInfo}>
        
-          <View style={style.opacity}></View>
-
-          <ImageBackground source={require('./profilePhoto.jpg')} style={{ width: '100%', height: '100%', }} imageStyle={{ borderBottomLeftRadius: 30, borderBottomRightRadius: 30 }} />
-          <View style={style.UserInfo}>
-            <View style={{ display: 'flex', flexDirection: 'row', }}>
-              <View style={{ gap: 8 }}>
-                <Text style={{ color: 'white', fontSize: 18 }}>John Doe</Text>
-                <Text style={{ color: 'white', fontSize: 11 }}>Bireysel Hesap</Text>
-
-
-              </View>
-
-              <View style={{ width: 22, height: 22, left: 10, }}>
-                <ImageBackground source={require('./BadgeYellow.png')} style={{ flex: 1 }} />
-
-                <Icon name='check' style={{ position: 'absolute', left: 3.5, top: 3 }} size={15} />
-              </View>
-
+          <View style={{flexDirection:'row',width:'90%',alignItems:'center',paddingLeft:20,gap:20}}>
+          <View
+          style={{
+            width:65,height:65,
+         
+           
+         
+          }}
+        >
+          <View style={style.profileImage}>
+            <Image
+              source={require("./profil.jpg")}
+              style={{ width: "100%", height: "100%" }}
+              borderRadius={50}
+            />
+          </View>
+        </View>
+          <View style={{ display: "flex", flexDirection: "row" ,alignItems:'center',}}>
+            <View style={{ gap: 8 }}>
+              <Text style={{ color: "white", fontSize: 15 }}>John Doe</Text>
+            
             </View>
 
-          </View>
+            <View style={{ width: 22, height: 22, left: 10 }}>
+              <ImageBackground
+                source={require("./BadgeYellow.png")}
+                style={{ flex: 1 }}
+              />
 
-          <View style={{ width: width > 400 ? 90 : 80, position: 'absolute', bottom: -45, zIndex: 1, left: '40%' }}>
-            <View style={style.profileImage}>
-              <Image source={require('./profil.jpg')} style={{ width: '100%', height: '100%' }} borderRadius={50}  />
+              <Icon
+                name="check"
+                style={{ position: "absolute", left: 3.5, top: 3 }}
+                size={15}
+              />
             </View>
-
-
           </View>
+          </View>
+   
 
         </View>
-        <View style={style.body}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-          {/*   <View style={style.ScrollSetting}>
 
-              <View style={style.Settings}>
-                <View>
-                  <Text style={style.headerText}>Emlak Kulüp</Text>
-                  {İsLoggedIn ?
-                    <TouchableOpacity onPress={() => navigation.navigate('Collecitons')}>
+     
+      </View>
+      <ScrollView contentContainerStyle={{flexGrow:1,paddingTop:20}}>
+           <View style={{padding:10}}>
+            <View>
+       
+            {İsLoggedIn?
+                <>
+                    
+                    <View style={{gap:30}}>
+                      <View>
+                         <Text style={style.headerText}>Koleksiyonlarım</Text>
+                         <TouchableOpacity onPress={() => navigation.navigate('Collecitons')}>
                       <ProfileSettingsItem text='Koleksiyonlarım' ıconName='bookmark-border' />
-                    </TouchableOpacity> :
-                    <TouchableOpacity onPress={() => navigation.navigate('RealtorClub')}>
-                      <ProfileSettingsItem text='Emlak Kulüp Başvurusu' />
                     </TouchableOpacity>
-                  }
+                    </View>
 
-
-                </View>
-                <View>
-                  <Text style={style.headerText}>Mağazam Emlak Sepette</Text>
-                  <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Gelen Başvurular',color:true})}>
-                    <ProfileSettingsItem text='Gelen Başvurular' IconFeather='users' IconType={true} />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Başvurularım',color:false})}>
-                    <ProfileSettingsItem text='Başvurularım' IconFeather='users'IconType={true} />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity onPress={() => navigation.navigate('DashBord')}>
-                    <ProfileSettingsItem text='Gösterge Paneli' ıconName='home-work' />
-                  </TouchableOpacity>
-
-
-
-                  {İsLoggedIn ?
-                    <TouchableOpacity onPress={() => navigation.navigate('MyProject', { header2: 'Proje İlanları' })}>
+                      <View>
+                        <Text style={style.headerText}>İlanlarım</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('MyProject', { header2: 'Proje İlanları' })}>
                       <ProfileSettingsItem text='Proje İlanlarım'  IconType={true} IconFeather='plus' />
-                    </TouchableOpacity> : ''}
-
-                  {İsLoggedIn ?
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate('MyRealtor', { header: 'Emlak İlanları', hidden: 'none' })}>
                       <ProfileSettingsItem text='Emlak İlanlarım' IconType={true} IconFeather='plus' />
-                    </TouchableOpacity> : ''}
+                    </TouchableOpacity>
+                      </View>
 
-                  {İsLoggedIn ? '' : <TouchableOpacity onPress={() => navigation.navigate('Forms')}>
+                    <View>
+                    <Text style={style.headerText}>Başvurular</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Gelen Başvurular',color:true})}>
+                    <ProfileSettingsItem text='Takas Başvuruları' IconFeather='users' IconType={true} />
+                  </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Gelen Başvurular',color:true})}>
+                    <ProfileSettingsItem text='Gelen Konut Başvuruları' IconFeather='users' IconType={true} />
+                  </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Başvurularım',color:false})}>
+                    <ProfileSettingsItem text='Başvurularım' IconFeather='users'IconType={true} />
+                  </TouchableOpacity>
+                    </View>
+                      
+                      <View>
+                        <Text style={style.headerText}>Mağazam Emlak Sepette</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('DashBord')}>
+                    <ProfileSettingsItem text='Gösterge Paneli' ıconName='home-work' />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigation.navigate('Forms')}>
                     <ProfileSettingsItem text='Sat Kirala Formlarım' ıconName='info-outline' />
-                  </TouchableOpacity>}
-
-
+                  </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
-                    handlePres('MyBasket')
-
-                  }}>
+                    handlePres('MyBasket')}}>
                     <ProfileSettingsItem text='Satış' ıconName='shopping-bag' />
                   </TouchableOpacity>
-
                   <TouchableOpacity onPress={() => {
-                    handlePres('Rent')
-                  }}
-
-                  >
+                    handlePres('MyBasket')}}>
                     <ProfileSettingsItem text='Kiralık' ıconName='shopping-bag' />
                   </TouchableOpacity>
-                  {İsLoggedIn ?
-                    <TouchableOpacity onPress={() => {
+                  <TouchableOpacity onPress={() => {
                       handlePres('Offer')
                     }}>
                       <ProfileSettingsItem text='İlanda Kampanya Yap' ıconName='arrow-downward' />
-                    </TouchableOpacity> : ''}
-
-                </View>
-                <View>
-
-                  <Text style={style.headerText}>Hesabım & Yardım</Text>
-                  <TouchableOpacity onPress={() => navigation.navigate('UpdateProfile')}>
+                    </TouchableOpacity>
+                      </View>
+                      <View>
+                        <Text style={style.headerText}>Hesabım & Yardım</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('UpdateProfile')}>
                     <ProfileSettingsItem text='Profili Güncelle' ıconName='edit' />
                   </TouchableOpacity>
 
                   <TouchableOpacity onPress={() => navigation.navigate('ChangePas')}>
                     <ProfileSettingsItem text='Şifreyi Değiştir' ıconName='lock' />
                   </TouchableOpacity>
-
-                  {İsLoggedIn ?
-                    <TouchableOpacity onPress={() => {
-                      handlePres('userType')
-
-
-                    }}>
+                  <TouchableOpacity>
                       <ProfileSettingsItem text='Kullanıcı Tipi Oluştur' ıconName='person-add-alt-1' />
-                    </TouchableOpacity> : ''}
-
-                  {İsLoggedIn ?
-                    <TouchableOpacity onPress={() => {
-                      handlePres('createUser')
-
-                    }}>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
                       <ProfileSettingsItem text='Alt Kullanıcı Oluştur' ıconName='person-add-alt-1' />
-                    </TouchableOpacity> : ''}
-                  {İsLoggedIn ?
-                    <TouchableOpacity onPress={() => {
-                      handlePres('Ads')
-                    }}>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
                       <ProfileSettingsItem text='Reklam Görselleri' ıconName='image' />
-                    </TouchableOpacity> : ''}
+                    </TouchableOpacity>
+                  <View style={{alignItems:'center',padding:20}}>
+                        <TouchableOpacity style={style.btnLogOut}>
+                          <Text style={{color:'white',textAlign:'center',fontSize:15}}>Çıkış Yap</Text>
+                        </TouchableOpacity>
+                      </View>
+                      </View>
+                    
+                    </View>
+                </>
+              
+            :
+                    <>
+                    <View style={{gap:30}}>
+                      <View>
+                         <Text style={style.headerText}>Emlak Kulüp</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('RealtorClub')}>
+                      <ProfileSettingsItem text='Emlak Kulüp Başvurusu' />
+                    </TouchableOpacity>
+                    </View>
 
+                    <View>
+                    <Text style={style.headerText}>Başvurular</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate('Suggest',{name:'Başvurularım',color:false})}>
+                    <ProfileSettingsItem text='Başvurularım' IconFeather='users'IconType={true} />
+                  </TouchableOpacity>
+                    </View>
+                      
+                      <View>
+                        <Text style={style.headerText}>Mağazam Emlak Sepette</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('DashBord')}>
+                    <ProfileSettingsItem text='Gösterge Paneli' ıconName='home-work' />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigation.navigate('Forms')}>
+                    <ProfileSettingsItem text='Sat Kirala Formlarım' ıconName='info-outline' />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => {
+                    handlePres('MyBasket')}}>
+                    <ProfileSettingsItem text='Satış' ıconName='shopping-bag' />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => {
+                    handlePres('MyBasket')}}>
+                    <ProfileSettingsItem text='Kiralık' ıconName='shopping-bag' />
+                  </TouchableOpacity>
+                      </View>
+                      <View>
+                        <Text style={style.headerText}>Hesabım & Yardım</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('UpdateProfile')}>
+                    <ProfileSettingsItem text='Profili Güncelle' ıconName='edit' />
+                  </TouchableOpacity>
 
-                </View>
-
+                  <TouchableOpacity onPress={() => navigation.navigate('ChangePas')}>
+                    <ProfileSettingsItem text='Şifreyi Değiştir' ıconName='lock' />
+                  </TouchableOpacity>
+                  <View style={{alignItems:'center',paddingTop:15}}>
+                        <TouchableOpacity style={style.btnLogOut}>
+                          <Text style={{color:'white',textAlign:'center',fontSize:15}}>Çıkış Yap</Text>
+                        </TouchableOpacity>
+                      </View>
+                      </View>
+                    
+                    </View>
+                    </>
+                
+                  }
               </View>
-              <TouchableOpacity style={{ top: 50, padding: 10, alignItems: 'center' }} >
-                <View style={{ width: '90%', backgroundColor: '#EA2A29', padding: 15, borderRadius: 4 }}>
-                  <Text style={{ textAlign: 'center', color: 'white', fontSize: 15 }}>Çıkış Yap</Text>
-                </View>
-              </TouchableOpacity>
-            </View> */}
-          </ScrollView>
+                  
+
+           </View>
+                
+
+           <Modal
+        isVisible={SellModalVisible}
+        onBackdropPress={toggleSellModal}
+        swipeDirection={['down']}
+        backdropColor="transparent"
+        style={style.modal}
+      >
+        <View style={style.modalContent}>
+          <Text style={style.modalText}>Satış</Text>
+      
         </View>
-      </View>
-      <View style={{ flex: 1, position: 'absolute', bottom: 0, width: '100%', display: display == false ? 'none' : 'flex' }}>
+      </Modal>
+      <Modal
+        isVisible={RentModalVisible}
+        onBackdropPress={toggleRentModal}
+        swipeDirection={['down']}
+        backdropColor="transparent"
+        style={style.modal}
+      >
+        <View style={style.modalContent}>
+          <Text style={style.modalText}>Kiralık</Text>
+      
+        </View>
+      </Modal>
+      <Modal
+        isVisible={OfferModalVisible}
+        onBackdropPress={toggleOfferModal}
+        swipeDirection={['down']}
+        backdropColor="transparent"
+        style={style.modal}
+      >
+        <View style={style.modalContent}>
+          <Text style={style.modalText}>Kampanya</Text>
+      
+        </View>
+      </Modal>
+      <Modal
+        isVisible={UserTypeModalVisible}
+        onBackdropPress={toggleUserTypeModal}
+        swipeDirection={['down']}
+        backdropColor="transparent"
+        style={style.modal}
+      >
+        <View style={style.modalContent}>
+          <Text style={style.modalText}>Kullanıcı tipi</Text>
+      
+        </View>
+      </Modal>
+      <Modal
+        isVisible={UserModalVisible}
+        onBackdropPress={toggleUserModal}
+        swipeDirection={['down']}
+        backdropColor="transparent"
+        style={style.modal}
+      >
+        <View style={style.modalContent}>
+          <Text style={style.modalText}> Alt Kullanıcı Oluştur</Text>
+      
+        </View>
+      </Modal>
+      <Modal
+        isVisible={AdsPictureVisible}
+        onBackdropPress={toggleAdsPictureModal}
+        swipeDirection={['down']}
+        backdropColor="transparent"
+        style={style.modal}
+      >
+        <View style={style.modalContent}>
+          <Text style={style.modalText}> Reklam Görselleri</Text>
+      
+        </View>
+      </Modal>
+      </ScrollView>
+    </View>
+  );
+}
+const { width, height, fontScale } = Dimensions.get("window");
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  header: {
+    width: "100%",
+    height: "19%",
+    justifyContent:'center',
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  opacity: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#DE4241E6",
+    position: "absolute",
+    zIndex: 1,
+  
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  profileImage: {
+
+    borderRadius: 50,
+    backgroundColor: "blue",
+  },
+  UserInfo: {
+    width: "100%",
+    paddingTop:'10%',
+    justifyContent:'center',
+    position: "absolute",
+    zIndex: 1,
+
+  
+  },
+  body: {
+    width: "100%",
+    height: "150%",
+    top: 55,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  Settings: {
+    gap: 40,
+    top: 30,
+    width: "100%",
+    backgroundColor: "#FFFF",
+    borderColor: "#e6e6e6",
+  },
+  headerText: {
+    fontSize: 15,
+    color: "#525B75",
+  },
+  animatedView: {
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+    backgroundColor: "#FFFF",
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 1,
+        shadowRadius: 1,
+      },
+    }),
+    backgroundColor: "white",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingTop: 20,
+    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 20,
+  },
+  btnLogOut:{
+    backgroundColor:'#EA2C2E',
+    width:'70%',padding:13,
+    borderRadius:10
+  }
+});
+{
+  /* <View style={{ flex: 1, position: 'absolute', bottom: 0, width: '100%', display: display == false ? 'none' : 'flex' }}>
 
         <Animated.View
           style={[style.animatedView, { transform: [{ translateY }], }]}>
@@ -379,101 +643,5 @@ export default function ShoppingProfile({ İsLoggedIn }) {
 
 
         </Animated.View>
-      </View>
-
-    </View>
-  )
+            </View>*/
 }
-const { width, height, fontScale } = Dimensions.get('window');
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white'
-  },
-  header: {
-    width: '100%',
-    height: '23%',
-
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30
-  },
-  opacity: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#DE4241E6',
-    position: 'absolute',
-    zIndex: 1,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30
-  },
-  profileImage: {
-    width: '100%',
-    height: width > 400 ? 90 : 80,
-    borderRadius: 50,
-    backgroundColor: 'blue'
-  },
-  UserInfo: {
-    width: '50%',
-
-    position: 'absolute',
-    zIndex: 1,
-    top: '40%',
-    left: 15
-
-  },
-  body: {
-    width: '100%',
-    height: '150%',
-    top: 55,
-    paddingLeft: 20,
-    paddingRight: 20
-
-  },
-  Settings: {
-    gap: 40,
-    top: 30,
-    width: '100%',
-    backgroundColor: '#FFFF',
-    borderColor: '#e6e6e6',
-
-  },
-  headerText: {
-    fontSize: 16,
-    color: 'grey'
-  },
-  animatedView: {
-
-
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-    backgroundColor: '#FFFF',
-    borderColor: '#e6e6e6',
-    ...Platform.select({
-      ios: {
-        shadowColor: ' #e6e6e6',
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation:5,
-        shadowColor: ' #e6e6e6',
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 1,
-        shadowRadius: 1,
-      
-      },
-    }),
-    backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingTop: 20,
-    paddingBottom: 5,
-    paddingLeft: 10,
-    paddingRight: 20,
-  },
-  ScrollSetting:{
-
-  }
-})

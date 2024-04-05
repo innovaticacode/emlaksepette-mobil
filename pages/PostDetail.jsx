@@ -23,7 +23,7 @@ import Bookmark from "react-native-vector-icons/FontAwesome";
 import DetailsPicture from "../components/DetailsPicture";
 import ShoppinInfo from "../components/ShoppinInfo";
 import DetailsSettings from "../components/PostDetailsSettings/DetailsSettings";
-import PostComment from "../components/PostDetailsSettings/PostComment";
+
 import PostFloorPlan from "../components/PostDetailsSettings/PostFloorPlan";
 import PostMap from "../components/PostDetailsSettings/Postmap";
 import PostPayment from "../components/PostDetailsSettings/PostPayment";
@@ -268,7 +268,7 @@ export default function PostDetail() {
         //   }
         // }}
       >
-        <View style={{ height: 250 }}>
+        <View style={{ height: 200 }}>
           <View style={styles.pagination}>
             <View
               style={{
@@ -320,29 +320,26 @@ export default function PostDetail() {
               </View>
             </TouchableOpacity>
           </View>
-          <PagerView
-            style={{ height: 250 }}
-            onPageSelected={(event) =>
-              handlePageChange(event.nativeEvent.position)
-            }
+          <PagerView style={{ height: 200 }}
+          
+            onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
           >
-            {ProjectHomeData.project.images.map((image, index) => {
-              return (
-                <View key={index + 1}>
-                  <ImageBackground
-                    source={{
-                      uri: `${apiUrl}${image.image.replace(
-                        "public",
-                        "storage"
-                      )}`,
-                    }}
-                    style={{ width: "100%", height: "100%" }}
-                    borderBottomLeftRadius={20}
-                    borderBottomRightRadius={20}
-                  />
-                </View>
-              );
-            })}
+             {
+              ProjectHomeData.project.images.map((image,index) => {
+              
+                return(
+                  <View key={index+1}>
+                     <ImageBackground
+                      source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
+                      style={{ width: "100%", height: "100%" }}
+                      borderBottomLeftRadius={20}
+                      borderBottomRightRadius={20}
+                    /> 
+                  </View>
+                )
+              })
+            } 
+            
           </PagerView>
         </View>
         <View style={{ paddingTop: 8, gap: 10 }}>
@@ -731,7 +728,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     position: "absolute",
     right: 7,
-    top: 43,
+    top: 22,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-around",
