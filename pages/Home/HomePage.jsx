@@ -423,9 +423,8 @@ export default function HomePage() {
 
                 {loadingPrjoects == false ? (
                   <View style={{ top: 40, padding: 10 }}>
-                    <ProjectPostSkeleton  />
+                    <ProjectPostSkeleton />
                   </View>
-                  
                 ) : (
                   <>
                     <FlatList
@@ -449,13 +448,11 @@ export default function HomePage() {
                             location={item.city.title}
                             city={item.county.ilce_title}
                             ProjectNo={item.id}
-                           
                             // acıklama={item.description
                             //   .replace(/<\/?[^>]+(>|$)/g, "")
                             //   .replace(/&nbsp;/g, " ")}
-                          
+
                             ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                           
                             loading={loadingPrjoects}
                           />
                         </View>
