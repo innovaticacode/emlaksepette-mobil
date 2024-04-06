@@ -4,13 +4,13 @@ import { useRoute } from "@react-navigation/native";
 import SettingsItem from "../../../components/SettingsItem";
 import ShoppinInfo from "../../../components/ShoppinInfo";
 import CheckSetting from "../../../components/CheckSetting";
-
+import { Shadow } from 'react-native-shadow-2';
 export default function Settings({ data }) {
   const route = useRoute();
 
   return (
-    <View style={{ paddingRight: 8, paddingLeft: 8 }}>
-      <View style={[styles.card, styles.shadowProp]}>
+    <View style={{  }}>
+    <Shadow style={{width:'100%'}}>
       <View key={0}>
   <SettingsItem info="İlan No" numbers={parseInt(data.housing.id) + 2000000}/>
 </View>
@@ -76,7 +76,7 @@ export default function Settings({ data }) {
         <SettingsItem info='Eşyalı' numbers='Evet'/>
         <SettingsItem info='Banyo Sayısı' numbers='1'/>
         <SettingsItem info='Kullanım Durumu' numbers='Boş' border='0'/> */}
-      </View>
+    </Shadow>
     </View>
   );
 }

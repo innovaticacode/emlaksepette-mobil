@@ -43,7 +43,7 @@ export default function Posts({
   const changeBookmark = () => {
     setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
   };
-  console.log(data.projectHousingsList[1])
+ 
   return (
     <TouchableOpacity
       onPress={() =>

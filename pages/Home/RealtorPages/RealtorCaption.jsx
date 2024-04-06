@@ -1,17 +1,17 @@
 import { View, Text,StyleSheet } from 'react-native'
 import React from 'react'
-
+import { Shadow } from 'react-native-shadow-2';
 export default function RealtorCaption({data}) {
     const caption=data?.housing?.description.replace(/<[^>]+>|&[a-zA-Z]+;|[%&]|&gt;/g, '')
   return (
-    <View style={{paddingLeft:8,paddingRight:8}}>
-    <View style={[styles.card, styles.shadowProp]} indicatorStyle='white'>
+    <Shadow  style={{width:'100%',margin:5}} paintInside={false}>
+    <View style={{padding:15,}} indicatorStyle='white'>
 
     <Text>{caption}</Text>
 
     </View>
- 
-    </View>
+    </Shadow>
+   
   )
 }
 const styles=StyleSheet.create({

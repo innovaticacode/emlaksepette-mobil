@@ -51,6 +51,7 @@ export default function SliderBar() {
           ) : (
             <>
               <SliderItem
+              StoreID={item.id}
                 key={index}
                 image={`${apiUrl}/storage/profile_images/${item.profile_image}`}
               />
@@ -66,5 +67,5 @@ export default function SliderBar() {
   );
 }
 const styles = StyleSheet.create({
-  scrollView: {},
+
 });

@@ -197,11 +197,11 @@ const [AdsPictureVisible, setAdsPictureVisible] = useState(false)
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
                     handlePres('MyBasket')}}>
-                    <ProfileSettingsItem text='Satış' ıconName='shopping-bag' />
+                    <ProfileSettingsItem text='Alım Satım Geçmişim' ıconName='shopping-bag' />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
                     handlePres('MyBasket')}}>
-                    <ProfileSettingsItem text='Kiralık' ıconName='shopping-bag' />
+                    <ProfileSettingsItem text='Kiralama Geçmişim' ıconName='shopping-bag' />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
                       handlePres('Offer')
@@ -264,11 +264,11 @@ const [AdsPictureVisible, setAdsPictureVisible] = useState(false)
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
                     handlePres('MyBasket')}}>
-                    <ProfileSettingsItem text='Satış' ıconName='shopping-bag' />
+                    <ProfileSettingsItem text='Alış Geçmişim' ıconName='shopping-bag' />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => {
                     handlePres('MyBasket')}}>
-                    <ProfileSettingsItem text='Kiralık' ıconName='shopping-bag' />
+                    <ProfileSettingsItem text='Kiraladıklarım' ıconName='shopping-bag' />
                   </TouchableOpacity>
                       </View>
                       <View>
