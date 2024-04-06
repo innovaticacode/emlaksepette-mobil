@@ -3,6 +3,7 @@ import{ React,useEffect,useState} from 'react'
 import MapView ,{ Marker,PROVIDER_GOOGLE }from 'react-native-maps';
 import * as Location from 'expo-location'
 import openMap from 'react-native-open-maps'
+import { Shadow } from 'react-native-shadow-2';
 export default function RealtorMap({mapData}) {
 
  
@@ -19,7 +20,7 @@ export default function RealtorMap({mapData}) {
     
 
   return (
-  
+
     <View style={{height:400,paddingLeft:9,paddingRight:8}}>  
 
     
@@ -43,7 +44,9 @@ export default function RealtorMap({mapData}) {
           description="Konutun Konumu"
         />  
 </MapView>
+
   </View>
+
  
   
    

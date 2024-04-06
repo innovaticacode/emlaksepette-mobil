@@ -5,7 +5,8 @@ import { TouchableWithoutFeedback, Keyboard, } from 'react-native'
 import CommentItem from './CommentItem'
 import UploadIcon from 'react-native-vector-icons/AntDesign'
 import { CheckBox } from '@rneui/themed';
-export default function Comment({data}) {
+import { Shadow } from 'react-native-shadow-2';
+export default function Comment({data, handleModal}) {
   
   const [checked, setChecked] = React.useState(false);
   const toggleCheckbox = () => setChecked(!checked);
@@ -23,41 +24,36 @@ export default function Comment({data}) {
   };
 
 
-console.log(data.housingComments[0].comment)
-const dateString = data.housingComments.created_at;
 
-// API'den gelen tarih stringini Date nesnesine dönüştürme
-const dateObject = new Date(dateString);
-
-// Gün, ay ve yıl bilgisini alarak string olarak oluşturma
-const formattedDate = `${dateObject.getDate()}/${dateObject.getMonth() + 1}/${dateObject.getFullYear()}`;
-
-// Formatlanmış tarih bilgisini konsola yazdırma
-console.log(formattedDate);
 
 
   return (
-    
+    <Shadow startColor='#ebebeb'>
     <View style={styles.container} onTouchMove={()=>Keyboard.dismiss()}>
-      <View style={{padding:2,gap:10}}>
+      <View style={{padding:10,gap:10}}>
             <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
               <Text style={{color:'#333',fontSize:17}}>Yorumlar</Text>
-              <TouchableOpacity style={{backgroundColor:'#EA2C2E',paddingLeft:12,paddingRight:12,padding:4,borderRadius:5}}>
-                <Text style={{textAlign:'center',fontSize:13,color:'white'}}>Tüm Yorumlar</Text>
-              </TouchableOpacity>
+            
             </View>
             <View>
               <View style={{flexDirection:'row',gap:5}}> 
-                <Text>4.4</Text>
+                <Text>{data.housingComments.rate}</Text>
                 <Text>10 puan</Text>
                 <Text>|</Text>
-                <Text>5 Yorum</Text>
+                <Text>{data.housingComments.length} Yorum</Text>
               </View>
             </View>
             <ScrollView horizontal contentContainerStyle={{padding:10,gap:10}} showsHorizontalScrollIndicator={false} >
+               
+
               {
+                 data.housingComments.length <1?
+                 <View style={{width:'100%'}}>
+                     <Text style={{textAlign:'center',color:'red'}}>Bu konut için yorum yapılmadı</Text>
+                 </View>
+              :
                 data.housingComments.map((itemComment,_index)=>(
-                  <CommentItem username={itemComment.user.name} key={_index} comment={itemComment.comment} date={itemComment.created_at}/>
+                  <CommentItem username={itemComment.user.name} key={_index} comment={itemComment.comment} date={itemComment.created_at} rate={itemComment.rate}/>
                 ))
               }
         
@@ -65,9 +61,27 @@ console.log(formattedDate);
       
 
             </ScrollView>
+            <View>
+            <TouchableOpacity
+              onPress={()=>{
+                handleModal()
+              }}
+            style={{
+              backgroundColor:'#E54242',
+              width:'30%',
+              padding:8,
+              borderTopRightRadius:10,
+              borderBottomRightRadius:10,
+              borderBottomLeftRadius:15
+            }}>
+        <Text style={{textAlign:'center',color:'white'}}>Yorum Yap</Text>
+      </TouchableOpacity>
+            </View>
+         
       </View>
+    
     </View>
-   
+    </Shadow>
   )
 }
 const styles = StyleSheet.create({

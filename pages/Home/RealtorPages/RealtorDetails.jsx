@@ -19,15 +19,12 @@ import PagerView from 'react-native-pager-view';
 import { useNavigation, useRoute  } from '@react-navigation/native';
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
-
-
-
 import Modal from "react-native-modal";
 import Categories from "../../../components/Categories";
 
 import LinkIcon from "react-native-vector-icons/Entypo";
 import Arrow from "react-native-vector-icons/MaterialIcons";
-
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import SliderMenuPostDetails from "../../../components/PostDetailsSettings/SliderMenuPostDetails";
 import { apiRequestGet } from "../../../components/methods/apiRequest";
 import Header from "../../../components/Header";
@@ -38,8 +35,8 @@ import Settings from "./Settings";
 import RealtorMap from "./RealtorMap";
 import Comment from "./Comment";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
-
-
+import { Shadow } from 'react-native-shadow-2';
+import { CheckBox } from "react-native-elements";
 
 export default function PostDetail() {
 const apiUrl = "https://emlaksepette.com/";
@@ -102,13 +99,27 @@ useEffect(() => {
     setImages(JSON.parse(res.data.housing.housing_type_data).images);
   });
 }, []);
-
 //  console.log( JSON.parse(data?.housing?.housing_type_data)['price'])
 
+const [modalVisibleComennet, setmodalVisibleComment] = useState(false)
+  const handleModal=()=>(
+    setmodalVisibleComment(!modalVisibleComennet)
+  )
+  const [rating, setRating] = useState(0); // Başlangıçta hiçbir yıldız dolu değil
 
+  const handleStarPress = (index) => {
+    // Tıklanan yıldıza kadar olan tüm yıldızları dolu yap
+    setRating(index + 1);
+
+    // Sarı yıldızların sayısını hesapla ve konsola yazdır
+    const yellowStars = index + 1;
+    console.log(`Sarı yıldızlar: ${yellowStars}`);
+  };
+  const [checked, setChecked] = useState(false);
+  const toggleCheked = () => setChecked(!checked);
 return (
   
-  <SafeAreaView style={{backgroundColor:'white',flex:1}}>
+  <SafeAreaView style={{  backgroundColor: "white",flex:1}}>
 
   <Header onPress={toggleDrawer} />
     <Modal
@@ -263,6 +274,7 @@ return (
       </TouchableOpacity>
     </View>
     <ScrollView
+    showsVerticalScrollIndicator={false}
       scrollEventThrottle={16}
 
     >
@@ -337,7 +349,8 @@ return (
           
         </PagerView>
       </View>
-      <View style={{ paddingTop: 8, gap: 10 }}>
+      <Shadow  style={{width:'100%',margin:7,padding:10,}}> 
+      <View style={{ paddingTop: 8, gap: 10,}}>
         <Text
           style={{
             textAlign: "center",
@@ -355,18 +368,25 @@ return (
         </Text>
        
       </View>
-     
+
       <View style={{justifyContent:'center',alignItems:'center'}}>
-      <SliderMenuRealtorDetails
+   
+        <SliderMenuRealtorDetails
           tab={tabs}
           setTab={setTabs}
           changeTab={changeTab}
         />
+      
+      
+    
       </View>
+      </Shadow>
+      
+      
           {tabs==0 && <RealtorCaption data={data}/>}
           {tabs == 1 && <Settings data={data} />}
           {tabs== 2 && <RealtorMap mapData={data}/>}
-          {tabs==3 && <Comment data={data}/> }
+          {tabs==3 && <Comment data={data} handleModal={handleModal}/> }
       
    
 {/* 
@@ -388,8 +408,8 @@ return (
         backdropColor="transparent"
         style={styles.modal2}
       >
-        <View style={styles.modalContent2}>
-          <Text style={styles.modalText2}>Paylaş</Text>
+        <View style={styles.modalContent3}>
+          <Text style={styles.modalText3}>Paylaş</Text>
         </View>
       </Modal>
       <Modal
@@ -397,16 +417,139 @@ return (
         onBackdropPress={ToggleColSheet}
         swipeDirection={["down"]}
         backdropColor="transparent"
-        style={styles.modal2}
+        style={styles.modal3}
       >
-        <View style={styles.modalContent2}>
-          <Text style={styles.modalText2}>Kaydet</Text>
+        <View style={styles.modalContent3}>
+          <Text style={styles.modalText}>Kaydet</Text>
         </View>
       </Modal>
 
-      <View style={{ padding: 10 }}>
-     
+      <Modal
+        isVisible={modalVisibleComennet}
+        onBackdropPress={() => setmodalVisibleComment(false)}
+        backdropColor="transparent"
+        style={styles.modal2}
+      >
+        <View style={styles.modalContent2}>
+          <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between',alignItems:'center',margin:10}}>
+          <Text style={{textAlign:'center',fontSize:16}}>Konutu Değerlendir</Text>
+          <TouchableOpacity 
+          onPress={()=>setmodalVisibleComment(false)}
+            style={{
+              backgroundColor:'#E54242',
+              width:'30%',
+              padding:8,
+              borderRadius:5
+          
+            }}
+          >
+            <Text style={{textAlign:'center',color:'white'}}>İptal Et</Text>
+          </TouchableOpacity>
+          </View>
+         <TouchableOpacity>
+              <View style={{ flexDirection: "row", gap: 4, alignItems: "center", borderBottomWidth:1,borderBottomColor:'#ebebeb',padding:10}}>
+          <View style={{ height: 35, width: 35 }}>
+            {
+              data?.housing?.user?.profile_image ? 
+              <ImageBackground
+              source={{
+               uri: `${apiUrl}/storage/profile_images/${data?.housing?.user?.profile_image}`,
+              }}
+             style={{ width: "100%", height: "100%" }}
+             borderRadius={20}
+           /> :
+           <ImageBackground
+           source={{
+            uri: `${apiUrl}/storage/profile_images/indir.png`,
+           }}
+          style={{ width: "100%", height: "100%" }}
+          borderRadius={20}
+        />
+            }
+          
+          </View>
+
+          <Text style={{ color: "#333" }}>
+            {data?.housing?.user?.name }
+          </Text>
+          <View
+            style={{
+              width: 18,
+              height: 18,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <LinkIcon
+              name="check"
+              style={{ position: "absolute", zIndex: 1 }}
+              color={"#333"}
+            />
+             <ImageBackground
+              source={require('../BadgeYellow.png')}
+              style={{ width: "100%", height: "100%" }}
+            /> 
+          </View>
+        </View>
+            </TouchableOpacity>
+               <View style={{flexDirection:'row',alignItems:'center',width:'100%',justifyContent:'center',gap:20,paddingTop:15}}>
+               {[...Array(5)].map((_, index) => (
+                <View key={index}>
+        <TouchableOpacity  onPress={() => handleStarPress(index)}>
+          <Ionicons
+            name={index < rating ? 'md-star' : 'md-star-outline'}
+            size={30}
+            color={index < rating ? 'gold' : 'gray'}
+          />
+        </TouchableOpacity>
+        </View>
+      ))}
+    
+
+
+                </View>        
+                <View style={{paddingTop:20,gap:5}}>
+                  <Text style={{fontSize:13}}>Yorumunuz</Text>
+        <TextInput style={{borderWidth:1,padding:9,borderRadius:6,borderColor:'#ebebeb',backgroundColor:'#EDEFF7'}}placeholder="Örn:Mahalle gerçekten çok nezih " />
       </View>
+      <View style={{marginTop:15}}>
+     <ScrollView horizontal style={{height:100,gap:10}} contentContainerStyle={{gap:15}} bounces={false} showsHorizontalScrollIndicator={false}>
+        <TouchableOpacity style={{backgroundColor:'#f2f2f2',height:100,borderWidth:1,borderStyle:'dashed',borderColor:'grey', width:100,alignItems:'center',justifyContent:'center'}}>
+        <View style={{alignItems:'center'}}>
+        <Ionicons name="camera-outline"size={30} color={'#EA2B2E'}/>
+          <Text style={{fontSize:10,color:'#333'}}>Fotoğraf Ekle</Text>
+        </View>
+        </TouchableOpacity>
+     
+     
+      
+     </ScrollView>
+     </View>
+     <View style={{width:'100%',alignItems:'center'}}>
+     <CheckBox
+                checked={checked}
+                onPress={toggleCheked}
+                // Use ThemeProvider to make change for all checkbox
+                iconType="material-community"
+                checkedIcon="checkbox-marked"
+                uncheckedIcon="checkbox-blank-outline"
+                checkedColor="#E54242"
+                title={
+                  <View style={{ paddingLeft: 10 }}>
+                    <Text>
+                      <Text style={{ fontSize: 13 }} numberOfLines={2}>
+                 Yorumlarda ismiminin gözükmesine ve yorum detaylanının site genelinde kullanılmmasına izin veriyorum.
+                      </Text>
+                      <Text style={{ fontSize: 13 }}>Aydınlatma Metnine ulaşmak için tıklayınız</Text>
+                    </Text>
+                  </View>
+                }
+          containerStyle={{backgroundColor:'white',borderWidth:0.5,borderColor:'#ebebeb'}}
+           
+              />
+     </View>
+        </View>
+      </Modal>
 
    
 
@@ -425,7 +568,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     height: 50,
-    backgroundColor: '#ecf0f1', // Top bar background color
+    backgroundColor: '#ECECF2', // Top bar background color
   },
   segment: {
     flex: 1,
@@ -526,7 +669,7 @@ modalView: {
   shadowRadius: 4,
   elevation: 5,
 },
-modal2: {
+modal: {
   justifyContent: "flex-end",
   margin: 0,
 },
@@ -572,7 +715,28 @@ pagination: {
       elevation: 5,
     },
   }),
-}
+},
+modal2: {
+  justifyContent: "flex-end",
+  margin: 0,
+},
+modalContent2: {
+  backgroundColor: "white",
+  padding: 20,
+  height: "88%",
+
+},
+modal3: {
+  justifyContent: "flex-end",
+  margin: 0,
+},
+modalContent3: {
+  backgroundColor: "white",
+  padding: 20,
+  height: "30%",
+  borderTopLeftRadius: 10,
+  borderTopRightRadius: 10,
+},
 
 
 });

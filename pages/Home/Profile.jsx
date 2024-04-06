@@ -28,7 +28,7 @@ import Team from "./ProfilePageItem/Team";
 import { useNavigation, useRoute } from "@react-navigation/native";
 export default function Profile() {
   const route = useRoute();
-  const { name } = route.params;
+  const { name,id } = route.params;
   const [tab, settab] = useState(0);
   const { width, height, fontScale, map, maplo } = Dimensions.get("window");
   const translateY = useRef(new Animated.Value(400)).current;
@@ -120,7 +120,7 @@ export default function Profile() {
                       Master Realtor
                     </Text>
                     <Text style={{ color: "white", fontSize: 11 }}>
-                      Gayrimenkul Ofisi
+                      Gayrimenkul Ofisi {id}
                     </Text>
                   </View>
 

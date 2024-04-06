@@ -19,12 +19,12 @@ import PagerView from "react-native-pager-view";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
-
-import DetailsPicture from "../components/DetailsPicture";
-import ShoppinInfo from "../components/ShoppinInfo";
 import DetailsSettings from "../components/PostDetailsSettings/DetailsSettings";
 
-import PostFloorPlan from "../components/PostDetailsSettings/PostFloorPlan";
+import LinkIcon3 from "react-native-vector-icons/Feather";
+import LinkIcon4 from "react-native-vector-icons/Fontisto";
+import LinkIcon2 from "react-native-vector-icons/FontAwesome";
+
 import PostMap from "../components/PostDetailsSettings/Postmap";
 import PostPayment from "../components/PostDetailsSettings/PostPayment";
 import PostCaption from "../components/PostDetailsSettings/PostCaption";
@@ -93,7 +93,7 @@ export default function PostDetail() {
   });
   useEffect(() => {
     apiRequestGet("project/" + projectId).then((res) => {
-      console.log(ProjectHomeData.projectHousingsList);
+    
       setProjectHomeData(res.data);
     });
   }, []);
@@ -111,6 +111,10 @@ export default function PostDetail() {
     setPaymentModalShowOrder(no);
     setFormVisible(!FormVisible);
   };
+  const [changeIcon, setchangeIcon] = useState(false)
+  const  toggleIcon=()=>{
+    setchangeIcon(!changeIcon)
+  }
   return (
     <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
       <Header onPress={toggleDrawer} />
@@ -332,8 +336,7 @@ export default function PostDetail() {
                      <ImageBackground
                       source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
                       style={{ width: "100%", height: "100%" }}
-                      borderBottomLeftRadius={20}
-                      borderBottomRightRadius={20}
+                 
                     /> 
                   </View>
                 )
@@ -400,8 +403,56 @@ export default function PostDetail() {
           backdropColor="transparent"
           style={styles.modal2}
         >
-          <View style={styles.modalContent2}>
-            <Text style={styles.modalText2}>Paylaş</Text>
+          <View style={[{backgroundColor:'white',height:'14%',padding:10}]}>
+          <ScrollView horizontal contentContainerStyle={{}} showsHorizontalScrollIndicator={false}>
+                  <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+              
+                gap: 27,
+              }}
+            >
+              <TouchableOpacity style={{ alignItems: "center" }}>
+                <View style={{backgroundColor:'#E54242',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
+                  <LinkIcon name="link" size={23} color={'white'} />
+                </View>
+                <Text style={{color:'#333',fontSize:12}}>Kopyala</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ alignItems: "center"}}>
+                <View style={{backgroundColor:'#24D366',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
+                  <LinkIcon2 name="whatsapp" size={23} color={'white'} />
+                </View>
+                <Text style={{color:'#333',fontSize:12}}>Whatsapp</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ alignItems: "center" }}>
+                <View style={{backgroundColor:'#E1306C',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
+                  <LinkIcon name="instagram" size={23} color={'white'} />
+                </View>
+                <Text style={{color:'#333',fontSize:12}}>İnstagram</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ alignItems: "center" }}>
+                <View style={{backgroundColor:'#1877F2',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
+                  <LinkIcon2 name="facebook" size={23} color={'white'} />
+                </View>
+                <Text style={{color:'#333',fontSize:12}}>Facebook</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ alignItems: "center" }}>
+                <View style={{backgroundColor:'#51b0e6',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
+                  <LinkIcon3 name="message-circle" size={23} color={'white'}/>
+                </View>
+                <Text style={{color:'#333',fontSize:12}}>Mesajlar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ alignItems: "center" }}>
+                <View style={{backgroundColor:'#7698E3',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
+                  <LinkIcon4 name="messenger" size={23} color={'white'} />
+                </View>
+                <Text style={{color:'#333',fontSize:12}}>Messenger</Text>
+              </TouchableOpacity>
+            </View>
+                  
+                  </ScrollView>
+     
           </View>
         </Modal>
         <Modal
@@ -412,7 +463,62 @@ export default function PostDetail() {
           style={styles.modal2}
         >
           <View style={styles.modalContent2}>
-            <Text style={styles.modalText2}>Kaydet</Text>
+          <View style={styles.modalContent2}>
+                  <View style={{width:'100%',padding:8,backgroundColor:'#F8F7F4',borderTopLeftRadius:15,borderTopRightRadius:15}}>
+                    <View style={{alignItems:'center',padding:5}}>
+                      <View style={{backgroundColor:'#D4D3D2',width:50,height:6,borderRadius:20}}/>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',paddingLeft:10,paddingRight:10}}>
+                      <View style={{flexDirection:'row',alignItems:'center',gap:15}}>
+                        <View style={{width:55,height:55,borderRadius:10}}>
+                          <ImageBackground     source={{uri:`${apiUrl}${ProjectHomeData?.project?.image?.replace("public",'storage')}`}} style={{width:'100%',height:'100%'}} borderRadius={10}/>
+                        </View>
+                        <Text style={{color:'#333',fontWeight:'500'}}>{bookmark=='bookmark-o'?'Kaydet':'Kaydedildi'}</Text>
+                      </View>
+                      <View>
+                      <TouchableOpacity
+              onPress={() => {
+                changeBookmark();
+                setTimeout(() => {
+                  setColectionSheet(false);
+                }, 500);
+             
+              }}
+            >
+              <View style={{alignItems:'center',justifyContent:'center'}}>
+                <Bookmark
+                  name={bookmark}
+                  size={25}
+                  color={bookmark == "bookmark-o" ? "black" : "red"}
+                />
+              </View>
+            </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={{flexDirection:'row',justifyContent:'space-between',paddingRight:10,paddingLeft:10,paddingTop:10}}>
+                    <Text style={{fontSize:13,color:'#333'}}>Koleksiyonlar</Text>
+                   <TouchableOpacity>
+                    <Text style={{fontSize:13,color:'#333',textDecorationLine:'underline'}}>Yeni Koleksiyon</Text>
+                   </TouchableOpacity>
+                  </View>
+                
+                   <View>
+                      <TouchableOpacity style={{flexDirection:'row',justifyContent:'space-between',paddingLeft:10,paddingRight:10,paddingTop:6}}>
+                        <View style={{flexDirection:'row',alignItems:'center', gap:10}}>
+                          <View style={{width:55,height:55,backgroundColor:'red',borderRadius:10}}>
+                       
+                          </View>
+                          <Text style={{fontSize:13,color:'#333'}}>Koleksiyon İsmi</Text>
+                        </View>
+                        <TouchableOpacity style={{alignItems:'center',justifyContent:'center',paddingRight:5}}
+                          onPress={toggleIcon}
+                        >
+                            <Icon name= {changeIcon? 'checkcircle' : "pluscircleo"} size={21}/>
+                        </TouchableOpacity>
+                      </TouchableOpacity>
+                  </View> 
+          </View>
           </View>
         </Modal>
 
@@ -772,8 +878,9 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   modalContent2: {
+
     backgroundColor: "white",
-    padding: 20,
+
     height: "30%",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,

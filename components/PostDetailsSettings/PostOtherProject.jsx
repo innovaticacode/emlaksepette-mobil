@@ -30,7 +30,7 @@ export default function OtherHomeInProject({
   const [rooms, setRooms] = useState([]);
   const Home = [];
 
-  console.log(getLastItemCount, "last");
+
   return (
     <SafeAreaView>
       <View style={{ paddingLeft: 10, paddingRight: 10 }}>

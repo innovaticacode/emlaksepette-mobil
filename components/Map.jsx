@@ -5,7 +5,7 @@ import * as Location from 'expo-location'
 import openMap from 'react-native-open-maps'
 export default function Map({mapData}) {
   var locationCoords = mapData.project.location.split(',');
-  console.log(locationCoords)
+
   const handleGetDirections = () => {
     // Harita uygulamasını açmak ve seçilen konuma yönlendirme yapmak için openMap fonksiyonunu kullanıyoruz
     if (locationCoords && locationCoords[0] && locationCoords[1]) {
