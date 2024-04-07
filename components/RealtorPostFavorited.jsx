@@ -14,7 +14,7 @@ import Bookmark from "react-native-vector-icons/FontAwesome";
 import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
 
-export default function RealtorPost({
+export default function RealtorPostFavorited({
   title,
   loading,
   price,
