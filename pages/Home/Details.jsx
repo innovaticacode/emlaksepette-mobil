@@ -713,7 +713,7 @@ export default function Details({ navigation }) {
           backdropColor="transparent"
           style={styles.modal2}
         >
-          <View style={[{backgroundColor:'white',height:'14%',padding:10}]}>
+          <View style={[styles.card, {backgroundColor:'white',height:'14%',padding:10}]}>
                   <ScrollView horizontal contentContainerStyle={{}} showsHorizontalScrollIndicator={false}>
                   <View
               style={{
@@ -1006,5 +1006,23 @@ const styles = StyleSheet.create({
   label:{
     color:'grey',
     fontWeight:'500'
-  }
+  },
+  card: {  
+    backgroundColor: '#FFFFFF',  
+    borderWidth:0.7,
+    borderColor:'#e6e6e6',
+    ...Platform.select({
+        ios: {
+          shadowColor: ' #e6e6e6',
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+  
+    
+  },
 });

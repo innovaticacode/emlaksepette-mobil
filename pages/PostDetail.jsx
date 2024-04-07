@@ -43,6 +43,7 @@ import PostOtherProject from "../components/PostDetailsSettings/PostOtherProject
 import SettingsItem from "../components/SettingsItem";
 import { addDotEveryThreeDigits } from "../components/methods/merhod";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Shadow } from "react-native-shadow-2";
 
 export default function PostDetail() {
   const apiUrl = "https://emlaksepette.com/";
@@ -395,7 +396,7 @@ export default function PostDetail() {
         )}
         {tabs == 3 && <PostPayment roomOrder={HomeId} data={ProjectHomeData} />}
         {tabs == 4 && <PostMap data={ProjectHomeData} />}
-
+     
         <Modal
           isVisible={IsOpenSheet}
           onBackdropPress={ToggleSheet}
@@ -403,13 +404,15 @@ export default function PostDetail() {
           backdropColor="transparent"
           style={styles.modal2}
         >
-          <View style={[{backgroundColor:'white',height:'14%',padding:10}]}>
-          <ScrollView horizontal contentContainerStyle={{}} showsHorizontalScrollIndicator={false}>
+            
+          <View style={[styles.card, {backgroundColor:'white',height:'14%',padding:10}]}>
+        
+          <ScrollView horizontal={true} contentContainerStyle={{}} showsHorizontalScrollIndicator={false}>
                   <View
               style={{
                 display: "flex",
                 flexDirection: "row",
-              
+                justifyContent: "space-around",
                 gap: 27,
               }}
             >
@@ -452,9 +455,11 @@ export default function PostDetail() {
             </View>
                   
                   </ScrollView>
-     
+      
           </View>
+   
         </Modal>
+    
         <Modal
           isVisible={ColectionSheet}
           onBackdropPress={ToggleColSheet}
@@ -921,5 +926,23 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  card: {  
+    backgroundColor: '#FFFFFF',  
+    borderWidth:0.7,
+    borderColor:'#e6e6e6',
+    ...Platform.select({
+        ios: {
+          shadowColor: ' #e6e6e6',
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+  
+    
   },
 });
