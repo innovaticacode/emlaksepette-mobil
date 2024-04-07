@@ -1,27 +1,33 @@
-import { View, Text ,StyleSheet,ScrollView} from 'react-native'
-import React from 'react'
-import CollectionsItem from './ProfilePages/profileComponents/CollectionsItem'
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React from "react";
+import CollectionsItem from "./ProfilePages/profileComponents/CollectionsItem";
 
 export default function CollectionsPage() {
   return (
     <View style={styles.container}>
-           <ScrollView contentContainerStyle={{}} showsVerticalScrollIndicator={false}>
-            <CollectionsItem/>
-            <CollectionsItem/>
-            <CollectionsItem/>
-            <CollectionsItem/>
-           
-
-
-            </ScrollView>
+      <ScrollView
+        contentContainerStyle={{}}
+        showsVerticalScrollIndicator={false}
+      >
+        <CollectionsItem />
+        <CollectionsItem />
+        <CollectionsItem />
+        <CollectionsItem />
+        <CollectionsItem />
+        <CollectionsItem />
+        <CollectionsItem />
+        <CollectionsItem />
+        <CollectionsItem />
+        <CollectionsItem />
+        <CollectionsItem />
+        <CollectionsItem />
+      </ScrollView>
     </View>
-  )
+  );
 }
-const styles=StyleSheet.create({
-    container:{
-     
-        paddingBottom:100,
-      
-        height:'100%'
-    }
-})
+const styles = StyleSheet.create({
+  container: {
+    paddingBottom: 140,
+    height: "100%",
+  },
+});
