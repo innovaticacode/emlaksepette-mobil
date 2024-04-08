@@ -6,30 +6,26 @@ import ProjectPost from '../ProjectPost';
 export default function ProjectPostSkeleton({}) {
    
   return (
-    <Skeleton animation='pulse'  height={250}  skeletonStyle={{backgroundColor:'#ebebeb',padding:5}}>
-    <TouchableOpacity style={{marginTop:10,padding:10}}>
+  
+    <TouchableOpacity style={{ backgroundColor:'#ebebeb'}} >
 
 
            <View style={styles.container}>
-        <Skeleton animation='pulse' skeletonStyle={{backgroundColor:'#ebebeb'}} >
+    
      <View style={styles.ShoppingName}>
        
      <View style={styles.ShopImage}>
-
+      <Skeleton circle width={50} height={50} skeletonStyle={{backgroundColor:'#dbdbdb'}} style={{backgroundColor:'#ced4da'}} />
      </View>
    
-
-     <View style={styles.ShopText}>
-        <Text style={{color:'white',fontSize:8,textAlign:'center',fontWeight:'500'}}></Text>
-     </View>
+    <Skeleton style={styles.ShopText} skeletonStyle={{backgroundColor:'#dbdbdb'}} />
+    
    
      </View>
-     </Skeleton>
-    <Skeleton  animation='pulse' skeletonStyle={{backgroundColor:'#ebebeb'}} >
-     <View style={[styles.Description,{padding:10}]}>
-       <Text style={{color:'#FFFFFF',fontWeight:'800',fontSize:17,textAlign:'center'}}></Text>
-     </View>
-     </Skeleton>
+  
+    <Skeleton style={styles.Description} skeletonStyle={{backgroundColor:'#dbdbdb'}} />
+    
+    
       
    
          
@@ -41,16 +37,16 @@ export default function ProjectPostSkeleton({}) {
       
 
     </TouchableOpacity>
-    </Skeleton>
+   
   )
 }
 const { width, height } = Dimensions.get('window');
 const styles=StyleSheet.create({
     container:{
             
-            height:width>400? 250:200,
+            height:width>400? 200:200,
             alignItems:'center',
-            top:10,
+          
         
             display:'flex',
             flexDirection:'row',
@@ -59,7 +55,7 @@ const styles=StyleSheet.create({
    ShoppingName:{
    position:'absolute',
    width:'30%',
-   backgroundColor:'#FFFFFF',
+   backgroundColor:'#ced4da',
   left:0,
   height:'40%',
   display:'flex',
@@ -74,10 +70,11 @@ const styles=StyleSheet.create({
    },
    ShopText:{
   height:'25%',
-    backgroundColor:'black',
+    
     justifyContent:'center'
    },
    Description:{
+    backgroundColor:'#ced4da',
     width:'40%',
     height:'100%',
     position:'absolute',

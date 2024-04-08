@@ -407,7 +407,7 @@ export default function PostDetail() {
             
           <View style={[styles.card, {backgroundColor:'white',height:'14%',padding:10}]}>
         
-          <ScrollView horizontal={true} contentContainerStyle={{}} showsHorizontalScrollIndicator={false}>
+          <ScrollView horizontal={true}  showsHorizontalScrollIndicator={false}>
                   <View
               style={{
                 display: "flex",

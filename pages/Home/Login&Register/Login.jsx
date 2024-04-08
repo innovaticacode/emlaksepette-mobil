@@ -19,6 +19,8 @@ import Icon from "react-native-vector-icons/Entypo";
 import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
  import { CheckBox } from "react-native-elements";
 import Modal from "react-native-modal";
+import { apiRequestPost } from "../../../components/methods/apiRequest";
+import * as SecureStore from 'expo-secure-store';
 export default function Login({ navigation }) {
   const [eye, seteye] = useState("eye-off-sharp");
   const [Show, setShow] = useState(false);
@@ -60,14 +62,27 @@ export default function Login({ navigation }) {
         setpassControl(false);
       }, 2000);
     } else {
-      setshowMailSendAlert(true);
       setTimeout(() => {
-        setshowMailSendAlert(false);
       }, 9000);
-      setEmail("");
-      setPassword("");
     }
+
+    apiRequestPost('login',{
+      email : email,
+      password : password
+    }).then((res) => {
+      if(res.data.status){
+        SecureStore.setItemAsync('user',JSON.stringify(res.data));
+        navigation.navigate('HomePage')
+      }else{
+        setshowMailSendAlert(true);
+        setStatus(false);
+        setStatusMessage(res.data.message)
+      }
+    })
   };
+
+  const [status,setStatus] = useState(false);
+  const [statusMessage,setStatusMessage] = useState(false);
 
   const [showLengthAlert, setShowLengthAlert] = useState(false);
   const [showUpperAlert, setShowUpperAlert] = useState(false);
@@ -84,28 +99,6 @@ export default function Login({ navigation }) {
       setShowLengthAlert(true);
     } else {
       setShowLengthAlert(false);
-    }
-
-    //rakam kontrölü
-    const numberRegex = /[0-9]/;
-    if (!numberRegex.test(text)) {
-      setShowNumberAlert(true);
-    } else {
-      setShowNumberAlert(false);
-    }
-    //Büyük harf kontrolü
-    const upperCaseRegex = /[A-Z]/;
-    if (!upperCaseRegex.test(text)) {
-      setShowUpperAlert(true);
-    } else {
-      setShowUpperAlert(false);
-    }
-    // Sembole kontrolü
-    const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
-    if (!symbolRegex.test(text)) {
-      setShowSymbolAlert(true);
-    } else {
-      setShowSymbolAlert(false);
     }
   };
 
@@ -395,7 +388,7 @@ export default function Login({ navigation }) {
 
             <View style={{ gap: 10 }}>
               <View style={{ alignItems: "center" }}>
-                <MailCheck name="email-check" size={55} color={"green"} />
+                <MailCheck name="close" size={55} color={status ? "green" : "red"} />
               </View>
               <View>
                 <Text
@@ -406,9 +399,7 @@ export default function Login({ navigation }) {
                     letterSpacing: 0.5,
                   }}
                 >
-                  Hesabınız oluşturuldu. Hesabınızı etkinleştirmek için lütfen
-                  e-posta adresinize gönderilen doğrulama bağlantısını
-                  tıklayarak e-postanızı onaylayın.
+                  {statusMessage}
                 </Text>
               </View>
             </View>
@@ -455,7 +446,7 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "white",
     padding: 20,
-    height: 300,
+    paddingBottom : 50,
     borderRadius: 20,
   },
   modalText: {

@@ -377,6 +377,7 @@ export default function Details({ navigation }) {
             alignItems: "center",
             gap: 8,
           }}
+          onPress={()=>navigation.navigate('Profile',{name:'',id:data?.project?.user?.id})}
         >
           <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
             <View style={{ height: 35, width: 35 }}>
