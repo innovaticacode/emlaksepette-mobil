@@ -8,6 +8,7 @@ import { apiRequestGetWithBearer } from '../../../../components/methods/apiReque
 import axios from "axios"
 import { getValueFor } from '../../../../components/methods/user';
 export default function ActiveAdverts({header,header2,hidden}) {
+
     const translateY = useRef(new Animated.Value(400)).current;
     const [display, setdisplay] = useState(false)
     const openSheet = () => {
