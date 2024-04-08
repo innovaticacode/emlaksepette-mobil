@@ -10,7 +10,7 @@ import {
   ScrollView,
   Animated,
 } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import LogOut from "react-native-vector-icons/Entypo";
 import Categories from "../../components/Categories";
@@ -19,9 +19,26 @@ import BackIcon from "react-native-vector-icons/MaterialIcons";
 import Modal from "react-native-modal";
 import ProfileSettingsItem from "../../components/ProfileSettingsItem";
 import { useRoute, useNavigation } from "@react-navigation/native";
-export default function ShoppingProfile({ İsLoggedIn }) {
+import { getValueFor } from "../../components/methods/user";
+export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
   const route = useRoute();
+
+  const [user,setUser] = useState({});
+  const [İsLoggedIn,setisLoggedIn] = useState(true);
+
+  useEffect(() => {
+    getValueFor("user",setUser);
+  },[])
+
+  useEffect(() => {
+    if(user.role == "Kurumsal Hesap"){
+      setisLoggedIn(true)
+    }else{
+      setisLoggedIn(false);
+    }
+  },[user])
+
   const navigation = useNavigation();
 
   const translateY = useRef(new Animated.Value(400)).current;
@@ -135,7 +152,7 @@ export default function ShoppingProfile({ İsLoggedIn }) {
               }}
             >
               <View style={{ gap: 8 }}>
-                <Text style={{ color: "white", fontSize: 15 }}>John Doe</Text>
+                <Text style={{ color: "white", fontSize: 15 }}>{user.name}</Text>
               </View>
 
               <View style={{ width: 22, height: 22, left: 10 }}>

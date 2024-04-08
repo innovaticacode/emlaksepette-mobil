@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet,Platform ,Dimensions} from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -12,12 +12,21 @@ import { useNavigation } from "@react-navigation/native";
 
 import ShoppingProfile from "./ShoppingProfile";
 import Login from "./Login&Register/Login";
+import userData, { getValueFor } from "../../components/methods/user";
+import * as SecureStore from 'expo-secure-store';
 
 const Tab = createBottomTabNavigator();
 
 
 
 const Home = () => {
+  const [user,setUser] = useState({})
+  useEffect(() => {
+    getValueFor("user",setUser)
+  },[]);
+
+  console.log(user);
+
   const {width,height}=Dimensions.get("window")
   return (
     <Tab.Navigator
@@ -113,7 +122,7 @@ const Home = () => {
 </Tab.Screen>
 <Tab.Screen
         name="Hesabım"
-        component={ShoppingProfile}
+        component={user.access_token ? ShoppingProfile : Login}
         options={{
           headerShown:false,
           tabBarIcon: ({ color, focused }) => (
