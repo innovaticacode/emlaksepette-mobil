@@ -2,23 +2,24 @@ import { View, Text, StyleSheet, TouchableOpacity, ImageBackground,Dimensions} f
 import {useState}from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Icon2 from 'react-native-vector-icons/Entypo'
-export default function ProjectAdvertPost({Onpress}) {
-    const [İsPasive, setİsPasive] = useState(true)
+import { frontEndUri } from '../../../../components/methods/apiRequest'
+export default function ProjectAdvertPost({Onpress,project}) {
+    const [status, setStatus] = useState(project.status)
 
     const {width,height}=Dimensions.get('window')
   return (
-    <TouchableOpacity onPress={()=>setİsPasive(!İsPasive)}>
+    <TouchableOpacity>
     <View style={style.container}>
      <View style={style.Post}>
             <View style={style.Image}>
                
                
-                <ImageBackground source={require('./home.jpg')} style={{width:'100%',height:'100%'}} resizeMode='cover' />
+                <ImageBackground source={{uri : frontEndUri + project.image.replace('public','storage')}} style={{width:'100%',height:'100%'}} resizeMode='cover' />
             </View>
 
             <View style={style.CaptionAndInfo}>
             <View style={{position:'absolute',zIndex:1,right:0,}}>
-                <Text style={{fontSize:10}}>İlan No: 1212121212</Text>
+                <Text style={{fontSize:10}}>İlan No: {project.id + 1000000}</Text>
                
                 </View>
                 <View style={{position:'absolute',zIndex:1,right:0,top:20}}> 
@@ -32,19 +33,23 @@ export default function ProjectAdvertPost({Onpress}) {
                             color:'#141824',
                             fontWeight:'400',
                           
-                        }}>Master Sonsuz Tatil Evleri</Text>
+                        }}>{project.project_title}</Text>
                         <View style={{flexDirection:'row'}}>
                             <Icon name='location' size={11}/>
                             <Text style={{fontSize:10}}>İstanbul / Kartal / Cevizli</Text>
                         </View>
                         <View style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
-                        <Text style={{fontSize:12,bottom:5}}>İlan Sayısı 1</Text>
-                        {
-                            İsPasive?
-                            <Text style={{bottom:10,fontSize:13,color:'#27B006'}}>Yayında</Text>:
-                            <Text style={{bottom:10,fontSize:13,color:'#B81900',fontWeight:'500'}}>Pasif</Text>
+                        <Text style={{fontSize:12,bottom:5}}>İlan Sayısı {project.room_count}</Text>
+                        {status==0 &&  <Text style={{bottom:5,fontSize:13,color:'#B81900',fontWeight:'500'}}>Pasif</Text> }
+                        {status==1 &&    <Text style={{bottom:5,fontSize:13,color:'#27B006'}}>Yayında</Text>}
+                        {status==2 &&  <Text style={{bottom:5,fontSize:13,color:'#E57809'}}>Admin Onayı Bekliyor</Text> }
+                        {status==3 && <Text style={{bottom:5,fontSize:13,color:'#B81900',fontWeight:'500'}}>Reddedildi</Text>  }
+                        {/* {
+                           status==0 
+                         :
+              
                         }
-                       
+                        */}
                         </View>
                        
                     </View>
