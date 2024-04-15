@@ -5,16 +5,20 @@ import Modal from "react-native-modal";
 import Icon from 'react-native-vector-icons/AntDesign'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { apiRequestGetWithBearer } from '../../../../components/methods/apiRequest';
+import { useNavigation } from "@react-navigation/native";
 import axios from "axios"
 import { getValueFor } from '../../../../components/methods/user';
 export default function WaitAdverts({header,header2,hidden}) {
+  const navigation = useNavigation()
     const translateY = useRef(new Animated.Value(400)).current;
     const [display, setdisplay] = useState(false)
-    const openSheet = () => {
+    const openSheet = (id) => {
+        setSelectedProject(id);
         setEditModalVisible(!EditModalVisible)
     }; 
     const [user,setUser] = useState({})
     const [projects,setProjects] = useState([])
+    const [selectedProject,setSelectedProject] = useState(null);
     const [projectCount,setProjectCount] = useState(0)
     useEffect(() => {
       getValueFor("user",setUser)
@@ -22,7 +26,7 @@ export default function WaitAdverts({header,header2,hidden}) {
     const [start,setStart] = useState(0);
     const [take,setTake] = useState(10);
     useEffect(() => {
-      axios.get('https://emlaksepette.com/api/get_my_projects?status=2&start='+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
+      axios.get('https://7f24-78-178-52-190.ngrok-free.app/api/get_my_projects?status=2&start='+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
         setProjects(res.data.data);
         setProjectCount(res.data.total_projects_count)
       }).catch((e) => {
@@ -30,6 +34,7 @@ export default function WaitAdverts({header,header2,hidden}) {
       })
     },[user]);
    const [EditModalVisible, setEditModalVisible] = useState(false)
+   
   return (
     <View style={{flex:1}}>
     <ScrollView>
@@ -44,7 +49,7 @@ export default function WaitAdverts({header,header2,hidden}) {
           {
             projects.map((project,index) => {
               return(
-                <ProjectAdvertPost key={index} project={project} Onpress={openSheet}/>
+                <ProjectAdvertPost  key={index} project={project} Onpress={openSheet}/>
               )
             })
           }
@@ -67,15 +72,29 @@ export default function WaitAdverts({header,header2,hidden}) {
             <View>
               <TouchableOpacity style={{backgroundColor:'grey',padding:3,width:40,borderRadius:10}}/>
             </View>
-           <TouchableOpacity style={{backgroundColor:'#DAFBD0',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#1B6C0A94'}}>
+           <TouchableOpacity 
+            onPress={()=>{
+              navigation.navigate('EditAdvert')
+              setEditModalVisible(false)
+            }}
+           style={{backgroundColor:'#DAFBD0',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#1B6C0A94'}}>
             <Text style={{textAlign:'center',color:'#1B6C0A',fontWeight:'bold'}}>İlanları Düzenle</Text>
             <MaterialIcon name='home-edit' size={18} color={'#1B6C0A'}/>
            </TouchableOpacity>
-           <TouchableOpacity style={{backgroundColor:'#FFEFCA',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#BD3803'}}>
+           <TouchableOpacity 
+             onPress={()=>{
+              navigation.navigate('Archieve')
+              setEditModalVisible(false)
+            }} style={{backgroundColor:'#FFEFCA',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#BD3803'}}>
             <Text style={{textAlign:'center',color:'#BD3803',fontWeight:'bold'}}>İşlem Kayıtları</Text>
             <MaterialIcon name='archive' size={18} color={'#BD3803'}/>
            </TouchableOpacity>
-           <TouchableOpacity style={{backgroundColor:'#DAFBD0',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#1B6C0A94'}}>
+           <TouchableOpacity
+             onPress={()=>{
+              navigation.navigate('EditProject',{id : selectedProject})
+              setEditModalVisible(false)
+            }}
+           style={{backgroundColor:'#DAFBD0',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#1B6C0A94'}}>
             <Text style={{textAlign:'center',color:'#1B6C0A',fontWeight:'bold'}}>Genel Düzenleme</Text>
             <MaterialIcon name='view-dashboard-edit' size={18} color={'#1B6C0A'}/>
            </TouchableOpacity>

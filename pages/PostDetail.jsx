@@ -46,7 +46,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Shadow } from "react-native-shadow-2";
 
 export default function PostDetail() {
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://7f24-78-178-52-190.ngrok-free.app/";
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState("hearto");

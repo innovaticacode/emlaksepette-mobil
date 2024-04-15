@@ -41,7 +41,7 @@ import userData from "../../components/methods/user";
 export default function HomePage() {
   const navigation = useNavigation();
 
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://7f24-78-178-52-190.ngrok-free.app/";
 
   const [loadingPrjoects, setloadingPrjoects] = useState(false);
   const [loadingEstates, setloadingEstates] = useState(false);
@@ -50,7 +50,7 @@ export default function HomePage() {
   const fetchFeaturedProjects = async () => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/featured-projects"
+        "https://7f24-78-178-52-190.ngrok-free.app/api/featured-projects"
       );
       setFeaturedProjects(response.data);
       setloadingPrjoects(true);
@@ -68,7 +68,7 @@ export default function HomePage() {
   const fetchFeaturedEstates = async () => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/real-estates"
+        "https://7f24-78-178-52-190.ngrok-free.app/api/real-estates"
       );
       setFeaturedEstates(response.data);
       setloadingEstates(true);
@@ -139,7 +139,7 @@ export default function HomePage() {
   const fetchFeaturedSliders = async () => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/featured-sliders"
+        "https://7f24-78-178-52-190.ngrok-free.app/api/featured-sliders"
       );
       setFeaturedSliders(response.data);
       setloadingEstates(true);

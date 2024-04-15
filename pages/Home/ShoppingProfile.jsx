@@ -372,7 +372,7 @@ export default function ShoppingProfile() {
                       />
                     </TouchableOpacity>
                     <View style={{ alignItems: "center", padding: 20 }}>
-                      <TouchableOpacity style={style.btnLogOut}>
+                      <TouchableOpacity onPress={logout} style={style.btnLogOut}>
                         <Text
                           style={{
                             color: "white",

@@ -55,6 +55,9 @@ import SubCategoryChild from './pages/Home/SearchPageItem/SubCategoryChild';
 import Search from './pages/Home/Search';
 import AllProjects from './pages/Home/AllProjects';
 import FilterScreen from './pages/Home/FilterScreen';
+import EditAdvert from './pages/Home/ProfilePages/ProjectAdveretsPages/EditPages/EditAdvert';
+import Archieve from './pages/Home/ProfilePages/ProjectAdveretsPages/EditPages/Archieve';
+import EditProject from './pages/Home/ProfilePages/ProjectAdveretsPages/EditPages/EditProject';
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
@@ -387,6 +390,9 @@ export default function App({route}) {
   })} 
  
   /> 
+  <Stack.Screen name='EditAdvert' component={EditAdvert}/>
+  <Stack.Screen name='Archieve' component={Archieve}/>
+  <Stack.Screen name='EditProject' component={EditProject}/>
   
 </Stack.Navigator>
 
