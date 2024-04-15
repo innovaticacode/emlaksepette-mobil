@@ -15,7 +15,7 @@ export default function SliderBar() {
   const fetchFeaturedStores = async () => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/featured-stores"
+        "https://7f24-78-178-52-190.ngrok-free.app/api/featured-stores"
       );
       if (response.data.length > 0) {
         setFeaturedStores(response.data);

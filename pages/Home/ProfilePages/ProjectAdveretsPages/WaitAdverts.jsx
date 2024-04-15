@@ -12,7 +12,11 @@ export default function WaitAdverts({header,header2,hidden}) {
   const navigation = useNavigation()
     const translateY = useRef(new Animated.Value(400)).current;
     const [display, setdisplay] = useState(false)
-    const openSheet = () => {
+    const [selectedAdvert, setselectedAdvert] = useState(null)
+    const [selectedAdvertName, setselectedAdvertName] = useState(null)
+    const openSheet = (id,name) => {
+      setselectedAdvertName(name)
+      setselectedAdvert(id)
         setEditModalVisible(!EditModalVisible)
     }; 
     const [user,setUser] = useState({})
@@ -24,7 +28,7 @@ export default function WaitAdverts({header,header2,hidden}) {
     const [start,setStart] = useState(0);
     const [take,setTake] = useState(10);
     useEffect(() => {
-      axios.get('https://emlaksepette.com/api/get_my_projects?status=2&start='+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
+      axios.get('https://7f24-78-178-52-190.ngrok-free.app/api/get_my_projects?status=2&start='+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
         setProjects(res.data.data);
         setProjectCount(res.data.total_projects_count)
       }).catch((e) => {
@@ -42,6 +46,7 @@ export default function WaitAdverts({header,header2,hidden}) {
         }}>
             <Text style={styles.headerText}>Onay Bekleyen İlanlar({projects.length})</Text>
         </View>
+
         <View style={styles.Adverts}>
           {
             projects.map((project,index) => {
@@ -71,7 +76,7 @@ export default function WaitAdverts({header,header2,hidden}) {
             </View>
            <TouchableOpacity 
             onPress={()=>{
-              navigation.navigate('EditAdvert')
+              navigation.navigate('EditAdvert',{Project_Id:selectedAdvert , Project_name:selectedAdvertName})
               setEditModalVisible(false)
             }}
            style={{backgroundColor:'#DAFBD0',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#1B6C0A94'}}>

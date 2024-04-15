@@ -176,6 +176,7 @@ export default function ShoppingProfile() {
           <View>
             {İsLoggedIn ? (
               <>
+            
                 <View style={{ gap: 30 }}>
                   <View>
                     <Text style={style.headerText}>Koleksiyonlarım</Text>

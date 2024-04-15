@@ -390,7 +390,10 @@ export default function App({route}) {
   })} 
  
   /> 
-  <Stack.Screen name='EditAdvert' component={EditAdvert}/>
+  <Stack.Screen name='EditAdvert' component={EditAdvert} options={()=>({
+    title:'İlanları Düzenle',
+    headerBackTitle:'.'
+  })}/>
   <Stack.Screen name='Archieve' component={Archieve}/>
   <Stack.Screen name='EditProject' component={EditProject}/>
   
