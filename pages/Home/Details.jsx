@@ -10,28 +10,28 @@ import {
   Button,
   Platform,
   Linking,
+  ActivityIndicator,
+  TextInput,
 } from "react-native";
 
-import { React, useRef, useState } from "react";
+import { React, useEffect, useRef, useState } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Caption from "../../components/Caption";
-import Settings from "../../components/Settings";
+import Settings from "./RealtorPages/Settings";
 import PagerView from "react-native-pager-view";
 import Map from "../../components/Map";
-import Icon2 from "react-native-vector-icons/Feather";
-import DetailsPicture from "../../components/DetailsPicture";
-import ShoppinInfo from "../../components/ShoppinInfo";
+
 import * as Clipboard from "expo-clipboard";
 
 import OtherHomeInProject from "../../components/OtherHomeInProject";
-import PaymentDetail from "../../components/PaymentDetail";
-import Alert from "../../components/Alert";
+
 import FloorPlan from "../../components/FloorPlan";
 import Information from "../../components/Information";
 import LinkIcon3 from "react-native-vector-icons/Feather";
 import LinkIcon4 from "react-native-vector-icons/Fontisto";
 import LinkIcon2 from "react-native-vector-icons/FontAwesome";
 import LinkIcon from "react-native-vector-icons/Entypo";
+
 import { useRoute } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Arrow from "react-native-vector-icons/MaterialIcons";
@@ -42,14 +42,34 @@ import Modal from "react-native-modal";
 import Categories from "../../components/Categories";
 import Search from "./Search";
 import SliderMenuDetails from "../../components/SliderMenuDetails";
+import { apiRequestGet } from "../../components/methods/apiRequest";
+import { addDotEveryThreeDigits } from "../../components/methods/merhod";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Shadow } from "react-native-shadow-2";
 export default function Details({ navigation }) {
-  const [ColectionSheet, setColectionSheet] = useState(false)
-  const [IsOpenSheet, setIsOpenSheet] = useState(false)
+  const [ColectionSheet, setColectionSheet] = useState(false);
+  const [IsOpenSheet, setIsOpenSheet] = useState(false);
+  const [selectedTab, setSelectedTab] = useState(0);
   const [showAlert, setshowAlert] = useState(false);
+  const [page, setPage] = useState(0);
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState("hearto");
   const [bookmark, setbookmark] = useState("bookmark-o");
   const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [itemCount, setItemCount] = useState(10);
+  const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
+  const [FormVisible, setFormVisible] = useState(false)
+  const apiUrl = "https://emlaksepette.com/";
+  const [data, setData] = useState({
+    project: {
+      room_count: 0,
+      roomInfo: [],
+      images : [],
+      location : "0,0"
+    },
+    projectHousingsList: {},
+  });
   const changeHeart = () => {
     setHeart(heart === "hearto" ? "heart" : "hearto");
   };
@@ -57,44 +77,130 @@ export default function Details({ navigation }) {
     setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
   };
   const route = useRoute();
-
+  let debounceTimeout;
   const {
-    otherParam,
-    konum,
-    ımage,
-    sehir,
-    acıklama,
-    ShoppingName,
-    ShoppingMail,
-    ShopingInfo,
-    Phone,
     slug,
     ProjectId,
-    ShopingImage,
   } = route.params;
 
   const translateY = useRef(new Animated.Value(400)).current;
-  const openModal = () => {
+  const openModal = (roomOrder) => {
+    setPaymentModalShowOrder(roomOrder);
     setModalVisible(!modalVisible);
   };
-  const openSheet = () => {
-    Animated.timing(translateY, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+  const OpenFormModal=(no)=>{
+    setPaymentModalShowOrder(no)
+    setFormVisible(!FormVisible)
+  }
+
+  useEffect(() => {
+    apiRequestGet("project/" + ProjectId).then((res) => {
+      setData(res.data);
+    });
+  }, []);
+
+  const getLastItemCount = () => {
+    var lastBlockItemsCount = 0;
+    for (var i = 0; i < selectedTab; i++) {
+      lastBlockItemsCount += data.project.blocks[i].housing_count;
+    }
+
+    return lastBlockItemsCount;
   };
 
-  const closeSheet = () => {
-    Animated.timing(translateY, {
-      toValue: 400,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+  const getBlockItems = (selectedOrder) => {
+    var lastBlockItemsCount = 0;
+
+    for (var i = 0; i < selectedOrder; i++) {
+      lastBlockItemsCount += data.project.blocks[i].housing_count;
+    }
+    apiRequestGet(
+      "project_housings/" +
+        ProjectId +
+        "?start=" +
+        lastBlockItemsCount +
+        "&end=" +
+        (lastBlockItemsCount + 10)
+    ).then((res) => {
+      setData({
+        ...data,
+        projectHousingsList: res.data.housings,
+      });
+
+      setItemCount(10);
+    });
   };
+
+  const fetchHousings = (page) => {
+    if (data.project.have_blocks) {
+      if (page * 10 <= data.project.blocks[selectedTab].housing_count) {
+        setIsLoading(true);
+        apiRequestGet(
+          "project_housings/" +
+            ProjectId +
+            "?start=" +
+            page * 10 +
+            "&end=" +
+            ((page + 1) * 10 > data.project.blocks[selectedTab].housing_count
+              ? data.project.blocks[selectedTab].housing_count
+              : (page + 1) * 10)
+        ).then((res) => {
+          setData({
+            ...data,
+            projectHousingsList: {
+              ...data.projectHousingsList,
+              ...res.data.housings,
+            },
+          });
+          setItemCount(
+            (page + 1) * 10 > data.project.blocks[selectedTab].housing_count
+              ? data.project.blocks[selectedTab].housing_count
+              : (page + 1) * 10
+          );
+          setIsLoading(false);
+        });
+      }
+    } else {
+      if (page * 10 <= data.project.room_count) {
+        setIsLoading(true);
+        apiRequestGet(
+          "project_housings/" +
+            ProjectId +
+            "?start=" +
+            page * 10 +
+            "&end=" +
+            (page + 1) * 10
+        ).then((res) => {
+          setData({
+            ...data,
+            projectHousingsList: {
+              ...data.projectHousingsList,
+              ...res.data.housings,
+            },
+          });
+          console.log(
+            (page + 1) * 10 > data.project.room_count
+              ? data.project.room_count
+              : (page + 1) * 10
+          );
+          setItemCount(
+            (page + 1) * 10 > data.project.room_count
+              ? data.project.room_count
+              : (page + 1) * 10
+          );
+          console.log("asd123123", page);
+          setIsLoading(false);
+        });
+      }
+    }
+  };
+
+  console.log(itemCount);
+
+
 
   const shareLinkOnWhatsApp = () => {
-    const url = `https://emlaksepette.com/proje/${slug}//1000${ProjectId}/detay`;
+    const url = `https://emlaksepette.com/${slug}//1000${ProjectId}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -103,7 +209,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("WhatsApp açılamadı:", error));
   };
   const shareLinkOnInstagram = (text) => {
-    const url = `https://emlaksepette.com/proje/${slug}/100${ProjectId}/detay`;
+    const url = `https://emlaksepette.com/${slug}/100${ProjectId}/detay`;
 
     const instagramShareURL = `instagram://story/?text=${encodeURIComponent(
       url
@@ -114,7 +220,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("Instagram açılamadı:", error));
   };
   const copyToClipboard = () => {
-    const url = `https://emlaksepette.com/proje/${slug}/1000${ProjectId}/detay`;
+    const url = `https://emlaksepette.com/${slug}/1000${ProjectId}/detay`;
     Clipboard.setStringAsync(url);
     ShowAlert();
   };
@@ -131,20 +237,40 @@ export default function Details({ navigation }) {
     }, 2000);
   };
 
+  const isCloseToBottom = ({
+    layoutMeasurement,
+    contentOffset,
+    contentSize,
+  }) => {
+    const paddingToBottom = 20;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
   const ToggleSheet = () => {
-   setIsOpenSheet(!IsOpenSheet)
+    setIsOpenSheet(!IsOpenSheet);
   };
   const ToggleColSheet = () => {
- setColectionSheet(!ColectionSheet)
-   };
+    setColectionSheet(!ColectionSheet);
+  };
   const changeTab = (tabs) => {
     setTabs(tabs);
   };
+  const [pagination, setpagination] = useState(0)
+  const handlePageChange = (pageNumber) => {
+    setpagination(pageNumber);
+  };
+  const [changeIcon, setchangeIcon] = useState(false)
+    const  toggleIcon=()=>{
+      setchangeIcon(!changeIcon)
+    }
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -165,7 +291,7 @@ export default function Details({ navigation }) {
             }}
           >
             <SafeAreaView style={{ zIndex: 1 }}>
-              <ScrollView showsVerticalScrollIndicator={false}>
+              <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("HomePage");
@@ -240,7 +366,7 @@ export default function Details({ navigation }) {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          backgroundColor: "#619AE5",
+          backgroundColor: data?.project.user?.banner_hex_code,
         }}
       >
         <TouchableOpacity
@@ -251,16 +377,22 @@ export default function Details({ navigation }) {
             alignItems: "center",
             gap: 8,
           }}
+          onPress={()=>navigation.navigate('Profile',{name:'',id:data?.project?.user?.id})}
         >
           <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
             <View style={{ height: 35, width: 35 }}>
               <ImageBackground
-                source={{ uri: ShopingImage }}
+                source={{
+                  uri: `${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`,
+                }}
                 style={{ width: "100%", height: "100%" }}
                 borderRadius={20}
               />
             </View>
-            <Text style={{ color: "white" }}>Maliyetine Ev</Text>
+            <Text style={{ color: "white" }}>
+              {" "}
+              {data?.project?.user?.name ? `${data?.project?.user?.name} ` : ""}
+            </Text>
             <View
               style={{
                 width: 18,
@@ -279,14 +411,31 @@ export default function Details({ navigation }) {
                 style={{ width: "100%", height: "100%" }}
               />
             </View>
+           
           </View>
 
           <Arrow name="arrow-forward-ios" size={16} color={"white"} />
+          <Text style={{color:'white',fontSize:15}}> 1000{data.project.id} No'lu proje</Text>
         </TouchableOpacity>
+        
       </View>
 
-      <ScrollView>
-        <View style={{ height: 250 }}>
+      <ScrollView
+    
+        scrollEventThrottle={16}
+        onScroll={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(() => {
+              if (!isLoading) {
+                fetchHousings(page + 1);
+                setPage(page + 1);
+              }
+            }, 1000); // 500ms içinde yeni bir istek yapılmazsa gerçekleştir
+          }
+        }}
+      >
+        <View style={{ height: 200 }}>
           <View style={styles.pagination}>
             <View
               style={{
@@ -297,12 +446,14 @@ export default function Details({ navigation }) {
                 borderRadius: 10,
               }}
             >
-              <Text style={{ color: "white", fontSize: 12 }}>1/10</Text>
+              <Text style={{ color: "white", fontSize: 12 }}>
+                {pagination + 1} / {data.project.images.length}
+              </Text>
             </View>
           </View>
 
           <View style={styles.ıconContainer}>
-            <TouchableOpacity onPress={()=>setIsOpenSheet(true)}>
+            <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
               <View style={styles.ıcon}>
                 <Icon name="sharealt" size={18} />
               </View>
@@ -321,12 +472,12 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={()=>
-              {
-                changeBookmark()
-                setColectionSheet(true)
-              
-              }}>
+            <TouchableOpacity
+              onPress={() => {
+                changeBookmark();
+                setColectionSheet(true);
+              }}
+            >
               <View style={styles.ıcon}>
                 <Bookmark
                   name={bookmark}
@@ -336,23 +487,24 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
           </View>
-          <PagerView style={{ height: 250 }}>
-            <View key="1">
-              <ImageBackground
-                source={{ uri: ımage }}
-                style={{ width: "100%", height: "100%" }}
-                borderBottomLeftRadius={20}
-                borderBottomRightRadius={20}
-              />
-            </View>
-            <View key="2">
-              <ImageBackground
-                source={require("./home.jpg")}
-                style={{ width: "100%", height: "100%" }}
-                borderBottomLeftRadius={20}
-                borderBottomRightRadius={20}
-              />
-            </View>
+          <PagerView style={{ height: 200 }}
+            onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
+          >
+            {
+              data.project.images.map((image,index) => {
+                // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
+                return(
+                  <View key={index+1}>
+                    <ImageBackground
+                      source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
+                      style={{ width: "100%", height: "100%" }}
+                    
+                    />
+                  </View>
+                )
+              })
+            }
+            
           </PagerView>
         </View>
         <View style={{ paddingTop: 8, gap: 10 }}>
@@ -364,10 +516,12 @@ export default function Details({ navigation }) {
               fontWeight: "400",
             }}
           >
-            {konum} / {sehir}
+            {data?.project?.city?.title
+              ? `${data.project.city.title} / ${data.project.county.ilce_title}`
+              : ""}
           </Text>
           <Text style={{ textAlign: "center", fontSize: 16, color: "#264ABB" }}>
-            {otherParam}
+            {data?.project?.project_title}
           </Text>
         </View>
         <View>
@@ -377,12 +531,23 @@ export default function Details({ navigation }) {
             changeTab={changeTab}
           />
         </View>
-        {tabs == 0 && <OtherHomeInProject openmodal={openModal} />}
+        {tabs == 0 && (
+          <OtherHomeInProject
+            itemCount={itemCount}
+            data={data}
+            getLastItemCount={getLastItemCount}
+            setSelectedTab={setSelectedTab}
+            selectedTab={selectedTab}
+            openmodal={openModal}
+            getBlockItems={getBlockItems}
+            OpenFormModal={OpenFormModal}
+          />
+        )}
         <View style={{ paddingLeft: 10, paddingRight: 10 }}>
-          {tabs == 1 && <Caption acıklama={acıklama} />}
+          {tabs == 1 && <Caption data={data} />}
         </View>
-        {tabs == 2 && <Information />}
-        <View style={{}}>{tabs === 3 && <Map />}</View>
+        {tabs == 2 && <Information settings={data} />}
+        <View style={{}}>{tabs === 3 && <Map mapData={data} />}</View>
 
         {tabs == 4 && <FloorPlan />}
 
@@ -412,14 +577,113 @@ export default function Details({ navigation }) {
               </TouchableOpacity>
               <View style={{ backgroundColor: "#EEEEEE", padding: 10 }}>
                 <Text style={{ fontWeight: "bold", fontSize: 12 }}>
-                  {otherParam} projesinde 1 No'lu ilan Ödeme Planı
+                  {data?.project?.project_title} projesinde{" "}
+                  {paymentModalShowOrder} No'lu ilan Ödeme Planı
                 </Text>
               </View>
               <View>
-                <SettingsItem info="Peşin Fiyat" numbers="2.000.000" />
-                <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="2.500.000" />
-                <SettingsItem info="Peşinat" numbers="1.000.000" />
-                <SettingsItem info="Aylık Ödenecek Tutar" numbers="100.000" />
+                <SettingsItem
+                  info="Peşin Fiyat"
+                  numbers={
+                    paymentModalShowOrder != null
+                      ? addDotEveryThreeDigits(
+                          data.projectHousingsList[paymentModalShowOrder][
+                            "price[]"
+                          ]
+                        ) + " ₺"
+                      : "0"
+                  }
+                />
+                {paymentModalShowOrder != null ? (
+                  JSON.parse(
+                    data.projectHousingsList[paymentModalShowOrder][
+                      "payment-plan[]"
+                    ]
+                  ) &&
+                  JSON.parse(
+                    data.projectHousingsList[paymentModalShowOrder][
+                      "payment-plan[]"
+                    ]
+                  ).includes("taksitli") ? (
+                    <SettingsItem
+                      info="Taksitli 12 Ay Fiyat"
+                      numbers={
+                        addDotEveryThreeDigits(
+                          data.projectHousingsList[paymentModalShowOrder][
+                            "installments-price[]"
+                          ]
+                        ) + "₺"
+                      }
+                    />
+                  ) : (
+                    <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="0" />
+                  )
+                ) : (
+                  <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="0" />
+                )}
+                {paymentModalShowOrder != null ? (
+                  JSON.parse(
+                    data.projectHousingsList[paymentModalShowOrder][
+                      "payment-plan[]"
+                    ]
+                  ) &&
+                  JSON.parse(
+                    data.projectHousingsList[paymentModalShowOrder][
+                      "payment-plan[]"
+                    ]
+                  ).includes("taksitli") ? (
+                    <SettingsItem
+                      info="Peşinat"
+                      numbers={
+                        addDotEveryThreeDigits(
+                          data.projectHousingsList[paymentModalShowOrder][
+                            "advance[]"
+                          ]
+                        ) + "₺"
+                      }
+                    />
+                  ) : (
+                    <SettingsItem info="Peşinat" numbers="0" />
+                  )
+                ) : (
+                  <SettingsItem info="Peşinat" numbers="0" />
+                )}
+
+                {paymentModalShowOrder != null ? (
+                  JSON.parse(
+                    data.projectHousingsList[paymentModalShowOrder][
+                      "payment-plan[]"
+                    ]
+                  ) &&
+                  JSON.parse(
+                    data.projectHousingsList[paymentModalShowOrder][
+                      "payment-plan[]"
+                    ]
+                  ).includes("taksitli") ? (
+                    <SettingsItem
+                      info="Aylık Ödenecek Tutar"
+                      numbers={
+                        addDotEveryThreeDigits(
+                          (
+                            (data.projectHousingsList[paymentModalShowOrder][
+                              "installments-price[]"
+                            ] -
+                              data.projectHousingsList[paymentModalShowOrder][
+                                "advance[]"
+                              ]) /
+                            data.projectHousingsList[paymentModalShowOrder][
+                              "installments[]"
+                            ]
+                          ).toFixed(0)
+                        ) + "₺"
+                      }
+                    />
+                  ) : (
+                    <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
+                  )
+                ) : (
+                  <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
+                )}
               </View>
 
               <TouchableOpacity
@@ -444,29 +708,200 @@ export default function Details({ navigation }) {
           </View>
         </Modal>
         <Modal
-        isVisible={IsOpenSheet}
-        onBackdropPress={ToggleSheet}
-        swipeDirection={['down']}
-        backdropColor="transparent"
-        style={styles.modal2}
-      >
-        <View style={styles.modalContent2}>
-          <Text style={styles.modalText2}>Paylaş</Text>
-      
+          isVisible={IsOpenSheet}
+          onBackdropPress={ToggleSheet}
+        
+          backdropColor="transparent"
+          style={styles.modal2}
+        >
+          <View style={[styles.card, {backgroundColor:'white',height:'14%',padding:10}]}>
+                  <ScrollView horizontal contentContainerStyle={{}} showsHorizontalScrollIndicator={false}>
+                  <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-around",
+                gap: 27,
+              }}
+            >
+              <TouchableOpacity style={{ alignItems: "center" }}>
+                <View style={{backgroundColor:'#E54242',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
+                  <LinkIcon name="link" size={23} color={'white'} />
+                </View>
+                <Text style={{color:'#333',fontSize:12}}>Kopyala</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ alignItems: "center"}}>
+                <View style={{backgroundColor:'#24D366',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
+                  <LinkIcon2 name="whatsapp" size={23} color={'white'} />
+                </View>
+                <Text style={{color:'#333',fontSize:12}}>Whatsapp</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ alignItems: "center" }}>
+                <View style={{backgroundColor:'#E1306C',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
+                  <LinkIcon name="instagram" size={23} color={'white'} />
+                </View>
+                <Text style={{color:'#333',fontSize:12}}>İnstagram</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ alignItems: "center" }}>
+                <View style={{backgroundColor:'#1877F2',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
+                  <LinkIcon2 name="facebook" size={23} color={'white'} />
+                </View>
+                <Text style={{color:'#333',fontSize:12}}>Facebook</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ alignItems: "center" }}>
+                <View style={{backgroundColor:'#51b0e6',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
+                  <LinkIcon3 name="message-circle" size={23} color={'white'}/>
+                </View>
+                <Text style={{color:'#333',fontSize:12}}>Mesajlar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ alignItems: "center" }}>
+                <View style={{backgroundColor:'#7698E3',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
+                  <LinkIcon4 name="messenger" size={23} color={'white'} />
+                </View>
+                <Text style={{color:'#333',fontSize:12}}>Messenger</Text>
+              </TouchableOpacity>
+            </View>
+                  
+                  </ScrollView>
+     
+            
+                 
+          </View>
+        </Modal>
+
+
+        <Modal
+          isVisible={ColectionSheet}
+          onBackdropPress={ToggleColSheet}
+          swipeDirection={["down"]}
+          backdropColor="transparent"
+          style={styles.modal2}
+        >
+          <View style={styles.modalContent2}>
+                  <View style={{width:'100%',padding:8,backgroundColor:'#F8F7F4',borderTopLeftRadius:15,borderTopRightRadius:15}}>
+                    <View style={{alignItems:'center',padding:5}}>
+                      <View style={{backgroundColor:'#D4D3D2',width:50,height:6,borderRadius:20}}/>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',paddingLeft:10,paddingRight:10}}>
+                      <View style={{flexDirection:'row',alignItems:'center',gap:15}}>
+                        <View style={{width:55,height:55,borderRadius:10}}>
+                          <ImageBackground     source={{uri:`${apiUrl}${data?.project?.image?.replace("public",'storage')}`}} style={{width:'100%',height:'100%'}} borderRadius={10}/>
+                        </View>
+                        <Text style={{color:'#333',fontWeight:'500'}}>{bookmark=='bookmark-o'?'Kaydet':'Kaydedildi'}</Text>
+                      </View>
+                      <View>
+                      <TouchableOpacity
+              onPress={() => {
+                changeBookmark();
+                setTimeout(() => {
+                  setColectionSheet(false);
+                }, 500);
+             
+              }}
+            >
+              <View style={{alignItems:'center',justifyContent:'center'}}>
+                <Bookmark
+                  name={bookmark}
+                  size={25}
+                  color={bookmark == "bookmark-o" ? "black" : "red"}
+                />
+              </View>
+            </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={{flexDirection:'row',justifyContent:'space-between',paddingRight:10,paddingLeft:10,paddingTop:10}}>
+                    <Text style={{fontSize:13,color:'#333'}}>Koleksiyonlar</Text>
+                   <TouchableOpacity>
+                    <Text style={{fontSize:13,color:'#333',textDecorationLine:'underline'}}>Yeni Koleksiyon</Text>
+                   </TouchableOpacity>
+                  </View>
+                  <ScrollView>
+                      < TouchableOpacity style={{flexDirection:'row',justifyContent:'space-between',paddingLeft:10,paddingRight:10,paddingTop:6}}>
+                        <View style={{flexDirection:'row',alignItems:'center', gap:10}}>
+                          <View style={{width:55,height:55,backgroundColor:'red',borderRadius:10}}>
+
+                          </View>
+                          <Text style={{fontSize:13,color:'#333'}}>Koleksiyon İsmi</Text>
+                        </View>
+                        <TouchableOpacity style={{alignItems:'center',justifyContent:'center',paddingRight:5}}
+                          onPress={toggleIcon}
+                        >
+                            <Icon name= {changeIcon? 'checkcircle' : "pluscircleo"} size={21}/>
+                        </TouchableOpacity>
+                      </TouchableOpacity>
+                  </ScrollView>
+          </View>
+        </Modal>
+        <Modal
+          animationType="slide" 
+          transparent={true}
+          onBackdropPress={()=>setFormVisible(false)}
+          visible={FormVisible}
+          onRequestClose={() => {
+            setFormVisible(false);
+          }}
+        >
+          <View style={[styles.centeredView,{padding:0}]}>
+            <View style={[styles.modalView,{height:'90%'}]}>
+            <Text style={{ fontWeight: "bold", fontSize: 12,textAlign:'center' }}>
+                  {data?.project?.project_title}{" "}projesinde {" "}
+                  {paymentModalShowOrder} No'lu Konut Başvuru Formu
+                </Text>
+                <KeyboardAwareScrollView showsVerticalScrollIndicator={false}> 
+            <View style={{gap:15}}>
+         
+              <View style={{gap:7}}>
+                <Text style={styles.label}>Ad Soyad</Text>
+                <TextInput style={styles.Input}/>
+              </View>
+              <View style={{gap:7}}>
+                <Text style={styles.label}>Telefon Numarası</Text>
+                <TextInput style={styles.Input}/>
+              </View>
+              <View style={{gap:7}}>
+                <Text style={styles.label}>E-Posta</Text>
+                <TextInput style={styles.Input}/>
+              </View>
+              <View style={{gap:7}}>
+                <Text style={styles.label}>Meslek</Text>
+                <TextInput style={styles.Input}/>
+              </View>
+              <View style={{gap:7}}>
+                <Text style={styles.label}>İl</Text>
+                <TextInput style={styles.Input}/>
+              </View>
+              <View style={{gap:7}}>
+                <Text style={styles.label}>İlçe</Text>
+                <TextInput style={styles.Input}/>
+              </View>
+           
+        
+            </View>
+            </KeyboardAwareScrollView>
+            <View style={{flexDirection:'row',justifyContent:'space-around'}}>
+              <TouchableOpacity style={{backgroundColor:'#28A745',width:'40%',padding:15,borderRadius:10}}>
+                <Text style={{color:'white',textAlign:'center'}}>Gönder</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{backgroundColor:'#DC3545',width:'40%',padding:15,borderRadius:10}}
+                onPress={()=>{
+                  setFormVisible(false)
+                }}
+              >
+                <Text style={{color:'white',textAlign:'center'}}>Kapat</Text>
+              </TouchableOpacity>
+            </View>
+            </View>
+          </View>
+        </Modal>
+
+        <View style={{ padding: 10 }}>
+          <ActivityIndicator
+            size="large"
+            color="grey"
+            style={{ display: isLoading ? "flex" : "none" }}
+          />
         </View>
-      </Modal>
-      <Modal
-        isVisible={ColectionSheet}
-        onBackdropPress={ToggleColSheet}
-        swipeDirection={['down']}
-        backdropColor="transparent"
-        style={styles.modal2}
-      >
-        <View style={styles.modalContent2}>
-          <Text style={styles.modalText2}>Kaydet</Text>
-      
-        </View>
-      </Modal>
       </ScrollView>
     </SafeAreaView>
   );
@@ -512,10 +947,11 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     position: "absolute",
     right: 7,
-    top: 43,
+    top: 22,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-around",
+    alignItems:'center',
     gap: 20,
     zIndex: 1,
   },
@@ -532,6 +968,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+
     // modal dışı koyu arkaplan
   },
   modalView: {
@@ -551,15 +988,42 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modal2: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     margin: 0,
   },
   modalContent2: {
-    backgroundColor: 'white',
-    padding: 20,
-    height:'30%',
+    backgroundColor: "white",
+  
+    height: "35%",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+  },
+  Input:{
+    borderWidth:1,
+    padding:10,
+    borderRadius:6,
+    borderColor:'#ebebeb'
+  },
+  label:{
+    color:'grey',
+    fontWeight:'500'
+  },
+  card: {  
+    backgroundColor: '#FFFFFF',  
+    borderWidth:0.7,
+    borderColor:'#e6e6e6',
+    ...Platform.select({
+        ios: {
+          shadowColor: ' #e6e6e6',
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+  
     
-  }
+  },
 });

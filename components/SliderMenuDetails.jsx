@@ -14,6 +14,7 @@ export default function SliderMenuDetails({tab,setTab,changeTab}) {
       horizontal={true}
       showsHorizontalScrollIndicator={false}
       style={{}}
+      bounces={false}
     >
       <View style={{ padding: 10, flexDirection: "row", gap: 10 }}>
         {menuItems.map((item, index) => (

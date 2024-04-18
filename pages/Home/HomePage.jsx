@@ -36,6 +36,7 @@ import * as Animatable from "react-native-animatable";
 import Swiper from "react-native-swiper";
 import PagerView from "react-native-pager-view";
 import Categories from "../../components/Categories";
+import userData from "../../components/methods/user";
 
 export default function HomePage() {
   const navigation = useNavigation();
@@ -62,6 +63,7 @@ export default function HomePage() {
     fetchFeaturedProjects();
   }, []);
   const [featuredEstates, setFeaturedEstates] = useState([]);
+  
 
   const fetchFeaturedEstates = async () => {
     try {
@@ -78,7 +80,7 @@ export default function HomePage() {
     (estate) => estate.step1_slug == "is-yeri"
   );
   const filteredHomes = featuredEstates
-    .filter((estate) => estate.step1_slug == "konut")
+    .filter((estate) => estate.id == 201)
     .slice(0, 5);
   const filteredProject = featuredProjects.slice(0, 5);
 
@@ -119,7 +121,7 @@ export default function HomePage() {
   const handleScroll = (event) => {
     const scrollPosition = event.nativeEvent.contentOffset.y;
     // Sayfanın 200px aşağısına inildiğinde gizlenmesi gerekiyor
-    if (scrollPosition > 245) {
+    if (scrollPosition > 225) {
       setIsHidden(true);
     } else {
       setIsHidden(false);
@@ -304,9 +306,9 @@ export default function HomePage() {
                 <Text style={{textAlign:'center'}}>Sırala</Text>
                 </TouchableOpacity>
               </View> */}
-
-        <View
-          style={{ paddingBottom: 10, display: isHidden ? "flex" : "none" }}
+   <Animatable.View animation={isHidden ? "fadeInUp" : "fadeOutDown"} useNativeDriver={true}>
+   <View
+          style={{ marginBottom:3, display: isHidden  ? "flex" : "none" }}
         >
           <View
             style={{
@@ -315,9 +317,11 @@ export default function HomePage() {
               paddingLeft: 10,
               paddingRight: 10,
               alignItems: "center",
+              display: tab==1?'none':'flex'
             }}
           >
             <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN PROJELER</Text>
+            <Animatable.View animation={isHidden? 'fadeInUp':'fadeOut'}>
             <TouchableOpacity
               style={styles.allBtn}
               onPress={() =>
@@ -329,8 +333,13 @@ export default function HomePage() {
             >
               <Text style={{ color: "white", fontSize: 13 }}>Tümünü Gör</Text>
             </TouchableOpacity>
+            </Animatable.View>
+         
+
           </View>
         </View>
+            </Animatable.View>
+     
         <Swiper
           showsButtons={false}
           showsPagination={false}
@@ -369,7 +378,7 @@ export default function HomePage() {
                               uri: `${apiUrl}/storage/sliders/${item.image}`,
                             }}
                             style={{ width: "100%", height: "100%" }}
-                            resizeMode="cover"
+                            resizeMode="contain"
                             borderRadius={10}
                           />
                         </View>
@@ -422,10 +431,9 @@ export default function HomePage() {
                 </View>
 
                 {loadingPrjoects == false ? (
-                  <View style={{ top: 40, padding: 10 }}>
-                    <ProjectPostSkeleton  />
+                  <View style={{  padding: 10 }}>
+                    <ProjectPostSkeleton />
                   </View>
-                  
                 ) : (
                   <>
                     <FlatList
@@ -446,18 +454,15 @@ export default function HomePage() {
                               "public/",
                               "storage/"
                             )}`}
+                            user={item.user}
                             location={item.city.title}
                             city={item.county.ilce_title}
                             ProjectNo={item.id}
-                            slug={item.slug}
-                            acıklama={item.description
-                              .replace(/<\/?[^>]+(>|$)/g, "")
-                              .replace(/&nbsp;/g, " ")}
-                            ShoppingName={item.user.name}
-                            ShoppingMail={item.user.email}
-                            Phone={item.user.phone}
+                            // acıklama={item.description
+                            //   .replace(/<\/?[^>]+(>|$)/g, "")
+                            //   .replace(/&nbsp;/g, " ")}
+
                             ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                            ShopingInfo={item.user.corporate_type}
                             loading={loadingPrjoects}
                           />
                         </View>
@@ -500,6 +505,7 @@ export default function HomePage() {
                     filteredHomes.map((item, index) => (
                       <RealtorPost
                         key={index}
+                        HouseId={item.id}
                         price={`${
                           JSON.parse(item.housing_type_data)["price"]
                         } `}

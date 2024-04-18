@@ -221,6 +221,7 @@ export default function AllProjects() {
                       "public/",
                       "storage/"
                     )}`}
+                    user={item.user}
                     location={item.city.title}
                     city={item.county.ilce_title}
                     ProjectNo={item.id}

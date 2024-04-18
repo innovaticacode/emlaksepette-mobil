@@ -12,8 +12,9 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Animated,
+  ActivityIndicator,
 } from "react-native";
-import { React, useState, useRef } from "react";
+import { React, useState, useRef ,useEffect} from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
 import ShopInfo from "./ProfilePageItem/ShopInfo";
@@ -24,11 +25,14 @@ import LinkIcon4 from "react-native-vector-icons/Fontisto";
 import LinkIcon2 from "react-native-vector-icons/FontAwesome";
 import LinkIcon from "react-native-vector-icons/Entypo";
 import Arrow from "react-native-vector-icons/MaterialIcons";
+import { Skeleton } from '@rneui/themed'
 import Team from "./ProfilePageItem/Team";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { apiRequestGet } from "../../components/methods/apiRequest";
+import SliderItemSkeleton from "../../components/SkeletonComponents/SliderItemSkeleton";
 export default function Profile() {
   const route = useRoute();
-  const { name } = route.params;
+  const { name,id } = route.params;
   const [tab, settab] = useState(0);
   const { width, height, fontScale, map, maplo } = Dimensions.get("window");
   const translateY = useRef(new Animated.Value(400)).current;
@@ -48,6 +52,19 @@ export default function Profile() {
       useNativeDriver: true,
     }).start();
   };
+  const [loading, setloading] = useState(false)
+  const [storeData, setstoreSata] = useState([])
+  useEffect(() => {
+    apiRequestGet("brand/" + id ).then((res) => {
+      setloading(true +'true oldu')
+     setstoreSata(res.data)
+    });
+ 
+  }, [])
+  console.log(loading)
+  const ApiUrl='https://emlaksepette.com/'
+  console.log(storeData?.data?.name)
+  
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -57,14 +74,19 @@ export default function Profile() {
           closeSheet();
         }}
       >
-        <View style={{ width: "100%", height: 220 }}>
+
+        { 
+          loading? 
+          <>
+     
+           <View style={{ width: "100%", height:storeData?.data?.name?.length>30 ? width<400?  '' :240 : width<400 ?200:220 }}>
           <View
             style={{
               position: "absolute",
               zIndex: 1,
               width: "100%",
               height: "100%",
-              backgroundColor: "#EA2B2E94",
+              backgroundColor:storeData?.data?.banner_hex_code +94 ,
               borderBottomLeftRadius: 30,
               borderBottomRightRadius: 30,
             }}
@@ -105,9 +127,10 @@ export default function Profile() {
                     gap: 10,
                   }}
                 >
+                
                   <View style={{ width: 40, height: 40, borderRadius: 20 }}>
                     <Image
-                      source={require("./profil.jpg")}
+                      source={{uri:`${ApiUrl}storage/profile_images/${storeData?.data?.profile_image}`}}
                       style={{
                         width: "100%",
                         height: "100%",
@@ -115,27 +138,15 @@ export default function Profile() {
                       }}
                     />
                   </View>
-                  <View>
-                    <Text style={{ fontSize: 19, color: "white" }}>
-                      Master Realtor
+                  <View style={{width:'90%'}}>
+                    <Text style={{ fontSize: 17, color: "white" }} >
+                    {storeData?.data?.name}
                     </Text>
                     <Text style={{ color: "white", fontSize: 11 }}>
-                      Gayrimenkul Ofisi
+                 {storeData?.data?.activity} Şirketi
                     </Text>
                   </View>
-
-                  <View style={{ width: 22, height: 22 ,bottom:7}}>
-                    <ImageBackground
-                      source={require("./BadgeYellow.png")}
-                      style={{ width: "100%", height: "100%" }}
-                    />
-                    <LinkIcon
-                      name="check"
-                      size={14}
-                      style={{ position: "absolute", left: 4, top: 4 }}
-                      color={"blue"}
-                    />
-                  </View>
+                        
                 </View>
               </View>
               <View style={{ width: "60%", paddingTop: 10 }}>
@@ -163,6 +174,109 @@ export default function Profile() {
             }}
           />
         </View>
+     
+          </>
+          
+          :<>
+           
+           <View style={{ width: "100%", height: 220 }}>
+          <View
+            style={{
+              position: "absolute",
+              zIndex: 1,
+              width: "100%",
+              height: "100%",
+              backgroundColor:'#e7ebee',
+              borderBottomLeftRadius: 30,
+              borderBottomRightRadius: 30,
+            }}
+          >
+            <View style={styles.InfoContainer}>
+              <Skeleton width={45}height={30} style={{borderRadius:5}}
+              skeletonStyle={{backgroundColor:'#ced4da' , borderRadius:5}}
+              children={
+                  <TouchableOpacity
+                  style={{
+                    backgroundColor: "#ebebeb94",
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    borderRadius: 5,
+                    justifyContent: "center",
+                    width: 45,
+                    height: 30,
+                    alignItems: "center",
+                  }}
+                  onPress={() => navigation.goBack()}
+                >
+                  <Arrow
+                    name="arrow-back-ios"
+                    size={20}
+                    style={{ left: 3 }}
+                    color={"white"}
+                  />
+                </TouchableOpacity>
+              }/>
+             
+            
+             <Skeleton style={styles.shareIcons} skeletonStyle={{backgroundColor:'#ced4da'}}/>
+              {/* <TouchableOpacity style={styles.shareIcons} onPress={openSheet}>
+                <Icon name="sharealt" size={18} />
+              </TouchableOpacity> */}
+
+            </View>
+
+
+            <View style={{ paddingLeft: 15, paddingRight: 15 }}>
+              <View style={{ paddingTop: 10 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                   
+                    gap: 10,
+                  }}
+                >
+                <Skeleton width={40} height={40} circle={true} skeletonStyle={{backgroundColor:'#ced4da'}}/>
+                  <View>
+                    <Skeleton width={100} skeletonStyle={{backgroundColor:'#ced4da'}} children={
+                       <Text style={{ fontSize: 19, color: "white" }} numberOfLines={1}>
+                       {storeData?.data?.name}
+                       </Text>
+                    }/>
+                   <Skeleton width={45} style={{top:5}} skeletonStyle={{backgroundColor:'#ced4da'}} children={
+                       <Text style={{ color: "white", fontSize: 11 }}>
+                       {storeData?.data?.activity} Şirketi
+                          </Text>
+                   }/>
+                 
+                  </View>
+                    <Skeleton width={22} height={22} style={{bottom:7}} circle skeletonStyle={{backgroundColor:'#ced4da'}}/>
+                 
+                </View>
+              </View>
+              <Skeleton width={'60%'} height={30} style={{top:20,}} skeletonStyle={{backgroundColor:'#ced4da'}} />
+              {/* <View style={{ width: "60%", paddingTop: 10 }}>
+                <TextInput
+                  style={{
+                    padding: 9,
+                    backgroundColor: "#f5f5f53d",
+                    borderWidth: 0,
+                    borderColor:'#ebebeb',
+                    borderRadius: 10,
+                  }}
+                  placeholder="Ara..."
+                  placeholderTextColor={"#333"}
+                />
+              </View> */}
+            </View>
+          </View>
+
+     
+        </View>
+
+          </>
+        }
+       
 
         <View>
           <ScrollView
@@ -171,7 +285,10 @@ export default function Profile() {
             showsHorizontalScrollIndicator={false}
             nestedScrollEnabled={true}
           >
-            <View style={styles.tabBar}>
+            {
+              loading ? 
+              <>
+                 <View style={styles.tabBar}>
               <TouchableOpacity
                 style={[
                   styles.TabBarBtn,
@@ -212,7 +329,7 @@ export default function Profile() {
                     bottom: width > 400 ? 0 : 1,
                   }}
                 >
-                  Proje İlanları(0)
+                  Proje İlanları({storeData?.data?.projects?.length})
                 </Text>
               </TouchableOpacity>
 
@@ -233,7 +350,7 @@ export default function Profile() {
                     fontWeight: tab === 2 ? "500" : "normal",
                   }}
                 >
-                  Emlak İlanları(0)
+                  Emlak İlanları({storeData?.data?.housings?.length})
                 </Text>
               </TouchableOpacity>
 
@@ -259,10 +376,23 @@ export default function Profile() {
                 </Text>
               </TouchableOpacity>
             </View>
+              </>:
+              <>
+                 <View style={styles.tabBar}>
+
+                  <Skeleton width={150} height={14} skeletonStyle={{backgroundColor:'#ced4da'}}/>
+                  <Skeleton width={150} height={14} skeletonStyle={{backgroundColor:'#ced4da'}}/>
+                  <Skeleton width={150} height={14} skeletonStyle={{backgroundColor:'#ced4da'}}/>
+                  <Skeleton width={150} height={14} skeletonStyle={{backgroundColor:'#ced4da'}}/>
+
+            </View>
+              </>
+            }
+         
           </ScrollView>
         </View>
-        {tab === 0 && <ShopInfo />}
-        {tab === 1 && <ProjectAdverts />}
+        {tab === 0 && <ShopInfo data={storeData} loading={loading}/>}
+        {tab === 1 && <ProjectAdverts data={storeData} />}
         {tab === 2 && <RealtorAdverts />}
         {tab === 3 && <Team />}
       </View>

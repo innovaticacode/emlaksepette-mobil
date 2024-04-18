@@ -80,7 +80,7 @@ import {
   
     const shareLinkOnWhatsApp = () => {
    
-      const url=`https://emlaksepette.com/proje/${slug}//1000${ProjectId}/detay`
+      const url=`https://7f24-78-178-52-190.ngrok-free.app/proje/${slug}//1000${ProjectId}/detay`
     
    
       const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
@@ -92,7 +92,7 @@ import {
     };
     const shareLinkOnInstagram = (text) => {
    
-      const url=`https://emlaksepette.com/proje/${slug}/100${ProjectId}/detay`
+      const url=`https://7f24-78-178-52-190.ngrok-free.app/proje/${slug}/100${ProjectId}/detay`
     
      
       const instagramShareURL = `instagram://story/?text=${encodeURIComponent(url)}`;
@@ -103,7 +103,7 @@ import {
         .catch((error) => console.error('Instagram açılamadı:', error));
     };
     const copyToClipboard = () => {
-      const url=`https://emlaksepette.com/proje/${slug}/1000${ProjectId}/detay`
+      const url=`https://7f24-78-178-52-190.ngrok-free.app/proje/${slug}/1000${ProjectId}/detay`
       Clipboard.setStringAsync(url);
       ShowAlert()
     };

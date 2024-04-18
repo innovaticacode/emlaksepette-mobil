@@ -8,7 +8,7 @@ import {GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
 
 
 export default function SliderBar() {
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://emlaksepette.com";
   const [loading, setloading] = useState(false);
   const [featuredStores, setFeaturedStores] = useState([]);
 
@@ -51,6 +51,7 @@ export default function SliderBar() {
           ) : (
             <>
               <SliderItem
+              StoreID={item.id}
                 key={index}
                 image={`${apiUrl}/storage/profile_images/${item.profile_image}`}
               />
@@ -66,5 +67,5 @@ export default function SliderBar() {
   );
 }
 const styles = StyleSheet.create({
-  scrollView: {},
+
 });

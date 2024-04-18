@@ -1,20 +1,70 @@
-import { View, Text, ScrollView,Image,Dimensions} from 'react-native'
-import React from 'react'
+import { View, Text, ScrollView,Image,Dimensions,FlatList} from 'react-native'
+import React,{useState,useEffect} from 'react'
+import Posts from '../../../components/Posts';
+import ProjectPost from '../../../components/ProjectPost';
+import axios from 'axios';
 
-export default function ProjectAdverts() {
+export default function ProjectAdverts({data}) {
+  const [loadingPrjoects, setloadingPrjoects] = useState(false);
+ 
+  const [featuredProjects, setFeaturedProjects] = useState([]);
+
+  const fetchFeaturedProjects = async () => {
+    try {
+      setFeaturedProjects(data.data.projects);
+      setloadingPrjoects(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFeaturedProjects();
+  }, []);
+ 
   const { width, height } = Dimensions.get('window');
+  const ApiUrl='https://emlaksepette.com'
   return (
-    <View style={{height:2000}}>
+   
     <ScrollView>
-    
-    <View style={{alignItems:'center',width:'100%',bottom: width>400?100:170}}>
-     <Image source={require('./House.jpg')} resizeMode='contain' style={{width:'85%'}}/>
-      <Text style={{bottom: width>400?250:270,fontSize:20,fontWeight:'500'}}>Henüz Proje Yayınlanmadı</Text>
-    </View>
+  
+  <FlatList
+                      data={featuredProjects}
+                      renderItem={({ item, index }) => (
+                        <View
+                          style={{
+                            paddingLeft: 10,
+                            paddingRight: 10,
+                            width: "100%",
+                          }}
+                        >
+                          <ProjectPost
+                            key={index}
+                            project={item}
+                            caption={item.project_title}
+                            ımage={`${ApiUrl}/${item.image.replace(
+                              "public/",
+                              "storage/"
+                            )}`}
+                            location={item?.city?.title}
+                            city={item?.county?.ilce_title}
+                            ProjectNo={item.id}
+                            user={data.data}
+                            // acıklama={item.description
+                            //   .replace(/<\/?[^>]+(>|$)/g, "")
+                            //   .replace(/&nbsp;/g, " ")}
+
+                            ProfilImage={`${ApiUrl}/storage/profile_images/${data.data.profile_image}`}
+                            loading={loadingPrjoects}
+                          />
+                        </View>
+                      )}
+                      scrollEnabled={false}
+                    />
     
       
      
     </ScrollView>
-    </View>
+
   )
 }

@@ -3,45 +3,98 @@ import React from 'react'
 import SettingsItem from '../SettingsItem'
 import ShoppinInfo from '../ShoppinInfo'
 import { useRoute } from '@react-navigation/native';
-export default function DetailsSettings() {
+import CheckSetting from '../CheckSetting';
+export default function DetailsSettings({data,roomOrder}) {
     const route = useRoute();
-    const { itemId, otherParam ,konum ,key,location,metre,katSayısı,odaSayısı} = route.params;
+    const {} = route.params;
+    function veriParseEt(veri) {
+      try {
+        // Veriyi JSON olarak parse et
+        var jsonVeri = JSON.parse(veri);
+        return true;
+      } catch (hata) {
+        // Eğer veri JSON formatında değilse, hata alırız
+        return false;
+        // Burada başka bir işlem yapabiliriz, örneğin orijinal veriyi geri döndürebiliriz
+        // veya hiçbir işlem yapmayabiliriz.
+      }
+    }
   return (
     <View style={{padding:8}}>
+   
+ 
     <View style={[styles.card, styles.shadowProp]}>
-    <View style={{height:400,}}>
-      <ScrollView contentContainerStyle={{flexGrow:1}} nestedScrollEnabled={true} showsVerticalScrollIndicator={false}>
+        {data.projectHousingSetting.map((setting,index) => {
+          if (!setting.is_array) {
+            if (data.projectHousingsList[roomOrder ? roomOrder : 1][setting.column_name + "[]"]) {
+              return (
+              
+                  <SettingsItem
+                  key={index}
+                    info={setting.label}
+                    numbers={
+                 data.projectHousingsList[1][
+                        setting.column_name + "[]"
+                      ]
+                    }
+                  />
+             
+              );
+            }
+          } else {
+
+          }
+        })}
+        <View>
+          {data.projectHousingSetting.map((setting,index) => {
+            if (setting.is_array) {
+              if (data.projectHousingsList[roomOrder ? roomOrder : 1][setting.column_name + "[]"]) {
+                if (
+                  veriParseEt(
+                  data.projectHousingsList[roomOrder ? roomOrder : 1][setting.column_name + "[]"]
+                  )
+                ) {
+                  var arrayData = JSON.parse(
+                   data.projectHousingsList[roomOrder ? roomOrder : 1][setting.column_name + "[]"]
+                  );
+
+                  if (arrayData.length > 0) {
+                    return (
+                      
+                      <View style={{margin:10}} key={index}>
+                          <Text>{setting.label}</Text>
+                        <View key={setting.id} style={{marginTop:10,display:'flex',flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}}>
+                        
+                          {arrayData.map((arrayD,index2)=> {
+                            return (
+                              <View style={{width:'50%',marginTop:10,display:'flex',}}key={index2}>
+                                <View>
+                                  <CheckSetting text={arrayD} />
+                                
+                                </View>
+                              </View>
+                            ) 
+                          })}
+                        </View>
+                      </View>
+                    );
+                  }
+                }
+              }
+            } else {
+            }
+          })}
+        </View>
+      </View>
   
-        <SettingsItem info='İlan No:' numbers='000000' color='#264ABB' bold='bold'/>
-        <SettingsItem info='Kullanım Durumu' numbers='Boş'/>
-        <SettingsItem info='m2 (Brüt:)' numbers={metre}/>
-        <SettingsItem info='m2 (Net):' numbers={metre}/>
-        <SettingsItem info='Bina Yaşı:' numbers='0'/>
-        <SettingsItem info='Isıtma:' numbers='Doğalgaz Sobası'/>
-        <SettingsItem info='Banyo Sayısı:' numbers='1'/>
-        <SettingsItem info='Krediye Uygun:' numbers='Evet'/>
-        <SettingsItem info='Tapı Durumu:' numbers='Hisseli Tapu' />
-        <SettingsItem info='Isıtma:' numbers='Doğalgaz Sobası'/>
-        <SettingsItem info='Banyo Sayısı:' numbers='1'/>
-        <SettingsItem info='Krediye Uygun:' numbers='Evet'/>
-        <SettingsItem info='Tapı Durumu:' numbers='Hisseli Tapu' />
-        <SettingsItem info='Krediye Uygun:' numbers='Evet'/>
-        <SettingsItem info='Tapı Durumu:' numbers='Hisseli Tapu' />
-        <SettingsItem info='Isıtma:' numbers='Doğalgaz Sobası'/>
-        <SettingsItem info='Banyo Sayısı:' numbers='1'/>
-        <SettingsItem info='Krediye Uygun:' numbers='Evet'/>
-        <SettingsItem info='Tapı Durumu:' numbers='Hisseli Tapu' />
+      
      
         
-        </ScrollView>
-        </View>
-       
+  
+      
         
-    </View>
-    <View style={styles.Info}>
-        <ShoppinInfo/>
-        
-        </View>
+ 
+   
        
     </View>
   )
