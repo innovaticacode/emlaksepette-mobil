@@ -58,6 +58,11 @@ import FilterScreen from './pages/Home/FilterScreen';
 import EditAdvert from './pages/Home/ProfilePages/ProjectAdveretsPages/EditPages/EditAdvert';
 import Archieve from './pages/Home/ProfilePages/ProjectAdveretsPages/EditPages/Archieve';
 import EditProject from './pages/Home/ProfilePages/ProjectAdveretsPages/EditPages/EditProject';
+import SellAndRentFormPage from './pages/Home/SellAndRentFormPage';
+import SendSellAndRentForm from './pages/Home/SendSellAndRentForm';
+import SeeNeigbourhood from './pages/Home/ProfilePages/SeeNeigbourhood';
+import SwapScreen from './pages/Home/ProfilePages/SwapScreen';
+import ComeSwapScreen from './pages/Home/ProfilePages/ComeSwapScreen';
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
@@ -396,7 +401,31 @@ export default function App({route}) {
   })}/>
   <Stack.Screen name='Archieve' component={Archieve}/>
   <Stack.Screen name='EditProject' component={EditProject}/>
+  <Stack.Screen name='SellAndRent' component={SellAndRentFormPage}
+  options={({route})=>({
+        title:'Sat Kirala'
   
+  })}  />
+    <Stack.Screen name='SendSellAndRentForm' component={SendSellAndRentForm}
+  options={({route})=>({
+        title:'Sat Kirala Formu'
+  
+  })}  />
+      <Stack.Screen name='SeeNeigbour' component={SeeNeigbourhood}
+  options={({route})=>({
+        title:'Komuşumu Gör'
+  
+  })}  />
+        <Stack.Screen name='SwapScreen' component={SwapScreen}
+  options={({route})=>({
+        title:'Gelen Takas Başvurularım'
+  
+  })}  />
+         <Stack.Screen name='ComeSwapScreen' component={ComeSwapScreen}
+  options={({route})=>({
+        title:'Takas Başvurularım'
+  
+  })}  />
 </Stack.Navigator>
 
 </NavigationContainer>

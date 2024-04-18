@@ -1,13 +1,14 @@
 import { View, Text,ScrollView,TouchableOpacity,StyleSheet } from 'react-native'
 import React from 'react'
-
+import Icon from 'react-native-vector-icons/Ionicons'
 export default function SliderMenuRealtorDetails({tab,setTab,changeTab}) {
     const menuItems=[
       
-        {text:'Açıklama'},
-        {text:'Özellikler'},
-        {text:'Harita'},
-        {text:'Yorumlar'}
+        {text:'Açıklama',Icontype:false},
+        {text:'Özellikler',Icontype:false},
+        {text:'Harita',Icontype:false},
+        {text:'Yorumlar',Icontype:false},
+        {text:'Takas Formu' , Icontype:true}
     ]
   return (
     <ScrollView
@@ -22,6 +23,7 @@ export default function SliderMenuRealtorDetails({tab,setTab,changeTab}) {
           <TouchableOpacity
             key={index}
             style={[
+              
               styles.tabBtn,
               {
                 backgroundColor: tab == index ? "#EA2C2E" : "white",
@@ -32,6 +34,11 @@ export default function SliderMenuRealtorDetails({tab,setTab,changeTab}) {
                 changeTab(index)
             }}
           >
+            {
+              item.Icontype?
+              <Icon name='swap-horizontal' size={12} color={tab == index ? "white" : "black"}/>:''
+            }
+             
             <Text
               style={{
                 textAlign: "center",
@@ -41,6 +48,7 @@ export default function SliderMenuRealtorDetails({tab,setTab,changeTab}) {
             >
               {item.text}
             </Text>
+
           </TouchableOpacity>
         ))}
       </View>
@@ -49,6 +57,8 @@ export default function SliderMenuRealtorDetails({tab,setTab,changeTab}) {
 }
 const styles = StyleSheet.create({
     tabBtn: {
+      gap:5,
+      flexDirection:'row',
       backgroundColor: "white",
       paddingLeft: 15,
       paddingRight: 15,

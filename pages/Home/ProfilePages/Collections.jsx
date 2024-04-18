@@ -114,7 +114,7 @@ const [user,setUser] = useState({})
 //   getValueFor("user",setUser)
 // },[]);
 // useEffect(() => {
-//   axios.get('https://7f24-78-178-52-190.ngrok-free.app/api/project_housings/412?start=10&end=20'+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
+//   axios.get('https://emlaksepette.com/api/apiproject_housings/412?start=10&end=20'+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
 //     setcollections(res.data.data + 'evler');
 
 //   console.log(user+ 'user')

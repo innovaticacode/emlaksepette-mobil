@@ -22,7 +22,7 @@ export default function PasiveAdverts({header,header2,hidden}) {
     const [start,setStart] = useState(0);
     const [take,setTake] = useState(10);
     useEffect(() => {
-      axios.get('https://7f24-78-178-52-190.ngrok-free.app/api/get_my_projects?status=0&start='+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
+      axios.get('https://emlaksepette.com/api/get_my_projects?status=0&start='+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
         setProjects(res.data.data);
         setProjectCount(res.data.total_projects_count)
       }).catch((e) => {

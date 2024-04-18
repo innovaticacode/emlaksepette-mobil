@@ -148,7 +148,11 @@ export default function ShareScreen() {
               </Text>
             </View>
             <View style={{alignItems:'center'}}>
-              <TouchableOpacity style={styles.addBtn}>
+              <TouchableOpacity style={styles.addBtn}
+                   onPress={()=>{
+                    navigation.navigate('CategorieChoose',{name:'Proje İLanı',previousName:'Proje İlanı'})
+                  }}
+              >
                 <Text style={{textAlign:'center',color:'white',fontWeight:'600'}}>Proje İlanı Ekle</Text>
                 <Icon name="pluscircle" color={'white'} size={15}/>
               </TouchableOpacity>
@@ -170,7 +174,11 @@ export default function ShareScreen() {
               </Text>
             </View>
             <View style={{alignItems:'center'}}>
-              <TouchableOpacity style={[styles.addBtn,{backgroundColor:'#274ABB'}]}>
+              <TouchableOpacity style={[styles.addBtn,{backgroundColor:'#274ABB'}]}
+              onPress={()=>{
+                navigation.navigate('RealtorAdd',{name:'Emlak İlanı Yayınla'})
+              }}
+              >
                 <Text style={{textAlign:'center',color:'white',fontWeight:'600'}}>Emlak İlanı Ekle</Text>
                 <Icon name="pluscircle" color={'white'} size={15}/>
               </TouchableOpacity>
@@ -192,7 +200,11 @@ export default function ShareScreen() {
               </Text>
             </View>
             <View style={{alignItems:'center'}}>
-              <TouchableOpacity style={[styles.addBtn,{backgroundColor:'#333333'}]}>
+              <TouchableOpacity style={[styles.addBtn,{backgroundColor:'#333333'}]}
+              onPress={()=>{
+                navigation.navigate('SellAndRent')
+              }}
+              >
                 <Text style={{textAlign:'center',color:'white',fontWeight:'600'}}>Sat Kirala</Text>
                 <Icon name="pluscircle" color={'white'} size={15}/>
               </TouchableOpacity>

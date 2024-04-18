@@ -22,7 +22,7 @@ import Categories from "../../components/Categories";
 import ProjectPost from "../../components/ProjectPost";
 import * as Animatable from "react-native-animatable";
 export default function AllProjects() {
-  const apiUrl = "https://7f24-78-178-52-190.ngrok-free.app/";
+  const apiUrl = "https://emlaksepette.com/";
   const route = useRoute();
   const { name, data } = route.params;
   const navigation = useNavigation();
@@ -221,6 +221,7 @@ export default function AllProjects() {
                       "public/",
                       "storage/"
                     )}`}
+                    user={item.user}
                     location={item.city.title}
                     city={item.county.ilce_title}
                     ProjectNo={item.id}

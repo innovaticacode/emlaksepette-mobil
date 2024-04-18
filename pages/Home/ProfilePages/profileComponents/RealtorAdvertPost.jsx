@@ -3,8 +3,8 @@ import {useState}from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Icon2 from 'react-native-vector-icons/Entypo'
 import { frontEndUri } from '../../../../components/methods/apiRequest'
-export default function ProjectAdvertPost({Onpress,project}) {
-    const [status, setStatus] = useState(project.status)
+export default function RealtorAdvertPost({Onpress,housing}) {
+    const [status, setStatus] = useState(housing.status)
 
     const {width,height}=Dimensions.get('window')
   return (
@@ -14,33 +14,35 @@ export default function ProjectAdvertPost({Onpress,project}) {
             <View style={style.Image}>
                
                
-                <ImageBackground source={{uri : frontEndUri  +  project.image.replace('public','storage')}} style={{width:'100%',height:'100%'}} resizeMode='cover' />
+                {/* <ImageBackground source={{uri : frontEndUri + housing.image.replace('public','storage')}} style={{width:'100%',height:'100%'}} resizeMode='cover' /> */}
             </View>
 
             <View style={style.CaptionAndInfo}>
             <View style={{position:'absolute',zIndex:1,right:0,}}>
-                <Text style={{fontSize:10}}>İlan No: {project.id + 1000000}</Text>
-               
+                <Text style={{fontSize:10}}>İlan No: {housing.id + 1000000}</Text>
+                
                 </View>
                 <View style={{position:'absolute',zIndex:1,right:0,top:20}}> 
-                <TouchableOpacity onPress={() => {Onpress(project.id,project.project_title)}}>
+                <TouchableOpacity onPress={() => {Onpress(housing.id)}}>
                  <Icon2 name='dots-three-vertical' size={18}/>
                  </TouchableOpacity>       
                 </View> 
                     <View style={style.Caption}>
-                        <Text style={{
-                            fontSize:16,
+                        <Text
+                        numberOfLines={2}
+                        style={{
+                            fontSize:12,
                             color:'#141824',
                             fontWeight:'400',
                           
-                        }}>{project.project_title}</Text>
+                        }}>{housing.housing_title}</Text>
                         <View style={{flexDirection:'row'}}>
                             <Icon name='location' size={11}/>
-                            <Text style={{fontSize:10}}>İstanbul / Kartal / Cevizli</Text>
+                            <Text style={{fontSize:10}}>{housing.city.title}/ {housing.county.title} / {housing.neighborhood.mahalle_title}</Text>
                         </View>
                     
                         <View style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
-                        <Text style={{fontSize:12,bottom:5}}>İlan Sayısı {project.room_count}</Text>
+                        <Text style={{fontSize:12,bottom:5}}>İlan Sayısı {housing.room_count}</Text>
                         {status==0 &&  <Text style={{bottom:5,fontSize:13,color:'#B81900',fontWeight:'500'}}>Pasif</Text> }
                         {status==1 &&    <Text style={{bottom:5,fontSize:13,color:'#27B006'}}>Yayında</Text>}
                         {status==2 &&  <Text style={{bottom:5,fontSize:13,color:'#E57809'}}>Admin Onayı Bekliyor</Text> }
