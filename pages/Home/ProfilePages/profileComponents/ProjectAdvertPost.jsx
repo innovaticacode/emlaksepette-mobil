@@ -14,7 +14,7 @@ export default function ProjectAdvertPost({Onpress,project}) {
             <View style={style.Image}>
                
                
-                <ImageBackground source={{uri : frontEndUri + project.image.replace('public','storage')}} style={{width:'100%',height:'100%'}} resizeMode='cover' />
+                <ImageBackground source={{uri : frontEndUri  +  project.image.replace('public','storage')}} style={{width:'100%',height:'100%'}} resizeMode='cover' />
             </View>
 
             <View style={style.CaptionAndInfo}>
@@ -23,7 +23,7 @@ export default function ProjectAdvertPost({Onpress,project}) {
                
                 </View>
                 <View style={{position:'absolute',zIndex:1,right:0,top:20}}> 
-                <TouchableOpacity onPress={Onpress}>
+                <TouchableOpacity onPress={() => {Onpress(project.id,project.project_title)}}>
                  <Icon2 name='dots-three-vertical' size={18}/>
                  </TouchableOpacity>       
                 </View> 
@@ -38,6 +38,7 @@ export default function ProjectAdvertPost({Onpress,project}) {
                             <Icon name='location' size={11}/>
                             <Text style={{fontSize:10}}>İstanbul / Kartal / Cevizli</Text>
                         </View>
+                    
                         <View style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
                         <Text style={{fontSize:12,bottom:5}}>İlan Sayısı {project.room_count}</Text>
                         {status==0 &&  <Text style={{bottom:5,fontSize:13,color:'#B81900',fontWeight:'500'}}>Pasif</Text> }

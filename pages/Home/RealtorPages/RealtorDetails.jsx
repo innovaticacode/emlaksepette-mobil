@@ -9,7 +9,8 @@ import {
 Image,
  Dimensions,
  Linking,
- TextInput
+ TextInput,
+ Pressable
 } from "react-native";
 import { React, useRef, useState,useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -37,9 +38,10 @@ import Comment from "./Comment";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import { Shadow } from 'react-native-shadow-2';
 import { CheckBox } from "react-native-elements";
+import SwapForm from "./SwapForm";
 
 export default function PostDetail() {
-const apiUrl = "https://emlaksepette.com/";
+const apiUrl = "https://emlaksepette.com/api";
 const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
 const [images,setImages] = useState([]);
@@ -117,6 +119,16 @@ const [modalVisibleComennet, setmodalVisibleComment] = useState(false)
   };
   const [checked, setChecked] = useState(false);
   const toggleCheked = () => setChecked(!checked);
+  const [modalVisibleAlert, setModalVisibleAlert] = useState(false);
+  const [AlertMessage, setAlertMessage] = useState('')
+  
+  const openSwapAler=(message)=>{
+    setAlertMessage(message)
+    setModalVisibleAlert(true)
+  }
+
+  const [colorAlert, setcolorAlert] = useState(false)
+  const [LoadingModal, setLoadingModal] = useState(false)
 return (
   
   <SafeAreaView style={{  backgroundColor: "white",flex:1}}>
@@ -387,7 +399,7 @@ return (
           {tabs == 1 && <Settings data={data} />}
           {tabs== 2 && <RealtorMap mapData={data}/>}
           {tabs==3 && <Comment data={data} handleModal={handleModal}/> }
-      
+          {tabs==4 && <SwapForm data={data} openModal={openSwapAler} color={setcolorAlert} />}
    
 {/* 
               {
@@ -550,8 +562,32 @@ return (
      </View>
         </View>
       </Modal>
-
-   
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisibleAlert}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisibleAlert(!modalVisibleAlert);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={[styles.modalView,{height:70,padding:10,borderRadius:0,backgroundColor:colorAlert ,flexDirection:'row',alignItems:'center'}]}>
+            <View style={{flex:0.3/2,padding:2,alignItems:'center',justifyContent:'center'}}>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisibleAlert(!modalVisibleAlert)}>
+          <Icon name="closesquare" size={40} color={'red'}/>
+            </Pressable> 
+            </View>
+        <View style={{flex:1.5/2}}>
+        <Text style={{textAlign:'center',fontSize:15,color:'red'}}>{AlertMessage}</Text>
+        </View>
+           
+          
+          </View>
+        </View>
+      </Modal>
+    
 
     </ScrollView>
 

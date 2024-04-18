@@ -7,11 +7,15 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { apiRequestGetWithBearer } from '../../../../components/methods/apiRequest';
 import axios from "axios"
 import { getValueFor } from '../../../../components/methods/user';
+import { useNavigation } from "@react-navigation/native";
 export default function ActiveAdverts({header,header2,hidden}) {
 
+  const navigation = useNavigation()
     const translateY = useRef(new Animated.Value(400)).current;
+    const [selectedProject,setSelectedProject] = useState(null);
     const [display, setdisplay] = useState(false)
-    const openSheet = () => {
+    const openSheet = (id) => {
+        setSelectedProject(id);
         setEditModalVisible(!EditModalVisible)
     }; 
     const [user,setUser] = useState({})
@@ -43,9 +47,9 @@ export default function ActiveAdverts({header,header2,hidden}) {
         </View>
         <View style={styles.Adverts}>
           {
-            projects.map((project) => {
+            projects.map((project,index) => {
               return(
-                <ProjectAdvertPost project={project} Onpress={openSheet}/>
+                <ProjectAdvertPost key={index} project={project} Onpress={openSheet}/>
               )
             })
           }
@@ -76,7 +80,10 @@ export default function ActiveAdverts({header,header2,hidden}) {
             <Text style={{textAlign:'center',color:'#BD3803',fontWeight:'bold'}}>İşlem Kayıtları</Text>
             <MaterialIcon name='archive' size={18} color={'#BD3803'}/>
            </TouchableOpacity>
-           <TouchableOpacity style={{backgroundColor:'#DAFBD0',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#1B6C0A94'}}>
+           <TouchableOpacity onPress={()=>{
+              navigation.navigate('EditProject',{id : selectedProject})
+              setEditModalVisible(false)
+            }} style={{backgroundColor:'#DAFBD0',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#1B6C0A94'}}>
             <Text style={{textAlign:'center',color:'#1B6C0A',fontWeight:'bold'}}>Genel Düzenleme</Text>
             <MaterialIcon name='view-dashboard-edit' size={18} color={'#1B6C0A'}/>
            </TouchableOpacity>

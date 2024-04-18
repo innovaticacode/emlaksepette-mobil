@@ -12,11 +12,17 @@ export default function WaitAdverts({header,header2,hidden}) {
   const navigation = useNavigation()
     const translateY = useRef(new Animated.Value(400)).current;
     const [display, setdisplay] = useState(false)
-    const openSheet = () => {
+    const [selectedAdvert, setselectedAdvert] = useState(null)
+    const [selectedAdvertName, setselectedAdvertName] = useState(null)
+    const openSheet = (id,name) => {
+      setselectedAdvertName(name)
+      setselectedAdvert(id)
+        setSelectedProject(id);
         setEditModalVisible(!EditModalVisible)
     }; 
     const [user,setUser] = useState({})
     const [projects,setProjects] = useState([])
+    const [selectedProject,setSelectedProject] = useState(null);
     const [projectCount,setProjectCount] = useState(0)
     useEffect(() => {
       getValueFor("user",setUser)
@@ -32,6 +38,7 @@ export default function WaitAdverts({header,header2,hidden}) {
       })
     },[user]);
    const [EditModalVisible, setEditModalVisible] = useState(false)
+   
   return (
     <View style={{flex:1}}>
     <ScrollView>
@@ -42,11 +49,12 @@ export default function WaitAdverts({header,header2,hidden}) {
         }}>
             <Text style={styles.headerText}>Onay Bekleyen İlanlar({projects.length})</Text>
         </View>
+
         <View style={styles.Adverts}>
           {
             projects.map((project,index) => {
               return(
-                <ProjectAdvertPost key={index} project={project} Onpress={openSheet}/>
+                <ProjectAdvertPost  key={index} project={project} Onpress={openSheet}/>
               )
             })
           }
@@ -71,7 +79,7 @@ export default function WaitAdverts({header,header2,hidden}) {
             </View>
            <TouchableOpacity 
             onPress={()=>{
-              navigation.navigate('EditAdvert')
+              navigation.navigate('EditAdvert',{Project_Id:selectedAdvert , Project_name:selectedAdvertName})
               setEditModalVisible(false)
             }}
            style={{backgroundColor:'#DAFBD0',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#1B6C0A94'}}>
@@ -88,7 +96,7 @@ export default function WaitAdverts({header,header2,hidden}) {
            </TouchableOpacity>
            <TouchableOpacity
              onPress={()=>{
-              navigation.navigate('EditProject')
+              navigation.navigate('EditProject',{id : selectedProject})
               setEditModalVisible(false)
             }}
            style={{backgroundColor:'#DAFBD0',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#1B6C0A94'}}>

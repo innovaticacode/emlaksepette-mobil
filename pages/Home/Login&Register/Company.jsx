@@ -11,18 +11,24 @@ import {
 
   
 } from "react-native";
-import { React, useState } from "react";
-import { Picker } from "@react-native-picker/picker";
+import { React, useState,useEffect } from "react";
+
 import EyeIcon from "react-native-vector-icons/Ionicons";
 import { CheckBox } from "@rneui/themed";
-import ıcon from "react-native-vector-icons/SimpleLineIcons";
-import AccordionItem from "./AccordionItem";
-import Modal from 'react-native-modal';
+import RNPickerSelect from "react-native-picker-select";
+import axios from "axios";
 export default function Company() {
   const [selectedIndexRadio, setIndexRadio] = useState(1);
   {
     /* Input States */
   }
+  const [eposta, seteposta] = useState("")
+  const [phoneNumber, setphoneNumber] = useState("")
+  const [password, setpassword] = useState("")
+  const [bossName, setbossName] = useState("")
+  const [companyName, setcompanyName] = useState("")
+  const [companyPhone, setcompanyPhone] = useState("")
+  const [Iban, setIban] = useState("")
   const [accounttype, setaccounttype] = useState("");
   const [focusArea, setfocusArea] = useState("");
   const [city, setcity] = useState("");
@@ -30,7 +36,8 @@ export default function Company() {
   const [neigbourhod, setneigbourhod] = useState("");
   const [TaxPlaceCity, setTaxPlaceCity] = useState("");
   const [TaxPlace, setTaxPlace] = useState('')
-
+const [taxNumber, settaxNumber] = useState("")
+const [IdCardNo, setIdCardNo] = useState("")
   {
     /* cheked documents */
   }
@@ -50,83 +57,82 @@ export default function Company() {
   const show = () => {
     setShow(!Show);
   };
-  const chooseAccount = (text) => {
-    setaccounttype(text);
-    setModalVisible(false)
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('https://emlaksepette.com/api/cities');
+      return response.data;
+    } catch (error) {
+      console.error('Hata:', error);
+      throw error;
+    }
+  };
   
-  };
-  const chooseArea = (text) => {
-    setfocusArea(text);
-    setfocusAreaModal(false)
-  };
-  const chooseCity = (text) => {
-    setcity(text);
    
-  };
-  const chooseCounty = (text) => {
-    setcounty(text);
-
+  const [citites,setCities] = useState([]);
+  useEffect(() => {
+    fetchData()
+      .then(citites => setCities(citites.data))
+      .catch(error => console.error('Veri alınırken bir hata oluştu:', error));
+  }, []);
+ console.log(citites)
+ const [counties, setcounties] = useState([])
+const fetchDataCounty = async (value) => {
+  try {
+    const response = await axios.get(`https://emlaksepette.com/api/counties/${value}`);
+    return response.data;
+  } catch (error) {
+    console.error('Hata:', error);
+    throw error;
   }
-  const chooseNeigbourhood = (text) => {
-    setneigbourhod(text);
-  
-  }
-  const toggleAccountModal = () => {
-  setModalVisible(false)
-  };
-
-  const toggleFocusAreaModal = () => {
-    setfocusAreaModal(false);
-  };
-  const toggleCityModal = () => {
-    setcityModal(false);
-  };
-  const toggleCountyModal = () => {
-    setcountyModal(false);
-  };
-  const toggleNeigbourhoodModal = () => {
-    setneigbourhoodModal(false);
-  };
-  const toggleTaxCityModal = () => {
-    setTaxCityModall(false);
-  };
-  const toggleTaxplaceModal = () => {
-    setTaxPlaceModal(false);
-  };
-  {
-    /* Input Data Arrays */
-  }
-  const focusarea = [{ title: "İnşaat" }, { title: "Emlak" }];
-  const chooseAccountItems = [{ title: "İnşaat" }, { title: "Emlak" }];
-
-  {
-    /* Modal boolean States */
-  }
-  const [modalVisible, setModalVisible] = useState(false);
-  const [focusAreaModal, setfocusAreaModal] = useState(false);
-  const [cityModal, setcityModal] = useState(false);
-  const [countyModal, setcountyModal] = useState(false);
-  const [neigbourhoodModal, setneigbourhoodModal] = useState(false);
-  const [TaxCityModal, setTaxCityModall] = useState(false);
-  const [TaxPlaceModal, setTaxPlaceModal] = useState(false);
-
-  {
-    /* Data Arrays for Modals */
-  }
-  const itemsAccount = [
-    "Emlakçı",
-    "Banka",
-    "İnşaat",
-    "Turizm",
-    
-  ];
-  const FocusAreaItems=[
-    "İnşaat",
-    "Gayrimenkul",
-    "Turizm",
-    "Banka"
-  ]
+};
+// useEffect(() => {
+//   fetchDataCounty()
+//     .then(county => setcounties(county.data))
+//     .catch(error => console.error('Veri alınırken bir hata oluştu:', error));
+// },[city]);
  
+      const onChangeCity=(value)=>{
+        setcity(value)
+         if (value) {
+            fetchDataCounty(value)
+                         .then(county => setcounties(county.data))
+                         .catch(error => console.error('Veri alınırken bir hata oluştu:', error));
+         }else{
+          setcounties([])
+         }
+      }
+      const [Neigbour, setNeigbour] = useState([])
+      const fetchDataNeigbour = async (value) => {
+        try {
+          const response = await axios.get(`https://emlaksepette.com/api/neighborhoods/${value}`)
+          return response.data;
+        } catch (error) {
+          console.error('Hata:', error);
+          throw error;
+        }
+      };
+
+        const onChangeCounty=(value)=>{
+          setcounty(value)
+          if (value) {
+             fetchDataNeigbour(value)
+                          .then(county => setNeigbour(county.data))
+                          .catch(error => console.error('Veri alınırken bir hata oluştu:', error));
+          }else{
+           setNeigbour([])
+          }
+        }
+        const register=()=>{
+          
+          if (eposta , phoneNumber,password,bossName,companyName, companyPhone,Iban,accounttype,focusArea,city,county,neigbourhod,TaxPlaceCity,TaxPlace,taxNumber) {
+            alert('Üyeliğiniz oluşturuldu')
+            seteposta("")
+          }else{
+            alert('Lütfen Tüm alanları Doldurun')
+          }
+         
+        }
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -139,7 +145,8 @@ export default function Company() {
                   E-Posta
                 </Text>
               </View>
-              <TextInput style={styles.Input} placeholder="example@gmail.com" />
+              <TextInput style={styles.Input} value={eposta} onChangeText={(value)=>seteposta(value)} placeholder="example@gmail.com" />
+
             </View>
 
             <View style={{ gap: 5 }}>
@@ -149,6 +156,8 @@ export default function Company() {
                 </Text>
               </View>
               <TextInput
+              value={phoneNumber}
+              onChangeText={(value)=>setphoneNumber(value)}
                 style={styles.Input}
                 placeholder=""
                 keyboardType="number-pad"
@@ -163,6 +172,8 @@ export default function Company() {
               </View>
               <View>
                 <TextInput
+                value={password}
+                onChangeText={(value)=>setpassword(value)}
                   style={styles.Input}
                   placeholder="*********"
                   secureTextEntry={Show ? false : true}
@@ -185,7 +196,7 @@ export default function Company() {
                   Yetkili İsim Soyisim
                 </Text>
               </View>
-              <TextInput style={styles.Input} placeholder="" />
+              <TextInput style={styles.Input} value={bossName} onChangeText={(value)=>setbossName(value)} placeholder="" />
             </View>
 
             <View style={{ gap: 5 }}>
@@ -194,7 +205,7 @@ export default function Company() {
                   Firma Adı
                 </Text>
               </View>
-              <TextInput style={styles.Input} placeholder="" />
+              <TextInput style={styles.Input} value={companyName} onChangeText={(value)=>setcompanyName(value)} placeholder="" />
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
@@ -203,6 +214,8 @@ export default function Company() {
                 </Text>
               </View>
               <TextInput
+              value={companyPhone}
+              onChangeText={(value)=>setcompanyPhone(value)}
                 style={styles.Input}
                 placeholder=""
                 keyboardType="number-pad"
@@ -215,77 +228,106 @@ export default function Company() {
                 </Text>
               </View>
               <TextInput
+              value={Iban}
+              onChangeText={(value)=>setIban(Value)}
                 style={styles.Input}
                 placeholder=""
                 keyboardType="number-pad"
               />
             </View>
-
             <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
-                  Kurumsal Hesap Türü
-                </Text>
-              </View>
-              <TouchableOpacity
-                style={styles.Input}
-                onPress={() =>  setModalVisible(true)}
-              >
-                <Text>{accounttype}</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
-                  Faailiyet Alanınız
-                </Text>
-              </View>
-              <TouchableOpacity
-                style={styles.Input}
-                onPress={() => setfocusAreaModal(true)}
-              >
-                <Text>{focusArea}</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
-                  İl
-                </Text>
-              </View>
-              <TouchableOpacity
-                style={styles.Input}
-                onPress={() => setcityModal(true)}
-              >
-                <Text>{city}</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
-                  İlçe
-                </Text>
-              </View>
-              <TouchableOpacity
-                style={styles.Input}
-                onPress={() => setcountyModal(true)}
-              >
-                <Text>{county}</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
-                  Mahalle
-                </Text>
-              </View>
-              <TouchableOpacity
-                style={styles.Input}
-                onPress={() => setneigbourhoodModal(true)}
-              >
-                <Text>{neigbourhod}</Text>
-              </TouchableOpacity>
-            </View>
+            <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              Kurumsal Hesap Türü
+            </Text>
+            <RNPickerSelect
+           
+              placeholder={{
+                label: "Seçiniz...",
+                value: null,
+              }}
+              style={pickerSelectStyles}
+               onValueChange={(value) => setaccounttype(value)}
+              items={[
+                { label: "Konut", value: "konut" },
+                { label: "Arsa", value: "arsa" },
+                { label: "İş Yeri", value: "iş yeri" },
+              ]}
+            />
+         
+          </View>
+          
+          <View style={{ gap: 5 }}>
+            <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              Faaliyet Alanınız
+            </Text>
+            <RNPickerSelect
+           
+              placeholder={{
+                label: "Seçiniz...",
+                value: null,
+              }}
+              style={pickerSelectStyles}
+               onValueChange={(value) => setfocusArea(value)}
+              items={[
+                { label: "Konut", value: "konut" },
+                { label: "Arsa", value: "arsa" },
+                { label: "İş Yeri", value: "iş yeri" },
+              ]}
+            />
+         
+          </View>
+          <View style={{ gap: 6 }}>
+            <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              İl
+            </Text>
+            <RNPickerSelect
+           
+              placeholder={{
+                label: "Seçiniz...",
+                value: null,
+              }}
+              style={pickerSelectStyles}
+               onValueChange={(value) => {
+                onChangeCity(value)
+               }}
+              items={citites}
+            />
+         
+          </View>
+          <View style={{ gap: 6 }}>
+            <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                İlçe
+            </Text>
+            <RNPickerSelect
+           
+              placeholder={{
+                label: "Seçiniz...",
+                value: null,
+              }}
+              style={pickerSelectStyles}
+               onValueChange={(value) => {
+                onChangeCounty(value)
+               }}
+              items={counties}
+            />
+         
+          </View>
+          <View style={{ gap: 6 }}>
+            <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              Mahalle
+            </Text>
+            <RNPickerSelect
+           
+              placeholder={{
+                label: "Seçiniz...",
+                value: null,
+              }}
+              style={pickerSelectStyles}
+               onValueChange={(value) => setneigbourhod(value)}
+              items={Neigbour}
+            />
+         
+          </View>
             <View>
               <Text>İşletme Türü</Text>
               <View
@@ -330,31 +372,60 @@ export default function Company() {
                 />
               </View>
             </View>
-            <View style={{ gap: 5 }}>
+            <View style={{ gap: 6 }}>
+            <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+             Vergi Dairesi İli
+            </Text>
+            <RNPickerSelect
+           
+              placeholder={{
+                label: "Seçiniz...",
+                value: null,
+              }}
+              style={pickerSelectStyles}
+               onValueChange={(value) => setTaxPlaceCity(value)}
+              items={[
+                { label: "Konut", value: "konut" },
+                { label: "Arsa", value: "arsa" },
+                { label: "İş Yeri", value: "iş yeri" },
+              ]}
+            />
+         
+          </View>
+          <View style={{ gap: 6 }}>
+            <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+             Vergi Dairesi
+            </Text>
+            <RNPickerSelect
+           
+              placeholder={{
+                label: "Seçiniz...",
+                value: null,
+              }}
+              style={pickerSelectStyles}
+               onValueChange={(value) => setTaxPlace(value)}
+              items={[
+                { label: "Konut", value: "konut" },
+                { label: "Arsa", value: "arsa" },
+                { label: "İş Yeri", value: "iş yeri" },
+              ]}
+            />
+         
+          </View>
+          <View style={{ gap: 5,}}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
-                 Vergi Dairesi İli
+                  Vergi No
                 </Text>
               </View>
-              <TouchableOpacity
+              <TextInput
+              value={taxNumber}
+              onChangeText={(value)=>settaxNumber(value)}
                 style={styles.Input}
-                onPress={() => setTaxCityModall(true)}
-              >
-                <Text>{}</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
-                 Vergi Dairesi 
-                </Text>
-              </View>
-              <TouchableOpacity
-                style={styles.Input}
-                onPress={() => setTaxPlaceModal(true)}
-              >
-                <Text>{}</Text>
-              </TouchableOpacity>
+                placeholder=""
+                keyboardType="number-pad"
+                maxLength={11}
+              />
             </View>
             <View style={{ gap: 5, display:selectedIndexRadio==1? 'flex':'none'}}>
               <View style={{ paddingLeft: 5 }}>
@@ -363,6 +434,8 @@ export default function Company() {
                 </Text>
               </View>
               <TextInput
+              value={IdCardNo}
+              onChangeText={(value)=>setIdCardNo(value)}
                 style={styles.Input}
                 placeholder=""
                 keyboardType="number-pad"
@@ -463,7 +536,9 @@ export default function Company() {
 
                 {/* Register Button */}
             <View style={{ alignItems: "center" }}>
-              <TouchableOpacity style={styles.btnRegister} >
+              <TouchableOpacity style={styles.btnRegister} 
+                onPress={register}
+              >
                 <Text style={styles.btnRegisterText}>Üye Ol</Text>
               </TouchableOpacity>
             </View>
@@ -471,115 +546,7 @@ export default function Company() {
 
           </View>
         </View>
-        <Modal
-      isVisible={modalVisible}
-      onBackdropPress={toggleAccountModal}
-      backdropColor="transparent"
-      style={styles.modal}
-    >
-      <View style={styles.modalContent}>
-        <FlatList
-          data={itemsAccount}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.itemContainer}
-                onPress={()=>{
-                    chooseAccount(item);
-                }}
-            >
-              <Text>{item}</Text>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
-    </Modal>
-      <Modal
-        isVisible={focusAreaModal}
-        onBackdropPress={toggleFocusAreaModal}
-        swipeDirection={['down']}
-        backdropColor="transparent"
-        style={styles.modal}
-      >
-        <View style={styles.modalContent}>
-        <FlatList
-          data={FocusAreaItems}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.itemContainer}
-                onPress={()=>{
-                    chooseArea(item);
-                }}
-            >
-              <Text>{item}</Text>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          showsVerticalScrollIndicator={false}
-        />
-        
-        </View>
-      </Modal>
-      <Modal
-        isVisible={cityModal}
-        onBackdropPress={toggleCityModal}
-        swipeDirection={['down']}
-        backdropColor="transparent"
-        style={styles.modal}
-      >
-        <View style={styles.modalContent}>
-          <Text style={styles.modalText}>il</Text>
-      
-        </View>
-      </Modal>
-      <Modal
-        isVisible={countyModal}
-        onBackdropPress={toggleCountyModal}
-        swipeDirection={['down']}
-        backdropColor="transparent"
-        style={styles.modal}
-      >
-        <View style={styles.modalContent}>
-          <Text style={styles.modalText}>ilçe</Text>
-      
-        </View>
-      </Modal>
-      <Modal
-        isVisible={neigbourhoodModal}
-        onBackdropPress={toggleNeigbourhoodModal}
-        swipeDirection={['down']}
-        backdropColor="transparent"
-        style={styles.modal}
-      >
-        <View style={styles.modalContent}>
-          <Text style={styles.modalText}>mahalle</Text>
-      
-        </View>
-      </Modal>
-      <Modal
-        isVisible={TaxCityModal}
-        onBackdropPress={toggleTaxCityModal}
-        swipeDirection={['down']}
-        backdropColor="transparent"
-        style={styles.modal}
-      >
-        <View style={styles.modalContent}>
-          <Text style={styles.modalText}>vergi dairesi ili</Text>
-      
-        </View>
-      </Modal>
-      <Modal
-        isVisible={TaxPlaceModal}
-        onBackdropPress={toggleTaxplaceModal}
-        swipeDirection={['down']}
-        backdropColor="transparent"
-        style={styles.modal}
-      >
-        <View style={styles.modalContent}>
-          <Text style={styles.modalText}>vergi dairesi</Text>
-      
-        </View>
-      </Modal>
-    
+   
    
        
       
@@ -588,6 +555,25 @@ export default function Company() {
     </TouchableWithoutFeedback>
   );
 }
+const pickerSelectStyles = StyleSheet.create({
+  
+  inputIOS: {
+    backgroundColor: "#FAFAFA",
+    borderWidth: 1,
+    borderColor: "#ebebeb",
+    borderRadius: 6,
+    padding: 10,
+    fontSize: 14, // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
+    backgroundColor: "#FAFAFA",
+    borderWidth: 1,
+    borderColor: "#bdc6cf",
+    borderRadius: 6,
+    padding: 10,
+    fontSize: 14, // to ensure the text is never behind the icon
+  },
+});
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -2,7 +2,7 @@ import axios from "axios"
 import { getValueFor } from "./user";
 import { useState } from "react";
 const apiUrl = "https://emlaksepette.com/api/";
-export const frontEndUri = "https://emlaksepette.com/"
+export const frontEndUri = "https://emlaksepette.com/api/"
 
 
 export const apiRequestGet = (url) => {
@@ -16,6 +16,5 @@ export const apiRequestPost = (url,params) => {
 export const apiRequestGetWithBearer = (url) => {
     const [user,setUser] = useState({});
     getValueFor("user",setUser)
-    console.log(user.access_token);
     return axios.get(apiUrl+url,{ headers: { Authorization: 'Bearer' + user.access_token } });
 }

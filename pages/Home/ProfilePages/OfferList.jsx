@@ -3,7 +3,6 @@ import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather'
 import OfferItem from './profileComponents/OfferItem';
-
 import TrashIcon from 'react-native-vector-icons/EvilIcons'
 export default function OfferList() {
     const renderRightActions = () => (
