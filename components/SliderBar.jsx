@@ -8,7 +8,7 @@ import {GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
 
 
 export default function SliderBar() {
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://7f24-78-178-52-190.ngrok-free.app/";
   const [loading, setloading] = useState(false);
   const [featuredStores, setFeaturedStores] = useState([]);
 

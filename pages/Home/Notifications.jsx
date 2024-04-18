@@ -35,11 +35,10 @@ export default function Notifications() {
         {
             Notifications.map((item,index)=>(
                 <GestureHandlerRootView key={index} >
-                <Swipeable renderRightActions={renderRightActions}>
-                <Notificate key={index} name={item.NotificateDescription} time={item.time} />
-           
-                </Swipeable>
-    </GestureHandlerRootView>
+                  <Swipeable renderRightActions={renderRightActions}>
+                    <Notificate key={index} name={item.NotificateDescription} time={item.time} />
+                  </Swipeable>
+              </GestureHandlerRootView>
             ))
         }
         </View>

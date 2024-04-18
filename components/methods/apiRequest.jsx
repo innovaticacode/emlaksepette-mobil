@@ -16,6 +16,5 @@ export const apiRequestPost = (url,params) => {
 export const apiRequestGetWithBearer = (url) => {
     const [user,setUser] = useState({});
     getValueFor("user",setUser)
-    console.log(user.access_token);
     return axios.get(apiUrl+url,{ headers: { Authorization: 'Bearer' + user.access_token } });
 }

@@ -20,6 +20,7 @@ import Modal from "react-native-modal";
 import ProfileSettingsItem from "../../components/ProfileSettingsItem";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
+import * as SecureStore from 'expo-secure-store';
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
   const route = useRoute();
@@ -38,6 +39,11 @@ export default function ShoppingProfile() {
       setisLoggedIn(false);
     }
   },[user])
+
+  const logout = () => {
+    SecureStore.setItemAsync("user","");
+    navigation.navigate("HomePage")
+  }
 
   const navigation = useNavigation();
 
@@ -367,7 +373,7 @@ export default function ShoppingProfile() {
                       />
                     </TouchableOpacity>
                     <View style={{ alignItems: "center", padding: 20 }}>
-                      <TouchableOpacity style={style.btnLogOut}>
+                      <TouchableOpacity onPress={logout} style={style.btnLogOut}>
                         <Text
                           style={{
                             color: "white",
@@ -473,7 +479,7 @@ export default function ShoppingProfile() {
                       />
                     </TouchableOpacity>
                     <View style={{ alignItems: "center", paddingTop: 15 }}>
-                      <TouchableOpacity style={style.btnLogOut}>
+                      <TouchableOpacity style={style.btnLogOut} onPress={logout}>
                         <Text
                           style={{
                             color: "white",

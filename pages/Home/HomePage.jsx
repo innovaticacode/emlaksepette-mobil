@@ -41,7 +41,7 @@ import userData from "../../components/methods/user";
 export default function HomePage() {
   const navigation = useNavigation();
 
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://7f24-78-178-52-190.ngrok-free.app/";
 
   const [loadingPrjoects, setloadingPrjoects] = useState(false);
   const [loadingEstates, setloadingEstates] = useState(false);

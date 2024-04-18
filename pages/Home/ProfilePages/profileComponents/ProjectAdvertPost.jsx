@@ -23,7 +23,7 @@ export default function ProjectAdvertPost({Onpress,project}) {
                
                 </View>
                 <View style={{position:'absolute',zIndex:1,right:0,top:20}}> 
-                <TouchableOpacity onPress={()=>{Onpress(project.id , project.project_title)}}>
+                <TouchableOpacity onPress={() => {Onpress(project.id)}}>
                  <Icon2 name='dots-three-vertical' size={18}/>
                  </TouchableOpacity>       
                 </View> 

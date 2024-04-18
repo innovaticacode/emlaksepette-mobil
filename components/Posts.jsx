@@ -72,7 +72,7 @@ export default function Posts({
             <Image
               source={{
                 uri:
-                  "https://emlaksepette.com/project_housing_images/" +
+                  "https://7f24-78-178-52-190.ngrok-free.app/project_housing_images/" +
                   roomData["image[]"],
               }}
               style={{ width: "90%", height: "90%" }}
