@@ -41,7 +41,7 @@ import { CheckBox } from "react-native-elements";
 import SwapForm from "./SwapForm";
 
 export default function PostDetail() {
-const apiUrl = "https://emlaksepette.com/api";
+const apiUrl = "https://emlaksepette.com";
 const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
 const [images,setImages] = useState([]);
@@ -353,7 +353,7 @@ return (
                
               <View key={_index}>
             
-                <ImageBackground source={{uri:`${apiUrl}housing_images/${item}`}} style={{width:'100%',height:'100%'}}/>
+                <ImageBackground source={{uri:`${apiUrl}/housing_images/${item}`}} style={{width:'100%',height:'100%'}}/>
               </View>
             ])
           }
@@ -373,7 +373,7 @@ return (
         >
         {data?.housing?.city?.title} / {data?.housing?.county?.title}
         </Text>
-        {/* <Text style={{textAlign:'center',color: "#264A" ,fontSize:15}}>{JSON.parse(data?.housing?.housing_type_data)['price']} ₺</Text> */}
+         <Text style={{textAlign:'center',color: "#264A" ,fontSize:15}}>{addDotEveryThreeDigits(JSON.parse(data?.housing?.housing_type_data)?.price)} ₺</Text>  
         <Text style={{ textAlign: "center", fontSize: 15, color: "#264ABB" }}>
        {data?.pageInfo?.meta_title} 
      

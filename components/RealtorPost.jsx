@@ -51,7 +51,7 @@ export default function RealtorPost({
             <View
               style={{ backgroundColor: "#E54242", padding: 2, width: "90%" }}
             >
-              <Text style={{ fontSize: 9, color: "white" }}>42342343243</Text>
+              <Text style={{ fontSize: 9, color: "white" }}>{ 2000 +HouseId}</Text>
             </View>
             <Image
               source={{ uri: image }}

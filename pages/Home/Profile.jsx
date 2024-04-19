@@ -32,9 +32,10 @@ import { apiRequestGet } from "../../components/methods/apiRequest";
 import SliderItemSkeleton from "../../components/SkeletonComponents/SliderItemSkeleton";
 export default function Profile() {
   const route = useRoute();
+  const [Housings, setHousings] = useState([])
   const { name,id } = route.params;
   const [tab, settab] = useState(0);
-  const { width, height, fontScale, map, maplo } = Dimensions.get("window");
+  const { width, height, fontScale,} = Dimensions.get("window");
   const translateY = useRef(new Animated.Value(400)).current;
   const navigation = useNavigation();
   const openSheet = () => {
@@ -58,10 +59,11 @@ export default function Profile() {
     apiRequestGet("brand/" + id ).then((res) => {
       setloading(true +'true oldu')
      setstoreSata(res.data)
+     setHousings(res.data.data.housings)
     });
- 
+
   }, [])
-  console.log(loading)
+  console.log(Housings[0]?.title + 'sdfsdf')
   const ApiUrl='https://emlaksepette.com/'
   console.log(storeData?.data?.name)
   
@@ -393,7 +395,7 @@ export default function Profile() {
         </View>
         {tab === 0 && <ShopInfo data={storeData} loading={loading}/>}
         {tab === 1 && <ProjectAdverts data={storeData} />}
-        {tab === 2 && <RealtorAdverts />}
+        {tab === 2 && <RealtorAdverts housingdata={Housings} />}
         {tab === 3 && <Team />}
       </View>
       <View style={{ flex: 1, position: "absolute", bottom: 0 }}>

@@ -118,6 +118,7 @@ const logoutModal=()=>{
   {
     /* Modal Functions*/
   }
+  
   const [dialogVisible, setdialogVisible] = useState(false)
   return (
     <View style={style.container} onTouchStart={() => closeSheet()}>
