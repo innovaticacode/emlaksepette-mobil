@@ -12,11 +12,13 @@ import {
   
 } from "react-native";
 import { React, useState,useEffect } from "react";
-
+import Modal from "react-native-modal";
 import EyeIcon from "react-native-vector-icons/Ionicons";
 import { CheckBox } from "@rneui/themed";
 import RNPickerSelect from "react-native-picker-select";
 import axios from "axios";
+import IconSocialMedia from "react-native-vector-icons/AntDesign";
+import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
 export default function Company() {
   const [selectedIndexRadio, setIndexRadio] = useState(1);
   {
@@ -29,13 +31,13 @@ export default function Company() {
   const [companyName, setcompanyName] = useState("")
   const [companyPhone, setcompanyPhone] = useState("")
   const [Iban, setIban] = useState("")
-  const [accounttype, setaccounttype] = useState("");
-  const [focusArea, setfocusArea] = useState("");
-  const [city, setcity] = useState("");
-  const [county, setcounty] = useState("");
-  const [neigbourhod, setneigbourhod] = useState("");
-  const [TaxPlaceCity, setTaxPlaceCity] = useState("");
-  const [TaxPlace, setTaxPlace] = useState('')
+  const [accounttype, setaccounttype] = useState(null);
+  const [focusArea, setfocusArea] = useState(null);
+  const [city, setcity] = useState(null);
+  const [county, setcounty] = useState(null);
+  const [neigbourhod, setneigbourhod] = useState(null);
+  const [TaxPlaceCity, setTaxPlaceCity] = useState(null);
+  const [TaxPlace, setTaxPlace] = useState(null)
 const [taxNumber, settaxNumber] = useState("")
 const [IdCardNo, setIdCardNo] = useState("")
   {
@@ -49,7 +51,8 @@ const [IdCardNo, setIdCardNo] = useState("")
   const toggleCheked1 = () => setChecked1(!checked1);
   const toggleCheked2 = () => setChecked2(!checked2);
   const toggleCheked3 = () => setChecked3(!checked3);
-
+  const [showMailSendAlert, setshowMailSendAlert] = useState(false);
+  const [succesRegister, setsuccesRegister] = useState(false)
   {
     /* Functions */
   }
@@ -75,7 +78,7 @@ const [IdCardNo, setIdCardNo] = useState("")
       .then(citites => setCities(citites.data))
       .catch(error => console.error('Veri alınırken bir hata oluştu:', error));
   }, []);
- console.log(citites)
+
  const [counties, setcounties] = useState([])
 const fetchDataCounty = async (value) => {
   try {
@@ -124,16 +127,81 @@ const fetchDataCounty = async (value) => {
           }
         }
         const register=()=>{
-          
-          if (eposta , phoneNumber,password,bossName,companyName, companyPhone,Iban,accounttype,focusArea,city,county,neigbourhod,TaxPlaceCity,TaxPlace,taxNumber) {
-            alert('Üyeliğiniz oluşturuldu')
+            
+          if (eposta && phoneNumber && password && bossName && companyName && companyPhone && Iban && accounttype && focusArea && city && county && neigbourhod && TaxPlaceCity && TaxPlace && taxNumber &&  checked&&checked1&&checked2&&checked3) {
+     
+            setsuccesRegister(true)
             seteposta("")
+            setphoneNumber("")
+            setpassword("")
+            setbossName("")
+            setcompanyName("")
+            setcompanyPhone("")
+            setIban("")
+            setaccounttype(null)
+            setfocusArea(null)
+            setcity(null)
+            setcounty(null)
+            setneigbourhod(null)
+            setTaxPlaceCity(null)
+            setTaxPlace(null)
+            settaxNumber("")
+            setIdCardNo("")
+            setChecked(false)
+            setChecked1(false)
+            setChecked2(false)
+            setChecked3(false)
+            
+            
           }else{
-            alert('Lütfen Tüm alanları Doldurun')
+            setshowMailSendAlert(true)
           }
          
         }
-
+        const fetchTaxOfficeCity = async () => {
+          try {
+            const response = await axios.get('https://emlaksepette.com/api/get-tax-offices');
+            return response.data;
+          } catch (error) {
+            console.error('Hata:', error);
+            throw error;
+          }
+        };
+        
+         
+       const [TaxOfficesCity, setTaxOfficesCity] = useState([])
+        useEffect(() => {
+          fetchTaxOfficeCity()
+            .then(TaxOffice => setTaxOfficesCity(TaxOffice))
+            .catch(error => console.error('Veri alınırken bir hata oluştu:', error));
+        }, []);
+        const Cityies = Array.from(new Set(TaxOfficesCity.map(item => item.il)));
+        const onChangeTaxOfficesSity=(value)=>{
+          setTaxPlaceCity(value)
+          if (value) {
+            fetchTaxOffice(value)
+            .then(TaxOffice => setTaxOffices(TaxOffice))
+            .catch(error => console.error('Veri alınırken bir hata oluştu:', error));
+                          
+          }else{
+       
+          }
+        }
+        const fetchTaxOffice = async (value) => {
+          try {
+            const response = await axios.get(`https://emlaksepette.com/api/get-tax-office/${value}`);
+            return response.data;
+          } catch (error) {
+            console.error('Hata:', error);
+            throw error;
+          }
+        };
+        
+      
+       const [TaxOffices, setTaxOffices] = useState([])
+       
+        const TaxOfficePlace = Array.from(new Set(TaxOffices.map(item => item.daire)));
+    
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -229,7 +297,7 @@ const fetchDataCounty = async (value) => {
               </View>
               <TextInput
               value={Iban}
-              onChangeText={(value)=>setIban(Value)}
+              onChangeText={(value)=>setIban(value)}
                 style={styles.Input}
                 placeholder=""
                 keyboardType="number-pad"
@@ -240,9 +308,9 @@ const fetchDataCounty = async (value) => {
               Kurumsal Hesap Türü
             </Text>
             <RNPickerSelect
-           
+          value={accounttype}
               placeholder={{
-                label: "Seçiniz...",
+                label: 'Seçiniz...',
                 value: null,
               }}
               style={pickerSelectStyles}
@@ -261,7 +329,7 @@ const fetchDataCounty = async (value) => {
               Faaliyet Alanınız
             </Text>
             <RNPickerSelect
-           
+            value={focusArea}
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -281,7 +349,7 @@ const fetchDataCounty = async (value) => {
               İl
             </Text>
             <RNPickerSelect
-           
+           value={city}
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -299,7 +367,7 @@ const fetchDataCounty = async (value) => {
                 İlçe
             </Text>
             <RNPickerSelect
-           
+           value={county}
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -317,7 +385,7 @@ const fetchDataCounty = async (value) => {
               Mahalle
             </Text>
             <RNPickerSelect
-           
+           value={neigbourhod}
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -351,6 +419,8 @@ const fetchDataCounty = async (value) => {
                   }}
                 />
                 <CheckBox
+
+                
                   checked={selectedIndexRadio === 2}
                   onPress={() => setIndexRadio(2)}
                   checkedIcon="dot-circle-o"
@@ -377,18 +447,15 @@ const fetchDataCounty = async (value) => {
              Vergi Dairesi İli
             </Text>
             <RNPickerSelect
-           
+           value={TaxPlaceCity}
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
               }}
               style={pickerSelectStyles}
-               onValueChange={(value) => setTaxPlaceCity(value)}
-              items={[
-                { label: "Konut", value: "konut" },
-                { label: "Arsa", value: "arsa" },
-                { label: "İş Yeri", value: "iş yeri" },
-              ]}
+               onValueChange={(value) => {onChangeTaxOfficesSity(value)}}
+               items={Cityies.map(il => ({ label: il, value: il }))}
+            
             />
          
           </View>
@@ -397,18 +464,14 @@ const fetchDataCounty = async (value) => {
              Vergi Dairesi
             </Text>
             <RNPickerSelect
-           
+           value={TaxPlace}
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
               }}
               style={pickerSelectStyles}
                onValueChange={(value) => setTaxPlace(value)}
-              items={[
-                { label: "Konut", value: "konut" },
-                { label: "Arsa", value: "arsa" },
-                { label: "İş Yeri", value: "iş yeri" },
-              ]}
+               items={TaxOfficePlace.map(daire => ({ label: daire, value: daire }))}
             />
          
           </View>
@@ -546,8 +609,92 @@ const fetchDataCounty = async (value) => {
 
           </View>
         </View>
-   
-   
+        <Modal isVisible={showMailSendAlert}
+        animationIn={'fadeInRightBig'}
+        animationOut={'fadeOutLeftBig'}
+        style={styles.modal}>
+          <View style={styles.modalContent}>
+           
+
+            <View style={{ gap: 10 }}>
+              <View style={{ alignItems: "center" }}>
+                <View style={{backgroundColor:"#E54242",borderRadius:40,padding:6}}>
+                <MailCheck name="close" size={40} color={'#fff'} />
+                </View>
+              
+              </View>
+              <View>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontSize: 15,
+                    color: "#333",
+                    letterSpacing: 0.5,
+                  }}
+                >
+                    Lütfen Tüm Alanları Doldurunuz!
+                </Text>
+          
+              </View>
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#E54242",
+                  padding: 10,
+                  width:'100%',
+                  borderRadius: 5,
+                }}
+                onPress={() => setshowMailSendAlert(false)}
+              >
+               <Text style={{textAlign:'center',color:'#ffff',fontWeight:500}}>Tamam</Text>
+              </TouchableOpacity>
+            </View>
+            </View>
+          </View>
+        </Modal>
+        <Modal isVisible={succesRegister}
+        animationIn={'fadeInRightBig'}
+        animationOut={'fadeOutLeftBig'}
+        style={styles.modal}>
+          <View style={styles.modalContent}>
+           
+
+            <View style={{ gap: 10 }}>
+              <View style={{ alignItems: "center" }}>
+                <View style={{backgroundColor:"#D4EDDA",borderRadius:40,padding:10}}>
+                <MailCheck name="email-send" size={40} color={'#316D40'} />
+                </View>
+              
+              </View>
+              <View>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontSize: 15,
+                    color: "#333",
+                    letterSpacing: 0.5,
+                  }}
+                >
+                   Hesabınız Oluşturuldu 
+                </Text>
+          
+              </View>
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#316D40",
+                  padding: 10,
+                  width:'100%',
+                  borderRadius: 5,
+                }}
+                onPress={() => setsuccesRegister(false)}
+              >
+               <Text style={{textAlign:'center',color:'#D4EDDA',fontWeight:500}}>Tamam</Text>
+              </TouchableOpacity>
+            </View>
+            </View>
+          </View>
+        </Modal>
        
       
 
@@ -599,15 +746,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   modal: {
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     margin: 0,
+    padding:30
   },
   modalContent: {
     backgroundColor: 'white',
     padding: 20,
-    height:300,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+  
+borderRadius:10
     
   },
   modalText: {
