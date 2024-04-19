@@ -456,6 +456,7 @@ export default function HomePage() {
                               "public/",
                               "storage/"
                             )}`}
+                            user={item.user}
                             location={item.city.title}
                             city={item.county.ilce_title}
                             ProjectNo={item.id}

@@ -197,10 +197,10 @@ export default function Details({ navigation }) {
 
   console.log(itemCount);
 
-  console.log(data.projectHousingsList["11"]);
+
 
   const shareLinkOnWhatsApp = () => {
-    const url = `https://emlaksepette.com/proje/${slug}//1000${ProjectId}/detay`;
+    const url = `https://emlaksepette.com/${slug}//1000${ProjectId}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -209,7 +209,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("WhatsApp açılamadı:", error));
   };
   const shareLinkOnInstagram = (text) => {
-    const url = `https://emlaksepette.com/proje/${slug}/100${ProjectId}/detay`;
+    const url = `https://emlaksepette.com/${slug}/100${ProjectId}/detay`;
 
     const instagramShareURL = `instagram://story/?text=${encodeURIComponent(
       url
@@ -220,7 +220,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("Instagram açılamadı:", error));
   };
   const copyToClipboard = () => {
-    const url = `https://emlaksepette.com/proje/${slug}/1000${ProjectId}/detay`;
+    const url = `https://emlaksepette.com/${slug}/1000${ProjectId}/detay`;
     Clipboard.setStringAsync(url);
     ShowAlert();
   };

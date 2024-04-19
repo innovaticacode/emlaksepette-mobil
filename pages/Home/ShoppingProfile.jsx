@@ -20,6 +20,8 @@ import Modal from "react-native-modal";
 import ProfileSettingsItem from "../../components/ProfileSettingsItem";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
+import * as SecureStore from 'expo-secure-store';
+import { Shadow } from "react-native-shadow-2";
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
   const route = useRoute();
@@ -39,6 +41,15 @@ export default function ShoppingProfile() {
     }
   },[user])
 
+  const logout = () => {
+    setdialogVisible(false)
+    SecureStore.setItemAsync("user","");
+    navigation.navigate("HomePage")
+
+  }
+const logoutModal=()=>{
+  setdialogVisible(true)
+}
   const navigation = useNavigation();
 
   const translateY = useRef(new Animated.Value(400)).current;
@@ -107,10 +118,12 @@ export default function ShoppingProfile() {
   {
     /* Modal Functions*/
   }
+  
+  const [dialogVisible, setdialogVisible] = useState(false)
   return (
     <View style={style.container} onTouchStart={() => closeSheet()}>
       <View style={style.header}>
-        <View style={style.opacity}></View>
+        <View style={[style.opacity,{}]}></View>
 
         <ImageBackground
           source={require("./profilePhoto.jpg")}
@@ -176,6 +189,7 @@ export default function ShoppingProfile() {
           <View>
             {İsLoggedIn ? (
               <>
+            
                 <View style={{ gap: 30 }}>
                   <View>
                     <Text style={style.headerText}>Koleksiyonlarım</Text>
@@ -219,21 +233,47 @@ export default function ShoppingProfile() {
                       />
                     </TouchableOpacity>
                   </View>
-
+                  <View>
+                    <Text style={style.headerText}>Komşumu Gör</Text>
+                    <TouchableOpacity
+                      onPress={()=>navigation.navigate('SeeNeigbour')}
+                    >
+                      <ProfileSettingsItem
+                        text="Komşumu Gör"
+                        IconType={true}
+                        IconFeather="eye"
+                      />
+                    </TouchableOpacity>
+                  
+                  </View>
                   <View>
                     <Text style={style.headerText}>Başvurular</Text>
                     <TouchableOpacity
                       onPress={() =>
-                        navigation.navigate("Suggest", {
-                          name: "Gelen Başvurular",
+                        navigation.navigate("ComeSwapScreen", {
+                         
                           color: true,
                         })
                       }
                     >
                       <ProfileSettingsItem
-                        text="Takas Başvuruları"
-                        IconFeather="users"
-                        IconType={true}
+                        text="Takas Başvurularım"
+                        ıconName="swap-horiz"
+                        IconType={false}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("SwapScreen", {
+                         
+                          color: true,
+                        })
+                      }
+                    >
+                      <ProfileSettingsItem
+                        text="Gelen Takas Başvurularım"
+                        ıconName="swap-horiz"
+                        IconType={false}
                       />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -366,7 +406,7 @@ export default function ShoppingProfile() {
                       />
                     </TouchableOpacity>
                     <View style={{ alignItems: "center", padding: 20 }}>
-                      <TouchableOpacity style={style.btnLogOut}>
+                      <TouchableOpacity onPress={logoutModal} style={style.btnLogOut}>
                         <Text
                           style={{
                             color: "white",
@@ -392,9 +432,35 @@ export default function ShoppingProfile() {
                       <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
                     </TouchableOpacity>
                   </View>
-
+                  <View>
+                    <Text style={style.headerText}>Komşumu Gör</Text>
+                    <TouchableOpacity
+                      onPress={()=>navigation.navigate('SeeNeigbour')}
+                    >
+                      <ProfileSettingsItem
+                        text="Komşumu Gör"
+                        IconType={true}
+                        IconFeather="eye"
+                      />
+                    </TouchableOpacity>
+                  
+                  </View>
                   <View>
                     <Text style={style.headerText}>Başvurular</Text>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("SwapScreen", {
+                         
+                          color: true,
+                        })
+                      }
+                    >
+                      <ProfileSettingsItem
+                        text="Takas Başvurularım"
+                        IconFeather="users"
+                        IconType={true}
+                      />
+                    </TouchableOpacity>
                     <TouchableOpacity
                       onPress={() =>
                         navigation.navigate("Suggest", {
@@ -472,7 +538,7 @@ export default function ShoppingProfile() {
                       />
                     </TouchableOpacity>
                     <View style={{ alignItems: "center", paddingTop: 15 }}>
-                      <TouchableOpacity style={style.btnLogOut}>
+                      <TouchableOpacity style={style.btnLogOut} onPress={logoutModal}>
                         <Text
                           style={{
                             color: "white",
@@ -726,6 +792,43 @@ export default function ShoppingProfile() {
             </TouchableOpacity>
           </View>
         </Modal>
+        <Shadow>
+        <Modal
+        animationType="slide"
+              
+              onBackdropPress={()=> setdialogVisible(!dialogVisible)}
+        visible={dialogVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setdialogVisible(!dialogVisible);
+        }}>
+        <View style={{}}>
+          <View style={[style.modalView, style.card,{padding:0,borderRadius:10,backgroundColor:"#F8F7F4",alignItems:'center',gap:20}]}>
+            <Text style={{color:'#333'}}>Çıkış Yapmak İstedğinize Emin misiniz?</Text>
+            <View style={{flexDirection:'row',alignItems:'center',gap:10}}>
+            <View style={{flex:1/2}}>
+            <TouchableOpacity onPress={logout} 
+              style={{backgroundColor:'#F8D7DA',padding:10,borderRadius:6}}
+            >
+              <Text style={{textAlign:'center',color:'#721C24'}}>Çıkış Yap</Text>
+            </TouchableOpacity>
+        </View>
+            <View style={{flex:1/2}}>
+            <TouchableOpacity
+              style={[{backgroundColor:'#D4EDDA',padding:10,borderRadius:6}]}
+              onPress={() => setdialogVisible(!dialogVisible)}>
+                      <Text style={{textAlign:'center',color:'#165724'}}>İptal Et</Text>
+            </TouchableOpacity> 
+            </View>
+            </View>
+          
+  
+           
+          
+          </View>
+        </View>
+      </Modal>
+      </Shadow>
       </ScrollView>
     </View>
   );
@@ -839,186 +942,30 @@ const style = StyleSheet.create({
       },
     }),
   },
+  card: {  
+        
+    backgroundColor: '#FFFFFF',  
+    borderRadius: 10,  
+    paddingVertical: 22,  
+    paddingHorizontal: 20,  
+    width: '100%',  
+    marginVertical: 10,  
+
+    borderWidth:0.7,
+    borderColor:'#e6e6e6',
+    ...Platform.select({
+        ios: {
+          shadowColor: ' #e6e6e6',
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+  
+    
+  },
 });
-{
-  /* <View style={{ flex: 1, position: 'absolute', bottom: 0, width: '100%', display: display == false ? 'none' : 'flex' }}>
 
-        <Animated.View
-          style={[style.animatedView, { transform: [{ translateY }], }]}>
-
-          <View style={{ width: '100%', }}>
-            <View style={{ alignItems: 'center' }}>
-              <TouchableOpacity style={{ width: 40, height: 7, backgroundColor: '#ebebeb', borderRadius: 10 }} onPress={closeSheet}>
-
-              </TouchableOpacity>
-            </View>
-            <View style={{ paddingBottom: 10, }}>
-
-              {
-                isSelected == "userType" ?
-                  <>
-                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                      onPress={() => navigation.navigate('CreateUserType', { header: 'Listeleden geldi', hidden: 'none', name: 'Kullanıcılar' })}
-                    >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
-
-                        <Text style={{ textAlign: 'center', top: 2 }}>Listele</Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                      onPress={() => navigation.navigate('CreateUserType', { header: 'yeni ekleden geldi', name: 'Kullanıcı Ekle', hidden2: 'none' })}
-                    >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
-
-                        <Text style={{ textAlign: 'center', top: 2, }}>Yeni Ekle</Text>
-
-                      </View>
-                    </TouchableOpacity></> : ''
-
-
-
-              }
-              {
-                isSelected == "createUser" ?
-                  <>
-                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                      onPress={() => navigation.navigate('CreateUser', { header: 'Listeleden  geldi', hidden3: 'none', name: 'Kullanıcılar', changeSlectedState: 'false' })}
-                    >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
-
-                        <Text style={{ textAlign: 'center', top: 2, }}>Listele</Text>
-
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                      onPress={() => navigation.navigate('CreateUser', { header: 'Yeni Ekleden geldi', name: 'Kullanıcı Oluştur', hidden4: 'none', })}
-                    >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, hidden4: 'none' }}>
-
-                        <Text style={{ textAlign: 'center', top: 2, }}>Yeni Ekle</Text>
-
-                      </View>
-                    </TouchableOpacity>
-
-                  </> : ''
-              }
-
-
-
-
-              {
-                isSelected == "MyBasket" ?
-                  <>
-                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                      onPress={() => navigation.navigate('Sell', { displayInfo: 'none' })}
-                    >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
-
-                        <Text style={{ textAlign: 'center', top: 2, }}>Gayrimenkul Alış</Text>
-
-                      </View>
-                    </TouchableOpacity>
-                    {İsLoggedIn ?
-                      <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                        onPress={() => navigation.navigate('Sell', {text:'Satılmıştır'})}
-                      >
-                        <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, hidden4: 'none' }}>
-
-                          <Text style={{ textAlign: 'center', top: 2, }}>Gayrimenkul Satış</Text>
-
-                        </View>
-                      </TouchableOpacity> : ''
-                    }
-
-
-                  </> : ''
-
-              }
-
-              {
-                isSelected == "Rent" ?
-                  <>
-
-                    {
-                      İsLoggedIn ?
-                        <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                          onPress={() => navigation.navigate('Rent', { text: 'Kiraya Verdiklerim' ,display:'none',name:'Kiraya Verdiklerim'})}
-                        >
-                          <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
-
-                            <Text style={{ textAlign: 'center', top: 2, }}>Kiraya Verdiklerim</Text>
-
-                          </View>
-                        </TouchableOpacity> : ''
-                    }
-
-                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                      onPress={() => navigation.navigate('Rent', { text: 'Kiraladıklarım',name:'Kiraladıklarım' })}
-                    >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, hidden4: 'none' }}>
-
-                        <Text style={{ textAlign: 'center', top: 2, }}>Kiraladıklarım</Text>
-
-                      </View>
-                    </TouchableOpacity>
-
-                  </> : ''
-              }
-
-              {
-                isSelected == "Offer" ?
-                  <>
-                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                          onPress={()=>navigation.navigate('Offer',{name:'Kampanya Oluştur'})}
-                    >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
-
-                        <Text style={{ textAlign: 'center', top: 2, }}>Oluştur</Text>
-
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-                          onPress={()=>navigation.navigate('OfferList',{name:'Kampanya Listele'})}
-                    >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, hidden4: 'none' }}>
-
-                        <Text style={{ textAlign: 'center', top: 2, }}>Listele</Text>
-
-                      </View>
-                    </TouchableOpacity>
-
-                  </> : ''
-              }
-              {
-                isSelected == "Ads" ?
-                  <>
-                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-
-                    >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
-
-                        <Text style={{ textAlign: 'center', top: 2, }}>Oluştur</Text>
-
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-
-                    >
-                      <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, hidden4: 'none' }}>
-
-                        <Text style={{ textAlign: 'center', top: 2, }}>Listele</Text>
-
-                      </View>
-                    </TouchableOpacity>
-
-                  </> : ''
-              }
-
-
-            </View>
-          </View>
-
-
-        </Animated.View>
-            </View>*/
-}
