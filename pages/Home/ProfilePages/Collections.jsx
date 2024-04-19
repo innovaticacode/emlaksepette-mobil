@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, TextInput, Keyboard ,Animated,TouchableOpacity,Modal,Linking} from 'react-native'
-import { useState,useRef} from 'react'
+import { useState,useRef,useEffect} from 'react'
 import CollectionsItem from './profileComponents/CollectionsItem'
 
 import ShareIcon from "react-native-vector-icons/Entypo"
@@ -10,7 +10,10 @@ import Heart from "react-native-vector-icons/AntDesign";
 import IconMessenger from "react-native-vector-icons/Fontisto"
 import IconSms from "react-native-vector-icons/Feather"
 import * as Clipboard from 'expo-clipboard';
+
 import { SearchBar } from '@rneui/themed';
+import axios from 'axios'
+import { getValueFor } from '../../../components/methods/user'
 export default function Collections() {
   const [showAlert, setshowAlert] = useState(false)
   const [modalVisible, setModalVisible] = useState(false);
@@ -45,7 +48,7 @@ setdisplay(false)
   }; 
   const shareLinkOnWhatsApp = () => {
  
-    const url=`https://emlaksepette.com/proje/1000381/detay`
+    const url=`https://7f24-78-178-52-190.ngrok-free.app/proje/1000381/detay`
   
  
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
@@ -57,7 +60,7 @@ setdisplay(false)
   };
   const shareLinkOnInstagram = (text) => {
  
-    const url=`https://emlaksepette.com/proje/1000381/detay`
+    const url=`https://7f24-78-178-52-190.ngrok-free.app/proje/1000381/detay`
   
    
     const instagramShareURL = `instagram://story/?text=${encodeURIComponent(url)}`;
@@ -68,7 +71,7 @@ setdisplay(false)
       .catch((error) => console.error('Instagram açılamadı:', error));
   };
   const copyToClipboard = () => {
-    const url=`https://emlaksepette.com/proje/1000381/detay`
+    const url=`https://7f24-78-178-52-190.ngrok-free.app/proje/1000381/detay`
     Clipboard.setStringAsync(url);
    ShowAlert()
   };
@@ -80,7 +83,7 @@ setdisplay(false)
     Linking.openURL(`sms:?body=${encodeURIComponent(message)}`);
   };
   const shareLinkOnMessenger = () => {
-    const url = 'https://emlaksepette.com/proje/1000381/detay';
+    const url = 'https://7f24-78-178-52-190.ngrok-free.app/proje/1000381/detay';
     const messengerShareURL = `fb-messenger://share/?link=${encodeURIComponent(url)}`;
   
     Linking.openURL(messengerShareURL)
@@ -102,6 +105,23 @@ const ShowAlert = ()=>{
     setshowAlert(false)
   }, 2000);
 }
+const [collections, setcollections] = useState([])
+const [start,setStart] = useState(1);
+const [take,setTake] = useState(10);
+const [user,setUser] = useState({})
+
+// useEffect(() => {
+//   getValueFor("user",setUser)
+// },[]);
+// useEffect(() => {
+//   axios.get('https://emlaksepette.com/api/apiproject_housings/412?start=10&end=20'+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
+//     setcollections(res.data.data + 'evler');
+
+//   console.log(user+ 'user')
+//   }).catch((e) => {
+//     console.log(e);
+//   })
+// },[user]);
   return ( 
     <View style={{flex:1,}}>
     <View style={{alignItems:'center',flex:1,padding:10,backgroundColor:'white'}} onTouchStart={()=>{
@@ -127,10 +147,10 @@ const ShowAlert = ()=>{
        </View>
      
   <ScrollView  showsVerticalScrollIndicator={false}>
-      <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
-      <CollectionsItem openBottom={openSheet} disabled={isDisabled}  shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
-      <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
-      <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+
+        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+ 
+
 
     </ScrollView> 
    

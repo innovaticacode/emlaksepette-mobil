@@ -11,7 +11,7 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 export default function ProjectPost({
   project,
-
+user,
   ımage,
   location,
   city,
@@ -74,7 +74,7 @@ export default function ProjectPost({
           style={[
             styles.Description,
             {
-              backgroundColor: project.user.banner_hex_code + "CC",
+              backgroundColor: user?.banner_hex_code + "CC",
               padding: 10,
             },
           ]}
