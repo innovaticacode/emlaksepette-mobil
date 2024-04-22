@@ -46,7 +46,8 @@ import SliderMenuDetails from "../../components/SliderMenuDetails";
 import { apiRequestGet } from "../../components/methods/apiRequest";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Shadow } from "react-native-shadow-2";
+
+import CloseIcon from 'react-native-vector-icons/AntDesign';
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [IsOpenSheet, setIsOpenSheet] = useState(false);
@@ -272,6 +273,8 @@ export default function Details({ navigation }) {
     const  toggleIcon=()=>{
       setchangeIcon(!changeIcon)
     }
+    const [showCoverImageModal,setCoverImageModal] = useState(false);
+    const [selectedImage,setSelectedImage] = useState("");
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -436,7 +439,7 @@ export default function Details({ navigation }) {
           }
         }}
       >
-        <View style={{ height: 200 }}>
+        <View style={{ height: 250 }}>
           <View style={styles.pagination}>
             <View
               style={{
@@ -496,7 +499,7 @@ export default function Details({ navigation }) {
               data.project.images.map((image,index) => {
                 // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
                 return(
-                  <Pressable key={index+1} onPress={()=>alert('sdfdsf')}>
+                  <Pressable key={index+1} onPress={()=>setCoverImageModal(true)}>
                     <ImageBackground
                       source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
                       style={{ width: "100%", height: "100%" }}
@@ -904,6 +907,36 @@ export default function Details({ navigation }) {
             style={{ display: isLoading ? "flex" : "none" }}
           />
         </View>
+        <Modal
+            animationType="slide"
+            transparent={false}
+            visible={showCoverImageModal}
+            style={{backgroundColor:'#000'}}
+            onRequestClose={() => {
+              setCoverImageModal(!showCoverImageModal);
+            }}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+
+                <View style={{width:'100%',height:'100%'}}>
+                  <View style={styles.close_icon_area}>
+                    <TouchableOpacity onPress={() => {setCoverImageModal(!showCoverImageModal)}}>
+                      <CloseIcon name='close' style={styles.close_icon} size={30}></CloseIcon>
+                    </TouchableOpacity>
+                  </View>
+                  {/* <Image style={{width:'100%',height:'100%',objectFit:'contain'}} source={{uri : frontEndUri+(selectedImage?.image?.replace('public','storage'))}}></Image> */}
+                  <View style={styles.image_buttons}>
+                    <TouchableOpacity onPress={{}}>
+                      <View style={styles.image_button}>
+                        <CloseIcon name='delete' style={styles.image_delete_button} size={30}></CloseIcon>
+                        <Text style={styles.image_text}>Fotoğrafı Sil</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </Modal>
       </ScrollView>
     </SafeAreaView>
   );
@@ -949,7 +982,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     position: "absolute",
     right: 7,
-    top: 22,
+    top: 42,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-around",
