@@ -39,7 +39,7 @@ import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import { Shadow } from 'react-native-shadow-2';
 import { CheckBox } from "react-native-elements";
 import SwapForm from "./SwapForm";
-import Lightbox from "react-native-lightbox-v2";
+
 
 export default function PostDetail() {
 const apiUrl = "https://emlaksepette.com";
