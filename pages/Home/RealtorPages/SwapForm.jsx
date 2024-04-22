@@ -223,7 +223,10 @@ const fetchDataCounty = async (value) => {
           }
         }
 
-       
+        const pickerData = [];
+        for (let i = 0; i <= 100; i++) {
+          pickerData.push({ label: i.toString(), value: i });
+        }
     
   return (
     <KeyboardAwareScrollView style={{ padding: 10, gap: 10 }} contentContainerStyle={{gap:10}}>
@@ -376,11 +379,7 @@ const fetchDataCounty = async (value) => {
               }}
               style={pickerSelectStyles}
                onValueChange={(value) => sethouseAge(value)}
-              items={[
-                { label: "Konut", value: "konut" },
-                { label: "Arsa", value: "arsa" },
-                { label: "İş Yeri", value: "iş yeri" },
-              ]}
+              items={pickerData}
             />
           </View>
           <View style={{ gap: 6 }}>
@@ -676,8 +675,8 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 14, // to ensure the text is never behind the icon
   },
   inputAndroid: {
-    borderWidth: 1,
-    borderColor: "#bdc6cf",
+    borderWidth: 2,
+    borderColor: "black",
     borderRadius: 6,
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon
