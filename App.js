@@ -46,7 +46,7 @@ import AdvertType from './pages/Home/İlanYükleme/RealtorAdvertsAdd/AdvertType'
 import RealtorAdvertAdd from './pages/Home/İlanYükleme/RealtorAdvertsAdd/RealtorAdvertAdd';
 import Notifications from './pages/Home/Notifications';
 import RealtorClub from './pages/Home/RealtorClub';
-import Basket from './pages/Home/Basket';
+
 import PublicPage from './pages/Home/SearchPageItem/PublicPage';
 import SubCategory from './pages/Home/SearchPageItem/SubCategory';
 import HomeList from './pages/Home/SearchPageItem/HomeList';
@@ -63,6 +63,8 @@ import SendSellAndRentForm from './pages/Home/SendSellAndRentForm';
 import SeeNeigbourhood from './pages/Home/ProfilePages/SeeNeigbourhood';
 import SwapScreen from './pages/Home/ProfilePages/SwapScreen';
 import ComeSwapScreen from './pages/Home/ProfilePages/ComeSwapScreen';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
@@ -74,8 +76,9 @@ export default function App({route}) {
 
 
   return (
-    
+    <GestureHandlerRootView style={{flex:1}}>
     <NavigationContainer>
+   
   <Stack.Navigator screenOptions={{
       gestureEnabled: true,
       ...TransitionPresets.SlideFromRightIOS,
@@ -429,6 +432,7 @@ export default function App({route}) {
 </Stack.Navigator>
 
 </NavigationContainer>
+</GestureHandlerRootView>
 
   );
    

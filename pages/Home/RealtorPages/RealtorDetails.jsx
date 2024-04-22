@@ -39,6 +39,7 @@ import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import { Shadow } from 'react-native-shadow-2';
 import { CheckBox } from "react-native-elements";
 import SwapForm from "./SwapForm";
+import Lightbox from "react-native-lightbox-v2";
 
 export default function PostDetail() {
 const apiUrl = "https://emlaksepette.com";
@@ -341,25 +342,30 @@ return (
               />
             </View>
           </TouchableOpacity>
-        </View>
-        <PagerView style={{ height: 250 }}
+        </View>  
+           
+        <PagerView style={{ height: 250, }}
         
           onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
         >
-
+ 
 
           {
             images.map((item,_index) => [
-               
-              <View key={_index}>
-            
+             
+              <View key={_index} style={{}}>
+      
                 <ImageBackground source={{uri:`${apiUrl}/housing_images/${item}`}} style={{width:'100%',height:'100%'}}/>
+              
               </View>
+             
             ])
           }
         
-          
+   
         </PagerView>
+       
+     
       </View>
       <Shadow  style={{width:'100%',margin:7,padding:10,}}> 
       <View style={{ paddingTop: 8, gap: 10,}}>
@@ -373,7 +379,7 @@ return (
         >
         {data?.housing?.city?.title} / {data?.housing?.county?.title}
         </Text>
-         <Text style={{textAlign:'center',color: "#264A" ,fontSize:15}}>{addDotEveryThreeDigits(JSON.parse(data?.housing?.housing_type_data)?.price)} ₺</Text>  
+         {/* <Text style={{textAlign:'center',color: "#264A" ,fontSize:15}}>{addDotEveryThreeDigits(JSON.parse(data?.housing?.housing_type_data)?.price)} ₺</Text>   */}
         <Text style={{ textAlign: "center", fontSize: 15, color: "#264ABB" }}>
        {data?.pageInfo?.meta_title} 
      
