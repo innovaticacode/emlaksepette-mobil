@@ -19,6 +19,7 @@ import RNPickerSelect from "react-native-picker-select";
 import axios from "axios";
 import IconSocialMedia from "react-native-vector-icons/AntDesign";
 import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 export default function Company() {
   const [selectedIndexRadio, setIndexRadio] = useState(1);
   {
@@ -201,10 +202,11 @@ const fetchDataCounty = async (value) => {
        const [TaxOffices, setTaxOffices] = useState([])
        
         const TaxOfficePlace = Array.from(new Set(TaxOffices.map(item => item.daire)));
+     
     
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <View style={{ padding: 15, gap: 20 }}>
             <View style={{ gap: 5 }}>
@@ -316,9 +318,10 @@ const fetchDataCounty = async (value) => {
               style={pickerSelectStyles}
                onValueChange={(value) => setaccounttype(value)}
               items={[
-                { label: "Konut", value: "konut" },
-                { label: "Arsa", value: "arsa" },
-                { label: "İş Yeri", value: "iş yeri" },
+                { label: "Emlakçı", value: "Emlakçı" },
+                { label: "Banka", value: "Banka" },
+                { label: "İnşaat", value: "İnşaat" },
+                { label: "Turizm", value: "Turizm" }
               ]}
             />
          
@@ -337,9 +340,10 @@ const fetchDataCounty = async (value) => {
               style={pickerSelectStyles}
                onValueChange={(value) => setfocusArea(value)}
               items={[
-                { label: "Konut", value: "konut" },
-                { label: "Arsa", value: "arsa" },
-                { label: "İş Yeri", value: "iş yeri" },
+                { label: "Gayrimenkul", value: "Gayrimenkul" },
+                { label: "Banka", value: "Banka" },
+                { label: "İnşaat", value: "İnşaat" },
+                { label: "Turizm", value: "Turizm" }
               ]}
             />
          
@@ -698,7 +702,7 @@ const fetchDataCounty = async (value) => {
        
       
 
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );
 }

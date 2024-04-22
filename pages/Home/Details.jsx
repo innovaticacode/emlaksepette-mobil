@@ -12,6 +12,7 @@ import {
   Linking,
   ActivityIndicator,
   TextInput,
+  Pressable,
 } from "react-native";
 
 import { React, useEffect, useRef, useState } from "react";
@@ -487,20 +488,21 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
           </View>
-          <PagerView style={{ height: 200 }}
+          <PagerView style={{ height: 250 }}
             onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
+            
           >
             {
               data.project.images.map((image,index) => {
                 // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
                 return(
-                  <View key={index+1}>
+                  <Pressable key={index+1} onPress={()=>alert('sdfdsf')}>
                     <ImageBackground
                       source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
                       style={{ width: "100%", height: "100%" }}
                     
                     />
-                  </View>
+                  </Pressable>
                 )
               })
             }
