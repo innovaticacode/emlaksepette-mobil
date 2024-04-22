@@ -63,7 +63,6 @@ export default function HomePage() {
     fetchFeaturedProjects();
   }, []);
   const [featuredEstates, setFeaturedEstates] = useState([]);
-  
 
   const fetchFeaturedEstates = async () => {
     try {
@@ -306,40 +305,43 @@ export default function HomePage() {
                 <Text style={{textAlign:'center'}}>Sırala</Text>
                 </TouchableOpacity>
               </View> */}
-   <Animatable.View animation={isHidden ? "fadeInUp" : "fadeOutDown"} useNativeDriver={true}>
-   <View
-          style={{ marginBottom:3, display: isHidden  ? "flex" : "none" }}
+        <Animatable.View
+          animation={isHidden ? "fadeInUp" : "fadeOutDown"}
+          useNativeDriver={true}
         >
           <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingLeft: 10,
-              paddingRight: 10,
-              alignItems: "center",
-              display: tab==1?'none':'flex'
-            }}
+            style={{ marginBottom: 3, display: isHidden ? "flex" : "none" }}
           >
-            <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN PROJELER</Text>
-            <Animatable.View animation={isHidden? 'fadeInUp':'fadeOut'}>
-            <TouchableOpacity
-              style={styles.allBtn}
-              onPress={() =>
-                navigation.navigate("AllProject", {
-                  name: "Tüm Projeler",
-                  data: featuredProjects,
-                })
-              }
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingLeft: 10,
+                paddingRight: 10,
+                alignItems: "center",
+                display: tab == 1 ? "none" : "flex",
+              }}
             >
-              <Text style={{ color: "white", fontSize: 13 }}>Tümünü Gör</Text>
-            </TouchableOpacity>
-            </Animatable.View>
-         
-
+              <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN PROJELER</Text>
+              <Animatable.View animation={isHidden ? "fadeInUp" : "fadeOut"}>
+                <TouchableOpacity
+                  style={styles.allBtn}
+                  onPress={() =>
+                    navigation.navigate("AllProject", {
+                      name: "Tüm Projeler",
+                      data: featuredProjects,
+                    })
+                  }
+                >
+                  <Text style={{ color: "white", fontSize: 13 }}>
+                    Tümünü Gör
+                  </Text>
+                </TouchableOpacity>
+              </Animatable.View>
+            </View>
           </View>
-        </View>
-            </Animatable.View>
-     
+        </Animatable.View>
+
         <Swiper
           showsButtons={false}
           showsPagination={false}
@@ -431,7 +433,7 @@ export default function HomePage() {
                 </View>
 
                 {loadingPrjoects == false ? (
-                  <View style={{  padding: 10 }}>
+                  <View style={{ padding: 10 }}>
                     <ProjectPostSkeleton />
                   </View>
                 ) : (
