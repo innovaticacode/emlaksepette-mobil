@@ -41,6 +41,7 @@ export default function Company() {
   const [TaxPlace, setTaxPlace] = useState(null)
 const [taxNumber, settaxNumber] = useState("")
 const [IdCardNo, setIdCardNo] = useState("")
+const [ShoppingName, setShoppingName] = useState("")
   {
     /* cheked documents */
   }
@@ -209,6 +210,14 @@ const fetchDataCounty = async (value) => {
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <View style={{ padding: 15, gap: 20 }}>
+          <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                  Yetkili İsim Soyisim
+                </Text>
+              </View>
+              <TextInput style={styles.Input} value={bossName} onChangeText={(value)=>setbossName(value)} placeholder="" />
+            </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
@@ -218,22 +227,6 @@ const fetchDataCounty = async (value) => {
               <TextInput style={styles.Input} value={eposta} onChangeText={(value)=>seteposta(value)} placeholder="example@gmail.com" />
 
             </View>
-
-            <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
-                  Cep Telefonu
-                </Text>
-              </View>
-              <TextInput
-              value={phoneNumber}
-              onChangeText={(value)=>setphoneNumber(value)}
-                style={styles.Input}
-                placeholder=""
-                keyboardType="number-pad"
-              />
-            </View>
-
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
@@ -263,16 +256,25 @@ const fetchDataCounty = async (value) => {
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
-                  Yetkili İsim Soyisim
+                  Cep Telefonu
                 </Text>
               </View>
-              <TextInput style={styles.Input} value={bossName} onChangeText={(value)=>setbossName(value)} placeholder="" />
+              <TextInput
+              value={phoneNumber}
+              onChangeText={(value)=>setphoneNumber(value)}
+                style={styles.Input}
+                placeholder=""
+                keyboardType="number-pad"
+              />
             </View>
+
+           
+           
 
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
-                  Firma Adı
+                  Ticaret Ünvanı
                 </Text>
               </View>
               <TextInput style={styles.Input} value={companyName} onChangeText={(value)=>setcompanyName(value)} placeholder="" />
@@ -280,7 +282,15 @@ const fetchDataCounty = async (value) => {
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
-                  Sabit Telefon
+                 Mağaza Adı
+                </Text>
+              </View>
+              <TextInput style={styles.Input} value={ShoppingName} onChangeText={(value)=>setShoppingName(value)} placeholder="" />
+            </View>
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                  Sabit Telefon (Opsiyonel)
                 </Text>
               </View>
               <TextInput
@@ -291,21 +301,8 @@ const fetchDataCounty = async (value) => {
                 keyboardType="number-pad"
               />
             </View>
-            <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
-                  Iban
-                </Text>
-              </View>
-              <TextInput
-              value={Iban}
-              onChangeText={(value)=>setIban(value)}
-                style={styles.Input}
-                placeholder=""
-                keyboardType="number-pad"
-              />
-            </View>
-            <View style={{ gap: 5 }}>
+          
+            {/* <View style={{ gap: 5 }}>
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Kurumsal Hesap Türü
             </Text>
@@ -325,7 +322,7 @@ const fetchDataCounty = async (value) => {
               ]}
             />
          
-          </View>
+          </View> */}
           
           <View style={{ gap: 5 }}>
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
@@ -340,10 +337,13 @@ const fetchDataCounty = async (value) => {
               style={pickerSelectStyles}
                onValueChange={(value) => setfocusArea(value)}
               items={[
-                { label: "Gayrimenkul", value: "Gayrimenkul" },
+                { label: "Emlak Ofisi", value: "Emlak Ofisi" },
+                { label: "İnşaat Ofisi", value: "İnşaat Ofisi" },
+                { label: "Prefabrik Yapı", value: "Prefabrik Yapı" },
                 { label: "Banka", value: "Banka" },
-                { label: "İnşaat", value: "İnşaat" },
-                { label: "Turizm", value: "Turizm" }
+                { label: "Turizm", value: "Turizm" },
+                { label: "Ustalar & Hizmetler", value: "Ustalar & Hizmetler" }
+                
               ]}
             />
          

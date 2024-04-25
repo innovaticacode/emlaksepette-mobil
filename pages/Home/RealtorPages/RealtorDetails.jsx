@@ -130,6 +130,11 @@ const [modalVisibleComennet, setmodalVisibleComment] = useState(false)
 
   const [colorAlert, setcolorAlert] = useState(false)
   const [LoadingModal, setLoadingModal] = useState(false)
+  const [ColectionSheet2, setColectionSheet2] = useState(false);
+  const [changeIcon, setchangeIcon] = useState(false)
+  const  toggleIcon=()=>{
+    setchangeIcon(!changeIcon)
+  }
 return (
   
   <SafeAreaView style={{  backgroundColor: "white",flex:1}}>
@@ -331,7 +336,7 @@ return (
           <TouchableOpacity
             onPress={() => {
               changeBookmark();
-              setColectionSheet(true);
+              setColectionSheet2(true);
             }}
           >
             <View style={styles.ıcon}>
@@ -431,14 +436,69 @@ return (
         </View>
       </Modal>
       <Modal
-        isVisible={ColectionSheet}
-        onBackdropPress={ToggleColSheet}
+        isVisible={ColectionSheet2}
+        onBackdropPress={()=>setColectionSheet2(false)}
         swipeDirection={["down"]}
+        onSwipeComplete={()=>setColectionSheet2(false)}
         backdropColor="transparent"
         style={styles.modal3}
       >
         <View style={styles.modalContent3}>
-          <Text style={styles.modalText}>Kaydet</Text>
+     
+                  <View style={{width:'100%',padding:8,backgroundColor:'#F8F7F4',borderTopLeftRadius:15,borderTopRightRadius:15}}>
+                    <View style={{alignItems:'center',padding:5}}>
+                      <View style={{backgroundColor:'#D4D3D2',width:50,height:6,borderRadius:20}}/>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',paddingLeft:10,paddingRight:10}}>
+                      <View style={{flexDirection:'row',alignItems:'center',gap:15}}>
+                        <View style={{width:55,height:55,borderRadius:10}}>
+                          <ImageBackground     source={{uri:`${apiUrl}${data?.project?.image?.replace("public",'storage')}`}} style={{width:'100%',height:'100%'}} borderRadius={10}/>
+                        </View>
+                        <Text style={{color:'#333',fontWeight:'500'}}>{bookmark=='bookmark-o'?'Kaydet':'Kaydedildi'}</Text>
+                      </View>
+                      <View>
+                      <TouchableOpacity
+              onPress={() => {
+                changeBookmark();
+                setTimeout(() => {
+                  setColectionSheet(false);
+                }, 500);
+             
+              }}
+            >
+              <View style={{alignItems:'center',justifyContent:'center'}}>
+                <Bookmark
+                  name={bookmark}
+                  size={25}
+                  color={bookmark == "bookmark-o" ? "black" : "red"}
+                />
+              </View>
+            </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={{flexDirection:'row',justifyContent:'space-between',paddingRight:10,paddingLeft:10,paddingTop:10}}>
+                    <Text style={{fontSize:13,color:'#333'}}>Koleksiyonlar</Text>
+                   <TouchableOpacity>
+                    <Text style={{fontSize:13,color:'#333',textDecorationLine:'underline'}}>Yeni Koleksiyon</Text>
+                   </TouchableOpacity>
+                  </View>
+                  <ScrollView>
+                      < TouchableOpacity style={{flexDirection:'row',justifyContent:'space-between',paddingLeft:10,paddingRight:10,paddingTop:6}}>
+                        <View style={{flexDirection:'row',alignItems:'center', gap:10}}>
+                          <View style={{width:55,height:55,backgroundColor:'red',borderRadius:10}}>
+
+                          </View>
+                          <Text style={{fontSize:13,color:'#333'}}>Koleksiyon İsmi</Text>
+                        </View>
+                        <TouchableOpacity style={{alignItems:'center',justifyContent:'center',paddingRight:5}}
+                          onPress={toggleIcon}
+                        >
+                            <Icon name= {changeIcon? 'checkcircle' : "pluscircleo"} size={21}/>
+                        </TouchableOpacity>
+                      </TouchableOpacity>
+                  </ScrollView>
+    
         </View>
       </Modal>
 
@@ -577,7 +637,7 @@ return (
           setModalVisibleAlert(!modalVisibleAlert);
         }}>
         <View style={styles.centeredView}>
-          <View style={[styles.modalView,{height:70,padding:10,borderRadius:0,backgroundColor:colorAlert ,flexDirection:'row',alignItems:'center'}]}>
+          <View style={[styles.modalView,{height:'100%',padding:10,borderRadius:0,backgroundColor:colorAlert ,flexDirection:'row',alignItems:'center'}]}>
             <View style={{flex:0.3/2,padding:2,alignItems:'center',justifyContent:'center'}}>
             <Pressable
               style={[styles.button, styles.buttonClose]}
@@ -594,6 +654,7 @@ return (
         </View>
       </Modal>
     
+
 
     </ScrollView>
 
@@ -774,10 +835,34 @@ modal3: {
 },
 modalContent3: {
   backgroundColor: "white",
-  padding: 20,
-  height: "30%",
+
+  height: "35%",
   borderTopLeftRadius: 10,
   borderTopRightRadius: 10,
+},
+centeredViewSave: {
+  padding: 10,
+  flex: 1,
+  justifyContent: "center",
+  alignItems: "center",
+
+  // modal dışı koyu arkaplan
+},
+modalViewSave: {
+  width: "100%",
+
+  backgroundColor: "red",
+  borderRadius: 20,
+  padding: 25,
+  gap: 20,
+  shadowColor: "#000",
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowOpacity: 0.25,
+  shadowRadius: 4,
+  elevation: 5,
 },
 
 

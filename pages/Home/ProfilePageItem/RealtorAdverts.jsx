@@ -27,7 +27,9 @@ export default function RealtorAdverts( {housingdata} ){
   return (
    
   
-    <ScrollView>
+    <ScrollView contentContainerStyle={{padding:10,paddingBottom:50}}
+ 
+    >
    
     {
       objectKeys.map((key,index)=>(

@@ -41,13 +41,13 @@ const {Project_Id, Project_name}=route.params
 <Text style={{color:'white'}}> Proje İlanlarım / {Project_name} Adlı Projenin Konutları</Text>
 
 </View>
-{
+{/* {
     Array.from({
       length:housings.length
     }).map((item,index)=>{
       return <Text>fdsfd {index +1}</Text>
     })
- }
+ } */}
     <View style={styles.table}>
   
          <View style={[styles.row,{borderBottomWidth:1,borderBottomColor:'#333'}]}>

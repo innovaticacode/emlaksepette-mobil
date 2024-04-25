@@ -29,30 +29,30 @@ const Home = () => {
 
   const {width,height}=Dimensions.get("window")
   return (
-    <Tab.Navigator
-    
-      screenOptions={{
-        tabBarLabelStyle: {
-          fontSize: 12,
-  
-          fontWeight: "200",
-        },
-        tabBarActiveTintColor: "black",
-        tabBarInactiveTintColor: "grey",
-        tabBarActiveBackgroundColor: "transparent",
-        tabBarStyle: {
-          backgroundColor: "white",
-          padding: 6,
-          height: Platform.OS === "android" ? '7%' :'9%'
-        },
-      }}
+    <Tab.Navigator 
+    screenOptions={{
+      tabBarLabelStyle: {
+        fontWeight: '500', // Kalın font
+        color: 'black', 
+        marginBottom:5// Varsayılan rengi
+      },
+      tabBarActiveTintColor: 'red', // Üstüne gelindiğinde rengi
+      tabBarStyle: {
+        backgroundColor: 'white',
+        padding: 5,
+        height: Platform.OS === 'android' ? '7%' : '9%',
+      },
+    }}
     >
       <Tab.Screen
         name="HomePage"
         component={HomePage}
+        
         options={{
           title:'Ana Sayfa',
+          
           headerShown: false,
+          
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name="home-outline"

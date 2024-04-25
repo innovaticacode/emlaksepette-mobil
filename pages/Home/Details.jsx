@@ -48,6 +48,7 @@ import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import CloseIcon from 'react-native-vector-icons/AntDesign';
+import Swiper from "react-native-swiper";
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [IsOpenSheet, setIsOpenSheet] = useState(false);
@@ -202,7 +203,7 @@ export default function Details({ navigation }) {
 
 
   const shareLinkOnWhatsApp = () => {
-    const url = `https://emlaksepette.com/${slug}//1000${ProjectId}/detay`;
+    const url = `https://emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -266,15 +267,28 @@ export default function Details({ navigation }) {
     setTabs(tabs);
   };
   const [pagination, setpagination] = useState(0)
+   const pagerRef = useRef(null);
   const handlePageChange = (pageNumber) => {
     setpagination(pageNumber);
+    setSelectedImage(pageNumber);
+  
+    if (pageNumber === data.project.images.length - 1) {
+      // Son sayfaya ulaşıldığında, ilk sayfaya geri dön
+      setTimeout(() => {
+        pagerRef.current.setPage(0);
+      }, 1000); // Opsiyonel: Animasyonu daha pürüzsüz hale getirmek için bir gecikme ekleyin
+    }
   };
   const [changeIcon, setchangeIcon] = useState(false)
     const  toggleIcon=()=>{
       setchangeIcon(!changeIcon)
     }
     const [showCoverImageModal,setCoverImageModal] = useState(false);
-    const [selectedImage,setSelectedImage] = useState("");
+    const openGalery=(index)=>{
+      // setSelectedImage(index)
+      setCoverImageModal(true)
+    }
+    const [selectedImage,setSelectedImage] = useState(0);
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -282,6 +296,8 @@ export default function Details({ navigation }) {
         isVisible={isDrawerOpen}
         onBackdropPress={() => setIsDrawerOpen(false)}
         animationIn="bounceInLeft"
+        swipeDirection={['left']}
+        onSwipeComplete={()=>setIsDrawerOpen(false)}
         animationOut="bounceOutLeft"
         style={styles.modal}
       >
@@ -492,14 +508,18 @@ export default function Details({ navigation }) {
             </TouchableOpacity>
           </View>
           <PagerView style={{ height: 250 }}
+           ref={pagerRef}
+          initialPage={selectedImage}
             onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
             
+          
           >
+          
             {
               data.project.images.map((image,index) => {
                 // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
                 return(
-                  <Pressable key={index+1} onPress={()=>setCoverImageModal(true)}>
+                  <Pressable key={index+1} onPress={()=>{openGalery(index)}}>
                     <ImageBackground
                       source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
                       style={{ width: "100%", height: "100%" }}
@@ -729,19 +749,19 @@ export default function Details({ navigation }) {
                 gap: 27,
               }}
             >
-              <TouchableOpacity style={{ alignItems: "center" }}>
+              <TouchableOpacity style={{ alignItems: "center" }} onPress={copyToClipboard}>
                 <View style={{backgroundColor:'#E54242',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
                   <LinkIcon name="link" size={23} color={'white'} />
                 </View>
                 <Text style={{color:'#333',fontSize:12}}>Kopyala</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center"}}>
+              <TouchableOpacity style={{ alignItems: "center"}} onPress={shareLinkOnWhatsApp}>
                 <View style={{backgroundColor:'#24D366',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
                   <LinkIcon2 name="whatsapp" size={23} color={'white'} />
                 </View>
                 <Text style={{color:'#333',fontSize:12}}>Whatsapp</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
+              <TouchableOpacity style={{ alignItems: "center" }} onPress={shareLinkOnInstagram}>
                 <View style={{backgroundColor:'#E1306C',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
                   <LinkIcon name="instagram" size={23} color={'white'} />
                 </View>
@@ -908,35 +928,49 @@ export default function Details({ navigation }) {
           />
         </View>
         <Modal
-            animationType="slide"
-            transparent={false}
-            visible={showCoverImageModal}
-            style={{backgroundColor:'#000'}}
-            onRequestClose={() => {
-              setCoverImageModal(!showCoverImageModal);
-            }}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
+          isVisible={showCoverImageModal}
+          onBackdropPress={()=>setCoverImageModal(false)}
+          swipeDirection={["down"]}
+          animationIn={'fadeInRightBig'}
+                onSwipeComplete={()=>setCoverImageModal(false)}
+          backdropColor="transparent"
+          style={styles.modalImage}
+        >
+          <View style={styles.modalContentImage}>
+                 <View style={{alignItems:'flex-end'}}>
+                  <TouchableOpacity onPress={()=>setCoverImageModal(false)}>
+                  <CloseIcon name="close" color={'white'} size={30}/>
+                  </TouchableOpacity>
+                
+                 </View>
+                
+            <PagerView style={{ height: 300 }}
+            initialPage={selectedImage}
+            onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
+            
+          >
+            {
+              data.project.images.map((image,index) => {
+                // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
+                return(
+                  <Pressable key={index+1} onPress={()=>setCoverImageModal(true)}>
+                    <ImageBackground
+                      source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
+                      style={{ width: "100%", height: "100%", }}
+                     
+                      resizeMode='cover'
+                    
+                    />
+                  </Pressable>
+                )
+              })
+            }
+            
+          </PagerView>
 
-                <View style={{width:'100%',height:'100%'}}>
-                  <View style={styles.close_icon_area}>
-                    <TouchableOpacity onPress={() => {setCoverImageModal(!showCoverImageModal)}}>
-                      <CloseIcon name='close' style={styles.close_icon} size={30}></CloseIcon>
-                    </TouchableOpacity>
-                  </View>
-                  {/* <Image style={{width:'100%',height:'100%',objectFit:'contain'}} source={{uri : frontEndUri+(selectedImage?.image?.replace('public','storage'))}}></Image> */}
-                  <View style={styles.image_buttons}>
-                    <TouchableOpacity onPress={{}}>
-                      <View style={styles.image_button}>
-                        <CloseIcon name='delete' style={styles.image_delete_button} size={30}></CloseIcon>
-                        <Text style={styles.image_text}>Fotoğrafı Sil</Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </View>
-          </Modal>
+                 </View>
+     
+        </Modal>
       </ScrollView>
     </SafeAreaView>
   );
@@ -1061,4 +1095,16 @@ const styles = StyleSheet.create({
   
     
   },
+  modalImage: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContentImage: {
+    backgroundColor: "black",
+    justifyContent:'center',
+    
+  flex:1
+    
+  },
+ 
 });

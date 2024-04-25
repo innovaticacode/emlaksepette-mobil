@@ -295,7 +295,7 @@ export default function Login({ navigation }) {
                     width: "40%",
                   }}
                 />
-                <Text>OR</Text>
+                <Text style={{color:'#666666'}}>Ya Da</Text>
                 <View
                   style={{
                     backgroundColor: "#E7EBEE",

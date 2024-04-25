@@ -64,6 +64,9 @@ import SeeNeigbourhood from './pages/Home/ProfilePages/SeeNeigbourhood';
 import SwapScreen from './pages/Home/ProfilePages/SwapScreen';
 import ComeSwapScreen from './pages/Home/ProfilePages/ComeSwapScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import AllRealtorAdverts from './pages/Home/AllRealtorAdverts';
+import UploadAdsPicture from './pages/Home/ProfilePages/UploadAdsPicture';
+import AdsPictureList from './pages/Home/ProfilePages/AdsPictureList';
 
 const Stack = createNativeStackNavigator();
 
@@ -428,6 +431,33 @@ export default function App({route}) {
   options={({route})=>({
         title:'Takas Başvurularım'
   
+        
+  })}  />
+           <Stack.Screen name='AllRealtor' component={AllRealtorAdverts}
+  options={({route})=>({
+        headerShown:false
+  
+  })}  />
+             <Stack.Screen name='UploadAdsPicture' component={UploadAdsPicture}
+             
+  options={({route})=>({
+  // Geri düğmesini kaldırır
+    headerBackTitleVisible: false,
+        title:'Reklam Görseli Oluştur',
+        headerStyle:{
+          backgroundColor:"#F5F5F7",
+          
+        }
+
+  
+  })}  />
+              <Stack.Screen name='AdsPictureList' component={AdsPictureList}
+  options={({route})=>({
+        title:'Reklam Görselleri',
+    headerStyle:{
+          backgroundColor:"#F5F5F7",
+          
+        }
   })}  />
 </Stack.Navigator>
 

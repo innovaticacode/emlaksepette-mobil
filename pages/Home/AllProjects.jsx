@@ -36,7 +36,7 @@ export default function AllProjects() {
   const handleScroll = (event) => {
     const scrollPosition = event.nativeEvent.contentOffset.y;
     // Sayfanın 200px aşağısına inildiğinde gizlenmesi gerekiyor
-    if (scrollPosition > 15) {
+    if (scrollPosition > 25) {
       setIsHidden(true);
   
     } else {
@@ -153,27 +153,27 @@ export default function AllProjects() {
 
         <View
           style={{
-            padding: isHidden ? 5 : 10,
-            borderBottomWidth: 1,
-            borderColor: "#ebebeb",
+            padding:  10,
+         
           }}
         >
           <View style={{ padding: 0 }}>
-            <Animatable.View animation={isHidden ? "fadeInUp" : "zoomInUp"}>
+     
               <Text
                 style={[
                   styles.headerText,
                   {
-                    fontSize: isHidden ? 15 : 23,
-                    textAlign: isHidden ? "center" : "left",
+                    fontSize: 15, 
+                    textAlign:  "center" 
                   },
                 ]}
               >
                 Tüm Projeler
               </Text>
-            </Animatable.View>
+          
           </View>
         </View>
+         
         <View
           style={{
             flexDirection: "row",
@@ -205,7 +205,7 @@ export default function AllProjects() {
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}
         >
-            
+          
           <View>
             <FlatList
               data={data}

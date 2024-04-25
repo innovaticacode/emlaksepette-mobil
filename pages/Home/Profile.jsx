@@ -34,7 +34,7 @@ export default function Profile() {
   const route = useRoute();
   const [Housings, setHousings] = useState([])
   const { name,id } = route.params;
-  const [tab, settab] = useState(0);
+  const [tab, settab] = useState(1);
   const { width, height, fontScale,} = Dimensions.get("window");
   const translateY = useRef(new Animated.Value(400)).current;
   const navigation = useNavigation();
@@ -80,7 +80,7 @@ export default function Profile() {
         { 
           loading? 
           <>
-     
+
            <View style={{ width: "100%", height:storeData?.data?.name?.length>30 ? width<400?  '' :240 : width<400 ?200:220 }}>
           <View
             style={{

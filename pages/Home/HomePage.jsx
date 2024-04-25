@@ -305,7 +305,7 @@ export default function HomePage() {
                 <Text style={{textAlign:'center'}}>Sırala</Text>
                 </TouchableOpacity>
               </View> */}
-        <Animatable.View
+        {/* <Animatable.View
           animation={isHidden ? "fadeInUp" : "fadeOutDown"}
           useNativeDriver={true}
         >
@@ -340,7 +340,7 @@ export default function HomePage() {
               </Animatable.View>
             </View>
           </View>
-        </Animatable.View>
+        </Animatable.View> */}
 
         <Swiper
           showsButtons={false}
@@ -350,13 +350,14 @@ export default function HomePage() {
           onIndexChanged={handleIndexChanged}
         >
           <ScrollView
+          stickyHeaderIndices={[2]}
             ref={scrollViewRef}
+            contentContainerStyle={{gap:8}}
             onScroll={handleScroll}
             scrollEventThrottle={16}
           >
-            {tab == 0 ? (
-              <>
-                <Animatable.View delay={1000} duration={1000} style={{}}>
+          
+             
                   <View style={{ height: 100, padding: 8, borderRadius: 10 }}>
                     <PagerView
                       style={{ height: "100%" }}
@@ -387,31 +388,28 @@ export default function HomePage() {
                       ))}
                     </PagerView>
                   </View>
-                  <Animatable.View duration={1500}>
+               
                     <View style={{ height: 100 }}>
                       <SliderBar loading={loadingPrjoects} />
                     </View>
-                  </Animatable.View>
-                </Animatable.View>
-              </>
-            ) : (
-              ""
-            )}
-            <View style={styles.slide1}>
-              <View style={{ gap: 0, paddingTop: 0 }}>
-                <View
+                
+           
+                    <View
                   style={{
-                    paddingTop: 15,
-                    display: isHidden ? "none" : "flex",
+                    
+                    // display: isHidden ? "none" : "flex",
                   }}
                 >
                   <View
                     style={{
+                   
+                      paddingBottom:3,
                       flexDirection: "row",
                       justifyContent: "space-between",
                       paddingLeft: 10,
                       paddingRight: 10,
                       alignItems: "center",
+                      backgroundColor:'white'
                     }}
                   >
                     <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN PROJELER</Text>
@@ -431,6 +429,10 @@ export default function HomePage() {
                     </TouchableOpacity>
                   </View>
                 </View>
+            <View style={styles.slide1}>
+              
+              <View style={{ gap: 0, paddingTop: 0 }}>
+          
 
                 {loadingPrjoects == false ? (
                   <View style={{ padding: 10 }}>
@@ -450,6 +452,7 @@ export default function HomePage() {
                         >
                           <ProjectPost
                             key={index}
+                              
                             project={item}
                             caption={item.project_title}
                             ımage={`${apiUrl}/${item.image.replace(
@@ -489,7 +492,9 @@ export default function HomePage() {
               >
                 <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN KONUTLAR</Text>
 
-                <TouchableOpacity style={styles.allBtn}>
+                <TouchableOpacity style={styles.allBtn}
+                onPress={()=>navigation.navigate('AllRealtor',{name:'adfsd',data:featuredEstates})}
+                >
                   <Text style={{ color: "white", fontSize: 13 }}>
                     Tümünü Gör
                   </Text>
@@ -616,7 +621,7 @@ const styles = StyleSheet.create({
   },
   slide1: {
     flex: 1,
-    top: 10,
+   
     paddingBottom: 30,
   },
   slide2: {

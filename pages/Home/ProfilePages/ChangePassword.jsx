@@ -27,7 +27,7 @@ export default function ChangePassword() {
       <View>
             <Text style={styles.label}>Mevcut Şifre</Text>
             <TextInput style={styles.Input} secureTextEntry={SecureTextForPass1} />
-            <TouchableOpacity style={{position:'absolute',right:15,top:32}} onPress={ToggleForPass1}>
+            <TouchableOpacity style={{position:'absolute',right:15,top:25}} onPress={ToggleForPass1}>
               <Eye name={SecureTextForPass1?'eye-off-outline' : 'eye-outline'} size={22}/>
             </TouchableOpacity>
 
@@ -35,14 +35,14 @@ export default function ChangePassword() {
           <View>
             <Text style={styles.label}>Yeni Şifre</Text>
             <TextInput style={styles.Input}  secureTextEntry={SecuretextForNewPass} />
-            <TouchableOpacity style={{position:'absolute',right:15,top:32}} onPress={ToggleForPass2}>
+            <TouchableOpacity style={{position:'absolute',right:15,top:25}} onPress={ToggleForPass2}>
               <Eye name={SecuretextForNewPass?'eye-off-outline' : 'eye-outline'} size={22}/>
             </TouchableOpacity>
           </View>
           <View>
             <Text style={styles.label}>Yeni Şifre (Tekrar)</Text>
             <TextInput style={styles.Input} secureTextEntry={SecureTextForNewPassAgain}  />
-            <TouchableOpacity style={{position:'absolute',right:15,top:32}} onPress={ToggleForPass3}>
+            <TouchableOpacity style={{position:'absolute',right:15,top:25}} onPress={ToggleForPass3}>
               <Eye name={SecureTextForNewPassAgain?'eye-off-outline' : 'eye-outline'} size={22}/>
             </TouchableOpacity>
           </View>
@@ -79,11 +79,11 @@ const styles=StyleSheet.create({
 
   },
   Input:{
-    padding:15,
+    padding:9,
     backgroundColor:'transparent',
-    borderRadius:20,
+    borderRadius:10,
     fontSize:15,
-    borderWidth:2,
+    borderWidth:1,
     borderColor:'#ebebeb'
   },
   label:{
@@ -95,7 +95,7 @@ const styles=StyleSheet.create({
 
   },
   updatebtn:{
-    width:'50%',
+    width:'100%',
     backgroundColor:'#E54242',
     padding:13,
     borderRadius:10,

@@ -109,7 +109,11 @@ const [collections, setcollections] = useState([])
 const [start,setStart] = useState(1);
 const [take,setTake] = useState(10);
 const [user,setUser] = useState({})
-
+const handleSearch = (text) => {
+  setSearchText(text);
+  // Burada arama işlemleri yapılabilir
+};
+const [searchText, setSearchText] = useState("");
 // useEffect(() => {
 //   getValueFor("user",setUser)
 // },[]);
@@ -128,16 +132,7 @@ const [user,setUser] = useState({})
       Keyboard.dismiss()
       closeSheet()
     }}>
-     
-      <View style={styles.SearchArea}> 
-    <SearchBar inputStyle={styles.Input} containerStyle={{padding:4,backgroundColor:'#dbdbdb',borderBottomWidth:0,borderTopWidth:0,borderRadius:4}}
-     inputContainerStyle={{backgroundColor:'#ebebeb',padding:0}}
-     placeholder='Koleksiyonlarında Ara...'
-    value={searchColection}
-    onChangeText={setSearchColection}
-    onFocus={closeSheet}
-     />
-      </View>
+    
     <View style={styles.container}>
     <View style={{display:showAlert? 'flex':'none', justifyContent:'center',alignItems:'center',paddingBottom:15}}>
           <View style={{padding:11, backgroundColor:'#6fdb4e97',display:showAlert? 'flex':'none' , flexDirection:'row',alignItems:'center',gap:15,borderRadius:10,}}>
@@ -146,10 +141,52 @@ const [user,setUser] = useState({})
        </View>  
        </View>
      
-  <ScrollView  showsVerticalScrollIndicator={false}>
-
-        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+  <ScrollView  showsVerticalScrollIndicator={false}
+  stickyHeaderIndices={[0]}
+  >
  
+  <View style={styles.SearchArea}> 
+      <SearchBar
+          containerStyle={{
+            backgroundColor: "transparent",
+            borderTopWidth: 0,
+            borderWidth: 0,
+            borderBottomWidth: 0,
+            justifyContent: "center",
+            width: "100%",
+            paddingBottom: 10,
+            padding: 8,
+            height: 50,
+          }}
+          inputContainerStyle={{
+            borderRadius: 6,
+            backgroundColor: "#bebebe26",
+            borderWidth: 1,
+            borderColor: "#bebebe26",
+            borderBottomWidth: 1,
+            height: "110%",
+            borderBottomColor: "#bebebe26",
+          }}
+          placeholder="Koleksiyon Ara..."
+          inputStyle={{ fontSize: 15 }}
+          showLoading={false}
+          searchIcon={{ color: "#E54242" }}
+          onChangeText={handleSearch}
+          value={searchText}
+        />
+
+      </View>
+        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/> 
+         <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+
+     
 
 
     </ScrollView> 
@@ -332,14 +369,14 @@ const [user,setUser] = useState({})
 const styles=StyleSheet.create({
     container:{
         flex:1,
-        paddingVertical: 25,
+     
         paddingHorizontal: 0,
         width: '100%',
         marginVertical: 0,
     },
       SearchArea:{
         width:'100%',
-      
+        backgroundColor:'white'
       },
       
         Input: {

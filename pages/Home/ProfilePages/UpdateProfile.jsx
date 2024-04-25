@@ -92,10 +92,14 @@ export default function UpdateProfile() {
             <TextInput style={styles.Input} keyboardType='number-pad' value={phoneNumber} onChangeText={onChangeText} placeholder='0544 444 44 44' maxLength={14}/>
           </View>
           <View>
+            <Text style={styles.label}>E-Posta</Text>
+            <TextInput style={styles.Input}  selectTextOnFocus={true} placeholder='örnek@gmail.com' />
+          </View>
+          <View>
             <Text style={styles.label}>Iban Numarası</Text>
             <TextInput style={styles.Input} value={iban} onChangeText={onChangeText2} onFocus={onFocus}  maxLength={28} keyboardType='number-pad'/>
           </View>
-          <View style={{alignItems:'center',marginBottom:40,zIndex:2}}>
+          <View style={{alignItems:'center'}}>
             <TouchableOpacity style={styles.updatebtn}>
               <Text style={styles.btnText}>Güncelle</Text>
             </TouchableOpacity>
@@ -185,19 +189,20 @@ const styles=StyleSheet.create({
 
     },
     Input:{
-      padding:15,
+      padding:10,
       backgroundColor:'transparent',
-      borderRadius:20,
-      fontSize:15,
-      borderWidth:2,
-      borderColor:'#ebebeb'
+      borderRadius:10,
+      fontSize:14,
+      borderWidth: 1,
+      borderColor: "#ebebeb",
+      color:'#333'
     },
     label:{
-      fontSize:14,
+      fontSize:13,
       bottom:5,
       left:2,
-      fontWeight:'300',
       letterSpacing:0.5,
+      fontSize: 14, color: "grey", fontWeight: '500'
       
     },
     animatedView:{
@@ -228,7 +233,7 @@ const styles=StyleSheet.create({
       paddingRight:20,
     },
     updatebtn:{
-      width:'50%',
+      width:'90%',
       backgroundColor:'#E54242',
       padding:13,
       borderRadius:10,
