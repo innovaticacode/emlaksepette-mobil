@@ -23,14 +23,14 @@ export default function UploadAdsPicture() {
         </View>
         <ScrollView contentContainerStyle={{padding:10}} showsVerticalScrollIndicator={false} stickyHeaderIndices={[0]}>
             <View style={{backgroundColor:'#F5F5F7',paddingBottom:10,paddingTop:10}}>
-            <Text style={{color:'#333',fontSize:15}}>Resimler</Text>
+            <Text style={{color:'#333',fontSize:15}}>Yüklediğim Reklam Görselleri</Text>
             </View>
                 <View style={{gap:10}}>
                 <AdsPictureItem/>
                 <AdsPictureItem/>
                 <AdsPictureItem/>
                 <AdsPictureItem/>
-                <AdsPictureItem/>
+                <AdsPictureItem/> 
                 <AdsPictureItem/>
                 <AdsPictureItem/>
                 </View>

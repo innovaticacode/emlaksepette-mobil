@@ -67,6 +67,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AllRealtorAdverts from './pages/Home/AllRealtorAdverts';
 import UploadAdsPicture from './pages/Home/ProfilePages/UploadAdsPicture';
 import AdsPictureList from './pages/Home/ProfilePages/AdsPictureList';
+import UserTypeList from './pages/Home/ProfilePages/UserTypeList';
 
 const Stack = createNativeStackNavigator();
 
@@ -454,6 +455,14 @@ export default function App({route}) {
               <Stack.Screen name='AdsPictureList' component={AdsPictureList}
   options={({route})=>({
         title:'Reklam Görselleri',
+    headerStyle:{
+          backgroundColor:"#F5F5F7",
+          
+        }
+  })}  />
+             <Stack.Screen name='UserTypes' component={UserTypeList}
+  options={({route})=>({
+        title:'Kullanıcı Tipleri',
     headerStyle:{
           backgroundColor:"#F5F5F7",
           

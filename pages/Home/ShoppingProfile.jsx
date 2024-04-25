@@ -531,11 +531,8 @@ export default function ShoppingProfile() {
               style={{}}
               onPress={() => {
                 setUserTypeModalVisible(false);
-                navigation.navigate("CreateUserType", {
-                  header: "Listeleden geldi",
-                  hidden: "none",
-                  name: "Kullanıcılar",
-                });
+                navigation.navigate('UserTypes')
+                
               }}
             >
               <ProfileSettingsItem text="Listele"  arrowNone={true} />

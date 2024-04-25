@@ -8,7 +8,7 @@ export default function AdsPictureList() {
     const navigation=useNavigation()
   return (
         <ScrollView style={styles.container} stickyHeaderIndices={[1]} contentContainerStyle={{paddingBottom:40}} showsVerticalScrollIndicator={false}>
-            <View style={{alignItems:'flex-end',padding:15}}>
+            <View style={{alignItems:'flex-end',padding:10}}>
             <TouchableOpacity style={{backgroundColor:'#E3E6ED',padding:10,borderRadius:6,flexDirection:'row',gap:10,alignItems:'center'}}
                 onPress={()=>{
                     navigation.navigate('UploadAdsPicture')
@@ -20,7 +20,7 @@ export default function AdsPictureList() {
             </View>
        
                 <View style={{padding:7,flexDirection:'row',justifyContent:'space-between',backgroundColor:'#F5F5F7'}}>
-                    <Text style={{color:'#333',fontSize:18,letterSpacing:0.5,fontWeight:'500'}}>Reklam Görselleriniz</Text>
+                    <Text style={{color:'#333',fontSize:16,letterSpacing:0.5,fontWeight:'500'}}>Reklam Görsellerim</Text>
                   
                 </View>
                 <View style={{gap:10,padding:10}}> 

@@ -1,9 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import { CheckBox } from '@rneui/base'
-export default function Checkbox({title}) {
+export default function Checkbox({title,chechked,id}) {
     const [checked, setChecked] = React.useState(false);
-    const toggleCheckbox = () => setChecked(!checked);
+    const toggleCheckbox = () => {
+      setChecked(!checked)
+      chechked(id)
+    }
   return (
     <View style={{borderWidth:1 ,borderColor:'#ebebeb',borderRadius:10}}>
          <CheckBox
