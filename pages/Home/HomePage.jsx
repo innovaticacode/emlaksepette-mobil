@@ -562,6 +562,7 @@ export default function HomePage() {
               {filteredEstates.map((item, index) => (
                 <RealtorPost
                   key={index}
+                  HouseId={item.id}
                   price={`${JSON.parse(item.housing_type_data)["price"]} `}
                   title={item.housing_title}
                   loading={loadingEstates}

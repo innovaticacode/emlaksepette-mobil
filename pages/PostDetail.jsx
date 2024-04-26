@@ -945,4 +945,10 @@ const styles = StyleSheet.create({
   
     
   },
+  Input:{
+    borderWidth:1,
+    padding:10,
+    borderRadius:6,
+    borderColor:'#ebebeb'
+  },
 });

@@ -68,6 +68,7 @@ import AllRealtorAdverts from './pages/Home/AllRealtorAdverts';
 import UploadAdsPicture from './pages/Home/ProfilePages/UploadAdsPicture';
 import AdsPictureList from './pages/Home/ProfilePages/AdsPictureList';
 import UserTypeList from './pages/Home/ProfilePages/UserTypeList';
+import PaymentScreen from './pages/Home/PaymentScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -467,6 +468,15 @@ export default function App({route}) {
           backgroundColor:"#F5F5F7",
           
         }
+  })}  />
+          <Stack.Screen name='PaymentScreen' component={PaymentScreen}
+  options={({route})=>({
+    title:'Sepet Özeti Ve Onay',
+       headerStyle:{
+        backgroundColor:'#f7f7f7',
+        
+       }
+  
   })}  />
 </Stack.Navigator>
 

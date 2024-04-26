@@ -48,9 +48,7 @@ import RealtorPost from "../../components/RealtorPost";
     const [modalVisible, setModalVisible] = useState(false);
   
   
-          const InputLabel=[
-              {label:'Fiyat',placeholder:'Fiyat giriniz'}
-          ]
+         
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
         <View style={styles.container}>

@@ -189,6 +189,9 @@ export default function Basket() {
               <Text style={{ fontWeight: "200" }}>25.000 ₺</Text>
             </View>
             <TouchableOpacity
+            onPress={()=>{
+              navigation.navigate('PaymentScreen')
+            }}
               style={{
                 flex: 1.2 / 2,
                 backgroundColor: "#ea2b2e",

@@ -23,7 +23,7 @@ export default function UserTypeList() {
       console.error('Error fetching data:', error);
     }
   };
- 
+
 
 
 

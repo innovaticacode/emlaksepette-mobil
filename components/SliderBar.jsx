@@ -30,7 +30,9 @@ export default function SliderBar() {
   useEffect(() => {
     fetchFeaturedStores();
   }, []);
-
+  const capitalizeFirstLetter = (text) => {
+    return text.charAt(0).toUpperCase() + text.slice(1);
+  };
   return (
   <GestureHandlerRootView>
     <ScrollView
@@ -56,7 +58,7 @@ export default function SliderBar() {
                 image={`${apiUrl}/storage/profile_images/${item.profile_image}`}
               />
               <Text numberOfLines={2} style={{ fontSize: 12 }}>
-                {item.name}
+              {capitalizeFirstLetter(item.name)}
               </Text>
             </>
           )}
