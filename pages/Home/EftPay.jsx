@@ -3,7 +3,7 @@ import React,{useState} from 'react'
 import { ImageBackground } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo';
 import * as Clipboard from "expo-clipboard";
-export default function EftPay() {
+export default function EftPay({ onPress,selectedDocumentName}) {
     const [selectedIban, setselectedIban] = useState(false)
     const [selectedBank, setselectedBank] = useState(0)
     const [showCopyAlert, setshowCopyAlert] = useState(false)
@@ -66,10 +66,15 @@ export default function EftPay() {
                 </Text>
             </View>
             <View style={{padding:10,paddingTop:20}}>
-            <TouchableOpacity style={{flexDirection:'row',alignItems:'center',backgroundColor: '#000000', padding:13,justifyContent:'center',gap:15,borderRadius:5 ,width:'50%'}}>
+            <TouchableOpacity style={{flexDirection:'row',alignItems:'center',backgroundColor: '#000000', padding:13,justifyContent:'center',gap:15,borderRadius:5 ,width:'50%'}}
+                    onPress={()=>{
+                        onPress()
+                    }}
+            >
                 <Icon name='link' color={'white'} size={17}/>
                 <Text style={{color:'white'}}>Dekont Ekle</Text>
             </TouchableOpacity>
+            <Text>{selectedDocumentName}</Text>
           </View>
 
             <View style={{padding:10,paddingTop:20}}>

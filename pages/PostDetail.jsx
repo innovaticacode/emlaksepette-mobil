@@ -125,6 +125,8 @@ export default function PostDetail() {
         animationIn="bounceInLeft"
         animationOut="bounceOutLeft"
         style={styles.modal}
+        swipeDirection={['left']}
+        onSwipeComplete={()=>setIsDrawerOpen(false)}
       >
         <View style={styles.modalContent}>
           <View

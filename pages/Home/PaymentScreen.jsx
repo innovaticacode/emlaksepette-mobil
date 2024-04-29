@@ -1,10 +1,13 @@
-import { View, Text,StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text,StyleSheet, ScrollView, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
 import React,{useState} from 'react'
 import IconIdCard from "react-native-vector-icons/FontAwesome"
 import { CheckBox } from '@rneui/themed';
 import CreditCardScreen from './CreditCardScreen';
 import EftPay from './EftPay';
+import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import * as DocumentPicker from 'expo-document-picker';
+
 export default function PaymentScreen() {
     const [checked, setChecked] = React.useState(false);
     const toggleCheckbox = () => setChecked(!checked);
@@ -28,6 +31,34 @@ export default function PaymentScreen() {
     const [notes, setnotes] = useState("")
     const [referanceCode, setreferanceCode] = useState("")
 {/** State Of Inputs **/}
+const [modalVisible, setModalVisible] = useState(false)
+const [selectedDocumentName, setSelectedDocumentName] = useState(null);
+const pickDocument = async () => {
+    try {
+      // Kullanıcıya belge seçmesine izin ver
+      console.log('Belge seçme işlemi başladı.');
+      // Kullanıcıya belge seçmesine izin ver
+      const result = await DocumentPicker.getDocumentAsync();
+      console.log('Belge seçme işlemi tamamlandı.');
+      
+      // Belge seçilirse, belge bilgilerini göster
+      if (result && result === 'success') {
+        console.log('Belge seçildi:', result.uri);
+        const documentName = getFileNameFromUri(result.uri); // Belge adını al
+        setSelectedDocumentName(documentName); 
+      } else {
+        console.log('Belge seçilmedi veya işlem iptal edildi.');
+      }
+    } catch (err) {
+      console.log('Belge seçerken hata oluştu:', err);
+    }
+  
+  }
+  
+  const getFileNameFromUri = (uri) => {
+    const uriComponents = uri.split('/');
+    return uriComponents[uriComponents.length - 1];
+  }
   return (
     <KeyboardAwareScrollView style={styles.container}
         contentContainerStyle={{gap:20,paddingBottom:50}}
@@ -95,7 +126,10 @@ export default function PaymentScreen() {
                 <View style={{gap:5}}>
                 <CheckBox
            checked={checked2}
-           onPress={toggleCheckbox2}
+           onPress={()=>{
+            checked2? setModalVisible(false) : setModalVisible(true)
+            setChecked2(false)
+           }}
            // Use ThemeProvider to make change for all checkbox
            iconType="material-community"
            checkedIcon="checkbox-marked"
@@ -105,7 +139,7 @@ export default function PaymentScreen() {
            containerStyle={{padding:0,margin:0,marginRight:0,marginLeft:0}}
            title={<View style={{padding:5}}>
          
-                <Text style={{textDecorationLine:'underline',fontSize:12}} onPress={()=>{{}}}>
+                <Text style={{textDecorationLine:'underline',fontSize:12}}>
                 Mesafeli kapora emanet sözleşmesini 
                 </Text> 
 
@@ -186,8 +220,38 @@ export default function PaymentScreen() {
                 <Text style={{textAlign:'center',color: tabs==1?'white':'#333'}}>EFT / Havale ile Ödeme</Text>
             </TouchableOpacity>
         </View>
+        {selectedDocumentName && (
+        <Text>Seçilen Belge: {selectedDocumentName}</Text>
+      )}
+
             {tabs==0 && <CreditCardScreen CompeletePayment={completeCreditCardPay}/>}
-            {tabs==1 && <EftPay/>}
+            {tabs==1 && <EftPay onPress={pickDocument} selectedDocumentName={selectedDocumentName}/>}
+            <Modal
+        isVisible={modalVisible}
+        onBackdropPress={() => setModalVisible(false)}
+        backdropColor="transparent"
+        style={styles.modal2}
+        animationIn={'fadeInRightBig'}
+        animationOut={'fadeOutRightBig'}
+      >
+        <View style={styles.modalContent2}>
+      <SafeAreaView>
+      <View style={{alignItems:'center'}}>
+            <TouchableOpacity style={styles.Acceptbtn}
+                onPress={()=>{
+                  setChecked2(true)
+                  setModalVisible(false)
+                }}
+            >
+              <Text style={{color:'white',fontWeight:'bold'}}>Okudum Kabul ediyorum</Text>
+            </TouchableOpacity>
+            </View>
+      </SafeAreaView>
+           
+                       
+   
+        </View>
+      </Modal>
     </KeyboardAwareScrollView>
   )
 }
@@ -240,5 +304,21 @@ const styles = StyleSheet.create({
         fontSize: 14, 
         color: "grey",
         fontWeight: '600'
+    },
+    modal2: {
+        justifyContent: "flex-end",
+        margin: 0,
+      },
+      modalContent2: {
+        backgroundColor: "#f4f4f4",
+        padding: 20,
+        height: "100%",
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+      },
+      Acceptbtn:{
+        backgroundColor:'#2aaa46',
+        padding:10,
+        borderRadius:5
     }
 })

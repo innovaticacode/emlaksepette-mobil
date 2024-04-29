@@ -176,9 +176,11 @@ export default function HomePage() {
         <Modal
           isVisible={isDrawerOpen}
           onBackdropPress={() => setIsDrawerOpen(false)}
-          animationIn="bounceInLeft"
+          animationIn='fadeInLeftBig'
           animationOut="bounceOutLeft"
           style={styles.modal}
+          swipeDirection={['left']}
+          onSwipeComplete={()=>setIsDrawerOpen(false)}
         >
           <View style={styles.modalContent}>
             <View
@@ -581,6 +583,95 @@ export default function HomePage() {
               ))}
             </ScrollView>
           </View>
+          <View style={styles.slide4}>
+            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN İŞ ARSALAR</Text>
+
+                <TouchableOpacity style={styles.allBtn}>
+                  <Text style={{ color: "white", fontSize: 13 }}>
+                    Tümünü Gör
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+        
+          </View>
+          <View style={styles.slide4}>
+            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN PREFABRİK YAPILAR</Text>
+
+                <TouchableOpacity style={styles.allBtn}>
+                  <Text style={{ color: "white", fontSize: 13 }}>
+                    Tümünü Gör
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+        
+          </View>
+          <View style={styles.slide4}>
+            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 12 }}>GÜNLÜK TATİL EVLERİ</Text>
+
+                <TouchableOpacity style={styles.allBtn}>
+                  <Text style={{ color: "white", fontSize: 13 }}>
+                    Tümünü Gör
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+        
+          </View>
+          <View style={styles.slide4}>
+            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 12 }}>AL SAT ACİL İLANLARI</Text>
+
+                <TouchableOpacity style={styles.allBtn}>
+                  <Text style={{ color: "white", fontSize: 13 }}>
+                    Tümünü Gör
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+        
+          </View>
+          
         </Swiper>
         {/* </ScrollView> */}
       </SafeAreaView>
@@ -629,6 +720,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   slide3: {
+    flex: 1,
+  },
+  slide4: {
     flex: 1,
   },
   text: {

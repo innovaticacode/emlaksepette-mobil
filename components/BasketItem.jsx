@@ -90,11 +90,11 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
               <Text style={{fontSize:12,color:'#333'}}>{name}</Text>
               </View>
                 <View style={{flex:0.7/2,flexDirection:'row',justifyContent: hisse?'space-between':'flex-end'}}>
-                  <View style={{ borderWidth:1,borderColor:'#ebebeb', paddingLeft:7,paddingRight:7,borderRadius:10,display:hisse? 'flex':'none',flexDirection:'row',alignItems:'center',gap:10}}>
+                  <View style={{ borderWidth:0,borderColor:'#ebebeb', paddingLeft:7,paddingRight:7,borderRadius:10,display:hisse? 'flex':'none',flexDirection:'row',alignItems:'center',gap:10}}>
                    <TouchableOpacity onPress={decreaseProductCount}>
                     <Icon3 name="minus" color={'grey'}/>
                    </TouchableOpacity>
-                   <View style={{backgroundColor:'#efbdbd',paddingLeft:8,paddingRight:8, paddingTop:4, paddingBottom:4,}}>
+                   <View style={{backgroundColor:'#efbdbd',paddingLeft:8,paddingRight:8, paddingTop:4, paddingBottom:4,borderRadius:20}}>
                     <Text style={{fontSize:12,fontWeight:'bold',color:'#FFF'}}>{productCount}</Text>
                    </View>
                    <TouchableOpacity onPress={()=>{

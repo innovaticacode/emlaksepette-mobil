@@ -295,10 +295,10 @@ export default function Details({ navigation }) {
       <Modal
         isVisible={isDrawerOpen}
         onBackdropPress={() => setIsDrawerOpen(false)}
-        animationIn="bounceInLeft"
+        animationIn='fadeInLeftBig'
         swipeDirection={['left']}
         onSwipeComplete={()=>setIsDrawerOpen(false)}
-        animationOut="bounceOutLeft"
+        animationOut='fadeOutLeftBig'
         style={styles.modal}
       >
         <View style={styles.modalContent}>

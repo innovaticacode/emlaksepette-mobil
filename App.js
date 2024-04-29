@@ -128,7 +128,7 @@ export default function App({route}) {
   
     options={({route})=>({
       headerShown:false,
-      headerBackTitle:'.',
+       headerBackTitleVisible: false,
         title:route.params.name
         
         
@@ -207,7 +207,7 @@ export default function App({route}) {
       }} />
         <Stack.Screen name="Offer"  component={Offer}
          options={({route})=>({
-          headerBackTitle:'.',
+           headerBackTitleVisible: false,
           title:route.params.name
           
 })}
@@ -266,7 +266,7 @@ export default function App({route}) {
       />
          <Stack.Screen name="OfferList"  component={OfferList} 
             options={({route})=>({
-              headerBackTitle:'.',
+               headerBackTitleVisible: false,
               animationTypeForReplace:'pop',
               title:route.params.name
               
@@ -276,7 +276,7 @@ export default function App({route}) {
       />
         <Stack.Screen name="CategorieChoose"  component={CategoryChoose} 
             options={({route})=>({
-              headerBackTitle:'.',
+               headerBackTitleVisible: false,
               animationTypeForReplace:'pop',
               title:route.params.name
               
@@ -286,7 +286,7 @@ export default function App({route}) {
       />
           <Stack.Screen name="CategorieStatu"  component={CategorieStatus} 
             options={({route})=>({
-              headerBackTitle:'.',
+               headerBackTitleVisible: false,
               animationTypeForReplace:'pop',
               title:route.params.name
               
@@ -296,7 +296,7 @@ export default function App({route}) {
       />
         <Stack.Screen name="AdvertPlace"  component={AdvertsPlace} 
             options={({route})=>({
-              headerBackTitle:'.',
+               headerBackTitleVisible: false,
               animationTypeForReplace:'pop',
               title:route.params.name
                 
@@ -308,7 +308,7 @@ export default function App({route}) {
       />
          <Stack.Screen name="AdvertForm"  
             options={({route})=>({
-              headerBackTitle:'.',
+               headerBackTitleVisible: false,
               animationTypeForReplace:'pop',
               
                 
@@ -323,7 +323,7 @@ export default function App({route}) {
 
          <Stack.Screen name="ShareAdvert" 
        options={({route})=>({
-        headerBackTitle:'.',
+         headerBackTitleVisible: false,
         animationTypeForReplace:'pop',
         title:''
         
@@ -337,20 +337,20 @@ export default function App({route}) {
 
 
   <Stack.Screen name="AdvertStatu"  component={AdvertStatu} options={({route})=>({
-    headerBackTitle:'.',
+     headerBackTitleVisible: false,
     title:route.params.name
   })} 
  
   />  
 
 <Stack.Screen name="AdvertType"  component={AdvertType} options={({route})=>({
-   headerBackTitle:'.',
+    headerBackTitleVisible: false,
     title:route.params.name
   })} 
  
   /> 
   <Stack.Screen name="RealtorAdd"  component={RealtorAdvertAdd} options={({route})=>({
-     headerBackTitle:'.',
+      headerBackTitleVisible: false,
     title:'İlanı Paylaş'
   })} 
  
@@ -450,8 +450,6 @@ export default function App({route}) {
           backgroundColor:"#F5F5F7",
           
         }
-
-  
   })}  />
               <Stack.Screen name='AdsPictureList' component={AdsPictureList}
   options={({route})=>({

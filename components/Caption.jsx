@@ -1,21 +1,14 @@
 import { View, Text ,StyleSheet,Platform, TouchableOpacity,ScrollView } from 'react-native'
 import React from 'react'
-import ShoppinInfo from './ShoppinInfo'
+import HTML from 'react-native-render-html';
 // import { FlatList, GestureHandlerRootView,ScrollView} from 'react-native-gesture-handler';
 export default function Caption({data}) {
   const caption=data?.project?.description.replace(/<[^>]+>|&[a-zA-Z]+;|[%&]|&gt;/g, '')
   return (
 
     <View style={[styles.card,{paddingLeft:20,paddingRight:20,flex:1}]}>
-
-   
-
-   
-    
     <Text>
-
-{caption}
-
+    <HTML source={{ html: data?.project?.description }}  contentWidth={100}/>
 </Text>
    
 

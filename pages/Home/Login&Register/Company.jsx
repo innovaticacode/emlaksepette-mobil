@@ -130,7 +130,7 @@ const fetchDataCounty = async (value) => {
         }
         const register=()=>{
             
-          if (eposta && phoneNumber && password && bossName && companyName && companyPhone && Iban && accounttype && focusArea && city && county && neigbourhod && TaxPlaceCity && TaxPlace && taxNumber &&  checked&&checked1&&checked2&&checked3) {
+          if (eposta && phoneNumber && password && bossName && companyName && focusArea && city && county && neigbourhod && TaxOfficesCity && TaxPlace && taxNumber && ShoppingName ) {
      
             setsuccesRegister(true)
             seteposta("")
@@ -139,8 +139,8 @@ const fetchDataCounty = async (value) => {
             setbossName("")
             setcompanyName("")
             setcompanyPhone("")
-            setIban("")
-            setaccounttype(null)
+            setShoppingName('')
+        
             setfocusArea(null)
             setcity(null)
             setcounty(null)
@@ -203,11 +203,20 @@ const fetchDataCounty = async (value) => {
        const [TaxOffices, setTaxOffices] = useState([])
        
         const TaxOfficePlace = Array.from(new Set(TaxOffices.map(item => item.daire)));
-     
+
+        const [modalVisible, setModalVisible] = useState(false)
+        const [modalVisible2, setModalVisible2] = useState(false)
+        const [modalVisible3, setModalVisible3] = useState(false)
+        const [Deals, setDeals] = useState('')
+  
+        const GetDeal=(deal)=>{
+            setDeals(deal)
+          
+        }
     
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <View style={{ padding: 15, gap: 20 }}>
           <View style={{ gap: 5 }}>
@@ -513,7 +522,12 @@ const fetchDataCounty = async (value) => {
             <View>
               <CheckBox
                 checked={checked}
-                onPress={toggleCheked}
+                onPress={()=>{
+                  GetDeal('Bireysel Üyelik Sözleşmesi')
+            
+                  checked? setModalVisible(false) : setModalVisible(true)
+                    setChecked(false)
+               }}
                 // Use ThemeProvider to make change for all checkbox
                 iconType="material-community"
                 checkedIcon="checkbox-marked"
@@ -524,7 +538,7 @@ const fetchDataCounty = async (value) => {
                     <Text>
                       <Text style={{ color: "#027BFF", fontSize: 13 }}>
                         {" "}
-                        Bireysel üyelik sözleşmesini
+                        Kurumsal üyelik sözleşmesini
                       </Text>
                       <Text style={{ fontSize: 13 }}> okudum onaylıyorum</Text>
                     </Text>
@@ -536,7 +550,12 @@ const fetchDataCounty = async (value) => {
               />
               <CheckBox
                 checked={checked1}
-                onPress={toggleCheked1}
+                onPress={()=>{
+                  GetDeal('Kvkk metni')
+            
+                  checked1? setModalVisible2(false) : setModalVisible2(true)
+                    setChecked1(false)
+               }}
                 // Use ThemeProvider to make change for all checkbox
                 iconType="material-community"
                 checkedIcon="checkbox-marked"
@@ -558,7 +577,12 @@ const fetchDataCounty = async (value) => {
               />
               <CheckBox
                 checked={checked2}
-                onPress={toggleCheked2}
+                onPress={()=>{
+                  GetDeal('Gizlilik Sözleşmesi')
+            
+                  checked2? setModalVisible3(false) : setModalVisible3(true)
+                    setChecked2(false)
+               }}
                 // Use ThemeProvider to make change for all checkbox
                 iconType="material-community"
                 checkedIcon="checkbox-marked"
@@ -700,9 +724,87 @@ const fetchDataCounty = async (value) => {
           </View>
         </Modal>
        
+         <Modal
+        isVisible={modalVisible}
+        onBackdropPress={() => setModalVisible(false)}
+        backdropColor="transparent"
+        style={styles.modal2}
+      >
+        <View style={styles.modalContent2}>
       
+            <Text>
+            {Deals}
+           
+            </Text>
+            <View style={{alignItems:'center'}}>
+            <TouchableOpacity style={styles.Acceptbtn}
+              onPress={()=>{setChecked(!checked)
+              setModalVisible(false)
+              }}
+            >
+              <Text style={{color:'white',fontWeight:'bold'}}>Okudum Kabul ediyorum</Text>
+            </TouchableOpacity>
+            </View>
+        
+          
+                       
+          
+        </View>
+      </Modal>
+      <Modal
+        isVisible={modalVisible2}
+        onBackdropPress={() => setModalVisible2(false)}
+        backdropColor="transparent"
+        style={styles.modal2}
+      >
+        <View style={styles.modalContent2}>
+        
+            <Text>
+            {Deals}
+           
+            </Text>
+          
+            <View style={{alignItems:'center'}}>
+            <TouchableOpacity style={styles.Acceptbtn}
+                onPress={()=>{
+                  setChecked1(true)
+                  setModalVisible2(false)
+                }}
+            >
+                <Text style={{color:'white',fontWeight:'bold'}}>Okudum Kabul ediyorum</Text>
+            </TouchableOpacity>
+            </View>     
+          
+        </View>
+      </Modal>
+      <Modal
+        isVisible={modalVisible3}
+        onBackdropPress={() => setModalVisible3(false)}
+        backdropColor="transparent"
+        style={styles.modal2}
+      >
+        <View style={styles.modalContent2}>
+       
+            <Text>
+            {Deals}
+           
+            </Text>
+            <View style={{alignItems:'center'}}>
+            <TouchableOpacity style={styles.Acceptbtn}
+                onPress={()=>{
+                  setChecked2(true)
+                  setModalVisible3(false)
+                }}
+            >
+              <Text style={{color:'white',fontWeight:'bold'}}>Okudum Kabul ediyorum</Text>
+            </TouchableOpacity>
+            </View>
+                       
+          
+        </View>
+      </Modal>
 
-      </KeyboardAwareScrollView>
+      </ScrollView>
     </TouchableWithoutFeedback>
   );
 }
@@ -772,4 +874,20 @@ borderRadius:10
     marginTop: 10,
     padding: 10,
   },
+  modal2: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContent2: {
+    backgroundColor: "#f4f4f4",
+    padding: 20,
+    height: "80%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  Acceptbtn:{
+    backgroundColor:'#2aaa46',
+    padding:10,
+    borderRadius:5
+}
 });

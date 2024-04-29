@@ -47,6 +47,8 @@ export default function Test() {
         animationIn="bounceInLeft"
         animationOut="bounceOutLeft"
         style={styles.modal}
+        swipeDirection={['left']}
+        onSwipeComplete={()=>setIsDrawerOpen(false)}
       >
         <View style={styles.modalContent}>
           <View

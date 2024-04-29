@@ -25,6 +25,7 @@ import Search from "./Search";
 import Categories from "../../components/Categories";
 import Modal from "react-native-modal";
 
+
 export default function Basket() {
   const route = useRoute();
 
@@ -51,6 +52,7 @@ export default function Basket() {
   const toggleDrawer=()=>{
     setIsDrawerOpen(!isDrawerOpen)
   }
+  
   return (
     <SafeAreaView style={{flex:1,backgroundColor:'white'}}>
           <View style={{
@@ -71,7 +73,8 @@ export default function Basket() {
           onBackdropPress={()=>setIsDrawerOpen(false)}
           animationIn='bounceInLeft'
           animationOut='bounceOutLeft'
-        
+          swipeDirection={['left']}
+          onSwipeComplete={()=>setIsDrawerOpen(false)}
           style={styles.modal}
         >
           <View style={styles.modalContent}>
@@ -117,9 +120,9 @@ export default function Basket() {
           </View>
         </Modal>
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
+      <ScrollView style={styles.container} stickyHeaderIndices={[0]} showsVerticalScrollIndicator={false}>
         {Basket.map((item, index) => (
-          <GestureHandlerRootView key={index}>
+          <GestureHandlerRootView key={index}style={{backgroundColor:'white'}} >
             <Swipeable renderRightActions={renderRightActions}>
               <BasketItem
                 key={index}
@@ -132,19 +135,26 @@ export default function Basket() {
             </Swipeable>
           </GestureHandlerRootView>
         ))}
-
-        {/* <FlatList
-    
-      data={Basket}
-      renderItem={({ item ,index}) => (
+          
+        <View>
+       <View style={[styles.HouseInfo,{padding:15}]}>
+        <View style={{flexDirection:'row',gap:5,}}>
+        <Text style={{fontSize:12}}>İlan Adı:</Text>
+        <Text style={{fontSize:12}}>Master Sonsuz Tatil Köyü projesinde 3 NO'lu konut</Text>
+        </View>
+        <View style={{flexDirection:'row',gap:5,}}>
+        <Text style={{fontSize:12}}>İlan Konumu:</Text>
+        <Text style={{fontSize:12}}>Sakarya / Hendek</Text>
+        </View>
+        <View style={{flexDirection:'row',gap:5,}}>
+        <Text style={{fontSize:12}}>Mağaza:</Text>
+        <Text style={{fontSize:12}}>Maliyetine Ev</Text>
+        </View>
+       
+       </View>
         
-       
-       
-      )}
-      keyExtractor={item => item.id}
-    /> */}
-
-        <View style={styles.acceptCart}>
+        </View>
+         <View style={styles.acceptCart}>
           <View
             style={{
               width: "100%",
@@ -204,8 +214,9 @@ export default function Basket() {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </View>
+        </View> 
+      </ScrollView>
+
     </TouchableWithoutFeedback>
     </SafeAreaView>
   );
@@ -214,16 +225,17 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     flex: 1,
-    padding: 13,
+  paddingLeft:10,
+  paddingRight:10,
+  paddingBottom:10,
     gap: 10,
+  
   },
   acceptCart: {
     width: "100%",
 
     padding: 10,
-    position: "absolute",
-    bottom: 15,
-    left: 13,
+   
     gap: 8,
     backgroundColor: "#FFFFFF",
     borderRadius: 4,
@@ -281,5 +293,39 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     width:320,
+  },
+  HouseInfo:{
+    backgroundColor: '#FFFFFF',  
+    borderRadius: 5,  
+    paddingVertical: 10,  
+    paddingHorizontal: 5,  
+    width: '100%',  
+    marginVertical: 10,  
+
+    borderWidth:0.7,
+    borderColor:'#e6e6e6',
+    ...Platform.select({
+        ios: {
+          shadowColor: ' #e6e6e6',
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+
+  },
+  modal2: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContent2: {
+    backgroundColor: "#f4f4f4",
+    padding: 20,
+    height: "75%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 });
