@@ -6,7 +6,7 @@ import Modal from "react-native-modal";
 import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from 'axios';
 import HTML from 'react-native-render-html';
-export default function Personal() {
+export default function Personal({type}) {
    
   const [eye, seteye] = useState('eye-off-sharp')
     const [Show, setShow] = useState(false)
@@ -38,18 +38,48 @@ export default function Personal() {
 const [name, setname] = useState('')
 const [ePosta, setePosta] = useState('')
 const [password, setpassword] = useState('')
+const [phoneNumber, setphoneNumber] = useState('')
+const [message, setmessage] = useState('')
+const postData = async () => {
+   
+  try {
+  var formData=new FormData()
+  formData.append('type',1)
+    formData.append('name', name)
+    formData.append('email', ePosta)
+ formData.append('password', password)
+ formData.append('mobile_phone',phoneNumber)
+ formData.append('check-a',checked)
+ formData.append('check-b',checked1)
+ formData.append('check-c',checked2)
+    const response = await axios.post('https://emlaksepette.com/api/register', formData);
+    
+    // İsteğin başarılı bir şekilde tamamlandığı durum
+    console.log('İstek başarıyla tamamlandı:', response.data);
+    setmessage(response.data.message)
+
+  } catch (error) {
+    // Hata durumunda
+   
+    console.error('Hata:', error +'post isteği başarısız ');
+  }
+};
         const registerPersonal=()=>{
           
           if (name && ePosta && password && checked && checked1 && checked2) {
             if (password.length >= 6) { // Şifre en az 6 karakter uzunluğunda olmalı
+              postData()
               setsuccesRegister(true)
               setname('')
               setePosta('')
               setpassword('')
+              setphoneNumber('')
               setChecked(false)
               setChecked1(false)
               setChecked2(false)
               setChecked3(false)
+         
+              
             } else {
               // Şifre yeterince uzun değilse uyarı göster
                 ShowAlert('Şifreniz 6 Karakterden Az Olmamalı!')
@@ -96,7 +126,7 @@ const [password, setpassword] = useState('')
  <ScrollView showsVerticalScrollIndicator={false}>
     
         <View style={{padding:15,gap:20}}>
-
+    
       <View style={{gap:5}}>
         <View style={{paddingLeft:5}}>
           <Text style={{fontSize:14,color:'grey',fontWeight:600}}>İsim</Text>
@@ -112,6 +142,12 @@ const [password, setpassword] = useState('')
         <TextInput style={styles.Input} value={ePosta} onChangeText={(value)=>setePosta(value)} placeholder='example@gmail.com' />
       </View>
 
+      <View style={{gap:5}}>
+        <View style={{paddingLeft:5}}>
+          <Text style={{fontSize:14,color:'grey',fontWeight:600}}>Cep Telefonu</Text>
+        </View>
+        <TextInput style={styles.Input} value={phoneNumber} onChangeText={(value)=>setphoneNumber(value)} placeholder='5555555555' keyboardType='number-pad' />
+      </View>
       <View style={{gap:5}}>
         <View style={{paddingLeft:5}}>
           <Text style={{fontSize:14,color:'grey',fontWeight:600}}>Şifre</Text>
@@ -235,11 +271,13 @@ const [password, setpassword] = useState('')
         animationOut={'fadeOutRightBig'}
       >
         <SafeAreaView style={styles.modalContent2}>
-         <ScrollView style={{padding:10}}>
-         <Text>
-            <HTML source={{ html: Deals }} contentWidth={100} />
-            </Text>
-            <View style={{alignItems:'center',}}>
+         <ScrollView style={{padding:10}} contentContainerStyle={{gap:20}}>
+         {/* <Text>
+          
+            </Text> */}
+       <HTML source={{ html: Deals }} contentWidth={100} />
+
+            <View style={{alignItems:'center',paddingBottom:25}}>
             <TouchableOpacity style={styles.Acceptbtn}
               onPress={()=>{setChecked(!checked)
               setModalVisible(false)
@@ -266,12 +304,13 @@ const [password, setpassword] = useState('')
       >
         <SafeAreaView style={styles.modalContent2}>
         <ScrollView showsVerticalScrollIndicator={false} style={{padding:10,}}>
-            <Text>
-            {/* {Deals.replace(/<[^>]+>|&[a-zA-Z]+;|[%&]|&gt;/g, '')} */}
+    
+         
             <HTML source={{ html: Deals }}  contentWidth={100}/>
-            </Text>
+         
+        
           
-            <View style={{alignItems:'center'}}>
+            <View style={{alignItems:'center',paddingBottom:20}}>
             <TouchableOpacity style={styles.Acceptbtn}
                 onPress={()=>{
                   setChecked1(true)
@@ -295,13 +334,13 @@ const [password, setpassword] = useState('')
         <SafeAreaView style={styles.modalContent2}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{padding:10,}}>
      
-                <Text>
-          
-            <HTML source={{ html: Deals }}  contentWidth={100}/>
-            </Text>
            
           
-            <View style={{alignItems:'center'}}>
+            <HTML source={{ html: Deals }}  contentWidth={100}/>
+        
+           
+          
+            <View style={{alignItems:'center',paddingBottom:50}}>
             <TouchableOpacity style={styles.Acceptbtn}
                 onPress={()=>{
                   setChecked2(true)
@@ -340,7 +379,7 @@ const [password, setpassword] = useState('')
                     letterSpacing: 0.5,
                   }}
                 >
-                   Hesabınız Oluşturuldu Lütfen Mail Adresinize Gelen Linkten Hesabınızı doğrulayın
+                   {JSON.stringify(message)}
                 </Text>
           
               </View>
@@ -427,8 +466,8 @@ const styles=StyleSheet.create({
     },
     modalContent2: {
       backgroundColor: "#f4f4f4",
-      padding: 30,
-      paddingBottom:60,
+      padding: 10,
+
       height: "100%",
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,

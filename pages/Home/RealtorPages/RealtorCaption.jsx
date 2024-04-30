@@ -6,11 +6,11 @@ export default function RealtorCaption({data}) {
     const caption=data?.housing?.description
   return (
     <Shadow  style={{width:'100%',margin:5}} paintInside={false}>
-    <View style={{padding:15,}} indicatorStyle='white'>
+    <View style={{padding:10,}} >
 
-    <Text>
+  
     <HTML source={{ html: caption}}  contentWidth={100}/>
-    </Text>
+  
 
     </View>
     </Shadow>

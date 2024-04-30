@@ -10,6 +10,7 @@ import {
   Dimensions,
   Linking,
   TextInput,
+  Pressable
 } from "react-native";
 import { React, useRef, useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -34,8 +35,7 @@ import Categories from "../components/Categories";
 import Search from "./Home/Search";
 import LinkIcon from "react-native-vector-icons/Entypo";
 import Arrow from "react-native-vector-icons/MaterialIcons";
-import SliderMenuDetails from "../components/SliderMenuDetails";
-import OtherHomeInProject from "../components/OtherHomeInProject";
+import CloseIcon from 'react-native-vector-icons/AntDesign';
 import SliderMenuPostDetails from "../components/PostDetailsSettings/SliderMenuPostDetails";
 import { apiRequestGet } from "../components/methods/apiRequest";
 import Posts from "../components/Posts";
@@ -46,7 +46,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Shadow } from "react-native-shadow-2";
 
 export default function PostDetail() {
-  const apiUrl = "https://emlaksepette.com";
+  const apiUrl = "https://emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState("hearto");
@@ -101,6 +101,7 @@ export default function PostDetail() {
   const [pagination, setpagination] = useState(0);
   const handlePageChange = (pageNumber) => {
     setpagination(pageNumber);
+    setSelectedImage(pageNumber);
   };
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const openModal = (roomOrder) => {
@@ -115,6 +116,12 @@ export default function PostDetail() {
   const [changeIcon, setchangeIcon] = useState(false)
   const  toggleIcon=()=>{
     setchangeIcon(!changeIcon)
+  }
+  const [showCoverImageModal,setCoverImageModal] = useState(false);
+  const [selectedImage,setSelectedImage] = useState(0);
+  const openGalery=(index)=>{
+    // setSelectedImage(index)
+    setCoverImageModal(true)
   }
   return (
     <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
@@ -217,6 +224,9 @@ export default function PostDetail() {
         }}
       >
         <TouchableOpacity
+        onPress={()=>{
+          navigation.navigate('Profile',{name:'',id:ProjectHomeData?.project?.user?.id})
+        }}
           style={{
             paddingLeft: 15,
             padding: 10,
@@ -275,7 +285,7 @@ export default function PostDetail() {
         //   }
         // }}
       >
-        <View style={{ height: 200 }}>
+        <View style={{ height: 250 }}>
           <View style={styles.pagination}>
             <View
               style={{
@@ -327,21 +337,21 @@ export default function PostDetail() {
               </View>
             </TouchableOpacity>
           </View>
-          <PagerView style={{ height: 200 }}
-          
+          <PagerView style={{ height: 250 }}
+           initialPage={selectedImage}
             onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
           >
              {
               ProjectHomeData.project.images.map((image,index) => {
               
                 return(
-                  <View key={index+1}>
-                     <ImageBackground
-                      source={{uri:`${apiUrl}/${image.image.replace("public",'storage')}`}}
-                      style={{ width: "100%", height: "100%" }}
-                 
-                    /> 
-                  </View>
+                  <Pressable key={index+1} onPress={()=>{openGalery(index)}}>
+                  <ImageBackground
+                    source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
+                    style={{ width: "100%", height: "100%" }}
+                  
+                  />
+                </Pressable>
                 )
               })
             } 
@@ -770,6 +780,51 @@ export default function PostDetail() {
             </View>
           </View>
         </Modal>
+        <Modal
+          isVisible={showCoverImageModal}
+          onBackdropPress={()=>setCoverImageModal(false)}
+          swipeDirection={["down"]}
+          animationIn={'fadeInRightBig'}
+          animationOut={'fadeOutDownBig'}
+                onSwipeComplete={()=>setCoverImageModal(false)}
+          backdropColor="transparent"
+          style={styles.modalImage}
+        >
+          <View style={styles.modalContentImage}>
+                 <View style={{alignItems:'flex-end',marginBottom:20}}>
+                  <TouchableOpacity onPress={()=>setCoverImageModal(false)}>
+                  <CloseIcon name="close" color={'white'} size={30}/>
+                  </TouchableOpacity>
+                
+                 </View>
+                
+            <PagerView style={{ height: 300 }}
+            initialPage={selectedImage}
+            onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
+            
+          >
+            {
+              ProjectHomeData.project.images.map((image,index) => {
+                // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
+                return(
+                  <Pressable key={index+1} onPress={()=>setCoverImageModal(true)}>
+                    <ImageBackground
+                      source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
+                      style={{ width: "100%", height: "100%", }}
+                     
+                      resizeMode='cover'
+                    
+                    />
+                  </Pressable>
+                )
+              })
+            }
+            
+          </PagerView>
+
+                 </View>
+     
+        </Modal>
       </ScrollView>
     </SafeAreaView>
   );
@@ -841,7 +896,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     position: "absolute",
     right: 7,
-    top: 22,
+    top: 42,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-around",
@@ -953,4 +1008,16 @@ const styles = StyleSheet.create({
     borderRadius:6,
     borderColor:'#ebebeb'
   },
+  modalImage: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContentImage: {
+    backgroundColor: "black",
+    justifyContent:'center',
+    
+  flex:1
+    
+  },
+ 
 });

@@ -33,6 +33,7 @@ import Search from "../Search";
 import SliderMenuRealtorDetails from "../../../components/SliderMenuRealtorDetail";
 import RealtorCaption from "./RealtorCaption";
 import Settings from "./Settings";
+import CloseIcon from 'react-native-vector-icons/AntDesign';
 import RealtorMap from "./RealtorMap";
 import Comment from "./Comment";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
@@ -84,6 +85,7 @@ const ToggleColSheet = () => {
 const [pagination, setpagination] = useState(0)
 const handlePageChange = (pageNumber) => {
   setpagination(pageNumber);
+  setSelectedImage(pageNumber)
 }
 const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
 const openModal = (roomOrder) => {
@@ -134,6 +136,12 @@ const [modalVisibleComennet, setmodalVisibleComment] = useState(false)
   const [changeIcon, setchangeIcon] = useState(false)
   const  toggleIcon=()=>{
     setchangeIcon(!changeIcon)
+  }
+  const [showCoverImageModal,setCoverImageModal] = useState(false);
+  const [selectedImage,setSelectedImage] = useState(0);
+  const openGalery=(index)=>{
+    // setSelectedImage(index)
+    setCoverImageModal(true)
   }
 return (
   
@@ -238,6 +246,9 @@ return (
       }}
     >
       <TouchableOpacity
+          onPress={()=>{
+            navigation.navigate('Profile',{name:'',id:data?.housing.user?.id})
+          }}
         style={{
           paddingLeft: 15,
           padding: 10,
@@ -360,15 +371,23 @@ return (
           {
             images.map((item,_index) => [
              
-              <View key={_index} style={{}}>
+              <Pressable key={_index+1} onPress={()=>setCoverImageModal(true)}>
       
                 <ImageBackground source={{uri:`${apiUrl}/housing_images/${item}`}} style={{width:'100%',height:'100%'}}/>
               
-              </View>
+                </Pressable>
              
             ])
           }
-        
+{/*        
+                    <ImageBackground
+                      source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
+                      style={{ width: "100%", height: "100%", }}
+                     
+                      resizeMode='cover'
+                    
+                    /> */}
+            
    
         </PagerView>
        
@@ -655,7 +674,62 @@ return (
           </View>
         </View>
       </Modal>
-    
+      <Modal
+          isVisible={showCoverImageModal}
+          onBackdropPress={()=>setCoverImageModal(false)}
+          swipeDirection={["down"]}
+          animationIn={'fadeInRightBig'}
+          animationOut={'fadeOutDownBig'}
+                onSwipeComplete={()=>setCoverImageModal(false)}
+          backdropColor="transparent"
+          style={styles.modalImage}
+        >
+          <View style={styles.modalContentImage}>
+                 <View style={{alignItems:'flex-end',marginBottom:20}}>
+                  <TouchableOpacity onPress={()=>setCoverImageModal(false)}>
+                  <CloseIcon name="close" color={'white'} size={30}/>
+                  </TouchableOpacity>
+                
+                 </View>
+                
+            <PagerView style={{ height: 300 }}
+            initialPage={selectedImage}
+            onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
+            
+          >
+                  {
+            images.map((item,_index) => [
+             
+              <View key={_index} style={{}}>
+      
+                <ImageBackground source={{uri:`${apiUrl}/housing_images/${item}`}} style={{width:'100%',height:'100%'}}/>
+              
+              </View>
+             
+            ])
+          }
+            {/* {
+              data.housing.images.map((image,index) => {
+                // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
+                return(
+                  <Pressable key={index+1} onPress={()=>setCoverImageModal(true)}>
+                    <ImageBackground
+                      source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
+                      style={{ width: "100%", height: "100%", }}
+                     
+                      resizeMode='cover'
+                    
+                    />
+                  </Pressable>
+                )
+              })
+            } */}
+            
+          </PagerView>
+
+                 </View>
+     
+        </Modal>
 
 
     </ScrollView>
@@ -865,6 +939,17 @@ modalViewSave: {
   shadowOpacity: 0.25,
   shadowRadius: 4,
   elevation: 5,
+},
+modalImage: {
+  justifyContent: "flex-end",
+  margin: 0,
+},
+modalContentImage: {
+  backgroundColor: "black",
+  justifyContent:'center',
+  
+flex:1
+  
 },
 
 

@@ -267,17 +267,12 @@ export default function Details({ navigation }) {
     setTabs(tabs);
   };
   const [pagination, setpagination] = useState(0)
-   const pagerRef = useRef(null);
+
   const handlePageChange = (pageNumber) => {
     setpagination(pageNumber);
     setSelectedImage(pageNumber);
   
-    if (pageNumber === data.project.images.length - 1) {
-      // Son sayfaya ulaşıldığında, ilk sayfaya geri dön
-      setTimeout(() => {
-        pagerRef.current.setPage(0);
-      }, 1000); // Opsiyonel: Animasyonu daha pürüzsüz hale getirmek için bir gecikme ekleyin
-    }
+  
   };
   const [changeIcon, setchangeIcon] = useState(false)
     const  toggleIcon=()=>{
@@ -508,7 +503,7 @@ export default function Details({ navigation }) {
             </TouchableOpacity>
           </View>
           <PagerView style={{ height: 250 }}
-           ref={pagerRef}
+     
           initialPage={selectedImage}
             onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
             
@@ -932,12 +927,13 @@ export default function Details({ navigation }) {
           onBackdropPress={()=>setCoverImageModal(false)}
           swipeDirection={["down"]}
           animationIn={'fadeInRightBig'}
+          animationOut={'fadeOutDownBig'}
                 onSwipeComplete={()=>setCoverImageModal(false)}
           backdropColor="transparent"
           style={styles.modalImage}
         >
           <View style={styles.modalContentImage}>
-                 <View style={{alignItems:'flex-end'}}>
+                 <View style={{alignItems:'flex-end',marginBottom:20}}>
                   <TouchableOpacity onPress={()=>setCoverImageModal(false)}>
                   <CloseIcon name="close" color={'white'} size={30}/>
                   </TouchableOpacity>

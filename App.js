@@ -1,4 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
+
 import { StyleSheet, Text, View, TextInput ,TouchableWithoutFeedback,Keyboard,ScrollView, Alert } from 'react-native';
 import { createNativeStackNavigator} from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -21,7 +22,7 @@ import Rent from './pages/Home/ProfilePages/Rent';
 import UpdateProfile from './pages/Home/ProfilePages/UpdateProfile';
 import ChangePassword from './pages/Home/ProfilePages/ChangePassword';
 import RegisterRealtorClub from './pages/Home/ProfilePages/RegisterRealtorClub';
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import MyProjectAdverts from './pages/Home/ProfilePages/MyProjectAdverts';
 import MyRealtorAdverts from './pages/Home/ProfilePages/MyRealtorAdverts';
 import Offer from './pages/Home/ProfilePages/Offer';
@@ -69,16 +70,24 @@ import UploadAdsPicture from './pages/Home/ProfilePages/UploadAdsPicture';
 import AdsPictureList from './pages/Home/ProfilePages/AdsPictureList';
 import UserTypeList from './pages/Home/ProfilePages/UserTypeList';
 import PaymentScreen from './pages/Home/PaymentScreen';
+import Onboard from './pages/Home/Onboarding/Onboard';
+import SplashScreen from './pages/Home/Onboarding/SplashScreen';
 
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
   
   const [İsLoggedIn, setİsLoggedIn] = useState(false)
-  const [isLogIn, setisLogIn] = useState(false)
+  const [ShowOnBoard, setShowOnBoard] = useState(true)
   const [showBackIcon, setshowBackIcon] = useState(false)
-  const [İsloading, setİsloading] = useState(false)
 
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowSplash(false);
+    }, 1000); // 3 saniye sonra splash ekranını kaldır
+  }, []);
 
   return (
     <GestureHandlerRootView style={{flex:1}}>
@@ -89,15 +98,30 @@ export default function App({route}) {
       ...TransitionPresets.SlideFromRightIOS,
       
   }}>
- 
-  <Stack.Screen name="Home" options={{
-    headerShown:false,
    
-  }} 
-    
-  >
-    {(props) => <Home {...props}  showBackIcon={showBackIcon} setshowBackIcon={setshowBackIcon}/>}
-  </Stack.Screen>
+    {
+      showSplash?
+      <Stack.Screen name='SplashScreen' component={SplashScreen} options={{
+        headerShown:false
+      }}/>
+  :
+    //   ShowOnBoard? 
+    //   <Stack.Screen name='OnBoard'>
+
+    //   {(props)=><Onboard {...props} setShowOnBoard={setShowOnBoard}/>}
+    //  </Stack.Screen>:
+      <Stack.Screen name="Home" options={{
+        headerShown:false,
+       
+      }} 
+        
+      >
+        {(props) => <Home {...props}  showBackIcon={showBackIcon} setshowBackIcon={setshowBackIcon}/>}
+      </Stack.Screen>
+    }
+
+
+ 
   
 
   <Stack.Group>
