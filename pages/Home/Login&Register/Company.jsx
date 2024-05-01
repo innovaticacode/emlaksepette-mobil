@@ -67,7 +67,7 @@ const [ShoppingName, setShoppingName] = useState("")
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://emlaksepette.com/api/cities');
+      const response = await axios.get('https://test.emlaksepette.com/api/cities');
       return response.data;
     } catch (error) {
       console.error('Hata:', error);
@@ -86,7 +86,7 @@ const [ShoppingName, setShoppingName] = useState("")
  const [counties, setcounties] = useState([])
 const fetchDataCounty = async (value) => {
   try {
-    const response = await axios.get(`https://emlaksepette.com/api/counties/${value}`);
+    const response = await axios.get(`https://test.emlaksepette.com/api/counties/${value}`);
     return response.data;
   } catch (error) {
     console.error('Hata:', error);
@@ -112,7 +112,7 @@ const fetchDataCounty = async (value) => {
       const [Neigbour, setNeigbour] = useState([])
       const fetchDataNeigbour = async (value) => {
         try {
-          const response = await axios.get(`https://emlaksepette.com/api/neighborhoods/${value}`)
+          const response = await axios.get(`https://test.emlaksepette.com/api/neighborhoods/${value}`)
           return response.data;
         } catch (error) {
           console.error('Hata:', error);
@@ -130,7 +130,8 @@ const fetchDataCounty = async (value) => {
            setNeigbour([])
           }
         }
-
+          const [message, setmessage] = useState('')
+          const [IsSucces, setIsSucces] = useState(null)
         const postData = async () => {
    
           try {
@@ -148,19 +149,21 @@ const fetchDataCounty = async (value) => {
             formData.append('county_id',county)
             formData.append('neighborhood_id',neigbourhod)
             formData.append('taxOfficeCity',TaxPlaceCity)
-            formData.append('taxOffice',TaxPlace)
+            formData.append('taxOffice', TaxPlace)
             formData.append('taxNumber',taxNumber)
             formData.append('idNumber',IdCardNo)
             formData.append('check-d',checked)
             formData.append('check-b',checked1)
             formData.append('check-c',checked2)
             formData.append('activity','İnşaat')
-            formData.append('iban',35435435345435)
-            const response = await axios.post('https://emlaksepette.com/api/register', formData);
+            formData.append('iban','53656646656465')
+            const response = await axios.post('https://test.emlaksepette.com/api/register', formData);
             
             // İsteğin başarılı bir şekilde tamamlandığı durum
             console.log('İstek başarıyla tamamlandı:', response.data);
-            // setmessage(response.data.message)
+             setmessage(response.data.message)
+            setIsSucces(response.data.status)
+             setsuccesRegister(true)
         
           } catch (error) {
             // Hata durumunda
@@ -169,13 +172,13 @@ const fetchDataCounty = async (value) => {
           }
         };
 
-
+        console.log(IsSucces + 'giriş durumu')
 
         const register=()=>{    
           if (eposta && phoneNumber && password && bossName && companyName && focusArea && city && county && neigbourhod && TaxPlaceCity && TaxPlace && taxNumber && ShoppingName ) {
               if (password.length>=6) {
                 postData()
-                setsuccesRegister(true)
+            
                 seteposta("")
                 setphoneNumber("")
                 setpassword("")
@@ -209,7 +212,7 @@ const fetchDataCounty = async (value) => {
         }
         const fetchTaxOfficeCity = async () => {
           try {
-            const response = await axios.get('https://emlaksepette.com/api/get-tax-offices');
+            const response = await axios.get('https://test.emlaksepette.com/api/get-tax-offices');
             return response.data;
           } catch (error) {
             console.error('Hata:', error);
@@ -238,7 +241,7 @@ const fetchDataCounty = async (value) => {
         }
         const fetchTaxOffice = async (value) => {
           try {
-            const response = await axios.get(`https://emlaksepette.com/api/get-tax-office/${value}`);
+            const response = await axios.get(`https://test.emlaksepette.com/api/get-tax-office/${value}`);
             return response.data;
           } catch (error) {
             console.error('Hata:', error);
@@ -249,7 +252,13 @@ const fetchDataCounty = async (value) => {
       
        const [TaxOffices, setTaxOffices] = useState([])
        
-        const TaxOfficePlace = Array.from(new Set(TaxOffices.map(item => item.daire)));
+       const TaxOfficePlace = Array.from(new Set(TaxOffices.map((item) => item.daire)));
+
+       // RNPickerSelect için uygun formata dönüştürme
+       const formattedTaxOfficePlace = TaxOffices.map((item) => ({
+         label: item.daire,
+         value: item.id.toString() // id değerini string olarak çevirme
+       }));
 
         const [modalVisible, setModalVisible] = useState(false)
         const [modalVisible2, setModalVisible2] = useState(false)
@@ -272,7 +281,7 @@ const fetchDataCounty = async (value) => {
         // Örnek kullanım
        
         const fetchDataDeal = async (deal) => {
-          const url = `https://emlaksepette.com/api/sayfa/${deal}`;
+          const url = `https://test.emlaksepette.com/api/sayfa/${deal}`;
           try {
             const data = await fetchFromURL(url);
               setDeals(data.content)
@@ -525,6 +534,7 @@ const fetchDataCounty = async (value) => {
           <View style={{ gap: 6 }}>
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
              Vergi Dairesi
+           
             </Text>
             <RNPickerSelect
            value={TaxPlace}
@@ -534,7 +544,7 @@ const fetchDataCounty = async (value) => {
               }}
               style={pickerSelectStyles}
                onValueChange={(value) => setTaxPlace(value)}
-               items={TaxOfficePlace.map(daire => ({ label: daire, value: daire }))}
+               items={formattedTaxOfficePlace}
             />
          
           </View>
@@ -753,7 +763,7 @@ const fetchDataCounty = async (value) => {
                     letterSpacing: 0.5,
                   }}
                 >
-                   Hesabınız Oluşturuldu 
+                  {JSON.stringify(message)}
                 </Text>
           
               </View>

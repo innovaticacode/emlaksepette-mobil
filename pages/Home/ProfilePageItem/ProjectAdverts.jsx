@@ -23,7 +23,7 @@ export default function ProjectAdverts({data}) {
   }, []);
  
   const { width, height } = Dimensions.get('window');
-  const ApiUrl='https://emlaksepette.com'
+  const ApiUrl='https://test.emlaksepette.com'
   return (
    
     <ScrollView>

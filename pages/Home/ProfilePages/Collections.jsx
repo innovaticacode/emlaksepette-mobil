@@ -118,7 +118,7 @@ const [searchText, setSearchText] = useState("");
 //   getValueFor("user",setUser)
 // },[]);
 // useEffect(() => {
-//   axios.get('https://emlaksepette.com/api/apiproject_housings/412?start=10&end=20'+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
+//   axios.get('https://test.emlaksepette.com/api/apiproject_housings/412?start=10&end=20'+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
 //     setcollections(res.data.data + 'evler');
 
 //   console.log(user+ 'user')

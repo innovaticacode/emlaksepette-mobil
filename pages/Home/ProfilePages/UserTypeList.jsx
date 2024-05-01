@@ -13,7 +13,7 @@ export default function UserTypeList() {
   }, []);
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://emlaksepette.com/api/institutional/roles',{
+      const response = await axios.get('https://test.emlaksepette.com/api/institutional/roles',{
         headers: {
           'Authorization':  `Bearer ${user?.access_token}`
         }

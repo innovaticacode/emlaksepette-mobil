@@ -34,7 +34,7 @@ export default function CreateUserType() {
 
       try {
         const response = await axios.get(
-          "https://emlaksepette.com/api/institutional/roles/create",
+          "https://test.emlaksepette.com/api/institutional/roles/create",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -92,7 +92,7 @@ export default function CreateUserType() {
         formData.append('permissions[]',  item); // [] kullanarak PHP tarafında bir dizi olarak alınmasını sağlar
       });
       console.log(formData)
-      const response = await axios.post('https://emlaksepette.com/api/institutional/roles', formData ,{
+      const response = await axios.post('https://test.emlaksepette.com/api/institutional/roles', formData ,{
         headers:{
           Authorization: `Bearer ${user?.access_token}`,
         }

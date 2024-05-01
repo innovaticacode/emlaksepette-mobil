@@ -64,7 +64,7 @@ export default function Profile() {
 
   }, [])
   console.log(Housings[0]?.title + 'sdfsdf')
-  const ApiUrl='https://emlaksepette.com/'
+  const ApiUrl='https://test.emlaksepette.com/'
   console.log(storeData?.data?.name)
   
   return (

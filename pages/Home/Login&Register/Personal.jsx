@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput,TouchableOpacity ,TouchableWithoutFeedback, Keyboard, ScrollView,Platform, SafeAreaView} from 'react-native'
+import { View, Text, StyleSheet, TextInput,TouchableOpacity ,TouchableWithoutFeedback, Keyboard, ScrollView,Platform, SafeAreaView, ActivityIndicator} from 'react-native'
 import {React,useState}from 'react'
 import EyeIcon from "react-native-vector-icons/Ionicons"
 import { CheckBox } from '@rneui/themed';
@@ -6,8 +6,9 @@ import Modal from "react-native-modal";
 import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from 'axios';
 import HTML from 'react-native-render-html';
+import { useNavigation } from '@react-navigation/native';
 export default function Personal({type}) {
-   
+   const navigation=useNavigation()
   const [eye, seteye] = useState('eye-off-sharp')
     const [Show, setShow] = useState(false)
     const show=()=>{
@@ -40,9 +41,11 @@ const [ePosta, setePosta] = useState('')
 const [password, setpassword] = useState('')
 const [phoneNumber, setphoneNumber] = useState('')
 const [message, setmessage] = useState('')
+const [Isloading, setIsloading] = useState(false)
 const postData = async () => {
-   
+  setIsloading(true)
   try {
+    
   var formData=new FormData()
   formData.append('type',1)
     formData.append('name', name)
@@ -52,43 +55,106 @@ const postData = async () => {
  formData.append('check-a',checked)
  formData.append('check-b',checked1)
  formData.append('check-c',checked2)
-    const response = await axios.post('https://emlaksepette.com/api/register', formData);
+ formData.append('check-e',checked3)
+    const response = await axios.post('https://test.emlaksepette.com/api/register', formData);
     
     // İsteğin başarılı bir şekilde tamamlandığı durum
     console.log('İstek başarıyla tamamlandı:', response.data);
     setmessage(response.data.message)
-
+    setname('');
+    setePosta('');
+    setpassword('');
+    setphoneNumber('');
+    setChecked(false);
+    setChecked1(false);
+    setChecked2(false);
+    setChecked3(false);
+    seterrorStatu(0)
+    seterrorMessage('')
   } catch (error) {
     // Hata durumunda
+
+  if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.email) {
+    const errorMessage = error.response.data.errors.email[0];
+    console.log('API Hatası:', errorMessage);
+    seterrorStatu(2)
+   seterrorMessage(errorMessage)
    
-    console.error('Hata:', error +'post isteği başarısız ');
+  } else {
+    console.error('Beklenmeyen bir hata oluştu:', error);
+  }
+ 
+      
+
+      console.error('Beklenmeyen bir hata oluştu:', error);
+  }finally{
+    setIsloading(false)
+    navigation.navigate('Login')
+    
   }
 };
-        const registerPersonal=()=>{
-          
-          if (name && ePosta && password && checked && checked1 && checked2) {
-            if (password.length >= 6) { // Şifre en az 6 karakter uzunluğunda olmalı
-              postData()
-              setsuccesRegister(true)
-              setname('')
-              setePosta('')
-              setpassword('')
-              setphoneNumber('')
-              setChecked(false)
-              setChecked1(false)
-              setChecked2(false)
-              setChecked3(false)
-         
-              
-            } else {
-              // Şifre yeterince uzun değilse uyarı göster
-                ShowAlert('Şifreniz 6 Karakterden Az Olmamalı!')
-            }
-          } else {
-            // Gerekli alanlar doldurulmadıysa uyarı göster
-            ShowAlert('Lütfen Gerekli Alanları Doldurunuz!')
-          }
-        }
+const [errorStatu, seterrorStatu] = useState(0)
+const [errorMessage, seterrorMessage] = useState('')
+const registerPersonal = () => {
+  let ErrorMessage = '';
+  
+  switch (true) {
+    case !name:
+      seterrorStatu(1)
+      seterrorMessage('İsim Alanı Boş Bırakılmaz')
+      setTimeout(() => {
+        seterrorStatu(0)
+      }, 1000);
+      break;
+    case !ePosta:
+      seterrorStatu(2)
+      seterrorMessage('Email alanı Boş Bırakılmaz')
+      setTimeout(() => {
+        seterrorStatu(0)
+      }, 1000);
+      break;
+      case !phoneNumber:
+        seterrorStatu(3)
+        seterrorMessage('Telefon Alanı Boş Bırakılmaz')
+        setTimeout(() => {
+          seterrorStatu(0)
+        }, 1000);
+        break;
+    case !password:
+      seterrorStatu(4)
+      seterrorMessage('Şifre Alanı Boş Bırakılamaz')
+      setTimeout(() => {
+        seterrorStatu(0)
+      }, 1000);
+      break;
+ 
+    case !checked || !checked1 || !checked2:
+      seterrorStatu(5)
+      seterrorMessage('Sözleşmeleri Onaylamayı Unutmayın')
+      setTimeout(() => {
+        seterrorStatu(0)
+      }, 1000);
+      break;
+    case password.length < 6:
+      seterrorStatu(6)
+      seterrorMessage('Şifreniz En Az 6 Karakter Olmalıdır')
+      setTimeout(() => {
+        seterrorStatu(0)
+      }, 1000);
+      break;
+    default:
+      postData();
+   
+  }
+
+  if (ErrorMessage) {
+  
+    ShowAlert(ErrorMessage);
+  }
+};
+
+
+
         const [alertMessage, setalertMessage] = useState('')
         const ShowAlert=(alert)=>{
           setalertMessage(alert)
@@ -107,7 +173,7 @@ const postData = async () => {
         // Örnek kullanım
         
         const fetchData = async (deal) => {
-          const url = `https://emlaksepette.com/api/sayfa/${deal}`;
+          const url = `https://test.emlaksepette.com/api/sayfa/${deal}`;
           try {
             const data = await fetchFromURL(url);
               setDeals(data.content)
@@ -119,12 +185,13 @@ const postData = async () => {
         };
         
         // Fonksiyonu çağırarak isteği gerçekleştirin
-  
+        
   return (
     <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
         <View style={styles.container}>
  <ScrollView showsVerticalScrollIndicator={false}>
-    
+
+     
         <View style={{padding:15,gap:20}}>
     
       <View style={{gap:5}}>
@@ -132,33 +199,67 @@ const postData = async () => {
           <Text style={{fontSize:14,color:'grey',fontWeight:600}}>İsim</Text>
         </View>
       
-        <TextInput style={styles.Input} value={name} onChangeText={(value)=>setname(value)} placeholder='Adınızı Giriniz...' />
+        <TextInput style={[styles.Input,{
+          borderColor: errorStatu===1?'#E54242':'#ebebeb'
+        }]} value={name} onChangeText={(value)=>setname(value)} placeholder='Adınızı Giriniz...' />
+        {
+          errorStatu==1 ?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+        }
+
       </View>
 
       <View style={{gap:5}}>
         <View style={{paddingLeft:5}}>
           <Text style={{fontSize:14,color:'grey',fontWeight:600}}>E-Posta</Text>
         </View>
-        <TextInput style={styles.Input} value={ePosta} onChangeText={(value)=>setePosta(value)} placeholder='example@gmail.com' />
+        <TextInput style={[styles.Input,{
+          borderColor: errorStatu===2?'#E54242':'#ebebeb'
+        }]} value={ePosta} onChangeText={(value)=>setePosta(value)} placeholder='example@gmail.com' />
+        {
+          errorStatu==2?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+        }
       </View>
 
       <View style={{gap:5}}>
         <View style={{paddingLeft:5}}>
           <Text style={{fontSize:14,color:'grey',fontWeight:600}}>Cep Telefonu</Text>
         </View>
-        <TextInput style={styles.Input} value={phoneNumber} onChangeText={(value)=>setphoneNumber(value)} placeholder='5555555555' keyboardType='number-pad' />
+        <TextInput style={[styles.Input,{
+          borderColor: errorStatu===3?'#E54242':'#ebebeb'
+        }]} value={phoneNumber} onChangeText={(value)=>setphoneNumber(value)} placeholder='5555555555' keyboardType='number-pad' />
+        {
+          errorStatu==3?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+        }
       </View>
       <View style={{gap:5}}>
         <View style={{paddingLeft:5}}>
           <Text style={{fontSize:14,color:'grey',fontWeight:600}}>Şifre</Text>
         </View>
         <View>
-        <TextInput style={styles.Input} value={password} onChangeText={(value)=>setpassword(value)} placeholder='*********' secureTextEntry={Show? false:true}/>
+        <TextInput style={[styles.Input,{
+          borderColor: errorStatu===4?'#E54242':'#ebebeb'
+        }]} value={password} onChangeText={(value)=>setpassword(value)} placeholder='*********' secureTextEntry={Show? false:true}/>
         <TouchableOpacity style={{position:'absolute',right:10,bottom:9}}  onPress={show}>
         <EyeIcon name={Show? 'eye':'eye-off-sharp'} size={20} color={'#333'}/>
         </TouchableOpacity>
+      
         </View>
-       
+        {
+          errorStatu==4 ?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+        }
+         {
+          errorStatu==6 ?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+        }
       </View>
 
       <View>
@@ -176,8 +277,8 @@ const postData = async () => {
            uncheckedIcon="checkbox-blank-outline"
            checkedColor="#E54242"
            title={
-            <Text>
-            <Text style={{color:'#027BFF',fontSize:13}}>   Bireysel üyelik sözleşmesini</Text>
+            <Text style={{color:errorStatu===5?'red':'black'}}>
+            <Text style={{color: errorStatu===5?'red':'#027BFF',fontSize:13}}>   Bireysel üyelik sözleşmesini</Text>
             <Text style={{fontSize:13}}> okudum onaylıyorum</Text>
             
             </Text>
@@ -199,8 +300,8 @@ const postData = async () => {
            uncheckedIcon="checkbox-blank-outline"
            checkedColor="#E54242"
            title={
-            <Text>
-            <Text style={{color:'#027BFF',fontSize:13}}>   Kvkk metnini</Text>
+            <Text  style={{color:errorStatu===5?'red':'black'}} >
+            <Text style={{color:errorStatu===5?'red':'#027BFF',fontSize:13}}>   Kvkk metnini</Text>
             <Text style={{fontSize:13}}> okudum onaylıyorum</Text>
          
             </Text>
@@ -223,8 +324,8 @@ const postData = async () => {
            checkedColor="#E54242"
            title={
             <View style={{paddingLeft:10}}>
-           <Text>
-            <Text style={{color:'#027BFF',fontSize:13}}>Gizlilik sözleşmesi ve aydınlatma metnini</Text>
+           <Text style={{color:errorStatu===5?'red':'black'}}>
+            <Text style={{color:errorStatu===5?'red':'#027BFF',fontSize:13}}>Gizlilik sözleşmesi ve aydınlatma metnini</Text>
             <Text style={{fontSize:13}}> okudum onaylıyorum</Text>
        
             </Text>
@@ -440,6 +541,17 @@ const postData = async () => {
               </TouchableOpacity>
             </View>
             </View>
+          </View>
+        </Modal>
+        <Modal isVisible={Isloading}
+        animationIn={'fadeInRightBig'}
+        animationOut={'fadeOutLeftBig'}
+        style={styles.modal}>
+          <View style={styles.modalContent}>
+           
+                <ActivityIndicator size='large'/>
+                  <Text style={{textAlign:'center',fontWeight:'bold'}}>Giriş Sayfasına Yönlendiriliyorsunuz</Text>
+          
           </View>
         </Modal>
       </ScrollView>

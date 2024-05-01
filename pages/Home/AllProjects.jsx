@@ -21,7 +21,7 @@ import ProjectPost from "../../components/ProjectPost";
 import * as Animatable from "react-native-animatable";
 import axios from "axios";
 export default function AllProjects() {
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://test.emlaksepette.com/";
   const route = useRoute();
   const { name, data } = route.params;
   const navigation = useNavigation();
@@ -51,7 +51,7 @@ export default function AllProjects() {
   const fetchFeaturedProjects = async () => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/featured-projects"
+        "https://test.emlaksepette.com/api/featured-projects"
       );
       setFeaturedProjects(response.data);
       setIsLoading(true)

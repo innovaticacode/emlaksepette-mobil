@@ -18,7 +18,7 @@ export default function ActiveRealtorAdverts() {
   const [start,setStart] = useState(0);
   const [take,setTake] = useState(10);
   useEffect(() => {
-    axios.get('https://emlaksepette.com/api/get_my_housings',{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
+    axios.get('https://test.emlaksepette.com/api/get_my_housings',{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
       sethousings(res?.data?.activeHousingTypes);
       console.log(housings +'dff')
       // console.log(user)

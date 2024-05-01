@@ -23,7 +23,7 @@ import {
   import * as Animatable from "react-native-animatable";
 import RealtorPost from "../../components/RealtorPost";
   export default function AllRealtorAdverts() {
-    const apiUrl = "https://emlaksepette.com/";
+    const apiUrl = "https://test.emlaksepette.com/";
     const route = useRoute();
     const { name, data } = route.params;
     const navigation = useNavigation();

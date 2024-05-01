@@ -21,7 +21,7 @@ export default function RealtorAdverts( {housingdata} ){
   // }, []);
   console.log( housingdata + 'fgfgdfgfgsfskfsld')
   const { width, height } = Dimensions.get('window');
-  const ApiUrl='https://emlaksepette.com'
+  const ApiUrl='https://test.emlaksepette.com'
   const objectKeys=Object.keys(housingdata)
   console.log(objectKeys)
   return (
