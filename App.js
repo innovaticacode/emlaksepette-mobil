@@ -72,6 +72,8 @@ import UserTypeList from './pages/Home/ProfilePages/UserTypeList';
 import PaymentScreen from './pages/Home/PaymentScreen';
 import Onboard from './pages/Home/Onboarding/Onboard';
 import SplashScreen from './pages/Home/Onboarding/SplashScreen';
+import { getValueFor } from './components/methods/user';
+import Verification from './pages/Home/ProfilePages/Verification';
 
 const Stack = createNativeStackNavigator();
 
@@ -87,6 +89,14 @@ export default function App({route}) {
     setTimeout(() => {
       setShowSplash(false);
     }, 1000); // 3 saniye sonra splash ekranını kaldır
+  }, []);
+
+
+  const [user, setUser] = useState({});
+
+
+  useEffect(() => {
+    getValueFor("user", setUser);
   }, []);
 
   return (
@@ -177,7 +187,12 @@ export default function App({route}) {
       headerShown:false
    
   }} />
-    <Stack.Screen name="Collecitons"  component={Collections}options={{
+
+
+
+    <Stack.Group>
+
+<Stack.Screen name="Collecitons"  component={Collections}options={{
         title:'Koleksiyonlarım',
       headerBackTitle:'Panel'
   }} />
@@ -200,7 +215,7 @@ export default function App({route}) {
         
         
     })}
-  
+ 
   />
      <Stack.Screen name="UpdateProfile"  component={UpdateProfile}options={{
         title:'Profili Güncelle',
@@ -298,6 +313,19 @@ export default function App({route}) {
           })}
       
       />
+
+
+
+
+
+
+    </Stack.Group>
+
+
+
+
+
+
         <Stack.Screen name="CategorieChoose"  component={CategoryChoose} 
             options={({route})=>({
                headerBackTitleVisible: false,

@@ -15,7 +15,7 @@ export default function UserTypeList() {
     try {
       const response = await axios.get('https://test.emlaksepette.com/api/institutional/roles',{
         headers: {
-          'Authorization':  `Bearer ${user?.access_token}`
+          'Authorization':  `Bearer ${user.access_token}`
         }
       });
       setuserList(response?.data.roles);

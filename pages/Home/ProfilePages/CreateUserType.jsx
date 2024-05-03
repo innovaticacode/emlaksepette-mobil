@@ -94,7 +94,7 @@ export default function CreateUserType() {
       console.log(formData)
       const response = await axios.post('https://test.emlaksepette.com/api/institutional/roles', formData ,{
         headers:{
-          Authorization: `Bearer ${user?.access_token}`,
+          Authorization: `Bearer ${user.access_token}`,
         }
       });
       

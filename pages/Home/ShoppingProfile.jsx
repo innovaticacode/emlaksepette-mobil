@@ -24,6 +24,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
 import * as SecureStore from "expo-secure-store";
 import { Shadow } from "react-native-shadow-2";
+import Verification from "./ProfilePages/Verification";
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
   const route = useRoute();
@@ -196,23 +197,17 @@ export default function ShoppingProfile() {
         </View>
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
+       
         <View style={{ padding: 10 }}>
+
           <View>
             {İsLoggedIn ? (
               <>
                 <View style={{ gap: 30 }}>
-                  {/* <Collapse onToggle={()=>setopenAccor(!openAccor)} >
-    <CollapseHeader>
-      <View style={{backgroundColor:'#F8F8F8',padding:15,flexDirection:'row',justifyContent:'space-between'}}>
-        <Text style={{color:'#4686FB'}}>Sat Kirala Nedir?</Text>
-        <Icon name=  {openAccor? 'arrow-down' :'arrow-right'}size={15} color={'grey'}/>
-      </View>
-    </CollapseHeader>
-    <CollapseBody style={{padding:15}} >
-      <Text style={{color:'#696969'}}>Sat kirala sistemi gayrimenkullerini hızlı güvenli ve değerinde satmak isteyen bireysel satıcıların gayrimenkullerin platforma kayıtlı kurumsal emlak firmaları vasıtasıyla satışını sağlayan bir hizmettir.</Text>
-    </CollapseBody>
-</Collapse> */}
-                  <View>
+                    {
+                      user.corporateAccountStatus===1?
+                      <>
+               <View>
                     <Text style={style.headerText}>Koleksiyonlarım</Text>
                     <TouchableOpacity
                       onPress={() => navigation.navigate("Collecitons")}
@@ -334,26 +329,7 @@ export default function ShoppingProfile() {
                         ıconName="home-work"
                       />
                     </TouchableOpacity>
-                    {/* <TouchableOpacity
-                      onPress={() => navigation.navigate("Forms")}
-                    >
-                      <ProfileSettingsItem
-                        text="Sat Kirala Formlarım"
-                        ıconName="info-outline"
-                      />
-                    </TouchableOpacity> */}
-                    {/* <TouchableOpacity
-                      onPress={() => {
-                        setSellModalVisible(true);
-                        handlePres("MyBasket");
-                      }}
-                    >
-                      <ProfileSettingsItem
-                        text="Alım Satım Geçmişim"
-                        ıconName="shopping-bag"
-                      />
-                      
-                    </TouchableOpacity> */}
+                   
                     <Collapse onToggle={()=>{
                       setopenAccor(!openAccor)
 
@@ -444,17 +420,7 @@ export default function ShoppingProfile() {
                 </TouchableOpacity>
                       </CollapseBody>
                     </Collapse>
-                    {/* <TouchableOpacity
-                      onPress={() => {
-                        setRentModalVisible(true);
-                        handlePres("MyBasket");
-                      }}
-                    >
-                      <ProfileSettingsItem
-                        text="Kiralama Geçmişim"
-                        ıconName="shopping-bag"
-                      />
-                    </TouchableOpacity> */}
+           
                    <Collapse onToggle={()=>setopenAccor3(!openAccor3)}>
                       <CollapseHeader>
                         <View>
@@ -556,24 +522,7 @@ export default function ShoppingProfile() {
             </TouchableOpacity>
                       </CollapseBody>
                     </Collapse>
-                    {/* <TouchableOpacity
-                      onPress={() => setUserTypeModalVisible(true)}
-                    >
-                      <ProfileSettingsItem
-                        text="Kullanıcı Tipi Oluştur"
-                        ıconName="person-add-alt-1"
-                      />
-                    </TouchableOpacity> */}
-                    {/* <TouchableOpacity
-                      onPress={() => {
-                        setUserModalVisible(true);
-                      }}
-                    >
-                      <ProfileSettingsItem
-                        text="Alt Kullanıcı Oluştur"
-                        ıconName="person-add-alt-1"
-                      />
-                    </TouchableOpacity> */}
+              
                             <Collapse onToggle={()=>setopenAccor5(!openAccor5)}>
                       <CollapseHeader>
                         <View>
@@ -638,35 +587,16 @@ export default function ShoppingProfile() {
             </TouchableOpacity>
                       </CollapseBody>
                     </Collapse>
-                    {/* <TouchableOpacity
-                      onPress={() => {
-                        setAdsPictureVisible(true);
-                      }}
-                    >
-                      <ProfileSettingsItem
-                        text="Reklam Görselleri"
-                        ıconName="image"
-                      
-                      />
-                    </TouchableOpacity> */}
-                    
-                    <View style={{ alignItems: "center", padding: 20 }}>
-                      <TouchableOpacity
-                        onPress={logoutModal}
-                        style={style.btnLogOut}
-                      >
-                        <Text
-                          style={{
-                            color: "white",
-                            textAlign: "center",
-                            fontSize: 15,
-                          }}
-                        >
-                          Çıkış Yap
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
+             
+                  
                   </View>
+                      </>:
+                  
+                      <Verification/>
+
+                 
+                    }
+                 
                 </View>
               </>
             ) : (
@@ -786,7 +716,12 @@ export default function ShoppingProfile() {
                         ıconName="lock"
                       />
                     </TouchableOpacity>
-                    <View style={{ alignItems: "center", paddingTop: 15 }}>
+                  
+                  </View>
+                </View>
+              </>
+            )}
+              <View style={{ alignItems: "center", paddingTop: 15 }}>
                       <TouchableOpacity
                         style={style.btnLogOut}
                         onPress={logoutModal}
@@ -802,150 +737,15 @@ export default function ShoppingProfile() {
                         </Text>
                       </TouchableOpacity>
                     </View>
-                  </View>
-                </View>
-              </>
-            )}
           </View>
         </View>
 
-        <Modal
-          isVisible={SellModalVisible}
-          onBackdropPress={toggleSellModal}
-          swipeDirection={["down"]}
-          backdropColor="transparent"
-          style={style.modal}
-        >
-          <View style={style.modalContent}>
-            {İsLoggedIn ? (
-              <>
-             
-              </>
-            ) : (
-              <TouchableOpacity
-                style={{}}
-                onPress={() => {
-                  setSellModalVisible(false);
-                  navigation.navigate("Sell", { displayInfo: "none" });
-                }}
-              >
-                <ProfileSettingsItem
-                  text="Aldıklarım"
-                  ıconName="shopping-bag"
-                />
-              </TouchableOpacity>
-            )}
-          </View>
-        </Modal>
-        <Modal
-          isVisible={RentModalVisible}
-          onBackdropPress={toggleRentModal}
-          swipeDirection={["down"]}
-          backdropColor="transparent"
-          style={style.modal}
-        >
-          <View style={style.modalContent}>
-            {İsLoggedIn ? (
-              <>
-               
-              </>
-            ) : (
-              <TouchableOpacity
-                style={{}}
-                onPress={() => {
-                  setRentModalVisible(false);
-                  navigation.navigate("Rent", {
-                    text: "Kiraladıklarım",
-                    name: "Kiraladıklarım",
-                  });
-                }}
-              >
-                <ProfileSettingsItem
-                  text="Kiraladıklarım"
-                  ıconName="shopping-bag"
-                />
-              </TouchableOpacity>
-            )}
-          </View>
-        </Modal>
-        <Modal
-          isVisible={OfferModalVisible}
-          onBackdropPress={toggleOfferModal}
-          swipeDirection={["down"]}
-          backdropColor="transparent"
-          style={style.modal}
-        >
-          <View style={style.modalContent}>
-           
-          </View>
-        </Modal>
-        <Modal
-          isVisible={UserTypeModalVisible}
-          onBackdropPress={() => setUserTypeModalVisible(false)}
-          swipeDirection={["down"]}
-          backdropColor="transparent"
-          style={style.modal}
-        >
-          <View style={style.modalContent}>
-            
-          </View>
-        </Modal>
-        <Modal
-          isVisible={UserModalVisible}
-          onBackdropPress={toggleUserModal}
-          swipeDirection={["down"]}
-          backdropColor="transparent"
-          style={style.modal}
-        >
-          <View style={style.modalContent}>
-            <TouchableOpacity
-              style={{}}
-              onPress={() => {
-                setUserModalVisible(false);
-                navigation.navigate("CreateUser", {
-                  header: "Listeleden  geldi",
-                  hidden3: "none",
-                  name: "Kullanıcılar",
-                  changeSlectedState: "false",
-                });
-              }}
-            >
-              <ProfileSettingsItem text="Listele" ıconName="person-add-alt-1" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{}}
-              onPress={() => {
-                setUserModalVisible(false);
-                navigation.navigate("CreateUser", {
-                  header: "Yeni Ekleden geldi",
-                  name: "Kullanıcı Oluştur",
-                  hidden4: "none",
-                });
-              }}
-            >
-              <ProfileSettingsItem
-                text="Yeni Kullanıcı Ekle"
-                ıconName="person-add-alt-1"
-              />
-            </TouchableOpacity>
-          </View>
-        </Modal>
-        <Modal
-          isVisible={AdsPictureVisible}
-          onBackdropPress={toggleAdsPictureModal}
-          swipeDirection={["down"]}
-          backdropColor="transparent"
-          style={style.modal}
-        >
-          <View style={style.modalContent}>
-            <TouchableOpacity style={{}}>
-              <ProfileSettingsItem text="Listele" />
-            </TouchableOpacity>
-            <TouchableOpacity style={{}}>
-              <ProfileSettingsItem text="Oluştur" />
-            </TouchableOpacity>
-          </View>
-        </Modal>
+      
+      
+       
+        
+
+       
         <Shadow>
           <Modal
             animationType="slide"
@@ -1005,7 +805,7 @@ export default function ShoppingProfile() {
                       ]}
                       onPress={() => setdialogVisible(!dialogVisible)}
                     >
-                      <Text style={{ textAlign: "center", color: "#165724" }}>
+                      <Text style={{ textAlign: "center", color: "#165724",fontWeight:'600'}}>
                         İptal Et
                       </Text>
                     </TouchableOpacity>
@@ -1101,7 +901,7 @@ const style = StyleSheet.create({
     paddingRight: 20,
   },
   btnLogOut: {
-    backgroundColor: "#EA2C2E",
+    backgroundColor: "#E54242",
     width: "70%",
     padding: 13,
     borderRadius: 10,

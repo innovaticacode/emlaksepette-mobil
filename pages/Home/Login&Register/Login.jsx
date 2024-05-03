@@ -21,7 +21,14 @@ import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
 import Modal from "react-native-modal";
 import { apiRequestPost } from "../../../components/methods/apiRequest";
 import * as SecureStore from 'expo-secure-store';
+import { useRoute } from "@react-navigation/native";
+
+
+
+
 export default function Login({ navigation }) {
+  const route = useRoute()
+
   const [eye, seteye] = useState("eye-off-sharp");
   const [Show, setShow] = useState(false);
   const show = () => {
@@ -105,16 +112,36 @@ export default function Login({ navigation }) {
   {
     /* ınput control*/
   }
+
+  const IsShowAlert =route.params?.showAlert
+
+  const message =route.params?.message  
+  Login.navigationOptions = {
+    headerShown: false, // Başlık gizleme
+  };
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <View style={styles.header}></View>
+        <View style={[styles.header,{}]}>
+
+        </View>
+      <View style={{padding:10}}> 
+        <View style={{backgroundColor:'#E7FCEB',flexDirection:'row',alignItems:'center',padding:10,gap:15, display:IsShowAlert?'flex':'none'}}>
+          <View>
+            <BackIcon name="checkcircle" color={'#1D8027'} size={30}/>
+          </View>
+          <View style={{flex:1.9/2}}>
+          <Text style={{color:'#1D8027',fontSize:12}}>Hesabınız oluşturuldu. Hesabınızı etkinleştirmek için lütfen e-posta adresinize gönderilen doğrulama bağlantısını tıklayarak e-postanızı onaylayın</Text>
+          </View>
+         
+        </View>
+        </View>
         <View style={styles.logIn}>
           <KeyboardAwareScrollView>
             <View style={styles.form}>
               <View>
                 <Text
-                  style={{ color: "#17243e", fontSize: 20, fontWeight: "bold" }}
+                  style={{ color: "#17243e", fontSize: 24, fontWeight: "bold" ,textAlign:'center'}}
                 >
                   Giriş Yap
                 </Text>
@@ -295,7 +322,7 @@ export default function Login({ navigation }) {
                     width: "40%",
                   }}
                 />
-                <Text style={{color:'#666666'}}>Ya Da</Text>
+                <Text style={{color:'#666666'}}>veya</Text>
                 <View
                   style={{
                     backgroundColor: "#E7EBEE",
@@ -408,7 +435,10 @@ export default function Login({ navigation }) {
       </View>
     </TouchableWithoutFeedback>
   );
+ 
 }
+
+
 const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {

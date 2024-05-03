@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
- FlatList
+ FlatList,
+ ActivityIndicator
 
   
 } from "react-native";
-import { React, useState,useEffect } from "react";
+import { React, useState,useEffect,useRef } from "react";
 import Modal from "react-native-modal";
 import EyeIcon from "react-native-vector-icons/Ionicons";
 import { CheckBox } from "@rneui/themed";
@@ -22,7 +23,9 @@ import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
 import HTML from 'react-native-render-html';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 export default function Company() {
+  const Navigation=useNavigation()
   const [selectedIndexRadio, setIndexRadio] = useState(1);
   {
     /* Input States */
@@ -44,6 +47,7 @@ export default function Company() {
 const [taxNumber, settaxNumber] = useState("")
 const [IdCardNo, setIdCardNo] = useState("")
 const [ShoppingName, setShoppingName] = useState("")
+const [licence, setlicence] = useState('')
   {
     /* cheked documents */
   }
@@ -98,6 +102,12 @@ const fetchDataCounty = async (value) => {
 //     .then(county => setcounties(county.data))
 //     .catch(error => console.error('Veri alınırken bir hata oluştu:', error));
 // },[city]);
+const scrollViewRef = useRef();
+
+  // Bu fonksiyon sayfanın en üstüne scroll etmek için kullanılabilir
+  const scrollToTop = () => {
+    scrollViewRef.current.scrollTo({ y: 0, animated: true });
+  };
  
       const onChangeCity=(value)=>{
         setcity(value)
@@ -133,7 +143,7 @@ const fetchDataCounty = async (value) => {
           const [message, setmessage] = useState('')
           const [IsSucces, setIsSucces] = useState(null)
         const postData = async () => {
-   
+          setsuccesRegister(true)
           try {
           var formData=new FormData()
           formData.append('type',2)
@@ -163,30 +173,14 @@ const fetchDataCounty = async (value) => {
             console.log('İstek başarıyla tamamlandı:', response.data);
              setmessage(response.data.message)
             setIsSucces(response.data.status)
-             setsuccesRegister(true)
-        
-          } catch (error) {
-            // Hata durumunda
-           
-            console.error('Hata:', error +'post isteği başarısız ');
-          }
-        };
-
-        console.log(IsSucces + 'giriş durumu')
-
-        const register=()=>{    
-          if (eposta && phoneNumber && password && bossName && companyName && focusArea && city && county && neigbourhod && TaxPlaceCity && TaxPlace && taxNumber && ShoppingName ) {
-              if (password.length>=6) {
-                postData()
-            
-                seteposta("")
+  
+             seteposta("")
                 setphoneNumber("")
                 setpassword("")
                 setbossName("")
                 setcompanyName("")
                 setcompanyPhone("")
                 setShoppingName('')
-            
                 setfocusArea(null)
                 setcity(null)
                 setcounty(null)
@@ -195,19 +189,182 @@ const fetchDataCounty = async (value) => {
                 setTaxPlace(null)
                 settaxNumber("")
                 setIdCardNo("")
+                setlicence('')
                 setChecked(false)
                 setChecked1(false)
                 setChecked2(false)
                 setChecked3(false)
-                
-              }else{
-                alert('Şifreniz 6 Karakterden Uzun Olmalıdır')
-              }
-           
+                Navigation.navigate('Login',{showAlert:true})
+          } catch (error) {
+            // Hata durumunda
+            scrollToTop()
+            if (error.response && error.response.data && error.response.data.errors && error.response.data.errors.email) {
+              const errorMessage = error.response.data.errors.email[0];
+              console.log('API Hatası:', errorMessage);
+              seterrorMessage(errorMessage)
+              seterrorStatu(2)
+              setTimeout(() => {
+                seterrorStatu(0)
+              }, 3000);
+     
+             
+            } else {
+              console.error('Beklenmeyen bir hata oluştu:', error);
+            }
+       
+          }finally{
+            setsuccesRegister(false)
             
-          }else{
-            setshowMailSendAlert(true)
           }
+        };
+
+
+          const [errorStatu, seterrorStatu] = useState(0)
+          const [errorMessage, seterrorMessage] = useState('')
+
+        const register=()=>{    
+          switch (true) {
+            case !bossName:
+              seterrorStatu(1)
+              seterrorMessage('İsim Alanı Boş Bırakılmaz')
+              scrollToTop()
+              setTimeout(() => {
+                seterrorStatu(0)
+              }, 10000);
+              break;
+
+            case !eposta:
+              seterrorStatu(2)
+               seterrorMessage('Email alanı Boş Bırakılmaz')
+               scrollToTop()
+               setTimeout(() => {
+                 seterrorStatu(0)
+               }, 10000);
+              break;
+              case !password:
+                seterrorStatu(3)
+                seterrorMessage('Şifre Alanı Boş Bırakılamaz')
+                scrollToTop()
+                setTimeout(() => {
+                  seterrorStatu(0)
+                }, 10000);
+                break;
+            case !phoneNumber:
+              seterrorStatu(4)
+              seterrorMessage('Telefon Numarası Boş Bırakılamaz')
+              scrollToTop()
+              setTimeout(() => {
+                seterrorStatu(0)
+              }, 10000);
+              break;
+         
+          
+              case !companyName:
+                seterrorStatu(5)
+                seterrorMessage('Ticaret Ünvanı Boş Bırakılamaz')
+                scrollToTop()
+                setTimeout(() => {
+                  seterrorStatu(0)
+                }, 10000);
+                break;
+              case !ShoppingName:
+                seterrorStatu(6)
+                seterrorMessage('Mağaza Adı Boş Bırakılamaz')
+                scrollToTop()
+                setTimeout(() => {
+                  seterrorStatu(0)
+                }, 10000);
+                break;
+                case !focusArea:
+                  seterrorStatu(7)
+                  seterrorMessage('Faaliyet Alanı Boş Bırakılamaz')
+                  scrollToTop()
+                  setTimeout(() => {
+                    seterrorStatu(0)
+                  }, 10000);
+                  break;
+                  case !city:
+                    seterrorStatu(8)
+                    seterrorMessage('Şehir Seçimi Zorunludur')
+                    scrollToTop()
+                    setTimeout(() => {
+                      seterrorStatu(0)
+                    }, 10000);
+                    break;
+                    case !county:
+                      seterrorStatu(9)
+                      seterrorMessage('İlçe Seçimi Zorunludur')
+                      scrollToTop()
+                      setTimeout(() => {
+                        seterrorStatu(0)
+                      }, 10000);
+                      break;
+                      case !neigbourhod:
+                        seterrorStatu(10)
+                        seterrorMessage('Mahalle Seçimi Zorunludur')
+                        scrollToTop()
+                        setTimeout(() => {
+                          seterrorStatu(0)
+                        }, 10000);
+                        break;
+                        case !TaxPlaceCity:
+                          seterrorStatu(11)
+                          seterrorMessage('Vergi dairesi ili zorunludur."')
+                          scrollToTop()
+                          setTimeout(() => {
+                            seterrorStatu(0)
+                          }, 10000);
+                          break;
+                          case !TaxPlace:
+                            seterrorStatu(12)
+                            seterrorMessage('Vergi dairesi adı zorunludur')
+                            scrollToTop()
+                            setTimeout(() => {
+                              seterrorStatu(0)
+                            }, 10000);
+                            break;
+                            case !taxNumber:
+                              seterrorStatu(13)
+                              seterrorMessage('Vergi numarası zorunludur')
+                              scrollToTop()
+                              setTimeout(() => {
+                                seterrorStatu(0)
+                              }, 10000);
+                              break;
+                              case !licence:
+                                seterrorStatu(14)
+                                seterrorMessage('Yetki Belgesi zorunludur')
+                             
+                                setTimeout(() => {
+                                  seterrorStatu(0)
+                                }, 10000);
+                                break;
+                               case !checked || !checked1 || !checked2:
+             seterrorStatu(15)
+               seterrorMessage('Sözleşmeleri Onaylamayı Unutmayın')
+             setTimeout(() => {
+                seterrorStatu(0)
+               }, 10000);
+              break;
+            case password.length < 6:
+              seterrorStatu(16)
+              seterrorMessage('Şifreniz En Az 6 Karakter Olmalıdır')
+              scrollToTop()
+              setTimeout(() => {
+                seterrorStatu(0)
+              }, 10000);
+              break;
+            default:
+              postData();
+           
+          }
+        
+          if (errorMessage) {
+          
+            // ShowAlert(ErrorMessage);
+          }
+          console.log(errorStatu + 'error statu')
+        
          
         }
         const fetchTaxOfficeCity = async () => {
@@ -295,7 +452,7 @@ const fetchDataCounty = async (value) => {
     
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
         <View style={styles.container}>
           <View style={{ padding: 15, gap: 20 }}>
           <View style={{ gap: 5 }}>
@@ -304,28 +461,45 @@ const fetchDataCounty = async (value) => {
                   Yetkili İsim Soyisim
                 </Text>
               </View>
-              <TextInput style={styles.Input} value={bossName} onChangeText={(value)=>setbossName(value)} placeholder="" />
+              <TextInput style={[styles.Input,{
+                borderColor:errorStatu==1? 'red':'#ebebeb'
+              }]} value={bossName} onChangeText={(value)=>setbossName(value)} placeholder="" />
+              {
+          errorStatu==1 ?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+        }
             </View>
+      
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                   E-Posta
                 </Text>
               </View>
-              <TextInput style={styles.Input} value={eposta} onChangeText={(value)=>seteposta(value)} placeholder="example@gmail.com" />
-
+              <TextInput style={[styles.Input,{
+                borderColor:errorStatu===2?'red':'#ebebeb'
+              }]} value={eposta} onChangeText={(value)=>seteposta(value)} placeholder="example@gmail.com" />
+              {
+          errorStatu==2 ?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+        }
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                   Şifre
                 </Text>
+                
               </View>
               <View>
                 <TextInput
                 value={password}
                 onChangeText={(value)=>setpassword(value)}
-                  style={styles.Input}
+                  style={[styles.Input,{
+                    borderColor:errorStatu===3?'red':'#ebebeb'
+                  }]}
                   placeholder="*********"
                   secureTextEntry={Show ? false : true}
                 />
@@ -340,6 +514,11 @@ const fetchDataCounty = async (value) => {
                   />
                 </TouchableOpacity>
               </View>
+              {
+          errorStatu==3 ?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+              }
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
@@ -350,10 +529,17 @@ const fetchDataCounty = async (value) => {
               <TextInput
               value={phoneNumber}
               onChangeText={(value)=>setphoneNumber(value)}
-                style={styles.Input}
+                style={[styles.Input,{
+                  borderColor:errorStatu==4? 'red':'#ebebeb'
+                }]}
                 placeholder=""
                 keyboardType="number-pad"
               />
+                     {
+          errorStatu==4 ?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+              }
             </View>
 
            
@@ -365,7 +551,14 @@ const fetchDataCounty = async (value) => {
                   Ticaret Ünvanı
                 </Text>
               </View>
-              <TextInput style={styles.Input} value={companyName} onChangeText={(value)=>setcompanyName(value)} placeholder="" />
+              <TextInput style={[styles.Input,{
+                borderColor:errorStatu==5? 'red':'#ebebeb'
+              }]} value={companyName} onChangeText={(value)=>setcompanyName(value)} placeholder="" />
+              {
+          errorStatu==5 ?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+              }
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
@@ -373,7 +566,14 @@ const fetchDataCounty = async (value) => {
                  Mağaza Adı
                 </Text>
               </View>
-              <TextInput style={styles.Input} value={ShoppingName} onChangeText={(value)=>setShoppingName(value)} placeholder="" />
+              <TextInput style={[styles.Input,{
+                borderColor:errorStatu==6? 'red':'#ebebeb'
+              }]} value={ShoppingName} onChangeText={(value)=>setShoppingName(value)} placeholder="" />
+              {
+          errorStatu==6 ?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+              }
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
@@ -414,7 +614,11 @@ const fetchDataCounty = async (value) => {
                 
               ]}
             />
-         
+               {
+          errorStatu==7?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+              }
           </View>
           <View style={{ gap: 6 }}>
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
@@ -432,7 +636,11 @@ const fetchDataCounty = async (value) => {
                }}
               items={citites}
             />
-         
+                     {
+          errorStatu==8?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+              }
           </View>
           <View style={{ gap: 6 }}>
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
@@ -450,7 +658,11 @@ const fetchDataCounty = async (value) => {
                }}
               items={counties}
             />
-         
+                       {
+          errorStatu==9?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+              }
           </View>
           <View style={{ gap: 6 }}>
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
@@ -466,7 +678,11 @@ const fetchDataCounty = async (value) => {
                onValueChange={(value) => setneigbourhod(value)}
               items={Neigbour}
             />
-         
+            {
+             errorStatu==10?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+              }
           </View>
             <View>
               <Text>İşletme Türü</Text>
@@ -529,7 +745,11 @@ const fetchDataCounty = async (value) => {
                items={Cityies.map(il => ({ label: il, value: il }))}
             
             />
-         
+             {
+             errorStatu==11?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+              }
           </View>
           <View style={{ gap: 6 }}>
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
@@ -546,7 +766,11 @@ const fetchDataCounty = async (value) => {
                onValueChange={(value) => setTaxPlace(value)}
                items={formattedTaxOfficePlace}
             />
-         
+             {
+             errorStatu==12?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+              }
           </View>
           <View style={{ gap: 5,}}>
               <View style={{ paddingLeft: 5 }}>
@@ -562,6 +786,31 @@ const fetchDataCounty = async (value) => {
                 keyboardType="number-pad"
                 maxLength={11}
               />
+                  {
+             errorStatu==13?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+              }
+            </View>
+            <View style={{ gap: 5,}}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                  Yetki Belgesi No
+                </Text>
+              </View>
+              <TextInput
+              value={licence}
+              onChangeText={(value)=>setlicence(value)}
+                style={styles.Input}
+                placeholder=""
+                keyboardType="number-pad"
+                maxLength={11}
+              />
+                  {
+             errorStatu==14?
+          
+          <Text style={{fontSize:12,color:'red'}}>{errorMessage}</Text>:''
+              }
             </View>
             <View style={{ gap: 5, display:selectedIndexRadio==1? 'flex':'none'}}>
               <View style={{ paddingLeft: 5 }}>
@@ -595,8 +844,8 @@ const fetchDataCounty = async (value) => {
                 checkedColor="#E54242"
                 title={
                   <View style={{ paddingLeft: 10 }}>
-                    <Text>
-                      <Text style={{ color: "#027BFF", fontSize: 13 }}>
+                    <Text style={{color:errorStatu==15?'red':'#333'}}>
+                      <Text style={{ color:errorStatu==15?'red': "#027BFF", fontSize: 13 }}>
                         {" "}
                         Kurumsal üyelik sözleşmesini
                       </Text>
@@ -623,8 +872,8 @@ const fetchDataCounty = async (value) => {
                 checkedColor="#E54242"
                 title={
                   <View style={{ paddingLeft: 10 }}>
-                    <Text>
-                      <Text style={{ color: "#027BFF", fontSize: 13 }}>
+                    <Text style={{color:errorStatu==15?'red':'#333'}}>
+                      <Text style={{ color:errorStatu==15?'red': "#027BFF", fontSize: 13 }}>
                         Kvkk metnini
                       </Text>
                       <Text style={{ fontSize: 13 }}> okudum onaylıyorum</Text>
@@ -650,8 +899,8 @@ const fetchDataCounty = async (value) => {
                 checkedColor="#E54242"
                 title={
                   <View style={{ paddingLeft: 10 }}>
-                    <Text>
-                      <Text style={{ color: "#027BFF", fontSize: 13 }}>
+                    <Text style={{color:errorStatu==15?'red':'#333'}}>
+                      <Text style={{ color:errorStatu==15?'red': "#027BFF", fontSize: 13 }}>
                         Gizlilik sözleşmesi ve aydınlatma metnini
                       </Text>
                       <Text style={{ fontSize: 13 }}> okudum onaylıyorum</Text>
@@ -745,42 +994,8 @@ const fetchDataCounty = async (value) => {
         animationOut={'fadeOutLeftBig'}
         style={styles.modal}>
           <View style={styles.modalContent}>
-           
-
-            <View style={{ gap: 10 }}>
-              <View style={{ alignItems: "center" }}>
-                <View style={{backgroundColor:"#D4EDDA",borderRadius:40,padding:10}}>
-                <MailCheck name="email-send" size={40} color={'#316D40'} />
-                </View>
-              
-              </View>
-              <View>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    fontSize: 15,
-                    color: "#333",
-                    letterSpacing: 0.5,
-                  }}
-                >
-                  {JSON.stringify(message)}
-                </Text>
-          
-              </View>
-              <View style={{ flexDirection: "row", justifyContent: "center" }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#316D40",
-                  padding: 10,
-                  width:'100%',
-                  borderRadius: 5,
-                }}
-                onPress={() => setsuccesRegister(false)}
-              >
-               <Text style={{textAlign:'center',color:'#D4EDDA',fontWeight:500}}>Tamam</Text>
-              </TouchableOpacity>
-            </View>
-            </View>
+                <ActivityIndicator size='large'/>
+                <Text style={{textAlign:'center',fontWeight:'bold'}}>Giriş Sayfasına Yönlendiriliyorsunuz</Text>
           </View>
         </Modal>
        
@@ -924,8 +1139,8 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: 'white',
-    padding: 20,
-  
+    padding: 40,
+    gap:20,
 borderRadius:10
     
   },
