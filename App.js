@@ -74,6 +74,7 @@ import Onboard from './pages/Home/Onboarding/Onboard';
 import SplashScreen from './pages/Home/Onboarding/SplashScreen';
 import { getValueFor } from './components/methods/user';
 import Verification from './pages/Home/ProfilePages/Verification';
+import ForgotPassword from './pages/Home/Login&Register/ForgotPassword';
 
 const Stack = createNativeStackNavigator();
 
@@ -528,6 +529,17 @@ export default function App({route}) {
        }
   
   })}  />
+  <Stack.Screen name='Forgot' component={ForgotPassword}
+   options={({route})=>({
+    title:'Şifremi Unuttum',
+    headerShown:false,
+       headerStyle:{
+        backgroundColor:'#f7f7f7',
+        
+       }
+  
+  })}
+  />
 </Stack.Navigator>
 
 </NavigationContainer>

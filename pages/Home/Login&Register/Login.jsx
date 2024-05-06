@@ -256,7 +256,11 @@ export default function Login({ navigation }) {
                       }}
                     />
                   </View>
-                  <TouchableOpacity style={{}}>
+                  <TouchableOpacity style={{}} 
+                    onPress={() => {
+                      navigation.navigate("Forgot");
+                    }}
+                  >
                     <Text
                       style={{
                         fontSize: 13,
