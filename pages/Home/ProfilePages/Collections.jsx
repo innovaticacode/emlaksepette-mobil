@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, Keyboard ,Animated,TouchableOpacity,Modal,Linking} from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, Keyboard ,Animated,TouchableOpacity,Modal,Linking, ActivityIndicator} from 'react-native'
 import { useState,useRef,useEffect} from 'react'
 import CollectionsItem from './profileComponents/CollectionsItem'
 
@@ -114,18 +114,83 @@ const handleSearch = (text) => {
   // Burada arama işlemleri yapılabilir
 };
 const [searchText, setSearchText] = useState("");
-// useEffect(() => {
-//   getValueFor("user",setUser)
-// },[]);
-// useEffect(() => {
-//   axios.get('https://test.emlaksepette.com/api/apiproject_housings/412?start=10&end=20'+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
-//     setcollections(res.data.data + 'evler');
 
-//   console.log(user+ 'user')
-//   }).catch((e) => {
-//     console.log(e);
-//   })
-// },[user]);
+ useEffect(() => {
+   getValueFor("user",setUser)
+ },[]);
+
+
+ const [loading, setloading] = useState(false)
+const fetchData = async () => {
+  try {
+    const response = await axios.get('https://test.emlaksepette.com/api/client/collections',{
+      headers: {
+        'Authorization': `Bearer ${user?.access_token}`
+      }
+    });
+    setloading(true)
+    setcollections(response.data.collections);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }finally{
+    setloading(false)
+  }
+};
+useEffect(() => {
+  fetchData();
+}, [user]);
+
+const [selectedCollection, setselectedCollection] = useState(0)
+const [colectionName, setcolectionName] = useState('')
+ const getId=(id,name)=>{
+      setselectedCollection(id)
+    setcolectionName(name)
+ }
+console.log(selectedCollection)
+const [message, setmessage] = useState(false)
+ const deleteCollection = async (id) => {
+  try {
+    let formData=new FormData()
+    formData.append()
+    const response = await axios.delete(`https://test.emlaksepette.com/api/collection/${id}/delete`,{
+      headers: {
+        'Authorization': `Bearer ${user?.access_token}`
+      }
+    });
+    console.log(response.data)
+    setmessage(true)
+    closeSheet()
+    setTimeout(() => {
+        setmessage(false)
+    }, 3000);
+  fetchData()
+    setModalVisible2(false)
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+const [newName, setnewName] = useState('')
+
+const editCollectionName = async (id) => {
+  try {
+    let formData = new FormData();
+    formData.append('_method', 'PUT');
+    formData.append('collectionName', newName);
+
+    const response = await axios.post(`https://test.emlaksepette.com/api/collection/${id}/edit`, formData, {
+      headers: {
+        'Authorization': `Bearer ${user?.access_token}`,
+        'Content-Type': 'multipart/form-data' // FormData kullanıldığı için Content-Type belirtilmelidir
+      }
+    });
+      fetchData()
+    closeSheet();
+    setModalVisible(false);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
   return ( 
     <View style={{flex:1,}}>
     <View style={{alignItems:'center',flex:1,padding:10,backgroundColor:'white'}} onTouchStart={()=>{
@@ -176,15 +241,24 @@ const [searchText, setSearchText] = useState("");
         />
 
       </View>
-        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
-        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
-        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
-        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
-        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
-        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
-        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
-        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/> 
-         <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+      <View style={{alignItems:'center',justifyContent:'center',gap:30}}>
+
+      {
+        collections?.length === 0 && <Text style={{textAlign:'center',fontSize:18}}>Koleksiyonunuz bulunmamaktadır</Text>
+      }
+      {
+        message? <Text style={{color:'green',textAlign:'center'}}>{colectionName} adlı Koleksiyonunuz silindi</Text>:<></>
+      }
+      </View>
+       
+  
+      {
+          loading==false?
+      collections.map((collection, index) => (
+          <CollectionsItem item={collection} getId={getId} key={index} openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+          
+      )):<ActivityIndicator size='large'/>}
+   
 
      
 
@@ -228,7 +302,10 @@ const [searchText, setSearchText] = useState("");
           </TouchableOpacity>
         
         <TouchableOpacity style={{padding:15,borderBottomWidth:1,borderBottomColor:'#ebebeb'}}
-          onPress={()=>setModalVisible2(!modalVisible2)}
+          onPress={()=>{setModalVisible2(!modalVisible2)
+            
+          }}
+          
         >
           <View style={{flexDirection:'row',gap:15,justifyContent:'flex-start',padding:3,}}>
             <DeleteIcon name='delete-outline' size={20}/>
@@ -255,13 +332,18 @@ const [searchText, setSearchText] = useState("");
           <View style={{gap:5}}>
             <Text>Koleksiyon Adı</Text>
             <TextInput style={[styles.Input,{width:'100%'}]}
-  
+            value={newName}
+            onChangeText={(value)=>setnewName(value)}
+            placeholder={colectionName}
+            placeholderTextColor={'#333'}
             />
           </View>
          
            <View style={{flexDirection:'row',justifyContent:'space-around'}}>
             <TouchableOpacity style={{backgroundColor:'green',padding:15,paddingLeft:20,paddingRight:20,borderRadius:5}}
-       
+                onPress={()=>{
+                      editCollectionName(selectedCollection)
+                }}
             >
               <Text style={{color:'white',fontSize:15,}}>Kaydet</Text>
             </TouchableOpacity>
@@ -347,9 +429,14 @@ const [searchText, setSearchText] = useState("");
       >
         <View style={styles.centeredView3}>
           <View style={styles.modalView3}>
-            <Text style={styles.modalText3}>Ürünü favorilerden kaldırmak istiyormusunuz?</Text>
+            <Text style={styles.modalText3}>Koleksiyonu Silmek İStediğinize eminmisin?</Text>
             <View style={{display:'flex',flexDirection:'row',gap:25,}}>
-            <TouchableOpacity style={{backgroundColor:'red',paddingLeft:20,paddingRight:20,paddingTop:10,paddingBottom:10,borderRadius:10}}>
+            <TouchableOpacity style={{backgroundColor:'red',paddingLeft:20,paddingRight:20,paddingTop:10,paddingBottom:10,borderRadius:10}}
+            onPress={()=>{
+              deleteCollection(selectedCollection)
+            
+            }}
+            >
               <Text style={{color:'white'}}>Evet</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -380,7 +467,7 @@ const styles=StyleSheet.create({
       },
       
         Input: {
-          backgroundColor: '#ebebebba',
+          backgroundColor: '#ebebebab',
           marginTop: 0,
           padding: 10,
           fontSize: 17,

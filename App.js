@@ -221,7 +221,7 @@ export default function App({route}) {
      <Stack.Screen name="UpdateProfile"  component={UpdateProfile}options={{
         title:'Profili Güncelle',
           headerStyle:{
-            backgroundColor:'#F7F7F9',
+            backgroundColor:'white',
           }
   }} 
   

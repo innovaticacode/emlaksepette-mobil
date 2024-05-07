@@ -67,7 +67,7 @@ export default function ShoppingProfile() {
   return (
     <View style={style.container}>
       <View style={style.header}>
-        <View style={[style.opacity, {backgroundColor:user.banner_hex_code }]}></View>
+        <View style={[style.opacity, {backgroundColor:user.banner_hex_code + 97}]}></View>
 
         <ImageBackground
           source={require("./profilePhoto.jpg")}
@@ -109,7 +109,7 @@ export default function ShoppingProfile() {
               }}
             >
               <View style={{ gap: 8 }}>
-                <Text style={{ color: "#333", fontSize: 15,fontWeight:'bold' }}>
+                <Text style={{ color: "white", fontSize: 15,fontWeight:'bold' }}>
                   {user.name}
                 </Text>
               </View>
@@ -281,7 +281,7 @@ export default function ShoppingProfile() {
                             <TouchableOpacity
                               style={{}}
                               onPress={() => {
-                                setSellModalVisible(false);
+                               
                                 navigation.navigate("Sell", {
                                   displayInfo: "none",
                                 });
@@ -295,7 +295,7 @@ export default function ShoppingProfile() {
                             <TouchableOpacity
                               style={{}}
                               onPress={() => {
-                                setSellModalVisible(false);
+                             
                                 navigation.navigate("Sell", {
                                   text: "Satılmıştır",
                                 });
@@ -322,7 +322,7 @@ export default function ShoppingProfile() {
                             <TouchableOpacity
                               style={{}}
                               onPress={() => {
-                                setRentModalVisible(false);
+                          
                                 navigation.navigate("Rent", {
                                   text: "Kiraya Verdiklerim",
                                   display: "none",
@@ -339,7 +339,7 @@ export default function ShoppingProfile() {
                             <TouchableOpacity
                               style={{}}
                               onPress={() => {
-                                setRentModalVisible(false);
+                             
                                 navigation.navigate("Rent", {
                                   text: "Kiraladıklarım",
                                   name: "Kiraladıklarım",
@@ -368,7 +368,7 @@ export default function ShoppingProfile() {
                             <TouchableOpacity
                               style={{}}
                               onPress={() => {
-                                setOfferModalVisible(false);
+                               
                                 navigation.navigate("Offer", {
                                   name: "Kampanya Oluştur",
                                 });
@@ -382,7 +382,7 @@ export default function ShoppingProfile() {
                             <TouchableOpacity
                               style={{}}
                               onPress={() => {
-                                setOfferModalVisible(false);
+                            
                                 navigation.navigate("OfferList", {
                                   name: "Kampanya Listele",
                                 });
@@ -429,7 +429,7 @@ export default function ShoppingProfile() {
                             <TouchableOpacity
                               style={{}}
                               onPress={() => {
-                                setUserTypeModalVisible(false);
+                            
                                 navigation.navigate("UserTypes");
                               }}
                             >
@@ -441,7 +441,7 @@ export default function ShoppingProfile() {
                             <TouchableOpacity
                               style={{}}
                               onPress={() => {
-                                setUserTypeModalVisible(false);
+                       
                                 navigation.navigate("CreateUserType", {
                                   header: "yeni ekleden geldi",
                                   name: "Kullanıcı Ekle",
@@ -471,7 +471,7 @@ export default function ShoppingProfile() {
                             <TouchableOpacity
                               style={{}}
                               onPress={() => {
-                                setUserModalVisible(false);
+                            
                                 navigation.navigate("CreateUser", {
                                   header: "Listeleden  geldi",
                                   hidden3: "none",
@@ -488,7 +488,7 @@ export default function ShoppingProfile() {
                             <TouchableOpacity
                               style={{}}
                               onPress={() => {
-                                setUserModalVisible(false);
+                           
                                 navigation.navigate("CreateUser", {
                                   header: "Yeni Ekleden geldi",
                                   name: "Kullanıcı Oluştur",

@@ -10,6 +10,9 @@ export default function CollectionsItem({
   disabled,
   shareWp,
   copy,
+  item,
+  getId,
+  name
 }) {
   const navigation = useNavigation();
   return (
@@ -25,48 +28,29 @@ export default function CollectionsItem({
             }}
           >
             <Dot name="eye" size={17} color={"#EA6361"} />
-            <Text style={{ color: "#EA6361" }}>0 Görüntülenme</Text>
+            <Text style={{ color: "#EA6361" }}>{item.clicks.length} Görüntülenme</Text>
           </View>
           <View style={{ flex: 1 / 2, alignItems: "flex-end" }}>
-            <TouchableOpacity onPress={openBottom}>
+            <TouchableOpacity onPress={()=>{
+              openBottom()
+              getId(item.id,item.name)
+            }} >
               <Dot name="dots-three-vertical" size={20} />
             </TouchableOpacity>
           </View>
         </View>
         <View style={{ flexDirection: "row" }}>
-          <View style={{ padding: 20, gap: 10 }}>
-            <View style={{ flexDirection: "row", gap: 5 }}>
+          <View style={{ padding: 20, gap: 10,flex:1/2 }}>
+            <View style={{ flexDirection:'row', gap: 5 }}>
               <Text>Koleksiyon Adı:</Text>
-              <Text style={{ color: "#EA6361" }}>Kartal</Text>
+              <Text style={{ color: "#EA6361" }} numberOfLines={2}>{item.name}</Text>
             </View>
             <View style={{ flexDirection: "row", gap: 5 }}>
               <Text>İlan Sayısı:</Text>
-              <Text style={{ color: "#EA6361" }}>3</Text>
+              <Text style={{ color: "#EA6361" }}>{item.links.length}</Text>
             </View>
           </View>
-          <View
-            style={{
-              padding: 2,
-              flex: 2 / 2,
-              flexDirection: "row",
-              gap: 5,
-              height: 80,
-              alignItems: "center",
-            }}
-          >
-            <View style={{ flex: 1 / 2, justifyContent: "center", height: 50 }}>
-              <Image
-                source={require("./home.jpg")}
-                style={{ width: "100%", height: "100%" }}
-              />
-            </View>
-            <View style={{ flex: 1 / 2, height: 50 }}>
-              <Image
-                source={require("./home.jpg")}
-                style={{ width: "100%", height: "100%" }}
-              />
-            </View>
-          </View>
+        
         </View>
         <View style={{ gap: 10 }}>
           <View>
