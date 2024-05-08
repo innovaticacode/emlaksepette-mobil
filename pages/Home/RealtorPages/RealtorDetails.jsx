@@ -40,6 +40,7 @@ import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import { Shadow } from 'react-native-shadow-2';
 import { CheckBox } from "react-native-elements";
 import SwapForm from "./SwapForm";
+import AddCollection from "../../../components/AddCollection";
 
 
 export default function PostDetail() {
@@ -143,6 +144,15 @@ const [modalVisibleComennet, setmodalVisibleComment] = useState(false)
     // setSelectedImage(index)
     setCoverImageModal(true)
   }
+
+  const [selectedHouse, setselectedHouse] = useState(0)
+  const openCollection=(id)=>{
+      setselectedHouse(id)
+      changeBookmark()
+      setColectionSheet(true);
+  }
+
+const [addCollection, setaddCollection] = useState(false)
 return (
   
   <SafeAreaView style={{  backgroundColor: "white",flex:1}}>
@@ -348,8 +358,7 @@ return (
 
           <TouchableOpacity
             onPress={() => {
-              changeBookmark();
-              setColectionSheet2(true);
+                openCollection()
             }}
           >
             <View style={styles.ıcon}>
@@ -457,71 +466,112 @@ return (
         </View>
       </Modal>
       <Modal
-        isVisible={ColectionSheet2}
-        onBackdropPress={()=>setColectionSheet2(false)}
-        swipeDirection={["down"]}
-        onSwipeComplete={()=>setColectionSheet2(false)}
-        backdropColor="transparent"
-        style={styles.modal3}
-      >
-        <View style={styles.modalContent3}>
-     
-                  <View style={{width:'100%',padding:8,backgroundColor:'#F8F7F4',borderTopLeftRadius:15,borderTopRightRadius:15}}>
-                    <View style={{alignItems:'center',padding:5}}>
-                      <View style={{backgroundColor:'#D4D3D2',width:50,height:6,borderRadius:20}}/>
+          isVisible={ColectionSheet}
+          onBackdropPress={ToggleColSheet}
+      
+          animationIn={'fadeInDown'}
+          animationOut={'fadeOutDown'}
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropColor="transparent"
+          style={styles.modal4}
+        >
+          <View style={styles.modalContent4}>
+            <SafeAreaView>
+                <View style={{padding:20,paddingTop:24,gap:13,borderBottomWidth:1,borderBottomColor:'#ebebeb'}}>
+                  <Text style={{color:'#19181C',textAlign:'center',fontSize:16,fontWeight:'400'}}>Koleksiyona Ekle</Text>
+                  <Text style={{textAlign:'center',color:'#B2B2B2',fontSize:14}}>Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin</Text>
+                </View>
+                
+                <ScrollView  contentContainerStyle={{paddingLeft:10,paddingRight:10,paddingTop:4,gap:10,paddingBottom:100}}>
+                  <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}}
+                    onPress={()=>{
+                      setColectionSheet(false)
+                      setTimeout(() => {
+                        setaddCollection(true)
+                      }, 700);
+                   
+                     
+                    }}
+                  >
+                    <View style={{padding:0,alignItems:'center',justifyContent:'center'}}>
+                    <Icon name="pluscircleo" size={27} color={'#19181C'}/>
                     </View>
-                    <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',paddingLeft:10,paddingRight:10}}>
-                      <View style={{flexDirection:'row',alignItems:'center',gap:15}}>
-                        <View style={{width:55,height:55,borderRadius:10}}>
-                          <ImageBackground     source={{uri:`${apiUrl}${data?.project?.image?.replace("public",'storage')}`}} style={{width:'100%',height:'100%'}} borderRadius={10}/>
-                        </View>
-                        <Text style={{color:'#333',fontWeight:'500'}}>{bookmark=='bookmark-o'?'Kaydet':'Kaydedildi'}</Text>
-                      </View>
-                      <View>
-                      <TouchableOpacity
-              onPress={() => {
-                changeBookmark();
-                setTimeout(() => {
-                  setColectionSheet(false);
-                }, 500);
-             
-              }}
-            >
-              <View style={{alignItems:'center',justifyContent:'center'}}>
-                <Bookmark
-                  name={bookmark}
-                  size={25}
-                  color={bookmark == "bookmark-o" ? "black" : "red"}
-                />
-              </View>
-            </TouchableOpacity>
-                      </View>
+                    <View style={{width:'100%',borderBottomWidth:1,padding:15,borderBottomColor:'#ebebeb'}}>
+                      <Text style={{fontSize:13,color:'#19181C',fontWeight:'600'}}>Yeni Oluştur</Text>
                     </View>
-                  </View>
-                  <View style={{flexDirection:'row',justifyContent:'space-between',paddingRight:10,paddingLeft:10,paddingTop:10}}>
-                    <Text style={{fontSize:13,color:'#333'}}>Koleksiyonlar</Text>
-                   <TouchableOpacity>
-                    <Text style={{fontSize:13,color:'#333',textDecorationLine:'underline'}}>Yeni Koleksiyon</Text>
-                   </TouchableOpacity>
-                  </View>
-                  <ScrollView>
-                      < TouchableOpacity style={{flexDirection:'row',justifyContent:'space-between',paddingLeft:10,paddingRight:10,paddingTop:6}}>
-                        <View style={{flexDirection:'row',alignItems:'center', gap:10}}>
-                          <View style={{width:55,height:55,backgroundColor:'red',borderRadius:10}}>
+                  </TouchableOpacity>
+                   <AddCollection /> 
+                   <AddCollection /> 
+                   <AddCollection /> 
+                   <AddCollection /> 
+                   <AddCollection /> 
+                   <AddCollection /> 
+                   <AddCollection /> 
+              
+                
 
-                          </View>
-                          <Text style={{fontSize:13,color:'#333'}}>Koleksiyon İsmi</Text>
+                </ScrollView>
+                </SafeAreaView> 
+          </View>
+        </Modal>
+
+        <Modal
+          isVisible={addCollection}
+          onBackdropPress={()=>setaddCollection(false)}
+      
+          animationIn={'fadeInRight'}
+          animationOut={'lightSpeedOut'}
+          animationInTiming={200}
+          animationOutTiming={200}
+ 
+          style={styles.modal5}
+        >
+          <View style={styles.modalContent5}>
+                
+                <ScrollView bounces={false} contentContainerStyle={{paddingLeft:10,paddingRight:10,paddingTop:4,gap:10,paddingBottom:20}}>
+                  <SafeAreaView>
+               
+                    <View style={{flexDirection:'row',padding:10,alignItems:'center',borderBottomWidth:1,borderBottomColor:'#ebebeb'}}>
+                    <TouchableOpacity style={{flexDirection:'row',alignItems:'center',flex:0.5/2}}
+                      onPress={()=>{
+                        setaddCollection(false)
+                      }}
+                  >
+                    <View style={{padding:0,alignItems:'center',justifyContent:'center'}}>
+                    <Icon name="close" size={27} color={'#19181C'}/>
+                    </View>
+                 
+                  </TouchableOpacity>
+                  <View style={{flex:1/2}}>
+                    <Text style={{color:'#19181C',textAlign:'center',fontSize:16,fontWeight:'400'}}>Koleksiyon Oluştur</Text>
+                  </View>
+                    </View>
+                        <View style={{gap:6,justifyContent:'center',paddingTop:20}}>
+                          <Text style={{fontSize:13,color:'#19181C'}}>Koleksiyon İsmi</Text>
+                          <TextInput
+                  style={styles.Input}
+                
+             
+                />
+             
                         </View>
-                        <TouchableOpacity style={{alignItems:'center',justifyContent:'center',paddingRight:5}}
-                          onPress={toggleIcon}
-                        >
-                            <Icon name= {changeIcon? 'checkcircle' : "pluscircleo"} size={21}/>
+                        <View style={{paddingTop:80}}>
+                        <TouchableOpacity style={{backgroundColor:'#EA2A28',padding:10,borderRadius:6}}>
+                          <Text style={{textAlign:'center',color:'white'}}>Koleksiyon Oluştur</Text>
                         </TouchableOpacity>
-                      </TouchableOpacity>
-                  </ScrollView>
-    
-        </View>
-      </Modal>
+                        </View>
+                      
+                  </SafeAreaView>
+                
+              
+              
+                  
+
+                </ScrollView>
+                
+          </View>
+        </Modal>
 
       <Modal
         isVisible={modalVisibleComennet}
@@ -916,6 +966,29 @@ modalContent3: {
   borderTopLeftRadius: 10,
   borderTopRightRadius: 10,
 },
+modal4: {
+  justifyContent: "flex-end",
+  margin: 0,
+  backgroundColor:'#1414148c'
+},
+modalContent4: {
+  backgroundColor: "#fefefe",
+
+  height: "52%",
+  borderTopLeftRadius: 10,
+  borderTopRightRadius: 10,
+},
+modal5: {
+  justifyContent: "flex-end",
+  margin: 0,
+  backgroundColor:'#1414148c'
+},
+modalContent5: {
+  backgroundColor: "#fefefe",
+
+  height: "100%",
+
+},
 centeredViewSave: {
   padding: 10,
   flex: 1,
@@ -952,6 +1025,14 @@ flex:1
   
 },
 
+Input: {
+  backgroundColor:'#E6E6E6',
+  padding: 10,
+  borderWidth: 1,
+  borderColor: "#ebebeb",
+  borderRadius: 6,
+  fontSize: 14,
+},
 
 });
 

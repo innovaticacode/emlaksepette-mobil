@@ -15,7 +15,7 @@ export default function UserTypeList() {
     try {
       const response = await axios.get('https://test.emlaksepette.com/api/institutional/roles',{
         headers: {
-          'Authorization':  `Bearer ${user.access_token}`
+          'Authorization':`Bearer ${user?.access_token}`
         }
       });
       setuserList(response?.data.roles);
@@ -30,7 +30,7 @@ export default function UserTypeList() {
 useEffect(() => {
  
   fetchData();
-}, [])
+}, [user])
 const roles = userList;
 
 // Her bir rolü map fonksiyonu ile dönüştür ve yeni bir dizi oluştur

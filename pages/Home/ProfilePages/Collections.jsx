@@ -119,26 +119,31 @@ const [searchText, setSearchText] = useState("");
    getValueFor("user",setUser)
  },[]);
 
+ useEffect(() => {
+  fetchData(); // Sayfa ilk yüklendiğinde verileri getir
+}, [user])
+
 
  const [loading, setloading] = useState(false)
-const fetchData = async () => {
+
+ const fetchData = async () => {
   try {
-    const response = await axios.get('https://test.emlaksepette.com/api/client/collections',{
+    setloading(true);
+
+    const response = await axios.get('https://test.emlaksepette.com/api/client/collections', {
+  
       headers: {
-        'Authorization': `Bearer ${user?.access_token}`
+        'Authorization':`Bearer ${user.access_token}`
       }
     });
-    setloading(true)
-    setcollections(response.data.collections);
+    setcollections(response?.data?.collections);
   } catch (error) {
     console.error('Error fetching data:', error);
-  }finally{
-    setloading(false)
+  } finally {
+    setloading(false); // İstek tamamlandığında loading durumunu false yap
   }
 };
-useEffect(() => {
-  fetchData();
-}, [user]);
+
 
 const [selectedCollection, setselectedCollection] = useState(0)
 const [colectionName, setcolectionName] = useState('')
@@ -243,24 +248,23 @@ const editCollectionName = async (id) => {
       </View>
       <View style={{alignItems:'center',justifyContent:'center',gap:30}}>
 
-      {
-        collections?.length === 0 && <Text style={{textAlign:'center',fontSize:18}}>Koleksiyonunuz bulunmamaktadır</Text>
-      }
+
+      
       {
         message? <Text style={{color:'green',textAlign:'center'}}>{colectionName} adlı Koleksiyonunuz silindi</Text>:<></>
       }
       </View>
        
-  
+      <Text style={{textAlign:'center',fontSize:18,display:collections?.length==0 ?'flex':'none' }}>Koleksiyonunuz bulunmamaktadır</Text>
       {
-          loading==false?
+          loading ==false?
       collections.map((collection, index) => (
           <CollectionsItem item={collection} getId={getId} key={index} openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
           
-      )):<ActivityIndicator size='large'/>}
+      )):<ActivityIndicator size='large' color={'red'}/>}
    
 
-     
+
 
 
     </ScrollView> 

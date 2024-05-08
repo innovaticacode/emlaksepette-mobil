@@ -28,7 +28,7 @@ export default function CreateUserType() {
   }, []);
 
   const [Permissions, setPermissions] = useState([]);
-  useEffect(() => {
+
     // fetchData fonksiyonunu tanımlayın
     const fetchData = async () => {
 
@@ -53,8 +53,10 @@ export default function CreateUserType() {
    
   
     // user.access_token ve permissions değiştiğinde fetchData fonksiyonunu yeniden çağırın
-  }, [user.access_token, Permissions]);
 
+useEffect(()=>{
+    fetchData()
+},[user])
  
 
   const arrays = Object.values(Permissions);

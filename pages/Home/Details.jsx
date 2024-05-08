@@ -49,6 +49,9 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 
 import CloseIcon from 'react-native-vector-icons/AntDesign';
 import Swiper from "react-native-swiper";
+import AddCollection from "../../components/AddCollection";
+import { getValueFor } from "../../components/methods/user";
+import axios from "axios";
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [IsOpenSheet, setIsOpenSheet] = useState(false);
@@ -284,6 +287,85 @@ export default function Details({ navigation }) {
       setCoverImageModal(true)
     }
     const [selectedImage,setSelectedImage] = useState(0);
+
+    const [selectedHouse, setselectedHouse] = useState(0)
+    const openCollection=(id)=>{
+        setselectedHouse(id)
+        setColectionSheet(true);
+    }
+
+const [addCollection, setaddCollection] = useState(false)
+const [user, setUser] = useState({});
+
+const [newCollectionNameCreate, setnewCollectionNameCreate] = useState('')
+useEffect(() => {
+  getValueFor("user", setUser);
+}, []);
+const [collections, setcollections] = useState([])
+  const [collectionAddedSucces, setcollectionAddedSucces] = useState(false)
+const [selectedCollectionName, setselectedCollectionName] = useState('')
+const fetchData = async () => {
+ 
+  try {
+    const response = await axios.get('https://test.emlaksepette.com/api/getCollections',{
+      headers: {
+        'Authorization': `Bearer ${user.access_token}`
+      }
+    });
+  
+    setcollections(response?.data.collections);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }finally{
+  
+  }
+};
+useEffect(() => {
+  fetchData();
+}, [user]);
+const addCollectionPost=()=>{
+  const collectionData = {
+    collection_name: newCollectionNameCreate,
+    cart: {
+      id: selectedHouse,
+      type: "project",
+      project: data.project.id,
+      clear_cart: "no",
+      selectedCollectionId: null
+    }
+  };
+
+
+  axios.post('https://test.emlaksepette.com/api/add/collection', collectionData, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${user.access_token}`,
+      
+     
+    },
+  })
+  .then(response => {
+    setaddCollection(false)
+    setnewCollectionNameCreate('')
+
+    setTimeout(() => {
+      setcollectionAddedSucces(true)
+    },200);
+    setTimeout(() => {
+      setcollectionAddedSucces(false)
+    }, 3000);
+    // Başarılı yanıtı işleyin
+    setselectedCollectionName(response.data.collection.name)
+    console.log('Response:', response.data);
+  })
+  .catch(error => {
+    // Hata durumunu işleyin
+    console.error('Error:', error);
+  });
+
+}
+
+console.log(selectedCollectionName)
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -487,20 +569,7 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => {
-                changeBookmark();
-                setColectionSheet(true);
-              }}
-            >
-              <View style={styles.ıcon}>
-                <Bookmark
-                  name={bookmark}
-                  size={18}
-                  color={bookmark == "bookmark-o" ? "black" : "red"}
-                />
-              </View>
-            </TouchableOpacity>
+          
           </View>
           <PagerView style={{ height: 250 }}
      
@@ -553,6 +622,7 @@ export default function Details({ navigation }) {
         </View>
         {tabs == 0 && (
           <OtherHomeInProject
+            openCollection={openCollection}
             itemCount={itemCount}
             data={data}
             getLastItemCount={getLastItemCount}
@@ -561,6 +631,7 @@ export default function Details({ navigation }) {
             openmodal={openModal}
             getBlockItems={getBlockItems}
             OpenFormModal={OpenFormModal}
+
           />
         )}
         <View style={{ paddingLeft: 10, paddingRight: 10 }}>
@@ -793,64 +864,128 @@ export default function Details({ navigation }) {
         <Modal
           isVisible={ColectionSheet}
           onBackdropPress={ToggleColSheet}
-          swipeDirection={["down"]}
+      
+          animationIn={'fadeInDown'}
+          animationOut={'fadeOutDown'}
+          animationInTiming={200}
+          animationOutTiming={200}
           backdropColor="transparent"
           style={styles.modal2}
         >
           <View style={styles.modalContent2}>
-                  <View style={{width:'100%',padding:8,backgroundColor:'#F8F7F4',borderTopLeftRadius:15,borderTopRightRadius:15}}>
-                    <View style={{alignItems:'center',padding:5}}>
-                      <View style={{backgroundColor:'#D4D3D2',width:50,height:6,borderRadius:20}}/>
+            <SafeAreaView>
+                <View style={{padding:20,paddingTop:24,gap:13,borderBottomWidth:1,borderBottomColor:'#ebebeb'}}>
+                  <Text style={{color:'#19181C',textAlign:'center',fontSize:16,fontWeight:'400'}}>Koleksiyona Ekle</Text>
+                  <Text style={{textAlign:'center',color:'#B2B2B2',fontSize:14}}>Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin</Text>
+                </View>
+                
+                <ScrollView  contentContainerStyle={{paddingLeft:10,paddingRight:10,paddingTop:4,gap:10,paddingBottom:100}}>
+                  <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}}
+                    onPress={()=>{
+                      setColectionSheet(false)
+                      setTimeout(() => {
+                        setaddCollection(true)
+                      }, 700);
+                   
+                     
+                    }}
+                  >
+                    <View style={{padding:0,alignItems:'center',justifyContent:'center'}}>
+                    <Icon name="pluscircleo" size={27} color={'#19181C'}/>
                     </View>
-                    <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',paddingLeft:10,paddingRight:10}}>
-                      <View style={{flexDirection:'row',alignItems:'center',gap:15}}>
-                        <View style={{width:55,height:55,borderRadius:10}}>
-                          <ImageBackground     source={{uri:`${apiUrl}${data?.project?.image?.replace("public",'storage')}`}} style={{width:'100%',height:'100%'}} borderRadius={10}/>
-                        </View>
-                        <Text style={{color:'#333',fontWeight:'500'}}>{bookmark=='bookmark-o'?'Kaydet':'Kaydedildi'}</Text>
-                      </View>
-                      <View>
-                      <TouchableOpacity
-              onPress={() => {
-                changeBookmark();
-                setTimeout(() => {
-                  setColectionSheet(false);
-                }, 500);
-             
-              }}
-            >
-              <View style={{alignItems:'center',justifyContent:'center'}}>
-                <Bookmark
-                  name={bookmark}
-                  size={25}
-                  color={bookmark == "bookmark-o" ? "black" : "red"}
-                />
-              </View>
-            </TouchableOpacity>
-                      </View>
+                    <View style={{width:'100%',borderBottomWidth:1,padding:15,borderBottomColor:'#ebebeb'}}>
+                      <Text style={{fontSize:13,color:'#19181C',fontWeight:'600'}}>Yeni Oluştur</Text>
                     </View>
-                  </View>
-                  <View style={{flexDirection:'row',justifyContent:'space-between',paddingRight:10,paddingLeft:10,paddingTop:10}}>
-                    <Text style={{fontSize:13,color:'#333'}}>Koleksiyonlar</Text>
-                   <TouchableOpacity>
-                    <Text style={{fontSize:13,color:'#333',textDecorationLine:'underline'}}>Yeni Koleksiyon</Text>
-                   </TouchableOpacity>
-                  </View>
-                  <ScrollView>
-                      < TouchableOpacity style={{flexDirection:'row',justifyContent:'space-between',paddingLeft:10,paddingRight:10,paddingTop:6}}>
-                        <View style={{flexDirection:'row',alignItems:'center', gap:10}}>
-                          <View style={{width:55,height:55,backgroundColor:'red',borderRadius:10}}>
+                  </TouchableOpacity>
+                      {
+                        collections.map((item,index)=>(
+                          <AddCollection  key={index} item={item}/> 
+                        ))
+                      }
+               
+              
+                  
 
-                          </View>
-                          <Text style={{fontSize:13,color:'#333'}}>Koleksiyon İsmi</Text>
+                </ScrollView>
+                </SafeAreaView> 
+          </View>
+        </Modal>
+
+
+        <Modal
+          isVisible={collectionAddedSucces}
+          onBackdropPress={()=>setcollectionAddedSucces(false)}
+      
+          animationIn={'fadeInDown'}
+          animationOut={'fadeOutDown'}
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropColor="transparent"
+          style={styles.modal4}
+        >
+          <View style={styles.modalContent4}>
+            <View style={{padding:10}}>
+            <Text style={{textAlign:'center',color:'green',fontWeight:'500'}}>{selectedHouse} No'lu konutu {selectedCollectionName} adlı koleksiyonunuza eklendi</Text>
+            </View>
+                    
+          </View>
+        </Modal>
+
+        <Modal
+          isVisible={addCollection}
+          onBackdropPress={()=>setaddCollection(false)}
+      
+          animationIn={'fadeInRight'}
+          animationOut={'lightSpeedOut'}
+          animationInTiming={200}
+          animationOutTiming={200}
+ 
+          style={styles.modal3}
+        >
+          <View style={styles.modalContent3}>
+                
+                <ScrollView bounces={false} contentContainerStyle={{paddingLeft:10,paddingRight:10,paddingTop:4,gap:10,paddingBottom:20}}>
+                  <SafeAreaView>
+               
+                    <View style={{flexDirection:'row',padding:10,alignItems:'center',borderBottomWidth:1,borderBottomColor:'#ebebeb'}}>
+                    <TouchableOpacity style={{flexDirection:'row',alignItems:'center',flex:0.5/2}}
+                      onPress={()=>{
+                        setaddCollection(false)
+                      }}
+                  >
+                    <View style={{padding:0,alignItems:'center',justifyContent:'center'}}>
+                    <Icon name="close" size={27} color={'#19181C'}/>
+                    </View>
+                 
+                  </TouchableOpacity>
+                  <View style={{flex:1/2}}>
+                    <Text style={{color:'#19181C',textAlign:'center',fontSize:16,fontWeight:'400'}}>Koleksiyon Oluştur</Text>
+                  </View>
+                    </View>
+                        <View style={{gap:6,justifyContent:'center',paddingTop:20}}>
+                          <Text style={{fontSize:13,color:'#19181C'}}>Koleksiyon İsmi</Text>
+                          <TextInput
+                  style={styles.Input}
+                      value={newCollectionNameCreate}
+                      onChangeText={(value)=>setnewCollectionNameCreate(value)}
+             
+                />
+             
                         </View>
-                        <TouchableOpacity style={{alignItems:'center',justifyContent:'center',paddingRight:5}}
-                          onPress={toggleIcon}
-                        >
-                            <Icon name= {changeIcon? 'checkcircle' : "pluscircleo"} size={21}/>
+                        <View style={{paddingTop:80}}>
+                        <TouchableOpacity style={{backgroundColor:'#EA2A28',padding:10,borderRadius:6}} onPress={addCollectionPost} >
+                          <Text style={{textAlign:'center',color:'white'}}>Koleksiyon Oluştur</Text>
                         </TouchableOpacity>
-                      </TouchableOpacity>
-                  </ScrollView>
+                        </View>
+                      
+                  </SafeAreaView>
+                
+              
+              
+                  
+
+                </ScrollView>
+                
           </View>
         </Modal>
         <Modal
@@ -1055,13 +1190,25 @@ const styles = StyleSheet.create({
   modal2: {
     justifyContent: "flex-end",
     margin: 0,
+    backgroundColor:'#1414148c'
   },
   modalContent2: {
-    backgroundColor: "white",
+    backgroundColor: "#fefefe",
   
-    height: "35%",
+    height: "52%",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+  },
+  modal3: {
+    justifyContent: "flex-end",
+    margin: 0,
+    backgroundColor:'#1414148c'
+  },
+  modalContent3: {
+    backgroundColor: "#fefefe",
+  
+    height: "100%",
+
   },
   Input:{
     borderWidth:1,
@@ -1101,6 +1248,27 @@ const styles = StyleSheet.create({
     
   flex:1
     
+  },
+  Input: {
+    backgroundColor:'#E6E6E6',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ebebeb",
+    borderRadius: 6,
+    fontSize: 14,
+  },
+  modal4: {
+    justifyContent: "center",
+    margin: 0,
+    padding:20,
+    backgroundColor:'#1414148c'
+  },
+  modalContent4: {
+    backgroundColor: "#fefefe",
+  padding:20,
+  borderRadius:10
+   
+
   },
  
 });
