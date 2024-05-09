@@ -303,7 +303,7 @@ const fetchDataCounty = async (value) => {
           style={pickerSelectStyles}
           onValueChange={(value) => setSwapChoose(value)}
           items={[
-            { label: "Emlak", value: "Emlak" },
+            { label: "Emlak", value: "emlak" },
             { label: "Araç", value: "araç" },
             { label: "Barter", value: "barter" },
             { label: "Diğer", value: "Diğer" },

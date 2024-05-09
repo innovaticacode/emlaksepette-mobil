@@ -133,7 +133,7 @@ const [searchText, setSearchText] = useState("");
     const response = await axios.get('https://test.emlaksepette.com/api/client/collections', {
   
       headers: {
-        'Authorization':`Bearer ${user.access_token}`
+        'Authorization':`Bearer ${user?.access_token}`
       }
     });
     setcollections(response?.data?.collections);

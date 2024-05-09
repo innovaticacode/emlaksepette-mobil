@@ -45,6 +45,8 @@ import { addDotEveryThreeDigits } from "../components/methods/merhod";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Shadow } from "react-native-shadow-2";
 import AddCollection from "../components/AddCollection";
+import axios from "axios";
+import { getValueFor } from "../components/methods/user";
 
 export default function PostDetail() {
   const apiUrl = "https://test.emlaksepette.com/";
@@ -132,6 +134,115 @@ export default function PostDetail() {
   }
 
 const [addCollection, setaddCollection] = useState(false)
+const [collections, setcollections] = useState([])
+
+const [user, setUser] = useState({});
+
+const [newCollectionNameCreate, setnewCollectionNameCreate] = useState('')
+useEffect(() => {
+  getValueFor("user", setUser);
+}, []);
+
+const fetchData = async () => {
+ 
+  try {
+    const response = await axios.get('https://test.emlaksepette.com/api/getCollections',{
+      headers: {
+        'Authorization': `Bearer ${user.access_token}`
+      }
+    });
+  
+    setcollections(response?.data.collections);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }finally{
+  
+  }
+};
+useEffect(() => {
+  fetchData();
+}, [user]);
+const addCollectionPost=()=>{
+  const collectionData = {
+    collection_name: newCollectionNameCreate,
+    cart: {
+      id: selectedHouse,
+      type: "project",
+      project:projectId,
+      clear_cart: "no",
+      selectedCollectionId: null
+    }
+  };
+
+
+  axios.post('https://test.emlaksepette.com/api/add/collection', collectionData, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${user.access_token}`,
+      
+     
+    },
+  })
+  .then(response => {
+    // setaddCollection(false)
+    // setnewCollectionNameCreate('')
+
+    // setTimeout(() => {
+    //   setcollectionAddedSucces(true)
+    // },200);
+    // setTimeout(() => {
+    //   setcollectionAddedSucces(false)
+    // }, 3000);
+    // // Başarılı yanıtı işleyin
+    // setselectedCollectionName(response.data.collection.name)
+    console.log('Response:', response.data);
+  })
+  .catch(error => {
+    // Hata durumunu işleyin
+    console.error('Error:', error);
+  });
+
+}
+const [selectedCollectionId, setselectedCollectionId] = useState(0)
+const [selectedCollectionName2, setselectedCollectionName2] = useState('')
+const getCollectionId=(id,name)=>{
+    setselectedCollectionId(id)
+    setselectedCollectionName2(name)
+} 
+const addSelectedCollection=()=>{
+  const collectionData = {
+    collection_name:selectedCollectionName2,
+    clear_cart: "no",
+    id: HomeId,
+    project:ProjectHomeData.project.id,
+    selectedCollectionId: selectedCollectionId,
+    type: "project"
+  };
+
+
+  axios.post('https://test.emlaksepette.com/api/addLink', collectionData, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${user.access_token}`,
+      
+     
+    },
+  })
+  .then(response => {
+  
+ 
+
+  
+    console.log('Response:', response.data);
+  })
+  .catch(error => {
+    // Hata durumunu işleyin
+    console.error('Error:', error);
+  });
+
+}
+console.log(HomeId)
+
   return (
     <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
       <Header onPress={toggleDrawer} />
@@ -334,7 +445,7 @@ const [addCollection, setaddCollection] = useState(false)
             <TouchableOpacity
               onPress={() => {
                
-                openCollection(projectId)
+                openCollection(HomeId)
               }}
             >
               <View style={styles.ıcon}>
@@ -721,6 +832,7 @@ const [addCollection, setaddCollection] = useState(false)
         >
           <View style={styles.modalContent2}>
             <SafeAreaView>
+             
                 <View style={{padding:20,paddingTop:24,gap:13,borderBottomWidth:1,borderBottomColor:'#ebebeb'}}>
                   <Text style={{color:'#19181C',textAlign:'center',fontSize:16,fontWeight:'400'}}>Koleksiyona Ekle</Text>
                   <Text style={{textAlign:'center',color:'#B2B2B2',fontSize:14}}>Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin</Text>
@@ -744,34 +856,12 @@ const [addCollection, setaddCollection] = useState(false)
                       <Text style={{fontSize:13,color:'#19181C',fontWeight:'600'}}>Yeni Oluştur</Text>
                     </View>
                   </TouchableOpacity>
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
+                  {
+                        collections.map((item,index)=>(
+                          <AddCollection  key={index} item={item} getCollectionId={getCollectionId} addLink={addSelectedCollection}/> 
+                        ))
+                      }
+               
               
               
 
@@ -814,13 +904,16 @@ const [addCollection, setaddCollection] = useState(false)
                           <Text style={{fontSize:13,color:'#19181C'}}>Koleksiyon İsmi</Text>
                           <TextInput
                   style={styles.Input}
-                
-             
+                      value={newCollectionNameCreate}
+                      onChangeText={(value)=>setnewCollectionNameCreate(value)}
+
                 />
              
                         </View>
                         <View style={{paddingTop:80}}>
-                        <TouchableOpacity style={{backgroundColor:'#EA2A28',padding:10,borderRadius:6}}>
+                        <TouchableOpacity style={{backgroundColor:'#EA2A28',padding:10,borderRadius:6}}
+                          onPress={addCollectionPost}
+                        >
                           <Text style={{textAlign:'center',color:'white'}}>Koleksiyon Oluştur</Text>
                         </TouchableOpacity>
                         </View>

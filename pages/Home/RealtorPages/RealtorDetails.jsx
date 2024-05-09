@@ -41,6 +41,8 @@ import { Shadow } from 'react-native-shadow-2';
 import { CheckBox } from "react-native-elements";
 import SwapForm from "./SwapForm";
 import AddCollection from "../../../components/AddCollection";
+import { getValueFor } from "../../../components/methods/user";
+import axios from "axios";
 
 
 export default function PostDetail() {
@@ -153,6 +155,34 @@ const [modalVisibleComennet, setmodalVisibleComment] = useState(false)
   }
 
 const [addCollection, setaddCollection] = useState(false)
+const [collections, setcollections] = useState([])
+
+const [user, setUser] = useState({});
+
+const [newCollectionNameCreate, setnewCollectionNameCreate] = useState('')
+useEffect(() => {
+  getValueFor("user", setUser);
+}, []);
+
+const fetchData = async () => {
+ 
+  try {
+    const response = await axios.get('https://test.emlaksepette.com/api/getCollections',{
+      headers: {
+        'Authorization': `Bearer ${user.access_token}`
+      }
+    });
+  
+    setcollections(response?.data.collections);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }finally{
+  
+  }
+};
+useEffect(() => {
+  fetchData();
+}, [user]);
 return (
   
   <SafeAreaView style={{  backgroundColor: "white",flex:1}}>
@@ -501,13 +531,11 @@ return (
                       <Text style={{fontSize:13,color:'#19181C',fontWeight:'600'}}>Yeni Oluştur</Text>
                     </View>
                   </TouchableOpacity>
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
-                   <AddCollection /> 
+                  {
+                        collections.map((item,index)=>(
+                          <AddCollection  key={index} item={item}/> 
+                        ))
+                      }
               
                 
 

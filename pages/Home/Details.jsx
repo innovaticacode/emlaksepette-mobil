@@ -323,6 +323,7 @@ const fetchData = async () => {
 useEffect(() => {
   fetchData();
 }, [user]);
+
 const addCollectionPost=()=>{
   const collectionData = {
     collection_name: newCollectionNameCreate,
@@ -364,8 +365,53 @@ const addCollectionPost=()=>{
   });
 
 }
+const [selectedCollectionId, setselectedCollectionId] = useState(0)
+const [selectedCollectionName2, setselectedCollectionName2] = useState('')
+const getCollectionId=(id,name)=>{
+    setselectedCollectionId(id)
+    setselectedCollectionName2(name)
+} 
+const addSelectedCollection=(id)=>{
+  const collectionData = {
+    collection_name:selectedCollectionName2,
+    clear_cart: "no",
+    id: selectedHouse,
+    project: data.project.id,
+    selectedCollectionId: selectedCollectionId,
+    type: "project"
+  };
 
-console.log(selectedCollectionName)
+
+  axios.post('https://test.emlaksepette.com/api/addLink', collectionData, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${user.access_token}`,
+      
+     
+    },
+  })
+  .then(response => {
+  
+ 
+
+    setTimeout(() => {
+      setcollectionAddedSucces(true)
+    },200);
+    setTimeout(() => {
+      setcollectionAddedSucces(false)
+    }, 3000);
+    // Başarılı yanıtı işleyin
+    // setselectedCollectionName(response.data.collection.name)
+    console.log('Response:', response.data);
+  })
+  .catch(error => {
+    // Hata durumunu işleyin
+    console.error('Error:', error);
+  });
+
+}
+console.log(selectedCollectionName2)
+    
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -899,7 +945,7 @@ console.log(selectedCollectionName)
                   </TouchableOpacity>
                       {
                         collections.map((item,index)=>(
-                          <AddCollection  key={index} item={item}/> 
+                          <AddCollection  key={index} item={item} getCollectionId={getCollectionId} addLink={addSelectedCollection}/> 
                         ))
                       }
                
