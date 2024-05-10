@@ -230,9 +230,6 @@ const addSelectedCollection=()=>{
   })
   .then(response => {
   
- 
-
-  
     console.log('Response:', response.data);
   })
   .catch(error => {

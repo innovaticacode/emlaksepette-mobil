@@ -21,43 +21,35 @@ export default function CreateUserType() {
     "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGE5OGU0NWVmZDZmOGFmMTZmMTdlYjZlOTYwZjZjZjk3ZWFlNTIyOTUxNzM3ZDcwM2IyODIyNTJjYmM5NWIwZWI3NTI5ZDZmZGJkMjkxODEiLCJpYXQiOjE3MTQwMzgzODguOTAzNDYyLCJuYmYiOjE3MTQwMzgzODguOTAzNDY5LCJleHAiOjE3NDU1NzQzODguODkwOTQ3LCJzdWIiOiIxMDgiLCJzY29wZXMiOltdfQ.COl7GBq8jVhi4tdpv9M4XfVaB725vZUkUanlNOjomYucIgRwW8fqShfw9-u28idpkCL9mEmcovWB9Cy58eQU7NRtFyShUHj1NglDP_BWcimJfTGd5GVNfGe2n5NzklTJtdUr0TuEz0QIAJmMFppH2PDJ1dtVGt8YbWwqCxRK6a08mN4YtQR9Z6tLe9_s5PDw49qy9QFyu91S5o11rMlN4bX3iLG0h0-zPDY3Vl6TO7IJkgBe4o8FUoxvlSH9xEwU0jo1wqTR_r38105CjeAV4SCMLLfPEzeKQkxMJ5A2DRVrPRl-dg7EAIyS8lK6OHQ6KpmlZqOFDAdFwlIK7btEV0_brS3vrON2x63jYrnFAOhZ5jR8WBNsGqnJVGn1NZoX0VwqHF2dxWAqcTjqbqAYmSJpagWB_Awk02Zqt1rEQDHajN4N1jld0fddP5R8pRO6P_pzqwwq1-is01pIVqWLp27YRAtF4hpDEcOTzEuhrt_UN98m4l-6wGr3suxuIhwb_zfH0lw_qDqyZK54dOX6Q8oPqYn4daZN5TtgJs87jaSw615M7VZXwYp7hd43ZfSqSbfLX2k0vskLIbWKBgdooW3npWPjlmv72zu9GHRKpEdWUbmBDHXjjGDQOhLuumiC9vZOWU-hcIJYWwGAyAY0Y1A-xRaRTkTB8St8TxWul5Q";
   const { header, hidden, hidden2 } = route.params;
   const [TypeName, setTypeName] = useState("");
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
 
   const [Permissions, setPermissions] = useState([]);
+  const [groupNames, setGroupNames] = useState([]);
 
-    // fetchData fonksiyonunu tanımlayın
-    const fetchData = async () => {
-
-      try {
-        const response = await axios.get(
-          "https://test.emlaksepette.com/api/institutional/roles/create",
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
-        setPermissions(response?.data?.groupedPermissions);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-  
-    // fetchData fonksiyonunu çağırın
+  // fetchData fonksiyonunu tanımlayın
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "https://test.emlaksepette.com/api/institutional/roles/create",
+        {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        }
+      );
+      setPermissions(response?.data?.groupedPermissions);
+      setGroupNames(response?.data?.groupNames);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
     fetchData();
-    
-   
-  
-    // user.access_token ve permissions değiştiğinde fetchData fonksiyonunu yeniden çağırın
-
-useEffect(()=>{
-    fetchData()
-},[user])
- 
+  }, [user]);
 
   const arrays = Object.values(Permissions);
 
@@ -81,37 +73,36 @@ useEffect(()=>{
   };
   const handleShowCheckedItems = () => {
     console.log(checkedItems);
-    postData()
-    navigation.navigate('UserTypes')
-    
+    postData();
+    navigation.navigate("UserTypes");
   };
   const postData = async () => {
-   
     try {
-    var formData=new FormData()
-      formData.append('name', TypeName);
-      checkedItems.forEach(item => {
-        formData.append('permissions[]',  item); // [] kullanarak PHP tarafında bir dizi olarak alınmasını sağlar
+      var formData = new FormData();
+      formData.append("name", TypeName);
+      checkedItems.forEach((item) => {
+        formData.append("permissions[]", item); // [] kullanarak PHP tarafında bir dizi olarak alınmasını sağlar
       });
-      console.log(formData)
-      const response = await axios.post('https://test.emlaksepette.com/api/institutional/roles', formData ,{
-        headers:{
-          Authorization: `Bearer ${user.access_token}`,
+      console.log(formData);
+      const response = await axios.post(
+        "https://test.emlaksepette.com/api/institutional/roles",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
         }
-      });
-      
-      // İsteğin başarılı bir şekilde tamamlandığı durum
-      console.log('İstek başarıyla tamamlandı:', response.data);
+      );
 
-      
-  
+      // İsteğin başarılı bir şekilde tamamlandığı durum
+      console.log("İstek başarıyla tamamlandı:", response.data);
     } catch (error) {
       // Hata durumunda
-     
-      console.error('Hata:', error +'post isteği başarısız ');
+
+      console.error("Hata:", error + "post isteği başarısız ");
     }
   };
-  
+
   return (
     <ScrollView style={{ backgroundColor: "white" }}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -126,16 +117,17 @@ useEffect(()=>{
             />
           </View>
           <View style={{ display: hidden }}>
-            <Text style={styles.label}>İzinler</Text>
+          
             <View>
               {Object.values(Permissions).map((array, index) => (
-                <View key={index} style={{ gap: 10 }}>
+                <View key={index} style={{ gap: 10 , marginTop: 10, marginBottom: 10}}>
+                              <Text style={{fontSize:15,color:'#333',fontWeight:'500'}}>{groupNames[index]}</Text>
+
                   {array.map((item, subIndex) => (
                     <Checkbox
                       title={item.description}
                       key={subIndex}
                       id={item.id}
-                   
                       chechked={handleCheckboxChange}
                     />
                   ))}
@@ -163,7 +155,6 @@ useEffect(()=>{
               </Text>
             </TouchableOpacity>
           </View>
-
         </View>
       </TouchableWithoutFeedback>
     </ScrollView>

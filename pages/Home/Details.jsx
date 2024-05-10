@@ -367,6 +367,7 @@ const addCollectionPost=()=>{
 }
 const [selectedCollectionId, setselectedCollectionId] = useState(0)
 const [selectedCollectionName2, setselectedCollectionName2] = useState('')
+
 const getCollectionId=(id,name)=>{
     setselectedCollectionId(id)
     setselectedCollectionName2(name)
@@ -391,8 +392,6 @@ const addSelectedCollection=(id)=>{
     },
   })
   .then(response => {
-  
- 
 
     setTimeout(() => {
       setcollectionAddedSucces(true)
