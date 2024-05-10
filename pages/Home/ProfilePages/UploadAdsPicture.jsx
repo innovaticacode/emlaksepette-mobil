@@ -1,23 +1,49 @@
-import { View, Text ,StyleSheet, TouchableOpacity, ScrollView} from 'react-native'
-import React from 'react'
+import { View, Text ,StyleSheet, TouchableOpacity, ScrollView,Image} from 'react-native'
+import React,{useState} from 'react'
 import UploadIcon from 'react-native-vector-icons/AntDesign'
 import AdsPictureItem from './profileComponents/AdsPictureItem'
-
+import * as ImagePicker from 'expo-image-picker';
 export default function UploadAdsPicture() {
+   
+    const [image, setImage] = useState(null);
 
-    
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
+  
+  
   return (
     <View style={styles.container}>
         <View>
             <View style={styles.uploadArea}>
                 <View style={{alignItems:'center',justifyContent:'center',gap:15}}>
-                    <TouchableOpacity>
+                <Image source={{ uri: image }} style={styles.image} />
+                
+                
+                    {/* <TouchableOpacity>
                     <UploadIcon name='upload'size={50} color={'grey'}/>
+             
                     </TouchableOpacity>
                     <Text style={{fontSize:14,color:'#333'}}>Mağazanızın profili için bir reklam resmi yükleyin</Text>
-                    <TouchableOpacity style={styles.UploadBtn}>
+                     <TouchableOpacity style={styles.UploadBtn}>
                         <Text style={{color:'white',textAlign:'center',fontWeight:'500'}}>Resim Seçin</Text>
-                    </TouchableOpacity>
+                   </TouchableOpacity>
+        */}
+          
+
+                 
                 </View>
             </View> 
         </View>
@@ -26,8 +52,8 @@ export default function UploadAdsPicture() {
             <Text style={{color:'#333',fontSize:15}}>Yüklediğim Reklam Görselleri</Text>
             </View>
                 <View style={{gap:10}}>
-                <AdsPictureItem/>
-                <AdsPictureItem/>
+                <AdsPictureItem />
+                <AdsPictureItem />
                 <AdsPictureItem/>
                 <AdsPictureItem/>
                 <AdsPictureItem/> 
@@ -37,7 +63,7 @@ export default function UploadAdsPicture() {
               
         </ScrollView>
         <View style={{paddingBottom:40}}>
-            <TouchableOpacity style={[styles.UploadBtn,{width:'100%'}]} >
+            <TouchableOpacity style={[styles.UploadBtn,{width:'100%'}]} onPress={pickImage} >
                 <Text style={{color:'white',textAlign:'center',fontWeight:'500'}}>Resmi Yükle</Text>
             </TouchableOpacity>
         </View>

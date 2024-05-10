@@ -36,8 +36,8 @@ export default function SwapScreen() {
       fetchData();
     }, [user]);
  const [swapSuggestdetails, setswapSuggestdetails] = useState([])
-
-    const getDetails = async (id) => {
+    const [selectedModalIndex, setselectedModalIndex] = useState(0)
+    const getDetails = async (id,index) => {
      
       try {
         const response = await axios.get(`https://test.emlaksepette.com/api/institutional/swap_applications/${id}`,{
@@ -47,6 +47,7 @@ export default function SwapScreen() {
         });
         openModal()
         setswapSuggestdetails(response?.data?.form)
+        setselectedModalIndex(index)
       console.log(response.data + 'fgdgdfg')
     
       } catch (error) {
@@ -58,7 +59,7 @@ export default function SwapScreen() {
     <ScrollView style={styles.container}  contentContainerStyle={{gap:15,paddingBottom:50}}>
       {
         SwapSuggest.map((item,index)=>(
-          <SwapItem openModal={openModal} key={index} item={item}  getDetails={getDetails}/>
+          <SwapItem openModal={openModal} key={index} item={item}  getDetails={getDetails} index={index}/>
         ))
       }
    
@@ -77,7 +78,7 @@ export default function SwapScreen() {
        
           <View style={[styles.modalView, styles.card,{padding:0,borderRadius:10,backgroundColor:"#F8F7F4",gap:20}]}>
           <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
-          <Text style={{fontSize:17}}>1.Başvuru Detayları</Text>
+          <Text style={{fontSize:17}}>{selectedModalIndex+1}.Başvuru Detayları</Text>
           <TouchableOpacity onPress={()=>setDetailModal(false)}>
               <Icon name='closecircle' size={23}/>
           </TouchableOpacity>
@@ -110,24 +111,24 @@ export default function SwapScreen() {
                             swapSuggestdetails.takas_tercihi=='araç' &&
                             <>
                              <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
-                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Araç Model Yılı: </Text>Araç</Text>
+                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Araç Model Yılı: </Text>{swapSuggestdetails.arac_model_yili}</Text>
                     </View>
                     <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
-                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Araç Markası: </Text>Araç</Text>
+                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Araç Markası: </Text>{swapSuggestdetails.arac_markasi}</Text>
                     </View>
                     <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
-                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Yakıt Tipi: </Text>Araç</Text>
+                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Yakıt Tipi: </Text>{swapSuggestdetails.yakit_tipi}</Text>
                     </View>
                     <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
-                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Vites Tipi: </Text>Araç</Text>
+                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Vites Tipi: </Text>{swapSuggestdetails.vites_tipi}</Text>
                     </View>
                     <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
-                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Araç Satış Rakamı: </Text>Araç</Text>
+                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Araç Satış Rakamı: </Text>{addDotEveryThreeDigits(swapSuggestdetails.arac_satis_rakami)}</Text>
                     </View>
                             </>
                       }
                             {
-                            swapSuggestdetails.takas_tercihi=='Emlak' && swapSuggestdetails.emlak_tipi=='arsa' &&
+                            swapSuggestdetails.takas_tercihi=='emlak' && swapSuggestdetails.emlak_tipi=='arsa' &&
                             <>
                              <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
                     <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Emlak tipi: </Text>{swapSuggestdetails.emlak_tipi}</Text>
@@ -153,11 +154,9 @@ export default function SwapScreen() {
                             </>
                       }
                           {
-                            swapSuggestdetails.takas_tercihi=='Emlak' && swapSuggestdetails.emlak_tipi=='konut' &&
+                            swapSuggestdetails.takas_tercihi=='emlak' && swapSuggestdetails.emlak_tipi=='konut' &&
                             <>
-                                   <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
-                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Takas Tercihi: </Text>{swapSuggestdetails.takas_tercihi}</Text>
-                    </View>
+                        
                              <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
                     <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Emlak tipi: </Text>{swapSuggestdetails.emlak_tipi}</Text>
                     </View>
@@ -183,9 +182,7 @@ export default function SwapScreen() {
                         {
                             swapSuggestdetails.takas_tercihi=='emlak' && swapSuggestdetails.emlak_tipi=='işyeri' &&
                             <>                     
-                                   <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
-                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Takas Tercihi: </Text>{swapSuggestdetails.takas_tercihi}</Text>
-                    </View>
+                       
                              <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
                     <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Emlak tipi: </Text>{swapSuggestdetails.emlak_tipi}</Text>
                     </View>
@@ -197,6 +194,7 @@ export default function SwapScreen() {
                     </View>
                             </>
                       }
+                        
 
                
                    

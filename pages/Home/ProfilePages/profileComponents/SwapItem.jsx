@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-export default function SwapItem({openModal,item,getDetails}) {
+export default function SwapItem({openModal,item,getDetails,index}) {
   return (
 
     <View style={style.container}>
@@ -33,8 +33,8 @@ export default function SwapItem({openModal,item,getDetails}) {
                 <View style={{}}>
                   <TouchableOpacity style={{backgroundColor:'#E54242',padding:10,borderRadius:6}}
                   onPress={()=>{
-          
-                     getDetails(item.id)
+                    
+                     getDetails(item.id,index)
                   }}
                  >
                  
