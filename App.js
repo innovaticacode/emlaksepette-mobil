@@ -1,4 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
+
 import { StyleSheet, Text, View, TextInput ,TouchableWithoutFeedback,Keyboard,ScrollView, Alert } from 'react-native';
 import { createNativeStackNavigator} from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -21,7 +22,7 @@ import Rent from './pages/Home/ProfilePages/Rent';
 import UpdateProfile from './pages/Home/ProfilePages/UpdateProfile';
 import ChangePassword from './pages/Home/ProfilePages/ChangePassword';
 import RegisterRealtorClub from './pages/Home/ProfilePages/RegisterRealtorClub';
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import MyProjectAdverts from './pages/Home/ProfilePages/MyProjectAdverts';
 import MyRealtorAdverts from './pages/Home/ProfilePages/MyRealtorAdverts';
 import Offer from './pages/Home/ProfilePages/Offer';
@@ -64,16 +65,40 @@ import SeeNeigbourhood from './pages/Home/ProfilePages/SeeNeigbourhood';
 import SwapScreen from './pages/Home/ProfilePages/SwapScreen';
 import ComeSwapScreen from './pages/Home/ProfilePages/ComeSwapScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import AllRealtorAdverts from './pages/Home/AllRealtorAdverts';
+import UploadAdsPicture from './pages/Home/ProfilePages/UploadAdsPicture';
+import AdsPictureList from './pages/Home/ProfilePages/AdsPictureList';
+import UserTypeList from './pages/Home/ProfilePages/UserTypeList';
+import PaymentScreen from './pages/Home/PaymentScreen';
+import Onboard from './pages/Home/Onboarding/Onboard';
+import SplashScreen from './pages/Home/Onboarding/SplashScreen';
+import { getValueFor } from './components/methods/user';
+import Verification from './pages/Home/ProfilePages/Verification';
+import ForgotPassword from './pages/Home/Login&Register/ForgotPassword';
 
 const Stack = createNativeStackNavigator();
 
 export default function App({route}) {
   
   const [İsLoggedIn, setİsLoggedIn] = useState(false)
-  const [isLogIn, setisLogIn] = useState(false)
+  const [ShowOnBoard, setShowOnBoard] = useState(true)
   const [showBackIcon, setshowBackIcon] = useState(false)
-  const [İsloading, setİsloading] = useState(false)
 
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowSplash(false);
+    }, 1000); // 3 saniye sonra splash ekranını kaldır
+  }, []);
+
+
+  const [user, setUser] = useState({});
+
+
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
 
   return (
     <GestureHandlerRootView style={{flex:1}}>
@@ -84,15 +109,30 @@ export default function App({route}) {
       ...TransitionPresets.SlideFromRightIOS,
       
   }}>
- 
-  <Stack.Screen name="Home" options={{
-    headerShown:false,
    
-  }} 
-    
-  >
-    {(props) => <Home {...props}  showBackIcon={showBackIcon} setshowBackIcon={setshowBackIcon}/>}
-  </Stack.Screen>
+    {
+      showSplash?
+      <Stack.Screen name='SplashScreen' component={SplashScreen} options={{
+        headerShown:false
+      }}/>
+  :
+    //   ShowOnBoard? 
+    //   <Stack.Screen name='OnBoard'>
+
+    //   {(props)=><Onboard {...props} setShowOnBoard={setShowOnBoard}/>}
+    //  </Stack.Screen>:
+      <Stack.Screen name="Home" options={{
+        headerShown:false,
+       
+      }} 
+        
+      >
+        {(props) => <Home {...props}  showBackIcon={showBackIcon} setshowBackIcon={setshowBackIcon}/>}
+      </Stack.Screen>
+    }
+
+
+ 
   
 
   <Stack.Group>
@@ -123,7 +163,7 @@ export default function App({route}) {
   
     options={({route})=>({
       headerShown:false,
-      headerBackTitle:'.',
+       headerBackTitleVisible: false,
         title:route.params.name
         
         
@@ -148,7 +188,12 @@ export default function App({route}) {
       headerShown:false
    
   }} />
-    <Stack.Screen name="Collecitons"  component={Collections}options={{
+
+
+
+    <Stack.Group>
+
+<Stack.Screen name="Collecitons"  component={Collections}options={{
         title:'Koleksiyonlarım',
       headerBackTitle:'Panel'
   }} />
@@ -171,12 +216,12 @@ export default function App({route}) {
         
         
     })}
-  
+ 
   />
      <Stack.Screen name="UpdateProfile"  component={UpdateProfile}options={{
         title:'Profili Güncelle',
           headerStyle:{
-            backgroundColor:'#F7F7F9',
+            backgroundColor:'white',
           }
   }} 
   
@@ -202,7 +247,7 @@ export default function App({route}) {
       }} />
         <Stack.Screen name="Offer"  component={Offer}
          options={({route})=>({
-          headerBackTitle:'.',
+           headerBackTitleVisible: false,
           title:route.params.name
           
 })}
@@ -261,7 +306,7 @@ export default function App({route}) {
       />
          <Stack.Screen name="OfferList"  component={OfferList} 
             options={({route})=>({
-              headerBackTitle:'.',
+               headerBackTitleVisible: false,
               animationTypeForReplace:'pop',
               title:route.params.name
               
@@ -269,9 +314,22 @@ export default function App({route}) {
           })}
       
       />
+
+
+
+
+
+
+    </Stack.Group>
+
+
+
+
+
+
         <Stack.Screen name="CategorieChoose"  component={CategoryChoose} 
             options={({route})=>({
-              headerBackTitle:'.',
+               headerBackTitleVisible: false,
               animationTypeForReplace:'pop',
               title:route.params.name
               
@@ -281,7 +339,7 @@ export default function App({route}) {
       />
           <Stack.Screen name="CategorieStatu"  component={CategorieStatus} 
             options={({route})=>({
-              headerBackTitle:'.',
+               headerBackTitleVisible: false,
               animationTypeForReplace:'pop',
               title:route.params.name
               
@@ -291,7 +349,7 @@ export default function App({route}) {
       />
         <Stack.Screen name="AdvertPlace"  component={AdvertsPlace} 
             options={({route})=>({
-              headerBackTitle:'.',
+               headerBackTitleVisible: false,
               animationTypeForReplace:'pop',
               title:route.params.name
                 
@@ -303,7 +361,7 @@ export default function App({route}) {
       />
          <Stack.Screen name="AdvertForm"  
             options={({route})=>({
-              headerBackTitle:'.',
+               headerBackTitleVisible: false,
               animationTypeForReplace:'pop',
               
                 
@@ -318,7 +376,7 @@ export default function App({route}) {
 
          <Stack.Screen name="ShareAdvert" 
        options={({route})=>({
-        headerBackTitle:'.',
+         headerBackTitleVisible: false,
         animationTypeForReplace:'pop',
         title:''
         
@@ -332,20 +390,20 @@ export default function App({route}) {
 
 
   <Stack.Screen name="AdvertStatu"  component={AdvertStatu} options={({route})=>({
-    headerBackTitle:'.',
+     headerBackTitleVisible: false,
     title:route.params.name
   })} 
  
   />  
 
 <Stack.Screen name="AdvertType"  component={AdvertType} options={({route})=>({
-   headerBackTitle:'.',
+    headerBackTitleVisible: false,
     title:route.params.name
   })} 
  
   /> 
   <Stack.Screen name="RealtorAdd"  component={RealtorAdvertAdd} options={({route})=>({
-     headerBackTitle:'.',
+      headerBackTitleVisible: false,
     title:'İlanı Paylaş'
   })} 
  
@@ -428,7 +486,60 @@ export default function App({route}) {
   options={({route})=>({
         title:'Takas Başvurularım'
   
+        
   })}  />
+           <Stack.Screen name='AllRealtor' component={AllRealtorAdverts}
+  options={({route})=>({
+        headerShown:false
+  
+  })}  />
+             <Stack.Screen name='UploadAdsPicture' component={UploadAdsPicture}
+             
+  options={({route})=>({
+  // Geri düğmesini kaldırır
+    headerBackTitleVisible: false,
+        title:'Reklam Görseli Oluştur',
+        headerStyle:{
+          backgroundColor:"#F5F5F7",
+          
+        }
+  })}  />
+              <Stack.Screen name='AdsPictureList' component={AdsPictureList}
+  options={({route})=>({
+        title:'Reklam Görselleri',
+    headerStyle:{
+          backgroundColor:"#F5F5F7",
+          
+        }
+  })}  />
+             <Stack.Screen name='UserTypes' component={UserTypeList}
+  options={({route})=>({
+        title:'Kullanıcı Tipleri',
+    headerStyle:{
+          backgroundColor:"#F5F5F7",
+          
+        }
+  })}  />
+          <Stack.Screen name='PaymentScreen' component={PaymentScreen}
+  options={({route})=>({
+    title:'Sepet Özeti Ve Onay',
+       headerStyle:{
+        backgroundColor:'#f7f7f7',
+        
+       }
+  
+  })}  />
+  <Stack.Screen name='Forgot' component={ForgotPassword}
+   options={({route})=>({
+    title:'Şifremi Unuttum',
+    headerShown:false,
+       headerStyle:{
+        backgroundColor:'#f7f7f7',
+        
+       }
+  
+  })}
+  />
 </Stack.Navigator>
 
 </NavigationContainer>

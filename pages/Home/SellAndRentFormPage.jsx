@@ -30,14 +30,11 @@ export default function SellAndRentFormPage() {
         <Text style={{ color: "#898F9E", width: 300 }}>
           Arsa, konut, işyeri, turistik tesis, devremülk tüm
           gayrimenkullerinizin satış veya kiralamasını emlaksepette sizin
-          yerinize yapsın zamanınız size kalsın.
+          yerinize yapsın zamanınız size kalsın formu doldur bilgilerini gir kolay sat kirala!
         </Text>
       </View>
-      <View style={{ paddingTop: 20, gap: 10 }}>
-        <Text style={{ fontSize: 18, color: "#333" }}>
-          Formu doldur bilgilerini gir kolay sat kirala!
-        </Text>
-        <View style={{ height: 1, width: "100%", backgroundColor: "red" }} />
+      <View style={{ paddingTop:20, gap: 10 }}>
+
         <View style={{ alignItems: "center" }}>
           <TouchableOpacity 
           onPress={()=>{
@@ -51,18 +48,21 @@ export default function SellAndRentFormPage() {
         </View>
       </View>
       <View style={{ paddingTop: 50, margin: 10 }}>
-        <Text style={{ textAlign: "center", fontSize: 17, color: "#333" }}>
+        <Text style={{ textAlign: "center", fontSize: 22, color: "#E54242",fontWeight:'500' }}>
           Sat Kiralanın Avantajları
         </Text>
 
         <View style={[styles.card, { alignItems: "center", gap: 5 }]}>
-          <Icon name="cash-fast" size={30} color={"#333"} />
+          <View style={{backgroundColor:'#E54242',padding:5,borderRadius:5,       transform: [{ perspective: 300 }, { rotateY: '-45deg' }], paddingLeft:32,paddingRight:32}}>
+          <Icon name="cash-fast" size={30} color={"white"} />
+          </View>
+        
           <Text
             style={{
               fontSize: 18,
               fontWeight: "bold",
               textAlign: "center",
-              color: "#333",
+              color: "#E54242",
             }}
           >
             Sat Kirala İle Hızlı Satış
@@ -77,13 +77,16 @@ export default function SellAndRentFormPage() {
           </View>
         </View>
         <View style={[styles.card, { alignItems: "center" }]}>
-          <Icon name="cash-lock" size={30} color={"#333"} />
+          <View style={{backgroundColor:'#E54242',padding:5,borderRadius:5,       transform: [{ perspective: 300 }, { rotateY: '-45deg' }], paddingLeft:32,paddingRight:32}}>
+          <Icon name="cash-lock" size={32} color={"white"} />
+          </View>
+     
           <Text
             style={{
               fontSize: 18,
               fontWeight: "bold",
               textAlign: "center",
-              color: "#333",
+              color: "#E54242",
             }}
           >
             Kapora Güvence Sistemi
@@ -97,13 +100,16 @@ export default function SellAndRentFormPage() {
           </View>
         </View>
         <View style={[styles.card, { alignItems: "center" }]}>
-          <Icon2 name='users' size={25} color={"#333"} />
+          <View style={{backgroundColor:'#E54242',padding:5,borderRadius:5,       transform: [{ perspective: 300 }, { rotateY: '-45deg' }], paddingLeft:32,paddingRight:32}}>
+          <Icon2 name='users' size={30} color={"white"} />
+          </View>
+       
           <Text
             style={{
               fontSize: 18,
               fontWeight: "bold",
               textAlign: "center",
-              color: "#333",
+              color: "#E54242",
             }}
           >
          Emlaksepette.com Uzmanlğı
@@ -116,16 +122,18 @@ export default function SellAndRentFormPage() {
           </View>
         </View>
             <View style={{padding:10}}>
-              <Text style={{color:'#333',textAlign:'center',fontSize:23}}>İlanımı nasıl satarım?</Text>
+              <Text style={{textAlign: "center", fontSize: 22, color: "#E54242",fontWeight:'500'}}>İlanımı nasıl satarım?</Text>
             </View>
             <View style={[styles.card, { alignItems: "center" }]}>
-          <Icon name='form-select' size={25} color={"#333"} />
+              <View style={{backgroundColor:'#E54242',padding:5,borderRadius:5,transform: [{ perspective: 300 }, { rotateY: '-45deg' }], paddingLeft:32,paddingRight:32}}>  
+          <Icon name='form-select' size={25} color={"white"} />
+          </View>
           <Text
             style={{
               fontSize: 18,
               fontWeight: "bold",
               textAlign: "center",
-              color: "#333",
+              color: "#E54242",
             }}
           >
              Formu Doldurun
@@ -138,13 +146,16 @@ export default function SellAndRentFormPage() {
           </View>
         </View>
         <View style={[styles.card, { alignItems: "center" }]}>
-          <Icon name='home-account' size={37} color={"#333"} />
+          <View style={{backgroundColor:'#E54242',padding:1,borderRadius:5,transform: [{ perspective: 300 }, { rotateY: '-45deg' }], paddingLeft:28,paddingRight:28}}>
+          <Icon name='home-account' size={37} color={"white"} />
+          </View>
+       
           <Text
             style={{
               fontSize: 18,
               fontWeight: "bold",
               textAlign: "center",
-              color: "#333",
+              color: "#E54242",
             }}
           >
             Profesyonel Emlak Danışmanlığı
@@ -157,13 +168,16 @@ export default function SellAndRentFormPage() {
           </View>
         </View>
         <View style={[styles.card, { alignItems: "center" }]}>
-          <Icon name='cash-check' size={37} color={"#333"} />
+          <View style={{backgroundColor:'#E54242',padding:1,borderRadius:5,transform: [{ perspective: 300 }, { rotateY: '-45deg' }], paddingLeft:28,paddingRight:28}}>
+          <Icon name='cash-check' size={37} color={"white"} />
+          </View>
+       
           <Text
             style={{
               fontSize: 18,
               fontWeight: "bold",
               textAlign: "center",
-              color: "#333",
+              color: "#E54242",
             }}
           >
             Hızlı Güvenli ve Kolay Satın
@@ -226,7 +240,7 @@ export default function SellAndRentFormPage() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: "#f5f5f7",
     flex: 1,
     padding: 10,
     
@@ -247,20 +261,20 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 5,
+    borderRadius: 15,
     paddingVertical: 20,
     paddingHorizontal: 5,
     width: "100%",
     marginVertical: 10,
-
+    gap:5,
     borderWidth: 0.7,
-    borderColor: "#e6e6e6",
+    borderColor: "#f4f4f4",
     ...Platform.select({
       ios: {
-        shadowColor: " #e6e6e6",
+        shadowColor: "#f4f4f4",
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.1,
-        shadowRadius: 5,
+        shadowRadius: 10,
       },
       android: {
         elevation: 5,

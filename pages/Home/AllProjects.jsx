@@ -9,11 +9,9 @@ import {
   ImageBackground,
   FlatList,
   Dimensions,
-  PanResponder,
-  Button,
-  TextInput,
+ActivityIndicator
 } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef ,useEffect} from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import Header from "../../components/Header";
 import Modal from "react-native-modal";
@@ -21,8 +19,9 @@ import Search from "./Search";
 import Categories from "../../components/Categories";
 import ProjectPost from "../../components/ProjectPost";
 import * as Animatable from "react-native-animatable";
+import axios from "axios";
 export default function AllProjects() {
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://test.emlaksepette.com/";
   const route = useRoute();
   const { name, data } = route.params;
   const navigation = useNavigation();
@@ -36,7 +35,7 @@ export default function AllProjects() {
   const handleScroll = (event) => {
     const scrollPosition = event.nativeEvent.contentOffset.y;
     // Sayfanın 200px aşağısına inildiğinde gizlenmesi gerekiyor
-    if (scrollPosition > 15) {
+    if (scrollPosition > 25) {
       setIsHidden(true);
   
     } else {
@@ -47,9 +46,25 @@ export default function AllProjects() {
   const [modalVisible, setModalVisible] = useState(false);
 
 
-        const InputLabel=[
-            {label:'Fiyat',placeholder:'Fiyat giriniz'}
-        ]
+  const [IsLoading, setIsLoading] = useState(false)
+  const [featuredProjects, setFeaturedProjects] = useState([]);
+  const fetchFeaturedProjects = async () => {
+    try {
+      const response = await axios.get(
+        "https://test.emlaksepette.com/api/featured-projects"
+      );
+      setFeaturedProjects(response.data);
+      setIsLoading(true)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFeaturedProjects();
+  }, []);
+
+     
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View style={styles.container}>
@@ -150,30 +165,30 @@ export default function AllProjects() {
             </View>
           </View>
         </Modal>
-
+                
         <View
           style={{
-            padding: isHidden ? 5 : 10,
-            borderBottomWidth: 1,
-            borderColor: "#ebebeb",
+            padding:  10,
+         
           }}
         >
           <View style={{ padding: 0 }}>
-            <Animatable.View animation={isHidden ? "fadeInUp" : "zoomInUp"}>
+     
               <Text
                 style={[
                   styles.headerText,
                   {
-                    fontSize: isHidden ? 15 : 23,
-                    textAlign: isHidden ? "center" : "left",
+                    fontSize: 15, 
+                    textAlign:  "center" 
                   },
                 ]}
               >
                 Tüm Projeler
               </Text>
-            </Animatable.View>
+          
           </View>
         </View>
+         
         <View
           style={{
             flexDirection: "row",
@@ -205,10 +220,19 @@ export default function AllProjects() {
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}
         >
-            
+          
           <View>
-            <FlatList
-              data={data}
+            
+              {
+                IsLoading==false?
+                <View style={{alignItems:'center',justifyContent:'center',width:'100%',flex:1}}>
+                <ActivityIndicator style={{width:100}} size='large' color='#E54242'/>
+      
+                 </View>
+                :   
+
+              <FlatList
+              data={featuredProjects}
               renderItem={({ item }) => (
                 <View
                   style={{ paddingLeft: 10, paddingRight: 10, width: "100%" }}
@@ -238,7 +262,13 @@ export default function AllProjects() {
                 </View>
               )}
               scrollEnabled={false}
-            />
+            /> 
+              }
+           
+        
+            
+
+            
           </View>
         </ScrollView>
       </View>

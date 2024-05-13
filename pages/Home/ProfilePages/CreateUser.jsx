@@ -1,10 +1,12 @@
-import { View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated, TouchableOpacity, Switch ,Modal} from 'react-native'
+import { View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated, TouchableOpacity, Switch ,Modal, Touchable} from 'react-native'
 import { useState, useRef } from 'react'
 import { useRoute,useNavigation } from '@react-navigation/native';
 import { TextInput } from 'react-native';
 import UserTypes from './profileComponents/UserTypes';
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import ModalEdit from "react-native-modal";
 import DotIcon from 'react-native-vector-icons/Entypo'
+import RNPickerSelect from "react-native-picker-select";
 export default function CreateUser() {
   const route = useRoute();
   const navigation = useNavigation();
@@ -17,29 +19,14 @@ export default function CreateUser() {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 const [isShowSheet, setisShowSheet] = useState(false)
   const [isShowText, setisShowText] = useState(false)
-  const openSheet = () => {
-    setdisplay(true)
+  const [modalVisible, setModalVisible] = useState(false);
 
-    Animated.timing(translateY, {
-
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
   const handleButtonPress = (text) => {
     setUserTypeValue(text)
     closeSheet()
   };
 
-  const closeSheet = () => {
-    setdisplay(false)
-    Animated.timing(translateY, {
-      toValue: 400,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
+
     const Types=[
       {
         'Role':'Satış Temsilcisi',
@@ -54,17 +41,18 @@ const [isShowSheet, setisShowSheet] = useState(false)
 
     const handlePres = (text) => {
       setisSelected(text)
-      openSheet()
+     
+
    
     }
 
-
+    const [UserType, setUserType] = useState('')
 
   return (
     <TouchableWithoutFeedback onPress={() => {
      
       Keyboard.dismiss()
-      closeSheet()
+ 
     }}>
       <View style={style.container}>
         <View style={[style.Form, {display:hidden3}]}>
@@ -89,30 +77,25 @@ const [isShowSheet, setisShowSheet] = useState(false)
               <TextInput style={style.Input} />
             </View>
             <View>
-            
-              <Icon name={isSelected? 'close' :'arrow-drop-down'}  style={{position:'absolute',right:10,top:30,zIndex:1}} size={27} onPress={()=>{
-                if (isSelected===true) {
-                  setUserTypeValue(isSelected? '' :'')
-                  closeSheet()
-                  setisSelected(!isSelected)
-                }
-              
-                
-                }} />
-             
-              <Text style={style.Label}>Kullanıcı Tipi</Text>
-             
-              <TouchableOpacity style={[style.Input,{padding:17.5}]}
-                onPress={()=>{
-                  setisSelected(isSelected? isSelected: !isSelected)
-                    openSheet()
-                  
-                }}
-              >
-                <Text>{UserTypeValue}</Text>
-              </TouchableOpacity>
-
+            <Text style={style.Label}>Kullanıcı Tipi</Text>
+            <RNPickerSelect
+          value={UserType}
+              placeholder={{
+                label: 'Seçiniz...',
+                value: null,
+              }}
+              style={pickerSelectStyles}
+               onValueChange={(value) => setUserType(value)}
+              items={[
+                { label: "Emlakçı", value: "Emlakçı" },
+                { label: "Banka", value: "Banka" },
+                { label: "İnşaat", value: "İnşaat" },
+                { label: "Turizm", value: "Turizm" }
+              ]}
+            />
             </View>
+        
+  
             <View style={{flexDirection:'row',gap:20,}}>
             <Switch
               style={{left:7}}
@@ -133,70 +116,7 @@ const [isShowSheet, setisShowSheet] = useState(false)
       </TouchableOpacity>
       </View>
         </View>
-        <View style={{ flex: 1, position: 'absolute', bottom: 0, width: '100%', display: display == false ? 'none' : 'flex' }}>
-
-          <Animated.View
-            style={[style.animatedView, { transform: [{ translateY }], }]}>
-
-            <View style={{ width: '100%', }}>
-              <View style={{ alignItems: 'center' }}>
-                <TouchableOpacity style={{ width: 40, height: 7, backgroundColor: '#ebebeb', borderRadius: 10 }} onPress={closeSheet}>
-
-                </TouchableOpacity>
-              </View>
-              <View style={{ paddingBottom: 0 }}>
-                <View style={style.bottomSheetItem}>
-             
-                
-              {
-                isSelected?
-              Types.map((item,index)=>(     
-          <UserTypes rol={item.Role} key={index} onPress={() => handleButtonPress(item.Role)} />  
-          )):
-          
-          
-          <View>
-            
-             
-          <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}
-          onPress={()=>{
-            navigation.navigate('CreateUser',{hidden4:'none',name:'Kullanıcı Düzenle' ,show:'none'})
-            setisShowSheet(!isShowSheet)
-            closeSheet()
-          }}
-      >
-        <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
-            <Icon name='edit' size={20}/>
-          <Text style={{ textAlign: 'center', top: 2 }}>Düzenle</Text>
-        </View>
-      </TouchableOpacity>
-        
-        
-          <TouchableOpacity style={{ padding: 15, borderBottomWidth: 1, borderBottomColor: '#ebebeb', }}>
-        <View style={{ flexDirection: 'row', gap: 15, justifyContent: 'flex-start', padding: 3, }}>
-            <DotIcon name='trash' color={'red'} size={18}/>
-          <Text style={{ textAlign: 'center', top: 2 }}>Sil</Text>
-        </View>
-      </TouchableOpacity>
-    
-            
-
-
-       </View>
-          
-          
-          } 
-         
-              
-           
-              
-                </View>
-              </View>
-            </View>
-
-
-          </Animated.View>
-        </View>
+       
         <View style={{alignItems:'center' ,display:hidden4}}>
         <View style={style.card}>
      <View style={{display:'flex',flexDirection:'row',gap:20,justifyContent:'space-around'}}>
@@ -217,21 +137,64 @@ const [isShowSheet, setisShowSheet] = useState(false)
             
           </View>
           <View style={{position:'absolute',right:10,top:12 }}>
-              <TouchableOpacity onPress={openSheet}>
+              <TouchableOpacity onPress={()=>setModalVisible(true)}>
               <DotIcon name='dots-three-vertical' size={18}/>
               </TouchableOpacity>
-         
+              
             </View>
           
      </View>
         </View>
-
-    
-      </View>
+        {/**/}
+        <ModalEdit
+        isVisible={modalVisible}
+        onBackdropPress={()=>setModalVisible(false)}
+        swipeDirection={["down"]}
+        onSwipeComplete={()=>setModalVisible(false)}
+        backdropColor="transparent"
+        style={style.modal3}
+      >
+        <View style={[style.modalContent3,{gap:10}]}>
+          <View style={{alignItems:'center',paddingTop:15}}>
+          <TouchableOpacity style={{backgroundColor:'#bdc6cf',padding:4,width:'15%',borderRadius:20}}/>
+          </View>
+            <View style={{gap:10,padding:10}}>
+              <TouchableOpacity style={{padding:10,backgroundColor:'#EA2A28',flexDirection:'row',alignItems:'center',justifyContent:'center',borderRadius:5}}>
+                <Text style={{color:'white'}}>Kullanıcıyı Sil</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{padding:10,backgroundColor:'#79ad69',flexDirection:'row',alignItems:'center',justifyContent:'center',borderRadius:5}}>
+                <Text style={{color:'white'}}>Kullanıcıyı Düzenle</Text>
+              </TouchableOpacity>
+            </View>
+               
                   
+    
+        </View>
+      </ModalEdit>  
+      </View>
+    
     </TouchableWithoutFeedback>
   )
 }
+const pickerSelectStyles = StyleSheet.create({
+  
+  inputIOS: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#ebebeb",
+    borderRadius: 6,
+    padding: 9,
+    fontSize: 14, // to ensure the text is never behind the icon
+  },
+  inputAndroid: {
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#bdc6cf",
+    borderRadius: 6,
+    padding: 9,
+    fontSize: 14, // to ensure the text is never behind the icon
+  },
+});
 const style = StyleSheet.create({
   container: {
     flex: 1,
@@ -248,11 +211,11 @@ const style = StyleSheet.create({
     padding: 20
   },
   Input: {
-    padding: 15,
+    padding: 9,
     backgroundColor: 'transparent',
-    borderRadius: 20,
+    borderRadius: 10,
     fontSize: 15,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#ebebeb'
   },
   Label: {
@@ -385,5 +348,16 @@ btnText:{
   color:'white',
 
   letterSpacing:0.5
-}
+},
+modal3: {
+  justifyContent: "flex-end",
+  margin: 0,
+},
+modalContent3: {
+  backgroundColor: "#f5f5f7",
+
+  height: "30%",
+  borderTopLeftRadius: 20,
+  borderTopRightRadius: 20,
+},
 })

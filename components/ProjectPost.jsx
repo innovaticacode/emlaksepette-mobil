@@ -37,7 +37,7 @@ user,
       style={{ marginTop: 10 }}
       onPress={() =>
         navigation.navigate("Details", {
-        
+          
           ProjectId: ProjectNo,
       
         })

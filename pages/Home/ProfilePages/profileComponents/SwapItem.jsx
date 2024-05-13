@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-export default function SwapItem({openModal,name,color,title,username,mail,location,status,job}) {
+export default function SwapItem({openModal,item,getDetails,index}) {
   return (
 
     <View style={style.container}>
@@ -12,19 +12,19 @@ export default function SwapItem({openModal,name,color,title,username,mail,locat
         <View style={{gap:30}}>
                 <View style={{gap:20}}>
                     <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5,flexDirection:'row',justifyContent:'space-between',paddingRight:10,}}>
-                        <View><Text style={{color:'#333'}}><Text style={{fontWeight:'bold'}}>Ad:</Text> Kerem</Text></View>
+                        <View><Text style={{color:'#333'}}><Text style={{fontWeight:'bold'}}>Ad:</Text>{item.ad}</Text></View>
           
               
                     </View>
 
                     <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
-                    <Text style={{color:'#333'}}><Text style={{fontWeight:'bold'}}>Soyad:</Text> Bozmaz</Text>
+                    <Text style={{color:'#333'}}><Text style={{fontWeight:'bold'}}>Soyad:</Text>{item.soyad}</Text>
                     </View>
                     <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
-                    <Text style={{color:'#333'}}><Text style={{fontWeight:'bold'}}>Telefon:</Text> 05537064474</Text>
+                    <Text style={{color:'#333'}}><Text style={{fontWeight:'bold'}}>Telefon:</Text>{item.telefon}</Text>
                     </View>
                     <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
-                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Email: </Text>kerembzmz44@gmail.com</Text>
+                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Email: </Text>{item.email}</Text>
                     </View>
                        
                       
@@ -33,7 +33,8 @@ export default function SwapItem({openModal,name,color,title,username,mail,locat
                 <View style={{}}>
                   <TouchableOpacity style={{backgroundColor:'#E54242',padding:10,borderRadius:6}}
                   onPress={()=>{
-                     openModal()
+                    
+                     getDetails(item.id,index)
                   }}
                  >
                  

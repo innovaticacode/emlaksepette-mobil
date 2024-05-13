@@ -48,6 +48,10 @@ import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import CloseIcon from 'react-native-vector-icons/AntDesign';
+import Swiper from "react-native-swiper";
+import AddCollection from "../../components/AddCollection";
+import { getValueFor } from "../../components/methods/user";
+import axios from "axios";
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [IsOpenSheet, setIsOpenSheet] = useState(false);
@@ -62,7 +66,7 @@ export default function Details({ navigation }) {
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const [FormVisible, setFormVisible] = useState(false)
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://test.emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -197,12 +201,60 @@ export default function Details({ navigation }) {
     }
   };
 
-  console.log(itemCount);
+  console.log(collections);
 
+  const removeItemOnCollection = (collectionId) => {
+    const collectionData = {
+      item_type:1,
+      room_order: selectedHouse,
+      item_id: data.project.id,
+      collection_id: collectionId,
+    };
+  
+  
+    axios.post('https://test.emlaksepette.com/api/remove_item_on_collection', collectionData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.access_token}`,
+      },
+    })
+    .then(response => {
+      setTimeout(() => {
+        setcollectionAddedSucces(true)
+      },200);
+      setTimeout(() => {
+        setcollectionAddedSucces(false)
+      }, 3000);
+      var newCollections = collections.map((collection) => {
+        if(collection.id == collectionId){
+          var newLinks = collection.links.filter((link) => {
+            if(link.collection_id == collectionId && link.item_id == data.project.id && link.room_order == selectedHouse){
 
+            }else{
+              return link
+            }
+          })
+
+          return {
+            ...collection,
+            links : newLinks
+          }
+        }else{
+          return collection;
+        }
+      })
+
+      setcollections(newCollections)
+      console.log(newCollections,"qwe");
+    })
+    .catch(error => {
+      // Hata durumunu işleyin
+      console.error('Error:', error);
+    });
+  }
 
   const shareLinkOnWhatsApp = () => {
-    const url = `https://emlaksepette.com/${slug}//1000${ProjectId}/detay`;
+    const url = `https://test.emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -211,7 +263,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("WhatsApp açılamadı:", error));
   };
   const shareLinkOnInstagram = (text) => {
-    const url = `https://emlaksepette.com/${slug}/100${ProjectId}/detay`;
+    const url = `https://test.emlaksepette.com/${slug}/100${ProjectId}/detay`;
 
     const instagramShareURL = `instagram://story/?text=${encodeURIComponent(
       url
@@ -222,7 +274,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("Instagram açılamadı:", error));
   };
   const copyToClipboard = () => {
-    const url = `https://emlaksepette.com/${slug}/1000${ProjectId}/detay`;
+    const url = `https://test.emlaksepette.com/${slug}/1000${ProjectId}/detay`;
     Clipboard.setStringAsync(url);
     ShowAlert();
   };
@@ -266,23 +318,192 @@ export default function Details({ navigation }) {
     setTabs(tabs);
   };
   const [pagination, setpagination] = useState(0)
+
   const handlePageChange = (pageNumber) => {
     setpagination(pageNumber);
+    setSelectedImage(pageNumber);
+  
+  
   };
   const [changeIcon, setchangeIcon] = useState(false)
     const  toggleIcon=()=>{
       setchangeIcon(!changeIcon)
     }
     const [showCoverImageModal,setCoverImageModal] = useState(false);
-    const [selectedImage,setSelectedImage] = useState("");
+    const openGalery=(index)=>{
+      // setSelectedImage(index)
+      setCoverImageModal(true)
+    }
+    const [selectedImage,setSelectedImage] = useState(0);
+
+    const [selectedHouse, setselectedHouse] = useState(0)
+    const openCollection=(id)=>{
+        setselectedHouse(id)
+        setColectionSheet(true);
+    }
+
+const [addCollection, setaddCollection] = useState(false)
+const [user, setUser] = useState({});
+
+const [newCollectionNameCreate, setnewCollectionNameCreate] = useState('')
+useEffect(() => {
+  getValueFor("user", setUser);
+}, []);
+const [collections, setcollections] = useState([])
+  const [collectionAddedSucces, setcollectionAddedSucces] = useState(false)
+const [selectedCollectionName, setselectedCollectionName] = useState('')
+const fetchData = async () => {
+ console.log(collections)
+  try {
+    if(user.access_token){
+      const response = await axios.get('https://test.emlaksepette.com/api/client/collections',{
+        headers: {
+          'Authorization': `Bearer ${user.access_token}`
+        }
+      });
+    
+      setcollections(response?.data.collections);
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }finally{
+  
+  }
+};
+
+
+const ıtemOnCollection = (collectionId) => {
+  let check = false;
+  collections.map((collection) => {
+    for(var i = 0 ; i < collection.links.length; i++){
+      if(collection.links[i].item_type = 1 && collection.links[i].item_id == data.project.id && collection.links[i].room_order == selectedHouse && collection.links[i].collection_id == collectionId){
+        check = true;
+      }
+    }
+  })
+
+  return check;
+}
+
+useEffect(() => {
+  fetchData();
+}, [user]);
+
+const addCollectionPost=()=>{
+  const collectionData = {
+    collection_name: newCollectionNameCreate,
+    cart: {
+      id: selectedHouse,
+      type: "project",
+      project: data.project.id,
+      clear_cart: "no",
+      selectedCollectionId: null
+    }
+  };
+
+
+  axios.post('https://test.emlaksepette.com/api/add/collection', collectionData, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${user.access_token}`,
+      
+     
+    },
+  })
+  .then(response => {
+    setaddCollection(false)
+    setnewCollectionNameCreate('')
+
+    setTimeout(() => {
+      setcollectionAddedSucces(true)
+    },200);
+    setTimeout(() => {
+      setcollectionAddedSucces(false)
+    }, 3000);
+    // Başarılı yanıtı işleyin
+    setselectedCollectionName(response.data.collection.name)
+    console.log('Response:', response.data);
+  })
+  .catch(error => {
+    // Hata durumunu işleyin
+    console.error('Error:', error);
+  });
+
+}
+const [selectedCollectionId, setselectedCollectionId] = useState(0)
+const [selectedCollectionName2, setselectedCollectionName2] = useState('')
+
+const getCollectionId=(id,name)=>{
+    setselectedCollectionId(id)
+    setselectedCollectionName2(name)
+} 
+const addSelectedCollection=(id)=>{
+  const collectionData = {
+    collection_name:selectedCollectionName2,
+    clear_cart: "no",
+    id: selectedHouse,
+    project: data.project.id,
+    selectedCollectionId: id,
+    type: "project"
+  };
+
+
+  axios.post('https://test.emlaksepette.com/api/addLink', collectionData, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${user.access_token}`,
+    },
+  })
+  .then(response => {
+    setTimeout(() => {
+      setcollectionAddedSucces(true)
+    },200);
+    setTimeout(() => {
+      setcollectionAddedSucces(false)
+    }, 3000);
+    // Başarılı yanıtı işleyin
+    // setselectedCollectionName(response.data.collection.name)
+    var newCollections = collections.map((collection) => {
+      if(collection.id == id){
+        return {
+          ...collection,
+          links : [
+            ...collection.links,
+            {
+              collection_id : id,
+              room_order : selectedHouse,
+              item_id : data.project.id,
+              user_id : user?.id,
+              item_type : 1
+            }
+          ]
+        }
+      }else{
+        return collection;
+      }
+    })
+    console.log(newCollections);
+    setcollections(newCollections)
+  })
+  .catch(error => {
+    // Hata durumunu işleyin
+    console.error('Error:', error);
+  });
+
+}
+const [PopUpForRemoveItem, setPopUpForRemoveItem] = useState(false)
+console.log(selectedCollectionName2)
+    
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
       <Modal
         isVisible={isDrawerOpen}
         onBackdropPress={() => setIsDrawerOpen(false)}
-        animationIn="bounceInLeft"
-        animationOut="bounceOutLeft"
+        animationIn='fadeInLeftBig'
+        swipeDirection={['left']}
+        onSwipeComplete={()=>setIsDrawerOpen(false)}
+        animationOut='fadeOutLeftBig'
         style={styles.modal}
       >
         <View style={styles.modalContent}>
@@ -476,30 +697,21 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => {
-                changeBookmark();
-                setColectionSheet(true);
-              }}
-            >
-              <View style={styles.ıcon}>
-                <Bookmark
-                  name={bookmark}
-                  size={18}
-                  color={bookmark == "bookmark-o" ? "black" : "red"}
-                />
-              </View>
-            </TouchableOpacity>
+          
           </View>
           <PagerView style={{ height: 250 }}
+     
+          initialPage={selectedImage}
             onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
             
+          
           >
+          
             {
               data.project.images.map((image,index) => {
                 // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
                 return(
-                  <Pressable key={index+1} onPress={()=>setCoverImageModal(true)}>
+                  <Pressable key={index+1} onPress={()=>{openGalery(index)}}>
                     <ImageBackground
                       source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
                       style={{ width: "100%", height: "100%" }}
@@ -538,6 +750,7 @@ export default function Details({ navigation }) {
         </View>
         {tabs == 0 && (
           <OtherHomeInProject
+            openCollection={openCollection}
             itemCount={itemCount}
             data={data}
             getLastItemCount={getLastItemCount}
@@ -546,6 +759,7 @@ export default function Details({ navigation }) {
             openmodal={openModal}
             getBlockItems={getBlockItems}
             OpenFormModal={OpenFormModal}
+
           />
         )}
         <View style={{ paddingLeft: 10, paddingRight: 10 }}>
@@ -729,19 +943,19 @@ export default function Details({ navigation }) {
                 gap: 27,
               }}
             >
-              <TouchableOpacity style={{ alignItems: "center" }}>
+              <TouchableOpacity style={{ alignItems: "center" }} onPress={copyToClipboard}>
                 <View style={{backgroundColor:'#E54242',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
                   <LinkIcon name="link" size={23} color={'white'} />
                 </View>
                 <Text style={{color:'#333',fontSize:12}}>Kopyala</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center"}}>
+              <TouchableOpacity style={{ alignItems: "center"}} onPress={shareLinkOnWhatsApp}>
                 <View style={{backgroundColor:'#24D366',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
                   <LinkIcon2 name="whatsapp" size={23} color={'white'} />
                 </View>
                 <Text style={{color:'#333',fontSize:12}}>Whatsapp</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
+              <TouchableOpacity style={{ alignItems: "center" }} onPress={shareLinkOnInstagram}>
                 <View style={{backgroundColor:'#E1306C',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
                   <LinkIcon name="instagram" size={23} color={'white'} />
                 </View>
@@ -778,64 +992,158 @@ export default function Details({ navigation }) {
         <Modal
           isVisible={ColectionSheet}
           onBackdropPress={ToggleColSheet}
-          swipeDirection={["down"]}
+      
+          animationIn={'fadeInDown'}
+          animationOut={'fadeOutDown'}
+          animationInTiming={200}
+          animationOutTiming={200}
           backdropColor="transparent"
           style={styles.modal2}
         >
           <View style={styles.modalContent2}>
-                  <View style={{width:'100%',padding:8,backgroundColor:'#F8F7F4',borderTopLeftRadius:15,borderTopRightRadius:15}}>
-                    <View style={{alignItems:'center',padding:5}}>
-                      <View style={{backgroundColor:'#D4D3D2',width:50,height:6,borderRadius:20}}/>
+            <SafeAreaView>
+                <View style={{padding:20,paddingTop:24,gap:13,borderBottomWidth:1,borderBottomColor:'#ebebeb'}}>
+                  <Text style={{color:'#19181C',textAlign:'center',fontSize:16,fontWeight:'400'}}>Koleksiyona Ekle</Text>
+                  <Text style={{textAlign:'center',color:'#B2B2B2',fontSize:14}}>Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin</Text>
+                </View>
+                
+                <ScrollView  contentContainerStyle={{paddingLeft:10,paddingRight:10,paddingTop:4,gap:10,paddingBottom:100}}>
+                  <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}}
+                    onPress={()=>{
+                      setColectionSheet(false)
+                      setTimeout(() => {
+                        setaddCollection(true)
+                      }, 700);
+                   
+                     
+                    }}
+                  >
+                    <View style={{padding:0,alignItems:'center',justifyContent:'center'}}>
+                    <Icon name="pluscircleo" size={27} color={'#19181C'}/>
                     </View>
-                    <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',paddingLeft:10,paddingRight:10}}>
-                      <View style={{flexDirection:'row',alignItems:'center',gap:15}}>
-                        <View style={{width:55,height:55,borderRadius:10}}>
-                          <ImageBackground     source={{uri:`${apiUrl}${data?.project?.image?.replace("public",'storage')}`}} style={{width:'100%',height:'100%'}} borderRadius={10}/>
-                        </View>
-                        <Text style={{color:'#333',fontWeight:'500'}}>{bookmark=='bookmark-o'?'Kaydet':'Kaydedildi'}</Text>
-                      </View>
-                      <View>
-                      <TouchableOpacity
-              onPress={() => {
-                changeBookmark();
-                setTimeout(() => {
-                  setColectionSheet(false);
-                }, 500);
-             
-              }}
-            >
-              <View style={{alignItems:'center',justifyContent:'center'}}>
-                <Bookmark
-                  name={bookmark}
-                  size={25}
-                  color={bookmark == "bookmark-o" ? "black" : "red"}
-                />
-              </View>
-            </TouchableOpacity>
-                      </View>
+                    <View style={{width:'100%',borderBottomWidth:1,padding:15,borderBottomColor:'#ebebeb'}}>
+                      <Text style={{fontSize:13,color:'#19181C',fontWeight:'600'}}>Yeni Oluştur</Text>
                     </View>
-                  </View>
-                  <View style={{flexDirection:'row',justifyContent:'space-between',paddingRight:10,paddingLeft:10,paddingTop:10}}>
-                    <Text style={{fontSize:13,color:'#333'}}>Koleksiyonlar</Text>
-                   <TouchableOpacity>
-                    <Text style={{fontSize:13,color:'#333',textDecorationLine:'underline'}}>Yeni Koleksiyon</Text>
-                   </TouchableOpacity>
-                  </View>
-                  <ScrollView>
-                      < TouchableOpacity style={{flexDirection:'row',justifyContent:'space-between',paddingLeft:10,paddingRight:10,paddingTop:6}}>
-                        <View style={{flexDirection:'row',alignItems:'center', gap:10}}>
-                          <View style={{width:55,height:55,backgroundColor:'red',borderRadius:10}}>
+                  </TouchableOpacity>
+                      {
+                        collections.map((item,index)=>(
+                          <AddCollection checkFunc={ıtemOnCollection} setPopUpForRemoveItem={setPopUpForRemoveItem} key={index} item={item} getCollectionId={getCollectionId} removeItemOnCollection={removeItemOnCollection} addLink={addSelectedCollection}/> 
+                        ))
+                      }
+               
+              
+                  
 
-                          </View>
-                          <Text style={{fontSize:13,color:'#333'}}>Koleksiyon İsmi</Text>
+                </ScrollView>
+                </SafeAreaView> 
+          </View>
+        </Modal>
+
+
+        <Modal
+          isVisible={collectionAddedSucces}
+          onBackdropPress={()=>setcollectionAddedSucces(false)}
+      
+          animationIn={'fadeInDown'}
+          animationOut={'fadeOutDown'}
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropColor="transparent"
+          style={styles.modal4}
+        >
+          <View style={styles.modalContent4}>
+            <View style={{padding:10}}>
+            <Text style={{textAlign:'center',color:'green',fontWeight:'500'}}>{selectedHouse} No'lu konutu {selectedCollectionName} adlı koleksiyonunuza eklendi</Text>
+            </View>
+                    
+          </View>
+        </Modal>
+
+        <Modal
+          isVisible={PopUpForRemoveItem}
+          onBackdropPress={()=>setPopUpForRemoveItem(false)}
+      
+          animationIn={'zoomInUp'}
+          animationOut={'zoomOutUp'}
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropColor="transparent"
+          style={styles.modal4}
+        >
+          <View style={styles.modalContent4}>
+            <View style={{padding:10,gap:10}}>
+           <Text style={{textAlign:'center'}}>{selectedHouse} No'lu konutu {selectedCollectionName} adlı koleksiyonunuzdan kaldırmak istediğinize eminmisiniz</Text>
+           <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
+
+            <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}>
+              <Text style={{color:'white'}}>Evet</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}>
+              <Text style={{color:'white'}}>Hayır</Text>
+            </TouchableOpacity>
+
+           </View>
+
+            </View>
+                    
+          </View>
+        </Modal>
+        <Modal
+          isVisible={addCollection}
+          onBackdropPress={()=>setaddCollection(false)}
+      
+          animationIn={'fadeInRight'}
+          animationOut={'lightSpeedOut'}
+          animationInTiming={200}
+          animationOutTiming={200}
+ 
+          style={styles.modal3}
+        >
+          <View style={styles.modalContent3}>
+                
+                <ScrollView bounces={false} contentContainerStyle={{paddingLeft:10,paddingRight:10,paddingTop:4,gap:10,paddingBottom:20}}>
+                  <SafeAreaView>
+               
+                    <View style={{flexDirection:'row',padding:10,alignItems:'center',borderBottomWidth:1,borderBottomColor:'#ebebeb'}}>
+                    <TouchableOpacity style={{flexDirection:'row',alignItems:'center',flex:0.5/2}}
+                      onPress={()=>{
+                        setaddCollection(false)
+                      }}
+                  >
+                    <View style={{padding:0,alignItems:'center',justifyContent:'center'}}>
+                    <Icon name="close" size={27} color={'#19181C'}/>
+                    </View>
+                 
+                  </TouchableOpacity>
+                  <View style={{flex:1/2}}>
+                    <Text style={{color:'#19181C',textAlign:'center',fontSize:16,fontWeight:'400'}}>Koleksiyon Oluştur</Text>
+                  </View>
+                    </View>
+                        <View style={{gap:6,justifyContent:'center',paddingTop:20}}>
+                          <Text style={{fontSize:13,color:'#19181C'}}>Koleksiyon İsmi</Text>
+                          <TextInput
+                  style={styles.Input}
+                      value={newCollectionNameCreate}
+                      onChangeText={(value)=>setnewCollectionNameCreate(value)}
+             
+                />
+             
                         </View>
-                        <TouchableOpacity style={{alignItems:'center',justifyContent:'center',paddingRight:5}}
-                          onPress={toggleIcon}
-                        >
-                            <Icon name= {changeIcon? 'checkcircle' : "pluscircleo"} size={21}/>
+                        <View style={{paddingTop:80}}>
+                        <TouchableOpacity style={{backgroundColor:'#EA2A28',padding:10,borderRadius:6}} onPress={addCollectionPost} >
+                          <Text style={{textAlign:'center',color:'white'}}>Koleksiyon Oluştur</Text>
                         </TouchableOpacity>
-                      </TouchableOpacity>
-                  </ScrollView>
+                        </View>
+                      
+                  </SafeAreaView>
+                
+              
+              
+                  
+
+                </ScrollView>
+                
           </View>
         </Modal>
         <Modal
@@ -908,35 +1216,50 @@ export default function Details({ navigation }) {
           />
         </View>
         <Modal
-            animationType="slide"
-            transparent={false}
-            visible={showCoverImageModal}
-            style={{backgroundColor:'#000'}}
-            onRequestClose={() => {
-              setCoverImageModal(!showCoverImageModal);
-            }}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
+          isVisible={showCoverImageModal}
+          onBackdropPress={()=>setCoverImageModal(false)}
+          swipeDirection={["down"]}
+          animationIn={'fadeInRightBig'}
+          animationOut={'fadeOutDownBig'}
+                onSwipeComplete={()=>setCoverImageModal(false)}
+          backdropColor="transparent"
+          style={styles.modalImage}
+        >
+          <View style={styles.modalContentImage}>
+                 <View style={{alignItems:'flex-end',marginBottom:20}}>
+                  <TouchableOpacity onPress={()=>setCoverImageModal(false)}>
+                  <CloseIcon name="close" color={'white'} size={30}/>
+                  </TouchableOpacity>
+                
+                 </View>
+                
+            <PagerView style={{ height: 300 }}
+            initialPage={selectedImage}
+            onPageSelected={(event) => handlePageChange(event.nativeEvent.position)}
+            
+          >
+            {
+              data.project.images.map((image,index) => {
+                // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
+                return(
+                  <Pressable key={index+1} onPress={()=>setCoverImageModal(true)}>
+                    <ImageBackground
+                      source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
+                      style={{ width: "100%", height: "100%", }}
+                     
+                      resizeMode='cover'
+                    
+                    />
+                  </Pressable>
+                )
+              })
+            }
+            
+          </PagerView>
 
-                <View style={{width:'100%',height:'100%'}}>
-                  <View style={styles.close_icon_area}>
-                    <TouchableOpacity onPress={() => {setCoverImageModal(!showCoverImageModal)}}>
-                      <CloseIcon name='close' style={styles.close_icon} size={30}></CloseIcon>
-                    </TouchableOpacity>
-                  </View>
-                  {/* <Image style={{width:'100%',height:'100%',objectFit:'contain'}} source={{uri : frontEndUri+(selectedImage?.image?.replace('public','storage'))}}></Image> */}
-                  <View style={styles.image_buttons}>
-                    <TouchableOpacity onPress={{}}>
-                      <View style={styles.image_button}>
-                        <CloseIcon name='delete' style={styles.image_delete_button} size={30}></CloseIcon>
-                        <Text style={styles.image_text}>Fotoğrafı Sil</Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </View>
-          </Modal>
+                 </View>
+     
+        </Modal>
       </ScrollView>
     </SafeAreaView>
   );
@@ -1025,13 +1348,25 @@ const styles = StyleSheet.create({
   modal2: {
     justifyContent: "flex-end",
     margin: 0,
+    backgroundColor:'#1414148c'
   },
   modalContent2: {
-    backgroundColor: "white",
+    backgroundColor: "#fefefe",
   
-    height: "35%",
+    height: "52%",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+  },
+  modal3: {
+    justifyContent: "flex-end",
+    margin: 0,
+    backgroundColor:'#1414148c'
+  },
+  modalContent3: {
+    backgroundColor: "#fefefe",
+  
+    height: "100%",
+
   },
   Input:{
     borderWidth:1,
@@ -1061,4 +1396,37 @@ const styles = StyleSheet.create({
   
     
   },
+  modalImage: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContentImage: {
+    backgroundColor: "black",
+    justifyContent:'center',
+    
+  flex:1
+    
+  },
+  Input: {
+    backgroundColor:'#E6E6E6',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ebebeb",
+    borderRadius: 6,
+    fontSize: 14,
+  },
+  modal4: {
+    justifyContent: "center",
+    margin: 0,
+    padding:20,
+    backgroundColor:'#1414148c'
+  },
+  modalContent4: {
+    backgroundColor: "#fefefe",
+  padding:20,
+  borderRadius:10
+   
+
+  },
+ 
 });

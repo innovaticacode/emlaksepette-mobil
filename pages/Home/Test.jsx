@@ -8,7 +8,7 @@ import {
   ImageBackground,
   Platform,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import Favorite from "../../components/Favorite";
 import Header from "../../components/Header";
 import Modal from "react-native-modal";
@@ -17,6 +17,8 @@ import Search from "./Search";
 import { useNavigation } from "@react-navigation/native";
 import Favorites from "./Favorites";
 import CollectionsPage from "./CollectionsPage";
+import { getValueFor } from "../../components/methods/user";
+import { ActivityIndicator } from "react-native";
 
 export default function Test() {
   const navigation = useNavigation();
@@ -26,8 +28,18 @@ export default function Test() {
     setIsDrawerOpen(!isDrawerOpen);
   };
   //APİ İSTEĞİ BU SAYFAYA ATILACAK VE DİĞER SAYFALARA PROPS OLARAK GEÇİLECEK
+
+  const [user, setuser] = useState({})
+  useEffect(() => {
+    getValueFor("user",setuser)
+  },[]);
+
+  console.log(user + 'ffdfdfd')
+
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+ 
       <View
         style={{
           ...Platform.select({
@@ -47,6 +59,8 @@ export default function Test() {
         animationIn="bounceInLeft"
         animationOut="bounceOutLeft"
         style={styles.modal}
+        swipeDirection={['left']}
+        onSwipeComplete={()=>setIsDrawerOpen(false)}
       >
         <View style={styles.modalContent}>
           <View
@@ -124,8 +138,10 @@ export default function Test() {
           </View>
         </View>
       </Modal>
-
-      <View style={styles.TabBar}>
+      {
+        user.access_token ? 
+        <>
+           <View style={styles.TabBar}>
         <View
           style={{
             flexDirection: "row",
@@ -174,10 +190,21 @@ export default function Test() {
           </TouchableOpacity>
         </View>
       </View>
+   
       <View style={{}}>
         {tabs == 1 && <Favorites />}
         {tabs == 2 && <CollectionsPage />}
       </View>
+      </>:<>
+      {/* <View style={{alignItems:'center',justifyContent:'center'}}>
+              <ActivityIndicator size='large'/>
+              <Text>Giriş sayfasına Yönlendiriliyorsunuz</Text>
+      </View> */}
+      
+      </>
+      }
+  
+    
     </SafeAreaView>
   );
 }

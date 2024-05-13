@@ -41,7 +41,7 @@ import userData from "../../components/methods/user";
 export default function HomePage() {
   const navigation = useNavigation();
 
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://test.emlaksepette.com/";
 
   const [loadingPrjoects, setloadingPrjoects] = useState(false);
   const [loadingEstates, setloadingEstates] = useState(false);
@@ -50,7 +50,7 @@ export default function HomePage() {
   const fetchFeaturedProjects = async () => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/featured-projects"
+        "https://test.emlaksepette.com/api/featured-projects"
       );
       setFeaturedProjects(response.data);
       setloadingPrjoects(true);
@@ -67,7 +67,7 @@ export default function HomePage() {
   const fetchFeaturedEstates = async () => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/real-estates"
+        "https://test.emlaksepette.com/api/real-estates"
       );
       setFeaturedEstates(response.data);
       setloadingEstates(true);
@@ -138,7 +138,7 @@ export default function HomePage() {
   const fetchFeaturedSliders = async () => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/featured-sliders"
+        "https://test.emlaksepette.com/api/featured-sliders"
       );
       setFeaturedSliders(response.data);
       setloadingEstates(true);
@@ -176,9 +176,11 @@ export default function HomePage() {
         <Modal
           isVisible={isDrawerOpen}
           onBackdropPress={() => setIsDrawerOpen(false)}
-          animationIn="bounceInLeft"
+          animationIn='fadeInLeftBig'
           animationOut="bounceOutLeft"
           style={styles.modal}
+          swipeDirection={['left']}
+          onSwipeComplete={()=>setIsDrawerOpen(false)}
         >
           <View style={styles.modalContent}>
             <View
@@ -305,7 +307,7 @@ export default function HomePage() {
                 <Text style={{textAlign:'center'}}>Sırala</Text>
                 </TouchableOpacity>
               </View> */}
-        <Animatable.View
+        {/* <Animatable.View
           animation={isHidden ? "fadeInUp" : "fadeOutDown"}
           useNativeDriver={true}
         >
@@ -340,7 +342,7 @@ export default function HomePage() {
               </Animatable.View>
             </View>
           </View>
-        </Animatable.View>
+        </Animatable.View> */}
 
         <Swiper
           showsButtons={false}
@@ -350,13 +352,14 @@ export default function HomePage() {
           onIndexChanged={handleIndexChanged}
         >
           <ScrollView
+          stickyHeaderIndices={[2]}
             ref={scrollViewRef}
+            contentContainerStyle={{gap:8}}
             onScroll={handleScroll}
             scrollEventThrottle={16}
           >
-            {tab == 0 ? (
-              <>
-                <Animatable.View delay={1000} duration={1000} style={{}}>
+          
+             
                   <View style={{ height: 100, padding: 8, borderRadius: 10 }}>
                     <PagerView
                       style={{ height: "100%" }}
@@ -387,31 +390,28 @@ export default function HomePage() {
                       ))}
                     </PagerView>
                   </View>
-                  <Animatable.View duration={1500}>
+               
                     <View style={{ height: 100 }}>
                       <SliderBar loading={loadingPrjoects} />
                     </View>
-                  </Animatable.View>
-                </Animatable.View>
-              </>
-            ) : (
-              ""
-            )}
-            <View style={styles.slide1}>
-              <View style={{ gap: 0, paddingTop: 0 }}>
-                <View
+                
+           
+                    <View
                   style={{
-                    paddingTop: 15,
-                    display: isHidden ? "none" : "flex",
+                    
+                    // display: isHidden ? "none" : "flex",
                   }}
                 >
                   <View
                     style={{
+                   
+                      paddingBottom:3,
                       flexDirection: "row",
                       justifyContent: "space-between",
                       paddingLeft: 10,
                       paddingRight: 10,
                       alignItems: "center",
+                      backgroundColor:'white'
                     }}
                   >
                     <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN PROJELER</Text>
@@ -431,6 +431,10 @@ export default function HomePage() {
                     </TouchableOpacity>
                   </View>
                 </View>
+            <View style={styles.slide1}>
+              
+              <View style={{ gap: 0, paddingTop: 0 }}>
+          
 
                 {loadingPrjoects == false ? (
                   <View style={{ padding: 10 }}>
@@ -450,6 +454,7 @@ export default function HomePage() {
                         >
                           <ProjectPost
                             key={index}
+                              
                             project={item}
                             caption={item.project_title}
                             ımage={`${apiUrl}/${item.image.replace(
@@ -489,7 +494,9 @@ export default function HomePage() {
               >
                 <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN KONUTLAR</Text>
 
-                <TouchableOpacity style={styles.allBtn}>
+                <TouchableOpacity style={styles.allBtn}
+                onPress={()=>navigation.navigate('AllRealtor',{name:'adfsd',data:featuredEstates})}
+                >
                   <Text style={{ color: "white", fontSize: 13 }}>
                     Tümünü Gör
                   </Text>
@@ -557,6 +564,7 @@ export default function HomePage() {
               {filteredEstates.map((item, index) => (
                 <RealtorPost
                   key={index}
+                  HouseId={item.id}
                   price={`${JSON.parse(item.housing_type_data)["price"]} `}
                   title={item.housing_title}
                   loading={loadingEstates}
@@ -575,6 +583,95 @@ export default function HomePage() {
               ))}
             </ScrollView>
           </View>
+          <View style={styles.slide4}>
+            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN İŞ ARSALAR</Text>
+
+                <TouchableOpacity style={styles.allBtn}>
+                  <Text style={{ color: "white", fontSize: 13 }}>
+                    Tümünü Gör
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+        
+          </View>
+          <View style={styles.slide4}>
+            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN PREFABRİK YAPILAR</Text>
+
+                <TouchableOpacity style={styles.allBtn}>
+                  <Text style={{ color: "white", fontSize: 13 }}>
+                    Tümünü Gör
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+        
+          </View>
+          <View style={styles.slide4}>
+            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 12 }}>GÜNLÜK TATİL EVLERİ</Text>
+
+                <TouchableOpacity style={styles.allBtn}>
+                  <Text style={{ color: "white", fontSize: 13 }}>
+                    Tümünü Gör
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+        
+          </View>
+          <View style={styles.slide4}>
+            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 12 }}>AL SAT ACİL İLANLARI</Text>
+
+                <TouchableOpacity style={styles.allBtn}>
+                  <Text style={{ color: "white", fontSize: 13 }}>
+                    Tümünü Gör
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+        
+          </View>
+          
         </Swiper>
         {/* </ScrollView> */}
       </SafeAreaView>
@@ -616,13 +713,16 @@ const styles = StyleSheet.create({
   },
   slide1: {
     flex: 1,
-    top: 10,
+   
     paddingBottom: 30,
   },
   slide2: {
     flex: 1,
   },
   slide3: {
+    flex: 1,
+  },
+  slide4: {
     flex: 1,
   },
   text: {

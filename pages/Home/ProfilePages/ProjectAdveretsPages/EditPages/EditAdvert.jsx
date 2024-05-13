@@ -24,7 +24,7 @@ const {Project_Id, Project_name}=route.params
       getValueFor("user",setUser)
     },[]);
     useEffect(() => {
-      axios.get(`https://emlaksepette.com/api/project_housings/${Project_Id}?start=${start}&end=${end}`+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
+      axios.get(`https://test.emlaksepette.com/api/project_housings/${Project_Id}?start=${start}&end=${end}`+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
         sethousings(res.data.housings + 'evler');
         console.log(housings['advertise_title[]'])
       console.log(user.name+ 'usergfgdfg')
@@ -41,13 +41,13 @@ const {Project_Id, Project_name}=route.params
 <Text style={{color:'white'}}> Proje İlanlarım / {Project_name} Adlı Projenin Konutları</Text>
 
 </View>
-{
+{/* {
     Array.from({
       length:housings.length
     }).map((item,index)=>{
       return <Text>fdsfd {index +1}</Text>
     })
- }
+ } */}
     <View style={styles.table}>
   
          <View style={[styles.row,{borderBottomWidth:1,borderBottomColor:'#333'}]}>

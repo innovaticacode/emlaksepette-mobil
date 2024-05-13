@@ -1,10 +1,10 @@
 import { View, Text ,StyleSheet,ScrollView} from 'react-native'
 import React from 'react'
 import ShoppinInfo from '../ShoppinInfo'
-
+import HTML from 'react-native-render-html';
 
 export default function PostCaption({data}) {
-  const caption=data?.project?.description.replace(/<[^>]+>|&[a-zA-Z]+;|[%&]|&gt;/g, '')
+  const caption=data?.project?.description
   function veriParseEt(veri) {
     try {
       // Veriyi JSON olarak parse et
@@ -20,8 +20,10 @@ export default function PostCaption({data}) {
   return (
     <View style={{paddingLeft:8,paddingRight:8}}>
     <View style={[styles.card, styles.shadowProp]} indicatorStyle='white'>
-
-    <Text>{caption}</Text>
+    <Text>
+    <HTML source={{ html: data?.project?.description }}  contentWidth={100}/>
+    </Text>
+  
 
     </View>
  

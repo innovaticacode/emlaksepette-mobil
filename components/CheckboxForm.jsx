@@ -1,10 +1,14 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import { CheckBox } from 'react-native-elements'
-export default function CheckboxForm({item}) {
+export default function CheckboxForm({item,getCheckedItems}) {
 
     const [checkedForm, setCheckedForm] = React.useState(false);
-    const toggleCheckboxForm = () => setCheckedForm(!checkedForm);
+    const toggleCheckboxForm = () => {
+      
+      setCheckedForm(!checkedForm)
+      getCheckedItems(item)
+    };
   return (
     <View style={{width:'45%'}}>
          <CheckBox
