@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Dot from "react-native-vector-icons/Entypo";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/FontAwesome5";
@@ -7,6 +7,7 @@ import Icon3 from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 export default function CollectionsItem({
   openBottom,
+  projectItems,
   disabled,
   shareWp,
   copy,
@@ -15,6 +16,21 @@ export default function CollectionsItem({
   name
 }) {
   const navigation = useNavigation();
+  const [collectionItems,setCollectionItems] = useState([]);
+  const getCollectionItems = () => {
+    var collectionItemsTemp = [];
+    for(var i = 0 ; i < projectItems.length; i++){
+      if(projectItems[i].collection_id == item.id){
+        collectionItemsTemp.push(projectItems[i]);
+      }
+    }
+    setCollectionItems(collectionItemsTemp);
+  }
+
+  useEffect(() => {
+    getCollectionItems()
+  },[projectItems])
+
   return (
     <View style={{ alignItems: "center" }}>
       <View style={style.container}>
@@ -64,7 +80,7 @@ export default function CollectionsItem({
                 gap: 6,
               }}
               onPress={() => {
-                navigation.navigate("EditColection");
+                navigation.navigate("EditColection",{collectionItems:collectionItems});
               }}
             >
               <Icon name="pencil" size={15} color={"#BD3803"} />

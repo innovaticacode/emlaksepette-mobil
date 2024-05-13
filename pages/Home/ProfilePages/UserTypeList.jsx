@@ -13,12 +13,14 @@ export default function UserTypeList() {
   }, []);
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://test.emlaksepette.com/api/institutional/roles',{
-        headers: {
-          'Authorization':`Bearer ${user?.access_token}`
-        }
-      });
-      setuserList(response?.data.roles);
+      if(user.access_token){
+        const response = await axios.get('https://test.emlaksepette.com/api/institutional/roles',{
+          headers: {
+            'Authorization':`Bearer ${user?.access_token}`
+          }
+        });
+        setuserList(response?.data.roles);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
     }

@@ -201,9 +201,57 @@ export default function Details({ navigation }) {
     }
   };
 
-  console.log(itemCount);
+  console.log(collections);
 
+  const removeItemOnCollection = (collectionId) => {
+    const collectionData = {
+      item_type:1,
+      room_order: selectedHouse,
+      item_id: data.project.id,
+      collection_id: collectionId,
+    };
+  
+  
+    axios.post('https://test.emlaksepette.com/api/remove_item_on_collection', collectionData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.access_token}`,
+      },
+    })
+    .then(response => {
+      setTimeout(() => {
+        setcollectionAddedSucces(true)
+      },200);
+      setTimeout(() => {
+        setcollectionAddedSucces(false)
+      }, 3000);
+      var newCollections = collections.map((collection) => {
+        if(collection.id == collectionId){
+          var newLinks = collection.links.filter((link) => {
+            if(link.collection_id == collectionId && link.item_id == data.project.id && link.room_order == selectedHouse){
 
+            }else{
+              return link
+            }
+          })
+
+          return {
+            ...collection,
+            links : newLinks
+          }
+        }else{
+          return collection;
+        }
+      })
+
+      setcollections(newCollections)
+      console.log(newCollections,"qwe");
+    })
+    .catch(error => {
+      // Hata durumunu işleyin
+      console.error('Error:', error);
+    });
+  }
 
   const shareLinkOnWhatsApp = () => {
     const url = `https://test.emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
@@ -305,21 +353,38 @@ const [collections, setcollections] = useState([])
   const [collectionAddedSucces, setcollectionAddedSucces] = useState(false)
 const [selectedCollectionName, setselectedCollectionName] = useState('')
 const fetchData = async () => {
- 
+ console.log(collections)
   try {
-    const response = await axios.get('https://test.emlaksepette.com/api/getCollections',{
-      headers: {
-        'Authorization': `Bearer ${user.access_token}`
-      }
-    });
-  
-    setcollections(response?.data.collections);
+    if(user.access_token){
+      const response = await axios.get('https://test.emlaksepette.com/api/client/collections',{
+        headers: {
+          'Authorization': `Bearer ${user.access_token}`
+        }
+      });
+    
+      setcollections(response?.data.collections);
+    }
   } catch (error) {
     console.error('Error fetching data:', error);
   }finally{
   
   }
 };
+
+
+const ıtemOnCollection = (collectionId) => {
+  let check = false;
+  collections.map((collection) => {
+    for(var i = 0 ; i < collection.links.length; i++){
+      if(collection.links[i].item_type = 1 && collection.links[i].item_id == data.project.id && collection.links[i].room_order == selectedHouse && collection.links[i].collection_id == collectionId){
+        check = true;
+      }
+    }
+  })
+
+  return check;
+}
+
 useEffect(() => {
   fetchData();
 }, [user]);
@@ -378,7 +443,7 @@ const addSelectedCollection=(id)=>{
     clear_cart: "no",
     id: selectedHouse,
     project: data.project.id,
-    selectedCollectionId: selectedCollectionId,
+    selectedCollectionId: id,
     type: "project"
   };
 
@@ -387,12 +452,9 @@ const addSelectedCollection=(id)=>{
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${user.access_token}`,
-      
-     
     },
   })
   .then(response => {
-
     setTimeout(() => {
       setcollectionAddedSucces(true)
     },200);
@@ -401,7 +463,27 @@ const addSelectedCollection=(id)=>{
     }, 3000);
     // Başarılı yanıtı işleyin
     // setselectedCollectionName(response.data.collection.name)
-    console.log('Response:', response.data);
+    var newCollections = collections.map((collection) => {
+      if(collection.id == id){
+        return {
+          ...collection,
+          links : [
+            ...collection.links,
+            {
+              collection_id : id,
+              room_order : selectedHouse,
+              item_id : data.project.id,
+              user_id : user?.id,
+              item_type : 1
+            }
+          ]
+        }
+      }else{
+        return collection;
+      }
+    })
+    console.log(newCollections);
+    setcollections(newCollections)
   })
   .catch(error => {
     // Hata durumunu işleyin
@@ -409,6 +491,7 @@ const addSelectedCollection=(id)=>{
   });
 
 }
+const [PopUpForRemoveItem, setPopUpForRemoveItem] = useState(false)
 console.log(selectedCollectionName2)
     
   return (
@@ -944,7 +1027,7 @@ console.log(selectedCollectionName2)
                   </TouchableOpacity>
                       {
                         collections.map((item,index)=>(
-                          <AddCollection  key={index} item={item} getCollectionId={getCollectionId} addLink={addSelectedCollection}/> 
+                          <AddCollection checkFunc={ıtemOnCollection} setPopUpForRemoveItem={setPopUpForRemoveItem} key={index} item={item} getCollectionId={getCollectionId} removeItemOnCollection={removeItemOnCollection} addLink={addSelectedCollection}/> 
                         ))
                       }
                
@@ -976,6 +1059,36 @@ console.log(selectedCollectionName2)
           </View>
         </Modal>
 
+        <Modal
+          isVisible={PopUpForRemoveItem}
+          onBackdropPress={()=>setPopUpForRemoveItem(false)}
+      
+          animationIn={'zoomInUp'}
+          animationOut={'zoomOutUp'}
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropColor="transparent"
+          style={styles.modal4}
+        >
+          <View style={styles.modalContent4}>
+            <View style={{padding:10,gap:10}}>
+           <Text style={{textAlign:'center'}}>{selectedHouse} No'lu konutu {selectedCollectionName} adlı koleksiyonunuzdan kaldırmak istediğinize eminmisiniz</Text>
+           <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
+
+            <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}>
+              <Text style={{color:'white'}}>Evet</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}>
+              <Text style={{color:'white'}}>Hayır</Text>
+            </TouchableOpacity>
+
+           </View>
+
+            </View>
+                    
+          </View>
+        </Modal>
         <Modal
           isVisible={addCollection}
           onBackdropPress={()=>setaddCollection(false)}

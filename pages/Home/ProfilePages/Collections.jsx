@@ -105,9 +105,9 @@ const ShowAlert = ()=>{
     setshowAlert(false)
   }, 2000);
 }
+
+const [projectItems,setProjectItems] = useState([]);
 const [collections, setcollections] = useState([])
-const [start,setStart] = useState(1);
-const [take,setTake] = useState(10);
 const [user,setUser] = useState({})
 const handleSearch = (text) => {
   setSearchText(text);
@@ -130,13 +130,18 @@ const [searchText, setSearchText] = useState("");
   try {
     setloading(true);
 
-    const response = await axios.get('https://test.emlaksepette.com/api/client/collections', {
-  
-      headers: {
-        'Authorization':`Bearer ${user?.access_token}`
-      }
-    });
-    setcollections(response?.data?.collections);
+    if(user.access_token){
+      const response = await axios.get('https://test.emlaksepette.com/api/client/collections', {
+    
+        headers: {
+          'Authorization':`Bearer ${user?.access_token}`
+        }
+      });
+      setProjectItems(response?.data?.items)
+      setcollections(response?.data?.collections);
+    }
+
+    
   } catch (error) {
     console.error('Error fetching data:', error);
   } finally {
@@ -196,6 +201,8 @@ const editCollectionName = async (id) => {
   }
 };
 
+console.log(collections);
+
   return ( 
     <View style={{flex:1,}}>
     <View style={{alignItems:'center',flex:1,padding:10,backgroundColor:'white'}} onTouchStart={()=>{
@@ -254,14 +261,19 @@ const editCollectionName = async (id) => {
         message? <Text style={{color:'green',textAlign:'center'}}>{colectionName} adlı Koleksiyonunuz silindi</Text>:<></>
       }
       </View>
-       
-      <Text style={{textAlign:'center',fontSize:18,display:collections?.length==0 ?'flex':'none' }}>Koleksiyonunuz bulunmamaktadır</Text>
+       {
+        loading == false ? 
+          <Text style={{textAlign:'center',fontSize:18,display:collections?.length==0 ?'flex':'none' }}>Koleksiyonunuz bulunmamaktadır</Text>
+
+        : ''
+       }
       {
           loading ==false?
-      collections.map((collection, index) => (
-          <CollectionsItem item={collection} getId={getId} key={index} openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
-          
-      )):<ActivityIndicator size='large' color={'red'}/>}
+      collections.map((collection, index) => {
+        return(
+          <CollectionsItem projectItems={projectItems} item={collection} getId={getId} key={index} openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+        )
+      }):<ActivityIndicator size='large' color={'red'}/>}
    
 
 

@@ -33,16 +33,19 @@ export default function CreateUserType() {
   // fetchData fonksiyonunu tanımlayın
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        "https://test.emlaksepette.com/api/institutional/roles/create",
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
-      setPermissions(response?.data?.groupedPermissions);
-      setGroupNames(response?.data?.groupNames);
+      if(user.access_token){
+        const response = await axios.get(
+          "https://test.emlaksepette.com/api/institutional/roles/create",
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+        setPermissions(response?.data?.groupedPermissions);
+        setGroupNames(response?.data?.groupNames);
+      }
+      
     } catch (error) {
       console.error("Error fetching data:", error);
     }
