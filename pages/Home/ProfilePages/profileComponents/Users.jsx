@@ -2,12 +2,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 
-export default function Users({name}) {
+export default function Users({name,id,index}) {
     const navigation =useNavigation()
   return (
     <View style={style.container}>
      <View style={style.UserContainer}>
         <View style={style.Name}>
+            <Text>{index+1}</Text>
                 <Text>{name}</Text>
         </View>
         <View style={style.buttons}>
@@ -26,23 +27,39 @@ export default function Users({name}) {
 }
 const style=StyleSheet.create({
         container:{
-            top:10,
-          
+            backgroundColor: "#FFFFFF",
+    borderRadius: 15,
+    paddingVertical: 7,
+    paddingHorizontal: 5,
+    width: "100%",
+
+    gap:5,
+    borderWidth: 1,
+    borderColor: "#f4f4f4",
+    ...Platform.select({
+      ios: {
+        shadowColor: "#f4f4f4",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+    
         },
         UserContainer:{
             display:'flex',
             flexDirection:'row',
             justifyContent:'space-between',
-            borderTopWidth:1,
-            borderBottomWidth:1,
-            borderBottomColor:'#ebebeb',
-            borderTopColor:'#ebebeb',
+         
             padding:8
         },
         Name:{
             flex:1/2,
-          
-          
+            flexDirection:'row',
+            gap:10,
             padding:10
         },
         buttons:{

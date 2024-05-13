@@ -31,7 +31,7 @@ export default function Register() {
               </TouchableOpacity>
               </View>
             </View>
-                {tabs===1 && <Personal/>}
+                {tabs===1 && <Personal type={tabs}/>}
                 {tabs===2 && <Company/>}
 
         </View>

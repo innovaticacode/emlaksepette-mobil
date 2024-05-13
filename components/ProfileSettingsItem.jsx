@@ -2,7 +2,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Icon2 from 'react-native-vector-icons/Feather'
-export default function ProfileSettingsItem({text,ıconName,IconType,IconFeather}) {
+import Arrow from 'react-native-vector-icons/SimpleLineIcons'
+export default function ProfileSettingsItem({text,ıconName,IconType,IconFeather,arrowControl,arrowNone}) {
   return (
     
     <View style={style.ıtem}>
@@ -19,8 +20,12 @@ export default function ProfileSettingsItem({text,ıconName,IconType,IconFeather
           
           <Text style={{fontSize:15,color:'#525B75'}}>{text}</Text>
         </View>
-        <View style={{flex:0.7/2,alignItems:'flex-end'}}>         
-          <Icon name='arrow-forward-ios' size={16} color={'#525B75'}/>
+        <View style={{flex:0.7/2,alignItems:'flex-end'}}>     
+        {
+          arrowNone?
+          '': <Arrow name= {arrowControl? 'arrow-down':'arrow-right'} size={15} color={'#525B75'}/>
+        }    
+         
         </View>
      </View>
     </View>

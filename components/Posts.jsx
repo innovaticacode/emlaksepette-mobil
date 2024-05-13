@@ -30,7 +30,7 @@ export default function Posts({
   setModalVisible,
   openmodal,
   openFormModal,
- 
+  openCollection
 
 }) {
   const navigation = useNavigation();
@@ -72,7 +72,7 @@ export default function Posts({
             <Image
               source={{
                 uri:
-                  "https://emlaksepette.com/project_housing_images/" +
+                  "https://test.emlaksepette.com/project_housing_images/" +
                   roomData["image[]"],
               }}
               style={{ width: "90%", height: "90%" }}
@@ -86,7 +86,10 @@ export default function Posts({
                 </Text>
               </View>
               <View style={styles.ıcons}>
-                <TouchableOpacity onPress={changeBookmark}>
+                <TouchableOpacity onPress={()=>{
+                  changeBookmark()
+                  openCollection(roomOrder)
+                }}>
                   <View style={styles.ıconContainer}>
                     <Bookmark
                       name={bookmark}

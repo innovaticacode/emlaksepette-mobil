@@ -1,13 +1,16 @@
 import { View, Text,StyleSheet } from 'react-native'
 import React from 'react'
 import { Shadow } from 'react-native-shadow-2';
+import HTML from 'react-native-render-html';
 export default function RealtorCaption({data}) {
-    const caption=data?.housing?.description.replace(/<[^>]+>|&[a-zA-Z]+;|[%&]|&gt;/g, '')
+    const caption=data?.housing?.description
   return (
     <Shadow  style={{width:'100%',margin:5}} paintInside={false}>
-    <View style={{padding:15,}} indicatorStyle='white'>
+    <View style={{padding:10,}} >
 
-    <Text>{caption}</Text>
+  
+    <HTML source={{ html: caption}}  contentWidth={100}/>
+  
 
     </View>
     </Shadow>

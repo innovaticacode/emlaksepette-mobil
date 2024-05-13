@@ -9,7 +9,7 @@ import ShareScreen from "./ShareScreen";
 import Test from "./Test";
 import Basket from "./Basket";
 import { useNavigation } from "@react-navigation/native";
-
+import IconStore from 'react-native-vector-icons/MaterialCommunityIcons'
 import ShoppingProfile from "./ShoppingProfile";
 import Login from "./Login&Register/Login";
 import userData, { getValueFor } from "../../components/methods/user";
@@ -29,30 +29,30 @@ const Home = () => {
 
   const {width,height}=Dimensions.get("window")
   return (
-    <Tab.Navigator
-    
-      screenOptions={{
-        tabBarLabelStyle: {
-          fontSize: 12,
-  
-          fontWeight: "200",
-        },
-        tabBarActiveTintColor: "black",
-        tabBarInactiveTintColor: "grey",
-        tabBarActiveBackgroundColor: "transparent",
-        tabBarStyle: {
-          backgroundColor: "white",
-          padding: 6,
-          height: Platform.OS === "android" ? '7%' :'9%'
-        },
-      }}
+    <Tab.Navigator 
+    screenOptions={{
+      tabBarLabelStyle: {
+        fontWeight: '500', // Kalın font
+        color: 'black', 
+        marginBottom:5// Varsayılan rengi
+      },
+      tabBarActiveTintColor: 'red', // Üstüne gelindiğinde rengi
+      tabBarStyle: {
+        backgroundColor: 'white',
+        padding: 5,
+        height: Platform.OS === 'android' ? '7%' : '9%',
+      },
+    }}
     >
       <Tab.Screen
         name="HomePage"
         component={HomePage}
+        
         options={{
           title:'Ana Sayfa',
+          
           headerShown: false,
+          
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name="home-outline"
@@ -64,7 +64,7 @@ const Home = () => {
       />
  <Tab.Screen
         name="Favoriler"
-        component={Test}
+        component={user.access_token ? Test : Login}
         options={{
           headerShown:false,
           tabBarIcon: ({ color, focused }) => (
@@ -80,7 +80,7 @@ const Home = () => {
 
       <Tab.Screen
         name="ShareAdvert"
-        component={ShareScreen}
+        component={user.access_token ? ShareScreen : Login }
         options={{
           headerShown:false,
           tabBarLabel: "İlan Ver",
@@ -99,39 +99,47 @@ const Home = () => {
 
      
   <Tab.Screen
-  
-  name="Sepetim"
-  options={({ route }) => ({
-    headerShown:false,
-    tabBarIcon: ({ color, focused }) => (
-      <Feather
-        name="shopping-cart"
-        color={focused ? "black" : "grey"}
-        size={20}
-      />
-    ),
-    tabBarBadge: 0,
-    tabBarBadgeStyle: {
-      fontSize: 10, height: 17, width: 20, position: 'absolute', top: 0, right: 0, borderRadius:6
-    },
-  
+    component={ user.access_token? Basket:Login}
+    name="Sepetim"
+    options={({ route }) => ({
+      headerShown:false,
+      tabBarIcon: ({ color, focused }) => (
+        <Feather
+          name="shopping-cart"
+          color={focused ? "black" : "grey"}
+          size={20}
+        />
+      ),
+      tabBarBadge: 0,
+      tabBarBadgeStyle: {
+        fontSize: 10, height: 17, width: 20, position: 'absolute', top: 0, right: 0, borderRadius:6
+      },
     
-  })}
->
-  {(props) => <Basket {...props}/>} 
-</Tab.Screen>
+      
+    })}
+  />
+
+
+
+
 <Tab.Screen
-        name="Hesabım"
+        name={user.role === 'Kurumsal Hesap' ? "Mağazam" :'Hesabım'}
         component={user.access_token ? ShoppingProfile : Login}
         options={{
           headerShown:false,
+       
+          
           tabBarIcon: ({ color, focused }) => (
-
+                user.role=='Kurumsal Hesap'
+                ?
+                  
+                <IconStore name="storefront-outline" size={28}  color={focused ? "#333" : "grey"}/>:
             <Feather
-              name="user"
+              name= "user"
               color={focused ? "black" : "grey"}
               size={23}
             />
+
           ),
         }}
       />

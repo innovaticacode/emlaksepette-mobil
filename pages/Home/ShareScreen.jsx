@@ -44,6 +44,8 @@ export default function ShareScreen() {
         animationIn="bounceInLeft"
         animationOut="bounceOutLeft"
         style={styles.modal}
+        swipeDirection={['left']}
+        onSwipeComplete={()=>setIsDrawerOpen(false)}
       >
         <View style={styles.modalContent}>
           <View

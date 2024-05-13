@@ -1,16 +1,26 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import React from 'react'
 import EditCollectionPost from './profileComponents/EditCollectionPost'
+import { useRoute } from '@react-navigation/native'
 
 export default function EditCollection() {
+  const route = useRoute();
+  const {collectionItems} = route.params;
+
+  console.log(collectionItems)
   return (
-    <ScrollView style={{backgroundColor:'white'}} showsVerticalScrollIndicator={false}>
-    <View style={styles.container}>
-       <View style={styles.shadowcard}>
-           <EditCollectionPost/>
-           <EditCollectionPost/>
-       </View>
-    </View>
+    <ScrollView style={{backgroundColor:'white'}} showsVerticalScrollIndicator={false} contentContainerStyle={{gap:10,padding:10}}>
+   
+    
+        {
+          collectionItems.map((collectionItem,index) => {
+            return(
+              <EditCollectionPost item={collectionItem} key={index}/>
+            )
+          })
+        }
+      
+ 
     </ScrollView>
   )
 }

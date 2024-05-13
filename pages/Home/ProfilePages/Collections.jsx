@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, TextInput, Keyboard ,Animated,TouchableOpacity,Modal,Linking} from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, Keyboard ,Animated,TouchableOpacity,Modal,Linking, ActivityIndicator} from 'react-native'
 import { useState,useRef,useEffect} from 'react'
 import CollectionsItem from './profileComponents/CollectionsItem'
 
@@ -105,39 +105,111 @@ const ShowAlert = ()=>{
     setshowAlert(false)
   }, 2000);
 }
+
+const [projectItems,setProjectItems] = useState([]);
 const [collections, setcollections] = useState([])
-const [start,setStart] = useState(1);
-const [take,setTake] = useState(10);
 const [user,setUser] = useState({})
+const handleSearch = (text) => {
+  setSearchText(text);
+  // Burada arama işlemleri yapılabilir
+};
+const [searchText, setSearchText] = useState("");
 
-// useEffect(() => {
-//   getValueFor("user",setUser)
-// },[]);
-// useEffect(() => {
-//   axios.get('https://emlaksepette.com/api/apiproject_housings/412?start=10&end=20'+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
-//     setcollections(res.data.data + 'evler');
+ useEffect(() => {
+   getValueFor("user",setUser)
+ },[]);
 
-//   console.log(user+ 'user')
-//   }).catch((e) => {
-//     console.log(e);
-//   })
-// },[user]);
+ useEffect(() => {
+  fetchData(); // Sayfa ilk yüklendiğinde verileri getir
+}, [user])
+
+
+ const [loading, setloading] = useState(false)
+
+ const fetchData = async () => {
+  try {
+    setloading(true);
+
+    if(user.access_token){
+      const response = await axios.get('https://test.emlaksepette.com/api/client/collections', {
+    
+        headers: {
+          'Authorization':`Bearer ${user?.access_token}`
+        }
+      });
+      setProjectItems(response?.data?.items)
+      setcollections(response?.data?.collections);
+    }
+
+    
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  } finally {
+    setloading(false); // İstek tamamlandığında loading durumunu false yap
+  }
+};
+
+
+const [selectedCollection, setselectedCollection] = useState(0)
+const [colectionName, setcolectionName] = useState('')
+ const getId=(id,name)=>{
+      setselectedCollection(id)
+    setcolectionName(name)
+ }
+console.log(selectedCollection)
+const [message, setmessage] = useState(false)
+ const deleteCollection = async (id) => {
+  try {
+    let formData=new FormData()
+    formData.append()
+    const response = await axios.delete(`https://test.emlaksepette.com/api/collection/${id}/delete`,{
+      headers: {
+        'Authorization': `Bearer ${user?.access_token}`
+      }
+    });
+    console.log(response.data)
+    setmessage(true)
+    closeSheet()
+    setTimeout(() => {
+        setmessage(false)
+    }, 3000);
+  fetchData()
+    setModalVisible2(false)
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+const [newName, setnewName] = useState('')
+
+const editCollectionName = async (id) => {
+  try {
+    let formData = new FormData();
+    formData.append('_method', 'PUT');
+    formData.append('collectionName', newName);
+
+    const response = await axios.post(`https://test.emlaksepette.com/api/collection/${id}/edit`, formData, {
+      headers: {
+        'Authorization': `Bearer ${user?.access_token}`,
+        'Content-Type': 'multipart/form-data' // FormData kullanıldığı için Content-Type belirtilmelidir
+      }
+    });
+      fetchData()
+    closeSheet();
+    setModalVisible(false);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+console.log(collections);
+
   return ( 
     <View style={{flex:1,}}>
     <View style={{alignItems:'center',flex:1,padding:10,backgroundColor:'white'}} onTouchStart={()=>{
       Keyboard.dismiss()
       closeSheet()
     }}>
-     
-      <View style={styles.SearchArea}> 
-    <SearchBar inputStyle={styles.Input} containerStyle={{padding:4,backgroundColor:'#dbdbdb',borderBottomWidth:0,borderTopWidth:0,borderRadius:4}}
-     inputContainerStyle={{backgroundColor:'#ebebeb',padding:0}}
-     placeholder='Koleksiyonlarında Ara...'
-    value={searchColection}
-    onChangeText={setSearchColection}
-    onFocus={closeSheet}
-     />
-      </View>
+    
     <View style={styles.container}>
     <View style={{display:showAlert? 'flex':'none', justifyContent:'center',alignItems:'center',paddingBottom:15}}>
           <View style={{padding:11, backgroundColor:'#6fdb4e97',display:showAlert? 'flex':'none' , flexDirection:'row',alignItems:'center',gap:15,borderRadius:10,}}>
@@ -146,10 +218,65 @@ const [user,setUser] = useState({})
        </View>  
        </View>
      
-  <ScrollView  showsVerticalScrollIndicator={false}>
-
-        <CollectionsItem openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+  <ScrollView  showsVerticalScrollIndicator={false}
+  stickyHeaderIndices={[0]}
+  >
  
+  <View style={styles.SearchArea}> 
+      <SearchBar
+          containerStyle={{
+            backgroundColor: "transparent",
+            borderTopWidth: 0,
+            borderWidth: 0,
+            borderBottomWidth: 0,
+            justifyContent: "center",
+            width: "100%",
+            paddingBottom: 10,
+            padding: 8,
+            height: 50,
+          }}
+          inputContainerStyle={{
+            borderRadius: 6,
+            backgroundColor: "#bebebe26",
+            borderWidth: 1,
+            borderColor: "#bebebe26",
+            borderBottomWidth: 1,
+            height: "110%",
+            borderBottomColor: "#bebebe26",
+          }}
+          placeholder="Koleksiyon Ara..."
+          inputStyle={{ fontSize: 15 }}
+          showLoading={false}
+          searchIcon={{ color: "#E54242" }}
+          onChangeText={handleSearch}
+          value={searchText}
+        />
+
+      </View>
+      <View style={{alignItems:'center',justifyContent:'center',gap:30}}>
+
+
+      
+      {
+        message? <Text style={{color:'green',textAlign:'center'}}>{colectionName} adlı Koleksiyonunuz silindi</Text>:<></>
+      }
+      </View>
+       {
+        loading == false ? 
+          <Text style={{textAlign:'center',fontSize:18,display:collections?.length==0 ?'flex':'none' }}>Koleksiyonunuz bulunmamaktadır</Text>
+
+        : ''
+       }
+      {
+          loading ==false?
+      collections.map((collection, index) => {
+        return(
+          <CollectionsItem projectItems={projectItems} item={collection} getId={getId} key={index} openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
+        )
+      }):<ActivityIndicator size='large' color={'red'}/>}
+   
+
+
 
 
     </ScrollView> 
@@ -191,7 +318,10 @@ const [user,setUser] = useState({})
           </TouchableOpacity>
         
         <TouchableOpacity style={{padding:15,borderBottomWidth:1,borderBottomColor:'#ebebeb'}}
-          onPress={()=>setModalVisible2(!modalVisible2)}
+          onPress={()=>{setModalVisible2(!modalVisible2)
+            
+          }}
+          
         >
           <View style={{flexDirection:'row',gap:15,justifyContent:'flex-start',padding:3,}}>
             <DeleteIcon name='delete-outline' size={20}/>
@@ -218,13 +348,18 @@ const [user,setUser] = useState({})
           <View style={{gap:5}}>
             <Text>Koleksiyon Adı</Text>
             <TextInput style={[styles.Input,{width:'100%'}]}
-  
+            value={newName}
+            onChangeText={(value)=>setnewName(value)}
+            placeholder={colectionName}
+            placeholderTextColor={'#333'}
             />
           </View>
          
            <View style={{flexDirection:'row',justifyContent:'space-around'}}>
             <TouchableOpacity style={{backgroundColor:'green',padding:15,paddingLeft:20,paddingRight:20,borderRadius:5}}
-       
+                onPress={()=>{
+                      editCollectionName(selectedCollection)
+                }}
             >
               <Text style={{color:'white',fontSize:15,}}>Kaydet</Text>
             </TouchableOpacity>
@@ -310,9 +445,14 @@ const [user,setUser] = useState({})
       >
         <View style={styles.centeredView3}>
           <View style={styles.modalView3}>
-            <Text style={styles.modalText3}>Ürünü favorilerden kaldırmak istiyormusunuz?</Text>
+            <Text style={styles.modalText3}>Koleksiyonu Silmek İStediğinize eminmisin?</Text>
             <View style={{display:'flex',flexDirection:'row',gap:25,}}>
-            <TouchableOpacity style={{backgroundColor:'red',paddingLeft:20,paddingRight:20,paddingTop:10,paddingBottom:10,borderRadius:10}}>
+            <TouchableOpacity style={{backgroundColor:'red',paddingLeft:20,paddingRight:20,paddingTop:10,paddingBottom:10,borderRadius:10}}
+            onPress={()=>{
+              deleteCollection(selectedCollection)
+            
+            }}
+            >
               <Text style={{color:'white'}}>Evet</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -332,18 +472,18 @@ const [user,setUser] = useState({})
 const styles=StyleSheet.create({
     container:{
         flex:1,
-        paddingVertical: 25,
+     
         paddingHorizontal: 0,
         width: '100%',
         marginVertical: 0,
     },
       SearchArea:{
         width:'100%',
-      
+        backgroundColor:'white'
       },
       
         Input: {
-          backgroundColor: '#ebebebba',
+          backgroundColor: '#ebebebab',
           marginTop: 0,
           padding: 10,
           fontSize: 17,

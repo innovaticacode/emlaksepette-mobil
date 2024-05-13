@@ -21,7 +21,7 @@ export default function Header({ loading, onPress }) {
           onPress();
         }}
       >
-        <IconMenu name="menu" size={40} color={"#333"} />
+        <IconMenu name="menu" size={37} color={"#333"} />
       </TouchableOpacity>
       <View
         onTouchStart={() => {
@@ -70,16 +70,18 @@ export default function Header({ loading, onPress }) {
               backgroundColor: "red",
               paddingLeft: 6,
               paddingRight: 6,
-              padding: 1,
+            
+              paddingTop:2,
+              paddingBottom:2,
               bottom: 22,
               left: 23,
               zIndex: 1,
               borderRadius: 20,
             }}
           >
-            <Text style={{ color: "white" }}>1</Text>
+            <Text style={{ color: "white",fontSize:11 }}>1</Text>
           </View>
-          <Icon name="bell" size={40} />
+          <Icon name="bell" size={35} />
         </TouchableOpacity>
       </View>
     </View>
