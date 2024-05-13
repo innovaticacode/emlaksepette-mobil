@@ -8,7 +8,10 @@ export default function AddCollection({removeItemOnCollection,checkFunc,item,get
         onPress={()=>{
           getCollectionId(item.id,item.name)
           if(itemCheck){
-            setPopUpForRemoveItem(true)
+            setTimeout(() => {
+                setPopUpForRemoveItem(true)
+            }, 500);
+            // setPopUpForRemoveItem(true)
             removeItemOnCollection(item.id)
             console.log("asd");
           }else{

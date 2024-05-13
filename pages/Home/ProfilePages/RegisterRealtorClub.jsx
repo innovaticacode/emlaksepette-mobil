@@ -1,7 +1,12 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Keyboard, Alert, TouchableWithoutFeedback } from 'react-native'
-import { useState } from 'react'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Keyboard, Alert, TouchableWithoutFeedback, ActivityIndicator } from 'react-native'
+import { useState,useEffect } from 'react'
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import Modal from "react-native-modal";
+import { getValueFor } from '../../../components/methods/user';
+import { Icon } from "react-native-elements";
+import * as SecureStore from 'expo-secure-store';
 export default function RegisterRealtorClub({setİsLoggedIn}) {
     const route = useRoute();
     const navigation=useNavigation()
@@ -69,24 +74,114 @@ export default function RegisterRealtorClub({setİsLoggedIn}) {
       .join(' ');
     setFullName(capitalizedText);
   };
+  
+
+  const [user, setUser] = useState({});
+const [check, setcheck] = useState(false)
+ 
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
+
+  useEffect(() => {
+    setIban(user.iban);
+  },[user])
+  useEffect(() => {
+   setFullName(user.bank_name)
+  },[user])
+
+  const [StatusMessage, setStatusMessage] = useState(false)
+  const [succesRegister, setsuccesRegister] = useState(false)
+  const [ErrorMEssage, setErrorMEssage] = useState('')
+  const sendPutRequest = async () => {
+  
+    const data = {
+      idNumber: tcNo,
+    bank_name: fullName,
+    iban:iban,
+    "check-d": true
+  }
+  setsuccesRegister(true)
+  setloading(true)
+
+    try {
+      const response = await axios.put('https://test.emlaksepette.com/api/institutional/club/update', data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.access_token}`
+        }
+      });
+     setTcNo('')
+     setIban('')
+     setFullName('')
+      setStatusMessage(true)
+    
+
+      console.log('Başarılı:', response.data);
+    } catch (error) {
+      console.error('Hata:', error);
+      setErrorMEssage(error)
+    }finally{
+      setloading(false)
+      setsuccesRegister(false)
+    }
+  };
+
+  console.log(ErrorMEssage)
+  const [errorStatu, seterrorStatu] = useState(0)
+  const [loading, setloading] = useState(false)
+  const RegisterClub = ()=>{
+
+    switch (true) {
+      case !tcNo:
+        seterrorStatu(1);
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 2000);
+        break;
+      case !fullName:
+        seterrorStatu(2);
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 2000);
+        break;
+      case iban.length !== 32:
+        seterrorStatu(3);
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 2000);
+        break;
+      default:
+        sendPutRequest();
+    }
+  }
+
     return (
       <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
+
+
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.headerText}>Emlak Sepette | Emlak Kulüp Başvurusu</Text>
+             {  user.has_club==0 &&  <Text style={styles.headerText}>Emlak Sepette | Emlak Kulüp Başvurusu</Text>}
+               {  user.has_club==2 && <View style={{gap:10}}>
+               
+                <Text style={styles.headerText}>Emlak Sepette | Emlak Kulüp Başvurunuz Alındı</Text>
+                <View style={{borderTopWidth:1,borderColor:'#ebebeb',paddingTop:20}}>
+                <Text style={{color:'green',fontSize:16,fontWeight:'500'}}>
+                   Üyelik başvurunuz alındı. Bilgileriniz incelendikten sonra hesabınız aktive edilecek.
+                   </Text>
+                </View>
+                 
+               </View> 
+               }
             </View>
-            <View style={{ alignItems: 'center' }}>
+            {
+                user.has_club==0 &&
+                <>
+                  <View style={{ alignItems: 'center' }}>
                 <View style={styles.FormContainer}>
                     <View style={styles.Inputs}>
-                        <View>
-                            <Text style={styles.Label}>Telefon</Text>
-                            <TextInput
-                                style={styles.Input}
-                             value={phoneNumber}
-                             onChangeText={onChangeText}
-                            keyboardType="phone-pad" 
-                            />
-                        </View>
+               
                         <View>
                             <Text style={styles.Label}>Tc Kimlik No</Text>
                             <TextInput style={styles.Input} keyboardType='number-pad' 
@@ -94,13 +189,16 @@ export default function RegisterRealtorClub({setİsLoggedIn}) {
                             onChangeText={onChangeTC}
                             maxLength={15}
                             />
+                            { errorStatu==1 &&  <Text style={{fontSize:12,color:'red'}}>Tc kimlik numarası zorunludur</Text>}
+                          
                         </View>
                         <View>
-                            <Text style={styles.Label}>Banka Alıcı Adı</Text>
+                            <Text style={styles.Label}>Hesap Sahibinin Adı Soyadı</Text>
                             <TextInput style={styles.Input} 
                                   value={fullName}
                                   onChangeText={onChangeFullName}
-                            />
+                            />   
+                            { errorStatu==2 &&  <Text style={{fontSize:12,color:'red'}}>Hesap sahibi adı soyadı zorunludur</Text>}
                         </View>
                         <View>
                             <Text style={styles.Label}>Iban Numarası</Text>
@@ -108,27 +206,145 @@ export default function RegisterRealtorClub({setİsLoggedIn}) {
                              value={iban}
                              onChangeText={onChangeText2}
                              onFocus={onFocus}
-                             maxLength={28} 
+                             maxLength={32} 
                             />
+                             { errorStatu==3 &&  <Text style={{fontSize:12,color:'red'}}> IBAN alanı zorunludur</Text>}
                         </View>
                     </View>
                     <View style={{alignItems:'center',top:10}}>
-                        <TouchableOpacity style={{backgroundColor:'#E54242',width:'70%',padding:10}} onPress={()=>{
-                           
-                           if (fullName===''  || phoneNumber==='' || tcNo==='' || iban.length<28) {
-                               Alert.alert('Lütfen Tüm Alanları Doldurunuz!')
-                           }else{
-                            setİsLoggedIn(true)
-                            navigation.navigate('ShopProfile')
-                           }
-                            
-
-                        }}>
+                        <TouchableOpacity style={{backgroundColor:'#E54242',width:'70%',padding:10,borderRadius:6}} onPress={RegisterClub}>
                             <Text style={{textAlign:'center',color:'white',fontSize:17,fontWeight:'500'}}>Üye Ol</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
+        
+            <Modal
+          isVisible={succesRegister}
+          onBackdropPress={() => setsuccesRegister(false)}
+          animationIn={'zoomInUp'}
+          animationOut={'zoomOutUp'}
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropColor="transparent"
+          style={styles.modal4}
+        >
+          <View style={styles.modalContent4}>
+            <View style={{ padding: 10 ,gap:25}}>
+              <View>
+              <Icon
+                name='check-circle'
+                color={'green'}
+                size={40}
+              />
+              </View>
+            <View>
+              {
+                loading==true ?
+                <Text
+                style={{
+                  textAlign: "center",
+                  color: "green",
+                  fontSize:18,
+                  fontWeight: "500",
+                }}
+              >
+                  Emlak Kulüp Başvurunuz Alınmıştır!
+              </Text>:
+              <ActivityIndicator/>
+              }
+       
+            </View>
+           
+            </View>
+          </View>
+        </Modal>
+                </>
+               
+            }
+
+            {
+                user.has_club==3 &&
+                <>
+                  <View style={{ alignItems: 'center' }}>
+                <View style={styles.FormContainer}>
+                    <View style={styles.Inputs}>
+               
+                     
+                        <View>
+                            <Text style={styles.Label}>Hesap Sahibinin Adı Soyadı</Text>
+                            <TextInput style={styles.Input} 
+                                  value={user.has_club==3? fullName:  fullName}
+                                  onChangeText={onChangeFullName}
+                            />   
+                            { errorStatu==2 &&  <Text style={{fontSize:12,color:'red'}}>Hesap sahibi adı soyadı zorunludur</Text>}
+                        </View>
+                        <View>
+                            <Text style={styles.Label}>Iban Numarası</Text>
+                            <TextInput style={styles.Input} keyboardType='number-pad'
+                             value={user.has_club==3? iban:   iban}
+                             onChangeText={onChangeText2}
+                             onFocus={onFocus}
+                             maxLength={32} 
+                            />
+                             { errorStatu==3 &&  <Text style={{fontSize:12,color:'red'}}> IBAN alanı zorunludur</Text>}
+                        </View>
+                    </View>
+                    <View style={{alignItems:'center',top:10}}>
+                        <TouchableOpacity style={{backgroundColor:'#E54242',width:'70%',padding:10,borderRadius:6}} onPress={RegisterClub}>
+                            <Text style={{textAlign:'center',color:'white',fontSize:17,fontWeight:'500'}}>Üye Ol</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+        
+            <Modal
+          isVisible={succesRegister}
+          onBackdropPress={() => setsuccesRegister(false)}
+          animationIn={'zoomInUp'}
+          animationOut={'zoomOutUp'}
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropColor="transparent"
+          style={styles.modal4}
+        >
+          <View style={styles.modalContent4}>
+            <View style={{ padding: 10 ,gap:25}}>
+              <View>
+              <Icon
+                name='check-circle'
+                color={'green'}
+                size={40}
+              />
+              </View>
+            <View>
+              {
+                loading==true ?
+                <Text
+                style={{
+                  textAlign: "center",
+                  color: "green",
+                  fontSize:18,
+                  fontWeight: "500",
+                }}
+              >
+                  Emlak Kulüp Başvurunuz Alınmıştır!
+              </Text>:
+              <ActivityIndicator/>
+              }
+       
+            </View>
+           
+            </View>
+          </View>
+        </Modal>
+                </>
+               
+            }
+          
+          
+
+          
         </View>
         </TouchableWithoutFeedback>
     )
@@ -183,13 +399,25 @@ const styles = StyleSheet.create({
     Input: {
         backgroundColor: '#ebebebba',
         marginTop: 10,
-        padding: 13,
+        padding: 9,
         fontSize: 17,
-        borderRadius: 4,
+        borderRadius: 7,
 
     },
     Label: {
         top: 5,
         color:'#131313'
-    }
+    },
+    modal4: {
+      justifyContent: "center",
+      margin: 0,
+      padding: 20,
+      backgroundColor: "#1414148c",
+    },
+    modalContent4: {
+      backgroundColor: "#ffffff",
+      padding: 20,
+      height:'20%',
+      borderRadius: 10,
+    },
 })
