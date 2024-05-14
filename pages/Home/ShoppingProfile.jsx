@@ -109,12 +109,11 @@ export default function ShoppingProfile() {
               }}
             >
               <View style={{ gap: 8 }}>
+                <View style={{flexDirection:'row',alignItems:'center'}}>
                 <Text style={{ color: "white", fontSize: 15,fontWeight:'bold' }}>
                   {user.name}
                 </Text>
-              </View>
-
-              <View style={{ width: 22, height: 22, left: 10 }}>
+                <View style={{ width: 20, height: 20, left: 10 }}>
                 <ImageBackground
                   source={require("./BadgeYellow.png")}
                   style={{ flex: 1 }}
@@ -122,10 +121,18 @@ export default function ShoppingProfile() {
 
                 <Icon
                   name="check"
-                  style={{ position: "absolute", left: 3.5, top: 3 }}
-                  size={15}
+                  style={{ position: "absolute", left: 3.5, top: 3.5 }}
+                  size={13}
                 />
               </View>
+                </View>
+          
+                <Text style={{ color: "white", fontSize: 11,fontWeight:'bold' }}>
+                  {user.corporate_type}
+                </Text>
+              </View>
+
+            
             </View>
           </View>
         </View>
@@ -146,7 +153,7 @@ export default function ShoppingProfile() {
                         onPress={() => navigation.navigate("Collecitons")}
                       >
                         <ProfileSettingsItem
-                          text="Koleksiyonlarım"
+                          text={user.corporate_type=='Emlak Ofisi'? 'Portföylerim': "Koleksiyonlarım"}
                           ıconName="bookmark-border"
                         />
                       </TouchableOpacity>
@@ -189,19 +196,26 @@ export default function ShoppingProfile() {
 
                       <View>
                         <Text style={style.headerText}>İlanlarım</Text>
-                        <TouchableOpacity
-                          onPress={() =>
-                            navigation.navigate("MyProject", {
-                              header2: "Proje İlanları",
-                            })
-                          }
-                        >
-                          <ProfileSettingsItem
-                            text="Proje İlanlarım"
-                            IconType={true}
-                            IconFeather="plus"
-                          />
-                        </TouchableOpacity>
+                        {
+                          user.corporate_type== 'Emlak Ofisi'?
+                            <></>:
+                            <TouchableOpacity
+                            onPress={() =>
+                              navigation.navigate("MyProject", {
+                                header2: "Proje İlanları",
+                              })
+                            }
+                          >
+                            <ProfileSettingsItem
+                              text="Proje İlanlarım"
+                              IconType={true}
+                              IconFeather="plus"
+                            />
+                          </TouchableOpacity>
+                          
+                        }
+                      
+
                         <TouchableOpacity
                           onPress={() =>
                             navigation.navigate("MyRealtor", {

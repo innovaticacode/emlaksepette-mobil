@@ -193,13 +193,10 @@ export default function Test() {
    
       <View style={{}}>
         {tabs == 1 && <Favorites />}
-        {tabs == 2 && <CollectionsPage />}
+        {tabs == 2 && <CollectionsPage/>}
       </View>
       </>:<>
-      {/* <View style={{alignItems:'center',justifyContent:'center'}}>
-              <ActivityIndicator size='large'/>
-              <Text>Giriş sayfasına Yönlendiriliyorsunuz</Text>
-      </View> */}
+ 
       
       </>
       }

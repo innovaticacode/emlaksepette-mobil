@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
   TextInput,
   Pressable,
+  Dimensions
 } from "react-native";
 
 import { React, useEffect, useRef, useState } from "react";
@@ -501,7 +502,7 @@ export default function Details({ navigation }) {
   };
   const [PopUpForRemoveItem, setPopUpForRemoveItem] = useState(false);
   console.log(selectedCollectionName2);
-
+  const {width,height}=Dimensions.get('window')
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -954,7 +955,7 @@ export default function Details({ navigation }) {
               styles.card,
               {
                 backgroundColor: "white",
-                height: "30%",
+                height: width>400 ?"30%":'37%',
                 padding: 10,
                 borderTopLeftRadius: 25,
                 borderTopRightRadius: 25,
@@ -1064,51 +1065,7 @@ export default function Details({ navigation }) {
                   </Text>
                 </TouchableOpacity>
               </View>
-              {/* <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-around",
-                gap: 27,
-              }}
-            >
-              <TouchableOpacity style={{ alignItems: "center" }} onPress={copyToClipboard}>
-                <View style={{backgroundColor:'#E54242',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
-                  <LinkIcon name="link" size={23} color={'white'} />
-                </View>
-                <Text style={{color:'#333',fontSize:12}}>Kopyala</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center"}} onPress={shareLinkOnWhatsApp}>
-                <View style={{backgroundColor:'#24D366',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
-                  <LinkIcon2 name="whatsapp" size={23} color={'white'} />
-                </View>
-                <Text style={{color:'#333',fontSize:12}}>Whatsapp</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }} onPress={shareLinkOnInstagram}>
-                <View style={{backgroundColor:'#E1306C',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
-                  <LinkIcon name="instagram" size={23} color={'white'} />
-                </View>
-                <Text style={{color:'#333',fontSize:12}}>İnstagram</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={{backgroundColor:'#1877F2',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
-                  <LinkIcon2 name="facebook" size={23} color={'white'} />
-                </View>
-                <Text style={{color:'#333',fontSize:12}}>Facebook</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={{backgroundColor:'#51b0e6',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
-                  <LinkIcon3 name="message-circle" size={23} color={'white'}/>
-                </View>
-                <Text style={{color:'#333',fontSize:12}}>Mesajlar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={{backgroundColor:'#7698E3',width:40,height:40,borderRadius:20,alignItems:'center',justifyContent:'center'}}>
-                  <LinkIcon4 name="messenger" size={23} color={'white'} />
-                </View>
-                <Text style={{color:'#333',fontSize:12}}>Messenger</Text>
-              </TouchableOpacity>
-            </View> */}
+            
             </View>
           </View>
         </Modal>
@@ -1181,7 +1138,7 @@ export default function Details({ navigation }) {
                       justifyContent: "center",
                     }}
                   >
-                    <Icon name="pluscircleo" size={27} color={"#19181C"} />
+                    <Icon2 name="pluscircleo" size={27} color={"#19181C"} />
                   </View>
                   <View
                     style={{

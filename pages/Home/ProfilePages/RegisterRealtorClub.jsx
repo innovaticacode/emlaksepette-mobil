@@ -84,7 +84,9 @@ const [check, setcheck] = useState(false)
   }, []);
 
   useEffect(() => {
-    setIban(user.iban);
+    user.has_club==3?
+    setIban (user.iban):
+    setIban('')
   },[user])
   useEffect(() => {
    setFullName(user.bank_name)
@@ -130,6 +132,7 @@ const [check, setcheck] = useState(false)
   console.log(ErrorMEssage)
   const [errorStatu, seterrorStatu] = useState(0)
   const [loading, setloading] = useState(false)
+
   const RegisterClub = ()=>{
 
     switch (true) {
@@ -155,6 +158,26 @@ const [check, setcheck] = useState(false)
         sendPutRequest();
     }
   }
+  const RegisterAgainClub = ()=>{
+
+    switch (true) {
+  
+      case !fullName:
+        seterrorStatu(2);
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 2000);
+        break;
+      case iban.length !== 32:
+        seterrorStatu(3);
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 2000);
+        break;
+      default:
+        sendPutRequest();
+    }
+  }
 
     return (
       <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
@@ -163,6 +186,7 @@ const [check, setcheck] = useState(false)
         <View style={styles.container}>
             <View style={styles.header}>
              {  user.has_club==0 &&  <Text style={styles.headerText}>Emlak Sepette | Emlak Kulüp Başvurusu</Text>}
+             {  user.has_club==3 &&  <Text style={styles.headerText}>Emlak Sepette | Emlak Kulüp Başvurusu</Text>}
                {  user.has_club==2 && <View style={{gap:10}}>
                
                 <Text style={styles.headerText}>Emlak Sepette | Emlak Kulüp Başvurunuz Alındı</Text>
@@ -176,22 +200,34 @@ const [check, setcheck] = useState(false)
                }
             </View>
             {
+              user.has_club==3 &&
+               <View style={{backgroundColor:'#EA2A28',padding:10,margin:10,borderRadius:7}}>
+              <Text style={{textAlign:'center',color:'white',fontWeight:'600'}}>Emlak Kulüp Üyeliğiniz reddedilmiştir lütfen bilgileri günncelleyerek tekrar deneyeniz</Text>
+            </View>
+            }
+           
+            {
                 user.has_club==0 &&
                 <>
                   <View style={{ alignItems: 'center' }}>
                 <View style={styles.FormContainer}>
                     <View style={styles.Inputs}>
                
-                        <View>
-                            <Text style={styles.Label}>Tc Kimlik No</Text>
-                            <TextInput style={styles.Input} keyboardType='number-pad' 
-                            value={tcNo}
-                            onChangeText={onChangeTC}
-                            maxLength={15}
-                            />
-                            { errorStatu==1 &&  <Text style={{fontSize:12,color:'red'}}>Tc kimlik numarası zorunludur</Text>}
-                          
-                        </View>
+                    {
+                user.account_type=='Limited veya Anonim Şirketi'?
+                <></>
+                :
+                <View>
+                <Text style={styles.Label}>Tc Kimlik No</Text>
+                <TextInput style={styles.Input} keyboardType='number-pad' 
+                value={tcNo}
+                onChangeText={onChangeTC}
+                maxLength={15}
+                />
+                { errorStatu==1 &&  <Text style={{fontSize:12,color:'red'}}>Tc kimlik numarası zorunludur</Text>}
+              
+            </View>
+               }
                         <View>
                             <Text style={styles.Label}>Hesap Sahibinin Adı Soyadı</Text>
                             <TextInput style={styles.Input} 
@@ -212,53 +248,14 @@ const [check, setcheck] = useState(false)
                         </View>
                     </View>
                     <View style={{alignItems:'center',top:10}}>
-                        <TouchableOpacity style={{backgroundColor:'#E54242',width:'70%',padding:10,borderRadius:6}} onPress={RegisterClub}>
+                        <TouchableOpacity style={{backgroundColor:'#E54242',width:'70%',padding:10,borderRadius:6}} onPress={ user.account_type=='Limited veya Anonim Şirketi'? RegisterAgainClub: RegisterClub}>
                             <Text style={{textAlign:'center',color:'white',fontSize:17,fontWeight:'500'}}>Üye Ol</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
         
-            <Modal
-          isVisible={succesRegister}
-          onBackdropPress={() => setsuccesRegister(false)}
-          animationIn={'zoomInUp'}
-          animationOut={'zoomOutUp'}
-          animationInTiming={200}
-          animationOutTiming={200}
-          backdropColor="transparent"
-          style={styles.modal4}
-        >
-          <View style={styles.modalContent4}>
-            <View style={{ padding: 10 ,gap:25}}>
-              <View>
-              <Icon
-                name='check-circle'
-                color={'green'}
-                size={40}
-              />
-              </View>
-            <View>
-              {
-                loading==true ?
-                <Text
-                style={{
-                  textAlign: "center",
-                  color: "green",
-                  fontSize:18,
-                  fontWeight: "500",
-                }}
-              >
-                  Emlak Kulüp Başvurunuz Alınmıştır!
-              </Text>:
-              <ActivityIndicator/>
-              }
-       
-            </View>
-           
-            </View>
-          </View>
-        </Modal>
+      
                 </>
                
             }
@@ -269,8 +266,23 @@ const [check, setcheck] = useState(false)
                   <View style={{ alignItems: 'center' }}>
                 <View style={styles.FormContainer}>
                     <View style={styles.Inputs}>
-               
-                     
+               {
+                user.account_type=='Limited veya Anonim Şirketi'?
+                <></>
+                :
+                <View>
+                <Text style={styles.Label}>Tc Kimlik No</Text>
+                <TextInput style={styles.Input} keyboardType='number-pad' 
+                value={tcNo}
+                onChangeText={onChangeTC}
+                maxLength={15}
+                />
+                { errorStatu==1 &&  <Text style={{fontSize:12,color:'red'}}>Tc kimlik numarası zorunludur</Text>}
+              
+            </View>
+               }
+                   
+
                         <View>
                             <Text style={styles.Label}>Hesap Sahibinin Adı Soyadı</Text>
                             <TextInput style={styles.Input} 
@@ -291,14 +303,19 @@ const [check, setcheck] = useState(false)
                         </View>
                     </View>
                     <View style={{alignItems:'center',top:10}}>
-                        <TouchableOpacity style={{backgroundColor:'#E54242',width:'70%',padding:10,borderRadius:6}} onPress={RegisterClub}>
+                        <TouchableOpacity style={{backgroundColor:'#E54242',width:'70%',padding:10,borderRadius:6}} onPress={RegisterAgainClub}>
                             <Text style={{textAlign:'center',color:'white',fontSize:17,fontWeight:'500'}}>Üye Ol</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
         
-            <Modal
+     
+                </>
+               
+            }
+          
+          <Modal
           isVisible={succesRegister}
           onBackdropPress={() => setsuccesRegister(false)}
           animationIn={'zoomInUp'}
@@ -338,11 +355,6 @@ const [check, setcheck] = useState(false)
             </View>
           </View>
         </Modal>
-                </>
-               
-            }
-          
-          
 
           
         </View>
