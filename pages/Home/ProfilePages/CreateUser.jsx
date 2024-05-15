@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated, TouchableOpacity, Switch ,Modal, Touchable} from 'react-native'
-import { useState, useRef } from 'react'
+import { useState, useRef ,useEffect} from 'react'
 import { useRoute,useNavigation } from '@react-navigation/native';
 import { TextInput } from 'react-native';
 import UserTypes from './profileComponents/UserTypes';
@@ -7,6 +7,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import ModalEdit from "react-native-modal";
 import DotIcon from 'react-native-vector-icons/Entypo'
 import RNPickerSelect from "react-native-picker-select";
+import { getValueFor } from '../../../components/methods/user';
+import axios from 'axios';
 export default function CreateUser() {
   const route = useRoute();
   const navigation = useNavigation();
@@ -45,8 +47,14 @@ const [isShowSheet, setisShowSheet] = useState(false)
 
    
     }
+const [user, setuser] = useState({})
 
-    const [UserType, setUserType] = useState('')
+const [UserType, setUserType] = useState('')
+const [roles, setroles] = useState({})
+
+
+console.log(roles); // roles state'i güncellendikten sonra yazdırılmalı
+
 
   return (
     <TouchableWithoutFeedback onPress={() => {
@@ -79,6 +87,7 @@ const [isShowSheet, setisShowSheet] = useState(false)
             <View>
             <Text style={style.Label}>Kullanıcı Tipi</Text>
             <RNPickerSelect
+          doneText='Tamam'
           value={UserType}
               placeholder={{
                 label: 'Seçiniz...',
@@ -86,12 +95,7 @@ const [isShowSheet, setisShowSheet] = useState(false)
               }}
               style={pickerSelectStyles}
                onValueChange={(value) => setUserType(value)}
-              items={[
-                { label: "Emlakçı", value: "Emlakçı" },
-                { label: "Banka", value: "Banka" },
-                { label: "İnşaat", value: "İnşaat" },
-                { label: "Turizm", value: "Turizm" }
-              ]}
+              items={pickerItems}
             />
             </View>
         

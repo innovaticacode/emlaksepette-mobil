@@ -75,6 +75,7 @@ import SplashScreen from './pages/Home/Onboarding/SplashScreen';
 import { getValueFor } from './components/methods/user';
 import Verification from './pages/Home/ProfilePages/Verification';
 import ForgotPassword from './pages/Home/Login&Register/ForgotPassword';
+import UpdateUserType from './pages/Home/ProfilePages/UpdateUserType';
 
 const Stack = createNativeStackNavigator();
 
@@ -540,6 +541,14 @@ export default function App({route}) {
   
   })}
   />
+           <Stack.Screen name='UpdateUserType' component={UpdateUserType}
+  options={({route})=>({
+    headerBackTitleVisible: false,
+        headerShown:true,
+        title:'Kullanıcı Güncelle'
+  
+  })}  />
+  
 </Stack.Navigator>
 
 </NavigationContainer>

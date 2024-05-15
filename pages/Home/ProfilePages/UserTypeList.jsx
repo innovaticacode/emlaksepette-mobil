@@ -53,7 +53,7 @@ console.log(transformedRoles)
       <View style={{padding:10,gap:10}}>
         {
             transformedRoles.map((item,index)=>(
-             <Users name={item.name} id='1' key={index} index={index}/>
+             <Users name={item.name} id='1' key={index} index={index} item={item}/>
             ))
         }
   
