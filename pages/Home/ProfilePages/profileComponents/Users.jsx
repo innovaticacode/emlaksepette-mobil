@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 
-export default function Users({name,id,index,item}) {
+export default function Users({name,id,index,item,deleteUser}) {
     const navigation =useNavigation()
   return (
     <View style={style.container}>
@@ -17,7 +17,9 @@ export default function Users({name,id,index,item}) {
                 >
                     <Text style={style.btnText}>Güncelle</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={style.butons}>
+                <TouchableOpacity style={style.butons} onPress={()=>{
+                    deleteUser(item.id,item.name)
+                }}>
                     <Text style={style.btnText}>Sil</Text>
                 </TouchableOpacity>
         </View>

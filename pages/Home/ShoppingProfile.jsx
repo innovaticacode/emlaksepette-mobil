@@ -523,11 +523,8 @@ export default function ShoppingProfile() {
                               style={{}}
                               onPress={() => {
                             
-                                navigation.navigate("CreateUser", {
-                                  header: "Listeleden  geldi",
-                                  hidden3: "none",
-                                  name: "Kullanıcılar",
-                                  changeSlectedState: "false",
+                                navigation.navigate("UsersList", {
+                               
                                 });
                               }}
                             >

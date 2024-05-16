@@ -27,7 +27,7 @@ export default function CreateUserType() {
   }, []);
   const [permissions, setPermissions] = useState({});
   const [groupNames, setGroupNames] = useState([]);
-
+  console.log(permissions,"asd");
  
   // fetchData fonksiyonunu düzenle
 
@@ -61,7 +61,7 @@ export default function CreateUserType() {
   }, [user]);
 
   const [checkedItems, setCheckedItems] = useState([]);
-
+  console.log(checkedItems,"asd")
   const handleCheckboxChange = (description) => {
     if (checkedItems.includes(description)) {
       // Eğer seçilen öğe zaten varsa, listeden kaldır
@@ -83,7 +83,11 @@ export default function CreateUserType() {
       console.log(formData);
       const response = await axios.post(
         `https://test.emlaksepette.com/api/institutional/roles/${UserID}`,
-        formData,
+        {
+          'permissions' : checkedItems,
+          '_method' : 'PUT',
+          "name" : TypeName
+        },
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -109,6 +113,22 @@ export default function CreateUserType() {
     setTypeName(name)
   }, [user])
   console.log(checkedItems)
+
+  useEffect(() => {
+    var tempItems = [];
+    Object.keys(permissions).map((key) => {
+      var keyItem = permissions[key];
+
+      keyItem.permissions.map((item, subIndex) => {
+        if(item.hasPermission){
+          tempItems.push(item.permission.id)
+        }
+      })
+    })
+
+    setCheckedItems(tempItems)
+  },[permissions])
+
   return (
     <ScrollView style={{ backgroundColor: "white" }}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
