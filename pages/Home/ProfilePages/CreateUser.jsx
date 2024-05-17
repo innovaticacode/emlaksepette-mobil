@@ -89,6 +89,7 @@ export default function CreateUser() {
   const [UserType, setUserType] = useState(null);
   const [isEnabled, setIsEnabled] = useState(true);
   const [isActive, setisActive] = useState(1)
+  const [Succesalert, setSuccesalert] = useState(false)
   const createUser = async () => {
     let formdata=new FormData()
       formdata.append('name',nameAndSurname)
@@ -109,18 +110,23 @@ export default function CreateUser() {
             },
           }
         );
+        setSuccesalert(true)
+        setTimeout(() => {
+            setSuccesalert(false)
+        }, 2000);
         setnameAndSurname('')
         setemail('')
           setpassword('')
           settitle('')
           setphoneNumber('')
           setUserType('')
-            setmessage(response.data.success)
+            setmessage(response.data)
         // Dönüştürülmüş veriyi state'e atama
     
         console.log(roleItems);
       }
     } catch (error) {
+    
       console.error("Veri getirme hatası:", error);
     }
   };
@@ -244,6 +250,26 @@ export default function CreateUser() {
                 <Text style={{ color: "white" }}>Kullanıcıyı Düzenle</Text>
               </TouchableOpacity>
             </View>
+          </View>
+        </ModalEdit>
+        <ModalEdit
+          isVisible={Succesalert}
+          animationIn={'zoomInUp'}
+          animationOut={'zoomOutUp'}
+          onBackdropPress={() => setSuccesalert(false)}
+          swipeDirection={["down"]}
+          onSwipeComplete={() => setSuccesalert(false)}
+          backdropColor="transparent"
+          style={style.modal4}
+        >
+          <View style={[style.modalContent4, { gap: 10 }]}>
+            <View style={{alignItems:'center',padding:15}}>
+            <Icon name="check-circle" size={35} color={'green'}/>
+            </View>
+            <View>
+              <Text style={{textAlign:'center',fontSize:16,color:'green',fontWeight:'bold'}}>Alt Kullanıcı Oluşturuldu</Text>
+              </View>
+              
           </View>
         </ModalEdit>
       </View>
@@ -416,5 +442,17 @@ const style = StyleSheet.create({
     height: "30%",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+  },
+  modal4: {
+    backgroundColor:'#14141497',
+    justifyContent: "center",
+    margin: 0,
+  },
+  modalContent4: {
+    backgroundColor: "#ffffff",
+    margin:10,
+    borderRadius:10,
+    height: "15%",
+
   },
 });
