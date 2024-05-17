@@ -40,7 +40,8 @@ export default function SwapScreen() {
     const getDetails = async (id,index) => {
      
       try {
-        const response = await axios.get(`https://test.emlaksepette.com/api/institutional/swap_applications/${id}`,{
+        if (user?.access_token) {
+          const response = await axios.get(`https://test.emlaksepette.com/api/institutional/swap_applications/${id}`,{
           headers: {
             'Authorization': `Bearer ${user?.access_token}`
           }
@@ -49,6 +50,8 @@ export default function SwapScreen() {
         setswapSuggestdetails(response?.data?.form)
         setselectedModalIndex(index)
       console.log(response.data + 'fgdgdfg')
+        }
+    
     
       } catch (error) {
         console.error('Error fetching data:', error);
