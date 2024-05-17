@@ -177,7 +177,7 @@ export default function ShoppingProfile() {
         </View>
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
-        <View style={{gap:20,padding:10}}>
+        <View style={{ gap: 20, padding: 10 }}>
           {groupedData.map((group, index) => (
             <View key={index}>
               {/* Başlık */}
@@ -185,67 +185,153 @@ export default function ShoppingProfile() {
 
               {/* Alt menü */}
               {group.subMenu.length > 0 &&
-                group.subMenu.map((item, subIndex) => (
-
-                  item.subMenu ?(
-                  <Collapse
-                    key={subIndex}
-                    onToggle={() => {
-                      setopenAccor(prevState => ({
-                        ...prevState,
-                        [subIndex]: !prevState[subIndex]
-                      }));
-                    }}
-                    isCollapsed={!openAccor[subIndex]}                    
-                  >
-                    <CollapseHeader>
-                      <View>
-                        <ProfileSettingsItem
-                          text={item.text}
-                          iconName={item.icon}
-                          arrowControl={item.subMenu && item.subMenu.length > 0}
-                          isCollapsed={!openAccor[subIndex]}                    
-
-                        />
-                      </View>
-                    </CollapseHeader>
-                    <CollapseBody style={{ margin: 10, gap: 10 }}>
-                      {item.subMenu &&
-                        item.subMenu.map((subItem, subItemIndex) => (
-                          <TouchableOpacity
-                            key={subItemIndex}
-                            onPress={() =>
-                              console.log("Navigated to:", subItem.url)
+                group.subMenu.map((item, subIndex) =>
+                  item.subMenu ? (
+                    <Collapse
+                      key={subIndex}
+                      onToggle={() => {
+                        setopenAccor((prevState) => ({
+                          ...prevState,
+                          [subIndex]: !prevState[subIndex],
+                        }));
+                      }}
+                      isCollapsed={!openAccor[subIndex]}
+                    >
+                      <CollapseHeader>
+                        <View>
+                          <ProfileSettingsItem
+                            text={item.text}
+                            iconName={item.icon}
+                            arrowControl={
+                              item.subMenu && item.subMenu.length > 0
                             }
-                          >
-                            <ProfileSettingsItem
-                              text={subItem.text}
-                              arrowNone={true}
-                            
-                            />
-                          </TouchableOpacity>
-                        ))}
-                    </CollapseBody>
-                  </Collapse>
-
+                            isCollapsed={!openAccor[subIndex]}
+                          />
+                        </View>
+                      </CollapseHeader>
+                      <CollapseBody style={{ margin: 10, gap: 10 }}>
+                        {item.subMenu &&
+                          item.subMenu.map((subItem, subItemIndex) => (
+                            <TouchableOpacity
+                              key={subItemIndex}
+                              onPress={() =>
+                                console.log("Navigated to:", subItem.url)
+                              }
+                            >
+                              <ProfileSettingsItem
+                                text={subItem.text}
+                                arrowNone={true}
+                              />
+                            </TouchableOpacity>
+                          ))}
+                      </CollapseBody>
+                    </Collapse>
                   ) : (
                     <View>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate(item.url)}
-                    >
-                      <ProfileSettingsItem
-                        text={item.text}
-                        ıconName={item.icon}
-                      />
-                    </TouchableOpacity>
-                  </View>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate(item.url)}
+                      >
+                        <ProfileSettingsItem
+                          text={item.text}
+                          ıconName={item.icon}
+                        />
+                      </TouchableOpacity>
+                    </View>
                   )
-
-                ))}
+                )}
             </View>
           ))}
         </View>
-
+        <View
+          style={{ alignItems: "center", paddingTop: 15, paddingBottom: 25 }}
+        >
+          <TouchableOpacity style={style.btnLogOut} onPress={logoutModal}>
+            <Text
+              style={{
+                color: "white",
+                textAlign: "center",
+                fontSize: 15,
+              }}
+            >
+              Çıkış Yap
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <Shadow>
+          <Modal
+            animationType="slide"
+            onBackdropPress={() => setdialogVisible(!dialogVisible)}
+            visible={dialogVisible}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+              setdialogVisible(!dialogVisible);
+            }}
+          >
+            <View style={{}}>
+              <View
+                style={[
+                  style.modalView,
+                  style.card,
+                  {
+                    padding: 0,
+                    borderRadius: 10,
+                    backgroundColor: "#F8F7F4",
+                    alignItems: "center",
+                    gap: 20,
+                  },
+                ]}
+              >
+                <Text style={{ color: "#333" }}>
+                  Çıkış Yapmak İstedğinize Emin misiniz?
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                >
+                  <View style={{ flex: 1 / 2 }}>
+                    <TouchableOpacity
+                      onPress={logout}
+                      style={{
+                        backgroundColor: "#F8D7DA",
+                        padding: 10,
+                        borderRadius: 6,
+                      }}
+                    >
+                      <Text style={{ textAlign: "center", color: "#721C24" }}>
+                        Çıkış Yap
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ flex: 1 / 2 }}>
+                    <TouchableOpacity
+                      style={[
+                        {
+                          backgroundColor: "#D4EDDA",
+                          padding: 10,
+                          borderRadius: 6,
+                        },
+                      ]}
+                      onPress={() => setdialogVisible(!dialogVisible)}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "#165724",
+                          fontWeight: "600",
+                        }}
+                      >
+                        İptal Et
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        </Shadow>
         {/* 
           <View>
             {İsLoggedIn ? (
@@ -861,97 +947,11 @@ export default function ShoppingProfile() {
                 </View>
               </>
             )}
-            <View style={{ alignItems: "center", paddingTop: 15 }}>
-              <TouchableOpacity style={style.btnLogOut} onPress={logoutModal}>
-                <Text
-                  style={{
-                    color: "white",
-                    textAlign: "center",
-                    fontSize: 15,
-                  }}
-                >
-                  Çıkış Yap
-                </Text>
-              </TouchableOpacity>
-            </View>
+            
           </View>
         </View>
 
-        <Shadow>
-          <Modal
-            animationType="slide"
-            onBackdropPress={() => setdialogVisible(!dialogVisible)}
-            visible={dialogVisible}
-            onRequestClose={() => {
-              Alert.alert("Modal has been closed.");
-              setdialogVisible(!dialogVisible);
-            }}
-          >
-            <View style={{}}>
-              <View
-                style={[
-                  style.modalView,
-                  style.card,
-                  {
-                    padding: 0,
-                    borderRadius: 10,
-                    backgroundColor: "#F8F7F4",
-                    alignItems: "center",
-                    gap: 20,
-                  },
-                ]}
-              >
-                <Text style={{ color: "#333" }}>
-                  Çıkış Yapmak İstedğinize Emin misiniz?
-                </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <View style={{ flex: 1 / 2 }}>
-                    <TouchableOpacity
-                      onPress={logout}
-                      style={{
-                        backgroundColor: "#F8D7DA",
-                        padding: 10,
-                        borderRadius: 6,
-                      }}
-                    >
-                      <Text style={{ textAlign: "center", color: "#721C24" }}>
-                        Çıkış Yap
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={{ flex: 1 / 2 }}>
-                    <TouchableOpacity
-                      style={[
-                        {
-                          backgroundColor: "#D4EDDA",
-                          padding: 10,
-                          borderRadius: 6,
-                        },
-                      ]}
-                      onPress={() => setdialogVisible(!dialogVisible)}
-                    >
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          color: "#165724",
-                          fontWeight: "600",
-                        }}
-                      >
-                        İptal Et
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </View>
-          </Modal>
-        </Shadow> */}
+        */}
       </ScrollView>
     </View>
   );

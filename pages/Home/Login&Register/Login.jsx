@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
   },
   form: {
     padding: 40,
-    gap: 20,
+    gap: 10,
   },
   Input: {
     padding: 10,
