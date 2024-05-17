@@ -90,6 +90,7 @@ export default function CreateUser() {
   const [isEnabled, setIsEnabled] = useState(true);
   const [isActive, setisActive] = useState(1)
   const [Succesalert, setSuccesalert] = useState(false)
+  const [errorMessage, seterrorMessage] = useState([])
   const createUser = async () => {
     let formdata=new FormData()
       formdata.append('name',nameAndSurname)
@@ -110,27 +111,30 @@ export default function CreateUser() {
             },
           }
         );
-        setSuccesalert(true)
-        setTimeout(() => {
-            setSuccesalert(false)
-        }, 2000);
+        // seterrorMessage(response.data.success,'fsdfdfds')
+        // setSuccesalert(true)
+        // setTimeout(() => {
+        //     setSuccesalert(false)
+        // }, 2000);
         setnameAndSurname('')
         setemail('')
           setpassword('')
           settitle('')
           setphoneNumber('')
           setUserType('')
-            setmessage(response.data)
+            setmessage(response.data.message)
+        
         // Dönüştürülmüş veriyi state'e atama
     
-        console.log(roleItems);
+       
       }
     } catch (error) {
-    
-      console.error("Veri getirme hatası:", error);
+       
+        console.error(error);
     }
   };
-  console.log(message)
+// console.log(message +'dfdssdf')
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -267,7 +271,7 @@ export default function CreateUser() {
             <Icon name="check-circle" size={35} color={'green'}/>
             </View>
             <View>
-              <Text style={{textAlign:'center',fontSize:16,color:'green',fontWeight:'bold'}}>Alt Kullanıcı Oluşturuldu</Text>
+              <Text style={{textAlign:'center',fontSize:16,color:'green',fontWeight:'bold'}}>Kullanıcı oluşturuldu</Text>
               </View>
               
           </View>

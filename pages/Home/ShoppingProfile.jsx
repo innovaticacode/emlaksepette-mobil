@@ -25,7 +25,39 @@ import { getValueFor } from "../../components/methods/user";
 import * as SecureStore from "expo-secure-store";
 import { Shadow } from "react-native-shadow-2";
 import Verification from "./ProfilePages/Verification";
+import Menu from "./Menu.json";
 export default function ShoppingProfile() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // JSON dosyasını require ile içe aktarıyoruz
+        const response = require("./Menu.json");
+        setData(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Etiketlere göre veriyi grupla
+  const groupedData = data.reduce((acc, item) => {
+    const existingGroupIndex = acc.findIndex(
+      (group) => group.label === item.label
+    );
+    if (existingGroupIndex !== -1) {
+      // Grup zaten varsa alt menüyü ekleyin
+      acc[existingGroupIndex].subMenu.push(item);
+    } else {
+      // Grup yoksa yeni bir grup oluşturun
+      acc.push({ label: item.label, subMenu: [item] });
+    }
+    return acc;
+  }, []);
+
   const { width, height, fontScale } = Dimensions.get("window");
   const route = useRoute();
 
@@ -63,11 +95,16 @@ export default function ShoppingProfile() {
   const [openAccor7, setopenAccor7] = useState(false);
 
   const [dialogVisible, setdialogVisible] = useState(false);
-  const PhotoUrl ='https://test.emlaksepette.com/storage/profile_images/'
+  const PhotoUrl = "https://test.emlaksepette.com/storage/profile_images/";
   return (
     <View style={style.container}>
       <View style={style.header}>
-        <View style={[style.opacity, {backgroundColor:user.banner_hex_code + 97}]}></View>
+        <View
+          style={[
+            style.opacity,
+            { backgroundColor: user.banner_hex_code + 97 },
+          ]}
+        ></View>
 
         <ImageBackground
           source={require("./profilePhoto.jpg")}
@@ -95,7 +132,7 @@ export default function ShoppingProfile() {
             >
               <View style={style.profileImage}>
                 <Image
-                  source={{uri:PhotoUrl + user.profile_image}}
+                  source={{ uri: PhotoUrl + user.profile_image }}
                   style={{ width: "100%", height: "100%" }}
                   borderRadius={50}
                 />
@@ -109,36 +146,107 @@ export default function ShoppingProfile() {
               }}
             >
               <View style={{ gap: 8 }}>
-                <View style={{flexDirection:'row',alignItems:'center'}}>
-                <Text style={{ color: "white", fontSize: 15,fontWeight:'bold' }}>
-                  {user.name}
-                </Text>
-                <View style={{ width: 20, height: 20, left: 10 }}>
-                <ImageBackground
-                  source={require("./BadgeYellow.png")}
-                  style={{ flex: 1 }}
-                />
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Text
+                    style={{ color: "white", fontSize: 15, fontWeight: "bold" }}
+                  >
+                    {user.name}
+                  </Text>
+                  <View style={{ width: 20, height: 20, left: 10 }}>
+                    <ImageBackground
+                      source={require("./BadgeYellow.png")}
+                      style={{ flex: 1 }}
+                    />
 
-                <Icon
-                  name="check"
-                  style={{ position: "absolute", left: 3.5, top: 3.5 }}
-                  size={13}
-                />
-              </View>
+                    <Icon
+                      name="check"
+                      style={{ position: "absolute", left: 3.5, top: 3.5 }}
+                      size={13}
+                    />
+                  </View>
                 </View>
-          
-                <Text style={{ color: "white", fontSize: 11,fontWeight:'bold' }}>
+
+                <Text
+                  style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
+                >
                   {user.corporate_type}
                 </Text>
               </View>
-
-            
             </View>
           </View>
         </View>
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
-        <View style={{ padding: 10 }}>
+        <View style={{gap:20,padding:10}}>
+          {groupedData.map((group, index) => (
+            <View key={index}>
+              {/* Başlık */}
+              <Text style={style.headerText}>{group.label}</Text>
+
+              {/* Alt menü */}
+              {group.subMenu.length > 0 &&
+                group.subMenu.map((item, subIndex) => (
+
+                  item.subMenu ?(
+                  <Collapse
+                    key={subIndex}
+                    onToggle={() => {
+                      setopenAccor(prevState => ({
+                        ...prevState,
+                        [subIndex]: !prevState[subIndex]
+                      }));
+                    }}
+                    isCollapsed={!openAccor[subIndex]}                    
+                  >
+                    <CollapseHeader>
+                      <View>
+                        <ProfileSettingsItem
+                          text={item.text}
+                          iconName={item.icon}
+                          arrowControl={item.subMenu && item.subMenu.length > 0}
+                          isCollapsed={!openAccor[subIndex]}                    
+
+                        />
+                      </View>
+                    </CollapseHeader>
+                    <CollapseBody style={{ margin: 10, gap: 10 }}>
+                      {item.subMenu &&
+                        item.subMenu.map((subItem, subItemIndex) => (
+                          <TouchableOpacity
+                            key={subItemIndex}
+                            onPress={() =>
+                              console.log("Navigated to:", subItem.url)
+                            }
+                          >
+                            <ProfileSettingsItem
+                              text={subItem.text}
+                              arrowNone={true}
+                            
+                            />
+                          </TouchableOpacity>
+                        ))}
+                    </CollapseBody>
+                  </Collapse>
+
+                  ) : (
+                    <View>
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate(item.url)}
+                    >
+                      <ProfileSettingsItem
+                        text={item.text}
+                        ıconName={item.icon}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  )
+
+                ))}
+            </View>
+          ))}
+        </View>
+
+        {/* 
           <View>
             {İsLoggedIn ? (
               <>
@@ -843,7 +951,7 @@ export default function ShoppingProfile() {
               </View>
             </View>
           </Modal>
-        </Shadow>
+        </Shadow> */}
       </ScrollView>
     </View>
   );
@@ -873,7 +981,6 @@ const style = StyleSheet.create({
   },
   profileImage: {
     borderRadius: 50,
-  
   },
   UserInfo: {
     width: "100%",
