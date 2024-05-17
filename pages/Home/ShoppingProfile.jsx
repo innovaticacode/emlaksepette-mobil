@@ -109,12 +109,11 @@ export default function ShoppingProfile() {
               }}
             >
               <View style={{ gap: 8 }}>
+                <View style={{flexDirection:'row',alignItems:'center'}}>
                 <Text style={{ color: "white", fontSize: 15,fontWeight:'bold' }}>
                   {user.name}
                 </Text>
-              </View>
-
-              <View style={{ width: 22, height: 22, left: 10 }}>
+                <View style={{ width: 20, height: 20, left: 10 }}>
                 <ImageBackground
                   source={require("./BadgeYellow.png")}
                   style={{ flex: 1 }}
@@ -122,10 +121,18 @@ export default function ShoppingProfile() {
 
                 <Icon
                   name="check"
-                  style={{ position: "absolute", left: 3.5, top: 3 }}
-                  size={15}
+                  style={{ position: "absolute", left: 3.5, top: 3.5 }}
+                  size={13}
                 />
               </View>
+                </View>
+          
+                <Text style={{ color: "white", fontSize: 11,fontWeight:'bold' }}>
+                  {user.corporate_type}
+                </Text>
+              </View>
+
+            
             </View>
           </View>
         </View>
@@ -138,33 +145,77 @@ export default function ShoppingProfile() {
                 <View style={{ gap: 30 }}>
                   {user.corporateAccountStatus === 1 ? (
                     <>
+                    {
+                      user.has_club==1 &&
                       <View>
-                        <Text style={style.headerText}>Koleksiyonlarım</Text>
-                        <TouchableOpacity
-                          onPress={() => navigation.navigate("Collecitons")}
-                        >
-                          <ProfileSettingsItem
-                            text="Koleksiyonlarım"
-                            ıconName="bookmark-border"
-                          />
-                        </TouchableOpacity>
-                      </View>
+                      <Text style={style.headerText}>Koleksiyonlarım</Text>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate("Collecitons")}
+                      >
+                        <ProfileSettingsItem
+                          text={user.corporate_type=='Emlak Ofisi'? 'Portföylerim': "Koleksiyonlarım"}
+                          ıconName="bookmark-border"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    }
+                      {
+                      user.has_club==0 &&
+                      <View>
+                      <Text style={style.headerText}>Emlak Kulüp</Text>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate("RealtorClub")}
+                      >
+                        <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
+                      </TouchableOpacity>
+                    </View>
+                    }
+                         {
+                      user.has_club==2 &&
+                      <View>
+                      <Text style={style.headerText}>Emlak Kulüp</Text>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate("RealtorClub")}
+                      >
+                        <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
+                      </TouchableOpacity>
+                    </View>
+                    }
+                      {
+                      user.has_club==3 &&
+                      <View>
+                      <Text style={style.headerText}>Emlak Kulüp</Text>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate("RealtorClub")}
+                      >
+                        <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
+                      </TouchableOpacity>
+                    </View>
+                    }
+                    
 
                       <View>
                         <Text style={style.headerText}>İlanlarım</Text>
-                        <TouchableOpacity
-                          onPress={() =>
-                            navigation.navigate("MyProject", {
-                              header2: "Proje İlanları",
-                            })
-                          }
-                        >
-                          <ProfileSettingsItem
-                            text="Proje İlanlarım"
-                            IconType={true}
-                            IconFeather="plus"
-                          />
-                        </TouchableOpacity>
+                        {
+                          user.corporate_type== 'Emlak Ofisi'?
+                            <></>:
+                            <TouchableOpacity
+                            onPress={() =>
+                              navigation.navigate("MyProject", {
+                                header2: "Proje İlanları",
+                              })
+                            }
+                          >
+                            <ProfileSettingsItem
+                              text="Proje İlanlarım"
+                              IconType={true}
+                              IconFeather="plus"
+                            />
+                          </TouchableOpacity>
+                          
+                        }
+                      
+
                         <TouchableOpacity
                           onPress={() =>
                             navigation.navigate("MyRealtor", {
@@ -472,11 +523,8 @@ export default function ShoppingProfile() {
                               style={{}}
                               onPress={() => {
                             
-                                navigation.navigate("CreateUser", {
-                                  header: "Listeleden  geldi",
-                                  hidden3: "none",
-                                  name: "Kullanıcılar",
-                                  changeSlectedState: "false",
+                                navigation.navigate("UsersList", {
+                               
                                 });
                               }}
                             >
@@ -549,14 +597,53 @@ export default function ShoppingProfile() {
             ) : (
               <>
                 <View style={{ gap: 30 }}>
-                  <View>
-                    <Text style={style.headerText}>Emlak Kulüp</Text>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate("RealtorClub")}
-                    >
-                      <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
-                    </TouchableOpacity>
-                  </View>
+                {
+                      user.has_club==1 &&
+                      <View>
+                      <Text style={style.headerText}>Koleksiyonlarım</Text>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate("Collecitons")}
+                      >
+                        <ProfileSettingsItem
+                          text="Koleksiyonlarım"
+                          ıconName="bookmark-border"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    }
+                      {
+                      user.has_club==0 &&
+                      <View>
+                      <Text style={style.headerText}>Emlak Kulüp</Text>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate("RealtorClub")}
+                      >
+                        <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
+                      </TouchableOpacity>
+                    </View>
+                    }
+                    {
+                      user.has_club==2 &&
+                      <View>
+                      <Text style={style.headerText}>Emlak Kulüp</Text>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate("RealtorClub")}
+                      >
+                        <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
+                      </TouchableOpacity>
+                    </View>
+                    }
+                      {
+                      user.has_club==3 &&
+                      <View>
+                      <Text style={style.headerText}>Emlak Kulüp</Text>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate("RealtorClub")}
+                      >
+                        <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
+                      </TouchableOpacity>
+                    </View>
+                    }
                   <View>
                     <Text style={style.headerText}>Komşumu Gör</Text>
                     <TouchableOpacity
