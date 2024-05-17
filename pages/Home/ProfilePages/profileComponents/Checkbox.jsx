@@ -1,8 +1,8 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import { CheckBox } from '@rneui/base'
-export default function Checkbox({title,chechked,id}) {
-    const [checked, setChecked] = React.useState(false);
+export default function Checkbox({title,chechked,id,checkedStatus}) {
+    const [checked, setChecked] = React.useState(checkedStatus);
     const toggleCheckbox = () => {
       setChecked(!checked)
       chechked(id)

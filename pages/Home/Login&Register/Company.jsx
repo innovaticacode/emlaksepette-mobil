@@ -26,7 +26,7 @@ import { SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 export default function Company() {
   const Navigation=useNavigation()
-  const [selectedIndexRadio, setIndexRadio] = useState(1);
+  const [selectedIndexRadio, setIndexRadio] = useState(0);
   {
     /* Input States */
   }
@@ -48,6 +48,7 @@ const [taxNumber, settaxNumber] = useState("")
 const [IdCardNo, setIdCardNo] = useState("")
 const [ShoppingName, setShoppingName] = useState("")
 const [licence, setlicence] = useState('')
+const [acccountType, setacccountType] = useState('')
   {
     /* cheked documents */
   }
@@ -165,8 +166,9 @@ const scrollViewRef = useRef();
             formData.append('check-d',checked)
             formData.append('check-b',checked1)
             formData.append('check-c',checked2)
-            formData.append('activity','İnşaat')
-            formData.append('iban','53656646656465')
+            formData.append('account_type')
+            formData.append('activity',null)
+            formData.append('iban',null)
             const response = await axios.post('https://test.emlaksepette.com/api/register', formData);
             
             // İsteğin başarılı bir şekilde tamamlandığı durum
@@ -448,8 +450,10 @@ const scrollViewRef = useRef();
             // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
           }
         };
-        
-    
+        const chooseType=(title)=>{
+          setacccountType(title)
+        }
+    console.log(acccountType)
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
@@ -694,7 +698,9 @@ const scrollViewRef = useRef();
               >
                 <CheckBox
                   checked={selectedIndexRadio === 1}
-                  onPress={() => setIndexRadio(1)}
+                  onPress={() => {
+                    chooseType('Şahıs Şirketi')
+                    setIndexRadio(1)}}
                   checkedIcon="dot-circle-o"
                   uncheckedIcon="circle-o"
                   checkedColor="#E54242"
@@ -710,7 +716,8 @@ const scrollViewRef = useRef();
 
                 
                   checked={selectedIndexRadio === 2}
-                  onPress={() => setIndexRadio(2)}
+                  onPress={() => {setIndexRadio(2) 
+                    chooseType('Limited veya Anonim Şirketi')}}
                   checkedIcon="dot-circle-o"
                   uncheckedIcon="circle-o"
                   checkedColor="#E54242"

@@ -11,11 +11,12 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import Header from "../../components/Header";
-import { useState } from "react";
+import { useState,useEffect} from "react";
 import Modal from "react-native-modal";
 import Categories from "../../components/Categories";
 import Search from "./Search";
 import { useNavigation } from "@react-navigation/native";
+import { getValueFor } from "../../components/methods/user";
 export default function ShareScreen() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -24,6 +25,10 @@ export default function ShareScreen() {
   };
 
   const navigation = useNavigation();
+  const [user, setuser] = useState({})
+  useEffect(() => {
+    getValueFor("user", setuser);
+  }, []);
   return (
     <SafeAreaView style={{ backgroundColor: "white", flex: 1}}>
       <View
@@ -136,33 +141,41 @@ export default function ShareScreen() {
       >
           <View style={{gap:15,height:'100%',paddingBottom:25,paddingTop:5,alignItems:'center'}}> 
              {/* Project Card */}
-          <View style={styles.card}>
-            <View style={{width:'100%',height:13,backgroundColor:'#EA2A28',borderTopLeftRadius:15,borderTopRightRadius:15}}/>
-            <View style={{alignItems:'center'}}>
-                <View style={{width:80,height:80}}>
-                  <Image source={require('./proje.png')} style={{width:'100%',height:'100%',tintColor:'#EA2A28'}}/>
-                </View>
-
-            </View>
-            <View style={{padding:10}}>
-              <Text style={{fontWeight:'400',textAlign:'center',fontSize:12}}>
-              Kendi proje ilanınızı ekleyin ve hayalinzdeki projenizi paylaşın. Binlerce kişiye ulaşın
-              </Text>
-            </View>
-            <View style={{alignItems:'center'}}>
-              <TouchableOpacity style={styles.addBtn}
-                   onPress={()=>{
-                    navigation.navigate('CategorieChoose',{name:'Proje İLanı',previousName:'Proje İlanı'})
-                  }}
-              >
-                <Text style={{textAlign:'center',color:'white',fontWeight:'600'}}>Proje İlanı Ekle</Text>
-                <Icon name="pluscircle" color={'white'} size={15}/>
-              </TouchableOpacity>
-             
-            </View>
-          </View>
+              {
+             user.role=='Kurumsal Hesap' &&   user.corporate_type=='Emlak Ofisi' ?
+                <>
+                </>:
+                      <View style={styles.card}>
+                      <View style={{width:'100%',height:13,backgroundColor:'#EA2A28',borderTopLeftRadius:15,borderTopRightRadius:15}}/>
+                      <View style={{alignItems:'center'}}>
+                          <View style={{width:80,height:80}}>
+                            <Image source={require('./proje.png')} style={{width:'100%',height:'100%',tintColor:'#EA2A28'}}/>
+                          </View>
+          
+                      </View>
+                      <View style={{padding:10}}>
+                        <Text style={{fontWeight:'400',textAlign:'center',fontSize:12}}>
+                        Kendi proje ilanınızı ekleyin ve hayalinzdeki projenizi paylaşın. Binlerce kişiye ulaşın
+                        </Text>
+                      </View>
+                      <View style={{alignItems:'center'}}>
+                        <TouchableOpacity style={styles.addBtn}
+                             onPress={()=>{
+                              navigation.navigate('CategorieChoose',{name:'Proje İLanı',previousName:'Proje İlanı'})
+                            }}
+                        >
+                          <Text style={{textAlign:'center',color:'white',fontWeight:'600'}}>Proje İlanı Ekle</Text>
+                          <Icon name="pluscircle" color={'white'} size={15}/>
+                        </TouchableOpacity>
+                       
+                      </View>
+                    </View>
+              }
+    
           {/* Estate Card */}
-          <View style={styles.card}>
+          {
+            user.role=='Kurumsal Hesap'?
+            <View style={styles.card}>
             <View style={{width:'100%',height:13,backgroundColor:'#274ABB',borderTopLeftRadius:15,borderTopRightRadius:15}}/>
             <View style={{alignItems:'center'}}>
                 <View style={{width:80,height:80}}>
@@ -186,9 +199,11 @@ export default function ShareScreen() {
               </TouchableOpacity>
              
             </View>
-          </View>
+          </View>:''
+          }
+         
                 {/* Sat Kirala */}
-          <View style={styles.card}>
+          <View style={[styles.card,{display:user.role=='Bireysel Hesap' ? 'flex':'none'}]}>
             <View style={{width:'100%',height:13,backgroundColor:'#333333',borderTopLeftRadius:15,borderTopRightRadius:15}}/>
             <View style={{alignItems:'center'}}>
                 <View style={{width:80,height:80}}>

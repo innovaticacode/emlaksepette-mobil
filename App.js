@@ -75,6 +75,9 @@ import SplashScreen from './pages/Home/Onboarding/SplashScreen';
 import { getValueFor } from './components/methods/user';
 import Verification from './pages/Home/ProfilePages/Verification';
 import ForgotPassword from './pages/Home/Login&Register/ForgotPassword';
+import UpdateUserType from './pages/Home/ProfilePages/UpdateUserType';
+import UpdateUsers from './pages/Home/ProfilePages/UpdateUsers';
+import UsersList from './pages/Home/ProfilePages/UsersList';
 
 const Stack = createNativeStackNavigator();
 
@@ -540,6 +543,28 @@ export default function App({route}) {
   
   })}
   />
+           <Stack.Screen name='UpdateUserType' component={UpdateUserType}
+  options={({route})=>({
+    headerBackTitleVisible: false,
+        headerShown:true,
+        title:'Kullanıcı Güncelle'
+  
+  })}  />
+             <Stack.Screen name='UpdateUsers' component={UpdateUsers}
+  options={({route})=>({
+    headerBackTitleVisible: false,
+        headerShown:true,
+        title:'Alt Kullanıcı Güncelle'
+  
+  })}  />
+              <Stack.Screen name='UsersList' component={UsersList}
+  options={({route})=>({
+    headerBackTitleVisible: false,
+        headerShown:true,
+        title:'Alt Kullanıcılar'
+  
+  })}  />
+  
 </Stack.Navigator>
 
 </NavigationContainer>
