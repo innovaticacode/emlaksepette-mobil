@@ -215,7 +215,7 @@ export default function ShoppingProfile() {
                           <TouchableOpacity
                             key={subItemIndex}
                             onPress={() =>
-                              console.log("Navigated to:", subItem.url)
+                              navigation.navigate(subItem.url)
                             }
                           >
                             <ProfileSettingsItem
@@ -861,19 +861,7 @@ export default function ShoppingProfile() {
                 </View>
               </>
             )}
-            <View style={{ alignItems: "center", paddingTop: 15 }}>
-              <TouchableOpacity style={style.btnLogOut} onPress={logoutModal}>
-                <Text
-                  style={{
-                    color: "white",
-                    textAlign: "center",
-                    fontSize: 15,
-                  }}
-                >
-                  Çıkış Yap
-                </Text>
-              </TouchableOpacity>
-            </View>
+           
           </View>
         </View>
 

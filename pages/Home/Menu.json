@@ -130,15 +130,7 @@
             }
         ]
     },
-    {
-        "id": "realestate",
-        "label": "Mağazam Emlak Sepette",
-        "icon": "info",
-        "text": "Sat Kirala Formlarım",
-        "key": "RealEstate",
-        "url": "institutional.real.estates",
-        "activePath": "/hesabim/real_estates"
-    },
+  
     {
         "id": "shopping-bag",
         "label": "Mağazam Emlak Sepette",
@@ -154,13 +146,13 @@
             {
                 "text": "Aldıklarım",
                 "key": "ShowCartOrders",
-                "url": "institutional.profile.cart-orders",
+                "url": "Sell",
                 "activePath": "/hesabim/aldiklarim"
             },
             {
                 "text": "Sattıklarım",
                 "key": "GetOrders",
-                "url": "institutional.orders",
+                "url": "Sell",
                 "activePath": "/hesabim/sattiklarim"
             }
         ]
@@ -180,13 +172,13 @@
             {
                 "text": "Kiraya Verdiklerim",
                 "key": "GetReservations",
-                "url": "institutional.reservations",
+                "url": "Rent",
                 "activePath": "/hesabim/reservations"
             },
             {
                 "text": "Kiraladıklarım",
                 "key": "MyReservations",
-                "url": "institutional.myreservations",
+                "url": "Rent",
                 "activePath": "/hesabim/kiraladiklarim"
             }
         ]
@@ -226,13 +218,13 @@
             {
                 "text": "Oluştur",
                 "key": "CreateOffer",
-                "url": "institutional.offers.create",
+                "url": "Offer",
                 "activePath": "/hesabim/kampanya-olustur"
             },
             {
                 "text": "Listele",
                 "key": "GetOffers",
-                "url": "institutional.offers.index",
+                "url": "OfferList",
                 "activePath": "/hesabim/kampanyalar"
             }
         ]

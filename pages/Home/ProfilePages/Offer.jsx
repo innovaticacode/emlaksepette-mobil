@@ -7,7 +7,7 @@ import ListCheckBox from './profileComponents/ListCheckBox';
 export default function Offer() {
   const [OfferPrice, setOfferPrice] = useState(0)
   const route = useRoute();
-  const { name } = route.params;
+
   const translateY = useRef(new Animated.Value(400)).current;
   const [selectedPressAl, setSelectedPresAll]=useState(false);
   const [display, setdisplay] = useState(false)

@@ -3,10 +3,10 @@ import { useState,useRef } from 'react'
 import { useRoute, useNavigation } from '@react-navigation/native';
 import RentOrder from './profileComponents/RentOrder';
 import Icon from 'react-native-vector-icons/Entypo'
-export default function Rent() {
+export default function Rent({display}) {
   const [Tabs, setTabs] = useState(0)
   const route = useRoute();
-  const { text,display,name } = route.params;
+
 
   const translateY = useRef(new Animated.Value(400)).current;
   const [display2, setdisplay2] = useState(false)
@@ -47,12 +47,8 @@ export default function Rent() {
       <ScrollView>
       <View style={styles.OrdersArea}>
          
-            <RentOrder display={display}/>
-            <RentOrder display={display}/>
-            <RentOrder display={display}/>
-            <RentOrder display={display}/>
-            <RentOrder display={display}/>
-            <RentOrder display={display}/>
+            <RentOrder display={'flex'}/>
+        
 
 
       </View>
