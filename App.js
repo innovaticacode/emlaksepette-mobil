@@ -215,7 +215,7 @@ export default function App({route}) {
     <Stack.Screen name="Rent"  component={Rent}
        options={({route})=>({
         animationTypeForReplace:'pop',
-        title:route.params.name
+        title:'Kiraladıklarım'
         
         
     })}
@@ -251,7 +251,7 @@ export default function App({route}) {
         <Stack.Screen name="Offer"  component={Offer}
          options={({route})=>({
            headerBackTitleVisible: false,
-          title:route.params.name
+          title:'Kampanya Oluştur'
           
 })}
         
@@ -259,7 +259,7 @@ export default function App({route}) {
          <Stack.Screen name="CreateUserType"  component={CreateUserType} 
             options={({route})=>({
             
-                title:route.params.name
+                title:'Kullanıcı Tipi Oluştur'
                 
                 
             })}
@@ -301,7 +301,7 @@ export default function App({route}) {
       <Stack.Screen name="Suggest"  component={Suggests} 
             options={({route})=>({
               animationTypeForReplace:'pop',
-              title:route.params.name
+              title:'Gelen Konut Başvuruları'
               
               
           })}
@@ -311,7 +311,7 @@ export default function App({route}) {
             options={({route})=>({
                headerBackTitleVisible: false,
               animationTypeForReplace:'pop',
-              title:route.params.name
+              title:'Kampanya Listele'
               
               
           })}

@@ -11,7 +11,7 @@ export default function Sell() {
     setSearch(search);
   };
   const route = useRoute();
-  const {displayInfo,text} = route.params;
+
 
   const [products, setProducts] = useState([
     { id: 1,  date: '2023-01-15' },
@@ -84,13 +84,13 @@ export default function Sell() {
         </View>
         <ScrollView>
         <View style={style.orders}>
+                  <Order display={'none'} text={'deneme'}/>
+                  {/* <Order display={displayInfo} text={text}/>
                   <Order display={displayInfo} text={text}/>
                   <Order display={displayInfo} text={text}/>
                   <Order display={displayInfo} text={text}/>
                   <Order display={displayInfo} text={text}/>
-                  <Order display={displayInfo} text={text}/>
-                  <Order display={displayInfo} text={text}/>
-                  <Order display={displayInfo} text={text}/>
+                  <Order display={displayInfo} text={text}/> */}
                  
 
         </View>

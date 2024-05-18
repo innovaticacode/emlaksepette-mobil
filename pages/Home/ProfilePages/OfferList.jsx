@@ -15,7 +15,7 @@ export default function OfferList() {
       );
     const route = useRoute();
     const navigation=useNavigation()
-    const { name } = route.params;
+  
   return (
     <View style={styles.container}>
         <View style={styles.header}> 

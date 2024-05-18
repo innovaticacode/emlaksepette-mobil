@@ -17,9 +17,7 @@ import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 export default function CreateUserType() {
   const route = useRoute();
-  const token =
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGE5OGU0NWVmZDZmOGFmMTZmMTdlYjZlOTYwZjZjZjk3ZWFlNTIyOTUxNzM3ZDcwM2IyODIyNTJjYmM5NWIwZWI3NTI5ZDZmZGJkMjkxODEiLCJpYXQiOjE3MTQwMzgzODguOTAzNDYyLCJuYmYiOjE3MTQwMzgzODguOTAzNDY5LCJleHAiOjE3NDU1NzQzODguODkwOTQ3LCJzdWIiOiIxMDgiLCJzY29wZXMiOltdfQ.COl7GBq8jVhi4tdpv9M4XfVaB725vZUkUanlNOjomYucIgRwW8fqShfw9-u28idpkCL9mEmcovWB9Cy58eQU7NRtFyShUHj1NglDP_BWcimJfTGd5GVNfGe2n5NzklTJtdUr0TuEz0QIAJmMFppH2PDJ1dtVGt8YbWwqCxRK6a08mN4YtQR9Z6tLe9_s5PDw49qy9QFyu91S5o11rMlN4bX3iLG0h0-zPDY3Vl6TO7IJkgBe4o8FUoxvlSH9xEwU0jo1wqTR_r38105CjeAV4SCMLLfPEzeKQkxMJ5A2DRVrPRl-dg7EAIyS8lK6OHQ6KpmlZqOFDAdFwlIK7btEV0_brS3vrON2x63jYrnFAOhZ5jR8WBNsGqnJVGn1NZoX0VwqHF2dxWAqcTjqbqAYmSJpagWB_Awk02Zqt1rEQDHajN4N1jld0fddP5R8pRO6P_pzqwwq1-is01pIVqWLp27YRAtF4hpDEcOTzEuhrt_UN98m4l-6wGr3suxuIhwb_zfH0lw_qDqyZK54dOX6Q8oPqYn4daZN5TtgJs87jaSw615M7VZXwYp7hd43ZfSqSbfLX2k0vskLIbWKBgdooW3npWPjlmv72zu9GHRKpEdWUbmBDHXjjGDQOhLuumiC9vZOWU-hcIJYWwGAyAY0Y1A-xRaRTkTB8St8TxWul5Q";
-  const { header, hidden, hidden2 } = route.params;
+  
   const [TypeName, setTypeName] = useState("");
   const navigation = useNavigation();
   const [user, setuser] = useState({});
@@ -110,7 +108,7 @@ export default function CreateUserType() {
     <ScrollView style={{ backgroundColor: "white" }}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.container}>
-          <View style={[styles.InputArea, { display: hidden }]}>
+          <View style={[styles.InputArea, {}]}>
             <Text style={[styles.label]}>Kullanıcı Rolü Belirle</Text>
             <TextInput
               style={styles.Input}
@@ -119,7 +117,7 @@ export default function CreateUserType() {
               onChangeText={(value) => setTypeName(value)}
             />
           </View>
-          <View style={{ display: hidden }}>
+          <View style={{  }}>
           
             <View>
               {Object.values(Permissions).map((array, index) => (
