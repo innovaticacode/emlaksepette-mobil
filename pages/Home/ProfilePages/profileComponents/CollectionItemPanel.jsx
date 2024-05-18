@@ -18,17 +18,36 @@ export default function CollectionItemPanel({ collection, panelInfo }) {
       style={style.container}
     >
       <View style={style.Images}>
-        <View style={{ width: "50%", height: "100%" }}>
-          <ImageBackground
-            source={require("./home.jpg")}
-            style={{ width: "100%", height: "100%" }}
-          />
-        </View>
-        <View style={{ width: "50%", height: "100%", backgroundColor: "grey" }}>
-          <ImageBackground
-            source={require("./home.jpg")}
-            style={{ width: "100%", height: "100%" }}
-          />
+        <View
+          style={{
+            width: "100%",
+            height: "100%",
+            flexDirection: "row",
+            gap: 10,
+          }}
+        >
+          {panelInfo.slice(0, 2).map((panelInf, i) => (
+            <View key={i} style={{ width: "50%", height: "100%" }}>
+              <ImageBackground
+                key={i}
+                source={{
+                  uri:
+                    panelInf.item_type === 2 &&
+                    panelInf.housing?.housing_type_data
+                      ? `https://test.emlaksepette.com/${
+                          JSON.parse(panelInf.housing.housing_type_data).images
+                        }`
+                      : `https://test.emlaksepette.com/${panelInf.project.image.replace(
+                          "public",
+                          "storage"
+                        )}`,
+                }}
+                style={{ width: "100%", height: "100%" }}
+              >
+                {/* Diğer bileşenler buraya eklenebilir */}
+              </ImageBackground>
+            </View>
+          ))}
         </View>
       </View>
 
@@ -62,7 +81,7 @@ export default function CollectionItemPanel({ collection, panelInfo }) {
             }}
           >
             <Icon2 name="eye" size={17} color="red" />
-            <Text style={{ fontSize: 12 }}>20</Text>
+            <Text style={{ fontSize: 12 }}> {collection?.clicks.length} </Text>
           </View>
           <View>
             <Text style={{ fontSize: 12 }}>Görüntülenme</Text>
