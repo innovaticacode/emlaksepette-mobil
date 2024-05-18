@@ -210,7 +210,7 @@ const editCollectionName = async (id) => {
   }
 };
 
-console.log(collections);
+console.log(selectedCollection)
 
   return ( 
     <View style={{flex:1,}}>
