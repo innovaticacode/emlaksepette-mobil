@@ -17,17 +17,14 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import IconSocialMedia from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/Entypo";
 import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
- import { CheckBox } from "react-native-elements";
+import { CheckBox } from "react-native-elements";
 import Modal from "react-native-modal";
 import { apiRequestPost } from "../../../components/methods/apiRequest";
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from "expo-secure-store";
 import { useRoute } from "@react-navigation/native";
 
-
-
-
 export default function Login({ navigation }) {
-  const route = useRoute()
+  const route = useRoute();
 
   const [eye, seteye] = useState("eye-off-sharp");
   const [Show, setShow] = useState(false);
@@ -69,27 +66,26 @@ export default function Login({ navigation }) {
         setpassControl(false);
       }, 2000);
     } else {
-      setTimeout(() => {
-      }, 9000);
+      setTimeout(() => {}, 9000);
     }
 
-    apiRequestPost('login',{
-      email : email,
-      password : password
+    apiRequestPost("login", {
+      email: email,
+      password: password,
     }).then((res) => {
-      if(res.data.status){
-        SecureStore.setItemAsync('user',JSON.stringify(res.data));
-        navigation.navigate('HomePage')
-      }else{
+      if (res.data.status) {
+        SecureStore.setItemAsync("user", JSON.stringify(res.data));
+        navigation.navigate("HomePage");
+      } else {
         setshowMailSendAlert(true);
         setStatus(false);
-        setStatusMessage(res.data.message)
+        setStatusMessage(res.data.message);
       }
-    })
+    });
   };
 
-  const [status,setStatus] = useState(false);
-  const [statusMessage,setStatusMessage] = useState(false);
+  const [status, setStatus] = useState(false);
+  const [statusMessage, setStatusMessage] = useState(false);
 
   const [showLengthAlert, setShowLengthAlert] = useState(false);
   const [showUpperAlert, setShowUpperAlert] = useState(false);
@@ -113,35 +109,50 @@ export default function Login({ navigation }) {
     /* ınput control*/
   }
 
-  const IsShowAlert =route.params?.showAlert
+  const IsShowAlert = route.params?.showAlert;
 
-  const message =route.params?.message  
+  const message = route.params?.message;
   Login.navigationOptions = {
     headerShown: false, // Başlık gizleme
   };
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <View style={[styles.header,{}]}>
-
-        </View>
-      <View style={{padding:10}}> 
-        <View style={{backgroundColor:'#E7FCEB',flexDirection:'row',alignItems:'center',padding:10,gap:15, display:IsShowAlert?'flex':'none'}}>
-          <View>
-            <BackIcon name="checkcircle" color={'#1D8027'} size={30}/>
+        <View style={[styles.header, {}]}></View>
+        <View style={{ padding: 10 }}>
+          <View
+            style={{
+              backgroundColor: "#E7FCEB",
+              flexDirection: "row",
+              alignItems: "center",
+              padding: 10,
+              gap: 15,
+              display: IsShowAlert ? "flex" : "none",
+            }}
+          >
+            <View>
+              <BackIcon name="checkcircle" color={"#1D8027"} size={30} />
+            </View>
+            <View style={{ flex: 1.9 / 2 }}>
+              <Text style={{ color: "#1D8027", fontSize: 12 }}>
+                Hesabınız oluşturuldu. Hesabınızı etkinleştirmek için lütfen
+                e-posta adresinize gönderilen doğrulama bağlantısını tıklayarak
+                e-postanızı onaylayın
+              </Text>
+            </View>
           </View>
-          <View style={{flex:1.9/2}}>
-          <Text style={{color:'#1D8027',fontSize:12}}>Hesabınız oluşturuldu. Hesabınızı etkinleştirmek için lütfen e-posta adresinize gönderilen doğrulama bağlantısını tıklayarak e-postanızı onaylayın</Text>
-          </View>
-         
-        </View>
         </View>
         <View style={styles.logIn}>
           <KeyboardAwareScrollView>
             <View style={styles.form}>
               <View>
                 <Text
-                  style={{ color: "#17243e", fontSize: 24, fontWeight: "bold" ,textAlign:'center'}}
+                  style={{
+                    color: "#17243e",
+                    fontSize: 24,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                  }}
                 >
                   Giriş Yap
                 </Text>
@@ -183,7 +194,12 @@ export default function Login({ navigation }) {
                 </View>
                 <View>
                   <TouchableOpacity
-                    style={{ position: "absolute", right: 10, top: 7,zIndex:1 }}
+                    style={{
+                      position: "absolute",
+                      right: 10,
+                      top: 7,
+                      zIndex: 1,
+                    }}
                     onPress={show}
                   >
                     <EyeIcon
@@ -256,7 +272,8 @@ export default function Login({ navigation }) {
                       }}
                     />
                   </View>
-                  <TouchableOpacity style={{}} 
+                  <TouchableOpacity
+                    style={{}}
                     onPress={() => {
                       navigation.navigate("Forgot");
                     }}
@@ -326,7 +343,7 @@ export default function Login({ navigation }) {
                     width: "40%",
                   }}
                 />
-                <Text style={{color:'#666666'}}>veya</Text>
+                <Text style={{ color: "#666666" }}>veya</Text>
                 <View
                   style={{
                     backgroundColor: "#E7EBEE",
@@ -387,7 +404,7 @@ export default function Login({ navigation }) {
             <View>
               <Text style={{ textAlign: "center" }}>
                 <Text style={{ fontSize: 13, color: "#333" }}>
-                  Henüz Üye Değilmisiniz?{" "}
+                  Henüz üye değil misiniz?{" "}
                 </Text>
 
                 <Text
@@ -419,7 +436,11 @@ export default function Login({ navigation }) {
 
             <View style={{ gap: 10 }}>
               <View style={{ alignItems: "center" }}>
-                <MailCheck name="close" size={55} color={status ? "green" : "red"} />
+                <MailCheck
+                  name="close"
+                  size={55}
+                  color={status ? "green" : "red"}
+                />
               </View>
               <View>
                 <Text
@@ -439,9 +460,7 @@ export default function Login({ navigation }) {
       </View>
     </TouchableWithoutFeedback>
   );
- 
 }
-
 
 const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
@@ -463,7 +482,7 @@ const styles = StyleSheet.create({
   },
   form: {
     padding: 40,
-    gap: 20,
+    gap: 10,
   },
   Input: {
     padding: 10,
@@ -480,7 +499,7 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "white",
     padding: 20,
-    paddingBottom : 50,
+    paddingBottom: 50,
     borderRadius: 20,
   },
   modalText: {
