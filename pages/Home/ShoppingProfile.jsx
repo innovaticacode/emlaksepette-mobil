@@ -26,6 +26,7 @@ import * as SecureStore from "expo-secure-store";
 import { Shadow } from "react-native-shadow-2";
 import Verification from "./ProfilePages/Verification";
 import Menu from "./Menu.json";
+import axios from "axios";
 export default function ShoppingProfile() {
   const [data, setData] = useState([]);
 
@@ -87,15 +88,67 @@ export default function ShoppingProfile() {
   const navigation = useNavigation();
 
   const [openAccor, setopenAccor] = useState(false);
-  const [openAccor2, setopenAccor2] = useState(false);
-  const [openAccor3, setopenAccor3] = useState(false);
-  const [openAccor4, setopenAccor4] = useState(false);
-  const [openAccor5, setopenAccor5] = useState(false);
-  const [openAccor6, setopenAccor6] = useState(false);
-  const [openAccor7, setopenAccor7] = useState(false);
 
   const [dialogVisible, setdialogVisible] = useState(false);
   const PhotoUrl = "https://test.emlaksepette.com/storage/profile_images/";
+
+//permissionslara atılan istek
+
+
+const [permissionsUser, setpermissionsUser] = useState([])
+
+  const fetchData = async () => {
+    try {
+      if (user.access_token) {
+        const response = await axios.get(`https://test.emlaksepette.com/api/institutional/users/${user?.id}`, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`
+          }
+        });
+          setpermissionsUser(response.data.permissions)
+      }
+   
+    } catch (error) {
+      console.error('eror', error);
+    
+    }
+  };
+
+
+
+useEffect(()=>{
+  fetchData();
+},[user])
+
+
+const [PermissionsKeyOfUser, setPermissionsKeyOfUser] = useState([])
+
+useEffect(() => {
+  if (data.length > 0) {
+    const keysArray = data.map(item => item.key);
+    setPermissionsKeyOfUser(keysArray);
+  }
+}, [data]);
+
+
+const commonKeys = permissionsUser && PermissionsKeyOfUser.length > 0
+? PermissionsKeyOfUser.filter(key => permissionsUser.includes(key))
+: [];
+
+
+// Filtrelenmiş key değerlerine göre menü öğelerini seçin
+const filteredMenuData = groupedData.filter(item =>
+  (item.subMenu && item.subMenu.length > 0) || commonKeys.includes(item.key)
+);
+
+
+console.log(filteredMenuData.length + "sdsf")
+
+
+
+//permissionslara atılan istek
+
+
   return (
     <View style={style.container}>
       <View style={style.header}>
@@ -177,75 +230,86 @@ export default function ShoppingProfile() {
         </View>
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
-        <View style={{gap:20,padding:10}}>
-          {groupedData.map((group, index) => (
+        <View style={{ gap: 20, padding: 10 }}>
+          {filteredMenuData.map((group, index) => (
             <View key={index}>
               {/* Başlık */}
               <Text style={style.headerText}>{group.label}</Text>
 
               {/* Alt menü */}
               {group.subMenu.length > 0 &&
-                group.subMenu.map((item, subIndex) => (
-
-                  item.subMenu ?(
-                  <Collapse
-                    key={subIndex}
-                    onToggle={() => {
-                      setopenAccor(prevState => ({
-                        ...prevState,
-                        [subIndex]: !prevState[subIndex]
-                      }));
-                    }}
-                    isCollapsed={!openAccor[subIndex]}                    
-                  >
-                    <CollapseHeader>
-                      <View>
-                        <ProfileSettingsItem
-                          text={item.text}
-                          iconName={item.icon}
-                          arrowControl={item.subMenu && item.subMenu.length > 0}
-                          isCollapsed={!openAccor[subIndex]}                    
-
-                        />
-                      </View>
-                    </CollapseHeader>
-                    <CollapseBody style={{ margin: 10, gap: 10 }}>
-                      {item.subMenu &&
-                        item.subMenu.map((subItem, subItemIndex) => (
-                          <TouchableOpacity
-                            key={subItemIndex}
-                            onPress={() =>
-                              navigation.navigate(subItem.url)
+                group.subMenu.map((item, subIndex) =>
+                  item.subMenu ? (
+                    <Collapse
+                      key={subIndex}
+                      onToggle={() => {
+                        setopenAccor((prevState) => ({
+                          ...prevState,
+                          [subIndex]: !prevState[subIndex],
+                        }));
+                      }}
+                      isCollapsed={!openAccor[subIndex]}
+                    >
+                      <CollapseHeader>
+                        <View>
+                          <ProfileSettingsItem
+                          key={subIndex}
+                            text={item.text}
+                            iconName={item.icon}
+                            arrowControl={
+                              item.subMenu && item.subMenu.length > 0
                             }
-                          >
-                            <ProfileSettingsItem
-                              text={subItem.text}
-                              arrowNone={true}
-                            
-                            />
-                          </TouchableOpacity>
-                        ))}
-                    </CollapseBody>
-                  </Collapse>
-
+                            isCollapsed={!openAccor[subIndex]}
+                          />
+                        </View>
+                      </CollapseHeader>
+                      <CollapseBody  style={{ margin: 10, gap: 10 }}>
+                        {item.subMenu &&
+                          item.subMenu.map((subItem, subItemIndex) => (
+                            <TouchableOpacity
+                              key={subItemIndex}
+                              onPress={() => navigation.navigate(subItem.url)}
+                            >
+                              <ProfileSettingsItem
+                         
+                                text={subItem.text}
+                                arrowNone={true}
+                              />
+                            </TouchableOpacity>
+                          ))}
+                      </CollapseBody>
+                    </Collapse>
                   ) : (
                     <View>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate(item.url)}
-                    >
-                      <ProfileSettingsItem
-                        text={item.text}
-                        ıconName={item.icon}
-                      />
-                    </TouchableOpacity>
-                  </View>
+                      <TouchableOpacity
+                        onPress={() => navigation.navigate(item.url)}
+                      >
+                        <ProfileSettingsItem
+                        
+                          text={item.text}
+                          ıconName={item.icon}
+                        />
+                      </TouchableOpacity>
+                    </View>
                   )
-
-                ))}
+                )}
             </View>
           ))}
         </View>
-
+        <View style={{ flex: 1 / 2 }}>
+                    <TouchableOpacity
+                      onPress={logout}
+                      style={{
+                        backgroundColor: "#F8D7DA",
+                        padding: 10,
+                        borderRadius: 6,
+                      }}
+                    >
+                      <Text style={{ textAlign: "center", color: "#721C24" }}>
+                        Çıkış Yap
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
         {/* 
           <View>
             {İsLoggedIn ? (

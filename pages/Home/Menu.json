@@ -23,7 +23,7 @@
         "icon": "eye",
         "text": "Komşumu Gör",
         "key": "neighborView",
-        "url": "institutional.neighbors.index",
+        "url": "SeeNeigbour'",
         "activePath": "/hesabim/komsumu-gor"
     },
     {
@@ -32,7 +32,7 @@
         "icon": "plus",
         "text": "Proje İlanlarım",
         "key": "GetProjects",
-        "url": "institutional.react.projects",
+        "url": "MyProject",
         "activePath": "/hesabim/projects"
     },
     {
@@ -41,7 +41,7 @@
         "icon": "plus",
         "text": "Emlak İlanlarım",
         "key": "GetHousings",
-        "url": "institutional.housing.list",
+        "url": "MyRealtor",
         "activePath": "/hesabim/konutlar"
     },
     {
@@ -50,7 +50,7 @@
         "icon": "users",
         "text": "Takas Başvurularım",
         "key": "GetSwapApplications",
-        "url": "institutional.react.swap.applications",
+        "url": "SwapScreen",
         "activePath": "/hesabim/takas-basvurularim"
     },
     {
@@ -59,7 +59,7 @@
         "icon": "users",
         "text": "Gelen Konut Başvuruları",
         "key": "GetReceivedOffers",
-        "url": "institutional.get_received_offers",
+        "url": "Suggest",
         "activePath": "/hesabim/gelen-konut-basvurulari"
     },
     {
@@ -68,7 +68,7 @@
         "icon": "users",
         "text": "Başvurularım",
         "key": "GetGivenOffers",
-        "url": "institutional.get_given_offers",
+        "url": "Suggest",
         "activePath": "/hesabim/basvurularim"
     },
     {
@@ -86,7 +86,7 @@
         "icon": "bookmark",
         "text": "Koleksiyonlarım",
         "key": "GetMyCollection",
-        "url": "institutional.sharer.index",
+        "url": "Collecitons",
         "activePath": "/hesabim/koleksiyonlarim*"
     },
     {
@@ -95,7 +95,7 @@
         "icon": "edit",
         "text": "Profili Güncelle",
         "key": "EditProfile",
-        "url": "institutional.profile.edit",
+        "url": "UpdateProfile",
         "activePath": "/hesabim/profil/duzenleme"
     },
     {
@@ -104,7 +104,7 @@
         "icon": "lock",
         "text": "Şifreyi Değiştir",
         "key": "ChangePassword",
-        "url": "institutional.password.edit",
+        "url": "ChangePas",
         "activePath": "/hesabim/sifre/guncelleme"
     },
     {
@@ -113,19 +113,19 @@
         "icon": "user",
         "text": "Kullanıcı Tipi Oluştur",
         "key": "Roles",
-        "url": "#nv-role",
+        "url": "",
         "activePath": "/hesabim/roles*",
         "subMenu": [
             {
                 "text": "Yeni Ekle",
                 "key": "CreateRole",
-                "url": "institutional.roles.create",
+                "url": "CreateUserType",
                 "activePath": "/hesabim/rol/olustur"
             },
             {
                 "text": "Listele",
                 "key": "GetRoles",
-                "url": "institutional.roles.index",
+                "url": "UserTypes",
                 "activePath": "/hesabim/roller"
             }
         ]
@@ -264,13 +264,13 @@
             {
                 "text": "Oluştur",
                 "key": "CreateStoreBanner",
-                "url": "institutional.storeBanners.create",
+                "url": "UploadAdsPicture",
                 "activePath": "/hesabim/reklam-gorseli/olustur"
             },
             {
                 "text": "Listele",
                 "key": "GetStoreBanners",
-                "url": "institutional.storeBanners.index",
+                "url": "AdsPictureList",
                 "activePath": "/hesabim/reklam-gorselleri"
             }
         ]

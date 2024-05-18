@@ -109,10 +109,18 @@ const ShowAlert = ()=>{
 const [projectItems,setProjectItems] = useState([]);
 const [collections, setcollections] = useState([])
 const [user,setUser] = useState({})
+const [filteredMenuData, setFilteredMenuData] = useState([]);
 const handleSearch = (text) => {
   setSearchText(text);
+
+  // Eğer searchText doluysa, collections array'ini filtrele
+  // Aksi takdirde, collections array'ini olduğu gibi bırak
+  const filteredData = text ? collections.filter(item => item.name.toLowerCase().includes(text.toLowerCase())) : collections;
+  setcollectionsRecods(filteredData);
+
   // Burada arama işlemleri yapılabilir
 };
+
 const [searchText, setSearchText] = useState("");
 
  useEffect(() => {
@@ -120,12 +128,12 @@ const [searchText, setSearchText] = useState("");
  },[]);
 
  useEffect(() => {
-  fetchData(); // Sayfa ilk yüklendiğinde verileri getir
+  fetchData(); // Sayfa ilk yüklendiğinde verileri <getir
 }, [user])
 
 
  const [loading, setloading] = useState(false)
-
+const [collectionsRecods, setcollectionsRecods] = useState([])
  const fetchData = async () => {
   try {
     setloading(true);
@@ -139,6 +147,7 @@ const [searchText, setSearchText] = useState("");
       });
       setProjectItems(response?.data?.items)
       setcollections(response?.data?.collections);
+      setcollectionsRecods(response?.data?.collections)
     }
 
     
@@ -269,7 +278,7 @@ console.log(collections);
        }
       {
           loading ==false?
-      collections.map((collection, index) => {
+     collectionsRecods.map((collection, index) => {
         return(
           <CollectionsItem projectItems={projectItems} item={collection} getId={getId} key={index} openBottom={openSheet} disabled={isDisabled} shareWp={shareLinkOnWhatsApp} copy={copyToClipboard}/>
         )

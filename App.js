@@ -259,7 +259,7 @@ export default function App({route}) {
          <Stack.Screen name="CreateUserType"  component={CreateUserType} 
             options={({route})=>({
             
-                title:route.params.name
+                title:'Kullanıcı Tipi Oluştur'
                 
                 
             })}
@@ -301,7 +301,7 @@ export default function App({route}) {
       <Stack.Screen name="Suggest"  component={Suggests} 
             options={({route})=>({
               animationTypeForReplace:'pop',
-              title:route.params.name
+              title:'Gelen Konut Başvuruları'
               
               
           })}
