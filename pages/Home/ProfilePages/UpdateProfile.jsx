@@ -9,7 +9,7 @@ import ColorPicker from 'react-native-wheel-color-picker'
 import { getValueFor } from '../../../components/methods/user'
 import axios from 'axios'
 import Icon from 'react-native-vector-icons/Fontisto'
-
+import { CheckBox } from '@rneui/themed';
 export default function UpdateProfile() {
  
 
@@ -94,6 +94,13 @@ console.log(user.banner_hex_code)
       postData()
     }
   }
+  const [iban, setiban] = useState('')
+  const [link, setlink] = useState('')
+  const [yearsOfSector, setyearsOfSector] = useState('')
+  const [phone, setphone] = useState('')
+  const [mobilPhone, setmobilPhone] = useState('')
+  const [checked, setChecked] = useState(false);
+     const toggleCheckbox = () => setChecked(!checked);
   return (
     <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
     <ScrollView style={{flex:1,backgroundColor:'white'}}>
@@ -116,6 +123,22 @@ console.log(user.banner_hex_code)
           <View>
             <Text style={styles.label}>İsim</Text>
             <TextInput style={styles.Input} value={name} onChangeText={(value)=>setName(value)} selectTextOnFocus={true} placeholder={user.name}/>
+          </View>
+          <View>
+            <Text style={styles.label}>Iban Numarası</Text>
+            <TextInput style={styles.Input} value={iban} onChangeText={(value)=>setiban(value)} />
+          </View>
+          <View>
+            <Text style={styles.label}>Website Linki</Text>
+            <TextInput style={styles.Input} value={link} onChangeText={(value)=>setlink(value)} />
+          </View>
+          <View>
+            <Text style={styles.label}>Sabit Telefon (Opsiyonel)</Text>
+            <TextInput style={styles.Input} value={phone} onChangeText={(value)=>setphone(value)} />
+          </View>
+          <View>
+            <Text style={styles.label}>Kaç yıldır sektördesiniz?</Text>
+            <TextInput style={styles.Input} value={yearsOfSector} onChangeText={(value)=>setyearsOfSector(value)} />
           </View>
           {/* <View>
             <Text style={styles.label}>Cep Telefonu</Text>
@@ -156,7 +179,22 @@ console.log(user.banner_hex_code)
       useNativeLayout={false}
     />
           </View>
-     
+          <View>
+            <Text style={styles.label}>Cep Numarası</Text>
+            <TextInput style={styles.Input} value={mobilPhone} onChangeText={(value)=>setmobilPhone(value)} />
+            <CheckBox
+           checked={checked}
+           onPress={toggleCheckbox}
+           // Use ThemeProvider to make change for all checkbox
+           iconType="material-community"
+           checkedIcon="checkbox-marked"
+           uncheckedIcon="checkbox-blank-outline"
+           checkedColor="red"
+           title={'Güncellemek İstiyorum'}
+           containerStyle={{marginRight:0,paddingRight:0}}
+           style={{margin:0}}
+         />
+          </View>
 
           
     </View>

@@ -129,7 +129,7 @@ export default function SeeCollection() {
         </View>
           <ScrollView showsVerticalScrollIndicator={false} style={{padding:10}}>
             <View style={style.PostContainer}>
-                    <Posts/>
+                 
 
             </View>
           </ScrollView>

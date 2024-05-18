@@ -29,13 +29,56 @@ import Menu from "./Menu.json";
 import axios from "axios";
 export default function ShoppingProfile() {
   const [data, setData] = useState([]);
+  const [MenuItems, setMenuItems] = useState([]);
+
+  const [permissionsUser, setpermissionsUser] = useState([]);
+
+  const fetchPermissionUser = async () => {
+    try {
+      if (user.access_token) {
+        const response = await axios.get(
+          `https://test.emlaksepette.com/api/institutional/users/${user?.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+        setpermissionsUser(response.data.permissions);
+        console.log(permissionsUser+ "sadsdfsf")
+      }
+    } catch (error) {
+      console.error("eror", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPermissionUser();
+  }, [user]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // JSON dosyasını require ile içe aktarıyoruz
         const response = require("./Menu.json");
-        setData(response);
+        const filteredMenu = response.filter((item) => {
+          if (item.subMenu) {
+            // Eğer alt menü varsa, alt menü öğelerini filtrele
+            const filteredSubMenu = item.subMenu.filter((subItem) =>
+              permissionsUser.includes(subItem.key)
+            );
+            if (filteredSubMenu.length > 0) {
+              item.subMenu = filteredSubMenu;
+              return true; // Ana menü öğesi görünmeli
+            }
+            return false;
+          }
+          // Eğer alt menü yoksa, ana menü öğesini kontrol et
+          return permissionsUser.includes(item.key);
+        });
+
+        console.log(permissionsUser + "yenisdsd");
+        setData(filteredMenu);
       } catch (error) {
         console.error(error);
       }
@@ -92,62 +135,37 @@ export default function ShoppingProfile() {
   const [dialogVisible, setdialogVisible] = useState(false);
   const PhotoUrl = "https://test.emlaksepette.com/storage/profile_images/";
 
-//permissionslara atılan istek
+  //permissionslara atılan istek
 
+  const [PermissionsKeyOfUser, setPermissionsKeyOfUser] = useState([]);
 
-const [permissionsUser, setpermissionsUser] = useState([])
-
-  const fetchData = async () => {
-    try {
-      if (user.access_token) {
-        const response = await axios.get(`https://test.emlaksepette.com/api/institutional/users/${user?.id}`, {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`
-          }
-        });
-          setpermissionsUser(response.data.permissions)
-      }
-   
-    } catch (error) {
-      console.error('eror', error);
-    
+  useEffect(() => {
+    if (data.length > 0) {
+      const keysArray = data.map((item) => item.key);
+      setPermissionsKeyOfUser(keysArray);
     }
-  };
+  }, [data]);
+  // console.log(PermissionsKeyOfUser + 'dasdsd')
 
+  // const commonKeys = permissionsUser && PermissionsKeyOfUser.length > 0
+  // ? PermissionsKeyOfUser.filter(key => permissionsUser.includes(key))
+  // : [];
 
+  // // Filtrelenmiş key değerlerine göre menü öğelerini seçin
+  // const filteredMenuData = groupedData.filter(item =>
+  //   (item.subMenu && item.subMenu.length > 0) || commonKeys.includes(item.key)
+  // );
 
-useEffect(()=>{
-  fetchData();
-},[user])
+  // console.log(filteredMenuData.length + "sdsf")
 
+  //permissionslara atılan istek
 
-const [PermissionsKeyOfUser, setPermissionsKeyOfUser] = useState([])
-
-useEffect(() => {
-  if (data.length > 0) {
-    const keysArray = data.map(item => item.key);
-    setPermissionsKeyOfUser(keysArray);
-  }
-}, [data]);
-
-
-const commonKeys = permissionsUser && PermissionsKeyOfUser.length > 0
-? PermissionsKeyOfUser.filter(key => permissionsUser.includes(key))
-: [];
-
-
-// Filtrelenmiş key değerlerine göre menü öğelerini seçin
-const filteredMenuData = groupedData.filter(item =>
-  (item.subMenu && item.subMenu.length > 0) || commonKeys.includes(item.key)
-);
-
-
-console.log(filteredMenuData.length + "sdsf")
-
-
-
-//permissionslara atılan istek
-
+  // useEffect(() => {
+  //   // Kullanıcının yetkilerine göre menü öğelerini filtreleme
+  //   const filteredMenu = groupedData.filter(item => PermissionsKeyOfUser.includes(item.key));
+  //   setMenuItems(filteredMenu);
+  // }, [user]);
+  // console.log(MenuItems,'fdfsdfsdf')
 
   return (
     <View style={style.container}>
@@ -231,7 +249,7 @@ console.log(filteredMenuData.length + "sdsf")
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
         <View style={{ gap: 20, padding: 10 }}>
-          {filteredMenuData.map((group, index) => (
+          {groupedData.map((group, index) => (
             <View key={index}>
               {/* Başlık */}
               <Text style={style.headerText}>{group.label}</Text>
@@ -253,7 +271,7 @@ console.log(filteredMenuData.length + "sdsf")
                       <CollapseHeader>
                         <View>
                           <ProfileSettingsItem
-                          key={subIndex}
+                            key={subIndex}
                             text={item.text}
                             iconName={item.icon}
                             arrowControl={
@@ -263,7 +281,7 @@ console.log(filteredMenuData.length + "sdsf")
                           />
                         </View>
                       </CollapseHeader>
-                      <CollapseBody  style={{ margin: 10, gap: 10 }}>
+                      <CollapseBody style={{ margin: 10, gap: 10 }}>
                         {item.subMenu &&
                           item.subMenu.map((subItem, subItemIndex) => (
                             <TouchableOpacity
@@ -271,7 +289,6 @@ console.log(filteredMenuData.length + "sdsf")
                               onPress={() => navigation.navigate(subItem.url)}
                             >
                               <ProfileSettingsItem
-                         
                                 text={subItem.text}
                                 arrowNone={true}
                               />
@@ -285,7 +302,6 @@ console.log(filteredMenuData.length + "sdsf")
                         onPress={() => navigation.navigate(item.url)}
                       >
                         <ProfileSettingsItem
-                        
                           text={item.text}
                           ıconName={item.icon}
                         />
@@ -297,19 +313,19 @@ console.log(filteredMenuData.length + "sdsf")
           ))}
         </View>
         <View style={{ flex: 1 / 2 }}>
-                    <TouchableOpacity
-                      onPress={logout}
-                      style={{
-                        backgroundColor: "#F8D7DA",
-                        padding: 10,
-                        borderRadius: 6,
-                      }}
-                    >
-                      <Text style={{ textAlign: "center", color: "#721C24" }}>
-                        Çıkış Yap
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+          <TouchableOpacity
+            onPress={logout}
+            style={{
+              backgroundColor: "#F8D7DA",
+              padding: 10,
+              borderRadius: 6,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "#721C24" }}>
+              Çıkış Yap
+            </Text>
+          </TouchableOpacity>
+        </View>
         {/* 
           <View>
             {İsLoggedIn ? (
