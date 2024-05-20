@@ -98,7 +98,7 @@ export default function Login({ navigation }) {
     setPassword(text);
     // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
 
-    if (text.length < 6) {
+    if (text.length < 5) {
       setShowLengthAlert(true);
     } else {
       setShowLengthAlert(false);
