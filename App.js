@@ -78,6 +78,7 @@ import ForgotPassword from './pages/Home/Login&Register/ForgotPassword';
 import UpdateUserType from './pages/Home/ProfilePages/UpdateUserType';
 import UpdateUsers from './pages/Home/ProfilePages/UpdateUsers';
 import UsersList from './pages/Home/ProfilePages/UsersList';
+import Takeds from './pages/Home/ProfilePages/Takeds';
 
 const Stack = createNativeStackNavigator();
 
@@ -562,6 +563,13 @@ export default function App({route}) {
     headerBackTitleVisible: false,
         headerShown:true,
         title:'Alt Kullanıcılar'
+  
+  })}  />
+           <Stack.Screen name='Taked' component={Takeds}
+  options={({route})=>({
+    headerBackTitleVisible: false,
+        headerShown:true,
+        title:'Sattıklarım'
   
   })}  />
   
