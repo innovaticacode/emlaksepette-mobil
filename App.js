@@ -210,7 +210,7 @@ export default function App({route}) {
    
   }} />
     <Stack.Screen name="Sell"  component={Sell}options={{
-        title:'Siparişlerim'
+        title:'Aldıklarım'
 
   }} />
     <Stack.Screen name="Rent"  component={Rent}
