@@ -31,7 +31,7 @@ const [products, setproducts] = useState([])
             },
           }
         );
-        setproducts(response.data)
+        setproducts(response.data.solds)
       }
       
     } catch (error) {
@@ -46,7 +46,7 @@ const [products, setproducts] = useState([])
 
   return ( 
     <View style={style.container} onTouchStart={()=>Keyboard.dismiss()}>
-    <Text>fdgdfklg</Text>
+
         <View style={style.Navbar}>
             <View style={style.SearchInput}>
               <SearchBar
@@ -101,7 +101,12 @@ const [products, setproducts] = useState([])
         </View>
         <ScrollView>
         <View style={style.orders}>
-                  <Order display={'none'} text={'deneme'}/>
+          {
+            products.map((item,index)=>(
+              <Order item={item}/>
+            ))
+          }
+                 
           
                  
 

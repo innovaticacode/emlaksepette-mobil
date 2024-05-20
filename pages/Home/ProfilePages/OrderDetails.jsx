@@ -9,7 +9,7 @@ import {useState} from 'react'
 import { useRoute, useNavigation } from '@react-navigation/native';
 export default function OrderDetails() {
     const route = useRoute();
-  const {display,text}=route.params;
+
   return (
     <ScrollView style={{backgroundColor:'white'}}>
      
@@ -81,7 +81,7 @@ export default function OrderDetails() {
                 <Text style={{fontSize:13}}>
                     <Text>Aşşağıdaki 1 ürün </Text>
                     <Text style={{fontWeight:'bold'}}>28 Şubat Çarşamba </Text>
-                    <Text> {text==='Satılmıştır'? 'günü Satılmıştır' :'günü Satın Alınmıştır '}</Text>
+                    <Text>Satılmıştır</Text>
                 </Text>
             </View>
             <View style={{display:'flex',flexDirection:'row',justifyContent:'space-between',paddingTop:20,paddingLeft:10,paddingRight:10,alignItems:'center'}}>
@@ -116,7 +116,7 @@ export default function OrderDetails() {
             </TouchableOpacity>
             </View>
    </View>
-   <View style={[style.PersonalInfoArea,{display:display}]}>
+   <View style={[style.PersonalInfoArea]}>
     <Text style={{textAlign:'center'}}>Alıcı Bilgileri</Text>
         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
           
