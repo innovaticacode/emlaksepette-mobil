@@ -146,13 +146,13 @@
             {
                 "text": "Aldıklarım",
                 "key": "ShowCartOrders",
-                "url": "Sell",
+                "url": "Taked",
                 "activePath": "/hesabim/aldiklarim"
             },
             {
                 "text": "Sattıklarım",
                 "key": "GetOrders",
-                "url": "Taked",
+                "url": "Sell",
                 "activePath": "/hesabim/sattiklarim"
             }
         ]

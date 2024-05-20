@@ -210,7 +210,7 @@ export default function App({route}) {
    
   }} />
     <Stack.Screen name="Sell"  component={Sell}options={{
-        title:'Siparişlerim'
+        title:'Sattıklarım'
 
   }} />
     <Stack.Screen name="Rent"  component={Rent}
@@ -569,7 +569,7 @@ export default function App({route}) {
   options={({route})=>({
     headerBackTitleVisible: false,
         headerShown:true,
-        title:'Sattıklarım'
+        title:'Aldıklarım'
   
   })}  />
   
