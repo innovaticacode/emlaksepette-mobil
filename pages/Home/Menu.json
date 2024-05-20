@@ -152,7 +152,7 @@
             {
                 "text": "Sattıklarım",
                 "key": "GetOrders",
-                "url": "Sell",
+                "url": "Taked",
                 "activePath": "/hesabim/sattiklarim"
             }
         ]

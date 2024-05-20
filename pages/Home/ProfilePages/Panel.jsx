@@ -68,11 +68,15 @@ export default function Panel({ options, onSelect }) {
     fetchData();
   }, [user]);
   console.log(links);
+  const PhotoUrl = "https://test.emlaksepette.com/storage/profile_images/";
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1}} contentContainerStyle={{paddingBottom:20}}>
       <View style={style.container}>
         <View style={style.header}>
           <View style={style.NameInfo}>
+          <View style={{backgroundColor:'#0297EB',padding:5,width:'40%',borderRadius:5}}>
+                <Text style={{color:'white',fontWeight:'500',fontSize:13,textAlign:'center'}}>{user.role}</Text>
+            </View>
             <Text
               style={{
                 fontSize: width > 400 ? 16 : 14,
@@ -82,18 +86,19 @@ export default function Panel({ options, onSelect }) {
             >
               Hoşgeldin
             </Text>
+          
             <Text
               style={{
                 fontSize: width > 400 ? 24 : 20,
                 fontWeight: "400",
               }}
             >
-              {panelInfo?.user?.name}
+              Sayın {panelInfo?.user?.name}
             </Text>
           </View>
           <View style={style.ProfileImage}>
             <Image
-              source={require("../home.jpg")}
+              source={{uri:`${PhotoUrl}${user.profile_image}`}}
               style={{ width: "100%", height: "100%" }}
               borderRadius={50}
             />
@@ -346,7 +351,7 @@ const style = StyleSheet.create({
   },
   header: {
     width: "100%",
-    height: width > 400 ? "12%" : "9%",
+ 
 
     display: "flex",
     flexDirection: "row",
@@ -358,10 +363,9 @@ const style = StyleSheet.create({
     gap: 6,
   },
   ProfileImage: {
-    flex: 0.3 / 2,
-    width: width > 400 ? "100%" : "100%",
 
-    height: width > 400 ? "90%" : "120%",
+    width:70,
+    height:70
   },
   dropdownButton: {
     padding: 10,
