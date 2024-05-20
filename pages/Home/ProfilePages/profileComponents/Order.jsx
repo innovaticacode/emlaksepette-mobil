@@ -10,6 +10,7 @@ import Icon from "react-native-vector-icons/SimpleLineIcons";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import StarIcon from "react-native-vector-icons/FontAwesome";
 import Warning from "react-native-vector-icons/Entypo";
+import Icon4 from 'react-native-vector-icons/FontAwesome5'
 import { useNavigation } from "@react-navigation/native";
 
 export default function Order({ item }) {
@@ -44,6 +45,7 @@ export default function Order({ item }) {
 
 
   const navigation = useNavigation();
+  const PhotoUrl= 'https://test.emlaksepette.com/storage/profile_images/'
   return (
     <TouchableOpacity onPress={() => navigation.navigate("OrderDetail", {})}>
       <View style={style.container}>
@@ -64,82 +66,76 @@ export default function Order({ item }) {
         <View style={style.PhotoAndComment}>
           <View
             style={{
+           
               display: "flex",
               width: "100%",
-              flexDirection: "row",
-              justifyContent: "space-between",
+          
             }}
           >
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
-            >
-              {item.status == 0 && (
-                <FeatherIcon name="clock" color={"#F28907"} />
-              )}
-              {item.status == 1 && <FeatherIcon name="check" color={"green"} />}
-              {item.status == 2 && <FeatherIcon name="warning" color={"red"} />}
-              {item.status == 0 && (
-                <Text style={{ color: "#F28907", fontSize: 13 }}>
-                  {" "}
-                  Onay bekliyor{" "}
-                </Text>
-              )}
-              {item.status == 1 && (
-                <Text style={{ color: "green", fontSize: 13 }}>
-                  {" "}
-                  Onaylandı{" "}
-                </Text>
-              )}
-              {item.status == 2 && (
-                <Text style={{ color: "red", fontSize: 13 }}>
-                  {" "}
-                  Onaylanmadı{" "}
-                </Text>
-              )}
-            </View>
-            <View>
-              <TouchableOpacity
-                style={{
-                  borderWidth: 1,
-                  borderColor: "#ebebeb",
-                  borderRadius: 4,
-                  padding: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 7,
-                }}
-              >
-                <StarIcon name="star" size={14} color={"green"} />
-                <Text style={{ color: "#353030", fontSize: 12 }}>
-                  Değerlendir
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-
-          <View style={{ gap: 9 }}>
-            <View style={{ height: 80, width: "24%" }}>
+            
+                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                 <View style={{ height: 80, width: 80 }}>
               <ImageBackground
                 source={{ uri: imageUrl }}
                 style={{ width: "100%", height: "100%" }}
                 resizeMode="cover"
               />
             </View>
-            {item.status == 0 && (
-              <Text style={{ color: "#F28907", fontSize: 12 }}>
-                1 Ürün Onayda
-              </Text>
-            )}
-            {item.status == 1 && (
-              <Text style={{ color: "green", fontSize: 12 }}>
-                1 Ürün Onaylandı
-              </Text>
-            )}
-            {item.status == 2 && (
-              <Text style={{ color: "red", fontSize: 12 }}>
-                1 Ürün Reddedildi
-              </Text>
-            )}
+            <View style={{gap:10,width:'35%',justifyContent:'space-between'}}>
+              {item.status ==0 &&   <View style={{backgroundColor:'#FFEFCA',borderWidth:1,borderColor:'#FFCC85',padding:2,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:10}}>
+                  
+                      <Text style={{color:'#BC3913',textAlign:'center',fontSize:12}}>Onay Bekliyor</Text>
+                      <FeatherIcon name="clock" color={'#BC3913'}/>
+                  </View>}
+                  {item.status ==1 &&   <View style={{backgroundColor:'#D9F9D0',borderWidth:1,borderColor:'#BEE8B4',padding:2,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:10}}>
+                      <Text style={{color:'#4B8F3C',textAlign:'center',fontSize:12}}>Onaylandı</Text>
+                      <FeatherIcon name="check" color={'#4B8F3C'} size={16}/>
+                  </View>}
+                  {item.status == 2 &&   <View style={{backgroundColor:'#FFE0DB',borderWidth:1,borderColor:'#FABCB3',paddingLeft:6,paddingRight:6,padding:4,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:6,overflow:'hidden'}}>
+                      <Text style={{color:'#B81911',textAlign:'center',fontSize:11}}>Ödeme reddedildi</Text>
+                      <StarIcon name="close" color={'#B81911'}/>
+                  </View>}
+          
+                  {
+                    item.status==1 && 
+                    <TouchableOpacity
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#ebebeb",
+                      borderRadius: 4,
+                      padding: 6,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 7,
+                    }}
+                  >
+                    <Icon4 name="file-invoice" size={14} color={"green"} />
+                    <Text style={{ color: "#353030", fontSize: 11 }}>
+                     Faturayı Görüntüle
+                    </Text>
+                  </TouchableOpacity>
+                  }
+                  
+                  <View style={{flexDirection:'row',gap:10,alignItems:'center',justifyContent:'flex-end'}}>
+              <Text style={{fontSize:13,color:'#333'}}>{item.user.name}</Text>
+                  <View style={{width:35,height:35}}>
+                        <ImageBackground source={{uri:`${PhotoUrl}${item.user.profile_image}`}}  style={{width:'100%',height:'100%'}} borderRadius={20}/>
+                  </View>
+                 
+              </View>
+
+            </View>
+                
+               </View>
+         
+       
+          </View>
+
+          <View style={{ gap: 9,marginTop:5,flexDirection:'row' ,justifyContent:'space-between'}}>
+         
+            {/* <View style={{justifyContent:'flex-end'}} >
+           
+            </View> */}
           </View>
         </View>
       </View>
