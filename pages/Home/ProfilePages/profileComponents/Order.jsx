@@ -5,19 +5,42 @@ import FeatherIcon from 'react-native-vector-icons/Feather'
 import StarIcon from 'react-native-vector-icons/FontAwesome'
 import { useNavigation } from '@react-navigation/native'
 
-export default function Order({display,text}) {
+export default function Order({display, item}) {
     const navigation=useNavigation()
+    const date = new Date(item.created_at);
+
+// Ay isimleri dizisi
+const monthNames = [
+  "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+  "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+];
+
+// Günü, ay ismini ve yılı al
+const day = date.getDate();
+const month = monthNames[date.getMonth()];
+const year = date.getFullYear();
+
+const formattedDate = `${day} ${month} ${year}`
+const cartString = `${item.cart}`;
+
+// JSON stringini nesneye dönüştür
+const cartObject = JSON.parse(cartString);
+
+// Image URL'sine eriş
+const imageUrl = cartObject.item.image;
+
+
   return (
-    <TouchableOpacity onPress={()=>navigation.navigate('OrderDetail',{display,text})}>
+    <TouchableOpacity onPress={()=>navigation.navigate('OrderDetail')}>
     <View style={style.container}>
 
    
         <View style={style.InfoDateButton}>
             <View style={style.Info}>
-              <Text>28 Şubat 2024</Text>
+              <Text>{formattedDate}</Text>
               <View style={{flexDirection:'row'}}>
               <Text>Toplam: </Text>
-              <Text style={{color:'green'}}>2.500.000</Text>
+              <Text style={{color:'green'}}>{item.amount} ₺</Text>
               </View>
              
             </View>
@@ -30,8 +53,9 @@ export default function Order({display,text}) {
         <View style={style.PhotoAndComment}>
             <View style={{display:'flex', width:'100%', flexDirection:'row',justifyContent:'space-between'}}>
             <View style={{flexDirection:'row',alignItems:'center',gap:5}}>
+           
                 <FeatherIcon name='check' color={'green'}/>
-                <Text style={{color:'green',fontSize:13}}>Onaylandı</Text>
+     
             </View>
                <View>
                     <TouchableOpacity  style={{borderWidth:1 ,borderColor:'#ebebeb', borderRadius:4,padding:5,flexDirection:'row',alignItems:'center',gap:7}}>
@@ -43,7 +67,7 @@ export default function Order({display,text}) {
 
             <View style={{gap:9}}>
            <View style={{height:80,width:'24%', }}>
-            <ImageBackground source={require('./home.jpg')} style={{width:'100%',height:'100%'}} resizeMode='cover'/>
+            <ImageBackground source={{uri:imageUrl}} style={{width:'100%',height:'100%'}} resizeMode='cover'/>
            </View>
             <Text style={{color:'grey',fontSize:12}}>1 Ürün Teslim Edildi</Text>
            </View>
