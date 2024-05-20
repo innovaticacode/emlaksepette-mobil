@@ -45,7 +45,7 @@ export default function ShoppingProfile() {
           }
         );
         setpermissionsUser(response.data.permissions);
-        console.log(permissionsUser+ "sadsdfsf")
+        console.log(permissionsUser + "sadsdfsf");
       }
     } catch (error) {
       console.error("eror", error);
