@@ -30,8 +30,8 @@ export default function Posts({
   setModalVisible,
   openmodal,
   openFormModal,
-  openCollection
-
+  openCollection,
+  getID,
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -43,13 +43,13 @@ export default function Posts({
   const changeBookmark = () => {
     setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
   };
- 
+
   return (
     <TouchableOpacity
       onPress={() =>
         navigation.navigate("PostDetails", {
-              HomeId:roomOrder,
-              projectId : data.project.id
+          HomeId: roomOrder,
+          projectId: data.project.id,
         })
       }
     >
@@ -86,10 +86,12 @@ export default function Posts({
                 </Text>
               </View>
               <View style={styles.ıcons}>
-                <TouchableOpacity onPress={()=>{
-                  changeBookmark()
-                  openCollection(roomOrder)
-                }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    changeBookmark();
+                    openCollection(roomOrder);
+                  }}
+                >
                   <View style={styles.ıconContainer}>
                     <Bookmark
                       name={bookmark}
@@ -207,12 +209,11 @@ export default function Posts({
                   )
                 ) : roomData["off_sale[]"] != "[]" ? (
                   <TouchableOpacity
-                  onPress={()=>{
-                    openFormModal(roomOrder)
-                
-                  }}
+                    onPress={() => {
+                      openFormModal(roomOrder);
+                      getID(roomOrder);
+                    }}
                     style={styles.PayDetailBtn}
-                  
                   >
                     <Text style={{ fontWeight: "500", fontSize: 12 }}>
                       Başvuru Yap
