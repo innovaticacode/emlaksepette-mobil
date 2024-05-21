@@ -42,6 +42,7 @@ export default function Order({ item }) {
   const imageUrl = cartObject.item.image;
   console.log(imageUrl);
 
+
   const navigation = useNavigation();
   return (
     <TouchableOpacity onPress={() => navigation.navigate("OrderDetail", {})}>
