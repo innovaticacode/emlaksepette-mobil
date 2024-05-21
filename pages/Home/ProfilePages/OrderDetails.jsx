@@ -63,8 +63,7 @@ export default function OrderDetails() {
             }
         }
     }, [Detail]);
-
-
+          
 
 
 const date = new Date(Detail.created_at);
