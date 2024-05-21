@@ -47,7 +47,7 @@ export default function Order({ item }) {
   const navigation = useNavigation();
   const PhotoUrl= 'https://test.emlaksepette.com/storage/profile_images/'
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("OrderDetail", {})}>
+    <TouchableOpacity onPress={() => navigation.navigate("OrderDetail", {OrderId:item.id})}>
       <View style={style.container}>
         <View style={style.InfoDateButton}>
           <View style={style.Info}>
@@ -117,9 +117,9 @@ export default function Order({ item }) {
                   }
                   
                   <View style={{flexDirection:'row',gap:10,alignItems:'center',justifyContent:'flex-end'}}>
-              <Text style={{fontSize:13,color:'#333'}}>{item.user.name}</Text>
+              <Text style={{fontSize:13,color:'#333'}}>{item?.user?.name}</Text>
                   <View style={{width:35,height:35}}>
-                        <ImageBackground source={{uri:`${PhotoUrl}${item.user.profile_image}`}}  style={{width:'100%',height:'100%'}} borderRadius={20}/>
+                        <ImageBackground source={{uri:`${PhotoUrl}${item?.user?.profile_image}`}}  style={{width:'100%',height:'100%'}} borderRadius={20}/>
                   </View>
                  
               </View>
