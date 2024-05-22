@@ -545,7 +545,11 @@ export default function Details({ navigation }) {
       formData.append("city_id", city);
       formData.append("county_id", county);
       formData.append("title", titleid);
-      formData.append("offer_description", offerid);
+      formData.append("offer_description", "asdwa2sd asdrks ksks ");
+      // formData.append("approval_status", 0);
+      // formData.append("response_status", 0);
+      // formData.append("sales_status", 0);
+      // formData.append("offer_status", 0);
 
       const response = await axios.post(
         "https://test.emlaksepette.com/api/institutional/give_offer",
@@ -557,6 +561,10 @@ export default function Details({ navigation }) {
           },
         }
       );
+      setFormVisible(false);
+      setTimeout(() => {
+        setTrueModal(true);
+      }, 3000);
 
       console.log("İstek başarıyla tamamlandı:", response.data);
 
@@ -633,6 +641,8 @@ export default function Details({ navigation }) {
       setcounties([]);
     }
   };
+
+  const [trueModal, setTrueModal] = useState(false);
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -1577,6 +1587,16 @@ export default function Details({ navigation }) {
                       items={counties}
                     />
                   </View>
+                  <View style={{ gap: 7 }}>
+                    <Text
+                      style={styles.label}
+                      value={titleid}
+                      onChangeText={(value) => setOfferId("offerid", value)}
+                    >
+                      Açıklama
+                    </Text>
+                    <TextInput style={styles.Input} />
+                  </View>
                 </View>
               </KeyboardAwareScrollView>
               <View
@@ -1667,6 +1687,31 @@ export default function Details({ navigation }) {
                 );
               })}
             </PagerView>
+          </View>
+        </Modal>
+
+        <Modal
+          isVisible={trueModal}
+          onBackdropPress={() => setTrueModal(false)}
+          animationIn={"fadeInDown"}
+          animationOut={"fadeOutDown"}
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropColor="transparent"
+          style={[styles.modal4, { backgroundColor: "gren" }]}
+        >
+          <View style={styles.modalContent4}>
+            <View style={{ padding: 10 }}>
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "green",
+                  fontWeight: "500",
+                }}
+              >
+                Form başarıyla gönderildi.
+              </Text>
+            </View>
           </View>
         </Modal>
       </ScrollView>
