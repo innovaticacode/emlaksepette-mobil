@@ -117,7 +117,7 @@ let deposit_rate = 0.04;
     indirim_yuzdesi = (indirim_miktari / tam_tutar) * 100;
     indirim_yuzdesi_formatli = new Intl.NumberFormat('tr-TR', { style: 'percent', maximumFractionDigits: 2 }).format(indirim_yuzdesi / 100);
 
-
+    
   return (
     <ScrollView style={{backgroundColor:'white'}}>
    

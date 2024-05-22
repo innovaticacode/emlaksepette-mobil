@@ -34,7 +34,7 @@ export default function Profile() {
   const route = useRoute();
   const [Housings, setHousings] = useState([])
   const { name,id } = route.params;
-  const [tab, settab] = useState(1);
+  const [tab, settab] = useState(0);
   const { width, height, fontScale,} = Dimensions.get("window");
   const translateY = useRef(new Animated.Value(400)).current;
   const navigation = useNavigation();
@@ -302,14 +302,14 @@ export default function Profile() {
                 ]}
                 onPress={() => settab(0)}
               >
-                <Entypo name="shop" size={16} />
+                <Entypo name="home" size={16} />
                 <Text
                   style={{
                     color: tab === 0 ? "black" : "grey",
                     fontWeight: tab === 0 ? "500" : "normal",
                   }}
                 >
-                  Mağaza profili
+                  Ana Sayfa
                 </Text>
               </TouchableOpacity>
 

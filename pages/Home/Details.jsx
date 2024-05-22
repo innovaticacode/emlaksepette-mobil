@@ -13,7 +13,7 @@ import {
   ActivityIndicator,
   TextInput,
   Pressable,
-  Dimensions
+  Dimensions,
 } from "react-native";
 
 import { React, useEffect, useRef, useState } from "react";
@@ -500,9 +500,49 @@ export default function Details({ navigation }) {
         console.error("Error:", error);
       });
   };
-  const [PopUpForRemoveItem, setPopUpForRemoveItem] = useState(false);
-  console.log(selectedCollectionName2);
-  const {width,height}=Dimensions.get('window')
+    
+  const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false)
+const [ModalForAddToCart, setModalForAddToCart] = useState(false)
+  const [selectedCartItem, setselectedCartItem] = useState(0)
+    const GetIdForCart=(id)=>{
+        setselectedCartItem(id)
+        setModalForAddToCart(true)
+        console.log(selectedCartItem)
+    }
+
+    const addToCard = async () => {
+        const formData=new FormData()
+        formData.append('id',selectedCartItem)
+        formData.append('isShare',data.projectHousingsList[selectedCartItem]['share_sale[]'])
+        formData.append('numbershare',data.projectHousingsList[selectedCartItem]['number_of_shares[]'])
+        formData.append('qt',1)
+        formData.append('type','project')
+        formData.append('clear_cart','no')
+        formData.append('project',data.project.id)
+      try {
+        if (user?.access_token) {
+          const response = await axios.post(
+            "https://test.emlaksepette.com/api/institutional/add_to_cart",
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${user?.access_token}`,
+              },
+            }
+          );
+
+            navigation.navigate('Sepetim')
+        }
+      } catch (error) {
+        console.error('post isteği olmadı' ,error);
+      } 
+    };
+  
+
+   
+      
+
+  const { width, height } = Dimensions.get("window");
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -767,6 +807,7 @@ export default function Details({ navigation }) {
         </View>
         {tabs == 0 && (
           <OtherHomeInProject
+          GetIdForCart={GetIdForCart}
             openCollection={openCollection}
             itemCount={itemCount}
             data={data}
@@ -955,7 +996,7 @@ export default function Details({ navigation }) {
               styles.card,
               {
                 backgroundColor: "white",
-                height: width>400 ?"30%":'37%',
+                height: width > 400 ? "30%" : "37%",
                 padding: 10,
                 borderTopLeftRadius: 25,
                 borderTopRightRadius: 25,
@@ -975,22 +1016,40 @@ export default function Details({ navigation }) {
                   Paylaş
                 </Text>
               </View>
-              <ScrollView horizontal contentContainerStyle={{ gap: 20,}} showsHorizontalScrollIndicator={false}>
-                  <TouchableOpacity style={{alignItems:'center',justifyContent:'center',paddingTop:5}}>
-      <Icon
-        name="link"
-    size={32}
-                  iconStyle={{color:'#ffffff'}}
-        style={{backgroundColor:'red',padding:12,borderRadius:8}}
-        reverseColor={'orange'}
-   
-      />
-      <Text
-                    style={{ fontSize: 12, color: "#333", textAlign: "center",top:5 }}
+              <ScrollView
+                horizontal
+                contentContainerStyle={{ gap: 20 }}
+                showsHorizontalScrollIndicator={false}
+              >
+                <TouchableOpacity
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingTop: 5,
+                  }}
+                >
+                  <Icon
+                    name="link"
+                    size={32}
+                    iconStyle={{ color: "#ffffff" }}
+                    style={{
+                      backgroundColor: "red",
+                      padding: 12,
+                      borderRadius: 8,
+                    }}
+                    reverseColor={"orange"}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: "#333",
+                      textAlign: "center",
+                      top: 5,
+                    }}
                   >
                     Bağlantı Kopyala
                   </Text>
-  </TouchableOpacity>
+                </TouchableOpacity>
                 <TouchableOpacity>
                   <SocialIcon
                     iconSize={30}
@@ -1011,7 +1070,7 @@ export default function Details({ navigation }) {
                     raised
                     type="instagram"
                   />
-                   <Text
+                  <Text
                     style={{ fontSize: 12, color: "#333", textAlign: "center" }}
                   >
                     İnstagram
@@ -1024,7 +1083,7 @@ export default function Details({ navigation }) {
                     raised
                     type="facebook"
                   />
-                   <Text
+                  <Text
                     style={{ fontSize: 12, color: "#333", textAlign: "center" }}
                   >
                     Facebook
@@ -1038,7 +1097,7 @@ export default function Details({ navigation }) {
                     raised
                     type="twitter"
                   />
-                   <Text
+                  <Text
                     style={{ fontSize: 12, color: "#333", textAlign: "center" }}
                   >
                     Twitter
@@ -1065,7 +1124,6 @@ export default function Details({ navigation }) {
                   </Text>
                 </TouchableOpacity>
               </View>
-            
             </View>
           </View>
         </Modal>
@@ -1162,7 +1220,7 @@ export default function Details({ navigation }) {
                 {collections.map((item, index) => (
                   <AddCollection
                     checkFunc={ıtemOnCollection}
-                    setPopUpForRemoveItem={setPopUpForRemoveItem}
+                    setPopUpForRemoveItem={setsetPopUpForRemoveItem}
                     key={index}
                     item={item}
                     getCollectionId={getCollectionId}
@@ -1201,40 +1259,7 @@ export default function Details({ navigation }) {
           </View>
         </Modal>
 
-        {/* <Modal
-          isVisible={PopUpForRemoveItem}
-          onBackdropPress={()=>setPopUpForRemoveItem(false)}
-      
-          animationIn={'zoomInUp'}
-          animationOut={'zoomOutUp'}
-          animationInTiming={200}
-          animationOutTiming={200}
-          backdropColor="transparent"
-          style={styles.modal4}
-        >
-          <View style={styles.modalContent4}>
-            <View style={{padding:10,gap:10}}>
-           <Text style={{textAlign:'center'}}>{selectedHouse} No'lu konutu {selectedCollectionName} adlı koleksiyonunuzdan kaldırmak istediğinize eminmisiniz</Text>
-           <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
-
-            <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}>
-              <Text style={{color:'white'}}>Evet</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
-                onPress={()=>{
-                  setPopUpForRemoveItem(false)
-                }}
-            >
-              <Text style={{color:'white'}}>Hayır</Text>
-            </TouchableOpacity>
-
-           </View>
-
-            </View>
-                    
-          </View>
-        </Modal> */}
+        {/* */}
         <Modal
           isVisible={addCollection}
           onBackdropPress={() => setaddCollection(false)}
@@ -1464,6 +1489,44 @@ export default function Details({ navigation }) {
                 );
               })}
             </PagerView>
+          </View>
+        </Modal>
+        <Modal
+          isVisible={ModalForAddToCart}
+          onBackdropPress={()=>setModalForAddToCart(false)}
+      
+          animationIn={'zoomInUp'}
+          animationOut={'zoomOutUp'}
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropColor="transparent"
+          style={styles.modal4}
+        >
+          <View style={styles.modalContent4}>
+            <View style={{padding:10,gap:10}}>
+           <Text style={{textAlign:'center'}}>{selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize Eminmisiniz?</Text>
+           <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
+
+            <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
+              onPress={()=>{
+                addToCard() 
+              }}
+            >
+              <Text style={{color:'white'}}>Sepete Ekle</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
+                onPress={()=>{
+                  setModalForAddToCart(false)
+                }}
+            >
+              <Text style={{color:'white'}}>Vazgeç</Text>
+            </TouchableOpacity>
+
+           </View>
+
+            </View>
+                    
           </View>
         </Modal>
       </ScrollView>

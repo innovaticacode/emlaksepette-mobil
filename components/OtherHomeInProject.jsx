@@ -21,7 +21,8 @@ export default function OtherHomeInProject({
   OpenFormModal,
   data,
   getLastItemCount,
-  openCollection
+  openCollection,
+  GetIdForCart
 }) {
   const [tabs, setTabs] = useState(0);
   const [rooms, setRooms] = useState([]);
@@ -82,6 +83,7 @@ export default function OtherHomeInProject({
             }).map((index, _index) => {
               return (
                 <Posts
+                GetIdForCart={GetIdForCart}
                 openCollection={openCollection}
                   key={_index}
                   data={data}

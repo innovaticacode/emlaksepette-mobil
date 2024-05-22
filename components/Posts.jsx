@@ -30,7 +30,8 @@ export default function Posts({
   setModalVisible,
   openmodal,
   openFormModal,
-  openCollection
+  openCollection,
+  GetIdForCart
 
 }) {
   const navigation = useNavigation();
@@ -167,7 +168,12 @@ export default function Posts({
                     </Text>
                   </TouchableOpacity>
                 ) : (
-                  <TouchableOpacity style={styles.addBasket}>
+                  <TouchableOpacity style={styles.addBasket}
+                    onPress={()=>{
+                      GetIdForCart(roomOrder)
+                    }}
+                  
+                  >
                     <Text
                       style={{
                         color: "white",
