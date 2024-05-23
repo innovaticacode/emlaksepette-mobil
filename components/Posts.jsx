@@ -31,7 +31,9 @@ export default function Posts({
   openmodal,
   openFormModal,
   openCollection,
-  getID,
+  GetIdForCart
+
+
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -169,7 +171,12 @@ export default function Posts({
                     </Text>
                   </TouchableOpacity>
                 ) : (
-                  <TouchableOpacity style={styles.addBasket}>
+                  <TouchableOpacity style={styles.addBasket}
+                    onPress={()=>{
+                      GetIdForCart(roomOrder)
+                    }}
+                  
+                  >
                     <Text
                       style={{
                         color: "white",

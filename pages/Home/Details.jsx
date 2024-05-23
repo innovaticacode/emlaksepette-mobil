@@ -503,146 +503,51 @@ export default function Details({ navigation }) {
         console.error("Error:", error);
       });
   };
-  const [PopUpForRemoveItem, setPopUpForRemoveItem] = useState(false);
-  console.log(selectedCollectionName2);
+
+    
+  const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false)
+const [ModalForAddToCart, setModalForAddToCart] = useState(false)
+  const [selectedCartItem, setselectedCartItem] = useState(0)
+    const GetIdForCart=(id)=>{
+        setselectedCartItem(id)
+        setModalForAddToCart(true)
+        console.log(selectedCartItem)
+    }
+
+    const addToCard = async () => {
+        const formData=new FormData()
+        formData.append('id',selectedCartItem)
+        formData.append('isShare',data.projectHousingsList[selectedCartItem]['share_sale[]'])
+        formData.append('numbershare',data.projectHousingsList[selectedCartItem]['number_of_shares[]'])
+        formData.append('qt',1)
+        formData.append('type','project')
+        formData.append('clear_cart','no')
+        formData.append('project',data.project.id)
+      try {
+        if (user?.access_token) {
+          const response = await axios.post(
+            "https://test.emlaksepette.com/api/institutional/add_to_cart",
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${user?.access_token}`,
+              },
+            }
+          );
+
+            navigation.navigate('Sepetim')
+        }
+      } catch (error) {
+        console.error('post isteği olmadı' ,error);
+      } 
+    };
+  
+
+   
+      
+
   const { width, height } = Dimensions.get("window");
 
-  const [users, setUsers] = useState({});
-  const [İsLoggedIn, setisLoggedIn] = useState(true);
-
-  useEffect(() => {
-    getValueFor("user", setUsers);
-  }, []);
-
-  const [userid, setUserId] = useState("");
-  const [storeid, setStoreId] = useState("");
-  const [projectid, setProjectId] = useState("");
-  const [roomid, setRoomId] = useState("");
-  const [emailid, setEmailId] = useState("");
-  const [nameid, setNameId] = useState("");
-
-  const [phoneid, setPhoneId] = useState("");
-
-  const [titleid, setTitleId] = useState("");
-  const [offerid, setOfferId] = useState("");
-
-  const [createdid, setCreatedId] = useState("");
-  const [selectedroomId, setselectedroomId] = useState();
-  const getRoomID = (id) => {
-    setselectedroomId(id);
-  };
-  const postData = async () => {
-    try {
-      var formData = new FormData();
-
-      formData.append("userid", user.id);
-      formData.append("projectUserId", data.project.user.id);
-      formData.append("projectId", data.project.id);
-      formData.append("roomId", selectedroomId);
-      formData.append("name", nameid);
-      formData.append("phone", phoneid);
-      formData.append("email", emailid);
-      formData.append("city_id", city);
-      formData.append("county_id", county);
-      formData.append("title", titleid);
-      formData.append("offer_description", "asdwa2sd asdrks ksks ");
-      // formData.append("approval_status", 0);
-      // formData.append("response_status", 0);
-      // formData.append("sales_status", 0);
-      // formData.append("offer_status", 0);
-
-      const response = await axios.post(
-        "https://test.emlaksepette.com/api/institutional/give_offer",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-            "Content-Type": "multipart/form-data", // İçerik tipini belirtmek
-          },
-        }
-      );
-      setFormVisible(false);
-      setTimeout(() => {
-        setTrueModal(true);
-      }, 3000);
-
-      console.log("İstek başarıyla tamamlandı:", response.data);
-
-      // color("#d4edda");
-      setNameId("");
-      setPhoneId("");
-      setEmailId("");
-      setcity("");
-      setcounty("");
-      setTitleId("");
-      setOfferId("");
-    } catch (error) {
-      if (error.response) {
-        // Sunucudan gelen hata yanıtı
-        console.error("Sunucu Hatası:", error.response.data);
-        console.error("Hata Kodu:", error.response.status);
-      } else if (error.request) {
-        // İstek yapıldı, ancak cevap alınamadı
-        console.error("Sunucudan cevap alınamadı:", error.request);
-      } else {
-        // İstek ayarları sırasında bir hata oluştu
-        console.error("İstek Ayar Hatası:", error.message);
-      }
-      console.error("Post isteği başarısız:", error);
-    }
-  };
-
-  console.log(selectedroomId);
-  const [city, setcity] = useState("");
-  const [county, setcounty] = useState("");
-  const fetchCity = async () => {
-    try {
-      const response = await axios.get(
-        "https://test.emlaksepette.com/api/cities"
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Hata:", error);
-      throw error;
-    }
-  };
-
-  const [citites, setCities] = useState([]);
-  useEffect(() => {
-    fetchCity()
-      .then((citites) => setCities(citites.data))
-      .catch((error) =>
-        console.error("Veri alınırken bir hata oluştu:", error)
-      );
-  }, []);
-
-  const [counties, setcounties] = useState([]);
-  const fetchDataCounty = async (value) => {
-    try {
-      const response = await axios.get(
-        `https://test.emlaksepette.com/api/counties/${value}`
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Hata:", error);
-      throw error;
-    }
-  };
-
-  const onChangeCity = (value) => {
-    setcity(value);
-    if (value) {
-      fetchDataCounty(value)
-        .then((county) => setcounties(county.data))
-        .catch((error) =>
-          console.error("Veri alınırken bir hata oluştu:", error)
-        );
-    } else {
-      setcounties([]);
-    }
-  };
-
-  const [trueModal, setTrueModal] = useState(false);
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -908,7 +813,9 @@ export default function Details({ navigation }) {
         </View>
         {tabs == 0 && (
           <OtherHomeInProject
-            getID={getRoomID}
+
+          GetIdForCart={GetIdForCart}
+
             openCollection={openCollection}
             itemCount={itemCount}
             data={data}
@@ -1321,7 +1228,7 @@ export default function Details({ navigation }) {
                 {collections.map((item, index) => (
                   <AddCollection
                     checkFunc={ıtemOnCollection}
-                    setPopUpForRemoveItem={setPopUpForRemoveItem}
+                    setPopUpForRemoveItem={setsetPopUpForRemoveItem}
                     key={index}
                     item={item}
                     getCollectionId={getCollectionId}
@@ -1360,40 +1267,7 @@ export default function Details({ navigation }) {
           </View>
         </Modal>
 
-        {/* <Modal
-          isVisible={PopUpForRemoveItem}
-          onBackdropPress={()=>setPopUpForRemoveItem(false)}
-      
-          animationIn={'zoomInUp'}
-          animationOut={'zoomOutUp'}
-          animationInTiming={200}
-          animationOutTiming={200}
-          backdropColor="transparent"
-          style={styles.modal4}
-        >
-          <View style={styles.modalContent4}>
-            <View style={{padding:10,gap:10}}>
-           <Text style={{textAlign:'center'}}>{selectedHouse} No'lu konutu {selectedCollectionName} adlı koleksiyonunuzdan kaldırmak istediğinize eminmisiniz</Text>
-           <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
-
-            <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}>
-              <Text style={{color:'white'}}>Evet</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
-                onPress={()=>{
-                  setPopUpForRemoveItem(false)
-                }}
-            >
-              <Text style={{color:'white'}}>Hayır</Text>
-            </TouchableOpacity>
-
-           </View>
-
-            </View>
-                    
-          </View>
-        </Modal> */}
+        {/* */}
         <Modal
           isVisible={addCollection}
           onBackdropPress={() => setaddCollection(false)}
@@ -1691,27 +1565,41 @@ export default function Details({ navigation }) {
         </Modal>
 
         <Modal
-          isVisible={trueModal}
-          onBackdropPress={() => setTrueModal(false)}
-          animationIn={"fadeInDown"}
-          animationOut={"fadeOutDown"}
+          isVisible={ModalForAddToCart}
+          onBackdropPress={()=>setModalForAddToCart(false)}
+      
+          animationIn={'zoomInUp'}
+          animationOut={'zoomOutUp'}
           animationInTiming={200}
           animationOutTiming={200}
           backdropColor="transparent"
-          style={[styles.modal4, { backgroundColor: "gren" }]}
+          style={styles.modal4}
         >
           <View style={styles.modalContent4}>
-            <View style={{ padding: 10 }}>
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "green",
-                  fontWeight: "500",
+            <View style={{padding:10,gap:10}}>
+           <Text style={{textAlign:'center'}}>{selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize Eminmisiniz?</Text>
+           <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
+
+            <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
+              onPress={()=>{
+                addToCard() 
+              }}
+            >
+              <Text style={{color:'white'}}>Sepete Ekle</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
+                onPress={()=>{
+                  setModalForAddToCart(false)
                 }}
-              >
-                Form başarıyla gönderildi.
-              </Text>
+            >
+              <Text style={{color:'white'}}>Vazgeç</Text>
+            </TouchableOpacity>
+
+           </View>
+
             </View>
+
           </View>
         </Modal>
       </ScrollView>
