@@ -6,9 +6,14 @@ import { getValueFor } from "../../components/methods/user";
 import { useRoute } from "@react-navigation/native";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
+import { PDFDocument, Page } from "react-native-pdf-lib";
+import RNFS from "react-native-fs";
+import Share from "react-native-share";
 
 export default function Invoice() {
   const [user, setUser] = useState({});
+  const route = useRoute();
+  const { OrderId } = route.params;
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -19,7 +24,7 @@ export default function Invoice() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://test.emlaksepette.com/api/institutional/invoice/${orderId}`,
+          `https://test.emlaksepette.com/api/institutional/invoice/${OrderId}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -79,6 +84,57 @@ export default function Invoice() {
       }
     }
   }, [data, user.access_token]);
+
+  const createPDF = async () => {
+    try {
+      // Yeni PDF dokümanı oluştur
+      const pdfPath = `${RNFS.DocumentDirectoryPath}/invoice.pdf`;
+      const page1 = PDFDocument.Page.create()
+        .setMediaBox(200, 200)
+        .drawText("Invoice", {
+          x: 5,
+          y: 170,
+          fontSize: 20,
+          color: "#007386",
+        })
+        .drawText("Date: 2023-05-22", {
+          x: 5,
+          y: 150,
+          fontSize: 12,
+          color: "#000",
+        });
+
+      const pdfDoc = PDFDocument.create(pdfPath).addPages(page1);
+
+      await pdfDoc.write(); // PDF dosyasını kaydet
+
+      return pdfPath;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const downloadPDF = async () => {
+    const pdfPath = await createPDF();
+
+    if (pdfPath) {
+      const shareOptions = {
+        title: "Download Invoice",
+        url: `file://${pdfPath}`,
+        type: "application/pdf",
+      };
+
+      Share.open(shareOptions)
+        .then((res) => {
+          console.log("PDF shared:", res);
+        })
+        .catch((err) => {
+          err && console.log(err);
+        });
+    } else {
+      Alert.alert("Error", "Failed to create PDF.");
+    }
+  };
 
   return (
     <ScrollView style={{}} contentContainerStyle={{ flexGrow: 1 }}>
@@ -278,6 +334,7 @@ export default function Invoice() {
           <Text>{data?.invoice?.order?.store?.email}</Text>
           <Text>Vergi No: {data?.invoice?.order?.store?.taxNumber}</Text>
           <Text>İletişim No: {data?.invoice?.order?.store?.phone}</Text>
+          <Button title="Download Invoice" onPress={downloadPDF} />
         </View>
       </View>
     </ScrollView>

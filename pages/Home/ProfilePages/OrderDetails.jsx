@@ -36,7 +36,7 @@ export default function OrderDetails() {
       try {
         if (user?.access_token) {
           const response = await axios.get(
-            `https://test.emlaksepette.com/api/institutional/order_detail/453`,
+            `https://test.emlaksepette.com/api/institutional/order_detail/${OrderId}`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -432,7 +432,9 @@ export default function OrderDetails() {
               <Text>Canlı Destek</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Invoice")}
+              onPress={() =>
+                navigation.navigate("Invoice", { OrderId: Detail.id })
+              }
               style={{
                 paddingTop: 10,
                 flexDirection: "row",
