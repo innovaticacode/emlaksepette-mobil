@@ -1,17 +1,94 @@
-import { View, Text, Image } from "react-native";
-import React from "react";
+import { View, Text, Image, ScrollView, ImageBackground } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
 import { StyleSheet } from "react-native";
+import axios from "axios";
+import { getValueFor } from "../../components/methods/user";
+import { useRoute } from "@react-navigation/native";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
+import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
 export default function Invoice() {
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
+  const [data, setData] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      if (user?.access_token) {
+        const response = await axios.get(
+          `https://test.emlaksepette.com/api/institutional/invoice/${orderId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+        setData(response?.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [user]);
+  const date = new Date(data?.invoice?.created_at);
+  // Ay isimleri dizisi
+  const monthNames = [
+    "Ocak",
+    "Şubat",
+    "Mart",
+    "Nisan",
+    "Mayıs",
+    "Haziran",
+    "Temmuz",
+    "Ağustos",
+    "Eylül",
+    "Ekim",
+    "Kasım",
+    "Aralık",
+  ];
+  // Günü, ay ismini ve yılı al
+  const day = date.getDate();
+  const month = monthNames[date.getMonth()];
+  const year = date.getFullYear();
+  const formattedDate = `${day} ${month} ${year}`;
+  const [parsedData, setparsedData] = useState("");
+  useEffect(() => {
+    if (
+      data?.invoice?.order?.cart &&
+      typeof data?.invoice?.order?.cart === "string" &&
+      user.access_token
+    ) {
+      try {
+        // JSON verisini ayrıştırıyoruz
+        const cartObject = JSON.parse(data?.invoice?.order?.cart);
+        // cartObject ve item.image'in var olup olmadığını kontrol ediyoruz
+        if (cartObject && cartObject.item && cartObject.item.image) {
+          setparsedData(cartObject);
+        } else {
+          console.error("Cart nesnesi veya item.image bulunamadı");
+        }
+      } catch (error) {
+        console.error("JSON parse edilemedi:", error);
+      }
+    }
+  }, [data, user.access_token]);
+
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView style={{}} contentContainerStyle={{ flexGrow: 1 }}>
       <View
         style={{
           paddingRight: 10,
           paddingLeft: 10,
           backgroundColor: "#0879FB",
           position: "relative",
-          height: "20%",
+          height: 170,
         }}
       >
         <Text
@@ -39,8 +116,18 @@ export default function Invoice() {
               justifyContent: "center",
             }}
           >
-            <View style={{ width: "40%", backgroundColor: "red" }}>
-              <Text>logo</Text>
+            <View style={{ width: "40%" }}>
+              <View style={{ width: 100, height: 100 }}>
+                <ImageBackground
+                  source={require("../../components/emlaksepettelogo.png")}
+                  resizeMode="contain"
+                  style={{
+                    width: "100%",
+                    flex: 1,
+                    justifyContent: "center",
+                  }}
+                />
+              </View>
             </View>
             <View width={{ width: "60%" }}>
               <Text style={{ color: "white", fontWeight: "500", fontSize: 12 }}>
@@ -70,7 +157,7 @@ export default function Invoice() {
       >
         <View
           style={{
-            backgroundColor: "##F5F6FA",
+            backgroundColor: "#F5F6FA",
             width: 230,
             paddingRight: 20,
             paddingLeft: 20,
@@ -81,15 +168,18 @@ export default function Invoice() {
           }}
         >
           <Text style={{ fontWeight: "700" }}>Alıcı Bilgisi:</Text>
-          <Text>Hayrına Ev234</Text>
-          <Text>emlaksepettetest@gmail.com</Text>
-          <Text>İş: 232323</Text>
+          <Text> {data?.invoice?.order?.user?.name} </Text>
+          <Text>{data?.invoice?.order?.user?.email}</Text>
+          <Text>İş: {data?.invoice?.order?.user?.phone}</Text>
         </View>
         <View style={{ gap: 3 }}>
           <Text>Fatura No:</Text>
-          <Text style={{ fontWeight: "700" }}>FTR-171682839823</Text>
+          <Text style={{ fontWeight: "700" }}>
+            {" "}
+            {data?.invoice?.invoice_number}{" "}
+          </Text>
           <Text>Tarih</Text>
-          <Text style={{ fontWeight: "700" }}>2024-05-21 09:04:43</Text>
+          <Text style={{ fontWeight: "700" }}> {formattedDate} </Text>
         </View>
       </View>
       <View style={{ marginTop: 40 }}>
@@ -118,13 +208,19 @@ export default function Invoice() {
               paddingLeft: 10,
               paddingTop: 20,
               paddingBottom: 20,
-
               display: "flex",
               flexDirection: "row",
             }}
           >
-            <View style={{ width: "25%" }}>
-              <Text>Image</Text>
+            <View style={{ width: 100, height: 100 }}>
+              {parsedData.item && parsedData.item.image ? (
+                <Image
+                  style={{ width: "100%", height: "100%" }}
+                  source={{ uri: parsedData.item.image }}
+                />
+              ) : (
+                <Text>Resim yüklenemedi</Text> // Eğer item veya image yoksa bir mesaj göster
+              )}
             </View>
             <View
               style={{
@@ -133,9 +229,14 @@ export default function Invoice() {
                 width: "75%",
               }}
             >
-              <Text>
-                MASTER REALTOR'DEN YAKUTLAR RESİDENCE ' DE YATIRIMLIK 3.5 +1
-              </Text>
+              {parsedData && parsedData.item ? (
+                <>
+                  <Text>{parsedData.item.title}</Text>
+                  {/* Title'ı yazdırıyoruz */}
+                </>
+              ) : (
+                <Text>Veri yüklenemedi</Text> // Eğer item veya image yoksa bir mesaj göster
+              )}
               <Text style={{ fontWeight: "700" }}>İSTANBUL / KARTAL</Text>
             </View>
           </View>
@@ -145,10 +246,10 @@ export default function Invoice() {
         <View style={[styles.card, { paddingLeft: 10, paddingRight: 10 }]}>
           <Text style={{ fontWeight: "700" }}>Ödeme Bilgileri:</Text>
           <Text>
-            Master Girişim bilgileri Teknolojileri Gayrimenkul Yatırım ve
-            Pazarlama AŞ - TR16 0001 0020 9997 7967 8350 01
+            {data?.invoice?.order?.bank?.receipent_full_name} -{" "}
+            {data?.invoice?.order?.bank?.iban}
           </Text>
-          <Text>Kapora: 408,000,00 ₺</Text>
+          <Text>Kapora: {data?.invoice?.order?.amount}</Text>
         </View>
         <View
           style={[
@@ -162,24 +263,24 @@ export default function Invoice() {
         >
           <View>
             <Text style={{ fontWeight: "700" }}> Toplam Fiyat </Text>
-            <Text> 10,200,000,00 ₺ </Text>
+            <Text> {addDotEveryThreeDigits(parsedData?.item?.price)} ₺</Text>
           </View>
           <View>
             <Text style={{ fontWeight: "700" }}> Kapora </Text>
-            <Text> 408,000,00 ₺ </Text>
+            <Text> {data?.invoice?.order?.amount} ₺ </Text>
           </View>
         </View>
       </View>
       <View style={{}}>
         <View style={[styles.card, { paddingLeft: 10, paddingRight: 10 }]}>
           <Text style={{ fontWeight: "700" }}>Satıcı Bilgileri:</Text>
-          <Text>Master Realtor</Text>
-          <Text>masterrealtorturkiye@gmail.com</Text>
-          <Text>Vergi No: 39291212</Text>
-          <Text>İletişim No: 4423562</Text>
+          <Text>{data?.invoice?.order?.store?.name}</Text>
+          <Text>{data?.invoice?.order?.store?.email}</Text>
+          <Text>Vergi No: {data?.invoice?.order?.store?.taxNumber}</Text>
+          <Text>İletişim No: {data?.invoice?.order?.store?.phone}</Text>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
