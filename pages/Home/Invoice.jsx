@@ -24,7 +24,10 @@ export default function Invoice() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
+
+
           `https://test.emlaksepette.com/api/institutional/invoice/${OrderId}`,
+
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,

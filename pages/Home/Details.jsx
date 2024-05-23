@@ -542,8 +542,128 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
       } 
     };
   
+    const [userid, setUserId] = useState("");
+    const [storeid, setStoreId] = useState("");
+    const [projectid, setProjectId] = useState("");
+    const [roomid, setRoomId] = useState("");
+    const [emailid, setEmailId] = useState("");
+    const [nameid, setNameId] = useState("");
+  
+    const [phoneid, setPhoneId] = useState("");
+  
+    const [titleid, setTitleId] = useState("");
+    const [offerid, setOfferId] = useState("");
+  
+    const [createdid, setCreatedId] = useState("");
+    const [selectedroomId, setselectedroomId] = useState();
+    const getRoomID = (id) => {
+      setselectedroomId(id);
+    };
+    const postData = async () => {
+      try {
+        var formData = new FormData();
+  
+        formData.append("userid", user.id);
+        formData.append("projectUserId", data.project.user.id);
+        formData.append("projectId", data.project.id);
+        formData.append("roomId", selectedroomId);
+        formData.append("name", nameid);
+        formData.append("phone", phoneid);
+        formData.append("email", emailid);
+        formData.append("city_id", city);
+        formData.append("county_id", county);
+        formData.append("title", titleid);
+        formData.append("offer_description", "asdwa2sd asdrks ksks ");
 
-   
+  
+        const response = await axios.post(
+          "https://test.emlaksepette.com/api/institutional/give_offer",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              "Content-Type": "multipart/form-data", // İçerik tipini belirtmek
+            },
+          }
+        );
+        setFormVisible(false);
+        setTimeout(() => {
+          setTrueModal(true);
+        }, 3000);
+  
+        console.log("İstek başarıyla tamamlandı:", response.data);
+  
+        // color("#d4edda");
+        setNameId("");
+        setPhoneId("");
+        setEmailId("");
+        setcity("");
+        setcounty("");
+        setTitleId("");
+        setOfferId("");
+      } catch (error) {
+        if (error.response) {
+          // Sunucudan gelen hata yanıtı
+          console.error("Sunucu Hatası:", error.response.data);
+          console.error("Hata Kodu:", error.response.status);
+        } else if (error.request) {
+          // İstek yapıldı, ancak cevap alınamadı
+          console.error("Sunucudan cevap alınamadı:", error.request);
+        } else {
+          // İstek ayarları sırasında bir hata oluştu
+          console.error("İstek Ayar Hatası:", error.message);
+        }
+        console.error("Post isteği başarısız:", error);
+      }
+    };
+    const [city, setcity] = useState("");
+    const [county, setcounty] = useState("");
+    const fetchCity = async () => {
+      try {
+        const response = await axios.get(
+          "https://test.emlaksepette.com/api/cities"
+        );
+        return response.data;
+      } catch (error) {
+        console.error("Hata:", error);
+        throw error;
+      }
+    };
+  
+    const [citites, setCities] = useState([]);
+    useEffect(() => {
+      fetchCity()
+        .then((citites) => setCities(citites.data))
+        .catch((error) =>
+          console.error("Veri alınırken bir hata oluştu:", error)
+        );
+    }, []);
+  
+    const [counties, setcounties] = useState([]);
+    const fetchDataCounty = async (value) => {
+      try {
+        const response = await axios.get(
+          `https://test.emlaksepette.com/api/counties/${value}`
+        );
+        return response.data;
+      } catch (error) {
+        console.error("Hata:", error);
+        throw error;
+      }
+    };
+  
+    const onChangeCity = (value) => {
+      setcity(value);
+      if (value) {
+        fetchDataCounty(value)
+          .then((county) => setcounties(county.data))
+          .catch((error) =>
+            console.error("Veri alınırken bir hata oluştu:", error)
+          );
+      } else {
+        setcounties([]);
+      }
+    };
       
 
   const { width, height } = Dimensions.get("window");
@@ -813,7 +933,7 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
         </View>
         {tabs == 0 && (
           <OtherHomeInProject
-
+            GetID={getRoomID}
           GetIdForCart={GetIdForCart}
 
             openCollection={openCollection}
@@ -1387,7 +1507,7 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
                   <View style={{ gap: 7 }}>
                     <Text
                       value={nameid}
-                      onChangeValue={(value) => setNameId(value)}
+                    
                       style={styles.label}
                       onChangeText={(value) => setNameId("name", value)}
                     >
