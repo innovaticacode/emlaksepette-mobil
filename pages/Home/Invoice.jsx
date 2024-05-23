@@ -19,7 +19,7 @@ export default function Invoice() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://test.emlaksepette.com/api/institutional/invoice/453`,
+          `https://test.emlaksepette.com/api/institutional/invoice/${orderId}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -263,7 +263,7 @@ export default function Invoice() {
         >
           <View>
             <Text style={{ fontWeight: "700" }}> Toplam Fiyat </Text>
-            <Text> {addDotEveryThreeDigits(parsedData.item.price)} ₺</Text>
+            <Text> {addDotEveryThreeDigits(parsedData?.item?.price)} ₺</Text>
           </View>
           <View>
             <Text style={{ fontWeight: "700" }}> Kapora </Text>
