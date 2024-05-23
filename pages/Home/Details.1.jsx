@@ -4,38 +4,28 @@ import {
   ImageBackground,
   SafeAreaView,
   TouchableOpacity,
-  StyleSheet,
   ScrollView,
   Animated,
-  Button,
-  Platform,
   Linking,
   ActivityIndicator,
   TextInput,
   Pressable,
   Dimensions,
 } from "react-native";
-
 import { React, useEffect, useRef, useState } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
 import Caption from "../../components/Caption";
-import Settings from "./RealtorPages/Settings";
 import PagerView from "react-native-pager-view";
 import Map from "../../components/Map";
 import { SocialIcon, Icon } from "react-native-elements";
 import * as Clipboard from "expo-clipboard";
-
 import OtherHomeInProject from "../../components/OtherHomeInProject";
-
 import FloorPlan from "../../components/FloorPlan";
 import Information from "../../components/Information";
-
 import LinkIcon from "react-native-vector-icons/Entypo";
-
 import { useRoute } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Arrow from "react-native-vector-icons/MaterialIcons";
-import Bookmark from "react-native-vector-icons/FontAwesome";
 import SettingsItem from "../../components/SettingsItem";
 import Header from "../../components/Header";
 import Modal from "react-native-modal";
@@ -45,14 +35,11 @@ import SliderMenuDetails from "../../components/SliderMenuDetails";
 import { apiRequestGet } from "../../components/methods/apiRequest";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
 import CloseIcon from "react-native-vector-icons/AntDesign";
-import Swiper from "react-native-swiper";
 import AddCollection from "../../components/AddCollection";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
-
-import RNPickerSelect from "react-native-picker-select";
+import { styles } from "./Details";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -503,50 +490,71 @@ export default function Details({ navigation }) {
         console.error("Error:", error);
       });
   };
-
-    
-  const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false)
-const [ModalForAddToCart, setModalForAddToCart] = useState(false)
-  const [selectedCartItem, setselectedCartItem] = useState(0)
-    const GetIdForCart=(id)=>{
-        setselectedCartItem(id)
-        setModalForAddToCart(true)
-        console.log(selectedCartItem)
-    }
-
-    const addToCard = async () => {
-        const formData=new FormData()
-        formData.append('id',selectedCartItem)
-        formData.append('isShare',data.projectHousingsList[selectedCartItem]['share_sale[]'])
-        formData.append('numbershare',data.projectHousingsList[selectedCartItem]['number_of_shares[]'])
-        formData.append('qt',1)
-        formData.append('type','project')
-        formData.append('clear_cart','no')
-        formData.append('project',data.project.id)
-      try {
-        if (user?.access_token) {
-          const response = await axios.post(
-            "https://test.emlaksepette.com/api/institutional/add_to_cart",
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${user?.access_token}`,
-              },
-            }
-          );
-
-            navigation.navigate('Sepetim')
-        }
-      } catch (error) {
-        console.error('post isteği olmadı' ,error);
-      } 
-    };
-  
-
-   
-      
-
+  const [PopUpForRemoveItem, setPopUpForRemoveItem] = useState(false);
+  console.log(selectedCollectionName2);
   const { width, height } = Dimensions.get("window");
+
+  const [users, setUsers] = useState({});
+  const [İsLoggedIn, setisLoggedIn] = useState(true);
+
+  useEffect(() => {
+    getValueFor("user", setUsers);
+  }, []);
+
+  const [userid, setUserId] = useState("");
+  const [storeid, setStoreId] = useState("");
+  const [projectid, setProjectId] = useState("");
+  const [roomid, setRoomId] = useState("");
+  const [emailid, setEmailId] = useState("");
+  const [nameid, setNameId] = useState("");
+
+  const [phoneid, setPhoneId] = useState("");
+  const [cityid, setCityId] = useState("");
+  const [countyid, setCountyId] = useState("");
+  const [titleid, setTitleId] = useState("");
+  const [offerid, setOfferId] = useState("");
+  const [approvalid, setApprovalId] = useState("");
+  const [responseid, setResponseId] = useState("");
+  const [salesid, setSalesId] = useState("");
+  const [offerresid, settOfferresid] = useState("");
+
+  const [createdid, setCreatedId] = useState("");
+
+  const postData = async () => {
+    try {
+      var formData = new FormData();
+      formData.append("name", nameid);
+      formData.append("phone", phoneid);
+      formData.append("email", emailid);
+      formData.append("city_id", cityid);
+      formData.append("county_id", countyid);
+      formData.append("title", titleid);
+      formData.append("offer_description", offerid);
+
+      const response = await axios.post(
+        "https://test.emlaksepette.com/api/institutional/give_offer",
+        formData
+      );
+
+      // İsteğin başarılı bir şekilde tamamlandığı durum
+      console.log("İstek başarıyla tamamlandı:", response.data);
+
+      openModal(JSON.stringify(response.data.message));
+      color("#d4edda");
+      setNameid("");
+      setPhoneid("");
+      setEmailid("");
+      setCityiid("");
+      setCountyid("");
+      setTitleid("");
+      setOfferid("");
+    } catch (error) {
+      // Hata durumunda
+      openModal("Tüm Alanları Doldurunuz");
+      color("#F8D7DA");
+      console.error("Hata:", error + "post isteği başarısız ");
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -641,7 +649,6 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
           </View>
         </View>
       </Modal>
-
       <View
         style={{
           flexDirection: "row",
@@ -813,9 +820,6 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
         </View>
         {tabs == 0 && (
           <OtherHomeInProject
-
-          GetIdForCart={GetIdForCart}
-
             openCollection={openCollection}
             itemCount={itemCount}
             data={data}
@@ -1228,7 +1232,7 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
                 {collections.map((item, index) => (
                   <AddCollection
                     checkFunc={ıtemOnCollection}
-                    setPopUpForRemoveItem={setsetPopUpForRemoveItem}
+                    setPopUpForRemoveItem={setPopUpForRemoveItem}
                     key={index}
                     item={item}
                     getCollectionId={getCollectionId}
@@ -1267,7 +1271,40 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
           </View>
         </Modal>
 
-        {/* */}
+        {/* <Modal
+              isVisible={PopUpForRemoveItem}
+              onBackdropPress={()=>setPopUpForRemoveItem(false)}
+          
+              animationIn={'zoomInUp'}
+              animationOut={'zoomOutUp'}
+              animationInTiming={200}
+              animationOutTiming={200}
+              backdropColor="transparent"
+              style={styles.modal4}
+            >
+              <View style={styles.modalContent4}>
+                <View style={{padding:10,gap:10}}>
+               <Text style={{textAlign:'center'}}>{selectedHouse} No'lu konutu {selectedCollectionName} adlı koleksiyonunuzdan kaldırmak istediğinize eminmisiniz</Text>
+               <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
+    
+                <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}>
+                  <Text style={{color:'white'}}>Evet</Text>
+                </TouchableOpacity>
+    
+                <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
+                    onPress={()=>{
+                      setPopUpForRemoveItem(false)
+                    }}
+                >
+                  <Text style={{color:'white'}}>Hayır</Text>
+                </TouchableOpacity>
+    
+               </View>
+    
+                </View>
+                        
+              </View>
+            </Modal> */}
         <Modal
           isVisible={addCollection}
           onBackdropPress={() => setaddCollection(false)}
@@ -1425,49 +1462,23 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
                     </Text>
                     <TextInput style={styles.Input} />
                   </View>
-                  <View style={{ gap: 6 }}>
+                  <View style={{ gap: 7 }}>
                     <Text
-                      style={{ fontSize: 14, color: "grey", fontWeight: 600 }}
+                      style={styles.label}
+                      value={cityid}
+                      onChangeText={(value) => setCity("cityid", value)}
                     >
-                      Şehir
+                      İl
                     </Text>
-                    <RNPickerSelect
-                      placeholder={{
-                        label: "Şehir Seçiniz...",
-                        value: null,
-                      }}
-                      style={pickerSelectStyles}
-                      value={city}
-                      onValueChange={(value) => {
-                        onChangeCity(value);
-                      }}
-                      items={citites}
-                    />
-                  </View>
-                  <View style={{ gap: 6 }}>
-                    <Text
-                      style={{ fontSize: 14, color: "grey", fontWeight: 600 }}
-                    >
-                      İlçe
-                    </Text>
-                    <RNPickerSelect
-                      placeholder={{
-                        label: "İlçe Seçiniz...",
-                        value: null,
-                      }}
-                      value={county}
-                      style={pickerSelectStyles}
-                      onValueChange={(value) => setcounty(value)}
-                      items={counties}
-                    />
+                    <TextInput style={styles.Input} />
                   </View>
                   <View style={{ gap: 7 }}>
                     <Text
                       style={styles.label}
-                      value={titleid}
-                      onChangeText={(value) => setOfferId("offerid", value)}
+                      value={countyid}
+                      onChangeText={(value) => setCounty("countyid", value)}
                     >
-                      Açıklama
+                      İlçe
                     </Text>
                     <TextInput style={styles.Input} />
                   </View>
@@ -1483,7 +1494,7 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
                     padding: 15,
                     borderRadius: 10,
                   }}
-                  onPress={postData}
+                  onPress={handleSubmit}
                 >
                   <Text style={{ color: "white", textAlign: "center" }}>
                     Gönder
@@ -1563,221 +1574,7 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
             </PagerView>
           </View>
         </Modal>
-
-        <Modal
-          isVisible={ModalForAddToCart}
-          onBackdropPress={()=>setModalForAddToCart(false)}
-      
-          animationIn={'zoomInUp'}
-          animationOut={'zoomOutUp'}
-          animationInTiming={200}
-          animationOutTiming={200}
-          backdropColor="transparent"
-          style={styles.modal4}
-        >
-          <View style={styles.modalContent4}>
-            <View style={{padding:10,gap:10}}>
-           <Text style={{textAlign:'center'}}>{selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize Eminmisiniz?</Text>
-           <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
-
-            <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
-              onPress={()=>{
-                addToCard() 
-              }}
-            >
-              <Text style={{color:'white'}}>Sepete Ekle</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
-                onPress={()=>{
-                  setModalForAddToCart(false)
-                }}
-            >
-              <Text style={{color:'white'}}>Vazgeç</Text>
-            </TouchableOpacity>
-
-           </View>
-
-            </View>
-
-          </View>
-        </Modal>
       </ScrollView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
-    flex: 1,
-    ...Platform.select({
-      ios: {},
-      android: {
-        paddingTop: 25,
-      },
-    }),
-  },
-  modal: {
-    margin: 0,
-  },
-  modalContent: {
-    backgroundColor: "white",
-
-    flex: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: 320,
-  },
-  pagination: {
-    position: "absolute",
-    zIndex: 1,
-    padding: 3,
-    paddingLeft: 8,
-    paddingRight: 8,
-    borderRadius: 10,
-    bottom: 0,
-    alignItems: "center",
-
-    width: "100%",
-  },
-  ıconContainer: {
-    width: 50,
-    height: 150,
-    backgroundColor: "transparent",
-    position: "absolute",
-    right: 7,
-    top: 42,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-around",
-    alignItems: "center",
-    gap: 20,
-    zIndex: 1,
-  },
-  ıcon: {
-    backgroundColor: "#FFFFFFAD",
-    width: 35,
-    height: 35,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-  },
-  centeredView: {
-    padding: 10,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-
-    // modal dışı koyu arkaplan
-  },
-  modalView: {
-    width: "100%",
-
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 25,
-    gap: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modal2: {
-    justifyContent: "flex-end",
-    margin: 0,
-    backgroundColor: "#1414148c",
-  },
-  modalContent2: {
-    backgroundColor: "#fefefe",
-
-    height: "52%",
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  modal3: {
-    justifyContent: "flex-end",
-    margin: 0,
-    backgroundColor: "#1414148c",
-  },
-  modalContent3: {
-    backgroundColor: "#fefefe",
-
-    height: "100%",
-  },
-  Input: {
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 6,
-    borderColor: "#ebebeb",
-  },
-  label: {
-    color: "grey",
-    fontWeight: "500",
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderWidth: 0.7,
-    borderColor: "#e6e6e6",
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  modalImage: {
-    justifyContent: "flex-end",
-    margin: 0,
-  },
-  modalContentImage: {
-    backgroundColor: "black",
-    justifyContent: "center",
-
-    flex: 1,
-  },
-  Input: {
-    backgroundColor: "#E6E6E6",
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ebebeb",
-    borderRadius: 6,
-    fontSize: 14,
-  },
-  modal4: {
-    justifyContent: "center",
-    margin: 0,
-    padding: 20,
-    backgroundColor: "#1414148c",
-  },
-  modalContent4: {
-    backgroundColor: "#fefefe",
-    padding: 20,
-    borderRadius: 10,
-  },
-});
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    borderWidth: 1,
-    borderColor: "#bdc6cf",
-    borderRadius: 6,
-    padding: 10,
-    fontSize: 14, // to ensure the text is never behind the icon
-  },
-  inputAndroid: {
-    borderWidth: 2,
-    borderColor: "black",
-    borderRadius: 6,
-    padding: 10,
-    fontSize: 14, // to ensure the text is never behind the icon
-  },
-});
