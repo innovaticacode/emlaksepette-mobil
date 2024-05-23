@@ -23,7 +23,7 @@
         "icon": "eye",
         "text": "Komşumu Gör",
         "key": "neighborView",
-        "url": "SeeNeigbour'",
+        "url": "SeeNeigbourHood",
         "activePath": "/hesabim/komsumu-gor"
     },
     {
@@ -195,13 +195,13 @@
             {
                 "text": "Yeni Ekle",
                 "key": "CreateUser",
-                "url": "institutional.users.create",
+                "url": "CreateUser",
                 "activePath": "/hesabim/kullanici/olustur"
             },
             {
                 "text": "Listele",
                 "key": "GetUsers",
-                "url": "institutional.users.index",
+                "url": "UsersList",
                 "activePath": "/hesabim/kullanicilar"
             }
         ]

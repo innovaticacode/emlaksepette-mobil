@@ -21,8 +21,7 @@ export default function UpdateProfile() {
 
 
 
-  const translateY = useRef(new Animated.Value(400)).current;
-  const [sheetDisplay, setsheetDisplay] = useState(false)
+
  
 
 

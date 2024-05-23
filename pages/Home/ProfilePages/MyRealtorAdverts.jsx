@@ -12,7 +12,7 @@ import PasiveRealtorAdverts from './PasiveRealtorAdverts'
 export default function MyRealtorAdverts() {
   const [Tabs, setTabs] = useState(0)
   const route = useRoute();
-  const { header,hidden} = route.params;
+
   return (
     <View style={styles.container}>
       <View style={styles.tabBar}>

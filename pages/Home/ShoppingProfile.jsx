@@ -312,20 +312,94 @@ export default function ShoppingProfile() {
             </View>
           ))}
         </View>
-        <View style={{ flex: 1 / 2 }}>
+        <View style={{ flex: 1 / 2 ,paddingBottom:50,alignItems:'center'}}>
           <TouchableOpacity
-            onPress={logout}
+            onPress={()=>setdialogVisible(true)}
             style={{
-              backgroundColor: "#F8D7DA",
+              backgroundColor: "#EA2A28",
               padding: 10,
               borderRadius: 6,
+              width:'80%'
             }}
           >
-            <Text style={{ textAlign: "center", color: "#721C24" }}>
+            <Text style={{ textAlign: "center", color: "#ffffff" ,fontWeight:'500'}}>
               Çıkış Yap
             </Text>
           </TouchableOpacity>
         </View>
+        <Modal
+            animationType="slide"
+            onBackdropPress={() => setdialogVisible(!dialogVisible)}
+            visible={dialogVisible}
+            onRequestClose={() => {
+              Alert.alert("Modal has been closed.");
+              setdialogVisible(!dialogVisible);
+            }}
+          >
+            <View style={{}}>
+              <View
+                style={[
+                  style.modalView,
+                  style.card,
+                  {
+                    padding: 0,
+                    borderRadius: 10,
+                    backgroundColor: "#F8F7F4",
+                    alignItems: "center",
+                    gap: 20,
+                  },
+                ]}
+              >
+                <Text style={{ color: "#333" }}>
+                  Çıkış Yapmak İstedğinize Emin misiniz?
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                >
+                  <View style={{ flex: 1 / 2 }}>
+                    <TouchableOpacity
+                      onPress={logout}
+                      style={{
+                        backgroundColor: "#F8D7DA",
+                        padding: 10,
+                        borderRadius: 6,
+                      }}
+                    >
+                      <Text style={{ textAlign: "center", color: "#721C24" }}>
+                        Çıkış Yap
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ flex: 1 / 2 }}>
+                    <TouchableOpacity
+                      style={[
+                        {
+                          backgroundColor: "#D4EDDA",
+                          padding: 10,
+                          borderRadius: 6,
+                        },
+                      ]}
+                      onPress={() => setdialogVisible(!dialogVisible)}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "#165724",
+                          fontWeight: "600",
+                        }}
+                      >
+                        İptal Et
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </Modal>
         {/* 
           <View>
             {İsLoggedIn ? (
@@ -946,79 +1020,7 @@ export default function ShoppingProfile() {
         </View>
 
         <Shadow>
-          <Modal
-            animationType="slide"
-            onBackdropPress={() => setdialogVisible(!dialogVisible)}
-            visible={dialogVisible}
-            onRequestClose={() => {
-              Alert.alert("Modal has been closed.");
-              setdialogVisible(!dialogVisible);
-            }}
-          >
-            <View style={{}}>
-              <View
-                style={[
-                  style.modalView,
-                  style.card,
-                  {
-                    padding: 0,
-                    borderRadius: 10,
-                    backgroundColor: "#F8F7F4",
-                    alignItems: "center",
-                    gap: 20,
-                  },
-                ]}
-              >
-                <Text style={{ color: "#333" }}>
-                  Çıkış Yapmak İstedğinize Emin misiniz?
-                </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <View style={{ flex: 1 / 2 }}>
-                    <TouchableOpacity
-                      onPress={logout}
-                      style={{
-                        backgroundColor: "#F8D7DA",
-                        padding: 10,
-                        borderRadius: 6,
-                      }}
-                    >
-                      <Text style={{ textAlign: "center", color: "#721C24" }}>
-                        Çıkış Yap
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={{ flex: 1 / 2 }}>
-                    <TouchableOpacity
-                      style={[
-                        {
-                          backgroundColor: "#D4EDDA",
-                          padding: 10,
-                          borderRadius: 6,
-                        },
-                      ]}
-                      onPress={() => setdialogVisible(!dialogVisible)}
-                    >
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          color: "#165724",
-                          fontWeight: "600",
-                        }}
-                      >
-                        İptal Et
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </View>
-          </Modal>
+       
         </Shadow> */}
       </ScrollView>
     </View>
