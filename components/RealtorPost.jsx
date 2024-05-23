@@ -24,6 +24,7 @@ export default function RealtorPost({
   roomCount,
   floor,
   HouseId,
+  GetId
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -108,7 +109,11 @@ export default function RealtorPost({
                 </Text>
               </View>
               <View style={styles.btns}>
-                <TouchableOpacity style={styles.addBasket}>
+                <TouchableOpacity style={styles.addBasket}
+                    onPress={()=>{
+                      GetId(HouseId)
+                    }}
+                >
                   <Text
                     style={{ color: "white", fontWeight: "500", fontSize: 12 }}
                   >

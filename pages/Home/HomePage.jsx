@@ -36,7 +36,7 @@ import * as Animatable from "react-native-animatable";
 import Swiper from "react-native-swiper";
 import PagerView from "react-native-pager-view";
 import Categories from "../../components/Categories";
-import userData from "../../components/methods/user";
+import userData, { getValueFor } from "../../components/methods/user";
 
 export default function HomePage() {
   const navigation = useNavigation();
@@ -167,6 +167,48 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, [currentPage]);
 
+
+  const [user, setuser] = useState({})
+  useEffect(() => {
+    getValueFor("user", setuser);
+  }, []);
+  const [ModalForAddToCart, setModalForAddToCart] = useState(false)
+  const [selectedCartItem, setselectedCartItem] = useState(0)
+    const GetIdForCart=(id)=>{
+        setselectedCartItem(id)
+        setModalForAddToCart(true)
+        console.log(selectedCartItem)
+    }
+
+    const addToCard = async () => {
+        const formData=new FormData()
+        formData.append('id',selectedCartItem)
+        formData.append('isShare',null)
+        formData.append('numbershare',null)
+        formData.append('qt',1)
+        formData.append('type','housing')
+        formData.append('project',null)
+        formData.append('clear_cart','no')
+    
+      try {
+        if (user?.access_token) {
+          const response = await axios.post(
+            "https://test.emlaksepette.com/api/institutional/add_to_cart",
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${user?.access_token}`,
+              },
+            }
+          );
+            setModalForAddToCart(false)
+            navigation.navigate('Sepetim')
+        }
+      } catch (error) {
+        console.error('post isteği olmadı' ,error);
+      } 
+    };
+  
   const { width: screenWidth } = Dimensions.get("window");
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -513,6 +555,7 @@ export default function HomePage() {
                   ) : (
                     filteredHomes.map((item, index) => (
                       <RealtorPost
+                      GetId={GetIdForCart}
                         key={index}
                         HouseId={item.id}
                         price={`${
@@ -674,6 +717,44 @@ export default function HomePage() {
           
         </Swiper>
         {/* </ScrollView> */}
+        <Modal
+          isVisible={ModalForAddToCart}
+          onBackdropPress={()=>setModalForAddToCart(false)}
+      
+          animationIn={'zoomInUp'}
+          animationOut={'zoomOutUp'}
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropColor="transparent"
+          style={styles.modal4}
+        >
+          <View style={styles.modalContent4}>
+            <View style={{padding:10,gap:10}}>
+           <Text style={{textAlign:'center'}}>#1000{selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize Eminmisiniz?</Text>
+           <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
+
+            <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
+              onPress={()=>{
+                addToCard() 
+              }}
+            >
+              <Text style={{color:'white'}}>Sepete Ekle</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
+                onPress={()=>{
+                  setModalForAddToCart(false)
+                }}
+            >
+              <Text style={{color:'white'}}>Vazgeç</Text>
+            </TouchableOpacity>
+
+           </View>
+
+            </View>
+
+          </View>
+        </Modal>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -755,6 +836,17 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     padding: 5,
     borderRadius: 4,
+  },
+  modal4: {
+    justifyContent: "center",
+    margin: 0,
+    padding: 20,
+    backgroundColor: "#1414148c",
+  },
+  modalContent4: {
+    backgroundColor: "#fefefe",
+    padding: 20,
+    borderRadius: 10,
   },
 });
 {

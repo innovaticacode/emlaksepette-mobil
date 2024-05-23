@@ -31,7 +31,8 @@ export default function Posts({
   openmodal,
   openFormModal,
   openCollection,
-  GetIdForCart
+  GetIdForCart,
+  GetID
 
 
 }) {
@@ -218,7 +219,7 @@ export default function Posts({
                   <TouchableOpacity
                     onPress={() => {
                       openFormModal(roomOrder);
-                      getID(roomOrder);
+                      GetID(roomOrder);
                     }}
                     style={styles.PayDetailBtn}
                   >
