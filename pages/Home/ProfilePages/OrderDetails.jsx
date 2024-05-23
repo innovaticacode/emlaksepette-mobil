@@ -432,7 +432,9 @@ export default function OrderDetails() {
               <Text>Canlı Destek</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Invoice")}
+              onPress={() =>
+                navigation.navigate("Invoice", { OrderId: Detail.id })
+              }
               style={{
                 paddingTop: 10,
                 flexDirection: "row",
