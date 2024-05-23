@@ -6,9 +6,6 @@ import { getValueFor } from "../../components/methods/user";
 import { useRoute } from "@react-navigation/native";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
-import { PDFDocument, Page } from "react-native-pdf-lib";
-import RNFS from "react-native-fs";
-import Share from "react-native-share";
 
 export default function Invoice() {
   const [user, setUser] = useState({});
@@ -24,8 +21,6 @@ export default function Invoice() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-
-
           `https://test.emlaksepette.com/api/institutional/invoice/${OrderId}`,
 
           {
