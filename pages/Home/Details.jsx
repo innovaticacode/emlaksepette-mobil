@@ -573,7 +573,7 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
         formData.append("city_id", city);
         formData.append("county_id", county);
         formData.append("title", titleid);
-        formData.append("offer_description", "asdwa2sd asdrks ksks ");
+        formData.append("offer_description",offerid);
 
   
         const response = await axios.post(
@@ -667,7 +667,75 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
       
 
   const { width, height } = Dimensions.get("window");
+  const [errorStatu, seterrorStatu] = useState(0)
+  const [errorMessage, seterrorMessage] = useState('')
+  const GiveOffer = () => {
+    switch (true) {
+      case !nameid:
+        seterrorStatu(1);
+        seterrorMessage("İsim Alanı Boş Bırakılmaz");
+   
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+        case !phoneid:
+          seterrorStatu(2);
+          seterrorMessage("Telefon Alanı Boş Bırakılmaz");
 
+          setTimeout(() => {
+            seterrorStatu(0);
+          }, 5000);
+          break;
+          case !titleid:
+            seterrorStatu(3);
+            seterrorMessage("Meslek Alanı Boş Bırakılmaz");
+   
+            setTimeout(() => {
+              seterrorStatu(0);
+            }, 5000);
+            break;
+            case !city:
+              seterrorStatu(4);
+              seterrorMessage("Şehir Seçiniz ");
+        
+              setTimeout(() => {
+                seterrorStatu(0);
+              }, 5000);
+              break;
+              case !county:
+                seterrorStatu(5);
+                seterrorMessage("İlçe Seçniz");
+          
+                setTimeout(() => {
+                  seterrorStatu(0);
+                }, 5000);
+                break;
+                case !emailid:
+                  seterrorStatu(6);
+                  seterrorMessage("Mail Alanı Boş Bırakılmaz");
+
+                  setTimeout(() => {
+                    seterrorStatu(0);
+                  }, 5000);
+                  break;
+                  case !offerid:
+                    seterrorStatu(7);
+                    seterrorMessage("Açıklama alanı boş bırakılamaz");
+                
+                    setTimeout(() => {
+                      seterrorStatu(0);
+                    }, 5000);
+                    break;
+      default:
+        postData();
+    }
+
+    if (errorMessage) {
+      // ShowAlert(ErrorMessage);
+    }
+    console.log(errorStatu + "error statu");
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -1506,45 +1574,61 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
                 <View style={{ gap: 15 }}>
                   <View style={{ gap: 7 }}>
                     <Text
-                      value={nameid}
+                 
                     
                       style={styles.label}
-                      onChangeText={(value) => setNameId("name", value)}
+              
                     >
                       Ad Soyad
                     </Text>
-                    <TextInput style={styles.Input} />
+                    <TextInput style={styles.Input}   value={nameid}   onChangeText={(value) => setNameId(value)}/>
+                    {errorStatu==1 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
                   </View>
                   <View style={{ gap: 7 }}>
                     <Text
                       style={styles.label}
-                      value={phoneid}
-                      onChangeText={(value) => setPhoneId("phoneid", value)}
+
+               
                     >
                       Telefon Numarası
                     </Text>
-                    <TextInput style={styles.Input} />
+                    <TextInput style={styles.Input}    value={phoneid}   onChangeText={(value) => setPhoneId(value)} />
+                    {errorStatu==2 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
                   </View>
                   <View style={{ gap: 7 }}>
                     <Text
                       style={styles.label}
-                      value={emailid}
-                      onChangeText={(value) => setEmailId("emailid", value)}
+                  
+                 
                     >
                       E-Posta
                     </Text>
-                    <TextInput style={styles.Input} />
+                    <TextInput style={styles.Input}     value={emailid}     onChangeText={(value) => setEmailId(value)} />
+                    {errorStatu==6 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
                   </View>
                   <View style={{ gap: 7 }}>
                     <Text
                       style={styles.label}
                       value={titleid}
-                      onChangeText={(value) => setTitleId("titleid", value)}
+                     
                     >
                       Meslek
                     </Text>
-                    <TextInput style={styles.Input} />
+                    <TextInput style={styles.Input} value={titleid} onChangeText={(value) => setTitleId(value)} />
+                    {errorStatu==3 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
                   </View>
+                  <View style={{ gap: 7 }}>
+                    <Text
+                      style={styles.label}
+                  
+                     
+                    >
+                        Açıklama
+                    </Text>
+                    <TextInput style={styles.Input} value={offerid} onChangeText={(value) => setOfferId(value)} />
+                    {errorStatu==7 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
+                  </View>
+                
                   <View style={{ gap: 6 }}>
                     <Text
                       style={{ fontSize: 14, color: "grey", fontWeight: 600 }}
@@ -1563,6 +1647,7 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
                       }}
                       items={citites}
                     />
+                     {errorStatu==4 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
                   </View>
                   <View style={{ gap: 6 }}>
                     <Text
@@ -1580,17 +1665,9 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
                       onValueChange={(value) => setcounty(value)}
                       items={counties}
                     />
+                    {errorStatu==5 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
                   </View>
-                  <View style={{ gap: 7 }}>
-                    <Text
-                      style={styles.label}
-                      value={titleid}
-                      onChangeText={(value) => setOfferId("offerid", value)}
-                    >
-                      Açıklama
-                    </Text>
-                    <TextInput style={styles.Input} />
-                  </View>
+                
                 </View>
               </KeyboardAwareScrollView>
               <View
@@ -1603,7 +1680,7 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
                     padding: 15,
                     borderRadius: 10,
                   }}
-                  onPress={postData}
+                  onPress={GiveOffer}
                 >
                   <Text style={{ color: "white", textAlign: "center" }}>
                     Gönder

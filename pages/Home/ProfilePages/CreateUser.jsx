@@ -23,7 +23,7 @@ import axios from "axios";
 export default function CreateUser() {
   const route = useRoute();
   const navigation = useNavigation();
-  const { header, hidden3, hidden4, changeSlectedState, show } = route.params;
+ 
   const [display, setdisplay] = useState(false);
   const translateY = useRef(new Animated.Value(400)).current;
  

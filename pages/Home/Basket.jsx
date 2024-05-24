@@ -12,7 +12,7 @@ import {
   Platform,
   ImageBackground
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import BasketItem from "../../components/BasketItem";
 import {
   Swipeable,
@@ -24,6 +24,8 @@ import Header from "../../components/Header";
 import Search from "./Search";
 import Categories from "../../components/Categories";
 import Modal from "react-native-modal";
+import { getValueFor } from "../../components/methods/user";
+import axios from "axios";
 
 
 export default function Basket() {
@@ -52,7 +54,31 @@ export default function Basket() {
   const toggleDrawer=()=>{
     setIsDrawerOpen(!isDrawerOpen)
   }
-  
+  const [user, setuser] = useState({})
+  const [Cart, setCart] = useState({})
+  useEffect(() => {
+    getValueFor('user',setuser)
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      if(user.access_token){
+        const response = await axios.get('https://test.emlaksepette.com/api/institutional/my-cart',{
+          headers: {
+            'Authorization':`Bearer ${user?.access_token}`
+          }
+        });
+          setCart(response?.data?.cart?.item)
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+useEffect(() => {
+  fetchData();
+}, [user])
+console.log(Cart)
   return (
     <SafeAreaView style={{flex:1,backgroundColor:'white'}}>
           <View style={{
@@ -121,20 +147,20 @@ export default function Basket() {
         </Modal>
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView style={styles.container} stickyHeaderIndices={[0]} showsVerticalScrollIndicator={false}>
-        {Basket.map((item, index) => (
-          <GestureHandlerRootView key={index}style={{backgroundColor:'white'}} >
+        
+      
+          <GestureHandlerRootView style={{backgroundColor:'white'}} >
             <Swipeable renderRightActions={renderRightActions}>
               <BasketItem
-                key={index}
-                name={item.name}
-                shopName={item.shopName}
-                price={item.price}
-                shopPoint={item.shopPoint}
-                hisse={item.hisse}
+              
+                name={Cart.title}
+                ımage={Cart.image}
+                price={Cart.amount}
+               
               />
             </Swipeable>
           </GestureHandlerRootView>
-        ))}
+   
           
         <View>
        <View style={[styles.HouseInfo,{padding:15}]}>
