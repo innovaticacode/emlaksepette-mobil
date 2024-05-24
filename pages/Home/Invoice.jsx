@@ -4,11 +4,9 @@ import { StyleSheet } from "react-native";
 import axios from "axios";
 import { getValueFor } from "../../components/methods/user";
 import { useRoute } from "@react-navigation/native";
-import { useSafeAreaFrame } from "react-native-safe-area-context";
+
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
-import { PDFDocument, Page } from "react-native-pdf-lib";
-import RNFS from "react-native-fs";
-import Share from "react-native-share";
+
 
 export default function Invoice() {
   const [user, setUser] = useState({});
@@ -337,7 +335,7 @@ export default function Invoice() {
           <Text>{data?.invoice?.order?.store?.email}</Text>
           <Text>Vergi No: {data?.invoice?.order?.store?.taxNumber}</Text>
           <Text>İletişim No: {data?.invoice?.order?.store?.phone}</Text>
-          <Button title="Download Invoice" onPress={downloadPDF} />
+       
         </View>
       </View>
     </ScrollView>

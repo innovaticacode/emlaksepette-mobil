@@ -308,7 +308,7 @@ export default function App({ route }) {
               component={CreateUser}
               options={({ route }) => ({
                 animationTypeForReplace: "pop",
-                title: route.params.name,
+                title: 'Alt Kullanıcı Oluştur',
               })}
             />
             <Stack.Screen
@@ -539,7 +539,7 @@ export default function App({ route }) {
             })}
           />
           <Stack.Screen
-            name="SeeNeigbour"
+            name="SeeNeigbourHood"
             component={SeeNeigbourhood}
             options={({ route }) => ({
               title: "Komuşumu Gör",
