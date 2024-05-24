@@ -13,6 +13,7 @@ import {
   Keyboard,
   Animated,
   ActivityIndicator,
+  Linking,
 } from "react-native";
 import { React, useState, useRef, useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -31,6 +32,10 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { apiRequestGet } from "../../components/methods/apiRequest";
 import SliderItemSkeleton from "../../components/SkeletonComponents/SliderItemSkeleton";
 import ShopVitrin from "./ProfilePageItem/ShopVitrin";
+import { Button } from "react-native-elements";
+import Modal from "react-native-modal";
+import { CheckBox } from "@rneui/themed";
+
 export default function Profile() {
   const route = useRoute();
   const [Housings, setHousings] = useState([]);
@@ -45,6 +50,49 @@ export default function Profile() {
       duration: 300,
       useNativeDriver: true,
     }).start();
+  };
+  const [nameId, setNameId] = useState("");
+  const [phoneId, setPhoneId] = useState("");
+  const [emailId, setEmailId] = useState("");
+  const [errorStatu, seterrorStatu] = useState(0);
+  const [errorMessage, seterrorMessage] = useState("");
+
+  const GiveOffer = () => {
+    switch (true) {
+      case !nameId:
+        seterrorStatu(1);
+        seterrorMessage("İsim Alanı Boş Bırakılmaz");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      case !phoneId:
+        seterrorStatu(2);
+        seterrorMessage("Telefon Alanı Boş Bırakılmaz");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+
+      case !emailId:
+        seterrorStatu(6);
+        seterrorMessage("Mail Alanı Boş Bırakılmaz");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+
+      default:
+        postData();
+    }
+
+    if (errorMessage) {
+      // ShowAlert(ErrorMessage);
+    }
+    console.log(errorStatu + "error statu");
   };
 
   const closeSheet = () => {
@@ -66,6 +114,29 @@ export default function Profile() {
   console.log(Housings[0]?.title + "sdfsdf");
   const ApiUrl = "https://test.emlaksepette.com/";
   console.log(storeData?.data?.name);
+  const handleOpenPhone = () => {
+    // Telefon uygulamasını açmak için
+    Linking.openURL("tel:+905537064474");
+  };
+  const [formVisible, setFormVisible] = useState("false");
+
+  const [featuredProjects, setFeaturedProjects] = useState([]);
+
+  const fetchFeaturedProjects = async () => {
+    try {
+      setFeaturedProjects(data.data.projects);
+      setloadingPrjoects(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFeaturedProjects();
+  }, []);
+
+  const [checked, setChecked] = useState(false);
+  const toggleCheckbox = () => setChecked(!checked);
 
   return (
     <View style={{ flex: 1 }}>
@@ -470,7 +541,13 @@ export default function Profile() {
             )}
           </ScrollView>
         </View>
-        {tab === 0 && <ShopVitrin data={storeData} loading={loading} />}
+        {tab === 0 && (
+          <ShopVitrin
+            housingdata={Housings}
+            data={storeData}
+            loading={loading}
+          />
+        )}
         {tab === 1 && <ProjectAdverts data={storeData} />}
         {tab === 2 && <RealtorAdverts housingdata={Housings} />}
         {tab === 3 && <Team />}
@@ -544,6 +621,164 @@ export default function Profile() {
           </ScrollView>
         </Animated.View>
       </View>
+      <View
+        style={{
+          padding: 20,
+
+          display: "flex",
+          justifyContent: "space-between",
+          flexDirection: "row",
+          backgroundColor: "rgba(0, 0, 0, 0)",
+        }}
+      >
+        <TouchableOpacity
+          style={{ width: "40%", backgroundColor: "blue", borderRadius: 5 }}
+          onPress={handleOpenPhone}
+        >
+          <Text
+            style={{
+              padding: 10,
+              color: "white",
+              fontWeight: "500",
+              fontSize: 20,
+              textAlign: "center",
+            }}
+          >
+            Ara
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{ width: "40%", backgroundColor: "blue", borderRadius: 5 }}
+          onPress={() => setFormVisible((prev) => !prev)}
+        >
+          <Text
+            style={{
+              padding: 10,
+              color: "white",
+              fontWeight: "500",
+              fontSize: 20,
+              textAlign: "center",
+            }}
+          >
+            Başvur
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <Modal
+        animationType="slide"
+        onBackdropPress={() => setFormVisible(false)}
+        visible={formVisible}
+        onRequestClose={() => {
+          setFormVisible(false);
+        }}
+      >
+        <View style={[styless.centeredView, { padding: 0 }]}>
+          <View style={[styless.modalView, { height: "90%" }]}>
+            <Text style={{ textAlign: "center" }}>
+              Bilgilerinizi doldurun, sizi arayalım!
+            </Text>
+            <View style={{ gap: 7 }}>
+              <Text style={styless.label}>Ad Soyad</Text>
+              <TextInput
+                style={styless.Input}
+                value={nameId}
+                onChangeText={(value) => setNameId(value)}
+              />
+              {errorStatu == 1 && (
+                <Text style={{ color: "red", fontSize: 12 }}>
+                  {errorMessage}
+                </Text>
+              )}
+            </View>
+            <View style={{ gap: 7 }}>
+              <Text style={styless.label}>Telefon Numarası</Text>
+              <TextInput
+                style={styless.Input}
+                value={phoneId}
+                onChangeText={(value) => setPhoneId(value)}
+              />
+              {errorStatu == 2 && (
+                <Text style={{ color: "red", fontSize: 12 }}>
+                  {errorMessage}
+                </Text>
+              )}
+            </View>
+            <View style={{ gap: 7 }}>
+              <Text style={styles.label}>E-Posta</Text>
+              <TextInput
+                style={styless.Input}
+                value={emailId}
+                onChangeText={(value) => setEmailId(value)}
+              />
+              {errorStatu == 6 && (
+                <Text style={{ color: "red", fontSize: 12 }}>
+                  {errorMessage}
+                </Text>
+              )}
+            </View>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-around" }}
+            >
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#28A745",
+                  width: "40%",
+                  padding: 15,
+                  borderRadius: 10,
+                  backgroundColor: checked ? "#28A745" : "#D3D3D3",
+                }}
+                disabled={!checked}
+                onPress={GiveOffer}
+              >
+                <Text style={{ color: "white", textAlign: "center" }}>
+                  Gönder
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#DC3545",
+                  width: "40%",
+                  padding: 15,
+                  borderRadius: 10,
+                }}
+                onPress={() => {
+                  setFormVisible(false);
+                }}
+              >
+                <Text style={{ color: "white", textAlign: "center" }}>
+                  Kapat
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              <CheckBox
+                checked={checked}
+                onPress={toggleCheckbox}
+                // Use ThemeProvider to make change for all checkbox
+                iconType="material-community"
+                checkedIcon="checkbox-marked"
+                uncheckedIcon="checkbox-blank-outline"
+                checkedColor="red"
+                containerStyle={{
+                  alignItems: "flex-start",
+                  justifyContent: "flex-start",
+                }}
+                title={
+                  <Text>
+                    “Gönder” butonuna tıkladığınızda ad, soyad, e-posta ve mobil
+                    telefon numarası bilgileriniz onayınızın ardından
+                    tarafınızla iletişim kurulması amacıyla müteahhit firmaya
+                    iletilecektir. Veri sorumlusu sıfatıyla tüm yükümlülük ve
+                    sorumluluk müteahhit firmaya ait olacaktır. Kişisel
+                    verilerinizin korunması hakkında detaylı bilgi için buraya
+                    Tıklayabilirsiniz.
+                  </Text>
+                }
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -605,5 +840,164 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+});
+
+const styless = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+    flex: 1,
+    ...Platform.select({
+      ios: {},
+      android: {
+        paddingTop: 25,
+      },
+    }),
+  },
+  modal: {
+    margin: 0,
+  },
+  modalContent: {
+    backgroundColor: "white",
+
+    flex: 1,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    width: 320,
+  },
+  pagination: {
+    position: "absolute",
+    zIndex: 1,
+    padding: 3,
+    paddingLeft: 8,
+    paddingRight: 8,
+    borderRadius: 10,
+    bottom: 0,
+    alignItems: "center",
+
+    width: "100%",
+  },
+  ıconContainer: {
+    width: 50,
+    height: 150,
+    backgroundColor: "transparent",
+    position: "absolute",
+    right: 7,
+    top: 42,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center",
+    gap: 20,
+    zIndex: 1,
+  },
+  ıcon: {
+    backgroundColor: "#FFFFFFAD",
+    width: 35,
+    height: 35,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+  },
+  centeredView: {
+    padding: 10,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+
+    // modal dışı koyu arkaplan
+  },
+  modalView: {
+    width: "100%",
+
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 25,
+    gap: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modal2: {
+    justifyContent: "flex-end",
+    margin: 0,
+    backgroundColor: "#1414148c",
+  },
+  modalContent2: {
+    backgroundColor: "#fefefe",
+
+    height: "52%",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  modal3: {
+    justifyContent: "flex-end",
+    margin: 0,
+    backgroundColor: "#1414148c",
+  },
+  modalContent3: {
+    backgroundColor: "#fefefe",
+
+    height: "100%",
+  },
+  Input: {
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 6,
+    borderColor: "#ebebeb",
+  },
+  label: {
+    color: "grey",
+    fontWeight: "500",
+  },
+  card: {
+    backgroundColor: "#FFFFFF",
+    borderWidth: 0.7,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  modalImage: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContentImage: {
+    backgroundColor: "black",
+    justifyContent: "center",
+
+    flex: 1,
+  },
+  Input: {
+    backgroundColor: "#E6E6E6",
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ebebeb",
+    borderRadius: 6,
+    fontSize: 14,
+  },
+  modal4: {
+    justifyContent: "center",
+    margin: 0,
+    padding: 20,
+    backgroundColor: "#1414148c",
+  },
+  modalContent4: {
+    backgroundColor: "#fefefe",
+    padding: 20,
+    borderRadius: 10,
   },
 });
