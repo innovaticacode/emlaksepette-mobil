@@ -5,7 +5,7 @@ import ProjectPost from '../../../components/ProjectPost';
 
 export default function ProjectAdverts({data}) {
   const { width, height } = Dimensions.get('window');
-  const ApiUrl='https://7f24-78-178-52-190.ngrok-free.app/'
+  const ApiUrl='https://test.emlaksepette.com/'
   return (
    
     <ScrollView>

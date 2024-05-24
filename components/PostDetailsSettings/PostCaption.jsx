@@ -1,7 +1,7 @@
 import { View, Text ,StyleSheet,ScrollView} from 'react-native'
 import React from 'react'
 import ShoppinInfo from '../ShoppinInfo'
-
+import { Platform } from "react-native";
 
 export default function PostCaption({data}) {
   const caption=data?.project?.description.replace(/<[^>]+>|&[a-zA-Z]+;|[%&]|&gt;/g, '')

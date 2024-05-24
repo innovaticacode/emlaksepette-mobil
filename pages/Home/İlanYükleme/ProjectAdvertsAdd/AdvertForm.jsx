@@ -3,7 +3,7 @@ import {useState}from 'react'
 import { useRoute } from '@react-navigation/native'
 import PagerView from 'react-native-pager-view';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
-
+import { Platform } from "react-native";
 export default function AdvertForm({}) {
     const route=useRoute();
     const {InputValue}=route.params;

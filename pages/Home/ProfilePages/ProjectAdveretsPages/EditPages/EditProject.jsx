@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Image, Modal, Pressable, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Image, Modal, Pressable, TouchableOpacity, Button } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import ArrowRightIcon from 'react-native-vector-icons/AntDesign';
 import HomeIcon from 'react-native-vector-icons/Entypo';
@@ -12,9 +12,16 @@ import RNPickerSelect from 'react-native-picker-select';
 import { useRoute } from "@react-navigation/native";
 import { actions, RichEditor, RichToolbar }  from "react-native-pell-rich-editor"; 
 import MapView, { Marker } from 'react-native-maps';
-import { apiRequestGet, apiRequestPost, frontEndUri } from '../../../../../components/methods/apiRequest';
+import { apiRequestGet, apiRequestPost, apiRequestPostWithBearer, apiUrl, frontEndUri } from '../../../../../components/methods/apiRequest';
 import { addDotEveryThreeDigits } from '../../../../../components/methods/merhod';
 import CloseIcon from 'react-native-vector-icons/AntDesign';
+import * as ImagePicker from 'expo-image-picker';
+import { getValueFor } from '../../../../../components/methods/user';
+import * as SecureStore from 'expo-secure-store';
+import axios from "axios"
+import Geocoder from 'react-native-geocoding';
+import { useNavigation } from '@react-navigation/native';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 export default function EditProject() {
   const route = useRoute();
@@ -22,28 +29,85 @@ export default function EditProject() {
 
   const [data,setData] = useState({
     start_date : new Date(),
-    end_date : new Date()
+    end_date : new Date(),
+    location : ""
   });
+  const [projectGlobal,setProjectGlobal] = useState({});
 
+  const navigation = useNavigation();
+
+  navigation.setOptions({
+    headerStyle : {
+      backgroundColor : projectGlobal.status == 1 ? "#2b3" : projectGlobal.status == 2 ? "#f0ad4e" : projectGlobal.status == 3 ? "#bb2124" : "#bb2124"
+    },
+    headerTintColor: 'white',
+    headerBackTitleVisible: false,
+    headerTitle : 'Proje Düzenle ('+(projectGlobal.status == 1 ? "Aktif" : projectGlobal.status == 2 ? "Onay Bekliyor" : projectGlobal.status == 3 ? "Reddedildi" : "Pasif")+')'
+  })
+
+  Geocoder.init("AIzaSyB-ip8tV3D9tyRNS8RMUwxU8n7mCJ9WCl0");
+  const [imageReplace,setImageReplace] = useState(false);
+  const [user,setUser] = useState({});
   const [showCoverImageModal,setCoverImageModal] = useState(false);
   const [selectedImage,setSelectedImage] = useState("");
+  const [cities,setCities] = useState([]);
+  const [counties,setCounties] = useState([]);
+  const [neighborhoods,setNeighborhoods] = useState([]);
+  const [showUpdateModal,setShowUpdateModal] = useState(false);
+  const mapRef = useRef();
   
   useEffect(() => {
-    apiRequestGet('get_my_project/'+id).then((res) => {
+    axios.get(apiUrl+'get_temp_order_project/'+id,{ headers: { Authorization: 'Bearer ' + user.access_token }}).then((res) => {
       setData({
-        ...res.data.project,
+        ...res.data.tempData,
         start_date : new Date(res.data.project.start_date),
         end_date : new Date(res.data.project.project_end_date),
       });
 
-      richText.current?.setContentHTML(res.data.project.description)
+      setProjectGlobal(res.data.project)
+
+      richText.current?.setContentHTML(res.data.tempData.description)
+
+      axios.get(apiUrl+'counties/'+res.data.tempData.city_id).then((countyRes) => {
+        setCounties(countyRes.data.data);
+      })
+
+      const newRegion = {
+        latitude : res.data.tempData.location.split(',')[0],
+        longitude : res.data.tempData.location.split(',')[1],
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      }
+
+      if (mapRef.current) {
+        mapRef.current.animateToRegion(newRegion, 1000); // Animasyon süresi: 1000ms
+      }
+
+      axios.get(apiUrl+'neighborhoods/'+res.data.tempData.county_id).then((neighborhoodsRes) => {
+        setNeighborhoods(neighborhoodsRes.data.data);
+      })
+    }).catch((e) => {
+      console.log(e);
+    })
+  },[user])
+
+  useEffect(() => {
+    axios.get(apiUrl+'cities').then((res) => {
+      setCities(res.data.data);
     })
   },[])
-
-  const [open,setOpen] = useState(false);
-  
   const richText = useRef(); 
   const setDataFunc = (key,value) => {
+    var formData = new FormData();
+
+    formData.append('key',key);
+    formData.append('value', value);
+    formData.append('item_type', 3);
+    formData.append('array_data', 0);
+    axios.post(apiUrl+'temp_order_change_data',formData,{ headers: { Authorization: 'Bearer ' + user.access_token }}).then((res) => {
+    }).catch((e) => {
+      console.log(e);
+    })
     setData({
       ...data,
       [key] : value
@@ -67,284 +131,531 @@ export default function EditProject() {
     })
   }
 
+  const setUserx = async() => {
+    let result = await SecureStore.getItemAsync("user");
+    if (result) {
+      setUser(JSON.parse(result))
+    } 
+  }
+
+  useEffect(() => {
+    setUserx();
+  },[])
+
+  const changeCoverImage = async() => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    setImageReplace(true);
+
+    if (!result.canceled) {
+      var formData = new FormData();
+      var localUri  = result.assets[0].uri;
+      let filename = localUri.split('/').pop();
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
+      formData.append('image', { uri: localUri, name: filename, type });
+      formData.append('item_type', 3);
+      axios.post(apiUrl+'temp_order_single_file_add',formData,{ headers: { Authorization: 'Bearer ' + user.access_token }}).then((res) => {
+      }).catch((e) => {
+        console.log(e);
+      })
+
+      setData({
+        ...data,
+        image : result.assets[0].uri
+      });
+    }
+  }
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      var formData = new FormData();
+      var localUri  = result.assets[0].uri;
+      let filename = localUri.split('/').pop();
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
+      formData.append('file0', { uri: localUri, name: filename, type });
+      formData.append('item_type', 3);
+      axios.post(apiUrl+'temp_order_image_add',formData,{ headers: { Authorization: 'Bearer ' + user.access_token }}).then((res) => {
+      }).catch((e) => {
+        console.log(e);
+      })
+
+      setData({
+        ...data,
+        images : [
+          ...data.images,
+          {
+            isAdded : true,
+            image : result.assets[0].uri
+          }
+        ]
+      });
+    }
+  };
+
+  const pickSituation = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      var formData = new FormData();
+      var localUri  = result.assets[0].uri;
+      let filename = localUri.split('/').pop();
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
+
+      formData.append('file0', { uri: localUri, name: filename, type });
+      formData.append('item_type', 3);
+      axios.post(apiUrl+'situation_image_add',formData,{ headers: { Authorization: 'Bearer ' + user.access_token }}).then((res) => {
+      }).catch((e) => {
+        console.log(e);
+      })
+
+      setData({
+        ...data,
+        situations : [
+          ...data.situations,
+          {
+            isAdded : true,
+            situation : result.assets[0].uri
+          }
+        ]
+      });
+    }
+  };
+
+  const getCountiesByCityId = (cityId) => {
+    var cityTemp = cities.find((city) => city.value == cityId);
+    axios.get(apiUrl+'counties/'+cityId).then((countyRes) => {
+      setCounties(countyRes.data.data);
+    })
+
+    if(cityTemp){
+      Geocoder.from(cityTemp.label)
+		  .then(json => {
+			var location = json.results[0].geometry.location;
+        const newRegion = {
+          latitude : location.lat,
+          longitude : location.lng,
+          latitudeDelta: 2,
+          longitudeDelta: 2,
+        }
+
+        if (mapRef.current) {
+          mapRef.current.animateToRegion(newRegion, 1000); // Animasyon süresi: 1000ms
+        }
+        console.log(location,"asd");
+      })
+      .catch(error => console.warn(error));
+    }
+  }
+
+  const getNeighborhoodsByCountyId = (countyId) => {
+    axios.get(apiUrl+'neighborhoods/'+countyId).then((neighborhoodsRes) => {
+      setNeighborhoods(neighborhoodsRes.data.data);
+    })
+
+    if(countyId){
+      var cityTemp = cities.find((city) => city.value == data.city_id);
+      var countyTemp = counties.find((city) => city.value == countyId);
+  
+      Geocoder.from(cityTemp.label+' '+countyTemp.label)
+      .then(json => {
+        var location = json.results[0].geometry.location;
+        const newRegion = {
+          latitude : location.lat,
+          longitude : location.lng,
+          latitudeDelta: 0.7,
+          longitudeDelta: 0.7,
+        }
+  
+        if (mapRef.current) {
+          mapRef.current.animateToRegion(newRegion, 1000); // Animasyon süresi: 1000ms
+        }
+        console.log(location,"asd");
+      })
+      .catch(error => console.warn(error));
+    }
+    
+  }
+
+  const neighborhoodSelect = (neighborhoodId) => {
+    if(neighborhoodId){
+      var cityTemp = cities.find((city) => city.value == data.city_id);
+      var countyTemp = counties.find((city) => city.value == data.county_id);
+      var neighborhoodTemp = neighborhoods.find((city) => city.value == neighborhoodId);
+  
+      Geocoder.from(cityTemp.label+' '+countyTemp.label+' '+neighborhoodTemp.label)
+      .then(json => {
+        var location = json.results[0].geometry.location;
+        const newRegion = {
+          latitude : location.lat,
+          longitude : location.lng,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        }
+  
+        if (mapRef.current) {
+          mapRef.current.animateToRegion(newRegion, 1000); // Animasyon süresi: 1000ms
+        }
+        console.log(location,"asd");
+      })
+      .catch(error => console.warn(error));
+    }
+  }
+
+  const updateProject = () => {
+    setShowUpdateModal(true);
+    // 
+  }
+
+  const updateProjectEnd = () => {
+    axios.post(apiUrl+'update_project',{},{ headers: { Authorization: 'Bearer ' + user.access_token }}).then((res) => {
+      if(res.data.status){
+        navigation.navigate('MyProject',{status : "update_project"})
+      }
+    }).catch((e) => {
+      console.log(e);
+    })
+  }
+
   return (
-    <ScrollView >
-      <View style={{paddingBottom:20}}>
-        <View style={styles.breadcrumb}>
-          <HomeIcon style={styles.breadcrumbHome} size={20} name='home'/>
-          <Text style={{marginLeft:5,fontWeight:'bold'}}>Emlak </Text>
-          <ArrowRightIcon style={{marginLeft:5,fontWeight:'bold'}} name='right'/>
-          <Text style={{marginLeft:5,fontWeight:'bold'}}>Konut</Text>
-          <ArrowRightIcon style={{marginLeft:5,fontWeight:'bold'}} name='right'/>
-          <Text style={{marginLeft:5,fontWeight:'bold'}}>Satılık</Text>
-          <ArrowRightIcon style={{marginLeft:5,fontWeight:'bold'}} name='right'/>
-          <Text style={{marginLeft:5,fontWeight:'bold'}}>Villa</Text>
-        </View>
-        <View style={styles.card}>
-          <Modal
-            animationType="slide"
-            transparent={false}
-            visible={showCoverImageModal}
-            style={{backgroundColor:'#000'}}
-            onRequestClose={() => {
-              setCoverImageModal(!showCoverImageModal);
-            }}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
+    <View>
+      <AwesomeAlert 
+        show={showUpdateModal}
+        title="Projeyi Güncelliyorsunuz"
+        message="Projeyi güncellemeniz durumunda proje tekrardan admin onayıda düşecektir. Onaylıyor musunuz?"
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={true}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="İptal"
+        confirmText="Evet, Güncelle"
+        confirmButtonColor="#f0ad4e"
+        onCancelPressed={() => {
+          setShowUpdateModal(false);
+        }}
+        onConfirmPressed={() => {
+          updateProjectEnd();
+        }}
+      />
+      <ScrollView>
+        <View style={{paddingBottom:20}}>
+          <View style={styles.breadcrumb}>
+            <HomeIcon style={styles.breadcrumbHome} size={20} name='home'/>
+            <Text style={{marginLeft:5,fontWeight:'bold'}}>Emlak </Text>
+            <ArrowRightIcon style={{marginLeft:5,fontWeight:'bold'}} name='right'/>
+            <Text style={{marginLeft:5,fontWeight:'bold'}}>Konut</Text>
+            <ArrowRightIcon style={{marginLeft:5,fontWeight:'bold'}} name='right'/>
+            <Text style={{marginLeft:5,fontWeight:'bold'}}>Satılık</Text>
+            <ArrowRightIcon style={{marginLeft:5,fontWeight:'bold'}} name='right'/>
+            <Text style={{marginLeft:5,fontWeight:'bold'}}>Villa</Text>
+          </View>
+          <Text style={{fontSize:20,marginTop:10,fontWeight:'bold',padding:10,paddingTop:0,paddingBottom:0}}>Genel Bilgiler</Text>
+          <View style={styles.card}>
+            <Modal
+              animationType="slide"
+              transparent={false}
+              visible={showCoverImageModal}
+              style={{backgroundColor:'#000'}}
+              onRequestClose={() => {
+                setCoverImageModal(!showCoverImageModal);
+              }}>
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
 
-                <View style={{width:'100%',height:'100%'}}>
-                  <View style={styles.close_icon_area}>
-                    <TouchableOpacity onPress={() => {setCoverImageModal(!showCoverImageModal)}}>
-                      <CloseIcon name='close' style={styles.close_icon} size={30}></CloseIcon>
-                    </TouchableOpacity>
-                  </View>
-                  <Image style={{width:'100%',height:'100%',objectFit:'contain'}} source={{uri : frontEndUri+(selectedImage?.image?.replace('public','storage'))}}></Image>
-                  <View style={styles.image_buttons}>
-                    <TouchableOpacity onPress={() => {deleteImage(selectedImage?.id)}}>
-                      <View style={styles.image_button}>
-                        <CloseIcon name='delete' style={styles.image_delete_button} size={30}></CloseIcon>
-                        <Text style={styles.image_text}>Fotoğrafı Sil</Text>
-                      </View>
-                    </TouchableOpacity>
+                  <View style={{width:'100%',height:'100%'}}>
+                    <View style={styles.close_icon_area}>
+                      <TouchableOpacity onPress={() => {setCoverImageModal(!showCoverImageModal)}}>
+                        <CloseIcon name='close' style={styles.close_icon} size={30}></CloseIcon>
+                      </TouchableOpacity>
+                    </View>
+                    <Image style={{width:'100%',height:'100%',objectFit:'contain'}} source={{uri : frontEndUri+(selectedImage?.image?.replace('public','storage'))}}></Image>
+                    <View style={styles.image_buttons}>
+                      <TouchableOpacity onPress={() => {deleteImage(selectedImage?.id)}}>
+                        <View style={styles.image_button}>
+                          <CloseIcon name='delete' style={styles.image_delete_button} size={30}></CloseIcon>
+                          <Text style={styles.image_text}>Fotoğrafı Sil</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               </View>
-            </View>
-          </Modal>
-          <View style={styles.image_cards}>
-            <Text style={styles.label}>
-              Kapak Görseli
-            </Text>
-            <View style={styles.image_card}>
-              <Image style={{width:'100%',height:'100%'}} source={{uri : (frontEndUri+(data?.image?.replace('public','storage')))}}></Image>
-            </View>
-          </View>
-          <View style={styles.image_cards}>
-            <Text style={styles.label}>
-              Proje Galerisi
-            </Text>
-            <View style={{display:'flex',flexDirection:'row',flexWrap:'wrap',gap:4}}>
-              <TouchableOpacity onPress={() => {setCoverImageModal(true);}}>
+            </Modal>
+            <View style={styles.image_cards}>
+              <Text style={styles.label}>
+                Kapak Görseli
+              </Text>
+              <TouchableOpacity onPress={() => {changeCoverImage()}}>
                 <View style={styles.image_card}>
-                  <CloseIcon name='plus' size={40}></CloseIcon>
+                  <Image style={{width:'100%',height:'100%'}} source={{uri : (imageReplace ? data?.image : (frontEndUri+(data?.image?.replace('public','storage'))))}}></Image>
                 </View>
               </TouchableOpacity>
-              {
-                data.images?.map((image) => {
-                  return (
-                    <TouchableOpacity onPress={() => {setCoverImageModal(true);setSelectedImage(image)}}>
-                      <View style={styles.image_card}>
-                        <Image style={{width:'100%',height:'100%'}} source={{uri : (frontEndUri+(image?.image?.replace('public','storage')))}}></Image>
-                      </View>
-                    </TouchableOpacity>
-                  )
-                })
-              }
             </View>
-            
-          </View>
+            <View style={styles.image_cards}>
+              <Text style={styles.label}>
+                Proje Galerisi
+              </Text>
+              <View style={{display:'flex',flexDirection:'row',flexWrap:'wrap',gap:4}}>
+                <TouchableOpacity onPress={() => {pickImage()}}>
+                  <View style={styles.image_card}>
+                    <CloseIcon name='plus' size={40}></CloseIcon>
+                  </View>
+                </TouchableOpacity>
+                {
+                  data.images?.map((image) => {
 
-          <View style={styles.image_cards}>
-            <Text style={styles.label}>
-              Proje Vaziyet&Kat Planı
-            </Text>
-            <View style={{display:'flex',flexDirection:'row',flexWrap:'wrap',gap:4}}>
-              <TouchableOpacity onPress={() => {setCoverImageModal(true);}}>
-                <View style={styles.image_card}>
-                  <CloseIcon name='plus' size={40}></CloseIcon>
-                </View>
-              </TouchableOpacity>
-              {
-                data.situations?.map((image) => {
-                  console.log(frontEndUri+(image?.situation?.replace('public','')));
-                  return (
-                    <TouchableOpacity onPress={() => {setCoverImageModal(true);setSelectedImage(image)}}>
-                      <View style={styles.image_card}>
-                        <Image style={{width:'100%',height:'100%'}} source={{uri : (frontEndUri+(image?.situation?.replace('public','')))}}></Image>
-                      </View>
-                    </TouchableOpacity>
-                  )
-                })
-              }
+                    if(image.isAdded){
+                      return (
+                        <TouchableOpacity onPress={() => {setCoverImageModal(true);setSelectedImage(image)}}>
+                          <View style={styles.image_card}>
+                            <Image style={{width:'100%',height:'100%'}} source={{uri : (image?.image)}}></Image>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                    }else{
+                      return (
+                        <TouchableOpacity onPress={() => {setCoverImageModal(true);setSelectedImage(image)}}>
+                          <View style={styles.image_card}>
+                            <Image style={{width:'100%',height:'100%'}} source={{uri : (frontEndUri+(image?.image?.replace('public','storage')))}}></Image>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                    }
+                    
+                  })
+                }
+              </View>
+              
             </View>
-            
-          </View>
-          <Text style={styles.label}>İlan Başlığı</Text>
-          <TextInput
-            onChangeText={(value) => {setDataFunc('project_title',value)}}
-            value={data.project_title}
-            style={styles.input}
-            placeholder="İlan Başlığı"
-          />
 
-          <Text style={{...styles.label,marginTop:10}}>İlan Açıklaması</Text>
-          <RichToolbar 
-            editor={richText} 
-            actions={[ 
-              actions.setBold, 
-              actions.insertImage, 
-              actions.insertBulletsList, 
-              actions.insertOrderedList, 
-              actions.insertLink, 
-              actions.setStrikethrough, 
-              actions.setItalic, 
-              actions.setUnderline, 
-              actions.heading1,
-            ]} 
-            iconMap={{[actions.heading1]:handleHead,}} 
-          /> 
-          <RichEditor ref={richText} 
-            height={200}
-            initialContentHTML={data.description}
-            onChange={(descriptionText) => { 
-              console.log("descriptionText:",descriptionText);
-            }} 
-          />
-        </View>
-
-        <View style={styles.card}>
-          <View>
-            <Text style={styles.label}>Yapımcı Firma</Text>
-            <View style={styles.leftIconInput}>
-              <View style={styles.leftIcon}>
-                <BuildingIcon style={{color:'#fff'}} size={25} name='building-o'></BuildingIcon>
+            <View style={styles.image_cards}>
+              <Text style={styles.label}>
+                Proje Vaziyet&Kat Planı
+              </Text>
+              <View style={{display:'flex',flexDirection:'row',flexWrap:'wrap',gap:4}}>
+                <TouchableOpacity onPress={() => {pickSituation();}}>
+                  <View style={styles.image_card}>
+                    <CloseIcon name='plus' size={40}></CloseIcon>
+                  </View>
+                </TouchableOpacity>
+                {
+                  data.situations?.map((image) => {
+                    if(image.isAdded){
+                      return (
+                        <TouchableOpacity onPress={() => {setCoverImageModal(true);setSelectedImage(image)}}>
+                          <View style={styles.image_card}>
+                            <Image style={{width:'100%',height:'100%'}} source={{uri : (image?.situation)}}></Image>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                    }else{
+                      return (
+                        <TouchableOpacity onPress={() => {setCoverImageModal(true);setSelectedImage(image)}}>
+                          <View style={styles.image_card}>
+                            <Image style={{width:'100%',height:'100%'}} source={{uri : (frontEndUri+'situation_images/'+(image?.situation?.replace('public','').replace('situation_images','')))}}></Image>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                    }
+                  })
+                }
               </View>
-              <View style={styles.rightInput}>
-                <TextInput
-                  onChangeText={(value) => {setDataFunc('create_company',value)}}
-                  value={data.create_company}
-                  style={styles.inputWithIcons}
-                  placeholder="Yapımcı Firma"
-                />
-              </View>
+              
             </View>
-            <Text style={styles.label}>Toplam Proje Alanı (M2)</Text>
-            <View style={styles.leftIconInput}>
-              <View style={styles.leftIcon}>
-                <WidthIcon style={{color:'#fff'}} size={25} name='size-fullscreen'></WidthIcon>
-              </View>
-              <View style={styles.rightInput}>
-                <TextInput
-                  onChangeText={(value) => {setDataFunc('total_project_area',value)}}
-                  value={addDotEveryThreeDigits(data.total_project_area)}
-                  style={styles.inputWithIcons}
-                  placeholder="Toplam Proje Alanı (M2)"
-                />
-              </View>
-            </View>
-            <Text style={styles.label}>Ada Bilgisi</Text>
-            <View style={styles.leftIconInput}>
-              <View style={styles.leftIcon}>
-                <LocationIcon style={{color:'#fff'}} size={25} name='location-pin'></LocationIcon>
-              </View>
-              <View style={styles.rightInput}>
-                <TextInput
-                  onChangeText={(value) => {setDataFunc('island',value)}}
-                  value={data.island}
-                  style={styles.inputWithIcons}
-                  placeholder="Ada Bilgisi"
-                />
-              </View>
-            </View>
-            <Text style={styles.label}>Parsel Bilgisi</Text>
-            <View style={styles.leftIconInput}>
-              <View style={styles.leftIcon}>
-                <LocationIcon style={{color:'#fff'}} size={25} name='location-pin'></LocationIcon>
-              </View>
-              <View style={styles.rightInput}>
-                <TextInput
-                  onChangeText={(value) => {setDataFunc('parcel',value)}}
-                  value={data.parcel}
-                  style={styles.inputWithIcons}
-                  placeholder="Parsel Bilgisi"
-                />
-              </View>
-            </View>
-            <Text style={styles.label}>Başlangıç Tarihi</Text>
-            <View style={styles.leftIconInput}>
-              <View style={styles.leftIcon}>
-                <CalendarIcon style={{color:'#fff'}} size={25} name='calendar'></CalendarIcon>
-              </View>
-              <View style={styles.rightInput}>
-                <DateTimePicker onChange={(event,date) => {setDataFunc('start_date',date)}} display="spinner" locale="tr-TR" timeZoneName={'Europe/Istanbul'} accentColor="#fff" style={{...styles.inputWithIcons,height:45,backgroundColor:'#fff'}} value={data.start_date}></DateTimePicker>
-              </View>
-            </View>
-            <Text style={styles.label}>Bitiş Tarihi</Text>
-            <View style={styles.leftIconInput}>
-              <View style={styles.leftIcon}>
-                <CalendarIcon style={{color:'#fff'}} size={25} name='calendar'></CalendarIcon>
-              </View>
-              <View style={styles.rightInput}>
-                <DateTimePicker onChange={(event,date) => {setDataFunc('end_date',date)}} display="spinner" locale="tr-TR" timeZoneName={'Europe/Istanbul'} accentColor="#fff" style={{...styles.inputWithIcons,height:45,backgroundColor:'#fff'}} value={data.end_date}></DateTimePicker>
-              </View>
-            </View>
-          </View>
-        </View>
-        
-        <Text style={{fontSize:20,marginTop:10,fontWeight:'bold',padding:10,paddingTop:0,paddingBottom:0}}>Adres Bilgileri</Text>
-        <View style={styles.card}>
-          <Text style={styles.label}>İl <Text style={{color :'red'}}>*</Text></Text>
-          <RNPickerSelect
-            placeholder={{
-              label: 'İl Seçiniz...',
-              value: null,
-            }}
-            style={pickerSelectStyles}
-            onValueChange={(value) => console.log(value)}
-            items={[
-              { label: 'Football', value: 'football' },
-              { label: 'Baseball', value: 'baseball' },
-              { label: 'Hockey', value: 'hockey' },
-            ]}
-          />
-          <Text style={{...styles.label,marginTop:15}}>İlçe <Text style={{color :'red'}}>*</Text></Text>
-          <RNPickerSelect
-            placeholder={{
-              label: 'İlçe Seçiniz...',
-              value: null,
-            }}
-            style={pickerSelectStyles}
-            onValueChange={(value) => console.log(value)}
-            items={[
-              { label: 'Football', value: 'football' },
-              { label: 'Baseball', value: 'baseball' },
-              { label: 'Hockey', value: 'hockey' },
-            ]}
-          />
-          <Text style={{...styles.label,marginTop:15}}>Mahalle <Text style={{color :'red'}}>*</Text></Text>
-          <RNPickerSelect
-            placeholder={{
-              label: 'Mahalle Seçiniz...',
-              value: null,
-            }}
-            style={pickerSelectStyles}
-            onValueChange={(value) => console.log(value)}
-            items={[
-              { label: 'Football', value: 'football' },
-              { label: 'Baseball', value: 'baseball' },
-              { label: 'Hockey', value: 'hockey' },
-            ]}
-          />
-          <MapView
-            style={{marginTop:15}}
-            height={300}
-            initialRegion={{
-              latitude: 37.78825,
-              longitude: -122.4324,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-          >
-            <Marker
-              key={0}
-              coordinate={{latitude : 37.78825, longitude :  -122.4324}}
-              title="asd"
-              description="asd"
+            <Text style={styles.label}>İlan Başlığı</Text>
+            <TextInput
+              onChangeText={(value) => {setDataFunc('project_title',value)}}
+              value={data.project_title}
+              style={styles.input}
+              placeholder="İlan Başlığı"
             />
-          </MapView>
+
+            <Text style={{...styles.label,marginTop:10}}>İlan Açıklaması</Text>
+            <RichToolbar 
+              editor={richText} 
+              actions={[ 
+                actions.setBold, 
+                actions.insertImage, 
+                actions.insertBulletsList, 
+                actions.insertOrderedList, 
+                actions.insertLink, 
+                actions.setStrikethrough, 
+                actions.setItalic, 
+                actions.setUnderline, 
+                actions.heading1,
+              ]} 
+              iconMap={{[actions.heading1]:handleHead,}} 
+            /> 
+            <RichEditor ref={richText} 
+              height={200}
+              initialContentHTML={data.description}
+              onChange={(descriptionText) => { 
+                setDataFunc('description',descriptionText)
+              }} 
+            />
+          </View>
+
+          <Text style={{fontSize:20,marginTop:10,fontWeight:'bold',padding:10,paddingTop:0,paddingBottom:0}}>Teknik Bilgiler</Text>
+          <View style={styles.card}>
+            <View>
+              <Text style={styles.label}>Yapımcı Firma</Text>
+              <View style={styles.leftIconInput}>
+                <View style={styles.leftIcon}>
+                  <BuildingIcon style={{color:'#fff'}} size={25} name='building-o'></BuildingIcon>
+                </View>
+                <View style={styles.rightInput}>
+                  <TextInput
+                    onChangeText={(value) => {setDataFunc('create_company',value)}}
+                    value={data.create_company}
+                    style={styles.inputWithIcons}
+                    placeholder="Yapımcı Firma"
+                  />
+                </View>
+              </View>
+              <Text style={styles.label}>Toplam Proje Alanı (M2)</Text>
+              <View style={styles.leftIconInput}>
+                <View style={styles.leftIcon}>
+                  <WidthIcon style={{color:'#fff'}} size={25} name='size-fullscreen'></WidthIcon>
+                </View>
+                <View style={styles.rightInput}>
+                  <TextInput
+                    onChangeText={(value) => {setDataFunc('total_project_area',value)}}
+                    value={addDotEveryThreeDigits(data.total_project_area)}
+                    style={styles.inputWithIcons}
+                    placeholder="Toplam Proje Alanı (M2)"
+                  />
+                </View>
+              </View>
+              <Text style={styles.label}>Ada Bilgisi</Text>
+              <View style={styles.leftIconInput}>
+                <View style={styles.leftIcon}>
+                  <LocationIcon style={{color:'#fff'}} size={25} name='location-pin'></LocationIcon>
+                </View>
+                <View style={styles.rightInput}>
+                  <TextInput
+                    onChangeText={(value) => {setDataFunc('island',value)}}
+                    value={data.island}
+                    style={styles.inputWithIcons}
+                    placeholder="Ada Bilgisi"
+                  />
+                </View>
+              </View>
+              <Text style={styles.label}>Parsel Bilgisi</Text>
+              <View style={styles.leftIconInput}>
+                <View style={styles.leftIcon}>
+                  <LocationIcon style={{color:'#fff'}} size={25} name='location-pin'></LocationIcon>
+                </View>
+                <View style={styles.rightInput}>
+                  <TextInput
+                    onChangeText={(value) => {setDataFunc('parcel',value)}}
+                    value={data.parcel}
+                    style={styles.inputWithIcons}
+                    placeholder="Parsel Bilgisi"
+                  />
+                </View>
+              </View>
+              <Text style={styles.label}>Başlangıç Tarihi</Text>
+              <View style={styles.leftIconInput}>
+                <View style={styles.leftIcon}>
+                  <CalendarIcon style={{color:'#fff'}} size={25} name='calendar'></CalendarIcon>
+                </View>
+                <View style={styles.rightInput}>
+                  <DateTimePicker onChange={(event,date) => {setDataFunc('start_date',date)}} display="spinner" locale="tr-TR" timeZoneName={'Europe/Istanbul'} accentColor="#fff" style={{...styles.inputWithIcons,height:45,backgroundColor:'#fff'}} value={data.start_date}></DateTimePicker>
+                </View>
+              </View>
+              <Text style={styles.label}>Bitiş Tarihi</Text>
+              <View style={styles.leftIconInput}>
+                <View style={styles.leftIcon}>
+                  <CalendarIcon style={{color:'#fff'}} size={25} name='calendar'></CalendarIcon>
+                </View>
+                <View style={styles.rightInput}>
+                  <DateTimePicker onChange={(event,date) => {setDataFunc('end_date',date)}} display="spinner" locale="tr-TR" timeZoneName={'Europe/Istanbul'} accentColor="#fff" style={{...styles.inputWithIcons,height:45,backgroundColor:'#fff'}} value={data.end_date}></DateTimePicker>
+                </View>
+              </View>
+            </View>
+          </View>
+          
+          <Text style={{fontSize:20,marginTop:10,fontWeight:'bold',padding:10,paddingTop:0,paddingBottom:0}}>Adres Bilgileri</Text>
+          <View style={styles.card}>
+            <Text style={styles.label}>İl <Text style={{color :'red'}}>*</Text></Text>
+            <RNPickerSelect
+              placeholder={{
+                label: 'İl Seçiniz...',
+                value: null,
+              }}
+              value={data.city_id}
+              style={pickerSelectStyles}
+              onValueChange={(value) => {getCountiesByCityId(value);setDataFunc('city_id',value)}}
+              items={cities}
+            />
+            <Text style={{...styles.label,marginTop:15}}>İlçe <Text style={{color :'red'}}>*</Text></Text>
+            <RNPickerSelect
+              placeholder={{
+                label: 'İlçe Seçiniz...',
+                value: null,
+              }}
+              value={data.county_id}
+              style={pickerSelectStyles}
+              onValueChange={(value) => {setDataFunc('county_id',value);getNeighborhoodsByCountyId(value);}}
+              items={counties}
+            />
+            <Text style={{...styles.label,marginTop:15}}>Mahalle <Text style={{color :'red'}}>*</Text></Text>
+            <RNPickerSelect
+              placeholder={{
+                label: 'Mahalle Seçiniz...',
+                value: null,
+              }}
+              style={pickerSelectStyles}
+              value={data.neighbourhood_id}
+              onValueChange={(value) => {setDataFunc('neighbourhood_id',value);neighborhoodSelect(value)}}
+              items={neighborhoods}
+            />
+            <MapView
+              style={{marginTop:15,marginBottom:70}}
+              height={300}
+              ref={mapRef}
+              onPress={(event) => {setDataFunc('location',event.nativeEvent.coordinate.latitude + ','+event.nativeEvent.coordinate.longitude)}}
+            >
+              <Marker
+                key={0}
+                coordinate={{latitude : data?.location?.split(',')[0], longitude :  data?.location?.split(',')[1]}}
+                title="Seçtiğiniz Konum"
+                description="Bu konum ilanın konumu olarak gözükecektir"
+              />
+            </MapView>
+          </View>
+        </View>
+      </ScrollView>
+      <View style={styles.save_button_areax}>
+        <View style={styles.save_button_area}>
+          <TouchableOpacity onPress={updateProject}>
+            <Text style={styles.save_button}>Güncelle</Text>
+          </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+    </View>
   )
 }
 
@@ -374,6 +685,27 @@ const pickerSelectStyles = StyleSheet.create({
 });
 
 const styles=StyleSheet.create({
+  save_button_areax : {
+    position : 'fixed',
+    bottom : 70 ,
+    left : '5%',
+    right : 20,
+    width : '90%'
+  },
+  save_button_area : {
+    backgroundColor : '#EA2B2E',
+    borderRadius : 10,
+    display : 'flex',
+    justifyContent : 'center',
+    alignItems : 'center',
+    paddingTop : 15,
+    paddingBottom : 15 ,
+  },
+  save_button : {
+    backgroundColor : '#EA2B2E',
+    color : '#fff',
+    fontSize : 15
+  },
   close_icon_area : {
     width : '100%',
     display : 'flex',

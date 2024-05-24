@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import React from 'react'
 import EditCollectionPost from './profileComponents/EditCollectionPost'
-
+import { Platform } from "react-native";
 export default function EditCollection() {
   return (
     <ScrollView style={{backgroundColor:'white'}} showsVerticalScrollIndicator={false}>

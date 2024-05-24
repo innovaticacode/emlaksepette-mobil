@@ -4,6 +4,7 @@ import { useRoute,useNavigation } from '@react-navigation/native';
 import { TextInput } from 'react-native';
 import UserTypes from './profileComponents/UserTypes';
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import { Platform } from "react-native";
 import DotIcon from 'react-native-vector-icons/Entypo'
 export default function CreateUser() {
   const route = useRoute();

@@ -21,6 +21,7 @@ import ProfileSettingsItem from "../../components/ProfileSettingsItem";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from "react-native";
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
   const route = useRoute();

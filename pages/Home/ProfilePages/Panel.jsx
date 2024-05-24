@@ -6,6 +6,7 @@ import Loading  from "react-native-vector-icons/EvilIcons"
 import Icon2  from "react-native-vector-icons/Entypo"
 import { useNavigation } from '@react-navigation/native'
 import CollectionItemPanel from './profileComponents/CollectionItemPanel'
+import { Platform } from "react-native";
 export default function Panel({options,onSelect}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });

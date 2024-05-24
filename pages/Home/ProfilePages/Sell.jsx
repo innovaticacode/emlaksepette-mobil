@@ -4,6 +4,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { SearchBar } from '@rneui/base';
 import Icon from "react-native-vector-icons/AntDesign"
 import Order from './profileComponents/Order';
+import { Platform } from "react-native";
 export default function Sell() {
   const [search, setSearch] = useState("");
   const [Tabs, setTabs] = useState(0)

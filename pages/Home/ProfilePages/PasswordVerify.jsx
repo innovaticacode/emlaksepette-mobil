@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image,TextInput, TouchableWithoutFeedback, Keyboard,Dimensions, TouchableOpacity,KeyboardAvoidingView } from 'react-native'
 import { useRef,useState,useEffect} from 'react'
-
+import { Platform } from "react-native";
 
 export default function PasswordVerify() {
   const [isTimerRunning, setIsTimerRunning] = useState(false);

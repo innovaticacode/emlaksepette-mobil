@@ -1,6 +1,7 @@
 import { View, Text,StyleSheet } from 'react-native'
 import React from 'react'
 import { Shadow } from 'react-native-shadow-2';
+import { Platform } from "react-native";
 export default function RealtorCaption({data}) {
     const caption=data?.housing?.description.replace(/<[^>]+>|&[a-zA-Z]+;|[%&]|&gt;/g, '')
   return (

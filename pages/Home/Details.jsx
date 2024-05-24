@@ -60,7 +60,7 @@ export default function Details({ navigation }) {
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const [FormVisible, setFormVisible] = useState(false)
-  const apiUrl = "https://7f24-78-178-52-190.ngrok-free.app/";
+  const apiUrl = "https://test.emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -200,7 +200,7 @@ export default function Details({ navigation }) {
   console.log(data.projectHousingsList["11"]);
 
   const shareLinkOnWhatsApp = () => {
-    const url = `https://7f24-78-178-52-190.ngrok-free.app/proje/${slug}//1000${ProjectId}/detay`;
+    const url = `https://test.emlaksepette.com/proje/${slug}//1000${ProjectId}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -209,7 +209,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("WhatsApp açılamadı:", error));
   };
   const shareLinkOnInstagram = (text) => {
-    const url = `https://7f24-78-178-52-190.ngrok-free.app/proje/${slug}/100${ProjectId}/detay`;
+    const url = `https://test.emlaksepette.com/proje/${slug}/100${ProjectId}/detay`;
 
     const instagramShareURL = `instagram://story/?text=${encodeURIComponent(
       url
@@ -220,7 +220,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("Instagram açılamadı:", error));
   };
   const copyToClipboard = () => {
-    const url = `https://7f24-78-178-52-190.ngrok-free.app/proje/${slug}/1000${ProjectId}/detay`;
+    const url = `https://test.emlaksepette.com/proje/${slug}/1000${ProjectId}/detay`;
     Clipboard.setStringAsync(url);
     ShowAlert();
   };

@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native'
 import React from 'react'
 import Icon2  from "react-native-vector-icons/Entypo"
+import { Platform } from "react-native";
 export default function CollectionItemPanel() {
   return (
    <TouchableOpacity style={style.container}>

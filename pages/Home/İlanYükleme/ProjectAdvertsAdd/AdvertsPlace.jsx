@@ -3,7 +3,7 @@ import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import CategoryAdverts from './CategoryAdverts';
 import Icon2 from 'react-native-vector-icons/AntDesign'
-
+import { Platform } from "react-native";
 export default function AdvertsPlace() {
   const propertyTypes = [
     "Villa",

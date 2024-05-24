@@ -1,14 +1,31 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import ActiveAdverts from './ProjectAdveretsPages/ActiveAdverts'
 import WaitAdverts from './ProjectAdveretsPages/WaitAdverts'
 import RejectAdverts from './ProjectAdveretsPages/RejectAdverts'
 import PasiveAdverts from './ProjectAdveretsPages/PasiveAdverts'
+import { ALERT_TYPE,Toast } from 'react-native-alert-notification';
 import { useRoute, useNavigation } from '@react-navigation/native';
-export default function MyProjectAdverts() {
+import { Platform } from "react-native";
+export default function MyProjectAdverts({navigation}) {
   const [Tabs, setTabs] = useState(0)
   const route = useRoute();
-  const { header,header2} = route.params;
+  const { header,header2,status} = route.params;
+  const [showMessage,setShowMessage] = useState(false);
+  useEffect(() => {
+    if(status == "update_project"){
+      if(!showMessage){
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: 'Başarılı',
+          textBody: 'Başarıyla projeyi güncellediniz admin onayının ardından aktife alınacaktır.',
+        })
+      }
+  
+      setShowMessage(true);
+    }
+  },[status])
+
   return (
     <View style={styles.container}>
       <View style={styles.tabBar}>
@@ -24,7 +41,7 @@ export default function MyProjectAdverts() {
             >
               <Text style={[styles.tabBarText,{color:Tabs===1? 'white':'red',fontWeight:Tabs===1?'600':'normal'}]}>Onay Bekleyen İlanlar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.TabBarBtn,{backgroundColor:Tabs==2? 'red':'#ebebeb'}]}
+            <TouchableOpacity  style={[styles.TabBarBtn,{backgroundColor:Tabs==2? 'red':'#ebebeb'}]}
               onPress={()=>setTabs(2)}
             >
               <Text style={[styles.tabBarText,{color:Tabs===2? 'white':'red',fontWeight:Tabs===2?'600':'normal'}]}>Reddedilen İlanlar</Text>
@@ -38,7 +55,7 @@ export default function MyProjectAdverts() {
         </ScrollView>
       </View>
       {Tabs==0 && <ActiveAdverts header={header2}/>}
-      {Tabs==1 && <WaitAdverts header={header2}/>}
+      {Tabs==1 && <WaitAdverts navigationx={navigation} header={header2}/>}
       {Tabs==2 && <RejectAdverts header={header2}/>}
       {Tabs==3 && <PasiveAdverts header={header2}/>}
 

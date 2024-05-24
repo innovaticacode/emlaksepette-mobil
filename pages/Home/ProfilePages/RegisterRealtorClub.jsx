@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Keyboard, Alert, TouchableWithoutFeedback } from 'react-native'
 import { useState } from 'react'
 import { useRoute } from '@react-navigation/native';
+import { Platform } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 export default function RegisterRealtorClub({setİsLoggedIn}) {
     const route = useRoute();

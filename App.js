@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput ,TouchableWithoutFeedback,Keyboard,ScrollView, Alert } from 'react-native';
-import { createNativeStackNavigator} from '@react-navigation/native-stack';
+import { StyleSheet, Text, View, TextInput, TouchableWithoutFeedback, Keyboard, ScrollView, Alert } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { TransitionPresets } from '@react-navigation/stack';
 import Home from './pages/Home/Home'
@@ -58,10 +58,12 @@ import FilterScreen from './pages/Home/FilterScreen';
 import EditAdvert from './pages/Home/ProfilePages/ProjectAdveretsPages/EditPages/EditAdvert';
 import Archieve from './pages/Home/ProfilePages/ProjectAdveretsPages/EditPages/Archieve';
 import EditProject from './pages/Home/ProfilePages/ProjectAdveretsPages/EditPages/EditProject';
+import { AlertNotificationRoot } from 'react-native-alert-notification';
+
 const Stack = createNativeStackNavigator();
 
-export default function App({route}) {
-  
+export default function App({ route }) {
+
   const [İsLoggedIn, setİsLoggedIn] = useState(false)
   const [isLogIn, setisLogIn] = useState(false)
   const [showBackIcon, setshowBackIcon] = useState(false)
@@ -69,342 +71,344 @@ export default function App({route}) {
 
 
   return (
-    
+
     <NavigationContainer>
-  <Stack.Navigator screenOptions={{
-      gestureEnabled: true,
-      ...TransitionPresets.SlideFromRightIOS,
-      
-  }}>
- 
-  <Stack.Screen name="Home" options={{
-    headerShown:false,
-   
-  }} 
-    
-  >
-    {(props) => <Home {...props}  showBackIcon={showBackIcon} setshowBackIcon={setshowBackIcon}/>}
-  </Stack.Screen>
-  
+      <AlertNotificationRoot>
+        <Stack.Navigator screenOptions={{
+          gestureEnabled: true,
+          ...TransitionPresets.SlideFromRightIOS,
 
-  <Stack.Group>
-    <Stack.Screen name="Login"  options={{ title: 'Giriş Yap' }} >
-      {(props=> <Login {...props}/>)}
-    </Stack.Screen>
-    <Stack.Screen name="Register" component={Register} options={{title:'Üye Ol',headerBackTitle:'.' }} />
-  </Stack.Group>
+        }}>
 
- 
-  <Stack.Screen name="Emlak"  component={Emlakİlanı} 
-   options={({route})=>({
-   
-  })} 
-  />
-  <Stack.Screen name="Proje"  component={Projeİlanı}
-   options={({route})=>({
-    title:route.params.name
-  })} 
-  />
-  <Stack.Screen name="Details"  component={Details} options={({route})=>({
-    headerShown:false,
-    title:route.params.name
-  })} 
- 
-  />
-    <Stack.Screen name="PostDetails"  component={PostDetail}
-  
-    options={({route})=>({
-      headerShown:false,
-      headerBackTitle:'.',
-        title:route.params.name
-        
-        
-    })} />
- 
-    <Stack.Screen name="Profile"  component={Profile}
-    
-    options={{
-    headerShown:false
-  }} />
-<Stack.Screen
+          <Stack.Screen name="Home" options={{
+            headerShown: false,
 
-  name='ShopProfile'
+          }}
 
-  options={{headerShown:false}}
-  
->
+          >
+            {(props) => <Home {...props} showBackIcon={showBackIcon} setshowBackIcon={setshowBackIcon} />}
+          </Stack.Screen>
 
-{(props) => <ShoppingProfile {...props} İsLoggedIn={İsLoggedIn} />}
-</Stack.Screen>
- <Stack.Screen name="Realtor details"  component={RealtorDetails}options={{
-      headerShown:false
-   
-  }} />
-    <Stack.Screen name="Collecitons"  component={Collections}options={{
-        title:'Koleksiyonlarım',
-      headerBackTitle:'Panel'
-  }} />
-    <Stack.Screen name="DashBord"  component={Panel}options={{
-        title:'Gösterge Paneli'
-   
-  }} />
-    <Stack.Screen name="Forms"  component={SellAndRentForms}options={{
-        title:'Sat Kirala Formlarım'
-   
-  }} />
-    <Stack.Screen name="Sell"  component={Sell}options={{
-        title:'Siparişlerim'
 
-  }} />
-    <Stack.Screen name="Rent"  component={Rent}
-       options={({route})=>({
-        animationTypeForReplace:'pop',
-        title:route.params.name
-        
-        
-    })}
-  
-  />
-     <Stack.Screen name="UpdateProfile"  component={UpdateProfile}options={{
-        title:'Profili Güncelle',
-          headerStyle:{
-            backgroundColor:'#F7F7F9',
-          }
-  }} 
-  
-  />
-    <Stack.Screen name="ChangePas"  component={ChangePassword}options={{
-        title:'Şifreyi Değiştir'
-   
-  }} />
-      <Stack.Screen name="RealtorClub" 
-        
-      options={{
-        title:'Emlak Kulüp Üyesi Ol'
-   
-  }} >
-    {(props) => <RegisterRealtorClub {...props} setİsLoggedIn={setİsLoggedIn}/>}
-  </Stack.Screen>
-  <Stack.Screen name="MyProject"  component={MyProjectAdverts}options={{
-          title:'Proje İlanlarım'
-   
-  }} />
-   <Stack.Screen name="MyRealtor"  component={MyRealtorAdverts}options={{
-      title:'Emlak ilanlarım'
-      }} />
-        <Stack.Screen name="Offer"  component={Offer}
-         options={({route})=>({
-          headerBackTitle:'.',
-          title:route.params.name
-          
-})}
-        
-        />
-         <Stack.Screen name="CreateUserType"  component={CreateUserType} 
-            options={({route})=>({
-            
-                title:route.params.name
-                
-                
+          <Stack.Group>
+            <Stack.Screen name="Login" options={{ title: 'Giriş Yap' }} >
+              {(props => <Login {...props} />)}
+            </Stack.Screen>
+            <Stack.Screen name="Register" component={Register} options={{ title: 'Üye Ol', headerBackTitle: '.' }} />
+          </Stack.Group>
+
+
+          <Stack.Screen name="Emlak" component={Emlakİlanı}
+            options={({ route }) => ({
+
             })}
-         />
-        <Stack.Screen name="CreateUser"  component={CreateUser}
-         options={({route})=>({
-          animationTypeForReplace:'pop',
-          title:route.params.name
-          
-          
-      })}
-        />
-          <Stack.Screen name="AdsPicture"  component={AdsPictures}options={{
-            title:'Reklam Görselleri'
-        }} />
-          <Stack.Screen name="SeeColleciton"  component={SeeCollection}options={{
-            headerShown:false, 
-        }} />
-           <Stack.Screen name="EditColection"  component={EditCollection}options={{
-            title:'Koleksiyonu Düzenle',
-            headerBackTitle:'.'
-            
-        }} />
-            <Stack.Screen name="PassVerify"  component={PasswordVerify}options={{
-            title:'Şifre Doğrulama',
-            headerBackTitle:'.'
-            
-        }} />
-           <Stack.Screen name="OrderDetail"  component={OrderDetails}options={{
-            title:'Sipariş Detayı',
-            headerBackTitle:'.'
-            
-        }} />
-         <Stack.Screen name="RentOrderDetail"  component={RentOrderDetails}options={{
-          title:'Rezervasyon Detayı',
-          headerBackTitle:'.'
-          
-      }} />
-      <Stack.Screen name="Suggest"  component={Suggests} 
-            options={({route})=>({
-              animationTypeForReplace:'pop',
-              title:route.params.name
-              
-              
+          />
+          <Stack.Screen name="Proje" component={Projeİlanı}
+            options={({ route }) => ({
+              title: route.params.name
+            })}
+          />
+          <Stack.Screen name="Details" component={Details} options={({ route }) => ({
+            headerShown: false,
+            title: route.params.name
           })}
-      
-      />
-         <Stack.Screen name="OfferList"  component={OfferList} 
-            options={({route})=>({
-              headerBackTitle:'.',
-              animationTypeForReplace:'pop',
-              title:route.params.name
-              
-              
+
+          />
+          <Stack.Screen name="PostDetails" component={PostDetail}
+
+            options={({ route }) => ({
+              headerShown: false,
+              headerBackTitle: '.',
+              title: route.params.name
+
+
+            })} />
+
+          <Stack.Screen name="Profile" component={Profile}
+
+            options={{
+              headerShown: false
+            }} />
+          <Stack.Screen
+
+            name='ShopProfile'
+
+            options={{ headerShown: false }}
+
+          >
+
+            {(props) => <ShoppingProfile {...props} İsLoggedIn={İsLoggedIn} />}
+          </Stack.Screen>
+          <Stack.Screen name="Realtor details" component={RealtorDetails} options={{
+            headerShown: false
+
+          }} />
+          <Stack.Screen name="Collecitons" component={Collections} options={{
+            title: 'Koleksiyonlarım',
+            headerBackTitle: 'Panel'
+          }} />
+          <Stack.Screen name="DashBord" component={Panel} options={{
+            title: 'Gösterge Paneli'
+
+          }} />
+          <Stack.Screen name="Forms" component={SellAndRentForms} options={{
+            title: 'Sat Kirala Formlarım'
+
+          }} />
+          <Stack.Screen name="Sell" component={Sell} options={{
+            title: 'Siparişlerim'
+
+          }} />
+          <Stack.Screen name="Rent" component={Rent}
+            options={({ route }) => ({
+              animationTypeForReplace: 'pop',
+              title: route.params.name
+
+
+            })}
+
+          />
+          <Stack.Screen name="UpdateProfile" component={UpdateProfile} options={{
+            title: 'Profili Güncelle',
+            headerStyle: {
+              backgroundColor: '#F7F7F9',
+            }
+          }}
+
+          />
+          <Stack.Screen name="ChangePas" component={ChangePassword} options={{
+            title: 'Şifreyi Değiştir'
+
+          }} />
+          <Stack.Screen name="RealtorClub"
+
+            options={{
+              title: 'Emlak Kulüp Üyesi Ol'
+
+            }} >
+            {(props) => <RegisterRealtorClub {...props} setİsLoggedIn={setİsLoggedIn} />}
+          </Stack.Screen>
+          <Stack.Screen name="MyProject" component={MyProjectAdverts} options={{
+            title: 'Proje İlanlarım'
+
+          }} />
+          <Stack.Screen name="MyRealtor" component={MyRealtorAdverts} options={{
+            title: 'Emlak ilanlarım'
+          }} />
+          <Stack.Screen name="Offer" component={Offer}
+            options={({ route }) => ({
+              headerBackTitle: '.',
+              title: route.params.name
+
+            })}
+
+          />
+          <Stack.Screen name="CreateUserType" component={CreateUserType}
+            options={({ route }) => ({
+
+              title: route.params.name
+
+
+            })}
+          />
+          <Stack.Screen name="CreateUser" component={CreateUser}
+            options={({ route }) => ({
+              animationTypeForReplace: 'pop',
+              title: route.params.name
+
+
+            })}
+          />
+          <Stack.Screen name="AdsPicture" component={AdsPictures} options={{
+            title: 'Reklam Görselleri'
+          }} />
+          <Stack.Screen name="SeeColleciton" component={SeeCollection} options={{
+            headerShown: false,
+          }} />
+          <Stack.Screen name="EditColection" component={EditCollection} options={{
+            title: 'Koleksiyonu Düzenle',
+            headerBackTitle: '.'
+
+          }} />
+          <Stack.Screen name="PassVerify" component={PasswordVerify} options={{
+            title: 'Şifre Doğrulama',
+            headerBackTitle: '.'
+
+          }} />
+          <Stack.Screen name="OrderDetail" component={OrderDetails} options={{
+            title: 'Sipariş Detayı',
+            headerBackTitle: '.'
+
+          }} />
+          <Stack.Screen name="RentOrderDetail" component={RentOrderDetails} options={{
+            title: 'Rezervasyon Detayı',
+            headerBackTitle: '.'
+
+          }} />
+          <Stack.Screen name="Suggest" component={Suggests}
+            options={({ route }) => ({
+              animationTypeForReplace: 'pop',
+              title: route.params.name
+
+
+            })}
+
+          />
+          <Stack.Screen name="OfferList" component={OfferList}
+            options={({ route }) => ({
+              headerBackTitle: '.',
+              animationTypeForReplace: 'pop',
+              title: route.params.name
+
+
+            })}
+
+          />
+          <Stack.Screen name="CategorieChoose" component={CategoryChoose}
+            options={({ route }) => ({
+              headerBackTitle: '.',
+              animationTypeForReplace: 'pop',
+              title: route.params.name
+
+
+            })}
+
+          />
+          <Stack.Screen name="CategorieStatu" component={CategorieStatus}
+            options={({ route }) => ({
+              headerBackTitle: '.',
+              animationTypeForReplace: 'pop',
+              title: route.params.name
+
+
+            })}
+
+          />
+          <Stack.Screen name="AdvertPlace" component={AdvertsPlace}
+            options={({ route }) => ({
+              headerBackTitle: '.',
+              animationTypeForReplace: 'pop',
+              title: route.params.name
+
+
+            })}
+
+
+
+          />
+          <Stack.Screen name="AdvertForm"
+            options={({ route }) => ({
+              headerBackTitle: '.',
+              animationTypeForReplace: 'pop',
+
+
+
+            })}
+
+
+
+          >
+            {(props) => <AdvertForm />}
+          </Stack.Screen>
+
+          <Stack.Screen name="ShareAdvert"
+            options={({ route }) => ({
+              headerBackTitle: '.',
+              animationTypeForReplace: 'pop',
+              title: ''
+
+
+            })}
+
+          >
+
+            {(props) => <ShareScreenProject {...props} />}
+          </Stack.Screen>
+
+
+          <Stack.Screen name="AdvertStatu" component={AdvertStatu} options={({ route }) => ({
+            headerBackTitle: '.',
+            title: route.params.name
           })}
-      
-      />
-        <Stack.Screen name="CategorieChoose"  component={CategoryChoose} 
-            options={({route})=>({
-              headerBackTitle:'.',
-              animationTypeForReplace:'pop',
-              title:route.params.name
-              
-              
+
+          />
+
+          <Stack.Screen name="AdvertType" component={AdvertType} options={({ route }) => ({
+            headerBackTitle: '.',
+            title: route.params.name
           })}
-      
-      />
-          <Stack.Screen name="CategorieStatu"  component={CategorieStatus} 
-            options={({route})=>({
-              headerBackTitle:'.',
-              animationTypeForReplace:'pop',
-              title:route.params.name
-              
-              
+
+          />
+          <Stack.Screen name="RealtorAdd" component={RealtorAdvertAdd} options={({ route }) => ({
+            headerBackTitle: '.',
+            title: 'İlanı Paylaş'
           })}
-      
-      />
-        <Stack.Screen name="AdvertPlace"  component={AdvertsPlace} 
-            options={({route})=>({
-              headerBackTitle:'.',
-              animationTypeForReplace:'pop',
-              title:route.params.name
-                
-              
+
+          />
+          <Stack.Screen name="Notifications" component={Notifications} options={({ route }) => ({
+            title: 'Bildirimler'
           })}
-      
 
-
-      />
-         <Stack.Screen name="AdvertForm"  
-            options={({route})=>({
-              headerBackTitle:'.',
-              animationTypeForReplace:'pop',
-              
-                
-              
+          />
+          <Stack.Screen name='RealtorClubExplore' component={RealtorClub} options={({ route }) => ({
+            title: 'Emlak Kulübü Keşfet'
           })}
-      
-            
 
-      >
-        {(props) => <AdvertForm />}
-      </Stack.Screen>
+          />
+          <Stack.Screen name='Public' component={PublicPage} options={({ route }) => ({
+            title: route.params.name
+          })}
 
-         <Stack.Screen name="ShareAdvert" 
-       options={({route})=>({
-        headerBackTitle:'.',
-        animationTypeForReplace:'pop',
-        title:''
-        
-        
-    })}
-  
-  >
+          />
+          <Stack.Screen name='SubCategory' component={SubCategory} options={({ route }) => ({
+            title: route.params.name
+          })}
 
-{(props) => <ShareScreenProject {...props} />}
-  </Stack.Screen>
+          />
 
+          <Stack.Screen name='HomeList' component={HomeList} options={({ route }) => ({
+            headerShown: false
+          })}
 
-  <Stack.Screen name="AdvertStatu"  component={AdvertStatu} options={({route})=>({
-    headerBackTitle:'.',
-    title:route.params.name
-  })} 
- 
-  />  
+          />
+          <Stack.Screen name='SubCategoryChild' component={SubCategoryChild} options={({ route }) => ({
+            title: route.params.name
+          })}
 
-<Stack.Screen name="AdvertType"  component={AdvertType} options={({route})=>({
-   headerBackTitle:'.',
-    title:route.params.name
-  })} 
- 
-  /> 
-  <Stack.Screen name="RealtorAdd"  component={RealtorAdvertAdd} options={({route})=>({
-     headerBackTitle:'.',
-    title:'İlanı Paylaş'
-  })} 
- 
-  /> 
-  <Stack.Screen name="Notifications"  component={Notifications} options={({route})=>({
-    title:'Bildirimler'
-  })} 
- 
-  /> 
-   <Stack.Screen name='RealtorClubExplore'  component={RealtorClub} options={({route})=>({
-    title:'Emlak Kulübü Keşfet'
-  })} 
- 
-  /> 
-     <Stack.Screen name='Public'  component={PublicPage} options={({route})=>({
-        title:route.params.name
-  })} 
- 
-  /> 
-     <Stack.Screen name='SubCategory'  component={SubCategory} options={({route})=>({
-        title:route.params.name
-  })} 
- 
-  /> 
-   
-      <Stack.Screen name='HomeList'  component={HomeList} options={({route})=>({
-        headerShown:false
-  })} 
- 
-  /> 
-     <Stack.Screen name='SubCategoryChild'  component={SubCategoryChild} options={({route})=>({
-        title:route.params.name
-  })} 
- 
-  />
-      <Stack.Screen name='Search'  component={Search} options={({route})=>({
-        headerShown:false
-  })} 
- 
-  /> 
-      <Stack.Screen name='AllProject'  component={AllProjects} options={({route})=>({
-        headerShown:false,
-    title:route.params.name
-  })} 
- 
-  /> 
-      <Stack.Screen name='FilterScrenn'  component={FilterScreen} options={({route})=>({
-      
-    title:route.params.name
-  })} 
- 
-  /> 
-  <Stack.Screen name='EditAdvert' component={EditAdvert}/>
-  <Stack.Screen name='Archieve' component={Archieve}/>
-  <Stack.Screen name='EditProject' component={EditProject}/>
-  
-</Stack.Navigator>
+          />
+          <Stack.Screen name='Search' component={Search} options={({ route }) => ({
+            headerShown: false
+          })}
 
-</NavigationContainer>
+          />
+          <Stack.Screen name='AllProject' component={AllProjects} options={({ route }) => ({
+            headerShown: false,
+            title: route.params.name
+          })}
+
+          />
+          <Stack.Screen name='FilterScrenn' component={FilterScreen} options={({ route }) => ({
+
+            title: route.params.name
+          })}
+
+          />
+          <Stack.Screen name='EditAdvert' component={EditAdvert} />
+          <Stack.Screen name='Archieve' component={Archieve} />
+          <Stack.Screen name='EditProject' component={EditProject} />
+
+        </Stack.Navigator>
+      </AlertNotificationRoot>
+
+    </NavigationContainer>
 
   );
-   
-  
+
+
 
 
 
 }
 
-  
+
 

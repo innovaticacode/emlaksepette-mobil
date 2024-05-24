@@ -7,6 +7,7 @@ import ShopComment from './ShopComment';
 import ProfileMap from './ProfileMap';
 import { Skeleton } from '@rneui/themed'
 import CommentItem from '../RealtorPages/CommentItem';
+import { Platform } from "react-native";
 export default function ShopInfo({data, loading}) {
     const { width, height } = Dimensions.get('window');
     const dateTimeString = data?.data?.created_at

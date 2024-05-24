@@ -8,6 +8,7 @@ import LinkIcon from "react-native-vector-icons/Entypo"
 import Icon from "react-native-vector-icons/AntDesign"
 import { useNavigation } from '@react-navigation/native'
 import BackIcon from "react-native-vector-icons/MaterialIcons"
+import { Platform } from "react-native";
 export default function SeeCollection() {
     const { width, height ,fontScale} = Dimensions.get('window');
     const navigation = useNavigation();

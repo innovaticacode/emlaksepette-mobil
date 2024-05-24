@@ -3,6 +3,7 @@ import React from 'react'
 import { useRoute  } from '@react-navigation/native';
 import Checkbox from './profileComponents/Checkbox';
 import Users from './profileComponents/Users';
+import { Platform } from "react-native";
 export default function CreateUserType() {
   const route = useRoute();
   const { header,hidden,hidden2} = route.params;

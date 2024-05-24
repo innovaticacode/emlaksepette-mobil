@@ -10,6 +10,7 @@ import {
 import {React,useState} from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Icon2 from "react-native-vector-icons/Fontisto";
+import { Platform } from "react-native";
 import Posts from "./Posts";
 export default function Favorite() {
   const [modalVisible, setModalVisible] = useState(false);

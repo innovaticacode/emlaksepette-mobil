@@ -7,35 +7,28 @@ import {
   StyleSheet,
   Dimensions,
 } from "react-native";
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
 import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
 import { addDotEveryThreeDigits } from "./methods/merhod";
-
+import { getValueFor } from "./methods/user";
+import { Platform } from "react-native";
 export default function Posts({
   data,
   roomOrder,
-  caption,
   location,
-  price,
-  ımage,
-  metre,
-  odaSayısı,
-  katSayısı,
-  No,
   isFavorited,
   setModalVisible,
   openmodal,
   openFormModal,
- 
-
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
   const [bookmark, setbookmark] = useState("bookmark-o");
+  const [user,setUser] = useState({});
   var roomData = data.projectHousingsList[roomOrder];
   const changeHeart = () => {
     setHeart(heart === "hearto" ? "heart" : "hearto");
@@ -43,6 +36,10 @@ export default function Posts({
   const changeBookmark = () => {
     setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
   };
+
+  useEffect(() => {
+    getValueFor('user',setUser);
+  },[])
  
   return (
     <TouchableOpacity
@@ -72,7 +69,7 @@ export default function Posts({
             <Image
               source={{
                 uri:
-                  "https://7f24-78-178-52-190.ngrok-free.app/project_housing_images/" +
+                  "https://test.emlaksepette.com/project_housing_images/" +
                   roomData["image[]"],
               }}
               style={{ width: "90%", height: "90%" }}
@@ -99,6 +96,7 @@ export default function Posts({
                   <TouchableOpacity
                     onPress={() => {
                       changeHeart();
+                      console.log("tiklandi")
                     }}
                   >
                     <View style={styles.ıconContainer}>

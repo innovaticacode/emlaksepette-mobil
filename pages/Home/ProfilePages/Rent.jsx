@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity,Animated } from 'r
 import { useState,useRef } from 'react'
 import { useRoute, useNavigation } from '@react-navigation/native';
 import RentOrder from './profileComponents/RentOrder';
+import { Platform } from "react-native";
 import Icon from 'react-native-vector-icons/Entypo'
 export default function Rent() {
   const [Tabs, setTabs] = useState(0)

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TextInput, Keyboard ,Animated,TouchableOpacity,Modal,Linking} from 'react-native'
 import { useState,useRef} from 'react'
 import CollectionsItem from './profileComponents/CollectionsItem'
-
+import { Platform } from "react-native";
 import ShareIcon from "react-native-vector-icons/Entypo"
 import DeleteIcon from "react-native-vector-icons/MaterialIcons"
 import PencilIcon from "react-native-vector-icons/FontAwesome5"
@@ -45,7 +45,7 @@ setdisplay(false)
   }; 
   const shareLinkOnWhatsApp = () => {
  
-    const url=`https://7f24-78-178-52-190.ngrok-free.app/proje/1000381/detay`
+    const url=`https://test.emlaksepette.com/proje/1000381/detay`
   
  
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
@@ -57,7 +57,7 @@ setdisplay(false)
   };
   const shareLinkOnInstagram = (text) => {
  
-    const url=`https://7f24-78-178-52-190.ngrok-free.app/proje/1000381/detay`
+    const url=`https://test.emlaksepette.com/proje/1000381/detay`
   
    
     const instagramShareURL = `instagram://story/?text=${encodeURIComponent(url)}`;
@@ -68,7 +68,7 @@ setdisplay(false)
       .catch((error) => console.error('Instagram açılamadı:', error));
   };
   const copyToClipboard = () => {
-    const url=`https://7f24-78-178-52-190.ngrok-free.app/proje/1000381/detay`
+    const url=`https://test.emlaksepette.com/proje/1000381/detay`
     Clipboard.setStringAsync(url);
    ShowAlert()
   };
@@ -80,7 +80,7 @@ setdisplay(false)
     Linking.openURL(`sms:?body=${encodeURIComponent(message)}`);
   };
   const shareLinkOnMessenger = () => {
-    const url = 'https://7f24-78-178-52-190.ngrok-free.app/proje/1000381/detay';
+    const url = 'https://test.emlaksepette.com/proje/1000381/detay';
     const messengerShareURL = `fb-messenger://share/?link=${encodeURIComponent(url)}`;
   
     Linking.openURL(messengerShareURL)

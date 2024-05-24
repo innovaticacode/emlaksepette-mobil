@@ -15,7 +15,7 @@ export default function SliderMenu({ goToSlide, tab, settab }) {
     const fetchMenuItems = async () => {
       try {
         const response = await axios.get(
-          "https://7f24-78-178-52-190.ngrok-free.app/api/menu-list"
+          "https://test.emlaksepette.com/api/menu-list"
         );
         setMenuItems(response.data);
       } catch (error) {

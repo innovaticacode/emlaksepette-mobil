@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyB-VOKU81R4jYkAo8aIrqzfJXZoTo5Ebgs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>264713893731</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.emlaksepette.emlaksepette</string>
+	<key>PROJECT_ID</key>
+	<string>emlaksepette-e3207</string>
+	<key>STORAGE_BUCKET</key>
+	<string>emlaksepette-e3207.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:264713893731:ios:843e8f3490d623d2e48556</string>
+</dict>
+</plist>

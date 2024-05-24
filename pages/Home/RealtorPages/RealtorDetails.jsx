@@ -13,7 +13,7 @@ Image,
 } from "react-native";
 import { React, useRef, useState,useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
-
+import { Platform } from "react-native";
 
 import PagerView from 'react-native-pager-view';
 import { useNavigation, useRoute  } from '@react-navigation/native';
@@ -39,7 +39,7 @@ import { Shadow } from 'react-native-shadow-2';
 import { CheckBox } from "react-native-elements";
 
 export default function PostDetail() {
-const apiUrl = "https://7f24-78-178-52-190.ngrok-free.app/";
+const apiUrl = "https://test.emlaksepette.com/";
 const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
 const [images,setImages] = useState([]);

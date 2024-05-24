@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Entypo'
 import { CheckBox } from 'react-native-elements';
 import Icon2 from 'react-native-vector-icons/AntDesign'
 import Blocks from './Blocks';
+import { Platform } from "react-native";
 export default function ShareScreenProject({}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [text, setText] = useState('');

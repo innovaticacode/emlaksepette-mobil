@@ -4,7 +4,7 @@ import Editıcon from "react-native-vector-icons/MaterialCommunityIcons"
 
 import ShareIcon from "react-native-vector-icons/Entypo"
 import DeleteIcon from "react-native-vector-icons/MaterialIcons"
-
+import { Platform } from "react-native";
 
 export default function UpdateProfile() {
  

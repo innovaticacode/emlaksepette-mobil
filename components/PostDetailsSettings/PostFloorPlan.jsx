@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet,Image,Dimensions} from 'react-native'
 import React from 'react'
 import ShoppinInfo from '../ShoppinInfo'
-
+import { Platform } from "react-native";
 export default function PostFloorPlan() {
   return (
     <View style={{padding:7}}>

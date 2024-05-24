@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import FeatherIcon from 'react-native-vector-icons/Feather'
 import StarIcon from 'react-native-vector-icons/FontAwesome'
 import { useNavigation } from '@react-navigation/native'
-
+import { Platform } from "react-native";
 export default function Order({display,text}) {
     const navigation=useNavigation()
   return (

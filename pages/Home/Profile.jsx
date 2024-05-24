@@ -62,7 +62,7 @@ export default function Profile() {
  
   }, [])
   console.log(loading)
-  const ApiUrl='https://7f24-78-178-52-190.ngrok-free.app/'
+  const ApiUrl='https://test.emlaksepette.com/'
   console.log(storeData?.data?.name)
   
   return (
