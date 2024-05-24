@@ -6,6 +6,7 @@ import ShoppinInfo from "./ShoppinInfo";
 import CheckIcon from "react-native-vector-icons/AntDesign";
 import { CheckBox } from "react-native-elements";
 import CheckSetting from "./CheckSetting";
+import { Platform } from "react-native";
 export default function Information({ settings }) {
   const route = useRoute();
   const { itemId, otherParam, konum } = route.params;

@@ -2,7 +2,7 @@ import { View, Text, StyleSheet ,TouchableOpacity,ScrollView ,Modal,TextInput,Li
 import {useState} from 'react'
 import { useRoute } from '@react-navigation/native'
 import SuggestItem from './profileComponents/SuggestItem';
-
+import { Platform } from "react-native";
 export default function Suggests() {
  
   const [modalVisible, setModalVisible] = useState(false);

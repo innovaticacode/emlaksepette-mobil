@@ -3,6 +3,7 @@ import {useState}from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Icon2 from 'react-native-vector-icons/Entypo'
 import { frontEndUri } from '../../../../components/methods/apiRequest'
+import { Platform } from "react-native";
 export default function RealtorAdvertPost({Onpress,housing}) {
     const [status, setStatus] = useState(housing.status)
 

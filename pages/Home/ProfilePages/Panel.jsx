@@ -18,6 +18,7 @@ import Icon2 from "react-native-vector-icons/Entypo";
 import { useNavigation } from "@react-navigation/native";
 import CollectionItemPanel from "./profileComponents/CollectionItemPanel";
 import { getValueFor } from "../../../components/methods/user";
+import { Platform } from "react-native";
 import axios from "axios";
 export default function Panel({ options, onSelect }) {
   const [modalVisible, setModalVisible] = useState(false);

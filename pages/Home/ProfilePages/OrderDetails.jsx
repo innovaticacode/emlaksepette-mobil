@@ -7,6 +7,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather'
 import Icon4 from 'react-native-vector-icons/FontAwesome5'
 import {useState} from 'react'
 import { useRoute, useNavigation } from '@react-navigation/native';
+import { Platform } from "react-native";
 export default function OrderDetails() {
     const route = useRoute();
 

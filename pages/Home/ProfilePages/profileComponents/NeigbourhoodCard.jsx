@@ -1,6 +1,7 @@
 import { View, Text,StyleSheet, TouchableOpacity,Linking } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/Feather'
+import { Platform } from "react-native";
 export default function NeigbourhoodCard() {
     const handleOpenPhone = () => {
         // Telefon uygulamasını açmak için

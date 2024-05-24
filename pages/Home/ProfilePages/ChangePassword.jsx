@@ -5,6 +5,7 @@ import Eye from 'react-native-vector-icons/Ionicons'
 import { getValueFor } from '../../../components/methods/user'
 import axios from 'axios'
 import Modal from "react-native-modal";
+import { Platform } from "react-native";
 export default function ChangePassword() {
 
   const navigation=useNavigation()

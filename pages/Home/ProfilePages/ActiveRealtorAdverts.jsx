@@ -7,6 +7,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useNavigation } from "@react-navigation/native";
 import RealtorAdvertPost from './profileComponents/RealtorAdvertPost'
 import Modal from "react-native-modal";
+import { Platform } from "react-native";
 export default function ActiveRealtorAdverts() {
   const navigation = useNavigation()
   const [user,setUser] = useState({})

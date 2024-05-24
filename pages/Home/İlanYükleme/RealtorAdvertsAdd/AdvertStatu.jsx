@@ -3,6 +3,7 @@ import React from 'react'
 import { useRoute,useNavigation } from '@react-navigation/native'
 import CategoryAdverts from '../ProjectAdvertsAdd/CategoryAdverts';
 import Icon from 'react-native-vector-icons/AntDesign'
+import { Platform } from "react-native";
 export default function AdvertStatu() {
     const navigation=useNavigation()
     const route=useRoute()

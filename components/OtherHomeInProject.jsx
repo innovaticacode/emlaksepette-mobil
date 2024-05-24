@@ -12,6 +12,7 @@ import Bblok from "./Bloks/Bblok";
 import ShoppinInfo from "./ShoppinInfo";
 import Posts from "./Posts";
 import { apiRequestGet } from "./methods/apiRequest";
+import { Platform } from "react-native";
 export default function OtherHomeInProject({
   selectedTab,
   getBlockItems,

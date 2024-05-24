@@ -14,6 +14,7 @@ import InfoUsual from "./Sell And Rent tab Pages/InfoUsual";
 import PaymentProcces from "./Sell And Rent tab Pages/PaymentProcces";
 import DateProcces from "./Sell And Rent tab Pages/DateProcces";
 import ApplyProcces from "./Sell And Rent tab Pages/ApplyProcces";
+import { Platform } from "react-native";
 export default function SellAndRentFormPage() {
   const [tabs, settabs] = useState(1)
     const navigation=useNavigation()

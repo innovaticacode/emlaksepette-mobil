@@ -27,6 +27,7 @@ import { Shadow } from "react-native-shadow-2";
 import Verification from "./ProfilePages/Verification";
 import Menu from "./Menu.json";
 import axios from "axios";
+import { Platform } from "react-native";
 export default function ShoppingProfile() {
   const [data, setData] = useState([]);
   const [MenuItems, setMenuItems] = useState([]);

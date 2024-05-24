@@ -3,6 +3,7 @@ import React from 'react'
 import SliderItem from './SliderItem'
 import SettingsItem from './SettingsItem'
 import { useNavigation } from '@react-navigation/native'
+import { Platform } from "react-native";
 export default function ShoppinInfo({flex,bottom,top}) {
     const navigation=useNavigation()
     return (

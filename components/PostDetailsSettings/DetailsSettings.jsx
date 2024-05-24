@@ -4,6 +4,7 @@ import SettingsItem from '../SettingsItem'
 import ShoppinInfo from '../ShoppinInfo'
 import { useRoute } from '@react-navigation/native';
 import CheckSetting from '../CheckSetting';
+import { Platform } from "react-native";
 export default function DetailsSettings({data,roomOrder}) {
     const route = useRoute();
     const {} = route.params;

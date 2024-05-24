@@ -15,7 +15,7 @@ Image,
 import { React, useRef, useState,useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 
-
+import { Platform } from "react-native";
 import PagerView from 'react-native-pager-view';
 import { useNavigation, useRoute  } from '@react-navigation/native';
 import Heart from "react-native-vector-icons/AntDesign";

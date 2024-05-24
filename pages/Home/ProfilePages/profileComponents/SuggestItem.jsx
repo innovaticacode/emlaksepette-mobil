@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
-
+import { Platform } from "react-native";
 export default function SuggestItem({openModal,name,color,title,username,mail,location,status,job}) {
   return (
     <View style={style.container}>

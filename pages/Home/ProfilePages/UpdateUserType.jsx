@@ -15,6 +15,7 @@ import Checkbox from "./profileComponents/Checkbox";
 import Users from "./profileComponents/Users";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
+import { Platform } from "react-native";
 export default function CreateUserType() {
   const route = useRoute();
 

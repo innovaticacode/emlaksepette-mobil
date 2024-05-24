@@ -13,7 +13,7 @@ import Icon from "react-native-vector-icons/Entypo";
 import Icon2 from "react-native-vector-icons/SimpleLineIcons";
 import Icon3 from "react-native-vector-icons/FontAwesome"
 import { useNavigation } from "@react-navigation/native";
-
+import { Platform } from "react-native";
 export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
   const navigation=useNavigation()
 

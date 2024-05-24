@@ -8,6 +8,7 @@ import {
 import React from "react";
 import Icon2 from "react-native-vector-icons/Entypo";
 import { useNavigation } from "@react-navigation/native";
+import { Platform } from "react-native";
 export default function CollectionItemPanel({ collection, panelInfo }) {
   const navigation = useNavigation();
   return (

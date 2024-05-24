@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import React from "react";
 import EditCollectionPost from "./profileComponents/EditCollectionPost";
 import { useRoute } from "@react-navigation/native";
-
+import { Platform } from "react-native";
 export default function EditCollection() {
   const route = useRoute();
   const { collectionItems } = route.params;

@@ -4,6 +4,7 @@ import { ImageBackground } from 'react-native'
 import Icon from "react-native-vector-icons/Entypo"
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons'
 import { useNavigation } from '@react-navigation/native'
+import { Platform } from "react-native";
 export default function RentOrder({display,openSheet}) {
     const navigation=useNavigation();
   return (

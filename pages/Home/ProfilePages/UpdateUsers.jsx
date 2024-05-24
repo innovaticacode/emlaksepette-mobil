@@ -19,6 +19,7 @@ import {
   import DotIcon from "react-native-vector-icons/Entypo";
   import RNPickerSelect from "react-native-picker-select";
   import { getValueFor } from "../../../components/methods/user";
+  import { Platform } from "react-native";
   import axios from "axios";
   export default function UpdateUsers() {
     const route = useRoute();

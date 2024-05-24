@@ -2,7 +2,7 @@ import { View, Text ,StyleSheet,ScrollView} from 'react-native'
 import React from 'react'
 import ShoppinInfo from '../ShoppinInfo'
 import HTML from 'react-native-render-html';
-
+import { Platform } from "react-native";
 export default function PostCaption({data}) {
   const caption=data?.project?.description
   function veriParseEt(veri) {
