@@ -1,14 +1,25 @@
-import { View, Text, StyleSheet, Platform } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Platform,
+  Linking,
+  TouchableOpacity,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { Image } from "react-native-elements";
 import Swiper from "react-native-swiper";
 import { ScrollView } from "react-native-gesture-handler";
 import CommentItem from "../RealtorPages/CommentItem";
+import RealtorPost from "../../../components/RealtorPost";
+import ProjectPost from "../../../components/ProjectPost";
 
-export default function ShopVitrin({ data }) {
+export default function ShopVitrin({ data, housingdata }) {
   const ApiUrl = "https://test.emlaksepette.com/storage/store_banners/";
+  const ApiUrls = "https://test.emlaksepette.com";
   const [banners, setBanners] = useState([]);
   const [owners, setOwners] = useState([]);
+  const [loadingPrjoects, setloadingPrjoects] = useState(false);
 
   useEffect(() => {
     if (data && data.data) {
@@ -21,8 +32,26 @@ export default function ShopVitrin({ data }) {
     }
   }, [data]);
 
+  const objectKeys = Object.keys(housingdata);
+
+  const [featuredProjects, setFeaturedProjects] = useState([]);
+  useEffect(() => {
+    const fetchFeaturedProjects = async () => {
+      try {
+        setFeaturedProjects(data.data.projects);
+        setloadingPrjoects(true);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchFeaturedProjects();
+  }, [data]);
+
   return (
-    <View style={{ flex: 1, paddingLeft: 15, paddingRight: 15 }}>
+    <ScrollView
+      style={{ flex: 1, paddingLeft: 15, paddingRight: 15 }}
+      contentContainerStyle={{ flexGrow: 1 }}
+    >
       {banners.length > 0 && (
         <View style={{ height: 245 }}>
           <Swiper autoplay>
@@ -63,7 +92,83 @@ export default function ShopVitrin({ data }) {
           </ScrollView>
         </View>
       )}
-    </View>
+      <View style={{ marginTop: 50 }}>
+        {objectKeys.length > 0 &&
+          objectKeys.slice(0, 1).map((key, index) => (
+            <View key={index}>
+              <View
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 18 }}>Emlak İlanları</Text>
+                <TouchableOpacity
+                  style={{ backgroundColor: "red", padding: 10 }}
+                >
+                  <Text style={{ color: "white" }}>Tümünü Gör</Text>
+                </TouchableOpacity>
+              </View>
+              <RealtorPost
+                title={`${housingdata[key].title}`}
+                price={`${
+                  JSON.parse(housingdata[key].housing_type_data)["price"]
+                }`}
+                m2={`${
+                  JSON.parse(housingdata[key].housing_type_data)["squaremeters"]
+                }`}
+                roomCount={`${
+                  JSON.parse(housingdata[key].housing_type_data)["room_count"]
+                }`}
+                floor={`${
+                  JSON.parse(housingdata[key].housing_type_data)[
+                    "floorlocation"
+                  ]
+                }`}
+                image={`${ApiUrls}/housing_images/${
+                  JSON.parse(housingdata[key].housing_type_data)["image"]
+                }`}
+                HouseId={`${housingdata[key].id}`}
+              />
+            </View>
+          ))}
+      </View>
+
+      {featuredProjects.length > 0 && (
+        <View>
+          <View
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: 50,
+            }}
+          >
+            <Text style={{ fontSize: 18 }}>Proje İlanları</Text>
+            <TouchableOpacity style={{ backgroundColor: "red", padding: 10 }}>
+              <Text style={{ color: "white" }}>Tümünü Gör</Text>
+            </TouchableOpacity>
+          </View>
+          {featuredProjects.slice(0, 1).map((item, i) => (
+            <ProjectPost
+              key={i}
+              project={item}
+              caption={item.project_title}
+              ımage={`${ApiUrls}/${item.image.replace("public/", "storage/")}`}
+              location={item?.city?.title}
+              city={item?.county?.ilce_title}
+              ProjectNo={item.id}
+              user={data.data}
+              ProfilImage={`${ApiUrls}/storage/profile_images/${data.data.profile_image}`}
+              loading={loadingPrjoects}
+            />
+          ))}
+        </View>
+      )}
+    </ScrollView>
   );
 }
 
