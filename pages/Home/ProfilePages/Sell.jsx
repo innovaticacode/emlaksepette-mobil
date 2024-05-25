@@ -78,28 +78,7 @@ const [products, setproducts] = useState([])
                  </TouchableOpacity>
             </View>
         </View>
-        <View style={style.TabBar}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={{display:'flex',flexDirection:'row',gap:20}}>
-            <TouchableOpacity style={[style.TabBarBtn,{backgroundColor:Tabs==0? '#ebebeb':'#E54242',borderWidth:Tabs==0? 1:0, borderColor:'#E54242'}]}
-              onPress={()=>setTabs(0)}
-            >
-              <Text style={[style.tabBarText,{color:Tabs===0? '#E54242':'white',fontWeight:Tabs===0?'600':'normal'}]}>Tümü</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[style.TabBarBtn,{backgroundColor:Tabs==1? '#ebebeb':'#E54242',borderWidth:Tabs==1? 1:0, borderColor:'#E54242'}]}
-            onPress={()=>setTabs(1)}
-            >
-              <Text style={[style.tabBarText,{color:Tabs===1? '#E54242':'white',fontWeight:Tabs===1?'600':'normal'}]}>Onay Bekleyenler</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[style.TabBarBtn,{backgroundColor:Tabs==2? '#ebebeb':'#E54242',borderWidth:Tabs==2? 1:0, borderColor:'#E54242'}]}
-              onPress={()=>setTabs(2)}
-            >
-              <Text style={[style.tabBarText,{color:Tabs===2? '#E54242':'white',fontWeight:Tabs===2?'600':'normal'}]}>İptaller</Text>
-            </TouchableOpacity>
-                 
-            </View>
-        </ScrollView>
-        </View>
+      
         <ScrollView>
         <View style={style.orders}>
           {

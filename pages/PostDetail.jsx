@@ -333,6 +333,7 @@ console.log(HomeId)
           </View>
         </View>
       </Modal>
+             
       <View
         style={{
           flexDirection: "row",
@@ -388,6 +389,7 @@ console.log(HomeId)
           <Arrow name="arrow-forward-ios" size={16} color={"white"} />
         </TouchableOpacity>
       </View>
+  
       <ScrollView
         scrollEventThrottle={16}
         // onScroll={({ nativeEvent }) => {
@@ -982,7 +984,7 @@ console.log(HomeId)
                 <Text style={{color:'#333',fontSize:12}}>Messenger</Text>
               </TouchableOpacity>
             </View>
-                  
+
                   </ScrollView>
       
           </View>

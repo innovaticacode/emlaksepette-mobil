@@ -25,18 +25,9 @@ export default function FloorPlan() {
   )
 }
 const styles=StyleSheet.create({
-    container:{
-   
-     
-     
-              
+    container:{     
       backgroundColor: '#FFFFFF',  
-     
-    
-      
       width: '100%',  
-     
-  
       borderWidth:0.7,
       borderColor:'#e6e6e6',
       ...Platform.select({

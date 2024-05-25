@@ -22,8 +22,7 @@ export default function UpdateProfile() {
 
 
 
-  const translateY = useRef(new Animated.Value(400)).current;
-  const [sheetDisplay, setsheetDisplay] = useState(false)
+
  
 
 
@@ -33,7 +32,7 @@ export default function UpdateProfile() {
 useEffect(() => {
     getValueFor('user',setuser)
   }, []);
-console.log(user.banner_hex_code)
+
   const [currentColor, setCurrentColor] = useState(user.banner_hex_code);
   const [swatchesOnly, setSwatchesOnly] = useState(false);
   const [swatchesLast, setSwatchesLast] = useState(false);

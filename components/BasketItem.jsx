@@ -13,8 +13,9 @@ import Icon from "react-native-vector-icons/Entypo";
 import Icon2 from "react-native-vector-icons/SimpleLineIcons";
 import Icon3 from "react-native-vector-icons/FontAwesome"
 import { useNavigation } from "@react-navigation/native";
+export default function BasketItem({name,shopName,price,shopPoint,hisse,  ımage}) {
 import { Platform } from "react-native";
-export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
+  
   const navigation=useNavigation()
 
   const [chechked, setchechked] = useState(false)
@@ -82,7 +83,7 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
             </View>
          
             <View style={{flex:0.6/2,height:90}}>
-              <Image source={require('./images/home.jpg')} style={{width:'100%',height:'100%'}}/>
+              <Image source={{uri:ımage}} style={{width:'100%',height:'100%'}}/>
 
             </View>
             <View style={{flex:1.4/2,padding:7,flexDirection:'column'}}>
@@ -104,7 +105,7 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
                    </TouchableOpacity>
                   </View>
                   <View style={{paddingLeft:0,paddingRight:0,justifyContent:'center',alignItems:'flex-end'}}>
-                    <Text style={{fontSize:13,color:'green',fontWeight:'bold'}}>{formattedNumber}</Text>
+                    <Text style={{fontSize:13,color:'green',fontWeight:'bold'}}>{formattedNumber} ₺</Text>
                     <View style={{backgroundColor:'green',padding:5,display:hisse?'flex':'none'}}>
                     <Text style={{fontSize:10,color:'white'}}>{productCount} Hisse Satın Aldınız</Text>
                     </View>
