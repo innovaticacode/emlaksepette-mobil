@@ -24,7 +24,7 @@ import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import Menu from "./Menu.json";
 import { Platform } from "react-native";
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator } from "react-native";
 
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
@@ -77,7 +77,7 @@ export default function ShoppingProfile() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);  // Yükleme başladı
+        setLoading(true); // Yükleme başladı
 
         const response = require("./Menu.json");
         const filteredMenu = response.filter((item) => {
@@ -96,8 +96,8 @@ export default function ShoppingProfile() {
         setData(filteredMenu);
       } catch (error) {
         console.error(error);
-      }finally {
-        setLoading(false);  // Yükleme tamamlandı
+      } finally {
+        setLoading(false); // Yükleme tamamlandı
       }
     };
 
@@ -226,7 +226,7 @@ export default function ShoppingProfile() {
                       <Collapse
                         key={subIndex}
                         onToggle={() => {
-                          setopenAccor((prevState) => ({
+                          setOpenAccor((prevState) => ({
                             ...prevState,
                             [subIndex]: !prevState[subIndex],
                           }));
@@ -238,7 +238,7 @@ export default function ShoppingProfile() {
                             <ProfileSettingsItem
                               key={subIndex}
                               text={item.text}
-                              iconName={item.icon}
+                              ıconName={item.icon}
                               arrowControl={
                                 item.subMenu && item.subMenu.length > 0
                               }
@@ -426,8 +426,9 @@ const style = StyleSheet.create({
     borderColor: "#e6e6e6",
   },
   headerText: {
-    fontSize: 15,
-    color: "#525B75",
+    fontSize: 13,
+    color: "#000000",
+    fontWeight: "bold",
   },
   animatedView: {
     alignItems: "center",

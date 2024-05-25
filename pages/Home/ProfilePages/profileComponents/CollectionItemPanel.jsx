@@ -37,7 +37,7 @@ export default function CollectionItemPanel({ collection, panelInfo }) {
                   uri:
                     panelInf.item_type === 2 &&
                     panelInf.housing?.housing_type_data
-                      ? `https://test.emlaksepette.com/${
+                      ? `https://test.emlaksepette.com/housing_images/${
                           JSON.parse(panelInf.housing.housing_type_data).images
                         }`
                       : `https://test.emlaksepette.com/${panelInf.project.image.replace(

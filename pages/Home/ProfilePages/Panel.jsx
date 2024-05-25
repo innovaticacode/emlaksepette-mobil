@@ -136,7 +136,7 @@ export default function Panel({ options, onSelect }) {
                               }}
                             />
                           </View>
-                          <View>
+                          <View style={{marginLeft: 5}}>
                             <Text
                               style={{
                                 fontSize: 16,
@@ -257,6 +257,14 @@ export default function Panel({ options, onSelect }) {
             </Modal>
           </View>
         </View> */}
+
+              <View style={styles.container}>
+                <Image
+                  source={{ uri: "https://emlaksepette.com/images/emlak-kulup-banner.png" }}
+                  style={styles.image}
+                />
+              </View>
+
               <View style={style.Cards}>
                 <Text
                   style={{
@@ -277,10 +285,16 @@ export default function Panel({ options, onSelect }) {
                       }}
                     >
                       <View style={{ flex: 1.8 / 2 }}>
-                        <Text style={{ fontSize: 15, color: "#FF0000" }}>
+                        <Text
+                          style={{
+                            fontSize: 13,
+                            color: "#FF0000",
+                            fontWeight: "bold",
+                          }}
+                        >
                           Toplam Kazanç
                         </Text>
-                        <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+                        <Text style={{ fontSize: 9, fontWeight: "bold" }}>
                           (Komisyon Tutarı)
                         </Text>
                       </View>
@@ -313,10 +327,16 @@ export default function Panel({ options, onSelect }) {
                       }}
                     >
                       <View style={{ flex: 1.8 / 2 }}>
-                        <Text style={{ fontSize: 15, color: "#FF0000" }}>
+                        <Text
+                          style={{
+                            fontSize: 13,
+                            color: "#FF0000",
+                            fontWeight: "bold",
+                          }}
+                        >
                           Reddedilen
                         </Text>
-                        <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+                        <Text style={{ fontSize: 9, fontWeight: "bold" }}>
                           (Komisyon Tutarı)
                         </Text>
                       </View>
@@ -352,10 +372,16 @@ export default function Panel({ options, onSelect }) {
                       }}
                     >
                       <View style={{ flex: 1.8 / 2 }}>
-                        <Text style={{ fontSize: 15, color: "#FFA500" }}>
-                          Onayda
+                        <Text
+                          style={{
+                            fontSize: 13,
+                            color: "#FFA500",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Onaydaki Kazanç
                         </Text>
-                        <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+                        <Text style={{ fontSize: 9, fontWeight: "bold" }}>
                           (Komisyon Tutarı)
                         </Text>
                       </View>
@@ -387,10 +413,16 @@ export default function Panel({ options, onSelect }) {
                       }}
                     >
                       <View style={{ flex: 1.7 / 2 }}>
-                        <Text style={{ fontSize: 15, color: "#9ACA66" }}>
+                        <Text
+                          style={{
+                            fontSize: 13,
+                            color: "#9ACA66",
+                            fontWeight: "bold",
+                          }}
+                        >
                           Başarı Yüzdesi(%)
                         </Text>
-                        <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+                        <Text style={{ fontSize: 9, fontWeight: "bold" }}>
                           (Komisyon Tutarı)
                         </Text>
                       </View>
@@ -432,7 +464,7 @@ export default function Panel({ options, onSelect }) {
                       marginLeft: 5,
                     }}
                   >
-                    Koleksiyonlarım
+                    Son Eklenen Koleksiyonlarım
                   </Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Collecitons")}
@@ -466,6 +498,21 @@ export default function Panel({ options, onSelect }) {
   );
 }
 const { width, height } = Dimensions.get("window");
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    justifyContent: "space-between", // Görseller arasında boşluk
+    alignItems: "center", // Dikeyde ortalama
+    padding: 10,
+  },
+  image: {
+    width: "100%",
+    height: 100,
+    margin: 5,
+    objectFit: "contain",
+  },
+});
+
 const style = StyleSheet.create({
   container: {
     flex: 1,
