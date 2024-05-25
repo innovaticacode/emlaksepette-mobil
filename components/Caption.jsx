@@ -1,6 +1,8 @@
-import { View, Text ,StyleSheet,Platform, TouchableOpacity,ScrollView } from 'react-native'
+import { View, Text ,StyleSheet, TouchableOpacity,ScrollView } from 'react-native'
 import React from 'react'
 import HTML from 'react-native-render-html';
+import { Platform } from "react-native";
+
 // import { FlatList, GestureHandlerRootView,ScrollView} from 'react-native-gesture-handler';
 export default function Caption({data}) {
   const caption=data?.project?.description.replace(/<[^>]+>|&[a-zA-Z]+;|[%&]|&gt;/g, '')

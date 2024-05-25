@@ -3,7 +3,6 @@ import {
     Text,
     StyleSheet,
     SafeAreaView,
-    Platform,
     ScrollView,
     TouchableOpacity,
     ImageBackground,
@@ -18,6 +17,7 @@ import {
   import Header from "../../components/Header";
   import Modal from "react-native-modal";
   import Search from "./Search";
+  import { Platform } from "react-native";
   import Categories from "../../components/Categories";
   import ProjectPost from "../../components/ProjectPost";
   import * as Animatable from "react-native-animatable";

@@ -1,4 +1,4 @@
-import { View, Text ,SafeAreaView, StyleSheet, TouchableOpacity,Platform} from 'react-native'
+import { View, Text ,SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native'
 import{ React,useState }from 'react'
 import Personal from './Personal';
 import Company from './Company';

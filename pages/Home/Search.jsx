@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView,StyleSheet,  Keyboard,Image,Platform } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView,StyleSheet,  Keyboard,Image } from "react-native";
 import {React,useState,useEffect}from "react";
 import Icon from "react-native-vector-icons/EvilIcons";
 import Categories from "../../components/Categories";
@@ -7,6 +7,7 @@ import { SearchBar } from '@rneui/themed';
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
+import { Platform } from "react-native";
 
 export default function Search({onpres}) {
   const navigation=useNavigation();

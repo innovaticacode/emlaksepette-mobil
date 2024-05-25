@@ -4,14 +4,15 @@ import {
   StyleSheet,
   TextInput,
   ImageBackground,
-  TouchableOpacity,
-  Platform,
+  TouchableOpacity
 } from "react-native";
 import React from "react";
 import AddBtn from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/EvilIcons";
 import IconMenu from "react-native-vector-icons/Entypo";
 import { useNavigation } from "@react-navigation/native";
+import { Platform } from "react-native";
+
 export default function Header({ loading, onPress }) {
   const navigation = useNavigation();
   return (

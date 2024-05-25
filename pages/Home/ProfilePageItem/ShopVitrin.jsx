@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Platform,
   Linking,
   TouchableOpacity,
 } from "react-native";
@@ -13,6 +12,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import CommentItem from "../RealtorPages/CommentItem";
 import RealtorPost from "../../../components/RealtorPost";
 import ProjectPost from "../../../components/ProjectPost";
+import { Platform } from "react-native";
 
 export default function ShopVitrin({ data, housingdata }) {
   const ApiUrl = "https://test.emlaksepette.com/storage/store_banners/";

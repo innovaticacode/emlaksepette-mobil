@@ -4,6 +4,7 @@ import { StyleSheet } from "react-native";
 import axios from "axios";
 import { getValueFor } from "../../components/methods/user";
 import { useRoute } from "@react-navigation/native";
+import { Platform } from "react-native";
 
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
