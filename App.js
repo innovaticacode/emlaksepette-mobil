@@ -222,7 +222,11 @@ export default function App({ route }) {
               name="DashBord"
               component={Panel}
               options={{
-                title: "Gösterge Paneli",
+                title: "Sana Özel",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black"
+
               }}
             />
             <Stack.Screen

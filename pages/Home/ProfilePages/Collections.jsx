@@ -165,7 +165,6 @@ const [colectionName, setcolectionName] = useState('')
       setselectedCollection(id)
     setcolectionName(name)
  }
-console.log(selectedCollection)
 const [message, setmessage] = useState(false)
  const deleteCollection = async (id) => {
   try {
@@ -176,7 +175,6 @@ const [message, setmessage] = useState(false)
         'Authorization': `Bearer ${user?.access_token}`
       }
     });
-    console.log(response.data)
     setmessage(true)
     closeSheet()
     setTimeout(() => {
@@ -210,7 +208,6 @@ const editCollectionName = async (id) => {
   }
 };
 
-console.log(selectedCollection)
 
   return ( 
     <View style={{flex:1,}}>

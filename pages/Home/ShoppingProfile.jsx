@@ -281,7 +281,7 @@ export default function ShoppingProfile() {
             style={{ flex: 1 / 2, paddingBottom: 50, alignItems: "center" }}
           >
             <TouchableOpacity
-              onPress={() => setdialogVisible(true)}
+              onPress={() => setDialogVisible(true)}
               style={{
                 backgroundColor: "#EA2A28",
                 padding: 10,
@@ -302,11 +302,11 @@ export default function ShoppingProfile() {
           </View>
           <Modal
             animationType="slide"
-            onBackdropPress={() => setdialogVisible(!dialogVisible)}
+            onBackdropPress={() => setDialogVisible(!dialogVisible)}
             visible={dialogVisible}
             onRequestClose={() => {
               Alert.alert("Modal has been closed.");
-              setdialogVisible(!dialogVisible);
+              setDialogVisible(!dialogVisible);
             }}
           >
             <View style={{}}>
@@ -356,7 +356,7 @@ export default function ShoppingProfile() {
                           borderRadius: 6,
                         },
                       ]}
-                      onPress={() => setdialogVisible(!dialogVisible)}
+                      onPress={() => setDialogVisible(!dialogVisible)}
                     >
                       <Text
                         style={{

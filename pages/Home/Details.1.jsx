@@ -170,24 +170,16 @@ export default function Details({ navigation }) {
               ...res.data.housings,
             },
           });
-          console.log(
-            (page + 1) * 10 > data.project.room_count
-              ? data.project.room_count
-              : (page + 1) * 10
-          );
           setItemCount(
             (page + 1) * 10 > data.project.room_count
               ? data.project.room_count
               : (page + 1) * 10
           );
-          console.log("asd123123", page);
           setIsLoading(false);
         });
       }
     }
   };
-
-  console.log(collections);
 
   const removeItemOnCollection = (collectionId) => {
     const collectionData = {
@@ -238,7 +230,6 @@ export default function Details({ navigation }) {
         });
 
         setcollections(newCollections);
-        console.log(newCollections, "qwe");
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -344,7 +335,6 @@ export default function Details({ navigation }) {
   const [collectionAddedSucces, setcollectionAddedSucces] = useState(false);
   const [selectedCollectionName, setselectedCollectionName] = useState("");
   const fetchData = async () => {
-    console.log(collections);
     try {
       if (user.access_token) {
         const response = await axios.get(
@@ -423,7 +413,6 @@ export default function Details({ navigation }) {
         }, 3000);
         // Başarılı yanıtı işleyin
         setselectedCollectionName(response.data.collection.name);
-        console.log("Response:", response.data);
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -482,7 +471,6 @@ export default function Details({ navigation }) {
             return collection;
           }
         });
-        console.log(newCollections);
         setcollections(newCollections);
       })
       .catch((error) => {
@@ -491,7 +479,6 @@ export default function Details({ navigation }) {
       });
   };
   const [PopUpForRemoveItem, setPopUpForRemoveItem] = useState(false);
-  console.log(selectedCollectionName2);
   const { width, height } = Dimensions.get("window");
 
   const [users, setUsers] = useState({});
@@ -536,8 +523,6 @@ export default function Details({ navigation }) {
         formData
       );
 
-      // İsteğin başarılı bir şekilde tamamlandığı durum
-      console.log("İstek başarıyla tamamlandı:", response.data);
 
       openModal(JSON.stringify(response.data.message));
       color("#d4edda");
@@ -772,7 +757,6 @@ export default function Details({ navigation }) {
             }
           >
             {data.project.images.map((image, index) => {
-              // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
               return (
                 <Pressable
                   key={index + 1}
@@ -1552,7 +1536,6 @@ export default function Details({ navigation }) {
               }
             >
               {data.project.images.map((image, index) => {
-                // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
                 return (
                   <Pressable
                     key={index + 1}
