@@ -8,7 +8,6 @@ import {
   ScrollView,
   Animated,
   Button,
-  Platform,
   Linking,
   ActivityIndicator,
   TextInput,
@@ -24,6 +23,7 @@ import PagerView from "react-native-pager-view";
 import Map from "../../components/Map";
 import { SocialIcon, Icon } from "react-native-elements";
 import * as Clipboard from "expo-clipboard";
+import { Platform } from "react-native";
 
 import OtherHomeInProject from "../../components/OtherHomeInProject";
 

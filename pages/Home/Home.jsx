@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet,Platform ,Dimensions} from "react-native";
+import { View, Text, StyleSheet ,Dimensions} from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
@@ -14,6 +14,7 @@ import ShoppingProfile from "./ShoppingProfile";
 import Login from "./Login&Register/Login";
 import userData, { getValueFor } from "../../components/methods/user";
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from "react-native";
 
 const Tab = createBottomTabNavigator();
 

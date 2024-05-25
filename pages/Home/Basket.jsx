@@ -9,9 +9,10 @@ import {
   TouchableOpacity,
   TextInput,
   SafeAreaView,
-  Platform,
   ImageBackground
 } from "react-native";
+import { Platform } from "react-native";
+
 import React, { useState ,useEffect} from "react";
 import BasketItem from "../../components/BasketItem";
 import {

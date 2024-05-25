@@ -1,8 +1,5 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import React from "react";
-import Favorite from "../../components/Favorite";
-import Test from "./Test";
-
 import RealtorPostFavorited from "../../components/RealtorPostFavorited";
 
 export default function Favorites() {

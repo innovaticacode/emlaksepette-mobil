@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
-  Platform,
   SafeAreaView,
   ActivityIndicator,
 } from "react-native";

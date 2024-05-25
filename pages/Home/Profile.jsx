@@ -35,6 +35,7 @@ import ShopVitrin from "./ProfilePageItem/ShopVitrin";
 import { Button } from "react-native-elements";
 import Modal from "react-native-modal";
 import { CheckBox } from "@rneui/themed";
+import { Platform } from "react-native";
 
 export default function Profile() {
   const route = useRoute();
