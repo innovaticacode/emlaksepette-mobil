@@ -851,7 +851,7 @@ return (
         </View>
       </Modal>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalVisibleAlert}
         onRequestClose={() => {

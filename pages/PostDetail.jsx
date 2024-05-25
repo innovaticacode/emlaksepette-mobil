@@ -535,7 +535,7 @@ export default function PostDetail() {
         <View style={{ padding: 10 }}></View>
 
         <Modal
-          animationType="slide" // veya "fade", "none" gibi
+          animationType="fade" // veya "fade", "none" gibi
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
@@ -691,7 +691,7 @@ export default function PostDetail() {
           </View>
         </Modal>
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           onBackdropPress={() => setFormVisible(false)}
           visible={FormVisible}

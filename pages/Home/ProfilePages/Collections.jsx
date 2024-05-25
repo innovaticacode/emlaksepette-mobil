@@ -8,9 +8,10 @@ import {
   Animated,
   TouchableOpacity,
   Modal,
-  Linking,
-  ActivityIndicator,
+  Linking
 } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
+
 import { useState, useRef, useEffect } from "react";
 import CollectionsItem from "./profileComponents/CollectionsItem";
 import { Platform } from "react-native";
@@ -232,6 +233,12 @@ export default function Collections() {
   };
 
   return (
+    <View style={styles.container}>
+    {loading ? (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#000000" />
+      </View>
+    ) : (
     <View style={{ flex: 1 }}>
       <View
         style={{
@@ -246,7 +253,7 @@ export default function Collections() {
         }}
       >
         <View style={styles.container}>
-          <View
+          {/* <View
             style={{
               display: showAlert ? "flex" : "none",
               justifyContent: "center",
@@ -270,7 +277,7 @@ export default function Collections() {
               </Text>
               <Heart name="check" size={20} color={"white"} />
             </View>
-          </View>
+          </View> */}
 
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -350,7 +357,9 @@ export default function Collections() {
                 );
               })
             ) : (
-              <ActivityIndicator size="large" color={"red"} />
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#000000" />
+              </View>
             )}
           </ScrollView>
         </View>
@@ -455,7 +464,7 @@ export default function Collections() {
         </Animated.View>
       </View>
       <Modal
-        animationType="slide" // veya "fade", "none" gibi
+        animationType="fade" // veya "fade", "none" gibi
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
@@ -478,7 +487,12 @@ export default function Collections() {
                 style={styles.closeButton}
                 onPress={() => setModalVisible(!modalVisible)}
               >
-                <Icon2 name="x" size={15} color={"#525B75"} style={{fontWeight: "700"}} />
+                <Icon2
+                  name="x"
+                  size={15}
+                  color={"#525B75"}
+                  style={{ fontWeight: "700" }}
+                />
               </TouchableOpacity>
             </View>
             <View style={{ gap: 5 }}>
@@ -540,7 +554,7 @@ export default function Collections() {
         </View>
       </Modal>
       <Modal
-        animationType="slide" // veya "fade", "none" gibi
+        animationType="fade" // veya "fade", "none" gibi
         transparent={true}
         visible={SharemodalVisible}
         onRequestClose={() => {
@@ -650,7 +664,7 @@ export default function Collections() {
         </View>
       </Modal>
       <Modal
-        animationType="slide" // veya "fade", "none" gibi
+        animationType="fade" // veya "fade", "none" gibi
         transparent={true}
         visible={modalVisible2}
         onRequestClose={() => {
@@ -696,6 +710,8 @@ export default function Collections() {
         </View>
       </Modal>
     </View>
+      )}
+      </View>
   );
 }
 const styles = StyleSheet.create({
@@ -831,5 +847,10 @@ const styles = StyleSheet.create({
   modalText3: {
     marginBottom: 15,
     textAlign: "center",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

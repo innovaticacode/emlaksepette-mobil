@@ -1018,7 +1018,7 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
         {tabs == 4 && <FloorPlan />}
 
         <Modal
-          animationType="slide" // veya "fade", "none" gibi
+          animationType="fade" // veya "fade", "none" gibi
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
@@ -1544,7 +1544,7 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
           </View>
         </Modal>
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           onBackdropPress={() => setFormVisible(false)}
           visible={FormVisible}

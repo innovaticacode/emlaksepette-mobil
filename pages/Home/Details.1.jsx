@@ -824,7 +824,7 @@ export default function Details({ navigation }) {
         {tabs == 4 && <FloorPlan />}
 
         <Modal
-          animationType="slide" // veya "fade", "none" gibi
+          animationType="fade" // veya "fade", "none" gibi
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
@@ -1383,7 +1383,7 @@ export default function Details({ navigation }) {
           </View>
         </Modal>
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           onBackdropPress={() => setFormVisible(false)}
           visible={FormVisible}

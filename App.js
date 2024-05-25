@@ -525,6 +525,9 @@ export default function App({ route }) {
             component={Notifications}
             options={({ route }) => ({
               title: "Bildirimler",
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
             })}
           />
           <Stack.Screen

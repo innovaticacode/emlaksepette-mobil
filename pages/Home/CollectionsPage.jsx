@@ -367,7 +367,7 @@ export default function CollectionsPage() {
         </Animated.View>
       </View>
       <Modal
-        animationType="slide" // veya "fade", "none" gibi
+        animationType="fade" // veya "fade", "none" gibi
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
@@ -421,7 +421,7 @@ export default function CollectionsPage() {
         </View>
       </Modal>
       <Modal
-        animationType="slide" // veya "fade", "none" gibi
+        animationType="fade" // veya "fade", "none" gibi
         transparent={true}
         visible={SharemodalVisible}
         onRequestClose={() => {
@@ -531,7 +531,7 @@ export default function CollectionsPage() {
         </View>
       </Modal>
       <Modal
-        animationType="slide" // veya "fade", "none" gibi
+        animationType="fade" // veya "fade", "none" gibi
         transparent={true}
         visible={modalVisible2}
         onRequestClose={() => {

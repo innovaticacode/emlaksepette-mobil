@@ -301,7 +301,7 @@ export default function ShoppingProfile() {
             </TouchableOpacity>
           </View>
           <Modal
-            animationType="slide"
+            animationType="fade"
             onBackdropPress={() => setDialogVisible(!dialogVisible)}
             visible={dialogVisible}
             onRequestClose={() => {
