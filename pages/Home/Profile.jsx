@@ -36,6 +36,8 @@ import { Button } from "react-native-elements";
 import Modal from "react-native-modal";
 import { CheckBox } from "@rneui/themed";
 import { Platform } from "react-native";
+import axios from "axios";
+import { getValueFor } from "../../components/methods/user";
 
 export default function Profile() {
   const route = useRoute();
@@ -57,6 +59,56 @@ export default function Profile() {
   const [emailId, setEmailId] = useState("");
   const [errorStatu, seterrorStatu] = useState(0);
   const [errorMessage, seterrorMessage] = useState("");
+  const [user, setUser] = useState({});
+
+  const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
+  const postData = async () => {
+    try {
+      var formData = new FormData();
+
+      formData.append("name", nameId);
+      formData.append("phone", phoneId);
+      formData.append("email", emailId);
+
+      const response = await axios.post(
+        "https://test.emlaksepette.com/api/institutional/give_offer",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            "Content-Type": "multipart/form-data", // İçerik tipini belirtmek
+          },
+        }
+      );
+      setFormVisible(false);
+      setTimeout(() => {
+        setTrueModal(true);
+      }, 3000);
+
+      console.log("İstek başarıyla tamamlandı:", response.data);
+
+      // color("#d4edda");
+      setNameId("");
+      setPhoneId("");
+      setEmailId("");
+    } catch (error) {
+      if (error.response) {
+        // Sunucudan gelen hata yanıtı
+        console.error("Sunucu Hatası:", error.response.data);
+        console.error("Hata Kodu:", error.response.status);
+      } else if (error.request) {
+        // İstek yapıldı, ancak cevap alınamadı
+        console.error("Sunucudan cevap alınamadı:", error.request);
+      } else {
+        // İstek ayarları sırasında bir hata oluştu
+        console.error("İstek Ayar Hatası:", error.message);
+      }
+      console.error("Post isteği başarısız:", error);
+    }
+  };
 
   const GiveOffer = () => {
     switch (true) {
@@ -625,15 +677,15 @@ export default function Profile() {
       <View
         style={{
           padding: 20,
-
           display: "flex",
           justifyContent: "space-between",
           flexDirection: "row",
-          backgroundColor: "rgba(0, 0, 0, 0)",
+          backgroundColor: "transparent ",
+          zIndex: -2,
         }}
       >
         <TouchableOpacity
-          style={{ width: "40%", backgroundColor: "blue", borderRadius: 5 }}
+          style={{ width: "40%", backgroundColor: "red", borderRadius: 5 }}
           onPress={handleOpenPhone}
         >
           <Text
@@ -641,7 +693,7 @@ export default function Profile() {
               padding: 10,
               color: "white",
               fontWeight: "500",
-              fontSize: 20,
+              fontSize: 16,
               textAlign: "center",
             }}
           >
@@ -649,7 +701,7 @@ export default function Profile() {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{ width: "40%", backgroundColor: "blue", borderRadius: 5 }}
+          style={{ width: "40%", backgroundColor: "red", borderRadius: 5 }}
           onPress={() => setFormVisible((prev) => !prev)}
         >
           <Text
@@ -657,7 +709,7 @@ export default function Profile() {
               padding: 10,
               color: "white",
               fontWeight: "500",
-              fontSize: 20,
+              fontSize: 16,
               textAlign: "center",
             }}
           >
