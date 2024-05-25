@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import ShoppinInfo from './ShoppinInfo'
-
+import { Platform } from "react-native";
 export default function FloorPlan() {
   return (
     <View style={{padding:9,top:1}}>

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, TextInput, Keyboard ,Animated,TouchableOpacity,Modal,Linking, ActivityIndicator} from 'react-native'
 import { useState,useRef,useEffect} from 'react'
 import CollectionsItem from './profileComponents/CollectionsItem'
-
+import { Platform } from "react-native";
 import ShareIcon from "react-native-vector-icons/Entypo"
 import DeleteIcon from "react-native-vector-icons/MaterialIcons"
 import PencilIcon from "react-native-vector-icons/FontAwesome5"

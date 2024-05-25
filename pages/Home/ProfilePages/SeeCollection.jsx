@@ -7,6 +7,7 @@ import LinkIcon2 from "react-native-vector-icons/FontAwesome"
 import LinkIcon from "react-native-vector-icons/Entypo"
 import Icon from "react-native-vector-icons/AntDesign"
 import { useNavigation } from '@react-navigation/native'
+import { Platform } from "react-native";
 import BackIcon from "react-native-vector-icons/MaterialIcons"
 export default function SeeCollection() {
     const { width, height ,fontScale} = Dimensions.get('window');

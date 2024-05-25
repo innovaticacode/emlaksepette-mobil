@@ -1,3 +1,4 @@
+
 import {
   View,
   Text,
@@ -15,6 +16,8 @@ import ShopComment from "./ShopComment";
 import ProfileMap from "./ProfileMap";
 import { Skeleton } from "@rneui/themed";
 import CommentItem from "../RealtorPages/CommentItem";
+import { Platform } from "react-native";
+
 export default function ShopInfo({ data, loading }) {
   const { width, height } = Dimensions.get("window");
   const dateTimeString = data?.data?.created_at;
@@ -54,7 +57,6 @@ export default function ShopInfo({ data, loading }) {
                 >
                   <Icon name="calendar" size={20} color={"white"} />
                 </View>
-
                 <View style={{ gap: 5 }}>
                   <Text>Katılma Tarihi</Text>
                   <Text style={{ fontWeight: "600" }}>{formattedDate}</Text>

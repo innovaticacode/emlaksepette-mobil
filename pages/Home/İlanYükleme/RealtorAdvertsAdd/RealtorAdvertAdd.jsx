@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, ScrollView, TextInput, TouchableWithoutFeedback
 import  {useState} from 'react'
 import { useRoute } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/AntDesign'
-
+import { Platform } from "react-native";
 export default function RealtorAdvertAdd() {
     const route=useRoute()
     const {name,beforeName,antesName}=route.params

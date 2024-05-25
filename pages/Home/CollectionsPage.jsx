@@ -10,7 +10,7 @@ import Heart from "react-native-vector-icons/AntDesign";
 import IconMessenger from "react-native-vector-icons/Fontisto"
 import IconSms from "react-native-vector-icons/Feather"
 import * as Clipboard from 'expo-clipboard';
-
+import { Platform } from "react-native";
 import { SearchBar } from '@rneui/themed';
 import axios from 'axios'
 

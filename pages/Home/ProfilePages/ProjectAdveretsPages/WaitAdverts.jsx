@@ -8,6 +8,7 @@ import { apiRequestGetWithBearer } from '../../../../components/methods/apiReque
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios"
 import { getValueFor } from '../../../../components/methods/user';
+import { Platform } from "react-native";
 export default function WaitAdverts({header,header2,hidden}) {
   const navigation = useNavigation()
     const translateY = useRef(new Animated.Value(400)).current;

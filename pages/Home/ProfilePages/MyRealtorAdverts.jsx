@@ -9,6 +9,7 @@ import ActiveRealtorAdverts from './ActiveRealtorAdverts'
 import WaitRealtorAdverts from './WaitRealtorAdverts'
 import RejectRealtorAdverts from './RejectRealtorAdverts'
 import PasiveRealtorAdverts from './PasiveRealtorAdverts'
+import { Platform } from "react-native";
 export default function MyRealtorAdverts() {
   const [Tabs, setTabs] = useState(0)
   const route = useRoute();

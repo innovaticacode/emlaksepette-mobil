@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import React from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
+import { Platform } from "react-native";
 export default function EditCollectionPost({ item }) {
   console.log(item);
 

@@ -31,7 +31,6 @@ export default function ShoppinInfo({ flex, bottom, top }) {
           >
             Mağaza Bilgileri
           </Text>
-
           <View style={styles.InfoView}>
             <View
               style={{

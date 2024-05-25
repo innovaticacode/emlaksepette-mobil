@@ -14,7 +14,7 @@ import Bookmark from "react-native-vector-icons/FontAwesome";
 import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
 import { addDotEveryThreeDigits } from "./methods/merhod";
-
+import { Platform } from "react-native";
 export default function Posts({
   data,
   roomOrder,

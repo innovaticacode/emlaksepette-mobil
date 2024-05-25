@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import PaymentItem from './PaymentItem'
-
+import { Platform } from "react-native";
 export default function PaymentDetail() {
   return (
     <View style={{padding:10}}>

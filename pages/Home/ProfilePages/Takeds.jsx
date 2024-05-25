@@ -12,6 +12,7 @@ import { SearchBar } from "@rneui/base";
 import Icon from "react-native-vector-icons/AntDesign";
 import Order from "./profileComponents/Order";
 import { getValueFor } from "../../../components/methods/user";
+import { Platform } from "react-native";
 import axios from "axios";
 export default function Takeds() {
   const [search, setSearch] = useState("");

@@ -11,6 +11,7 @@ import axios from 'axios'
 import Icon from 'react-native-vector-icons/Fontisto'
 import { CheckBox } from '@rneui/themed';
 import RNPickerSelect from "react-native-picker-select";
+import { Platform } from "react-native";
 export default function UpdateProfile() {
   const [selectedLocation, setSelectedLocation] = useState(null);
 

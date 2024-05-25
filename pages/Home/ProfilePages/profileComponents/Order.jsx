@@ -12,7 +12,7 @@ import StarIcon from "react-native-vector-icons/FontAwesome";
 import Warning from "react-native-vector-icons/Entypo";
 import Icon4 from 'react-native-vector-icons/FontAwesome5'
 import { useNavigation } from "@react-navigation/native";
-
+import { Platform } from "react-native";
 export default function Order({ item }) {
   const date = new Date(item.created_at);
   // Ay isimleri dizisi

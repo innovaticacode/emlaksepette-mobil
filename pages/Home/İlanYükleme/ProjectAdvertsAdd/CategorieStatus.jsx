@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import CategoryAdverts from './CategoryAdverts'
 import { useRoute ,useNavigation} from '@react-navigation/native'
 import Icon2 from 'react-native-vector-icons/AntDesign'
+import { Platform } from "react-native";
 export default function CategorieStatus() {
  const [display, setdisplay] = useState(true)
  const route=useRoute()

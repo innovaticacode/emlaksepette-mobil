@@ -1,3 +1,4 @@
+
 import {
   View,
   Text,
@@ -11,9 +12,11 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import RentOrder from "./profileComponents/RentOrder";
 import Icon from "react-native-vector-icons/Entypo";
 import axios from "axios";
+  import { Platform } from "react-native";
 import { getValueFor } from "../../../components/methods/user";
 export default function Rent({ display }) {
   const [Tabs, setTabs] = useState(0);
+
   const route = useRoute();
 
   const translateY = useRef(new Animated.Value(400)).current;

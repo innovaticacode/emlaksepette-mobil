@@ -17,6 +17,8 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
+import { Platform } from "react-native";
+
 export default function OrderDetails() {
   const navigation = useNavigation();
   const route = useRoute();

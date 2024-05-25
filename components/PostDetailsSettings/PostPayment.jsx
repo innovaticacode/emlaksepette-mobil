@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import PaymentItem from '../PaymentItem'
 import { addDotEveryThreeDigits } from '../methods/merhod'
-
+import { Platform } from "react-native";
 
 export default function PostPayment({data,roomOrder}) {
   // console.log(data.projectHousingsList[roomOrder]['pay-dec-count2'])

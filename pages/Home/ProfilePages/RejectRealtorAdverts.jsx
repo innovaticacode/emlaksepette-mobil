@@ -6,6 +6,7 @@ import { getValueFor } from '../../../components/methods/user'
 import RealtorAdvertPost from './profileComponents/RealtorAdvertPost'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useNavigation } from "@react-navigation/native";
+import { Platform } from "react-native";
 export default function RejectRealtorAdverts() {
   const navigation = useNavigation()
   const [user,setUser] = useState({})

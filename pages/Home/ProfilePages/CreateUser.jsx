@@ -10,6 +10,7 @@ import {
   Modal,
   Touchable,
 } from "react-native";
+import { Platform } from "react-native";
 import { useState, useRef, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native";

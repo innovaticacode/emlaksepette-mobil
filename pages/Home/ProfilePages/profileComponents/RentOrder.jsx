@@ -3,9 +3,12 @@ import React from 'react'
 import { ImageBackground } from 'react-native'
 import Icon from "react-native-vector-icons/Entypo"
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons'
+import { Platform } from "react-native";
+
 import { useNavigation } from '@react-navigation/native'
 import { addDotEveryThreeDigits } from '../../../../components/methods/merhod'
 export default function RentOrder({display,title,chekIn,chekOut,price,status}) {
+
     const navigation=useNavigation();
     const months = [
       "Ocak",

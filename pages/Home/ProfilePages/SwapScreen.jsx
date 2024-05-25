@@ -6,6 +6,7 @@ import Modal from "react-native-modal";
 import { getValueFor } from '../../../components/methods/user';
 import axios from 'axios';
 import { addDotEveryThreeDigits } from '../../../components/methods/merhod';
+import { Platform } from "react-native";
 export default function SwapScreen() {
     const [DetailModal, setDetailModal] = useState(false)
     const openModal=()=>{

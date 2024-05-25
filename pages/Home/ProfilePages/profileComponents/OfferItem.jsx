@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-
+import { Platform } from "react-native";
 export default function OfferItem() {
 
     const generateRandomColorCode = () => {

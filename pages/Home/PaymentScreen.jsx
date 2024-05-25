@@ -7,7 +7,7 @@ import EftPay from './EftPay';
 import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as DocumentPicker from 'expo-document-picker';
-
+import { Platform } from "react-native";
 export default function PaymentScreen() {
     const [checked, setChecked] = React.useState(false);
     const toggleCheckbox = () => setChecked(!checked);
