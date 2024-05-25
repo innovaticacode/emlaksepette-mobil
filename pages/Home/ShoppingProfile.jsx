@@ -274,7 +274,7 @@ export default function ShoppingProfile() {
                             key={subIndex}
                             text={item.text}
                             iconName={item.icon}
-                            arrowControl={
+                            arrowControl={ 
                               item.subMenu && item.subMenu.length > 0
                             }
                             isCollapsed={!openAccor[subIndex]}

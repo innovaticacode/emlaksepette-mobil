@@ -89,6 +89,7 @@ import UpdateUsers from "./pages/Home/ProfilePages/UpdateUsers";
 import UsersList from "./pages/Home/ProfilePages/UsersList";
 import Takeds from "./pages/Home/ProfilePages/Takeds";
 import Invoice from "./pages/Home/Invoice";
+import CreateReservation from "./pages/Home/RealtorPages/CreateReservation";
 
 const Stack = createNativeStackNavigator();
 
@@ -662,6 +663,15 @@ export default function App({ route }) {
               headerBackTitleVisible: false,
               headerShown: true,
               title: "Fatura",
+            })}
+          />
+             <Stack.Screen
+            name="CreateReservation"
+            component={CreateReservation}
+            options={({ route }) => ({
+              headerBackTitleVisible: false,
+              headerShown: true,
+              title: "Rezervasyon Oluştur",
             })}
           />
         </Stack.Navigator>

@@ -28,7 +28,7 @@ export default function PostMap({data}) {
       <Text style={{color:'white'}}>Yol Tarifi Al</Text>
       </TouchableOpacity>  
     <MapView
-    provider={PROVIDER_GOOGLE}
+  
   initialRegion={{
     latitude:locationCoords[0],
     longitude:locationCoords[1],

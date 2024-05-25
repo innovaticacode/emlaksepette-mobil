@@ -386,7 +386,17 @@ return (
                 >
                     <Text style={{textAlign:'center',color:'#ffffff',fontWeight:'500'}}>Ara</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
+                  {data?.housing?.step2_slug=='gunluk-kiralik' ?
+                     <TouchableOpacity
+                     onPress={()=>{
+                      navigation.navigate('CreateReservation')
+                     }}
+                       style={{backgroundColor:'#EA2A28',padding:10,width:'40%',borderRadius:5}}
+                     >
+                       <Text  style={{textAlign:'center',color:'#ffffff',fontWeight:'500'}}>Rezervasyon Yap</Text>
+                     </TouchableOpacity>
+                     :
+                        <TouchableOpacity
                   onPress={()=>{
                     setModalForAddToCart(true)
                   }}
@@ -394,8 +404,10 @@ return (
                   >
                     <Text  style={{textAlign:'center',color:'#ffffff',fontWeight:'500'}}>Sepete Ekle</Text>
                   </TouchableOpacity>
-                </View>
-              
+           
+                  }
+               
+               </View>
               </View> 
     <View
       style={{

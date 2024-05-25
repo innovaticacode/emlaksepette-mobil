@@ -83,6 +83,10 @@ export default function HomePage() {
     .slice(0, 10);
   const filteredProject = featuredProjects.slice(0, 5);
 
+  const filteredBookHouse = featuredEstates
+  .filter((estate) => estate.step2_slug == 'gunluk-kiralik')
+  .slice(0, 10);
+
   useEffect(() => {
     fetchFeaturedEstates();
   }, []);
@@ -341,50 +345,7 @@ export default function HomePage() {
           <SliderMenu goToSlide={goToSlide} tab={tab} setTab={settab} />
         </View>
 
-        {/* <View style={{flexDirection:'row',justifyContent:'center',gap:20,paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:10}}>
-              <TouchableOpacity style={styles.btn}>
-                <Text style={{textAlign:'center'}}>Filtrele</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btn}>
-                <Text style={{textAlign:'center'}}>Sırala</Text>
-                </TouchableOpacity>
-              </View> */}
-        {/* <Animatable.View
-          animation={isHidden ? "fadeInUp" : "fadeOutDown"}
-          useNativeDriver={true}
-        >
-          <View
-            style={{ marginBottom: 3, display: isHidden ? "flex" : "none" }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingLeft: 10,
-                paddingRight: 10,
-                alignItems: "center",
-                display: tab == 1 ? "none" : "flex",
-              }}
-            >
-              <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN PROJELER</Text>
-              <Animatable.View animation={isHidden ? "fadeInUp" : "fadeOut"}>
-                <TouchableOpacity
-                  style={styles.allBtn}
-                  onPress={() =>
-                    navigation.navigate("AllProject", {
-                      name: "Tüm Projeler",
-                      data: featuredProjects,
-                    })
-                  }
-                >
-                  <Text style={{ color: "white", fontSize: 13 }}>
-                    Tümünü Gör
-                  </Text>
-                </TouchableOpacity>
-              </Animatable.View>
-            </View>
-          </View>
-        </Animatable.View> */}
+      
 
         <Swiper
           showsButtons={false}
@@ -576,6 +537,7 @@ export default function HomePage() {
                         floor={`${
                           JSON.parse(item.housing_type_data)["floorlocation"]
                         } `}
+                        dailyRent={false}
                       />
                     ))
                   )}
@@ -622,6 +584,7 @@ export default function HomePage() {
                   floor={`${
                     JSON.parse(item.housing_type_data)["floorlocation"]
                   } `}
+                  dailyRent={false}
                 />
               ))}
             </ScrollView>
@@ -637,7 +600,7 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN İŞ ARSALAR</Text>
+                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN ARSALAR</Text>
 
                 <TouchableOpacity style={styles.allBtn}>
                   <Text style={{ color: "white", fontSize: 13 }}>
@@ -690,6 +653,42 @@ export default function HomePage() {
                 </TouchableOpacity>
               </View>
             </View>
+            {
+                <ScrollView style={{ width: "100%" }}>
+                  {loadingPrjoects == false ? (
+                    <View style={{ top: 40, padding: 10 }}>
+                      <ProjectPostSkeleton />
+                    </View>
+                  ) : (
+                    filteredBookHouse.map((item, index) => (
+                      <RealtorPost
+                      GetId={GetIdForCart}
+                        key={index}
+                        HouseId={item.id}
+                        price={`${
+                          JSON.parse(item.housing_type_data)["daily_rent"]
+                        } `}
+                        title={item.housing_title}
+                        loading={loadingEstates}
+                        location={item.city_title + " / " + item.county_title}
+                        image={`${apiUrl}/housing_images/${
+                          JSON.parse(item.housing_type_data).image
+                        }`}
+                        m2={`${
+                          JSON.parse(item.housing_type_data)["squaremeters"]
+                        } `}
+                        roomCount={`${
+                          JSON.parse(item.housing_type_data)["room_count"]
+                        } `}
+                        floor={`${
+                          JSON.parse(item.housing_type_data)["floorlocation"]
+                        } `}
+                        dailyRent={true}
+                      />
+                    ))
+                  )}
+                </ScrollView>
+              }
         
           </View>
           <View style={styles.slide4}>
