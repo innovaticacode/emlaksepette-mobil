@@ -523,7 +523,6 @@ export default function Details({ navigation }) {
         formData
       );
 
-
       openModal(JSON.stringify(response.data.message));
       color("#d4edda");
       setNameid("");
@@ -821,7 +820,7 @@ export default function Details({ navigation }) {
         {tabs == 2 && <Information settings={data} />}
         <View style={{}}>{tabs === 3 && <Map mapData={data} />}</View>
 
-        {tabs == 4 && <FloorPlan />}
+        {tabs == 4 && <FloorPlan data={data} />}
 
         <Modal
           animationType="fade" // veya "fade", "none" gibi
