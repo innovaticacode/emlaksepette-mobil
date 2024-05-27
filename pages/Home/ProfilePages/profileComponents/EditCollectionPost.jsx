@@ -1,11 +1,14 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
 import { Platform } from "react-native";
+import Icon2 from "react-native-vector-icons/Feather";
+import { useNavigation } from "@react-navigation/native";
 
-export default function EditCollectionPost({ item }) {
+export default function EditCollectionPost({ item, collection }) {
   const parseHousingData = (data) => JSON.parse(data);
+  const navigation = useNavigation();
 
   let itemData = {
     id: 0,
@@ -27,6 +30,10 @@ export default function EditCollectionPost({ item }) {
 
     itemData = {
       id: item.project.id,
+      idOran: 1000000,
+      roomOrder: item.project_values["daily_rent[]"]
+        ? addDotEveryThreeDigits(item.project_values["daily_rent[]"])
+        : 0,
       price: price ? addDotEveryThreeDigits(price) : addDotEveryThreeDigits(0),
       dailyRent: item.project_values["daily_rent[]"]
         ? addDotEveryThreeDigits(item.project_values["daily_rent[]"])
@@ -37,6 +44,8 @@ export default function EditCollectionPost({ item }) {
       discountedPrice: discountedPrice
         ? addDotEveryThreeDigits(discountedPrice)
         : 0,
+      defaultPrice: price ? addDotEveryThreeDigits(price) : 0,
+      discountRate: discountRate,
     };
   } else if (item?.housing?.housing_type_data) {
     const housingData = parseHousingData(item.housing.housing_type_data);
@@ -52,6 +61,8 @@ export default function EditCollectionPost({ item }) {
 
     itemData = {
       id: item.housing.id,
+      idOran: 2000000,
+
       price: housingData.price
         ? addDotEveryThreeDigits(housingData.price[0])
         : 0,
@@ -65,22 +76,33 @@ export default function EditCollectionPost({ item }) {
         ? addDotEveryThreeDigits(discountedPrice)
         : 0,
       defaultPrice: defaultPrice ? addDotEveryThreeDigits(defaultPrice) : 0,
+      discountRate: discountRate,
     };
   }
 
   const displayPrice =
     itemData.price !== 0 ? itemData.price : itemData.dailyRent;
-
+  useEffect(() => {
+    navigation.setOptions({ title: collection.name });
+  }, [collection.name]);
   return (
     <View style={styles.container}>
-      <View style={styles.row}>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          width: "100%",
+          alignItems: "center",
+        }}
+      >
         <View style={styles.imageContainer}>
           <Image
             source={{
               uri:
                 item?.item_type === 2 && item?.housing?.housing_type_data
                   ? `https://test.emlaksepette.com/housing_images/${itemData.image}`
-                  : `https://test.emlaksepette.com/${itemData.image.replace(
+                  : `https://test.emlaksepette.com/project_housing_images/${itemData.image.replace(
                       "public",
                       "storage"
                     )}`,
@@ -89,45 +111,101 @@ export default function EditCollectionPost({ item }) {
           />
         </View>
         <View style={styles.detailsContainer}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title} numberOfLines={2}>
-             
-              <Text style={{fontSize: 10 }}>
-              İlan No: {parseInt(itemData.id) + 2000000} {"\n"}
-              </Text>
-              <Text style={{ fontWeight: 700 }}>
-                {itemData.advertise_title}
-              </Text>
+          <Text style={styles.title}>
+            <Text style={{ fontSize: 9 }}>
+              İlan No: {parseInt(itemData.id) + parseInt(itemData.idOran)}{" "}
+              {"\n"}
             </Text>
-          </View>
-          <View style={styles.priceAndEarningContainer}>
-            <View style={styles.priceContainer}>
-              <Text style={styles.value}>
-              <Text style={styles.label}>Fiyat: </Text>
-              <Text style={{fontWeight: "700", fontSize: "13px"}}> {itemData.discountedPrice} ₺  </Text>
-               
-                {/* <Text style={styles.originalPrice}>
-                  {itemData.defaultPrice} ₺
-                </Text> */}
-              </Text>
-            </View>
-            <View style={styles.earningContainer}>
-              <Text style={styles.earning}>
-              <Text style={styles.label}>Kazanç: </Text>
-              <Text style={{fontWeight: "700", fontSize: "13px"}}> {item.earningAmount % 1 === 0
-                  ? addDotEveryThreeDigits(item.earningAmount)
-                  : item.earningAmount.toFixed(2)}{" "}
-                ₺</Text>
+            <Text style={{ fontWeight: 700 }}>{itemData.advertise_title}</Text>
+          </Text>
 
-                
-              </Text>
+          <View style={styles.priceAndEarningContainer}>
+            <View style={{ width: "60%" }}>
+              <View style={styles.priceContainer}>
+                <Text style={styles.value}>
+                  <Text style={styles.label}>Fiyat: </Text>
+                  <Text
+                    style={{
+                      fontWeight: "700",
+                      fontSize: "13px",
+                      marginRight: 10,
+                    }}
+                  >
+                    {" "}
+                    {itemData.discountedPrice} ₺
+                  </Text>
+                  {/* {itemData.discountRate !== 0 && (
+                  <Text style={styles.originalPrice}>
+                    {" "}
+                    {itemData.defaultPrice} ₺
+                  </Text>
+                )} */}
+                </Text>
+              </View>
+              <View style={styles.earningContainer}>
+                <Text style={styles.earning}>
+                  <Text style={styles.label}>Kazanç: </Text>
+                  <Text style={{ fontWeight: "700", fontSize: "13px" }}>
+                    {item.action &&
+                    (item.action === "tryBuy" || item.action === "noCart") ? (
+                      <Text>
+                        {item.earningAmount % 1 === 0
+                          ? addDotEveryThreeDigits(item.earningAmount)
+                          : item.earningAmount.toFixed(2)}{" "}
+                        ₺
+                      </Text>
+                    ) : (
+                      <>
+                        <Text>
+                          {item.sharePrice.balance &&
+                          item.sharePrice.status === "0" ? (
+                            <Text style={styles.orange}>
+                              {item.sharePrice.balance % 1 === 0
+                                ? addDotEveryThreeDigits(
+                                    item.sharePrice.balance
+                                  )
+                                : item.sharePrice.balance.toFixed(2)}{" "}
+                              ₺ {"\n"}
+                              <Text>Onay Bekleniyor</Text>
+                            </Text>
+                          ) : item.sharePrice.balance &&
+                            item.sharePrice.status === "1" ? (
+                            <Text style={styles.green}>
+                              {item.sharePrice.balance % 1 === 0
+                                ? addDotEveryThreeDigits(
+                                    item.sharePrice.balance
+                                  )
+                                : item.sharePrice.balance.toFixed(2)}{" "}
+                              ₺ {"\n"}
+                              <Text>Komisyon Kazancınız</Text>
+                            </Text>
+                          ) : item.sharePrice.balance &&
+                            item.sharePrice.status === "2" ? (
+                            <Text style={styles.red}>
+                              {item.sharePrice.balance % 1 === 0
+                                ? addDotEveryThreeDigits(
+                                    item.sharePrice.balance
+                                  )
+                                : item.sharePrice.balance.toFixed(2)}{" "}
+                              ₺ {"\n"}
+                              <Text>Kazancınız Reddedildi</Text>
+                            </Text>
+                          ) : (
+                            "-"
+                          )}
+                        </Text>
+                      </>
+                    )}
+                  </Text>
+                </Text>
+              </View>
+            </View>
+            <View style={{ width: "30%"}}>
+              <TouchableOpacity style={styles.deleteButton}>
+                <Text style={{ color: "#FFFFFF", fontSize: 13 , textAlign: "center"}}>Sil</Text>
+              </TouchableOpacity>
             </View>
           </View>
-        </View>
-        <View style={styles.deleteButtonContainer}>
-          <TouchableOpacity style={styles.deleteButton}>
-            <Text style={styles.deleteButtonText}>Sil</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -155,14 +233,36 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  orange: {
+    color: "#FFA500",
+  },
+  green: {
+    color: "#008000",
+    fontWeight: "bold",
+  },
+  red: {
+    color: "#FF0000",
+    fontWeight: "bold",
+  },
+  priceAndEarningContainer: {
+    marginTop: 10,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+  },
   row: {
     flexDirection: "row",
     gap: 4,
   },
+  detailsContainer: {
+    width: "75%",
+    padding: 5,
+  },
   imageContainer: {
-    flex: 0.25,
-    padding: 1,
+    width: "25%",
     height: 90,
+    padding: 1,
   },
   image: {
     width: "100%",
@@ -170,18 +270,12 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     objectFit: "cover",
   },
-  detailsContainer: {
-    flex: 0.55,
-    padding: 5,
-  },
-  titleContainer: {
-    flex: 0.5,
-  },
   title: {
     fontSize: 13,
     fontWeight: 700,
+    width: "100%",
   },
- 
+
   priceContainer: {
     width: "100%",
     gap: 4,
@@ -203,7 +297,8 @@ const styles = StyleSheet.create({
     color: "#298A1D",
   },
   originalPrice: {
-    fontSize: 11,
+    fontWeight: "bold",
+    fontSize: 10,
     color: "#e54242",
     textDecorationLine: "line-through",
   },
@@ -211,12 +306,14 @@ const styles = StyleSheet.create({
     flex: 0.2,
     alignItems: "center",
     justifyContent: "center",
+    justifyContent: "space-between",
+    width: "40%",
   },
   deleteButton: {
     backgroundColor: "#E54242",
+    padding: 5,
+    borderRadius: 5,
     width: "100%",
-    padding: 8,
-    borderRadius: 6,
   },
   deleteButtonText: {
     textAlign: "center",

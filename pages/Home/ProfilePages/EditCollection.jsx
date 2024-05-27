@@ -5,7 +5,8 @@ import { useRoute } from "@react-navigation/native";
 import { Platform } from "react-native";
 export default function EditCollection() {
   const route = useRoute();
-  const { collectionItems } = route.params;
+  const { collectionItems, item } = route.params;
+
 
   return (
     <ScrollView
@@ -14,7 +15,7 @@ export default function EditCollection() {
       contentContainerStyle={{ gap: 10, padding: 10 }}
     >
       {collectionItems?.map((collectionItem, index) => {
-        return <EditCollectionPost item={collectionItem} key={index} />;
+        return <EditCollectionPost item={collectionItem} key={index} collection={item} />;
       })}
     </ScrollView>
   );

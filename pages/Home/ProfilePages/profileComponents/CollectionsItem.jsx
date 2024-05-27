@@ -91,6 +91,7 @@ export default function CollectionsItem({
               onPress={() => {
                 navigation.navigate("EditColection", {
                   collectionItems: collectionItems,
+                  item:item
                 });
               }}
             >

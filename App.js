@@ -372,8 +372,8 @@ export default function App({ route }) {
             <Stack.Screen
               name="EditColection"
               component={EditCollection}
+              initialParams={{ item: { name: 'Koleksiyon Düzenle' } }} 
               options={{
-                title: "Koleksiyonu Düzenle",
                 headerBackTitle: "",
                 headerBackTitleVisible: false,
                 headerTintColor: "black",
