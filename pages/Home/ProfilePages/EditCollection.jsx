@@ -7,7 +7,6 @@ export default function EditCollection() {
   const route = useRoute();
   const { collectionItems } = route.params;
 
-  console.log(collectionItems);
   return (
     <ScrollView
       style={{ backgroundColor: "white" }}

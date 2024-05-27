@@ -310,7 +310,7 @@ export default function ShareScreenProject({}) {
         }
        
       <Modal
-        animationType="slide" // veya "fade", "none" gibi
+        animationType="fade" // veya "fade", "none" gibi
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {

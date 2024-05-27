@@ -13,23 +13,23 @@ export default function CollectionsItem({
   copy,
   item,
   getId,
-  name
+  name,
 }) {
   const navigation = useNavigation();
-  const [collectionItems,setCollectionItems] = useState([]);
+  const [collectionItems, setCollectionItems] = useState([]);
   const getCollectionItems = () => {
     var collectionItemsTemp = [];
-    for(var i = 0 ; i < projectItems.length; i++){
-      if(projectItems[i].collection_id == item.id){
+    for (var i = 0; i < projectItems.length; i++) {
+      if (projectItems[i].collection_id == item.id) {
         collectionItemsTemp.push(projectItems[i]);
       }
     }
     setCollectionItems(collectionItemsTemp);
-  }
+  };
 
   useEffect(() => {
-    getCollectionItems()
-  },[projectItems])
+    getCollectionItems();
+  }, [projectItems]);
 
   return (
     <View style={{ alignItems: "center" }}>
@@ -43,30 +43,39 @@ export default function CollectionsItem({
               alignItems: "center",
             }}
           >
-            <Dot name="eye" size={17} color={"#EA6361"} />
-            <Text style={{ color: "#EA6361" }}>{item.clicks.length} Görüntülenme</Text>
+            <Dot name="eye" size={15} color={"#EA2B2E"} />
+            <Text style={{ color: "#EA2B2E", fontSize: "13" }}>
+              {item.clicks.length} Görüntülenme
+            </Text>
           </View>
           <View style={{ flex: 1 / 2, alignItems: "flex-end" }}>
-            <TouchableOpacity onPress={()=>{
-              openBottom()
-              getId(item.id,item.name)
-            }} >
-              <Dot name="dots-three-vertical" size={20} />
+            <TouchableOpacity
+              onPress={() => {
+                openBottom();
+                getId(item.id, item.name);
+              }}
+            >
+              <Dot name="dots-three-horizontal" size={20} />
             </TouchableOpacity>
           </View>
         </View>
         <View style={{ flexDirection: "row" }}>
-          <View style={{ padding: 20, gap: 10,flex:1/2 }}>
-            <View style={{ flexDirection:'row', gap: 5 }}>
-              <Text>Koleksiyon Adı:</Text>
-              <Text style={{ color: "#EA6361" }} numberOfLines={2}>{item.name}</Text>
+          <View style={{ paddingTop: 15, paddingBottom: 15 }}>
+            <View style={{ flexDirection: "row", gap: 5 }}>
+              <Text style={{ fontWeight: "700", fontSize: "13" }}>
+                Koleksiyon Adı:
+              </Text>
+              <Text style={{ color: "#EA2B2E" }} numberOfLines={2}>
+                {item.name}
+              </Text>
             </View>
             <View style={{ flexDirection: "row", gap: 5 }}>
-              <Text>İlan Sayısı:</Text>
-              <Text style={{ color: "#EA6361" }}>{item.links.length}</Text>
+              <Text style={{ fontWeight: "700", fontSize: "13" }}>
+                İlan Sayısı:
+              </Text>
+              <Text style={{ color: "#EA2B2E" }}>{item.links.length}</Text>
             </View>
           </View>
-        
         </View>
         <View style={{ gap: 10 }}>
           <View>
@@ -80,7 +89,9 @@ export default function CollectionsItem({
                 gap: 6,
               }}
               onPress={() => {
-                navigation.navigate("EditColection",{collectionItems:collectionItems});
+                navigation.navigate("EditColection", {
+                  collectionItems: collectionItems,
+                });
               }}
             >
               <Icon name="pencil" size={15} color={"#BD3803"} />
@@ -89,9 +100,10 @@ export default function CollectionsItem({
                   textAlign: "center",
                   color: "#BD3803",
                   fontWeight: "500",
+                  fontSize: "13",
                 }}
               >
-                DÜZENLE
+                Düzenle
               </Text>
             </TouchableOpacity>
           </View>
@@ -120,9 +132,10 @@ export default function CollectionsItem({
                   textAlign: "center",
                   color: "#025787",
                   fontWeight: "500",
+                  fontSize: "13",
                 }}
               >
-                ÖNİZLE
+                Önizle
               </Text>
             </TouchableOpacity>
           </View>
@@ -146,9 +159,10 @@ export default function CollectionsItem({
                   textAlign: "center",
                   color: "#1F6F11",
                   fontWeight: "600",
+                  fontSize: "13",
                 }}
               >
-                LİNKİ KOPYALA
+                Linki Kopyala
               </Text>
             </TouchableOpacity>
           </View>
@@ -172,9 +186,10 @@ export default function CollectionsItem({
                   textAlign: "center",
                   color: "#1F6F11",
                   fontWeight: "600",
+                  fontSize: "13",
                 }}
               >
-                WHATSAPPTA PAYLAŞ
+                Whatsappta Paylaş
               </Text>
             </TouchableOpacity>
           </View>

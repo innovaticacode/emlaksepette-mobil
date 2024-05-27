@@ -23,11 +23,9 @@ export default function RealtorAdverts({ housingdata }) {
   // useEffect(() => {
   //   fetchFeaturedEstates();
   // }, []);
-  console.log(housingdata + "fgfgdfgfgsfskfsld");
   const { width, height } = Dimensions.get("window");
   const ApiUrl = "https://test.emlaksepette.com";
   const objectKeys = Object.keys(housingdata);
-  console.log(objectKeys);
   return (
     <ScrollView contentContainerStyle={{ padding: 10, paddingBottom: 50 }}>
       {objectKeys.map((key, index) => (

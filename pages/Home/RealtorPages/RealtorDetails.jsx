@@ -107,8 +107,6 @@ useEffect(() => {
     setImages(JSON.parse(res.data.housing.housing_type_data).images);
   });
 }, []);
-//  console.log( JSON.parse(data?.housing?.housing_type_data)['price'])
-console.log(data.id)
 const [modalVisibleComennet, setmodalVisibleComment] = useState(false)
   const handleModal=()=>(
     setmodalVisibleComment(!modalVisibleComennet)
@@ -853,7 +851,7 @@ return (
         </View>
       </Modal>
       <Modal
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         visible={modalVisibleAlert}
         onRequestClose={() => {

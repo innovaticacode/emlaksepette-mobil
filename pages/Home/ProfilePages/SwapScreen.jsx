@@ -70,7 +70,7 @@ export default function SwapScreen() {
      
  
     <Modal
-        animationType="slide"
+        animationType="fade"
              backdropColor='#0000'
               onBackdropPress={()=> setDetailModal(!DetailModal)}
         visible={DetailModal}

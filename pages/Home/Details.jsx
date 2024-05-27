@@ -183,24 +183,18 @@ export default function Details({ navigation }) {
               ...res.data.housings,
             },
           });
-          console.log(
-            (page + 1) * 10 > data.project.room_count
-              ? data.project.room_count
-              : (page + 1) * 10
-          );
           setItemCount(
             (page + 1) * 10 > data.project.room_count
               ? data.project.room_count
               : (page + 1) * 10
           );
-          console.log("asd123123", page);
           setIsLoading(false);
         });
       }
     }
   };
 
-  console.log(collections);
+  
 
   const removeItemOnCollection = (collectionId) => {
     const collectionData = {
@@ -357,7 +351,7 @@ export default function Details({ navigation }) {
   const [collectionAddedSucces, setcollectionAddedSucces] = useState(false);
   const [selectedCollectionName, setselectedCollectionName] = useState("");
   const fetchData = async () => {
-    console.log(collections);
+    
     try {
       if (user.access_token) {
         const response = await axios.get(
@@ -1024,7 +1018,7 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
         {tabs == 4 && <FloorPlan />}
 
         <Modal
-          animationType="slide" // veya "fade", "none" gibi
+          animationType="fade" // veya "fade", "none" gibi
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
@@ -1550,7 +1544,7 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
           </View>
         </Modal>
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           onBackdropPress={() => setFormVisible(false)}
           visible={FormVisible}
