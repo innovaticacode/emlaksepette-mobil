@@ -34,7 +34,6 @@ export default function Test() {
     getValueFor("user",setuser)
   },[]);
 
-  console.log(user + 'ffdfdfd')
 
 
   return (
