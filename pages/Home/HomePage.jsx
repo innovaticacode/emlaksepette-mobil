@@ -635,7 +635,7 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN İŞ ARSALAR</Text>
+                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN ARSALAR</Text>
 
                 <TouchableOpacity style={styles.allBtn}>
                   <Text style={{ color: "white", fontSize: 13 }}>
