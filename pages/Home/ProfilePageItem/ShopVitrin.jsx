@@ -92,6 +92,7 @@ export default function ShopVitrin({ data, housingdata }) {
           </ScrollView>
         </View>
       )}
+
       <View style={{ marginTop: 50 }}>
         {objectKeys.length > 0 &&
           objectKeys.slice(0, 1).map((key, index) => (

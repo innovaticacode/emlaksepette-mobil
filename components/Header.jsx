@@ -4,7 +4,7 @@ import {
   StyleSheet,
   TextInput,
   ImageBackground,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import AddBtn from "react-native-vector-icons/AntDesign";
@@ -71,16 +71,16 @@ export default function Header({ loading, onPress }) {
               backgroundColor: "red",
               paddingLeft: 6,
               paddingRight: 6,
-            
-              paddingTop:2,
-              paddingBottom:2,
+
+              paddingTop: 2,
+              paddingBottom: 2,
               bottom: 22,
               left: 23,
               zIndex: 1,
               borderRadius: 20,
             }}
           >
-            <Text style={{ color: "white",fontSize:11 }}>1</Text>
+            <Text style={{ color: "white", fontSize: 11 }}>1</Text>
           </View>
           <Icon name="bell" size={35} />
         </TouchableOpacity>

@@ -8,6 +8,7 @@ import {
   ScrollView,
   Animated,
   Button,
+  Platform,
   Linking,
   ActivityIndicator,
   TextInput,
@@ -23,7 +24,6 @@ import PagerView from "react-native-pager-view";
 import Map from "../../components/Map";
 import { SocialIcon, Icon } from "react-native-elements";
 import * as Clipboard from "expo-clipboard";
-import { Platform } from "react-native";
 
 import OtherHomeInProject from "../../components/OtherHomeInProject";
 
@@ -498,229 +498,232 @@ export default function Details({ navigation }) {
       });
   };
 
-    
-  const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false)
-const [ModalForAddToCart, setModalForAddToCart] = useState(false)
-  const [selectedCartItem, setselectedCartItem] = useState(0)
-    const GetIdForCart=(id)=>{
-        setselectedCartItem(id)
-        setModalForAddToCart(true)
-        console.log(selectedCartItem)
-    }
+  const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
+  const [ModalForAddToCart, setModalForAddToCart] = useState(false);
+  const [selectedCartItem, setselectedCartItem] = useState(0);
+  const GetIdForCart = (id) => {
+    setselectedCartItem(id);
+    setModalForAddToCart(true);
+    console.log(selectedCartItem);
+  };
 
-    const addToCard = async () => {
-        const formData=new FormData()
-        formData.append('id',selectedCartItem)
-        formData.append('isShare',data.projectHousingsList[selectedCartItem]['share_sale[]'])
-        formData.append('numbershare',data.projectHousingsList[selectedCartItem]['number_of_shares[]'])
-        formData.append('qt',1)
-        formData.append('type','project')
-        formData.append('clear_cart','no')
-        formData.append('project',data.project.id)
-      try {
-        if (user?.access_token) {
-          const response = await axios.post(
-            "https://test.emlaksepette.com/api/institutional/add_to_cart",
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${user?.access_token}`,
-              },
-            }
-          );
-
-            navigation.navigate('Sepetim')
-        }
-      } catch (error) {
-        console.error('post isteği olmadı' ,error);
-      } 
-    };
-  
-    const [userid, setUserId] = useState("");
-    const [storeid, setStoreId] = useState("");
-    const [projectid, setProjectId] = useState("");
-    const [roomid, setRoomId] = useState("");
-    const [emailid, setEmailId] = useState("");
-    const [nameid, setNameId] = useState("");
-  
-    const [phoneid, setPhoneId] = useState("");
-  
-    const [titleid, setTitleId] = useState("");
-    const [offerid, setOfferId] = useState("");
-  
-    const [createdid, setCreatedId] = useState("");
-    const [selectedroomId, setselectedroomId] = useState();
-    const getRoomID = (id) => {
-      setselectedroomId(id);
-    };
-    const postData = async () => {
-      try {
-        var formData = new FormData();
-  
-        formData.append("userid", user.id);
-        formData.append("projectUserId", data.project.user.id);
-        formData.append("projectId", data.project.id);
-        formData.append("roomId", selectedroomId);
-        formData.append("name", nameid);
-        formData.append("phone", phoneid);
-        formData.append("email", emailid);
-        formData.append("city_id", city);
-        formData.append("county_id", county);
-        formData.append("title", titleid);
-        formData.append("offer_description",offerid);
-
-  
+  const addToCard = async () => {
+    const formData = new FormData();
+    formData.append("id", selectedCartItem);
+    formData.append(
+      "isShare",
+      data.projectHousingsList[selectedCartItem]["share_sale[]"]
+    );
+    formData.append(
+      "numbershare",
+      data.projectHousingsList[selectedCartItem]["number_of_shares[]"]
+    );
+    formData.append("qt", 1);
+    formData.append("type", "project");
+    formData.append("clear_cart", "no");
+    formData.append("project", data.project.id);
+    try {
+      if (user?.access_token) {
         const response = await axios.post(
-          "https://test.emlaksepette.com/api/institutional/give_offer",
+          "https://test.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
-              Authorization: `Bearer ${user.access_token}`,
-              "Content-Type": "multipart/form-data", // İçerik tipini belirtmek
+              Authorization: `Bearer ${user?.access_token}`,
             },
           }
         );
-        setFormVisible(false);
-        setTimeout(() => {
-          setTrueModal(true);
-        }, 3000);
-  
-        console.log("İstek başarıyla tamamlandı:", response.data);
-  
-        // color("#d4edda");
-        setNameId("");
-        setPhoneId("");
-        setEmailId("");
-        setcity("");
-        setcounty("");
-        setTitleId("");
-        setOfferId("");
-      } catch (error) {
-        if (error.response) {
-          // Sunucudan gelen hata yanıtı
-          console.error("Sunucu Hatası:", error.response.data);
-          console.error("Hata Kodu:", error.response.status);
-        } else if (error.request) {
-          // İstek yapıldı, ancak cevap alınamadı
-          console.error("Sunucudan cevap alınamadı:", error.request);
-        } else {
-          // İstek ayarları sırasında bir hata oluştu
-          console.error("İstek Ayar Hatası:", error.message);
+
+        navigation.navigate("Sepetim");
+      }
+    } catch (error) {
+      console.error("post isteği olmadı", error);
+    }
+  };
+
+  const [userid, setUserId] = useState("");
+  const [storeid, setStoreId] = useState("");
+  const [projectid, setProjectId] = useState("");
+  const [roomid, setRoomId] = useState("");
+  const [emailid, setEmailId] = useState("");
+  const [nameid, setNameId] = useState("");
+
+  const [phoneid, setPhoneId] = useState("");
+
+  const [titleid, setTitleId] = useState("");
+  const [offerid, setOfferId] = useState("");
+
+  const [createdid, setCreatedId] = useState("");
+  const [selectedroomId, setselectedroomId] = useState();
+  const getRoomID = (id) => {
+    setselectedroomId(id);
+  };
+  const postData = async () => {
+    try {
+      var formData = new FormData();
+
+      formData.append("userid", user.id);
+      formData.append("projectUserId", data.project.user.id);
+      formData.append("projectId", data.project.id);
+      formData.append("roomId", selectedroomId);
+      formData.append("name", nameid);
+      formData.append("phone", phoneid);
+      formData.append("email", emailid);
+      formData.append("city_id", city);
+      formData.append("county_id", county);
+      formData.append("title", titleid);
+      formData.append("offer_description", offerid);
+
+      const response = await axios.post(
+        "https://test.emlaksepette.com/api/institutional/give_offer",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            "Content-Type": "multipart/form-data", // İçerik tipini belirtmek
+          },
         }
-        console.error("Post isteği başarısız:", error);
+      );
+      setFormVisible(false);
+      setTimeout(() => {
+        setTrueModal(true);
+      }, 3000);
+
+      console.log("İstek başarıyla tamamlandı:", response.data);
+
+      // color("#d4edda");
+      setNameId("");
+      setPhoneId("");
+      setEmailId("");
+      setcity("");
+      setcounty("");
+      setTitleId("");
+      setOfferId("");
+    } catch (error) {
+      if (error.response) {
+        // Sunucudan gelen hata yanıtı
+        console.error("Sunucu Hatası:", error.response.data);
+        console.error("Hata Kodu:", error.response.status);
+      } else if (error.request) {
+        // İstek yapıldı, ancak cevap alınamadı
+        console.error("Sunucudan cevap alınamadı:", error.request);
+      } else {
+        // İstek ayarları sırasında bir hata oluştu
+        console.error("İstek Ayar Hatası:", error.message);
       }
-    };
-    const [city, setcity] = useState("");
-    const [county, setcounty] = useState("");
-    const fetchCity = async () => {
-      try {
-        const response = await axios.get(
-          "https://test.emlaksepette.com/api/cities"
-        );
-        return response.data;
-      } catch (error) {
-        console.error("Hata:", error);
-        throw error;
-      }
-    };
-  
-    const [citites, setCities] = useState([]);
-    useEffect(() => {
-      fetchCity()
-        .then((citites) => setCities(citites.data))
+      console.error("Post isteği başarısız:", error);
+    }
+  };
+  const [city, setcity] = useState("");
+  const [county, setcounty] = useState("");
+  const fetchCity = async () => {
+    try {
+      const response = await axios.get(
+        "https://test.emlaksepette.com/api/cities"
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Hata:", error);
+      throw error;
+    }
+  };
+
+  const [citites, setCities] = useState([]);
+  useEffect(() => {
+    fetchCity()
+      .then((citites) => setCities(citites.data))
+      .catch((error) =>
+        console.error("Veri alınırken bir hata oluştu:", error)
+      );
+  }, []);
+
+  const [counties, setcounties] = useState([]);
+  const fetchDataCounty = async (value) => {
+    try {
+      const response = await axios.get(
+        `https://test.emlaksepette.com/api/counties/${value}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Hata:", error);
+      throw error;
+    }
+  };
+
+  const onChangeCity = (value) => {
+    setcity(value);
+    if (value) {
+      fetchDataCounty(value)
+        .then((county) => setcounties(county.data))
         .catch((error) =>
           console.error("Veri alınırken bir hata oluştu:", error)
         );
-    }, []);
-  
-    const [counties, setcounties] = useState([]);
-    const fetchDataCounty = async (value) => {
-      try {
-        const response = await axios.get(
-          `https://test.emlaksepette.com/api/counties/${value}`
-        );
-        return response.data;
-      } catch (error) {
-        console.error("Hata:", error);
-        throw error;
-      }
-    };
-  
-    const onChangeCity = (value) => {
-      setcity(value);
-      if (value) {
-        fetchDataCounty(value)
-          .then((county) => setcounties(county.data))
-          .catch((error) =>
-            console.error("Veri alınırken bir hata oluştu:", error)
-          );
-      } else {
-        setcounties([]);
-      }
-    };
-      
+    } else {
+      setcounties([]);
+    }
+  };
 
   const { width, height } = Dimensions.get("window");
-  const [errorStatu, seterrorStatu] = useState(0)
-  const [errorMessage, seterrorMessage] = useState('')
+  const [errorStatu, seterrorStatu] = useState(0);
+  const [errorMessage, seterrorMessage] = useState("");
   const GiveOffer = () => {
     switch (true) {
       case !nameid:
         seterrorStatu(1);
         seterrorMessage("İsim Alanı Boş Bırakılmaz");
-   
+
         setTimeout(() => {
           seterrorStatu(0);
         }, 5000);
         break;
-        case !phoneid:
-          seterrorStatu(2);
-          seterrorMessage("Telefon Alanı Boş Bırakılmaz");
+      case !phoneid:
+        seterrorStatu(2);
+        seterrorMessage("Telefon Alanı Boş Bırakılmaz");
 
-          setTimeout(() => {
-            seterrorStatu(0);
-          }, 5000);
-          break;
-          case !titleid:
-            seterrorStatu(3);
-            seterrorMessage("Meslek Alanı Boş Bırakılmaz");
-   
-            setTimeout(() => {
-              seterrorStatu(0);
-            }, 5000);
-            break;
-            case !city:
-              seterrorStatu(4);
-              seterrorMessage("Şehir Seçiniz ");
-        
-              setTimeout(() => {
-                seterrorStatu(0);
-              }, 5000);
-              break;
-              case !county:
-                seterrorStatu(5);
-                seterrorMessage("İlçe Seçniz");
-          
-                setTimeout(() => {
-                  seterrorStatu(0);
-                }, 5000);
-                break;
-                case !emailid:
-                  seterrorStatu(6);
-                  seterrorMessage("Mail Alanı Boş Bırakılmaz");
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      case !titleid:
+        seterrorStatu(3);
+        seterrorMessage("Meslek Alanı Boş Bırakılmaz");
 
-                  setTimeout(() => {
-                    seterrorStatu(0);
-                  }, 5000);
-                  break;
-                  case !offerid:
-                    seterrorStatu(7);
-                    seterrorMessage("Açıklama alanı boş bırakılamaz");
-                
-                    setTimeout(() => {
-                      seterrorStatu(0);
-                    }, 5000);
-                    break;
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      case !city:
+        seterrorStatu(4);
+        seterrorMessage("Şehir Seçiniz ");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      case !county:
+        seterrorStatu(5);
+        seterrorMessage("İlçe Seçniz");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      case !emailid:
+        seterrorStatu(6);
+        seterrorMessage("Mail Alanı Boş Bırakılmaz");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      case !offerid:
+        seterrorStatu(7);
+        seterrorMessage("Açıklama alanı boş bırakılamaz");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
       default:
         postData();
     }
@@ -996,8 +999,7 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
         {tabs == 0 && (
           <OtherHomeInProject
             GetID={getRoomID}
-          GetIdForCart={GetIdForCart}
-
+            GetIdForCart={GetIdForCart}
             openCollection={openCollection}
             itemCount={itemCount}
             data={data}
@@ -1567,62 +1569,73 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
               <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ gap: 15 }}>
                   <View style={{ gap: 7 }}>
-                    <Text
-                 
-                    
-                      style={styles.label}
-              
-                    >
-                      Ad Soyad
-                    </Text>
-                    <TextInput style={styles.Input}   value={nameid}   onChangeText={(value) => setNameId(value)}/>
-                    {errorStatu==1 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
+                    <Text style={styles.label}>Ad Soyad</Text>
+                    <TextInput
+                      style={styles.Input}
+                      value={nameid}
+                      onChangeText={(value) => setNameId(value)}
+                    />
+                    {errorStatu == 1 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
                   </View>
                   <View style={{ gap: 7 }}>
-                    <Text
-                      style={styles.label}
-
-               
-                    >
-                      Telefon Numarası
-                    </Text>
-                    <TextInput style={styles.Input}    value={phoneid}   onChangeText={(value) => setPhoneId(value)} />
-                    {errorStatu==2 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
+                    <Text style={styles.label}>Telefon Numarası</Text>
+                    <TextInput
+                      style={styles.Input}
+                      value={phoneid}
+                      onChangeText={(value) => setPhoneId(value)}
+                    />
+                    {errorStatu == 2 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
                   </View>
                   <View style={{ gap: 7 }}>
-                    <Text
-                      style={styles.label}
-                  
-                 
-                    >
-                      E-Posta
-                    </Text>
-                    <TextInput style={styles.Input}     value={emailid}     onChangeText={(value) => setEmailId(value)} />
-                    {errorStatu==6 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
+                    <Text style={styles.label}>E-Posta</Text>
+                    <TextInput
+                      style={styles.Input}
+                      value={emailid}
+                      onChangeText={(value) => setEmailId(value)}
+                    />
+                    {errorStatu == 6 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
                   </View>
                   <View style={{ gap: 7 }}>
-                    <Text
-                      style={styles.label}
-                      value={titleid}
-                     
-                    >
+                    <Text style={styles.label} value={titleid}>
                       Meslek
                     </Text>
-                    <TextInput style={styles.Input} value={titleid} onChangeText={(value) => setTitleId(value)} />
-                    {errorStatu==3 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
+                    <TextInput
+                      style={styles.Input}
+                      value={titleid}
+                      onChangeText={(value) => setTitleId(value)}
+                    />
+                    {errorStatu == 3 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
                   </View>
                   <View style={{ gap: 7 }}>
-                    <Text
-                      style={styles.label}
-                  
-                     
-                    >
-                        Açıklama
-                    </Text>
-                    <TextInput style={styles.Input} value={offerid} onChangeText={(value) => setOfferId(value)} />
-                    {errorStatu==7 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
+                    <Text style={styles.label}>Açıklama</Text>
+                    <TextInput
+                      style={styles.Input}
+                      value={offerid}
+                      onChangeText={(value) => setOfferId(value)}
+                    />
+                    {errorStatu == 7 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
                   </View>
-                
+
                   <View style={{ gap: 6 }}>
                     <Text
                       style={{ fontSize: 14, color: "grey", fontWeight: 600 }}
@@ -1641,7 +1654,11 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
                       }}
                       items={citites}
                     />
-                     {errorStatu==4 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
+                    {errorStatu == 4 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
                   </View>
                   <View style={{ gap: 6 }}>
                     <Text
@@ -1659,9 +1676,12 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
                       onValueChange={(value) => setcounty(value)}
                       items={counties}
                     />
-                    {errorStatu==5 && <Text style={{color:'red',fontSize:12}}>{errorMessage}</Text>}
+                    {errorStatu == 5 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
                   </View>
-                
                 </View>
               </KeyboardAwareScrollView>
               <View
@@ -1757,40 +1777,58 @@ const [ModalForAddToCart, setModalForAddToCart] = useState(false)
 
         <Modal
           isVisible={ModalForAddToCart}
-          onBackdropPress={()=>setModalForAddToCart(false)}
-      
-          animationIn={'zoomInUp'}
-          animationOut={'zoomOutUp'}
+          onBackdropPress={() => setModalForAddToCart(false)}
+          animationIn={"zoomInUp"}
+          animationOut={"zoomOutUp"}
           animationInTiming={200}
           animationOutTiming={200}
           backdropColor="transparent"
           style={styles.modal4}
         >
           <View style={styles.modalContent4}>
-            <View style={{padding:10,gap:10}}>
-           <Text style={{textAlign:'center'}}>{selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize Eminmisiniz?</Text>
-           <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
-
-            <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
-              onPress={()=>{
-                addToCard() 
-              }}
-            >
-              <Text style={{color:'white'}}>Sepete Ekle</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
-                onPress={()=>{
-                  setModalForAddToCart(false)
+            <View style={{ padding: 10, gap: 10 }}>
+              <Text style={{ textAlign: "center" }}>
+                {selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
+                Eminmisiniz?
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  gap: 20,
                 }}
-            >
-              <Text style={{color:'white'}}>Vazgeç</Text>
-            </TouchableOpacity>
+              >
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "green",
+                    padding: 10,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    borderRadius: 6,
+                  }}
+                  onPress={() => {
+                    addToCard();
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Sepete Ekle</Text>
+                </TouchableOpacity>
 
-           </View>
-
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#e44242",
+                    padding: 10,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    borderRadius: 6,
+                  }}
+                  onPress={() => {
+                    setModalForAddToCart(false);
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Vazgeç</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-
           </View>
         </Modal>
       </ScrollView>
