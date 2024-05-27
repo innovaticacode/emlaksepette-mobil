@@ -43,6 +43,7 @@ import SwapForm from "./SwapForm";
 import AddCollection from "../../../components/AddCollection";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
+import Calendar from "./Calendar";
 
 
 export default function PostDetail() {
@@ -389,7 +390,7 @@ return (
                   {data?.housing?.step2_slug=='gunluk-kiralik' ?
                      <TouchableOpacity
                      onPress={()=>{
-                      navigation.navigate('CreateReservation')
+                      navigation.navigate('CreateReservation',{data:data.housing})
                      }}
                        style={{backgroundColor:'#EA2A28',padding:10,width:'40%',borderRadius:5}}
                      >
@@ -596,8 +597,8 @@ return (
       </View>
       </Shadow>
       
-      
-          {tabs==0 && <RealtorCaption data={data}/>}
+        
+          {tabs ==0 && <RealtorCaption data={data}/>}
           {tabs == 1 && <Settings data={data} />}
           {tabs== 2 && <RealtorMap mapData={data}/>}
           {tabs==3 && <Comment data={data} handleModal={handleModal}/> }

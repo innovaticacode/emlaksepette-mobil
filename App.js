@@ -604,6 +604,7 @@ export default function App({ route }) {
             component={PaymentScreen}
             options={({ route }) => ({
               title: "Sepet Özeti Ve Onay",
+              headerBackTitleVisible:false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
               },
