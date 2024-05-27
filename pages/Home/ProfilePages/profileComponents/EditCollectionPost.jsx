@@ -91,26 +91,35 @@ export default function EditCollectionPost({ item }) {
         <View style={styles.detailsContainer}>
           <View style={styles.titleContainer}>
             <Text style={styles.title} numberOfLines={2}>
-              #{parseInt(itemData.id) + 2000000} {"\n"}
-              {itemData.advertise_title}
+             
+              <Text style={{fontSize: 10 }}>
+              İlan No: {parseInt(itemData.id) + 2000000} {"\n"}
+              </Text>
+              <Text style={{ fontWeight: 700 }}>
+                {itemData.advertise_title}
+              </Text>
             </Text>
           </View>
           <View style={styles.priceAndEarningContainer}>
             <View style={styles.priceContainer}>
               <Text style={styles.value}>
-                {itemData.discountedPrice} ₺ {"\n"}
-                <Text style={styles.originalPrice}>
+              <Text style={styles.label}>Fiyat: </Text>
+              <Text style={{fontWeight: "700", fontSize: "13px"}}> {itemData.discountedPrice} ₺  </Text>
+               
+                {/* <Text style={styles.originalPrice}>
                   {itemData.defaultPrice} ₺
-                </Text>
+                </Text> */}
               </Text>
             </View>
             <View style={styles.earningContainer}>
-              <Text style={styles.label}>Kazanç</Text>
               <Text style={styles.earning}>
-                {item.earningAmount % 1 === 0
+              <Text style={styles.label}>Kazanç: </Text>
+              <Text style={{fontWeight: "700", fontSize: "13px"}}> {item.earningAmount % 1 === 0
                   ? addDotEveryThreeDigits(item.earningAmount)
                   : item.earningAmount.toFixed(2)}{" "}
-                ₺
+                ₺</Text>
+
+                
               </Text>
             </View>
           </View>
@@ -170,18 +179,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 13,
+    fontWeight: 700,
   },
-  priceAndEarningContainer: {
-    flex: 0.5,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
+ 
   priceContainer: {
-    width: "50%",
+    width: "100%",
     gap: 4,
   },
   earningContainer: {
-    width: "50%",
+    width: "100%",
     gap: 4,
   },
   label: {
