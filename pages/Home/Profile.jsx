@@ -718,7 +718,7 @@ export default function Profile() {
         </TouchableOpacity>
       </View>
       <Modal
-        animationType="slide"
+        animationType="fade"
         onBackdropPress={() => setFormVisible(false)}
         visible={formVisible}
         onRequestClose={() => {

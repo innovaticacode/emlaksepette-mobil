@@ -13,7 +13,6 @@ export default function AddCollection({removeItemOnCollection,checkFunc,item,get
             }, 500);
             // setPopUpForRemoveItem(true)
             removeItemOnCollection(item.id)
-            console.log("asd");
           }else{
             addLink(item.id)
           }

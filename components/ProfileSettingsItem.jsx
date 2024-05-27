@@ -11,7 +11,7 @@ export default function ProfileSettingsItem({
   IconFeather,
   arrowControl,
   arrowNone,
-  isCollapsed
+  isCollapsed,
 }) {
   return (
     <View style={style.ıtem}>
@@ -24,11 +24,9 @@ export default function ProfileSettingsItem({
             gap: 10,
           }}
         >
- 
-            <Icon2 name={ıconName} size={18} color={"#525B75"} />
-    
+          <Icon2 name={ıconName} size={18} color={"#525B75"} />
 
-          <Text style={{ fontSize: 15, color: "#525B75" }}>{text}</Text>
+          <Text style={{ fontSize: 13, color: "#000000" }}>{text}  </Text>
         </View>
         <View style={{ flex: 0.7 / 2, alignItems: "flex-end" }}>
           {!arrowControl ? (
