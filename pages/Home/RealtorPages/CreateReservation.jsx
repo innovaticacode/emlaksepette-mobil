@@ -7,59 +7,29 @@ import {
   ScrollView,
 } from "react-native";
 import CalendarPicker from "react-native-calendar-picker";
-import { format, parseISO, eachDayOfInterval, isValid } from "date-fns";
+import { format, parseISO, eachDayOfInterval, isValid , differenceInDays} from "date-fns";
 import { da, tr } from "date-fns/locale";
 import Icon from "react-native-vector-icons/FontAwesome";
+import Icon2 from "react-native-vector-icons/AntDesign";
+import * as SecureStore from 'expo-secure-store';
+
+import { CheckBox } from '@rneui/themed';
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const App = () => {
-  const route = useRoute()
-  const {data}=route.params
+  const route = useRoute();
+  const { data } = route.params;
   const navigation = useNavigation();
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [GuestCount, setGuestCount] = useState(0);
   const [reservations, setReservations] = useState([]);
-
-  // Simulated API response
-  const apiResponse = {
-    reservations: [
-      {
-        id: 12,
-        housing_id: 265,
-        user_id: 694,
-        check_in_date: "2024-06-03",
-        check_out_date: "2024-06-13",
-        status: 1,
-        person_count: 1,
-        total_price: 54000,
-        created_at: "2024-05-27T12:25:16.000000Z",
-        updated_at: "2024-05-27T12:25:55.000000Z",
-        key: "NPMMZ847",
-        owner_id: 694,
-        full_name: "Kerem Bozmaz",
-        tc: "17156324492",
-        email: "emlaksepettetest@gmail.com",
-        phone: "5537064474",
-        address: "asdasdas",
-        notes: "asdasd",
-        money_trusted: 1,
-        transaction: null,
-        payment_result: null,
-        dekont: "1716812717_🇨🇳 kopyası.pdf",
-        price: 5400,
-        money_is_safe: 0,
-        filename: null,
-        path: null,
-        down_payment: "27000",
-      },
-    ],
-  };
-
+  const [totalNights, setTotalNights] = useState(0);
+  const [checked, setChecked] =useState(false);
+     const toggleCheckbox = () => setChecked(!checked);
   useEffect(() => {
-    // Simulate fetching data from an API
     setReservations(data.reservations);
-  }, []);
+  }, [data]);
 
   const getBookedDates = (reservations) => {
     let dates = [];
@@ -72,39 +42,36 @@ const App = () => {
           start: startDate,
           end: endDate,
         });
-        dates = dates.concat(interval.map((date) => format(date, "yyyy-MM-dd")));
+        dates = dates.concat(interval.map((date) => format(date, 'yyyy-MM-dd')));
       }
     });
     return dates;
   };
 
   const bookedDates = getBookedDates(reservations);
-const [totalDay, settotalDay] = useState(null)
-const calculateTotalDays = () => {
-  if (startDate && endDate) {
-    const timeDiff = Math.abs(endDate.getTime() - startDate.getTime());
-    const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    settotalDay(diffDays);
-  }
-};
+
+  const calculateNightsBetweenDates = (start, end) => {
+    if (start && end) {
+      return differenceInDays(end, start);
+    }
+    return 0;
+  };
+
+  useEffect(() => {
+    const nights = calculateNightsBetweenDates(selectedStartDate, selectedEndDate);
+    setTotalNights(nights);
+  }, [selectedStartDate, selectedEndDate]);
 
   const onDateChange = (date, type) => {
     if (!isValid(date)) return;
-    calculateTotalDays()
-    const selectedDate = format(date, "yyyy-MM-dd");
-   
-    if (type === "START_DATE") {
-      if (selectedStartDate && format(selectedStartDate, "yyyy-MM-dd") === selectedDate) {
-        setSelectedStartDate(null);
+
+    if (type === 'START_DATE') {
+      setSelectedStartDate(date);
+      setSelectedEndDate(null);
+    } else if (type === 'END_DATE') {
+      if (selectedStartDate && date < selectedStartDate) {
         setSelectedEndDate(null);
-      } else if (!bookedDates.includes(selectedDate)) {
-        setSelectedStartDate(date);
-        setSelectedEndDate(null);
-      }
-    } else if (type === "END_DATE") {
-      if (selectedEndDate && format(selectedEndDate, "yyyy-MM-dd") === selectedDate) {
-        setSelectedEndDate(null);
-      } else if (!bookedDates.includes(selectedDate)) {
+      } else {
         setSelectedEndDate(date);
       }
     }
@@ -116,37 +83,18 @@ const calculateTotalDays = () => {
   };
 
   const months = [
-    "Ocak",
-    "Şubat",
-    "Mart",
-    "Nisan",
-    "Mayıs",
-    "Haziran",
-    "Temmuz",
-    "Ağustos",
-    "Eylül",
-    "Ekim",
-    "Kasım",
-    "Aralık",
+    'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+    'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık',
   ];
-  const weekdays = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
-  const weekdaysLong = [
-    "Pazar",
-    "Pazartesi",
-    "Salı",
-    "Çarşamba",
-    "Perşembe",
-    "Cuma",
-    "Cumartesi",
-  ];
+  const weekdays = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
 
   const formatDateString = (date) => {
-    if (!date) return "";
+    if (!date) return '';
     try {
-      return format(date, "dd MMMM", { locale: tr });
+      return format(date, 'dd MMMM', { locale: tr });
     } catch (error) {
-      console.error("Error formatting date:", error);
-      return "";
+      console.error('Error formatting date:', error);
+      return '';
     }
   };
 
@@ -167,22 +115,52 @@ const calculateTotalDays = () => {
         const parsedDate = parseISO(date);
         return {
           date: parsedDate,
-          style: { backgroundColor: "red" },
-          textStyle: { color: "white" },
-          containerStyle: [{ backgroundColor: "red" }],
+          style: { backgroundColor: 'red' },
+          textStyle: { color: 'white' },
+          containerStyle: [{ backgroundColor: 'red' }],
         };
       } catch (error) {
-        console.error("Error parsing date:", error);
+        console.error('Error parsing date:', error);
         return null;
       }
     }).filter(Boolean);
   };
 
   const isDateDisabled = (date) => {
-    return bookedDates.includes(format(date, "yyyy-MM-dd"));
+    return bookedDates.includes(format(date, 'yyyy-MM-dd'));
   };
+
   const today = new Date();
   const formattedDate = format(today, 'dd MMMM yyyy', { locale: tr });
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(amount);
+  };
+  const totalCost = selectedStartDate && selectedEndDate ? JSON.parse(data.housing_type_data).daily_rent * totalNights : 0;
+  const formattedTotalCost = formatCurrency(totalCost);
+  const halfTotalCost = totalCost / 2;
+  const formattedHalfTotalCost = formatCurrency(halfTotalCost);
+  const totalPrice =formatCurrency(checked? halfTotalCost +1000:halfTotalCost)
+  const saveData = async (key, value) => {
+    try {
+      await SecureStore.setItemAsync(key, value);
+      console.log('Data saved successfully');
+    } catch (error) {
+      console.log('Error saving data:', error);
+    }
+  };
+  const saveAllStates = async () => {
+    try {
+      await saveData('startDate', startDate);
+      await saveData('endDate', endDate);
+      
+      await saveData('checked',checked)
+      navigation.navigate('PaymentScreenForReserve',{HouseID:data.id,totalNight:totalNights})
+      alert('All states saved successfully');
+    } catch (error) {
+      console.log('Error saving states:', error);
+    }
+  };
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 50 }}>
       <View style={styles.card}>
@@ -205,7 +183,7 @@ const calculateTotalDays = () => {
           onDateChange={onDateChange}
           months={months}
           weekdays={weekdays}
-          weekdaysLong={weekdaysLong}
+        
           nextTitle={"İleri"}
           previousTitle={"Geri"}
           customDatesStyles={getCustomDatesStyles()}
@@ -245,21 +223,8 @@ const calculateTotalDays = () => {
               width: "40%",
             }}
           >
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#ebebeb",
-                padding: 6,
-                borderRadius: 30,
-              }}
-              onPress={() => {
-                setGuestCount(GuestCount + 1);
-              }}
-            >
-              <Icon name="plus" color={"#0ba5ed"} size={17} />
-            </TouchableOpacity>
-            <View>
-              <Text style={{ color: "#333" }}>{GuestCount}</Text>
-            </View>
+      
+          
             <TouchableOpacity
               style={{
                 backgroundColor: "#ebebeb",
@@ -274,8 +239,43 @@ const calculateTotalDays = () => {
             >
               <Icon name="minus" color={"#0ba5ed"} size={17} />
             </TouchableOpacity>
+            <View>
+              <Text style={{ color: "#333" }}>{GuestCount}</Text>
+            </View>
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#ebebeb",
+                padding: 6,
+                borderRadius: 30,
+              }}
+              onPress={() => {
+                setGuestCount(GuestCount + 1);
+              }}
+            >
+              <Icon name="plus" color={"#0ba5ed"} size={17} />
+            </TouchableOpacity>
           </View>
         </View>
+       
+      </View>
+      <View style={styles.dateContainer}>
+      <CheckBox
+           checked={checked}
+           onPress={toggleCheckbox}
+           // Use ThemeProvider to make change for all checkbox
+           iconType="material-community"
+           checkedIcon="checkbox-marked"
+           uncheckedIcon="checkbox-blank-outline"
+           checkedColor="red"
+           containerStyle={{margin:0,padding:0}}
+           title={'Param Güvende (+1000 ₺)'}
+           
+         />
+         <View style={{flexDirection:'row',gap:10,marginTop:10,width:'90%'}}>
+              <Icon2 name="infocirlceo" size={17}/>
+              <Text style={{fontSize:13}}>Param Güvende seçeneğini işaretlerseniz rezervasyon iptal durumunda paranızın iadesinde kesinti olmayacaktır.</Text>
+         </View>
       </View>
       <View style={[styles.dateContainer, { gap: 10 }]}>
         <View
@@ -289,7 +289,7 @@ const calculateTotalDays = () => {
           }}
         >
           <Icon name="calendar" size={15} color={"#333"} />
-          <Text style={{ color: "grey", fontWeight: "500" }}>
+          <Text style={{ color: "#333", fontWeight: "500" }}>
             Rezervasyon Detayı
           </Text>
         </View>
@@ -325,7 +325,7 @@ const calculateTotalDays = () => {
           >
             <Text style={styles.DetailTitle}>Giriş Tarihi:</Text>
             <View style={{ width: "50%", alignItems: "flex-end" }}>
-              <Text style={styles.DetailTitle}>{JSON.parse(data.housing_type_data).starting_date}</Text>
+              <Text style={styles.DetailTitle}>{startDate}</Text>
             </View>
           </View>
           <View
@@ -333,7 +333,7 @@ const calculateTotalDays = () => {
           >
             <Text style={styles.DetailTitle}>Çıkış Tarihi:</Text>
             <View style={{ width: "50%", alignItems: "flex-end" }}>
-              <Text style={styles.DetailTitle}>{JSON.parse(data.housing_type_data).release_date}</Text>
+              <Text style={styles.DetailTitle}>{endDate}</Text>
             </View>
           </View>
         </View>
@@ -350,7 +350,7 @@ const calculateTotalDays = () => {
           }}
         >
           <Icon name="star-o" size={15} color={"#333"} />
-          <Text style={{ color: "grey", fontWeight: "500" }}>
+          <Text style={{ color: "#333", fontWeight: "500" }}>
               Sepet Özeti
           </Text>
         </View>
@@ -361,44 +361,63 @@ const calculateTotalDays = () => {
             <Text style={styles.DetailTitle}>Gecelik {JSON.parse(data.housing_type_data).daily_rent} TL</Text>
             <View style={{ width: "50%", alignItems: "flex-end" }}>
               <Text style={styles.DetailTitle}>
-                {totalDay}
+                {totalNights} x Gece
               </Text>
             </View>
           </View>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <Text style={styles.DetailTitle}>İlan No:</Text>
+            <Text style={styles.DetailTitle}>Toplam Tutar</Text>
             <View style={{ width: "50%", alignItems: "flex-end" }}>
-              <Text style={styles.DetailTitle}>3242323</Text>
+              <Text style={styles.DetailTitle}>
+                {formattedTotalCost} 
+              </Text>
             </View>
           </View>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <Text style={styles.DetailTitle}>Rezervasyon Tarihi:</Text>
+            <Text style={styles.DetailTitle}>Kapıda Ödenecek Tutar</Text>
             <View style={{ width: "50%", alignItems: "flex-end" }}>
-              <Text style={styles.DetailTitle}>27.05.2024</Text>
+              <Text style={styles.DetailTitle}>{formattedHalfTotalCost}</Text>
             </View>
           </View>
+          {
+            checked &&
+            <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text style={styles.DetailTitle}>Param Güvende:</Text>
+            <View style={{ width: "50%", alignItems: "flex-end" }}>
+              <Text style={styles.DetailTitle}>1000 ₺</Text>
+            </View>
+          </View>
+          }
+
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <Text style={styles.DetailTitle}>Giriş Tarihi:</Text>
+            <Text style={[styles.DetailTitle,{color:'#208011'}]}>Şimdi Ödenecek Tutar</Text>
             <View style={{ width: "50%", alignItems: "flex-end" }}>
-              <Text style={styles.DetailTitle}>fsdfsdfsdf</Text>
+              <Text style={[styles.DetailTitle,{color:'#208011'}]}>{totalPrice}</Text>
             </View>
-          </View>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text style={styles.DetailTitle}>Çıkış Tarihi:</Text>
-            <View style={{ width: "50%", alignItems: "flex-end" }}>
-              <Text style={styles.DetailTitle}>dsfsdfsdf</Text>
-            </View>
+            
           </View>
         </View>
       </View>
+   <View style={{padding:5,alignItems:'center'}}>
+    <TouchableOpacity style={{backgroundColor:'#EA2B2E',padding:10,borderRadius:7,width:'90%'}}
+      onPress={()=>{
+   
+        saveAllStates()
+      }}
+    >
+      <Text style={{textAlign:'center',color:'#ffffff',fontWeight:'500'}}>
+        Ödeme Yap
+      </Text>
+    </TouchableOpacity>
+   </View>
     </ScrollView>
   );
 };
@@ -431,7 +450,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   DetailTitle: {
-    color: "#333",
+    color: "#696969",
     fontWeight: "500",
   },
 });

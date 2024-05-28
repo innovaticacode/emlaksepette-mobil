@@ -8,9 +8,25 @@ import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as DocumentPicker from 'expo-document-picker';
 import * as SecureStore from 'expo-secure-store';
-
 import { Platform } from "react-native";
-export default function PaymentScreen() {
+import { apiRequestGet } from '../../components/methods/apiRequest';
+import { useRoute } from '@react-navigation/native';
+import { format, parseISO, eachDayOfInterval, isValid , differenceInDays} from "date-fns";
+import { da, tr } from "date-fns/locale";
+import { ImageBackground } from 'react-native';
+import Icon from "react-native-vector-icons/FontAwesome";
+import Icon2 from "react-native-vector-icons/AntDesign";
+export default function PaymentScreenForReserve() {
+    const [data, setData] = useState({})
+    const route =useRoute()
+    const {HouseID,totalNight}=route.params
+useEffect(() => {
+  apiRequestGet("housing/" + HouseID).then((res) => {
+    setData(res.data);
+   
+  });
+}, []);
+
     const [checked, setChecked] = React.useState(false);
     const toggleCheckbox = () => setChecked(!checked);
     const [checked2, setChecked2] = React.useState(false);
@@ -61,40 +77,122 @@ const pickDocument = async () => {
     const uriComponents = uri.split('/');
     return uriComponents[uriComponents.length - 1];
   }
+  const loadStateFromSecureStore = async (key) => {
+    try {
+      const value = await SecureStore.getItemAsync(key);
+      if (value !== null) {
+        console.log('Retrieved data for key', key, ':', value);
+        // Veriyi istediğiniz şekilde kullanabilirsiniz
+        return value;
+      } else {
+        console.log('No data found for key', key);
+        return null;
+      }
+    } catch (error) {
+      console.log('Error loading data for key', key, ':', error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    // Örneğin, kaydedilen kullanıcı adını almak için
+    loadStateFromSecureStore('startDate');
+    loadStateFromSecureStore('totalNight')
+  }, []);
+
+  const [username, setUsername] = useState('');
+  const [endDate, setendDate] = useState('')
+  const [chekedMoneySafe, setchekedMoneySafe] = useState(null)
+  useEffect(() => {
+    const getUsername = async () => {
+      const savedUsername = await loadStateFromSecureStore('startDate');
+    
+      if (savedUsername !== null) {
+        setUsername(savedUsername);
+      }
+      const endDate = await loadStateFromSecureStore('endDate');
+    
+      if (endDate !== null) {
+        setendDate(endDate);
+      }
+      const checkedMoneySafe = await loadStateFromSecureStore('checked');
+    
+      if (checkedMoneySafe !== null) {
+        setchekedMoneySafe(chekedMoneySafe);
+      }
+
+   
+    };
+  
+    getUsername();
+  }, [username,endDate,totalNight]);
+  
+
 
   
+  const today = new Date();
+  const formattedDate = format(today, 'dd MMMM yyyy', { locale: tr });
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(amount);
+  };
+
+ 
   
-  
-  
-  
-  
-  
+  const totalCost =  data && data?.housing && data?.housing?.housing_type_data && totalNight  ? JSON.parse(data?.housing?.housing_type_data)?.daily_rent * totalNight : 3 ;
+  const formattedTotalCost = formatCurrency(totalCost);
+  const halfTotalCost =  totalCost / 2 ;
+  const formattedHalfTotalCost = formatCurrency(halfTotalCost );
   return (
     <KeyboardAwareScrollView style={styles.container}
         contentContainerStyle={{gap:20,paddingBottom:50}}
         showsVerticalScrollIndicator={false}
     >
         <View>
-      
+           
+       <Text>{chekedMoneySafe}</Text>
+    
+   
+   
 
             <View style={[styles.AdvertDetail,{flexDirection:'row'}]}>
                 <View style={styles.image}>
+                    {
+                        data && data.housing&& data.housing.housing_type_data&&
+                        <ImageBackground source={{uri:`https://test.emlaksepette.com/housing_images/${JSON.parse(data?.housing?.housing_type_data).image}`}} style={{width:'100%',height:'100%'}}/>  
+                    }
 
                 </View>
                 <View style={styles.Description}>
                     <View style={{gap:2}}>
-                        <Text style={{fontSize:12}}>İlan No: 2000248</Text>
+                        <Text style={{fontSize:12}}>İlan No: 2000{data?.housing?.id}</Text>
                         <View>
-                        <Text style={{fontSize:13}} numberOfLines={3}>Master Realtor'den Bağçeşme'de 1+1 Eşyasız Kiralık Daire</Text>
+                        <Text style={{fontSize:13}} numberOfLines={3}>{data?.housing?.title}</Text>
                     </View>
                     </View>
                 
                     <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
-                        <View style={{backgroundColor:'#EA2B2E',borderRadius:5}}>
-                            <Text style={{fontSize:12,color:'white',padding:5,fontWeight:'500'}}>Kiralık Daire</Text>
+                      
+                            {
+                                data?.housing?.step2_slug=='gunluk-kiralik' &&
+                                   <View style={{backgroundColor:'#EA2B2E',borderRadius:5}}>
+                                 <Text style={{fontSize:12,color:'white',padding:5,fontWeight:'500'}}>Günlük Kiralık Villa</Text>
                         </View>
+                            }
+                              {
+                                data?.housing?.step2_slug=='kiralik' &&
+                                 <Text style={{fontSize:12,color:'white',padding:5,fontWeight:'500'}}>Kiralık Daire</Text>
+                            }
+                            {
+                                data?.housing?.step2_slug=='satilik' &&
+                                <View style={{backgroundColor:'#EA2B2E',borderRadius:5}}>
+                                <Text style={{fontSize:12,color:'white',padding:5,fontWeight:'500'}}>Satılık Daire</Text>
+                       </View>
+                            }
+                           
+                     
+                   
                         <View>
-                            <Text style={{fontSize:12}}>Kocaeli / İzmit</Text>
+                            <Text style={{fontSize:12}}>{data?.housing?.city?.title} / {data?.housing?.county?.title}</Text>
                         </View>
                     </View>
                 </View>
@@ -183,7 +281,143 @@ const pickDocument = async () => {
               
              
         </View>
-        <View style={[styles.AdvertDetail,{borderRadius:3,}]}>
+
+        {
+            data?.housing?.step2_slug=='gunluk-kiralik' ?
+            <>
+            <View style={[styles.dateContainer, { gap: 10 }]}>
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 10,
+                alignItems: "center",
+                borderBottomWidth: 1,
+                borderBottomColor: "#ebebeb",
+                paddingBottom: 10,
+              }}
+            >
+              <Icon name="calendar" size={15} color={"#333"} />
+              <Text style={{ color: "#333", fontWeight: "500" }}>
+                Rezervasyon Detayı
+              </Text>
+            </View>
+            <View style={{ gap: 20 }}>
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-between" }}
+              >
+                <Text style={styles.DetailTitle}>İlan:</Text>
+                <View style={{ width: "50%", alignItems: "flex-end" }}>
+                  <Text style={styles.DetailTitle}>
+                  {data?.housing?.title}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-between" }}
+              >
+                <Text style={styles.DetailTitle}>İlan No:</Text>
+                <View style={{ width: "50%", alignItems: "flex-end" }}>
+                  <Text style={styles.DetailTitle}>2000{data?.housing?.id}</Text>
+                </View>
+              </View>
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-between" }}
+              >
+                <Text style={styles.DetailTitle}>Rezervasyon Tarihi:</Text>
+                <View style={{ width: "50%", alignItems: "flex-end" }}>
+                  <Text style={styles.DetailTitle}>{formattedDate}</Text>
+                </View>
+              </View>
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-between" }}
+              >
+                <Text style={styles.DetailTitle}>Giriş Tarihi:</Text>
+                <View style={{ width: "50%", alignItems: "flex-end" }}>
+                  <Text style={styles.DetailTitle}>{username}</Text>
+                </View>
+              </View>
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-between" }}
+              >
+                <Text style={styles.DetailTitle}>Çıkış Tarihi:</Text>
+                <View style={{ width: "50%", alignItems: "flex-end" }}>
+                  <Text style={styles.DetailTitle}>{endDate}</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={[styles.dateContainer, { gap: 10 }]}>
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 10,
+                alignItems: "center",
+                borderBottomWidth: 1,
+                borderBottomColor: "#ebebeb",
+                paddingBottom: 10,
+              }}
+            >
+              <Icon name="star-o" size={15} color={"#333"} />
+              <Text style={{ color: "#333", fontWeight: "500" }}>
+                  Sepet Özeti
+              </Text>
+            </View>
+            <View style={{ gap: 20 }}>
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-between" }}
+              >
+                <Text style={styles.DetailTitle}>Gecelik {JSON.parse(data.housing.housing_type_data).daily_rent} TL</Text>
+                <View style={{ width: "50%", alignItems: "flex-end" }}>
+                  <Text style={styles.DetailTitle}>
+                  {totalNight}  x gece
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-between" }}
+              >
+                <Text style={styles.DetailTitle}>Toplam Tutar</Text>
+                <View style={{ width: "50%", alignItems: "flex-end" }}>
+                 
+                  <Text style={styles.DetailTitle}>
+                  {formattedTotalCost} 
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-between" }}
+              >
+                <Text style={styles.DetailTitle}>Kapıda Ödenecek Tutar</Text>
+                <View style={{ width: "50%", alignItems: "flex-end" }}>
+                  <Text style={styles.DetailTitle}>{formattedHalfTotalCost}</Text>
+                </View>
+              </View>
+              {
+                checked &&
+                <View
+                style={{ flexDirection: "row", justifyContent: "space-between" }}
+              >
+                <Text style={styles.DetailTitle}>Param Güvende:</Text>
+                <View style={{ width: "50%", alignItems: "flex-end" }}>
+                  <Text style={styles.DetailTitle}>1000 ₺</Text>
+                </View>
+              </View>
+              }
+    
+              <View
+                style={{ flexDirection: "row", justifyContent: "space-between" }}
+              >
+                <Text style={[styles.DetailTitle,{color:'#208011'}]}>Şimdi Ödenecek Tutar</Text>
+                <View style={{ width: "50%", alignItems: "flex-end" }}>
+                  <Text style={[styles.DetailTitle,{color:'#208011'}]}>{checked? formattedHalfTotalCost+1000:formattedHalfTotalCost }</Text>
+                </View>
+                
+              </View>
+            </View>
+          </View>
+          </>:
+          <>
+           <View style={[styles.AdvertDetail,{borderRadius:3,}]}>
         <View style={{flexDirection:'row',borderBottomWidth:0.5,borderBottomColor:'grey',gap:10,paddingBottom:5,alignItems:'center'}}>
                     <IconIdCard name='star-o' size={15}/>
                     <Text>Sepet Özeti</Text>
@@ -207,6 +441,9 @@ const pickDocument = async () => {
                 </View>
                 </View>
         </View>
+          </>
+        }
+       
         <View style={{flexDirection:'row',justifyContent:'space-between',borderWidth:0.5,gap:10,borderColor:'#333',width:'100%',overflow:'hidden'}}>
             <TouchableOpacity 
                 onPress={()=>{
@@ -332,5 +569,16 @@ const styles = StyleSheet.create({
         backgroundColor:'#2aaa46',
         padding:10,
         borderRadius:5
-    }
+    },
+    dateContainer: {
+        backgroundColor: "#ffffff",
+     
+        borderRadius: 10,
+        padding: 15,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 5,
+      },
 })

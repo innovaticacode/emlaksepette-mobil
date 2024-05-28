@@ -90,6 +90,7 @@ import UsersList from "./pages/Home/ProfilePages/UsersList";
 import Takeds from "./pages/Home/ProfilePages/Takeds";
 import Invoice from "./pages/Home/Invoice";
 import CreateReservation from "./pages/Home/RealtorPages/CreateReservation";
+import PaymentScreenForReserve from "./pages/Home/PaymentScreenForReserve";
 
 const Stack = createNativeStackNavigator();
 
@@ -673,6 +674,17 @@ export default function App({ route }) {
               headerBackTitleVisible: false,
               headerShown: true,
               title: "Rezervasyon Oluştur",
+            })}
+          />
+            <Stack.Screen
+            name="PaymentScreenForReserve"
+            component={PaymentScreenForReserve}
+            options={({ route }) => ({
+              title: "Sepet Özeti Ve Onay",
+              headerBackTitleVisible:false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
             })}
           />
         </Stack.Navigator>
