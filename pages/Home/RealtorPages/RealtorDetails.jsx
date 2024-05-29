@@ -389,7 +389,7 @@ return (
                   {data?.housing?.step2_slug=='gunluk-kiralik' ?
                      <TouchableOpacity
                      onPress={()=>{
-                      navigation.navigate('CreateReservation',{data:data.housing})
+                      navigation.navigate('CreateReservation')
                      }}
                        style={{backgroundColor:'#EA2A28',padding:10,width:'40%',borderRadius:5}}
                      >
