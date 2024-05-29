@@ -12,7 +12,7 @@ import {
   ImageBackground,
 } from "react-native";
 import { Platform } from "react-native";
-
+import IconIdCard from "react-native-vector-icons/FontAwesome"
 import React, { useState, useEffect } from "react";
 import BasketItem from "../../components/BasketItem";
 import {
@@ -27,6 +27,7 @@ import Categories from "../../components/Categories";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
+import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
 export default function Basket() {
   const route = useRoute();
@@ -56,9 +57,12 @@ export default function Basket() {
   };
   const [user, setuser] = useState({});
   const [Cart, setCart] = useState({});
+  const [type, settype] = useState({})
+  const [saleType, setsaleType] = useState({})
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
+
 
   const fetchData = async () => {
     try {
@@ -72,6 +76,8 @@ export default function Basket() {
           }
         );
         setCart(response?.data?.cart?.item);
+        settype(response?.data?.cart)
+        setsaleType(response?.data?.saleType)
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -81,6 +87,10 @@ export default function Basket() {
   useEffect(() => {
     fetchData();
   }, [user]);
+
+  console.log(saleType)
+
+  const [isInstallament, setisInstallament] = useState(0)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View
@@ -199,28 +209,127 @@ export default function Basket() {
                 name={Cart.title}
                 ımage={Cart.image}
                 price={Cart.amount}
+                roomOrder={Cart.housing}
+                type={type.type}
               />
             </Swipeable>
           </GestureHandlerRootView>
 
-          <View>
+          {/* <View>
             <View style={[styles.HouseInfo, { padding: 15 }]}>
               <View style={{ flexDirection: "row", gap: 5 }}>
                 <Text style={{ fontSize: 12 }}>İlan Adı:</Text>
-                <Text style={{ fontSize: 12 }}>
-                  Master Sonsuz Tatil Köyü projesinde 3 NO'lu konut
-                </Text>
+                {
+                  type.type=='housing'?
+                  <Text>{Cart.title}</Text>
+                  :
+                  <Text style={{ fontSize: 12 }}>
+                    {Cart.title} Projesinde {Cart.housing} No'lu Konut
+                  </Text>
+                }
+              
               </View>
               <View style={{ flexDirection: "row", gap: 5 }}>
                 <Text style={{ fontSize: 12 }}>İlan Konumu:</Text>
-                <Text style={{ fontSize: 12 }}>Sakarya / Hendek</Text>
+                <Text style={{ fontSize: 12 }}>{Cart.city} / Hendek</Text>
               </View>
               <View style={{ flexDirection: "row", gap: 5 }}>
                 <Text style={{ fontSize: 12 }}>Mağaza:</Text>
                 <Text style={{ fontSize: 12 }}>Maliyetine Ev</Text>
               </View>
             </View>
-          </View>
+          </View> */}
+          {
+            type.type =='project' &&
+            <View style={{flexDirection:'row',borderWidth:1,borderColor:'#E4E4E4',justifyContent:'center'}}>
+              <TouchableOpacity style={{width:'50%',padding:9,backgroundColor:isInstallament==0 ?'#5CB85C':'transparent',
+                  borderTopRightRadius:15,
+                  borderBottomRightRadius:15
+
+              }}
+                  onPress={()=>{
+                    setisInstallament(0)
+                  }}
+              >
+                <Text style={{textAlign:'center',color:isInstallament==1?'#333': '#ffffff'}}>
+                  Peşin Fiyat İle Ödeme
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{width:'50%',padding:9,backgroundColor:isInstallament==1 ?'#5CB85C':'transparent',
+                  borderTopLeftRadius:15,
+                  borderBottomLeftRadius:15
+                  
+              }}
+                  onPress={()=>{
+                    setisInstallament(1)
+                  }}
+              >
+                <Text style={{textAlign:'center',color:isInstallament==0?'#333': '#ffffff'}}>
+                 Taksitli Fiyat İle Ödeme
+                </Text>
+              </TouchableOpacity>
+            </View>
+          }
+            
+                  {
+                        type.type =='project' ?
+                        <View style={[styles.acceptCart,{borderRadius:3,}]}>
+                        <View style={{flexDirection:'row',borderBottomWidth:0.5,borderBottomColor:'grey',gap:10,paddingBottom:5,alignItems:'center'}}>
+                                    <IconIdCard name='star-o' size={15}/>
+                                    <Text>Sepet Özeti</Text>
+                                </View>
+                                <View style={{gap:20}}>
+                                <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                    <Text>İlan Fiyatı:</Text>
+                                    <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
+                                </View>
+                                <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                    <Text>Toplam Fiyat:</Text>
+                                    <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
+                                </View>
+                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                    <Text>%4 Kapora:</Text>
+                                    <Text>13.0000 ₺</Text>
+                                </View>
+                                
+                              
+                                </View>
+                        </View>:
+                            <View style={[styles.acceptCart,{borderRadius:3,}]}>
+                            <View style={{flexDirection:'row',borderBottomWidth:0.5,borderBottomColor:'grey',gap:10,paddingBottom:5,alignItems:'center'}}>
+                                        <IconIdCard name='star-o' size={15}/>
+                                        <Text>Sepet Özeti</Text>
+                                    </View>
+                                    <View style={{gap:20}}>
+                                    <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                        <Text>İlan Fiyatı:</Text>
+                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
+                                    </View>
+                                    <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                        <Text>Toplam Fiyat:</Text>
+                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
+                                    </View>
+                                      {
+                                        saleType=='kiralik'?
+                                        <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                        <Text>Bir Kira Kapora</Text>
+                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
+                                    </View>:
+                                       <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                       <Text>%2 Kapora</Text>
+                                       <Text>13.0000 ₺</Text>
+                                   </View>
+                                      }
+                              
+                                    
+                                   
+                                   
+                                    </View>
+                            </View>
+                  }
+      
+
+
           <View style={styles.acceptCart}>
             <View
               style={{
@@ -267,7 +376,7 @@ export default function Basket() {
               </View>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("PaymentScreen");
+                  navigation.navigate("PaymentScreen",{slug:type?.type, id:Cart.id,roomOrder:Cart.housing});
                 }}
                 style={{
                   flex: 1.2 / 2,
@@ -289,7 +398,7 @@ export default function Basket() {
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: "#ffffff",
     flex: 1,
     paddingLeft: 10,
     paddingRight: 10,
@@ -298,7 +407,7 @@ const styles = StyleSheet.create({
   },
   acceptCart: {
     width: "100%",
-
+marginTop:10,
     padding: 10,
 
     gap: 8,
@@ -363,7 +472,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 5,
     width: "100%",
-    marginVertical: 10,
+   marginTop:10,
 
     borderWidth: 0.7,
     borderColor: "#e6e6e6",
@@ -390,4 +499,27 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
+  AdvertDetail:{
+    gap:10,
+    backgroundColor: '#FFFFFF',  
+    borderRadius: 6,  
+    paddingVertical: 15,  
+    paddingHorizontal: 15,  
+    width: '100%',  
+    
+
+    borderWidth:0.7,
+    borderColor:'#e6e6e6',
+    ...Platform.select({
+        ios: {
+          shadowColor: ' #e6e6e6',
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.0,
+          shadowRadius: 1,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+},
 });

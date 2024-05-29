@@ -15,7 +15,7 @@ import Icon3 from "react-native-vector-icons/FontAwesome"
 import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
 
-export default function BasketItem({name,shopName,price,shopPoint,hisse,  ımage}) {
+export default function BasketItem({name,shopName,price,shopPoint,hisse, roomOrder, type,  ımage}) {
   
   const navigation=useNavigation()
 
@@ -89,7 +89,12 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse,  ımage
             </View>
             <View style={{flex:1.4/2,padding:7,flexDirection:'column'}}>
               <View style={{flex:1.5/2,}}>
-              <Text style={{fontSize:12,color:'#333'}}>{name}</Text>
+                {
+                   type=='housing'?
+                   <Text style={{fontSize:12,color:'#333'}}>{name}</Text>
+                   :   <Text style={{fontSize:12,color:'#333'}}>{name} Projesinde {roomOrder} No'lu Konut </Text>
+                }
+           
               </View>
                 <View style={{flex:0.7/2,flexDirection:'row',justifyContent: hisse?'space-between':'flex-end'}}>
                   <View style={{ borderWidth:0,borderColor:'#ebebeb', paddingLeft:7,paddingRight:7,borderRadius:10,display:hisse? 'flex':'none',flexDirection:'row',alignItems:'center',gap:10}}>
