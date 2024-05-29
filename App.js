@@ -217,14 +217,19 @@ export default function App({ route }) {
               component={Collections}
               options={{
                 title: "Koleksiyonlarım",
-                headerBackTitle: "Panel",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
               name="DashBord"
               component={Panel}
               options={{
-                title: "Gösterge Paneli",
+                title: "Sana Özel",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
@@ -232,6 +237,9 @@ export default function App({ route }) {
               component={SellAndRentForms}
               options={{
                 title: "Sat Kirala Formlarım",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
@@ -239,6 +247,9 @@ export default function App({ route }) {
               component={Sell}
               options={{
                 title: "Sattıklarım",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
@@ -247,6 +258,9 @@ export default function App({ route }) {
               options={({ route }) => ({
                 animationTypeForReplace: "pop",
                 title: "Kiraladıklarım",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               })}
             />
             <Stack.Screen
@@ -257,6 +271,9 @@ export default function App({ route }) {
                 headerStyle: {
                   backgroundColor: "white",
                 },
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
@@ -264,12 +281,18 @@ export default function App({ route }) {
               component={ChangePassword}
               options={{
                 title: "Şifreyi Değiştir",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
               name="RealtorClub"
               options={{
                 title: "Emlak Kulüp Üyesi Ol",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             >
               {(props) => (
@@ -281,6 +304,9 @@ export default function App({ route }) {
               component={MyProjectAdverts}
               options={{
                 title: "Proje İlanlarım",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
@@ -288,6 +314,9 @@ export default function App({ route }) {
               component={MyRealtorAdverts}
               options={{
                 title: "Emlak ilanlarım",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
@@ -296,6 +325,9 @@ export default function App({ route }) {
               options={({ route }) => ({
                 headerBackTitleVisible: false,
                 title: "Kampanya Oluştur",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               })}
             />
             <Stack.Screen
@@ -303,6 +335,9 @@ export default function App({ route }) {
               component={CreateUserType}
               options={({ route }) => ({
                 title: "Kullanıcı Tipi Oluştur",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               })}
             />
             <Stack.Screen
@@ -310,7 +345,10 @@ export default function App({ route }) {
               component={CreateUser}
               options={({ route }) => ({
                 animationTypeForReplace: "pop",
-                title: 'Alt Kullanıcı Oluştur',
+                title: "Alt Kullanıcı Oluştur",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               })}
             />
             <Stack.Screen
@@ -318,6 +356,9 @@ export default function App({ route }) {
               component={AdsPictures}
               options={{
                 title: "Reklam Görselleri",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
@@ -325,6 +366,9 @@ export default function App({ route }) {
               component={SeeCollection}
               options={{
                 headerShown: false,
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
@@ -332,7 +376,9 @@ export default function App({ route }) {
               component={EditCollection}
               options={{
                 title: "Koleksiyonu Düzenle",
-                headerBackTitle: ".",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
@@ -340,7 +386,9 @@ export default function App({ route }) {
               component={PasswordVerify}
               options={{
                 title: "Şifre Doğrulama",
-                headerBackTitle: ".",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
@@ -348,7 +396,9 @@ export default function App({ route }) {
               component={OrderDetails}
               options={{
                 title: "Sipariş Detayı",
-                headerBackTitle: ".",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
@@ -356,7 +406,9 @@ export default function App({ route }) {
               component={RentOrderDetails}
               options={{
                 title: "Rezervasyon Detayı",
-                headerBackTitle: ".",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
             <Stack.Screen
@@ -365,15 +417,20 @@ export default function App({ route }) {
               options={({ route }) => ({
                 animationTypeForReplace: "pop",
                 title: "Gelen Konut Başvuruları",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               })}
             />
             <Stack.Screen
               name="OfferList"
               component={OfferList}
               options={({ route }) => ({
-                headerBackTitleVisible: false,
                 animationTypeForReplace: "pop",
                 title: "Kampanya Listele",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               })}
             />
           </Stack.Group>
@@ -382,34 +439,42 @@ export default function App({ route }) {
             name="CategorieChoose"
             component={CategoryChoose}
             options={({ route }) => ({
-              headerBackTitleVisible: false,
               animationTypeForReplace: "pop",
               title: route.params.name,
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
             })}
           />
           <Stack.Screen
             name="CategorieStatu"
             component={CategorieStatus}
             options={({ route }) => ({
-              headerBackTitleVisible: false,
               animationTypeForReplace: "pop",
               title: route.params.name,
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
             })}
           />
           <Stack.Screen
             name="AdvertPlace"
             component={AdvertsPlace}
             options={({ route }) => ({
-              headerBackTitleVisible: false,
               animationTypeForReplace: "pop",
               title: route.params.name,
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
             })}
           />
           <Stack.Screen
             name="AdvertForm"
             options={({ route }) => ({
-              headerBackTitleVisible: false,
               animationTypeForReplace: "pop",
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
             })}
           >
             {(props) => <AdvertForm />}
@@ -418,9 +483,11 @@ export default function App({ route }) {
           <Stack.Screen
             name="ShareAdvert"
             options={({ route }) => ({
-              headerBackTitleVisible: false,
               animationTypeForReplace: "pop",
               title: "",
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
             })}
           >
             {(props) => <ShareScreenProject {...props} />}
@@ -430,7 +497,9 @@ export default function App({ route }) {
             name="AdvertStatu"
             component={AdvertStatu}
             options={({ route }) => ({
+              headerBackTitle: "",
               headerBackTitleVisible: false,
+              headerTintColor: "black",
               title: route.params.name,
             })}
           />
@@ -439,7 +508,9 @@ export default function App({ route }) {
             name="AdvertType"
             component={AdvertType}
             options={({ route }) => ({
+              headerBackTitle: "",
               headerBackTitleVisible: false,
+              headerTintColor: "black",
               title: route.params.name,
             })}
           />
@@ -456,6 +527,9 @@ export default function App({ route }) {
             component={Notifications}
             options={({ route }) => ({
               title: "Bildirimler",
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
             })}
           />
           <Stack.Screen

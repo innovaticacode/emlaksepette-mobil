@@ -53,11 +53,11 @@ export default function SliderBar() {
           ) : (
             <>
               <SliderItem
-              StoreID={item.id}
+                StoreID={item.id}
                 key={index}
                 image={`${apiUrl}/storage/profile_images/${item.profile_image}`}
               />
-              <Text numberOfLines={2} style={{ fontSize: 12 }}>
+              <Text numberOfLines={2} style={{ fontSize: 11 , textAlign: "center"}}>
               {capitalizeFirstLetter(item.name)}
               </Text>
             </>
