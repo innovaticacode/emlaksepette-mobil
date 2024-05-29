@@ -232,6 +232,17 @@ export default function Collections() {
     }
   };
 
+  const removeFromCollection = async (collectionItem) => {
+    try {
+      await onRemove();
+      setcollectionsRecods((prevItems) =>
+        prevItems.filter((projectItem) => projectItem.collection_id !== item.id)
+      );
+    } catch (error) {
+      console.error('Error removing item from the collection:', error);
+    }
+  };
+  
   return (
     <View style={styles.container}>
     {loading ? (
@@ -353,6 +364,9 @@ export default function Collections() {
                     disabled={isDisabled}
                     shareWp={shareLinkOnWhatsApp}
                     copy={copyToClipboard}
+                    onRemove={() => removeFromCollection(collection)} // onRemove işlevini yolla
+
+                    
                   />
                 );
               })

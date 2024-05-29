@@ -586,7 +586,6 @@ export default function Details({ navigation }) {
         setTrueModal(true);
       }, 3000);
 
-      console.log("İstek başarıyla tamamlandı:", response.data);
 
       // color("#d4edda");
       setNameId("");

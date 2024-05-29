@@ -331,7 +331,7 @@ useEffect(() => {
            
     <MapView
       style={{ flex: 1 }}
-      provider={PROVIDER_GOOGLE}
+    
       zoomControlEnabled={true}
       initialRegion={{
         latitude: user.latitude, // Türkiye'nin merkezi Ankara'nın enlemi
