@@ -413,7 +413,7 @@ export default function HomePage() {
                   backgroundColor: "white",
                 }}
               >
-                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN PROJELER</Text>
+                <Text style={{ fontSize: 12, fontWeight: 700 }}>ÖNE ÇIKAN PROJELER</Text>
 
                 <TouchableOpacity
                   style={styles.allBtn}
@@ -424,8 +424,8 @@ export default function HomePage() {
                     })
                   }
                 >
-                  <Text style={{ color: "white", fontSize: 13 }}>
-                    Tümünü Gör
+                  <Text style={{ color: "white", fontSize: 11 }}>
+                    Tüm Projeleri Gör
                   </Text>
                 </TouchableOpacity>
               </View>
