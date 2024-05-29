@@ -43,7 +43,6 @@ import SwapForm from "./SwapForm";
 import AddCollection from "../../../components/AddCollection";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
-import Calendar from "./Calendar";
 
 
 export default function PostDetail() {
@@ -122,7 +121,7 @@ const [modalVisibleComennet, setmodalVisibleComment] = useState(false)
 
     // Sarı yıldızların sayısını hesapla ve konsola yazdır
     const yellowStars = index + 1;
-    console.log(Sarı yıldızlar: ${yellowStars});
+    console.log(`Sarı yıldızlar: ${yellowStars}`);
   };
   const [checked, setChecked] = useState(false);
   const toggleCheked = () => setChecked(!checked);
@@ -170,7 +169,7 @@ const fetchData = async () => {
   try {
     const response = await axios.get('https://test.emlaksepette.com/api/getCollections',{
       headers: {
-        'Authorization': Bearer ${user.access_token}
+        'Authorization': `Bearer ${user.access_token}`
       }
     });
   
@@ -202,7 +201,7 @@ const addCollectionPost=()=>{
   axios.post('https://test.emlaksepette.com/api/add/collection', collectionData, {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': Bearer ${user.access_token},
+      'Authorization': `Bearer ${user.access_token}`,
       
      
     },
@@ -239,7 +238,7 @@ const addSelectedCollection=()=>{
   axios.post('https://test.emlaksepette.com/api/addLink', collectionData, {
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': Bearer ${user.access_token},
+      'Authorization': `Bearer ${user.access_token}`,
       
      
     },
@@ -272,7 +271,7 @@ try {
       formData,
       {
         headers: {
-          Authorization: Bearer ${user?.access_token},
+          Authorization: `Bearer ${user?.access_token}`,
         },
       }
     );
@@ -390,9 +389,7 @@ return (
                   {data?.housing?.step2_slug=='gunluk-kiralik' ?
                      <TouchableOpacity
                      onPress={()=>{
-
                       navigation.navigate('CreateReservation',{data:data.housing})
-
                      }}
                        style={{backgroundColor:'#EA2A28',padding:10,width:'40%',borderRadius:5}}
                      >
@@ -437,14 +434,14 @@ return (
               data?.housing?.user?.profile_image ? 
               <ImageBackground
               source={{
-               uri: ${apiUrl}/storage/profile_images/${data?.housing?.user?.profile_image},
+               uri: `${apiUrl}/storage/profile_images/${data?.housing?.user?.profile_image}`,
               }}
              style={{ width: "100%", height: "100%" }}
              borderRadius={20}
            /> :
            <ImageBackground
            source={{
-            uri: ${apiUrl}/storage/profile_images/indir.png,
+            uri: `${apiUrl}/storage/profile_images/indir.png`,
            }}
           style={{ width: "100%", height: "100%" }}
           borderRadius={20}
@@ -546,7 +543,7 @@ return (
              
               <Pressable key={_index+1} onPress={()=>setCoverImageModal(true)}>
       
-                <ImageBackground source={{uri:${apiUrl}/housing_images/${item}}} style={{width:'100%',height:'100%'}}/>
+                <ImageBackground source={{uri:`${apiUrl}/housing_images/${item}`}} style={{width:'100%',height:'100%'}}/>
               
                 </Pressable>
              
@@ -554,7 +551,7 @@ return (
           }
 {/*        
                     <ImageBackground
-                      source={{uri:${apiUrl}${image.image.replace("public",'storage')}}}
+                      source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
                       style={{ width: "100%", height: "100%", }}
                      
                       resizeMode='cover'
@@ -599,8 +596,8 @@ return (
       </View>
       </Shadow>
       
-        
-          {tabs ==0 && <RealtorCaption data={data}/>}
+      
+          {tabs==0 && <RealtorCaption data={data}/>}
           {tabs == 1 && <Settings data={data} />}
           {tabs== 2 && <RealtorMap mapData={data}/>}
           {tabs==3 && <Comment data={data} handleModal={handleModal}/> }
@@ -770,14 +767,14 @@ return (
               data?.housing?.user?.profile_image ? 
               <ImageBackground
               source={{
-               uri: ${apiUrl}/storage/profile_images/${data?.housing?.user?.profile_image},
+               uri: `${apiUrl}/storage/profile_images/${data?.housing?.user?.profile_image}`,
               }}
              style={{ width: "100%", height: "100%" }}
              borderRadius={20}
            /> :
            <ImageBackground
            source={{
-            uri: ${apiUrl}/storage/profile_images/indir.png,
+            uri: `${apiUrl}/storage/profile_images/indir.png`,
            }}
           style={{ width: "100%", height: "100%" }}
           borderRadius={20}
@@ -920,7 +917,7 @@ return (
              
               <View key={_index} style={{}}>
       
-                <ImageBackground source={{uri:${apiUrl}/housing_images/${item}}} style={{width:'100%',height:'100%'}}/>
+                <ImageBackground source={{uri:`${apiUrl}/housing_images/${item}`}} style={{width:'100%',height:'100%'}}/>
               
               </View>
              
@@ -928,11 +925,11 @@ return (
           }
             {/* {
               data.housing.images.map((image,index) => {
-                // console.log(${apiUrl}${image.image.replace("public",'storage')})
+                // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
                 return(
                   <Pressable key={index+1} onPress={()=>setCoverImageModal(true)}>
                     <ImageBackground
-                      source={{uri:${apiUrl}${image.image.replace("public",'storage')}}}
+                      source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
                       style={{ width: "100%", height: "100%", }}
                      
                       resizeMode='cover'
@@ -1247,6 +1244,7 @@ modal6: {
 modalContent6: {
   backgroundColor: "#fefefe",
   padding: 20,
-  borderRadius: 10,
+  borderRadius: 10,
 },
 });
+
