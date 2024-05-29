@@ -1,14 +1,29 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
-import React, { useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  Image,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
 import { Platform } from "react-native";
 import Icon2 from "react-native-vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import { getValueFor } from "../../../../components/methods/user";
 
-export default function EditCollectionPost({ item, collection }) {
+export default function EditCollectionPost({ item, collection, onRemove }) {
   const parseHousingData = (data) => JSON.parse(data);
   const navigation = useNavigation();
+  const apiUrl = "https://test.emlaksepette.com/api/";
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
 
   let itemData = {
     id: 0,
@@ -82,9 +97,40 @@ export default function EditCollectionPost({ item, collection }) {
 
   const displayPrice =
     itemData.price !== 0 ? itemData.price : itemData.dailyRent;
-  useEffect(() => {
-    navigation.setOptions({ title: collection.name });
-  }, [collection.name]);
+
+  // useEffect(() => {
+  //   navigation.setOptions({ title: collection.name });
+  // }, [collection.name]);
+
+  const handleRemoveFromCollection = async () => {
+    try {
+      const response = await axios.post(
+        `${apiUrl}remove-from-collection`,
+        {
+          itemType: item.item_type == 1 ? "project" : "housing",
+          itemId: item.item_type == 1 ? item.room_order : null,
+          projectId: item.item_type == 1 ? item.project.id : item.housing.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+      if (response.data.success) {
+        onRemove(item.id);
+        console.log(response.data);
+      } else {
+        console.error(
+          "Failed to remove item from collection:",
+          response.data
+        );
+      }
+    } catch (error) {
+      console.error("Error removing item from collection:", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View
@@ -116,14 +162,20 @@ export default function EditCollectionPost({ item, collection }) {
               İlan No: {parseInt(itemData.id) + parseInt(itemData.idOran)}{" "}
               {"\n"}
             </Text>
-            <Text style={{ fontWeight: 700 }}>{itemData.advertise_title}</Text>
+            <Text style={{ fontWeight: 700,fontSize: 11 }}>{itemData.advertise_title}</Text>
           </Text>
 
           <View style={styles.priceAndEarningContainer}>
-            <View style={{ width: "60%" }}>
+            <View style={{ width: "80%" }}>
               <View style={styles.priceContainer}>
                 <Text style={styles.value}>
                   <Text style={styles.label}>Fiyat: </Text>
+                  {itemData.discountRate !== 0 && (
+                    <Text style={styles.originalPrice}>
+                      {" "}
+                      {itemData.defaultPrice} ₺
+                    </Text>
+                  )}
                   <Text
                     style={{
                       fontWeight: "700",
@@ -134,12 +186,6 @@ export default function EditCollectionPost({ item, collection }) {
                     {" "}
                     {itemData.discountedPrice} ₺
                   </Text>
-                  {/* {itemData.discountRate !== 0 && (
-                  <Text style={styles.originalPrice}>
-                    {" "}
-                    {itemData.defaultPrice} ₺
-                  </Text>
-                )} */}
                 </Text>
               </View>
               <View style={styles.earningContainer}>
@@ -177,7 +223,7 @@ export default function EditCollectionPost({ item, collection }) {
                                   )
                                 : item.sharePrice.balance.toFixed(2)}{" "}
                               ₺ {"\n"}
-                              <Text>Komisyon Kazancınız</Text>
+                              <Text>Komisyon Kazandınız</Text>
                             </Text>
                           ) : item.sharePrice.balance &&
                             item.sharePrice.status === "2" ? (
@@ -200,9 +246,37 @@ export default function EditCollectionPost({ item, collection }) {
                 </Text>
               </View>
             </View>
-            <View style={{ width: "30%"}}>
-              <TouchableOpacity style={styles.deleteButton}>
-                <Text style={{ color: "#FFFFFF", fontSize: 13 , textAlign: "center"}}>Sil</Text>
+            <View style={{ width: "20%" }}>
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => {
+                  Alert.alert(
+                    "Emin misiniz?",
+                    "Bu öğeyi koleksiyondan kaldırmak istediğinizden emin misiniz?",
+                    [
+                      {
+                        text: "Hayır",
+                        style: "cancel",
+                      },
+                      {
+                        text: "Evet",
+                        onPress: handleRemoveFromCollection,
+                        style: "destructive",
+                      },
+                    ],
+                    { cancelable: false }
+                  );
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#FFFFFF",
+                    fontSize: 13,
+                    textAlign: "center",
+                  }}
+                >
+                  Sil
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

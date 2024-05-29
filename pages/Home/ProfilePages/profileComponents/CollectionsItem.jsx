@@ -5,6 +5,9 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/FontAwesome5";
 import Icon3 from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
+import { getValueFor } from "../../../../components/methods/user";
+import { slugify } from 'slugify';
+
 export default function CollectionsItem({
   openBottom,
   projectItems,
@@ -14,6 +17,7 @@ export default function CollectionsItem({
   item,
   getId,
   name,
+  onRemove,
 }) {
   const navigation = useNavigation();
   const [collectionItems, setCollectionItems] = useState([]);
@@ -26,11 +30,31 @@ export default function CollectionsItem({
     }
     setCollectionItems(collectionItemsTemp);
   };
+    
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
+
 
   useEffect(() => {
     getCollectionItems();
   }, [projectItems]);
 
+  const [numOfLinks, setNumOfLinks] = useState(item.links.length);
+
+  const handleRemove = async () => {
+    try {
+      await onRemove();
+      setCollectionItems((prevItems) =>
+        prevItems.filter((projectItem) => projectItem.collection_id !== item.id)
+      );
+    } catch (error) {
+      console.error("Error removing item from collection:", error);
+    }
+  };
+
+  
   return (
     <View style={{ alignItems: "center" }}>
       <View style={style.container}>
@@ -73,7 +97,7 @@ export default function CollectionsItem({
               <Text style={{ fontWeight: "700", fontSize: "13" }}>
                 İlan Sayısı:
               </Text>
-              <Text style={{ color: "#EA2B2E" }}>{item.links.length}</Text>
+              <Text style={{ color: "#EA2B2E" }}>{collectionItems.length}</Text>
             </View>
           </View>
         </View>
@@ -91,7 +115,7 @@ export default function CollectionsItem({
               onPress={() => {
                 navigation.navigate("EditColection", {
                   collectionItems: collectionItems,
-                  item:item
+                  item: item,
                 });
               }}
             >
@@ -119,7 +143,10 @@ export default function CollectionsItem({
                 gap: 10,
               }}
               onPress={() => {
-                navigation.navigate("SeeColleciton");
+                navigation.navigate("SeeColleciton", {
+                  item: item,
+                  collectionUser: user,
+                });
               }}
             >
               <Dot
