@@ -268,7 +268,13 @@ export default function ShoppingProfile() {
                         >
                           <ProfileSettingsItem
                             text={item.text}
+
                             ıconName={item.icon}
+                            arrowControl={ 
+                              item.subMenu && item.subMenu.length > 0
+                            }
+                            isCollapsed={!openAccor[subIndex]}
+
                           />
                         </TouchableOpacity>
                       </View>

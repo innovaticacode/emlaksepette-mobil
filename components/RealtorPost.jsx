@@ -24,7 +24,8 @@ export default function RealtorPost({
   roomCount,
   floor,
   HouseId,
-  GetId
+  GetId,
+  dailyRent
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -109,17 +110,34 @@ export default function RealtorPost({
                 </Text>
               </View>
               <View style={styles.btns}>
-                <TouchableOpacity style={styles.addBasket}
-                    onPress={()=>{
-                      GetId(HouseId)
-                    }}
+                {dailyRent==false && 
+                  <TouchableOpacity style={styles.addBasket}
+                  onPress={()=>{
+                    GetId(HouseId)
+                  }}
+              >
+                <Text
+                  style={{ color: "white", fontWeight: "500", fontSize: 12 }}
                 >
-                  <Text
-                    style={{ color: "white", fontWeight: "500", fontSize: 12 }}
-                  >
-                    Sepete Ekle
-                  </Text>
-                </TouchableOpacity>
+                  Sepete Ekle
+                </Text>
+              </TouchableOpacity>
+                }
+
+                      {dailyRent==true && 
+                  <TouchableOpacity style={[styles.addBasket,{width:'100%',padding:5,paddingLeft:0,paddingRight:0}]}
+                  onPress={()=>{
+                   
+                  }}
+              >
+                <Text
+                  style={{ color: "white", fontWeight: "500", fontSize: 12 }}
+                >
+                 Rezervasyon Yap
+                </Text>
+              </TouchableOpacity>
+                }
+              
               </View>
             </View>
           </View>

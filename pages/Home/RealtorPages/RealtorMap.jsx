@@ -26,7 +26,7 @@ export default function RealtorMap({mapData}) {
     
     <MapView
     
-    provider={PROVIDER_GOOGLE} 
+    
   initialRegion={{
     latitude:mapData.housing?.latitude,
     longitude:mapData?.housing?.longitude,
