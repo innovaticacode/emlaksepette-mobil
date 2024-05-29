@@ -586,7 +586,6 @@ export default function Details({ navigation }) {
         setTrueModal(true);
       }, 3000);
 
-
       // color("#d4edda");
       setNameId("");
       setPhoneId("");

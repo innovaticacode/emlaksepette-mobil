@@ -57,7 +57,7 @@ export default function Posts({
   } else {
     console.log("Belirtilen indeksteki öğe bulunamadı.");
   }
-    return (
+  return (
     <TouchableOpacity
       onPress={() =>
         navigation.navigate("PostDetails", {
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     display: "flex",
     flexDirection: "column",
-    borderBottomWidth: "1px",
+    borderBottomWidth: 1,
     borderBlockColor: "#E8E8E8",
   },
   İlan: {
@@ -420,23 +420,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#264ABB",
   },
-  pending:{
+  pending: {
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
     width: "100%",
     alignItems: "center",
     backgroundColor: "orange",
-
   },
-  sold:{
+  sold: {
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
     width: "100%",
     alignItems: "center",
     backgroundColor: "red",
-
   },
   PayDetailBtn: {
     paddingLeft: 20,

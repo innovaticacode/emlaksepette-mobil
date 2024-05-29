@@ -8,9 +8,9 @@ import {
   ImageBackground,
   FlatList,
   Dimensions,
-ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
-import React, { useState, useRef ,useEffect} from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import Header from "../../components/Header";
 import Modal from "react-native-modal";
@@ -38,16 +38,13 @@ export default function AllProjects() {
     // Sayfanın 200px aşağısına inildiğinde gizlenmesi gerekiyor
     if (scrollPosition > 25) {
       setIsHidden(true);
-  
     } else {
       setIsHidden(false);
-    
     }
   };
   const [modalVisible, setModalVisible] = useState(false);
 
-
-  const [IsLoading, setIsLoading] = useState(false)
+  const [IsLoading, setIsLoading] = useState(false);
   const [featuredProjects, setFeaturedProjects] = useState([]);
   const fetchFeaturedProjects = async () => {
     try {
@@ -55,7 +52,7 @@ export default function AllProjects() {
         "https://test.emlaksepette.com/api/featured-projects"
       );
       setFeaturedProjects(response.data);
-      setIsLoading(true)
+      setIsLoading(true);
     } catch (error) {
       console.log(error);
     }
@@ -65,7 +62,6 @@ export default function AllProjects() {
     fetchFeaturedProjects();
   }, []);
 
-     
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View style={styles.container}>
@@ -166,30 +162,27 @@ export default function AllProjects() {
             </View>
           </View>
         </Modal>
-                
+
         <View
           style={{
-            padding:  10,
-         
+            padding: 10,
           }}
         >
           <View style={{ padding: 0 }}>
-     
-              <Text
-                style={[
-                  styles.headerText,
-                  {
-                    fontSize: 15, 
-                    textAlign:  "center" 
-                  },
-                ]}
-              >
-                Tüm Projeler
-              </Text>
-          
+            <Text
+              style={[
+                styles.headerText,
+                {
+                  fontSize: 15,
+                  textAlign: "center",
+                },
+              ]}
+            >
+              Tüm Projeler
+            </Text>
           </View>
         </View>
-         
+
         <View
           style={{
             flexDirection: "row",
@@ -216,60 +209,60 @@ export default function AllProjects() {
         </View>
 
         <ScrollView
-     
           onScroll={handleScroll}
           showsVerticalScrollIndicator={false}
           scrollEventThrottle={16}
         >
-          
           <View>
-            
-              {
-                IsLoading==false?
-                <View style={{alignItems:'center',justifyContent:'center',width:'100%',flex:1}}>
-                <ActivityIndicator style={{width:100}} size='large' color='#E54242'/>
-      
-                 </View>
-                :   
-
+            {IsLoading == false ? (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "100%",
+                  flex: 1,
+                }}
+              >
+                <ActivityIndicator
+                  style={{ width: 100 }}
+                  size="large"
+                  color="#E54242"
+                />
+              </View>
+            ) : (
               <FlatList
-              data={featuredProjects}
-              renderItem={({ item }) => (
-                <View
-                  style={{ paddingLeft: 10, paddingRight: 10, width: "100%" }}
-                >
-                  <ProjectPost
-                  project={item}
-                    key={item.id}
-                    caption={item.project_title}
-                    ımage={`${apiUrl}/${item.image.replace(
-                      "public/",
-                      "storage/"
-                    )}`}
-                    user={item.user}
-                    location={item.city.title}
-                    city={item.county.ilce_title}
-                    ProjectNo={item.id}
-                    slug={item.slug}
-                    acıklama={item.description
-                      .replace(/<\/?[^>]+(>|$)/g, "")
-                      .replace(/&nbsp;/g, " ")}
-                    ShoppingName={item.user.name}
-                    ShoppingMail={item.user.email}
-                    Phone={item.user.phone}
-                    ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                    ShopingInfo={item.user.corporate_type}
-                  />
-                </View>
-              )}
-              scrollEnabled={false}
-            /> 
-              }
-           
-        
-            
-
-            
+                data={featuredProjects}
+                renderItem={({ item }) => (
+                  <View
+                    style={{ paddingLeft: 10, paddingRight: 10, width: "100%" }}
+                  >
+                    <ProjectPost
+                      project={item}
+                      key={item.id}
+                      caption={item.project_title}
+                      ımage={`${apiUrl}/${item.image.replace(
+                        "public/",
+                        "storage/"
+                      )}`}
+                      user={item.user}
+                      location={item.city.title}
+                      city={item.county.ilce_title}
+                      ProjectNo={item.id}
+                      slug={item.slug}
+                      acıklama={item.description
+                        .replace(/<\/?[^>]+(>|$)/g, "")
+                        .replace(/&nbsp;/g, " ")}
+                      ShoppingName={item.user.name}
+                      ShoppingMail={item.user.email}
+                      Phone={item.user.phone}
+                      ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
+                      ShopingInfo={item.user.corporate_type}
+                    />
+                  </View>
+                )}
+                scrollEnabled={false}
+              />
+            )}
           </View>
         </ScrollView>
       </View>
@@ -280,7 +273,7 @@ export default function AllProjects() {
         style={styles.modal2}
       >
         <View style={styles.modalContent2}>
-            {/* <FlatList
+          {/* <FlatList
                 data={InputLabel}
                 renderItem={({item})=>(
                     <View>
@@ -289,17 +282,15 @@ export default function AllProjects() {
                 </View>
                 )}
             /> */}
-           
-                       
-            <View style={{alignItems:'center'}}>
-                <TouchableOpacity style={styles.btnFilter}>
-                    <Text style={{color:'white'}}>
-                    <Text>Sonuçları Gör</Text>
-                    <Text> (100)</Text>
-                    </Text>
-                  
-                </TouchableOpacity>
-            </View>
+
+          <View style={{ alignItems: "center" }}>
+            <TouchableOpacity style={styles.btnFilter}>
+              <Text style={{ color: "white" }}>
+                <Text>Sonuçları Gör</Text>
+                <Text> (100)</Text>
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </SafeAreaView>
@@ -363,11 +354,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     width: 320,
   },
-  btnFilter:{
-    width:'80%',
-        backgroundColor: "#264ABB",
-        padding: 9,
-        alignItems:'center',
-        borderRadius:5
-  }
+  btnFilter: {
+    width: "80%",
+    backgroundColor: "#264ABB",
+    padding: 9,
+    alignItems: "center",
+    borderRadius: 5,
+  },
 });

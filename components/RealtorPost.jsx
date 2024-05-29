@@ -58,7 +58,10 @@ export default function RealtorPost({
           .replace(/,00$/, "")
       : null
     : 0;
-    const handlePress = housing && housing.step2_slug === "gunluk-kiralik" ? () => GetId(HouseId) : null;
+  const handlePress =
+    housing && housing.step2_slug === "gunluk-kiralik"
+      ? () => GetId(HouseId)
+      : null;
 
   return (
     <TouchableOpacity
@@ -116,7 +119,6 @@ export default function RealtorPost({
             </View>
 
             <View style={styles.PriceAndButtons}>
-              
               <View style={{ alignItems: "center", justifyContent: "center" }}>
                 {formattedDiscountedPrice ? (
                   <>
@@ -131,11 +133,7 @@ export default function RealtorPost({
                   <Text style={styles.priceText}>{formattedPrice}₺</Text>
                 )}
               </View>
-              <TouchableOpacity
-                style={styles.addBasket}
-                onPress={handlePress}
-
-              >
+              <TouchableOpacity style={styles.addBasket} onPress={handlePress}>
                 {housing && housing.step2_slug == "gunluk-kiralik" ? (
                   <Text
                     style={{
@@ -144,7 +142,7 @@ export default function RealtorPost({
                       fontSize: 12,
                     }}
                   >
-                    Rezervasyon 
+                    Rezervasyon
                   </Text>
                 ) : (
                   <Text
@@ -208,8 +206,8 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     display: "flex",
     flexDirection: "column",
-    borderBottomWidth: "1px",
-    borderBlockColor: "#E8E8E8"
+    borderBottomWidth: 1,
+    borderBlockColor: "#E8E8E8",
   },
   İlan: {
     padding: 3,
@@ -222,15 +220,15 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     paddingLeft: 5,
-    paddingTop: 5
+    paddingTop: 5,
   },
   captionAndIcons: {
     display: "flex",
     flexDirection: "row",
-   width: "100%"
+    width: "100%",
   },
   PriceAndButtons: {
-    marginTop: 'auto', // Push to the bottom
+    marginTop: "auto", // Push to the bottom
     display: "flex",
     flexDirection: "row-reverse",
     justifyContent: "space-between",
