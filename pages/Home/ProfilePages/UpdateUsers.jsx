@@ -237,7 +237,7 @@ console.log(userDetail ,'fdsfsd')
                   backgroundColor: "#EA2A29",
                   padding: 13,
                   width: "50%",
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
               >
                 <Text
@@ -309,7 +309,7 @@ console.log(userDetail ,'fdsfsd')
       backgroundColor: "transparent",
       borderWidth: 1,
       borderColor: "#ebebeb",
-      borderRadius: 6,
+      borderRadius: 5,
       padding: 9,
       fontSize: 14, // to ensure the text is never behind the icon
     },
@@ -317,7 +317,7 @@ console.log(userDetail ,'fdsfsd')
       backgroundColor: "transparent",
       borderWidth: 1,
       borderColor: "#bdc6cf",
-      borderRadius: 6,
+      borderRadius: 5,
       padding: 9,
       fontSize: 14, // to ensure the text is never behind the icon
     },
@@ -338,7 +338,7 @@ console.log(userDetail ,'fdsfsd')
     Input: {
       padding: 9,
       backgroundColor: "transparent",
-      borderRadius: 10,
+      borderRadius: 5,
       fontSize: 15,
       borderWidth: 1,
       borderColor: "#ebebeb",
@@ -389,7 +389,7 @@ console.log(userDetail ,'fdsfsd')
     card: {
       alignItems: "center",
       backgroundColor: "#FFFFFF",
-      borderRadius: 10,
+      borderRadius: 5,
       paddingVertical: 10,
       paddingHorizontal: 10,
       width: "90%",
@@ -453,7 +453,7 @@ console.log(userDetail ,'fdsfsd')
       paddingRight: 20,
       padding: 8,
       justifyContent: "center",
-      borderRadius: 10,
+      borderRadius: 5,
     },
     btnText: {
       color: "white",

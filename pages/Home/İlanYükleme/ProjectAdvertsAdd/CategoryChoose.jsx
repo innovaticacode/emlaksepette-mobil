@@ -52,7 +52,7 @@ const style=StyleSheet.create({
       alignItems:'center',
       gap:8,
       backgroundColor: '#FFFFFF',  
-      borderRadius: 10,  
+      borderRadius: 5,  
       paddingVertical: 12,  
       paddingHorizontal: 10,  
       width: '100%',  

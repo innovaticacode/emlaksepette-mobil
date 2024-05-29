@@ -719,7 +719,7 @@ export default function Details({ navigation }) {
                 padding: 5,
                 paddingLeft: 8,
                 paddingRight: 8,
-                borderRadius: 10,
+                borderRadius: 5,
               }}
             >
               <Text style={{ color: "white", fontSize: 12 }}>
@@ -961,7 +961,7 @@ export default function Details({ navigation }) {
                 style={{
                   backgroundColor: "#EA2C2E",
                   padding: 10,
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
               >
                 <Text
@@ -1368,7 +1368,7 @@ export default function Details({ navigation }) {
                     style={{
                       backgroundColor: "#EA2A28",
                       padding: 10,
-                      borderRadius: 6,
+                      borderRadius: 5,
                     }}
                     onPress={addCollectionPost}
                   >
@@ -1475,7 +1475,7 @@ export default function Details({ navigation }) {
                     backgroundColor: "#28A745",
                     width: "40%",
                     padding: 15,
-                    borderRadius: 10,
+                    borderRadius: 5,
                   }}
                   onPress={handleSubmit}
                 >
@@ -1488,7 +1488,7 @@ export default function Details({ navigation }) {
                     backgroundColor: "#DC3545",
                     width: "40%",
                     padding: 15,
-                    borderRadius: 10,
+                    borderRadius: 5,
                   }}
                   onPress={() => {
                     setFormVisible(false);

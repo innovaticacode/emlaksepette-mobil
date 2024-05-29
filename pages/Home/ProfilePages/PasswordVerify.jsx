@@ -154,7 +154,7 @@ const styles=StyleSheet.create({
           width: '80%',
           height: 10,
           backgroundColor: '#ccc',
-          borderRadius: 10,
+          borderRadius: 5,
           overflow: 'hidden',
         },
         progress: {

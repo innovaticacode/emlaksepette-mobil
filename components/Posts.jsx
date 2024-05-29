@@ -33,6 +33,7 @@ export default function Posts({
   openCollection,
   GetIdForCart,
   GetID,
+  bookmarkStatus,
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -57,7 +58,7 @@ export default function Posts({
   } else {
     console.log("Belirtilen indeksteki öğe bulunamadı.");
   }
-    return (
+  return (
     <TouchableOpacity
       onPress={() =>
         navigation.navigate("PostDetails", {
@@ -108,21 +109,29 @@ export default function Posts({
                   {truncateText(roomData["advertise_title[]"], 4)}
                 </Text>
               </View>
-              <View style={styles.ıcons}>
-                <TouchableOpacity
-                  onPress={() => {
-                    changeBookmark();
-                    openCollection(roomOrder);
-                  }}
-                >
-                  <View style={styles.ıconContainer}>
-                    <Bookmark
-                      name={bookmark}
-                      size={13}
-                      color={bookmark == "bookmark-o" ? "black" : "red"}
-                    />
-                  </View>
-                </TouchableOpacity>
+              <View
+                style={{
+                  ...styles.ıcons, // Diğer stil özelliklerini ekleyin
+                  justifyContent: bookmarkStatus ? "space-between" : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
+                }}
+              >
+                {bookmarkStatus == true ?? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      changeBookmark();
+                      openCollection(roomOrder);
+                    }}
+                  >
+                    <View style={styles.ıconContainer}>
+                      <Bookmark
+                        name={bookmark}
+                        size={13}
+                        color={bookmark == "bookmark-o" ? "black" : "red"}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                )}
+
                 {!isFavorited ? (
                   <TouchableOpacity
                     onPress={() => {
@@ -402,9 +411,10 @@ const styles = StyleSheet.create({
   ıcons: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
+  
     width: "30%",
     bottom: 5,
+    
   },
   btns: {
     display: "flex",
@@ -420,23 +430,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#264ABB",
   },
-  pending:{
+  pending: {
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
     width: "100%",
     alignItems: "center",
     backgroundColor: "orange",
-
   },
-  sold:{
+  sold: {
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
     width: "100%",
     alignItems: "center",
     backgroundColor: "red",
-
   },
   PayDetailBtn: {
     paddingLeft: 20,

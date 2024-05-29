@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     AdvertDetail:{
         gap:10,
         backgroundColor: '#FFFFFF',  
-        borderRadius: 6,  
+        borderRadius: 5,  
         paddingVertical: 15,  
         paddingHorizontal: 15,  
         width: '100%',  

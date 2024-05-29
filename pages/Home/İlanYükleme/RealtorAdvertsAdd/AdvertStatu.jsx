@@ -51,7 +51,7 @@ export default function AdvertStatu() {
 const styles=StyleSheet.create({
     Card:{
         backgroundColor: '#FFFFFF',  
-        borderRadius: 10,  
+        borderRadius: 5,  
         paddingVertical: 22,  
         paddingHorizontal: 5,  
         width: '100%',  

@@ -291,7 +291,7 @@ export default function ShoppingProfile() {
               style={{
                 backgroundColor: "#EA2A28",
                 padding: 10,
-                borderRadius: 6,
+                borderRadius: 5,
                 width: "80%",
               }}
             >
@@ -322,7 +322,7 @@ export default function ShoppingProfile() {
                   style.card,
                   {
                     padding: 0,
-                    borderRadius: 10,
+                    borderRadius: 5,
                     backgroundColor: "#F8F7F4",
                     alignItems: "center",
                     gap: 20,
@@ -345,7 +345,7 @@ export default function ShoppingProfile() {
                       style={{
                         backgroundColor: "#F8D7DA",
                         padding: 10,
-                        borderRadius: 6,
+                        borderRadius: 5,
                       }}
                     >
                       <Text style={{ textAlign: "center", color: "#721C24" }}>
@@ -359,7 +359,7 @@ export default function ShoppingProfile() {
                         {
                           backgroundColor: "#D4EDDA",
                           padding: 10,
-                          borderRadius: 6,
+                          borderRadius: 5,
                         },
                       ]}
                       onPress={() => setDialogVisible(!dialogVisible)}
@@ -469,7 +469,7 @@ const style = StyleSheet.create({
     backgroundColor: "#E54242",
     width: "70%",
     padding: 13,
-    borderRadius: 10,
+    borderRadius: 5,
   },
   modal: {
     justifyContent: "flex-end",
@@ -495,7 +495,7 @@ const style = StyleSheet.create({
   },
   card: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 10,
+    borderRadius: 5,
     paddingVertical: 22,
     paddingHorizontal: 20,
     width: "100%",

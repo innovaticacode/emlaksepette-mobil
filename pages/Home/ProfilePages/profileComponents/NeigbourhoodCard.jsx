@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     
        gap:10,
         backgroundColor: '#FFFFFF',  
-        borderRadius: 10,  
+        borderRadius: 5,  
         paddingVertical: 22,  
         paddingHorizontal: 10,  
         width: '100%',  

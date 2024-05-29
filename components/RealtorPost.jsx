@@ -27,6 +27,7 @@ export default function RealtorPost({
   discountRate,
   discount_amount,
   housing,
+  bookmarkStatus
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -88,16 +89,21 @@ export default function RealtorPost({
                   {title}
                 </Text>
               </View>
-              <View style={styles.ıcons}>
-                <TouchableOpacity onPress={changeBookmark}>
-                  <View style={styles.ıconContainer}>
-                    <Bookmark
-                      name={bookmark}
-                      size={13}
-                      color={bookmark == "bookmark-o" ? "black" : "red"}
-                    />
-                  </View>
-                </TouchableOpacity>
+              <View style={{
+                  ...styles.ıcons, // Diğer stil özelliklerini ekleyin
+                  justifyContent: bookmarkStatus ? "space-between" : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
+                }}>
+                {bookmarkStatus == true ?? 
+                   <TouchableOpacity onPress={changeBookmark}>
+                   <View style={styles.ıconContainer}>
+                     <Bookmark
+                       name={bookmark}
+                       size={13}
+                       color={bookmark == "bookmark-o" ? "black" : "red"}
+                     />
+                   </View>
+                 </TouchableOpacity>}
+             
 
                 <TouchableOpacity
                   onPress={() => {
@@ -242,7 +248,6 @@ const styles = StyleSheet.create({
   ıcons: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
     width: "30%",
     bottom: 5,
   },

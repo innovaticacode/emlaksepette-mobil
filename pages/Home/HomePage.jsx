@@ -324,7 +324,7 @@ export default function HomePage() {
             height: 50,
           }}
           inputContainerStyle={{
-            borderRadius: 6,
+            borderRadius: 5,
             backgroundColor: "#bebebe26",
             borderWidth: 1,
             borderColor: "#bebebe26",
@@ -743,7 +743,7 @@ export default function HomePage() {
                     padding: 10,
                     paddingLeft: 20,
                     paddingRight: 20,
-                    borderRadius: 6,
+                    borderRadius: 5,
                   }}
                   onPress={() => {
                     addToCard();
@@ -758,7 +758,7 @@ export default function HomePage() {
                     padding: 10,
                     paddingLeft: 20,
                     paddingRight: 20,
-                    borderRadius: 6,
+                    borderRadius: 5,
                   }}
                   onPress={() => {
                     setModalForAddToCart(false);
@@ -805,7 +805,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: 10,
-    borderRadius: 10,
+    borderRadius: 5,
   },
   slide1: {
     flex: 1,
@@ -861,7 +861,7 @@ const styles = StyleSheet.create({
   modalContent4: {
     backgroundColor: "#fefefe",
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 5,
   },
 });
 {
