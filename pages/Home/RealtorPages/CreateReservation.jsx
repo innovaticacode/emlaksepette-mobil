@@ -26,7 +26,11 @@ const App = () => {
   const [reservations, setReservations] = useState([]);
   const [totalNights, setTotalNights] = useState(0);
   const [checked, setChecked] =useState(false);
-     const toggleCheckbox = () => setChecked(!checked);
+  const [acitveMoneySafe, setacitveMoneySafe] = useState('no Safe')
+     const toggleCheckbox = () => {
+      setChecked(!checked)
+      setacitveMoneySafe(!checked? 'Safe':'no Safe')
+    };
   useEffect(() => {
     setReservations(data.reservations);
   }, [data]);
@@ -153,14 +157,14 @@ const App = () => {
       await saveData('startDate', startDate);
       await saveData('endDate', endDate);
       
-      await saveData('checked',checked)
+      await saveData('checked',acitveMoneySafe)
       navigation.navigate('PaymentScreenForReserve',{HouseID:data.id,totalNight:totalNights})
       alert('All states saved successfully');
     } catch (error) {
       console.log('Error saving states:', error);
     }
   };
-
+      
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 50 }}>
       <View style={styles.card}>
@@ -193,6 +197,7 @@ const App = () => {
       </View>
 
       <View style={styles.dateContainer}>
+     
         <View>
         
           <Text style={{ color: "#aab4c1", fontWeight: "600" }}>Tarih</Text>

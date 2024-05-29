@@ -115,11 +115,12 @@ const pickDocument = async () => {
       if (endDate !== null) {
         setendDate(endDate);
       }
-      const checkedMoneySafe = await loadStateFromSecureStore('checked');
+      const chekedMoneySafe = await loadStateFromSecureStore('checked');
     
-      if (checkedMoneySafe !== null) {
+      if (chekedMoneySafe !== null) {
         setchekedMoneySafe(chekedMoneySafe);
       }
+   
 
    
     };
@@ -138,22 +139,19 @@ const pickDocument = async () => {
 
  
   
-  const totalCost =  data && data?.housing && data?.housing?.housing_type_data && totalNight  ? JSON.parse(data?.housing?.housing_type_data)?.daily_rent * totalNight : 3 ;
+  const totalCost =  data && data?.housing && data?.housing?.housing_type_data && totalNight  ? JSON.parse(data?.housing?.housing_type_data)?.daily_rent * totalNight : 0 ;
   const formattedTotalCost = formatCurrency(totalCost);
   const halfTotalCost =  totalCost / 2 ;
   const formattedHalfTotalCost = formatCurrency(halfTotalCost );
+  const totalPrice =formatCurrency(chekedMoneySafe==='Safe' ? halfTotalCost +1000:halfTotalCost)
   return (
     <KeyboardAwareScrollView style={styles.container}
         contentContainerStyle={{gap:20,paddingBottom:50}}
         showsVerticalScrollIndicator={false}
     >
         <View>
-           
-       <Text>{chekedMoneySafe}</Text>
-    
-   
-   
-
+       
+ 
             <View style={[styles.AdvertDetail,{flexDirection:'row'}]}>
                 <View style={styles.image}>
                     {
@@ -393,7 +391,7 @@ const pickDocument = async () => {
                 </View>
               </View>
               {
-                checked &&
+                chekedMoneySafe=='Safe' &&
                 <View
                 style={{ flexDirection: "row", justifyContent: "space-between" }}
               >
@@ -409,7 +407,7 @@ const pickDocument = async () => {
               >
                 <Text style={[styles.DetailTitle,{color:'#208011'}]}>Şimdi Ödenecek Tutar</Text>
                 <View style={{ width: "50%", alignItems: "flex-end" }}>
-                  <Text style={[styles.DetailTitle,{color:'#208011'}]}>{checked? formattedHalfTotalCost+1000:formattedHalfTotalCost }</Text>
+                  <Text style={[styles.DetailTitle,{color:'#208011'}]}>{totalPrice}</Text>
                 </View>
                 
               </View>
