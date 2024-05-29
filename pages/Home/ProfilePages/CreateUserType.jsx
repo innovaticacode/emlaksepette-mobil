@@ -11,13 +11,13 @@ import {
 import React, { useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Checkbox from "./profileComponents/Checkbox";
-
+import { Platform } from "react-native";
 import Users from "./profileComponents/Users";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 export default function CreateUserType() {
   const route = useRoute();
-  
+
   const [TypeName, setTypeName] = useState("");
   const navigation = useNavigation();
   const [user, setuser] = useState({});
@@ -31,7 +31,7 @@ export default function CreateUserType() {
   // fetchData fonksiyonunu tanımlayın
   const fetchData = async () => {
     try {
-      if(user.access_token){
+      if (user.access_token) {
         const response = await axios.get(
           "https://test.emlaksepette.com/api/institutional/roles/create",
           {
@@ -43,7 +43,6 @@ export default function CreateUserType() {
         setPermissions(response?.data?.groupedPermissions);
         setGroupNames(response?.data?.groupNames);
       }
-      
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -73,7 +72,6 @@ export default function CreateUserType() {
     }
   };
   const handleShowCheckedItems = () => {
-    console.log(checkedItems);
     postData();
     navigation.navigate("UserTypes");
   };
@@ -84,7 +82,6 @@ export default function CreateUserType() {
       checkedItems.forEach((item) => {
         formData.append("permissions[]", item); // [] kullanarak PHP tarafında bir dizi olarak alınmasını sağlar
       });
-      console.log(formData);
       const response = await axios.post(
         "https://test.emlaksepette.com/api/institutional/roles",
         formData,
@@ -117,12 +114,18 @@ export default function CreateUserType() {
               onChangeText={(value) => setTypeName(value)}
             />
           </View>
-          <View style={{  }}>
-          
+          <View style={{}}>
             <View>
               {Object.values(Permissions).map((array, index) => (
-                <View key={index} style={{ gap: 10 , marginTop: 10, marginBottom: 10}}>
-                              <Text style={{fontSize:15,color:'#333',fontWeight:'500'}}>{groupNames[index]}</Text>
+                <View
+                  key={index}
+                  style={{ gap: 10, marginTop: 10, marginBottom: 10 }}
+                >
+                  <Text
+                    style={{ fontSize: 15, color: "#333", fontWeight: "500" }}
+                  >
+                    {groupNames[index]}
+                  </Text>
 
                   {array.map((item, subIndex) => (
                     <Checkbox

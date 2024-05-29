@@ -36,7 +36,7 @@ import * as Animatable from "react-native-animatable";
 import Swiper from "react-native-swiper";
 import PagerView from "react-native-pager-view";
 import Categories from "../../components/Categories";
-import userData from "../../components/methods/user";
+import userData, { getValueFor } from "../../components/methods/user";
 
 export default function HomePage() {
   const navigation = useNavigation();
@@ -79,9 +79,13 @@ export default function HomePage() {
     (estate) => estate.step1_slug == "is-yeri"
   );
   const filteredHomes = featuredEstates
-    .filter((estate) => estate.step1_slug == 'konut')
+    .filter((estate) => estate.step1_slug == "konut")
     .slice(0, 10);
   const filteredProject = featuredProjects.slice(0, 5);
+
+  const filteredBookHouse = featuredEstates
+  .filter((estate) => estate.step2_slug == 'gunluk-kiralik')
+  .slice(0, 10);
 
   useEffect(() => {
     fetchFeaturedEstates();
@@ -167,6 +171,47 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, [currentPage]);
 
+  const [user, setuser] = useState({});
+  useEffect(() => {
+    getValueFor("user", setuser);
+  }, []);
+  const [ModalForAddToCart, setModalForAddToCart] = useState(false);
+  const [selectedCartItem, setselectedCartItem] = useState(0);
+  const GetIdForCart = (id) => {
+    setselectedCartItem(id);
+    setModalForAddToCart(true);
+    console.log(selectedCartItem);
+  };
+
+  const addToCard = async () => {
+    const formData = new FormData();
+    formData.append("id", selectedCartItem);
+    formData.append("isShare", null);
+    formData.append("numbershare", null);
+    formData.append("qt", 1);
+    formData.append("type", "housing");
+    formData.append("project", null);
+    formData.append("clear_cart", "no");
+
+    try {
+      if (user?.access_token) {
+        const response = await axios.post(
+          "https://test.emlaksepette.com/api/institutional/add_to_cart",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+        setModalForAddToCart(false);
+        navigation.navigate("Sepetim");
+      }
+    } catch (error) {
+      console.error("post isteği olmadı", error);
+    }
+  };
+
   const { width: screenWidth } = Dimensions.get("window");
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -176,11 +221,11 @@ export default function HomePage() {
         <Modal
           isVisible={isDrawerOpen}
           onBackdropPress={() => setIsDrawerOpen(false)}
-          animationIn='fadeInLeftBig'
+          animationIn="fadeInLeftBig"
           animationOut="bounceOutLeft"
           style={styles.modal}
-          swipeDirection={['left']}
-          onSwipeComplete={()=>setIsDrawerOpen(false)}
+          swipeDirection={["left"]}
+          onSwipeComplete={() => setIsDrawerOpen(false)}
         >
           <View style={styles.modalContent}>
             <View
@@ -299,33 +344,77 @@ export default function HomePage() {
           <SliderMenu goToSlide={goToSlide} tab={tab} setTab={settab} />
         </View>
 
-        {/* <View style={{flexDirection:'row',justifyContent:'center',gap:20,paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:10}}>
-              <TouchableOpacity style={styles.btn}>
-                <Text style={{textAlign:'center'}}>Filtrele</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btn}>
-                <Text style={{textAlign:'center'}}>Sırala</Text>
-                </TouchableOpacity>
-              </View> */}
-        {/* <Animatable.View
-          animation={isHidden ? "fadeInUp" : "fadeOutDown"}
-          useNativeDriver={true}
+      
+
+        <Swiper
+          showsButtons={false}
+          showsPagination={false}
+          loop={false}
+          ref={swiperRef}
+          onIndexChanged={handleIndexChanged}
         >
-          <View
-            style={{ marginBottom: 3, display: isHidden ? "flex" : "none" }}
+          <ScrollView
+            stickyHeaderIndices={[2]}
+            ref={scrollViewRef}
+            contentContainerStyle={{ gap: 8 }}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
           >
+            <View style={{ height: 100, padding: 8, borderRadius: 10 }}>
+              <PagerView
+                style={{ height: "100%" }}
+                ref={pagerViewRef}
+                initialPage={currentPage}
+                onPageSelected={(event) =>
+                  setCurrentPage(event.nativeEvent.position)
+                }
+              >
+                {featuredSliders.map((item, index) => (
+                  <View
+                    style={{
+                      borderRadius: 15,
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    key={index}
+                  >
+                    <ImageBackground
+                      source={{
+                        uri: `${apiUrl}/storage/sliders/${item.image}`,
+                      }}
+                      style={{ width: "100%", height: "100%" }}
+                      resizeMode="contain"
+                      borderRadius={10}
+                    />
+                  </View>
+                ))}
+              </PagerView>
+            </View>
+
+            <View style={{ height: 100 }}>
+              <SliderBar loading={loadingPrjoects} />
+            </View>
+
             <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingLeft: 10,
-                paddingRight: 10,
-                alignItems: "center",
-                display: tab == 1 ? "none" : "flex",
-              }}
+              style={
+                {
+                  // display: isHidden ? "none" : "flex",
+                }
+              }
             >
-              <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN PROJELER</Text>
-              <Animatable.View animation={isHidden ? "fadeInUp" : "fadeOut"}>
+              <View
+                style={{
+                  paddingBottom: 3,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  alignItems: "center",
+                  backgroundColor: "white",
+                }}
+              >
+                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN PROJELER</Text>
+
                 <TouchableOpacity
                   style={styles.allBtn}
                   onPress={() =>
@@ -339,103 +428,10 @@ export default function HomePage() {
                     Tümünü Gör
                   </Text>
                 </TouchableOpacity>
-              </Animatable.View>
+              </View>
             </View>
-          </View>
-        </Animatable.View> */}
-
-        <Swiper
-          showsButtons={false}
-          showsPagination={false}
-          loop={false}
-          ref={swiperRef}
-          onIndexChanged={handleIndexChanged}
-        >
-          <ScrollView
-          stickyHeaderIndices={[2]}
-            ref={scrollViewRef}
-            contentContainerStyle={{gap:8}}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-          >
-          
-             
-                  <View style={{ height: 100, padding: 8, borderRadius: 10 }}>
-                    <PagerView
-                      style={{ height: "100%" }}
-                      ref={pagerViewRef}
-                      initialPage={currentPage}
-                      onPageSelected={(event) =>
-                        setCurrentPage(event.nativeEvent.position)
-                      }
-                    >
-                      {featuredSliders.map((item, index) => (
-                        <View
-                          style={{
-                            borderRadius: 15,
-                            width: "100%",
-                            height: "100%",
-                          }}
-                          key={index}
-                        >
-                          <ImageBackground
-                            source={{
-                              uri: `${apiUrl}/storage/sliders/${item.image}`,
-                            }}
-                            style={{ width: "100%", height: "100%" }}
-                            resizeMode="contain"
-                            borderRadius={10}
-                          />
-                        </View>
-                      ))}
-                    </PagerView>
-                  </View>
-               
-                    <View style={{ height: 100 }}>
-                      <SliderBar loading={loadingPrjoects} />
-                    </View>
-                
-           
-                    <View
-                  style={{
-                    
-                    // display: isHidden ? "none" : "flex",
-                  }}
-                >
-                  <View
-                    style={{
-                   
-                      paddingBottom:3,
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      paddingLeft: 10,
-                      paddingRight: 10,
-                      alignItems: "center",
-                      backgroundColor:'white'
-                    }}
-                  >
-                    <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN PROJELER</Text>
-
-                    <TouchableOpacity
-                      style={styles.allBtn}
-                      onPress={() =>
-                        navigation.navigate("AllProject", {
-                          name: "Tüm Projeler",
-                          data: featuredProjects,
-                        })
-                      }
-                    >
-                      <Text style={{ color: "white", fontSize: 13 }}>
-                        Tümünü Gör
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
             <View style={styles.slide1}>
-              
               <View style={{ gap: 0, paddingTop: 0 }}>
-          
-
                 {loadingPrjoects == false ? (
                   <View style={{ padding: 10 }}>
                     <ProjectPostSkeleton />
@@ -454,7 +450,6 @@ export default function HomePage() {
                         >
                           <ProjectPost
                             key={index}
-                              
                             project={item}
                             caption={item.project_title}
                             ımage={`${apiUrl}/${item.image.replace(
@@ -494,8 +489,14 @@ export default function HomePage() {
               >
                 <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN KONUTLAR</Text>
 
-                <TouchableOpacity style={styles.allBtn}
-                onPress={()=>navigation.navigate('AllRealtor',{name:'adfsd',data:featuredEstates})}
+                <TouchableOpacity
+                  style={styles.allBtn}
+                  onPress={() =>
+                    navigation.navigate("AllRealtor", {
+                      name: "adfsd",
+                      data: featuredEstates,
+                    })
+                  }
                 >
                   <Text style={{ color: "white", fontSize: 13 }}>
                     Tümünü Gör
@@ -513,6 +514,7 @@ export default function HomePage() {
                   ) : (
                     filteredHomes.map((item, index) => (
                       <RealtorPost
+                        GetId={GetIdForCart}
                         key={index}
                         HouseId={item.id}
                         price={`${
@@ -533,6 +535,7 @@ export default function HomePage() {
                         floor={`${
                           JSON.parse(item.housing_type_data)["floorlocation"]
                         } `}
+                        dailyRent={false}
                       />
                     ))
                   )}
@@ -579,6 +582,7 @@ export default function HomePage() {
                   floor={`${
                     JSON.parse(item.housing_type_data)["floorlocation"]
                   } `}
+                  dailyRent={false}
                 />
               ))}
             </ScrollView>
@@ -594,7 +598,7 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN İŞ ARSALAR</Text>
+                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN ARSALAR</Text>
 
                 <TouchableOpacity style={styles.allBtn}>
                   <Text style={{ color: "white", fontSize: 13 }}>
@@ -603,7 +607,6 @@ export default function HomePage() {
                 </TouchableOpacity>
               </View>
             </View>
-        
           </View>
           <View style={styles.slide4}>
             <View style={{ paddingTop: 0, paddingBottom: 10 }}>
@@ -616,7 +619,9 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN PREFABRİK YAPILAR</Text>
+                <Text style={{ fontSize: 12 }}>
+                  ÖNE ÇIKAN PREFABRİK YAPILAR
+                </Text>
 
                 <TouchableOpacity style={styles.allBtn}>
                   <Text style={{ color: "white", fontSize: 13 }}>
@@ -625,7 +630,6 @@ export default function HomePage() {
                 </TouchableOpacity>
               </View>
             </View>
-        
           </View>
           <View style={styles.slide4}>
             <View style={{ paddingTop: 0, paddingBottom: 10 }}>
@@ -647,7 +651,45 @@ export default function HomePage() {
                 </TouchableOpacity>
               </View>
             </View>
+
+            {
+                <ScrollView style={{ width: "100%" }}>
+                  {loadingPrjoects == false ? (
+                    <View style={{ top: 40, padding: 10 }}>
+                      <ProjectPostSkeleton />
+                    </View>
+                  ) : (
+                    filteredBookHouse.map((item, index) => (
+                      <RealtorPost
+                      GetId={GetIdForCart}
+                        key={index}
+                        HouseId={item.id}
+                        price={`${
+                          JSON.parse(item.housing_type_data)["daily_rent"]
+                        } `}
+                        title={item.housing_title}
+                        loading={loadingEstates}
+                        location={item.city_title + " / " + item.county_title}
+                        image={`${apiUrl}/housing_images/${
+                          JSON.parse(item.housing_type_data).image
+                        }`}
+                        m2={`${
+                          JSON.parse(item.housing_type_data)["squaremeters"]
+                        } `}
+                        roomCount={`${
+                          JSON.parse(item.housing_type_data)["room_count"]
+                        } `}
+                        floor={`${
+                          JSON.parse(item.housing_type_data)["floorlocation"]
+                        } `}
+                        dailyRent={true}
+                      />
+                    ))
+                  )}
+                </ScrollView>
+              }
         
+
           </View>
           <View style={styles.slide4}>
             <View style={{ paddingTop: 0, paddingBottom: 10 }}>
@@ -669,11 +711,65 @@ export default function HomePage() {
                 </TouchableOpacity>
               </View>
             </View>
-        
           </View>
-          
         </Swiper>
         {/* </ScrollView> */}
+        <Modal
+          isVisible={ModalForAddToCart}
+          onBackdropPress={() => setModalForAddToCart(false)}
+          animationIn={"zoomInUp"}
+          animationOut={"zoomOutUp"}
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropColor="transparent"
+          style={styles.modal4}
+        >
+          <View style={styles.modalContent4}>
+            <View style={{ padding: 10, gap: 10 }}>
+              <Text style={{ textAlign: "center" }}>
+                #1000{selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
+                Eminmisiniz?
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  gap: 20,
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "green",
+                    padding: 10,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    borderRadius: 6,
+                  }}
+                  onPress={() => {
+                    addToCard();
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Sepete Ekle</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#e44242",
+                    padding: 10,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    borderRadius: 6,
+                  }}
+                  onPress={() => {
+                    setModalForAddToCart(false);
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Vazgeç</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -713,7 +809,7 @@ const styles = StyleSheet.create({
   },
   slide1: {
     flex: 1,
-   
+
     paddingBottom: 30,
   },
   slide2: {
@@ -755,6 +851,17 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     padding: 5,
     borderRadius: 4,
+  },
+  modal4: {
+    justifyContent: "center",
+    margin: 0,
+    padding: 20,
+    backgroundColor: "#1414148c",
+  },
+  modalContent4: {
+    backgroundColor: "#fefefe",
+    padding: 20,
+    borderRadius: 10,
   },
 });
 {

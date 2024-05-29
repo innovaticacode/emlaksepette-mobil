@@ -26,7 +26,7 @@ export default function ProfileMap({mapData}) {
     
     <MapView
     
-    provider={PROVIDER_GOOGLE} 
+  
   initialRegion={{
     latitude:mapData?.data?.latitude,
     longitude:mapData?.data?.longitude,

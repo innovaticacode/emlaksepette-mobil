@@ -2,12 +2,12 @@ import { View, Text, StyleSheet ,TouchableOpacity,ScrollView ,Modal,TextInput,Li
 import {useState} from 'react'
 import { useRoute } from '@react-navigation/native'
 import SuggestItem from './profileComponents/SuggestItem';
-
+import { Platform } from "react-native";
 export default function Suggests() {
  
   const [modalVisible, setModalVisible] = useState(false);
     const route = useRoute();
-    const { header,name,color} = route.params;
+   
     const [Tabs, setTabs] = useState(0)
     const openModal=()=>{
       setModalVisible(!modalVisible)
@@ -37,12 +37,12 @@ export default function Suggests() {
             <TouchableOpacity style={[styles.TabBarBtn,{backgroundColor:Tabs==0? '#ebebeb':'#E54242'}]}
               onPress={()=>setTabs(0)}
             >
-              <Text style={[styles.tabBarText,{color:Tabs===0? 'red':'white',fontWeight:Tabs===0?'600':'normal'}]}>{name} (1)</Text>
+              <Text style={[styles.tabBarText,{color:Tabs===0? 'red':'white',fontWeight:Tabs===0?'600':'normal'}]}>asdasdas</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.TabBarBtn,{backgroundColor:Tabs==1? '#ebebeb':'#E54242'}]}
             onPress={()=>setTabs(1)}
             >
-              <Text style={[styles.tabBarText,{color:Tabs===1? 'red':'white',fontWeight:Tabs===1?'600':'normal'}]}> {name=='Başvurularım'?'Yanıtlananlar (0)':'Yanıtladıklarım (0)'}</Text>
+              <Text style={[styles.tabBarText,{color:Tabs===1? 'red':'white',fontWeight:Tabs===1?'600':'normal'}]}>Başvurularım</Text>
             </TouchableOpacity>
            
           
@@ -53,7 +53,7 @@ export default function Suggests() {
         <View style={{padding:15}}>
           {
             suggests.map((item,index)=>(
-              <SuggestItem openModal={openModal} name={name} color={color}
+              <SuggestItem openModal={openModal}
                 title={item.title} username={item.username} mail={item.mail}
                 location={item.location} status={item.status} job={item.job} key={index}
                 
@@ -66,7 +66,7 @@ export default function Suggests() {
         </View>
     </ScrollView>
     <Modal
-        animationType="slide" // veya "fade", "none" gibi
+        animationType="fade" // veya "fade", "none" gibi
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {

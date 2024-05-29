@@ -3,9 +3,38 @@ import React from 'react'
 import { ImageBackground } from 'react-native'
 import Icon from "react-native-vector-icons/Entypo"
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons'
+import { Platform } from "react-native";
+
 import { useNavigation } from '@react-navigation/native'
-export default function RentOrder({display,openSheet}) {
+import { addDotEveryThreeDigits } from '../../../../components/methods/merhod'
+export default function RentOrder({display,title,chekIn,chekOut,price,status}) {
+
     const navigation=useNavigation();
+    const months = [
+      "Ocak",
+      "Şubat",
+      "Mart",
+      "Nisan",
+      "Mayıs",
+      "Haziran",
+      "Temmuz",
+      "Ağustos",
+      "Eylül",
+      "Ekim",
+      "Kasım",
+      "Aralık"
+  ];
+    const checkInDateParts = chekIn.split('-');
+                        const checkOutDateParts = chekOut.split('-');
+
+    const checkInDay = checkInDateParts[2];
+                     
+                        const checkInYear = checkInDateParts[0];
+                        const checkInMonth = months[parseInt(checkInDateParts[1], 10) - 1];
+                        const checkOutMonth = months[parseInt(checkOutDateParts[1], 10) - 1];
+                        const checkOutDay = checkOutDateParts[2];
+                    
+                        const checkOutYear = checkOutDateParts[0];
   return (
     <TouchableOpacity onPress={()=>{
         navigation.navigate('RentOrderDetail',{display})
@@ -17,16 +46,29 @@ export default function RentOrder({display,openSheet}) {
             </View>
             <View style={styles.CaptionArea}>
                     <View style={{padding:4}}> 
-                        <Text style={{fontSize:14}}>Master Orman Köy Proje Arsaları</Text>
+                        <Text style={{fontSize:14}}>{title}</Text>
                     </View>
                     <View style={{flexDirection:'row',padding:4,gap:8}}>
-                    <Text style={{fontSize:12}}>27-28 Şubat 2024</Text>
+                    <Text style={{fontSize:12}}>{checkInDay}-{checkOutDay} {checkInMonth} {checkInYear}</Text>
                     
-                    <Text style={{fontSize:12}}>-  2500 ₺</Text>
+                    <Text style={{fontSize:12}}>-  {addDotEveryThreeDigits(price) } ₺</Text>
                     </View>
                    <View style={{padding:4,flexDirection:'row',alignItems:'center',gap:5}}>
-                    <Icon name='check'/>
-                    <Text style={{fontSize:13}}>Onaylandı</Text>
+               
+                    {status==1 &&  
+                    <>
+                         <Icon name='check' color={'green'}/>
+                         <Text style={{fontSize:13,color:'green'}}>Onaylandı</Text>
+                    </>
+                  }
+
+{status==0 &&  
+                    <>
+                         <Icon name='check' color={'#e5781e'}/>
+                         <Text style={{fontSize:13,color:'#e5781e'}}>Onay Bekliyor</Text>
+                    </>
+                  }
+                  
                    </View>
                    
             </View>

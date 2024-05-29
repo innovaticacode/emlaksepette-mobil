@@ -1,3 +1,4 @@
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,146 +9,125 @@ import {
   Dimensions,
   TouchableOpacity,
   ScrollView,
-  Animated,
 } from "react-native";
-import React, { useState, useRef, useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import {
   Collapse,
   CollapseHeader,
   CollapseBody,
-  AccordionList,
 } from "accordion-collapse-react-native";
 import Modal from "react-native-modal";
 import ProfileSettingsItem from "../../components/ProfileSettingsItem";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
 import * as SecureStore from "expo-secure-store";
-import { Shadow } from "react-native-shadow-2";
-import Verification from "./ProfilePages/Verification";
-import Menu from "./Menu.json";
 import axios from "axios";
+import Menu from "./Menu.json";
+import { Platform } from "react-native";
+import { ActivityIndicator } from "react-native";
+
 export default function ShoppingProfile() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // JSON dosyasını require ile içe aktarıyoruz
-        const response = require("./Menu.json");
-        setData(response);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // Etiketlere göre veriyi grupla
-  const groupedData = data.reduce((acc, item) => {
-    const existingGroupIndex = acc.findIndex(
-      (group) => group.label === item.label
-    );
-    if (existingGroupIndex !== -1) {
-      // Grup zaten varsa alt menüyü ekleyin
-      acc[existingGroupIndex].subMenu.push(item);
-    } else {
-      // Grup yoksa yeni bir grup oluşturun
-      acc.push({ label: item.label, subMenu: [item] });
-    }
-    return acc;
-  }, []);
-
   const { width, height, fontScale } = Dimensions.get("window");
+  const navigation = useNavigation();
   const route = useRoute();
+  const [loading, setLoading] = useState(true);
 
   const [user, setUser] = useState({});
-  const [İsLoggedIn, setisLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [data, setData] = useState([]);
+  const [permissionsUser, setPermissionsUser] = useState([]);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [openAccor, setOpenAccor] = useState({});
+  const PhotoUrl = "https://test.emlaksepette.com/storage/profile_images/";
 
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
 
   useEffect(() => {
-    if (user.role == "Kurumsal Hesap") {
-      setisLoggedIn(true);
+    if (user.role === "Kurumsal Hesap") {
+      setIsLoggedIn(true);
     } else {
-      setisLoggedIn(false);
+      setIsLoggedIn(false);
     }
   }, [user]);
 
-  const logout = () => {
-    setdialogVisible(false);
-    SecureStore.setItemAsync("user", "");
-    navigation.navigate("HomePage");
-  };
-  const logoutModal = () => {
-    setdialogVisible(true);
-  };
-  const navigation = useNavigation();
-
-  const [openAccor, setopenAccor] = useState(false);
-
-  const [dialogVisible, setdialogVisible] = useState(false);
-  const PhotoUrl = "https://test.emlaksepette.com/storage/profile_images/";
-
-//permissionslara atılan istek
-
-
-const [permissionsUser, setpermissionsUser] = useState([])
-
-  const fetchData = async () => {
+  const fetchPermissionUser = async () => {
     try {
       if (user.access_token) {
-        const response = await axios.get(`https://test.emlaksepette.com/api/institutional/users/${user?.id}`, {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`
+        const response = await axios.get(
+          `https://test.emlaksepette.com/api/institutional/users/${user?.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
           }
-        });
-          setpermissionsUser(response.data.permissions)
+        );
+        setPermissionsUser(response.data.permissions);
       }
-   
     } catch (error) {
-      console.error('eror', error);
-    
+      console.error("error", error);
     }
   };
 
+  useEffect(() => {
+    fetchPermissionUser();
+  }, [user]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true); // Yükleme başladı
 
-useEffect(()=>{
-  fetchData();
-},[user])
+        const response = require("./Menu.json");
+        const filteredMenu = response.filter((item) => {
+          if (item.subMenu) {
+            const filteredSubMenu = item.subMenu.filter((subItem) =>
+              permissionsUser.includes(subItem.key)
+            );
+            if (filteredSubMenu.length > 0) {
+              item.subMenu = filteredSubMenu;
+              return true;
+            }
+            return false;
+          }
+          return permissionsUser.includes(item.key);
+        });
+        setData(filteredMenu);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false); // Yükleme tamamlandı
+      }
+    };
 
+    fetchData();
+  }, [permissionsUser]);
 
-const [PermissionsKeyOfUser, setPermissionsKeyOfUser] = useState([])
+  const groupedData = data.reduce((acc, item) => {
+    const existingGroupIndex = acc.findIndex(
+      (group) => group.label === item.label
+    );
+    if (existingGroupIndex !== -1) {
+      acc[existingGroupIndex].subMenu.push(item);
+    } else {
+      acc.push({ label: item.label, subMenu: [item] });
+    }
+    return acc;
+  }, []);
 
-useEffect(() => {
-  if (data.length > 0) {
-    const keysArray = data.map(item => item.key);
-    setPermissionsKeyOfUser(keysArray);
-  }
-}, [data]);
+  const logout = () => {
+    setDialogVisible(false);
+    SecureStore.setItemAsync("user", "");
+    navigation.navigate("HomePage");
+  };
 
-
-const commonKeys = permissionsUser && PermissionsKeyOfUser.length > 0
-? PermissionsKeyOfUser.filter(key => permissionsUser.includes(key))
-: [];
-
-
-// Filtrelenmiş key değerlerine göre menü öğelerini seçin
-const filteredMenuData = groupedData.filter(item =>
-  (item.subMenu && item.subMenu.length > 0) || commonKeys.includes(item.key)
-);
-
-
-console.log(filteredMenuData.length + "sdsf")
-
-
-
-//permissionslara atılan istek
-
+  const toggleAccor = (index) => {
+    setOpenAccor((prevState) => ({
+      ...prevState,
+      [index]: !prevState[index],
+    }));
+  };
 
   return (
     <View style={style.container}>
@@ -229,714 +209,110 @@ console.log(filteredMenuData.length + "sdsf")
           </View>
         </View>
       </View>
-      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
-        <View style={{ gap: 20, padding: 10 }}>
-          {filteredMenuData.map((group, index) => (
-            <View key={index}>
-              {/* Başlık */}
-              <Text style={style.headerText}>{group.label}</Text>
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
+          <View style={{ gap: 20, padding: 10 }}>
+            {groupedData.map((group, index) => (
+              <View key={index}>
+                {/* Başlık */}
+                <Text style={style.headerText}>{group.label}</Text>
 
-              {/* Alt menü */}
-              {group.subMenu.length > 0 &&
-                group.subMenu.map((item, subIndex) =>
-                  item.subMenu ? (
-                    <Collapse
-                      key={subIndex}
-                      onToggle={() => {
-                        setopenAccor((prevState) => ({
-                          ...prevState,
-                          [subIndex]: !prevState[subIndex],
-                        }));
-                      }}
-                      isCollapsed={!openAccor[subIndex]}
-                    >
-                      <CollapseHeader>
-                        <View>
+                {/* Alt menü */}
+                {group.subMenu.length > 0 &&
+                  group.subMenu.map((item, subIndex) =>
+                    item.subMenu ? (
+                      <Collapse
+                        key={subIndex}
+                        onToggle={() => {
+                          setOpenAccor((prevState) => ({
+                            ...prevState,
+                            [subIndex]: !prevState[subIndex],
+                          }));
+                        }}
+                        isCollapsed={!openAccor[subIndex]}
+                      >
+                        <CollapseHeader>
+                          <View>
+                            <ProfileSettingsItem
+                              key={subIndex}
+                              text={item.text}
+                              ıconName={item.icon}
+                              arrowControl={
+                                item.subMenu && item.subMenu.length > 0
+                              }
+                              isCollapsed={!openAccor[subIndex]}
+                            />
+                          </View>
+                        </CollapseHeader>
+                        <CollapseBody style={{ margin: 10, gap: 10 }}>
+                          {item.subMenu &&
+                            item.subMenu.map((subItem, subItemIndex) => (
+                              <TouchableOpacity
+                                key={subItemIndex}
+                                onPress={() => navigation.navigate(subItem.url)}
+                              >
+                                <ProfileSettingsItem
+                                  text={subItem.text}
+                                  arrowNone={true}
+                                />
+                              </TouchableOpacity>
+                            ))}
+                        </CollapseBody>
+                      </Collapse>
+                    ) : (
+                      <View>
+                        <TouchableOpacity
+                          onPress={() => navigation.navigate(item.url)}
+                        >
                           <ProfileSettingsItem
-                          key={subIndex}
                             text={item.text}
-                            iconName={item.icon}
-                            arrowControl={
+
+                            ıconName={item.icon}
+                            arrowControl={ 
                               item.subMenu && item.subMenu.length > 0
                             }
                             isCollapsed={!openAccor[subIndex]}
-                          />
-                        </View>
-                      </CollapseHeader>
-                      <CollapseBody  style={{ margin: 10, gap: 10 }}>
-                        {item.subMenu &&
-                          item.subMenu.map((subItem, subItemIndex) => (
-                            <TouchableOpacity
-                              key={subItemIndex}
-                              onPress={() => navigation.navigate(subItem.url)}
-                            >
-                              <ProfileSettingsItem
-                         
-                                text={subItem.text}
-                                arrowNone={true}
-                              />
-                            </TouchableOpacity>
-                          ))}
-                      </CollapseBody>
-                    </Collapse>
-                  ) : (
-                    <View>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate(item.url)}
-                      >
-                        <ProfileSettingsItem
-                        
-                          text={item.text}
-                          ıconName={item.icon}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  )
-                )}
-            </View>
-          ))}
-        </View>
-        <View style={{ flex: 1 / 2 }}>
-                    <TouchableOpacity
-                      onPress={logout}
-                      style={{
-                        backgroundColor: "#F8D7DA",
-                        padding: 10,
-                        borderRadius: 6,
-                      }}
-                    >
-                      <Text style={{ textAlign: "center", color: "#721C24" }}>
-                        Çıkış Yap
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-        {/* 
-          <View>
-            {İsLoggedIn ? (
-              <>
-                <View style={{ gap: 30 }}>
-                  {user.corporateAccountStatus === 1 ? (
-                    <>
-                    {
-                      user.has_club==1 &&
-                      <View>
-                      <Text style={style.headerText}>Koleksiyonlarım</Text>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate("Collecitons")}
-                      >
-                        <ProfileSettingsItem
-                          text={user.corporate_type=='Emlak Ofisi'? 'Portföylerim': "Koleksiyonlarım"}
-                          ıconName="bookmark-border"
-                        />
-                      </TouchableOpacity>
-                    </View>
-                    }
-                      {
-                      user.has_club==0 &&
-                      <View>
-                      <Text style={style.headerText}>Emlak Kulüp</Text>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate("RealtorClub")}
-                      >
-                        <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
-                      </TouchableOpacity>
-                    </View>
-                    }
-                         {
-                      user.has_club==2 &&
-                      <View>
-                      <Text style={style.headerText}>Emlak Kulüp</Text>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate("RealtorClub")}
-                      >
-                        <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
-                      </TouchableOpacity>
-                    </View>
-                    }
-                      {
-                      user.has_club==3 &&
-                      <View>
-                      <Text style={style.headerText}>Emlak Kulüp</Text>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate("RealtorClub")}
-                      >
-                        <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
-                      </TouchableOpacity>
-                    </View>
-                    }
-                    
 
-                      <View>
-                        <Text style={style.headerText}>İlanlarım</Text>
-                        {
-                          user.corporate_type== 'Emlak Ofisi'?
-                            <></>:
-                            <TouchableOpacity
-                            onPress={() =>
-                              navigation.navigate("MyProject", {
-                                header2: "Proje İlanları",
-                              })
-                            }
-                          >
-                            <ProfileSettingsItem
-                              text="Proje İlanlarım"
-                              IconType={true}
-                              IconFeather="plus"
-                            />
-                          </TouchableOpacity>
-                          
-                        }
-                      
-
-                        <TouchableOpacity
-                          onPress={() =>
-                            navigation.navigate("MyRealtor", {
-                              header: "Emlak İlanları",
-                              hidden: "none",
-                            })
-                          }
-                        >
-                          <ProfileSettingsItem
-                            text="Emlak İlanlarım"
-                            IconType={true}
-                            IconFeather="plus"
                           />
                         </TouchableOpacity>
                       </View>
-                      <View>
-                        <Text style={style.headerText}>Komşumu Gör</Text>
-                        <TouchableOpacity
-                          onPress={() => navigation.navigate("SeeNeigbour")}
-                        >
-                          <ProfileSettingsItem
-                            text="Komşumu Gör"
-                            IconType={true}
-                            IconFeather="eye"
-                          />
-                        </TouchableOpacity>
-                      </View>
-                      <View>
-                        <Text style={style.headerText}>Başvurular</Text>
-                        <TouchableOpacity
-                          onPress={() =>
-                            navigation.navigate("ComeSwapScreen", {
-                              color: true,
-                            })
-                          }
-                        >
-                          <ProfileSettingsItem
-                            text="Takas Başvurularım"
-                            ıconName="swap-horiz"
-                            IconType={false}
-                          />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          onPress={() =>
-                            navigation.navigate("SwapScreen", {
-                              color: true,
-                            })
-                          }
-                        >
-                          <ProfileSettingsItem
-                            text="Gelen Takas Başvurularım"
-                            ıconName="swap-horiz"
-                            IconType={false}
-                          />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          onPress={() =>
-                            navigation.navigate("Suggest", {
-                              name: "Gelen Başvurular",
-                              color: true,
-                            })
-                          }
-                        >
-                          <ProfileSettingsItem
-                            text="Gelen Konut Başvuruları"
-                            IconFeather="users"
-                            IconType={true}
-                          />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          onPress={() =>
-                            navigation.navigate("Suggest", {
-                              name: "Başvurularım",
-                              color: false,
-                            })
-                          }
-                        >
-                          <ProfileSettingsItem
-                            text="Başvurularım"
-                            IconFeather="users"
-                            IconType={true}
-                          />
-                        </TouchableOpacity>
-                      </View>
-
-                      <View>
-                        <Text style={style.headerText}>
-                          Mağazam Emlak Sepette
-                        </Text>
-                        <TouchableOpacity
-                          onPress={() => navigation.navigate("DashBord")}
-                        >
-                          <ProfileSettingsItem
-                            text="Gösterge Paneli"
-                            ıconName="home-work"
-                          />
-                        </TouchableOpacity>
-
-                        <Collapse
-                          onToggle={() => {
-                            setopenAccor(!openAccor);
-                          }}
-                        >
-                          <CollapseHeader>
-                            <View>
-                              <ProfileSettingsItem
-                                text="Alım Satım Geçmişim"
-                                ıconName="shopping-bag"
-                                arrowControl={openAccor}
-                              />
-                            </View>
-                          </CollapseHeader>
-                          <CollapseBody style={{ margin: 10, gap: 10 }}>
-                            <TouchableOpacity
-                              style={{}}
-                              onPress={() => {
-                               
-                                navigation.navigate("Sell", {
-                                  displayInfo: "none",
-                                });
-                              }}
-                            >
-                              <ProfileSettingsItem
-                                text="Aldıklarım"
-                                arrowNone={true}
-                              />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              style={{}}
-                              onPress={() => {
-                             
-                                navigation.navigate("Sell", {
-                                  text: "Satılmıştır",
-                                });
-                              }}
-                            >
-                              <ProfileSettingsItem
-                                text="Sattıklarım"
-                                arrowNone={true}
-                              />
-                            </TouchableOpacity>
-                          </CollapseBody>
-                        </Collapse>
-                        <Collapse onToggle={() => setopenAccor2(!openAccor2)}>
-                          <CollapseHeader>
-                            <View>
-                              <ProfileSettingsItem
-                                text="Kiralama Geçmişim"
-                                ıconName="shopping-bag"
-                                arrowControl={openAccor2}
-                              />
-                            </View>
-                          </CollapseHeader>
-                          <CollapseBody style={{ margin: 10, gap: 10 }}>
-                            <TouchableOpacity
-                              style={{}}
-                              onPress={() => {
-                          
-                                navigation.navigate("Rent", {
-                                  text: "Kiraya Verdiklerim",
-                                  display: "none",
-                                  name: "Kiraya Verdiklerim",
-                                });
-                              }}
-                            >
-                              <ProfileSettingsItem
-                                text="Kiraya verdiklerim"
-                                arrowNone={true}
-                              />
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                              style={{}}
-                              onPress={() => {
-                             
-                                navigation.navigate("Rent", {
-                                  text: "Kiraladıklarım",
-                                  name: "Kiraladıklarım",
-                                });
-                              }}
-                            >
-                              <ProfileSettingsItem
-                                text="Kiraladıklarım"
-                                arrowNone={true}
-                              />
-                            </TouchableOpacity>
-                          </CollapseBody>
-                        </Collapse>
-
-                        <Collapse onToggle={() => setopenAccor3(!openAccor3)}>
-                          <CollapseHeader>
-                            <View>
-                              <ProfileSettingsItem
-                                text="İlanda Kampanya Yap"
-                                ıconName="local-offer"
-                                arrowControl={openAccor3}
-                              />
-                            </View>
-                          </CollapseHeader>
-                          <CollapseBody style={{ margin: 10, gap: 10 }}>
-                            <TouchableOpacity
-                              style={{}}
-                              onPress={() => {
-                               
-                                navigation.navigate("Offer", {
-                                  name: "Kampanya Oluştur",
-                                });
-                              }}
-                            >
-                              <ProfileSettingsItem
-                                text="Kampanya Oluştur"
-                                arrowNone={true}
-                              />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              style={{}}
-                              onPress={() => {
-                            
-                                navigation.navigate("OfferList", {
-                                  name: "Kampanya Listele",
-                                });
-                              }}
-                            >
-                              <ProfileSettingsItem
-                                text="Kampanyaları Listele"
-                                arrowNone={true}
-                              />
-                            </TouchableOpacity>
-                          </CollapseBody>
-                        </Collapse>
-                      </View>
-                      <View>
-                        <Text style={style.headerText}>Hesabım & Yardım</Text>
-                        <TouchableOpacity
-                          onPress={() => navigation.navigate("UpdateProfile")}
-                        >
-                          <ProfileSettingsItem
-                            text="Profili Güncelle"
-                            ıconName="edit"
-                          />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          onPress={() => navigation.navigate("ChangePas")}
-                        >
-                          <ProfileSettingsItem
-                            text="Şifreyi Değiştir"
-                            ıconName="lock"
-                          />
-                        </TouchableOpacity>
-                        <Collapse onToggle={() => setopenAccor4(!openAccor4)}>
-                          <CollapseHeader>
-                            <View>
-                              <ProfileSettingsItem
-                                text="Kullanıcı Tipi Oluştur"
-                                ıconName="person-add-alt-1"
-                                arrowControl={openAccor4}
-                              />
-                            </View>
-                          </CollapseHeader>
-                          <CollapseBody style={{ margin: 10, gap: 10 }}>
-                            <TouchableOpacity
-                              style={{}}
-                              onPress={() => {
-                            
-                                navigation.navigate("UserTypes");
-                              }}
-                            >
-                              <ProfileSettingsItem
-                                text="Listele"
-                                arrowNone={true}
-                              />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              style={{}}
-                              onPress={() => {
-                       
-                                navigation.navigate("CreateUserType", {
-                                  header: "yeni ekleden geldi",
-                                  name: "Kullanıcı Ekle",
-                                  hidden2: "none",
-                                });
-                              }}
-                            >
-                              <ProfileSettingsItem
-                                text="Yeni Ekle"
-                                arrowNone={true}
-                              />
-                            </TouchableOpacity>
-                          </CollapseBody>
-                        </Collapse>
-
-                        <Collapse onToggle={() => setopenAccor5(!openAccor5)}>
-                          <CollapseHeader>
-                            <View>
-                              <ProfileSettingsItem
-                                text="Alt Kullanıcı Oluştur"
-                                ıconName="person-add-alt-1"
-                                arrowControl={openAccor5}
-                              />
-                            </View>
-                          </CollapseHeader>
-                          <CollapseBody style={{ margin: 10, gap: 10 }}>
-                            <TouchableOpacity
-                              style={{}}
-                              onPress={() => {
-                            
-                                navigation.navigate("UsersList", {
-                               
-                                });
-                              }}
-                            >
-                              <ProfileSettingsItem
-                                text="Listele"
-                                arrowNone={true}
-                              />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              style={{}}
-                              onPress={() => {
-                           
-                                navigation.navigate("CreateUser", {
-                                  header: "Yeni Ekleden geldi",
-                                  name: "Kullanıcı Oluştur",
-                                  hidden4: "none",
-                                });
-                              }}
-                            >
-                              <ProfileSettingsItem
-                                text="Yeni Kullanıcı Ekle"
-                                arrowNone={true}
-                              />
-                            </TouchableOpacity>
-                          </CollapseBody>
-                        </Collapse>
-                        <Collapse onToggle={() => setopenAccor6(!openAccor6)}>
-                          <CollapseHeader>
-                            <View>
-                              <ProfileSettingsItem
-                                text="Reklam Görselleri"
-                                ıconName="image"
-                                arrowControl={openAccor6}
-                              />
-                            </View>
-                          </CollapseHeader>
-                          <CollapseBody style={{ margin: 10, gap: 10 }}>
-                            <TouchableOpacity
-                              style={{}}
-                              onPress={() =>
-                                navigation.navigate("AdsPictureList")
-                              }
-                            >
-                              <ProfileSettingsItem
-                                text="Listele"
-                                arrowNone={true}
-                              />
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                              style={{}}
-                              onPress={() =>
-                                navigation.navigate("UploadAdsPicture")
-                              }
-                            >
-                              <ProfileSettingsItem
-                                text="Oluştur"
-                                arrowNone={true}
-                              />
-                            </TouchableOpacity>
-                          </CollapseBody>
-                        </Collapse>
-                      </View>
-                    </>
-                  ) : (
-                    <Verification />
+                    )
                   )}
-                </View>
-              </>
-            ) : (
-              <>
-                <View style={{ gap: 30 }}>
-                {
-                      user.has_club==1 &&
-                      <View>
-                      <Text style={style.headerText}>Koleksiyonlarım</Text>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate("Collecitons")}
-                      >
-                        <ProfileSettingsItem
-                          text="Koleksiyonlarım"
-                          ıconName="bookmark-border"
-                        />
-                      </TouchableOpacity>
-                    </View>
-                    }
-                      {
-                      user.has_club==0 &&
-                      <View>
-                      <Text style={style.headerText}>Emlak Kulüp</Text>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate("RealtorClub")}
-                      >
-                        <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
-                      </TouchableOpacity>
-                    </View>
-                    }
-                    {
-                      user.has_club==2 &&
-                      <View>
-                      <Text style={style.headerText}>Emlak Kulüp</Text>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate("RealtorClub")}
-                      >
-                        <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
-                      </TouchableOpacity>
-                    </View>
-                    }
-                      {
-                      user.has_club==3 &&
-                      <View>
-                      <Text style={style.headerText}>Emlak Kulüp</Text>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate("RealtorClub")}
-                      >
-                        <ProfileSettingsItem text="Emlak Kulüp Başvurusu" />
-                      </TouchableOpacity>
-                    </View>
-                    }
-                  <View>
-                    <Text style={style.headerText}>Komşumu Gör</Text>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate("SeeNeigbour")}
-                    >
-                      <ProfileSettingsItem
-                        text="Komşumu Gör"
-                        IconType={true}
-                        IconFeather="eye"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  <View>
-                    <Text style={style.headerText}>Başvurular</Text>
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate("SwapScreen", {
-                          color: true,
-                        })
-                      }
-                    >
-                      <ProfileSettingsItem
-                        text="Takas Başvurularım"
-                        IconFeather="users"
-                        IconType={true}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate("Suggest", {
-                          name: "Başvurularım",
-                          color: false,
-                        })
-                      }
-                    >
-                      <ProfileSettingsItem
-                        text="Başvurularım"
-                        IconFeather="users"
-                        IconType={true}
-                      />
-                    </TouchableOpacity>
-                  </View>
-
-                  <View>
-                    <Text style={style.headerText}>Mağazam Emlak Sepette</Text>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate("DashBord")}
-                    >
-                      <ProfileSettingsItem
-                        text="Gösterge Paneli"
-                        ıconName="home-work"
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate("Forms")}
-                    >
-                      <ProfileSettingsItem
-                        text="Sat Kirala Formlarım"
-                        ıconName="info-outline"
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("Sell", { displayInfo: "none" });
-                      }}
-                    >
-                      <ProfileSettingsItem
-                        text="Aldıklarım"
-                        ıconName="shopping-bag"
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setRentModalVisible(false);
-                        navigation.navigate("Rent", {
-                          text: "Kiraladıklarım",
-                          name: "Kiraladıklarım",
-                        });
-                      }}
-                    >
-                      <ProfileSettingsItem
-                        text="Kiraladıklarım"
-                        ıconName="shopping-bag"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                  <View>
-                    <Text style={style.headerText}>Hesabım & Yardım</Text>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate("UpdateProfile")}
-                    >
-                      <ProfileSettingsItem
-                        text="Profili Güncelle"
-                        ıconName="edit"
-                      />
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate("ChangePas")}
-                    >
-                      <ProfileSettingsItem
-                        text="Şifreyi Değiştir"
-                        ıconName="lock"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </>
-            )}
-           
+              </View>
+            ))}
           </View>
-        </View>
-
-        <Shadow>
+          <View
+            style={{ flex: 1 / 2, paddingBottom: 50, alignItems: "center" }}
+          >
+            <TouchableOpacity
+              onPress={() => setDialogVisible(true)}
+              style={{
+                backgroundColor: "#EA2A28",
+                padding: 10,
+                borderRadius: 6,
+                width: "80%",
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "#ffffff",
+                  fontWeight: "500",
+                }}
+              >
+                Çıkış Yap
+              </Text>
+            </TouchableOpacity>
+          </View>
           <Modal
-            animationType="slide"
-            onBackdropPress={() => setdialogVisible(!dialogVisible)}
+            animationType="fade"
+            onBackdropPress={() => setDialogVisible(!dialogVisible)}
             visible={dialogVisible}
             onRequestClose={() => {
               Alert.alert("Modal has been closed.");
-              setdialogVisible(!dialogVisible);
+              setDialogVisible(!dialogVisible);
             }}
           >
             <View style={{}}>
@@ -986,7 +362,7 @@ console.log(filteredMenuData.length + "sdsf")
                           borderRadius: 6,
                         },
                       ]}
-                      onPress={() => setdialogVisible(!dialogVisible)}
+                      onPress={() => setDialogVisible(!dialogVisible)}
                     >
                       <Text
                         style={{
@@ -1003,8 +379,8 @@ console.log(filteredMenuData.length + "sdsf")
               </View>
             </View>
           </Modal>
-        </Shadow> */}
-      </ScrollView>
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -1056,8 +432,9 @@ const style = StyleSheet.create({
     borderColor: "#e6e6e6",
   },
   headerText: {
-    fontSize: 15,
-    color: "#525B75",
+    fontSize: 13,
+    color: "#000000",
+    fontWeight: "bold",
   },
   animatedView: {
     alignItems: "center",

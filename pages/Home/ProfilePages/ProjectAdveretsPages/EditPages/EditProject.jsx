@@ -82,7 +82,7 @@ export default function EditProject() {
         </View>
         <View style={styles.card}>
           <Modal
-            animationType="slide"
+            animationType="fade"
             transparent={false}
             visible={showCoverImageModal}
             style={{backgroundColor:'#000'}}

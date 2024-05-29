@@ -6,9 +6,10 @@ import {
   ScrollView,
   SafeAreaView,
   StyleSheet,
-  ImageBackground,
-  Platform,
+  ImageBackground
 } from "react-native";
+import { Platform } from "react-native";
+
 import Icon from "react-native-vector-icons/AntDesign";
 import Header from "../../components/Header";
 import { useState,useEffect} from "react";

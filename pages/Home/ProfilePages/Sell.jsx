@@ -1,9 +1,12 @@
 import { View, Text, StyleSheet, TouchableOpacity, Keyboard,ScrollView } from 'react-native'
-import {useState} from 'react'
+import {useState,useEffect} from 'react'
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { SearchBar } from '@rneui/base';
 import Icon from "react-native-vector-icons/AntDesign"
 import Order from './profileComponents/Order';
+import { getValueFor } from '../../../components/methods/user';
+import { Platform } from "react-native";
+import axios from 'axios';
 export default function Sell() {
   const [search, setSearch] = useState("");
   const [Tabs, setTabs] = useState(0)
@@ -11,25 +14,40 @@ export default function Sell() {
     setSearch(search);
   };
   const route = useRoute();
+  const [user, setuser] = useState({})
+  useEffect(() => {
+    getValueFor("user", setuser);
+  }, []);
 
+const [products, setproducts] = useState([])
 
-  const [products, setProducts] = useState([
-    { id: 1,  date: '2023-01-15' },
-    { id: 2,  date: '2023-03-10' },
-    { id: 3,  date: '2022-12-05' }
-  ])
+  const fetchData = async () => {
+    try {
+      if(user?.access_token){
+        const response = await axios.get(
+          "https://test.emlaksepette.com/api/institutional/get_solds",
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+        setproducts(response.data.solds)
+      }
+      
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, [user]);
 
-//  const date = new Date();
-//  const dayName = date.toLocaleDateString('tr-TR', { weekday: 'long' });
-//  const monthName = date.toLocaleDateString('tr-TR', { month: 'long' });
-  
-//  console.log("Gün: ", dayName);
-
- 
+    console.log(products,'dfsdfsfsd')
 
   return ( 
     <View style={style.container} onTouchStart={()=>Keyboard.dismiss()}>
-      
+
         <View style={style.Navbar}>
             <View style={style.SearchInput}>
               <SearchBar
@@ -60,37 +78,16 @@ export default function Sell() {
                  </TouchableOpacity>
             </View>
         </View>
-        <View style={style.TabBar}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={{display:'flex',flexDirection:'row',gap:20}}>
-            <TouchableOpacity style={[style.TabBarBtn,{backgroundColor:Tabs==0? '#ebebeb':'#E54242',borderWidth:Tabs==0? 1:0, borderColor:'#E54242'}]}
-              onPress={()=>setTabs(0)}
-            >
-              <Text style={[style.tabBarText,{color:Tabs===0? '#E54242':'white',fontWeight:Tabs===0?'600':'normal'}]}>Tümü</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[style.TabBarBtn,{backgroundColor:Tabs==1? '#ebebeb':'#E54242',borderWidth:Tabs==1? 1:0, borderColor:'#E54242'}]}
-            onPress={()=>setTabs(1)}
-            >
-              <Text style={[style.tabBarText,{color:Tabs===1? '#E54242':'white',fontWeight:Tabs===1?'600':'normal'}]}>Onay Bekleyenler</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[style.TabBarBtn,{backgroundColor:Tabs==2? '#ebebeb':'#E54242',borderWidth:Tabs==2? 1:0, borderColor:'#E54242'}]}
-              onPress={()=>setTabs(2)}
-            >
-              <Text style={[style.tabBarText,{color:Tabs===2? '#E54242':'white',fontWeight:Tabs===2?'600':'normal'}]}>İptaller</Text>
-            </TouchableOpacity>
-                 
-            </View>
-        </ScrollView>
-        </View>
+      
         <ScrollView>
         <View style={style.orders}>
-                  <Order display={'none'} text={'deneme'}/>
-                  {/* <Order display={displayInfo} text={text}/>
-                  <Order display={displayInfo} text={text}/>
-                  <Order display={displayInfo} text={text}/>
-                  <Order display={displayInfo} text={text}/>
-                  <Order display={displayInfo} text={text}/>
-                  <Order display={displayInfo} text={text}/> */}
+          {
+            products.map((item,index)=>(
+              <Order item={item}/>
+            ))
+          }
+                 
+          
                  
 
         </View>

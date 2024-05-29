@@ -5,8 +5,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   StyleSheet,
-  ImageBackground,
-  Platform,
+  ImageBackground
 } from "react-native";
 import React, { useState ,useEffect} from "react";
 import Favorite from "../../components/Favorite";
@@ -19,6 +18,7 @@ import Favorites from "./Favorites";
 import CollectionsPage from "./CollectionsPage";
 import { getValueFor } from "../../components/methods/user";
 import { ActivityIndicator } from "react-native";
+import { Platform } from 'react-native';
 
 export default function Test() {
   const navigation = useNavigation();
@@ -34,7 +34,6 @@ export default function Test() {
     getValueFor("user",setuser)
   },[]);
 
-  console.log(user + 'ffdfdfd')
 
 
   return (

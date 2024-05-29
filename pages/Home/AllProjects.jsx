@@ -3,7 +3,6 @@ import {
   Text,
   StyleSheet,
   SafeAreaView,
-  Platform,
   ScrollView,
   TouchableOpacity,
   ImageBackground,
@@ -20,6 +19,8 @@ import Categories from "../../components/Categories";
 import ProjectPost from "../../components/ProjectPost";
 import * as Animatable from "react-native-animatable";
 import axios from "axios";
+import { Platform } from "react-native";
+
 export default function AllProjects() {
   const apiUrl = "https://test.emlaksepette.com/";
   const route = useRoute();

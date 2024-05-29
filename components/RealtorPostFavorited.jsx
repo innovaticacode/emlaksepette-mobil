@@ -13,7 +13,7 @@ import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
 import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
-
+import { Platform } from "react-native";
 export default function RealtorPostFavorited({
   title,
   loading,

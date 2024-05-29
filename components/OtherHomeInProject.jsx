@@ -12,6 +12,7 @@ import Bblok from "./Bloks/Bblok";
 import ShoppinInfo from "./ShoppinInfo";
 import Posts from "./Posts";
 import { apiRequestGet } from "./methods/apiRequest";
+import { Platform } from "react-native";
 export default function OtherHomeInProject({
   selectedTab,
   getBlockItems,
@@ -21,7 +22,9 @@ export default function OtherHomeInProject({
   OpenFormModal,
   data,
   getLastItemCount,
-  openCollection
+  openCollection,
+  GetIdForCart,
+  GetID
 }) {
   const [tabs, setTabs] = useState(0);
   const [rooms, setRooms] = useState([]);
@@ -82,6 +85,8 @@ export default function OtherHomeInProject({
             }).map((index, _index) => {
               return (
                 <Posts
+                GetID={GetID}
+                GetIdForCart={GetIdForCart}
                 openCollection={openCollection}
                   key={_index}
                   data={data}

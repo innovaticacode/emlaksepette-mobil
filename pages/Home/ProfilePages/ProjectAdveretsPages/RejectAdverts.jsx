@@ -7,6 +7,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { apiRequestGetWithBearer } from '../../../../components/methods/apiRequest';
 import axios from "axios"
 import { getValueFor } from '../../../../components/methods/user';
+import { Platform } from "react-native";
 export default function RejectAdverts({header,header2,hidden}) {
     const translateY = useRef(new Animated.Value(400)).current;
     const [display, setdisplay] = useState(false)

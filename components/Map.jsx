@@ -29,7 +29,7 @@ export default function Map({mapData}) {
     
     <MapView
     
-    provider={PROVIDER_GOOGLE} 
+   
   initialRegion={{
     latitude:locationCoords[0],
     longitude:locationCoords[1],

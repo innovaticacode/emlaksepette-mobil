@@ -5,7 +5,6 @@ import MapView ,{ Marker ,PROVIDER_GOOGLE}from 'react-native-maps';
 import * as Location from 'expo-location'
 export default function PostMap({data}) {
   var locationCoords = data.project.location.split(',');
-  console.log(locationCoords)
   const handleGetDirections = () => {
     // Harita uygulamasını açmak ve seçilen konuma yönlendirme yapmak için openMap fonksiyonunu kullanıyoruz
     if (locationCoords && locationCoords[0] && locationCoords[1]) {
@@ -28,7 +27,7 @@ export default function PostMap({data}) {
       <Text style={{color:'white'}}>Yol Tarifi Al</Text>
       </TouchableOpacity>  
     <MapView
-    provider={PROVIDER_GOOGLE}
+  
   initialRegion={{
     latitude:locationCoords[0],
     longitude:locationCoords[1],

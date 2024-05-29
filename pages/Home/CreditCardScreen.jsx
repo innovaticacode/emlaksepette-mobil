@@ -2,7 +2,7 @@ import { View, Text,StyleSheet,TextInput, TouchableOpacity } from 'react-native'
 import React,{useState} from 'react'
 import RNPickerSelect from "react-native-picker-select";
 import Icon from 'react-native-vector-icons/FontAwesome'
-
+import { Platform } from "react-native";
 export default function CreditCardScreen({CompeletePayment}) {
     const months = [
         { label: 'Ocak', value: 1 },

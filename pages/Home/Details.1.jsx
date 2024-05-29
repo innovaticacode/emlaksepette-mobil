@@ -4,38 +4,28 @@ import {
   ImageBackground,
   SafeAreaView,
   TouchableOpacity,
-  StyleSheet,
   ScrollView,
   Animated,
-  Button,
-  Platform,
   Linking,
   ActivityIndicator,
   TextInput,
   Pressable,
   Dimensions,
 } from "react-native";
-
 import { React, useEffect, useRef, useState } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
 import Caption from "../../components/Caption";
-import Settings from "./RealtorPages/Settings";
 import PagerView from "react-native-pager-view";
 import Map from "../../components/Map";
 import { SocialIcon, Icon } from "react-native-elements";
 import * as Clipboard from "expo-clipboard";
-
 import OtherHomeInProject from "../../components/OtherHomeInProject";
-
 import FloorPlan from "../../components/FloorPlan";
 import Information from "../../components/Information";
-
 import LinkIcon from "react-native-vector-icons/Entypo";
-
 import { useRoute } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Arrow from "react-native-vector-icons/MaterialIcons";
-import Bookmark from "react-native-vector-icons/FontAwesome";
 import SettingsItem from "../../components/SettingsItem";
 import Header from "../../components/Header";
 import Modal from "react-native-modal";
@@ -45,14 +35,11 @@ import SliderMenuDetails from "../../components/SliderMenuDetails";
 import { apiRequestGet } from "../../components/methods/apiRequest";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
 import CloseIcon from "react-native-vector-icons/AntDesign";
-import Swiper from "react-native-swiper";
 import AddCollection from "../../components/AddCollection";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
-
-import RNPickerSelect from "react-native-picker-select";
+import { styles } from "./Details";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -194,8 +181,6 @@ export default function Details({ navigation }) {
     }
   };
 
-  
-
   const removeItemOnCollection = (collectionId) => {
     const collectionData = {
       item_type: 1,
@@ -245,7 +230,6 @@ export default function Details({ navigation }) {
         });
 
         setcollections(newCollections);
-        console.log(newCollections, "qwe");
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -351,7 +335,6 @@ export default function Details({ navigation }) {
   const [collectionAddedSucces, setcollectionAddedSucces] = useState(false);
   const [selectedCollectionName, setselectedCollectionName] = useState("");
   const fetchData = async () => {
-    
     try {
       if (user.access_token) {
         const response = await axios.get(
@@ -430,7 +413,6 @@ export default function Details({ navigation }) {
         }, 3000);
         // Başarılı yanıtı işleyin
         setselectedCollectionName(response.data.collection.name);
-        console.log("Response:", response.data);
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -489,7 +471,6 @@ export default function Details({ navigation }) {
             return collection;
           }
         });
-        console.log(newCollections);
         setcollections(newCollections);
       })
       .catch((error) => {
@@ -497,49 +478,15 @@ export default function Details({ navigation }) {
         console.error("Error:", error);
       });
   };
+  const [PopUpForRemoveItem, setPopUpForRemoveItem] = useState(false);
+  const { width, height } = Dimensions.get("window");
 
-  const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
-  const [ModalForAddToCart, setModalForAddToCart] = useState(false);
-  const [selectedCartItem, setselectedCartItem] = useState(0);
-  const GetIdForCart = (id) => {
-    setselectedCartItem(id);
-    setModalForAddToCart(true);
-    console.log(selectedCartItem);
-  };
+  const [users, setUsers] = useState({});
+  const [İsLoggedIn, setisLoggedIn] = useState(true);
 
-  const addToCard = async () => {
-    const formData = new FormData();
-    formData.append("id", selectedCartItem);
-    formData.append(
-      "isShare",
-      data.projectHousingsList[selectedCartItem]["share_sale[]"]
-    );
-    formData.append(
-      "numbershare",
-      data.projectHousingsList[selectedCartItem]["number_of_shares[]"]
-    );
-    formData.append("qt", 1);
-    formData.append("type", "project");
-    formData.append("clear_cart", "no");
-    formData.append("project", data.project.id);
-    try {
-      if (user?.access_token) {
-        const response = await axios.post(
-          "https://test.emlaksepette.com/api/institutional/add_to_cart",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
-
-        navigation.navigate("Sepetim");
-      }
-    } catch (error) {
-      console.error("post isteği olmadı", error);
-    }
-  };
+  useEffect(() => {
+    getValueFor("user", setUsers);
+  }, []);
 
   const [userid, setUserId] = useState("");
   const [storeid, setStoreId] = useState("");
@@ -549,189 +496,51 @@ export default function Details({ navigation }) {
   const [nameid, setNameId] = useState("");
 
   const [phoneid, setPhoneId] = useState("");
-
+  const [cityid, setCityId] = useState("");
+  const [countyid, setCountyId] = useState("");
   const [titleid, setTitleId] = useState("");
   const [offerid, setOfferId] = useState("");
+  const [approvalid, setApprovalId] = useState("");
+  const [responseid, setResponseId] = useState("");
+  const [salesid, setSalesId] = useState("");
+  const [offerresid, settOfferresid] = useState("");
 
   const [createdid, setCreatedId] = useState("");
-  const [selectedroomId, setselectedroomId] = useState();
-  const getRoomID = (id) => {
-    setselectedroomId(id);
-  };
+
   const postData = async () => {
     try {
       var formData = new FormData();
-
-      formData.append("userid", user.id);
-      formData.append("projectUserId", data.project.user.id);
-      formData.append("projectId", data.project.id);
-      formData.append("roomId", selectedroomId);
       formData.append("name", nameid);
       formData.append("phone", phoneid);
       formData.append("email", emailid);
-      formData.append("city_id", city);
-      formData.append("county_id", county);
+      formData.append("city_id", cityid);
+      formData.append("county_id", countyid);
       formData.append("title", titleid);
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
         "https://test.emlaksepette.com/api/institutional/give_offer",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-            "Content-Type": "multipart/form-data", // İçerik tipini belirtmek
-          },
-        }
+        formData
       );
-      setFormVisible(false);
-      setTimeout(() => {
-        setTrueModal(true);
-      }, 3000);
 
 
-      // color("#d4edda");
-      setNameId("");
-      setPhoneId("");
-      setEmailId("");
-      setcity("");
-      setcounty("");
-      setTitleId("");
-      setOfferId("");
+      openModal(JSON.stringify(response.data.message));
+      color("#d4edda");
+      setNameid("");
+      setPhoneid("");
+      setEmailid("");
+      setCityiid("");
+      setCountyid("");
+      setTitleid("");
+      setOfferid("");
     } catch (error) {
-      if (error.response) {
-        // Sunucudan gelen hata yanıtı
-        console.error("Sunucu Hatası:", error.response.data);
-        console.error("Hata Kodu:", error.response.status);
-      } else if (error.request) {
-        // İstek yapıldı, ancak cevap alınamadı
-        console.error("Sunucudan cevap alınamadı:", error.request);
-      } else {
-        // İstek ayarları sırasında bir hata oluştu
-        console.error("İstek Ayar Hatası:", error.message);
-      }
-      console.error("Post isteği başarısız:", error);
-    }
-  };
-  const [city, setcity] = useState("");
-  const [county, setcounty] = useState("");
-  const fetchCity = async () => {
-    try {
-      const response = await axios.get(
-        "https://test.emlaksepette.com/api/cities"
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Hata:", error);
-      throw error;
+      // Hata durumunda
+      openModal("Tüm Alanları Doldurunuz");
+      color("#F8D7DA");
+      console.error("Hata:", error + "post isteği başarısız ");
     }
   };
 
-  const [citites, setCities] = useState([]);
-  useEffect(() => {
-    fetchCity()
-      .then((citites) => setCities(citites.data))
-      .catch((error) =>
-        console.error("Veri alınırken bir hata oluştu:", error)
-      );
-  }, []);
-
-  const [counties, setcounties] = useState([]);
-  const fetchDataCounty = async (value) => {
-    try {
-      const response = await axios.get(
-        `https://test.emlaksepette.com/api/counties/${value}`
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Hata:", error);
-      throw error;
-    }
-  };
-
-  const onChangeCity = (value) => {
-    setcity(value);
-    if (value) {
-      fetchDataCounty(value)
-        .then((county) => setcounties(county.data))
-        .catch((error) =>
-          console.error("Veri alınırken bir hata oluştu:", error)
-        );
-    } else {
-      setcounties([]);
-    }
-  };
-
-  const { width, height } = Dimensions.get("window");
-  const [errorStatu, seterrorStatu] = useState(0);
-  const [errorMessage, seterrorMessage] = useState("");
-  const GiveOffer = () => {
-    switch (true) {
-      case !nameid:
-        seterrorStatu(1);
-        seterrorMessage("İsim Alanı Boş Bırakılmaz");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      case !phoneid:
-        seterrorStatu(2);
-        seterrorMessage("Telefon Alanı Boş Bırakılmaz");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      case !titleid:
-        seterrorStatu(3);
-        seterrorMessage("Meslek Alanı Boş Bırakılmaz");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      case !city:
-        seterrorStatu(4);
-        seterrorMessage("Şehir Seçiniz ");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      case !county:
-        seterrorStatu(5);
-        seterrorMessage("İlçe Seçniz");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      case !emailid:
-        seterrorStatu(6);
-        seterrorMessage("Mail Alanı Boş Bırakılmaz");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      case !offerid:
-        seterrorStatu(7);
-        seterrorMessage("Açıklama alanı boş bırakılamaz");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      default:
-        postData();
-    }
-
-    if (errorMessage) {
-      // ShowAlert(ErrorMessage);
-    }
-    console.log(errorStatu + "error statu");
-  };
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -825,7 +634,6 @@ export default function Details({ navigation }) {
           </View>
         </View>
       </Modal>
-
       <View
         style={{
           flexDirection: "row",
@@ -949,7 +757,6 @@ export default function Details({ navigation }) {
             }
           >
             {data.project.images.map((image, index) => {
-              // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
               return (
                 <Pressable
                   key={index + 1}
@@ -997,8 +804,6 @@ export default function Details({ navigation }) {
         </View>
         {tabs == 0 && (
           <OtherHomeInProject
-            GetID={getRoomID}
-            GetIdForCart={GetIdForCart}
             openCollection={openCollection}
             itemCount={itemCount}
             data={data}
@@ -1411,7 +1216,7 @@ export default function Details({ navigation }) {
                 {collections.map((item, index) => (
                   <AddCollection
                     checkFunc={ıtemOnCollection}
-                    setPopUpForRemoveItem={setsetPopUpForRemoveItem}
+                    setPopUpForRemoveItem={setPopUpForRemoveItem}
                     key={index}
                     item={item}
                     getCollectionId={getCollectionId}
@@ -1450,7 +1255,40 @@ export default function Details({ navigation }) {
           </View>
         </Modal>
 
-        {/* */}
+        {/* <Modal
+              isVisible={PopUpForRemoveItem}
+              onBackdropPress={()=>setPopUpForRemoveItem(false)}
+          
+              animationIn={'zoomInUp'}
+              animationOut={'zoomOutUp'}
+              animationInTiming={200}
+              animationOutTiming={200}
+              backdropColor="transparent"
+              style={styles.modal4}
+            >
+              <View style={styles.modalContent4}>
+                <View style={{padding:10,gap:10}}>
+               <Text style={{textAlign:'center'}}>{selectedHouse} No'lu konutu {selectedCollectionName} adlı koleksiyonunuzdan kaldırmak istediğinize eminmisiniz</Text>
+               <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
+    
+                <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}>
+                  <Text style={{color:'white'}}>Evet</Text>
+                </TouchableOpacity>
+    
+                <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
+                    onPress={()=>{
+                      setPopUpForRemoveItem(false)
+                    }}
+                >
+                  <Text style={{color:'white'}}>Hayır</Text>
+                </TouchableOpacity>
+    
+               </View>
+    
+                </View>
+                        
+              </View>
+            </Modal> */}
         <Modal
           isVisible={addCollection}
           onBackdropPress={() => setaddCollection(false)}
@@ -1568,118 +1406,65 @@ export default function Details({ navigation }) {
               <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ gap: 15 }}>
                   <View style={{ gap: 7 }}>
-                    <Text style={styles.label}>Ad Soyad</Text>
-                    <TextInput
-                      style={styles.Input}
+                    <Text
                       value={nameid}
-                      onChangeText={(value) => setNameId(value)}
-                    />
-                    {errorStatu == 1 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
+                      onChangeValue={(value) => setNameId(value)}
+                      style={styles.label}
+                      onChangeText={(value) => setNameId("name", value)}
+                    >
+                      Ad Soyad
+                    </Text>
+                    <TextInput style={styles.Input} />
                   </View>
                   <View style={{ gap: 7 }}>
-                    <Text style={styles.label}>Telefon Numarası</Text>
-                    <TextInput
-                      style={styles.Input}
+                    <Text
+                      style={styles.label}
                       value={phoneid}
-                      onChangeText={(value) => setPhoneId(value)}
-                    />
-                    {errorStatu == 2 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
+                      onChangeText={(value) => setPhoneId("phoneid", value)}
+                    >
+                      Telefon Numarası
+                    </Text>
+                    <TextInput style={styles.Input} />
                   </View>
                   <View style={{ gap: 7 }}>
-                    <Text style={styles.label}>E-Posta</Text>
-                    <TextInput
-                      style={styles.Input}
+                    <Text
+                      style={styles.label}
                       value={emailid}
-                      onChangeText={(value) => setEmailId(value)}
-                    />
-                    {errorStatu == 6 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
+                      onChangeText={(value) => setEmailId("emailid", value)}
+                    >
+                      E-Posta
+                    </Text>
+                    <TextInput style={styles.Input} />
                   </View>
                   <View style={{ gap: 7 }}>
-                    <Text style={styles.label} value={titleid}>
+                    <Text
+                      style={styles.label}
+                      value={titleid}
+                      onChangeText={(value) => setTitleId("titleid", value)}
+                    >
                       Meslek
                     </Text>
-                    <TextInput
-                      style={styles.Input}
-                      value={titleid}
-                      onChangeText={(value) => setTitleId(value)}
-                    />
-                    {errorStatu == 3 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
+                    <TextInput style={styles.Input} />
                   </View>
                   <View style={{ gap: 7 }}>
-                    <Text style={styles.label}>Açıklama</Text>
-                    <TextInput
-                      style={styles.Input}
-                      value={offerid}
-                      onChangeText={(value) => setOfferId(value)}
-                    />
-                    {errorStatu == 7 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
-                  </View>
-
-                  <View style={{ gap: 6 }}>
                     <Text
-                      style={{ fontSize: 14, color: "grey", fontWeight: 600 }}
+                      style={styles.label}
+                      value={cityid}
+                      onChangeText={(value) => setCity("cityid", value)}
                     >
-                      Şehir
+                      İl
                     </Text>
-                    <RNPickerSelect
-                      placeholder={{
-                        label: "Şehir Seçiniz...",
-                        value: null,
-                      }}
-                      style={pickerSelectStyles}
-                      value={city}
-                      onValueChange={(value) => {
-                        onChangeCity(value);
-                      }}
-                      items={citites}
-                    />
-                    {errorStatu == 4 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
+                    <TextInput style={styles.Input} />
                   </View>
-                  <View style={{ gap: 6 }}>
+                  <View style={{ gap: 7 }}>
                     <Text
-                      style={{ fontSize: 14, color: "grey", fontWeight: 600 }}
+                      style={styles.label}
+                      value={countyid}
+                      onChangeText={(value) => setCounty("countyid", value)}
                     >
                       İlçe
                     </Text>
-                    <RNPickerSelect
-                      placeholder={{
-                        label: "İlçe Seçiniz...",
-                        value: null,
-                      }}
-                      value={county}
-                      style={pickerSelectStyles}
-                      onValueChange={(value) => setcounty(value)}
-                      items={counties}
-                    />
-                    {errorStatu == 5 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
+                    <TextInput style={styles.Input} />
                   </View>
                 </View>
               </KeyboardAwareScrollView>
@@ -1693,7 +1478,7 @@ export default function Details({ navigation }) {
                     padding: 15,
                     borderRadius: 10,
                   }}
-                  onPress={GiveOffer}
+                  onPress={handleSubmit}
                 >
                   <Text style={{ color: "white", textAlign: "center" }}>
                     Gönder
@@ -1751,7 +1536,6 @@ export default function Details({ navigation }) {
               }
             >
               {data.project.images.map((image, index) => {
-                // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
                 return (
                   <Pressable
                     key={index + 1}
@@ -1773,239 +1557,7 @@ export default function Details({ navigation }) {
             </PagerView>
           </View>
         </Modal>
-
-        <Modal
-          isVisible={ModalForAddToCart}
-          onBackdropPress={() => setModalForAddToCart(false)}
-          animationIn={"zoomInUp"}
-          animationOut={"zoomOutUp"}
-          animationInTiming={200}
-          animationOutTiming={200}
-          backdropColor="transparent"
-          style={styles.modal4}
-        >
-          <View style={styles.modalContent4}>
-            <View style={{ padding: 10, gap: 10 }}>
-              <Text style={{ textAlign: "center" }}>
-                {selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
-                Eminmisiniz?
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  gap: 20,
-                }}
-              >
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "green",
-                    padding: 10,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                    borderRadius: 6,
-                  }}
-                  onPress={() => {
-                    addToCard();
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Sepete Ekle</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#e44242",
-                    padding: 10,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                    borderRadius: 6,
-                  }}
-                  onPress={() => {
-                    setModalForAddToCart(false);
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Vazgeç</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
       </ScrollView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
-    flex: 1,
-    ...Platform.select({
-      ios: {},
-      android: {
-        paddingTop: 25,
-      },
-    }),
-  },
-  modal: {
-    margin: 0,
-  },
-  modalContent: {
-    backgroundColor: "white",
-
-    flex: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: 320,
-  },
-  pagination: {
-    position: "absolute",
-    zIndex: 1,
-    padding: 3,
-    paddingLeft: 8,
-    paddingRight: 8,
-    borderRadius: 10,
-    bottom: 0,
-    alignItems: "center",
-
-    width: "100%",
-  },
-  ıconContainer: {
-    width: 50,
-    height: 150,
-    backgroundColor: "transparent",
-    position: "absolute",
-    right: 7,
-    top: 42,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-around",
-    alignItems: "center",
-    gap: 20,
-    zIndex: 1,
-  },
-  ıcon: {
-    backgroundColor: "#FFFFFFAD",
-    width: 35,
-    height: 35,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-  },
-  centeredView: {
-    padding: 10,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-
-    // modal dışı koyu arkaplan
-  },
-  modalView: {
-    width: "100%",
-
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 25,
-    gap: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modal2: {
-    justifyContent: "flex-end",
-    margin: 0,
-    backgroundColor: "#1414148c",
-  },
-  modalContent2: {
-    backgroundColor: "#fefefe",
-
-    height: "52%",
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  modal3: {
-    justifyContent: "flex-end",
-    margin: 0,
-    backgroundColor: "#1414148c",
-  },
-  modalContent3: {
-    backgroundColor: "#fefefe",
-
-    height: "100%",
-  },
-  Input: {
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 6,
-    borderColor: "#ebebeb",
-  },
-  label: {
-    color: "grey",
-    fontWeight: "500",
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderWidth: 0.7,
-    borderColor: "#e6e6e6",
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  modalImage: {
-    justifyContent: "flex-end",
-    margin: 0,
-  },
-  modalContentImage: {
-    backgroundColor: "black",
-    justifyContent: "center",
-
-    flex: 1,
-  },
-  Input: {
-    backgroundColor: "#E6E6E6",
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ebebeb",
-    borderRadius: 6,
-    fontSize: 14,
-  },
-  modal4: {
-    justifyContent: "center",
-    margin: 0,
-    padding: 20,
-    backgroundColor: "#1414148c",
-  },
-  modalContent4: {
-    backgroundColor: "#fefefe",
-    padding: 20,
-    borderRadius: 10,
-  },
-});
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    borderWidth: 1,
-    borderColor: "#bdc6cf",
-    borderRadius: 6,
-    padding: 10,
-    fontSize: 14, // to ensure the text is never behind the icon
-  },
-  inputAndroid: {
-    borderWidth: 2,
-    borderColor: "black",
-    borderRadius: 6,
-    padding: 10,
-    fontSize: 14, // to ensure the text is never behind the icon
-  },
-});

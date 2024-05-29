@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import React from 'react'
-
+import { Platform } from "react-native";
 export default function Team() {
   return (
     <ScrollView style={{flex:1}}>

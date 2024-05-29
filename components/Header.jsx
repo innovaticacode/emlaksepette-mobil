@@ -5,13 +5,14 @@ import {
   TextInput,
   ImageBackground,
   TouchableOpacity,
-  Platform,
 } from "react-native";
 import React from "react";
 import AddBtn from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/EvilIcons";
 import IconMenu from "react-native-vector-icons/Entypo";
 import { useNavigation } from "@react-navigation/native";
+import { Platform } from "react-native";
+
 export default function Header({ loading, onPress }) {
   const navigation = useNavigation();
   return (
@@ -70,16 +71,16 @@ export default function Header({ loading, onPress }) {
               backgroundColor: "red",
               paddingLeft: 6,
               paddingRight: 6,
-            
-              paddingTop:2,
-              paddingBottom:2,
+
+              paddingTop: 2,
+              paddingBottom: 2,
               bottom: 22,
               left: 23,
               zIndex: 1,
               borderRadius: 20,
             }}
           >
-            <Text style={{ color: "white",fontSize:11 }}>1</Text>
+            <Text style={{ color: "white", fontSize: 11 }}>1</Text>
           </View>
           <Icon name="bell" size={35} />
         </TouchableOpacity>

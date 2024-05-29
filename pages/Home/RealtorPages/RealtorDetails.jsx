@@ -15,7 +15,7 @@ Image,
 import { React, useRef, useState,useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 
-
+import { Platform } from "react-native";
 import PagerView from 'react-native-pager-view';
 import { useNavigation, useRoute  } from '@react-navigation/native';
 import Heart from "react-native-vector-icons/AntDesign";
@@ -43,6 +43,7 @@ import SwapForm from "./SwapForm";
 import AddCollection from "../../../components/AddCollection";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
+import Calendar from "./Calendar";
 
 
 export default function PostDetail() {
@@ -108,7 +109,7 @@ useEffect(() => {
   });
 }, []);
 //  console.log( JSON.parse(data?.housing?.housing_type_data)['price'])
-
+console.log(data.id)
 const [modalVisibleComennet, setmodalVisibleComment] = useState(false)
   const handleModal=()=>(
     setmodalVisibleComment(!modalVisibleComennet)
@@ -253,6 +254,36 @@ const addSelectedCollection=()=>{
   });
 
 }
+const [ModalForAddToCart, setModalForAddToCart] = useState(false)
+const addToCard = async () => {
+  const formData=new FormData()
+  formData.append('id',houseId)
+  formData.append('isShare',null)
+  formData.append('numbershare',null)
+  formData.append('qt',1)
+  formData.append('type','housing')
+  formData.append('project',null)
+  formData.append('clear_cart','no')
+
+try {
+  if (user?.access_token) {
+    const response = await axios.post(
+      "https://test.emlaksepette.com/api/institutional/add_to_cart",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      }
+    );
+      setModalForAddToCart(false)
+      navigation.navigate('Sepetim')
+  }
+} catch (error) {
+  console.error('post isteği olmadı' ,error);
+} 
+};
+
 
 return (
   
@@ -349,6 +380,38 @@ return (
         </View>
       </View>
     </Modal>
+              <View style={{width:'100%',height:'10%',backgroundColor:'transparent',position:'absolute',bottom:15,zIndex:1}}>
+                <View style={{flexDirection:'row',gap:20,justifyContent:'center'}}>
+                <TouchableOpacity
+                    style={{backgroundColor:'#EA2A28',padding:10,width:'40%',borderRadius:5}}
+                >
+                    <Text style={{textAlign:'center',color:'#ffffff',fontWeight:'500'}}>Ara</Text>
+                  </TouchableOpacity>
+                  {data?.housing?.step2_slug=='gunluk-kiralik' ?
+                     <TouchableOpacity
+                     onPress={()=>{
+
+                      navigation.navigate('CreateReservation',{data:data.housing})
+
+                     }}
+                       style={{backgroundColor:'#EA2A28',padding:10,width:'40%',borderRadius:5}}
+                     >
+                       <Text  style={{textAlign:'center',color:'#ffffff',fontWeight:'500'}}>Rezervasyon Yap</Text>
+                     </TouchableOpacity>
+                     :
+                        <TouchableOpacity
+                  onPress={()=>{
+                    setModalForAddToCart(true)
+                  }}
+                    style={{backgroundColor:'#EA2A28',padding:10,width:'40%',borderRadius:5}}
+                  >
+                    <Text  style={{textAlign:'center',color:'#ffffff',fontWeight:'500'}}>Sepete Ekle</Text>
+                  </TouchableOpacity>
+           
+                  }
+               
+               </View>
+              </View> 
     <View
       style={{
         flexDirection: "row",
@@ -536,8 +599,8 @@ return (
       </View>
       </Shadow>
       
-      
-          {tabs==0 && <RealtorCaption data={data}/>}
+        
+          {tabs ==0 && <RealtorCaption data={data}/>}
           {tabs == 1 && <Settings data={data} />}
           {tabs== 2 && <RealtorMap mapData={data}/>}
           {tabs==3 && <Comment data={data} handleModal={handleModal}/> }
@@ -886,7 +949,44 @@ return (
      
         </Modal>
 
+        <Modal
+          isVisible={ModalForAddToCart}
+          onBackdropPress={()=>setModalForAddToCart(false)}
+      
+          animationIn={'zoomInUp'}
+          animationOut={'zoomOutUp'}
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropColor="transparent"
+          style={styles.modal6}
+        >
+          <View style={styles.modalContent6}>
+            <View style={{padding:10,gap:10}}>
+           <Text style={{textAlign:'center'}}>#1000{data?.housing?.id} No'lu Konutu Sepete Eklemek İsteiğinize Eminmisiniz?</Text>
+           <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
 
+            <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
+              onPress={()=>{
+                addToCard() 
+              }}
+            >
+              <Text style={{color:'white'}}>Sepete Ekle</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
+                onPress={()=>{
+                  setModalForAddToCart(false)
+                }}
+            >
+              <Text style={{color:'white'}}>Vazgeç</Text>
+            </TouchableOpacity>
+
+           </View>
+
+            </View>
+
+          </View>
+        </Modal>
     </ScrollView>
 
 
@@ -1138,6 +1238,16 @@ Input: {
   borderRadius: 6,
   fontSize: 14,
 },
-
+modal6: {
+  justifyContent: "center",
+  margin: 0,
+  padding: 20,
+  backgroundColor: "#1414148c",
+},
+modalContent6: {
+  backgroundColor: "#fefefe",
+  padding: 20,
+  borderRadius: 10,
+},
 });
 

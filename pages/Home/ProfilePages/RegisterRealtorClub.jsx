@@ -6,6 +6,7 @@ import axios from 'axios';
 import Modal from "react-native-modal";
 import { getValueFor } from '../../../components/methods/user';
 import { Icon } from "react-native-elements";
+import { Platform } from "react-native";
 import * as SecureStore from 'expo-secure-store';
 export default function RegisterRealtorClub({setİsLoggedIn}) {
     const route = useRoute();

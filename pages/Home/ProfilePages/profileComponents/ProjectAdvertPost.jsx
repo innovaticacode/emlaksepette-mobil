@@ -3,6 +3,7 @@ import {useState}from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import Icon2 from 'react-native-vector-icons/Entypo'
 import { frontEndUri } from '../../../../components/methods/apiRequest'
+import { Platform } from "react-native";
 export default function ProjectAdvertPost({Onpress,project}) {
     const [status, setStatus] = useState(project.status)
 
