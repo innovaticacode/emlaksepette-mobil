@@ -194,8 +194,6 @@ export default function Details({ navigation }) {
     }
   };
 
-  
-
   const removeItemOnCollection = (collectionId) => {
     const collectionData = {
       item_type: 1,
@@ -351,7 +349,6 @@ export default function Details({ navigation }) {
   const [collectionAddedSucces, setcollectionAddedSucces] = useState(false);
   const [selectedCollectionName, setselectedCollectionName] = useState("");
   const fetchData = async () => {
-    
     try {
       if (user.access_token) {
         const response = await axios.get(
@@ -1016,7 +1013,7 @@ export default function Details({ navigation }) {
         {tabs == 2 && <Information settings={data} />}
         <View style={{}}>{tabs === 3 && <Map mapData={data} />}</View>
 
-        {tabs == 4 && <FloorPlan />}
+        {tabs == 4 && <FloorPlan data={data} />}
 
         <Modal
           animationType="fade" // veya "fade", "none" gibi
