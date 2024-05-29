@@ -159,7 +159,7 @@ const App = () => {
       
       await saveData('checked',acitveMoneySafe)
       navigation.navigate('PaymentScreenForReserve',{HouseID:data.id,totalNight:totalNights})
-      alert('All states saved successfully');
+      
     } catch (error) {
       console.log('Error saving states:', error);
     }
