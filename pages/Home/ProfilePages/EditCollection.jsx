@@ -1,11 +1,22 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import EditCollectionPost from "./profileComponents/EditCollectionPost";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Platform } from "react-native";
 export default function EditCollection() {
   const route = useRoute();
-  const { collectionItems } = route.params;
+  const { collectionItems: initialCollectionItems, item } = route.params;
+  const [collectionItems, setCollectionItems] = useState(initialCollectionItems);
+  const navigation = useNavigation();
+
+  const handleRemoveFromCollection = (removedItemId) => {
+    setCollectionItems((prevItems) =>
+      prevItems.filter((collectionItem) => collectionItem.id !== removedItemId)
+    );
+  };
+  useEffect(() => {
+    navigation.setOptions({ title: item.name });
+  }, [item.name]);
 
   return (
     <ScrollView
@@ -13,9 +24,18 @@ export default function EditCollection() {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ gap: 10, padding: 10 }}
     >
-      {collectionItems?.map((collectionItem, index) => {
-        return <EditCollectionPost item={collectionItem} key={index} />;
-      })}
+     {collectionItems && collectionItems.length > 0 ? (
+    collectionItems.map((collectionItem, index) => (
+      <EditCollectionPost
+        item={collectionItem}
+        key={index}
+        collection={item}
+        onRemove={handleRemoveFromCollection}
+      />
+    ))
+  ) : (
+    <Text style={{ textAlign: 'center', marginTop: 20 }}>Koleksiyon boş</Text>
+  )}
     </ScrollView>
   );
 }
