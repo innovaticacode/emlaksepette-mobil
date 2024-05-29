@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     display: "flex",
     flexDirection: "column",
-    borderBottomWidth: "1px",
+    borderBottomWidth: 1,
     borderBlockColor: "#E8E8E8",
   },
   İlan: {
