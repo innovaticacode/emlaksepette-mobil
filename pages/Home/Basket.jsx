@@ -12,7 +12,7 @@ import {
   ImageBackground,
 } from "react-native";
 import { Platform } from "react-native";
-import IconIdCard from "react-native-vector-icons/FontAwesome"
+import IconIdCard from "react-native-vector-icons/FontAwesome";
 import React, { useState, useEffect } from "react";
 import BasketItem from "../../components/BasketItem";
 import {
@@ -57,12 +57,12 @@ export default function Basket() {
   };
   const [user, setuser] = useState({});
   const [Cart, setCart] = useState({});
-  const [type, settype] = useState({})
-  const [saleType, setsaleType] = useState({})
+  const [type, settype] = useState({});
+  const [saleType, setsaleType] = useState({});
+  const [offerControl, setofferControl] = useState({})
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-
 
   const fetchData = async () => {
     try {
@@ -76,8 +76,9 @@ export default function Basket() {
           }
         );
         setCart(response?.data?.cart?.item);
-        settype(response?.data?.cart)
-        setsaleType(response?.data?.saleType)
+        settype(response?.data?.cart);
+        setsaleType(response?.data?.saleType);
+        setofferControl(response?.data)
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -88,9 +89,14 @@ export default function Basket() {
     fetchData();
   }, [user]);
 
-  console.log(saleType)
 
-  const [isInstallament, setisInstallament] = useState(0)
+
+  const [isInstallament, setisInstallament] = useState(0);
+
+  let DiscountRate = Cart.discount_rate;
+  let TotalPrice = Cart.price;
+  let DiscountPrice = Cart.price - (Cart.amount * Cart.discount_rate) / 100;
+  let KaporaForDiscountPrice = (DiscountPrice * 2) / 100;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View
@@ -239,72 +245,252 @@ export default function Basket() {
               </View>
             </View>
           </View> */}
-          {
-            type.type =='project' &&
-            <View style={{flexDirection:'row',borderWidth:1,borderColor:'#E4E4E4',justifyContent:'center'}}>
-              <TouchableOpacity style={{width:'50%',padding:9,backgroundColor:isInstallament==0 ?'#5CB85C':'transparent',
-                  borderTopRightRadius:15,
-                  borderBottomRightRadius:15
-
+      
+          {type.type == "project" && (
+            <View
+              style={{
+                flexDirection: "row",
+                borderWidth: 1,
+                borderColor: "#E4E4E4",
+                justifyContent: "center",
+                marginTop:10
               }}
-                  onPress={()=>{
-                    setisInstallament(0)
-                  }}
+            >
+              <TouchableOpacity
+                style={{
+                  width: "50%",
+                  padding: 9,
+                  backgroundColor:
+                    isInstallament == 0 ? "#5CB85C" : "transparent",
+                  borderTopRightRadius: 15,
+                  borderBottomRightRadius: 15,
+                }}
+                onPress={() => {
+                  setisInstallament(0);
+                }}
               >
-                <Text style={{textAlign:'center',color:isInstallament==1?'#333': '#ffffff'}}>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: isInstallament == 1 ? "#333" : "#ffffff",
+                  }}
+                >
                   Peşin Fiyat İle Ödeme
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{width:'50%',padding:9,backgroundColor:isInstallament==1 ?'#5CB85C':'transparent',
-                  borderTopLeftRadius:15,
-                  borderBottomLeftRadius:15
-                  
-              }}
-                  onPress={()=>{
-                    setisInstallament(1)
-                  }}
+              <TouchableOpacity
+                style={{
+                  width: "50%",
+                  padding: 9,
+                  backgroundColor:
+                    isInstallament == 1 ? "#5CB85C" : "transparent",
+                  borderTopLeftRadius: 15,
+                  borderBottomLeftRadius: 15,
+                }}
+                onPress={() => {
+                  setisInstallament(1);
+                }}
               >
-                <Text style={{textAlign:'center',color:isInstallament==0?'#333': '#ffffff'}}>
-                 Taksitli Fiyat İle Ödeme
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: isInstallament == 0 ? "#333" : "#ffffff",
+                  }}
+                >
+                  Taksitli Fiyat İle Ödeme
                 </Text>
               </TouchableOpacity>
             </View>
+          )}
+          {
+            isInstallament==1 &&
+            <View style={[styles.acceptCart,{gap:20}]}>
+                 <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{color:'#7E7E7E',fontWeight:'500'}}>Peşinat:</Text>
+                  <Text style={{color:'#7E7E7E',fontWeight:'500'}}>{addDotEveryThreeDigits(Cart.pesinat)} ₺</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{color:'#7E7E7E',fontWeight:'500'}}>Taksit Sayısı:</Text>
+                  <Text style={{color:'#7E7E7E',fontWeight:'500'}}>{Cart.taksitSayisi} </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{color:'#7E7E7E',fontWeight:'500'}}>Aylık Ödenecek Tutar:</Text>
+                  <Text style={{color:'#7E7E7E',fontWeight:'500'}}>{addDotEveryThreeDigits(Cart.aylik)} ₺</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{color:'#7E7E7E',fontWeight:'500'}}>Toplam Fiyat:</Text>
+                  <Text style={{color:'#7E7E7E',fontWeight:'500'}}>{addDotEveryThreeDigits(Cart.installmentPrice)} ₺</Text>
+                </View>
+            
+            </View>
           }
             
-                  {
-                        type.type =='project' ?
-                        <View style={[styles.acceptCart,{borderRadius:3,}]}>
-                        <View style={{flexDirection:'row',borderBottomWidth:0.5,borderBottomColor:'grey',gap:10,paddingBottom:5,alignItems:'center'}}>
-                                    <IconIdCard name='star-o' size={15}/>
-                                    <Text>Sepet Özeti</Text>
-                                </View>
-                                <View style={{gap:20}}>
-                                <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                    <Text>İlan Fiyatı:</Text>
-                                    <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
-                                </View>
-                                <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                    <Text>Toplam Fiyat:</Text>
-                                    <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
-                                </View>
-                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                    <Text>%4 Kapora:</Text>
-                                    <Text>13.0000 ₺</Text>
-                                </View>
-                                
-                              
-                                </View>
-                        </View>:
-                            <View style={[styles.acceptCart,{borderRadius:3,}]}>
-                            <View style={{flexDirection:'row',borderBottomWidth:0.5,borderBottomColor:'grey',gap:10,paddingBottom:5,alignItems:'center'}}>
-                                        <IconIdCard name='star-o' size={15}/>
-                                        <Text>Sepet Özeti</Text>
-                                    </View>
-                                    <View style={{gap:20}}>
-                                    <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                        <Text>İlan Fiyatı:</Text>
-                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
-                                    </View>
+
+
+          {type.type == "project" ? (
+            <View style={[styles.acceptCart, { borderRadius: 3 }]}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: "grey",
+                  gap: 10,
+                  paddingBottom: 5,
+                  alignItems: "center",
+                }}
+              >
+                <IconIdCard name="star-o" size={15} />
+                <Text>Sepet Özeti</Text>
+              </View>
+              <View style={{ gap: 20 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>İlan Fiyatı:</Text>
+                  <Text>{addDotEveryThreeDigits( isInstallament==1? Cart.installmentPrice:Cart.defaultPrice)} ₺</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>Toplam Fiyat:</Text>
+                  <Text>{addDotEveryThreeDigits(isInstallament==1 ? Cart.installmentPrice:Cart.price)} ₺</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>%{offerControl?.project?.deposit_rate} Kapora:</Text>
+                  <Text> {isInstallament==1?  addDotEveryThreeDigits(Cart.installmentPrice * offerControl?.project?.deposit_rate / 100 ) :addDotEveryThreeDigits(Cart.price * offerControl?.project?.deposit_rate / 100 )} ₺</Text>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <View style={[styles.acceptCart, { borderRadius: 3 }]}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: "grey",
+                  gap: 10,
+                  paddingBottom: 5,
+                  alignItems: "center",
+                }}
+              >
+                <IconIdCard name="star-o" size={15} />
+                <Text>Sepet Özeti</Text>
+              </View>
+              <View style={{ gap: 20 }}>
+                   
+                
+                {type.hasCounter == true ? (
+                  <>
+                       <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>İlan Fiyatı:</Text>
+                  <Text>{addDotEveryThreeDigits(Cart.price)} ₺</Text>
+                </View>
+                    <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text style={{ color: "red" }}>
+                      Emlak Kulüp İndirim Oranı:
+                    </Text>
+                    <Text style={{ color: "red" }}>{Cart.discount_rate}%</Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text style={{  }}>
+                      Toplam Fiyatı:
+                    </Text>
+                    <Text style={{ }}>{ addDotEveryThreeDigits(DiscountPrice)} ₺</Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text style={{  }}>
+                      %2 Kapora:
+                    </Text>
+                    <Text style={{ }}>{addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺</Text>
+                  </View>
+                  </>
+                
+                ) : (
+               <>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>İlan Fiyatı:</Text>
+                  <Text>{addDotEveryThreeDigits(Cart.price)} ₺</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>Toplam Fiyatı:</Text>
+                  <Text>{addDotEveryThreeDigits(Cart.price)} ₺</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>%2 Kapora:</Text>
+                  <Text>{addDotEveryThreeDigits(Cart.price *2 / 100 )} ₺</Text>
+                </View>
+
+               </>
+                )}
+            
+
+                {/* 
                                     <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
                                         <Text>Toplam Fiyat:</Text>
                                         <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
@@ -315,20 +501,35 @@ export default function Basket() {
                                         <Text>Bir Kira Kapora</Text>
                                         <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
                                     </View>:
+                                          type.hasCounter==true? 
                                        <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
                                        <Text>%2 Kapora</Text>
-                                       <Text>13.0000 ₺</Text>
+                                       <Text>{addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺</Text>
+                                   </View>:  <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                       <Text>%2 Kapora</Text>
+                                       <Text>{addDotEveryThreeDigits(Cart.amount * 2 /100)} ₺</Text>
                                    </View>
                                       }
-                              
-                                    
-                                   
-                                   
-                                    </View>
-                            </View>
-                  }
-      
 
+                                      {
+                                          type.hasCounter==true?
+                                          <>
+                                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                          <Text>Emlak Kulüp İndirimi</Text>
+                                          <Text>%{Cart.discount_rate}</Text>
+                                      </View>
+                                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                          <Text>İndirimli Fiyat</Text>
+                                          <Text>{DiscountPrice} ₺</Text>
+                                      </View>
+                                          </>
+                                          :<></>
+                                      
+                                      }
+                               */}
+              </View>
+            </View>
+          )}
 
           <View style={styles.acceptCart}>
             <View
@@ -336,8 +537,6 @@ export default function Basket() {
                 width: "100%",
                 padding: 5,
                 flexDirection: "row",
-                borderBottomWidth: 1,
-                borderBottomColor: "#ebebeb",
               }}
             >
               <View style={{ flex: 1.5 / 2 }}>
@@ -372,11 +571,17 @@ export default function Basket() {
                 style={{ flex: 0.8 / 2, paddingLeft: 15, padding: 4, gap: 4 }}
               >
                 <Text style={{ color: "grey", fontSize: 12 }}>Toplam</Text>
-                <Text style={{ fontWeight: "200" }}>25.000 ₺</Text>
+                <Text style={{ fontWeight: "500" }}>
+                  {addDotEveryThreeDigits((Cart.amount * 2) / 100)} TL
+                </Text>
               </View>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("PaymentScreen",{slug:type?.type, id:Cart.id,roomOrder:Cart.housing});
+                  navigation.navigate("PaymentScreen", {
+                    slug: type?.type,
+                    id: Cart.id,
+                    roomOrder: Cart.housing,
+                  });
                 }}
                 style={{
                   flex: 1.2 / 2,
@@ -407,7 +612,7 @@ const styles = StyleSheet.create({
   },
   acceptCart: {
     width: "100%",
-marginTop:10,
+    marginTop: 10,
     padding: 10,
 
     gap: 8,
@@ -472,7 +677,7 @@ marginTop:10,
     paddingVertical: 10,
     paddingHorizontal: 5,
     width: "100%",
-   marginTop:10,
+    marginTop: 10,
 
     borderWidth: 0.7,
     borderColor: "#e6e6e6",
@@ -499,27 +704,26 @@ marginTop:10,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-  AdvertDetail:{
-    gap:10,
-    backgroundColor: '#FFFFFF',  
-    borderRadius: 6,  
-    paddingVertical: 15,  
-    paddingHorizontal: 15,  
-    width: '100%',  
-    
+  AdvertDetail: {
+    gap: 10,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 6,
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    width: "100%",
 
-    borderWidth:0.7,
-    borderColor:'#e6e6e6',
+    borderWidth: 0.7,
+    borderColor: "#e6e6e6",
     ...Platform.select({
-        ios: {
-          shadowColor: ' #e6e6e6',
-          shadowOffset: { width: 1, height: 1 },
-          shadowOpacity: 0.0,
-          shadowRadius: 1,
-        },
-        android: {
-          elevation: 5,
-        },
-      }),
-},
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.0,
+        shadowRadius: 1,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
 });
