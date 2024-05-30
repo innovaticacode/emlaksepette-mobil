@@ -446,7 +446,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                 style={{
                   backgroundColor: "#E54242",
                   padding: 9,
-                  borderRadius: 10,
+                  borderRadius: 5,
                   width: "90%",
                 }}
                 onPress={registerPersonal}
@@ -725,7 +725,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
 
-    borderRadius: 10,
+    borderRadius: 5,
   },
   Acceptbtn: {
     backgroundColor: "#2aaa46",

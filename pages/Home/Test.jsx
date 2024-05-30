@@ -145,7 +145,7 @@ export default function Test() {
           style={{
             flexDirection: "row",
             borderWidth: 1,
-            borderRadius: 10,
+            borderRadius: 5,
             borderColor: "#ebebeb",
           }}
         >
@@ -237,6 +237,6 @@ const styles = StyleSheet.create({
     width: "50%",
 
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 5,
   },
 });

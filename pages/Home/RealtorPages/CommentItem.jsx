@@ -32,7 +32,7 @@ export default function CommentItem({ username, comment, date, rate }) {
           width: "100%",
           backgroundColor: "#F9F9F9",
           padding: 10,
-          borderRadius: 10,
+          borderRadius: 5,
           height: 120,
         }}
       >

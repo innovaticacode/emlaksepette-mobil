@@ -294,7 +294,7 @@ export default function Profile() {
                         backgroundColor: "#f5f5f53d",
                         borderWidth: 0,
                         borderColor: "#ebebeb",
-                        borderRadius: 10,
+                        borderRadius: 5,
                       }}
                       placeholder="Ara..."
                       placeholderTextColor={"#333"}
@@ -431,7 +431,7 @@ export default function Profile() {
                     backgroundColor: "#f5f5f53d",
                     borderWidth: 0,
                     borderColor:'#ebebeb',
-                    borderRadius: 10,
+                    borderRadius: 5,
                   }}
                   placeholder="Ara..."
                   placeholderTextColor={"#333"}
@@ -777,7 +777,7 @@ export default function Profile() {
                   backgroundColor: "#28A745",
                   width: "40%",
                   padding: 15,
-                  borderRadius: 10,
+                  borderRadius: 5,
                   backgroundColor: checked ? "#28A745" : "#D3D3D3",
                 }}
                 disabled={!checked}
@@ -792,7 +792,7 @@ export default function Profile() {
                   backgroundColor: "#DC3545",
                   width: "40%",
                   padding: 15,
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
                 onPress={() => {
                   setFormVisible(false);
@@ -924,7 +924,7 @@ const styless = StyleSheet.create({
     padding: 3,
     paddingLeft: 8,
     paddingRight: 8,
-    borderRadius: 10,
+    borderRadius: 5,
     bottom: 0,
     alignItems: "center",
 
@@ -1001,7 +1001,7 @@ const styless = StyleSheet.create({
   Input: {
     borderWidth: 1,
     padding: 10,
-    borderRadius: 6,
+    borderRadius: 5,
     borderColor: "#ebebeb",
   },
   label: {
@@ -1039,7 +1039,7 @@ const styless = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderColor: "#ebebeb",
-    borderRadius: 6,
+    borderRadius: 5,
     fontSize: 14,
   },
   modal4: {
@@ -1051,6 +1051,6 @@ const styless = StyleSheet.create({
   modalContent4: {
     backgroundColor: "#fefefe",
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 5,
   },
 });

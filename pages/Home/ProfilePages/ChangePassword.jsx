@@ -166,7 +166,7 @@ export default function ChangePassword() {
               style={{
                 backgroundColor: "white",
                 padding: 20,
-                borderRadius: 10,
+                borderRadius: 5,
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   Input: {
     padding: 9,
     backgroundColor: "transparent",
-    borderRadius: 10,
+    borderRadius: 5,
     fontSize: 15,
     borderWidth: 1,
     borderColor: "#ebebeb",
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#E54242",
     padding: 13,
-    borderRadius: 10,
+    borderRadius: 5,
   },
   btnText: {
     textAlign: "center",
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     padding: 25,
 
-    borderRadius: 10,
+    borderRadius: 5,
     alignItems: "center",
     gap: 20,
     ...Platform.select({

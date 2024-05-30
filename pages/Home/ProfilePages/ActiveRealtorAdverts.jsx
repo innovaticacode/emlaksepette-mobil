@@ -87,7 +87,7 @@ export default function ActiveRealtorAdverts() {
                     backgroundColor: "grey",
                     padding: 3,
                     width: 40,
-                    borderRadius: 10,
+                    borderRadius: 5,
                   }}
                 />
               </View>
