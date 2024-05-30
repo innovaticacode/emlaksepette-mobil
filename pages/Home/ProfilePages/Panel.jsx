@@ -260,7 +260,7 @@ export default function Panel({ options, onSelect }) {
 
               <View style={styles.container}>
                 <Image
-                  source={{ uri: "https://emlaksepette.com/images/emlak-kulup-banner.png" }}
+                  source={{ uri: "https://test.emlaksepette.com/images/emlak-kulup-banner.png" }}
                   style={styles.image}
                 />
               </View>

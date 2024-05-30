@@ -37,6 +37,7 @@ import Swiper from "react-native-swiper";
 import PagerView from "react-native-pager-view";
 import Categories from "../../components/Categories";
 import userData, { getValueFor } from "../../components/methods/user";
+import RealtorPostSkeleton from "../../components/SkeletonComponents/RealtorPostSkeleton";
 
 export default function HomePage() {
   const navigation = useNavigation();
@@ -79,13 +80,11 @@ export default function HomePage() {
     (estate) => estate.step1_slug == "is-yeri"
   );
   const filteredHomes = featuredEstates
-    .filter((estate) => estate.step1_slug == "konut")
-    .slice(0, 10);
-  const filteredProject = featuredProjects.slice(0, 5);
+    .filter((estate) => estate.step1_slug == "konut");
 
+  const filteredProject = featuredProjects.slice(0, 5);
   const filteredBookHouse = featuredEstates
-  .filter((estate) => estate.step2_slug == 'gunluk-kiralik')
-  .slice(0, 10);
+  .filter((estate) => estate.step2_slug == 'gunluk-kiralik');
 
   useEffect(() => {
     fetchFeaturedEstates();
@@ -180,7 +179,7 @@ export default function HomePage() {
   const GetIdForCart = (id) => {
     setselectedCartItem(id);
     setModalForAddToCart(true);
-    console.log(selectedCartItem);
+    
   };
 
   const addToCard = async () => {
@@ -211,7 +210,6 @@ export default function HomePage() {
       console.error("post isteği olmadı", error);
     }
   };
-
   const { width: screenWidth } = Dimensions.get("window");
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -477,7 +475,7 @@ export default function HomePage() {
             </View>
           </ScrollView>
           <View style={styles.slide2}>
-            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+            <View style={{ paddingTop: 0 }}>
               <View
                 style={{
                   flexDirection: "row",
@@ -487,18 +485,18 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN KONUTLAR</Text>
+                <Text style={{ fontSize: 12, fontWeight: 700 }}>ÖNE ÇIKAN KONUTLAR</Text>
 
                 <TouchableOpacity
                   style={styles.allBtn}
                   onPress={() =>
                     navigation.navigate("AllRealtor", {
-                      name: "adfsd",
+                      name: "Tümünü Gör",
                       data: featuredEstates,
                     })
                   }
                 >
-                  <Text style={{ color: "white", fontSize: 13 }}>
+                  <Text style={{ color: "white", fontSize: 11 }}>
                     Tümünü Gör
                   </Text>
                 </TouchableOpacity>
@@ -509,7 +507,7 @@ export default function HomePage() {
                 <View style={{ width: "100%" }}>
                   {loadingPrjoects == false ? (
                     <View style={{ top: 40, padding: 10 }}>
-                      <ProjectPostSkeleton />
+                      <RealtorPostSkeleton />
                     </View>
                   ) : (
                     filteredHomes.map((item, index) => (
@@ -520,21 +518,30 @@ export default function HomePage() {
                         price={`${
                           JSON.parse(item.housing_type_data)["price"]
                         } `}
+                        housing={item}
                         title={item.housing_title}
                         loading={loadingEstates}
                         location={item.city_title + " / " + item.county_title}
                         image={`${apiUrl}/housing_images/${
                           JSON.parse(item.housing_type_data).image
                         }`}
-                        m2={`${
-                          JSON.parse(item.housing_type_data)["squaremeters"]
+                        column1_name={`${
+                          JSON.parse(item.housing_type_data)[item.column1_name]
                         } `}
-                        roomCount={`${
-                          JSON.parse(item.housing_type_data)["room_count"]
+                        column1_additional={item.column1_additional}
+                        column2_name={`${
+                          JSON.parse(item.housing_type_data)[item.column2_name]
                         } `}
-                        floor={`${
-                          JSON.parse(item.housing_type_data)["floorlocation"]
+                        column2_additional={item.column2_additional}
+                        column3_name={`${
+                          JSON.parse(item.housing_type_data)[item.column3_name]
                         } `}
+                        column3_additional={item.column3_additional}
+                        column4_name={`${
+                          JSON.parse(item.housing_type_data)[item.column4_name]
+                        } `}
+                        column4_additional={item.column4_additional}
+                        bookmarkStatus={true}
                         dailyRent={false}
                       />
                     ))
@@ -544,7 +551,7 @@ export default function HomePage() {
             </ScrollView>
           </View>
           <View style={styles.slide3}>
-            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+            <View style={{ paddingTop: 0}}>
               <View
                 style={{
                   flexDirection: "row",
@@ -582,13 +589,14 @@ export default function HomePage() {
                   floor={`${
                     JSON.parse(item.housing_type_data)["floorlocation"]
                   } `}
+                  bookmarkStatus={true}
                   dailyRent={false}
                 />
               ))}
             </ScrollView>
           </View>
           <View style={styles.slide4}>
-            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+            <View style={{ paddingTop: 0}}>
               <View
                 style={{
                   flexDirection: "row",
@@ -609,7 +617,7 @@ export default function HomePage() {
             </View>
           </View>
           <View style={styles.slide4}>
-            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+            <View style={{ paddingTop: 0}}>
               <View
                 style={{
                   flexDirection: "row",
@@ -632,7 +640,7 @@ export default function HomePage() {
             </View>
           </View>
           <View style={styles.slide4}>
-            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+            <View style={{ paddingTop: 0}}>
               <View
                 style={{
                   flexDirection: "row",
@@ -640,12 +648,13 @@ export default function HomePage() {
                   paddingLeft: 10,
                   paddingRight: 10,
                   alignItems: "center",
+                  
                 }}
               >
-                <Text style={{ fontSize: 12 }}>GÜNLÜK TATİL EVLERİ</Text>
+                <Text style={{ fontSize: 12 }}>Günlük Kiralık İlanlar</Text>
 
                 <TouchableOpacity style={styles.allBtn}>
-                  <Text style={{ color: "white", fontSize: 13 }}>
+                  <Text style={{ color: "white", fontSize: 11 }}>
                     Tümünü Gör
                   </Text>
                 </TouchableOpacity>
@@ -682,6 +691,9 @@ export default function HomePage() {
                         floor={`${
                           JSON.parse(item.housing_type_data)["floorlocation"]
                         } `}
+                        bookmarkStatus={true}
+                        step2_slug={item.step2_slug}
+                        step1_slug={item.step1_slug}
                         dailyRent={true}
                       />
                     ))
@@ -692,7 +704,7 @@ export default function HomePage() {
 
           </View>
           <View style={styles.slide4}>
-            <View style={{ paddingTop: 0, paddingBottom: 10 }}>
+            <View style={{ paddingTop: 0}}>
               <View
                 style={{
                   flexDirection: "row",

@@ -7,7 +7,7 @@ export default function Notificate({name,time}) {
   return (
   
     <View style={styles.container}>
-      <View style={{flexDirection:'row',paddingTop:15}}>
+      <View style={{flexDirection:'row',paddingVertical: 15}}>
             <View style={{flex:0.2/2,alignItems:'center'}}>
                 <Icon name='home' size={20}/>
             </View>
