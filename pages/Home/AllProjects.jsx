@@ -22,7 +22,7 @@ import axios from "axios";
 import { Platform } from "react-native";
 
 export default function AllProjects() {
-  const apiUrl = "https://test.emlaksepette.com/";
+  const apiUrl = "https://emlaksepette.com/";
   const route = useRoute();
   const { name, data } = route.params;
   const navigation = useNavigation();
@@ -52,7 +52,7 @@ export default function AllProjects() {
   const fetchFeaturedProjects = async () => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/featured-projects"
+        "https://emlaksepette.com/api/featured-projects"
       );
       setFeaturedProjects(response.data);
       setIsLoading(true)

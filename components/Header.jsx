@@ -24,30 +24,34 @@ export default function Header({ loading, onPress }) {
     getValueFor("user", setuser);
   }, []);
 
+  
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/user/notification",
+          "https://emlaksepette.com/api/user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
             },
           }
         );
-        setNotifications(response.data);
 
-        const unreadCount = response.data.filter(
+        const notificationsData = Array.isArray(response.data) ? response.data : [];
+        setNotifications(notificationsData);
+
+        const unreadCount = notificationsData.filter(
           (notification) => notification.readed === 0
         ).length;
         setNotificationCount(unreadCount);
       } catch (error) {
         console.error("Error fetching notifications:", error);
+        setNotificationCount(0); // Hata durumunda unreadCount'u 0 olarak ayarla
       }
     };
 
     fetchNotifications();
-  }, []);
+  }, [user.access_token]);
 
   return (
     <View style={styles.header}>

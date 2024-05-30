@@ -30,7 +30,7 @@ const [Isucces, setIsucces] = useState(false)
     try {
       // POST isteği yap
       const response = await axios.post(
-        'https://test.emlaksepette.com/api/phone-verification/verify',
+        'https://emlaksepette.com/api/phone-verification/verify',
         { code: codes },
         {
           headers: {
@@ -70,7 +70,7 @@ useEffect(() => {
       };
   
       const response = await axios.post(
-        'https://test.emlaksepette.com/api/phone-verification/generate',
+        'https://emlaksepette.com/api/phone-verification/generate',
         {}, // Veri gövdesi boş olabilir veya isteğe özel verileri ekleyebilirsiniz
         config
       );

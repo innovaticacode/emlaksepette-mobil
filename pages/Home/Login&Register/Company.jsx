@@ -71,7 +71,7 @@ export default function Company() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/cities"
+        "https://emlaksepette.com/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -93,7 +93,7 @@ export default function Company() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/counties/${value}`
+        `https://emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -129,7 +129,7 @@ export default function Company() {
   const fetchDataNeigbour = async (value) => {
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/neighborhoods/${value}`
+        `https://emlaksepette.com/api/neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {
@@ -179,7 +179,7 @@ export default function Company() {
       formData.append("activity", null);
       formData.append("iban", null);
       const response = await axios.post(
-        "https://test.emlaksepette.com/api/register",
+        "https://emlaksepette.com/api/register",
         formData
       );
 
@@ -379,7 +379,7 @@ export default function Company() {
   const fetchTaxOfficeCity = async () => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/get-tax-offices"
+        "https://emlaksepette.com/api/get-tax-offices"
       );
       return response.data;
     } catch (error) {
@@ -411,7 +411,7 @@ export default function Company() {
   const fetchTaxOffice = async (value) => {
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/get-tax-office/${value}`
+        `https://emlaksepette.com/api/get-tax-office/${value}`
       );
       return response.data;
     } catch (error) {
@@ -452,7 +452,7 @@ export default function Company() {
   // Örnek kullanım
 
   const fetchDataDeal = async (deal) => {
-    const url = `https://test.emlaksepette.com/api/sayfa/${deal}`;
+    const url = `https://emlaksepette.com/api/sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);

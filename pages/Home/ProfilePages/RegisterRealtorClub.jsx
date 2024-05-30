@@ -108,7 +108,7 @@ const [check, setcheck] = useState(false)
   setloading(true)
 
     try {
-      const response = await axios.put('https://test.emlaksepette.com/api/institutional/club/update', data, {
+      const response = await axios.put('https://emlaksepette.com/api/institutional/club/update', data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.access_token}`

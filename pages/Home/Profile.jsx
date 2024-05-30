@@ -74,7 +74,7 @@ export default function Profile() {
       formData.append("email", emailId);
 
       const response = await axios.post(
-        "https://test.emlaksepette.com/api/institutional/give_offer",
+        "https://emlaksepette.com/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -165,7 +165,7 @@ export default function Profile() {
     });
   }, []);
   console.log(Housings[0]?.title + "sdfsdf");
-  const ApiUrl = "https://test.emlaksepette.com/";
+  const ApiUrl = "https://emlaksepette.com/";
   console.log(storeData?.data?.name);
   const handleOpenPhone = () => {
     // Telefon uygulamasını açmak için

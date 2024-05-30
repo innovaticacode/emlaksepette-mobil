@@ -52,12 +52,6 @@ export default function Posts({
       : text;
   }
 
-  if (data.projectCartOrders[roomOrder]) {
-    console.log(data.projectCartOrders[roomOrder]);
-    const status = data.projectCartOrders[roomOrder].status;
-  } else {
-    console.log("Belirtilen indeksteki öğe bulunamadı.");
-  }
   return (
     <TouchableOpacity
       onPress={() =>
@@ -93,7 +87,7 @@ export default function Posts({
             <Image
               source={{
                 uri:
-                  "https://test.emlaksepette.com/project_housing_images/" +
+                  "https://emlaksepette.com/project_housing_images/" +
                   roomData["image[]"],
               }}
               style={{ width: "100%", height: 80, objectFit: "cover" }}

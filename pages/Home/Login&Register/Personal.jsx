@@ -67,7 +67,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
       formData.append("check-c", checked2);
       formData.append("check-e", checked3);
       const response = await axios.post(
-        "https://test.emlaksepette.com/api/register",
+        "https://emlaksepette.com/api/register",
         formData
       );
 
@@ -185,7 +185,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
   // Örnek kullanım
 
   const fetchData = async (deal) => {
-    const url = `https://test.emlaksepette.com/api/sayfa/${deal}`;
+    const url = `https://emlaksepette.com/api/sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
