@@ -7,15 +7,15 @@ import {
   Dimensions,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { getValueFor } from "./methods/user";
 export default function ProjectPost({
   project,
-user,
   ımage,
   location,
   city,
-
+  user,
   ProfilImage,
 
   ProjectNo,
@@ -32,14 +32,16 @@ user,
   };
 
   const RandomColor = generateRandomColorCode();
+  const [userLogin, setuserLogin] = useState({});
+  useEffect(() => {
+    getValueFor("user", setuserLogin);
+  }, []);
   return (
     <TouchableOpacity
       style={{ marginTop: 10 }}
       onPress={() =>
         navigation.navigate("Details", {
-          
           ProjectId: ProjectNo,
-      
         })
       }
     >
@@ -89,6 +91,11 @@ user,
           >
             {project.project_title}
           </Text>
+          {userLogin && userLogin.corporate_type == "Emlak Ofisi" && (
+            <View style={styles.commissionBadge}>
+              <Text style={styles.commissionText}>%2 KOMİSYON!</Text>
+            </View>
+          )}
         </View>
       </View>
     </TouchableOpacity>
@@ -105,10 +112,11 @@ const styles = StyleSheet.create({
   },
   ShoppingName: {
     position: "absolute",
-    width: "30%",
+    width: 100,
     backgroundColor: "#FFFFFF",
-    left: 0,
-    height: "40%",
+    left: "35%",
+    height: 70,
+    top: 0,
     display: "flex",
     flexDirection: "column",
   },
@@ -123,11 +131,29 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   Description: {
-    width: "40%",
-    height: "100%",
+    width: "100%",
+    height: 40,
+    bottom: 0,
     position: "absolute",
     right: 0,
     alignItems: "center",
     justifyContent: "center",
+  },
+  commissionBadge: {
+    position: "absolute",
+    right: 0,
+    bottom: 60,
+    width: 120,
+    height: 30,
+    borderBottomLeftRadius: 15,
+    borderTopLeftRadius: 15,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  commissionText: {
+    color: "green",
+    fontWeight: "700",
+    fontSize: "13",
   },
 });

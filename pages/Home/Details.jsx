@@ -909,7 +909,7 @@ export default function Details({ navigation }) {
                 padding: 5,
                 paddingLeft: 8,
                 paddingRight: 8,
-                borderRadius: 10,
+                borderRadius: 5,
               }}
             >
               <Text style={{ color: "white", fontSize: 12 }}>
@@ -1154,7 +1154,7 @@ export default function Details({ navigation }) {
                 style={{
                   backgroundColor: "#EA2C2E",
                   padding: 10,
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
               >
                 <Text
@@ -1528,7 +1528,7 @@ export default function Details({ navigation }) {
                     style={{
                       backgroundColor: "#EA2A28",
                       padding: 10,
-                      borderRadius: 6,
+                      borderRadius: 5,
                     }}
                     onPress={addCollectionPost}
                   >
@@ -1688,7 +1688,7 @@ export default function Details({ navigation }) {
                     backgroundColor: "#28A745",
                     width: "40%",
                     padding: 15,
-                    borderRadius: 10,
+                    borderRadius: 5,
                   }}
                   onPress={GiveOffer}
                 >
@@ -1701,7 +1701,7 @@ export default function Details({ navigation }) {
                     backgroundColor: "#DC3545",
                     width: "40%",
                     padding: 15,
-                    borderRadius: 10,
+                    borderRadius: 5,
                   }}
                   onPress={() => {
                     setFormVisible(false);
@@ -1800,7 +1800,7 @@ export default function Details({ navigation }) {
                     padding: 10,
                     paddingLeft: 20,
                     paddingRight: 20,
-                    borderRadius: 6,
+                    borderRadius: 5,
                   }}
                   onPress={() => {
                     addToCard();
@@ -1815,7 +1815,7 @@ export default function Details({ navigation }) {
                     padding: 10,
                     paddingLeft: 20,
                     paddingRight: 20,
-                    borderRadius: 6,
+                    borderRadius: 5,
                   }}
                   onPress={() => {
                     setModalForAddToCart(false);
@@ -1860,7 +1860,7 @@ const styles = StyleSheet.create({
     padding: 3,
     paddingLeft: 8,
     paddingRight: 8,
-    borderRadius: 10,
+    borderRadius: 5,
     bottom: 0,
     alignItems: "center",
 
@@ -1937,7 +1937,7 @@ const styles = StyleSheet.create({
   Input: {
     borderWidth: 1,
     padding: 10,
-    borderRadius: 6,
+    borderRadius: 5,
     borderColor: "#ebebeb",
   },
   label: {
@@ -1975,7 +1975,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderColor: "#ebebeb",
-    borderRadius: 6,
+    borderRadius: 5,
     fontSize: 14,
   },
   modal4: {
@@ -1987,21 +1987,21 @@ const styles = StyleSheet.create({
   modalContent4: {
     backgroundColor: "#fefefe",
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 5,
   },
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     borderWidth: 1,
     borderColor: "#bdc6cf",
-    borderRadius: 6,
+    borderRadius: 5,
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon
   },
   inputAndroid: {
     borderWidth: 2,
     borderColor: "black",
-    borderRadius: 6,
+    borderRadius: 5,
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon
   },

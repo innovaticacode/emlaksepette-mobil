@@ -304,7 +304,7 @@ export default function Login({ navigation }) {
                       : 1,
                   backgroundColor: "#EA2C2E",
                   padding: 8,
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
                 onPress={Submit}
                 disabled={
@@ -363,7 +363,7 @@ export default function Login({ navigation }) {
                     padding: 10,
                     width: "45%",
                     height: 50,
-                    borderRadius: 10,
+                    borderRadius: 5,
                     flexDirection: "row",
                     alignItems: "center",
                     gap: 10,
@@ -384,7 +384,7 @@ export default function Login({ navigation }) {
                     padding: 8,
                     width: "45%",
                     height: 50,
-                    borderRadius: 10,
+                    borderRadius: 5,
                     flexDirection: "row",
                     alignItems: "center",
                     gap: 10,
@@ -488,7 +488,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderColor: "#ebebeb",
-    borderRadius: 10,
+    borderRadius: 5,
     fontSize: 14,
   },
   modal: {

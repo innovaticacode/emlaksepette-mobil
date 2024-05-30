@@ -512,7 +512,7 @@ const styles = StyleSheet.create({
     AdvertDetail:{
         gap:10,
         backgroundColor: '#FFFFFF',  
-        borderRadius: 6,  
+        borderRadius: 5,  
         paddingVertical: 15,  
         paddingHorizontal: 15,  
         width: '100%',  
@@ -571,7 +571,7 @@ const styles = StyleSheet.create({
     dateContainer: {
         backgroundColor: "#ffffff",
      
-        borderRadius: 10,
+        borderRadius: 5,
         padding: 15,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },

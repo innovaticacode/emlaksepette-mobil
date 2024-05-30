@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
   },
   Ticket1: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: 5,
     backgroundColor: '#FFFFFF',
     gap: 30,
     paddingVertical: 25,

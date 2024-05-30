@@ -174,7 +174,7 @@ export default function CreateUserType() {
                 backgroundColor: "#EA2A29",
                 padding: 13,
                 width: "50%",
-                borderRadius: 10,
+                borderRadius: 5,
               }}
               onPress={handleShowCheckedItems}
             >
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   },
   userContainer: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 10,
+    borderRadius: 5,
     paddingVertical: 22,
     paddingHorizontal: 10,
     width: "100%",

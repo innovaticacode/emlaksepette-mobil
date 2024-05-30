@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     gap: 5,
-    borderRadius: 10,
+    borderRadius: 5,
   },
   point: {
     flex: 0.8 / 2,

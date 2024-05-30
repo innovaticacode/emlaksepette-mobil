@@ -135,6 +135,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     padding: 20,
     gap:20,
-    borderRadius: 10,
+    borderRadius: 5,
   },
 })

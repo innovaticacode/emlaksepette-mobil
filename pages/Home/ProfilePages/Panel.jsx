@@ -260,7 +260,7 @@ export default function Panel({ options, onSelect }) {
 
               <View style={styles.container}>
                 <Image
-                  source={{ uri: "https://emlaksepette.com/images/emlak-kulup-banner.png" }}
+                  source={{ uri: "https://test.emlaksepette.com/images/emlak-kulup-banner.png" }}
                   style={styles.image}
                 />
               </View>
@@ -545,7 +545,7 @@ const style = StyleSheet.create({
   dropdownButton: {
     padding: 10,
     backgroundColor: "#FFFFFF",
-    borderRadius: 10,
+    borderRadius: 5,
     paddingVertical: 15,
     paddingHorizontal: 10,
     width: "100%",
@@ -574,7 +574,7 @@ const style = StyleSheet.create({
   modalContent: {
     backgroundColor: "white",
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 5,
     position: "absolute",
     right: 10,
   },
@@ -631,7 +631,7 @@ const style = StyleSheet.create({
     flexDirection: "row",
 
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 10,
 

@@ -11,24 +11,20 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import Notificate from "../../components/Notificate";
+import { useRoute } from '@react-navigation/native';
+import moment from "moment";
+import "moment/locale/tr";
 
 export default function Notifications() {
+  const route = useRoute();
+  const { notifications } = route.params;
+
   const renderRightActions = () => (
     <TouchableOpacity style={styles.deleteButton} onPress={() => {}}>
       <Text style={styles.deleteButtonText}>Sil</Text>
     </TouchableOpacity>
   );
 
-  const Notifications = [
-    {
-      NotificateDescription: "#200 kodlu İlanınızı Onaylandı ",
-      time: "15:30 Çarşamba",
-    },
-    {
-      NotificateDescription: "#200 kodlu İlanınızı Onaylandı",
-      time: "13:20 Salı",
-    },
-  ];
 
   return (
     <View style={styles.container}>
@@ -37,13 +33,13 @@ export default function Notifications() {
       </View>
       <ScrollView style={{}}>
         <View style={{ gap: 15 }}>
-          {Notifications.map((item, index) => (
+          {notifications.map((item, index) => (
             <GestureHandlerRootView key={index}>
               <Swipeable renderRightActions={renderRightActions}>
                 <Notificate
                   key={index}
-                  name={item.NotificateDescription}
-                  time={item.time}
+                  name={item.text}
+                  time={moment(item.created_at).locale("tr").format("LLL")}
                 />
               </Swipeable>
             </GestureHandlerRootView>
