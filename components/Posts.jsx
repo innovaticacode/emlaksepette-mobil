@@ -81,13 +81,13 @@ export default function Posts({
                   color: "white",
                 }}
               >
-                No {roomOrder}
+                No {roomOrder} {bookmarkStatus}
               </Text>
             </View>
             <Image
               source={{
                 uri:
-                  "https://emlaksepette.com/project_housing_images/" +
+                  "https://test.emlaksepette.com/project_housing_images/" +
                   roomData["image[]"],
               }}
               style={{ width: "100%", height: 80, objectFit: "cover" }}
@@ -97,7 +97,7 @@ export default function Posts({
             <View style={styles.captionAndIcons}>
               <View style={styles.caption}>
                 <Text style={{ fontSize: 9, color: "black" }}>
-                  İlan No: {1000000 + data.project.id}
+                  İlan No: {1000000 + data.project.id} 
                 </Text>
                 <Text style={{ fontSize: 9, fontWeight: 700 }}>
                   {truncateText(roomData["advertise_title[]"], 4)}
@@ -106,10 +106,10 @@ export default function Posts({
               <View
                 style={{
                   ...styles.ıcons, // Diğer stil özelliklerini ekleyin
-                  justifyContent: bookmarkStatus ? "space-between" : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
+                  justifyContent: bookmarkStatus && bookmarkStatus == true ? "space-between" : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
                 }}
               >
-                {bookmarkStatus == true ?? (
+                {bookmarkStatus && bookmarkStatus == true && (
                   <TouchableOpacity
                     onPress={() => {
                       changeBookmark();
@@ -405,10 +405,8 @@ const styles = StyleSheet.create({
   ıcons: {
     display: "flex",
     flexDirection: "row",
-  
-    width: "30%",
+    width: "25%",
     bottom: 5,
-    
   },
   btns: {
     display: "flex",

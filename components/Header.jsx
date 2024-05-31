@@ -24,12 +24,11 @@ export default function Header({ loading, onPress }) {
     getValueFor("user", setuser);
   }, []);
 
-  
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         const response = await axios.get(
-          "https://emlaksepette.com/api/user/notification",
+          "https://test.emlaksepette.com/api/user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -37,10 +36,10 @@ export default function Header({ loading, onPress }) {
           }
         );
 
-        const notificationsData = Array.isArray(response.data) ? response.data : [];
-        setNotifications(notificationsData);
+        console.log(response);
+        setNotifications(response.data);
 
-        const unreadCount = notificationsData.filter(
+        const unreadCount = response.data.filter(
           (notification) => notification.readed === 0
         ).length;
         setNotificationCount(unreadCount);
@@ -52,7 +51,6 @@ export default function Header({ loading, onPress }) {
 
     fetchNotifications();
   }, [user.access_token]);
-
   return (
     <View style={styles.header}>
       <TouchableOpacity

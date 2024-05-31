@@ -25,7 +25,7 @@ export default function WaitRealtorAdverts() {
     setEditModalVisible(!EditModalVisible)
 }; 
   useEffect(() => {
-    axios.get('https://emlaksepette.com/api/get_my_housings',{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
+    axios.get('https://test.emlaksepette.com/api/get_my_housings',{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
       sethousings(res.data.pendingHousingTypes);
       console.log(housings +'evler')
     

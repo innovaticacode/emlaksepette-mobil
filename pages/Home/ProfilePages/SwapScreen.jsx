@@ -21,7 +21,7 @@ export default function SwapScreen() {
     const fetchData = async () => {
      
       try {
-        const response = await axios.get('https://emlaksepette.com/api/institutional/swap_applications',{
+        const response = await axios.get('https://test.emlaksepette.com/api/institutional/swap_applications',{
           headers: {
             'Authorization': `Bearer ${user?.access_token}`
           }
@@ -42,7 +42,7 @@ export default function SwapScreen() {
      
       try {
         if (user?.access_token) {
-          const response = await axios.get(`https://emlaksepette.com/api/institutional/swap_applications/${id}`,{
+          const response = await axios.get(`https://test.emlaksepette.com/api/institutional/swap_applications/${id}`,{
           headers: {
             'Authorization': `Bearer ${user?.access_token}`
           }

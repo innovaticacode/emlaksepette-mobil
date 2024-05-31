@@ -64,7 +64,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://emlaksepette.com/api/institutional/my-cart",
+          "https://test.emlaksepette.com/api/institutional/my-cart",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,

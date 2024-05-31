@@ -69,7 +69,7 @@ export default function Details({ navigation }) {
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const [FormVisible, setFormVisible] = useState(false);
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://test.emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -744,8 +744,9 @@ export default function Details({ navigation }) {
   const [galleries, setGalleries] = useState();
 
   useEffect(() => {
-    setGalleries(data.project.images)
+    setGalleries(data.project.images);
   }, [data]);
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -929,66 +930,64 @@ export default function Details({ navigation }) {
           }
         }}
       >
-          <View style={{ height: 250 }}>
-      <View style={styles.pagination}>
-        <View
-          style={{
-            backgroundColor: "#333",
-            padding: 5,
-            paddingLeft: 8,
-            paddingRight: 8,
-            borderRadius: 5,
-          }}
-        >
-          <Text style={{ color: "white", fontSize: 12 }}>
-            {pagination + 1} / {data.project.images.length}
-          </Text>
-        </View>
-      </View>
-
-      <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={changeHeart}>
-          <View style={styles.icon}>
-            <Heart
-              name={heart}
-              size={18}
-              color={heart === 'hearto' ? 'black' : 'red'}
-            />
+        <View style={{ height: 250 }}>
+          <View style={styles.pagination}>
+            <View
+              style={{
+                backgroundColor: "#333",
+                padding: 5,
+                paddingLeft: 8,
+                paddingRight: 8,
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ color: "white", fontSize: 12 }}>
+                {pagination + 1} / {data.project.images.length}
+              </Text>
+            </View>
           </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
-          <View style={styles.icon}>
-            <Icon2 name="sharealt" size={18} />
-          </View>
-        </TouchableOpacity>
-      </View>
 
-      <Swiper
-        style={{ height: 250 }}
-        showsPagination={false}
-        onIndexChanged={(index) => setPagination(index)}
-        loop={false}
-        onPageSelected={(event) =>
-          handlePageChange(event.nativeEvent.position)
-        }
-        index={pagination}
-      >
-        {data.project.images &&
-          data.project.images.map((image, index) => {
-            const uri = `${apiUrl}${image.image.replace("public", "storage")}`;
-            return (
-              <Pressable
-                key={index}
-              >
-                <ImageBackground
-                  source={{ uri: uri }}
-                  style={{ width: "100%", height: "100%" }}
+          <View style={styles.ıconContainer}>
+            <TouchableOpacity onPress={changeHeart}>
+              <View style={styles.ıcon}>
+                <Heart
+                  name={heart}
+                  size={18}
+                  color={heart === "hearto" ? "black" : "red"}
                 />
-              </Pressable>
-            );
-          })}
-      </Swiper>
-    </View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
+              <View style={styles.ıcon}>
+                <Icon2 name="sharealt" size={18} />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <Swiper
+            style={{ height: 250 }}
+            showsPagination={false}
+            onIndexChanged={(index) => setPagination(index)}
+            loop={true}
+            index={pagination}
+          >
+            {data.project.images &&
+              data.project.images.map((image, index) => {
+                const uri = `${apiUrl}${image.image.replace(
+                  "public",
+                  "storage"
+                )}`;
+                return (
+                  <Pressable key={index}>
+                    <ImageBackground
+                      source={{ uri: uri }}
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  </Pressable>
+                );
+              })}
+          </Swiper>
+        </View>
         {/* <View style={{ height: 250 }}>
           <View style={styles.pagination}>
             <View
@@ -1074,7 +1073,7 @@ export default function Details({ navigation }) {
             }}
           >
             {data?.project?.city?.title
-              ? `${data.project.city.title} / ${data.project.county.ilce_title}`
+              ? `${data.project.city.title} / ${data.project.county.ilce_title} `
               : ""}
           </Text>
           <Text
@@ -1110,9 +1109,7 @@ export default function Details({ navigation }) {
             OpenFormModal={OpenFormModal}
           />
         )}
-        <View style={{ paddingLeft: 10, paddingRight: 10 }}>
-          {tabs == 1 && <Caption data={data} />}
-        </View>
+        <View>{tabs == 1 && <Caption data={data} />}</View>
         {tabs == 2 && <Information settings={data} />}
         <View style={{}}>{tabs === 3 && <Map mapData={data} />}</View>
 
@@ -1973,7 +1970,7 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "transparent",
     position: "absolute",
-    right: 2,
+    right: 10,
     top: 10,
     display: "flex",
     flexDirection: "column",

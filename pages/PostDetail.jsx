@@ -49,7 +49,7 @@ import axios from "axios";
 import { getValueFor } from "../components/methods/user";
 
 export default function PostDetail() {
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://test.emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState("hearto");
@@ -145,7 +145,7 @@ export default function PostDetail() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/getCollections",
+        "https://test.emlaksepette.com/api/getCollections",
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -176,7 +176,7 @@ export default function PostDetail() {
 
     axios
       .post(
-        "https://emlaksepette.com/api/add/collection",
+        "https://test.emlaksepette.com/api/add/collection",
         collectionData,
         {
           headers: {
@@ -219,7 +219,7 @@ export default function PostDetail() {
     };
 
     axios
-      .post("https://emlaksepette.com/api/addLink", collectionData, {
+      .post("https://test.emlaksepette.com/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,

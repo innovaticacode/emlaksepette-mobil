@@ -24,7 +24,7 @@ export default function OtherHomeInProject({
   getLastItemCount,
   openCollection,
   GetIdForCart,
-  GetID
+  GetID,
 }) {
   const [tabs, setTabs] = useState(0);
   const [rooms, setRooms] = useState([]);
@@ -32,66 +32,63 @@ export default function OtherHomeInProject({
 
   return (
     <SafeAreaView>
-      <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+      <View >
         <View style={styles.container}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              flexGrow: 1,
-              backgroundColor: "#ebebeb",
-              padding: 3,
-              gap: 10,
-            }}
-            bounces={false}
-          >
-            {data.project.have_blocks
-              ? data.project.blocks.map((block, blockIndex) => {
-                  return (
-                    <TouchableOpacity
-                      key={blockIndex}
-                      onPress={() => {
-                        setTabs(blockIndex);
-                        getBlockItems(blockIndex);
-                        setSelectedTab(blockIndex);
-                      }}
-                      style={[
-                        styles.blockBtn,
-                        {
-                          borderBottomWidth: tabs == blockIndex ? 1 : 0,
-                        },
-                      ]}
-                    >
-                      <Text
-                        style={{
-                          fontWeight: tabs == blockIndex ? "700" : "normal",
-                          color: "#333",
-                        }}
-                      >
-                        {block.block_name}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })
-              : ""}
-          </ScrollView>
+          {data.project.blocks && data.project.blocks.map((block, blockIndex) => (
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                flexGrow: 1,
+                backgroundColor: "#ebebeb",
+                padding: 3,
+                gap: 10,
+              }}
+              bounces={false}
+            >
+              <TouchableOpacity
+                key={blockIndex}
+                onPress={() => {
+                  setTabs(blockIndex);
+                  getBlockItems(blockIndex);
+                  setSelectedTab(blockIndex);
+                }}
+                style={[
+                  styles.blockBtn,
+                  {
+                    borderBottomWidth: tabs === blockIndex ? 1 : 0,
+                  },
+                ]}
+              >
+                <Text
+                  style={{
+                    fontWeight: tabs === blockIndex ? "700" : "normal",
+                    color: "#333",
+                  }}
+                >
+                  {block.block_name}
+                </Text>
+              </TouchableOpacity>{" "}
+            </ScrollView>
+          ))}
 
           <View>
             {Array.from({
               length:
                 data.project.room_count > 10
                   ? itemCount
-                  : data.project.room_count
+                  : data.project.room_count,
             }).map((index, _index) => {
               return (
                 <Posts
-                GetID={GetID}
-                GetIdForCart={GetIdForCart}
-                openCollection={openCollection}
+                  GetID={GetID}
+                  GetIdForCart={GetIdForCart}
+                  openCollection={openCollection}
                   key={_index}
                   data={data}
                   openFormModal={OpenFormModal}
                   openmodal={openmodal}
+                  bookmarkStatus={true}
                   roomOrder={
                     data.project.have_blocks
                       ? getLastItemCount() + _index + 1

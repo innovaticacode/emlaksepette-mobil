@@ -23,7 +23,7 @@ const [menuItems, setMenuItems] = useState([]);
 
 const fetchmenuItems = async () => {
   try {
-    const response = await axios.get('https://emlaksepette.com/api/menu-list');
+    const response = await axios.get('https://test.emlaksepette.com/api/menu-list');
     setMenuItems(response.data)
     const submenus = response.data[0].submenus;
 

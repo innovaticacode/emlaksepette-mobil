@@ -12,16 +12,16 @@ export default function FloorPlan({ data }) {
     getValueFor("user", setUser);
   }, []);
 
-  const apiUrl = "https://emlaksepette.com/situation_images/";
+  const apiUrl = "https://test.emlaksepette.com/situation_images/";
 
   const getFullImageURL = (partialURL) => {
-    return `https://emlaksepette.com/${partialURL}`;
+    return `https://test.emlaksepette.com/${partialURL}`;
   };
 
   console.log(data.project.situations, "asd");
 
   return (
-    <View style={{ padding: 9, top: 1 }}>
+    <View >
       <View style={styles.container}>
         <View
           style={{

@@ -185,7 +185,7 @@ const [certificate, setcertificate] = useState('')
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://emlaksepette.com/api/cities');
+      const response = await axios.get('https://test.emlaksepette.com/api/cities');
       return response.data;
     } catch (error) {
       console.error('Hata:', error);
@@ -204,7 +204,7 @@ const [certificate, setcertificate] = useState('')
  const [counties, setcounties] = useState([])
 const fetchDataCounty = async (value) => {
   try {
-    const response = await axios.get(`https://emlaksepette.com/api/counties/${value}`);
+    const response = await axios.get(`https://test.emlaksepette.com/api/counties/${value}`);
     return response.data;
   } catch (error) {
     console.error('Hata:', error);
@@ -231,7 +231,7 @@ const fetchDataCounty = async (value) => {
       const [Neigbour, setNeigbour] = useState([])
       const fetchDataNeigbour = async (value) => {
         try {
-          const response = await axios.get(`https://emlaksepette.com/api/neighborhoods/${value}`)
+          const response = await axios.get(`https://test.emlaksepette.com/api/neighborhoods/${value}`)
           return response.data;
         } catch (error) {
           console.error('Hata:', error);

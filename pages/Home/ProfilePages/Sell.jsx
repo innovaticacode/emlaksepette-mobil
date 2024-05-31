@@ -25,7 +25,7 @@ const [products, setproducts] = useState([])
     try {
       if(user?.access_token){
         const response = await axios.get(
-          "https://emlaksepette.com/api/institutional/get_solds",
+          "https://test.emlaksepette.com/api/institutional/get_solds",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

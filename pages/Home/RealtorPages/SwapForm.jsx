@@ -113,7 +113,7 @@ export default function SwapForm({ data, openModal, color }) {
       formData.append("barter_detay", Barter);
       console.log(name);
       const response = await axios.post(
-        "https://emlaksepette.com/api/swap",
+        "https://test.emlaksepette.com/api/swap",
         formData
       );
 
@@ -160,7 +160,7 @@ export default function SwapForm({ data, openModal, color }) {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/cities"
+        "https://test.emlaksepette.com/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -182,7 +182,7 @@ export default function SwapForm({ data, openModal, color }) {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://emlaksepette.com/api/counties/${value}`
+        `https://test.emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -220,7 +220,7 @@ export default function SwapForm({ data, openModal, color }) {
   const fetchDataNeigbour = async (value) => {
     try {
       const response = await axios.get(
-        `https://emlaksepette.com/api/neighborhoods/${value}`
+        `https://test.emlaksepette.com/api/neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {

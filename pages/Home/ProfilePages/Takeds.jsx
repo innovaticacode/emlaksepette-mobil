@@ -45,7 +45,7 @@ export default function Takeds() {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            `https://emlaksepette.com/api/institutional/get_boughts`,
+            `https://test.emlaksepette.com/api/institutional/get_boughts`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
