@@ -422,6 +422,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#264ABB",
   },
+  showCustomer:{
+    paddingLeft: 20,
+    paddingRight: 20,
+    padding: 5,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "green",
+  },
   pending: {
     paddingLeft: 20,
     paddingRight: 20,
