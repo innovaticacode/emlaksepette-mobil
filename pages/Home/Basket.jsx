@@ -28,6 +28,7 @@ import Modal from "react-native-modal";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
+import { Alert } from "react-native";
 
 export default function Basket() {
   const route = useRoute();
@@ -60,6 +61,8 @@ export default function Basket() {
   const [type, settype] = useState({});
   const [saleType, setsaleType] = useState({});
   const [offerControl, setofferControl] = useState({})
+  const [payDec, setpayDec] = useState([])
+  const [isShare, setisShare] = useState([])
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
@@ -79,6 +82,8 @@ export default function Basket() {
         settype(response?.data?.cart);
         setsaleType(response?.data?.saleType);
         setofferControl(response?.data)
+        setpayDec(response?.data?.cart?.item?.pay_decs)
+        setisShare(response?.data?.cart?.item?.isShare)
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -88,15 +93,142 @@ export default function Basket() {
   useEffect(() => {
     fetchData();
   }, [user]);
+const [parsedshare, setparsedshare] = useState('')
+ const Parse = async () => {
+  try {
+    if (Cart && isShare && type && saleType ) {
+      setparsedshare(JSON.parse(isShare)[0])
+      // const parsedShare =JSON.parse(isShare)[0]
+      console.log(parsedshare,'dsfsdfsdf')
+    }
+  }catch(error){
+    console.log('parse edilemedi')
+  }
+ }
+ useEffect(() => {
+  Parse()
+}, [fetchData]);
 
 
 
+
+ 
+  
   const [isInstallament, setisInstallament] = useState(0);
 
-  let DiscountRate = Cart.discount_rate;
-  let TotalPrice = Cart.price;
-  let DiscountPrice = Cart.price - (Cart.amount * Cart.discount_rate) / 100;
+  let DiscountRate = Cart?.discount_rate;
+  let TotalPrice = Cart?.price;
+  let DiscountPrice = Cart?.price - (Cart?.amount * Cart?.discount_rate) / 100;
   let KaporaForDiscountPrice = (DiscountPrice * 2) / 100;
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    
+    const monthNames = [
+      "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+      "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
+    
+    const day = date.getDate();
+    const month = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    
+    return `${month}, ${day} ${year}`;
+  };
+
+
+// Sepetteki Hisse Sayısını Arttırma Ve Fİyat Güncelleme
+  const [shareCounter, setshareCounter] = useState(1)
+//Arttırma
+const [message, setmessage] = useState({})
+const [counter, setcounter] = useState(1)
+  const UpdateCart= async ()=>{
+        let formData=new FormData()
+        formData.append('change','artir')
+    try {
+      if (user.access_token) {
+        const response = await axios.post(
+          "https://test.emlaksepette.com/api/update-cart-qt",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+        fetchData()
+            setmessage(response.data)
+            setcounter(response?.data?.quantity)
+            if (counter==Cart.numbershare) {
+                  Alert.alert('Daha Fazla Hisse Ekleyemezsinizæ')
+            } 
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+console.log(Cart.qt,'dfsdfds')
+  //Azaltma
+  const UpdateShareMinus = async ()=>{
+    let formData=new FormData()
+    formData.append('change','azalt')
+try {
+  if (user.access_token) {
+    const response = await axios.post(
+      "https://test.emlaksepette.com/api/update-cart-qt",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      }
+    );
+    fetchData()
+        setmessage(response.data)
+        setcounter(response?.data?.quantity)
+  }
+} catch (error) {
+  console.error("Error fetching data:", error);
+}
+  }
+console.log(message)
+const formatAmount = (amount) => {
+  return new Intl.NumberFormat('tr-TR', { 
+    style: 'currency', 
+    currency: 'TRY',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+};
+const [messageUpdateCart, setmessageUpdateCart] = useState({})
+const UpdateCartForInstallemnt=async(selectedOption)=>{
+    let qt = Cart.qt ? Cart.qt : 1
+
+    var updatedPrice = selectedOption === 'taksitli' ? (Cart.installmentPrice * qt) : (Cart.defaultPrice * qt);
+    let formData= new FormData()
+    formData.append('paymentOption',selectedOption)
+    formData.append('updatedPrice',updatedPrice)
+    try {
+      if (user.access_token) {
+        const response = await axios.post(
+          "https://test.emlaksepette.com/api/update-cart",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+        fetchData()
+            setmessageUpdateCart(response.data)
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+
+}   
+
+console.log(messageUpdateCart)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View
@@ -212,11 +344,15 @@ export default function Basket() {
           <GestureHandlerRootView style={{ backgroundColor: "white" }}>
             <Swipeable renderRightActions={renderRightActions}>
               <BasketItem
-                name={Cart.title}
-                ımage={Cart.image}
-                price={Cart.amount}
-                roomOrder={Cart.housing}
-                type={type.type}
+                name={Cart?.title}
+                ımage={Cart?.image}
+                price={Cart?.amount}
+                roomOrder={Cart?.housing}
+                type={type?.type}
+                share={parsedshare}
+                update={UpdateCart}
+                minus={UpdateShareMinus}
+                counter={counter}
               />
             </Swipeable>
           </GestureHandlerRootView>
@@ -289,6 +425,7 @@ export default function Basket() {
                 }}
                 onPress={() => {
                   setisInstallament(1);
+                  UpdateCartForInstallemnt('taksitli')
                 }}
               >
                 <Text
@@ -312,7 +449,7 @@ export default function Basket() {
                   }}
                 >
                   <Text style={{color:'#7E7E7E',fontWeight:'500'}}>Peşinat:</Text>
-                  <Text style={{color:'#7E7E7E',fontWeight:'500'}}>{addDotEveryThreeDigits(Cart.pesinat)} ₺</Text>
+                  <Text style={{color:'#7E7E7E',fontWeight:'500'}}>{addDotEveryThreeDigits(Cart?.pesinat)} ₺</Text>
                 </View>
                 <View
                   style={{
@@ -321,7 +458,7 @@ export default function Basket() {
                   }}
                 >
                   <Text style={{color:'#7E7E7E',fontWeight:'500'}}>Taksit Sayısı:</Text>
-                  <Text style={{color:'#7E7E7E',fontWeight:'500'}}>{Cart.taksitSayisi} </Text>
+                  <Text style={{color:'#7E7E7E',fontWeight:'500'}}>{Cart?.taksitSayisi} </Text>
                 </View>
                 <View
                   style={{
@@ -341,7 +478,32 @@ export default function Basket() {
                   <Text style={{color:'#7E7E7E',fontWeight:'500'}}>Toplam Fiyat:</Text>
                   <Text style={{color:'#7E7E7E',fontWeight:'500'}}>{addDotEveryThreeDigits(Cart.installmentPrice)} ₺</Text>
                 </View>
-            
+              {
+                payDec.map((item,_index)=>(
+                  <View
+                  key={_index}
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                 <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{_index +1}. Ara Ödeme</Text>
+                 <View>
+                 <Text style={{color:'#7E7E7E',fontWeight:'600',textAlign:'right'}}>{addDotEveryThreeDigits(item[`pay_dec_price${_index}`])} ₺</Text>
+                 <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{formatDate(item[`pay_dec_date${_index}`])}</Text>
+        
+                 </View>
+
+                </View>
+                  // <View style={{flexDirection:'column',gap:5,alignItems:'center'}}> 
+                
+                  //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{payDec.length}. Ara Ödeme</Text>
+                  //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{addDotEveryThreeDigits(item[`pay_dec_price${_index}`])} ₺</Text>
+                  //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{formatDate(item[`pay_dec_date${_index}`])}</Text>
+                  // </View>
+                ))
+
+              }
             </View>
           }
             
@@ -370,7 +532,12 @@ export default function Basket() {
                   }}
                 >
                   <Text>İlan Fiyatı:</Text>
-                  <Text>{addDotEveryThreeDigits( isInstallament==1? Cart.installmentPrice:Cart.defaultPrice)} ₺</Text>
+                  
+                   
+                       <Text>{formatAmount(isInstallament==1? Cart?.installmentPrice:Cart?.amount) } ₺</Text>
+
+               
+                
                 </View>
                 <View
                   style={{
@@ -379,7 +546,7 @@ export default function Basket() {
                   }}
                 >
                   <Text>Toplam Fiyat:</Text>
-                  <Text>{addDotEveryThreeDigits(isInstallament==1 ? Cart.installmentPrice:Cart.price)} ₺</Text>
+                  <Text>{ formatAmount(isInstallament==1 ? Cart.installmentPrice:Cart.amount)} ₺</Text>
                 </View>
                 <View
                   style={{
@@ -388,7 +555,7 @@ export default function Basket() {
                   }}
                 >
                   <Text>%{offerControl?.project?.deposit_rate} Kapora:</Text>
-                  <Text> {isInstallament==1?  addDotEveryThreeDigits(Cart.installmentPrice * offerControl?.project?.deposit_rate / 100 ) :addDotEveryThreeDigits(Cart.price * offerControl?.project?.deposit_rate / 100 )} ₺</Text>
+                  <Text> {isInstallament==1   ? formatAmount(Cart.installmentPrice * offerControl?.project?.deposit_rate ) / 100  :formatAmount(Cart?.amount* offerControl?.project?.deposit_rate / 100 )} ₺</Text>
                 </View>
               </View>
             </View>
@@ -465,7 +632,7 @@ export default function Basket() {
                   }}
                 >
                   <Text>İlan Fiyatı:</Text>
-                  <Text>{addDotEveryThreeDigits(Cart.price)} ₺</Text>
+                  <Text>{addDotEveryThreeDigits(Cart?.price)} ₺</Text>
                 </View>
                 <View
                   style={{
@@ -474,7 +641,7 @@ export default function Basket() {
                   }}
                 >
                   <Text>Toplam Fiyatı:</Text>
-                  <Text>{addDotEveryThreeDigits(Cart.price)} ₺</Text>
+                  <Text>{addDotEveryThreeDigits(Cart?.price)} ₺</Text>
                 </View>
                 <View
                   style={{
@@ -483,7 +650,7 @@ export default function Basket() {
                   }}
                 >
                   <Text>%2 Kapora:</Text>
-                  <Text>{addDotEveryThreeDigits(Cart.price *2 / 100 )} ₺</Text>
+                  <Text>{addDotEveryThreeDigits(Cart?.price *2 / 100 )} ₺</Text>
                 </View>
 
                </>
@@ -572,7 +739,15 @@ export default function Basket() {
               >
                 <Text style={{ color: "grey", fontSize: 12 }}>Toplam</Text>
                 <Text style={{ fontWeight: "500" }}>
-                  {addDotEveryThreeDigits((Cart.amount * 2) / 100)} TL
+                  {
+                    isInstallament==0 &&
+                   formatAmount(( Cart?.amount * offerControl?.project?.deposit_rate) / 100)
+                  }
+                    {
+                    isInstallament==1 &&
+                    addDotEveryThreeDigits(( Cart?.installmentPrice * offerControl?.project?.deposit_rate) / 100)
+                  }
+               TL
                 </Text>
               </View>
               <TouchableOpacity
