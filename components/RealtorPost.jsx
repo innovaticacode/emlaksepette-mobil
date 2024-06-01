@@ -69,12 +69,12 @@ export default function RealtorPost({
           .replace(/,00$/, "")
       : null
     : 0;
-  const handlePress =
-    housing && housing.step2_slug === "gunluk-kiralik"
-      ? () => GetId(HouseId)
-      : null;
+
+    const handlePress = () => GetId(HouseId)
+
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
+
 
   return (
     <TouchableOpacity
