@@ -280,7 +280,7 @@ export default function Collections() {
                 flexDirection: "row",
                 alignItems: "center",
                 gap: 15,
-                borderRadius: 10,
+                borderRadius: 5,
               }}
             >
               <Text style={{ textAlign: "center", color: "white" }}>
@@ -308,7 +308,7 @@ export default function Collections() {
                   height: 50,
                 }}
                 inputContainerStyle={{
-                  borderRadius: 6,
+                  borderRadius: 5,
                   backgroundColor: "#bebebe26",
                   borderWidth: 1,
                   borderColor: "#bebebe26",
@@ -398,7 +398,7 @@ export default function Collections() {
                   width: 40,
                   height: 7,
                   backgroundColor: "#ebebeb",
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
                 onPress={closeSheet}
               ></TouchableOpacity>
@@ -698,7 +698,7 @@ export default function Collections() {
                   paddingRight: 20,
                   paddingTop: 10,
                   paddingBottom: 10,
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
                 onPress={() => {
                   deleteCollection(selectedCollection);
@@ -714,7 +714,7 @@ export default function Collections() {
                   paddingRight: 20,
                   paddingTop: 10,
                   paddingBottom: 10,
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
               >
                 <Text style={{ color: "white" }}>Vazgeç</Text>
@@ -821,7 +821,7 @@ const styles = StyleSheet.create({
     width: "100%",
 
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 5,
     padding: 20,
     gap: 15,
     shadowColor: "#000",

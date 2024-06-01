@@ -54,7 +54,7 @@ export default function SwapItem({openModal,item,getDetails,index}) {
 const style =StyleSheet.create({
     container:{
         backgroundColor:'#FFF',
-        borderRadius: 10,  
+        borderRadius: 5,  
         paddingVertical: 30,  
         paddingHorizontal: 10,  
         width: '100%',  

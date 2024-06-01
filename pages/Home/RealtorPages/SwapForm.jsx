@@ -573,7 +573,7 @@ export default function SwapForm({ data, openModal, color }) {
                 backgroundColor: "#e54242",
                 padding: 10,
                 width: "50%",
-                borderRadius: 10,
+                borderRadius: 5,
               }}
             >
               <Text style={{ textAlign: "center", color: "white" }}>Yükle</Text>
@@ -769,7 +769,7 @@ export default function SwapForm({ data, openModal, color }) {
                 backgroundColor: "#e54242",
                 padding: 10,
                 width: "50%",
-                borderRadius: 10,
+                borderRadius: 5,
               }}
             >
               <Text style={{ textAlign: "center", color: "white" }}>Yükle</Text>
@@ -843,7 +843,7 @@ export default function SwapForm({ data, openModal, color }) {
           style={{
             backgroundColor: "red",
             padding: 10,
-            borderRadius: 10,
+            borderRadius: 5,
           }}
         >
           <Text style={{ color: "white", textAlign: "center" }}>
@@ -858,14 +858,14 @@ const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     borderWidth: 1,
     borderColor: "#bdc6cf",
-    borderRadius: 6,
+    borderRadius: 5,
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon
   },
   inputAndroid: {
     borderWidth: 2,
     borderColor: "black",
-    borderRadius: 6,
+    borderRadius: 5,
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon
   },
@@ -874,7 +874,7 @@ const styles = StyleSheet.create({
   Input: {
     borderWidth: 1,
     borderColor: "#bdc6cf",
-    borderRadius: 6,
+    borderRadius: 5,
     padding: 8,
     fontSize: 14,
   },

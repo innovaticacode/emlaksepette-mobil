@@ -287,7 +287,7 @@ export default function CollectionsPage() {
                   width: 40,
                   height: 7,
                   backgroundColor: "#ebebeb",
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
                 onPress={closeSheet}
               ></TouchableOpacity>
@@ -551,7 +551,7 @@ export default function CollectionsPage() {
                   paddingRight: 20,
                   paddingTop: 10,
                   paddingBottom: 10,
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
                 onPress={() => {
                   deleteCollection(selectedCollection);
@@ -567,7 +567,7 @@ export default function CollectionsPage() {
                   paddingRight: 20,
                   paddingTop: 10,
                   paddingBottom: 10,
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
               >
                 <Text style={{ color: "white" }}>Vazgeç</Text>
@@ -662,7 +662,7 @@ const styles = StyleSheet.create({
     width: "100%",
 
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 5,
     padding: 20,
     gap: 15,
     shadowColor: "#000",

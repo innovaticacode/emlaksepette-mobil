@@ -40,7 +40,7 @@ export default function OfferItem() {
 const style=StyleSheet.create({
 container:{
     
-    borderRadius: 10,  
+    borderRadius: 5,  
     paddingVertical: 20,  
     paddingHorizontal: 10,  
     width: '100%',  

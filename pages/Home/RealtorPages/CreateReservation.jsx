@@ -222,7 +222,7 @@ const App = () => {
               justifyContent: "space-around",
               marginTop: 10,
               padding: 5,
-              borderRadius: 10,
+              borderRadius: 5,
               backgroundColor: "#e0e3e5",
               alignItems: "center",
               width: "40%",
@@ -435,7 +435,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#ffffff",
     margin: 10,
-    borderRadius: 10,
+    borderRadius: 5,
     padding: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
   dateContainer: {
     backgroundColor: "#ffffff",
     margin: 10,
-    borderRadius: 10,
+    borderRadius: 5,
     padding: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },

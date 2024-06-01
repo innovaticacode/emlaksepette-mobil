@@ -27,6 +27,17 @@ export default function RealtorPost({
   discountRate,
   discount_amount,
   housing,
+  bookmarkStatus,
+  column1_name,
+  column1_additional,
+  column2_name,
+  column2_additional,
+  column3_name,
+  column3_additional,
+  column4_name,
+  column4_additional,
+  step2_slug,
+  step1_slug
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -58,7 +69,12 @@ export default function RealtorPost({
           .replace(/,00$/, "")
       : null
     : 0;
+
     const handlePress = () => GetId(HouseId)
+
+
+  const housingData = housing && JSON.parse(housing.housing_type_data);
+
 
   return (
     <TouchableOpacity
@@ -79,7 +95,7 @@ export default function RealtorPost({
             <View style={styles.captionAndIcons}>
               <View style={styles.caption}>
                 <Text style={{ fontSize: 9, color: "black" }}>
-                  İlan No: {2000000 + HouseId}
+                  İlan No: {2000000 + HouseId} 
                 </Text>
                 <Text
                   style={{ fontSize: 10, fontWeight: 700 }}
@@ -88,16 +104,23 @@ export default function RealtorPost({
                   {title}
                 </Text>
               </View>
-              <View style={styles.ıcons}>
-                <TouchableOpacity onPress={changeBookmark}>
-                  <View style={styles.ıconContainer}>
-                    <Bookmark
-                      name={bookmark}
-                      size={13}
-                      color={bookmark == "bookmark-o" ? "black" : "red"}
-                    />
-                  </View>
-                </TouchableOpacity>
+              <View
+                style={{
+                  ...styles.ıcons, // Diğer stil özelliklerini ekleyin
+                  justifyContent: bookmarkStatus && bookmarkStatus == true ? "space-between" : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
+                }}
+              >
+                {bookmarkStatus && bookmarkStatus == true && (
+                  <TouchableOpacity onPress={changeBookmark}>
+                    <View style={styles.ıconContainer}>
+                      <Bookmark
+                        name={bookmark}
+                        size={13}
+                        color={bookmark == "bookmark-o" ? "black" : "red"}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                )}
 
                 <TouchableOpacity
                   onPress={() => {
@@ -116,7 +139,6 @@ export default function RealtorPost({
             </View>
 
             <View style={styles.PriceAndButtons}>
-              
               <View style={{ alignItems: "center", justifyContent: "center" }}>
                 {formattedDiscountedPrice ? (
                   <>
@@ -131,12 +153,10 @@ export default function RealtorPost({
                   <Text style={styles.priceText}>{formattedPrice}₺</Text>
                 )}
               </View>
-              <TouchableOpacity
-                style={styles.addBasket}
-                onPress={handlePress}
+              <TouchableOpacity style={styles.addBasket} onPress={handlePress}>
 
-              >
-                {housing && housing.step2_slug == "gunluk-kiralik" ? (
+                {step2_slug && step2_slug== "gunluk-kiralik" && step1_slug == "mustakil-tatil" ? (
+
                   <Text
                     style={{
                       color: "white",
@@ -144,7 +164,7 @@ export default function RealtorPost({
                       fontSize: 12,
                     }}
                   >
-                    Rezervasyon 
+                    Rezervasyon
                   </Text>
                 ) : (
                   <Text
@@ -161,7 +181,6 @@ export default function RealtorPost({
             </View>
           </View>
         </View>
-        {m2 && roomCount && floor ? (
           <View
             style={{
               backgroundColor: "#E8E8E8",
@@ -171,16 +190,33 @@ export default function RealtorPost({
               justifyContent: "space-between",
             }}
           >
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <Info text={m2 + "m2"} />
-              <Info text={roomCount} />
-              <Info text={floor + "Katlı"} />
+            <View style={{ flexDirection: "row" }}>
+              {column1_name && (
+                <Info
+                  text={`${column1_name} ${
+                    column1_additional ? column1_additional : ""
+                  }`}
+                />
+              )}
+               {column2_name && (
+                <Info
+                  text={`${column2_name} ${
+                    column2_additional ? column2_additional : ""
+                  }`}
+                />
+              )}
+               {column3_name && (
+                <Info
+                  text={`${column3_name} ${
+                    column3_additional ? column3_additional : ""
+                  }`}
+                />
+              )}
             </View>
             <View style={{ justifyContent: "center" }}>
               <Text style={styles.InformationText}>{location}</Text>
             </View>
           </View>
-        ) : null}
         {/* {discountRate ? (
           <View
             style={{
@@ -208,8 +244,8 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     display: "flex",
     flexDirection: "column",
-    borderBottomWidth: "1px",
-    borderBlockColor: "#E8E8E8"
+    borderBottomWidth: 1,
+    borderBlockColor: "#E8E8E8",
   },
   İlan: {
     padding: 3,
@@ -222,15 +258,21 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     paddingLeft: 5,
-    paddingTop: 5
+
+    paddingRight:5,
+
+    paddingTop: 5,
   },
   captionAndIcons: {
     display: "flex",
     flexDirection: "row",
-   width: "100%"
+    width: "100%",
+
+    justifyContent: "space-between"
+
   },
   PriceAndButtons: {
-    marginTop: 'auto', // Push to the bottom
+    marginTop: "auto", // Push to the bottom
     display: "flex",
     flexDirection: "row-reverse",
     justifyContent: "space-between",
@@ -242,8 +284,7 @@ const styles = StyleSheet.create({
   ıcons: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
-    width: "30%",
+    width: "25%",
     bottom: 5,
   },
   btns: {

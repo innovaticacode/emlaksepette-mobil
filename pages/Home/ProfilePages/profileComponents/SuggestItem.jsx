@@ -66,7 +66,7 @@ export default function SuggestItem({openModal,name,color,title,username,mail,lo
 const style =StyleSheet.create({
     container:{
         backgroundColor:'#FFF',
-        borderRadius: 10,  
+        borderRadius: 5,  
         paddingVertical: 20,  
         paddingHorizontal: 10,  
         width: '100%',  

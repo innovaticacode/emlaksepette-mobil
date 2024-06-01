@@ -409,7 +409,7 @@ export default function PostDetail() {
                 padding: 5,
                 paddingLeft: 8,
                 paddingRight: 8,
-                borderRadius: 10,
+                borderRadius: 5,
               }}
             >
               <Text style={{ color: "white", fontSize: 12 }}>
@@ -673,7 +673,7 @@ export default function PostDetail() {
                 style={{
                   backgroundColor: "#EA2C2E",
                   padding: 10,
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
               >
                 <Text
@@ -747,7 +747,7 @@ export default function PostDetail() {
                     backgroundColor: "#28A745",
                     width: "40%",
                     padding: 15,
-                    borderRadius: 10,
+                    borderRadius: 5,
                   }}
                 >
                   <Text style={{ color: "white", textAlign: "center" }}>
@@ -759,7 +759,7 @@ export default function PostDetail() {
                     backgroundColor: "#DC3545",
                     width: "40%",
                     padding: 15,
-                    borderRadius: 10,
+                    borderRadius: 5,
                   }}
                   onPress={() => {
                     setFormVisible(false);
@@ -998,7 +998,7 @@ export default function PostDetail() {
                   style={{
                     backgroundColor: "#EA2A28",
                     padding: 10,
-                    borderRadius: 6,
+                    borderRadius: 5,
                   }}
                   onPress={addCollectionPost}
                 >
@@ -1266,7 +1266,7 @@ const styles = StyleSheet.create({
     padding: 3,
     paddingLeft: 8,
     paddingRight: 8,
-    borderRadius: 10,
+    borderRadius: 5,
     bottom: 0,
     alignItems: "center",
 
@@ -1316,7 +1316,7 @@ const styles = StyleSheet.create({
   Input: {
     borderWidth: 1,
     padding: 10,
-    borderRadius: 6,
+    borderRadius: 5,
     borderColor: "#ebebeb",
   },
   modalImage: {

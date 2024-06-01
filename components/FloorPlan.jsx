@@ -21,7 +21,7 @@ export default function FloorPlan({ data }) {
   console.log(data.project.situations, "asd");
 
   return (
-    <View style={{ padding: 9, top: 1 }}>
+    <View >
       <View style={styles.container}>
         <View
           style={{
@@ -29,14 +29,21 @@ export default function FloorPlan({ data }) {
             padding: 12,
           }}
         >
-          {data?.project?.situations?.map((situation, i) => (
-            <View key={i} style={{ width: 200, height: 100 }}>
-              <Image
-                style={{ width: "100%", height: "100%" }}
-                source={{ uri: getFullImageURL(situation.situation) }}
-              />
-            </View>
-          ))}
+          {data?.project?.situations?.length > 0 ? (
+            data.project.situations.map((situation, i) => (
+              <View
+                key={i}
+                style={{ width: 200, height: 100, marginBottom: 10 }}
+              >
+                <Image
+                  style={{ width: "100%", height: "100%", resizeMode: "cover" }}
+                  source={{ uri: getFullImageURL(situation.situation) }}
+                />
+              </View>
+            ))
+          ) : (
+            <Text>No images available</Text>
+          )}
         </View>
       </View>
     </View>

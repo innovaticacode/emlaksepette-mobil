@@ -33,6 +33,7 @@ export default function Posts({
   openCollection,
   GetIdForCart,
   GetID,
+  bookmarkStatus,
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -51,13 +52,7 @@ export default function Posts({
       : text;
   }
 
-  if (data.projectCartOrders[roomOrder]) {
-    console.log(data.projectCartOrders[roomOrder]);
-    const status = data.projectCartOrders[roomOrder].status;
-  } else {
-    console.log("Belirtilen indeksteki öğe bulunamadı.");
-  }
-    return (
+  return (
     <TouchableOpacity
       onPress={() =>
         navigation.navigate("PostDetails", {
@@ -86,7 +81,7 @@ export default function Posts({
                   color: "white",
                 }}
               >
-                No {roomOrder}
+                No {roomOrder} {bookmarkStatus}
               </Text>
             </View>
             <Image
@@ -102,27 +97,35 @@ export default function Posts({
             <View style={styles.captionAndIcons}>
               <View style={styles.caption}>
                 <Text style={{ fontSize: 9, color: "black" }}>
-                  İlan No: {1000000 + data.project.id}
+                  İlan No: {1000000 + data.project.id} 
                 </Text>
                 <Text style={{ fontSize: 9, fontWeight: 700 }}>
                   {truncateText(roomData["advertise_title[]"], 4)}
                 </Text>
               </View>
-              <View style={styles.ıcons}>
-                <TouchableOpacity
-                  onPress={() => {
-                    changeBookmark();
-                    openCollection(roomOrder);
-                  }}
-                >
-                  <View style={styles.ıconContainer}>
-                    <Bookmark
-                      name={bookmark}
-                      size={13}
-                      color={bookmark == "bookmark-o" ? "black" : "red"}
-                    />
-                  </View>
-                </TouchableOpacity>
+              <View
+                style={{
+                  ...styles.ıcons, // Diğer stil özelliklerini ekleyin
+                  justifyContent: bookmarkStatus && bookmarkStatus == true ? "space-between" : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
+                }}
+              >
+                {bookmarkStatus && bookmarkStatus == true && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      changeBookmark();
+                      openCollection(roomOrder);
+                    }}
+                  >
+                    <View style={styles.ıconContainer}>
+                      <Bookmark
+                        name={bookmark}
+                        size={13}
+                        color={bookmark == "bookmark-o" ? "black" : "red"}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                )}
+
                 {!isFavorited ? (
                   <TouchableOpacity
                     onPress={() => {
@@ -368,7 +371,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     display: "flex",
     flexDirection: "column",
-    borderBottomWidth: "1px",
+    borderBottomWidth: 1,
     borderBlockColor: "#E8E8E8",
   },
   İlan: {
@@ -402,8 +405,7 @@ const styles = StyleSheet.create({
   ıcons: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
-    width: "30%",
+    width: "25%",
     bottom: 5,
   },
   btns: {
@@ -420,23 +422,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#264ABB",
   },
-  pending:{
+  showCustomer:{
+    paddingLeft: 20,
+    paddingRight: 20,
+    padding: 5,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "green",
+  },
+  pending: {
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
     width: "100%",
     alignItems: "center",
     backgroundColor: "orange",
-
   },
-  sold:{
+  sold: {
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
     width: "100%",
     alignItems: "center",
     backgroundColor: "red",
-
   },
   PayDetailBtn: {
     paddingLeft: 20,

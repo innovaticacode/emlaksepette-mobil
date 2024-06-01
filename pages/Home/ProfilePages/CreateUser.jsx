@@ -200,7 +200,7 @@ export default function CreateUser() {
                 backgroundColor: "#EA2A29",
                 padding: 13,
                 width: "50%",
-                borderRadius: 10,
+                borderRadius: 5,
               }}
             >
               <Text
@@ -300,7 +300,7 @@ const pickerSelectStyles = StyleSheet.create({
     backgroundColor: "transparent",
     borderWidth: 1,
     borderColor: "#ebebeb",
-    borderRadius: 6,
+    borderRadius: 5,
     padding: 9,
     fontSize: 14, // to ensure the text is never behind the icon
   },
@@ -308,7 +308,7 @@ const pickerSelectStyles = StyleSheet.create({
     backgroundColor: "transparent",
     borderWidth: 1,
     borderColor: "#bdc6cf",
-    borderRadius: 6,
+    borderRadius: 5,
     padding: 9,
     fontSize: 14, // to ensure the text is never behind the icon
   },
@@ -329,7 +329,7 @@ const style = StyleSheet.create({
   Input: {
     padding: 9,
     backgroundColor: "transparent",
-    borderRadius: 10,
+    borderRadius: 5,
     fontSize: 15,
     borderWidth: 1,
     borderColor: "#ebebeb",
@@ -380,7 +380,7 @@ const style = StyleSheet.create({
   card: {
     alignItems: "center",
     backgroundColor: "#FFFFFF",
-    borderRadius: 10,
+    borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 10,
     width: "90%",
@@ -444,7 +444,7 @@ const style = StyleSheet.create({
     paddingRight: 20,
     padding: 8,
     justifyContent: "center",
-    borderRadius: 10,
+    borderRadius: 5,
   },
   btnText: {
     color: "white",
@@ -470,7 +470,7 @@ const style = StyleSheet.create({
   modalContent4: {
     backgroundColor: "#ffffff",
     margin: 10,
-    borderRadius: 10,
+    borderRadius: 5,
     height: "15%",
   },
 });

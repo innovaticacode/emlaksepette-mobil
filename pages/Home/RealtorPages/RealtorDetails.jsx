@@ -488,7 +488,7 @@ return (
               padding: 5,
               paddingLeft: 8,
               paddingRight: 8,
-              borderRadius: 10,
+              borderRadius: 5,
             }}
           >
             <Text style={{ color: "white", fontSize: 12 }}>
@@ -1117,7 +1117,7 @@ pagination: {
   padding: 3,
   paddingLeft: 8,
   paddingRight: 8,
-  borderRadius: 10,
+  borderRadius: 5,
   bottom: 0,
   alignItems: "center",
 
@@ -1232,7 +1232,7 @@ Input: {
   padding: 10,
   borderWidth: 1,
   borderColor: "#ebebeb",
-  borderRadius: 6,
+  borderRadius: 5,
   fontSize: 14,
 },
 modal6: {
@@ -1244,7 +1244,7 @@ modal6: {
 modalContent6: {
   backgroundColor: "#fefefe",
   padding: 20,
-  borderRadius: 10,
+  borderRadius: 5,
 },
 });
 
