@@ -169,7 +169,7 @@ export default function Profile() {
   console.log(storeData?.data?.name);
   const handleOpenPhone = () => {
     // Telefon uygulamasını açmak için
-    Linking.openURL("tel:+905537064474");
+    Linking.openURL(`tel:+${storeData.data.phone}`);
   };
   const [formVisible, setFormVisible] = useState("false");
 
@@ -681,7 +681,7 @@ export default function Profile() {
           justifyContent: "space-between",
           flexDirection: "row",
           backgroundColor: "transparent ",
-          zIndex: -2,
+          zIndex: 1,
         }}
       >
         <TouchableOpacity
@@ -757,7 +757,7 @@ export default function Profile() {
               )}
             </View>
             <View style={{ gap: 7 }}>
-              <Text style={styles.label}>E-Posta</Text>
+              <Text style={styless.label}>E-Posta</Text>
               <TextInput
                 style={styless.Input}
                 value={emailId}
