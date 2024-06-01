@@ -353,6 +353,7 @@ console.log(messageUpdateCart)
                 update={UpdateCart}
                 minus={UpdateShareMinus}
                 counter={counter}
+                storeName={offerControl?.store}
               />
             </Swipeable>
           </GestureHandlerRootView>
@@ -555,7 +556,7 @@ console.log(messageUpdateCart)
                   }}
                 >
                   <Text>%{offerControl?.project?.deposit_rate} Kapora:</Text>
-                  <Text> {isInstallament==1   ? formatAmount(Cart.installmentPrice * offerControl?.project?.deposit_rate ) / 100  :formatAmount(Cart?.amount* offerControl?.project?.deposit_rate / 100 )} ₺</Text>
+                  <Text> {isInstallament==1   ?    formatAmount(( Cart?.installmentPrice * offerControl?.project?.deposit_rate) / 100) :formatAmount(Cart?.amount* offerControl?.project?.deposit_rate / 100 )} ₺</Text>
                 </View>
               </View>
             </View>

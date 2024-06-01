@@ -16,7 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
 import { addDotEveryThreeDigits } from "./methods/merhod";
 
-export default function BasketItem({name,shopName,price,shopPoint,hisse, roomOrder, type,  ımage , share, update, minus, counter}) {
+export default function BasketItem({name,shopName,price,shopPoint,hisse, roomOrder, type,  ımage , share, update, minus, counter,  storeName}) {
   
   const navigation=useNavigation()
 
@@ -44,7 +44,7 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse, roomOrd
         <View style={{flexDirection:'row',justifyContent:'space-between',borderBottomWidth:1,paddingBottom:8,borderBottomColor:'#ebebeb'}}>
         <View style={{width:'55%'}}>
         <TouchableOpacity style={{display:'flex',flexDirection:'row',alignItems:'center',gap:9,}}
-          onPress={()=>navigation.navigate('Profile',{name:shopName})}
+          onPress={()=>navigation.navigate('Profile',{id:storeName.id})}
         >
           <TouchableOpacity
             style={{borderWidth:0.9,borderColor:'grey',padding:2,backgroundColor:chechked? '#EA2C2E':'white',borderRadius:20}}
@@ -54,7 +54,7 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse, roomOrd
 
           </TouchableOpacity>
           <View>
-            <Text>{shopName}</Text>
+            <Text>{storeName?.name}</Text>
           </View>
           <View style={{backgroundColor:'#6ce24f',padding:1,paddingLeft:8,paddingRight:8,borderRadius:5}}>
             <Text style={{color:'white'}}>{shopPoint}</Text>
