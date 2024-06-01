@@ -15,8 +15,8 @@ import ProjectPost from "../../../components/ProjectPost";
 import { Platform } from "react-native";
 
 export default function ShopVitrin({ data, housingdata }) {
-  const ApiUrl = "https://test.emlaksepette.com/storage/store_banners/";
-  const ApiUrls = "https://test.emlaksepette.com";
+  const ApiUrl = "https://emlaksepette.com/storage/store_banners/";
+  const ApiUrls = "https://emlaksepette.com";
   const [banners, setBanners] = useState([]);
   const [owners, setOwners] = useState([]);
   const [loadingPrjoects, setloadingPrjoects] = useState(false);

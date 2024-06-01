@@ -69,7 +69,7 @@ export default function Details({ navigation }) {
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const [FormVisible, setFormVisible] = useState(false);
-  const apiUrl = "https://test.emlaksepette.com/";
+  const apiUrl = "https://emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -217,7 +217,7 @@ export default function Details({ navigation }) {
 
     axios
       .post(
-        "https://test.emlaksepette.com/api/remove_item_on_collection",
+        "https://emlaksepette.com/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -265,7 +265,7 @@ export default function Details({ navigation }) {
   };
 
   const shareLinkOnWhatsApp = () => {
-    const url = `https://test.emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
+    const url = `https://emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -274,7 +274,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("WhatsApp açılamadı:", error));
   };
   const shareLinkOnInstagram = (text) => {
-    const url = `https://test.emlaksepette.com/${slug}/100${ProjectId}/detay`;
+    const url = `https://emlaksepette.com/${slug}/100${ProjectId}/detay`;
 
     const instagramShareURL = `instagram://story/?text=${encodeURIComponent(
       url
@@ -285,7 +285,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("Instagram açılamadı:", error));
   };
   const copyToClipboard = () => {
-    const url = `https://test.emlaksepette.com/${slug}/1000${ProjectId}/detay`;
+    const url = `https://emlaksepette.com/${slug}/1000${ProjectId}/detay`;
     Clipboard.setStringAsync(url);
     ShowAlert();
   };
@@ -365,7 +365,7 @@ export default function Details({ navigation }) {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/client/collections",
+          "https://emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -417,16 +417,12 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post(
-        "https://test.emlaksepette.com/api/add/collection",
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      )
+      .post("https://emlaksepette.com/api/add/collection", collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
       .then((response) => {
         fetchData();
         setaddCollection(false);
@@ -465,7 +461,7 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post("https://test.emlaksepette.com/api/addLink", collectionData, {
+      .post("https://emlaksepette.com/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -514,7 +510,6 @@ export default function Details({ navigation }) {
   const GetIdForCart = (id) => {
     setselectedCartItem(id);
     setModalForAddToCart(true);
-    console.log(selectedCartItem);
   };
 
   const addToCard = async () => {
@@ -535,7 +530,7 @@ export default function Details({ navigation }) {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://test.emlaksepette.com/api/institutional/add_to_cart",
+          "https://emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -585,7 +580,7 @@ export default function Details({ navigation }) {
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        "https://test.emlaksepette.com/api/institutional/give_offer",
+        "https://emlaksepette.com/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -626,9 +621,7 @@ export default function Details({ navigation }) {
   const [county, setcounty] = useState("");
   const fetchCity = async () => {
     try {
-      const response = await axios.get(
-        "https://test.emlaksepette.com/api/cities"
-      );
+      const response = await axios.get("https://emlaksepette.com/api/cities");
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -649,7 +642,7 @@ export default function Details({ navigation }) {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/counties/${value}`
+        `https://emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -747,7 +740,6 @@ export default function Details({ navigation }) {
     setGalleries(data.project.images);
   }, [data]);
 
-
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -842,7 +834,7 @@ export default function Details({ navigation }) {
         </View>
       </Modal>
 
-      {/* <View
+      <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
@@ -865,6 +857,15 @@ export default function Details({ navigation }) {
           }
         >
           <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
+            <View style={{ height: 35, width: 35 }}>
+              <ImageBackground
+                source={{
+                  uri: `${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`,
+                }}
+                style={{ width: "100%", height: "100%", marginRight: 10 }}
+                borderRadius={20}
+              />
+            </View>
             <Text
               style={{
                 color: "white",
@@ -894,15 +895,7 @@ export default function Details({ navigation }) {
               />
             </View>
           </View>
-          <View style={{ height: 35, width: 35 }}>
-            <ImageBackground
-              source={{
-                uri: `${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`,
-              }}
-              style={{ width: "100%", height: "100%", marginRight: 10 }}
-              borderRadius={20}
-            />
-          </View>
+
           <Text
             style={{
               color: "white",
@@ -914,7 +907,7 @@ export default function Details({ navigation }) {
             Proje No: {1000000 + data.project.id}
           </Text>
         </TouchableOpacity>
-      </View> */}
+      </View>
 
       <ScrollView
         scrollEventThrottle={16}
@@ -1873,7 +1866,7 @@ export default function Details({ navigation }) {
         <Modal
           isVisible={ModalForAddToCart}
           onBackdropPress={() => setModalForAddToCart(false)}
-          animationType="fade" 
+          animationType="fade"
           transparent={true}
           style={styles.modal4}
         >

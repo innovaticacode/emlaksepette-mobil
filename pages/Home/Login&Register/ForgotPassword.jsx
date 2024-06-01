@@ -15,7 +15,7 @@ export default function ForgotPassword() {
         try {
         var formData=new FormData()
           formData.append('email',email)
-          const response = await axios.post('https://test.emlaksepette.com/api/password/email', formData);
+          const response = await axios.post('https://emlaksepette.com/api/password/email', formData);
           
           // İsteğin başarılı bir şekilde tamamlandığı durum
           console.log('İstek başarıyla tamamlandı:', response.data);

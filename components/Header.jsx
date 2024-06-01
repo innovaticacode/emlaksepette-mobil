@@ -28,7 +28,7 @@ export default function Header({ loading, onPress }) {
     const fetchNotifications = async () => {
       try {
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/user/notification",
+          "https://emlaksepette.com/api/user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

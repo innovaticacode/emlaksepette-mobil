@@ -38,7 +38,7 @@ export default function OrderDetails() {
       try {
         if (user?.access_token) {
           const response = await axios.get(
-            `https://test.emlaksepette.com/api/institutional/order_detail/${OrderId}`,
+            `https://emlaksepette.com/api/institutional/order_detail/${OrderId}`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,

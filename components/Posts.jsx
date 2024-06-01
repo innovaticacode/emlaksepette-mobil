@@ -1,12 +1,5 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet, Dimensions, ActivityIndicator } from "react-native";
+
 import { React, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
@@ -15,6 +8,8 @@ import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
 import { addDotEveryThreeDigits } from "./methods/merhod";
 import { Platform } from "react-native";
+import moment from "moment";
+import "moment/locale/tr";
 
 export default function Posts({
   project,
@@ -69,6 +64,7 @@ export default function Posts({
         navigation.navigate("PostDetails", {
           HomeId: roomOrder,
           projectId: data.project.id,
+          isLoading: true
         })
       }
     >
@@ -89,7 +85,7 @@ export default function Posts({
             <Image
               source={{
                 uri:
-                  "https://test.emlaksepette.com/project_housing_images/" +
+                  "https://emlaksepette.com/project_housing_images/" +
                   roomData["image[]"],
               }}
               style={styles.image}
@@ -99,7 +95,7 @@ export default function Posts({
             <View style={styles.captionAndIcons}>
               <View style={styles.caption}>
                 <Text style={styles.ilanNoText}>
-                  İlan No: {1000000 + data.project.id}
+                  İlan No: {1000000 + data.project.id + roomOrder }
                 </Text>
                 <Text style={styles.adTitleText}>
                   {truncateText(roomData["advertise_title[]"], 4)}
@@ -118,7 +114,7 @@ export default function Posts({
                       openCollection(roomOrder);
                     }}
                   >
-                    <View style={styles.iconContainer}>
+                    <View style={styles.ıconContainer}>
                       <Bookmark
                         name={bookmark}
                         size={13}
@@ -130,7 +126,7 @@ export default function Posts({
 
                 {!isUserSame ? (
                   <TouchableOpacity onPress={changeHeart}>
-                    <View style={styles.iconContainer}>
+                    <View style={styles.ıconContainer}>
                       <Heart
                         name={heart}
                         size={13}
@@ -140,13 +136,70 @@ export default function Posts({
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity onPress={() => setModalVisible(true)}>
-                    <View style={styles.iconContainer}>
+                    <View style={styles.ıconContainer}>
                       <Trash name="trash" size={13} color="red" />
                     </View>
                   </TouchableOpacity>
                 )}
               </View>
             </View>
+            {offSaleCheck && !soldCheck && shareSaleEmpty ? (
+              <View>
+                {projectDiscountAmount ? (
+                  <View style={styles.discountContainer}>
+                    <Svg
+                      viewBox="0 0 24 24"
+                      width={18}
+                      height={18}
+                      stroke="#EA2B2E"
+                      strokeWidth={2}
+                      fill="#EA2B2E"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="css-i6dzq1"
+                    >
+                      <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+                      <Polyline points="17 18 23 18 23 12" />
+                    </Svg>
+                    <Text style={styles.originalPrice}>
+                      <Text style={styles.strikethrough}>
+                        {formatPrice(roomData["price[]"])} ₺
+                      </Text>
+                    </Text>
+                    <Text style={styles.discountedPrice}>
+                      {formatPrice(formattedDiscountedPrice)} ₺
+                    </Text>
+                  </View>
+                ) : (
+                  <Text style={styles.regularPrice}>
+                    {formatPrice(roomData["price[]"])} ₺
+                  </Text>
+                )}
+                {projectDiscountAmount > 0 && (
+                  <Text style={styles.discountText}>
+                    {formatPrice(projectDiscountAmount)} ₺ indirim
+                  </Text>
+                )}
+              </View>
+            ) : (shareSale &&
+                shareSale !== "[]" &&
+                sumCartOrderQt[roomOrder]?.qt_total !== numberOfShare) ||
+              (shareSale &&
+                shareSale !== "[]" &&
+                !sumCartOrderQt[roomOrder]) ? (
+              <View>
+                <Text style={styles.regularPrice}>
+                  {shareSale && shareSale !== "[]" && numberOfShare !== 0 && (
+                    <Text style={styles.shareSaleText}>1/{numberOfShare}</Text>
+                  )}
+                  {" Pay Fiyatı - "}
+                  {shareSale && shareSale !== "[]" && numberOfShare !== 0
+                    ? formatPrice(roomData["price[]"] / numberOfShare)
+                    : formatPrice(roomData["price[]"])}
+                  ₺
+                </Text>
+              </View>
+            ) : null}
 
             <View style={styles.priceAndButtons}>
               <View style={styles.btns}>
@@ -167,77 +220,6 @@ export default function Posts({
                     </TouchableOpacity>
                   ) : (
                     <View style={styles.priceContainer}>
-                      {/* <Text style={styles.priceText}>
-                        {addDotEveryThreeDigits(roomData["price[]"])} ₺
-                      </Text>
-                      {projectDiscountAmount > 0 && (
-                        <Text style={styles.discountText}>
-                          {projectDiscountAmount} ₺ indirim
-                        </Text>
-                      )} */}
-                      {offSaleCheck && !soldCheck && shareSaleEmpty ? (
-                        <View>
-                          {projectDiscountAmount ? (
-                            <View style={styles.discountContainer}>
-                              <Svg
-                                viewBox="0 0 24 24"
-                                width={18}
-                                height={18}
-                                stroke="#EA2B2E"
-                                strokeWidth={2}
-                                fill="#EA2B2E"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="css-i6dzq1"
-                              >
-                                <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
-                                <Polyline points="17 18 23 18 23 12" />
-                              </Svg>
-                              <Text style={styles.originalPrice}>
-                                <Text style={styles.strikethrough}>
-                                  {formatPrice(roomData["price[]"])} ₺
-                                </Text>
-                              </Text>
-                              <Text style={styles.discountedPrice}>
-                                {formatPrice(formattedDiscountedPrice)} ₺
-                              </Text>
-                            </View>
-                          ) : (
-                            <Text style={styles.regularPrice}>
-                              {formatPrice(roomData["price[]"])} ₺
-                            </Text>
-                          )}
-                          {projectDiscountAmount > 0 && (
-                            <Text style={styles.discountText}>
-                              {formatPrice(projectDiscountAmount)} ₺ indirim
-                            </Text>
-                          )}
-                        </View>
-                      ) : (shareSale &&
-                          shareSale !== "[]" &&
-                          sumCartOrderQt[roomOrder]?.qt_total !==
-                            numberOfShare) ||
-                        (shareSale &&
-                          shareSale !== "[]" &&
-                          !sumCartOrderQt[roomOrder]) ? (
-                        <View>
-                          {shareSale &&
-                            shareSale !== "[]" &&
-                            numberOfShare !== 0 && (
-                              <Text style={styles.shareSaleText}>
-                                1 / {numberOfShare} Fiyatı
-                              </Text>
-                            )}
-                          <Text style={styles.regularPrice}>
-                            {shareSale &&
-                            shareSale !== "[]" &&
-                            numberOfShare !== 0
-                              ? formatPrice(roomData["price[]"] / numberOfShare)
-                              : formatPrice(roomData["price[]"])}
-                            ₺
-                          </Text>
-                        </View>
-                      ) : null}
                       <TouchableOpacity
                         style={styles.addBasket}
                         onPress={() => GetIdForCart(roomOrder)}
@@ -315,6 +297,9 @@ export default function Posts({
                   (data.project.list_item_values.column3_additional || "")
                 }
               />
+              <Info
+                text={moment(project.created_at).locale("tr").format("LL")}
+              />
             </View>
             <View style={styles.infoLocation}>
               <Text style={styles.informationText}>{location}</Text>
@@ -370,13 +355,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end",
     width: "100%",
-    
   },
   addBasket: {
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
-    marginTop:3,
     width: "100%",
     alignItems: "center",
     backgroundColor: "#264ABB",
@@ -390,7 +373,6 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
-    marginTop:3,
     width: "100%",
     alignItems: "center",
     backgroundColor: "green",
@@ -404,7 +386,6 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
-    marginTop:3,
     width: "100%",
     alignItems: "center",
     backgroundColor: "orange",
@@ -418,7 +399,6 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
-    marginTop:3,
     width: "100%",
     alignItems: "center",
     backgroundColor: "red",
@@ -432,7 +412,6 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
-    marginTop:3,
     alignItems: "center",
     backgroundColor: "#000000",
   },
@@ -441,7 +420,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "white",
   },
-  iconContainer: {
+  ıconContainer: {
     width: 28,
     height: 28,
     alignItems: "center",
@@ -451,7 +430,7 @@ const styles = StyleSheet.create({
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
-        shadowColor: "#e6e6e6",
+        shadowColor: "#f0f0f0",
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 5,
@@ -543,8 +522,6 @@ const styles = StyleSheet.create({
     color: "#274abb",
     fontWeight: "700",
     fontSize: 12,
-    position: "relative",
-    marginLeft: 5,
   },
   discountText: {
     color: "red",
@@ -552,7 +529,6 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   shareSaleText: {
-    textAlign: "center",
     width: "100%",
     color: "#274abb",
     fontWeight: "700",
