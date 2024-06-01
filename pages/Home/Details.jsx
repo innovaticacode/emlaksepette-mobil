@@ -1873,11 +1873,8 @@ export default function Details({ navigation }) {
         <Modal
           isVisible={ModalForAddToCart}
           onBackdropPress={() => setModalForAddToCart(false)}
-          animationIn={"zoomInUp"}
-          animationOut={"zoomOutUp"}
-          animationInTiming={200}
-          animationOutTiming={200}
-          backdropColor="transparent"
+          animationType="fade" 
+          transparent={true}
           style={styles.modal4}
         >
           <View style={styles.modalContent4}>
