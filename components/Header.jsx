@@ -35,6 +35,8 @@ export default function Header({ loading, onPress }) {
             },
           }
         );
+
+        console.log(response);
         setNotifications(response.data);
 
         const unreadCount = response.data.filter(
@@ -43,12 +45,12 @@ export default function Header({ loading, onPress }) {
         setNotificationCount(unreadCount);
       } catch (error) {
         console.error("Error fetching notifications:", error);
+        setNotificationCount(0); // Hata durumunda unreadCount'u 0 olarak ayarla
       }
     };
 
     fetchNotifications();
-  }, []);
-
+  }, [user.access_token]);
   return (
     <View style={styles.header}>
       <TouchableOpacity

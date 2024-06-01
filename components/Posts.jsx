@@ -52,12 +52,6 @@ export default function Posts({
       : text;
   }
 
-  if (data.projectCartOrders[roomOrder]) {
-    console.log(data.projectCartOrders[roomOrder]);
-    const status = data.projectCartOrders[roomOrder].status;
-  } else {
-    console.log("Belirtilen indeksteki öğe bulunamadı.");
-  }
   return (
     <TouchableOpacity
       onPress={() =>
@@ -87,7 +81,7 @@ export default function Posts({
                   color: "white",
                 }}
               >
-                No {roomOrder}
+                No {roomOrder} {bookmarkStatus}
               </Text>
             </View>
             <Image
@@ -103,7 +97,7 @@ export default function Posts({
             <View style={styles.captionAndIcons}>
               <View style={styles.caption}>
                 <Text style={{ fontSize: 9, color: "black" }}>
-                  İlan No: {1000000 + data.project.id}
+                  İlan No: {1000000 + data.project.id} 
                 </Text>
                 <Text style={{ fontSize: 9, fontWeight: 700 }}>
                   {truncateText(roomData["advertise_title[]"], 4)}
@@ -112,10 +106,10 @@ export default function Posts({
               <View
                 style={{
                   ...styles.ıcons, // Diğer stil özelliklerini ekleyin
-                  justifyContent: bookmarkStatus ? "space-between" : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
+                  justifyContent: bookmarkStatus && bookmarkStatus == true ? "space-between" : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
                 }}
               >
-                {bookmarkStatus == true ?? (
+                {bookmarkStatus && bookmarkStatus == true && (
                   <TouchableOpacity
                     onPress={() => {
                       changeBookmark();
@@ -411,10 +405,8 @@ const styles = StyleSheet.create({
   ıcons: {
     display: "flex",
     flexDirection: "row",
-  
-    width: "30%",
+    width: "25%",
     bottom: 5,
-    
   },
   btns: {
     display: "flex",
@@ -429,6 +421,14 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     backgroundColor: "#264ABB",
+  },
+  showCustomer:{
+    paddingLeft: 20,
+    paddingRight: 20,
+    padding: 5,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "green",
   },
   pending: {
     paddingLeft: 20,

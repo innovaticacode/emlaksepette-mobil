@@ -53,6 +53,7 @@ import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 
 import RNPickerSelect from "react-native-picker-select";
+import { Skeleton } from "@rneui/base";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -78,6 +79,18 @@ export default function Details({ navigation }) {
     },
     projectHousingsList: {},
   });
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Yüklenme durumu için zaman aşımı ekliyoruz
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000); // 2 saniye sonra yüklenme durumunu false yapıyoruz
+
+    return () => clearTimeout(timer); // Bileşen kaldırıldığında zamanlayıcıyı temizliyoruz
+  }, []);
+
   const changeHeart = () => {
     setHeart(heart === "hearto" ? "heart" : "hearto");
   };
@@ -102,7 +115,7 @@ export default function Details({ navigation }) {
     apiRequestGet("project/" + ProjectId).then((res) => {
       setData(res.data);
     });
-  }, []);
+  }, [ProjectId]);
 
   const getLastItemCount = () => {
     var lastBlockItemsCount = 0;
@@ -315,10 +328,10 @@ export default function Details({ navigation }) {
   const changeTab = (tabs) => {
     setTabs(tabs);
   };
-  const [pagination, setpagination] = useState(0);
+  const [pagination, setPagination] = useState(0);
 
   const handlePageChange = (pageNumber) => {
-    setpagination(pageNumber);
+    setPagination(pageNumber);
     setSelectedImage(pageNumber);
   };
   const [changeIcon, setchangeIcon] = useState(false);
@@ -728,6 +741,13 @@ export default function Details({ navigation }) {
     }
     console.log(errorStatu + "error statu");
   };
+  const [galleries, setGalleries] = useState();
+
+  useEffect(() => {
+    setGalleries(data.project.images);
+  }, [data]);
+
+
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -822,7 +842,7 @@ export default function Details({ navigation }) {
         </View>
       </Modal>
 
-      <View
+      {/* <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
@@ -831,11 +851,11 @@ export default function Details({ navigation }) {
       >
         <TouchableOpacity
           style={{
-            paddingLeft: 15,
-            padding: 10,
+            padding: 5,
             flexDirection: "row",
             alignItems: "center",
-            gap: 8,
+            justifyContent: "space-between",
+            width: "100%",
           }}
           onPress={() =>
             navigation.navigate("Profile", {
@@ -844,18 +864,15 @@ export default function Details({ navigation }) {
             })
           }
         >
-          <View style={{ flexDirection: "row", gap: 4, alignItems: "center" }}>
-            <View style={{ height: 35, width: 35 }}>
-              <ImageBackground
-                source={{
-                  uri: `${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`,
-                }}
-                style={{ width: "100%", height: "100%" }}
-                borderRadius={20}
-              />
-            </View>
-            <Text style={{ color: "white" }}>
-              {" "}
+          <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
+            <Text
+              style={{
+                color: "white",
+                fontWeight: 600,
+                fontSize: "12px",
+                paddingLeft: "10px",
+              }}
+            >
               {data?.project?.user?.name ? `${data?.project?.user?.name} ` : ""}
             </Text>
             <View
@@ -877,14 +894,27 @@ export default function Details({ navigation }) {
               />
             </View>
           </View>
-
-          <Arrow name="arrow-forward-ios" size={16} color={"white"} />
-          <Text style={{ color: "white", fontSize: 15 }}>
-            {" "}
-            1000{data.project.id} No'lu proje
+          <View style={{ height: 35, width: 35 }}>
+            <ImageBackground
+              source={{
+                uri: `${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`,
+              }}
+              style={{ width: "100%", height: "100%", marginRight: 10 }}
+              borderRadius={20}
+            />
+          </View>
+          <Text
+            style={{
+              color: "white",
+              fontWeight: 600,
+              fontSize: "12px",
+              paddingLeft: "10px",
+            }}
+          >
+            Proje No: {1000000 + data.project.id}
           </Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       <ScrollView
         scrollEventThrottle={16}
@@ -918,11 +948,64 @@ export default function Details({ navigation }) {
           </View>
 
           <View style={styles.ıconContainer}>
+            <TouchableOpacity onPress={changeHeart}>
+              <View style={styles.ıcon}>
+                <Heart
+                  name={heart}
+                  size={18}
+                  color={heart === "hearto" ? "black" : "red"}
+                />
+              </View>
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
               <View style={styles.ıcon}>
                 <Icon2 name="sharealt" size={18} />
               </View>
             </TouchableOpacity>
+          </View>
+
+          <Swiper
+            style={{ height: 250 }}
+            showsPagination={false}
+            onIndexChanged={(index) => setPagination(index)}
+            loop={true}
+            index={pagination}
+          >
+            {data.project.images &&
+              data.project.images.map((image, index) => {
+                const uri = `${apiUrl}${image.image.replace(
+                  "public",
+                  "storage"
+                )}`;
+                return (
+                  <Pressable key={index}>
+                    <ImageBackground
+                      source={{ uri: uri }}
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  </Pressable>
+                );
+              })}
+          </Swiper>
+        </View>
+        {/* <View style={{ height: 250 }}>
+          <View style={styles.pagination}>
+            <View
+              style={{
+                backgroundColor: "#333",
+                padding: 5,
+                paddingLeft: 8,
+                paddingRight: 8,
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ color: "white", fontSize: 12 }}>
+                {pagination + 1} / {data.project.images.length}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.ıconContainer}>
             <TouchableOpacity
               onPress={() => {
                 changeHeart();
@@ -936,7 +1019,13 @@ export default function Details({ navigation }) {
                 />
               </View>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
+              <View style={styles.ıcon}>
+                <Icon2 name="sharealt" size={18} />
+              </View>
+            </TouchableOpacity>
           </View>
+
           <PagerView
             style={{ height: 250 }}
             initialPage={selectedImage}
@@ -944,43 +1033,57 @@ export default function Details({ navigation }) {
               handlePageChange(event.nativeEvent.position)
             }
           >
-            {data.project.images.map((image, index) => {
-              // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
-              return (
-                <Pressable
-                  key={index + 1}
-                  onPress={() => {
-                    openGalery(index);
-                  }}
-                >
-                  <ImageBackground
-                    source={{
-                      uri: `${apiUrl}${image.image.replace(
-                        "public",
-                        "storage"
-                      )}`,
+             {galleries &&
+              galleries.map((image, index) => {
+                const uri = `${apiUrl}${image.image.replace(
+                  "public",
+                  "storage"
+                )}`;
+                return (
+                  <Pressable
+                    key={index + 1}
+                    onPress={() => {
+                      openGalery(index);
                     }}
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                </Pressable>
-              );
-            })}
+                  >
+                    <ImageBackground
+                      source={{ uri: uri }}
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  </Pressable>
+                );
+              })}
           </PagerView>
-        </View>
-        <View style={{ paddingTop: 8, gap: 10 }}>
+        </View> */}
+        <View
+          style={{
+            paddingTop: 8,
+            gap: 5,
+            borderBottomWidth: 1,
+            borderColor: "#e8e8e8",
+            paddingBottom: 10,
+          }}
+        >
           <Text
             style={{
               textAlign: "center",
-              fontSize: 12,
+              fontSize: 11,
               color: "#333",
-              fontWeight: "400",
+              fontWeight: "700",
             }}
           >
             {data?.project?.city?.title
-              ? `${data.project.city.title} / ${data.project.county.ilce_title}`
+              ? `${data.project.city.title} / ${data.project.county.ilce_title} `
               : ""}
           </Text>
-          <Text style={{ textAlign: "center", fontSize: 16, color: "#264ABB" }}>
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 16,
+              color: "#264ABB",
+              fontWeight: "700",
+            }}
+          >
             {data?.project?.project_title}
           </Text>
         </View>
@@ -1006,9 +1109,7 @@ export default function Details({ navigation }) {
             OpenFormModal={OpenFormModal}
           />
         )}
-        <View style={{ paddingLeft: 10, paddingRight: 10 }}>
-          {tabs == 1 && <Caption data={data} />}
-        </View>
+        <View>{tabs == 1 && <Caption data={data} />}</View>
         {tabs == 2 && <Information settings={data} />}
         <View style={{}}>{tabs === 3 && <Map mapData={data} />}</View>
 
@@ -1739,7 +1840,7 @@ export default function Details({ navigation }) {
               </TouchableOpacity>
             </View>
 
-            <PagerView
+            {/* <PagerView
               style={{ height: 300 }}
               initialPage={selectedImage}
               onPageSelected={(event) =>
@@ -1747,7 +1848,6 @@ export default function Details({ navigation }) {
               }
             >
               {data.project.images.map((image, index) => {
-                // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
                 return (
                   <Pressable
                     key={index + 1}
@@ -1766,7 +1866,7 @@ export default function Details({ navigation }) {
                   </Pressable>
                 );
               })}
-            </PagerView>
+            </PagerView> */}
           </View>
         </Modal>
 
@@ -1867,14 +1967,14 @@ const styles = StyleSheet.create({
   },
   ıconContainer: {
     width: 50,
-    height: 150,
+    height: "100%",
     backgroundColor: "transparent",
     position: "absolute",
-    right: 7,
-    top: 42,
+    right: 10,
+    top: 10,
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-around",
+    justifyContent: "start",
     alignItems: "center",
     gap: 20,
     zIndex: 1,

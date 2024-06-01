@@ -26,7 +26,7 @@ export default function Information({ settings }) {
   }
 
   return (
-    <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+    <View>
       <View style={[styles.card, styles.shadowProp]}>
         {settings.projectHousingSetting.map((setting,index) => {
           if (!setting.is_array) {

@@ -21,7 +21,7 @@ export default function FloorPlan({ data }) {
   console.log(data.project.situations, "asd");
 
   return (
-    <View style={{ padding: 9, top: 1 }}>
+    <View >
       <View style={styles.container}>
         <View
           style={{
