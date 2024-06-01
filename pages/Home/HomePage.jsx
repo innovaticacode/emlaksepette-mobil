@@ -730,11 +730,8 @@ export default function HomePage() {
         <Modal
           isVisible={ModalForAddToCart}
           onBackdropPress={() => setModalForAddToCart(false)}
-          animationIn={"zoomInUp"}
-          animationOut={"zoomOutUp"}
-          animationInTiming={200}
-          animationOutTiming={200}
-          backdropColor="transparent"
+          animationType="fade" // veya "fade", "none" gibi
+          transparent={true}
           style={styles.modal4}
         >
           <View style={styles.modalContent4}>
