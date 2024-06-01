@@ -69,11 +69,12 @@ export default function RealtorPost({
           .replace(/,00$/, "")
       : null
     : 0;
-  const handlePress =
-    housing && housing.step2_slug === "gunluk-kiralik"
-      ? () => GetId(HouseId)
-      : null;
+
+    const handlePress = () => GetId(HouseId)
+
+
   const housingData = housing && JSON.parse(housing.housing_type_data);
+
 
   return (
     <TouchableOpacity
@@ -153,7 +154,9 @@ export default function RealtorPost({
                 )}
               </View>
               <TouchableOpacity style={styles.addBasket} onPress={handlePress}>
+
                 {step2_slug && step2_slug== "gunluk-kiralik" && step1_slug == "mustakil-tatil" ? (
+
                   <Text
                     style={{
                       color: "white",
@@ -255,14 +258,18 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     paddingLeft: 5,
+
     paddingRight:5,
+
     paddingTop: 5,
   },
   captionAndIcons: {
     display: "flex",
     flexDirection: "row",
     width: "100%",
+
     justifyContent: "space-between"
+
   },
   PriceAndButtons: {
     marginTop: "auto", // Push to the bottom

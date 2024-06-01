@@ -573,6 +573,7 @@ export default function HomePage() {
             <ScrollView>
               {filteredEstates.map((item, index) => (
                 <RealtorPost
+                GetId={GetIdForCart}
                   key={index}
                   HouseId={item.id}
                   price={`${JSON.parse(item.housing_type_data)["price"]} `}
