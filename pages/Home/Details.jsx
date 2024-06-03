@@ -960,7 +960,7 @@ export default function Details({ navigation }) {
               style={{
                 color: "white",
                 fontWeight: 600,
-                fontSize: "12px",
+                fontSize: 12px,
                 paddingLeft: "10px",
               }}
             >
@@ -998,7 +998,7 @@ export default function Details({ navigation }) {
             style={{
               color: "white",
               fontWeight: 600,
-              fontSize: "12px",
+              fontSize: 12px,
               paddingLeft: "10px",
             }}
           >

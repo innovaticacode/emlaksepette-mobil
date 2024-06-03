@@ -267,6 +267,7 @@ export default function CollectionsPage() {
           <ActivityIndicator size="large" color={"red"} />
         )}
       </ScrollView>
+   
       <View
         style={{
           flex: 1,

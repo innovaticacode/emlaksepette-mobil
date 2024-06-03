@@ -8,7 +8,7 @@ import {
   ImageBackground,
   FlatList,
   Dimensions,
-  ActivityIndicator,
+  
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -20,6 +20,7 @@ import ProjectPost from "../../components/ProjectPost";
 import * as Animatable from "react-native-animatable";
 import axios from "axios";
 import { Platform } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function AllProjects() {
   const apiUrl = "https://test.emlaksepette.com/";
@@ -64,7 +65,8 @@ export default function AllProjects() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <View style={styles.container}>
+
+   
         <Header onPress={toggleDrawer} />
 
         <Modal
@@ -162,7 +164,6 @@ export default function AllProjects() {
             </View>
           </View>
         </Modal>
-
         <View
           style={{
             padding: 10,
@@ -207,20 +208,17 @@ export default function AllProjects() {
             </Text>
           </TouchableOpacity>
         </View>
+        <View style={styles.container}>
+  
 
-        <ScrollView
-          onScroll={handleScroll}
-          showsVerticalScrollIndicator={false}
-          scrollEventThrottle={16}
-        >
-          <View>
-            {IsLoading == false ? (
+             {IsLoading == false &&
               <View
                 style={{
                   alignItems: "center",
                   justifyContent: "center",
                   width: "100%",
-                  flex: 1,
+                  flex:1
+               
                 }}
               >
                 <ActivityIndicator
@@ -229,13 +227,14 @@ export default function AllProjects() {
                   color="#E54242"
                 />
               </View>
-            ) : (
+              }
+          <View>
+          
+         
               <FlatList
                 data={featuredProjects}
                 renderItem={({ item }) => (
-                  <View
-                    style={{ paddingLeft: 10, paddingRight: 10, width: "100%" }}
-                  >
+              
                     <ProjectPost
                       project={item}
                       key={item.id}
@@ -258,13 +257,13 @@ export default function AllProjects() {
                       ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
                       ShopingInfo={item.user.corporate_type}
                     />
-                  </View>
+                  
                 )}
-                scrollEnabled={false}
+               
               />
-            )}
+            
           </View>
-        </ScrollView>
+      
       </View>
       <Modal
         isVisible={modalVisible}
@@ -293,6 +292,7 @@ export default function AllProjects() {
           </View>
         </View>
       </Modal>
+    
     </SafeAreaView>
   );
 }
