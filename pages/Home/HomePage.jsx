@@ -79,12 +79,17 @@ export default function HomePage() {
   const filteredEstates = featuredEstates.filter(
     (estate) => estate.step1_slug == "is-yeri"
   );
-  const filteredHomes = featuredEstates
-    .filter((estate) => estate.step1_slug == "konut");
+  const filteredArsa = featuredEstates.filter(
+    (estate) => estate.step1_slug == "arsa"
+  );
+  const filteredHomes = featuredEstates.filter(
+    (estate) => estate.step1_slug == "konut"
+  );
 
   const filteredProject = featuredProjects.slice(0, 5);
-  const filteredBookHouse = featuredEstates
-  .filter((estate) => estate.step2_slug == 'gunluk-kiralik');
+  const filteredBookHouse = featuredEstates.filter(
+    (estate) => estate.step2_slug == "gunluk-kiralik"
+  );
 
   useEffect(() => {
     fetchFeaturedEstates();
@@ -179,7 +184,6 @@ export default function HomePage() {
   const GetIdForCart = (id) => {
     setselectedCartItem(id);
     setModalForAddToCart(true);
-    
   };
 
   const addToCard = async () => {
@@ -342,8 +346,6 @@ export default function HomePage() {
           <SliderMenu goToSlide={goToSlide} tab={tab} setTab={settab} />
         </View>
 
-      
-
         <Swiper
           showsButtons={false}
           showsPagination={false}
@@ -411,7 +413,9 @@ export default function HomePage() {
                   backgroundColor: "white",
                 }}
               >
-                <Text style={{ fontSize: 12, fontWeight: 700 }}>ÖNE ÇIKAN PROJELER</Text>
+                <Text style={{ fontSize: 12, fontWeight: 700 }}>
+                  ÖNE ÇIKAN PROJELER
+                </Text>
 
                 <TouchableOpacity
                   style={styles.allBtn}
@@ -485,7 +489,9 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 12, fontWeight: 700 }}>ÖNE ÇIKAN KONUTLAR</Text>
+                <Text style={{ fontSize: 12, fontWeight: 700 }}>
+                  ÖNE ÇIKAN KONUTLAR
+                </Text>
 
                 <TouchableOpacity
                   style={styles.allBtn}
@@ -551,7 +557,7 @@ export default function HomePage() {
             </ScrollView>
           </View>
           <View style={styles.slide3}>
-            <View style={{ paddingTop: 0}}>
+            <View style={{ paddingTop: 0 }}>
               <View
                 style={{
                   flexDirection: "row",
@@ -596,7 +602,7 @@ export default function HomePage() {
             </ScrollView>
           </View>
           <View style={styles.slide4}>
-            <View style={{ paddingTop: 0}}>
+            <View style={{ paddingTop: 0 }}>
               <View
                 style={{
                   flexDirection: "row",
@@ -615,9 +621,33 @@ export default function HomePage() {
                 </TouchableOpacity>
               </View>
             </View>
+            <ScrollView>
+              {filteredArsa.map((item, index) => (
+                <RealtorPost
+                  key={index}
+                  HouseId={item.id}
+                  price={`${JSON.parse(item.housing_type_data)["price"]} `}
+                  title={item.housing_title}
+                  loading={loadingEstates}
+                  location={item.city_title + " / " + item.county_title}
+                  image={`${apiUrl}/housing_images/${
+                    JSON.parse(item.housing_type_data).image
+                  }`}
+                  m2={`${JSON.parse(item.housing_type_data)["squaremeters"]} `}
+                  roomCount={`${
+                    JSON.parse(item.housing_type_data)["room_count"]
+                  } `}
+                  floor={`${
+                    JSON.parse(item.housing_type_data)["floorlocation"]
+                  } `}
+                  bookmarkStatus={true}
+                  dailyRent={false}
+                />
+              ))}
+            </ScrollView>
           </View>
           <View style={styles.slide4}>
-            <View style={{ paddingTop: 0}}>
+            <View style={{ paddingTop: 0 }}>
               <View
                 style={{
                   flexDirection: "row",
@@ -640,7 +670,7 @@ export default function HomePage() {
             </View>
           </View>
           <View style={styles.slide4}>
-            <View style={{ paddingTop: 0}}>
+            <View style={{ paddingTop: 0 }}>
               <View
                 style={{
                   flexDirection: "row",
@@ -648,7 +678,6 @@ export default function HomePage() {
                   paddingLeft: 10,
                   paddingRight: 10,
                   alignItems: "center",
-                  
                 }}
               >
                 <Text style={{ fontSize: 12 }}>Günlük Kiralık İlanlar</Text>
@@ -662,49 +691,47 @@ export default function HomePage() {
             </View>
 
             {
-                <ScrollView style={{ width: "100%" }}>
-                  {loadingPrjoects == false ? (
-                    <View style={{ top: 40, padding: 10 }}>
-                      <ProjectPostSkeleton />
-                    </View>
-                  ) : (
-                    filteredBookHouse.map((item, index) => (
-                      <RealtorPost
+              <ScrollView style={{ width: "100%" }}>
+                {loadingPrjoects == false ? (
+                  <View style={{ top: 40, padding: 10 }}>
+                    <ProjectPostSkeleton />
+                  </View>
+                ) : (
+                  filteredBookHouse.map((item, index) => (
+                    <RealtorPost
                       GetId={GetIdForCart}
-                        key={index}
-                        HouseId={item.id}
-                        price={`${
-                          JSON.parse(item.housing_type_data)["daily_rent"]
-                        } `}
-                        title={item.housing_title}
-                        loading={loadingEstates}
-                        location={item.city_title + " / " + item.county_title}
-                        image={`${apiUrl}/housing_images/${
-                          JSON.parse(item.housing_type_data).image
-                        }`}
-                        m2={`${
-                          JSON.parse(item.housing_type_data)["squaremeters"]
-                        } `}
-                        roomCount={`${
-                          JSON.parse(item.housing_type_data)["room_count"]
-                        } `}
-                        floor={`${
-                          JSON.parse(item.housing_type_data)["floorlocation"]
-                        } `}
-                        bookmarkStatus={true}
-                        step2_slug={item.step2_slug}
-                        step1_slug={item.step1_slug}
-                        dailyRent={true}
-                      />
-                    ))
-                  )}
-                </ScrollView>
-              }
-        
-
+                      key={index}
+                      HouseId={item.id}
+                      price={`${
+                        JSON.parse(item.housing_type_data)["daily_rent"]
+                      } `}
+                      title={item.housing_title}
+                      loading={loadingEstates}
+                      location={item.city_title + " / " + item.county_title}
+                      image={`${apiUrl}/housing_images/${
+                        JSON.parse(item.housing_type_data).image
+                      }`}
+                      m2={`${
+                        JSON.parse(item.housing_type_data)["squaremeters"]
+                      } `}
+                      roomCount={`${
+                        JSON.parse(item.housing_type_data)["room_count"]
+                      } `}
+                      floor={`${
+                        JSON.parse(item.housing_type_data)["floorlocation"]
+                      } `}
+                      bookmarkStatus={true}
+                      step2_slug={item.step2_slug}
+                      step1_slug={item.step1_slug}
+                      dailyRent={true}
+                    />
+                  ))
+                )}
+              </ScrollView>
+            }
           </View>
           <View style={styles.slide4}>
-            <View style={{ paddingTop: 0}}>
+            <View style={{ paddingTop: 0 }}>
               <View
                 style={{
                   flexDirection: "row",

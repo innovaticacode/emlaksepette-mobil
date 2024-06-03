@@ -53,6 +53,7 @@ import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 
 import RNPickerSelect from "react-native-picker-select";
+import { StatusBar } from "expo-status-bar";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -1780,6 +1781,10 @@ export default function Details({ navigation }) {
           backdropColor="transparent"
           style={styles.modal4}
         >
+          <StatusBar
+            backgroundColor="rgba(0, 0, 0, 0.5)"
+            barStyle="light-content"
+          />
           <View style={styles.modalContent4}>
             <View style={{ padding: 10, gap: 10 }}>
               <Text style={{ textAlign: "center" }}>
