@@ -23,7 +23,7 @@ export default function Invoice() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://emlaksepette.com/api/institutional/invoice/${OrderId}`,
+          `https://test.emlaksepette.com/api/institutional/invoice/${OrderId}`,
 
           {
             headers: {
@@ -196,7 +196,7 @@ export default function Invoice() {
                 Müşteri Hizmetleri : 444 3 284
               </Text>
               <Text style={{ color: "white", fontWeight: "500", fontSize: 12 }}>
-                Email: info@emlaksepette.com
+                Email: info@test.emlaksepette.com
               </Text>
             </View>
           </View>

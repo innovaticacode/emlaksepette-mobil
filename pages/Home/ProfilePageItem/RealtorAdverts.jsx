@@ -24,7 +24,7 @@ export default function RealtorAdverts({ housingdata }) {
   //   fetchFeaturedEstates();
   // }, []);
   const { width, height } = Dimensions.get("window");
-  const ApiUrl = "https://emlaksepette.com";
+  const ApiUrl = "https://test.emlaksepette.com";
   const objectKeys = Object.keys(housingdata);
   return (
     <ScrollView contentContainerStyle={{ padding: 10, paddingBottom: 50 }}>

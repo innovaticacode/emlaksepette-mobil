@@ -1,4 +1,13 @@
-import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet, Dimensions, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
 
 import { React, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -58,19 +67,43 @@ export default function Posts({
   }
   const formatPrice = (price) => addDotEveryThreeDigits(Math.round(price));
 
+  function navigateToPostDetails() {
+    const isShareSale = shareSale && shareSale !== "[]" && numberOfShare !== 0;
+    const totalPrice = roomOrder["price[]"];
+    const discountedPrice = formattedDiscountedPrice;
+    const discountAmount = projectDiscountAmount;
+
+    const params = {
+      HomeId: roomOrder,
+      projectId: data.project.id,
+      isLoading: true,
+      price: isShareSale
+        ? projectDiscountAmount
+          ? discountedPrice / numberOfShare
+          : totalPrice / numberOfShare
+        : projectDiscountAmount
+        ? discountedPrice
+        : totalPrice,
+      discount: isShareSale
+        ? projectDiscountAmount
+          ? projectDiscountAmount / numberOfShare
+          : 0
+        : projectDiscountAmount
+        ? projectDiscountAmount
+        : 0,
+      numberOfShare: numberOfShare,
+      isShareSale: isShareSale,
+    }
+    navigation.navigate("PostDetails", params);
+  }
   return (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate("PostDetails", {
-          HomeId: roomOrder,
-          projectId: data.project.id,
-          isLoading: true
-        })
-      }
-    >
-      <View style={styles.container}>
-        <View style={styles.İlan}>
-          <View style={{ width: "30%" }}>
+    <View style={styles.container}>
+      <View style={styles.İlan}>
+        <TouchableOpacity
+          style={{ width: "30%" }}
+          onPress={navigateToPostDetails}
+        >
+          <View>
             <View
               style={{
                 position: "absolute",
@@ -85,229 +118,220 @@ export default function Posts({
             <Image
               source={{
                 uri:
-                  "https://emlaksepette.com/project_housing_images/" +
+                  "https://test.emlaksepette.com/project_housing_images/" +
                   roomData["image[]"],
               }}
               style={styles.image}
             />
           </View>
-          <View style={styles.container2}>
-            <View style={styles.captionAndIcons}>
-              <View style={styles.caption}>
-                <Text style={styles.ilanNoText}>
-                  İlan No: {1000000 + data.project.id + roomOrder }
-                </Text>
-                <Text style={styles.adTitleText}>
-                  {truncateText(roomData["advertise_title[]"], 4)}
-                </Text>
-              </View>
-              <View
-                style={{
-                  ...styles.icons,
-                  justifyContent: bookmarkStatus ? "space-between" : "flex-end",
-                }}
-              >
-                {bookmarkStatus && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      changeBookmark();
-                      openCollection(roomOrder);
-                    }}
-                  >
-                    <View style={styles.ıconContainer}>
-                      <Bookmark
-                        name={bookmark}
-                        size={13}
-                        color={bookmark === "bookmark-o" ? "black" : "red"}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                )}
-
-                {!isUserSame ? (
-                  <TouchableOpacity onPress={changeHeart}>
-                    <View style={styles.ıconContainer}>
-                      <Heart
-                        name={heart}
-                        size={13}
-                        color={heart === "hearto" ? "black" : "red"}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity onPress={() => setModalVisible(true)}>
-                    <View style={styles.ıconContainer}>
-                      <Trash name="trash" size={13} color="red" />
-                    </View>
-                  </TouchableOpacity>
-                )}
-              </View>
+        </TouchableOpacity>
+        <View style={styles.container2}>
+          <View style={styles.captionAndIcons}>
+            <View style={styles.caption}>
+              <Text style={styles.ilanNoText}>
+                İlan No: {1000000 + data.project.id + roomOrder}
+              </Text>
+              <Text style={styles.adTitleText}>
+                {truncateText(roomData["advertise_title[]"], 4)}
+              </Text>
             </View>
-            {offSaleCheck && !soldCheck && shareSaleEmpty ? (
-              <View>
-                {projectDiscountAmount ? (
-                  <View style={styles.discountContainer}>
-                    <Svg
-                      viewBox="0 0 24 24"
-                      width={18}
-                      height={18}
-                      stroke="#EA2B2E"
-                      strokeWidth={2}
-                      fill="#EA2B2E"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="css-i6dzq1"
-                    >
-                      <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
-                      <Polyline points="17 18 23 18 23 12" />
-                    </Svg>
-                    <Text style={styles.originalPrice}>
-                      <Text style={styles.strikethrough}>
-                        {formatPrice(roomData["price[]"])} ₺
-                      </Text>
-                    </Text>
-                    <Text style={styles.discountedPrice}>
-                      {formatPrice(formattedDiscountedPrice)} ₺
-                    </Text>
+            <View
+              style={{
+                ...styles.icons,
+                justifyContent: bookmarkStatus ? "space-between" : "flex-end",
+              }}
+            >
+              {bookmarkStatus && (
+                <TouchableOpacity
+                  onPress={() => {
+                    changeBookmark();
+                    openCollection(roomOrder);
+                  }}
+                >
+                  <View style={styles.ıconContainer}>
+                    <Bookmark
+                      name={bookmark}
+                      size={13}
+                      color={bookmark === "bookmark-o" ? "black" : "red"}
+                    />
                   </View>
-                ) : (
-                  <Text style={styles.regularPrice}>
-                    {formatPrice(roomData["price[]"])} ₺
-                  </Text>
-                )}
-                {projectDiscountAmount > 0 && (
-                  <Text style={styles.discountText}>
-                    {formatPrice(projectDiscountAmount)} ₺ indirim
-                  </Text>
-                )}
-              </View>
-            ) : (shareSale &&
-                shareSale !== "[]" &&
-                sumCartOrderQt[roomOrder]?.qt_total !== numberOfShare) ||
-              (shareSale &&
-                shareSale !== "[]" &&
-                !sumCartOrderQt[roomOrder]) ? (
-              <View>
-                <Text style={styles.regularPrice}>
-                  {shareSale && shareSale !== "[]" && numberOfShare !== 0 && (
-                    <Text style={styles.shareSaleText}>1/{numberOfShare}</Text>
-                  )}
-                  {" Pay Fiyatı - "}
-                  {shareSale && shareSale !== "[]" && numberOfShare !== 0
-                    ? formatPrice(roomData["price[]"] / numberOfShare)
-                    : formatPrice(roomData["price[]"])}
-                  ₺
-                </Text>
-              </View>
-            ) : null}
+                </TouchableOpacity>
+              )}
 
-            <View style={styles.priceAndButtons}>
-              <View style={styles.btns}>
-                <View style={{ width: "50%" }}>
-                  {sold ? (
-                    sold.status === 1 ? (
-                      <TouchableOpacity style={styles.sold}>
-                        <Text style={styles.soldText}>Satıldı</Text>
-                      </TouchableOpacity>
-                    ) : (
-                      <TouchableOpacity style={styles.pending}>
-                        <Text style={styles.pendingText}>Rezerve Edildi</Text>
-                      </TouchableOpacity>
-                    )
-                  ) : roomData["off_sale[]"] !== "[]" ? (
-                    <TouchableOpacity style={styles.offSale} disabled>
-                      <Text style={styles.offSaleText}>Satışa Kapalı</Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <View style={styles.priceContainer}>
-                      <TouchableOpacity
-                        style={styles.addBasket}
-                        onPress={() => GetIdForCart(roomOrder)}
-                      >
-                        <Text style={styles.addBasketText}>Sepete Ekle</Text>
-                      </TouchableOpacity>
-                    </View>
-                  )}
+              {!isUserSame ? (
+                <TouchableOpacity onPress={changeHeart}>
+                  <View style={styles.ıconContainer}>
+                    <Heart
+                      name={heart}
+                      size={13}
+                      color={heart === "hearto" ? "black" : "red"}
+                    />
+                  </View>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                  <View style={styles.ıconContainer}>
+                    <Trash name="trash" size={13} color="red" />
+                  </View>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+
+          {offSaleCheck && !soldCheck && shareSaleEmpty ? (
+            <View>
+              {projectDiscountAmount ? (
+                <View style={styles.discountContainer}>
+                  <Svg
+                    viewBox="0 0 24 24"
+                    width={18}
+                    height={18}
+                    stroke="#EA2B2E"
+                    strokeWidth={2}
+                    fill="#EA2B2E"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="css-i6dzq1"
+                  >
+                    <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+                    <Polyline points="17 18 23 18 23 12" />
+                  </Svg>
+                  <Text style={styles.originalPrice}>
+                    <Text style={styles.strikethrough}>
+                      {formatPrice(roomData["price[]"])} ₺
+                    </Text>
+                  </Text>
+                  <Text style={styles.discountedPrice}>
+                    {formatPrice(formattedDiscountedPrice)} ₺
+                  </Text>
                 </View>
+              ) : (
+                <Text style={styles.regularPrice}>
+                  {formatPrice(roomData["price[]"])} ₺
+                </Text>
+              )}
+              {projectDiscountAmount > 0 && (
+                <Text style={styles.discountText}>
+                  {formatPrice(projectDiscountAmount)} ₺ indirim
+                </Text>
+              )}
+            </View>
+          ) : (shareSale &&
+              shareSale !== "[]" &&
+              sumCartOrderQt[roomOrder]?.qt_total !== numberOfShare) ||
+            (shareSale && shareSale !== "[]" && !sumCartOrderQt[roomOrder]) ? (
+            <View>
+              <Text style={styles.regularPrice}>
+                {shareSale && shareSale !== "[]" && numberOfShare !== 0 && (
+                  <Text style={styles.shareSaleText}>1/{numberOfShare}</Text>
+                )}
+                {" Pay Fiyatı - "}
+                {shareSale && shareSale !== "[]" && numberOfShare !== 0
+                  ? formatPrice(roomData["price[]"] / numberOfShare)
+                  : formatPrice(roomData["price[]"])}
+                ₺
+              </Text>
+            </View>
+          ) : null}
 
-                <View style={{ width: "50%" }}>
-                  {sold ? (
-                    sold.is_show_user === "on" ? (
-                      <TouchableOpacity style={styles.showCustomer}>
-                        <Text style={styles.showCustomerText}>Komşumu Gör</Text>
-                      </TouchableOpacity>
-                    ) : (
-                      <TouchableOpacity
-                        style={styles.payDetailBtn}
-                        onPress={openmodal}
-                      >
-                        <Text style={styles.payDetailText}>Ödeme Detayı</Text>
-                      </TouchableOpacity>
-                    )
-                  ) : roomData["off_sale[]"] !== "[]" ? (
+          <View style={styles.priceAndButtons}>
+            <View style={styles.btns}>
+              <View style={{ width: "50%" }}>
+                {sold ? (
+                  sold.status === 1 ? (
+                    <TouchableOpacity style={styles.sold}>
+                      <Text style={styles.soldText}>Satıldı</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity style={styles.pending}>
+                      <Text style={styles.pendingText}>Rezerve Edildi</Text>
+                    </TouchableOpacity>
+                  )
+                ) : roomData["off_sale[]"] !== "[]" ? (
+                  <TouchableOpacity style={styles.offSale} disabled>
+                    <Text style={styles.offSaleText}>Satışa Kapalı</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View style={styles.priceContainer}>
                     <TouchableOpacity
-                      onPress={() => {
-                        openFormModal(roomOrder);
-                        GetID(roomOrder);
-                      }}
-                      style={styles.payDetailBtn}
+                      style={styles.addBasket}
+                      onPress={() => GetIdForCart(roomOrder)}
                     >
-                      <Text style={styles.payDetailText}>Başvuru Yap</Text>
+                      <Text style={styles.addBasketText}>Sepete Ekle</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+
+              <View style={{ width: "50%" }}>
+                {sold ? (
+                  sold.is_show_user === "on" ? (
+                    <TouchableOpacity style={styles.showCustomer}>
+                      <Text style={styles.showCustomerText}>Komşumu Gör</Text>
                     </TouchableOpacity>
                   ) : (
                     <TouchableOpacity
                       style={styles.payDetailBtn}
-                      onPress={() => openmodal(roomOrder)}
+                      onPress={openmodal}
                     >
                       <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                     </TouchableOpacity>
-                  )}
-                </View>
+                  )
+                ) : roomData["off_sale[]"] !== "[]" ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      openFormModal(roomOrder);
+                      GetID(roomOrder);
+                    }}
+                    style={styles.payDetailBtn}
+                  >
+                    <Text style={styles.payDetailText}>Başvuru Yap</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.payDetailBtn}
+                    onPress={() => openmodal(roomOrder)}
+                  >
+                    <Text style={styles.payDetailText}>Ödeme Detayı</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
           </View>
         </View>
-        {data?.project?.list_item_values && (
-          <View style={styles.infoContainer}>
-            <View style={styles.infoRow}>
-              <Info
-                text={
-                  roomData[
-                    `${data?.project?.list_item_values?.column1_name}[]`
-                  ] +
-                  " " +
-                  (data.project.list_item_values.column1_additional || "")
-                }
-              />
-              <Info
-                text={
-                  roomData[
-                    `${data?.project?.list_item_values?.column2_name}[]`
-                  ] +
-                  " " +
-                  (data.project.list_item_values.column2_additional || "")
-                }
-              />
-              <Info
-                text={
-                  roomData[
-                    `${data?.project?.list_item_values?.column3_name}[]`
-                  ] +
-                  " " +
-                  (data.project.list_item_values.column3_additional || "")
-                }
-              />
-              <Info
-                text={moment(project.created_at).locale("tr").format("LL")}
-              />
-            </View>
-            <View style={styles.infoLocation}>
-              <Text style={styles.informationText}>{location}</Text>
-            </View>
-          </View>
-        )}
       </View>
-    </TouchableOpacity>
+      {data?.project?.list_item_values && (
+        <View style={styles.infoContainer}>
+          <View style={styles.infoRow}>
+            <Info
+              text={
+                roomData[`${data?.project?.list_item_values?.column1_name}[]`] +
+                " " +
+                (data.project.list_item_values.column1_additional || "")
+              }
+            />
+            <Info
+              text={
+                roomData[`${data?.project?.list_item_values?.column2_name}[]`] +
+                " " +
+                (data.project.list_item_values.column2_additional || "")
+              }
+            />
+            <Info
+              text={
+                roomData[`${data?.project?.list_item_values?.column3_name}[]`] +
+                " " +
+                (data.project.list_item_values.column3_additional || "")
+              }
+            />
+            <Info text={moment(project.created_at).locale("tr").format("LL")} />
+          </View>
+          <View style={styles.infoLocation}>
+            <Text style={styles.informationText}>{location}</Text>
+          </View>
+        </View>
+      )}
+    </View>
   );
 }
 

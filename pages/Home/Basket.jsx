@@ -71,7 +71,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://emlaksepette.com/api/institutional/my-cart",
+          "https://test.emlaksepette.com/api/institutional/my-cart",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -98,8 +98,6 @@ const [parsedshare, setparsedshare] = useState('')
   try {
     if (Cart && isShare && type && saleType ) {
       setparsedshare(JSON.parse(isShare)[0])
-      // const parsedShare =JSON.parse(isShare)[0]
-      console.log(parsedshare,'dsfsdfsdf')
     }
   }catch(error){
     console.log('parse edilemedi')
@@ -148,7 +146,7 @@ const [counter, setcounter] = useState(1)
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://emlaksepette.com/api/update-cart-qt",
+          "https://test.emlaksepette.com/api/update-cart-qt",
           formData,
           {
             headers: {
@@ -167,15 +165,13 @@ const [counter, setcounter] = useState(1)
       console.error("Error fetching data:", error);
     }
   }
-console.log(Cart.qt,'dfsdfds')
-  //Azaltma
   const UpdateShareMinus = async ()=>{
     let formData=new FormData()
     formData.append('change','azalt')
 try {
   if (user.access_token) {
     const response = await axios.post(
-      "https://emlaksepette.com/api/update-cart-qt",
+      "https://test.emlaksepette.com/api/update-cart-qt",
       formData,
       {
         headers: {
@@ -211,7 +207,7 @@ const UpdateCartForInstallemnt=async(selectedOption)=>{
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://emlaksepette.com/api/update-cart",
+          "https://test.emlaksepette.com/api/update-cart",
           formData,
           {
             headers: {

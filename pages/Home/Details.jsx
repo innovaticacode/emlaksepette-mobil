@@ -69,7 +69,7 @@ export default function Details({ navigation }) {
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const [FormVisible, setFormVisible] = useState(false);
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://test.emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -217,7 +217,7 @@ export default function Details({ navigation }) {
 
     axios
       .post(
-        "https://emlaksepette.com/api/remove_item_on_collection",
+        "https://test.emlaksepette.com/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -256,7 +256,6 @@ export default function Details({ navigation }) {
         });
 
         setcollections(newCollections);
-        console.log(newCollections, "qwe");
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -265,7 +264,7 @@ export default function Details({ navigation }) {
   };
 
   const shareLinkOnWhatsApp = () => {
-    const url = `https://emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
+    const url = `https://test.emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -274,7 +273,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("WhatsApp açılamadı:", error));
   };
   const shareLinkOnInstagram = (text) => {
-    const url = `https://emlaksepette.com/${slug}/100${ProjectId}/detay`;
+    const url = `https://test.emlaksepette.com/${slug}/100${ProjectId}/detay`;
 
     const instagramShareURL = `instagram://story/?text=${encodeURIComponent(
       url
@@ -285,7 +284,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("Instagram açılamadı:", error));
   };
   const copyToClipboard = () => {
-    const url = `https://emlaksepette.com/${slug}/1000${ProjectId}/detay`;
+    const url = `https://test.emlaksepette.com/${slug}/1000${ProjectId}/detay`;
     Clipboard.setStringAsync(url);
     ShowAlert();
   };
@@ -365,7 +364,7 @@ export default function Details({ navigation }) {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://emlaksepette.com/api/client/collections",
+          "https://test.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -417,7 +416,7 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post("https://emlaksepette.com/api/add/collection", collectionData, {
+      .post("https://test.emlaksepette.com/api/add/collection", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -461,7 +460,7 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post("https://emlaksepette.com/api/addLink", collectionData, {
+      .post("https://test.emlaksepette.com/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -495,7 +494,6 @@ export default function Details({ navigation }) {
             return collection;
           }
         });
-        console.log(newCollections);
         setcollections(newCollections);
       })
       .catch((error) => {
@@ -530,7 +528,7 @@ export default function Details({ navigation }) {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://emlaksepette.com/api/institutional/add_to_cart",
+          "https://test.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -580,7 +578,7 @@ export default function Details({ navigation }) {
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        "https://emlaksepette.com/api/institutional/give_offer",
+        "https://test.emlaksepette.com/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -621,7 +619,7 @@ export default function Details({ navigation }) {
   const [county, setcounty] = useState("");
   const fetchCity = async () => {
     try {
-      const response = await axios.get("https://emlaksepette.com/api/cities");
+      const response = await axios.get("https://test.emlaksepette.com/api/cities");
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -642,7 +640,7 @@ export default function Details({ navigation }) {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://emlaksepette.com/api/counties/${value}`
+        `https://test.emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -728,11 +726,6 @@ export default function Details({ navigation }) {
       default:
         postData();
     }
-
-    if (errorMessage) {
-      // ShowAlert(ErrorMessage);
-    }
-    console.log(errorStatu + "error statu");
   };
   const [galleries, setGalleries] = useState();
 

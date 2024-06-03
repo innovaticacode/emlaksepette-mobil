@@ -28,7 +28,6 @@ export default function CreateUserType() {
   }, []);
   const [permissions, setPermissions] = useState({});
   const [groupNames, setGroupNames] = useState([]);
-  console.log(permissions,"asd");
  
   // fetchData fonksiyonunu düzenle
 
@@ -36,7 +35,7 @@ export default function CreateUserType() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://emlaksepette.com/api/institutional/roles/${UserID}/edit`,
+          `https://test.emlaksepette.com/api/institutional/roles/${UserID}/edit`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -62,7 +61,6 @@ export default function CreateUserType() {
   }, [user]);
 
   const [checkedItems, setCheckedItems] = useState([]);
-  console.log(checkedItems,"asd")
   const handleCheckboxChange = (description) => {
     if (checkedItems.includes(description)) {
       // Eğer seçilen öğe zaten varsa, listeden kaldır
@@ -83,7 +81,7 @@ export default function CreateUserType() {
       });
       console.log(formData);
       const response = await axios.post(
-        `https://emlaksepette.com/api/institutional/roles/${UserID}`,
+        `https://test.emlaksepette.com/api/institutional/roles/${UserID}`,
         {
           'permissions' : checkedItems,
           '_method' : 'PUT',
@@ -105,15 +103,12 @@ export default function CreateUserType() {
     }
   };
   const handleShowCheckedItems = () => {
-    console.log(checkedItems);
     postData();
     // navigation.navigate("UserTypes");
   };
-  console.log(permissions + UserID);
   useEffect(() => {
     setTypeName(name)
   }, [user])
-  console.log(checkedItems)
 
   useEffect(() => {
     var tempItems = [];

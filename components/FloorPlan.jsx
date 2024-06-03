@@ -12,10 +12,10 @@ export default function FloorPlan({ data }) {
     getValueFor("user", setUser);
   }, []);
 
-  const apiUrl = "https://emlaksepette.com/situation_images/";
+  const apiUrl = "https://test.emlaksepette.com/situation_images/";
 
   const getFullImageURL = (partialURL) => {
-    return `https://emlaksepette.com/${partialURL}`;
+    return `https://test.emlaksepette.com/${partialURL}`;
   };
 
   return (

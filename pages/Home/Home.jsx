@@ -24,7 +24,6 @@ const Home = () => {
     getValueFor("user", setUser);
   }, []);
 
-  console.log(user);
 
   const { width, height } = Dimensions.get("window");
   return (

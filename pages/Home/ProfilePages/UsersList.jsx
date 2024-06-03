@@ -24,7 +24,7 @@ export default function UsersList() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://emlaksepette.com/api/institutional/users",
+          "https://test.emlaksepette.com/api/institutional/users",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -45,7 +45,7 @@ export default function UsersList() {
     try {
       if (user.access_token) {
         const response = await axios.delete(
-          `https://emlaksepette.com/api/institutional/users/${selectedUser}`,
+          `https://test.emlaksepette.com/api/institutional/users/${selectedUser}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -73,7 +73,6 @@ export default function UsersList() {
     setselectedUser(UserID);
     setselectedUserName(name)
   };
-  console.log(selectedUser);
   return (
     <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
       <View style={{ backgroundColor: "#ffffff", padding: 10 }}>

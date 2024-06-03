@@ -54,7 +54,7 @@ import { ActivityIndicator } from "react-native-paper";
 import FloorPlan from "../components/FloorPlan";
 
 export default function PostDetail() {
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://test.emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState("hearto");
@@ -69,7 +69,17 @@ export default function PostDetail() {
     setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
   };
   const route = useRoute();
-  const { HomeId, projectId, isLoading } = route.params;
+
+  const {
+    HomeId,
+    discount,
+    isLoading,
+    isShareSale,
+    numberOfShare,
+    price,
+    projectId
+  } = route.params;
+
   const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
   const handleOpenPhone = () => {
@@ -150,7 +160,7 @@ export default function PostDetail() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/getCollections",
+        "https://test.emlaksepette.com/api/getCollections",
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -180,12 +190,16 @@ export default function PostDetail() {
     };
 
     axios
-      .post("https://emlaksepette.com/api/add/collection", collectionData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.access_token}`,
-        },
-      })
+      .post(
+        "https://test.emlaksepette.com/api/add/collection",
+        collectionData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        }
+      )
       .then((response) => {
         // setaddCollection(false)
         // setnewCollectionNameCreate('')
@@ -220,7 +234,7 @@ export default function PostDetail() {
     };
 
     axios
-      .post("https://emlaksepette.com/api/addLink", collectionData, {
+      .post("https://test.emlaksepette.com/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -290,10 +304,7 @@ export default function PostDetail() {
   useEffect(() => {
     if (isLoading) {
       setTimeout(() => {
-        navigation.navigate("PostDetails", {
-          HomeId: HomeId,
-          projectId: ProjectHomeData.project.id,
-        });
+       
         setLoading(false);
       }, 1000);
     }
@@ -479,17 +490,6 @@ export default function PostDetail() {
 
           <ScrollView
             scrollEventThrottle={16}
-            // onScroll={({ nativeEvent }) => {
-            //   if (isCloseToBottom(nativeEvent)) {
-            //     clearTimeout(debounceTimeout);
-            //     debounceTimeout = setTimeout(() => {
-            //       if (!isLoading) {
-            //         fetchHousings(page + 1);
-            //         setPage(page + 1);
-            //       }
-            //     }, 1000); // 500ms içinde yeni bir istek yapılmazsa gerçekleştir
-            //   }
-            // }}
           >
             <View style={{ height: 250 }}>
               <View style={styles.pagination}>
@@ -503,7 +503,8 @@ export default function PostDetail() {
                   }}
                 >
                   <Text style={{ color: "white", fontSize: 12 }}>
-                    {pagination + 1} / {ProjectHomeData.project.images.length}
+                    {pagination + 1} /{" "}
+                    {ProjectHomeData?.project?.images?.length}
                   </Text>
                 </View>
               </View>
@@ -532,8 +533,8 @@ export default function PostDetail() {
                 loop={true}
                 index={pagination}
               >
-                {ProjectHomeData.project.images &&
-                  ProjectHomeData.project.images.map((image, index) => {
+                {ProjectHomeData?.project?.images &&
+                  ProjectHomeData?.project?.images.map((image, index) => {
                     const uri = `${apiUrl}${image.image.replace(
                       "public",
                       "storage"
@@ -567,7 +568,7 @@ export default function PostDetail() {
                 }}
               >
                 {ProjectHomeData?.project?.city?.title
-                  ? `${ProjectHomeData.project.city.title} / ${ProjectHomeData.project.county.ilce_title}`
+                  ? `${ProjectHomeData?.project?.city?.title} / ${ProjectHomeData?.project?.county?.ilce_title}`
                   : ""}
               </Text>
               <Text
@@ -578,8 +579,8 @@ export default function PostDetail() {
                   fontWeight: "700",
                 }}
               >
-                {ProjectHomeData.projectHousingsList[HomeId]
-                  ? ProjectHomeData.projectHousingsList[HomeId][
+                {ProjectHomeData?.projectHousingsList[HomeId]
+                  ? ProjectHomeData?.projectHousingsList[HomeId][
                       "advertise_title[]"
                     ] +
                     " " +
@@ -588,6 +589,9 @@ export default function PostDetail() {
                     ProjectHomeData.project.step1_slug.charAt(0).toUpperCase() + // İlk harfi büyütme
                     ProjectHomeData.project.step1_slug.slice(1) // Geri kalanı olduğu gibi bırakma
                   : ""}
+
+
+
               </Text>
             </View>
             <View>
@@ -597,16 +601,6 @@ export default function PostDetail() {
                 changeTab={changeTab}
               />
             </View>
-
-            {/* 
-                {
-                  ProjectHomeData.projectHousingsList((item,index)=>(
-                    <Text>asd</Text>
-                      // <Posts
-                      //     key={index}
-                      // />
-                  ))
-                } */}
 
             {tabs == 0 && (
               <OtherHomeInProject
@@ -901,7 +895,7 @@ export default function PostDetail() {
                     handlePageChange(event.nativeEvent.position)
                   }
                 >
-                  {ProjectHomeData.project.images.map((image, index) => {
+                  {ProjectHomeData?.project?.images.map((image, index) => {
                     return (
                       <Pressable
                         key={index + 1}
@@ -1461,6 +1455,10 @@ const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
+    alignItems: "center",
+  },
+  discountContainer: {
+    flexDirection: "row",
     alignItems: "center",
   },
 });

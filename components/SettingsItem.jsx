@@ -19,11 +19,11 @@ export default function SettingsItem({info,numbers,border,color,bold,number,font
     >
       
       <View style={{justifyContent:'center'}}>
-        <Text style={{fontSize:11,color: color ? color: "black",fontWeight: fontWeight ? fontWeight : 400}}>{number ?? number} {info}</Text>
+        <Text style={{fontSize:12,color: color ? color: "black",fontWeight: fontWeight ? fontWeight : 400}}>{number ?? number} {info}</Text>
       </View>
       <View style={{justifyContent:'center'}}>
    
-      <Text style={{ flexDirection: 'row', alignItems: 'center', fontSize: 11, color: color ? color : "black", fontWeight: 700 }}>
+      <Text style={{ flexDirection: 'row', alignItems: 'center', fontSize: 12, color: color ? color : "black", fontWeight: 700 }}>
   {icon && icon} {numbers}
 </Text>
 

@@ -156,7 +156,6 @@ export default function EditProject() {
               </TouchableOpacity>
               {
                 data.situations?.map((image) => {
-                  console.log(frontEndUri+(image?.situation?.replace('public','')));
                   return (
                     <TouchableOpacity onPress={() => {setCoverImageModal(true);setSelectedImage(image)}}>
                       <View style={styles.image_card}>

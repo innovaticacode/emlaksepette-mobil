@@ -66,7 +66,7 @@ export default function DetailsSettings({ data, roomOrder }) {
                 if (arrayData.length > 0) {
                   return (
                     <View style={{ margin: 10, marginTop: 20 }} key={index}>
-                      <Text style={{ color: "black", fontWeight: "700", fontSize: "12" }}>
+                      <Text style={{ color: "black", fontWeight: "700", fontSize: 12 }}>
                         {setting.label}
                       </Text>
                       <View
