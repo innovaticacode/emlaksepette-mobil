@@ -69,7 +69,7 @@ export default function Basket() {
 
   const fetchData = async () => {
     try {
-      if (user.access_token) {
+      if (user?.access_token) {
         const response = await axios.get(
           "https://test.emlaksepette.com/api/institutional/my-cart",
           {

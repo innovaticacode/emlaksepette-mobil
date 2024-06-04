@@ -38,6 +38,8 @@ import PagerView from "react-native-pager-view";
 import Categories from "../../components/Categories";
 import userData, { getValueFor } from "../../components/methods/user";
 import RealtorPostSkeleton from "../../components/SkeletonComponents/RealtorPostSkeleton";
+import { FlashList } from '@shopify/flash-list';
+import { ActivityIndicator } from "react-native-paper";
 
 export default function HomePage() {
   const navigation = useNavigation();
@@ -64,18 +66,46 @@ export default function HomePage() {
     fetchFeaturedProjects();
   }, []);
   const [featuredEstates, setFeaturedEstates] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const fetchFeaturedEstates = async () => {
+
+  const fetchFeaturedEstates = async (reset = false) => {
+    if (loading || (!hasMore && !reset)) return;
+    setLoading(true);
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/real-estates"
+        `https://test.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=12`
       );
-      setFeaturedEstates(response.data);
-      setloadingEstates(true);
+      const newEstates = response.data;
+
+      if (reset) {
+        setFeaturedEstates(newEstates);
+        setPage(2);
+        setHasMore(true);
+      } else {
+        if (newEstates.length > 0) {
+          setFeaturedEstates(prevEstates => {
+            const newUniqueEstates = newEstates.filter(
+              estate => !prevEstates.some(prevEstate => prevEstate.id === estate.id)
+            );
+            return [...prevEstates, ...newUniqueEstates];
+          });
+          setPage(prevPage => prevPage + 1);
+        } else {
+          setHasMore(false);
+        }
+      }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
     }
   };
+
   const filteredEstates = featuredEstates.filter(
     (estate) => estate.step1_slug == "is-yeri"
   );
@@ -89,14 +119,15 @@ export default function HomePage() {
   useEffect(() => {
     fetchFeaturedEstates();
   }, []);
+ 
 
-  const [refreshing, setRefreshing] = useState(false);
+  // Sayfa yenileme fonksiyonu
   const onRefresh = () => {
     setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    });
+    fetchFeaturedEstates();
   };
+  
+  
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
@@ -502,53 +533,61 @@ export default function HomePage() {
                 </TouchableOpacity>
               </View>
             </View>
-            <ScrollView>
-              {
-                <View style={{ width: "100%" }}>
-                  {loadingPrjoects == false ? (
-                    <View style={{ top: 40, padding: 10 }}>
-                      <RealtorPostSkeleton />
-                    </View>
-                  ) : (
-                    filteredHomes.map((item, index) => (
-                      <RealtorPost
-                        GetId={GetIdForCart}
-                        key={index}
-                        HouseId={item.id}
-                        price={`${
-                          JSON.parse(item.housing_type_data)["price"]
-                        } `}
-                        housing={item}
-                        title={item.housing_title}
-                        loading={loadingEstates}
-                        location={item.city_title + " / " + item.county_title}
-                        image={`${apiUrl}/housing_images/${
-                          JSON.parse(item.housing_type_data).image
-                        }`}
-                        column1_name={`${
-                          JSON.parse(item.housing_type_data)[item.column1_name]
-                        } `}
-                        column1_additional={item.column1_additional}
-                        column2_name={`${
-                          JSON.parse(item.housing_type_data)[item.column2_name]
-                        } `}
-                        column2_additional={item.column2_additional}
-                        column3_name={`${
-                          JSON.parse(item.housing_type_data)[item.column3_name]
-                        } `}
-                        column3_additional={item.column3_additional}
-                        column4_name={`${
-                          JSON.parse(item.housing_type_data)[item.column4_name]
-                        } `}
-                        column4_additional={item.column4_additional}
-                        bookmarkStatus={true}
-                        dailyRent={false}
-                      />
-                    ))
-                  )}
-                </View>
-              }
-            </ScrollView>
+             {/* {refreshing && (
+        <View style={{ padding: 10, backgroundColor: 'white', alignItems: 'center' }}>
+          <ActivityIndicator animating={true} size="small" color="#000000" />
+        </View>
+      )} */}
+            <FlatList
+        data={filteredHomes}
+     
+        renderItem={({ item }) => (
+          <RealtorPost
+          GetId={GetIdForCart}
+        
+          HouseId={item.id}
+          price={`${
+            JSON.parse(item.housing_type_data)["price"]
+          } `}
+          housing={item}
+          title={item.housing_title}
+          loading={loadingEstates}
+          location={item.city_title + " / " + item.county_title}
+          image={`${apiUrl}/housing_images/${
+            JSON.parse(item.housing_type_data).image
+          }`}
+          column1_name={`${
+            JSON.parse(item.housing_type_data)[item.column1_name]
+          } `}
+          column1_additional={item.column1_additional}
+          column2_name={`${
+            JSON.parse(item.housing_type_data)[item.column2_name]
+          } `}
+          column2_additional={item.column2_additional}
+          column3_name={`${
+            JSON.parse(item.housing_type_data)[item.column3_name]
+          } `}
+          column3_additional={item.column3_additional}
+          column4_name={`${
+            JSON.parse(item.housing_type_data)[item.column4_name]
+          } `}
+          column4_additional={item.column4_additional}
+          bookmarkStatus={true}
+          dailyRent={false}
+
+        />
+
+        )}
+        keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
+        onEndReached={() => fetchFeaturedEstates(false)}
+        onEndReachedThreshold={0}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        ListFooterComponent={loading && !refreshing ? <ActivityIndicator  style={{margin:20}}size="small" color="#000000" /> : null}
+    
+       
+      />
+             
           </View>
           <View style={styles.slide3}>
             <View style={{ paddingTop: 0}}>
