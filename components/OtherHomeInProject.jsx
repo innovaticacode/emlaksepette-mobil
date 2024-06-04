@@ -80,6 +80,7 @@ export default function OtherHomeInProject({
               </ScrollView>
             ))}
 
+
           <ScrollView>
             {Array.from({ length: Math.min(data.project.room_count, 10) }).map(
               (_, i) => {
@@ -136,6 +137,7 @@ export default function OtherHomeInProject({
               }
             )}
           </ScrollView>
+
         </View>
       </View>
     </SafeAreaView>
