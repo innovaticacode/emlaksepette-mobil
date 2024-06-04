@@ -154,6 +154,6 @@ const styles = StyleSheet.create({
   commissionText: {
     color: "green",
     fontWeight: "700",
-    fontSize: "13",
+    fontSize: 13,
   },
 });
