@@ -207,7 +207,7 @@ const addCollectionPost=()=>{
 
     // Başarılı yanıtı işleyin
     // setselectedCollectionName(response.data.collection.name)
-    console.log('Response:', response.data);
+   
   })
   .catch(error => {
     // Hata durumunu işleyin
@@ -242,7 +242,7 @@ const addSelectedCollection=()=>{
   })
   .then(response => {
   
-    console.log('Response:', response.data);
+   
   })
   .catch(error => {
     // Hata durumunu işleyin

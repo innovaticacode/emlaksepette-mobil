@@ -43,7 +43,7 @@ const [products, setproducts] = useState([])
     fetchData();
   }, [user]);
 
-    console.log(products,'dfsdfsfsd')
+   
 
   return ( 
     <View style={style.container} onTouchStart={()=>Keyboard.dismiss()}>

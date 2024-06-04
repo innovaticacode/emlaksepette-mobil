@@ -119,7 +119,7 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
       );
       if (response.data.success) {
         onRemove(item.id);
-        console.log(response.data);
+      
       } else {
         console.error(
           "Failed to remove item from collection:",

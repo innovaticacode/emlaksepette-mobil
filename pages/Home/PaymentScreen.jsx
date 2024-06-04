@@ -42,10 +42,10 @@ const [selectedDocumentName, setSelectedDocumentName] = useState(null);
 const pickDocument = async () => {
     try {
       // Kullanıcıya belge seçmesine izin ver
-      console.log('Belge seçme işlemi başladı.');
+
       // Kullanıcıya belge seçmesine izin ver
       const result = await DocumentPicker.getDocumentAsync();
-      console.log('Belge seçme işlemi tamamlandı.');
+  
       
       // Belge seçilirse, belge bilgilerini göster
       if (result && result === 'success') {

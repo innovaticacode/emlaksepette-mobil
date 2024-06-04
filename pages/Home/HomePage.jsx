@@ -120,7 +120,9 @@ export default function HomePage() {
   const filteredBookHouse = featuredEstates.filter(
     (estate) => estate.step2_slug == "gunluk-kiralik"
   );
-
+  const filteredPrefabrik= featuredEstates.filter(
+    (estate) => estate.step2_slug == "prefabrik"
+  );
  
  
 
@@ -245,7 +247,7 @@ export default function HomePage() {
   };
   const { width: screenWidth } = Dimensions.get("window");
   useEffect(() => {
-    if (tab == 1) {
+    if (tab == 1 || tab==2 || tab==3 || tab==4 || tab==5 || tab==6 || tab==7) {
       fetchFeaturedEstates()
     }
   
@@ -612,40 +614,64 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN İŞ YERLERİ</Text>
+                <Text style={{ fontSize: 12,fontWeight:'bold' }}>ÖNE ÇIKAN İŞ YERLERİ</Text>
 
                 <TouchableOpacity style={styles.allBtn}>
-                  <Text style={{ color: "white", fontSize: 13 }}>
+                  <Text style={{ color: "white", fontSize: 11 }}>
                     Tümünü Gör
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
-            <ScrollView>
-              {filteredEstates.map((item, index) => (
-                <RealtorPost
-                GetId={GetIdForCart}
-                  key={index}
-                  HouseId={item.id}
-                  price={`${JSON.parse(item.housing_type_data)["price"]} `}
-                  title={item.housing_title}
-                  loading={loadingEstates}
-                  location={item.city_title + " / " + item.county_title}
-                  image={`${apiUrl}/housing_images/${
-                    JSON.parse(item.housing_type_data).image
-                  }`}
-                  m2={`${JSON.parse(item.housing_type_data)["squaremeters"]} `}
-                  roomCount={`${
-                    JSON.parse(item.housing_type_data)["room_count"]
-                  } `}
-                  floor={`${
-                    JSON.parse(item.housing_type_data)["floorlocation"]
-                  } `}
-                  bookmarkStatus={true}
-                  dailyRent={false}
-                />
-              ))}
-            </ScrollView>
+            <FlatList
+        data={filteredEstates}
+     
+        renderItem={({ item }) => (
+          <RealtorPost
+          GetId={GetIdForCart}
+        
+          HouseId={item.id}
+          price={`${
+            JSON.parse(item.housing_type_data)["price"]
+          } `}
+          housing={item}
+          title={item.housing_title}
+          loading={loadingEstates}
+          location={item.city_title + " / " + item.county_title}
+          image={`${apiUrl}/housing_images/${
+            JSON.parse(item.housing_type_data).image
+          }`}
+          column1_name={`${
+            JSON.parse(item.housing_type_data)[item.column1_name]
+          } `}
+          column1_additional={item.column1_additional}
+          column2_name={`${
+            JSON.parse(item.housing_type_data)[item.column2_name]
+          } `}
+          column2_additional={item.column2_additional}
+          column3_name={`${
+            JSON.parse(item.housing_type_data)[item.column3_name]
+          } `}
+          column3_additional={item.column3_additional}
+          column4_name={`${
+            JSON.parse(item.housing_type_data)[item.column4_name]
+          } `}
+          column4_additional={item.column4_additional}
+          bookmarkStatus={true}
+          dailyRent={false}
+
+        />
+
+        )}
+        keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
+        onEndReached={() => fetchFeaturedEstates(false)}
+        onEndReachedThreshold={0.5}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        ListFooterComponent={loading && !refreshing ? <ActivityIndicator  style={{margin:20}}size="small" color="#000000" /> : null}
+    
+       
+      />
           </View>
           <View style={styles.slide4}>
             <View style={{ paddingTop: 0 }}>
@@ -661,36 +687,61 @@ export default function HomePage() {
                 <Text style={{ fontSize: 12 }}>ÖNE ÇIKAN ARSALAR</Text>
 
                 <TouchableOpacity style={styles.allBtn}>
-                  <Text style={{ color: "white", fontSize: 13 }}>
+                  <Text style={{ color: "white", fontSize: 11 }}>
                     Tümünü Gör
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
-            <ScrollView>
-              {filteredArsa.map((item, index) => (
-                <RealtorPost
-                  key={index}
-                  HouseId={item.id}
-                  price={`${JSON.parse(item.housing_type_data)["price"]} `}
-                  title={item.housing_title}
-                  loading={loadingEstates}
-                  location={item.city_title + " / " + item.county_title}
-                  image={`${apiUrl}/housing_images/${
-                    JSON.parse(item.housing_type_data).image
-                  }`}
-                  m2={`${JSON.parse(item.housing_type_data)["squaremeters"]} `}
-                  roomCount={`${
-                    JSON.parse(item.housing_type_data)["room_count"]
-                  } `}
-                  floor={`${
-                    JSON.parse(item.housing_type_data)["floorlocation"]
-                  } `}
-                  bookmarkStatus={true}
-                  dailyRent={false}
-                />
-              ))}
-            </ScrollView>
+            <FlatList
+        data={filteredArsa}
+     
+        renderItem={({ item }) => (
+          <RealtorPost
+          GetId={GetIdForCart}
+        
+          HouseId={item.id}
+          price={`${
+            JSON.parse(item.housing_type_data)["price"]
+          } `}
+          housing={item}
+          title={item.housing_title}
+          loading={loadingEstates}
+          location={item.city_title + " / " + item.county_title}
+          image={`${apiUrl}/housing_images/${
+            JSON.parse(item.housing_type_data).image
+          }`}
+          column1_name={`${
+            JSON.parse(item.housing_type_data)[item.column1_name]
+          } `}
+          column1_additional={item.column1_additional}
+          column2_name={`${
+            JSON.parse(item.housing_type_data)[item.column2_name]
+          } `}
+          column2_additional={item.column2_additional}
+          column3_name={`${
+            JSON.parse(item.housing_type_data)[item.column3_name]
+          } `}
+          column3_additional={item.column3_additional}
+          column4_name={`${
+            JSON.parse(item.housing_type_data)[item.column4_name]
+          } `}
+          column4_additional={item.column4_additional}
+          bookmarkStatus={true}
+          dailyRent={false}
+
+        />
+
+        )}
+        keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
+        onEndReached={() => fetchFeaturedEstates(false)}
+        onEndReachedThreshold={0.5}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        ListFooterComponent={loading && !refreshing ? <ActivityIndicator  style={{margin:20}}size="small" color="#000000" /> : null}
+    
+       
+      />
           </View>
           <View style={styles.slide4}>
             <View style={{ paddingTop: 0 }}>
@@ -708,12 +759,63 @@ export default function HomePage() {
                 </Text>
 
                 <TouchableOpacity style={styles.allBtn}>
-                  <Text style={{ color: "white", fontSize: 13 }}>
+                  <Text style={{ color: "white", fontSize: 11 }}>
                     Tümünü Gör
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
+            <FlatList
+        data={filteredPrefabrik}
+     
+        renderItem={({ item }) => (
+          <RealtorPost
+          GetId={GetIdForCart}
+        
+          HouseId={item.id}
+          price={`${
+            JSON.parse(item.housing_type_data)["price"]
+          } `}
+          housing={item}
+          title={item.housing_title}
+          loading={loadingEstates}
+          location={item.city_title + " / " + item.county_title}
+          image={`${apiUrl}/housing_images/${
+            JSON.parse(item.housing_type_data).image
+          }`}
+          column1_name={`${
+            JSON.parse(item.housing_type_data)[item.column1_name]
+          } `}
+          column1_additional={item.column1_additional}
+          column2_name={`${
+            JSON.parse(item.housing_type_data)[item.column2_name]
+          } `}
+          column2_additional={item.column2_additional}
+          column3_name={`${
+            JSON.parse(item.housing_type_data)[item.column3_name]
+          } `}
+          column3_additional={item.column3_additional}
+          column4_name={`${
+            JSON.parse(item.housing_type_data)[item.column4_name]
+          } `}
+          column4_additional={item.column4_additional}
+          bookmarkStatus={true}
+          dailyRent={false}
+
+        />
+
+        )}
+        keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
+        onEndReached={() => fetchFeaturedEstates(false)}
+        onEndReachedThreshold={0.5}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        ListFooterComponent={loading && !refreshing ? <ActivityIndicator  style={{margin:20}}size="small" color="#000000" /> : null}
+    
+       
+      />
+
+            
           </View>
           <View style={styles.slide4}>
             <View style={{ paddingTop: 0 }}>
@@ -804,6 +906,7 @@ export default function HomePage() {
           onBackdropPress={() => setModalForAddToCart(false)}
           animationType="fade" // veya "fade", "none" gibi
           transparent={true}
+          useNativeDriver={true}
           style={styles.modal4}
         >
           <View style={styles.modalContent4}>

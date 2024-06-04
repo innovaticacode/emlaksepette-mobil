@@ -48,7 +48,7 @@ export default function CreateUserType() {
         setPermissions(response.data.groupedPermissionsWithChecks);
       
 
-        console.log(permissions);
+     
       }
     } catch (error) {
       console.error("Veri getirme hatası:", error);
@@ -79,7 +79,7 @@ export default function CreateUserType() {
       checkedItems.forEach((item) => {
         formData.append("permissions[]", item); // [] kullanarak PHP tarafında bir dizi olarak alınmasını sağlar
       });
-      console.log(formData);
+  
       const response = await axios.post(
         `https://test.emlaksepette.com/api/institutional/roles/${UserID}`,
         {
@@ -95,7 +95,7 @@ export default function CreateUserType() {
       );
         alert('güncellendi')
       // İsteğin başarılı bir şekilde tamamlandığı durum
-      console.log("İstek başarıyla tamamlandı:", response.data);
+     
     } catch (error) {
       // Hata durumunda
 

@@ -460,7 +460,7 @@ export default function Company() {
   const chooseType = (title) => {
     setacccountType(title);
   };
-  console.log(acccountType);
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
