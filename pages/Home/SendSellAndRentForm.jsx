@@ -180,7 +180,6 @@ const [certificate, setcertificate] = useState('')
       setCheckedItems([...checkedItems, description]);
     }
   };
-  console.log(checkedItems)
 
 
   const fetchData = async () => {

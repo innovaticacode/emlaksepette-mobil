@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import ShoppinInfo from "./ShoppinInfo";
-import { Platform } from "react-native";
+import { View, StyleSheet } from "react-native";
+import Lightbox from "react-native-lightbox";
 import { Image } from "react-native-elements";
-import axios from "axios";
+import { Platform } from "react-native";
 import { getValueFor } from "./methods/user";
+
 export default function FloorPlan({ data }) {
   const [user, setUser] = useState({});
 
@@ -18,37 +18,26 @@ export default function FloorPlan({ data }) {
     return `https://test.emlaksepette.com/${partialURL}`;
   };
 
-  console.log(data.project.situations, "asd");
-
   return (
-    <View >
-      <View style={styles.container}>
-        <View
-          style={{
-            width: "100%",
-            padding: 12,
-          }}
-        >
-          {data?.project?.situations?.length > 0 ? (
-            data.project.situations.map((situation, i) => (
-              <View
-                key={i}
-                style={{ width: 200, height: 100, marginBottom: 10 }}
-              >
+    <View style={styles.container}>
+      <View style={styles.imageContainer}>
+        {data?.project?.situations?.length > 0 && (
+          data.project.situations.map((situation, i) => (
+            <View key={i} style={styles.imageWrapper}>
+              <Lightbox>
                 <Image
-                  style={{ width: "100%", height: "100%", resizeMode: "cover" }}
+                  style={styles.image}
                   source={{ uri: getFullImageURL(situation.situation) }}
                 />
-              </View>
-            ))
-          ) : (
-            <Text>No images available</Text>
-          )}
-        </View>
+              </Lightbox>
+            </View>
+          ))
+        )}
       </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#FFFFFF",
@@ -57,7 +46,7 @@ const styles = StyleSheet.create({
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
-        shadowColor: " #e6e6e6",
+        shadowColor: "#e6e6e6",
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 5,
@@ -66,5 +55,22 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  imageContainer: {
+    width: "100%",
+    padding: 12,
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  imageWrapper: {
+    width: "50%", // İki resim yan yana gelmesi için yarısını ayarladık
+    height: 200,
+    marginBottom: 10,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
   },
 });

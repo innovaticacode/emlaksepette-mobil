@@ -53,7 +53,6 @@ export default function Takeds() {
             }
           );
           setTakeds(response.data.boughts);
-          console.log(takeds + "sadsdfsf");
         }
       } catch (error) {
         console.error("eror", error);

@@ -54,7 +54,6 @@ import axios from "axios";
 
 import RNPickerSelect from "react-native-picker-select";
 import { Skeleton } from "@rneui/base";
-import PaymentItem from "../../components/PaymentItem";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -257,7 +256,6 @@ export default function Details({ navigation }) {
         });
 
         setcollections(newCollections);
-        console.log(newCollections, "qwe");
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -418,16 +416,12 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post(
-        "https://test.emlaksepette.com/api/add/collection",
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      )
+      .post("https://test.emlaksepette.com/api/add/collection", collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
       .then((response) => {
         fetchData();
         setaddCollection(false);
@@ -500,7 +494,6 @@ export default function Details({ navigation }) {
             return collection;
           }
         });
-        console.log(newCollections);
         setcollections(newCollections);
       })
       .catch((error) => {
@@ -515,7 +508,6 @@ export default function Details({ navigation }) {
   const GetIdForCart = (id) => {
     setselectedCartItem(id);
     setModalForAddToCart(true);
-    console.log(selectedCartItem);
   };
 
   const addToCard = async () => {
@@ -627,9 +619,7 @@ export default function Details({ navigation }) {
   const [county, setcounty] = useState("");
   const fetchCity = async () => {
     try {
-      const response = await axios.get(
-        "https://test.emlaksepette.com/api/cities"
-      );
+      const response = await axios.get("https://test.emlaksepette.com/api/cities");
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -736,11 +726,6 @@ export default function Details({ navigation }) {
       default:
         postData();
     }
-
-    if (errorMessage) {
-      // ShowAlert(ErrorMessage);
-    }
-    console.log(errorStatu + "error statu");
   };
   const [galleries, setGalleries] = useState();
 
@@ -748,100 +733,9 @@ export default function Details({ navigation }) {
     setGalleries(data.project.images);
   }, [data]);
 
-  var months = [
-    "Ocak",
-    "Şubat",
-    "Mart",
-    "Nisan",
-    "Mayıs",
-    "Haziran",
-    "Temmuz",
-    "Ağustos",
-    "Eylül",
-    "Ekim",
-    "Kasım",
-    "Aralık",
-  ];
-
-  const [paymentItems, setPaymentItems] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
-
-  useEffect(() => {
-    if (data && data.projectHousingsList && paymentModalShowOrder !== null) {
-      let total = 0;
-      const items = [];
-
-      for (
-        let _index = 0;
-        _index <
-        data.projectHousingsList[paymentModalShowOrder][
-          "pay-dec-count" + paymentModalShowOrder
-        ];
-        _index++
-      ) 
-      {
-        const priceString = addDotEveryThreeDigits(
-          data.projectHousingsList[paymentModalShowOrder][
-            `pay_desc_price${paymentModalShowOrder}` + _index
-          ]
-        );
-
-        const price = parseInt(priceString.replace(/\./g, ""), 10);
-        total += price;
-
-        const date = new Date(
-          data.projectHousingsList[paymentModalShowOrder][
-            "pay_desc_date" + paymentModalShowOrder + _index
-          ]
-        );
-
-        items.push(
-          <View key={_index}>
-            <PaymentItem
-              header={`${_index + 1} . Ara Ödeme`}
-              price={price}
-              date={
-                months[date.getMonth()] +
-                ", " +
-                date.getDate() +
-                " " +
-                date.getFullYear()
-              }
-              dFlex="column"
-            />
-          </View>
-        );
-      }
-
-      setTotalPrice(total);
-
-      items.push(
-        <View key="total">
-          <PaymentItem
-            header={`Total`}
-            price={total}
-            date={""}
-            dFlex="column"
-          />
-        </View>
-      );
-
-      setPaymentItems(items);
-    }
-  }, [data, paymentModalShowOrder]);
-
-  const formatAmount = (amount) => {
-  return new Intl.NumberFormat('tr-TR', { 
-    style: 'currency', 
-    currency: 'TRY',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(amount);
-};
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
-
       <Modal
         isVisible={isDrawerOpen}
         onBackdropPress={() => setIsDrawerOpen(false)}
@@ -933,7 +827,7 @@ export default function Details({ navigation }) {
         </View>
       </Modal>
 
-      {/* <View
+      <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
@@ -956,11 +850,20 @@ export default function Details({ navigation }) {
           }
         >
           <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
+            <View style={{ height: 35, width: 35 }}>
+              <ImageBackground
+                source={{
+                  uri: `${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`,
+                }}
+                style={{ width: "100%", height: "100%", marginRight: 10 }}
+                borderRadius={20}
+              />
+            </View>
             <Text
               style={{
                 color: "white",
                 fontWeight: 600,
-                fontSize: 12px,
+                fontSize: "12px",
                 paddingLeft: "10px",
               }}
             >
@@ -985,27 +888,19 @@ export default function Details({ navigation }) {
               />
             </View>
           </View>
-          <View style={{ height: 35, width: 35 }}>
-            <ImageBackground
-              source={{
-                uri: `${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`,
-              }}
-              style={{ width: "100%", height: "100%", marginRight: 10 }}
-              borderRadius={20}
-            />
-          </View>
+
           <Text
             style={{
               color: "white",
               fontWeight: 600,
-              fontSize: 12px,
+              fontSize: "12px",
               paddingLeft: "10px",
             }}
           >
             Proje No: {1000000 + data.project.id}
           </Text>
         </TouchableOpacity>
-      </View> */}
+      </View>
 
       <ScrollView
         scrollEventThrottle={16}
@@ -1261,13 +1156,7 @@ export default function Details({ navigation }) {
                     ]
                   ).includes("taksitli") ? (
                     <SettingsItem
-                      info={
-                        data.projectHousingsList[paymentModalShowOrder][
-                          "installments[]"
-                        ] +
-                        " " +
-                        "Ay Taksitli Fiyat"
-                      }
+                      info="Taksitli 12 Ay Fiyat"
                       numbers={
                         addDotEveryThreeDigits(
                           data.projectHousingsList[paymentModalShowOrder][
@@ -1325,21 +1214,17 @@ export default function Details({ navigation }) {
                       info="Aylık Ödenecek Tutar"
                       numbers={
                         addDotEveryThreeDigits(
-                          parseInt(
-                            data.projectHousingsList[paymentModalShowOrder]['installments-price[]']
+                          (
+                            (data.projectHousingsList[paymentModalShowOrder][
+                              "installments-price[]"
+                            ] -
+                              data.projectHousingsList[paymentModalShowOrder][
+                                "advance[]"
+                              ]) /
+                            data.projectHousingsList[paymentModalShowOrder][
+                              "installments[]"
+                            ]
                           ).toFixed(0)
-                         
-                          -
-                          parseInt(
-                            (totalPrice + parseInt( data.projectHousingsList[paymentModalShowOrder]['advance[]'])) 
-                          ).toFixed(0)
-                        
-
-                          /
-                          parseInt(
-                            data.projectHousingsList[paymentModalShowOrder]['installments[]']
-                          ).toFixed(0)
-                        
                         ) + "₺"
                       }
                     />
@@ -1348,14 +1233,6 @@ export default function Details({ navigation }) {
                   )
                 ) : (
                   <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
-                )}
-                {data &&
-                data?.projectHousingsList &&
-                paymentModalShowOrder == !null &&
-                paymentItems ? (
-                  paymentItems
-                ) : (
-                  <Text>ara ödeme yok</Text>
                 )}
               </View>
 

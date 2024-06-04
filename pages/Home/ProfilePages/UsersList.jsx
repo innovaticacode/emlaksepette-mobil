@@ -73,7 +73,6 @@ export default function UsersList() {
     setselectedUser(UserID);
     setselectedUserName(name)
   };
-  console.log(selectedUser);
   return (
     <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
       <View style={{ backgroundColor: "#ffffff", padding: 10 }}>
