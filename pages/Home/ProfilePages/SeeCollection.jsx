@@ -729,7 +729,7 @@ export default function SeeCollection() {
                           key={item.room_order}
                           data={item}
                           bookmarkStatus={false}
-                          openmodal={openModal}
+                          openModal={openModal}
                           openFormModal={OpenFormModal}
                           roomOrder={item.room_order}
                           GetIdForCart={GetIdForCart}

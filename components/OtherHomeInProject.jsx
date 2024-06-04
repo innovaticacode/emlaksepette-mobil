@@ -19,7 +19,7 @@ export default function OtherHomeInProject({
   getBlockItems,
   setSelectedTab,
   itemCount,
-  openmodal,
+  openModal,
   OpenFormModal,
   data,
   getLastItemCount,
@@ -129,7 +129,7 @@ export default function OtherHomeInProject({
                     shareSaleEmpty = {!data.projectHousingsList[i + 1]["share_sale[]"] || data.projectHousingsList[i + 1]["share_sale[]"] === "[]"}
                     soldCheck={sold && ["1", "0"].includes(sold.status)}
                     sumCartOrderQt={data.sumCartOrderQt}
-                    openmodal={openmodal}
+                    openModal={openModal}
                     bookmarkStatus={true}
                     projectDiscountAmount={projectDiscountAmount}
                     sold={sold}

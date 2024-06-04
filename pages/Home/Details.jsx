@@ -57,6 +57,7 @@ import RNPickerSelect from "react-native-picker-select";
 import { StatusBar } from "expo-status-bar";
 
 import { Skeleton } from "@rneui/base";
+import PaymentItem from "../../components/PaymentItem";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -118,7 +119,7 @@ export default function Details({ navigation }) {
     apiRequestGet("project/" + ProjectId).then((res) => {
       setData(res.data);
     });
-  },[ProjectId]);
+  }, [ProjectId]);
 
   const getLastItemCount = () => {
     var lastBlockItemsCount = 0;
@@ -741,6 +742,89 @@ export default function Details({ navigation }) {
   useEffect(() => {
     setGalleries(data.project.images);
   }, [data]);
+  var months = [
+    "Ocak",
+    "Şubat",
+    "Mart",
+    "Nisan",
+    "Mayıs",
+    "Haziran",
+    "Temmuz",
+    "Ağustos",
+    "Eylül",
+    "Ekim",
+    "Kasım",
+    "Aralık",
+  ];
+
+  const [paymentItems, setPaymentItems] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  const formatPrice = (price) => addDotEveryThreeDigits(Math.round(price));
+
+  useEffect(() => {
+    setPaymentItems([]);
+    setTotalPrice(0);
+    if (data && data.projectHousingsList && paymentModalShowOrder !== null) {
+      let total = 0;
+      const items = [];
+
+      for (
+        let _index = 0;
+        _index <
+        data.projectHousingsList[paymentModalShowOrder][
+          "pay-dec-count" + paymentModalShowOrder
+        ];
+        _index++
+      ) {
+        const priceString = addDotEveryThreeDigits(
+          data.projectHousingsList[paymentModalShowOrder][
+            `pay_desc_price${paymentModalShowOrder}` + _index
+          ]
+        );
+
+        const price = parseInt(priceString.replace(/\./g, ""), 10);
+        total += price;
+
+        const date = new Date(
+          data.projectHousingsList[paymentModalShowOrder][
+            "pay_desc_date" + paymentModalShowOrder + _index
+          ]
+        );
+
+        const padZero = (num) => (num < 10 ? `0${num}` : num);
+
+        const formattedDate = `${padZero(date.getDate())}.${padZero(
+          date.getMonth() + 1
+        )}.${date.getFullYear()}`;
+
+        items.push(
+          <View key={_index}>
+            <PaymentItem
+              header={`${_index + 1} . Ara Ödeme`}
+              price={formatPrice(price)}
+              date={formattedDate}
+              dFlex="column"
+            />
+          </View>
+        );
+      }
+      console.log(items);
+
+      setTotalPrice(total);
+
+      setPaymentItems(items);
+    }
+  }, [data, paymentModalShowOrder]);
+
+  const formatAmount = (amount) => {
+    return new Intl.NumberFormat("tr-TR", {
+      style: "currency",
+      currency: "TRY",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -1109,7 +1193,7 @@ export default function Details({ navigation }) {
             getLastItemCount={getLastItemCount}
             setSelectedTab={setSelectedTab}
             selectedTab={selectedTab}
-            openmodal={openModal}
+            openModal={openModal}
             getBlockItems={getBlockItems}
             OpenFormModal={OpenFormModal}
           />
@@ -1175,7 +1259,13 @@ export default function Details({ navigation }) {
                     ]
                   ).includes("taksitli") ? (
                     <SettingsItem
-                      info="Taksitli 12 Ay Fiyat"
+                      info={
+                        data.projectHousingsList[paymentModalShowOrder][
+                          "installments[]"
+                        ] +
+                        " " +
+                        "Ay Taksitli Fiyat"
+                      }
                       numbers={
                         addDotEveryThreeDigits(
                           data.projectHousingsList[paymentModalShowOrder][
@@ -1253,6 +1343,7 @@ export default function Details({ navigation }) {
                 ) : (
                   <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
                 )}
+                {paymentItems && paymentItems}
               </View>
 
               <TouchableOpacity
@@ -1947,7 +2038,8 @@ const styles = StyleSheet.create({
         paddingTop: 25,
       },
     }),
-  }, clubRateContainer: {
+  },
+  clubRateContainer: {
     width: 50,
     height: "100%",
     backgroundColor: "transparent",
@@ -1960,7 +2052,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 20,
     zIndex: 1,
-  },  commissionBadge: {
+  },
+  commissionBadge: {
     position: "absolute",
     right: 0,
     bottom: 60,
@@ -2139,5 +2232,4 @@ const pickerSelectStyles = StyleSheet.create({
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon
   },
- 
 });
