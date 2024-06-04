@@ -647,7 +647,7 @@ console.log(messageUpdateCart)
                   }}
                 >
                   <Text>%2 Kapora:</Text>
-                  <Text>{addDotEveryThreeDigits(Cart?.price *2 / 100 )} ₺</Text>
+                  <Text>{addDotEveryThreeDigits(Math.round( Cart?.price *2 / 100 ))} ₺</Text>
                 </View>
 
                </>

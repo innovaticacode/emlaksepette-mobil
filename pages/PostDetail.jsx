@@ -468,8 +468,8 @@ export default function PostDetail() {
                   style={{
                     color: "white",
                     fontWeight: 600,
-                    fontSize: "12px",
-                    paddingLeft: "10px",
+                    fontSize: 12,
+                    paddingLeft: 10,
                   }}
                 >
                   {ProjectHomeData?.project?.user?.name}
@@ -498,8 +498,8 @@ export default function PostDetail() {
                   style={{
                     color: "white",
                     fontWeight: 600,
-                    fontSize: "12px",
-                    paddingLeft: "10px",
+                    fontSize: 12,
+                    paddingLeft: 10,
                   }}
                 >
                   İlan No: {1000000 + ProjectHomeData?.project?.id + HomeId}

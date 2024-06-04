@@ -466,7 +466,7 @@ export default function Collections() {
             <View style={styles.closeButtonContainer}>
               <Text
                 style={{
-                  fontSize: "12px",
+                  fontSize: 12,
                   fontWeight: "600",
                   color: "black",
                 }}
@@ -495,7 +495,7 @@ export default function Collections() {
               />
               <Text
                 style={{
-                  fontSize: "10px",
+                  fontSize: 10,
                   marginBottom: 5,
                   color: "black",
                   marginTop: 10,
