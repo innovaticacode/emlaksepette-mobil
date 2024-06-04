@@ -264,31 +264,7 @@ export default function Collections() {
         }}
       >
         <View style={styles.container}>
-          {/* <View
-            style={{
-              display: showAlert ? "flex" : "none",
-              justifyContent: "center",
-              alignItems: "center",
-              paddingBottom: 15,
-            }}
-          >
-            <View
-              style={{
-                padding: 11,
-                backgroundColor: "#6fdb4e97",
-                display: showAlert ? "flex" : "none",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 15,
-                borderRadius: 5,
-              }}
-            >
-              <Text style={{ textAlign: "center", color: "white" }}>
-                Bağlantı Panoya Kopyalandı
-              </Text>
-              <Heart name="check" size={20} color={"white"} />
-            </View>
-          </View> */}
+      
 
           <ScrollView
             showsVerticalScrollIndicator={false}

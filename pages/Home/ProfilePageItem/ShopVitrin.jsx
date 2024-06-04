@@ -13,8 +13,13 @@ import CommentItem from "../RealtorPages/CommentItem";
 import RealtorPost from "../../../components/RealtorPost";
 import ProjectPost from "../../../components/ProjectPost";
 import { Platform } from "react-native";
+import Modal from "react-native-modal";
+import axios from "axios";
+import { getValueFor } from "../../../components/methods/user";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ShopVitrin({ data, housingdata }) {
+  const navigation=useNavigation()
   const ApiUrl = "https://test.emlaksepette.com/storage/store_banners/";
   const ApiUrls = "https://test.emlaksepette.com";
   const [banners, setBanners] = useState([]);
@@ -46,7 +51,46 @@ export default function ShopVitrin({ data, housingdata }) {
     };
     fetchFeaturedProjects();
   }, [data]);
+  const [user, setuser] = useState({});
+  useEffect(() => {
+    getValueFor("user", setuser);
+  }, []);
+  const [ModalForAddToCart, setModalForAddToCart] = useState(false);
+  const [selectedCartItem, setselectedCartItem] = useState(0);
+  const GetIdForCart = (id) => {
+    setselectedCartItem(id);
+    setModalForAddToCart(true);
+    
+  };
+    
+  const addToCard = async () => {
+    const formData = new FormData();
+    formData.append("id", selectedCartItem);
+    formData.append("isShare", null);
+    formData.append("numbershare", null);
+    formData.append("qt", 1);
+    formData.append("type", "housing");
+    formData.append("project", null);
+    formData.append("clear_cart", "no");
 
+    try {
+      if (user?.access_token) {
+        const response = await axios.post(
+          "https://test.emlaksepette.com/api/institutional/add_to_cart",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+        setModalForAddToCart(false);
+        navigation.navigate("Sepetim");
+      }
+    } catch (error) {
+      console.error("post isteği olmadı", error);
+    }
+  };
   return (
     <ScrollView
       style={{ flex: 1, paddingLeft: 15, paddingRight: 15 }}
@@ -113,6 +157,7 @@ export default function ShopVitrin({ data, housingdata }) {
                 </TouchableOpacity>
               </View>
               <RealtorPost
+              GetId={GetIdForCart}
                 title={`${housingdata[key].title}`}
                 price={`${
                   JSON.parse(housingdata[key].housing_type_data)["price"]
@@ -169,6 +214,59 @@ export default function ShopVitrin({ data, housingdata }) {
           ))}
         </View>
       )}
+        <Modal
+          isVisible={ModalForAddToCart}
+          onBackdropPress={() => setModalForAddToCart(false)}
+          animationType="fade" // veya "fade", "none" gibi
+          transparent={true}
+          style={styles.modal4}
+        >
+          <View style={styles.modalContent4}>
+            <View style={{ padding: 10, gap: 10 }}>
+              <Text style={{ textAlign: "center" }}>
+                #1000{selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
+                Eminmisiniz?
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  gap: 20,
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "green",
+                    padding: 10,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    borderRadius: 5,
+                  }}
+                  onPress={() => {
+                    addToCard();
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Sepete Ekle</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#e44242",
+                    padding: 10,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    borderRadius: 5,
+                  }}
+                  onPress={() => {
+                    setModalForAddToCart(false);
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Vazgeç</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
     </ScrollView>
   );
 }
@@ -225,5 +323,16 @@ const styles = StyleSheet.create({
   },
   star: {
     top: 3,
+  },
+  modal4: {
+    justifyContent: "center",
+    margin: 0,
+    padding: 20,
+    backgroundColor: "#1414148c",
+  },
+  modalContent4: {
+    backgroundColor: "#fefefe",
+    padding: 20,
+    borderRadius: 5,
   },
 });

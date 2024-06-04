@@ -54,6 +54,7 @@ import axios from "axios";
 
 import RNPickerSelect from "react-native-picker-select";
 import { Skeleton } from "@rneui/base";
+import PaymentItem from "../../components/PaymentItem";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -747,10 +748,100 @@ export default function Details({ navigation }) {
     setGalleries(data.project.images);
   }, [data]);
 
+  var months = [
+    "Ocak",
+    "Şubat",
+    "Mart",
+    "Nisan",
+    "Mayıs",
+    "Haziran",
+    "Temmuz",
+    "Ağustos",
+    "Eylül",
+    "Ekim",
+    "Kasım",
+    "Aralık",
+  ];
 
+  const [paymentItems, setPaymentItems] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  useEffect(() => {
+    if (data && data.projectHousingsList && paymentModalShowOrder !== null) {
+      let total = 0;
+      const items = [];
+
+      for (
+        let _index = 0;
+        _index <
+        data.projectHousingsList[paymentModalShowOrder][
+          "pay-dec-count" + paymentModalShowOrder
+        ];
+        _index++
+      ) 
+      {
+        const priceString = addDotEveryThreeDigits(
+          data.projectHousingsList[paymentModalShowOrder][
+            `pay_desc_price${paymentModalShowOrder}` + _index
+          ]
+        );
+
+        const price = parseInt(priceString.replace(/\./g, ""), 10);
+        total += price;
+
+        const date = new Date(
+          data.projectHousingsList[paymentModalShowOrder][
+            "pay_desc_date" + paymentModalShowOrder + _index
+          ]
+        );
+
+        items.push(
+          <View key={_index}>
+            <PaymentItem
+              header={`${_index + 1} . Ara Ödeme`}
+              price={price}
+              date={
+                months[date.getMonth()] +
+                ", " +
+                date.getDate() +
+                " " +
+                date.getFullYear()
+              }
+              dFlex="column"
+            />
+          </View>
+        );
+      }
+
+      setTotalPrice(total);
+
+      items.push(
+        <View key="total">
+          <PaymentItem
+            header={`Total`}
+            price={total}
+            date={""}
+            dFlex="column"
+          />
+        </View>
+      );
+
+      setPaymentItems(items);
+    }
+  }, [data, paymentModalShowOrder]);
+
+  const formatAmount = (amount) => {
+  return new Intl.NumberFormat('tr-TR', { 
+    style: 'currency', 
+    currency: 'TRY',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+};
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
+
       <Modal
         isVisible={isDrawerOpen}
         onBackdropPress={() => setIsDrawerOpen(false)}
@@ -869,7 +960,7 @@ export default function Details({ navigation }) {
               style={{
                 color: "white",
                 fontWeight: 600,
-                fontSize: "12px",
+                fontSize: 12px,
                 paddingLeft: "10px",
               }}
             >
@@ -907,7 +998,7 @@ export default function Details({ navigation }) {
             style={{
               color: "white",
               fontWeight: 600,
-              fontSize: "12px",
+              fontSize: 12px,
               paddingLeft: "10px",
             }}
           >
@@ -1170,7 +1261,13 @@ export default function Details({ navigation }) {
                     ]
                   ).includes("taksitli") ? (
                     <SettingsItem
-                      info="Taksitli 12 Ay Fiyat"
+                      info={
+                        data.projectHousingsList[paymentModalShowOrder][
+                          "installments[]"
+                        ] +
+                        " " +
+                        "Ay Taksitli Fiyat"
+                      }
                       numbers={
                         addDotEveryThreeDigits(
                           data.projectHousingsList[paymentModalShowOrder][
@@ -1228,17 +1325,21 @@ export default function Details({ navigation }) {
                       info="Aylık Ödenecek Tutar"
                       numbers={
                         addDotEveryThreeDigits(
-                          (
-                            (data.projectHousingsList[paymentModalShowOrder][
-                              "installments-price[]"
-                            ] -
-                              data.projectHousingsList[paymentModalShowOrder][
-                                "advance[]"
-                              ]) /
-                            data.projectHousingsList[paymentModalShowOrder][
-                              "installments[]"
-                            ]
+                          parseInt(
+                            data.projectHousingsList[paymentModalShowOrder]['installments-price[]']
                           ).toFixed(0)
+                         
+                          -
+                          parseInt(
+                            (totalPrice + parseInt( data.projectHousingsList[paymentModalShowOrder]['advance[]'])) 
+                          ).toFixed(0)
+                        
+
+                          /
+                          parseInt(
+                            data.projectHousingsList[paymentModalShowOrder]['installments[]']
+                          ).toFixed(0)
+                        
                         ) + "₺"
                       }
                     />
@@ -1247,6 +1348,14 @@ export default function Details({ navigation }) {
                   )
                 ) : (
                   <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
+                )}
+                {data &&
+                data?.projectHousingsList &&
+                paymentModalShowOrder == !null &&
+                paymentItems ? (
+                  paymentItems
+                ) : (
+                  <Text>ara ödeme yok</Text>
                 )}
               </View>
 
@@ -1873,7 +1982,7 @@ export default function Details({ navigation }) {
         <Modal
           isVisible={ModalForAddToCart}
           onBackdropPress={() => setModalForAddToCart(false)}
-          animationType="fade" 
+          animationType="fade"
           transparent={true}
           style={styles.modal4}
         >
