@@ -58,7 +58,6 @@ import { StatusBar } from "expo-status-bar";
 
 import { Skeleton } from "@rneui/base";
 
-
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [IsOpenSheet, setIsOpenSheet] = useState(false);
@@ -119,7 +118,7 @@ export default function Details({ navigation }) {
     apiRequestGet("project/" + ProjectId).then((res) => {
       setData(res.data);
     });
-  }, [ProjectId]);
+  },[ProjectId]);
 
   const getLastItemCount = () => {
     var lastBlockItemsCount = 0;
@@ -420,12 +419,16 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post("https://test.emlaksepette.com/api/add/collection", collectionData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.access_token}`,
-        },
-      })
+      .post(
+        "https://test.emlaksepette.com/api/add/collection",
+        collectionData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        }
+      )
       .then((response) => {
         fetchData();
         setaddCollection(false);
@@ -623,7 +626,9 @@ export default function Details({ navigation }) {
   const [county, setcounty] = useState("");
   const fetchCity = async () => {
     try {
-      const response = await axios.get("https://test.emlaksepette.com/api/cities");
+      const response = await axios.get(
+        "https://test.emlaksepette.com/api/cities"
+      );
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -953,7 +958,17 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
           </View>
-
+          <View style={styles.clubRateContainer}>
+            {user &&
+              user.corporate_type == "Emlak Ofisi" &&
+              data.project.club_rate && (
+                <View style={styles.commissionBadge}>
+                  <Text style={styles.commissionText}>
+                    %{data.project.club_rate} KOMİSYON!
+                  </Text>
+                </View>
+              )}
+          </View>
           <Swiper
             style={{ height: 250 }}
             showsPagination={false}
@@ -1932,6 +1947,35 @@ const styles = StyleSheet.create({
         paddingTop: 25,
       },
     }),
+  }, clubRateContainer: {
+    width: 50,
+    height: "100%",
+    backgroundColor: "transparent",
+    position: "absolute",
+    right: 0,
+    top: 5,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "start",
+    alignItems: "center",
+    gap: 20,
+    zIndex: 1,
+  },  commissionBadge: {
+    position: "absolute",
+    right: 0,
+    bottom: 60,
+    width: 120,
+    height: 30,
+    borderBottomLeftRadius: 15,
+    borderTopLeftRadius: 15,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  commissionText: {
+    color: "green",
+    fontWeight: "700",
+    fontSize: "13",
   },
   modal: {
     margin: 0,
@@ -1962,7 +2006,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     position: "absolute",
     right: 10,
-    top: 10,
+    top: 15,
     display: "flex",
     flexDirection: "column",
     justifyContent: "start",
@@ -2095,4 +2139,5 @@ const pickerSelectStyles = StyleSheet.create({
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon
   },
+ 
 });

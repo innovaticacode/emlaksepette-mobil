@@ -707,8 +707,73 @@ export default function Basket() {
                     )}
                   </View>
                 </View>
+<<<<<<< HEAD
               )}
             </>
+=======
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>Toplam Fiyatı:</Text>
+                  <Text>{addDotEveryThreeDigits(Cart?.price)} ₺</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>%2 Kapora:</Text>
+                  <Text>{addDotEveryThreeDigits(Math.round( Cart?.price *2 / 100 ))} ₺</Text>
+                </View>
+
+               </>
+                )}
+            
+
+                {/* 
+                                    <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                        <Text>Toplam Fiyat:</Text>
+                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
+                                    </View>
+                                      {
+                                        saleType=='kiralik'?
+                                        <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                        <Text>Bir Kira Kapora</Text>
+                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
+                                    </View>:
+                                          type.hasCounter==true? 
+                                       <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                       <Text>%2 Kapora</Text>
+                                       <Text>{addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺</Text>
+                                   </View>:  <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                       <Text>%2 Kapora</Text>
+                                       <Text>{addDotEveryThreeDigits(Cart.amount * 2 /100)} ₺</Text>
+                                   </View>
+                                      }
+
+                                      {
+                                          type.hasCounter==true?
+                                          <>
+                                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                          <Text>Emlak Kulüp İndirimi</Text>
+                                          <Text>%{Cart.discount_rate}</Text>
+                                      </View>
+                                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                          <Text>İndirimli Fiyat</Text>
+                                          <Text>{DiscountPrice} ₺</Text>
+                                      </View>
+                                          </>
+                                          :<></>
+                                      
+                                      }
+                               */}
+              </View>
+            </View>
+>>>>>>> 8da7fbd29bd90836a0c5fe419b26a06be14abb96
           )}
 
           <View style={styles.acceptCart}>
