@@ -13,6 +13,7 @@ import ShoppinInfo from "./ShoppinInfo";
 import Posts from "./Posts";
 import { apiRequestGet } from "./methods/apiRequest";
 import { Platform } from "react-native";
+import { getValueFor } from "./methods/user";
 export default function OtherHomeInProject({
   selectedTab,
   getBlockItems,
@@ -29,7 +30,11 @@ export default function OtherHomeInProject({
   const [tabs, setTabs] = useState(0);
   const [rooms, setRooms] = useState([]);
   const Home = [];
+  const [user, setUser] = useState({});
 
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
   const projectCartOrders = data.projectCartOrders || [];
   const projectHousingsList = data.projectHousingsList || [];
 
@@ -90,8 +95,8 @@ export default function OtherHomeInProject({
                 const previousBlockHousingCount = 0;
                 const key = i;
                 const isUserSame =
-                  sold && currentUser
-                    ? sold.user_id === currentUser.uid
+                  sold && user
+                    ? sold.user_id === user?.id
                     : false;
                 const projectDiscountAmount = getDiscountAmount(
                   data.project,
