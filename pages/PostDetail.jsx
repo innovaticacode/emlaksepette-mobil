@@ -52,6 +52,8 @@ import { getValueFor } from "../components/methods/user";
 import OtherHomeInProject from "../components/OtherHomeInProject";
 import { ActivityIndicator } from "react-native-paper";
 import FloorPlan from "../components/FloorPlan";
+import { Svg } from "react-native-svg";
+import { Polyline } from "react-native-maps";
 
 export default function PostDetail() {
   const apiUrl = "https://test.emlaksepette.com/";
@@ -69,15 +71,24 @@ export default function PostDetail() {
     setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
   };
   const route = useRoute();
+  const [loading, setLoading] = useState(true);
 
   const {
     HomeId,
     discount,
     isLoading,
-    isShareSale,
+    roomData,
     numberOfShare,
     price,
-    projectId
+    projectId,
+    sold,
+    discountedPrice,
+    discountAmount,
+    offSaleCheck,
+    soldCheck,
+    shareSale,
+    shareSaleEmpty,
+    sumCartOrderQt,
   } = route.params;
 
   const navigation = useNavigation();
@@ -115,6 +126,7 @@ export default function PostDetail() {
       setProjectHomeData(res.data);
     });
   }, []);
+
   const [pagination, setPagination] = useState(0);
   const handlePageChange = (pageNumber) => {
     setPagination(pageNumber);
@@ -148,35 +160,41 @@ export default function PostDetail() {
   };
 
   const [addCollection, setaddCollection] = useState(false);
-  const [collections, setcollections] = useState([]);
+  const [collections, setCollections] = useState([]);
 
   const [user, setUser] = useState({});
 
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
-  useEffect(() => {
-    getValueFor("user", setUser);
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = async (token, setCollections) => {
     try {
       const response = await axios.get(
         "https://test.emlaksepette.com/api/getCollections",
         {
           headers: {
-            Authorization: `Bearer ${user.access_token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      setcollections(response?.data.collections);
+      if (response?.data?.collections) {
+        setCollections(response.data.collections);
+      } else {
+        setCollections([]);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
-    } finally {
     }
   };
   useEffect(() => {
-    fetchData();
+    getValueFor("user", setUser);
+  }, []);
+
+  useEffect(() => {
+    if (user?.access_token) {
+      fetchData(user.access_token, setCollections);
+    }
   }, [user]);
+
   const addCollectionPost = () => {
     const collectionData = {
       collection_name: newCollectionNameCreate,
@@ -196,7 +214,7 @@ export default function PostDetail() {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
+            Authorization: `Bearer ${user?.access_token}`,
           },
         }
       )
@@ -299,20 +317,22 @@ export default function PostDetail() {
     setPaymentModalShowOrder(no);
     setFormVisible(!FormVisible);
   };
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (isLoading) {
-      setTimeout(() => {
-       
-        setLoading(false);
-      }, 1000);
-    }
-  }, [isLoading]);
+    setLoading(true);
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500);
+
+    // Cleanup function to clear the timeout if the component unmounts
+    return () => clearTimeout(timer);
+  }, [HomeId, projectId]); // HomeId ve projectId değiştiğinde effect tekrar çalışır
+
+  const formatPrice = (price) => addDotEveryThreeDigits(Math.round(price));
 
   return (
     <>
-      {isLoading ? (
+      {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#000000" />
         </View>
@@ -425,7 +445,7 @@ export default function PostDetail() {
                 });
               }}
               style={{
-                padding: 5,
+                padding: 10,
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
@@ -488,15 +508,13 @@ export default function PostDetail() {
             </TouchableOpacity>
           </View>
 
-          <ScrollView
-            scrollEventThrottle={16}
-          >
-            <View style={{ height: 250 }}>
+          <ScrollView scrollEventThrottle={16}>
+            <View style={{ height: 250, }}>
               <View style={styles.pagination}>
                 <View
                   style={{
                     backgroundColor: "#333",
-                    padding: 5,
+                    padding: 10,
                     paddingLeft: 8,
                     paddingRight: 8,
                     borderRadius: 5,
@@ -525,7 +543,18 @@ export default function PostDetail() {
                   </View>
                 </TouchableOpacity>
               </View>
+              <View style={styles.clubRateContainer}>
 
+              {user &&
+                user.corporate_type == "Emlak Ofisi" &&
+                ProjectHomeData.project.club_rate && (
+                  <View style={styles.commissionBadge}>
+                    <Text style={styles.commissionText}>
+                      %{ProjectHomeData.project.club_rate} KOMİSYON!
+                    </Text>
+                  </View>
+                )}
+                   </View>
               <Swiper
                 style={{ height: 250 }}
                 showsPagination={false}
@@ -565,6 +594,7 @@ export default function PostDetail() {
                   fontSize: 11,
                   color: "#333",
                   fontWeight: "700",
+                  marginTop: 5,
                 }}
               >
                 {ProjectHomeData?.project?.city?.title
@@ -577,6 +607,7 @@ export default function PostDetail() {
                   fontSize: 14,
                   color: "#264ABB",
                   fontWeight: "700",
+                  marginTop: 5,
                 }}
               >
                 {ProjectHomeData?.projectHousingsList[HomeId]
@@ -589,10 +620,164 @@ export default function PostDetail() {
                     ProjectHomeData.project.step1_slug.charAt(0).toUpperCase() + // İlk harfi büyütme
                     ProjectHomeData.project.step1_slug.slice(1) // Geri kalanı olduğu gibi bırakma
                   : ""}
-
-
-
               </Text>
+
+              {offSaleCheck && !soldCheck && shareSaleEmpty ? (
+                <>
+                  {discountAmount != 0 ? (
+                    <View style={styles.discountContainer}>
+                      <Svg
+                        viewBox="0 0 24 24"
+                        width={18}
+                        height={18}
+                        stroke="#EA2B2E"
+                        strokeWidth={2}
+                        fill="#EA2B2E"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="css-i6dzq1"
+                      >
+                        <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+                        <Polyline points="17 18 23 18 23 12" />
+                      </Svg>
+                      <Text style={styles.originalPrice}>
+                        <Text style={styles.strikethrough}>{price} ₺</Text>
+                      </Text>
+                      <Text style={styles.discountedPrice}>
+                        {discountedPrice} ₺
+                      </Text>
+                    </View>
+                  ) : (
+                    <View>
+                      <Text style={styles.regularPrice}>{price} ₺</Text>
+                    </View>
+                  )}
+                  {discountAmount > 0 && (
+                    <View>
+                      <Text style={styles.discountText}>
+                        {discountAmount} ₺ indirim
+                      </Text>
+                    </View>
+                  )}
+                </>
+              ) : (shareSale &&
+                  shareSale !== "[]" &&
+                  sumCartOrderQt[HomeId]?.qt_total !== numberOfShare) ||
+                (shareSale && shareSale !== "[]" && !sumCartOrderQt[HomeId]) ? (
+                <View>
+                  <Text style={styles.regularPrice}>
+                    {shareSale && shareSale !== "[]" && numberOfShare !== 0 && (
+                      <Text style={styles.shareSaleText}>
+                        1/{numberOfShare}
+                      </Text>
+                    )}
+                    {" Pay Fiyatı - "}
+                    {price}₺
+                  </Text>
+                </View>
+              ) : null}
+            </View>
+
+            <View style={styles.priceAndButtons}>
+              <View style={styles.btns}>
+                <View style={{ width: "50%" }}>
+                  {sold ? (
+                    sold.status == 1 ? (
+                      <TouchableOpacity style={styles.sold}>
+                        <Text style={styles.soldText}>Satıldı</Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity style={styles.pending}>
+                        <Text style={styles.pendingText}>Rezerve Edildi</Text>
+                      </TouchableOpacity>
+                    )
+                  ) : roomData["off_sale[]"] !== "[]" ? (
+                    <TouchableOpacity style={styles.offSale} disabled>
+                      <Text style={styles.offSaleText}>Satışa Kapalı</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <View style={styles.priceContainer}>
+                      <TouchableOpacity
+                        style={styles.addBasket}
+                        onPress={() => GetIdForCart(HomeId)}
+                      >
+                        <Text style={styles.addBasketText}>Sepete Ekle</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+
+                <View style={{ width: "50%" }}>
+                  {sold ? (
+                    sold.is_show_user === "on" ? (
+                      <TouchableOpacity style={styles.showCustomer}>
+                        <Text style={styles.showCustomerText}>Komşumu Gör</Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <TouchableOpacity
+                        style={styles.payDetailBtn}
+                        onPress={openModal}
+                      >
+                        <Text style={styles.payDetailText}>Ödeme Detayı</Text>
+                      </TouchableOpacity>
+                    )
+                  ) : roomData["off_sale[]"] !== "[]" ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        openFormModal(HomeId);
+                        GetID(HomeId);
+                      }}
+                      style={styles.payDetailBtn}
+                    >
+                      <Text style={styles.payDetailText}>Başvuru Yap</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.payDetailBtn}
+                      onPress={() => openModal(HomeId)}
+                    >
+                      <Text style={styles.payDetailText}>Ödeme Detayı</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </View>
+            </View>
+            <View>
+              {roomData["projected_earnings[]"] && (
+                <SettingsItem
+                  info="Öngörülen Yıllık Kazanç"
+                  color={"green"}
+                  fontWeight={"700"}
+                  icon={
+                    <LinkIcon3
+                      name="arrow-up-circle"
+                      size={15}
+                      color={"green"}
+                    />
+                  }
+                  numbers={"%" + roomData["projected_earnings[]"]}
+                />
+              )}
+            </View>
+            <View>
+              {roomData["swap[]"] && (
+                <SettingsItem
+                  info="Takas Başvurusu Yap"
+                  color={"orange"}
+                  fontWeight={"700"}
+                  icon={<LinkIcon3 name="plus" size={15} color={"orange"} />}
+                />
+              )}
+            </View>
+            <View>
+              {roomData["off_sale[]"] && (
+                <SettingsItem
+                  info="Koleksiyona Ekle"
+                  color={"red"}
+                  fontWeight={"700"}
+                  icon={<LinkIcon3 name="bookmark" size={15} color={"red"} />}
+                />
+              )}
             </View>
             <View>
               <SliderMenuPostDetails
@@ -612,17 +797,17 @@ export default function PostDetail() {
                 getLastItemCount={getLastItemCount}
                 setSelectedTab={setSelectedTab}
                 selectedTab={selectedTab}
-                openmodal={openModal}
+                openModal={openModal}
                 getBlockItems={getBlockItems}
                 OpenFormModal={OpenFormModal}
               />
             )}
             {tabs == 1 && <PostCaption data={ProjectHomeData} />}
             {tabs == 2 && (
-              <DetailsSettings roomOrder={HomeId} data={ProjectHomeData} />
+              <DetailsSettings HomeId={HomeId} data={ProjectHomeData} />
             )}
             {tabs == 3 && (
-              <PostPayment roomOrder={HomeId} data={ProjectHomeData} />
+              <PostPayment HomeId={HomeId} data={ProjectHomeData} />
             )}
             {tabs == 4 && <PostMap data={ProjectHomeData} />}
             {tabs == 5 && <FloorPlan data={ProjectHomeData} />}
@@ -799,7 +984,7 @@ export default function PostDetail() {
                   <Text
                     style={{
                       fontWeight: "bold",
-                      fontSize: 12,
+                      fontSize: 14,
                       textAlign: "center",
                     }}
                   >
@@ -1314,13 +1499,27 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     width: 320,
   },
+  clubRateContainer: {
+    width: 50,
+    height: "100%",
+    backgroundColor: "transparent",
+    position: "absolute",
+    right: 0,
+    top: 5,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "start",
+    alignItems: "center",
+    gap: 20,
+    zIndex: 1,
+  },
   ıconContainer: {
     width: 50,
     height: "100%",
     backgroundColor: "transparent",
     position: "absolute",
     right: 10,
-    top: 10,
+    top: 15,
     display: "flex",
     flexDirection: "column",
     justifyContent: "start",
@@ -1396,7 +1595,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   other: {
-    padding: 5,
+    padding: 10,
     top: 0,
 
     backgroundColor: "#FFFFFF",
@@ -1460,5 +1659,164 @@ const styles = StyleSheet.create({
   discountContainer: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  discountedPrice: {
+    color: "#27bb53",
+    fontWeight: "700",
+    marginTop: 5,
+    fontSize: 14,
+    position: "relative",
+    marginLeft: 5,
+  },
+  regularPrice: {
+    color: "#274abb",
+    fontWeight: "700",
+    marginTop: 5,
+    fontSize: 14,
+    textAlign: "center",
+  },
+  discountText: {
+    color: "red",
+    fontSize: 11,
+    padding: 10,
+  },
+  shareSaleText: {
+    width: "100%",
+    color: "#274abb",
+    fontWeight: "700",
+    marginTop: 5,
+    fontSize: 14,
+    position: "relative",
+  },
+  originalPrice: {
+    marginLeft: 5,
+  },
+  strikethrough: {
+    textDecorationLine: "line-through",
+    color: "#ea2a28",
+    fontWeight: "700",
+    marginTop: 5,
+    fontSize: 11,
+  },
+  offSale: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    padding: 10,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "red",
+  },
+  offSaleText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 12,
+  },
+  sold: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    padding: 10,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "red",
+  },
+  soldText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 12,
+  },
+  payDetailBtn: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    padding: 10,
+    alignItems: "center",
+    backgroundColor: "#000000",
+  },
+  payDetailText: {
+    fontWeight: "500",
+    fontSize: 12,
+    color: "white",
+  },
+  captionAndIcons: {
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+  },
+  caption: {
+    width: "70%",
+  },
+  icons: {
+    display: "flex",
+    flexDirection: "row",
+    width: "25%",
+    bottom: 5,
+  },
+  btns: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-end",
+    width: "100%",
+  },
+  addBasket: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    padding: 10,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "#264ABB",
+  },
+  addBasketText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 12,
+  },
+  showCustomer: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    padding: 10,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "green",
+  },
+  showCustomerText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 12,
+  },
+  pending: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    padding: 10,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "orange",
+  },
+  pendingText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 12,
+  },
+  priceAndButtons: {
+    marginTop: "auto",
+    display: "flex",
+    flexDirection: "row-reverse",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  commissionBadge: {
+    position: "absolute",
+    right: 0,
+    bottom: 60,
+    width: 120,
+    height: 30,
+    borderBottomLeftRadius: 15,
+    borderTopLeftRadius: 15,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  commissionText: {
+    color: "green",
+    fontWeight: "700",
+    fontSize: "13",
   },
 });
