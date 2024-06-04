@@ -19,6 +19,8 @@ import { addDotEveryThreeDigits } from "./methods/merhod";
 import { Platform } from "react-native";
 import moment from "moment";
 import "moment/locale/tr";
+import { Svg } from "react-native-svg";
+import { Polyline } from "react-native-maps";
 
 export default function Posts({
   project,
@@ -69,33 +71,43 @@ export default function Posts({
 
   function navigateToPostDetails() {
     const isShareSale = shareSale && shareSale !== "[]" && numberOfShare !== 0;
-    const totalPrice = roomOrder["price[]"];
+    const totalPrice = roomData["price[]"];
     const discountedPrice = formattedDiscountedPrice;
     const discountAmount = projectDiscountAmount;
-
+  
     const params = {
       HomeId: roomOrder,
       projectId: data.project.id,
       isLoading: true,
+      shareSale:shareSale,
+      sumCartOrderQt:sumCartOrderQt,
+      roomData:roomData,
       price: isShareSale
-        ? projectDiscountAmount
-          ? discountedPrice / numberOfShare
-          : totalPrice / numberOfShare
-        : projectDiscountAmount
-        ? discountedPrice
-        : totalPrice,
+        ? discountAmount != 0
+          ? formatPrice(discountedPrice / numberOfShare)
+          : formatPrice(price / numberOfShare)
+        : discountAmount != 0
+        ? formatPrice(discountedPrice)
+        : formatPrice(price),
       discount: isShareSale
-        ? projectDiscountAmount
-          ? projectDiscountAmount / numberOfShare
+        ? discountAmount != 0
+          ? formatPrice(discountAmount / numberOfShare)
           : 0
-        : projectDiscountAmount
-        ? projectDiscountAmount
+        : discountAmount
+        ? formatPrice(discountAmount)
         : 0,
       numberOfShare: numberOfShare,
-      isShareSale: isShareSale,
-    }
+      totalPrice: price,
+      discountedPrice: formattedDiscountedPrice,
+      discountAmount: discountAmount,
+      offSaleCheck: offSaleCheck,
+      soldCheck: soldCheck,
+      shareSaleEmpty: shareSaleEmpty,
+    };
+  
     navigation.navigate("PostDetails", params);
   }
+  
   return (
     <View style={styles.container}>
       <View style={styles.İlan}>
@@ -238,7 +250,7 @@ export default function Posts({
             <View style={styles.btns}>
               <View style={{ width: "50%" }}>
                 {sold ? (
-                  sold.status === 1 ? (
+                  sold.status == 1 ? (
                     <TouchableOpacity style={styles.sold}>
                       <Text style={styles.soldText}>Satıldı</Text>
                     </TouchableOpacity>
@@ -415,6 +427,19 @@ const styles = StyleSheet.create({
     backgroundColor: "orange",
   },
   pendingText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 12,
+  },
+  offSale:{
+    paddingLeft: 20,
+    paddingRight: 20,
+    padding: 5,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "red",
+  },
+  offSaleText:{
     color: "white",
     fontWeight: "500",
     fontSize: 12,
