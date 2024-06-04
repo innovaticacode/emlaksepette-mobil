@@ -118,7 +118,7 @@ export default function Details({ navigation }) {
     apiRequestGet("project/" + ProjectId).then((res) => {
       setData(res.data);
     });
-  }, [ProjectId]);
+  },[ProjectId]);
 
   const getLastItemCount = () => {
     var lastBlockItemsCount = 0;
