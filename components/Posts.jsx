@@ -6,7 +6,9 @@ import {
   ScrollView,
   StyleSheet,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
+
 import { React, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
@@ -15,61 +17,93 @@ import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
 import { addDotEveryThreeDigits } from "./methods/merhod";
 import { Platform } from "react-native";
+import moment from "moment";
+import "moment/locale/tr";
+
 export default function Posts({
+  project,
+  price,
+  formattedDiscountedPrice,
+  numberOfShare,
+  shareSaleEmpty,
+  offSaleCheck,
+  sumCartOrderQt,
+  soldCheck,
+  shareSale,
   data,
   roomOrder,
-  caption,
   location,
-  price,
-  ımage,
-  metre,
-  odaSayısı,
-  katSayısı,
-  No,
-  isFavorited,
-  setModalVisible,
-  openmodal,
   openFormModal,
+  openmodal,
   openCollection,
   GetIdForCart,
   GetID,
   bookmarkStatus,
+  projectDiscountAmount,
+  sold,
+  allCounts,
+  blockHousingCount,
+  previousBlockHousingCount,
+  isUserSame,
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
-  const [bookmark, setbookmark] = useState("bookmark-o");
-  var roomData = data.projectHousingsList[roomOrder];
+  const [bookmark, setBookmark] = useState("bookmark-o");
+  const roomData = data.projectHousingsList[roomOrder] || {};
+
   const changeHeart = () => {
     setHeart(heart === "hearto" ? "heart" : "hearto");
   };
+
   const changeBookmark = () => {
-    setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
+    setBookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
   };
+
   function truncateText(text, wordLimit) {
     const words = text.split(" ");
     return words.length > wordLimit
       ? words.slice(0, wordLimit).join(" ") + "..."
       : text;
   }
+  const formatPrice = (price) => addDotEveryThreeDigits(Math.round(price));
 
-  if (data.projectCartOrders[roomOrder]) {
-    console.log(data.projectCartOrders[roomOrder]);
-    const status = data.projectCartOrders[roomOrder].status;
-  } else {
-    console.log("Belirtilen indeksteki öğe bulunamadı.");
+  function navigateToPostDetails() {
+    const isShareSale = shareSale && shareSale !== "[]" && numberOfShare !== 0;
+    const totalPrice = roomOrder["price[]"];
+    const discountedPrice = formattedDiscountedPrice;
+    const discountAmount = projectDiscountAmount;
+
+    const params = {
+      HomeId: roomOrder,
+      projectId: data.project.id,
+      isLoading: true,
+      price: isShareSale
+        ? projectDiscountAmount
+          ? discountedPrice / numberOfShare
+          : totalPrice / numberOfShare
+        : projectDiscountAmount
+        ? discountedPrice
+        : totalPrice,
+      discount: isShareSale
+        ? projectDiscountAmount
+          ? projectDiscountAmount / numberOfShare
+          : 0
+        : projectDiscountAmount
+        ? projectDiscountAmount
+        : 0,
+      numberOfShare: numberOfShare,
+      isShareSale: isShareSale,
+    }
+    navigation.navigate("PostDetails", params);
   }
   return (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate("PostDetails", {
-          HomeId: roomOrder,
-          projectId: data.project.id,
-        })
-      }
-    >
-      <View style={styles.container}>
-        <View style={styles.İlan}>
-          <View style={{ width: "30%" }}>
+    <View style={styles.container}>
+      <View style={styles.İlan}>
+        <TouchableOpacity
+          style={{ width: "30%" }}
+          onPress={navigateToPostDetails}
+        >
+          <View>
             <View
               style={{
                 position: "absolute",
@@ -79,16 +113,7 @@ export default function Posts({
                 padding: 4,
               }}
             >
-              <Text
-                style={{
-                  color: "white",
-                  fontWeight: "500",
-                  fontSize: 12,
-                  color: "white",
-                }}
-              >
-                No {roomOrder}
-              </Text>
+              <Text style={styles.noText}>No {roomOrder}</Text>
             </View>
             <Image
               source={{
@@ -96,280 +121,222 @@ export default function Posts({
                   "https://test.emlaksepette.com/project_housing_images/" +
                   roomData["image[]"],
               }}
-              style={{ width: "100%", height: 80, objectFit: "cover" }}
+              style={styles.image}
             />
           </View>
-          <View style={styles.container2}>
-            <View style={styles.captionAndIcons}>
-              <View style={styles.caption}>
-                <Text style={{ fontSize: 9, color: "black" }}>
-                  İlan No: {1000000 + data.project.id}
-                </Text>
-                <Text style={{ fontSize: 9, fontWeight: 700 }}>
-                  {truncateText(roomData["advertise_title[]"], 4)}
-                </Text>
-              </View>
-              <View
-                style={{
-                  ...styles.ıcons, // Diğer stil özelliklerini ekleyin
-                  justifyContent: bookmarkStatus ? "space-between" : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
-                }}
-              >
-                {bookmarkStatus == true ?? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      changeBookmark();
-                      openCollection(roomOrder);
-                    }}
-                  >
-                    <View style={styles.ıconContainer}>
-                      <Bookmark
-                        name={bookmark}
-                        size={13}
-                        color={bookmark == "bookmark-o" ? "black" : "red"}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                )}
+        </TouchableOpacity>
+        <View style={styles.container2}>
+          <View style={styles.captionAndIcons}>
+            <View style={styles.caption}>
+              <Text style={styles.ilanNoText}>
+                İlan No: {1000000 + data.project.id + roomOrder}
+              </Text>
+              <Text style={styles.adTitleText}>
+                {truncateText(roomData["advertise_title[]"], 4)}
+              </Text>
+            </View>
+            <View
+              style={{
+                ...styles.icons,
+                justifyContent: bookmarkStatus ? "space-between" : "flex-end",
+              }}
+            >
+              {bookmarkStatus && (
+                <TouchableOpacity
+                  onPress={() => {
+                    changeBookmark();
+                    openCollection(roomOrder);
+                  }}
+                >
+                  <View style={styles.ıconContainer}>
+                    <Bookmark
+                      name={bookmark}
+                      size={13}
+                      color={bookmark === "bookmark-o" ? "black" : "red"}
+                    />
+                  </View>
+                </TouchableOpacity>
+              )}
 
-                {!isFavorited ? (
+              {!isUserSame ? (
+                <TouchableOpacity onPress={changeHeart}>
+                  <View style={styles.ıconContainer}>
+                    <Heart
+                      name={heart}
+                      size={13}
+                      color={heart === "hearto" ? "black" : "red"}
+                    />
+                  </View>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                  <View style={styles.ıconContainer}>
+                    <Trash name="trash" size={13} color="red" />
+                  </View>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+
+          {offSaleCheck && !soldCheck && shareSaleEmpty ? (
+            <View>
+              {projectDiscountAmount ? (
+                <View style={styles.discountContainer}>
+                  <Svg
+                    viewBox="0 0 24 24"
+                    width={18}
+                    height={18}
+                    stroke="#EA2B2E"
+                    strokeWidth={2}
+                    fill="#EA2B2E"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="css-i6dzq1"
+                  >
+                    <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+                    <Polyline points="17 18 23 18 23 12" />
+                  </Svg>
+                  <Text style={styles.originalPrice}>
+                    <Text style={styles.strikethrough}>
+                      {formatPrice(roomData["price[]"])} ₺
+                    </Text>
+                  </Text>
+                  <Text style={styles.discountedPrice}>
+                    {formatPrice(formattedDiscountedPrice)} ₺
+                  </Text>
+                </View>
+              ) : (
+                <Text style={styles.regularPrice}>
+                  {formatPrice(roomData["price[]"])} ₺
+                </Text>
+              )}
+              {projectDiscountAmount > 0 && (
+                <Text style={styles.discountText}>
+                  {formatPrice(projectDiscountAmount)} ₺ indirim
+                </Text>
+              )}
+            </View>
+          ) : (shareSale &&
+              shareSale !== "[]" &&
+              sumCartOrderQt[roomOrder]?.qt_total !== numberOfShare) ||
+            (shareSale && shareSale !== "[]" && !sumCartOrderQt[roomOrder]) ? (
+            <View>
+              <Text style={styles.regularPrice}>
+                {shareSale && shareSale !== "[]" && numberOfShare !== 0 && (
+                  <Text style={styles.shareSaleText}>1/{numberOfShare}</Text>
+                )}
+                {" Pay Fiyatı - "}
+                {shareSale && shareSale !== "[]" && numberOfShare !== 0
+                  ? formatPrice(roomData["price[]"] / numberOfShare)
+                  : formatPrice(roomData["price[]"])}
+                ₺
+              </Text>
+            </View>
+          ) : null}
+
+          <View style={styles.priceAndButtons}>
+            <View style={styles.btns}>
+              <View style={{ width: "50%" }}>
+                {sold ? (
+                  sold.status === 1 ? (
+                    <TouchableOpacity style={styles.sold}>
+                      <Text style={styles.soldText}>Satıldı</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity style={styles.pending}>
+                      <Text style={styles.pendingText}>Rezerve Edildi</Text>
+                    </TouchableOpacity>
+                  )
+                ) : roomData["off_sale[]"] !== "[]" ? (
+                  <TouchableOpacity style={styles.offSale} disabled>
+                    <Text style={styles.offSaleText}>Satışa Kapalı</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View style={styles.priceContainer}>
+                    <TouchableOpacity
+                      style={styles.addBasket}
+                      onPress={() => GetIdForCart(roomOrder)}
+                    >
+                      <Text style={styles.addBasketText}>Sepete Ekle</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+
+              <View style={{ width: "50%" }}>
+                {sold ? (
+                  sold.is_show_user === "on" ? (
+                    <TouchableOpacity style={styles.showCustomer}>
+                      <Text style={styles.showCustomerText}>Komşumu Gör</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.payDetailBtn}
+                      onPress={openmodal}
+                    >
+                      <Text style={styles.payDetailText}>Ödeme Detayı</Text>
+                    </TouchableOpacity>
+                  )
+                ) : roomData["off_sale[]"] !== "[]" ? (
                   <TouchableOpacity
                     onPress={() => {
-                      changeHeart();
+                      openFormModal(roomOrder);
+                      GetID(roomOrder);
                     }}
+                    style={styles.payDetailBtn}
                   >
-                    <View style={styles.ıconContainer}>
-                      <Heart
-                        name={heart}
-                        size={13}
-                        color={heart == "hearto" ? "black" : "red"}
-                      />
-                    </View>
+                    <Text style={styles.payDetailText}>Başvuru Yap</Text>
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
-                    onPress={() => {
-                      setModalVisible(true);
-                    }}
+                    style={styles.payDetailBtn}
+                    onPress={() => openmodal(roomOrder)}
                   >
-                    <View style={styles.ıconContainer}>
-                      <Trash name="trash" size={13} color="red" />
-                    </View>
+                    <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                   </TouchableOpacity>
                 )}
-              </View>
-            </View>
-
-            <View style={styles.PriceAndButtons}>
-              <View style={styles.btns}>
-                <View style={{ width: "50%" }}>
-                  {data.projectCartOrders[roomOrder] ? (
-                    data.projectCartOrders[roomOrder].status == 1 ? (
-                      <TouchableOpacity style={styles.sold}>
-                        <Text
-                          style={{
-                            color: "white",
-                            fontWeight: "500",
-                            fontSize: 12,
-                          }}
-                        >
-                          Satıldı
-                        </Text>
-                      </TouchableOpacity>
-                    ) : (
-                      <TouchableOpacity style={styles.pending}>
-                        <Text
-                          style={{
-                            color: "white",
-                            fontWeight: "500",
-                            fontSize: 12,
-                          }}
-                        >
-                          Rezerve Edildi
-                        </Text>
-                      </TouchableOpacity>
-                    )
-                  ) : roomData["off_sale[]"] !== "[]" ? (
-                    <TouchableOpacity style={styles.offSale} disabled={true}>
-                      <Text
-                        style={{
-                          color: "white",
-                          fontWeight: "500",
-                          fontSize: 12,
-                        }}
-                      >
-                        Satışa Kapalı
-                      </Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <>
-                      <View
-                        style={{
-                          flexDirection: "column",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Text
-                          style={{
-                            color: "#264ABB",
-                            fontWeight: "700",
-                            fontSize: 12,
-                            marginBottom: 5,
-                          }}
-                        >
-                          {addDotEveryThreeDigits(
-                            data.projectHousingsList[roomOrder]["price[]"]
-                          ) + " ₺"}
-                        </Text>
-                        <TouchableOpacity
-                          style={styles.addBasket}
-                          onPress={() => {
-                            GetIdForCart(roomOrder);
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: "white",
-                              fontWeight: "500",
-                              fontSize: 12,
-                            }}
-                          >
-                            Sepete Ekle
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    </>
-                  )}
-                </View>
-
-                <View style={{ width: "50%" }}>
-                  {data.projectCartOrders[roomOrder] ? (
-                    data.projectCartOrders[roomOrder].is_show_user == "on" ? (
-                      <TouchableOpacity style={styles.showCustomer}>
-                        <Text
-                          style={{
-                            color: "white",
-                            fontWeight: "500",
-                            fontSize: 12,
-                          }}
-                        >
-                          Komşumu Gör
-                        </Text>
-                      </TouchableOpacity>
-                    ) : (
-                      <TouchableOpacity
-                        style={styles.PayDetailBtn}
-                        onPress={() => {
-                          openmodal();
-                        }}
-                      >
-                        <Text
-                          style={{
-                            fontWeight: "500",
-                            fontSize: 12,
-                            color: "white",
-                          }}
-                        >
-                          Ödeme Detayı
-                        </Text>
-                      </TouchableOpacity>
-                    )
-                  ) : roomData["off_sale[]"] != "[]" ? (
-                    <TouchableOpacity
-                      onPress={() => {
-                        openFormModal(roomOrder);
-                        GetID(roomOrder);
-                      }}
-                      style={styles.PayDetailBtn}
-                    >
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 12,
-                          color: "white",
-                        }}
-                      >
-                        Başvuru Yap
-                      </Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity
-                      style={styles.PayDetailBtn}
-                      onPress={() => {
-                        openmodal(roomOrder);
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontWeight: "500",
-                          fontSize: 12,
-                          color: "white",
-                        }}
-                      >
-                        Ödeme Detayı
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
               </View>
             </View>
           </View>
         </View>
-        {data?.project?.list_item_values && (
-          <View
-            style={{
-              backgroundColor: "#E8E8E8",
-              height: 30,
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <Info
-                text={
-                  data?.projectHousingsList[roomOrder][
-                    data?.project?.list_item_values?.column1_name + "[]"
-                  ] +
-                  " " +
-                  (data.project.list_item_values.column1_additional != null
-                    ? data.project.list_item_values.column1_additional
-                    : "")
-                }
-              />
-              <Info
-                text={
-                  data?.projectHousingsList[roomOrder][
-                    data?.project?.list_item_values?.column2_name + "[]"
-                  ] +
-                  " " +
-                  (data.project.list_item_values.column2_additional != null
-                    ? data.project.list_item_values.column2_additional
-                    : "")
-                }
-              />
-              <Info
-                text={
-                  data?.projectHousingsList[roomOrder][
-                    data?.project?.list_item_values?.column3_name + "[]"
-                  ] +
-                  " " +
-                  (data.project.list_item_values.column3_additional != null
-                    ? data.project.list_item_values.column3_additional
-                    : "")
-                }
-              />
-            </View>
-            <View style={{ justifyContent: "center" }}>
-              <Text style={styles.InformationText}>{location}</Text>
-            </View>
-          </View>
-        )}
       </View>
-    </TouchableOpacity>
+      {data?.project?.list_item_values && (
+        <View style={styles.infoContainer}>
+          <View style={styles.infoRow}>
+            <Info
+              text={
+                roomData[`${data?.project?.list_item_values?.column1_name}[]`] +
+                " " +
+                (data.project.list_item_values.column1_additional || "")
+              }
+            />
+            <Info
+              text={
+                roomData[`${data?.project?.list_item_values?.column2_name}[]`] +
+                " " +
+                (data.project.list_item_values.column2_additional || "")
+              }
+            />
+            <Info
+              text={
+                roomData[`${data?.project?.list_item_values?.column3_name}[]`] +
+                " " +
+                (data.project.list_item_values.column3_additional || "")
+              }
+            />
+            <Info text={moment(project.created_at).locale("tr").format("LL")} />
+          </View>
+          <View style={styles.infoLocation}>
+            <Text style={styles.informationText}>{location}</Text>
+          </View>
+        </View>
+      )}
+    </View>
   );
 }
-const { width, height } = Dimensions.get("window");
+
+const { width } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
   container: {
     width: "100%",
@@ -398,23 +365,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
   },
-  PriceAndButtons: {
-    marginTop: "auto", // Push to the bottom
-    display: "flex",
-    flexDirection: "row-reverse",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
   caption: {
     width: "70%",
   },
-  ıcons: {
+  icons: {
     display: "flex",
     flexDirection: "row",
-  
-    width: "30%",
+    width: "25%",
     bottom: 5,
-    
   },
   btns: {
     display: "flex",
@@ -430,6 +388,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#264ABB",
   },
+  addBasketText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 12,
+  },
+  showCustomer: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    padding: 5,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "green",
+  },
+  showCustomerText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 12,
+  },
   pending: {
     paddingLeft: 20,
     paddingRight: 20,
@@ -437,6 +413,11 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     backgroundColor: "orange",
+  },
+  pendingText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 12,
   },
   sold: {
     paddingLeft: 20,
@@ -446,12 +427,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "red",
   },
-  PayDetailBtn: {
+  soldText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 12,
+  },
+  payDetailBtn: {
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
     alignItems: "center",
     backgroundColor: "#000000",
+  },
+  payDetailText: {
+    fontWeight: "500",
+    fontSize: 12,
+    color: "white",
   },
   ıconContainer: {
     width: 28,
@@ -463,7 +454,7 @@ const styles = StyleSheet.create({
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
-        shadowColor: " #e6e6e6",
+        shadowColor: "#f0f0f0",
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 5,
@@ -473,24 +464,99 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  InformationText: {
+  informationText: {
     fontSize: width > 400 ? 12 : 10,
     right: width > 400 ? 10 : 5,
+  },
+  ilanNoText: {
+    fontSize: 9,
+    color: "black",
+  },
+  adTitleText: {
+    fontSize: 9,
+    fontWeight: "700",
+  },
+  noText: {
+    color: "white",
+    fontWeight: "500",
+    fontSize: 12,
+  },
+  image: {
+    width: "100%",
+    height: 80,
+    objectFit: "cover",
+  },
+  priceAndButtons: {
+    marginTop: "auto",
+    display: "flex",
+    flexDirection: "row-reverse",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  priceContainer: {
+    flexDirection: "column",
+    alignItems: "center",
   },
   priceText: {
     color: "#264ABB",
     fontWeight: "700",
     fontSize: 12,
-  },
-  discountedPriceText: {
-    textDecorationLine: "line-through",
-    color: "#FF0000",
-    fontWeight: "700",
-    fontSize: 10,
+    marginBottom: 5,
   },
   discountText: {
     color: "red",
     fontSize: 11,
     padding: 5,
+  },
+  infoContainer: {
+    backgroundColor: "#E8E8E8",
+    height: 30,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  infoRow: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  infoLocation: {
+    justifyContent: "center",
+  },
+  discountContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  originalPrice: {
+    marginLeft: 5,
+  },
+  strikethrough: {
+    textDecorationLine: "line-through",
+    color: "#ea2a28",
+    fontWeight: "700",
+    fontSize: 11,
+  },
+  discountedPrice: {
+    color: "#27bb53",
+    fontWeight: "700",
+    fontSize: 12,
+    position: "relative",
+    marginLeft: 5,
+  },
+  regularPrice: {
+    color: "#274abb",
+    fontWeight: "700",
+    fontSize: 12,
+  },
+  discountText: {
+    color: "red",
+    fontSize: 11,
+    padding: 5,
+  },
+  shareSaleText: {
+    width: "100%",
+    color: "#274abb",
+    fontWeight: "700",
+    fontSize: 12,
+    position: "relative",
   },
 });

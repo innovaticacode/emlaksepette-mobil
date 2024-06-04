@@ -107,8 +107,6 @@ useEffect(() => {
     setImages(JSON.parse(res.data.housing.housing_type_data).images);
   });
 }, []);
-//  console.log( JSON.parse(data?.housing?.housing_type_data)['price'])
-console.log(data.id)
 const [modalVisibleComennet, setmodalVisibleComment] = useState(false)
   const handleModal=()=>(
     setmodalVisibleComment(!modalVisibleComennet)
@@ -121,7 +119,6 @@ const [modalVisibleComennet, setmodalVisibleComment] = useState(false)
 
     // Sarı yıldızların sayısını hesapla ve konsola yazdır
     const yellowStars = index + 1;
-    console.log(`Sarı yıldızlar: ${yellowStars}`);
   };
   const [checked, setChecked] = useState(false);
   const toggleCheked = () => setChecked(!checked);
@@ -389,7 +386,7 @@ return (
                   {data?.housing?.step2_slug=='gunluk-kiralik' ?
                      <TouchableOpacity
                      onPress={()=>{
-                      navigation.navigate('CreateReservation')
+                      navigation.navigate('CreateReservation',{data:data.housing})
                      }}
                        style={{backgroundColor:'#EA2A28',padding:10,width:'40%',borderRadius:5}}
                      >

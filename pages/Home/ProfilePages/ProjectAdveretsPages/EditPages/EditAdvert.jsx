@@ -26,8 +26,6 @@ const {Project_Id, Project_name}=route.params
     useEffect(() => {
       axios.get(`https://test.emlaksepette.com/api/project_housings/${Project_Id}?start=${start}&end=${end}`+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
         sethousings(res.data.housings + 'evler');
-        console.log(housings['advertise_title[]'])
-      console.log(user.name+ 'usergfgdfg')
       }).catch((e) => {
         console.log(e);
       })

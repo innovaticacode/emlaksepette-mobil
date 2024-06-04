@@ -219,7 +219,6 @@ export default function Company() {
         error.response.data.errors.email
       ) {
         const errorMessage = error.response.data.errors.email[0];
-        console.log("API Hatası:", errorMessage);
         seterrorMessage(errorMessage);
         seterrorStatu(2);
         setTimeout(() => {
@@ -371,10 +370,6 @@ export default function Company() {
         postData();
     }
 
-    if (errorMessage) {
-      // ShowAlert(ErrorMessage);
-    }
-    console.log(errorStatu + "error statu");
   };
   const fetchTaxOfficeCity = async () => {
     try {

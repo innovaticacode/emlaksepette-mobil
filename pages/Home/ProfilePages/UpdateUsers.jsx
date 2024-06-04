@@ -167,7 +167,6 @@ import {
             setphoneNumber(userDetail?.mobile_phone)
       }, [userDetail]);
 
-console.log(userDetail ,'fdsfsd')
     return (
       <TouchableWithoutFeedback
         onPress={() => {

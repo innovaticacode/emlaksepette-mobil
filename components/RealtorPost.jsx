@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  ImageBackground,
 } from "react-native";
 import { React, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -69,12 +70,12 @@ export default function RealtorPost({
           .replace(/,00$/, "")
       : null
     : 0;
-  const handlePress =
-    housing && housing.step2_slug === "gunluk-kiralik"
-      ? () => GetId(HouseId)
-      : null;
+
+    const handlePress = () => GetId(HouseId)
+
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
+
 
   return (
     <TouchableOpacity
@@ -84,10 +85,11 @@ export default function RealtorPost({
     >
       <View style={styles.container}>
         <View style={styles.İlan}>
-          <View style={{ width: "30%" }}>
-            <Image
+          <View style={{ width: "30%", height:80}}>
+            <ImageBackground
               source={{ uri: image }}
-              style={{ width: "100%", height: 80, objectFit: "cover" }}
+              style={{ width: "100%", height: '100%',  }}
+              resizeMode='contain'
             />
           </View>
 

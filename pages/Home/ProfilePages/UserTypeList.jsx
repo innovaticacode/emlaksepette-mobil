@@ -65,7 +65,6 @@ const [selectedUserId, setselectedUserId] = useState(0)
   setselectedUserId(UserId)
   setselectedUserName(name)
  }
-console.log(selectedUserId)
   return (
     <ScrollView style={styles.container}
     stickyHeaderIndices={[0]}
