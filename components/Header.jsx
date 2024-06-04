@@ -27,6 +27,13 @@ export default function Header({ loading, onPress }) {
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
+        if (!user?.access_token) {
+          console.warn("No access token found");
+          setNotifications([]);
+          setNotificationCount(0);
+          return;
+        }
+
         const response = await axios.get(
           "https://test.emlaksepette.com/api/user/notification",
           {
@@ -36,8 +43,11 @@ export default function Header({ loading, onPress }) {
           }
         );
 
-        console.log(response);
-        setNotifications(response.data);
+        if (response.data) {
+          setNotifications(response.data);
+        } else {
+          setNotifications([]);
+        }
 
         const unreadCount = response.data.filter(
           (notification) => notification.readed === 0
@@ -45,12 +55,15 @@ export default function Header({ loading, onPress }) {
         setNotificationCount(unreadCount);
       } catch (error) {
         console.error("Error fetching notifications:", error);
-        setNotificationCount(0); // Hata durumunda unreadCount'u 0 olarak ayarla
+        setNotifications([]);
+        setNotificationCount(0); // Set unreadCount to 0 in case of an error
       }
     };
 
-    fetchNotifications();
-  }, [user.access_token]);
+    if (user?.access_token) {
+      fetchNotifications();
+    }
+  }, [user?.access_token]);
   return (
     <View style={styles.header}>
       <TouchableOpacity

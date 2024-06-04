@@ -64,7 +64,7 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchFeaturedProjects();
-  }, []);
+  }, [page]);
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -121,9 +121,7 @@ export default function HomePage() {
     (estate) => estate.step2_slug == "gunluk-kiralik"
   );
 
-  useEffect(() => {
-    fetchFeaturedEstates();
-  }, []);
+ 
  
 
   // Sayfa yenileme fonksiyonu
@@ -246,7 +244,15 @@ export default function HomePage() {
     }
   };
   const { width: screenWidth } = Dimensions.get("window");
+  useEffect(() => {
+    if (tab == 1) {
+      fetchFeaturedEstates()
+    }
+  
+  }, [handleIndexChanged]);
   return (
+    
+     
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <SafeAreaView
         style={{ flex: 1, paddingTop: 25, backgroundColor: "white" }}
@@ -586,7 +592,7 @@ export default function HomePage() {
         )}
         keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
         onEndReached={() => fetchFeaturedEstates(false)}
-        onEndReachedThreshold={0}
+        onEndReachedThreshold={0.5}
         onRefresh={onRefresh}
         refreshing={refreshing}
         ListFooterComponent={loading && !refreshing ? <ActivityIndicator  style={{margin:20}}size="small" color="#000000" /> : null}
@@ -848,6 +854,7 @@ export default function HomePage() {
         </Modal>
       </SafeAreaView>
     </TouchableWithoutFeedback>
+   
   );
 }
 const styles = StyleSheet.create({

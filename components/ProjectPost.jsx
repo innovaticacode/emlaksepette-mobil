@@ -91,9 +91,9 @@ export default function ProjectPost({
           >
             {project.project_title}
           </Text>
-          {userLogin && userLogin.corporate_type == "Emlak Ofisi" && (
+          {userLogin && userLogin.corporate_type == "Emlak Ofisi" && project.club_rate && (
             <View style={styles.commissionBadge}>
-              <Text style={styles.commissionText}>%2 KOMİSYON!</Text>
+              <Text style={styles.commissionText}>%{project.club_rate} KOMİSYON!</Text>
             </View>
           )}
         </View>
@@ -154,6 +154,6 @@ const styles = StyleSheet.create({
   commissionText: {
     color: "green",
     fontWeight: "700",
-    fontSize: "13",
+    fontSize: 13,
   },
 });
