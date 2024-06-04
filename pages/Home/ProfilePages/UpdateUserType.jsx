@@ -28,7 +28,6 @@ export default function CreateUserType() {
   }, []);
   const [permissions, setPermissions] = useState({});
   const [groupNames, setGroupNames] = useState([]);
-  console.log(permissions,"asd");
  
   // fetchData fonksiyonunu düzenle
 
@@ -62,7 +61,6 @@ export default function CreateUserType() {
   }, [user]);
 
   const [checkedItems, setCheckedItems] = useState([]);
-  console.log(checkedItems,"asd")
   const handleCheckboxChange = (description) => {
     if (checkedItems.includes(description)) {
       // Eğer seçilen öğe zaten varsa, listeden kaldır
@@ -105,15 +103,12 @@ export default function CreateUserType() {
     }
   };
   const handleShowCheckedItems = () => {
-    console.log(checkedItems);
     postData();
     // navigation.navigate("UserTypes");
   };
-  console.log(permissions + UserID);
   useEffect(() => {
     setTypeName(name)
   }, [user])
-  console.log(checkedItems)
 
   useEffect(() => {
     var tempItems = [];

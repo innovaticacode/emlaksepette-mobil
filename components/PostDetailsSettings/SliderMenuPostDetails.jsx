@@ -17,15 +17,14 @@ export default function SliderMenuPostDetails({tab,setTab,changeTab}) {
       style={{}}
       bounces={false}
     >
-      <View style={{ padding: 10, flexDirection: "row", gap: 10 }}>
+      <View style={{ flexDirection: "row" }}>
         {menuItems.map((item, index) => (
           <TouchableOpacity
             key={index}
             style={[
               styles.tabBtn,
               {
-                backgroundColor: tab == index ? "#EA2C2E" : "white",
-                borderWidth: tab == index ? 0 : 1,
+                backgroundColor: tab == index ? "#EA2C2E" : "white"
               },
             ]}
             onPress={()=>{
@@ -48,18 +47,16 @@ export default function SliderMenuPostDetails({tab,setTab,changeTab}) {
   )
 }
 const styles = StyleSheet.create({
-    tabBtn: {
-      backgroundColor: "white",
-      paddingLeft: 15,
-      paddingRight: 15,
-      justifyContent: "center",
-      alignItems: "center",
-      padding: 7,
-      borderRadius: 5,
-      borderWidth: 1,
-      borderColor: "#ebebeb",
-    },
-    text: {
-      fontSize: 12,
-    },
-  });
+  tabBtn: {
+    backgroundColor: "white",
+    paddingLeft: 15,
+    paddingRight: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    borderColor: "#ebebeb",
+  },
+  text: {
+    fontSize: 12,
+  },
+});

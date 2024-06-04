@@ -196,7 +196,7 @@ export default function Invoice() {
                 Müşteri Hizmetleri : 444 3 284
               </Text>
               <Text style={{ color: "white", fontWeight: "500", fontSize: 12 }}>
-                Email: info@emlaksepette.com
+                Email: info@test.emlaksepette.com
               </Text>
             </View>
           </View>

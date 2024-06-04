@@ -26,14 +26,11 @@ export default function PasiveRealtorAdverts() {
 }; 
   useEffect(() => {
     axios.get('https://test.emlaksepette.com/api/get_my_housings',{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
-      sethousings(res.data.inactiveHousingTypes);
-      console.log(housings +'evler')
-    
+      sethousings(res.data.inactiveHousingTypes);    
     }).catch((e) => {
       console.log(e + 'hata');
     })
   },[user]);
-  console.log(housings+ 'sdfsdfsdfjsdfkjsdfk')
   return (
     <ScrollView>
     <View style={{

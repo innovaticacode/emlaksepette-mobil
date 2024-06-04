@@ -98,8 +98,6 @@ const [parsedshare, setparsedshare] = useState('')
   try {
     if (Cart && isShare && type && saleType ) {
       setparsedshare(JSON.parse(isShare)[0])
-      // const parsedShare =JSON.parse(isShare)[0]
-      console.log(parsedshare,'dsfsdfsdf')
     }
   }catch(error){
     console.log('parse edilemedi')
@@ -167,8 +165,6 @@ const [counter, setcounter] = useState(1)
       console.error("Error fetching data:", error);
     }
   }
-console.log(Cart.qt,'dfsdfds')
-  //Azaltma
   const UpdateShareMinus = async ()=>{
     let formData=new FormData()
     formData.append('change','azalt')

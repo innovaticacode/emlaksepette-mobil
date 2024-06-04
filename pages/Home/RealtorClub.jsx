@@ -70,20 +70,20 @@ export default function RealtorClub() {
             </View>
             <View style={{ gap: 20, marginTop: 0 }}>
               <RealtorClubItem description='Emlak Kulüp’e ÜYE OL Hemen Paylaştıkça Kazan (ilk 5000 üyelik ücretsiz)' ımage={image} colorcss={true} />
-              <RealtorClubItem description='Emlaksepette.com da bulunan bütün ilanları Koleksiyonuna ekleyerek kendi mağazada sosyal medya hesabında sana özel link ile paylaş' ımage={image2} colorcss={true} />
+              <RealtorClubItem description='test.emlaksepette.com da bulunan bütün ilanları Koleksiyonuna ekleyerek kendi mağazada sosyal medya hesabında sana özel link ile paylaş' ımage={image2} colorcss={true} />
               <RealtorClubItem description='Paylaştığın link üzerinden satışa dönen her ilandan sınırsız para kazan' ımage={image3} />
             </View>
             <View style={{ gap: 10, marginTop: 20, padding: 6 }}>
               <Text style={{ fontWeight: 'bold', color: '#333' }}>Sıkça Sorulan Sorular</Text>
               <Accordion
-                title="Emlaksepette.com Paylaş Kazan Nedir?"
+                title="test.emlaksepette.com Paylaş Kazan Nedir?"
                 index={0}
                 selectedIndex={selectedIndex}
                 setSelectedIndex={setSelectedIndex}
 
               >
                 <Text style={{ color: 'grey', lineHeight: 22 }}>
-                  Emlaksepette.com Paylaştıkça Kazan kampanyası, istediğin ilanları koleksiyonuna ekleyerek sana özel link ile farklı pek çok mecrada paylaşmanı ve bu yolla kazanç elde etmeni sağlayan Türkiye’nin en büyük ve en çok kazandıran paylaş kazan uygulamasıdır.
+                  test.emlaksepette.com Paylaştıkça Kazan kampanyası, istediğin ilanları koleksiyonuna ekleyerek sana özel link ile farklı pek çok mecrada paylaşmanı ve bu yolla kazanç elde etmeni sağlayan Türkiye’nin en büyük ve en çok kazandıran paylaş kazan uygulamasıdır.
                 </Text>
               </Accordion>
               <Accordion
@@ -94,7 +94,7 @@ export default function RealtorClub() {
 
               >
                 <Text style={{ color: 'grey', lineHeight: 22 }}>
-                  Emlaksepette.com Paylaştıkça Kazan kampanyası ile koleksiyonuna eklemiş olduğun ilanların sana özel linkleri paylaşarak satışına aracılık yapman durumunda aylık 500 bin tl kazanç elde edebilirsin.
+                  test.emlaksepette.com Paylaştıkça Kazan kampanyası ile koleksiyonuna eklemiş olduğun ilanların sana özel linkleri paylaşarak satışına aracılık yapman durumunda aylık 500 bin tl kazanç elde edebilirsin.
                 </Text>
               </Accordion>
               <Accordion
@@ -104,7 +104,7 @@ export default function RealtorClub() {
                 setSelectedIndex={setSelectedIndex}
 
               >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>Emlaksepette.com’ da bulunan proje ilanlarını koleksiyonuna ekleyerek paylaşım yaptığın ilanların satılması durumunda toplam fiyat üzerinden %1 komisyon kazanırsınız. (Örneğin X İnşaat firmasının projesindeki bir dairenin fiyatı 10 milyon TL paylaşmış olduğun link üzerinde satılması karşılığında emlak sepette.com emlak kulübü üyesine vergiler düşülerek net 78 bin tl nakit ödeme yapar) Emlaksepette.com’ da bulunan emlak ilanlarını koleksiyonuna ekleyerek paylaşım yaptığın ilanların satılması durumunda toplam fiyat üzerinden %0.5 komisyon kazanırsınız</Text>
+                <Text style={{ color: 'grey', lineHeight: 22 }}>test.emlaksepette.com’ da bulunan proje ilanlarını koleksiyonuna ekleyerek paylaşım yaptığın ilanların satılması durumunda toplam fiyat üzerinden %1 komisyon kazanırsınız. (Örneğin X İnşaat firmasının projesindeki bir dairenin fiyatı 10 milyon TL paylaşmış olduğun link üzerinde satılması karşılığında emlak sepette.com emlak kulübü üyesine vergiler düşülerek net 78 bin tl nakit ödeme yapar) test.emlaksepette.com’ da bulunan emlak ilanlarını koleksiyonuna ekleyerek paylaşım yaptığın ilanların satılması durumunda toplam fiyat üzerinden %0.5 komisyon kazanırsınız</Text>
               </Accordion>
               <Accordion
                 title="Koleksiyona ilan eklemede ve paylaşmada sınır var mı?"
@@ -113,7 +113,7 @@ export default function RealtorClub() {
                 setSelectedIndex={setSelectedIndex}
 
               >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>Emlaksepette.com Paylaştıkça Kazan'da ilan paylaşımında sınır yok istediğin kadar ilanı koleksiyonuna ekleyerek paylaş. Paylaşılan ilan sayısı arttıkça kazanma şansın da artar.</Text>
+                <Text style={{ color: 'grey', lineHeight: 22 }}>test.emlaksepette.com Paylaştıkça Kazan'da ilan paylaşımında sınır yok istediğin kadar ilanı koleksiyonuna ekleyerek paylaş. Paylaşılan ilan sayısı arttıkça kazanma şansın da artar.</Text>
               </Accordion>
               <Accordion
                 title="Hangi ilanlarda komisyon kazanbilirim?"
@@ -131,7 +131,7 @@ export default function RealtorClub() {
                 setSelectedIndex={setSelectedIndex}
 
               >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>Oluşturulan paylaştıkça kazan linki üzerinden emlaksepette.com ‘a gelen kullanıcının 24 gün boyunca sistem de link üzerinden geldiği tanınır. 24 gün içinde link paylaşımınızdan satış olması durumunda kazancınıza yansır</Text>
+                <Text style={{ color: 'grey', lineHeight: 22 }}>Oluşturulan paylaştıkça kazan linki üzerinden test.emlaksepette.com ‘a gelen kullanıcının 24 gün boyunca sistem de link üzerinden geldiği tanınır. 24 gün içinde link paylaşımınızdan satış olması durumunda kazancınıza yansır</Text>
               </Accordion>
               <Accordion
                 title="Koleksiyonuma eklediğim ilanların linkini paylaştıktan sonra fiyat değişikliği olursa ne olur?"
@@ -140,7 +140,7 @@ export default function RealtorClub() {
                 setSelectedIndex={setSelectedIndex}
 
               >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>Emlaksepette.com üzerinde bulunan kurumsal mağazalar fiyatı artırması veya düşürmesi durumunda en son güncel fiyat üzerinden komisyon kazanırsınız.</Text>
+                <Text style={{ color: 'grey', lineHeight: 22 }}>test.emlaksepette.com üzerinde bulunan kurumsal mağazalar fiyatı artırması veya düşürmesi durumunda en son güncel fiyat üzerinden komisyon kazanırsınız.</Text>
               </Accordion>
               <Accordion
                 title="Komisyonumu ne zaman alabilirim?"
@@ -157,7 +157,7 @@ export default function RealtorClub() {
                 selectedIndex={selectedIndex}
                 setSelectedIndex={setSelectedIndex}
               >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>Emlaksepette.com Paylaştıkça Kazan kampanyasından elde ettiğin kazancını alabilmen için ödeme bilgilerini eksiksiz ve doğrubir şekilde girmiş olman gerekiyor. Ödeme bilgilerin tamamlanmışsa üyelikte bizlere ilettiğin IBAN- hesap numarasına kazancın nakit olarak iletilecektir. Emlaksepette.com şahıs ödemeleri kapsamında ilgili kullanıcıların adına gider pusulası düzenleyip, oluşan stopaj maliyetinin ödemesini de kendi tarafında üstlenecektir fakat gelir beyanının yapılması, ödemeyi alan kullanıcının kendi sorumluluğunda olup oluşabilecek her türlü vergi ve yükümlülükler sizlerin sorumluluğundadır</Text>
+                <Text style={{ color: 'grey', lineHeight: 22 }}>test.emlaksepette.com Paylaştıkça Kazan kampanyasından elde ettiğin kazancını alabilmen için ödeme bilgilerini eksiksiz ve doğrubir şekilde girmiş olman gerekiyor. Ödeme bilgilerin tamamlanmışsa üyelikte bizlere ilettiğin IBAN- hesap numarasına kazancın nakit olarak iletilecektir. test.emlaksepette.com şahıs ödemeleri kapsamında ilgili kullanıcıların adına gider pusulası düzenleyip, oluşan stopaj maliyetinin ödemesini de kendi tarafında üstlenecektir fakat gelir beyanının yapılması, ödemeyi alan kullanıcının kendi sorumluluğunda olup oluşabilecek her türlü vergi ve yükümlülükler sizlerin sorumluluğundadır</Text>
               </Accordion>
               <Accordion
                 title="Paylaştığım ilan iptal ya da iade edildi ise kazancım iptal olur mu?"
@@ -181,7 +181,7 @@ export default function RealtorClub() {
                 selectedIndex={selectedIndex}
                 setSelectedIndex={setSelectedIndex}
               >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>Emlaksepette.com Paylaştıkça Kazan'da gelir elde edebilmek için aydınlatma metnine ve taahütnameye onay vermelisin. Aydınlatma metninin onaylanmadığı durumlarda paylaşım yapılsa da kazanç elde edilemez.</Text>
+                <Text style={{ color: 'grey', lineHeight: 22 }}>test.emlaksepette.com Paylaştıkça Kazan'da gelir elde edebilmek için aydınlatma metnine ve taahütnameye onay vermelisin. Aydınlatma metninin onaylanmadığı durumlarda paylaşım yapılsa da kazanç elde edilemez.</Text>
               </Accordion>
             </View>
             <View style={styles.footerAndAdvice}>
@@ -275,7 +275,7 @@ export default function RealtorClub() {
               <View style={{ height: 120 }}>
                 <View style={{ backgroundColor: '#DF4342d1', position: 'absolute', zIndex: 1, width: '100%', height: '100%', padding:10}}>
                   <Text style={{fontSize:12,color:'white',fontWeight:'bold',lineHeight:15}}>
-                    EMLAKSEPETTE.COM ‘DA YER ALAN YÜZBİNLERCE PROJE İLANINI VE EMLAK İLANLARINI SEÇ VE BÜTÜN DÜNYA İLE PAYLAŞ.
+                    test.emlaksepette.com ‘DA YER ALAN YÜZBİNLERCE PROJE İLANINI VE EMLAK İLANLARINI SEÇ VE BÜTÜN DÜNYA İLE PAYLAŞ.
 
                     AYLIK 50.000 TL İLE 500.000 TL ARASINDA LİNKLERİNDEN NAKİT GELİR ELDE ETME HAKKI KAZAN!
 

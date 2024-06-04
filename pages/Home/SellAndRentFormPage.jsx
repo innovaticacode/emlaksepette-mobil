@@ -113,12 +113,12 @@ export default function SellAndRentFormPage() {
               color: "#E54242",
             }}
           >
-         Emlaksepette.com Uzmanlğı
+         test.emlaksepette.com Uzmanlğı
           </Text>
 
           <View style={{ paddingTop: 10 }}>
             <Text style={{ color: "grey", fontWeight: "400", fontSize: 13 }}>
-            Emlaksepette.com ile tüm satış veya kiralama süreçlerinde profesyonel ve güvenilir hizmet alırsınız.
+            test.emlaksepette.com ile tüm satış veya kiralama süreçlerinde profesyonel ve güvenilir hizmet alırsınız.
             </Text>
           </View>
         </View>

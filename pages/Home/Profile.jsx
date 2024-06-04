@@ -142,10 +142,6 @@ export default function Profile() {
         postData();
     }
 
-    if (errorMessage) {
-      // ShowAlert(ErrorMessage);
-    }
-    console.log(errorStatu + "error statu");
   };
 
   const closeSheet = () => {
@@ -164,9 +160,7 @@ export default function Profile() {
       setHousings(res.data.data.housings);
     });
   }, []);
-  console.log(Housings[0]?.title + "sdfsdf");
   const ApiUrl = "https://test.emlaksepette.com/";
-  console.log(storeData?.data?.name);
   const handleOpenPhone = () => {
     // Telefon uygulamasını açmak için
     Linking.openURL(`tel:+${storeData.data.phone}`);

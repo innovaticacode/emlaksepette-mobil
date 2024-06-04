@@ -26,7 +26,6 @@ export default function Information({ settings }) {
   }
 
   return (
-    <View>
       <View style={[styles.card, styles.shadowProp]}>
         {settings.projectHousingSetting.map((setting,index) => {
           if (!setting.is_array) {
@@ -48,7 +47,7 @@ export default function Information({ settings }) {
           } else {
           }
         })}
-        <View>
+        <View >
           {settings.projectHousingSetting.map((setting,index) => {
             if (setting.is_array) {
               if (settings.projectHousingsList[1][setting.column_name + "[]"]) {
@@ -64,8 +63,8 @@ export default function Information({ settings }) {
                   if (arrayData.length > 0) {
                     return (
                       
-                      <View style={{margin:10}} key={index}>
-                          <Text>{setting.label}</Text>
+                      <View style={{margin:10, marginTop: 20}} key={index}>
+                          <Text style={{color:"black", fontWeight: "700",  fontSize: "12" }}>{setting.label}</Text>
                         <View key={setting.id} style={{marginTop:10,display:'flex',flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}}>
                         
                           {arrayData.map((arrayD,index2)=> {
@@ -88,7 +87,6 @@ export default function Information({ settings }) {
           })}
         </View>
       </View>
-    </View>
   );
 }
 

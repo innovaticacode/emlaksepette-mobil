@@ -27,13 +27,11 @@ export default function RejectRealtorAdverts() {
   useEffect(() => {
     axios.get('https://test.emlaksepette.com/api/get_my_housings',{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
       sethousings(res.data.disabledHousingTypes);
-      console.log(housings +'evler')
     
     }).catch((e) => {
       console.log(e + 'hata');
     })
   },[user]);
-  console.log(housings+ 'sdfsdfsdfjsdfkjsdfk')
   return (
     <ScrollView>
     <View style={{
