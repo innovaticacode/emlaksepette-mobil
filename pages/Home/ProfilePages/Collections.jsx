@@ -242,7 +242,22 @@ export default function Collections() {
       console.error("Error removing item from the collection:", error);
     }
   };
-
+  const [CollectionsRemoveIds, setCollectionsRemoveIds] = useState([])
+ 
+  const [CollectionIDForRemove, setCollectionIDForRemove] = useState(0)
+      const SelectCollection=(id)=>{
+          setCollectionIDForRemove(id)
+          setCollectionsRemoveIds(prevIds => {
+            if (prevIds.includes(id)) {
+           
+              return prevIds.filter(item => item !== id);
+              
+            } else {
+              return [...prevIds, id];
+            }
+          });
+      }
+    const [isChoosed, setisChoosed] = useState(false)
   return (
     <View style={styles.container}>
       {loading ? (
@@ -298,6 +313,23 @@ export default function Collections() {
                     value={searchText}
                   />
                 </View>
+                      <View style={{flexDirection:'row',gap:25,padding:5,paddingTop:9,alignItems:'center'}}>
+                        <TouchableOpacity style={styles.btnRemove}>
+                          <Text style={{fontSize:12,textAlign:'center',fontWeight:'bold',color:'#ffffff'}}>Tümünü Sil</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.btnRemove}
+                        
+                          onPress={()=>{
+                            setisChoosed(!isChoosed)
+                          }}
+                        >
+                          <Text style={{fontSize:12,textAlign:'center',fontWeight:'bold',color:'#ffffff'}}>Toplu Seç</Text>
+                        </TouchableOpacity>
+                        {
+                          isChoosed &&   <Text style={{fontSize:14}}>Seçili ({CollectionsRemoveIds.length})</Text>
+                        }
+                 
+                      </View>
                 <View
                   style={{
                     alignItems: "center",
@@ -330,6 +362,7 @@ export default function Collections() {
                   collectionsRecods.map((collection, index) => {
                     return (
                       <CollectionsItem
+                      SelectCollection={SelectCollection}
                         projectItems={projectItems}
                         item={collection}
                         getId={getId}
@@ -855,4 +888,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  btnRemove:{
+    backgroundColor:'#EA2A28',
+    padding:7,
+    borderRadius:5
+  }
 });

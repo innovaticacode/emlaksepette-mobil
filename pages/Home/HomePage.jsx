@@ -249,6 +249,8 @@ export default function HomePage() {
   }, [handleIndexChanged]);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+
+      
       <SafeAreaView
         style={{ flex: 1, paddingTop: 25, backgroundColor: "white" }}
       >
@@ -591,7 +593,7 @@ export default function HomePage() {
               keyExtractor={(item, index) =>
                 item.id ? item.id.toString() : index.toString()
               }
-              onEndReached={() => fetchFeaturedEstates(false)}
+              onEndReached={() => fetchFeaturedEstates()}
               onEndReachedThreshold={0}
               onRefresh={onRefresh}
               refreshing={refreshing}
