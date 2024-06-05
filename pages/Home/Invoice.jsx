@@ -126,7 +126,7 @@ export default function Invoice() {
 
       Share.open(shareOptions)
         .then((res) => {
-          console.log("PDF shared:", res);
+        
         })
         .catch((err) => {
           err && console.log(err);

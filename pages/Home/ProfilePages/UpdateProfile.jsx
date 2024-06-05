@@ -45,7 +45,7 @@ useEffect(() => {
 
   const onColorChangeComplete = (color) => {
     // Renk değişimi tamamlandığında burada istediğiniz işlemleri yapabilirsiniz
-    console.log("Yeni renk:", color);
+   
   };
   const [openColorPicker, setopenColorPicker] = useState(false)
 
@@ -72,7 +72,7 @@ useEffect(() => {
       formData.append('_method','PUT')
 
     
-      console.log(formData)
+    
       const response = await axios.post('https://test.emlaksepette.com/api/client/profile/update', formData ,{
         headers:{
           Authorization: `Bearer ${user.access_token}`,
@@ -87,7 +87,7 @@ useEffect(() => {
             setUpdateSuccess(false)
         }, 1500);
       // İsteğin başarılı bir şekilde tamamlandığı durum
-      console.log('İstek başarıyla tamamlandı:', response.data);
+    
 
       
   

@@ -191,7 +191,7 @@ export default function Basket() {
       console.error("Error fetching data:", error);
     }
   };
-  console.log(message);
+
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("tr-TR", {
       style: "currency",

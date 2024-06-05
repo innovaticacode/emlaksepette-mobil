@@ -259,7 +259,7 @@ export default function PostDetail() {
         },
       })
       .then((response) => {
-        console.log("Response:", response.data);
+      
       })
       .catch((error) => {
         // Hata durumunu işleyin

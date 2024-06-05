@@ -18,7 +18,7 @@ export default function ForgotPassword() {
           const response = await axios.post('https://test.emlaksepette.com/api/password/email', formData);
           
           // İsteğin başarılı bir şekilde tamamlandığı durum
-          console.log('İstek başarıyla tamamlandı:', response.data);
+       
            setstatus(response.data.success)
                 setshowSucces(true)
                 setTimeout(() => {
@@ -36,7 +36,7 @@ export default function ForgotPassword() {
             setshowAlert(false)
         }
       };
-      console.log(status)
+  
 
    
 
