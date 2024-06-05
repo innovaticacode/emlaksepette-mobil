@@ -364,7 +364,7 @@ export default function App({ route }) {
             <Stack.Screen
               name="EditColection"
               component={EditCollection}
-              initialParams={{ item: { name: 'Koleksiyon Düzenle' } }} 
+              initialParams={{ item: { name: 'Koleksiyon Düzenle' } }}
               options={{
                 headerBackTitle: "",
                 headerBackTitleVisible: false,
@@ -569,8 +569,11 @@ export default function App({ route }) {
             name="AllProject"
             component={AllProjects}
             options={({ route }) => ({
-              headerShown: false,
-              title: route.params.name,
+              headerShown: true,
+              title: route.params.name + " - " + route.params.count + " Proje" ,
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
             })}
           />
           <Stack.Screen
@@ -669,7 +672,7 @@ export default function App({ route }) {
             component={PaymentScreen}
             options={({ route }) => ({
               title: "Sepet Özeti Ve Onay",
-              headerBackTitleVisible:false,
+              headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
               },
@@ -731,7 +734,7 @@ export default function App({ route }) {
               title: "Fatura",
             })}
           />
-             <Stack.Screen
+          <Stack.Screen
             name="CreateReservation"
             component={CreateReservation}
             options={({ route }) => ({
@@ -740,12 +743,12 @@ export default function App({ route }) {
               title: "Rezervasyon Oluştur",
             })}
           />
-            <Stack.Screen
+          <Stack.Screen
             name="PaymentScreenForReserve"
             component={PaymentScreenForReserve}
             options={({ route }) => ({
               title: "Sepet Özeti Ve Onay",
-              headerBackTitleVisible:false,
+              headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
               },

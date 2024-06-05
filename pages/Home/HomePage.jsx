@@ -38,7 +38,7 @@ import PagerView from "react-native-pager-view";
 import Categories from "../../components/Categories";
 import userData, { getValueFor } from "../../components/methods/user";
 import RealtorPostSkeleton from "../../components/SkeletonComponents/RealtorPostSkeleton";
-import { FlashList } from '@shopify/flash-list';
+import { FlashList } from "@shopify/flash-list";
 import { ActivityIndicator } from "react-native-paper";
 
 export default function HomePage() {
@@ -71,13 +71,14 @@ export default function HomePage() {
   const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-
   const fetchFeaturedEstates = async (reset = false) => {
     if (loading || (!hasMore && !reset)) return;
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=12`
+        `https://test.emlaksepette.com/api/real-estates?page=${
+          reset ? 1 : page
+        }&limit=12`
       );
       const newEstates = response.data;
 
@@ -87,13 +88,14 @@ export default function HomePage() {
         setHasMore(true);
       } else {
         if (newEstates.length > 0) {
-          setFeaturedEstates(prevEstates => {
+          setFeaturedEstates((prevEstates) => {
             const newUniqueEstates = newEstates.filter(
-              estate => !prevEstates.some(prevEstate => prevEstate.id === estate.id)
+              (estate) =>
+                !prevEstates.some((prevEstate) => prevEstate.id === estate.id)
             );
             return [...prevEstates, ...newUniqueEstates];
           });
-          setPage(prevPage => prevPage + 1);
+          setPage((prevPage) => prevPage + 1);
         } else {
           setHasMore(false);
         }
@@ -121,16 +123,12 @@ export default function HomePage() {
     (estate) => estate.step2_slug == "gunluk-kiralik"
   );
 
- 
- 
-
   // Sayfa yenileme fonksiyonu
   const onRefresh = () => {
     setRefreshing(true);
     fetchFeaturedEstates();
   };
-  
-  
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
@@ -246,13 +244,10 @@ export default function HomePage() {
   const { width: screenWidth } = Dimensions.get("window");
   useEffect(() => {
     if (tab == 1) {
-      fetchFeaturedEstates()
+      fetchFeaturedEstates();
     }
-  
   }, [handleIndexChanged]);
   return (
-    
-     
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <SafeAreaView
         style={{ flex: 1, paddingTop: 25, backgroundColor: "white" }}
@@ -459,7 +454,16 @@ export default function HomePage() {
                   onPress={() =>
                     navigation.navigate("AllProject", {
                       name: "Tüm Projeler",
+                      slug: "tum-projeler",
                       data: featuredProjects,
+                      count: featuredProjects.length,
+                      type: null,
+                      optional: "satilik",
+                      title: "konut",
+                      check: null,
+                      city: null,
+                      county: null,
+                      hood: null
                     })
                   }
                 >
@@ -545,61 +549,62 @@ export default function HomePage() {
                 </TouchableOpacity>
               </View>
             </View>
-             {/* {refreshing && (
+            {/* {refreshing && (
         <View style={{ padding: 10, backgroundColor: 'white', alignItems: 'center' }}>
           <ActivityIndicator animating={true} size="small" color="#000000" />
         </View>
       )} */}
             <FlatList
-        data={filteredHomes}
-     
-        renderItem={({ item }) => (
-          <RealtorPost
-          GetId={GetIdForCart}
-        
-          HouseId={item.id}
-          price={`${
-            JSON.parse(item.housing_type_data)["price"]
-          } `}
-          housing={item}
-          title={item.housing_title}
-          loading={loadingEstates}
-          location={item.city_title + " / " + item.county_title}
-          image={`${apiUrl}/housing_images/${
-            JSON.parse(item.housing_type_data).image
-          }`}
-          column1_name={`${
-            JSON.parse(item.housing_type_data)[item.column1_name]
-          } `}
-          column1_additional={item.column1_additional}
-          column2_name={`${
-            JSON.parse(item.housing_type_data)[item.column2_name]
-          } `}
-          column2_additional={item.column2_additional}
-          column3_name={`${
-            JSON.parse(item.housing_type_data)[item.column3_name]
-          } `}
-          column3_additional={item.column3_additional}
-          column4_name={`${
-            JSON.parse(item.housing_type_data)[item.column4_name]
-          } `}
-          column4_additional={item.column4_additional}
-          bookmarkStatus={true}
-          dailyRent={false}
-
-        />
-
-        )}
-        keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
-        onEndReached={() => fetchFeaturedEstates(false)}
-        onEndReachedThreshold={0.5}
-        onRefresh={onRefresh}
-        refreshing={refreshing}
-        ListFooterComponent={loading && !refreshing ? <ActivityIndicator  style={{margin:20}}size="small" color="#000000" /> : null}
-    
-       
-      />
-             
+              data={filteredHomes}
+              renderItem={({ item }) => (
+                <RealtorPost
+                  GetId={GetIdForCart}
+                  HouseId={item.id}
+                  price={`${JSON.parse(item.housing_type_data)["price"]} `}
+                  housing={item}
+                  title={item.housing_title}
+                  loading={loadingEstates}
+                  location={item.city_title + " / " + item.county_title}
+                  image={`${apiUrl}/housing_images/${
+                    JSON.parse(item.housing_type_data).image
+                  }`}
+                  column1_name={`${
+                    JSON.parse(item.housing_type_data)[item.column1_name]
+                  } `}
+                  column1_additional={item.column1_additional}
+                  column2_name={`${
+                    JSON.parse(item.housing_type_data)[item.column2_name]
+                  } `}
+                  column2_additional={item.column2_additional}
+                  column3_name={`${
+                    JSON.parse(item.housing_type_data)[item.column3_name]
+                  } `}
+                  column3_additional={item.column3_additional}
+                  column4_name={`${
+                    JSON.parse(item.housing_type_data)[item.column4_name]
+                  } `}
+                  column4_additional={item.column4_additional}
+                  bookmarkStatus={true}
+                  dailyRent={false}
+                />
+              )}
+              keyExtractor={(item, index) =>
+                item.id ? item.id.toString() : index.toString()
+              }
+              onEndReached={() => fetchFeaturedEstates(false)}
+              onEndReachedThreshold={0.5}
+              onRefresh={onRefresh}
+              refreshing={refreshing}
+              ListFooterComponent={
+                loading && !refreshing ? (
+                  <ActivityIndicator
+                    style={{ margin: 20 }}
+                    size="small"
+                    color="#000000"
+                  />
+                ) : null
+              }
+            />
           </View>
           <View style={styles.slide3}>
             <View style={{ paddingTop: 0 }}>
@@ -624,7 +629,7 @@ export default function HomePage() {
             <ScrollView>
               {filteredEstates.map((item, index) => (
                 <RealtorPost
-                GetId={GetIdForCart}
+                  GetId={GetIdForCart}
                   key={index}
                   HouseId={item.id}
                   price={`${JSON.parse(item.housing_type_data)["price"]} `}
@@ -854,7 +859,6 @@ export default function HomePage() {
         </Modal>
       </SafeAreaView>
     </TouchableWithoutFeedback>
-   
   );
 }
 const styles = StyleSheet.create({

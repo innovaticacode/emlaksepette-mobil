@@ -70,15 +70,13 @@ export default function Panel({ options, onSelect }) {
     };
     fetchData();
   }, [user]);
+
   const PhotoUrl = "https://test.emlaksepette.com/storage/profile_images/";
 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Verilerin yüklenmesi süreci burada yönetilir
-    // Simülasyon için setTimeout kullanıldı, gerçek veri yükleme işlemi burada olmalı
     const loadData = async () => {
-      // Örnek bekleme süresi, burada gerçek veri yükleme işlemini gerçekleştirin
       setTimeout(() => {
         setIsLoading(false);
       }, 2000);
