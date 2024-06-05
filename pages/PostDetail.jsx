@@ -542,6 +542,11 @@ export default function PostDetail() {
                     <Icon2 name="sharealt" size={18} />
                   </View>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
+                  <View style={styles.ıcon}>
+                    <Bookmark name={bookmark} size={18} />
+                  </View>
+                </TouchableOpacity>
               </View>
               <View style={styles.clubRateContainer}>
 
@@ -1504,7 +1509,7 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "transparent",
     position: "absolute",
-    right: 0,
+    left: 0,
     top: 5,
     display: "flex",
     flexDirection: "column",
@@ -1804,12 +1809,12 @@ const styles = StyleSheet.create({
   },
   commissionBadge: {
     position: "absolute",
-    right: 0,
-    bottom: 60,
+    left: 0,
+    bottom: 50,
     width: 120,
     height: 30,
-    borderBottomLeftRadius: 15,
-    borderTopLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    borderTopRightRadius: 15,
     backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",

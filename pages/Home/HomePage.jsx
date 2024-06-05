@@ -458,8 +458,8 @@ export default function HomePage() {
                       data: featuredProjects,
                       count: featuredProjects.length,
                       type: null,
-                      optional: "satilik",
-                      title: "konut",
+                      optional: null,
+                      title: null,
                       check: null,
                       city: null,
                       county: null,
@@ -757,6 +757,7 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
+
                 <Text style={{ fontSize: 12 }}>
                   ÖNE ÇIKAN PREFABRİK YAPILAR
                 </Text>
@@ -785,6 +786,7 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
+
                 <Text style={{ fontSize: 12 }}>Günlük Kiralık İlanlar</Text>
 
                 <TouchableOpacity style={styles.allBtn}>
