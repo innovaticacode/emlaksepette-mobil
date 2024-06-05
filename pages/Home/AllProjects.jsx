@@ -45,7 +45,9 @@ export default function AllProjects() {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+
   const [selectedCity, setSelectedCity] = useState("");
+  const [selectedProjectStatus, setSelectedProjectStatus] = useState("");
   const [selectedCounty, setSelectedCounty] = useState("");
   const [selectedNeighborhood, setSelectedNeighborhood] = useState("");
 
@@ -156,6 +158,10 @@ export default function AllProjects() {
     setSelectedNeighborhood(value);
   };
 
+  const onChangeProjectStatus = (value) => {
+    setSelectedProjectStatus(value);
+  };
+
   useEffect(() => {
     setLoading(true);
     const timer = setTimeout(() => {
@@ -208,6 +214,20 @@ export default function AllProjects() {
     }
   };
   const [cityItems, setCityItems] = useState([]);
+  const [projectStatuses, setProjectStatuses] = useState([
+    {
+      value: 2,
+      label: "Tamamlanan Projeler",
+    },
+    {
+      value: 3,
+      label: "Devam Eden Projeler",
+    },
+    {
+      value: 5,
+      label: "Topraktan Projeler",
+    },
+  ]);
 
   useEffect(() => {
     const newCityItems = cities.map((city) => ({
@@ -654,7 +674,7 @@ export default function AllProjects() {
                   <View style={styles.optionsContainer}>
                     <RNPickerSelect
                       placeholder={{
-                        label: "Şehir Seçiniz...",
+                        label: "Şehir Seçiniz",
                         value: null,
                       }}
                       style={pickerSelectStyles}
@@ -667,7 +687,7 @@ export default function AllProjects() {
 
                     <RNPickerSelect
                       placeholder={{
-                        label: "İlçe Seçiniz...",
+                        label: "İlçe Seçiniz",
                         value: null,
                       }}
                       style={pickerSelectStyles}
@@ -680,7 +700,7 @@ export default function AllProjects() {
 
                     <RNPickerSelect
                       placeholder={{
-                        label: "Mahalle Seçiniz...",
+                        label: "Mahalle Seçiniz",
                         value: null,
                       }}
                       style={pickerSelectStyles}
@@ -690,26 +710,27 @@ export default function AllProjects() {
                       }}
                       items={neighborhoods}
                     />
-
-                    {/* <DropDownMenu
-                      options={districts}
-                      onSelectOption={(selectedDistrict) =>
-                        handleLocationChange("district", selectedDistrict)
-                      }
-                      selectedOption={selectedLocation.district}
-                      placeholder="İlçe Seçiniz"
+                  </View>
+                )}
+              </View>
+              <View style={styles.filterContainer}>
+                <TouchableOpacity onPress={() => toggleFilter("projectStatus")}>
+                  <Text style={styles.filterLabel}>Proje Durumu</Text>
+                </TouchableOpacity>
+                {openFilterIndex === "projectStatus" && (
+                  <View style={styles.optionsContainer}>
+                    <RNPickerSelect
+                      placeholder={{
+                        label: "Proje Durumu Seçiniz",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      value={selectedProjectStatus}
+                      onValueChange={(value) => {
+                        onChangeProjectStatus(value);
+                      }}
+                      items={projectStatuses}
                     />
-                    <DropDownMenu
-                      options={neighborhoods}
-                      onSelectOption={(selectedNeighborhood) =>
-                        handleLocationChange(
-                          "neighborhood",
-                          selectedNeighborhood
-                        )
-                      }
-                      selectedOption={selectedLocation.neighborhood}
-                      placeholder="Mahalle Seçiniz"
-                    /> */}
                   </View>
                 )}
               </View>
