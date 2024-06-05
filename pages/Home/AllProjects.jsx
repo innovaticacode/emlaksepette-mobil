@@ -237,6 +237,19 @@ export default function AllProjects() {
     setCityItems(newCityItems);
   }, [cities]);
 
+  const [listingDates, setListingDates] = useState([
+    { value: 24, label: "Son 24 Saat" },
+    { value: 3, label: "Son 3 Gün" },
+    { value: 7, label: "Son 7 Gün" },
+    { value: 15, label: "Son 15 Gün" },
+    { value: 30, label: "Son 30 Gün" },
+  ]);
+  const [selectedListingDate, setSelectedListingDate] = useState(null);
+
+  const onChangeListingDate = (value) => {
+    setSelectedListingDate(value);
+  };
+
   const [IsLoading, setIsLoading] = useState(false);
   const [featuredProjects, setFeaturedProjects] = useState([]);
   const fetchFeaturedProjects = async () => {
@@ -734,6 +747,32 @@ export default function AllProjects() {
                   </View>
                 )}
               </View>
+              <View style={styles.filterContainer}>
+                <TouchableOpacity onPress={() => toggleFilter("listingDate")}>
+                  <Text style={styles.filterLabel}>İlan Tarihi</Text>
+                </TouchableOpacity>
+                {openFilterIndex === "listingDate" && (
+                  <View style={styles.optionsContainer}>
+                    {listingDates.map((date) => (
+                      <View style={styles.option} key={date.value}>
+                        <TouchableOpacity
+                          style={styles.checkboxContainer}
+                          onPress={() =>
+                            handleCheckboxChange("listing_date", date.value)
+                          }
+                        >
+                          <Text style={styles.checkboxLabel}>{date.label}</Text>
+                          <View style={styles.checkbox}>
+                            {selectedCheckboxes["listing_date"]?.[
+                              date.value
+                            ] && <View style={styles.checkboxInner} />}
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+                  </View>
+                )}
+              </View>
 
               {filters.map((filter, index) => (
                 <View key={index} style={styles.filterContainer}>
@@ -972,7 +1011,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     paddingVertical: 10,
-    paddingHorizontal: 3,
     borderTopWidth: 1,
     justifyContent: "space-between",
     borderColor: "#eaeff5",
@@ -982,10 +1020,8 @@ const styles = StyleSheet.create({
     height: 20,
     borderWidth: 1,
     borderColor: "green",
-    marginRight: 8,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 10,
   },
   checkboxInner: {
     width: 14,
@@ -1014,7 +1050,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     paddingVertical: 10,
-    paddingHorizontal: 3,
     borderTopWidth: 1,
     justifyContent: "space-between",
     borderColor: "#eaeff5",
@@ -1027,8 +1062,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 8,
-    marginLeft: 10,
   },
   radioInner: {
     width: 12,
@@ -1039,6 +1072,9 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
   },
   radioLabel: {
+    marginLeft: 8,
+  },
+  checkboxLabel: {
     marginLeft: 8,
   },
   brandsSquare: {
@@ -1058,9 +1094,7 @@ const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     borderWidth: 1,
     borderColor: "#eaeff5",
-    borderRadius: 5,
     padding: 10,
-    marginHorizontal: 5,
     fontSize: 14,
     margin: "0 auto",
     marginBottom: 5,
@@ -1068,7 +1102,6 @@ const pickerSelectStyles = StyleSheet.create({
   inputAndroid: {
     borderWidth: 1,
     borderColor: "#eaeff5",
-    borderRadius: 5,
     padding: 10,
     marginHorizontal: 5,
     fontSize: 14,
