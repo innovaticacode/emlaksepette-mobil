@@ -458,8 +458,8 @@ export default function HomePage() {
                       data: featuredProjects,
                       count: featuredProjects.length,
                       type: null,
-                      optional: "satilik",
-                      title: "konut",
+                      optional: null,
+                      title: null,
                       check: null,
                       city: null,
                       county: null,
@@ -745,80 +745,6 @@ export default function HomePage() {
     
        
       />
-          </View>
-          <View style={styles.slide4}>
-            <View style={{ paddingTop: 0 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  alignItems: "center",
-                }}
-              >
-                <Text style={{ fontSize: 12 }}>
-                  ÖNE ÇIKAN PREFABRİK YAPILAR
-                </Text>
-
-                <TouchableOpacity style={styles.allBtn}>
-                  <Text style={{ color: "white", fontSize: 11 }}>
-                    Tümünü Gör
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <FlatList
-        data={filteredPrefabrik}
-     
-        renderItem={({ item }) => (
-          <RealtorPost
-          GetId={GetIdForCart}
-        
-          HouseId={item.id}
-          price={`${
-            JSON.parse(item.housing_type_data)["price"]
-          } `}
-          housing={item}
-          title={item.housing_title}
-          loading={loadingEstates}
-          location={item.city_title + " / " + item.county_title}
-          image={`${apiUrl}/housing_images/${
-            JSON.parse(item.housing_type_data).image
-          }`}
-          column1_name={`${
-            JSON.parse(item.housing_type_data)[item.column1_name]
-          } `}
-          column1_additional={item.column1_additional}
-          column2_name={`${
-            JSON.parse(item.housing_type_data)[item.column2_name]
-          } `}
-          column2_additional={item.column2_additional}
-          column3_name={`${
-            JSON.parse(item.housing_type_data)[item.column3_name]
-          } `}
-          column3_additional={item.column3_additional}
-          column4_name={`${
-            JSON.parse(item.housing_type_data)[item.column4_name]
-          } `}
-          column4_additional={item.column4_additional}
-          bookmarkStatus={true}
-          dailyRent={false}
-
-        />
-
-        )}
-        keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
-        onEndReached={() => fetchFeaturedEstates(false)}
-        onEndReachedThreshold={0.5}
-        onRefresh={onRefresh}
-        refreshing={refreshing}
-        ListFooterComponent={loading && !refreshing ? <ActivityIndicator  style={{margin:20}}size="small" color="#000000" /> : null}
-    
-       
-      />
-
-            
           </View>
           <View style={styles.slide4}>
             <View style={{ paddingTop: 0 }}>
