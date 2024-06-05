@@ -10,7 +10,6 @@ import { Platform } from "react-native";
 export default function Information({ settings }) {
   const route = useRoute();
   const { itemId, otherParam, konum } = route.params;
- 
 
   function veriParseEt(veri) {
     try {
@@ -26,67 +25,85 @@ export default function Information({ settings }) {
   }
 
   return (
-      <View style={[styles.card, styles.shadowProp]}>
-        {settings.projectHousingSetting.map((setting,index) => {
-          if (!setting.is_array) {
+    <View style={[styles.card, styles.shadowProp]}>
+      {settings.projectHousingSetting.map((setting, index) => {
+        if (!setting.is_array) {
+          if (settings.projectHousingsList[1][setting.column_name + "[]"]) {
+            return (
+              <SettingsItem
+                key={index}
+                info={setting.label}
+                numbers={
+                  settings.projectHousingsList[1][setting.column_name + "[]"]
+                }
+              />
+            );
+          }
+        } else {
+        }
+      })}
+      <View>
+        {settings.projectHousingSetting.map((setting, index) => {
+          if (setting.is_array) {
             if (settings.projectHousingsList[1][setting.column_name + "[]"]) {
-              return (
-              
-                  <SettingsItem
-                  key={index}
-                    info={setting.label}
-                    numbers={
-                      settings.projectHousingsList[1][
-                        setting.column_name + "[]"
-                      ]
-                    }
-                  />
-               
-              );
+              if (
+                veriParseEt(
+                  settings.projectHousingsList[1][setting.column_name + "[]"]
+                )
+              ) {
+                var arrayData = JSON.parse(
+                  settings.projectHousingsList[1][setting.column_name + "[]"]
+                );
+
+                if (arrayData.length > 0) {
+                  return (
+                    <View style={{ margin: 10, marginTop: 20 }} key={index}>
+                      <Text
+                        style={{
+                          color: "black",
+                          fontWeight: "700",
+                          fontSize: 12,
+                        }}
+                      >
+                        {setting.label}
+                      </Text>
+                      <View
+                        key={setting.id}
+                        style={{
+                          marginTop: 10,
+                          display: "flex",
+                          flexDirection: "row",
+                          flexWrap: "wrap",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        {arrayData.map((arrayD, index2) => {
+                          return (
+                            <View
+                              style={{
+                                width: "50%",
+                                marginTop: 10,
+                                display: "flex",
+                              }}
+                              key={index2}
+                            >
+                              <View>
+                                <CheckSetting text={arrayD} />
+                              </View>
+                            </View>
+                          );
+                        })}
+                      </View>
+                    </View>
+                  );
+                }
+              }
             }
           } else {
           }
         })}
-        <View >
-          {settings.projectHousingSetting.map((setting,index) => {
-            if (setting.is_array) {
-              if (settings.projectHousingsList[1][setting.column_name + "[]"]) {
-                if (
-                  veriParseEt(
-                    settings.projectHousingsList[1][setting.column_name + "[]"]
-                  )
-                ) {
-                  var arrayData = JSON.parse(
-                    settings.projectHousingsList[1][setting.column_name + "[]"]
-                  );
-
-                  if (arrayData.length > 0) {
-                    return (
-                      
-                      <View style={{margin:10, marginTop: 20}} key={index}>
-                          <Text style={{color:"black", fontWeight: "700",  fontSize: "12" }}>{setting.label}</Text>
-                        <View key={setting.id} style={{marginTop:10,display:'flex',flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}}>
-                        
-                          {arrayData.map((arrayD,index2)=> {
-                            return (
-                              <View style={{width:'50%',marginTop:10,display:'flex',}}key={index2}>
-                                <View>
-                                  <CheckSetting text={arrayD} />
-                                </View>
-                              </View>
-                            ) 
-                          })}
-                        </View>
-                      </View>
-                    );
-                  }
-                }
-              }
-            } else {
-            }
-          })}
-        </View>
       </View>
+    </View>
   );
 }
 
