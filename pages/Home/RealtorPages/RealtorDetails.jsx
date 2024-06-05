@@ -160,11 +160,11 @@ const [newCollectionNameCreate, setnewCollectionNameCreate] = useState('')
 useEffect(() => {
   getValueFor("user", setUser);
 }, []);
-
+console.log(user)
 const fetchData = async () => {
  
   try {
-    const response = await axios.get('https://test.emlaksepette.com/api/getCollections',{
+    const response = await axios.get('https://test.emlaksepette.com/api/client/collections',{
       headers: {
         'Authorization': `Bearer ${user.access_token}`
       }
@@ -279,7 +279,79 @@ try {
   console.error('post isteği olmadı' ,error);
 } 
 };
+const ıtemOnCollection = (collectionId) => {
+  let check = false;
+  collections.map((collection) => {
+    for (var i = 0; i < collection?.links?.length; i++) {
+      if (
+        (collection.links[i].item_type =
+          1 &&
+          collection.links[i].item_id == data.housing.id &&
+        
+          collection.links[i].collection_id == collectionId)
+      ) {
+        check = true;
+      }
+    }
+  });
 
+  return check;
+};
+const removeItemOnCollection = (collectionId) => {
+  const collectionData = {
+    item_type: 1,
+    room_order: selectedHouse,
+    item_id: data.project.id,
+    collection_id: collectionId,
+  };
+
+  axios
+    .post(
+      "https://test.emlaksepette.com/api/remove_item_on_collection",
+      collectionData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      }
+    )
+    .then((response) => {
+      setTimeout(() => {
+        setcollectionAddedSucces(true);
+      }, 200);
+      setTimeout(() => {
+        setcollectionAddedSucces(false);
+      }, 3000);
+      var newCollections = collections.map((collection) => {
+        if (collection.id == collectionId) {
+          var newLinks = collection.links.filter((link) => {
+            if (
+              link.collection_id == collectionId &&
+              link.item_id == data.project.id &&
+              link.room_order == selectedHouse
+            ) {
+            } else {
+              return link;
+            }
+          });
+
+          return {
+            ...collection,
+            links: newLinks,
+          };
+        } else {
+          return collection;
+        }
+      });
+
+      setcollections(newCollections);
+    })
+    .catch((error) => {
+      // Hata durumunu işleyin
+      console.error("Error:", error);
+    });
+};
 
 return (
   
@@ -661,7 +733,7 @@ return (
                   </TouchableOpacity>
                      {
                         collections.map((item,index)=>(
-                          <AddCollection  key={index} item={item} getCollectionId={getCollectionId} addLink={addSelectedCollection}/> 
+                          <AddCollection  checkFunc={ıtemOnCollection} key={index} item={item} getCollectionId={getCollectionId} addLink={addSelectedCollection}   removeItemOnCollection={removeItemOnCollection}/> 
                         ))
 
                       }

@@ -734,19 +734,16 @@ const styles = StyleSheet.create({
   },
 
   modal2: {
-    width: "95%",
-    height: "100%",
+    justifyContent: "flex-end",
+    margin: 0,
   },
   modalContent2: {
-    backgroundColor: "white",
-    height: "100%",
-    marginTop: 71,
-    width: "95%",
-    margin: 0,
-    position: "absolute", // Mutlak konumlandırma kullanarak sağa yaslanmasını sağlar
-    right: 0,
-    top: 0, // Modalın en üstte görünmesini sağlar
-    bottom: 0, // Modalın en altta da görünmesini sağlar
+    backgroundColor: "#f4f4f4",
+    padding: 20,
+    height: "80%",
+   marginTop:10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 
   modal: {
