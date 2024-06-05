@@ -180,7 +180,7 @@ export default function CreateUser() {
             </View>
             <View>
               <Text style={style.Label}>Kullanıcı Tipi</Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 doneText="Tamam"
                 value={UserType}
                 placeholder={{

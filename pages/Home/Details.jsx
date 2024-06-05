@@ -1834,7 +1834,7 @@ export default function Details({ navigation }) {
                     >
                       Şehir
                     </Text>
-                    <RNPickerSelect
+                    <RNPickerSelect doneText="Tamam"
                       placeholder={{
                         label: "Şehir Seçiniz...",
                         value: null,
@@ -1858,7 +1858,7 @@ export default function Details({ navigation }) {
                     >
                       İlçe
                     </Text>
-                    <RNPickerSelect
+                    <RNPickerSelect doneText="Tamam"
                       placeholder={{
                         label: "İlçe Seçiniz...",
                         value: null,

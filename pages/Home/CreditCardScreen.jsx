@@ -79,7 +79,7 @@ export default function CreditCardScreen({CompeletePayment}) {
                     <TextInput value={NameOfCardUser} style={styles.Input} onChangeText={(value)=>setNameOfCardUser(value)}/>
                 </View>
                 <View style={{flexDirection:'row',width:'100%',justifyContent:'space-around'}}>
-                <RNPickerSelect
+                <RNPickerSelect doneText="Tamam"
           placeholder={{
             label: "Ay ",
             value: null,
@@ -89,7 +89,7 @@ export default function CreditCardScreen({CompeletePayment}) {
           value={month}
           items={months}
         />
-                <RNPickerSelect
+                <RNPickerSelect doneText="Tamam"
           placeholder={{
             label: "Yıl ",
             value: null,

@@ -379,7 +379,7 @@ const fetchDataCounty = async (value) => {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               İl
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               doneText="Tamam"
               value={city}
               placeholder={{
@@ -397,7 +397,7 @@ const fetchDataCounty = async (value) => {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               İlçe
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               value={county}
               placeholder={{
                 label: "Seçiniz...",
@@ -414,7 +414,7 @@ const fetchDataCounty = async (value) => {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Mahalle
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               value={neigbourhod}
               placeholder={{
                 label: "Seçiniz...",
@@ -484,7 +484,7 @@ const fetchDataCounty = async (value) => {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Yapı Tipi
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               value={buildType}
               placeholder={{
                 label: "Seçiniz...",
@@ -538,7 +538,7 @@ const fetchDataCounty = async (value) => {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Cephe
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               value={Side}
               placeholder={{
                 label: "Seçiniz...",
@@ -558,7 +558,7 @@ const fetchDataCounty = async (value) => {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Manzara
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               value={view}
               placeholder={{
                 label: "Seçiniz...",
@@ -577,7 +577,7 @@ const fetchDataCounty = async (value) => {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Banyo/Tuvalet
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               value={bathAndToilet}
               placeholder={{
                 label: "Seçiniz...",
@@ -605,7 +605,7 @@ const fetchDataCounty = async (value) => {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Isınma
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               value={warm}
               placeholder={{
                 label: "Seçiniz...",
@@ -620,7 +620,7 @@ const fetchDataCounty = async (value) => {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Oda ve Salon
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               value={TotalRoomNumber}
               placeholder={{
                 label: "Seçiniz...",
@@ -635,7 +635,7 @@ const fetchDataCounty = async (value) => {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Tapu
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               value={certificate}
               placeholder={{
                 label: "Seçiniz...",

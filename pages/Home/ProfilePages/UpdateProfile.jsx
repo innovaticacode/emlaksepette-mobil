@@ -258,7 +258,7 @@ useEffect(() => {
       
             <View style={{flexDirection:'row'}}>
               <View style={{width:'32%'}}>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
               doneText="Tamam"
               value={cityCode}
               placeholder={{

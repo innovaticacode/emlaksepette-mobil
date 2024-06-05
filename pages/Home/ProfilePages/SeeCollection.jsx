@@ -1496,7 +1496,7 @@ export default function SeeCollection() {
                   >
                     Şehir
                   </Text>
-                  <RNPickerSelect
+                  <RNPickerSelect doneText="Tamam"
                     placeholder={{
                       label: "Şehir Seçiniz...",
                       value: null,
@@ -1520,7 +1520,7 @@ export default function SeeCollection() {
                   >
                     İlçe
                   </Text>
-                  <RNPickerSelect
+                  <RNPickerSelect doneText="Tamam"
                     placeholder={{
                       label: "İlçe Seçiniz...",
                       value: null,

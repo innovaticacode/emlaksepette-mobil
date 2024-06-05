@@ -417,7 +417,7 @@ export default function SwapForm({ data, openModal, color }) {
         <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
           Şehir
         </Text>
-        <RNPickerSelect
+        <RNPickerSelect doneText="Tamam"
           placeholder={{
             label: "Şehir Seçiniz...",
             value: null,
@@ -434,7 +434,7 @@ export default function SwapForm({ data, openModal, color }) {
         <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
           İlçe
         </Text>
-        <RNPickerSelect
+        <RNPickerSelect doneText="Tamam"
           placeholder={{
             label: "İlçe Seçiniz...",
             value: null,
@@ -449,7 +449,7 @@ export default function SwapForm({ data, openModal, color }) {
         <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
           Takas Tercihiniz
         </Text>
-        <RNPickerSelect
+        <RNPickerSelect doneText="Tamam"
           placeholder={{
             label: "Seçiniz...",
             value: null,
@@ -471,7 +471,7 @@ export default function SwapForm({ data, openModal, color }) {
         <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
           Emlak Tipi
         </Text>
-        <RNPickerSelect
+        <RNPickerSelect doneText="Tamam"
           placeholder={{
             label: "Seçiniz...",
             value: null,
@@ -491,7 +491,7 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Konut Tipi
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -511,7 +511,7 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Oda Sayısı
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -525,7 +525,7 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Konut Yaşı
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -539,7 +539,7 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Kullanım Durumu
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -590,7 +590,7 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Arsa İli
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -607,7 +607,7 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Arsa İlçe
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -624,7 +624,7 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Arsa Mahalle
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -648,7 +648,7 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Arsa İmar Durumu
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -688,7 +688,7 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Araç Model Yılı
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -703,7 +703,7 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Araba Markası
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -718,7 +718,7 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Yakıt Tipi
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -737,7 +737,7 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Vites Tipi
             </Text>
-            <RNPickerSelect
+            <RNPickerSelect doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,

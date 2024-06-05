@@ -593,7 +593,8 @@ export default function AllProjects() {
                 </TouchableOpacity>
                 {openFilterIndex === "location" && (
                   <View style={styles.optionsContainer}>
-                    <RNPickerSelect
+                    <RNPickerSelect doneText="Tamam"
+                     
                       placeholder={{
                         label: "Şehir Seçiniz",
                         value: null,
@@ -606,7 +607,7 @@ export default function AllProjects() {
                       items={cityItems}
                     />
 
-                    <RNPickerSelect
+                    <RNPickerSelect doneText="Tamam"
                       placeholder={{
                         label: "İlçe Seçiniz",
                         value: null,
@@ -619,7 +620,7 @@ export default function AllProjects() {
                       items={counties}
                     />
 
-                    <RNPickerSelect
+                    <RNPickerSelect doneText="Tamam"
                       placeholder={{
                         label: "Mahalle Seçiniz",
                         value: null,
@@ -757,7 +758,7 @@ export default function AllProjects() {
                 </TouchableOpacity>
                 {openFilterIndex === "projectStatus" && (
                   <View style={styles.optionsContainer}>
-                    <RNPickerSelect
+                    <RNPickerSelect doneText="Tamam"
                       placeholder={{
                         label: "Proje Durumu Seçiniz",
                         value: null,
@@ -1002,7 +1003,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingBottom: 10,
-    marginLeft: 10
+    marginLeft: 10,
   },
   switchLabel: {
     marginLeft: 10,
