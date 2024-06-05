@@ -570,10 +570,16 @@ export default function App({ route }) {
             component={AllProjects}
             options={({ route }) => ({
               headerShown: true,
+              headerStyle: {
+                backgroundColor: '#EA2B2E',
+              },
               title: route.params.name + " - " + route.params.count + " Proje" ,
               headerBackTitle: "",
               headerBackTitleVisible: false,
-              headerTintColor: "black",
+              headerTintColor: "white",
+              headerTitleStyle: {
+                fontSize: 14,
+              },
             })}
           />
           <Stack.Screen

@@ -264,7 +264,7 @@ import {
               <View style={{ alignItems: "center", paddingTop: 15 }}>
                 <TouchableOpacity
                   style={{
-                    backgroundColor: "#bdc6cf",
+                    backgroundColor: "#eaeff5",
                     padding: 4,
                     width: "15%",
                     borderRadius: 20,
@@ -315,7 +315,7 @@ import {
     inputAndroid: {
       backgroundColor: "transparent",
       borderWidth: 1,
-      borderColor: "#bdc6cf",
+      borderColor: "#eaeff5",
       borderRadius: 5,
       padding: 9,
       fontSize: 14, // to ensure the text is never behind the icon

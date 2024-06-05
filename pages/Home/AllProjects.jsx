@@ -21,6 +21,8 @@ import axios from "axios";
 import { Platform } from "react-native";
 import { ActivityIndicator, Switch, TextInput } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import { RxDropdownMenu } from "react-icons/rx";
+import RNPickerSelect from "react-native-picker-select";
 
 export default function AllProjects() {
   const apiUrl = "https://test.emlaksepette.com/";
@@ -35,12 +37,17 @@ export default function AllProjects() {
     title,
     titleHeader,
     check,
+    isLoading,
     city,
     county,
     hood,
   } = route.params;
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedCounty, setSelectedCounty] = useState("");
+  const [selectedNeighborhood, setSelectedNeighborhood] = useState("");
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -92,6 +99,72 @@ export default function AllProjects() {
   const [term, setTerm] = useState("");
   const apiUrlFilter = `https://test.emlaksepette.com/api/kategori/${slug}/${title}/${optional}/${type}/${check}/${city}/${county}/${hood}`;
 
+  const [counties, setCounties] = useState([]);
+  const [neighborhoods, setNeighborhoods] = useState([]);
+
+  const onChangeCity = (value) => {
+    setSelectedCity(value);
+    if (value) {
+      fetchDataCounty(value)
+        .then((county) => setCounties(county.data))
+        .catch((error) =>
+          console.error("Veri alınırken bir hata oluştu:", error)
+        );
+    } else {
+      setCounties([]);
+    }
+  };
+
+  const fetchDataCounty = async (value) => {
+    try {
+      const response = await axios.get(
+        `https://test.emlaksepette.com/api/counties/${value}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Hata:", error);
+      throw error;
+    }
+  };
+
+  const fetchDataNeighborhood = async (value) => {
+    try {
+      const response = await axios.get(
+        `https://test.emlaksepette.com/api/neighborhoods/${value}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Hata:", error);
+      throw error;
+    }
+  };
+
+  const onChangeCounty = (value) => {
+    setSelectedCounty(value);
+    if (value) {
+      fetchDataNeighborhood(value)
+        .then((county) => setNeighborhoods(county.data))
+        .catch((error) =>
+          console.error("Veri alınırken bir hata oluştu:", error)
+        );
+    } else {
+      setNeighborhoods([]);
+    }
+  };
+
+  const onChangeNeighborhood = (value) => {
+    setSelectedNeighborhood(value);
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [slug, data]);
+
   const fetchFilteredProjects = async () => {
     try {
       const response = await axios.get(apiUrlFilter);
@@ -126,6 +199,7 @@ export default function AllProjects() {
       setSecondhandHousings(data.secondhandHousings);
       setHousingStatuses(data.housingStatuses);
       setCities(data.cities);
+
       setTitleParam(data.title);
       setTypeParam(data.type);
       setTerm(data.term);
@@ -133,6 +207,15 @@ export default function AllProjects() {
       console.error(error);
     }
   };
+  const [cityItems, setCityItems] = useState([]);
+
+  useEffect(() => {
+    const newCityItems = cities.map((city) => ({
+      label: city.title,
+      value: city.id,
+    }));
+    setCityItems(newCityItems);
+  }, [cities]);
 
   const [IsLoading, setIsLoading] = useState(false);
   const [featuredProjects, setFeaturedProjects] = useState([]);
@@ -187,6 +270,18 @@ export default function AllProjects() {
       },
     }));
   };
+
+  function slugify(text) {
+    return text
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, "-") // Boşlukları tire ile değiştir
+      .replace(/[^\w\-]+/g, "") // Harf, sayı, tire dışındaki karakterleri kaldır
+      .replace(/\-\-+/g, "-") // Birden fazla tireyi tek tireyle değiştir
+      .replace(/^-+/, "") // Başlangıçtaki tireleri kaldır
+      .replace(/-+$/, ""); // Sondaki tireleri kaldır
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       {/* <Header onPress={toggleDrawer} /> */}
@@ -296,9 +391,7 @@ export default function AllProjects() {
           style={styles.btn}
           onPress={() => setModalVisible(true)}
         >
-          <Text style={{ color: "white", fontSize: 13, fontWeight: "600" }}>
-            Filtrele
-          </Text>
+          <Text style={{ color: "black", fontSize: 13 }}>Filtrele</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
@@ -307,9 +400,7 @@ export default function AllProjects() {
             borderLeftWidth: 1,
           }}
         >
-          <Text style={{ color: "white", fontSize: 13, fontWeight: "600" }}>
-            Sırala
-          </Text>
+          <Text style={{ color: "black", fontSize: 13 }}>Sırala</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
@@ -370,7 +461,7 @@ export default function AllProjects() {
                   backgroundColor: "#eaeff5",
                 }}
               >
-                <TouchableOpacity >
+                <TouchableOpacity>
                   <View style={styles.filterLabel}>
                     <Text style={{ fontWeight: "bold" }}>Kategori</Text>
                     <View style={styles.brandsSquare}>
@@ -477,6 +568,7 @@ export default function AllProjects() {
                           handleRadioChange("corporate_type", "Banka")
                         }
                       >
+                        <Text style={styles.radioLabel}>Bankadan</Text>
                         <View style={styles.radio}>
                           <View
                             style={[
@@ -486,7 +578,6 @@ export default function AllProjects() {
                             ]}
                           />
                         </View>
-                        <Text style={styles.radioLabel}>Bankadan</Text>
                       </TouchableOpacity>
                     </View>
                     <View style={styles.option}>
@@ -496,6 +587,7 @@ export default function AllProjects() {
                           handleRadioChange("corporate_type", "İnşaat Ofisi")
                         }
                       >
+                        <Text style={styles.radioLabel}>İnşaat Ofisinden</Text>
                         <View style={styles.radio}>
                           <View
                             style={[
@@ -505,7 +597,6 @@ export default function AllProjects() {
                             ]}
                           />
                         </View>
-                        <Text style={styles.radioLabel}>İnşaat Ofisinden</Text>
                       </TouchableOpacity>
                     </View>
                     <View style={styles.option}>
@@ -518,6 +609,9 @@ export default function AllProjects() {
                           )
                         }
                       >
+                        <Text style={styles.radioLabel}>
+                          Turizm İşletmesinden
+                        </Text>
                         <View style={styles.radio}>
                           <View
                             style={[
@@ -528,9 +622,6 @@ export default function AllProjects() {
                             ]}
                           />
                         </View>
-                        <Text style={styles.radioLabel}>
-                          Turizm İşletmesinden
-                        </Text>
                       </TouchableOpacity>
                     </View>
                     <View style={styles.option}>
@@ -540,6 +631,7 @@ export default function AllProjects() {
                           handleRadioChange("corporate_type", "Emlak Ofisi")
                         }
                       >
+                        <Text style={styles.radioLabel}>Emlak Ofisinden</Text>
                         <View style={styles.radio}>
                           <View
                             style={[
@@ -549,12 +641,79 @@ export default function AllProjects() {
                             ]}
                           />
                         </View>
-                        <Text style={styles.radioLabel}>Emlak Ofisinden</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
                 )}
               </View>
+              <View style={styles.filterContainer}>
+                <TouchableOpacity onPress={() => toggleFilter("location")}>
+                  <Text style={styles.filterLabel}>Konum</Text>
+                </TouchableOpacity>
+                {openFilterIndex === "location" && (
+                  <View style={styles.optionsContainer}>
+                    <RNPickerSelect
+                      placeholder={{
+                        label: "Şehir Seçiniz...",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      value={selectedCity}
+                      onValueChange={(value) => {
+                        onChangeCity(value);
+                      }}
+                      items={cityItems}
+                    />
+
+                    <RNPickerSelect
+                      placeholder={{
+                        label: "İlçe Seçiniz...",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      value={selectedCounty}
+                      onValueChange={(value) => {
+                        onChangeCounty(value);
+                      }}
+                      items={counties}
+                    />
+
+                    <RNPickerSelect
+                      placeholder={{
+                        label: "Mahalle Seçiniz...",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      value={selectedNeighborhood}
+                      onValueChange={(value) => {
+                        onChangeNeighborhood(value);
+                      }}
+                      items={neighborhoods}
+                    />
+
+                    {/* <DropDownMenu
+                      options={districts}
+                      onSelectOption={(selectedDistrict) =>
+                        handleLocationChange("district", selectedDistrict)
+                      }
+                      selectedOption={selectedLocation.district}
+                      placeholder="İlçe Seçiniz"
+                    />
+                    <DropDownMenu
+                      options={neighborhoods}
+                      onSelectOption={(selectedNeighborhood) =>
+                        handleLocationChange(
+                          "neighborhood",
+                          selectedNeighborhood
+                        )
+                      }
+                      selectedOption={selectedLocation.neighborhood}
+                      placeholder="Mahalle Seçiniz"
+                    /> */}
+                  </View>
+                )}
+              </View>
+
               {filters.map((filter, index) => (
                 <View key={index} style={styles.filterContainer}>
                   <TouchableOpacity onPress={() => toggleFilter(index)}>
@@ -716,7 +875,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     width: "50%",
-    backgroundColor: "#264ABB",
+    backgroundColor: "#eaeff5",
     padding: 12,
     justifyContent: "center",
     alignItems: "center",
@@ -738,10 +897,10 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   modalContent2: {
-    backgroundColor: "#f4f4f4",
+    backgroundColor: "#FFFFFF",
     padding: 20,
     height: "80%",
-   marginTop:10,
+    marginTop: 10,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
@@ -791,8 +950,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
-    padding: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 3,
     borderTopWidth: 1,
+    justifyContent: "space-between",
     borderColor: "#eaeff5",
   },
   checkbox: {
@@ -803,7 +964,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 10
+    marginLeft: 10,
   },
   checkboxInner: {
     width: 14,
@@ -831,8 +992,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
-    padding: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 3,
     borderTopWidth: 1,
+    justifyContent: "space-between",
     borderColor: "#eaeff5",
   },
   radio: {
@@ -844,7 +1007,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 8,
-    marginLeft: 10
+    marginLeft: 10,
   },
   radioInner: {
     width: 12,
@@ -867,5 +1030,28 @@ const styles = StyleSheet.create({
   brandName: {
     color: "black",
     marginRight: 3,
+  },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    borderWidth: 1,
+    borderColor: "#eaeff5",
+    borderRadius: 5,
+    padding: 10,
+    marginHorizontal: 5,
+    fontSize: 14,
+    margin: "0 auto",
+    marginBottom: 5,
+  },
+  inputAndroid: {
+    borderWidth: 1,
+    borderColor: "#eaeff5",
+    borderRadius: 5,
+    padding: 10,
+    marginHorizontal: 5,
+    fontSize: 14,
+    margin: "0 auto",
+    marginBottom: 5,
   },
 });

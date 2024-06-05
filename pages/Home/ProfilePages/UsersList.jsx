@@ -113,7 +113,7 @@ export default function UsersList() {
           <View style={{ alignItems: "center", paddingTop: 15 }}>
             <TouchableOpacity
               style={{
-                backgroundColor: "#bdc6cf",
+                backgroundColor: "#eaeff5",
                 padding: 4,
                 width: "15%",
                 borderRadius: 20,
