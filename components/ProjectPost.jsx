@@ -5,11 +5,13 @@ import {
   ImageBackground,
   TouchableOpacity,
   Dimensions,
-  Image,
+ 
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "./methods/user";
+import { Image } from 'expo-image';
+
 export default function ProjectPost({
   project,
   ımage,
@@ -46,16 +48,21 @@ export default function ProjectPost({
       }
     >
       <View style={styles.container}>
-        <ImageBackground
+        <Image
           source={{ uri: ımage }}
           style={{ width: "100%", height: "100%" }}
+     
+          contentFit="cover"
+          transition={300}
         />
         <View style={styles.ShoppingName}>
           <View style={styles.ShopImage}>
             <Image
               source={{ uri: ProfilImage }}
               style={{ width: "50%", height: "90%" }}
-              resizeMode="cover"
+
+              contentFit="cover"
+              transition={200}
             />
           </View>
           <View style={styles.ShopText}>

@@ -37,8 +37,8 @@ import Swiper from "react-native-swiper";
 import PagerView from "react-native-pager-view";
 import Categories from "../../components/Categories";
 import userData, { getValueFor } from "../../components/methods/user";
-import RealtorPostSkeleton from "../../components/SkeletonComponents/RealtorPostSkeleton";
-import { FlashList } from "@shopify/flash-list";
+
+
 import { ActivityIndicator } from "react-native-paper";
 
 export default function HomePage() {
@@ -592,7 +592,7 @@ export default function HomePage() {
                 item.id ? item.id.toString() : index.toString()
               }
               onEndReached={() => fetchFeaturedEstates(false)}
-              onEndReachedThreshold={0.5}
+              onEndReachedThreshold={0}
               onRefresh={onRefresh}
               refreshing={refreshing}
               ListFooterComponent={
