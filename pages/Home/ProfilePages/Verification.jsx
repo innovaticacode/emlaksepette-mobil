@@ -41,7 +41,7 @@ const [Isucces, setIsucces] = useState(false)
       );
       setCodes('')
       setsucces(true)
-      console.log('Doğrulama isteği başarıyla tamamlandı:', response.data);
+    
       setIsucces(true)
       setTimeout(() => {
           setIsucces(false)
@@ -89,7 +89,7 @@ useEffect(() => {
 
   const [succes, setsucces] = useState(true)
 
- console.log(succes)
+ 
   return (
     <View style={styles.container}>
       {

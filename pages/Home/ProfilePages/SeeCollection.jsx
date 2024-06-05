@@ -184,7 +184,7 @@ export default function SeeCollection() {
         });
 
         setcollections(newCollections);
-        console.log(newCollections, "qwe");
+    
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -289,7 +289,7 @@ export default function SeeCollection() {
         }, 3000);
         // Başarılı yanıtı işleyin
         setselectedCollectionName(response.data.collection.name);
-        console.log("Response:", response.data);
+      
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -349,7 +349,7 @@ export default function SeeCollection() {
             return collection;
           }
         });
-        console.log(newCollections);
+    
         setcollections(newCollections);
       })
       .catch((error) => {
@@ -587,7 +587,7 @@ export default function SeeCollection() {
     if (errorMessage) {
       // ShowAlert(ErrorMessage);
     }
-    console.log(errorStatu + "error statu");
+    
   };
   const OpenFormModal = (no) => {
     setPaymentModalShowOrder(no);
@@ -1591,34 +1591,6 @@ export default function SeeCollection() {
             </TouchableOpacity>
           </View>
 
-          {/* <PagerView
-              style={{ height: 300 }}
-              initialPage={selectedImage}
-              onPageSelected={(event) =>
-                handlePageChange(event.nativeEvent.position)
-              }
-            >
-              {data.project.images.map((image, index) => {
-                // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
-                return (
-                  <Pressable
-                    key={index + 1}
-                    onPress={() => setCoverImageModal(true)}
-                  >
-                    <ImageBackground
-                      source={{
-                        uri: `${apiUrl}${image.image.replace(
-                          "public",
-                          "storage"
-                        )}`,
-                      }}
-                      style={{ width: "100%", height: "100%" }}
-                      resizeMode="cover"
-                    />
-                  </Pressable>
-                );
-              })}
-            </PagerView> */}
         </View>
       </Modal>
 

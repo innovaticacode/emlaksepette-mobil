@@ -120,7 +120,7 @@ const [check, setcheck] = useState(false)
       setStatusMessage(true)
     
 
-      console.log('Başarılı:', response.data);
+    
     } catch (error) {
       console.error('Hata:', error);
       setErrorMEssage(error)
@@ -130,7 +130,7 @@ const [check, setcheck] = useState(false)
     }
   };
 
-  console.log(ErrorMEssage)
+
   const [errorStatu, seterrorStatu] = useState(0)
   const [loading, setloading] = useState(false)
 

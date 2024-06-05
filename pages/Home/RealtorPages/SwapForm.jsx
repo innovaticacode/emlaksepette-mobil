@@ -111,14 +111,14 @@ export default function SwapForm({ data, openModal, color }) {
       formData.append("vites_tipi", shiftType);
       formData.append("arac_satis_rakami", Price);
       formData.append("barter_detay", Barter);
-      console.log(name);
+    
       const response = await axios.post(
         "https://test.emlaksepette.com/api/swap",
         formData
       );
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
-      console.log("İstek başarıyla tamamlandı:", response.data);
+  
 
       openModal(JSON.stringify(response.data.message));
       color("#d4edda");

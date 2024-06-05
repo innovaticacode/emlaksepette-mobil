@@ -1,6 +1,6 @@
 def enableProguardInReleaseBuilds = true
 def enableHermes = true
-
+def activeHermes = project.ext.react.get(“enableHermes”, true);
 android {
     ...
 

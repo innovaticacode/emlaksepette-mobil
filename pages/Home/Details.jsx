@@ -443,7 +443,7 @@ export default function Details({ navigation }) {
         }, 3000);
         // Başarılı yanıtı işleyin
         setselectedCollectionName(response.data.collection.name);
-        console.log("Response:", response.data);
+       
       })
       .catch((error) => {
         // Hata durumunu işleyin

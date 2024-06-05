@@ -64,7 +64,7 @@ import {
             
           // Dönüştürülmüş veriyi state'e atama
           setroles(response.data.roles);
-          console.log(roleItems);
+       
         }
       } catch (error) {
         console.error("Veri getirme hatası:", error);
@@ -125,7 +125,7 @@ import {
               setmessage(response.data.success)
           // Dönüştürülmüş veriyi state'e atama
       
-          console.log(roleItems);
+         
         }
       } catch (error) {
         console.error("Veri getirme hatası:", error);
@@ -148,7 +148,7 @@ import {
               
             // Dönüştürülmüş veriyi state'e atama
             setuserDetail(response.data.user);
-            console.log(roleItems);
+            
           }
         } catch (error) {
           console.error("Veri getirme hatası:", error);

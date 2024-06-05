@@ -93,7 +93,7 @@ export default function CreateUserType() {
       );
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
-      console.log("İstek başarıyla tamamlandı:", response.data);
+    
     } catch (error) {
       // Hata durumunda
 
