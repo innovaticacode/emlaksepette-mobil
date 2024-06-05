@@ -459,7 +459,7 @@ export default function HomePage() {
                       count: featuredProjects.length,
                       type: null,
                       optional: null,
-                      title: null,
+                      title: "konut",
                       check: null,
                       city: null,
                       county: null,

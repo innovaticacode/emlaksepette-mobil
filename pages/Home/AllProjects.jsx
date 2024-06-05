@@ -317,7 +317,7 @@ export default function AllProjects() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      {/* <Header onPress={toggleDrawer} /> */}
+      <Header onPress={toggleDrawer} />
 
       <Modal
         swipeDirection="left"
@@ -424,7 +424,7 @@ export default function AllProjects() {
           style={styles.btn}
           onPress={() => setModalVisible(true)}
         >
-          <Text style={{ color: "black", fontSize: 13 }}>Filtrele</Text>
+          <Text style={{ color: "white", fontSize: 13 }}>Filtrele</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
@@ -433,7 +433,7 @@ export default function AllProjects() {
             borderLeftWidth: 1,
           }}
         >
-          <Text style={{ color: "black", fontSize: 13 }}>Sırala</Text>
+          <Text style={{ color: "white", fontSize: 13 }}>Sırala</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.container}>
@@ -587,7 +587,53 @@ export default function AllProjects() {
                   </View>
                 </TouchableOpacity>
               </View>
+              <View style={styles.filterContainer}>
+                <TouchableOpacity onPress={() => toggleFilter("location")}>
+                  <Text style={styles.filterLabel}>Konum</Text>
+                </TouchableOpacity>
+                {openFilterIndex === "location" && (
+                  <View style={styles.optionsContainer}>
+                    <RNPickerSelect
+                      placeholder={{
+                        label: "Şehir Seçiniz",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      value={selectedCity}
+                      onValueChange={(value) => {
+                        onChangeCity(value);
+                      }}
+                      items={cityItems}
+                    />
 
+                    <RNPickerSelect
+                      placeholder={{
+                        label: "İlçe Seçiniz",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      value={selectedCounty}
+                      onValueChange={(value) => {
+                        onChangeCounty(value);
+                      }}
+                      items={counties}
+                    />
+
+                    <RNPickerSelect
+                      placeholder={{
+                        label: "Mahalle Seçiniz",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      value={selectedNeighborhood}
+                      onValueChange={(value) => {
+                        onChangeNeighborhood(value);
+                      }}
+                      items={neighborhoods}
+                    />
+                  </View>
+                )}
+              </View>
               <View style={styles.filterContainer}>
                 <TouchableOpacity onPress={() => toggleFilter("kimden")}>
                   <Text style={styles.filterLabel}>Kimden</Text>
@@ -680,74 +726,6 @@ export default function AllProjects() {
                 )}
               </View>
               <View style={styles.filterContainer}>
-                <TouchableOpacity onPress={() => toggleFilter("location")}>
-                  <Text style={styles.filterLabel}>Konum</Text>
-                </TouchableOpacity>
-                {openFilterIndex === "location" && (
-                  <View style={styles.optionsContainer}>
-                    <RNPickerSelect
-                      placeholder={{
-                        label: "Şehir Seçiniz",
-                        value: null,
-                      }}
-                      style={pickerSelectStyles}
-                      value={selectedCity}
-                      onValueChange={(value) => {
-                        onChangeCity(value);
-                      }}
-                      items={cityItems}
-                    />
-
-                    <RNPickerSelect
-                      placeholder={{
-                        label: "İlçe Seçiniz",
-                        value: null,
-                      }}
-                      style={pickerSelectStyles}
-                      value={selectedCounty}
-                      onValueChange={(value) => {
-                        onChangeCounty(value);
-                      }}
-                      items={counties}
-                    />
-
-                    <RNPickerSelect
-                      placeholder={{
-                        label: "Mahalle Seçiniz",
-                        value: null,
-                      }}
-                      style={pickerSelectStyles}
-                      value={selectedNeighborhood}
-                      onValueChange={(value) => {
-                        onChangeNeighborhood(value);
-                      }}
-                      items={neighborhoods}
-                    />
-                  </View>
-                )}
-              </View>
-              <View style={styles.filterContainer}>
-                <TouchableOpacity onPress={() => toggleFilter("projectStatus")}>
-                  <Text style={styles.filterLabel}>Proje Durumu</Text>
-                </TouchableOpacity>
-                {openFilterIndex === "projectStatus" && (
-                  <View style={styles.optionsContainer}>
-                    <RNPickerSelect
-                      placeholder={{
-                        label: "Proje Durumu Seçiniz",
-                        value: null,
-                      }}
-                      style={pickerSelectStyles}
-                      value={selectedProjectStatus}
-                      onValueChange={(value) => {
-                        onChangeProjectStatus(value);
-                      }}
-                      items={projectStatuses}
-                    />
-                  </View>
-                )}
-              </View>
-              <View style={styles.filterContainer}>
                 <TouchableOpacity onPress={() => toggleFilter("listingDate")}>
                   <Text style={styles.filterLabel}>İlan Tarihi</Text>
                 </TouchableOpacity>
@@ -770,6 +748,27 @@ export default function AllProjects() {
                         </TouchableOpacity>
                       </View>
                     ))}
+                  </View>
+                )}
+              </View>
+              <View style={styles.filterContainer}>
+                <TouchableOpacity onPress={() => toggleFilter("projectStatus")}>
+                  <Text style={styles.filterLabel}>Proje Durumu</Text>
+                </TouchableOpacity>
+                {openFilterIndex === "projectStatus" && (
+                  <View style={styles.optionsContainer}>
+                    <RNPickerSelect
+                      placeholder={{
+                        label: "Proje Durumu Seçiniz",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      value={selectedProjectStatus}
+                      onValueChange={(value) => {
+                        onChangeProjectStatus(value);
+                      }}
+                      items={projectStatuses}
+                    />
                   </View>
                 )}
               </View>
@@ -829,17 +828,17 @@ export default function AllProjects() {
                                     }
                                     style={styles.checkboxContainer}
                                   >
+                                    <View>
+                                      <Text style={styles.checkboxLabel}>
+                                        {value.label}
+                                      </Text>
+                                    </View>
                                     <View style={styles.checkbox}>
                                       {selectedCheckboxes[filter.name]?.[
                                         value.value
                                       ] && (
                                         <View style={styles.checkboxInner} />
                                       )}
-                                    </View>
-                                    <View>
-                                      <Text style={styles.checkboxLabel}>
-                                        {value.label}
-                                      </Text>
                                     </View>
                                   </TouchableOpacity>
                                 )}
@@ -853,17 +852,17 @@ export default function AllProjects() {
                                     }
                                     style={styles.checkboxContainer}
                                   >
+                                    <View>
+                                      <Text style={styles.checkboxLabel}>
+                                        {value.label}
+                                      </Text>
+                                    </View>
                                     <View style={styles.checkbox}>
                                       {selectedCheckboxes[filter.name]?.[
                                         value.value
                                       ] && (
                                         <View style={styles.checkboxInner} />
                                       )}
-                                    </View>
-                                    <View>
-                                      <Text style={styles.checkboxLabel}>
-                                        {value.label}
-                                      </Text>
                                     </View>
                                   </TouchableOpacity>
                                 )}
@@ -935,7 +934,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     width: "50%",
-    backgroundColor: "#eaeff5",
+    backgroundColor: "#EA2B2E",
     padding: 12,
     justifyContent: "center",
     alignItems: "center",
@@ -1002,9 +1001,11 @@ const styles = StyleSheet.create({
   switchContainer: {
     flexDirection: "row",
     alignItems: "center",
+    paddingBottom: 10,
+    marginLeft: 10
   },
   switchLabel: {
-    marginLeft: 8,
+    marginLeft: 10,
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -1034,16 +1035,16 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     flexDirection: "row", // Yatay düzende sıralama sağlar
-    justifyContent: "space-between", // İki input arasında boşluk oluşturur
+    justifyContent: "space-around", // İki input arasında boşluk oluşturur
+    marginBottom: 10,
   },
   textInput: {
-    flex: 1,
-    height: 40,
+    height: 25,
+    width: "45%",
     borderWidth: 0,
     borderBottomWidth: 0,
     borderBottomColor: "transparent",
     backgroundColor: "white",
-    marginRight: 8,
   },
   radioContainer: {
     flexDirection: "row",
@@ -1072,10 +1073,10 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
   },
   radioLabel: {
-    marginLeft: 8,
+    marginLeft: 10,
   },
   checkboxLabel: {
-    marginLeft: 8,
+    marginLeft: 10,
   },
   brandsSquare: {
     position: "relative",

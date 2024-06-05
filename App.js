@@ -569,7 +569,7 @@ export default function App({ route }) {
             name="AllProject"
             component={AllProjects}
             options={({ route }) => ({
-              headerShown: true,
+              headerShown: false,
               headerStyle: {
                 backgroundColor: '#EA2B2E',
               },
