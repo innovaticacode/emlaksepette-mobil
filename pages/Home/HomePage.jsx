@@ -37,8 +37,8 @@ import Swiper from "react-native-swiper";
 import PagerView from "react-native-pager-view";
 import Categories from "../../components/Categories";
 import userData, { getValueFor } from "../../components/methods/user";
-import RealtorPostSkeleton from "../../components/SkeletonComponents/RealtorPostSkeleton";
-import { FlashList } from "@shopify/flash-list";
+
+
 import { ActivityIndicator } from "react-native-paper";
 
 export default function HomePage() {
@@ -592,7 +592,7 @@ export default function HomePage() {
                 item.id ? item.id.toString() : index.toString()
               }
               onEndReached={() => fetchFeaturedEstates(false)}
-              onEndReachedThreshold={0.5}
+              onEndReachedThreshold={0}
               onRefresh={onRefresh}
               refreshing={refreshing}
               ListFooterComponent={
@@ -757,6 +757,36 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
+
+                <Text style={{ fontSize: 12 }}>
+                  ÖNE ÇIKAN PREFABRİK YAPILAR
+                </Text>
+
+                <TouchableOpacity style={styles.allBtn}>
+                  <Text style={{ color: "white", fontSize: 11 }}>
+                    Tümünü Gör
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+           
+
+      
+
+            
+          </View>
+          <View style={styles.slide4}>
+            <View style={{ paddingTop: 0 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  alignItems: "center",
+                }}
+              >
+
                 <Text style={{ fontSize: 12 }}>Günlük Kiralık İlanlar</Text>
 
                 <TouchableOpacity style={styles.allBtn}>

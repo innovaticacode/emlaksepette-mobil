@@ -144,7 +144,7 @@ export default function CollectionsPage() {
     try {
       setloading(true);
 
-      if (user.access_token) {
+      if (user?.access_token) {
         const response = await axios.get(
           "https://test.emlaksepette.com/api/client/collections",
           {
