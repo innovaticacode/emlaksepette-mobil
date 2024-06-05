@@ -3,7 +3,7 @@ import React from 'react'
 import Posts from '../Posts'
 import ShoppinInfo from '../ShoppinInfo'
 
-export default function Ablok({openmodal}) {
+export default function Ablok({openModal}) {
   const Home = [
     {
       Acıklama: 'MASTER SONSUZ TATİL KÖYÜ SATILIK EV PAYI MASTER REALTOR',
@@ -88,7 +88,7 @@ export default function Ablok({openmodal}) {
     <View>
             {Home.map((item, index) => (
             <Posts key={item.id}
-            openmodal={openmodal}
+            openModal={openModal}
             No={item.id}
             caption={item.Acıklama} 
             price={item.fiyat}

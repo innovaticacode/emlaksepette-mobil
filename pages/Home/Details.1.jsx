@@ -809,7 +809,7 @@ export default function Details({ navigation }) {
             getLastItemCount={getLastItemCount}
             setSelectedTab={setSelectedTab}
             selectedTab={selectedTab}
-            openmodal={openModal}
+            openModal={openModal}
             getBlockItems={getBlockItems}
             OpenFormModal={OpenFormModal}
           />

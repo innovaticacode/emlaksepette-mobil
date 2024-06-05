@@ -36,7 +36,7 @@ export default function Posts({
   roomOrder,
   location,
   openFormModal,
-  openmodal,
+  openModal,
   openCollection,
   GetIdForCart,
   GetID,
@@ -284,7 +284,7 @@ export default function Posts({
                   ) : (
                     <TouchableOpacity
                       style={styles.payDetailBtn}
-                      onPress={openmodal}
+                      onPress={openModal}
                     >
                       <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                     </TouchableOpacity>
@@ -302,7 +302,7 @@ export default function Posts({
                 ) : (
                   <TouchableOpacity
                     style={styles.payDetailBtn}
-                    onPress={() => openmodal(roomOrder)}
+                    onPress={() => openModal(roomOrder)}
                   >
                     <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                   </TouchableOpacity>
