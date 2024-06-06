@@ -24,7 +24,7 @@ export default function UsersList() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/institutional/users",
+          "https://mobil.emlaksepette.com/api/institutional/users",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -45,7 +45,7 @@ export default function UsersList() {
     try {
       if (user.access_token) {
         const response = await axios.delete(
-          `https://test.emlaksepette.com/api/institutional/users/${selectedUser}`,
+          `https://mobil.emlaksepette.com/api/institutional/users/${selectedUser}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

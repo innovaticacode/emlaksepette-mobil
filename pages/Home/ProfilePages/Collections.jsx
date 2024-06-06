@@ -28,6 +28,7 @@ import Icon2 from "react-native-vector-icons/Feather";
 import { SearchBar } from "@rneui/themed";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
+import RegisterRealtorClub from "./RegisterRealtorClub";
 export default function Collections() {
   const [showAlert, setshowAlert] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -146,19 +147,18 @@ export default function Collections() {
     getValueFor("user", setUser);
   }, []);
 
-  useEffect(() => {
-    fetchData(); // Sayfa ilk yüklendiğinde verileri <getir
-  }, [user]);
+
 
   const [loading, setloading] = useState(false);
   const [collectionsRecods, setcollectionsRecods] = useState([]);
+  
   const fetchData = async () => {
     try {
       setloading(true);
 
       if (user.access_token) {
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/client/collections",
+          "https://mobil.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -168,6 +168,9 @@ export default function Collections() {
         setProjectItems(response?.data?.items);
         setcollections(response?.data?.collections);
         setcollectionsRecods(response?.data?.collections);
+        
+        
+         
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -175,6 +178,11 @@ export default function Collections() {
       setloading(false); // İstek tamamlandığında loading durumunu false yap
     }
   };
+
+  useEffect(() => {
+    fetchData();
+
+  }, [user]);
 
   const [selectedCollection, setselectedCollection] = useState(0);
   const [colectionName, setcolectionName] = useState("");
@@ -188,7 +196,7 @@ export default function Collections() {
       let formData = new FormData();
       formData.append();
       const response = await axios.delete(
-        `https://test.emlaksepette.com/api/collection/${id}/delete`,
+        `https://mobil.emlaksepette.com/api/collection/${id}/delete`,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -215,7 +223,7 @@ export default function Collections() {
       formData.append("collectionName", newName);
 
       const response = await axios.post(
-        `https://test.emlaksepette.com/api/collection/${id}/edit`,
+        `https://mobil.emlaksepette.com/api/collection/${id}/edit`,
         formData,
         {
           headers: {
@@ -242,8 +250,60 @@ export default function Collections() {
       console.error("Error removing item from the collection:", error);
     }
   };
+  const [CollectionsRemoveIds, setCollectionsRemoveIds] = useState([])
+  const [CollectionIDForAllRemove, setCollectionIDForAllRemove] = useState([])
+  const [CollectionIDForRemove, setCollectionIDForRemove] = useState(0)
+      const SelectCollection=(id)=>{
+          setCollectionIDForRemove(id)
+          setCollectionsRemoveIds(prevIds => {
+            if (prevIds.includes(id)) {
+           
+              return prevIds.filter(item => item !== id);
+              
+            } else {
+              return [...prevIds, id];
+            }
+          });
+      }
+    const [isChoosed, setisChoosed] = useState(false)
+    console.log(CollectionsRemoveIds)
+const [ereror, setereror] = useState({})
 
+    const RemoveSelectedCollections= async () => {
+      const data = {
+        ids: CollectionsRemoveIds,
+      
+      };
+      try {
+        const response = await axios.delete(
+          `https://mobil.emlaksepette.com/api/collections`,
+   
+          {
+            data: data,
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+              'Content-Type': 'application/json', // FormData kullanıldığı için Content-Type belirtilmelidir
+            },
+          }
+        );
+        fetchData();
+            setereror(response.data)
+        alert('fsdfsdf')
+        setModalVisible(false);
+        setCollectionsRemoveIds([])
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    console.log(ereror)
   return (
+
+    <>
+      {
+        user.has_club==0?
+        <RegisterRealtorClub/>
+        :
+    
     <View style={styles.container}>
       {loading ? (
         <View style={styles.loadingContainer}>
@@ -298,6 +358,47 @@ export default function Collections() {
                     value={searchText}
                   />
                 </View>
+                      <View style={{flexDirection:'row',padding:5,paddingTop:9,alignItems:'center',justifyContent:'space-between'}}>
+                        <View style={{flexDirection:'row',gap:25,alignItems:'center'}}>
+                        <TouchableOpacity style={styles.btnRemove}
+                            onPress={()=>{
+                         
+                            }}  
+                        >
+                          
+                            <Text style={{fontSize:12,textAlign:'center',fontWeight:'bold',color:'#ffffff'}}>Tümünü Sil</Text>
+                         
+                          
+                     
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.btnRemove}
+                        
+                          onPress={()=>{
+                            setisChoosed(!isChoosed)
+                          }}
+                        >
+                          <Text style={{fontSize:12,textAlign:'center',fontWeight:'bold',color:'#ffffff'}}>Toplu Seç</Text>
+                        </TouchableOpacity>
+                        {
+                          isChoosed &&   <Text style={{fontSize:14}}>Seçili ({CollectionsRemoveIds.length})</Text>
+                        }
+                        </View>
+                          <View style={{display:isChoosed ?'flex':'none' }}>
+                         <TouchableOpacity style={[styles.btnRemove,{paddingLeft:15,paddingRight:15}]}
+                            onPress={()=>{
+                            RemoveSelectedCollections()
+                            }}  
+                        >
+                          
+                              <Icon name="trash" size={18} color={'#ffffff'}/>
+                         
+                          
+                     
+                        </TouchableOpacity>
+                          
+                          </View>
+                      
+                      </View>
                 <View
                   style={{
                     alignItems: "center",
@@ -328,8 +429,12 @@ export default function Collections() {
                 )}
                 {loading == false ? (
                   collectionsRecods.map((collection, index) => {
+
                     return (
+                      
                       <CollectionsItem
+                      isChoosed={isChoosed}
+                      SelectCollection={SelectCollection}
                         projectItems={projectItems}
                         item={collection}
                         getId={getId}
@@ -714,6 +819,8 @@ export default function Collections() {
         </View>
       )}
     </View>
+      }
+    </>
   );
 }
 const styles = StyleSheet.create({
@@ -855,4 +962,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  btnRemove:{
+    backgroundColor:'#EA2A28',
+    padding:7,
+    borderRadius:5
+  }
 });

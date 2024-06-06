@@ -23,7 +23,7 @@ import { ActivityIndicator, Switch, TextInput } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 
 export default function AllProjects() {
-  const apiUrl = "https://test.emlaksepette.com/";
+  const apiUrl = "https://mobil.emlaksepette.com/";
 
   const route = useRoute();
   const {
@@ -90,7 +90,7 @@ export default function AllProjects() {
   const [optionalParam, setOptionalParam] = useState(null);
   const [typeParam, setTypeParam] = useState("");
   const [term, setTerm] = useState("");
-  const apiUrlFilter = `https://test.emlaksepette.com/api/kategori/${slug}/${title}/${optional}/${type}/${check}/${city}/${county}/${hood}`;
+  const apiUrlFilter = `https://mobil.emlaksepette.com/api/kategori/${slug}/${title}/${optional}/${type}/${check}/${city}/${county}/${hood}`;
 
   const fetchFilteredProjects = async () => {
     try {
@@ -139,7 +139,7 @@ export default function AllProjects() {
   const fetchFeaturedProjects = async () => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/featured-projects"
+        "https://mobil.emlaksepette.com/api/featured-projects"
       );
       setFeaturedProjects(response.data);
       setIsLoading(true);
@@ -734,19 +734,16 @@ const styles = StyleSheet.create({
   },
 
   modal2: {
-    width: "95%",
-    height: "100%",
+    justifyContent: "flex-end",
+    margin: 0,
   },
   modalContent2: {
-    backgroundColor: "white",
-    height: "100%",
-    marginTop: 71,
-    width: "95%",
-    margin: 0,
-    position: "absolute", // Mutlak konumlandırma kullanarak sağa yaslanmasını sağlar
-    right: 0,
-    top: 0, // Modalın en üstte görünmesini sağlar
-    bottom: 0, // Modalın en altta da görünmesini sağlar
+    backgroundColor: "#f4f4f4",
+    padding: 20,
+    height: "80%",
+   marginTop:10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 
   modal: {

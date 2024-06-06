@@ -18,6 +18,9 @@ export default function CollectionsItem({
   getId,
   name,
   onRemove,
+  SelectCollection,
+  isChoosed
+
 }) {
   const navigation = useNavigation();
   const [collectionItems, setCollectionItems] = useState([]);
@@ -53,9 +56,19 @@ export default function CollectionsItem({
     }
   };
 
+  const [isHighlighted, setIsHighlighted] = useState(false);
+  
+
   return (
-    <View style={{ alignItems: "center" }}>
-      <View style={style.container}>
+    <TouchableOpacity style={{ alignItems: "center" }} 
+    disabled={!isChoosed}
+        onPress={()=>{
+          SelectCollection(item?.id)
+       
+          setIsHighlighted(!isHighlighted)
+        }}
+    >
+      <View style={[style.container,{borderColor:  isHighlighted ? 'red':'#e6e6e6' }]}>
         <View style={style.header}>
           <View
             style={{
@@ -221,7 +234,7 @@ export default function CollectionsItem({
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 const style = StyleSheet.create({

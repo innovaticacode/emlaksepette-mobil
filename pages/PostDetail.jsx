@@ -56,7 +56,7 @@ import { Svg } from "react-native-svg";
 import { Polyline } from "react-native-maps";
 
 export default function PostDetail() {
-  const apiUrl = "https://test.emlaksepette.com/";
+  const apiUrl = "https://mobil.emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState("hearto");
@@ -168,7 +168,7 @@ export default function PostDetail() {
   const fetchData = async (token, setCollections) => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/getCollections",
+        "https://mobil.emlaksepette.com/api/getCollections",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -209,7 +209,7 @@ export default function PostDetail() {
 
     axios
       .post(
-        "https://test.emlaksepette.com/api/add/collection",
+        "https://mobil.emlaksepette.com/api/add/collection",
         collectionData,
         {
           headers: {
@@ -252,7 +252,7 @@ export default function PostDetail() {
     };
 
     axios
-      .post("https://test.emlaksepette.com/api/addLink", collectionData, {
+      .post("https://mobil.emlaksepette.com/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -540,6 +540,11 @@ export default function PostDetail() {
                 <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
                   <View style={styles.ıcon}>
                     <Icon2 name="sharealt" size={18} />
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
+                  <View style={styles.ıcon}>
+                    <Bookmark name={bookmark} size={18} />
                   </View>
                 </TouchableOpacity>
               </View>
@@ -1504,7 +1509,7 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "transparent",
     position: "absolute",
-    right: 0,
+    left: 0,
     top: 5,
     display: "flex",
     flexDirection: "column",
@@ -1804,12 +1809,12 @@ const styles = StyleSheet.create({
   },
   commissionBadge: {
     position: "absolute",
-    right: 0,
-    bottom: 60,
+    left: 0,
+    bottom: 50,
     width: 120,
     height: 30,
-    borderBottomLeftRadius: 15,
-    borderTopLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    borderTopRightRadius: 15,
     backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",

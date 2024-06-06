@@ -37,14 +37,16 @@ import Swiper from "react-native-swiper";
 import PagerView from "react-native-pager-view";
 import Categories from "../../components/Categories";
 import userData, { getValueFor } from "../../components/methods/user";
-import RealtorPostSkeleton from "../../components/SkeletonComponents/RealtorPostSkeleton";
+
+
+
 
 import { ActivityIndicator } from "react-native-paper";
 
 export default function HomePage() {
   const navigation = useNavigation();
 
-  const apiUrl = "https://test.emlaksepette.com/";
+  const apiUrl = "https://mobil.emlaksepette.com/";
 
   const [loadingPrjoects, setloadingPrjoects] = useState(false);
   const [loadingEstates, setloadingEstates] = useState(false);
@@ -53,7 +55,7 @@ export default function HomePage() {
   const fetchFeaturedProjects = async () => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/featured-projects"
+        "https://mobil.emlaksepette.com/api/featured-projects"
       );
       setFeaturedProjects(response.data);
       setloadingPrjoects(true);
@@ -76,9 +78,9 @@ export default function HomePage() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/real-estates?page=${
+        `https://mobil.emlaksepette.com/api/real-estates?page=${
           reset ? 1 : page
-        }&limit=12`
+        }&limit=10`
       );
       const newEstates = response.data;
 
@@ -173,7 +175,7 @@ export default function HomePage() {
   const fetchFeaturedSliders = async () => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/featured-sliders"
+        "https://mobil.emlaksepette.com/api/featured-sliders"
       );
       setFeaturedSliders(response.data);
       setloadingEstates(true);
@@ -226,7 +228,7 @@ export default function HomePage() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://test.emlaksepette.com/api/institutional/add_to_cart",
+          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -257,6 +259,8 @@ export default function HomePage() {
   }, [handleIndexChanged]);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+
+      
       <SafeAreaView
         style={{ flex: 1, paddingTop: 25, backgroundColor: "white" }}
       >
@@ -471,8 +475,8 @@ export default function HomePage() {
                       data: featuredProjects,
                       count: featuredProjects.length,
                       type: null,
-                      optional: "satilik",
-                      title: "konut",
+                      optional: null,
+                      title: null,
                       check: null,
                       city: null,
                       county: null,
@@ -604,8 +608,8 @@ export default function HomePage() {
               keyExtractor={(item, index) =>
                 item.id ? item.id.toString() : index.toString()
               }
-              onEndReached={() => fetchFeaturedEstates(false)}
-              onEndReachedThreshold={0.5}
+              onEndReached={() => fetchFeaturedEstates()}
+              onEndReachedThreshold={0}
               onRefresh={onRefresh}
               refreshing={refreshing}
               ListFooterComponent={
@@ -776,6 +780,7 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
+
                 <Text style={{ fontSize: 12 }}>
                   ÖNE ÇIKAN PREFABRİK YAPILAR
                 </Text>
@@ -787,6 +792,7 @@ export default function HomePage() {
                 </TouchableOpacity>
               </View>
             </View>
+
           </View>
           <View style={styles.slide4}>
             <View style={{ paddingTop: 0 }}>
@@ -799,6 +805,7 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
+
                 <Text style={{ fontSize: 12 }}>Günlük Kiralık İlanlar</Text>
 
                 <TouchableOpacity style={styles.allBtn}>
