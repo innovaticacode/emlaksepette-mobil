@@ -38,7 +38,7 @@ export default function ShoppingProfile() {
   const [permissionsUser, setPermissionsUser] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [openAccor, setOpenAccor] = useState({});
-  const PhotoUrl = "https://test.emlaksepette.com/storage/profile_images/";
+  const PhotoUrl = "https://mobil.emlaksepette.com/storage/profile_images/";
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -56,7 +56,7 @@ export default function ShoppingProfile() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          `https://test.emlaksepette.com/api/institutional/users/${user?.id}`,
+          `https://mobil.emlaksepette.com/api/institutional/users/${user?.id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -83,7 +83,7 @@ export default function ShoppingProfile() {
         const filteredMenu = response.filter((item) => {
           if (item.subMenu) {
             const filteredSubMenu = item.subMenu.filter((subItem) =>
-              permissionsUser.includes(subItem.key)
+              permissionsUser?.includes(subItem.key)
             );
             if (filteredSubMenu.length > 0) {
               item.subMenu = filteredSubMenu;
@@ -91,7 +91,7 @@ export default function ShoppingProfile() {
             }
             return false;
           }
-          return permissionsUser.includes(item.key);
+          return permissionsUser?.includes(item.key);
         });
         setData(filteredMenu);
       } catch (error) {

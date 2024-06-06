@@ -25,7 +25,7 @@ export default function PasiveRealtorAdverts() {
     setEditModalVisible(!EditModalVisible)
 }; 
   useEffect(() => {
-    axios.get('https://test.emlaksepette.com/api/get_my_housings',{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
+    axios.get('https://mobil.emlaksepette.com/api/get_my_housings',{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
       sethousings(res.data.inactiveHousingTypes);    
     }).catch((e) => {
       console.log(e + 'hata');

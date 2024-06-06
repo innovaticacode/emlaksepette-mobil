@@ -20,8 +20,8 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function ShopVitrin({ data, housingdata }) {
   const navigation=useNavigation()
-  const ApiUrl = "https://test.emlaksepette.com/storage/store_banners/";
-  const ApiUrls = "https://test.emlaksepette.com";
+  const ApiUrl = "https://mobil.emlaksepette.com/storage/store_banners/";
+  const ApiUrls = "https://mobil.emlaksepette.com";
   const [banners, setBanners] = useState([]);
   const [owners, setOwners] = useState([]);
   const [loadingPrjoects, setloadingPrjoects] = useState(false);
@@ -76,7 +76,7 @@ export default function ShopVitrin({ data, housingdata }) {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://test.emlaksepette.com/api/institutional/add_to_cart",
+          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {

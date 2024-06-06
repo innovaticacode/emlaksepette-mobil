@@ -19,8 +19,7 @@ export default function CollectionsItem({
   name,
   onRemove,
   SelectCollection,
-  toggleCollection,
-  isSelectedCollection,
+  isChoosed
 
 }) {
   const navigation = useNavigation();
@@ -61,9 +60,10 @@ export default function CollectionsItem({
   
   return (
     <TouchableOpacity style={{ alignItems: "center" }} 
+    disabled={!isChoosed}
         onPress={()=>{
           SelectCollection(item?.id)
-        
+       
           setIsHighlighted(!isHighlighted)
         }}
     >
