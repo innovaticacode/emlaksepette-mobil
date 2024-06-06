@@ -1,4 +1,3 @@
-
 import {
   View,
   Text,
@@ -12,7 +11,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import RentOrder from "./profileComponents/RentOrder";
 import Icon from "react-native-vector-icons/Entypo";
 import axios from "axios";
-  import { Platform } from "react-native";
+import { Platform } from "react-native";
 import { getValueFor } from "../../../components/methods/user";
 export default function Rent({ display }) {
   const [Tabs, setTabs] = useState(0);
@@ -53,7 +52,7 @@ export default function Rent({ display }) {
     getValueFor("user", setUser);
   }, []);
   const [RentItems, setRentItems] = useState({});
-  const [reservations, setreservations] = useState({});
+  const [reservations, setreservations] = useState([]);
   const [cancel, setcancel] = useState([]);
 
   const getRentCategoriesAnItem = async () => {
@@ -69,7 +68,6 @@ export default function Rent({ display }) {
         );
 
         setRentItems(response.data);
-        setreservations(RentItems.housingReservations);
       }
     } catch (error) {
       console.error("Hata:", error);
@@ -80,6 +78,10 @@ export default function Rent({ display }) {
   useEffect(() => {
     getRentCategoriesAnItem();
   }, [user]);
+
+  useEffect(() => {
+    setreservations(RentItems.confirmReservations);
+  }, [RentItems]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -102,7 +104,6 @@ export default function Rent({ display }) {
                     onPress={() => {
                       setTabs(index);
                       setreservations(RentItems[item.value] || []);
-
                     }}
                   >
                     <Text
