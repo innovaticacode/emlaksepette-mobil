@@ -6,7 +6,7 @@ import Icon2 from "react-native-vector-icons/FontAwesome5";
 import Icon3 from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../../components/methods/user";
-import { slugify } from 'slugify';
+import { slugify } from "slugify";
 
 export default function CollectionsItem({
   openBottom,
@@ -33,12 +33,11 @@ export default function CollectionsItem({
     }
     setCollectionItems(collectionItemsTemp);
   };
-    
+
   const [user, setUser] = useState({});
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-
 
   useEffect(() => {
     getCollectionItems();
@@ -56,8 +55,10 @@ export default function CollectionsItem({
       console.error("Error removing item from collection:", error);
     }
   };
+
   const [isHighlighted, setIsHighlighted] = useState(false);
   
+
   return (
     <TouchableOpacity style={{ alignItems: "center" }} 
     disabled={!isChoosed}
@@ -78,7 +79,7 @@ export default function CollectionsItem({
             }}
           >
             <Dot name="eye" size={15} color={"#EA2B2E"} />
-            <Text style={{ color: "#EA2B2E", fontSize: "13" }}>
+            <Text style={{ color: "#EA2B2E", fontSize: 13 }}>
               {item.clicks.length} Görüntülenme
             </Text>
           </View>
@@ -96,7 +97,7 @@ export default function CollectionsItem({
         <View style={{ flexDirection: "row" }}>
           <View style={{ paddingTop: 15, paddingBottom: 15 }}>
             <View style={{ flexDirection: "row", gap: 5 }}>
-              <Text style={{ fontWeight: "700", fontSize: "13" }}>
+              <Text style={{ fontWeight: "700", fontSize: 13 }}>
                 Koleksiyon Adı:
               </Text>
               <Text style={{ color: "#EA2B2E" }} numberOfLines={2}>
@@ -104,7 +105,7 @@ export default function CollectionsItem({
               </Text>
             </View>
             <View style={{ flexDirection: "row", gap: 5 }}>
-              <Text style={{ fontWeight: "700", fontSize: "13" }}>
+              <Text style={{ fontWeight: "700", fontSize: 13 }}>
                 İlan Sayısı:
               </Text>
               <Text style={{ color: "#EA2B2E" }}>{collectionItems.length}</Text>
@@ -135,7 +136,7 @@ export default function CollectionsItem({
                   textAlign: "center",
                   color: "#BD3803",
                   fontWeight: "500",
-                  fontSize: "13",
+                  fontSize: 13,
                 }}
               >
                 Düzenle
@@ -170,7 +171,7 @@ export default function CollectionsItem({
                   textAlign: "center",
                   color: "#025787",
                   fontWeight: "500",
-                  fontSize: "13",
+                  fontSize: 13,
                 }}
               >
                 Önizle
@@ -197,7 +198,7 @@ export default function CollectionsItem({
                   textAlign: "center",
                   color: "#1F6F11",
                   fontWeight: "600",
-                  fontSize: "13",
+                  fontSize: 13,
                 }}
               >
                 Linki Kopyala
@@ -224,7 +225,7 @@ export default function CollectionsItem({
                   textAlign: "center",
                   color: "#1F6F11",
                   fontWeight: "600",
-                  fontSize: "13",
+                  fontSize: 13,
                 }}
               >
                 Whatsappta Paylaş

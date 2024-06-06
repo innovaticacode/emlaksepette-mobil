@@ -443,7 +443,6 @@ export default function Details({ navigation }) {
         }, 3000);
         // Başarılı yanıtı işleyin
         setselectedCollectionName(response.data.collection.name);
-       
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -955,7 +954,7 @@ export default function Details({ navigation }) {
               style={{
                 color: "white",
                 fontWeight: 600,
-                fontSize: "12px",
+                fontSize: 12,
                 paddingLeft: "10px",
               }}
             >
@@ -985,7 +984,7 @@ export default function Details({ navigation }) {
             style={{
               color: "white",
               fontWeight: 600,
-              fontSize: "12px",
+              fontSize: 12,
               paddingLeft: "10px",
             }}
           >
@@ -1210,6 +1209,7 @@ export default function Details({ navigation }) {
           onRequestClose={() => {
             setModalVisible(!modalVisible);
           }}
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", margin: 0 }}
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
@@ -1366,6 +1366,7 @@ export default function Details({ navigation }) {
             </View>
           </View>
         </Modal>
+
         <Modal
           isVisible={IsOpenSheet}
           onBackdropPress={() => setIsOpenSheet(false)}
@@ -2003,10 +2004,6 @@ export default function Details({ navigation }) {
           transparent={true}
           style={styles.modal4}
         >
-          <StatusBar
-            backgroundColor="rgba(0, 0, 0, 0.5)"
-            barStyle="light-content"
-          />
           <View style={styles.modalContent4}>
             <View style={{ padding: 10, gap: 10 }}>
               <Text style={{ textAlign: "center" }}>
@@ -2098,7 +2095,7 @@ const styles = StyleSheet.create({
   commissionText: {
     color: "green",
     fontWeight: "700",
-    fontSize: "13",
+    fontSize: 13,
   },
   modal: {
     margin: 0,
@@ -2147,9 +2144,11 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     padding: 10,
+    margin: 0,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
 
     // modal dışı koyu arkaplan
   },
@@ -2160,6 +2159,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 25,
     gap: 20,
+
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
