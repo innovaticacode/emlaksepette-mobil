@@ -73,7 +73,7 @@ useEffect(() => {
 
     
     
-      const response = await axios.post('https://test.emlaksepette.com/api/client/profile/update', formData ,{
+      const response = await axios.post('https://mobil.emlaksepette.com/api/client/profile/update', formData ,{
         headers:{
           Authorization: `Bearer ${user.access_token}`,
         }
@@ -211,7 +211,7 @@ useEffect(() => {
     setmobilPhone(user.mobile_phone)
     
   },[user])
-  const PhotoUrl = "https://test.emlaksepette.com/storage/profile_images/";
+  const PhotoUrl = "https://mobil.emlaksepette.com/storage/profile_images/";
   const [ChoosePhotoModal, setChoosePhotoModal] = useState(false)
   return (
     <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>

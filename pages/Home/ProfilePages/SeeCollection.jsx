@@ -62,7 +62,7 @@ export default function SeeCollection() {
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const [FormVisible, setFormVisible] = useState(false);
-  const apiUrl = "https://test.emlaksepette.com/";
+  const apiUrl = "https://mobil.emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -92,7 +92,7 @@ export default function SeeCollection() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://test.emlaksepette.com/api/emlak-kulup/${collectionUser.id}/koleksiyonlar/${item.id}`
+          `https://mobil.emlaksepette.com/api/emlak-kulup/${collectionUser.id}/koleksiyonlar/${item.id}`
         );
         setCollectionData(response.data);
         setMergedItems(response.data.mergedItems);
@@ -145,7 +145,7 @@ export default function SeeCollection() {
 
     axios
       .post(
-        "https://test.emlaksepette.com/api/remove_item_on_collection",
+        "https://mobil.emlaksepette.com/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -214,7 +214,7 @@ export default function SeeCollection() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/client/collections",
+          "https://mobil.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -267,7 +267,7 @@ export default function SeeCollection() {
 
     axios
       .post(
-        "https://test.emlaksepette.com/api/add/collection",
+        "https://mobil.emlaksepette.com/api/add/collection",
         collectionData,
         {
           headers: {
@@ -315,7 +315,7 @@ export default function SeeCollection() {
     };
 
     axios
-      .post("https://test.emlaksepette.com/api/addLink", collectionData, {
+      .post("https://mobil.emlaksepette.com/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -384,7 +384,7 @@ export default function SeeCollection() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://test.emlaksepette.com/api/institutional/add_to_cart",
+          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -434,7 +434,7 @@ export default function SeeCollection() {
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        "https://test.emlaksepette.com/api/institutional/give_offer",
+        "https://mobil.emlaksepette.com/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -476,7 +476,7 @@ export default function SeeCollection() {
   const fetchCity = async () => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/cities"
+        "https://mobil.emlaksepette.com/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -498,7 +498,7 @@ export default function SeeCollection() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/counties/${value}`
+        `https://mobil.emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {

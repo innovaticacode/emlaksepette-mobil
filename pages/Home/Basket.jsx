@@ -71,7 +71,7 @@ export default function Basket() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/institutional/my-cart",
+          "https://mobil.emlaksepette.com/api/institutional/my-cart",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -150,7 +150,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://test.emlaksepette.com/api/update-cart-qt",
+          "https://mobil.emlaksepette.com/api/update-cart-qt",
           formData,
           {
             headers: {
@@ -175,7 +175,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://test.emlaksepette.com/api/update-cart-qt",
+          "https://mobil.emlaksepette.com/api/update-cart-qt",
           formData,
           {
             headers: {
@@ -214,7 +214,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://test.emlaksepette.com/api/update-cart",
+          "https://mobil.emlaksepette.com/api/update-cart",
           formData,
           {
             headers: {

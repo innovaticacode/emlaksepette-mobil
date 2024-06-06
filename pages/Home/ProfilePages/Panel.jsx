@@ -53,7 +53,7 @@ export default function Panel({ options, onSelect }) {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            `https://test.emlaksepette.com/api/institutional/users/${user.id}`,
+            `https://mobil.emlaksepette.com/api/institutional/users/${user.id}`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -71,7 +71,7 @@ export default function Panel({ options, onSelect }) {
     fetchData();
   }, [user]);
 
-  const PhotoUrl = "https://test.emlaksepette.com/storage/profile_images/";
+  const PhotoUrl = "https://mobil.emlaksepette.com/storage/profile_images/";
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -125,7 +125,7 @@ export default function Panel({ options, onSelect }) {
                           <View style={style.ProfileImage}>
                             <Image
                               source={{
-                                uri: `https://test.emlaksepette.com/storage/profile_images/${user.profile_image}`,
+                                uri: `https://mobil.emlaksepette.com/storage/profile_images/${user.profile_image}`,
                               }}
                               style={{
                                 width: 50,
@@ -258,7 +258,7 @@ export default function Panel({ options, onSelect }) {
 
               <View style={styles.container}>
                 <Image
-                  source={{ uri: "https://test.emlaksepette.com/images/emlak-kulup-banner.png" }}
+                  source={{ uri: "https://mobil.emlaksepette.com/images/emlak-kulup-banner.png" }}
                   style={styles.image}
                 />
               </View>

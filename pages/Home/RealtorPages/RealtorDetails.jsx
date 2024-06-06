@@ -46,7 +46,7 @@ import axios from "axios";
 
 
 export default function PostDetail() {
-const apiUrl = "https://test.emlaksepette.com";
+const apiUrl = "https://mobil.emlaksepette.com";
 const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
 const [images,setImages] = useState([]);
@@ -164,7 +164,7 @@ console.log(user)
 const fetchData = async () => {
  
   try {
-    const response = await axios.get('https://test.emlaksepette.com/api/client/collections',{
+    const response = await axios.get('https://mobil.emlaksepette.com/api/client/collections',{
       headers: {
         'Authorization': `Bearer ${user.access_token}`
       }
@@ -179,7 +179,7 @@ const fetchData = async () => {
 };
 useEffect(() => {
   fetchData();
-}, [user]);
+}, [user,addCollection]);
 
 
 const addCollectionPost=()=>{
@@ -195,7 +195,7 @@ const addCollectionPost=()=>{
   };
 
 
-  axios.post('https://test.emlaksepette.com/api/add/collection', collectionData, {
+  axios.post('https://mobil.emlaksepette.com/api/add/collection', collectionData, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${user.access_token}`,
@@ -204,7 +204,7 @@ const addCollectionPost=()=>{
     },
   })
   .then(response => {
-
+          setaddCollection(false)
     // Başarılı yanıtı işleyin
     // setselectedCollectionName(response.data.collection.name)
    
@@ -221,18 +221,18 @@ const getCollectionId=(id,name)=>{
     setselectedCollectionId(id)
     setselectedCollectionName2(name)
 } 
-const addSelectedCollection=()=>{
+const addSelectedCollection=(id)=>{
   const collectionData = {
     collection_name:selectedCollectionName2,
     clear_cart: "no",
-    id: data.housing.id,
+    id: data?.housing?.id,
     project:null,
-    selectedCollectionId: selectedCollectionId,
-    type:null
+    selectedCollectionId: id,
+    type:2
   };
 
 
-  axios.post('https://test.emlaksepette.com/api/addLink', collectionData, {
+  axios.post('https://mobil.emlaksepette.com/api/addLink', collectionData, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${user.access_token}`,
@@ -241,7 +241,26 @@ const addSelectedCollection=()=>{
     },
   })
   .then(response => {
-  
+    var newCollections = collections.map((collection) => {
+      if (collection.id == id) {
+        return {
+          ...collection,
+          links: [
+            ...collection.links,
+            {
+              collection_id: selectedCollectionId,
+              room_order: null,
+              item_id: data?.housing?.id,
+              user_id: user?.id,
+              item_type: 2,
+            },
+          ],
+        };
+      } else {
+        return collection;
+      }
+    });
+    setcollections(newCollections);
    
   })
   .catch(error => {
@@ -264,7 +283,7 @@ const addToCard = async () => {
 try {
   if (user?.access_token) {
     const response = await axios.post(
-      "https://test.emlaksepette.com/api/institutional/add_to_cart",
+      "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
       formData,
       {
         headers: {
@@ -299,15 +318,15 @@ const ıtemOnCollection = (collectionId) => {
 };
 const removeItemOnCollection = (collectionId) => {
   const collectionData = {
-    item_type: 1,
-    room_order: selectedHouse,
-    item_id: data.project.id,
+    item_type: 2,
+   
+    item_id: data.housing.id,
     collection_id: collectionId,
   };
 
   axios
     .post(
-      "https://test.emlaksepette.com/api/remove_item_on_collection",
+      "https://mobil.emlaksepette.com/api/remove_item_on_collection",
       collectionData,
       {
         headers: {
@@ -317,19 +336,14 @@ const removeItemOnCollection = (collectionId) => {
       }
     )
     .then((response) => {
-      setTimeout(() => {
-        setcollectionAddedSucces(true);
-      }, 200);
-      setTimeout(() => {
-        setcollectionAddedSucces(false);
-      }, 3000);
+        alert('sdfsdfsadas')
       var newCollections = collections.map((collection) => {
         if (collection.id == collectionId) {
           var newLinks = collection.links.filter((link) => {
             if (
               link.collection_id == collectionId &&
-              link.item_id == data.project.id &&
-              link.room_order == selectedHouse
+              link.item_id == data.housing.id &&
+              link.room_order == null
             ) {
             } else {
               return link;
@@ -352,7 +366,7 @@ const removeItemOnCollection = (collectionId) => {
       console.error("Error:", error);
     });
 };
-
+const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
 return (
   
   <SafeAreaView style={{  backgroundColor: "white",flex:1}}>
@@ -699,10 +713,7 @@ return (
           isVisible={ColectionSheet}
           onBackdropPress={ToggleColSheet}
       
-          animationIn={'fadeInDown'}
-          animationOut={'fadeOutDown'}
-          animationInTiming={200}
-          animationOutTiming={200}
+         
           backdropColor="transparent"
           style={styles.modal4}
         >
@@ -731,9 +742,10 @@ return (
                       <Text style={{fontSize:13,color:'#19181C',fontWeight:'600'}}>Yeni Oluştur</Text>
                     </View>
                   </TouchableOpacity>
+                  
                      {
                         collections.map((item,index)=>(
-                          <AddCollection  checkFunc={ıtemOnCollection} key={index} item={item} getCollectionId={getCollectionId} addLink={addSelectedCollection}   removeItemOnCollection={removeItemOnCollection}/> 
+                          <AddCollection  checkFunc={ıtemOnCollection} key={index} item={item} getCollectionId={getCollectionId} addLink={addSelectedCollection}   removeItemOnCollection={removeItemOnCollection}    setPopUpForRemoveItem={setsetPopUpForRemoveItem}/> 
                         ))
 
                       }

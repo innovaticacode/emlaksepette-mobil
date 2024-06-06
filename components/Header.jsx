@@ -35,7 +35,7 @@ export default function Header({ loading, onPress }) {
         }
 
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/user/notification",
+          "https://mobil.emlaksepette.com/api/user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

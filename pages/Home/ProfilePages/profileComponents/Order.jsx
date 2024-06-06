@@ -45,7 +45,7 @@ export default function Order({ item }) {
 
 
   const navigation = useNavigation();
-  const PhotoUrl= 'https://test.emlaksepette.com/storage/profile_images/'
+  const PhotoUrl= 'https://mobil.emlaksepette.com/storage/profile_images/'
   return (
     <TouchableOpacity onPress={() => navigation.navigate("OrderDetail", {OrderId:item.id})}>
       <View style={style.container}>

@@ -130,7 +130,7 @@ export default function Posts({
             <Image
               source={{
                 uri:
-                  "https://test.emlaksepette.com/project_housing_images/" +
+                  "https://mobil.emlaksepette.com/project_housing_images/" +
                   roomData["image[]"],
               }}
               style={styles.image}
