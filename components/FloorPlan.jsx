@@ -26,6 +26,7 @@ export default function FloorPlan({ data }) {
             <View key={i} style={styles.imageWrapper}>
               <Lightbox>
                 <Image
+                
                   style={styles.image}
                   source={{ uri: getFullImageURL(situation.situation) }}
                 />
