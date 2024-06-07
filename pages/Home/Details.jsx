@@ -456,9 +456,9 @@ export default function Details({ navigation }) {
     setselectedCollectionId(id);
     setselectedCollectionName2(name);
   };
-  const addSelectedCollection = (id) => {
+  const addSelectedCollection = (id,name) => {
     const collectionData = {
-      collection_name: selectedCollectionName2,
+      collection_name: name,
       clear_cart: "no",
       id: selectedHouse,
       project: data.project.id,
