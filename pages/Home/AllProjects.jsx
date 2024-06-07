@@ -689,7 +689,7 @@ export default function AllProjects() {
                   </View>
                 )}
               </View>
-              <View style={styles.filterContainer}>
+              {/* <View style={styles.filterContainer}>
                 <TouchableOpacity onPress={() => toggleFilter("kimden")}>
                   <Text style={styles.filterLabel}>Kimden</Text>
                 </TouchableOpacity>
@@ -782,7 +782,7 @@ export default function AllProjects() {
                     </View>
                   </View>
                 )}
-              </View>
+              </View> */}
               <View style={styles.filterContainer}>
                 <TouchableOpacity onPress={() => toggleFilter("listingDate")}>
                   <Text style={styles.filterLabel}>İlan Tarihi</Text>
