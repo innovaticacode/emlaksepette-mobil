@@ -44,7 +44,7 @@ import { ActivityIndicator } from "react-native-paper";
 export default function HomePage() {
   const navigation = useNavigation();
 
-  const apiUrl = "https://test.emlaksepette.com/";
+  const apiUrl = "https://mobil.emlaksepette.com/";
 
   const [loadingPrjoects, setloadingPrjoects] = useState(false);
   const [loadingEstates, setloadingEstates] = useState(false);
@@ -53,7 +53,7 @@ export default function HomePage() {
   const fetchFeaturedProjects = async () => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/featured-projects"
+        "https://mobil.emlaksepette.com/api/featured-projects"
       );
       setFeaturedProjects(response.data);
       setloadingPrjoects(true);
@@ -65,6 +65,7 @@ export default function HomePage() {
   useEffect(() => {
     fetchFeaturedProjects();
   }, [page]);
+
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -76,7 +77,7 @@ export default function HomePage() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/real-estates?page=${
+        `https://mobil.emlaksepette.com/api/real-estates?page=${
           reset ? 1 : page
         }&limit=12`
       );
@@ -173,7 +174,7 @@ export default function HomePage() {
   const fetchFeaturedSliders = async () => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/featured-sliders"
+        "https://mobil.emlaksepette.com/api/featured-sliders"
       );
       setFeaturedSliders(response.data);
       setloadingEstates(true);
@@ -226,7 +227,7 @@ export default function HomePage() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://test.emlaksepette.com/api/institutional/add_to_cart",
+          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -459,7 +460,7 @@ export default function HomePage() {
                       count: featuredProjects.length,
                       type: null,
                       optional: null,
-                      title: "konut",
+                      title: null,
                       check: null,
                       city: null,
                       county: null,

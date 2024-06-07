@@ -30,7 +30,7 @@ export default function ProjectAdverts({ data }) {
   }, []);
 
   const { width, height } = Dimensions.get("window");
-  const ApiUrl = "https://test.emlaksepette.com";
+  const ApiUrl = "https://mobil.emlaksepette.com";
   return (
     <ScrollView>
       <FlatList

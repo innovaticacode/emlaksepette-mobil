@@ -25,7 +25,7 @@ import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
 
 export default function AllProjects() {
-  const apiUrl = "https://test.emlaksepette.com/";
+  const apiUrl = "https://mobil.emlaksepette.com/";
 
   const route = useRoute();
   const {
@@ -99,7 +99,7 @@ export default function AllProjects() {
   const [optionalParam, setOptionalParam] = useState(null);
   const [typeParam, setTypeParam] = useState("");
   const [term, setTerm] = useState("");
-  const apiUrlFilter = `https://test.emlaksepette.com/api/kategori/${slug}/${title}/${optional}/${type}/${check}/${city}/${county}/${hood}`;
+  const apiUrlFilter = `https://mobil.emlaksepette.com/api/kategori/${slug}/${title}/${optional}/${type}/${check}/${city}/${county}/${hood}`;
 
   const [counties, setCounties] = useState([]);
   const [neighborhoods, setNeighborhoods] = useState([]);
@@ -120,7 +120,7 @@ export default function AllProjects() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/counties/${value}`
+        `https://mobil.emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -132,7 +132,7 @@ export default function AllProjects() {
   const fetchDataNeighborhood = async (value) => {
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/neighborhoods/${value}`
+        `https://mobil.emlaksepette.com/api/neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {
@@ -171,48 +171,6 @@ export default function AllProjects() {
     return () => clearTimeout(timer);
   }, [slug, data]);
 
-  const fetchFilteredProjects = async () => {
-    try {
-      const response = await axios.get(apiUrlFilter);
-      const data = response.data;
-      setPageInfo(data.pageInfo);
-      setNeighborhoodTitle(data.neighborhoodTitle);
-      setNeighborhoodSlug(data.neighborhoodSlug);
-      setCountySlug(data.countySlug);
-      setCountyTitle(data.countyTitle);
-      setCitySlug(data.citySlug);
-      setCityTitle(data.cityTitle);
-      setCityID(data.cityID);
-      setNeighborhoodID(data.neighborhoodID);
-      setCountyID(data.countyID);
-      setFilters(data.filters);
-      setSlugItem(data.slugItem);
-      setItems(data.items);
-      setNslug(data.nslug);
-      setCheckTitle(data.checkTitle);
-      setMenu(data.menu);
-      setOpt(data.opt);
-      setHousingTypeSlug(data.housingTypeSlug);
-      setHousingTypeParentSlug(data.housingTypeParentSlug);
-      setOptionalParam(data.optional);
-      setOptName(data.optName);
-      setHousingTypeName(data.housingTypeName);
-      setHousingTypeSlugName(data.housingTypeSlugName);
-      setSlugName(data.slugName);
-      setHousingTypeParent(data.housingTypeParent);
-      setHousingType(data.housingType);
-      setProjects(data.projects);
-      setSecondhandHousings(data.secondhandHousings);
-      setHousingStatuses(data.housingStatuses);
-      setCities(data.cities);
-
-      setTitleParam(data.title);
-      setTypeParam(data.type);
-      setTerm(data.term);
-    } catch (error) {
-      console.error(error);
-    }
-  };
   const [cityItems, setCityItems] = useState([]);
   const [projectStatuses, setProjectStatuses] = useState([
     {
@@ -255,7 +213,7 @@ export default function AllProjects() {
   const fetchFeaturedProjects = async () => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/featured-projects"
+        "https://mobil.emlaksepette.com/api/featured-projects"
       );
       setFeaturedProjects(response.data);
       setIsLoading(true);
@@ -315,6 +273,62 @@ export default function AllProjects() {
       .replace(/-+$/, ""); // Sondaki tireleri kaldır
   }
 
+  const fetchFilteredProjects = async (filterData) => {
+    try {
+      const response = await axios.get(apiUrlFilter, { params: filterData });
+      const data = response.data;
+      setPageInfo(data.pageInfo);
+      setNeighborhoodTitle(data.neighborhoodTitle);
+      setNeighborhoodSlug(data.neighborhoodSlug);
+      setCountySlug(data.countySlug);
+      setCountyTitle(data.countyTitle);
+      setCitySlug(data.citySlug);
+      setCityTitle(data.cityTitle);
+      setCityID(data.cityID);
+      setNeighborhoodID(data.neighborhoodID);
+      setCountyID(data.countyID);
+      setFilters(data.filters);
+      setSlugItem(data.slugItem);
+      setItems(data.items);
+      setNslug(data.nslug);
+      setCheckTitle(data.checkTitle);
+      setMenu(data.menu);
+      setOpt(data.opt);
+      setHousingTypeSlug(data.housingTypeSlug);
+      setHousingTypeParentSlug(data.housingTypeParentSlug);
+      setOptionalParam(data.optional);
+      setOptName(data.optName);
+      setHousingTypeName(data.housingTypeName);
+      setHousingTypeSlugName(data.housingTypeSlugName);
+      setSlugName(data.slugName);
+      setHousingTypeParent(data.housingTypeParent);
+      setHousingType(data.housingType);
+      setProjects(data.projects);
+      setSecondhandHousings(data.secondhandHousings);
+      setHousingStatuses(data.housingStatuses);
+      setCities(data.cities);
+      setTitleParam(data.title);
+      setTypeParam(data.type);
+      setTerm(data.term);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleFilterSubmit = () => {
+    const filterData = {
+      selectedCheckboxes,
+      selectedRadio,
+      textInputs,
+      selectedCity,
+      selectedCounty,
+      selectedNeighborhood,
+      selectedProjectStatus,
+      selectedListingDate,
+    };
+    setModalVisible(false);
+    fetchFilteredProjects(filterData);
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <Header onPress={toggleDrawer} />
@@ -429,7 +443,7 @@ export default function AllProjects() {
         <TouchableOpacity
           style={{
             ...styles.btn,
-            borderLeftColor: "#bebebe",
+            borderLeftColor: "white",
             borderLeftWidth: 1,
           }}
         >
@@ -451,7 +465,7 @@ export default function AllProjects() {
         )}
         <View>
           <FlatList
-            data={featuredProjects}
+            data={projects}
             renderItem={({ item }) => (
               <ProjectPost
                 project={item}
@@ -593,8 +607,8 @@ export default function AllProjects() {
                 </TouchableOpacity>
                 {openFilterIndex === "location" && (
                   <View style={styles.optionsContainer}>
-                    <RNPickerSelect doneText="Tamam"
-                     
+                    <RNPickerSelect
+                      doneText="Tamam"
                       placeholder={{
                         label: "Şehir Seçiniz",
                         value: null,
@@ -607,7 +621,8 @@ export default function AllProjects() {
                       items={cityItems}
                     />
 
-                    <RNPickerSelect doneText="Tamam"
+                    <RNPickerSelect
+                      doneText="Tamam"
                       placeholder={{
                         label: "İlçe Seçiniz",
                         value: null,
@@ -620,7 +635,8 @@ export default function AllProjects() {
                       items={counties}
                     />
 
-                    <RNPickerSelect doneText="Tamam"
+                    <RNPickerSelect
+                      doneText="Tamam"
                       placeholder={{
                         label: "Mahalle Seçiniz",
                         value: null,
@@ -758,7 +774,8 @@ export default function AllProjects() {
                 </TouchableOpacity>
                 {openFilterIndex === "projectStatus" && (
                   <View style={styles.optionsContainer}>
-                    <RNPickerSelect doneText="Tamam"
+                    <RNPickerSelect
+                      doneText="Tamam"
                       placeholder={{
                         label: "Proje Durumu Seçiniz",
                         value: null,
@@ -897,6 +914,12 @@ export default function AllProjects() {
                   )}
                 </View>
               ))}
+              <TouchableOpacity
+                onPress={handleFilterSubmit}
+                style={styles.filterButton}
+              >
+                <Text style={styles.filterButtonText}>Filtrele</Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
@@ -1089,6 +1112,20 @@ const styles = StyleSheet.create({
   brandName: {
     color: "black",
     marginRight: 3,
+  },
+  filterButton: {
+    backgroundColor: "#274abb",
+    padding: 10,
+    width: "100%",
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  filterButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

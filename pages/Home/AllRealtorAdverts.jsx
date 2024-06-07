@@ -26,7 +26,7 @@ import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 export default function AllRealtorAdverts() {
-  const apiUrl = "https://test.emlaksepette.com/";
+  const apiUrl = "https://mobil.emlaksepette.com/";
   const route = useRoute();
   const { name, data } = route.params;
   const navigation = useNavigation();
@@ -72,7 +72,7 @@ export default function AllRealtorAdverts() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://test.emlaksepette.com/api/institutional/add_to_cart",
+          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -106,7 +106,7 @@ export default function AllRealtorAdverts() {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=12`
+        `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=12`
       );
       const newEstates = response.data;
 

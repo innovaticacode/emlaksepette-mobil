@@ -158,7 +158,7 @@ export default function Collections() {
 
       if (user.access_token) {
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/client/collections",
+          "https://mobil.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -188,7 +188,7 @@ export default function Collections() {
       let formData = new FormData();
       formData.append();
       const response = await axios.delete(
-        `https://test.emlaksepette.com/api/collection/${id}/delete`,
+        `https://mobil.emlaksepette.com/api/collection/${id}/delete`,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -215,7 +215,7 @@ export default function Collections() {
       formData.append("collectionName", newName);
 
       const response = await axios.post(
-        `https://test.emlaksepette.com/api/collection/${id}/edit`,
+        `https://mobil.emlaksepette.com/api/collection/${id}/edit`,
         formData,
         {
           headers: {
