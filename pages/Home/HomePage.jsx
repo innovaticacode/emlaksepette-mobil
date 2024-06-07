@@ -38,9 +38,6 @@ import PagerView from "react-native-pager-view";
 import Categories from "../../components/Categories";
 import userData, { getValueFor } from "../../components/methods/user";
 
-
-
-
 import { ActivityIndicator } from "react-native-paper";
 
 export default function HomePage() {
@@ -259,8 +256,6 @@ export default function HomePage() {
   }, [handleIndexChanged]);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-
-      
       <SafeAreaView
         style={{ flex: 1, paddingTop: 25, backgroundColor: "white" }}
       >
@@ -780,7 +775,6 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
-
                 <Text style={{ fontSize: 12 }}>
                   ÖNE ÇIKAN PREFABRİK YAPILAR
                 </Text>
@@ -792,7 +786,6 @@ export default function HomePage() {
                 </TouchableOpacity>
               </View>
             </View>
-
           </View>
           <View style={styles.slide4}>
             <View style={{ paddingTop: 0 }}>
@@ -805,7 +798,6 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
-
                 <Text style={{ fontSize: 12 }}>Günlük Kiralık İlanlar</Text>
 
                 <TouchableOpacity style={styles.allBtn}>
