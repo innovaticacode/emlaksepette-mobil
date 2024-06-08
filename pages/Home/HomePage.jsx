@@ -667,7 +667,7 @@ export default function HomePage() {
                   } `}
                   column3_additional={item.column3_additional}
                   column4_name={`${
-                    JSON.parse(item.housing_type_data)[item.column4_name]
+                    JSON.parse(item.housing_type_data)["item.column4_name"]
                   } `}
                   column4_additional={item.column4_additional}
                   bookmarkStatus={true}
