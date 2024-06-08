@@ -141,7 +141,6 @@ export default function Profile() {
       default:
         postData();
     }
-
   };
 
   const closeSheet = () => {
@@ -674,7 +673,7 @@ export default function Profile() {
           display: "flex",
           justifyContent: "space-between",
           flexDirection: "row",
-          backgroundColor: "transparent ",
+          backgroundColor: "transparent",
           zIndex: 1,
         }}
       >
@@ -707,7 +706,7 @@ export default function Profile() {
               textAlign: "center",
             }}
           >
-            Başvur
+            Form Doldur
           </Text>
         </TouchableOpacity>
       </View>
