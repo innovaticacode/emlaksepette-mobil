@@ -21,186 +21,346 @@ import axios from "axios";
 import { Platform } from "react-native";
 import { ActivityIndicator, Switch, TextInput } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import { RxDropdownMenu } from "react-icons/rx";
+import RNPickerSelect from "react-native-picker-select";
 
 export default function AllProjects() {
-  const apiUrl = "https://mobil.emlaksepette.com/";
+  const [cityItems, setCityItems] = useState();
+  const [state, setState] = useState({
+    loading: true,
+    isDrawerOpen: false,
+    isHidden: false,
+    selectedCity: "",
+    selectedProjectStatus: "",
+    selectedCounty: "",
+    selectedNeighborhood: "",
+    modalVisible: false,
+    neighborhoodTitle: "",
+    neighborhoodSlug: "",
+    neighborhoods : [],
+    countySlug: "",
+    countyTitle: "",
+    citySlug: "",
+    cityTitle: "",
+    cityID: null,
+    neighborhoodID: null,
+    searchStatus : "Yükleniyor...",
+    countyID: null,
+    filters: [],
+    slugItem: null,
+    nslug: "",
+    checkTitle: "",
+    menu: [],
+    opt: "",
+    housingTypeSlug: "",
+    housingTypeParentSlug: "",
+    optName: "",
+    housingTypeName: "",
+    housingTypeSlugName: "",
+    slugName: "",
+    housingTypeParent: "",
+    housingType: "",
+    projects: [],
+    secondhandHousings: [],
+    housingStatuses: [],
+    cities: [],
+    titleParam: "",
+    counties: [],
+    optionalParam: null,
+    typeParam: "",
+    term: "",
+    openFilterIndex: null,
+    selectedCheckboxes: {},
+    selectedRadio: {},
+    textInputs: {},
+    selectedListingDate: null,
+    projectStatuses: [
+      { value: 2, label: "Tamamlanan Projeler" },
+      { value: 3, label: "Devam Eden Projeler" },
+      { value: 5, label: "Topraktan Projeler" },
+    ],
+    listingDates: [
+      { value: 24, label: "Son 24 Saat" },
+      { value: 3, label: "Son 3 Gün" },
+      { value: 7, label: "Son 7 Gün" },
+      { value: 15, label: "Son 15 Gün" },
+      { value: 30, label: "Son 30 Gün" },
+    ],
+  });
 
+  const apiUrl = "https://mobil.emlaksepette.com/";
   const route = useRoute();
-  const {
-    name,
-    data,
+  const navigation = useNavigation();
+  const { params } = route;
+
+  useEffect(() => {
+    fetchFilteredProjects(buildApiUrl(params), null);
+  }, [params]);
+
+
+  useEffect(() => {
+    const newCityItems = state.cities.map((city) => ({
+      label: city.title,
+      value: city.id,
+    }));
+    setCityItems(newCityItems);
+    return () => {
+      
+    };
+  }, [state.cities]);
+
+  useEffect(() => {
+    setState((prevState) => ({ ...prevState, loading: true }));
+    const timer = setTimeout(() => {
+      setState((prevState) => ({ ...prevState, loading: false }));
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [params.slug, params.data]);
+
+  const buildApiUrl = ({
     slug,
-    type,
-    optional,
     title,
-    titleHeader,
+    optional,
+    type,
     check,
     city,
     county,
     hood,
-  } = route.params;
-  const navigation = useNavigation();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
+  }) => {
+    let url = `${apiUrl}api/kategori/${slug}`;
+    if (title) url += `/${title}`;
+    if (optional) url += `/${optional}`;
+    if (type) url += `/${type}`;
+    if (check) url += `/${check}`;
+    if (city) url += `/${city}`;
+    if (county) url += `/${county}`;
+    if (hood) url += `/${hood}`;
+    return url;
   };
-  const [isHidden, setIsHidden] = useState(false);
 
-  const handleScroll = (event) => {
-    const scrollPosition = event.nativeEvent.contentOffset.y;
-    // Sayfanın 200px aşağısına inildiğinde gizlenmesi gerekiyor
-    if (scrollPosition > 25) {
-      setIsHidden(true);
+  const onChangeCity = (value) => {
+    setState((prevState) => ({ ...prevState, selectedCity: value }));
+    if (value) {
+      fetchDataCounty(value)
+        .then((county) =>
+          setState((prevState) => ({ ...prevState, counties: county.data }))
+        )
+        .catch((error) =>
+          console.error("Veri alınırken bir hata oluştu:", error)
+        );
     } else {
-      setIsHidden(false);
+      setState((prevState) => ({ ...prevState, counties: [] }));
     }
   };
-  const [modalVisible, setModalVisible] = useState(false);
-  const [pageInfo, setPageInfo] = useState(null);
-  const [neighborhoodTitle, setNeighborhoodTitle] = useState("");
-  const [neighborhoodSlug, setNeighborhoodSlug] = useState("");
-  const [countySlug, setCountySlug] = useState("");
-  const [countyTitle, setCountyTitle] = useState("");
-  const [citySlug, setCitySlug] = useState("");
-  const [cityTitle, setCityTitle] = useState("");
-  const [cityID, setCityID] = useState(null);
-  const [neighborhoodID, setNeighborhoodID] = useState(null);
-  const [countyID, setCountyID] = useState(null);
-  const [filters, setFilters] = useState([]);
-  const [slugItem, setSlugItem] = useState(null);
-  const [items, setItems] = useState([]);
-  const [nslug, setNslug] = useState("");
-  const [checkTitle, setCheckTitle] = useState("");
-  const [menu, setMenu] = useState([]);
-  const [opt, setOpt] = useState("");
-  const [housingTypeSlug, setHousingTypeSlug] = useState("");
-  const [housingTypeParentSlug, setHousingTypeParentSlug] = useState("");
-  const [optName, setOptName] = useState("");
-  const [housingTypeName, setHousingTypeName] = useState("");
-  const [housingTypeSlugName, setHousingTypeSlugName] = useState("");
-  const [slugName, setSlugName] = useState("");
-  const [housingTypeParent, setHousingTypeParent] = useState("");
-  const [housingType, setHousingType] = useState("");
-  const [projects, setProjects] = useState([]);
-  const [secondhandHousings, setSecondhandHousings] = useState([]);
-  const [housingStatuses, setHousingStatuses] = useState([]);
-  const [cities, setCities] = useState([]);
-  const [titleParam, setTitleParam] = useState("");
-  const [optionalParam, setOptionalParam] = useState(null);
-  const [typeParam, setTypeParam] = useState("");
-  const [term, setTerm] = useState("");
-  const apiUrlFilter = `https://mobil.emlaksepette.com/api/kategori/${slug}/${title}/${optional}/${type}/${check}/${city}/${county}/${hood}`;
 
-  const fetchFilteredProjects = async () => {
+  const fetchDataCounty = async (value) => {
     try {
-      const response = await axios.get(apiUrlFilter);
+      const response = await axios.get(`${apiUrl}api/counties/${value}`);
+      return response.data;
+    } catch (error) {
+      console.error("Hata:", error);
+      throw error;
+    }
+  };
+
+  const fetchDataNeighborhood = async (value) => {
+    try {
+      const response = await axios.get(`${apiUrl}api/neighborhoods/${value}`);
+      return response.data;
+    } catch (error) {
+      console.error("Hata:", error);
+      throw error;
+    }
+  };
+
+  const onChangeCounty = (value) => {
+    setState((prevState) => ({ ...prevState, selectedCounty: value }));
+    if (value) {
+      fetchDataNeighborhood(value)
+        .then((neighborhood) =>
+          setState((prevState) => ({
+            ...prevState,
+            neighborhoods: neighborhood.data,
+          }))
+        )
+        .catch((error) =>
+          console.error("Veri alınırken bir hata oluştu:", error)
+        );
+    } else {
+      setState((prevState) => ({ ...prevState, neighborhoods: [] }));
+    }
+  };
+
+  const onChangeNeighborhood = (value) => {
+    setState((prevState) => ({ ...prevState, selectedNeighborhood: value }));
+  };
+
+  const onChangeProjectStatus = (value) => {
+    setState((prevState) => ({ ...prevState, selectedProjectStatus: value }));
+  };
+
+  const handleFilterSubmit = () => {
+    const filterData = {
+      selectedCheckboxes: state.selectedCheckboxes,
+      selectedRadio: state.selectedRadio,
+      textInputs: state.textInputs,
+      selectedCity: state.selectedCity,
+      selectedCounty: state.selectedCounty,
+      selectedNeighborhood: state.selectedNeighborhood,
+      selectedProjectStatus: state.selectedProjectStatus,
+      selectedListingDate: state.selectedListingDate,
+    };
+    setState((prevState) => ({ ...prevState, modalVisible: false,  searchStatus : "Filtreleniyor...", }));
+    fetchFilteredProjects(buildApiUrl(params), filterData);
+  };
+
+  const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
+    try {
+      const response = await axios.get(apiUrlFilter, { params: filterData });
       const data = response.data;
-      setPageInfo(data.pageInfo);
-      setNeighborhoodTitle(data.neighborhoodTitle);
-      setNeighborhoodSlug(data.neighborhoodSlug);
-      setCountySlug(data.countySlug);
-      setCountyTitle(data.countyTitle);
-      setCitySlug(data.citySlug);
-      setCityTitle(data.cityTitle);
-      setCityID(data.cityID);
-      setNeighborhoodID(data.neighborhoodID);
-      setCountyID(data.countyID);
-      setFilters(data.filters);
-      setSlugItem(data.slugItem);
-      setItems(data.items);
-      setNslug(data.nslug);
-      setCheckTitle(data.checkTitle);
-      setMenu(data.menu);
-      setOpt(data.opt);
-      setHousingTypeSlug(data.housingTypeSlug);
-      setHousingTypeParentSlug(data.housingTypeParentSlug);
-      setOptionalParam(data.optional);
-      setOptName(data.optName);
-      setHousingTypeName(data.housingTypeName);
-      setHousingTypeSlugName(data.housingTypeSlugName);
-      setSlugName(data.slugName);
-      setHousingTypeParent(data.housingTypeParent);
-      setHousingType(data.housingType);
-      setProjects(data.projects);
-      setSecondhandHousings(data.secondhandHousings);
-      setHousingStatuses(data.housingStatuses);
-      setCities(data.cities);
-      setTitleParam(data.title);
-      setTypeParam(data.type);
-      setTerm(data.term);
+  
+      const newState = {
+        neighborhoodTitle: data.neighborhoodTitle,
+        neighborhoodSlug: data.neighborhoodSlug,
+        countySlug: data.countySlug,
+        countyTitle: data.countyTitle,
+        citySlug: data.citySlug,
+        cityTitle: data.cityTitle,
+        cityID: data.cityID,
+        neighborhoodID: data.neighborhoodID,
+        countyID: data.countyID,
+        filters: data.filters,
+        slugItem: data.slugItem,
+        loading: false,
+        nslug: data.nslug,
+        checkTitle: data.checkTitle,
+        menu: data.menu,
+        opt: data.opt,
+        housingTypeSlug: data.housingTypeSlug,
+        housingTypeParentSlug: data.housingTypeParentSlug,
+        optionalParam: data.optional,
+        optName: data.optName,
+        housingTypeName: data.housingTypeName,
+        housingTypeSlugName: data.housingTypeSlugName,
+        slugName: data.slugName,
+        housingTypeParent: data.housingTypeParent,
+        housingType: data.housingType,
+        secondhandHousings: data.secondhandHousings,
+        housingStatuses: data.housingStatuses,
+        cities: data.cities,
+        titleParam: data.title,
+        typeParam: data.type,
+        term: data.term,
+        searchStatus : "Yükleniyor...",
+        projects: data.projects,
+      };
+  
+      // FilterData varsa ve projects array boşsa searchStatus güncelle
+      if (filterData && data.projects.length === 0) {
+        newState.searchStatus = 'Sonuç bulunamadı';
+      }
+  
+      setState((prevState) => ({
+        ...prevState,
+        ...newState,
+      }));
     } catch (error) {
       console.error(error);
     }
   };
-
-  const [IsLoading, setIsLoading] = useState(false);
-  const [featuredProjects, setFeaturedProjects] = useState([]);
-  const fetchFeaturedProjects = async () => {
-    try {
-      const response = await axios.get(
-        "https://mobil.emlaksepette.com/api/featured-projects"
-      );
-      setFeaturedProjects(response.data);
-      setIsLoading(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchFeaturedProjects();
-    fetchFilteredProjects();
-  }, []);
-
-  const [openFilterIndex, setOpenFilterIndex] = useState(null);
-  const [selectedCheckboxes, setSelectedCheckboxes] = useState({});
-  const [selectedRadio, setSelectedRadio] = useState({});
-  const [textInputs, setTextInputs] = useState({});
-
-  const toggleFilter = (index) => {
-    setOpenFilterIndex(openFilterIndex === index ? null : index);
-  };
+  
 
   const handleCheckboxChange = (filterName, value) => {
-    setSelectedCheckboxes((prevState) => ({
+    setState((prevState) => ({
       ...prevState,
-      [filterName]: {
-        ...prevState[filterName],
-        [value]: !prevState[filterName]?.[value],
+      selectedCheckboxes: {
+        ...prevState.selectedCheckboxes,
+        [filterName]: {
+          ...prevState.selectedCheckboxes[filterName],
+          [value]: !prevState.selectedCheckboxes[filterName]?.[value],
+        },
       },
     }));
   };
-  const handleRadioChange = (filterName, value) => {
-    setSelectedRadio((prevState) => ({
+
+  const handleClearFilters = async () => {
+    setState((prevState) => ({
       ...prevState,
-      [filterName]: value,
+      selectedCheckboxes: {},
+      projects : [],
+      selectedCity: "",
+      selectedCounty: "",
+      selectedNeighborhood: "",
+      selectedProjectStatus: "",
+      selectedRadio: {},
+      textInputs: {},
+      searchStatus: "Filtre Temizleniyor...",
+      modalVisible: false,
+    }));
+  
+    await fetchFilteredProjects(buildApiUrl(params), null);
+  
+    setState((prevState) => ({
+      ...prevState,
+      modalVisible: false,
+      loading: false,
+    }));
+  };
+  
+
+  const handleRadioChange = (filterName, value) => {
+    setState((prevState) => ({
+      ...prevState,
+      selectedRadio: {
+        ...prevState.selectedRadio,
+        [filterName]: value,
+      },
     }));
   };
 
   const handleTextInputChange = (filterName, type, value) => {
-    setTextInputs((prevState) => ({
+    setState((prevState) => ({
       ...prevState,
-      [filterName]: {
-        ...prevState[filterName],
-        [type]: value,
+      textInputs: {
+        ...prevState.textInputs,
+        [filterName]: {
+          ...prevState.textInputs[filterName],
+          [type]: value,
+        },
       },
+    }));
+  };
+
+  const toggleFilter = (index) => {
+    setState((prevState) => ({
+      ...prevState,
+      openFilterIndex: prevState.openFilterIndex === index ? null : index,
+    }));
+  };
+
+  const toggleDrawer = () => {
+    setState((prevState) => ({
+      ...prevState,
+      isDrawerOpen: !prevState.isDrawerOpen,
     }));
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      {/* <Header onPress={toggleDrawer} /> */}
+      <Header onPress={toggleDrawer} />
 
       <Modal
         swipeDirection="left"
-        onSwipeComplete={() => setModalVisible(false)}
-        onSwipeThreshold={(gestureState) => {
-          return {
-            horizontal: gestureState.ly > Dimensions.get("window").width / 10,
-          };
-        }}
-        isVisible={isDrawerOpen}
-        onBackdropPress={() => setIsDrawerOpen(false)}
+        onSwipeComplete={() =>
+          setState((prevState) => ({ ...prevState, isDrawerOpen: false }))
+        }
+        onSwipeThreshold={(gestureState) => ({
+          horizontal: gestureState.ly > Dimensions.get("window").width / 10,
+        })}
+        isVisible={state.isDrawerOpen}
+        onBackdropPress={() =>
+          setState((prevState) => ({ ...prevState, isDrawerOpen: false }))
+        }
         animationIn="bounceInLeft"
         animationOut="bounceOutLeft"
         style={styles.modal}
@@ -219,7 +379,10 @@ export default function AllProjects() {
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("HomePage");
-                    setIsDrawerOpen(false);
+                    setState((prevState) => ({
+                      ...prevState,
+                      isDrawerOpen: false,
+                    }));
                   }}
                 >
                   <Categories
@@ -231,7 +394,10 @@ export default function AllProjects() {
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("Hesabım");
-                    setIsDrawerOpen(false);
+                    setState((prevState) => ({
+                      ...prevState,
+                      isDrawerOpen: false,
+                    }));
                   }}
                 >
                   <Categories
@@ -243,7 +409,10 @@ export default function AllProjects() {
                 <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("RealtorClubExplore");
-                    setIsDrawerOpen(false);
+                    setState((prevState) => ({
+                      ...prevState,
+                      isDrawerOpen: false,
+                    }));
                   }}
                 >
                   <Categories
@@ -286,48 +455,37 @@ export default function AllProjects() {
           </View>
         </View>
       </Modal>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
+
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => setModalVisible(true)}
+          onPress={() =>
+            setState((prevState) => ({ ...prevState, modalVisible: true }))
+          }
         >
-          <Text style={{ color: "white", fontSize: 13, fontWeight: "600" }}>
-            Filtrele
-          </Text>
+          <Text style={{ color: "white", fontSize: 13 }}>Filtrele</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
             ...styles.btn,
-            borderLeftColor: "#bebebe",
+            borderLeftColor: "white",
             borderLeftWidth: 1,
           }}
         >
-          <Text style={{ color: "white", fontSize: 13, fontWeight: "600" }}>
-            Sırala
-          </Text>
+          <Text style={{ color: "white", fontSize: 13 }}>Sırala</Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.container}>
-        {IsLoading == false && (
+        {state.loading == true ? (
           <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              width: "100%",
-              flex: 1,
-            }}
+            style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
           >
             <ActivityIndicator size="large" color="#000000" />
           </View>
-        )}
-        <View>
+        ) : (
           <FlatList
-            data={featuredProjects}
+            data={state.projects}
             renderItem={({ item }) => (
               <ProjectPost
                 project={item}
@@ -349,12 +507,30 @@ export default function AllProjects() {
                 ShopingInfo={item.user.corporate_type}
               />
             )}
+            keyExtractor={(item) => item.id.toString()}
+            ListEmptyComponent={
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: 20,
+                }}
+              >
+                <Text style={{ fontSize: 13, color: "gray", fontWeight: 700 }}>
+                <Text>{state.searchStatus}</Text>
+                </Text>
+              </View>
+            }
           />
-        </View>
+        )}
       </View>
+
       <Modal
-        isVisible={modalVisible}
-        onBackdropPress={() => setModalVisible(false)}
+        isVisible={state.modalVisible}
+        onBackdropPress={() =>
+          setState((prevState) => ({ ...prevState, modalVisible: false }))
+        }
         backdropColor="transparent"
         style={styles.modal2}
       >
@@ -370,18 +546,18 @@ export default function AllProjects() {
                   backgroundColor: "#eaeff5",
                 }}
               >
-                <TouchableOpacity >
+                <TouchableOpacity>
                   <View style={styles.filterLabel}>
                     <Text style={{ fontWeight: "bold" }}>Kategori</Text>
                     <View style={styles.brandsSquare}>
-                      {slugName.length > 0 && (
+                      {state.slugName.length > 0 && (
                         <Text style={[styles.brandName, { color: "black" }]}>
-                          {slugName}
+                          {state.slugName}
                         </Text>
                       )}
-                      {housingTypeSlugName.length > 0 && (
+                      {state.housingTypeSlugName.length > 0 && (
                         <>
-                          {slugName != null && (
+                          {state.slugName != null && (
                             <Text style={styles.brandName}>
                               <FontAwesome5Icon
                                 name="angle-right"
@@ -390,11 +566,11 @@ export default function AllProjects() {
                             </Text>
                           )}
                           <Text style={[styles.brandName, { color: "black" }]}>
-                            {housingTypeSlugName}
+                            {state.housingTypeSlugName}
                           </Text>
                         </>
                       )}
-                      {optName.length > 0 && (
+                      {state.optName.length > 0 && (
                         <>
                           <Text style={styles.brandName}>
                             <FontAwesome5Icon
@@ -403,11 +579,11 @@ export default function AllProjects() {
                             />
                           </Text>
                           <Text style={[styles.brandName, { color: "black" }]}>
-                            {optName}
+                            {state.optName}
                           </Text>
                         </>
                       )}
-                      {housingTypeName.length > 0 && (
+                      {state.housingTypeName.length > 0 && (
                         <>
                           <Text style={styles.brandName}>
                             <FontAwesome5Icon
@@ -416,11 +592,11 @@ export default function AllProjects() {
                             />
                           </Text>
                           <Text style={[styles.brandName, { color: "black" }]}>
-                            {housingTypeName}
+                            {state.housingTypeName}
                           </Text>
                         </>
                       )}
-                      {cityTitle != null && (
+                      {state.cityTitle != null && (
                         <View style={styles.hiddenCityName}>
                           <Text style={styles.brandName}>
                             <FontAwesome5Icon
@@ -429,11 +605,11 @@ export default function AllProjects() {
                             />
                           </Text>
                           <Text style={[styles.brandName, { color: "black" }]}>
-                            {cityTitle}
+                            {state.cityTitle}
                           </Text>
                         </View>
                       )}
-                      {countyTitle != null && (
+                      {state.countyTitle != null && (
                         <View style={styles.hiddenCountyName}>
                           <Text style={styles.brandName}>
                             <FontAwesome5Icon
@@ -442,11 +618,11 @@ export default function AllProjects() {
                             />
                           </Text>
                           <Text style={[styles.brandName, { color: "black" }]}>
-                            {countyTitle}
+                            {state.countyTitle}
                           </Text>
                         </View>
                       )}
-                      {neighborhoodTitle != null && (
+                      {state.neighborhoodTitle != null && (
                         <View style={styles.hiddenNeighborhoodName}>
                           <Text style={styles.brandName}>
                             <FontAwesome5Icon
@@ -455,7 +631,7 @@ export default function AllProjects() {
                             />
                           </Text>
                           <Text style={[styles.brandName, { color: "black" }]}>
-                            {neighborhoodTitle}
+                            {state.neighborhoodTitle}
                           </Text>
                         </View>
                       )}
@@ -463,12 +639,61 @@ export default function AllProjects() {
                   </View>
                 </TouchableOpacity>
               </View>
-
               <View style={styles.filterContainer}>
+                <TouchableOpacity onPress={() => toggleFilter("location")}>
+                  <Text style={styles.filterLabel}>Konum</Text>
+                </TouchableOpacity>
+                {state.openFilterIndex === "location" && (
+                  <View style={styles.optionsContainer}>
+                    <RNPickerSelect
+                      doneText="Tamam"
+                      placeholder={{
+                        label: "Şehir Seçiniz",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      value={state.selectedCity}
+                      onValueChange={(value) => {
+                        onChangeCity(value);
+                      }}
+                      items={cityItems}
+                    />
+
+                    <RNPickerSelect
+                      doneText="Tamam"
+                      placeholder={{
+                        label: "İlçe Seçiniz",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      value={state.selectedCounty}
+                      onValueChange={(value) => {
+                        onChangeCounty(value);
+                      }}
+                      items={state.counties}
+                    />
+
+                    <RNPickerSelect
+                      doneText="Tamam"
+                      placeholder={{
+                        label: "Mahalle Seçiniz",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      value={state.selectedNeighborhood}
+                      onValueChange={(value) => {
+                        onChangeNeighborhood(value);
+                      }}
+                      items={state.neighborhoods}
+                    />
+                  </View>
+                )}
+              </View>
+              {/* <View style={styles.filterContainer}>
                 <TouchableOpacity onPress={() => toggleFilter("kimden")}>
                   <Text style={styles.filterLabel}>Kimden</Text>
                 </TouchableOpacity>
-                {openFilterIndex === "kimden" && (
+                {state.openFilterIndex === "kimden" && (
                   <View style={styles.optionsContainer}>
                     <View style={styles.option}>
                       <TouchableOpacity
@@ -477,35 +702,16 @@ export default function AllProjects() {
                           handleRadioChange("corporate_type", "Banka")
                         }
                       >
-                        <View style={styles.radio}>
-                          <View
-                            style={[
-                              styles.radioInner,
-                              selectedRadio["corporate_type"] === "Banka" &&
-                                styles.radioSelected,
-                            ]}
-                          />
-                        </View>
                         <Text style={styles.radioLabel}>Bankadan</Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View style={styles.option}>
-                      <TouchableOpacity
-                        style={styles.radioContainer}
-                        onPress={() =>
-                          handleRadioChange("corporate_type", "İnşaat Ofisi")
-                        }
-                      >
                         <View style={styles.radio}>
                           <View
                             style={[
                               styles.radioInner,
-                              selectedRadio["corporate_type"] ===
-                                "İnşaat Ofisi" && styles.radioSelected,
+                              state.selectedRadio["corporate_type"] ===
+                                "Banka" && styles.radioSelected,
                             ]}
                           />
                         </View>
-                        <Text style={styles.radioLabel}>İnşaat Ofisinden</Text>
                       </TouchableOpacity>
                     </View>
                     <View style={styles.option}>
@@ -514,23 +720,45 @@ export default function AllProjects() {
                         onPress={() =>
                           handleRadioChange(
                             "corporate_type",
-                            "Turizm Amaçlı Kiralama"
+                            "construction_office"
                           )
                         }
                       >
+                        <Text style={styles.radioLabel}>İnşaat Ofisinden</Text>
                         <View style={styles.radio}>
                           <View
                             style={[
                               styles.radioInner,
-                              selectedRadio["corporate_type"] ===
-                                "Turizm Amaçlı Kiralama" &&
+                              state.selectedRadio["corporate_type"] ===
+                                "construction_office" && styles.radioSelected,
+                            ]}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={styles.option}>
+                      <TouchableOpacity
+                        style={styles.radioContainer}
+                        onPress={() =>
+                          handleRadioChange(
+                            "corporate_type",
+                            "tourism_purpose_rental"
+                          )
+                        }
+                      >
+                        <Text style={styles.radioLabel}>
+                          Turizm İşletmesinden
+                        </Text>
+                        <View style={styles.radio}>
+                          <View
+                            style={[
+                              styles.radioInner,
+                              state.selectedRadio["corporate_type"] ===
+                                "tourism_purpose_rental" &&
                                 styles.radioSelected,
                             ]}
                           />
                         </View>
-                        <Text style={styles.radioLabel}>
-                          Turizm İşletmesinden
-                        </Text>
                       </TouchableOpacity>
                     </View>
                     <View style={styles.option}>
@@ -540,29 +768,78 @@ export default function AllProjects() {
                           handleRadioChange("corporate_type", "Emlak Ofisi")
                         }
                       >
+                        <Text style={styles.radioLabel}>Emlak Ofisinden</Text>
                         <View style={styles.radio}>
                           <View
                             style={[
                               styles.radioInner,
-                              selectedRadio["corporate_type"] ===
+                              state.selectedRadio["corporate_type"] ===
                                 "Emlak Ofisi" && styles.radioSelected,
                             ]}
                           />
                         </View>
-                        <Text style={styles.radioLabel}>Emlak Ofisinden</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
                 )}
+              </View> */}
+              <View style={styles.filterContainer}>
+                <TouchableOpacity onPress={() => toggleFilter("listingDate")}>
+                  <Text style={styles.filterLabel}>İlan Tarihi</Text>
+                </TouchableOpacity>
+                {state.openFilterIndex === "listingDate" && (
+                  <View style={styles.optionsContainer}>
+                    {state.listingDates.map((date) => (
+                      <View style={styles.option} key={date.value}>
+                        <TouchableOpacity
+                          style={styles.checkboxContainer}
+                          onPress={() =>
+                            handleCheckboxChange("listing_date", date.value)
+                          }
+                        >
+                          <Text style={styles.checkboxLabel}>{date.label}</Text>
+                          <View style={styles.checkbox}>
+                            {state.selectedCheckboxes["listing_date"]?.[
+                              date.value
+                            ] && <View style={styles.checkboxInner} />}
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+                  </View>
+                )}
               </View>
-              {filters.map((filter, index) => (
+              <View style={styles.filterContainer}>
+                <TouchableOpacity onPress={() => toggleFilter("projectStatus")}>
+                  <Text style={styles.filterLabel}>Proje Durumu</Text>
+                </TouchableOpacity>
+                {state.openFilterIndex === "projectStatus" && (
+                  <View style={styles.optionsContainer}>
+                    <RNPickerSelect
+                      doneText="Tamam"
+                      placeholder={{
+                        label: "Proje Durumu Seçiniz",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      value={state.selectedProjectStatus}
+                      onValueChange={(value) => {
+                        onChangeProjectStatus(value);
+                      }}
+                      items={state.projectStatuses}
+                    />
+                  </View>
+                )}
+              </View>
+
+              {state.filters.map((filter, index) => (
                 <View key={index} style={styles.filterContainer}>
                   <TouchableOpacity onPress={() => toggleFilter(index)}>
                     <Text style={styles.filterLabel}>
                       {filter.label === "Peşin Fiyat" ? "Fiyat" : filter.label}
                     </Text>
                   </TouchableOpacity>
-                  {openFilterIndex === index && (
+                  {state.openFilterIndex === index && (
                     <View style={styles.optionsContainer}>
                       {filter.values &&
                         filter.values.map((value, idx) => (
@@ -572,7 +849,7 @@ export default function AllProjects() {
                               <View style={styles.switchContainer}>
                                 <Switch
                                   value={
-                                    !!selectedCheckboxes[filter.name]?.[
+                                    !!state.selectedCheckboxes[filter.name]?.[
                                       value.value
                                     ]
                                   }
@@ -587,7 +864,7 @@ export default function AllProjects() {
                                     true: "transparent",
                                   }}
                                   thumbColor={
-                                    selectedCheckboxes[filter.name]?.[
+                                    state.selectedCheckboxes[filter.name]?.[
                                       value.value
                                     ]
                                       ? "green"
@@ -610,17 +887,17 @@ export default function AllProjects() {
                                     }
                                     style={styles.checkboxContainer}
                                   >
-                                    <View style={styles.checkbox}>
-                                      {selectedCheckboxes[filter.name]?.[
-                                        value.value
-                                      ] && (
-                                        <View style={styles.checkboxInner} />
-                                      )}
-                                    </View>
                                     <View>
                                       <Text style={styles.checkboxLabel}>
                                         {value.label}
                                       </Text>
+                                    </View>
+                                    <View style={styles.checkbox}>
+                                      {state.selectedCheckboxes[filter.name]?.[
+                                        value.value
+                                      ] && (
+                                        <View style={styles.checkboxInner} />
+                                      )}
                                     </View>
                                   </TouchableOpacity>
                                 )}
@@ -634,17 +911,17 @@ export default function AllProjects() {
                                     }
                                     style={styles.checkboxContainer}
                                   >
-                                    <View style={styles.checkbox}>
-                                      {selectedCheckboxes[filter.name]?.[
-                                        value.value
-                                      ] && (
-                                        <View style={styles.checkboxInner} />
-                                      )}
-                                    </View>
                                     <View>
                                       <Text style={styles.checkboxLabel}>
                                         {value.label}
                                       </Text>
+                                    </View>
+                                    <View style={styles.checkbox}>
+                                      {state.selectedCheckboxes[filter.name]?.[
+                                        value.value
+                                      ] && (
+                                        <View style={styles.checkboxInner} />
+                                      )}
                                     </View>
                                   </TouchableOpacity>
                                 )}
@@ -661,7 +938,7 @@ export default function AllProjects() {
                             onChangeText={(value) =>
                               handleTextInputChange(filter.name, "min", value)
                             }
-                            value={textInputs[filter.name]?.min || ""}
+                            value={state.textInputs[filter.name]?.min || ""}
                           />
                           <TextInput
                             placeholder={`Max`}
@@ -670,7 +947,7 @@ export default function AllProjects() {
                             onChangeText={(value) =>
                               handleTextInputChange(filter.name, "max", value)
                             }
-                            value={textInputs[filter.name]?.max || ""}
+                            value={state.textInputs[filter.name]?.max || ""}
                           />
                         </View>
                       )}
@@ -678,6 +955,18 @@ export default function AllProjects() {
                   )}
                 </View>
               ))}
+              <TouchableOpacity
+                onPress={handleFilterSubmit}
+                style={styles.filterButton}
+              >
+                <Text style={styles.filterButtonText}>Filtrele</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleClearFilters}
+                style={[styles.filterButton, { backgroundColor: "#EA2B2E" }]} // Arka plan rengi isteğe göre ayarlanabilir
+              >
+                <Text style={styles.filterButtonText}>Temizle</Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </View>
@@ -716,7 +1005,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     width: "50%",
-    backgroundColor: "#264ABB",
+    backgroundColor: "#EA2B2E",
     padding: 12,
     justifyContent: "center",
     alignItems: "center",
@@ -738,10 +1027,10 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   modalContent2: {
-    backgroundColor: "#f4f4f4",
+    backgroundColor: "#FFFFFF",
     padding: 20,
     height: "80%",
-   marginTop:10,
+    marginTop: 10,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
@@ -783,16 +1072,19 @@ const styles = StyleSheet.create({
   switchContainer: {
     flexDirection: "row",
     alignItems: "center",
+    paddingBottom: 10,
+    marginLeft: 10,
   },
   switchLabel: {
-    marginLeft: 8,
+    marginLeft: 10,
   },
   checkboxContainer: {
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
-    padding: 5,
+    paddingVertical: 10,
     borderTopWidth: 1,
+    justifyContent: "space-between",
     borderColor: "#eaeff5",
   },
   checkbox: {
@@ -800,10 +1092,8 @@ const styles = StyleSheet.create({
     height: 20,
     borderWidth: 1,
     borderColor: "green",
-    marginRight: 8,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 10
   },
   checkboxInner: {
     width: 14,
@@ -816,23 +1106,24 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     flexDirection: "row", // Yatay düzende sıralama sağlar
-    justifyContent: "space-between", // İki input arasında boşluk oluşturur
+    justifyContent: "space-around", // İki input arasında boşluk oluşturur
+    marginBottom: 10,
   },
   textInput: {
-    flex: 1,
-    height: 40,
+    height: 25,
+    width: "45%",
     borderWidth: 0,
     borderBottomWidth: 0,
     borderBottomColor: "transparent",
     backgroundColor: "white",
-    marginRight: 8,
   },
   radioContainer: {
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
-    padding: 5,
+    paddingVertical: 10,
     borderTopWidth: 1,
+    justifyContent: "space-between",
     borderColor: "#eaeff5",
   },
   radio: {
@@ -843,8 +1134,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 8,
-    marginLeft: 10
   },
   radioInner: {
     width: 12,
@@ -855,7 +1144,10 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
   },
   radioLabel: {
-    marginLeft: 8,
+    marginLeft: 10,
+  },
+  checkboxLabel: {
+    marginLeft: 10,
   },
   brandsSquare: {
     position: "relative",
@@ -867,5 +1159,39 @@ const styles = StyleSheet.create({
   brandName: {
     color: "black",
     marginRight: 3,
+  },
+  filterButton: {
+    backgroundColor: "#274abb",
+    padding: 10,
+    width: "100%",
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  filterButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    borderWidth: 1,
+    borderColor: "#eaeff5",
+    padding: 10,
+    fontSize: 14,
+    margin: "0 auto",
+    marginBottom: 5,
+  },
+  inputAndroid: {
+    borderWidth: 1,
+    borderColor: "#eaeff5",
+    padding: 10,
+    marginHorizontal: 5,
+    fontSize: 14,
+    margin: "0 auto",
+    marginBottom: 5,
   },
 });

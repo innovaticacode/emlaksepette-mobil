@@ -79,7 +79,7 @@ export default function CreditCardScreen({CompeletePayment}) {
                     <TextInput value={NameOfCardUser} style={styles.Input} onChangeText={(value)=>setNameOfCardUser(value)}/>
                 </View>
                 <View style={{flexDirection:'row',width:'100%',justifyContent:'space-around'}}>
-                <RNPickerSelect
+                <RNPickerSelect doneText="Tamam"
           placeholder={{
             label: "Ay ",
             value: null,
@@ -89,7 +89,7 @@ export default function CreditCardScreen({CompeletePayment}) {
           value={month}
           items={months}
         />
-                <RNPickerSelect
+                <RNPickerSelect doneText="Tamam"
           placeholder={{
             label: "Yıl ",
             value: null,
@@ -130,7 +130,7 @@ const pickerSelectStyles = StyleSheet.create({
     inputAndroid: {
       backgroundColor: "#FAFAFA",
       borderWidth: 1,
-      borderColor: "#bdc6cf",
+      borderColor: "#eaeff5",
       borderRadius: 5,
       padding: 10,
       fontSize: 14, // to ensure the text is never behind the icon

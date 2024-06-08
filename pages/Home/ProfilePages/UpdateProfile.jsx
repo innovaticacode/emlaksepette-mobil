@@ -522,7 +522,7 @@ const pickerSelectStyles = StyleSheet.create({
   inputAndroid: {
     backgroundColor: "#FAFAFA",
     borderWidth: 1,
-    borderColor: "#bdc6cf",
+    borderColor: "#eaeff5",
     borderRadius: 5,
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon

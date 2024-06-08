@@ -651,7 +651,7 @@ export default function Company() {
               <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                 Faaliyet Alanınız
               </Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 value={focusArea}
                 placeholder={{
                   label: "Seçiniz...",
@@ -683,7 +683,7 @@ export default function Company() {
               <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                 İl
               </Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 value={city}
                 placeholder={{
                   label: "Seçiniz...",
@@ -707,7 +707,7 @@ export default function Company() {
               <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                 İlçe
               </Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 value={county}
                 placeholder={{
                   label: "Seçiniz...",
@@ -731,7 +731,7 @@ export default function Company() {
               <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                 Mahalle
               </Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 value={neigbourhod}
                 placeholder={{
                   label: "Seçiniz...",
@@ -803,7 +803,7 @@ export default function Company() {
               <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                 Vergi Dairesi İli
               </Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 value={TaxPlaceCity}
                 placeholder={{
                   label: "Seçiniz...",
@@ -827,7 +827,7 @@ export default function Company() {
               <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                 Vergi Dairesi
               </Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 value={TaxPlace}
                 placeholder={{
                   label: "Seçiniz...",
@@ -1202,7 +1202,7 @@ const pickerSelectStyles = StyleSheet.create({
   inputAndroid: {
     backgroundColor: "#FAFAFA",
     borderWidth: 1,
-    borderColor: "#bdc6cf",
+    borderColor: "#eaeff5",
     borderRadius: 5,
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon
