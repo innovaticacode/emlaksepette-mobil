@@ -38,9 +38,6 @@ import PagerView from "react-native-pager-view";
 import Categories from "../../components/Categories";
 import userData, { getValueFor } from "../../components/methods/user";
 
-
-
-
 import { ActivityIndicator } from "react-native-paper";
 
 export default function HomePage() {
@@ -57,7 +54,7 @@ export default function HomePage() {
       const response = await axios.get(
         "https://mobil.emlaksepette.com/api/featured-projects"
       );
-      setFeaturedProjects(response.data);
+      setFeaturedProjects(response.data.data);
       setloadingPrjoects(true);
     } catch (error) {
       console.log(error);
@@ -67,6 +64,7 @@ export default function HomePage() {
   useEffect(() => {
     fetchFeaturedProjects();
   }, [page]);
+
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -120,7 +118,7 @@ export default function HomePage() {
     (estate) => estate.step1_slug == "konut"
   );
 
-  const filteredProject = featuredProjects.slice(0, 5);
+  const filteredProject = featuredProjects;
   const filteredBookHouse = featuredEstates.filter(
     (estate) => estate.step2_slug == "gunluk-kiralik"
   );
@@ -475,9 +473,9 @@ export default function HomePage() {
                       data: featuredProjects,
                       count: featuredProjects.length,
                       type: null,
-                      optional: null,
-                      title: null,
-                      check: null,
+                      optional: "satilik",
+                      title: "konut",
+                      check: "villa",
                       city: null,
                       county: null,
                       hood: null,
@@ -780,7 +778,6 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
-
                 <Text style={{ fontSize: 12 }}>
                   ÖNE ÇIKAN PREFABRİK YAPILAR
                 </Text>
@@ -792,7 +789,6 @@ export default function HomePage() {
                 </TouchableOpacity>
               </View>
             </View>
-
           </View>
           <View style={styles.slide4}>
             <View style={{ paddingTop: 0 }}>
@@ -805,7 +801,6 @@ export default function HomePage() {
                   alignItems: "center",
                 }}
               >
-
                 <Text style={{ fontSize: 12 }}>Günlük Kiralık İlanlar</Text>
 
                 <TouchableOpacity style={styles.allBtn}>

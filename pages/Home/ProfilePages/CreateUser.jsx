@@ -180,7 +180,7 @@ export default function CreateUser() {
             </View>
             <View>
               <Text style={style.Label}>Kullanıcı Tipi</Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 doneText="Tamam"
                 value={UserType}
                 placeholder={{
@@ -228,7 +228,7 @@ export default function CreateUser() {
             <View style={{ alignItems: "center", paddingTop: 15 }}>
               <TouchableOpacity
                 style={{
-                  backgroundColor: "#bdc6cf",
+                  backgroundColor: "#eaeff5",
                   padding: 4,
                   width: "15%",
                   borderRadius: 20,
@@ -307,7 +307,7 @@ const pickerSelectStyles = StyleSheet.create({
   inputAndroid: {
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: "#bdc6cf",
+    borderColor: "#eaeff5",
     borderRadius: 5,
     padding: 9,
     fontSize: 14, // to ensure the text is never behind the icon

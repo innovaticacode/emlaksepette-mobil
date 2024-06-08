@@ -467,6 +467,7 @@ export default function Details({ navigation }) {
     };
 
     axios.post("https://mobil.emlaksepette.com/api/addLink", collectionData, {
+
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -1865,7 +1866,7 @@ export default function Details({ navigation }) {
                     >
                       Şehir
                     </Text>
-                    <RNPickerSelect
+                    <RNPickerSelect doneText="Tamam"
                       placeholder={{
                         label: "Şehir Seçiniz...",
                         value: null,
@@ -1889,7 +1890,7 @@ export default function Details({ navigation }) {
                     >
                       İlçe
                     </Text>
-                    <RNPickerSelect
+                    <RNPickerSelect doneText="Tamam"
                       placeholder={{
                         label: "İlçe Seçiniz...",
                         value: null,
@@ -2250,7 +2251,7 @@ const styles = StyleSheet.create({
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     borderWidth: 1,
-    borderColor: "#bdc6cf",
+    borderColor: "#eaeff5",
     borderRadius: 5,
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon

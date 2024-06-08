@@ -283,7 +283,7 @@ export default function EditProject() {
         <Text style={{fontSize:20,marginTop:10,fontWeight:'bold',padding:10,paddingTop:0,paddingBottom:0}}>Adres Bilgileri</Text>
         <View style={styles.card}>
           <Text style={styles.label}>İl <Text style={{color :'red'}}>*</Text></Text>
-          <RNPickerSelect
+          <RNPickerSelect doneText="Tamam"
             placeholder={{
               label: 'İl Seçiniz...',
               value: null,
@@ -297,7 +297,7 @@ export default function EditProject() {
             ]}
           />
           <Text style={{...styles.label,marginTop:15}}>İlçe <Text style={{color :'red'}}>*</Text></Text>
-          <RNPickerSelect
+          <RNPickerSelect doneText="Tamam"
             placeholder={{
               label: 'İlçe Seçiniz...',
               value: null,
@@ -311,7 +311,7 @@ export default function EditProject() {
             ]}
           />
           <Text style={{...styles.label,marginTop:15}}>Mahalle <Text style={{color :'red'}}>*</Text></Text>
-          <RNPickerSelect
+          <RNPickerSelect doneText="Tamam"
             placeholder={{
               label: 'Mahalle Seçiniz...',
               value: null,

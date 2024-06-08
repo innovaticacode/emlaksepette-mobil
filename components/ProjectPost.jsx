@@ -40,7 +40,7 @@ export default function ProjectPost({
   }, []);
   return (
     <TouchableOpacity
-      style={{ marginTop: 10 }}
+      
       onPress={() =>
         navigation.navigate("Details", {
           ProjectId: ProjectNo,
