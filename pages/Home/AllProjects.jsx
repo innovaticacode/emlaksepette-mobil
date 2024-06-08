@@ -211,7 +211,7 @@ export default function AllProjects() {
       selectedProjectStatus: state.selectedProjectStatus,
       selectedListingDate: state.selectedListingDate,
     };
-    setState((prevState) => ({ ...prevState, modalVisible: false }));
+    setState((prevState) => ({ ...prevState, modalVisible: false,  searchStatus : "Filtreleniyor...", }));
     fetchFilteredProjects(buildApiUrl(params), filterData);
   };
 
