@@ -83,7 +83,7 @@ export default function ShoppingProfile() {
         const filteredMenu = response.filter((item) => {
           if (item.subMenu) {
             const filteredSubMenu = item.subMenu.filter((subItem) =>
-              permissionsUser.includes(subItem.key)
+              permissionsUser?.includes(subItem.key)
             );
             if (filteredSubMenu.length > 0) {
               item.subMenu = filteredSubMenu;
@@ -91,7 +91,7 @@ export default function ShoppingProfile() {
             }
             return false;
           }
-          return permissionsUser.includes(item.key);
+          return permissionsUser?.includes(item.key);
         });
         setData(filteredMenu);
       } catch (error) {

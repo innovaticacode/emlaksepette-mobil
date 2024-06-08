@@ -78,7 +78,7 @@ export default function HomePage() {
       const response = await axios.get(
         `https://mobil.emlaksepette.com/api/real-estates?page=${
           reset ? 1 : page
-        }&limit=12`
+        }&limit=10`
       );
       const newEstates = response.data;
 
@@ -257,6 +257,8 @@ export default function HomePage() {
   }, [handleIndexChanged]);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+
+      
       <SafeAreaView
         style={{ flex: 1, paddingTop: 25, backgroundColor: "white" }}
       >
@@ -269,6 +271,11 @@ export default function HomePage() {
           swipeDirection={["left"]}
           onSwipeComplete={() => setIsDrawerOpen(false)}
         >
+          <StatusBar
+            backgroundColor="rgba(255, 0, 0, 0.6)"
+            barStyle="light-content"
+          />
+
           <View style={styles.modalContent}>
             <View
               style={{
@@ -599,7 +606,7 @@ export default function HomePage() {
               keyExtractor={(item, index) =>
                 item.id ? item.id.toString() : index.toString()
               }
-              onEndReached={() => fetchFeaturedEstates(false)}
+              onEndReached={() => fetchFeaturedEstates()}
               onEndReachedThreshold={0}
               onRefresh={onRefresh}
               refreshing={refreshing}

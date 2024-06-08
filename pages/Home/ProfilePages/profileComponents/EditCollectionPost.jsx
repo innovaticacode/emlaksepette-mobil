@@ -119,12 +119,8 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
       );
       if (response.data.success) {
         onRemove(item.id);
-      
       } else {
-        console.error(
-          "Failed to remove item from collection:",
-          response.data
-        );
+        console.error("Failed to remove item from collection:", response.data);
       }
     } catch (error) {
       console.error("Error removing item from collection:", error);
@@ -162,7 +158,9 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
               İlan No: {parseInt(itemData.id) + parseInt(itemData.idOran)}{" "}
               {"\n"}
             </Text>
-            <Text style={{ fontWeight: 700,fontSize: 11 }}>{itemData.advertise_title}</Text>
+            <Text style={{ fontWeight: 700, fontSize: 11 }}>
+              {itemData.advertise_title}
+            </Text>
           </Text>
 
           <View style={styles.priceAndEarningContainer}>
@@ -179,7 +177,7 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
                   <Text
                     style={{
                       fontWeight: "700",
-                      fontSize: "13px",
+                      fontSize: 13,
                       marginRight: 10,
                     }}
                   >
@@ -191,7 +189,7 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
               <View style={styles.earningContainer}>
                 <Text style={styles.earning}>
                   <Text style={styles.label}>Kazanç: </Text>
-                  <Text style={{ fontWeight: "700", fontSize: "13px" }}>
+                  <Text style={{ fontWeight: "700", fontSize: 13 }}>
                     {item.action &&
                     (item.action === "tryBuy" || item.action === "noCart") ? (
                       <Text>
