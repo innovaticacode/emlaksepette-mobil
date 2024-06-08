@@ -631,7 +631,7 @@ export default function HomePage() {
                 }}
               >
                 <Text style={{ fontSize: 12, fontWeight: "bold" }}>
-                  ÖNE ÇIKAN İŞ YERLERİ
+                  ÖNE ÇIKAN İŞ YERLERİqwe
                 </Text>
 
                 <TouchableOpacity style={styles.allBtn}>
@@ -664,7 +664,7 @@ export default function HomePage() {
                   } `}
                   column2_additional={item.column2_additional}
                   column3_name={`${
-                    JSON.parse(item.housing_type_data)[item.column3_name]
+                    JSON.parse(item.housing_type_data)["floorlocation"]
                   } `}
                   column3_additional={item.column3_additional}
                   column4_name={`${
