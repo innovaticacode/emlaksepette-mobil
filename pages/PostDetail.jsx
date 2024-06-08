@@ -386,7 +386,7 @@ console.log(selectedCollectionName2)
         }
       )
       .then((response) => {
-          alert()
+         
         var newCollections = collections.map((collection) => {
           if (collection.id == collectionId) {
             var newLinks = collection.links.filter((link) => {
@@ -864,7 +864,12 @@ console.log(selectedCollectionName2)
                 />
               )}
             </View>
-            <View>
+            <TouchableOpacity 
+                  onPress={()=>{
+                    getRoomID(HomeId)
+                    setColectionSheet(true)
+                  }}
+            >
               {roomData["off_sale[]"] && (
                 <SettingsItem
                   info="Koleksiyona Ekle"
@@ -873,7 +878,8 @@ console.log(selectedCollectionName2)
                   icon={<LinkIcon3 name="bookmark" size={15} color={"red"} />}
                 />
               )}
-            </View>
+              
+            </TouchableOpacity>
             <View>
               <SliderMenuPostDetails
                 tab={tabs}

@@ -159,7 +159,7 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
               {"\n"}
             </Text>
             <Text style={{ fontWeight: 700, fontSize: 11 }}>
-              {itemData.advertise_title}
+              {itemData.advertise_title} 
             </Text>
           </Text>
 

@@ -807,7 +807,7 @@ export default function Details({ navigation }) {
           </View>
         );
       }
-      console.log(items);
+      
 
       setTotalPrice(total);
 
@@ -823,7 +823,7 @@ export default function Details({ navigation }) {
       maximumFractionDigits: 0,
     }).format(amount);
   };
-
+console.log(totalPrice)
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -1325,10 +1325,11 @@ export default function Details({ navigation }) {
                           (
                             (data.projectHousingsList[paymentModalShowOrder][
                               "installments-price[]"
-                            ] -
-                              data.projectHousingsList[paymentModalShowOrder][
-                                "advance[]"
-                              ]) /
+                            ] )-
+                             ( data.projectHousingsList[paymentModalShowOrder][
+                                "advance[]" 
+                              ] )
+                              /
                             data.projectHousingsList[paymentModalShowOrder][
                               "installments[]"
                             ]

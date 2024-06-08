@@ -4,7 +4,7 @@ import PaymentItem from "../PaymentItem";
 import { addDotEveryThreeDigits } from "../methods/merhod";
 import { Platform } from "react-native";
 
-export default function PostPayment({ data, roomOrder }) {
+export default function PostPayment({ data, HomeId }) {
   var months = [
     "Ocak",
     "Şubat",
@@ -23,43 +23,46 @@ export default function PostPayment({ data, roomOrder }) {
   const paymentItems = [];
 
   // for döngüsü kullanarak PaymentItem bileşenlerini oluşturuyoruz
-  for (
-    let _index = 0;
-    _index < data.projectHousingsList[roomOrder]["pay-dec-count" + roomOrder];
-    _index++
-  ) {
-    const item =
-      data.projectHousingsList[roomOrder]["pay-dec-count" + roomOrder][_index];
-    const date = new Date(
-      data.projectHousingsList[roomOrder]["pay_desc_date" + roomOrder + _index]
-    );
-
-    paymentItems.push(
-      <View key={_index}>
-        <PaymentItem
-          header={`${_index + 1} . Ara Ödeme`}
-          price={addDotEveryThreeDigits(
-            data.projectHousingsList[roomOrder][
-              `pay_desc_price${roomOrder}` + _index
-            ]
-          )}
-          date={
-            months[date.getMonth()] +
-            ", " +
-            date.getDate() +
-            " " +
-            date.getFullYear()
-          }
-          dFlex="column"
-        />
-      </View>
-    );
+  if (data && data?.projectHousingsList && HomeId !== null) {
+    for (
+      let _index = 0;
+      _index < data?.projectHousingsList[HomeId]["pay-dec-count" + HomeId];
+      _index++
+    ) {
+      const item =
+        data?.projectHousingsList[HomeId]["pay-dec-count" + HomeId][_index];
+      const date = new Date(
+        data?.projectHousingsList[HomeId]["pay_desc_date" + HomeId + _index]
+      );
+  
+      paymentItems?.push(
+        <View key={_index}>
+          <PaymentItem
+            header={`${_index + 1} . Ara Ödeme`}
+            price={addDotEveryThreeDigits(
+              data?.projectHousingsList[HomeId][
+                `pay_desc_price${HomeId}` + _index
+              ]
+            )}
+            date={
+              months[date.getMonth()] +
+              ", " +
+              date.getDate() +
+              " " +
+              date.getFullYear()
+            }
+            dFlex="column"
+          />
+        </View>
+      );
+    }
   }
+
   return (
     <View style={{ padding: 8 }}>
       <View style={styles.container}>
         <View style={styles.PaymentPlan}>
-          {data.projectHousingsList[roomOrder]["off_sale[]"] != "[]" ? (
+          {data?.projectHousingsList[HomeId]["off_sale[]"] != "[]" ? (
             <>
               <Text
                 style={{
@@ -77,16 +80,16 @@ export default function PostPayment({ data, roomOrder }) {
               <PaymentItem
                 header="Peşin Fiyat:"
                 price={addDotEveryThreeDigits(
-                  data.projectHousingsList[roomOrder]["price[]"]
+                  data?.projectHousingsList[HomeId]["price[]"]
                 )}
                 align="center"
                 style={{fontSize: 11}}
                 top="7"
               />
               <PaymentItem
-                header={`${data.projectHousingsList[roomOrder]["installments[]"]} Ay Taksitli Fiyat: `}
+                header={`${data?.projectHousingsList[HomeId]["installments[]"]} Ay Taksitli Fiyat: `}
                 price={addDotEveryThreeDigits(
-                  data.projectHousingsList[roomOrder]["installments-price[]"]
+                  data?.projectHousingsList[HomeId]["installments-price[]"]
                 )}
                 align="center"
                 top="7"
@@ -94,7 +97,7 @@ export default function PostPayment({ data, roomOrder }) {
               <PaymentItem
                 header="Peşinat:"
                 price={addDotEveryThreeDigits(
-                  data.projectHousingsList[roomOrder]["advance[]"]
+                  data?.projectHousingsList[HomeId]["advance[]"]
                 )}
                 align="center"
                 top="7"
@@ -104,11 +107,11 @@ export default function PostPayment({ data, roomOrder }) {
                 header="Aylık Ödenecek Miktar: "
                 price={addDotEveryThreeDigits(
                   (
-                    (data.projectHousingsList[roomOrder][
+                    (data?.projectHousingsList[HomeId][
                       "installments-price[]"
                     ] -
-                      data.projectHousingsList[roomOrder]["advance[]"]) /
-                    data.projectHousingsList[roomOrder]["installments[]"]
+                      data?.projectHousingsList[HomeId]["advance[]"]) /
+                    data?.projectHousingsList[HomeId]["installments[]"]
                   ).toFixed(0)
                 )}
               />
