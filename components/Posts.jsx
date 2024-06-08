@@ -158,6 +158,7 @@ export default function Posts({
                   onPress={() => {
                     changeBookmark();
                     openCollection(roomOrder);
+                    GetID(roomOrder)
                   }}
                 >
                   <View style={styles.ıconContainer}>

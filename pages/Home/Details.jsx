@@ -456,9 +456,9 @@ export default function Details({ navigation }) {
     setselectedCollectionId(id);
     setselectedCollectionName2(name);
   };
-  const addSelectedCollection = (id) => {
+  const addSelectedCollection = (id,name) => {
     const collectionData = {
-      collection_name: selectedCollectionName2,
+      collection_name: name,
       clear_cart: "no",
       id: selectedHouse,
       project: data.project.id,
@@ -808,7 +808,7 @@ export default function Details({ navigation }) {
           </View>
         );
       }
-      console.log(items);
+      
 
       setTotalPrice(total);
 
@@ -824,7 +824,7 @@ export default function Details({ navigation }) {
       maximumFractionDigits: 0,
     }).format(amount);
   };
-
+console.log(totalPrice)
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -1326,10 +1326,11 @@ export default function Details({ navigation }) {
                           (
                             (data.projectHousingsList[paymentModalShowOrder][
                               "installments-price[]"
-                            ] -
-                              data.projectHousingsList[paymentModalShowOrder][
-                                "advance[]"
-                              ]) /
+                            ] )-
+                             ( data.projectHousingsList[paymentModalShowOrder][
+                                "advance[]" 
+                              ] )
+                              /
                             data.projectHousingsList[paymentModalShowOrder][
                               "installments[]"
                             ]

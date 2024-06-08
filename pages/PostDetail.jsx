@@ -168,7 +168,7 @@ export default function PostDetail() {
   const fetchData = async (token, setCollections) => {
     try {
       const response = await axios.get(
-        "https://mobil.emlaksepette.com/api/getCollections",
+        "https://mobil.emlaksepette.com/api/client/collections",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -193,13 +193,13 @@ export default function PostDetail() {
     if (user?.access_token) {
       fetchData(user.access_token, setCollections);
     }
-  }, [user]);
+  }, [user,ıtemOnCollection]);
 
   const addCollectionPost = () => {
     const collectionData = {
       collection_name: newCollectionNameCreate,
       cart: {
-        id: selectedHouse,
+        id: selectedroomId,
         type: "project",
         project: projectId,
         clear_cart: "no",
@@ -219,16 +219,8 @@ export default function PostDetail() {
         }
       )
       .then((response) => {
-        // setaddCollection(false)
-        // setnewCollectionNameCreate('')
-        // setTimeout(() => {
-        //   setcollectionAddedSucces(true)
-        // },200);
-        // setTimeout(() => {
-        //   setcollectionAddedSucces(false)
-        // }, 3000);
-        // // Başarılı yanıtı işleyin
-        // setselectedCollectionName(response.data.collection.name)
+        alert('fsdfds')
+      
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -238,16 +230,18 @@ export default function PostDetail() {
   const [selectedCollectionId, setselectedCollectionId] = useState(0);
   const [selectedCollectionName2, setselectedCollectionName2] = useState("");
   const getCollectionId = (id, name) => {
+   
     setselectedCollectionId(id);
     setselectedCollectionName2(name);
   };
-  const addSelectedCollection = () => {
+console.log(selectedCollectionName2)
+  const addSelectedCollection = (id ,name) => {
     const collectionData = {
-      collection_name: selectedCollectionName2,
+      collection_name: name,
       clear_cart: "no",
-      id: HomeId,
+      id: selectedroomId,
       project: ProjectHomeData.project.id,
-      selectedCollectionId: selectedCollectionId,
+      selectedCollectionId: id,
       type: "project",
     };
 
@@ -259,7 +253,28 @@ export default function PostDetail() {
         },
       })
       .then((response) => {
-      
+                   // setselectedCollectionName(response.data.collection.name)
+        var newCollections = collections.map((collection) => {
+          if (collection.id == id) {
+            return {
+              ...collection,
+              links: [
+                ...collection.links,
+                {
+                  collection_id: id,
+                  room_order: selectedroomId,
+                  item_id: ProjectHomeData?.project?.id,
+                  user_id: user?.id,
+                  item_type: 1,
+                },
+              ],
+            };
+          } else {
+            return collection;
+          }
+        });
+        setCollections(newCollections);
+    
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -267,7 +282,7 @@ export default function PostDetail() {
       });
   };
 
-  const [selectedroomId, setselectedroomId] = useState();
+  const [selectedroomId, setselectedroomId] = useState(0);
   const getRoomID = (id) => {
     setselectedroomId(id);
   };
@@ -298,7 +313,7 @@ export default function PostDetail() {
     }
     apiRequestGet(
       "project_housings/" +
-        ProjectId +
+        projectId +
         "?start=" +
         lastBlockItemsCount +
         "&end=" +
@@ -328,7 +343,79 @@ export default function PostDetail() {
     return () => clearTimeout(timer);
   }, [HomeId, projectId]); // HomeId ve projectId değiştiğinde effect tekrar çalışır
 
+
+  const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
   const formatPrice = (price) => addDotEveryThreeDigits(Math.round(price));
+
+  const ıtemOnCollection = (collectionId) => {
+    let check = false;
+    collections.map((collection) => {
+      for (var i = 0; i < collection.links.length; i++) {
+        if (
+          (collection.links[i].item_type =
+            1 &&
+            collection.links[i].item_id == ProjectHomeData.project.id &&
+            collection.links[i].room_order == selectedroomId &&
+            collection.links[i].collection_id == collectionId)
+        ) {
+          check = true;
+        }
+      }
+     
+    });
+
+    return check;
+  };
+  const removeItemOnCollection = (collectionId) => {
+    const collectionData = {
+      item_type: 1,
+      room_order: setselectedroomId,
+      item_id: ProjectHomeData?.project?.id,
+      collection_id: collectionId,
+    };
+
+    axios
+      .post(
+        "https://mobil.emlaksepette.com/api/remove_item_on_collection",
+        collectionData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        }
+      )
+      .then((response) => {
+         
+        var newCollections = collections.map((collection) => {
+          if (collection.id == collectionId) {
+            var newLinks = collection.links.filter((link) => {
+              if (
+                link.collection_id == collectionId &&
+                link.item_id == ProjectHomeData.project.id &&
+                link.room_order == selectedroomId
+              ) {
+              } else {
+                return link;
+              }
+            });
+
+            return {
+              ...collection,
+              links: newLinks,
+            };
+          } else {
+            return collection;
+          }
+        });
+
+        setCollections(newCollections);
+      })
+      .catch((error) => {
+        // Hata durumunu işleyin
+        console.error("Error:", error);
+      });
+  };
 
   return (
     <>
@@ -542,7 +629,10 @@ export default function PostDetail() {
                     <Icon2 name="sharealt" size={18} />
                   </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
+                <TouchableOpacity onPress={() =>{ 
+                      getRoomID(HomeId)
+
+                  setColectionSheet(true)}}>
                   <View style={styles.ıcon}>
                     <Bookmark name={bookmark} size={18} />
                   </View>
@@ -774,7 +864,12 @@ export default function PostDetail() {
                 />
               )}
             </View>
-            <View>
+            <TouchableOpacity 
+                  onPress={()=>{
+                    getRoomID(HomeId)
+                    setColectionSheet(true)
+                  }}
+            >
               {roomData["off_sale[]"] && (
                 <SettingsItem
                   info="Koleksiyona Ekle"
@@ -783,7 +878,8 @@ export default function PostDetail() {
                   icon={<LinkIcon3 name="bookmark" size={15} color={"red"} />}
                 />
               )}
-            </View>
+              
+            </TouchableOpacity>
             <View>
               <SliderMenuPostDetails
                 tab={tabs}
@@ -794,6 +890,7 @@ export default function PostDetail() {
 
             {tabs == 0 && (
               <OtherHomeInProject
+              
                 GetID={getRoomID}
                 GetIdForCart={GetIdForCart}
                 openCollection={openCollection}
@@ -1200,6 +1297,9 @@ export default function PostDetail() {
                   </TouchableOpacity>
                   {collections.map((item, index) => (
                     <AddCollection
+                    checkFunc={ıtemOnCollection}
+                    setPopUpForRemoveItem={setsetPopUpForRemoveItem}
+                    removeItemOnCollection={removeItemOnCollection}
                       key={index}
                       item={item}
                       getCollectionId={getCollectionId}
