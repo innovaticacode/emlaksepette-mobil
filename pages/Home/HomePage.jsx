@@ -54,7 +54,7 @@ export default function HomePage() {
       const response = await axios.get(
         "https://mobil.emlaksepette.com/api/featured-projects"
       );
-      setFeaturedProjects(response.data);
+      setFeaturedProjects(response.data.data);
       setloadingPrjoects(true);
     } catch (error) {
       console.log(error);
@@ -118,7 +118,7 @@ export default function HomePage() {
     (estate) => estate.step1_slug == "konut"
   );
 
-  const filteredProject = featuredProjects.slice(0, 5);
+  const filteredProject = featuredProjects;
   const filteredBookHouse = featuredEstates.filter(
     (estate) => estate.step2_slug == "gunluk-kiralik"
   );

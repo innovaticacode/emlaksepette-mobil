@@ -28,7 +28,6 @@ export default function Header({ loading, onPress }) {
     const fetchNotifications = async () => {
       try {
         if (!user?.access_token) {
-          console.warn("No access token found");
           setNotifications([]);
           setNotificationCount(0);
           return;
