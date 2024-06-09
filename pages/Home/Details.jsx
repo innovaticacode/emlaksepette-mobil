@@ -824,7 +824,8 @@ export default function Details({ navigation }) {
       maximumFractionDigits: 0,
     }).format(amount);
   };
-console.log(totalPrice)
+
+
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
@@ -1322,20 +1323,7 @@ console.log(totalPrice)
                     <SettingsItem
                       info="Aylık Ödenecek Tutar"
                       numbers={
-                        addDotEveryThreeDigits(
-                          (
-                            (data.projectHousingsList[paymentModalShowOrder][
-                              "installments-price[]"
-                            ] )-
-                             ( data.projectHousingsList[paymentModalShowOrder][
-                                "advance[]" 
-                              ] )
-                              /
-                            data.projectHousingsList[paymentModalShowOrder][
-                              "installments[]"
-                            ]
-                          ).toFixed(0)
-                        ) + "₺"
+                        formatAmount( ( parseInt( data.projectHousingsList[paymentModalShowOrder]['installments-price[]'] ) -  ( parseInt( data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'] ) ) 
                       }
                     />
                   ) : (
