@@ -38,7 +38,7 @@ export default function RealtorPost({
   column4_name,
   column4_additional,
   step2_slug,
-  step1_slug
+  step1_slug,
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -73,11 +73,9 @@ export default function RealtorPost({
       : null
     : 0;
 
-    const handlePress = () => GetId(HouseId)
-
+  const handlePress = () => GetId(HouseId);
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
-
 
   return (
     <TouchableOpacity
@@ -87,11 +85,11 @@ export default function RealtorPost({
     >
       <View style={styles.container}>
         <View style={styles.İlan}>
-          <View style={{ width: "30%", height:80}}>
+          <View style={{ width: "30%", height: 80 }}>
             <ImageBackground
               source={{ uri: image }}
-              style={{ width: "100%", height: '100%',  }}
-              resizeMode='contain'
+              style={{ width: "100%", height: "100%" }}
+              resizeMode="contain"
             />
           </View>
 
@@ -99,7 +97,7 @@ export default function RealtorPost({
             <View style={styles.captionAndIcons}>
               <View style={styles.caption}>
                 <Text style={{ fontSize: 9, color: "black" }}>
-                  İlan No: {2000000 + HouseId} 
+                  İlan No: {2000000 + HouseId}
                 </Text>
                 <Text
                   style={{ fontSize: 10, fontWeight: 700 }}
@@ -111,7 +109,10 @@ export default function RealtorPost({
               <View
                 style={{
                   ...styles.ıcons, // Diğer stil özelliklerini ekleyin
-                  justifyContent: bookmarkStatus && bookmarkStatus == true ? "space-between" : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
+                  justifyContent:
+                    bookmarkStatus && bookmarkStatus == true
+                      ? "space-between"
+                      : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
                 }}
               >
                 {bookmarkStatus && bookmarkStatus == true && (
@@ -160,9 +161,9 @@ export default function RealtorPost({
                 )}
               </View>
               <TouchableOpacity style={styles.addBasket} onPress={handlePress}>
-
-                {step2_slug && step2_slug== "gunluk-kiralik" && step1_slug == "mustakil-tatil" ? (
-
+                {step2_slug &&
+                step2_slug == "gunluk-kiralik" &&
+                step1_slug == "mustakil-tatil" ? (
                   <Text
                     style={{
                       color: "white",
@@ -187,42 +188,42 @@ export default function RealtorPost({
             </View>
           </View>
         </View>
-          <View
-            style={{
-              backgroundColor: "#E8E8E8",
-              height: 30,
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <View style={{ flexDirection: "row" }}>
-              {column1_name && (
-                <Info
-                  text={`${column1_name} ${
-                    column1_additional ? column1_additional : ""
-                  }`}
-                />
-              )}
-               {column2_name && (
-                <Info
-                  text={`${column2_name} ${
-                    column2_additional ? column2_additional : ""
-                  }`}
-                />
-              )}
-               {column3_name && (
-                <Info
-                  text={`${column3_name} ${
-                    column3_additional ? column3_additional : ""
-                  }`}
-                />
-              )}
-            </View>
-            <View style={{ justifyContent: "center" }}>
-              <Text style={styles.InformationText}>{location}</Text>
-            </View>
+        <View
+          style={{
+            backgroundColor: "#E8E8E8",
+            height: 30,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <View style={{ flexDirection: "row" }}>
+            {column1_name && (
+              <Info
+                text={`${column1_name} ${
+                  column1_additional ? column1_additional : ""
+                }`}
+              />
+            )}
+            {column2_name && (
+              <Info
+                text={`${column2_name} ${
+                  column2_additional ? column2_additional : ""
+                }`}
+              />
+            )}
+            {column3_name && (
+              <Info
+                text={`${column3_name} ${
+                  column3_additional ? column3_additional : ".Kat"
+                }`}
+              />
+            )}
           </View>
+          <View style={{ justifyContent: "center" }}>
+            <Text style={styles.InformationText}>{location}</Text>
+          </View>
+        </View>
         {/* {discountRate ? (
           <View
             style={{
@@ -265,7 +266,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     paddingLeft: 5,
 
-    paddingRight:5,
+    paddingRight: 5,
 
     paddingTop: 5,
   },
@@ -274,8 +275,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
 
-    justifyContent: "space-between"
-
+    justifyContent: "space-between",
   },
   PriceAndButtons: {
     marginTop: "auto", // Push to the bottom

@@ -1,4 +1,3 @@
-
 import {
   View,
   Text,
@@ -44,7 +43,11 @@ export default function ShopInfo({ data, loading }) {
           {loading ? (
             <>
               <View
-                style={[styles.ınformation, { top: 10 }, styles.commentArea]}
+                style={[
+                  styles.ınformation,
+                  { top: 10, borderRadius: 10 },
+                  styles.commentArea,
+                ]}
               >
                 <View
                   style={{
@@ -123,7 +126,13 @@ export default function ShopInfo({ data, loading }) {
 
           {loading ? (
             <>
-              <View style={[styles.ınformation, styles.commentArea]}>
+              <View
+                style={[
+                  styles.ınformation,
+                  { borderRadius: 10 },
+                  styles.commentArea,
+                ]}
+              >
                 <View
                   style={{
                     padding: 10,
@@ -199,7 +208,11 @@ export default function ShopInfo({ data, loading }) {
           {loading ? (
             <>
               <View
-                style={[styles.ınformation, { top: 40 }, styles.commentArea]}
+                style={[
+                  styles.ınformation,
+                  { top: 40, borderRadius: 10 },
+                  styles.commentArea,
+                ]}
               >
                 <View
                   style={{
@@ -269,7 +282,10 @@ export default function ShopInfo({ data, loading }) {
         {loading ? (
           <>
             <View
-              style={[{ width: "100%", height: 150, top: 60 }, styles.shadow]}
+              style={[
+                { width: "100%", height: 150, top: 60, borderRadius: 10 },
+                styles.shadow,
+              ]}
             >
               {/* <ProfileMap mapData={data}/>   */}
             </View>
@@ -286,7 +302,7 @@ export default function ShopInfo({ data, loading }) {
 
       {loading ? (
         <>
-          <View style={styles.comment}>
+          <View style={[styles.comment, { borderRadius: 10 }]}>
             <View style={styles.commentArea}>
               <Text
                 style={{ color: "#666666", fontWeight: "600", display: "none" }}
@@ -498,7 +514,7 @@ export default function ShopInfo({ data, loading }) {
         </>
       ) : (
         <>
-          <View style={[styles.comment, {}]}>
+          <View style={[styles.comment, { borderRadius: 10 }]}>
             <View style={styles.commentArea}>
               <Text
                 style={{ color: "#666666", fontWeight: "600", display: "none" }}
@@ -606,7 +622,7 @@ export default function ShopInfo({ data, loading }) {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    padding: 5,
+    padding: 10,
     height: "auto",
   },
   ınformation: {
@@ -632,13 +648,16 @@ const styles = StyleSheet.create({
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 3,
+        },
+        shadowOpacity: 0.29,
+        shadowRadius: 4.65,
       },
       android: {
-        elevation: 5,
+        elevation: 7,
       },
     }),
   },

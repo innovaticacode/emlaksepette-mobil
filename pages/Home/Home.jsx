@@ -25,7 +25,6 @@ const Home = () => {
     getValueFor("user", setUser);
   }, []);
 
-
   const { width, height } = Dimensions.get("window");
   return (
     <Tab.Navigator
