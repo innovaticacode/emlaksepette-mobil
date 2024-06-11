@@ -49,7 +49,7 @@ fetchmenuItems()
        </View>
 
 
-         <View>
+         <View style={{gap:10}}>
            
             {/* {
             menuItems.map((item,index)=>(
@@ -64,6 +64,7 @@ fetchmenuItems()
             {
               menuItems.map((item,index)=>(
                 <TouchableOpacity 
+              
                 onPress={()=>{
                   onpres()
                   navigation.navigate('Public',{name:item.text,data:item.submenus,})}}

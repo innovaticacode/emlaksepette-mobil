@@ -46,8 +46,10 @@ export default function RealtorPost({
   const changeHeart = () => {
     setHeart(heart === "hearto" ? "heart" : "hearto");
   };
-  const changeBookmark = () => {
-    setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
+  const [getPostId, setgetPostId] = useState(0)
+  const CreateCollection = (id) => {
+      setgetPostId(id)
+      navigation.navigate('CreateCollections',{id:id})
   };
   const discountedPrice = discountRate
     ? price - (price * discountRate) / 100
@@ -114,7 +116,9 @@ export default function RealtorPost({
                 }}
               >
                 {bookmarkStatus && bookmarkStatus == true && (
-                  <TouchableOpacity onPress={changeBookmark}>
+                  <TouchableOpacity onPress={()=>{
+                        CreateCollection(HouseId)
+                  }}>
                     <View style={styles.ıconContainer}>
                       <Bookmark
                         name={bookmark}

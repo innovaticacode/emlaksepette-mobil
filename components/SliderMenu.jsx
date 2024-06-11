@@ -43,7 +43,7 @@ export default function SliderMenu({ goToSlide, tab, settab }) {
               },
             ]}
             onPress={() => {
-              goToSlide(index);
+             
             }}
           >
             <Text

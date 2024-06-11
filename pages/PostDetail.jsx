@@ -54,6 +54,7 @@ import { ActivityIndicator } from "react-native-paper";
 import FloorPlan from "../components/FloorPlan";
 import { Svg } from "react-native-svg";
 import { Polyline } from "react-native-maps";
+import PaymentItem from "../components/PaymentItem";
 
 export default function PostDetail() {
   const apiUrl = "https://mobil.emlaksepette.com/";
@@ -415,6 +416,75 @@ console.log(selectedCollectionName2)
         // Hata durumunu işleyin
         console.error("Error:", error);
       });
+  };
+
+  const [paymentItems, setPaymentItems] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  const formatPrice2= (price) => addDotEveryThreeDigits(Math.round(price));
+
+  useEffect(() => {
+    setPaymentItems([]);
+    setTotalPrice(0);
+    if (ProjectHomeData && ProjectHomeData.projectHousingsList && paymentModalShowOrder !== null) {
+      let total = 0;
+      const items = [];
+
+      for (
+        let _index = 0;
+        _index <
+        ProjectHomeData.projectHousingsList[paymentModalShowOrder][
+          "pay-dec-count" + paymentModalShowOrder
+        ];
+        _index++
+      ) {
+        const priceString = addDotEveryThreeDigits(
+          ProjectHomeData.projectHousingsList[paymentModalShowOrder][
+            `pay_desc_price${paymentModalShowOrder}` + _index
+          ]
+        );
+
+        const price = parseInt(priceString.replace(/\./g, ""), 10);
+        total += price;
+
+        const date = new Date(
+          ProjectHomeData.projectHousingsList[paymentModalShowOrder][
+            "pay_desc_date" + paymentModalShowOrder + _index
+          ]
+        );
+
+        const padZero = (num) => (num < 10 ? `0${num}` : num);
+
+        const formattedDate = `${padZero(date.getDate())}.${padZero(
+          date.getMonth() + 1
+        )}.${date.getFullYear()}`;
+
+        items.push(
+          <View key={_index}>
+            <PaymentItem
+              header={`${_index + 1} . Ara Ödeme`}
+              price={formatPrice2(price)}
+              date={formattedDate}
+              dFlex="column"
+            />
+          </View>
+        );
+      }
+      
+
+      setTotalPrice(total);
+
+      setPaymentItems(items);
+    }
+  }, [ProjectHomeData, paymentModalShowOrder]);
+
+  const formatAmount = (amount) => {
+    return new Intl.NumberFormat("tr-TR", {
+      style: "currency",
+      currency: "TRY",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
   };
 
   return (
@@ -1028,19 +1098,7 @@ console.log(selectedCollectionName2)
                         <SettingsItem
                           info="Aylık Ödenecek Tutar"
                           numbers={
-                            addDotEveryThreeDigits(
-                              (
-                                (ProjectHomeData.projectHousingsList[
-                                  paymentModalShowOrder
-                                ]["installments-price[]"] -
-                                  ProjectHomeData.projectHousingsList[
-                                    paymentModalShowOrder
-                                  ]["advance[]"]) /
-                                ProjectHomeData.projectHousingsList[
-                                  paymentModalShowOrder
-                                ]["installments[]"]
-                              ).toFixed(0)
-                            ) + "₺"
+                            formatAmount( ( parseInt( ProjectHomeData.projectHousingsList[paymentModalShowOrder]['installments-price[]'] ) -  ( parseInt( ProjectHomeData.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(ProjectHomeData.projectHousingsList[paymentModalShowOrder]['installments[]'] ) ) 
                           }
                         />
                       ) : (
@@ -1049,6 +1107,7 @@ console.log(selectedCollectionName2)
                     ) : (
                       <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
                     )}
+                    {paymentItems && paymentItems}
                   </View>
 
                   <TouchableOpacity
