@@ -1,5 +1,5 @@
-import { View, Text,StyleSheet, ScrollView, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
-import React,{useState} from 'react'
+import { View, Text,StyleSheet, ScrollView, TextInput, TouchableOpacity, SafeAreaView, ImageBackground } from 'react-native'
+import React,{useState,useEffect} from 'react'
 import IconIdCard from "react-native-vector-icons/FontAwesome"
 import { CheckBox } from '@rneui/themed';
 import CreditCardScreen from './CreditCardScreen';
@@ -7,8 +7,14 @@ import EftPay from './EftPay';
 import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as DocumentPicker from 'expo-document-picker';
+import * as SecureStore from 'expo-secure-store';
 
+import { Platform } from "react-native";
+import { apiRequestGet } from '../../components/methods/apiRequest';
+import { useRoute } from '@react-navigation/native';
 export default function PaymentScreen() {
+    const route =useRoute()
+    const {slug,id,roomOrder}=route.params
     const [checked, setChecked] = React.useState(false);
     const toggleCheckbox = () => setChecked(!checked);
     const [checked2, setChecked2] = React.useState(false);
@@ -36,10 +42,10 @@ const [selectedDocumentName, setSelectedDocumentName] = useState(null);
 const pickDocument = async () => {
     try {
       // Kullanıcıya belge seçmesine izin ver
-      console.log('Belge seçme işlemi başladı.');
+
       // Kullanıcıya belge seçmesine izin ver
       const result = await DocumentPicker.getDocumentAsync();
-      console.log('Belge seçme işlemi tamamlandı.');
+  
       
       // Belge seçilirse, belge bilgilerini göster
       if (result && result === 'success') {
@@ -59,30 +65,71 @@ const pickDocument = async () => {
     const uriComponents = uri.split('/');
     return uriComponents[uriComponents.length - 1];
   }
+  const [data, setData] = useState({})
+  const [project, setproject] = useState({})
+  const [housing, sethousing] = useState({})
+  useEffect(() => {
+    apiRequestGet(`${slug}/` + id).then((res) => {
+   
+
+      if (slug=='housing') {
+            sethousing(res.data)
+      }else{
+        setproject(res?.data?.projectHousingsList[roomOrder])
+        setData(res.data);
+      }
+        
+    });
+  }, []);
+  
+  
+  
+  
+  
+  
+  
   return (
     <KeyboardAwareScrollView style={styles.container}
         contentContainerStyle={{gap:20,paddingBottom:50}}
         showsVerticalScrollIndicator={false}
     >
         <View>
+       
+
             <View style={[styles.AdvertDetail,{flexDirection:'row'}]}>
                 <View style={styles.image}>
-
+                    <ImageBackground source={{uri:`https://mobil.emlaksepette.com/project_housing_images/${project['image[]']}`}}style={{width:'100%',height:'100%'}} />
                 </View>
                 <View style={styles.Description}>
                     <View style={{gap:2}}>
-                        <Text style={{fontSize:12}}>İlan No: 2000248</Text>
+                    {
+                                slug=='housing' ?     <Text style={{fontSize:12}}>İlan No:2000{housing?.housing?.id}</Text>
+                                :
+                                <Text style={{fontSize:12}}>İlan No:1000{data?.project?.id}</Text>
+                            }
+                    
                         <View>
-                        <Text style={{fontSize:13}} numberOfLines={3}>Master Realtor'den Bağçeşme'de 1+1 Eşyasız Kiralık Daire</Text>
+                        {
+                                slug=='housing' ?     <Text style={{fontSize:12}}>{housing?.housing?.title}</Text>
+                                :
+                                <Text style={{fontSize:13}} numberOfLines={3}>{data?.project?.project_title} Projesinde {roomOrder} No'lu Konut </Text>
+                            }
+             
                     </View>
                     </View>
                 
                     <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
                         <View style={{backgroundColor:'#EA2B2E',borderRadius:5}}>
+                           
                             <Text style={{fontSize:12,color:'white',padding:5,fontWeight:'500'}}>Kiralık Daire</Text>
                         </View>
                         <View>
-                            <Text style={{fontSize:12}}>Kocaeli / İzmit</Text>
+                            {
+                                slug=='housing' ?   <Text style={{fontSize:12}}>{housing?.housing?.city?.title} / {housing?.housing?.county?.title}</Text>
+                                :
+                                   <Text style={{fontSize:12}}>{data?.project?.city?.title} / {data?.project?.county?.ilce_title}</Text>
+                            }
+     
                         </View>
                     </View>
                 </View>
@@ -171,6 +218,7 @@ const pickDocument = async () => {
               
              
         </View>
+
         <View style={[styles.AdvertDetail,{borderRadius:3,}]}>
         <View style={{flexDirection:'row',borderBottomWidth:0.5,borderBottomColor:'grey',gap:10,paddingBottom:5,alignItems:'center'}}>
                     <IconIdCard name='star-o' size={15}/>
@@ -195,6 +243,7 @@ const pickDocument = async () => {
                 </View>
                 </View>
         </View>
+        
         <View style={{flexDirection:'row',justifyContent:'space-between',borderWidth:0.5,gap:10,borderColor:'#333',width:'100%',overflow:'hidden'}}>
             <TouchableOpacity 
                 onPress={()=>{
@@ -265,7 +314,7 @@ const styles = StyleSheet.create({
     AdvertDetail:{
         gap:10,
         backgroundColor: '#FFFFFF',  
-        borderRadius: 6,  
+        borderRadius: 5,  
         paddingVertical: 15,  
         paddingHorizontal: 15,  
         width: '100%',  

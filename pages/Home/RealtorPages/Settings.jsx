@@ -5,6 +5,7 @@ import SettingsItem from "../../../components/SettingsItem";
 import ShoppinInfo from "../../../components/ShoppinInfo";
 import CheckSetting from "../../../components/CheckSetting";
 import { Shadow } from 'react-native-shadow-2';
+import { Platform } from "react-native";
 export default function Settings({ data }) {
   const route = useRoute();
 

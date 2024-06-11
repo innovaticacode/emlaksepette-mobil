@@ -5,6 +5,7 @@ import WaitAdverts from './ProjectAdveretsPages/WaitAdverts'
 import RejectAdverts from './ProjectAdveretsPages/RejectAdverts'
 import PasiveAdverts from './ProjectAdveretsPages/PasiveAdverts'
 import { useRoute, useNavigation } from '@react-navigation/native';
+import { Platform } from "react-native";
 export default function MyProjectAdverts() {
   const [Tabs, setTabs] = useState(0)
   const route = useRoute();

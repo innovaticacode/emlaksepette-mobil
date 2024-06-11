@@ -13,26 +13,27 @@ import Icon from "react-native-vector-icons/Entypo";
 import Icon2 from "react-native-vector-icons/SimpleLineIcons";
 import Icon3 from "react-native-vector-icons/FontAwesome"
 import { useNavigation } from "@react-navigation/native";
+import { Platform } from "react-native";
+import { addDotEveryThreeDigits } from "./methods/merhod";
 
-export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
+export default function BasketItem({name,shopName,price,shopPoint,hisse, roomOrder, type,  ımage , share, update, minus, counter,  storeName}) {
+  
   const navigation=useNavigation()
 
   const [chechked, setchechked] = useState(false)
-  const [productCount, setProductCount] = useState(1); // Ürün sayısı
-  const unitPrice = 2500000; // Ürün birim fiyatı
-  const totalPrice = price * productCount; // Toplam fiyat
+// Ürün sayısı
+// Toplam fiyat
 
   // Ürün sayısını arttırma işlevi
-  const increaseProductCount = () => {
-    setProductCount(prevCount => prevCount + 1);
-   
-  };
-  const formattedNumber = totalPrice.toLocaleString('tr-TR')
-  const decreaseProductCount = () => {
-    // Minimum ürün sayısı kontrolü yap
-    if (productCount > 1) {
-      setProductCount(prevCount => prevCount - 1);
-    }
+
+
+  const formatAmount = (amount) => {
+    return new Intl.NumberFormat('tr-TR', { 
+      style: 'currency', 
+      currency: 'TRY',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount);
   };
 
   return (
@@ -43,7 +44,7 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
         <View style={{flexDirection:'row',justifyContent:'space-between',borderBottomWidth:1,paddingBottom:8,borderBottomColor:'#ebebeb'}}>
         <View style={{width:'55%'}}>
         <TouchableOpacity style={{display:'flex',flexDirection:'row',alignItems:'center',gap:9,}}
-          onPress={()=>navigation.navigate('Profile',{name:shopName})}
+          onPress={()=>navigation.navigate('Profile',{id:storeName.id})}
         >
           <TouchableOpacity
             style={{borderWidth:0.9,borderColor:'grey',padding:2,backgroundColor:chechked? '#EA2C2E':'white',borderRadius:20}}
@@ -53,7 +54,7 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
 
           </TouchableOpacity>
           <View>
-            <Text>{shopName}</Text>
+            <Text>{storeName?.name}</Text>
           </View>
           <View style={{backgroundColor:'#6ce24f',padding:1,paddingLeft:8,paddingRight:8,borderRadius:5}}>
             <Text style={{color:'white'}}>{shopPoint}</Text>
@@ -82,35 +83,46 @@ export default function BasketItem({name,shopName,price,shopPoint,hisse}) {
             </View>
          
             <View style={{flex:0.6/2,height:90}}>
-              <Image source={require('./images/home.jpg')} style={{width:'100%',height:'100%'}}/>
+              <Image source={{uri:ımage}} style={{width:'100%',height:'100%'}}/>
 
             </View>
             <View style={{flex:1.4/2,padding:7,flexDirection:'column'}}>
               <View style={{flex:1.5/2,}}>
-              <Text style={{fontSize:12,color:'#333'}}>{name}</Text>
+                {
+                   type=='housing'?
+                   <Text style={{fontSize:12,color:'#333'}}>{name}</Text>
+                   :   <Text style={{fontSize:12,color:'#333'}}>{name} Projesinde {roomOrder} No'lu Konut </Text>
+                }
+           
               </View>
-                <View style={{flex:0.7/2,flexDirection:'row',justifyContent: hisse?'space-between':'flex-end'}}>
-                  <View style={{ borderWidth:0,borderColor:'#ebebeb', paddingLeft:7,paddingRight:7,borderRadius:10,display:hisse? 'flex':'none',flexDirection:'row',alignItems:'center',gap:10}}>
-                   <TouchableOpacity onPress={decreaseProductCount}>
-                    <Icon3 name="minus" color={'grey'}/>
+              
+                 
+                  <View style={{flex:0.7/2,flexDirection:'row',justifyContent:  share=='Var' ?'space-between':'flex-end'}}>
+                  <View style={{ borderWidth:0,borderColor:'#ebebeb', paddingLeft:7,paddingRight:7,borderRadius:10,display: share=='Var' ? 'flex':'none',flexDirection:'row',alignItems:'center',gap:10}}>
+                   <TouchableOpacity style={{padding:5}} onPress={()=>{
+                    minus()
+                   }} >
+                    <Icon3 name="minus" color={'grey'} size={18}/>
                    </TouchableOpacity>
                    <View style={{backgroundColor:'#efbdbd',paddingLeft:8,paddingRight:8, paddingTop:4, paddingBottom:4,borderRadius:20}}>
-                    <Text style={{fontSize:12,fontWeight:'bold',color:'#FFF'}}>{productCount}</Text>
+                    <Text style={{fontSize:12,fontWeight:'bold',color:'#FFF'}}>{counter}</Text>
                    </View>
-                   <TouchableOpacity onPress={()=>{
-                 increaseProductCount()
+                   <TouchableOpacity style={{padding:5}} onPress={()=>{
+                     update()
                     }}>
-                    <Icon3 name="plus" color={'red'}/>
+                    <Icon3 name="plus" color={'red'} size={18}/>
                    </TouchableOpacity>
                   </View>
                   <View style={{paddingLeft:0,paddingRight:0,justifyContent:'center',alignItems:'flex-end'}}>
-                    <Text style={{fontSize:13,color:'green',fontWeight:'bold'}}>{formattedNumber}</Text>
+                    <Text style={{fontSize:13,color:'green',fontWeight:'bold'}}>{formatAmount(price)} ₺</Text>
                     <View style={{backgroundColor:'green',padding:5,display:hisse?'flex':'none'}}>
-                    <Text style={{fontSize:10,color:'white'}}>{productCount} Hisse Satın Aldınız</Text>
+                    <Text style={{fontSize:10,color:'white'}}> Hisse Satın Aldınız</Text>
                     </View>
                    
                   </View>
                 </View>
+              
+               
 
 
             </View>

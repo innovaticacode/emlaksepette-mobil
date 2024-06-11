@@ -12,92 +12,137 @@ import Bblok from "./Bloks/Bblok";
 import ShoppinInfo from "./ShoppinInfo";
 import Posts from "./Posts";
 import { apiRequestGet } from "./methods/apiRequest";
+import { Platform } from "react-native";
+import { getValueFor } from "./methods/user";
 export default function OtherHomeInProject({
   selectedTab,
   getBlockItems,
   setSelectedTab,
   itemCount,
-  openmodal,
+  openModal,
   OpenFormModal,
   data,
   getLastItemCount,
   openCollection,
-  GetIdForCart
+  GetIdForCart,
+  GetID,
 }) {
   const [tabs, setTabs] = useState(0);
   const [rooms, setRooms] = useState([]);
   const Home = [];
+  const [user, setUser] = useState({});
 
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
+  const projectCartOrders = data.projectCartOrders || [];
+  const projectHousingsList = data.projectHousingsList || [];
+
+  const getDiscountAmount = (project, roomIndex) => {
+    const projectOffer = data.offer;
+    return projectOffer ? projectOffer.discount_amount : 0;
+  };
   return (
     <SafeAreaView>
-      <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+      <View>
         <View style={styles.container}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              flexGrow: 1,
-              backgroundColor: "#ebebeb",
-              padding: 3,
-              gap: 10,
-            }}
-            bounces={false}
-          >
-            {data.project.have_blocks
-              ? data.project.blocks.map((block, blockIndex) => {
-                  return (
-                    <TouchableOpacity
-                      key={blockIndex}
-                      onPress={() => {
-                        setTabs(blockIndex);
-                        getBlockItems(blockIndex);
-                        setSelectedTab(blockIndex);
-                      }}
-                      style={[
-                        styles.blockBtn,
-                        {
-                          borderBottomWidth: tabs == blockIndex ? 1 : 0,
-                        },
-                      ]}
-                    >
-                      <Text
-                        style={{
-                          fontWeight: tabs == blockIndex ? "700" : "normal",
-                          color: "#333",
-                        }}
-                      >
-                        {block.block_name}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })
-              : ""}
+          {data.project.blocks &&
+            data.project.blocks.map((block, blockIndex) => (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                  flexGrow: 1,
+                  backgroundColor: "#ebebeb",
+                  padding: 3,
+                  gap: 10,
+                }}
+                bounces={false}
+              >
+                <TouchableOpacity
+                  key={blockIndex}
+                  onPress={() => {
+                    setTabs(blockIndex);
+                    getBlockItems(blockIndex);
+                    setSelectedTab(blockIndex);
+                  }}
+                  style={[
+                    styles.blockBtn,
+                    {
+                      borderBottomWidth: tabs === blockIndex ? 1 : 0,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      fontWeight: tabs === blockIndex ? "700" : "normal",
+                      color: "#333",
+                    }}
+                  >
+                    {block.block_name}
+                  </Text>
+                </TouchableOpacity>{" "}
+              </ScrollView>
+            ))}
+
+
+          <ScrollView>
+            {Array.from({ length: Math.min(data.project.room_count, 10) }).map(
+              (_, i) => {
+                const sold = projectCartOrders[i + 1] || null;
+                const allCounts = 0;
+                const blockHousingCount = 0;
+                const previousBlockHousingCount = 0;
+                const key = i;
+                const isUserSame =
+                  sold && user
+                    ? sold.user_id === user?.id
+                    : false;
+                const projectDiscountAmount = getDiscountAmount(
+                  data.project,
+                  i
+                );
+
+                return (
+                  <Posts
+                    key={key}
+                    GetID={GetID}
+                    GetIdForCart={GetIdForCart}
+                    openCollection={openCollection}
+                    project={data.project}
+                    data={data}
+                    roomOrder={i + 1}
+                    location={`${data.project.city.title} / ${data.project.county.ilce_title}`}
+                    openFormModal={OpenFormModal}
+                    offSaleCheck={
+                      data.projectHousingsList[i + 1]["off_sale[]"] == "[]"
+                    }
+                    price={data.projectHousingsList[i + 1]["price[]"]}
+                    formattedDiscountedPrice={data.projectHousingsList[i + 1]["price[]"] - data.projectDiscountAmount}
+                    shareSale={
+                      data.projectHousingsList[i + 1]["share_sale[]"] ?? null
+                    }
+                    numberOfShare={
+                      data.projectHousingsList[i + 1]["number_of_shares[]"] ??
+                      null
+                    }
+                    shareSaleEmpty = {!data.projectHousingsList[i + 1]["share_sale[]"] || data.projectHousingsList[i + 1]["share_sale[]"] === "[]"}
+                    soldCheck={sold && ["1", "0"].includes(sold.status)}
+                    sumCartOrderQt={data.sumCartOrderQt}
+                    openModal={openModal}
+                    bookmarkStatus={true}
+                    projectDiscountAmount={projectDiscountAmount}
+                    sold={sold}
+                    allCounts={allCounts}
+                    blockHousingCount={blockHousingCount}
+                    previousBlockHousingCount={previousBlockHousingCount}
+                    isUserSame={isUserSame}
+                  />
+                );
+              }
+            )}
           </ScrollView>
 
-          <View>
-            {Array.from({
-              length:
-                data.project.room_count > 10
-                  ? itemCount
-                  : data.project.room_count
-            }).map((index, _index) => {
-              return (
-                <Posts
-                GetIdForCart={GetIdForCart}
-                openCollection={openCollection}
-                  key={_index}
-                  data={data}
-                  openFormModal={OpenFormModal}
-                  openmodal={openmodal}
-                  roomOrder={
-                    data.project.have_blocks
-                      ? getLastItemCount() + _index + 1
-                      : _index + 1
-                  }
-                />
-              );
-            })}
-          </View>
         </View>
       </View>
     </SafeAreaView>

@@ -12,7 +12,7 @@ import StarIcon from "react-native-vector-icons/FontAwesome";
 import Warning from "react-native-vector-icons/Entypo";
 import Icon4 from 'react-native-vector-icons/FontAwesome5'
 import { useNavigation } from "@react-navigation/native";
-
+import { Platform } from "react-native";
 export default function Order({ item }) {
   const date = new Date(item.created_at);
   // Ay isimleri dizisi
@@ -45,7 +45,7 @@ export default function Order({ item }) {
 
 
   const navigation = useNavigation();
-  const PhotoUrl= 'https://test.emlaksepette.com/storage/profile_images/'
+  const PhotoUrl= 'https://mobil.emlaksepette.com/storage/profile_images/'
   return (
     <TouchableOpacity onPress={() => navigation.navigate("OrderDetail", {OrderId:item.id})}>
       <View style={style.container}>

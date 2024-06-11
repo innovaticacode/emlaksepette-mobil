@@ -19,6 +19,7 @@ import {
   import DotIcon from "react-native-vector-icons/Entypo";
   import RNPickerSelect from "react-native-picker-select";
   import { getValueFor } from "../../../components/methods/user";
+  import { Platform } from "react-native";
   import axios from "axios";
   export default function UpdateUsers() {
     const route = useRoute();
@@ -52,7 +53,7 @@ import {
       try {
         if (user?.access_token) {
           const response = await axios.get(
-            `https://test.emlaksepette.com/api/institutional/roles`,
+            `https://mobil.emlaksepette.com/api/institutional/roles`,
             {
               headers: {
                 Authorization: `Bearer ${user.access_token}`,
@@ -63,7 +64,7 @@ import {
             
           // Dönüştürülmüş veriyi state'e atama
           setroles(response.data.roles);
-          console.log(roleItems);
+       
         }
       } catch (error) {
         console.error("Veri getirme hatası:", error);
@@ -105,7 +106,7 @@ import {
       try {
         if (user?.access_token) {
           const response = await axios.post(
-            `https://test.emlaksepette.com/api/institutional/users/${UserID}`,
+            `https://mobil.emlaksepette.com/api/institutional/users/${UserID}`,
             formdata,
             {
               headers: {
@@ -124,7 +125,7 @@ import {
               setmessage(response.data.success)
           // Dönüştürülmüş veriyi state'e atama
       
-          console.log(roleItems);
+         
         }
       } catch (error) {
         console.error("Veri getirme hatası:", error);
@@ -136,7 +137,7 @@ import {
         try {
           if (user?.access_token) {
             const response = await axios.get(
-              `https://test.emlaksepette.com/api/institutional/users/${UserID}`,
+              `https://mobil.emlaksepette.com/api/institutional/users/${UserID}`,
               {
                 headers: {
                   Authorization: `Bearer ${user.access_token}`,
@@ -147,7 +148,7 @@ import {
               
             // Dönüştürülmüş veriyi state'e atama
             setuserDetail(response.data.user);
-            console.log(roleItems);
+            
           }
         } catch (error) {
           console.error("Veri getirme hatası:", error);
@@ -166,7 +167,6 @@ import {
             setphoneNumber(userDetail?.mobile_phone)
       }, [userDetail]);
 
-console.log(userDetail ,'fdsfsd')
     return (
       <TouchableWithoutFeedback
         onPress={() => {
@@ -204,7 +204,7 @@ console.log(userDetail ,'fdsfsd')
               </View>
               <View>
                 <Text style={style.Label}>Kullanıcı Tipi</Text>
-                <RNPickerSelect
+                <RNPickerSelect doneText="Tamam"
                   doneText="Tamam"
                   value={UserType}
                   placeholder={{
@@ -236,7 +236,7 @@ console.log(userDetail ,'fdsfsd')
                   backgroundColor: "#EA2A29",
                   padding: 13,
                   width: "50%",
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
               >
                 <Text
@@ -264,7 +264,7 @@ console.log(userDetail ,'fdsfsd')
               <View style={{ alignItems: "center", paddingTop: 15 }}>
                 <TouchableOpacity
                   style={{
-                    backgroundColor: "#bdc6cf",
+                    backgroundColor: "#eaeff5",
                     padding: 4,
                     width: "15%",
                     borderRadius: 20,
@@ -308,15 +308,15 @@ console.log(userDetail ,'fdsfsd')
       backgroundColor: "transparent",
       borderWidth: 1,
       borderColor: "#ebebeb",
-      borderRadius: 6,
+      borderRadius: 5,
       padding: 9,
       fontSize: 14, // to ensure the text is never behind the icon
     },
     inputAndroid: {
       backgroundColor: "transparent",
       borderWidth: 1,
-      borderColor: "#bdc6cf",
-      borderRadius: 6,
+      borderColor: "#eaeff5",
+      borderRadius: 5,
       padding: 9,
       fontSize: 14, // to ensure the text is never behind the icon
     },
@@ -337,7 +337,7 @@ console.log(userDetail ,'fdsfsd')
     Input: {
       padding: 9,
       backgroundColor: "transparent",
-      borderRadius: 10,
+      borderRadius: 5,
       fontSize: 15,
       borderWidth: 1,
       borderColor: "#ebebeb",
@@ -388,7 +388,7 @@ console.log(userDetail ,'fdsfsd')
     card: {
       alignItems: "center",
       backgroundColor: "#FFFFFF",
-      borderRadius: 10,
+      borderRadius: 5,
       paddingVertical: 10,
       paddingHorizontal: 10,
       width: "90%",
@@ -452,7 +452,7 @@ console.log(userDetail ,'fdsfsd')
       paddingRight: 20,
       padding: 8,
       justifyContent: "center",
-      borderRadius: 10,
+      borderRadius: 5,
     },
     btnText: {
       color: "white",

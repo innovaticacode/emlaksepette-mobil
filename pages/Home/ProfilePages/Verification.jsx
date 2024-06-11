@@ -30,7 +30,7 @@ const [Isucces, setIsucces] = useState(false)
     try {
       // POST isteği yap
       const response = await axios.post(
-        'https://test.emlaksepette.com/api/phone-verification/verify',
+        'https://mobil.emlaksepette.com/api/phone-verification/verify',
         { code: codes },
         {
           headers: {
@@ -41,7 +41,7 @@ const [Isucces, setIsucces] = useState(false)
       );
       setCodes('')
       setsucces(true)
-      console.log('Doğrulama isteği başarıyla tamamlandı:', response.data);
+    
       setIsucces(true)
       setTimeout(() => {
           setIsucces(false)
@@ -70,7 +70,7 @@ useEffect(() => {
       };
   
       const response = await axios.post(
-        'https://test.emlaksepette.com/api/phone-verification/generate',
+        'https://mobil.emlaksepette.com/api/phone-verification/generate',
         {}, // Veri gövdesi boş olabilir veya isteğe özel verileri ekleyebilirsiniz
         config
       );
@@ -89,7 +89,7 @@ useEffect(() => {
 
   const [succes, setsucces] = useState(true)
 
- console.log(succes)
+ 
   return (
     <View style={styles.container}>
       {
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
     paddingBottom : 50,
-    borderRadius: 10,
+    borderRadius: 5,
     gap:15
   },
 })

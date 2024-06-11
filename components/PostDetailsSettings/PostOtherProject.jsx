@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import { React, useEffect, useState } from "react";
-
+import { Platform } from "react-native";
 
 
 
@@ -18,7 +18,7 @@ export default function OtherHomeInProject({
   getBlockItems,
   setSelectedTab,
   itemCount,
-  openmodal,
+  openModal,
   data,
   getLastItemCount,
   openFormModal,
@@ -49,7 +49,7 @@ export default function OtherHomeInProject({
                 <Posts
                   key={_index}
                   data={data}
-                  openmodal={openmodal}
+                  openModal={openModal}
                   openFormModal={openFormModal}
                   roomOrder={
                     data.project.have_blocks

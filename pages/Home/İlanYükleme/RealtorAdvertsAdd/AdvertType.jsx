@@ -3,6 +3,7 @@ import React from 'react'
 import CategoryAdverts from '../ProjectAdvertsAdd/CategoryAdverts'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/AntDesign'
+import { Platform } from "react-native";
 export default function AdvertType() {
  const navigation=useNavigation()
  const route=useRoute()
@@ -52,7 +53,7 @@ export default function AdvertType() {
 const styles=StyleSheet.create({
     Card:{
         backgroundColor: '#FFFFFF',  
-        borderRadius: 10,  
+        borderRadius: 5,  
         paddingVertical: 22,  
         paddingHorizontal: 5,  
         width: '100%',  

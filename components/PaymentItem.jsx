@@ -1,39 +1,55 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text } from "react-native";
+import React from "react";
 
-export default function PaymentItem({header,price,dFlex,date,align,top,border}) {
+export default function PaymentItem({
+  header,
+  price,
+  dFlex,
+  date,
+  align,
+  top,
+  color,
+  fontWeight,
+  border,
+}) {
   return (
-    <View style={{
-        width:'100%',
-        
-           borderBottomWidth:border==='0'?0:1,
-       borderBottomColor:'#EBEBEB',
-        justifyContent:'center',
-      padding:4
+    <View
+      style={{
+        width: "100%",
+        backgroundColor: "transparent",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        padding: 10,
+        borderBottomWidth: border === "0" ? 0 : 1,
+        borderColor: "#EBEBEB",
+      }}
+    >
+        <View style={{ justifyContent: "center" }}>
+          <Text
+            style={{
+              fontSize: 12,
+              color: color ? color : "black",
+              fontWeight: fontWeight ? fontWeight : 400,
+            }}
+          >
+            {header}
+          </Text>
+        </View>
+        <View style={{ justifyContent: "right" }}>
+          <Text
+            style={{
+              fontSize: 12,
+              color: color ? color : "black",
+              fontWeight: "700", // fontWeight 700 yerine "bold" da kullanılabilir
+            }}
+          >
+            {price} ₺
+            {"\n"}
+            {date}
 
-    }}>
-      <View style={{
-        display:'flex',
-        flexDirection:dFlex=='column'?'column':'row',
-        alignItems:align=='center'?'center':'baseline',
-        
-        
-      }}>
-            <View>
-              <Text style={{
-                  fontSize:12,
-                  fontWeight:'700',
-                  
-              }}>{header}</Text>
-            </View>
-            <View>
-                <Text style={{
-                    fontSize:14,
-                    top:top=='7'?7.8:0
-                }}>{price} ₺ </Text>
-                <Text>{date}</Text>
-            </View>
-      </View>
+          </Text>
+        </View>
     </View>
-  )
+  );
 }

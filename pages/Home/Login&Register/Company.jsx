@@ -71,7 +71,7 @@ export default function Company() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/cities"
+        "https://mobil.emlaksepette.com/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -93,7 +93,7 @@ export default function Company() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/counties/${value}`
+        `https://mobil.emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -129,7 +129,7 @@ export default function Company() {
   const fetchDataNeigbour = async (value) => {
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/neighborhoods/${value}`
+        `https://mobil.emlaksepette.com/api/neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {
@@ -179,7 +179,7 @@ export default function Company() {
       formData.append("activity", null);
       formData.append("iban", null);
       const response = await axios.post(
-        "https://test.emlaksepette.com/api/register",
+        "https://mobil.emlaksepette.com/api/register",
         formData
       );
 
@@ -219,7 +219,6 @@ export default function Company() {
         error.response.data.errors.email
       ) {
         const errorMessage = error.response.data.errors.email[0];
-        console.log("API Hatası:", errorMessage);
         seterrorMessage(errorMessage);
         seterrorStatu(2);
         setTimeout(() => {
@@ -371,15 +370,11 @@ export default function Company() {
         postData();
     }
 
-    if (errorMessage) {
-      // ShowAlert(ErrorMessage);
-    }
-    console.log(errorStatu + "error statu");
   };
   const fetchTaxOfficeCity = async () => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/get-tax-offices"
+        "https://mobil.emlaksepette.com/api/get-tax-offices"
       );
       return response.data;
     } catch (error) {
@@ -411,7 +406,7 @@ export default function Company() {
   const fetchTaxOffice = async (value) => {
     try {
       const response = await axios.get(
-        `https://test.emlaksepette.com/api/get-tax-office/${value}`
+        `https://mobil.emlaksepette.com/api/get-tax-office/${value}`
       );
       return response.data;
     } catch (error) {
@@ -452,7 +447,7 @@ export default function Company() {
   // Örnek kullanım
 
   const fetchDataDeal = async (deal) => {
-    const url = `https://test.emlaksepette.com/api/sayfa/${deal}`;
+    const url = `https://mobil.emlaksepette.com/api/sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
@@ -465,7 +460,7 @@ export default function Company() {
   const chooseType = (title) => {
     setacccountType(title);
   };
-  console.log(acccountType);
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
@@ -656,7 +651,7 @@ export default function Company() {
               <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                 Faaliyet Alanınız
               </Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 value={focusArea}
                 placeholder={{
                   label: "Seçiniz...",
@@ -688,7 +683,7 @@ export default function Company() {
               <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                 İl
               </Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 value={city}
                 placeholder={{
                   label: "Seçiniz...",
@@ -712,7 +707,7 @@ export default function Company() {
               <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                 İlçe
               </Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 value={county}
                 placeholder={{
                   label: "Seçiniz...",
@@ -736,7 +731,7 @@ export default function Company() {
               <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                 Mahalle
               </Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 value={neigbourhod}
                 placeholder={{
                   label: "Seçiniz...",
@@ -808,7 +803,7 @@ export default function Company() {
               <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                 Vergi Dairesi İli
               </Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 value={TaxPlaceCity}
                 placeholder={{
                   label: "Seçiniz...",
@@ -832,7 +827,7 @@ export default function Company() {
               <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
                 Vergi Dairesi
               </Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 value={TaxPlace}
                 placeholder={{
                   label: "Seçiniz...",
@@ -1200,15 +1195,15 @@ const pickerSelectStyles = StyleSheet.create({
     backgroundColor: "#FAFAFA",
     borderWidth: 1,
     borderColor: "#ebebeb",
-    borderRadius: 6,
+    borderRadius: 5,
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon
   },
   inputAndroid: {
     backgroundColor: "#FAFAFA",
     borderWidth: 1,
-    borderColor: "#bdc6cf",
-    borderRadius: 6,
+    borderColor: "#eaeff5",
+    borderRadius: 5,
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon
   },
@@ -1228,7 +1223,7 @@ const styles = StyleSheet.create({
   btnRegister: {
     backgroundColor: "#E54242",
     padding: 9,
-    borderRadius: 10,
+    borderRadius: 5,
     width: "90%",
   },
   btnRegisterText: {
@@ -1246,7 +1241,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 40,
     gap: 20,
-    borderRadius: 10,
+    borderRadius: 5,
   },
   modalText: {
     fontSize: 18,

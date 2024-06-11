@@ -8,14 +8,14 @@ import {GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
 
 
 export default function SliderBar() {
-  const apiUrl = "https://test.emlaksepette.com";
+  const apiUrl = "https://mobil.emlaksepette.com";
   const [loading, setloading] = useState(false);
   const [featuredStores, setFeaturedStores] = useState([]);
 
   const fetchFeaturedStores = async () => {
     try {
       const response = await axios.get(
-        "https://test.emlaksepette.com/api/featured-stores"
+        "https://mobil.emlaksepette.com/api/featured-stores"
       );
       if (response.data.length > 0) {
         setFeaturedStores(response.data);
@@ -53,11 +53,11 @@ export default function SliderBar() {
           ) : (
             <>
               <SliderItem
-              StoreID={item.id}
+                StoreID={item.id}
                 key={index}
                 image={`${apiUrl}/storage/profile_images/${item.profile_image}`}
               />
-              <Text numberOfLines={2} style={{ fontSize: 12 }}>
+              <Text numberOfLines={2} style={{ fontSize: 11 , textAlign: "center"}}>
               {capitalizeFirstLetter(item.name)}
               </Text>
             </>

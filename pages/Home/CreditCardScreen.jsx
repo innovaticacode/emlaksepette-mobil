@@ -2,7 +2,7 @@ import { View, Text,StyleSheet,TextInput, TouchableOpacity } from 'react-native'
 import React,{useState} from 'react'
 import RNPickerSelect from "react-native-picker-select";
 import Icon from 'react-native-vector-icons/FontAwesome'
-
+import { Platform } from "react-native";
 export default function CreditCardScreen({CompeletePayment}) {
     const months = [
         { label: 'Ocak', value: 1 },
@@ -79,7 +79,7 @@ export default function CreditCardScreen({CompeletePayment}) {
                     <TextInput value={NameOfCardUser} style={styles.Input} onChangeText={(value)=>setNameOfCardUser(value)}/>
                 </View>
                 <View style={{flexDirection:'row',width:'100%',justifyContent:'space-around'}}>
-                <RNPickerSelect
+                <RNPickerSelect doneText="Tamam"
           placeholder={{
             label: "Ay ",
             value: null,
@@ -89,7 +89,7 @@ export default function CreditCardScreen({CompeletePayment}) {
           value={month}
           items={months}
         />
-                <RNPickerSelect
+                <RNPickerSelect doneText="Tamam"
           placeholder={{
             label: "Yıl ",
             value: null,
@@ -123,15 +123,15 @@ const pickerSelectStyles = StyleSheet.create({
       backgroundColor: "#FAFAFA",
       borderWidth: 1,
       borderColor: "#ebebeb",
-      borderRadius: 6,
+      borderRadius: 5,
       padding: 10,
       fontSize: 14, // to ensure the text is never behind the icon
     },
     inputAndroid: {
       backgroundColor: "#FAFAFA",
       borderWidth: 1,
-      borderColor: "#bdc6cf",
-      borderRadius: 6,
+      borderColor: "#eaeff5",
+      borderRadius: 5,
       padding: 10,
       fontSize: 14, // to ensure the text is never behind the icon
     },

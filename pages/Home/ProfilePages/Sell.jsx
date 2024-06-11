@@ -5,6 +5,7 @@ import { SearchBar } from '@rneui/base';
 import Icon from "react-native-vector-icons/AntDesign"
 import Order from './profileComponents/Order';
 import { getValueFor } from '../../../components/methods/user';
+import { Platform } from "react-native";
 import axios from 'axios';
 export default function Sell() {
   const [search, setSearch] = useState("");
@@ -24,7 +25,7 @@ const [products, setproducts] = useState([])
     try {
       if(user?.access_token){
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/institutional/get_solds",
+          "https://mobil.emlaksepette.com/api/institutional/get_solds",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -42,7 +43,7 @@ const [products, setproducts] = useState([])
     fetchData();
   }, [user]);
 
-    console.log(products,'dfsdfsfsd')
+   
 
   return ( 
     <View style={style.container} onTouchStart={()=>Keyboard.dismiss()}>

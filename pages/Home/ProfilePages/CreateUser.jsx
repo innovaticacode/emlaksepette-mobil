@@ -10,6 +10,7 @@ import {
   Modal,
   Touchable,
 } from "react-native";
+import { Platform } from "react-native";
 import { useState, useRef, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native";
@@ -23,28 +24,24 @@ import axios from "axios";
 export default function CreateUser() {
   const route = useRoute();
   const navigation = useNavigation();
-  const { header, hidden3, hidden4, changeSlectedState, show } = route.params;
+
   const [display, setdisplay] = useState(false);
   const translateY = useRef(new Animated.Value(400)).current;
- 
+
   const [UserTypeValue, setUserTypeValue] = useState("");
   const [isSelected, setisSelected] = useState(false);
   const toggleSwitch = () => {
-    setIsEnabled((previousState) => !previousState)
-    setisActive(isEnabled? 0:1)
+    setIsEnabled((previousState) => !previousState);
+    setisActive(isEnabled ? 0 : 1);
   };
   const [isShowSheet, setisShowSheet] = useState(false);
   const [isShowText, setisShowText] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-
-
-
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-
 
   const [roles, setroles] = useState([]);
 
@@ -52,18 +49,16 @@ export default function CreateUser() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://test.emlaksepette.com/api/institutional/roles`,
+          `https://mobil.emlaksepette.com/api/institutional/roles`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
             },
           }
         );
-        
-          
+
         // Dönüştürülmüş veriyi state'e atama
         setroles(response.data.roles);
-        console.log(roleItems);
       }
     } catch (error) {
       console.error("Veri getirme hatası:", error);
@@ -80,30 +75,30 @@ export default function CreateUser() {
   }));
   // roles state'i güncellendikten sonra yazdırılmalı
 
-  const [message, setmessage] = useState({})
-  const [nameAndSurname, setnameAndSurname] = useState('')
-  const [title, settitle] = useState('')
-  const [email, setemail] = useState('')
-  const [phoneNumber, setphoneNumber] = useState('')
-  const [password, setpassword] = useState('')
+  const [message, setmessage] = useState({});
+  const [nameAndSurname, setnameAndSurname] = useState("");
+  const [title, settitle] = useState("");
+  const [email, setemail] = useState("");
+  const [phoneNumber, setphoneNumber] = useState("");
+  const [password, setpassword] = useState("");
   const [UserType, setUserType] = useState(null);
   const [isEnabled, setIsEnabled] = useState(true);
-  const [isActive, setisActive] = useState(1)
-  const [Succesalert, setSuccesalert] = useState(false)
-  const [errorMessage, seterrorMessage] = useState([])
+  const [isActive, setisActive] = useState(1);
+  const [Succesalert, setSuccesalert] = useState(false);
+  const [errorMessage, seterrorMessage] = useState([]);
   const createUser = async () => {
-    let formdata=new FormData()
-      formdata.append('name',nameAndSurname)
-      formdata.append('title',title)
-      formdata.append('email',email)
-      formdata.append('mobile_phone',phoneNumber )
-      formdata.append('password',password)
-      formdata.append('type',UserType)
-    
+    let formdata = new FormData();
+    formdata.append("name", nameAndSurname);
+    formdata.append("title", title);
+    formdata.append("email", email);
+    formdata.append("mobile_phone", phoneNumber);
+    formdata.append("password", password);
+    formdata.append("type", UserType);
+
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          `https://test.emlaksepette.com/api/institutional/users`,
+          `https://mobil.emlaksepette.com/api/institutional/users`,
           formdata,
           {
             headers: {
@@ -116,24 +111,20 @@ export default function CreateUser() {
         // setTimeout(() => {
         //     setSuccesalert(false)
         // }, 2000);
-        setnameAndSurname('')
-        setemail('')
-          setpassword('')
-          settitle('')
-          setphoneNumber('')
-          setUserType('')
-            setmessage(response.data.message)
-        
+        setnameAndSurname("");
+        setemail("");
+        setpassword("");
+        settitle("");
+        setphoneNumber("");
+        setUserType("");
+        setmessage(response.data.message);
+
         // Dönüştürülmüş veriyi state'e atama
-    
-       
       }
     } catch (error) {
-       
-        console.error(error);
+      console.error(error);
     }
   };
-// console.log(message +'dfdssdf')
 
   return (
     <TouchableWithoutFeedback
@@ -141,37 +132,55 @@ export default function CreateUser() {
         Keyboard.dismiss();
       }}
     >
-  
       <View style={style.container}>
-   
         <View style={[style.Form]}>
           <View style={style.Inputs}>
             <View>
               <Text style={style.Label}>İsim Soyisim</Text>
-              <TextInput style={style.Input} value={nameAndSurname} onChangeText={(value)=>setnameAndSurname(value)}/>
+              <TextInput
+                style={style.Input}
+                value={nameAndSurname}
+                onChangeText={(value) => setnameAndSurname(value)}
+              />
             </View>
             <View>
               <Text style={style.Label}>Unvan</Text>
-              <TextInput style={style.Input} value={title} onChangeText={(value)=>settitle(value)} />
+              <TextInput
+                style={style.Input}
+                value={title}
+                onChangeText={(value) => settitle(value)}
+              />
             </View>
             <View>
               <Text style={style.Label}>Email</Text>
-              <TextInput style={style.Input} value={email} onChangeText={(value)=>setemail(value)} />
+              <TextInput
+                style={style.Input}
+                value={email}
+                onChangeText={(value) => setemail(value)}
+              />
             </View>
             <View>
               <Text style={style.Label}>Cep No</Text>
-              <TextInput style={style.Input} value={phoneNumber} onChangeText={(value)=>setphoneNumber(value)} />
+              <TextInput
+                style={style.Input}
+                value={phoneNumber}
+                onChangeText={(value) => setphoneNumber(value)}
+              />
             </View>
             <View>
               <View style={{ flexDirection: "row", gap: 10 }}>
                 <Text style={style.Label}>Şifre</Text>
               </View>
 
-              <TextInput style={style.Input} value={password} onChangeText={(value)=>setpassword(value)} />
+              <TextInput
+                style={style.Input}
+                value={password}
+                onChangeText={(value) => setpassword(value)}
+              />
             </View>
             <View>
               <Text style={style.Label}>Kullanıcı Tipi</Text>
-              <RNPickerSelect
+              <RNPickerSelect doneText="Tamam"
                 doneText="Tamam"
                 value={UserType}
                 placeholder={{
@@ -183,17 +192,15 @@ export default function CreateUser() {
                 items={roleItems}
               />
             </View>
-
-         
           </View>
           <View style={{ width: "100%", alignItems: "center" }}>
             <TouchableOpacity
-            onPress={createUser}
+              onPress={createUser}
               style={{
                 backgroundColor: "#EA2A29",
                 padding: 13,
                 width: "50%",
-                borderRadius: 10,
+                borderRadius: 5,
               }}
             >
               <Text
@@ -221,7 +228,7 @@ export default function CreateUser() {
             <View style={{ alignItems: "center", paddingTop: 15 }}>
               <TouchableOpacity
                 style={{
-                  backgroundColor: "#bdc6cf",
+                  backgroundColor: "#eaeff5",
                   padding: 4,
                   width: "15%",
                   borderRadius: 20,
@@ -258,8 +265,8 @@ export default function CreateUser() {
         </ModalEdit>
         <ModalEdit
           isVisible={Succesalert}
-          animationIn={'zoomInUp'}
-          animationOut={'zoomOutUp'}
+          animationIn={"zoomInUp"}
+          animationOut={"zoomOutUp"}
           onBackdropPress={() => setSuccesalert(false)}
           swipeDirection={["down"]}
           onSwipeComplete={() => setSuccesalert(false)}
@@ -267,13 +274,21 @@ export default function CreateUser() {
           style={style.modal4}
         >
           <View style={[style.modalContent4, { gap: 10 }]}>
-            <View style={{alignItems:'center',padding:15}}>
-            <Icon name="check-circle" size={35} color={'green'}/>
+            <View style={{ alignItems: "center", padding: 15 }}>
+              <Icon name="check-circle" size={35} color={"green"} />
             </View>
             <View>
-              <Text style={{textAlign:'center',fontSize:16,color:'green',fontWeight:'bold'}}>Kullanıcı oluşturuldu</Text>
-              </View>
-              
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 16,
+                  color: "green",
+                  fontWeight: "bold",
+                }}
+              >
+                Kullanıcı oluşturuldu
+              </Text>
+            </View>
           </View>
         </ModalEdit>
       </View>
@@ -285,15 +300,15 @@ const pickerSelectStyles = StyleSheet.create({
     backgroundColor: "transparent",
     borderWidth: 1,
     borderColor: "#ebebeb",
-    borderRadius: 6,
+    borderRadius: 5,
     padding: 9,
     fontSize: 14, // to ensure the text is never behind the icon
   },
   inputAndroid: {
     backgroundColor: "transparent",
     borderWidth: 1,
-    borderColor: "#bdc6cf",
-    borderRadius: 6,
+    borderColor: "#eaeff5",
+    borderRadius: 5,
     padding: 9,
     fontSize: 14, // to ensure the text is never behind the icon
   },
@@ -314,7 +329,7 @@ const style = StyleSheet.create({
   Input: {
     padding: 9,
     backgroundColor: "transparent",
-    borderRadius: 10,
+    borderRadius: 5,
     fontSize: 15,
     borderWidth: 1,
     borderColor: "#ebebeb",
@@ -365,7 +380,7 @@ const style = StyleSheet.create({
   card: {
     alignItems: "center",
     backgroundColor: "#FFFFFF",
-    borderRadius: 10,
+    borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 10,
     width: "90%",
@@ -429,7 +444,7 @@ const style = StyleSheet.create({
     paddingRight: 20,
     padding: 8,
     justifyContent: "center",
-    borderRadius: 10,
+    borderRadius: 5,
   },
   btnText: {
     color: "white",
@@ -448,15 +463,14 @@ const style = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   modal4: {
-    backgroundColor:'#14141497',
+    backgroundColor: "#14141497",
     justifyContent: "center",
     margin: 0,
   },
   modalContent4: {
     backgroundColor: "#ffffff",
-    margin:10,
-    borderRadius:10,
+    margin: 10,
+    borderRadius: 5,
     height: "15%",
-
   },
 });

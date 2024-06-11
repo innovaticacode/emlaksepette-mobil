@@ -2,18 +2,67 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   ImageBackground,
   TouchableOpacity,
   Platform,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AddBtn from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/EvilIcons";
 import IconMenu from "react-native-vector-icons/Entypo";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import { getValueFor } from "./methods/user";
+
 export default function Header({ loading, onPress }) {
   const navigation = useNavigation();
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [user, setuser] = useState({});
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    getValueFor("user", setuser);
+  }, []);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        if (!user?.access_token) {
+          setNotifications([]);
+          setNotificationCount(0);
+          return;
+        }
+
+        const response = await axios.get(
+          "https://mobil.emlaksepette.com/api/user/notification",
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+
+        if (response.data) {
+          setNotifications(response.data);
+        } else {
+          setNotifications([]);
+        }
+
+        const unreadCount = response.data.filter(
+          (notification) => notification.readed === 0
+        ).length;
+        setNotificationCount(unreadCount);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+        setNotifications([]);
+        setNotificationCount(0); // Set unreadCount to 0 in case of an error
+      }
+    };
+
+    if (user?.access_token) {
+      fetchNotifications();
+    }
+  }, [user?.access_token]);
   return (
     <View style={styles.header}>
       <TouchableOpacity
@@ -33,64 +82,57 @@ export default function Header({ loading, onPress }) {
         }}
       >
         <ImageBackground
-          source={require("./emlaksepettelogo.png")}
+          source={{uri:'https://mobil.emlaksepette.com/images/emlaksepettelogo.png'}}
           resizeMode="contain"
           style={{
             width: "100%",
-            flex: 1,
+            height:'100%',
             justifyContent: "center",
           }}
         />
       </View>
 
       <View style={{ display: "flex", flexDirection: "row-reverse" }}>
-        {/* <TouchableOpacity style={{
-        
-        width:50,
-        alignItems: 'center',
-      
-        borderRadius:15
-      }}
-        onPress={()=>navigation.navigate('ShopProfile')}
-      >
-       <Icon name='user' size={40}/>
-      </TouchableOpacity> */}
         <TouchableOpacity
-          onPress={() => navigation.navigate("Notifications")}
+          onPress={() =>
+            navigation.navigate("Notifications", { notifications })
+          }
           style={{
             width: 50,
             alignItems: "center",
-
             borderRadius: 15,
           }}
         >
-          <View
-            style={{
-              position: "absolute",
-              backgroundColor: "red",
-              paddingLeft: 6,
-              paddingRight: 6,
-            
-              paddingTop:2,
-              paddingBottom:2,
-              bottom: 22,
-              left: 23,
-              zIndex: 1,
-              borderRadius: 20,
-            }}
-          >
-            <Text style={{ color: "white",fontSize:11 }}>1</Text>
-          </View>
+          {notificationCount > 0 && (
+            <View
+              style={{
+                position: "absolute",
+                backgroundColor: "red",
+                paddingLeft: 6,
+                paddingRight: 6,
+                paddingTop: 2,
+                paddingBottom: 2,
+                bottom: 22,
+                left: 23,
+                zIndex: 1,
+                borderRadius: 20,
+              }}
+            >
+              <Text style={{ color: "white", fontSize: 11 }}>
+                {notificationCount}
+              </Text>
+            </View>
+          )}
           <Icon name="bell" size={35} />
         </TouchableOpacity>
       </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   header: {
     alignItems: "center",
-
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",

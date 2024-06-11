@@ -15,7 +15,7 @@ Image,
 import { React, useRef, useState,useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 
-
+import { Platform } from "react-native";
 import PagerView from 'react-native-pager-view';
 import { useNavigation, useRoute  } from '@react-navigation/native';
 import Heart from "react-native-vector-icons/AntDesign";
@@ -46,7 +46,7 @@ import axios from "axios";
 
 
 export default function PostDetail() {
-const apiUrl = "https://test.emlaksepette.com";
+const apiUrl = "https://mobil.emlaksepette.com";
 const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
 const [images,setImages] = useState([]);
@@ -107,8 +107,6 @@ useEffect(() => {
     setImages(JSON.parse(res.data.housing.housing_type_data).images);
   });
 }, []);
-//  console.log( JSON.parse(data?.housing?.housing_type_data)['price'])
-
 const [modalVisibleComennet, setmodalVisibleComment] = useState(false)
   const handleModal=()=>(
     setmodalVisibleComment(!modalVisibleComennet)
@@ -121,7 +119,6 @@ const [modalVisibleComennet, setmodalVisibleComment] = useState(false)
 
     // Sarı yıldızların sayısını hesapla ve konsola yazdır
     const yellowStars = index + 1;
-    console.log(`Sarı yıldızlar: ${yellowStars}`);
   };
   const [checked, setChecked] = useState(false);
   const toggleCheked = () => setChecked(!checked);
@@ -163,11 +160,11 @@ const [newCollectionNameCreate, setnewCollectionNameCreate] = useState('')
 useEffect(() => {
   getValueFor("user", setUser);
 }, []);
-
+console.log(user)
 const fetchData = async () => {
  
   try {
-    const response = await axios.get('https://test.emlaksepette.com/api/getCollections',{
+    const response = await axios.get('https://mobil.emlaksepette.com/api/client/collections',{
       headers: {
         'Authorization': `Bearer ${user.access_token}`
       }
@@ -182,7 +179,7 @@ const fetchData = async () => {
 };
 useEffect(() => {
   fetchData();
-}, [user]);
+}, [user,addCollection]);
 
 
 const addCollectionPost=()=>{
@@ -198,7 +195,7 @@ const addCollectionPost=()=>{
   };
 
 
-  axios.post('https://test.emlaksepette.com/api/add/collection', collectionData, {
+  axios.post('https://mobil.emlaksepette.com/api/add/collection', collectionData, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${user.access_token}`,
@@ -207,10 +204,10 @@ const addCollectionPost=()=>{
     },
   })
   .then(response => {
-
+          setaddCollection(false)
     // Başarılı yanıtı işleyin
     // setselectedCollectionName(response.data.collection.name)
-    console.log('Response:', response.data);
+   
   })
   .catch(error => {
     // Hata durumunu işleyin
@@ -224,18 +221,18 @@ const getCollectionId=(id,name)=>{
     setselectedCollectionId(id)
     setselectedCollectionName2(name)
 } 
-const addSelectedCollection=()=>{
+const addSelectedCollection=(id)=>{
   const collectionData = {
     collection_name:selectedCollectionName2,
     clear_cart: "no",
-    id: data.housing.id,
+    id: data?.housing?.id,
     project:null,
-    selectedCollectionId: selectedCollectionId,
-    type:null
+    selectedCollectionId: id,
+    type:2
   };
 
 
-  axios.post('https://test.emlaksepette.com/api/addLink', collectionData, {
+  axios.post('https://mobil.emlaksepette.com/api/addLink', collectionData, {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${user.access_token}`,
@@ -244,8 +241,27 @@ const addSelectedCollection=()=>{
     },
   })
   .then(response => {
-  
-    console.log('Response:', response.data);
+    var newCollections = collections.map((collection) => {
+      if (collection.id == id) {
+        return {
+          ...collection,
+          links: [
+            ...collection.links,
+            {
+              collection_id: selectedCollectionId,
+              room_order: null,
+              item_id: data?.housing?.id,
+              user_id: user?.id,
+              item_type: 2,
+            },
+          ],
+        };
+      } else {
+        return collection;
+      }
+    });
+    setcollections(newCollections);
+   
   })
   .catch(error => {
     // Hata durumunu işleyin
@@ -253,7 +269,104 @@ const addSelectedCollection=()=>{
   });
 
 }
+const [ModalForAddToCart, setModalForAddToCart] = useState(false)
+const addToCard = async () => {
+  const formData=new FormData()
+  formData.append('id',houseId)
+  formData.append('isShare',null)
+  formData.append('numbershare',null)
+  formData.append('qt',1)
+  formData.append('type','housing')
+  formData.append('project',null)
+  formData.append('clear_cart','no')
 
+try {
+  if (user?.access_token) {
+    const response = await axios.post(
+      "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      }
+    );
+      setModalForAddToCart(false)
+      navigation.navigate('Sepetim')
+  }
+} catch (error) {
+  console.error('post isteği olmadı' ,error);
+} 
+};
+const ıtemOnCollection = (collectionId) => {
+  let check = false;
+  collections.map((collection) => {
+    for (var i = 0; i < collection?.links?.length; i++) {
+      if (
+        (collection.links[i].item_type =
+          1 &&
+          collection.links[i].item_id == data.housing.id &&
+        
+          collection.links[i].collection_id == collectionId)
+      ) {
+        check = true;
+      }
+    }
+  });
+
+  return check;
+};
+const removeItemOnCollection = (collectionId) => {
+  const collectionData = {
+    item_type: 2,
+   
+    item_id: data.housing.id,
+    collection_id: collectionId,
+  };
+
+  axios
+    .post(
+      "https://mobil.emlaksepette.com/api/remove_item_on_collection",
+      collectionData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      }
+    )
+    .then((response) => {
+        alert('sdfsdfsadas')
+      var newCollections = collections.map((collection) => {
+        if (collection.id == collectionId) {
+          var newLinks = collection.links.filter((link) => {
+            if (
+              link.collection_id == collectionId &&
+              link.item_id == data.housing.id &&
+              link.room_order == null
+            ) {
+            } else {
+              return link;
+            }
+          });
+
+          return {
+            ...collection,
+            links: newLinks,
+          };
+        } else {
+          return collection;
+        }
+      });
+
+      setcollections(newCollections);
+    })
+    .catch((error) => {
+      // Hata durumunu işleyin
+      console.error("Error:", error);
+    });
+};
+const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
 return (
   
   <SafeAreaView style={{  backgroundColor: "white",flex:1}}>
@@ -349,6 +462,36 @@ return (
         </View>
       </View>
     </Modal>
+              <View style={{width:'100%',height:'10%',backgroundColor:'transparent',position:'absolute',bottom:15,zIndex:1}}>
+                <View style={{flexDirection:'row',gap:20,justifyContent:'center'}}>
+                <TouchableOpacity
+                    style={{backgroundColor:'#EA2A28',padding:10,width:'40%',borderRadius:5}}
+                >
+                    <Text style={{textAlign:'center',color:'#ffffff',fontWeight:'500'}}>Ara</Text>
+                  </TouchableOpacity>
+                  {data?.housing?.step2_slug=='gunluk-kiralik' ?
+                     <TouchableOpacity
+                     onPress={()=>{
+                      navigation.navigate('CreateReservation',{data:data.housing})
+                     }}
+                       style={{backgroundColor:'#EA2A28',padding:10,width:'40%',borderRadius:5}}
+                     >
+                       <Text  style={{textAlign:'center',color:'#ffffff',fontWeight:'500'}}>Rezervasyon Yap</Text>
+                     </TouchableOpacity>
+                     :
+                        <TouchableOpacity
+                  onPress={()=>{
+                    setModalForAddToCart(true)
+                  }}
+                    style={{backgroundColor:'#EA2A28',padding:10,width:'40%',borderRadius:5}}
+                  >
+                    <Text  style={{textAlign:'center',color:'#ffffff',fontWeight:'500'}}>Sepete Ekle</Text>
+                  </TouchableOpacity>
+           
+                  }
+               
+               </View>
+              </View> 
     <View
       style={{
         flexDirection: "row",
@@ -428,7 +571,7 @@ return (
               padding: 5,
               paddingLeft: 8,
               paddingRight: 8,
-              borderRadius: 10,
+              borderRadius: 5,
             }}
           >
             <Text style={{ color: "white", fontSize: 12 }}>
@@ -570,10 +713,7 @@ return (
           isVisible={ColectionSheet}
           onBackdropPress={ToggleColSheet}
       
-          animationIn={'fadeInDown'}
-          animationOut={'fadeOutDown'}
-          animationInTiming={200}
-          animationOutTiming={200}
+         
           backdropColor="transparent"
           style={styles.modal4}
         >
@@ -602,9 +742,10 @@ return (
                       <Text style={{fontSize:13,color:'#19181C',fontWeight:'600'}}>Yeni Oluştur</Text>
                     </View>
                   </TouchableOpacity>
+                  
                      {
                         collections.map((item,index)=>(
-                          <AddCollection  key={index} item={item} getCollectionId={getCollectionId} addLink={addSelectedCollection}/> 
+                          <AddCollection  checkFunc={ıtemOnCollection} key={index} item={item} getCollectionId={getCollectionId} addLink={addSelectedCollection}   removeItemOnCollection={removeItemOnCollection}    setPopUpForRemoveItem={setsetPopUpForRemoveItem}/> 
                         ))
 
                       }
@@ -886,7 +1027,44 @@ return (
      
         </Modal>
 
+        <Modal
+          isVisible={ModalForAddToCart}
+          onBackdropPress={()=>setModalForAddToCart(false)}
+      
+          animationIn={'zoomInUp'}
+          animationOut={'zoomOutUp'}
+          animationInTiming={200}
+          animationOutTiming={200}
+          backdropColor="transparent"
+          style={styles.modal6}
+        >
+          <View style={styles.modalContent6}>
+            <View style={{padding:10,gap:10}}>
+           <Text style={{textAlign:'center'}}>#1000{data?.housing?.id} No'lu Konutu Sepete Eklemek İsteiğinize Eminmisiniz?</Text>
+           <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
 
+            <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
+              onPress={()=>{
+                addToCard() 
+              }}
+            >
+              <Text style={{color:'white'}}>Sepete Ekle</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
+                onPress={()=>{
+                  setModalForAddToCart(false)
+                }}
+            >
+              <Text style={{color:'white'}}>Vazgeç</Text>
+            </TouchableOpacity>
+
+           </View>
+
+            </View>
+
+          </View>
+        </Modal>
     </ScrollView>
 
 
@@ -1020,7 +1198,7 @@ pagination: {
   padding: 3,
   paddingLeft: 8,
   paddingRight: 8,
-  borderRadius: 10,
+  borderRadius: 5,
   bottom: 0,
   alignItems: "center",
 
@@ -1135,9 +1313,19 @@ Input: {
   padding: 10,
   borderWidth: 1,
   borderColor: "#ebebeb",
-  borderRadius: 6,
+  borderRadius: 5,
   fontSize: 14,
 },
-
+modal6: {
+  justifyContent: "center",
+  margin: 0,
+  padding: 20,
+  backgroundColor: "#1414148c",
+},
+modalContent6: {
+  backgroundColor: "#fefefe",
+  padding: 20,
+  borderRadius: 5,
+},
 });
 

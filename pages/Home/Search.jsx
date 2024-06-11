@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView,StyleSheet,  Keyboard,Image,Platform } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ScrollView, SafeAreaView,StyleSheet,  Keyboard,Image } from "react-native";
 import {React,useState,useEffect}from "react";
 import Icon from "react-native-vector-icons/EvilIcons";
 import Categories from "../../components/Categories";
@@ -7,6 +7,7 @@ import { SearchBar } from '@rneui/themed';
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
+import { Platform } from "react-native";
 
 export default function Search({onpres}) {
   const navigation=useNavigation();
@@ -22,7 +23,7 @@ const [menuItems, setMenuItems] = useState([]);
 
 const fetchmenuItems = async () => {
   try {
-    const response = await axios.get('https://test.emlaksepette.com/api/menu-list');
+    const response = await axios.get('https://mobil.emlaksepette.com/api/menu-list');
     setMenuItems(response.data)
     const submenus = response.data[0].submenus;
 
@@ -48,7 +49,7 @@ fetchmenuItems()
        </View>
 
 
-         <View>
+         <View style={{gap:10}}>
            
             {/* {
             menuItems.map((item,index)=>(
@@ -63,6 +64,7 @@ fetchmenuItems()
             {
               menuItems.map((item,index)=>(
                 <TouchableOpacity 
+              
                 onPress={()=>{
                   onpres()
                   navigation.navigate('Public',{name:item.text,data:item.submenus,})}}

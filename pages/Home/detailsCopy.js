@@ -349,7 +349,7 @@ import {
             </View>
          
             <View style={{ width: '100%', height:tabs===4 ?700:740}}>
-              {tabs === 0 && <OtherHomeInProject openmodal={openModal}/>}
+              {tabs === 0 && <OtherHomeInProject openModal={openModal}/>}
               {tabs === 1 && <Caption acıklama={acıklama}/>}
               {tabs === 2 && <Information ShoppingName={ShoppingName} ShopingInfo={ShopingInfo} ShoppingMail={ShoppingMail} Phone={Phone}/>}
               {tabs === 3 && <Settings/> }
@@ -451,7 +451,7 @@ import {
         </Animated.View>
       </View>
       <Modal
-          animationType="slide" // veya "fade", "none" gibi
+          animationType="fade" // veya "fade", "none" gibi
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {

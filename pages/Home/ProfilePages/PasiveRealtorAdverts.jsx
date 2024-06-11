@@ -6,6 +6,7 @@ import { getValueFor } from '../../../components/methods/user'
 import RealtorAdvertPost from './profileComponents/RealtorAdvertPost'
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useNavigation } from "@react-navigation/native";
+import { Platform } from "react-native";
 export default function PasiveRealtorAdverts() {
   const navigation = useNavigation()
   const [user,setUser] = useState({})
@@ -24,15 +25,12 @@ export default function PasiveRealtorAdverts() {
     setEditModalVisible(!EditModalVisible)
 }; 
   useEffect(() => {
-    axios.get('https://test.emlaksepette.com/api/get_my_housings',{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
-      sethousings(res.data.inactiveHousingTypes);
-      console.log(housings +'evler')
-    
+    axios.get('https://mobil.emlaksepette.com/api/get_my_housings',{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
+      sethousings(res.data.inactiveHousingTypes);    
     }).catch((e) => {
       console.log(e + 'hata');
     })
   },[user]);
-  console.log(housings+ 'sdfsdfsdfjsdfkjsdfk')
   return (
     <ScrollView>
     <View style={{

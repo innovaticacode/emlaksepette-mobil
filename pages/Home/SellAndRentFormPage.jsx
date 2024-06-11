@@ -14,6 +14,7 @@ import InfoUsual from "./Sell And Rent tab Pages/InfoUsual";
 import PaymentProcces from "./Sell And Rent tab Pages/PaymentProcces";
 import DateProcces from "./Sell And Rent tab Pages/DateProcces";
 import ApplyProcces from "./Sell And Rent tab Pages/ApplyProcces";
+import { Platform } from "react-native";
 export default function SellAndRentFormPage() {
   const [tabs, settabs] = useState(1)
     const navigation=useNavigation()
@@ -112,12 +113,12 @@ export default function SellAndRentFormPage() {
               color: "#E54242",
             }}
           >
-         Emlaksepette.com Uzmanlğı
+         test.emlaksepette.com Uzmanlğı
           </Text>
 
           <View style={{ paddingTop: 10 }}>
             <Text style={{ color: "grey", fontWeight: "400", fontSize: 13 }}>
-            Emlaksepette.com ile tüm satış veya kiralama süreçlerinde profesyonel ve güvenilir hizmet alırsınız.
+            test.emlaksepette.com ile tüm satış veya kiralama süreçlerinde profesyonel ve güvenilir hizmet alırsınız.
             </Text>
           </View>
         </View>

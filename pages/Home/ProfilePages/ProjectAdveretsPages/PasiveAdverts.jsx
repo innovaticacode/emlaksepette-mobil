@@ -7,6 +7,7 @@ import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { apiRequestGetWithBearer } from '../../../../components/methods/apiRequest';
 import axios from "axios"
 import { getValueFor } from '../../../../components/methods/user';
+import { Platform } from "react-native";
 export default function PasiveAdverts({header,header2,hidden}) {
     const translateY = useRef(new Animated.Value(400)).current;
     const [display, setdisplay] = useState(false)
@@ -22,7 +23,7 @@ export default function PasiveAdverts({header,header2,hidden}) {
     const [start,setStart] = useState(0);
     const [take,setTake] = useState(10);
     useEffect(() => {
-      axios.get('https://test.emlaksepette.com/api/get_my_projects?status=0&start='+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
+      axios.get('https://mobil.emlaksepette.com/api/get_my_projects?status=0&start='+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
         setProjects(res.data.data);
         setProjectCount(res.data.total_projects_count)
       }).catch((e) => {

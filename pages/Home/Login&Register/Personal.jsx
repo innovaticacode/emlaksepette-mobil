@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
-  Platform,
   SafeAreaView,
   ActivityIndicator,
 } from "react-native";
@@ -68,7 +67,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
       formData.append("check-c", checked2);
       formData.append("check-e", checked3);
       const response = await axios.post(
-        "https://test.emlaksepette.com/api/register",
+        "https://mobil.emlaksepette.com/api/register",
         formData
       );
 
@@ -186,7 +185,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
   // Örnek kullanım
 
   const fetchData = async (deal) => {
-    const url = `https://test.emlaksepette.com/api/sayfa/${deal}`;
+    const url = `https://mobil.emlaksepette.com/api/sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
@@ -447,7 +446,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                 style={{
                   backgroundColor: "#E54242",
                   padding: 9,
-                  borderRadius: 10,
+                  borderRadius: 5,
                   width: "90%",
                 }}
                 onPress={registerPersonal}
@@ -726,7 +725,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
 
-    borderRadius: 10,
+    borderRadius: 5,
   },
   Acceptbtn: {
     backgroundColor: "#2aaa46",

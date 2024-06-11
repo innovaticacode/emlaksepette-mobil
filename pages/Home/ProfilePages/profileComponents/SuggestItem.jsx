@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
-
+import { Platform } from "react-native";
 export default function SuggestItem({openModal,name,color,title,username,mail,location,status,job}) {
   return (
     <View style={style.container}>
@@ -66,7 +66,7 @@ export default function SuggestItem({openModal,name,color,title,username,mail,lo
 const style =StyleSheet.create({
     container:{
         backgroundColor:'#FFF',
-        borderRadius: 10,  
+        borderRadius: 5,  
         paddingVertical: 20,  
         paddingHorizontal: 10,  
         width: '100%',  

@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
-
+import { Platform } from "react-native";
 export default function Users({name,id,index,item,deleteUser}) {
     const navigation =useNavigation()
   return (

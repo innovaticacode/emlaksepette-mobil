@@ -5,17 +5,19 @@ import {
   ImageBackground,
   TouchableOpacity,
   Dimensions,
-  Image,
+ 
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { getValueFor } from "./methods/user";
+import { Image } from 'expo-image';
+
 export default function ProjectPost({
   project,
-user,
   ımage,
   location,
   city,
-
+  user,
   ProfilImage,
 
   ProjectNo,
@@ -32,28 +34,35 @@ user,
   };
 
   const RandomColor = generateRandomColorCode();
+  const [userLogin, setuserLogin] = useState({});
+  useEffect(() => {
+    getValueFor("user", setuserLogin);
+  }, []);
   return (
     <TouchableOpacity
-      style={{ marginTop: 10 }}
+      
       onPress={() =>
         navigation.navigate("Details", {
-          
           ProjectId: ProjectNo,
-      
         })
       }
     >
       <View style={styles.container}>
-        <ImageBackground
+        <Image
           source={{ uri: ımage }}
           style={{ width: "100%", height: "100%" }}
+     
+          contentFit="cover"
+          transition={300}
         />
         <View style={styles.ShoppingName}>
           <View style={styles.ShopImage}>
             <Image
               source={{ uri: ProfilImage }}
               style={{ width: "50%", height: "90%" }}
-              resizeMode="cover"
+
+              contentFit="cover"
+              transition={200}
             />
           </View>
           <View style={styles.ShopText}>
@@ -89,6 +98,11 @@ user,
           >
             {project.project_title}
           </Text>
+          {userLogin && userLogin.corporate_type == "Emlak Ofisi" && project.club_rate && (
+            <View style={styles.commissionBadge}>
+              <Text style={styles.commissionText}>%{project.club_rate} KOMİSYON!</Text>
+            </View>
+          )}
         </View>
       </View>
     </TouchableOpacity>
@@ -105,10 +119,11 @@ const styles = StyleSheet.create({
   },
   ShoppingName: {
     position: "absolute",
-    width: "30%",
+    width: 100,
     backgroundColor: "#FFFFFF",
-    left: 0,
-    height: "40%",
+    left: "35%",
+    height: 70,
+    top: 0,
     display: "flex",
     flexDirection: "column",
   },
@@ -123,11 +138,29 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   Description: {
-    width: "40%",
-    height: "100%",
+    width: "100%",
+    height: 40,
+    bottom: 0,
     position: "absolute",
     right: 0,
     alignItems: "center",
     justifyContent: "center",
+  },
+  commissionBadge: {
+    position: "absolute",
+    right: 0,
+    bottom: 60,
+    width: 120,
+    height: 30,
+    borderBottomLeftRadius: 15,
+    borderTopLeftRadius: 15,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  commissionText: {
+    color: "green",
+    fontWeight: "700",
+    fontSize: 13,
   },
 });

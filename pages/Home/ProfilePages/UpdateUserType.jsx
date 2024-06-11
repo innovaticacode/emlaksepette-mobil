@@ -15,6 +15,7 @@ import Checkbox from "./profileComponents/Checkbox";
 import Users from "./profileComponents/Users";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
+import { Platform } from "react-native";
 export default function CreateUserType() {
   const route = useRoute();
 
@@ -27,7 +28,6 @@ export default function CreateUserType() {
   }, []);
   const [permissions, setPermissions] = useState({});
   const [groupNames, setGroupNames] = useState([]);
-  console.log(permissions,"asd");
  
   // fetchData fonksiyonunu düzenle
 
@@ -35,7 +35,7 @@ export default function CreateUserType() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://test.emlaksepette.com/api/institutional/roles/${UserID}/edit`,
+          `https://mobil.emlaksepette.com/api/institutional/roles/${UserID}/edit`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -48,7 +48,7 @@ export default function CreateUserType() {
         setPermissions(response.data.groupedPermissionsWithChecks);
       
 
-        console.log(permissions);
+     
       }
     } catch (error) {
       console.error("Veri getirme hatası:", error);
@@ -61,7 +61,6 @@ export default function CreateUserType() {
   }, [user]);
 
   const [checkedItems, setCheckedItems] = useState([]);
-  console.log(checkedItems,"asd")
   const handleCheckboxChange = (description) => {
     if (checkedItems.includes(description)) {
       // Eğer seçilen öğe zaten varsa, listeden kaldır
@@ -80,9 +79,9 @@ export default function CreateUserType() {
       checkedItems.forEach((item) => {
         formData.append("permissions[]", item); // [] kullanarak PHP tarafında bir dizi olarak alınmasını sağlar
       });
-      console.log(formData);
+  
       const response = await axios.post(
-        `https://test.emlaksepette.com/api/institutional/roles/${UserID}`,
+        `https://mobil.emlaksepette.com/api/institutional/roles/${UserID}`,
         {
           'permissions' : checkedItems,
           '_method' : 'PUT',
@@ -96,7 +95,7 @@ export default function CreateUserType() {
       );
         alert('güncellendi')
       // İsteğin başarılı bir şekilde tamamlandığı durum
-      console.log("İstek başarıyla tamamlandı:", response.data);
+     
     } catch (error) {
       // Hata durumunda
 
@@ -104,15 +103,12 @@ export default function CreateUserType() {
     }
   };
   const handleShowCheckedItems = () => {
-    console.log(checkedItems);
     postData();
     // navigation.navigate("UserTypes");
   };
-  console.log(permissions + UserID);
   useEffect(() => {
     setTypeName(name)
   }, [user])
-  console.log(checkedItems)
 
   useEffect(() => {
     var tempItems = [];
@@ -173,7 +169,7 @@ export default function CreateUserType() {
                 backgroundColor: "#EA2A29",
                 padding: 13,
                 width: "50%",
-                borderRadius: 10,
+                borderRadius: 5,
               }}
               onPress={handleShowCheckedItems}
             >
@@ -227,7 +223,7 @@ const styles = StyleSheet.create({
   },
   userContainer: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 10,
+    borderRadius: 5,
     paddingVertical: 22,
     paddingHorizontal: 10,
     width: "100%",

@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, ScrollView, TextInput, TouchableWithoutFeedback
 import  {useState} from 'react'
 import { useRoute } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/AntDesign'
-
+import { Platform } from "react-native";
 export default function RealtorAdvertAdd() {
     const route=useRoute()
     const {name,beforeName,antesName}=route.params
@@ -92,7 +92,7 @@ const styles=StyleSheet.create({
     },
     Card:{
         backgroundColor: '#FFFFFF',  
-        borderRadius: 10,  
+        borderRadius: 5,  
         paddingVertical: 22,  
         paddingHorizontal: 5,  
         width: '100%',  
@@ -125,7 +125,7 @@ const styles=StyleSheet.create({
         padding:15,
         height:180,
         paddingTop:20,
-        borderRadius: 10,
+        borderRadius: 5,
         fontSize: 15,
         color: '#495057',
         fontWeight: '400',

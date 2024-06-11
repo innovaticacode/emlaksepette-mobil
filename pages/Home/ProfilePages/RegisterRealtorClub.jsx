@@ -6,6 +6,7 @@ import axios from 'axios';
 import Modal from "react-native-modal";
 import { getValueFor } from '../../../components/methods/user';
 import { Icon } from "react-native-elements";
+import { Platform } from "react-native";
 import * as SecureStore from 'expo-secure-store';
 export default function RegisterRealtorClub({setİsLoggedIn}) {
     const route = useRoute();
@@ -107,7 +108,7 @@ const [check, setcheck] = useState(false)
   setloading(true)
 
     try {
-      const response = await axios.put('https://test.emlaksepette.com/api/institutional/club/update', data, {
+      const response = await axios.put('https://mobil.emlaksepette.com/api/institutional/club/update', data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.access_token}`
@@ -119,7 +120,7 @@ const [check, setcheck] = useState(false)
       setStatusMessage(true)
     
 
-      console.log('Başarılı:', response.data);
+    
     } catch (error) {
       console.error('Hata:', error);
       setErrorMEssage(error)
@@ -129,7 +130,7 @@ const [check, setcheck] = useState(false)
     }
   };
 
-  console.log(ErrorMEssage)
+
   const [errorStatu, seterrorStatu] = useState(0)
   const [loading, setloading] = useState(false)
 
@@ -430,6 +431,6 @@ const styles = StyleSheet.create({
       backgroundColor: "#ffffff",
       padding: 20,
       height:'20%',
-      borderRadius: 10,
+      borderRadius: 5,
     },
 })

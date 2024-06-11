@@ -1,6 +1,7 @@
 import { View, Text,StyleSheet, TouchableOpacity,Linking } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/Feather'
+import { Platform } from "react-native";
 export default function NeigbourhoodCard() {
     const handleOpenPhone = () => {
         // Telefon uygulamasını açmak için
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
     
        gap:10,
         backgroundColor: '#FFFFFF',  
-        borderRadius: 10,  
+        borderRadius: 5,  
         paddingVertical: 22,  
         paddingHorizontal: 10,  
         width: '100%',  

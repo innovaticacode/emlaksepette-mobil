@@ -55,7 +55,7 @@ export default function Details({ navigation }) {
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const [FormVisible, setFormVisible] = useState(false);
-  const apiUrl = "https://test.emlaksepette.com/";
+  const apiUrl = "https://mobil.emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -170,24 +170,16 @@ export default function Details({ navigation }) {
               ...res.data.housings,
             },
           });
-          console.log(
-            (page + 1) * 10 > data.project.room_count
-              ? data.project.room_count
-              : (page + 1) * 10
-          );
           setItemCount(
             (page + 1) * 10 > data.project.room_count
               ? data.project.room_count
               : (page + 1) * 10
           );
-          console.log("asd123123", page);
           setIsLoading(false);
         });
       }
     }
   };
-
-  console.log(collections);
 
   const removeItemOnCollection = (collectionId) => {
     const collectionData = {
@@ -199,7 +191,7 @@ export default function Details({ navigation }) {
 
     axios
       .post(
-        "https://test.emlaksepette.com/api/remove_item_on_collection",
+        "https://mobil.emlaksepette.com/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -238,7 +230,6 @@ export default function Details({ navigation }) {
         });
 
         setcollections(newCollections);
-        console.log(newCollections, "qwe");
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -247,7 +238,7 @@ export default function Details({ navigation }) {
   };
 
   const shareLinkOnWhatsApp = () => {
-    const url = `https://test.emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
+    const url = `https://mobil.emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -256,7 +247,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("WhatsApp açılamadı:", error));
   };
   const shareLinkOnInstagram = (text) => {
-    const url = `https://test.emlaksepette.com/${slug}/100${ProjectId}/detay`;
+    const url = `https://mobil.emlaksepette.com/${slug}/100${ProjectId}/detay`;
 
     const instagramShareURL = `instagram://story/?text=${encodeURIComponent(
       url
@@ -267,7 +258,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("Instagram açılamadı:", error));
   };
   const copyToClipboard = () => {
-    const url = `https://test.emlaksepette.com/${slug}/1000${ProjectId}/detay`;
+    const url = `https://mobil.emlaksepette.com/${slug}/1000${ProjectId}/detay`;
     Clipboard.setStringAsync(url);
     ShowAlert();
   };
@@ -344,11 +335,10 @@ export default function Details({ navigation }) {
   const [collectionAddedSucces, setcollectionAddedSucces] = useState(false);
   const [selectedCollectionName, setselectedCollectionName] = useState("");
   const fetchData = async () => {
-    console.log(collections);
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/client/collections",
+          "https://mobil.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -401,7 +391,7 @@ export default function Details({ navigation }) {
 
     axios
       .post(
-        "https://test.emlaksepette.com/api/add/collection",
+        "https://mobil.emlaksepette.com/api/add/collection",
         collectionData,
         {
           headers: {
@@ -423,7 +413,6 @@ export default function Details({ navigation }) {
         }, 3000);
         // Başarılı yanıtı işleyin
         setselectedCollectionName(response.data.collection.name);
-        console.log("Response:", response.data);
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -448,7 +437,7 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post("https://test.emlaksepette.com/api/addLink", collectionData, {
+      .post("https://mobil.emlaksepette.com/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -482,7 +471,6 @@ export default function Details({ navigation }) {
             return collection;
           }
         });
-        console.log(newCollections);
         setcollections(newCollections);
       })
       .catch((error) => {
@@ -491,7 +479,6 @@ export default function Details({ navigation }) {
       });
   };
   const [PopUpForRemoveItem, setPopUpForRemoveItem] = useState(false);
-  console.log(selectedCollectionName2);
   const { width, height } = Dimensions.get("window");
 
   const [users, setUsers] = useState({});
@@ -532,12 +519,9 @@ export default function Details({ navigation }) {
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        "https://test.emlaksepette.com/api/institutional/give_offer",
+        "https://mobil.emlaksepette.com/api/institutional/give_offer",
         formData
       );
-
-      // İsteğin başarılı bir şekilde tamamlandığı durum
-      console.log("İstek başarıyla tamamlandı:", response.data);
 
       openModal(JSON.stringify(response.data.message));
       color("#d4edda");
@@ -735,7 +719,7 @@ export default function Details({ navigation }) {
                 padding: 5,
                 paddingLeft: 8,
                 paddingRight: 8,
-                borderRadius: 10,
+                borderRadius: 5,
               }}
             >
               <Text style={{ color: "white", fontSize: 12 }}>
@@ -772,7 +756,6 @@ export default function Details({ navigation }) {
             }
           >
             {data.project.images.map((image, index) => {
-              // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
               return (
                 <Pressable
                   key={index + 1}
@@ -826,7 +809,7 @@ export default function Details({ navigation }) {
             getLastItemCount={getLastItemCount}
             setSelectedTab={setSelectedTab}
             selectedTab={selectedTab}
-            openmodal={openModal}
+            openModal={openModal}
             getBlockItems={getBlockItems}
             OpenFormModal={OpenFormModal}
           />
@@ -837,10 +820,10 @@ export default function Details({ navigation }) {
         {tabs == 2 && <Information settings={data} />}
         <View style={{}}>{tabs === 3 && <Map mapData={data} />}</View>
 
-        {tabs == 4 && <FloorPlan />}
+        {tabs == 4 && <FloorPlan data={data} />}
 
         <Modal
-          animationType="slide" // veya "fade", "none" gibi
+          animationType="fade" // veya "fade", "none" gibi
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
@@ -978,7 +961,7 @@ export default function Details({ navigation }) {
                 style={{
                   backgroundColor: "#EA2C2E",
                   padding: 10,
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
               >
                 <Text
@@ -1385,7 +1368,7 @@ export default function Details({ navigation }) {
                     style={{
                       backgroundColor: "#EA2A28",
                       padding: 10,
-                      borderRadius: 6,
+                      borderRadius: 5,
                     }}
                     onPress={addCollectionPost}
                   >
@@ -1399,7 +1382,7 @@ export default function Details({ navigation }) {
           </View>
         </Modal>
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           onBackdropPress={() => setFormVisible(false)}
           visible={FormVisible}
@@ -1492,7 +1475,7 @@ export default function Details({ navigation }) {
                     backgroundColor: "#28A745",
                     width: "40%",
                     padding: 15,
-                    borderRadius: 10,
+                    borderRadius: 5,
                   }}
                   onPress={handleSubmit}
                 >
@@ -1505,7 +1488,7 @@ export default function Details({ navigation }) {
                     backgroundColor: "#DC3545",
                     width: "40%",
                     padding: 15,
-                    borderRadius: 10,
+                    borderRadius: 5,
                   }}
                   onPress={() => {
                     setFormVisible(false);
@@ -1552,7 +1535,6 @@ export default function Details({ navigation }) {
               }
             >
               {data.project.images.map((image, index) => {
-                // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
                 return (
                   <Pressable
                     key={index + 1}

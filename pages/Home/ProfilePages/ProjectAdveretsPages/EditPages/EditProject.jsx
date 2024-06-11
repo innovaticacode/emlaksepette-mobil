@@ -82,7 +82,7 @@ export default function EditProject() {
         </View>
         <View style={styles.card}>
           <Modal
-            animationType="slide"
+            animationType="fade"
             transparent={false}
             visible={showCoverImageModal}
             style={{backgroundColor:'#000'}}
@@ -156,7 +156,6 @@ export default function EditProject() {
               </TouchableOpacity>
               {
                 data.situations?.map((image) => {
-                  console.log(frontEndUri+(image?.situation?.replace('public','')));
                   return (
                     <TouchableOpacity onPress={() => {setCoverImageModal(true);setSelectedImage(image)}}>
                       <View style={styles.image_card}>
@@ -284,7 +283,7 @@ export default function EditProject() {
         <Text style={{fontSize:20,marginTop:10,fontWeight:'bold',padding:10,paddingTop:0,paddingBottom:0}}>Adres Bilgileri</Text>
         <View style={styles.card}>
           <Text style={styles.label}>İl <Text style={{color :'red'}}>*</Text></Text>
-          <RNPickerSelect
+          <RNPickerSelect doneText="Tamam"
             placeholder={{
               label: 'İl Seçiniz...',
               value: null,
@@ -298,7 +297,7 @@ export default function EditProject() {
             ]}
           />
           <Text style={{...styles.label,marginTop:15}}>İlçe <Text style={{color :'red'}}>*</Text></Text>
-          <RNPickerSelect
+          <RNPickerSelect doneText="Tamam"
             placeholder={{
               label: 'İlçe Seçiniz...',
               value: null,
@@ -312,7 +311,7 @@ export default function EditProject() {
             ]}
           />
           <Text style={{...styles.label,marginTop:15}}>Mahalle <Text style={{color :'red'}}>*</Text></Text>
-          <RNPickerSelect
+          <RNPickerSelect doneText="Tamam"
             placeholder={{
               label: 'Mahalle Seçiniz...',
               value: null,

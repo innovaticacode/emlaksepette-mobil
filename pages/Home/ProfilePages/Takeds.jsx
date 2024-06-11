@@ -12,6 +12,7 @@ import { SearchBar } from "@rneui/base";
 import Icon from "react-native-vector-icons/AntDesign";
 import Order from "./profileComponents/Order";
 import { getValueFor } from "../../../components/methods/user";
+import { Platform } from "react-native";
 import axios from "axios";
 export default function Takeds() {
   const [search, setSearch] = useState("");
@@ -44,7 +45,7 @@ export default function Takeds() {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            `https://test.emlaksepette.com/api/institutional/get_boughts`,
+            `https://mobil.emlaksepette.com/api/institutional/get_boughts`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -52,7 +53,6 @@ export default function Takeds() {
             }
           );
           setTakeds(response.data.boughts);
-          console.log(takeds + "sadsdfsf");
         }
       } catch (error) {
         console.error("eror", error);

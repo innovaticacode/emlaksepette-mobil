@@ -15,7 +15,7 @@ export default function UserTypeList() {
   const fetchData = async () => {
     try {
       if(user.access_token){
-        const response = await axios.get('https://test.emlaksepette.com/api/institutional/roles',{
+        const response = await axios.get('https://mobil.emlaksepette.com/api/institutional/roles',{
           headers: {
             'Authorization':`Bearer ${user?.access_token}`
           }
@@ -46,7 +46,7 @@ const [DeletedData, setDeletedData] = useState({})
 const [deletedSuccessMessage, setdeletedSuccessMessage] = useState(false)
 const DeleteUser = async (UserId) => {
   try {
-    const response = await axios.delete(`https://test.emlaksepette.com/api/institutional/roles/${UserId}`,{
+    const response = await axios.delete(`https://mobil.emlaksepette.com/api/institutional/roles/${UserId}`,{
       headers:{
         'Authorization':`Bearer ${user.access_token}`
       }
@@ -65,7 +65,6 @@ const [selectedUserId, setselectedUserId] = useState(0)
   setselectedUserId(UserId)
   setselectedUserName(name)
  }
-console.log(selectedUserId)
   return (
     <ScrollView style={styles.container}
     stickyHeaderIndices={[0]}
@@ -135,6 +134,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     padding: 20,
     gap:20,
-    borderRadius: 10,
+    borderRadius: 5,
   },
 })

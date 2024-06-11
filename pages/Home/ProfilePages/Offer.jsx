@@ -4,6 +4,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign'
 import OfferCheckbox from './profileComponents/OfferCheckbox';
 import ListCheckBox from './profileComponents/ListCheckBox';
+import { Platform } from "react-native";
 export default function Offer() {
   const [OfferPrice, setOfferPrice] = useState(0)
   const route = useRoute();
@@ -386,7 +387,7 @@ const styles = StyleSheet.create({
   },
   Ticket1: {
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: 5,
     backgroundColor: '#FFFFFF',
     gap: 30,
     paddingVertical: 25,
