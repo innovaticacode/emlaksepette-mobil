@@ -80,8 +80,15 @@ export default function RealtorAdverts({ housingdata }) {
         onEndReachedThreshold={0}
         onRefresh={onRefresh}
         refreshing={refreshing}
+        ListEmptyComponent={
+          !loadingEstates && (
+            <View>
+              <Text>Emlak ilanı bulunamadı</Text>
+            </View>
+          )
+        }
         ListFooterComponent={
-          loading && !refreshing ? (
+          loadingEstates && !refreshing ? (
             <ActivityIndicator
               style={{ margin: 20 }}
               size="small"

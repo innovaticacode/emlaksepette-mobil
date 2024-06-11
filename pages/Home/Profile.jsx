@@ -184,6 +184,19 @@ export default function Profile() {
   const [checked, setChecked] = useState(false);
   const toggleCheckbox = () => setChecked(!checked);
 
+  const SkeletonBox = () => (
+    <Animated.View
+      style={{
+        width: "40%",
+        height: 40,
+        backgroundColor: "#e0e0e0",
+        borderRadius: 5,
+        margin: 5,
+        opacity: 0.5, // Skeleton efektini verecek opaklık değeri
+      }}
+    />
+  );
+
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -667,48 +680,71 @@ export default function Profile() {
           </ScrollView>
         </Animated.View>
       </View>
-      <View
-        style={{
-          padding: 20,
-          display: "flex",
-          justifyContent: "space-between",
-          flexDirection: "row",
-          backgroundColor: "transparent",
-          zIndex: 1,
-        }}
-      >
-        <TouchableOpacity
-          style={{ width: "40%", backgroundColor: "red", borderRadius: 5 }}
-          onPress={handleOpenPhone}
+      <View>
+        <View
+          style={{
+            padding: 20,
+            display: "flex",
+            justifyContent: "space-between",
+            flexDirection: "row",
+            backgroundColor: "transparent",
+            zIndex: 1,
+          }}
         >
-          <Text
-            style={{
-              padding: 10,
-              color: "white",
-              fontWeight: "500",
-              fontSize: 16,
-              textAlign: "center",
-            }}
-          >
-            Ara
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ width: "40%", backgroundColor: "red", borderRadius: 5 }}
-          onPress={() => setFormVisible((prev) => !prev)}
-        >
-          <Text
-            style={{
-              padding: 10,
-              color: "white",
-              fontWeight: "500",
-              fontSize: 16,
-              textAlign: "center",
-            }}
-          >
-            Form Doldur
-          </Text>
-        </TouchableOpacity>
+          {loading ? (
+            <>
+              <TouchableOpacity
+                style={{
+                  width: "40%",
+                  backgroundColor: "red",
+                  borderRadius: 5,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={() => setLoading(true)} // Burada yükleme durumunu göstermek için geçici bir işlem
+              >
+                <Text
+                  style={{
+                    padding: 10,
+                    color: "white",
+                    fontWeight: "500",
+                    fontSize: 16,
+                    textAlign: "center",
+                  }}
+                >
+                  Ara
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  width: "40%",
+                  backgroundColor: "red",
+                  borderRadius: 5,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onPress={() => setLoading(true)} // Burada yükleme durumunu göstermek için geçici bir işlem
+              >
+                <Text
+                  style={{
+                    padding: 10,
+                    color: "white",
+                    fontWeight: "500",
+                    fontSize: 16,
+                    textAlign: "center",
+                  }}
+                >
+                  Form Doldur
+                </Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <SkeletonBox />
+              <SkeletonBox />
+            </>
+          )}
+        </View>
       </View>
       <Modal
         animationType="fade"

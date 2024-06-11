@@ -176,7 +176,7 @@ export default function ShopVitrin({ data, housingdata }) {
               </View>
               <FlatList
                 contentContainerStyle={{}}
-                data={housingdata}
+                data={housingdata.slice(0, 1)}
                 renderItem={({ item }) => (
                   <RealtorPost
                     GetId={GetIdForCart}
@@ -239,6 +239,7 @@ export default function ShopVitrin({ data, housingdata }) {
               flexDirection: "row",
               alignItems: "center",
               marginTop: 50,
+              marginBottom: 10,
             }}
           >
             <Text style={{ fontSize: 18 }}>Proje İlanları</Text>
