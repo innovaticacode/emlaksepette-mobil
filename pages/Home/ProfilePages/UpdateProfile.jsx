@@ -25,12 +25,14 @@ import Icon from "react-native-vector-icons/Fontisto";
 import { CheckBox } from "@rneui/themed";
 import RNPickerSelect from "react-native-picker-select";
 import { Platform } from "react-native";
+import * as Location from 'expo-location';
 export default function UpdateProfile() {
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   const handleMapPress = (event) => {
     const { coordinate } = event.nativeEvent;
     setSelectedLocation(coordinate);
+    console.log(coordinate)
   };
 
   const [user, setuser] = useState({});
@@ -209,13 +211,36 @@ export default function UpdateProfile() {
     setName(user.name);
     setiban(user.iban);
     setmobilPhone(user.mobile_phone);
+ 
+
   }, [user]);
   const PhotoUrl = "https://mobil.emlaksepette.com/storage/profile_images/";
   const [ChoosePhotoModal, setChoosePhotoModal] = useState(false);
+  const userLocation = user && { latitude: user?.latitude == null ? latitude :user.latitude, longitude: user?.longitude == null ? longitude:user.longitude };
+
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Konum izni reddedildi');
+        return;
+      }
+
+      let currentLocation = await Location.getCurrentPositionAsync({});
+      setLatitude(currentLocation.coords.latitude);
+      setLongitude(currentLocation.coords.longitude);
+    })();
+  }, [user, userLocation]);
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
         <View style={styles.ProfileEditArea}>
+        
           <View style={{ width: 90, height: 90 }}>
             <TouchableOpacity
               style={styles.ProfilImage}
@@ -374,28 +399,34 @@ export default function UpdateProfile() {
                 swatchesLast={swatchesLast}
                 swatches={swatchesEnabled}
                 discrete={false}
-                wheelLodingIndicator={<ActivityIndicator size={40} />}
-                sliderLodingIndicator={<ActivityIndicator size={20} />}
-                useNativeDriver={false}
+              
+                useNativeDriver={true}
                 useNativeLayout={false}
               />
             </View>
 
-            {user.role === "Kurumsal Hesap" && (
+            {user?.role === "Kurumsal Hesap" &&  (
               <View style={{ height: 300 }}>
                 <MapView
                   style={{ flex: 1 }}
                   zoomControlEnabled={true}
                   initialRegion={{
-                    latitude: user.latitude, // Türkiye'nin merkezi Ankara'nın enlemi
-                    longitude: user.longitude, // Türkiye'nin merkezi Ankara'nın boylamı
+                    latitude: user?.latitude == null ? latitude : user.latitude , // Türkiye'nin merkezi Ankara'nın enlemi
+                    longitude: user?.longitude == null ? longitude : user.longitude, // Türkiye'nin merkezi Ankara'nın boylamı
                     latitudeDelta: 8, // Harita yakınlığı
                     longitudeDelta: 8,
                   }}
                   onPress={handleMapPress}
                 >
-                  {selectedLocation && <Marker coordinate={selectedLocation} />}
-                </MapView>
+                    {userLocation && <Marker coordinate={userLocation} />}
+      
+      {/* Başka işaretlenecek konum varsa, onu da gösterin */}
+      {selectedLocation && <Marker coordinate={selectedLocation} />}
+      
+               
+                  
+                </MapView> 
+              
               </View>
             )}
 

@@ -164,13 +164,16 @@ console.log(user)
 const fetchData = async () => {
  
   try {
-    const response = await axios.get('https://mobil.emlaksepette.com/api/client/collections',{
-      headers: {
-        'Authorization': `Bearer ${user.access_token}`
-      }
-    });
-  
-    setcollections(response?.data.collections);
+    if (user.access_token) {
+      const response = await axios.get('https://mobil.emlaksepette.com/api/client/collections',{
+        headers: {
+          'Authorization': `Bearer ${user.access_token}`
+        }
+      });
+    
+      setcollections(response?.data.collections);
+    }
+   
   } catch (error) {
     console.error('Error fetching data:', error);
   }finally{
@@ -221,9 +224,9 @@ const getCollectionId=(id,name)=>{
     setselectedCollectionId(id)
     setselectedCollectionName2(name)
 } 
-const addSelectedCollection=(id)=>{
+const addSelectedCollection=(id,name )=>{
   const collectionData = {
-    collection_name:selectedCollectionName2,
+    collection_name:name,
     clear_cart: "no",
     id: data?.housing?.id,
     project:null,
@@ -248,7 +251,7 @@ const addSelectedCollection=(id)=>{
           links: [
             ...collection.links,
             {
-              collection_id: selectedCollectionId,
+              collection_id:id,
               room_order: null,
               item_id: data?.housing?.id,
               user_id: user?.id,

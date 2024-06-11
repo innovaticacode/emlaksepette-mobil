@@ -49,7 +49,7 @@ export default function RealtorPost({
   const [getPostId, setgetPostId] = useState(0)
   const CreateCollection = (id) => {
       setgetPostId(id)
-      navigation.navigate('CreateCollections',{id:id})
+      navigation.navigate('CreateCollections',{HouseID:id})
   };
   const discountedPrice = discountRate
     ? price - (price * discountRate) / 100
@@ -78,20 +78,22 @@ export default function RealtorPost({
   const housingData = housing && JSON.parse(housing.housing_type_data);
 
   return (
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate("Realtor details", { houseId: HouseId })
-      }
+    <View
+     
     >
       <View style={styles.container}>
         <View style={styles.İlan}>
-          <View style={{ width: "30%", height: 80 }}>
+          <TouchableOpacity style={{ width: "30%", height: 80 }}
+           onPress={() =>
+            navigation.navigate("Realtor details", { houseId: HouseId })
+          }
+          >
             <ImageBackground
               source={{ uri: image }}
               style={{ width: "100%", height: "100%" }}
               resizeMode="contain"
             />
-          </View>
+          </TouchableOpacity>
 
           <View style={styles.container2}>
             <View style={styles.captionAndIcons}>
@@ -240,7 +242,7 @@ export default function RealtorPost({
           </View>
         ) : null} */}
       </View>
-    </TouchableOpacity>
+    </View>
   );
 }
 const { width, height } = Dimensions.get("window");
