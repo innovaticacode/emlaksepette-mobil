@@ -15,8 +15,6 @@ import {
 import { useRef, useState, useEffect } from "react";
 import Editıcon from "react-native-vector-icons/MaterialCommunityIcons";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import ShareIcon from "react-native-vector-icons/Entypo";
-import DeleteIcon from "react-native-vector-icons/MaterialIcons";
 import Modal from "react-native-modal";
 import ColorPicker from "react-native-wheel-color-picker";
 import { getValueFor } from "../../../components/methods/user";
@@ -27,6 +25,8 @@ import RNPickerSelect from "react-native-picker-select";
 import { Platform } from "react-native";
 import * as Location from 'expo-location';
 export default function UpdateProfile() {
+ 
+  
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   const handleMapPress = (event) => {
@@ -34,7 +34,7 @@ export default function UpdateProfile() {
     setSelectedLocation(coordinate);
   
   };
-console.log(selectedLocation,'dfsddfsdf')
+
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
@@ -59,58 +59,12 @@ console.log(selectedLocation,'dfsddfsdf')
   const [loadingModal, setloadingModal] = useState(false);
   const [name, setName] = useState("");
 
-  const postData = async () => {
-    try {
-      let fullNumber = `${cityCode}${phone} `;
-      var formData = new FormData();
-
-      formData.append("name", name);
-      formData.append("banner_hex_code", currentColor);
-      formData.append("iban", iban);
-      formData.append("website", link);
-      formData.append("phone", fullNumber);
-      formData.append("year", yearsOfSector);
-      formData.append("mobile_phone", mobilPhone);
-      formData.append("latitude", selectedLocation.latitude);
-      formData.append("longitude", selectedLocation.longitude);
-      formData.append("_method", "PUT");
-
-      const response = await axios.post(
-        "https://mobil.emlaksepette.com/api/client/profile/update",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
-      setName("");
-
-      setUpdateSuccess(true);
-      500;
-
-      setTimeout(() => {
-        setUpdateSuccess(false);
-      }, 1500);
-      // İsteğin başarılı bir şekilde tamamlandığı durum
-    } catch (error) {
-      // Hata durumunda
-
-      console.error("Hata:", error + "post isteği başarısız ");
-    } finally {
-      setloadingModal(false);
-    }
-  };
-
+  
   useEffect(() => {
     setCurrentColor(user?.banner_hex_code);
   }, [user]);
 
-  const handleUpdate = () => {
-    if (name) {
-      postData();
-    }
-  };
+  
   const [iban, setiban] = useState("");
   const [link, setlink] = useState("");
   const [yearsOfSector, setyearsOfSector] = useState("");
@@ -211,7 +165,7 @@ console.log(selectedLocation,'dfsddfsdf')
     setName(user.name);
     setiban(user.iban);
     setmobilPhone(user.mobile_phone);
- 
+  
 
   }, [user]);
   const PhotoUrl = "https://mobil.emlaksepette.com/storage/profile_images/";
@@ -238,10 +192,60 @@ console.log(selectedLocation,'dfsddfsdf')
     }
    
   }, [user, userLocation]);
-console.log(userLocation)
+
+const postData = async () => {
+
+  try {
+    if (name) {
+      let fullNumber = `${cityCode}${phone} `;
+      var formData = new FormData();
+
+      formData.append("name", name);
+      formData.append("banner_hex_code", currentColor);
+      formData.append("iban", iban);
+      formData.append("website", link);
+      formData.append("phone", fullNumber);
+      formData.append("year", yearsOfSector);
+      formData.append("mobile_phone", mobilPhone);
+      formData.append("latitude",selectedLocation?.latitude );
+      formData.append("longitude",selectedLocation?.longitude );
+      formData.append("_method", "PUT");
+
+      const response = await axios.post(
+        "https://mobil.emlaksepette.com/api/client/profile/update",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+      console.log('sdfsfsfsdfsdfstbdg')
+      setName("");
+
+      setUpdateSuccess(true);
+      500;
+
+      setTimeout(() => {
+        setUpdateSuccess(false);
+      }, 1500); 
+    
+    }
+     
+  
+    // İsteğin başarılı bir şekilde tamamlandığı durum
+  } catch (error) {
+    // Hata durumunda
+
+    console.error("Hata:", error + "post isteği başarısız ");
+  } finally {
+    setloadingModal(false);
+  }
+};
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
+      <ScrollView style={{ flex: 1, backgroundColor: "white" }} scrollEnabled={!openColorPicker}>
         <View style={styles.ProfileEditArea}>
         
           <View style={{ width: 90, height: 90 }}>
@@ -385,11 +389,7 @@ console.log(userLocation)
             <View
               style={[
                 styles.card,
-                {
-                  opacity: openColorPicker ? 1 : 0,
-                  visibility: openColorPicker ? 'visible' : 'hidden',
-                },
-            
+                { display: openColorPicker ? "flex" : "none" },
               ]}
             >
               <ColorPicker
@@ -513,7 +513,7 @@ console.log(userLocation)
             </View>
           </View>
           <View style={{ alignItems: "center" }}>
-            <TouchableOpacity style={styles.updatebtn} onPress={handleUpdate}>
+            <TouchableOpacity style={styles.updatebtn} onPress={postData}>
               <Text style={styles.btnText}>Güncelle</Text>
             </TouchableOpacity>
           </View>

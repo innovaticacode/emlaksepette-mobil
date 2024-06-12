@@ -1206,12 +1206,12 @@ export default function Details({ navigation }) {
 
         <Modal
           animationType="fade" // veya "fade", "none" gibi
-          transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
             setModalVisible(!modalVisible);
           }}
           style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", margin: 0 }}
+          
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
@@ -1995,7 +1995,10 @@ export default function Details({ navigation }) {
           style={styles.modal4}
         >
           <View style={styles.modalContent4}>
-            <View style={{ padding: 10, gap: 10 }}>
+            {
+              user.access_token  ?
+              <> 
+              <View style={{ padding: 10, gap: 10 }}>
               <Text style={{ textAlign: "center" }}>
                 {selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
                 Eminmisiniz?
@@ -2038,6 +2041,30 @@ export default function Details({ navigation }) {
                 </TouchableOpacity>
               </View>
             </View>
+              </>:
+            <>
+                 <View style={{gap:10}}>
+                        <View style={{alignItems:'center',padding:10}}>
+                            <Icon name='warning' size={40} color={'#F65656'}/>
+                        </View>
+                        <View>
+                          <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}>Üyeliğiniz Bulunmamaktadır!</Text>
+                        </View>
+                        <View style={{width:'100%'}}>
+                          <Text style={{textAlign:'center',color:'#7A8A95'}}>Sepetinize konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
+                        </View>
+                        <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
+                           onPress={()=>{
+                            setModalForAddToCart(false)
+                            navigation.navigate('Login')
+                        }}
+                        >
+                      <Text style={{color:'#FFFFFF',textAlign:'center'}}>Giriş Yap</Text>
+                    </TouchableOpacity>
+                    </View>
+            </>
+            }
+           
           </View>
         </Modal>
       </ScrollView>
