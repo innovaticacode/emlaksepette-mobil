@@ -494,7 +494,7 @@ console.log(selectedCollectionName2)
           <ActivityIndicator size="large" color="#000000" />
         </View>
       ) : (
-        <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
+        <SafeAreaView style={{ backgroundColor: "white", flex: 1,paddingTop:30 }}>
           <Header onPress={toggleDrawer} />
           <Modal
             isVisible={isDrawerOpen}
@@ -1317,54 +1317,83 @@ console.log(selectedCollectionName2)
                     paddingBottom: 100,
                   }}
                 >
-                  <TouchableOpacity
-                    style={{ flexDirection: "row", alignItems: "center" }}
-                    onPress={() => {
-                      setColectionSheet(false);
-                      setTimeout(() => {
-                        setaddCollection(true);
-                      }, 700);
-                    }}
-                  >
-                    <View
-                      style={{
-                        padding: 0,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Icon name="pluscircleo" size={27} color={"#19181C"} />
-                    </View>
-                    <View
-                      style={{
-                        width: "100%",
-                        borderBottomWidth: 1,
-                        padding: 15,
-                        borderBottomColor: "#ebebeb",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 13,
-                          color: "#19181C",
-                          fontWeight: "600",
-                        }}
-                      >
-                        Yeni Oluştur
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                  {collections.map((item, index) => (
-                    <AddCollection
-                    checkFunc={ıtemOnCollection}
-                    setPopUpForRemoveItem={setsetPopUpForRemoveItem}
-                    removeItemOnCollection={removeItemOnCollection}
-                      key={index}
-                      item={item}
-                      getCollectionId={getCollectionId}
-                      addLink={addSelectedCollection}
-                    />
-                  ))}
+                  {
+                     user?.has_club == 0 ?
+                     <>
+                     <View style={{gap:15,flexDirection:'column',justifyContent:'center'}}>
+                       <View>
+                       <Text style={{color:'#EA2A28',fontWeight:'600',textAlign:'center',fontSize:14}}>Koleksiyon Eklemek İçin Emlak Kulüp üyesi olmalısınız</Text>
+                       </View>
+           
+                     <View style={{alignItems:'center'}}>
+                       <TouchableOpacity style={{
+                         backgroundColor:'#EA2A28',
+                         padding:12,
+                         borderRadius:5
+                       }}
+                           onPress={()=>{
+                             navigation.navigate('Collecitons')
+                             setColectionSheet(false)
+                           }}
+                       >
+                         <Text style={{color:'white',fontSize:12,fontWeight:'bold'}}>Üye Olmak İçin Tıklayınız</Text>
+                       </TouchableOpacity>
+                     </View>
+                     </View>
+                       
+                     </>:
+                     <> 
+                     <TouchableOpacity
+                     style={{ flexDirection: "row", alignItems: "center" }}
+                     onPress={() => {
+                       setColectionSheet(false);
+                       setTimeout(() => {
+                         setaddCollection(true);
+                       }, 700);
+                     }}
+                   >
+                     <View
+                       style={{
+                         padding: 0,
+                         alignItems: "center",
+                         justifyContent: "center",
+                       }}
+                     >
+                       <Icon name="pluscircleo" size={27} color={"#19181C"} />
+                     </View>
+                     <View
+                       style={{
+                         width: "100%",
+                         borderBottomWidth: 1,
+                         padding: 15,
+                         borderBottomColor: "#ebebeb",
+                       }}
+                     >
+                       <Text
+                         style={{
+                           fontSize: 13,
+                           color: "#19181C",
+                           fontWeight: "600",
+                         }}
+                       >
+                         Yeni Oluştur
+                       </Text>
+                     </View>
+                   </TouchableOpacity>
+                   {collections.map((item, index) => (
+                     <AddCollection
+                     checkFunc={ıtemOnCollection}
+                     setPopUpForRemoveItem={setsetPopUpForRemoveItem}
+                     removeItemOnCollection={removeItemOnCollection}
+                       key={index}
+                       item={item}
+                       getCollectionId={getCollectionId}
+                       addLink={addSelectedCollection}
+                     />
+                   ))}
+                     </>
+                  }
+                 
                 </ScrollView>
               </SafeAreaView>
             </View>
@@ -1981,6 +2010,6 @@ const styles = StyleSheet.create({
   commissionText: {
     color: "green",
     fontWeight: "700",
-    fontSize: "13",
+    fontSize: 13,
   },
 });

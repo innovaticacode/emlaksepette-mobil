@@ -117,9 +117,9 @@ export default function Details({ navigation }) {
 
   useEffect(() => {
     apiRequestGet("project/" + ProjectId).then((res) => {
-      setData(res.data);
+      setData(res?.data)
     });
-  }, [ProjectId]);
+  },[ProjectId])
 
   const getLastItemCount = () => {
     var lastBlockItemsCount = 0;

@@ -32,9 +32,9 @@ export default function UpdateProfile() {
   const handleMapPress = (event) => {
     const { coordinate } = event.nativeEvent;
     setSelectedLocation(coordinate);
-    console.log(coordinate)
+  
   };
-
+console.log(selectedLocation,'dfsddfsdf')
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
@@ -216,26 +216,29 @@ export default function UpdateProfile() {
   }, [user]);
   const PhotoUrl = "https://mobil.emlaksepette.com/storage/profile_images/";
   const [ChoosePhotoModal, setChoosePhotoModal] = useState(false);
-  const userLocation = user && { latitude: user?.latitude == null ? latitude :user.latitude, longitude: user?.longitude == null ? longitude:user.longitude };
+  const userLocation = user && { latitude: parseFloat(user?.latitude) == null ? latitude : parseFloat(user.latitude), longitude: parseFloat(user?.longitude) == null ? longitude:parseFloat(user.longitude) };
 
-  const [latitude, setLatitude] = useState(0);
-  const [longitude, setLongitude] = useState(0);
+  const [latitude, setLatitude] = useState(39.1667);
+  const [longitude, setLongitude] = useState(35.6667);
   const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Konum izni reddedildi');
-        return;
-      }
-
-      let currentLocation = await Location.getCurrentPositionAsync({});
-      setLatitude(currentLocation.coords.latitude);
-      setLongitude(currentLocation.coords.longitude);
-    })();
+    if (user.access_token) {
+      (async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Konum izni reddedildi');
+          return;
+        }
+  
+        let currentLocation = await Location.getCurrentPositionAsync({});
+        setLatitude(parseFloat(currentLocation.coords.latitude));
+        setLongitude(parseFloat(currentLocation.coords.longitude));
+      })();
+    }
+   
   }, [user, userLocation]);
-
+console.log(userLocation)
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
@@ -360,7 +363,7 @@ export default function UpdateProfile() {
                     padding: 20,
                     backgroundColor: currentColor,
                     width: "20%",
-                    borderWidth: "#ebebeb",
+                    borderWidth: 1,
                   }}
                   onPress={() => setopenColorPicker(!openColorPicker)}
                 ></TouchableOpacity>
@@ -382,7 +385,11 @@ export default function UpdateProfile() {
             <View
               style={[
                 styles.card,
-                { display: openColorPicker ? "flex" : "none" },
+                {
+                  opacity: openColorPicker ? 1 : 0,
+                  visibility: openColorPicker ? 'visible' : 'hidden',
+                },
+            
               ]}
             >
               <ColorPicker
@@ -410,18 +417,19 @@ export default function UpdateProfile() {
                 <MapView
                   style={{ flex: 1 }}
                   zoomControlEnabled={true}
-                  initialRegion={{
-                    latitude: user?.latitude == null ? latitude : user.latitude , // Türkiye'nin merkezi Ankara'nın enlemi
-                    longitude: user?.longitude == null ? longitude : user.longitude, // Türkiye'nin merkezi Ankara'nın boylamı
-                    latitudeDelta: 8, // Harita yakınlığı
-                    longitudeDelta: 8,
+                  region={{
+                    latitude: parseFloat(user?.latitude) == null ? parseFloat(latitude) : parseFloat(user.latitude) , // Türkiye'nin merkezi Ankara'nın enlemi
+                    longitude:parseFloat(user?.longitude) == null ? parseFloat(longitude) : parseFloat(user.longitude), // Türkiye'nin merkezi Ankara'nın boylamı
+                    latitudeDelta: 9, // Harita yakınlığı
+                    longitudeDelta: 9,
                   }}
                   onPress={handleMapPress}
                 >
-                    {userLocation && <Marker coordinate={userLocation} />}
-      
-      {/* Başka işaretlenecek konum varsa, onu da gösterin */}
-      {selectedLocation && <Marker coordinate={selectedLocation} />}
+                       {selectedLocation ? (
+              <Marker coordinate={selectedLocation} />
+            ) : (
+              <Marker coordinate={userLocation} />
+            )}
       
                
                   

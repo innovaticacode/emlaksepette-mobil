@@ -20,12 +20,12 @@ export default function PostCaption({ data }) {
   return (
     <View >
       <View style={[styles.card, styles.shadowProp]} indicatorStyle="white">
-        <Text>
+      
           <HTML
             source={{ html: data?.project?.description }}
             contentWidth={100}
           />
-        </Text>
+       
       </View>
     </View>
   );
