@@ -721,40 +721,107 @@ return (
           style={styles.modal4}
         >
           <View style={styles.modalContent4}>
-            <SafeAreaView>
+            <SafeAreaView style={{}}>
                 <View style={{padding:20,paddingTop:24,gap:13,borderBottomWidth:1,borderBottomColor:'#ebebeb'}}>
                   <Text style={{color:'#19181C',textAlign:'center',fontSize:16,fontWeight:'400'}}>Koleksiyona Ekle</Text>
                   <Text style={{textAlign:'center',color:'#B2B2B2',fontSize:14}}>Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin</Text>
                 </View>
                 
-                <ScrollView  contentContainerStyle={{paddingLeft:10,paddingRight:10,paddingTop:4,gap:10,paddingBottom:100}}>
-                  <TouchableOpacity style={{flexDirection:'row',alignItems:'center'}}
-                    onPress={()=>{
-                      setColectionSheet(false)
-                      setTimeout(() => {
-                        setaddCollection(true)
-                      }, 700);
+                <ScrollView  contentContainerStyle={{paddingLeft:10,paddingRight:10,paddingTop:4,gap:10,paddingBottom:150}}>
+                {
+                    user.access_token && user?.has_club == 0 ?
+                     <>
+                    
                    
-                     
+                    <View style={{paddingTop:10}}>
+                      <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}> Emlak Kulüp Üyeliğiniz Bulunmamaktadır!</Text>
+                    </View>
+                    <View style={{width:'100%'}}>
+                      <Text style={{textAlign:'center',color:'#7A8A95'}}>Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir</Text>
+                    </View>
+                    <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
+                       onPress={()=>{
+                        navigation.navigate('Collecitons')
+                        setColectionSheet(false)
                     }}
-                  >
-                    <View style={{padding:0,alignItems:'center',justifyContent:'center'}}>
-                    <Icon name="pluscircleo" size={27} color={'#19181C'}/>
+                    >
+                  <Text style={{color:'#FFFFFF',textAlign:'center'}}>Emlak Kulüp Üyesi Ol </Text>
+                </TouchableOpacity>
+           
+                       
+                     </>:
+                     !user.access_token ?
+                     <>
+                        <View style={{gap:10}}>
+                     
+                        <View style={{paddingTop:10}}>
+                          <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}>Üyeliğiniz Bulunmamaktadır!</Text>
+                        </View>
+                        <View style={{width:'100%'}}>
+                          <Text style={{textAlign:'center',color:'#7A8A95'}}>Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
+                        </View>
+                        <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
+                           onPress={()=>{
+                            setColectionSheet(false)
+                            navigation.navigate('Login')
+                        }}
+                        >
+                      <Text style={{color:'#FFFFFF',textAlign:'center'}}>Giriş Yap</Text>
+                    </TouchableOpacity>
                     </View>
-                    <View style={{width:'100%',borderBottomWidth:1,padding:15,borderBottomColor:'#ebebeb'}}>
-                      <Text style={{fontSize:13,color:'#19181C',fontWeight:'600'}}>Yeni Oluştur</Text>
-                    </View>
-                  </TouchableOpacity>
-                  
-                     {
-                        collections.map((item,index)=>(
-                          <AddCollection  checkFunc={ıtemOnCollection} key={index} item={item} getCollectionId={getCollectionId} addLink={addSelectedCollection}   removeItemOnCollection={removeItemOnCollection}    setPopUpForRemoveItem={setsetPopUpForRemoveItem}/> 
-                        ))
-
-                      }
-              
-                
-
+                           
+                     </>:
+                     <> 
+                     <TouchableOpacity
+                     style={{ flexDirection: "row", alignItems: "center" }}
+                     onPress={() => {
+                       setColectionSheet(false);
+                       setTimeout(() => {
+                         setaddCollection(true);
+                       }, 700);
+                     }}
+                   >
+                     <View
+                       style={{
+                         padding: 0,
+                         alignItems: "center",
+                         justifyContent: "center",
+                       }}
+                     >
+                       <Icon name="pluscircleo" size={27} color={"#19181C"} />
+                     </View>
+                     <View
+                       style={{
+                         width: "100%",
+                         borderBottomWidth: 1,
+                         padding: 15,
+                         borderBottomColor: "#ebebeb",
+                       }}
+                     >
+                       <Text
+                         style={{
+                           fontSize: 13,
+                           color: "#19181C",
+                           fontWeight: "600",
+                         }}
+                       >
+                         Yeni Oluştur
+                       </Text>
+                     </View>
+                   </TouchableOpacity>
+                   {collections.map((item, index) => (
+                     <AddCollection
+                     checkFunc={ıtemOnCollection}
+                     setPopUpForRemoveItem={setsetPopUpForRemoveItem}
+                     removeItemOnCollection={removeItemOnCollection}
+                       key={index}
+                       item={item}
+                       getCollectionId={getCollectionId}
+                       addLink={addSelectedCollection}
+                     />
+                   ))}
+                     </>
+                  }
                 </ScrollView>
                 </SafeAreaView> 
           </View>
@@ -1042,29 +1109,73 @@ return (
           style={styles.modal6}
         >
           <View style={styles.modalContent6}>
-            <View style={{padding:10,gap:10}}>
-           <Text style={{textAlign:'center'}}>#1000{data?.housing?.id} No'lu Konutu Sepete Eklemek İsteiğinize Eminmisiniz?</Text>
-           <View style={{flexDirection:'row',justifyContent:'center',gap:20}}>
-
-            <TouchableOpacity style={{backgroundColor:'green',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
-              onPress={()=>{
-                addToCard() 
-              }}
-            >
-              <Text style={{color:'white'}}>Sepete Ekle</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={{backgroundColor:'#e44242',padding:10,paddingLeft:20,paddingRight:20,borderRadius:6}}
-                onPress={()=>{
-                  setModalForAddToCart(false)
+          {
+              user.access_token  ?
+              <> 
+              <View style={{ padding: 10, gap: 10 }}>
+              <Text style={{ textAlign: "center" }}>
+                #2000{houseId} No'lu Konutu Sepete Eklemek İsteiğinize
+                Eminmisiniz?
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  gap: 20,
                 }}
-            >
-              <Text style={{color:'white'}}>Vazgeç</Text>
-            </TouchableOpacity>
+              >
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "green",
+                    padding: 10,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    borderRadius: 5,
+                  }}
+                  onPress={() => {
+                    addToCard();
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Sepete Ekle</Text>
+                </TouchableOpacity>
 
-           </View>
-
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#e44242",
+                    padding: 10,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    borderRadius: 5,
+                  }}
+                  onPress={() => {
+                    setModalForAddToCart(false);
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Vazgeç</Text>
+                </TouchableOpacity>
+              </View>
             </View>
+              </>:
+            <>
+                 <View style={{gap:10}}>
+                      
+                        <View style={{paddingTop:10}}>
+                          <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}>Üyeliğiniz Bulunmamaktadır!</Text>
+                        </View>
+                        <View style={{width:'100%'}}>
+                          <Text style={{textAlign:'center',color:'#7A8A95'}}>Sepetinize konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
+                        </View>
+                        <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
+                           onPress={()=>{
+                            setModalForAddToCart(false)
+                            navigation.navigate('Login')
+                        }}
+                        >
+                      <Text style={{color:'#FFFFFF',textAlign:'center'}}>Giriş Yap</Text>
+                    </TouchableOpacity>
+                    </View>
+            </>
+            }
 
           </View>
         </Modal>
@@ -1259,7 +1370,7 @@ modal4: {
 },
 modalContent4: {
   backgroundColor: "#fefefe",
-
+  
   height: "52%",
   borderTopLeftRadius: 10,
   borderTopRightRadius: 10,

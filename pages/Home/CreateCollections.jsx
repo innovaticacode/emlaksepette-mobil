@@ -252,10 +252,8 @@ const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
                       {
                         !user.access_token && 
                         <View style={styles.card}>
-                        <View style={{alignItems:'center',padding:10}}>
-                            <Icon name='warning' size={35} color={'#F65656'}/>
-                        </View>
-                        <View>
+                   
+                        <View style={{paddingTop:10}}>
                           <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}>Üyeliğiniz Bulunmamaktadır!</Text>
                         </View>
                         <View style={{width:'80%'}}>
@@ -273,10 +271,8 @@ const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
                   {
                     user.access_token && user.has_club == 0 &&
                     <View style={styles.card}>
-                    <View style={{alignItems:'center',padding:10}}>
-                        <Icon name='warning' size={35} color={'#F65656'}/>
-                    </View>
-                    <View>
+                 
+                    <View style={{paddingTop:10}}>
                       <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}> Emlak Kulüp Üyeliğiniz Bulunmamaktadır!</Text>
                     </View>
                     <View style={{width:'80%'}}>

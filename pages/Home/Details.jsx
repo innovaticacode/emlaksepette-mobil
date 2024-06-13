@@ -58,6 +58,7 @@ import { StatusBar } from "expo-status-bar";
 
 import { Skeleton } from "@rneui/base";
 import PaymentItem from "../../components/PaymentItem";
+import { err } from "react-native-svg";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -118,7 +119,8 @@ export default function Details({ navigation }) {
   useEffect(() => {
     apiRequestGet("project/" + ProjectId).then((res) => {
       setData(res?.data)
-    });
+    })
+    
   },[ProjectId])
 
   const getLastItemCount = () => {
@@ -957,7 +959,7 @@ export default function Details({ navigation }) {
                 color: "white",
                 fontWeight: 600,
                 fontSize: 12,
-                paddingLeft: "10px",
+                paddingLeft: 10,
               }}
             >
               {data?.project?.user?.name ? `${data?.project?.user?.name} ` : ""}
@@ -1551,36 +1553,53 @@ export default function Details({ navigation }) {
                   paddingRight: 10,
                   paddingTop: 4,
                   gap: 10,
-                  paddingBottom: 100,
+                  paddingBottom: 150,
                 }}
               >
                 {
-                  user?.has_club == 0 ?
+                user.access_token && user?.has_club == 0 ?
                   <>
-                  <View style={{gap:15,flexDirection:'column',justifyContent:'center'}}>
-                    <View>
-                    <Text style={{color:'#EA2A28',fontWeight:'600',textAlign:'center',fontSize:14}}>Koleksiyon Eklemek İçin Emlak Kulüp üyesi olmalısınız</Text>
+                  
+                  
+                    <View style={{paddingTop:10}}>
+                      <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}> Emlak Kulüp Üyeliğiniz Bulunmamaktadır!</Text>
                     </View>
-        
-                  <View style={{alignItems:'center'}}>
-                    <TouchableOpacity style={{
-                      backgroundColor:'#EA2A28',
-                      padding:12,
-                      borderRadius:5
+                    <View style={{width:'100%'}}>
+                      <Text style={{textAlign:'center',color:'#7A8A95'}}>Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir</Text>
+                    </View>
+                    <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
+                       onPress={()=>{
+                        navigation.navigate('Collecitons')
+                        setColectionSheet(false)
                     }}
-                        onPress={()=>{
-                          navigation.navigate('Collecitons')
-                          setColectionSheet(false)
-                        }}
                     >
-                      <Text style={{color:'white',fontSize:12,fontWeight:'bold'}}>Üye Olmak İçin Tıklayınız</Text>
-                    </TouchableOpacity>
-                  </View>
-                  </View>
+                  <Text style={{color:'#FFFFFF',textAlign:'center'}}>Emlak Kulüp Üyesi Ol </Text>
+                </TouchableOpacity>
+                
                     
                   </>
                
                   :
+                  !user.access_token ?
+                  <>
+                    <View style={{gap:10}}>
+                   
+                        <View style={{paddingTop:10}}>
+                          <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}>Üyeliğiniz Bulunmamaktadır!</Text>
+                        </View>
+                        <View style={{width:'100%'}}>
+                          <Text style={{textAlign:'center',color:'#7A8A95'}}>Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
+                        </View>
+                        <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
+                           onPress={()=>{
+                            setColectionSheet(false)
+                            navigation.navigate('Login')
+                        }}
+                        >
+                      <Text style={{color:'#FFFFFF',textAlign:'center'}}>Giriş Yap</Text>
+                    </TouchableOpacity>
+                    </View>
+                  </>:
                   <>
                     <TouchableOpacity
                   style={{ flexDirection: "row", alignItems: "center" }}
@@ -2044,10 +2063,8 @@ export default function Details({ navigation }) {
               </>:
             <>
                  <View style={{gap:10}}>
-                        <View style={{alignItems:'center',padding:10}}>
-                            <Icon name='warning' size={40} color={'#F65656'}/>
-                        </View>
-                        <View>
+                     
+                        <View style={{}}>
                           <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}>Üyeliğiniz Bulunmamaktadır!</Text>
                         </View>
                         <View style={{width:'100%'}}>

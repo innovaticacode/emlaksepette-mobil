@@ -17,7 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 const PAGE_SIZE = 10;
 
-const Estates = ({index}) => {
+const Prefabrik = ({index}) => {
      const navigation = useNavigation()
     const apiUrl = "https://mobil.emlaksepette.com/";
     const [featuredEstates, setFeaturedEstates] = useState([]);
@@ -61,7 +61,7 @@ const Estates = ({index}) => {
     };
   
     useEffect(() => {
-        if (index==1) {
+        if (index==4) {
             fetchFeaturedEstates();
         }else{
             setFeaturedEstates([])
@@ -75,7 +75,7 @@ const Estates = ({index}) => {
       setRefreshing(true);
       fetchFeaturedEstates(true);
     };
-  
+
     const renderFooter = () => {
       if (!loading) return null;
       return <ActivityIndicator style={{ margin: 20 }} size="small" color="#000000" />;
@@ -134,7 +134,7 @@ const Estates = ({index}) => {
         }}
       >
         <Text style={{ fontSize: 12, fontWeight: 700 }}>
-          ÖNE ÇIKAN KONUTLAR
+          ÖNE ÇIKAN PREFABRİK YAPILAR
         </Text>
 
         <TouchableOpacity style={styles.allBtn}>
@@ -200,7 +200,7 @@ const Estates = ({index}) => {
               <> 
               <View style={{ padding: 10, gap: 10 }}>
               <Text style={{ textAlign: "center" }}>
-               #1000{selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
+              #1000{selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
                 Eminmisiniz?
               </Text>
               <View
@@ -297,4 +297,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Estates;
+export default Prefabrik;
