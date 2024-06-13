@@ -60,6 +60,7 @@ export default function Profile() {
   const [errorStatu, seterrorStatu] = useState(0);
   const [errorMessage, seterrorMessage] = useState("");
   const [user, setUser] = useState({});
+  const [teamm, setTeamm] = useState([]);
 
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   useEffect(() => {
@@ -157,8 +158,10 @@ export default function Profile() {
       setloading(true + "true oldu");
       setstoreSata(res.data);
       setHousings(res.data.data.housings);
+      setTeamm(res.data.data.child);
     });
   }, []);
+  console.log(teamm);
   const ApiUrl = "https://mobil.emlaksepette.com/";
   const handleOpenPhone = () => {
     // Telefon uygulamasını açmak için
@@ -609,7 +612,7 @@ export default function Profile() {
         )}
         {tab === 1 && <ProjectAdverts data={storeData} />}
         {tab === 2 && <RealtorAdverts housingdata={Housings} />}
-        {tab === 3 && <Team />}
+        {tab === 3 && <Team teamm={teamm} />}
         {tab === 4 && <ShopInfo data={storeData} loading={loading} />}
       </View>
       <View style={{ flex: 1, position: "absolute", bottom: 0 }}>

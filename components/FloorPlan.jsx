@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import Lightbox from "react-native-lightbox";
-import { Image } from "react-native-elements";
 import { Platform } from "react-native";
 import { getValueFor } from "./methods/user";
 
@@ -21,18 +20,19 @@ export default function FloorPlan({ data }) {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        {data?.project?.situations?.length > 0 && (
+        {data?.project?.situations?.length > 0 ? (
           data.project.situations.map((situation, i) => (
             <View key={i} style={styles.imageWrapper}>
               <Lightbox>
                 <Image
-                
                   style={styles.image}
                   source={{ uri: getFullImageURL(situation.situation) }}
                 />
               </Lightbox>
             </View>
           ))
+        ) : (
+          <Text>Vaziyet & Kat Planı bilgisi bulunamadı.</Text>
         )}
       </View>
     </View>
