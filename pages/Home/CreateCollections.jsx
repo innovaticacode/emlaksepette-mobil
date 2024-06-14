@@ -88,6 +88,8 @@ const [disabledTrue, setdisabledTrue] = useState(false)
     
     
     }
+    const [showAlert, setshowAlert] = useState(false)
+    const [showDeleteAlert, setshowDeleteAlert] = useState(false)
     const addSelectedCollection=(id,name)=>{
       const collectionData = {
         collection_name:name,
@@ -108,6 +110,10 @@ const [disabledTrue, setdisabledTrue] = useState(false)
         },
       })
       .then(response => {
+        setshowAlert(true)
+        setTimeout(() => {
+          setshowAlert(false)
+        }, 2000);
         var newCollections = collections.map((collection) => {
           if (collection.id ==id) {
             return {
@@ -175,7 +181,10 @@ const removeItemOnCollection = (collectionId) => {
       }
     )
     .then((response) => {
-        alert('sdfsdfsadas')
+      setshowDeleteAlert(true)
+      setTimeout(() => {
+          setshowDeleteAlert(false)
+      }, 2000);
       var newCollections = collections.map((collection) => {
         if (collection.id == collectionId) {
           var newLinks = collection.links.filter((link) => {
@@ -312,7 +321,21 @@ const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
                       </View>
                 </>
           }
-   
+          <View style={{position:'absolute',bottom:50,width:'100%',padding:10,display:showAlert==true? 'flex':'none'}} >
+          <View style={{backgroundColor:'#1a842f',padding:15,borderRadius:10}}>
+        <View>
+          <Text style={{textAlign:'center',color:'#ffffff',fontSize:12,fontWeight:'bold'}}>Konutunuz {selectedCollectionName2} Adlı Koleksiyonuza Başarıyla Eklendi</Text>
+        </View>
+      </View>
+          </View>
+          <View style={{position:'absolute',bottom:50,width:'100%',padding:10,display:showDeleteAlert==true? 'flex':'none'}} >
+          <View style={{backgroundColor:'#d64d4d',padding:15,borderRadius:10}}>
+        <View>
+          <Text style={{textAlign:'center',color:'#ffffff',fontSize:12,fontWeight:'bold'}}>Konutunuz {selectedCollectionName2} Adlı Koleksiyonunuzdan Kaldırıldı</Text>
+        </View>
+      </View>
+          </View>
+ 
    </>
   
    

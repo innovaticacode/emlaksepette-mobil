@@ -176,11 +176,7 @@ const BookHouse = ({index}) => {
         keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
         onEndReached={() => fetchFeaturedEstates()}
         onEndReachedThreshold={0.1}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-           
-        ListFooterComponent={renderFooter}
+       
       />
 
      

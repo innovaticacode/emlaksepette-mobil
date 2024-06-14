@@ -35,115 +35,115 @@ const App = () => {
     setReservations(data.reservations);
   }, [data]);
 
-  const getBookedDates = (reservations) => {
-    let dates = [];
-    reservations.forEach((reservation) => {
-      const { check_in_date, check_out_date } = reservation;
-      const startDate = parseISO(check_in_date);
-      const endDate = parseISO(check_out_date);
-      if (isValid(startDate) && isValid(endDate)) {
-        const interval = eachDayOfInterval({
-          start: startDate,
-          end: endDate,
-        });
-        dates = dates.concat(interval.map((date) => format(date, 'yyyy-MM-dd')));
-      }
-    });
-    return dates;
-  };
+  // const getBookedDates = (reservations) => {
+  //   let dates = [];
+  //   reservations.forEach((reservation) => {
+  //     const { check_in_date, check_out_date } = reservation;
+  //     const startDate = parseISO(check_in_date);
+  //     const endDate = parseISO(check_out_date);
+  //     if (isValid(startDate) && isValid(endDate)) {
+  //       const interval = eachDayOfInterval({
+  //         start: startDate,
+  //         end: endDate,
+  //       });
+  //       dates = dates.concat(interval.map((date) => format(date, 'yyyy-MM-dd')));
+  //     }
+  //   });
+  //   return dates;
+  // };
 
-  const bookedDates = getBookedDates(reservations);
+  // const bookedDates = getBookedDates(reservations);
 
-  const calculateNightsBetweenDates = (start, end) => {
-    if (start && end) {
-      return differenceInDays(end, start);
-    }
-    return 0;
-  };
+  // const calculateNightsBetweenDates = (start, end) => {
+  //   if (start && end) {
+  //     return differenceInDays(end, start);
+  //   }
+  //   return 0;
+  // };
 
-  useEffect(() => {
-    const nights = calculateNightsBetweenDates(selectedStartDate, selectedEndDate);
-    setTotalNights(nights);
-  }, [selectedStartDate, selectedEndDate]);
+  // useEffect(() => {
+  //   const nights = calculateNightsBetweenDates(selectedStartDate, selectedEndDate);
+  //   setTotalNights(nights);
+  // }, [selectedStartDate, selectedEndDate,onDateChange]);
+  
+  // const onDateChange = (date, type) => {
+  //   if (!isValid(date)) return;
+  
+  //   if (type === 'START_DATE') {
+  //     setSelectedStartDate(date);
+  //     setSelectedEndDate(null);
+  //   } else if (type === 'END_DATE') {
+  //     if (selectedStartDate && date < selectedStartDate) {
+  //       setSelectedEndDate(null);
+  //     } else {
+  //       setSelectedEndDate(date);
+  //     }
+  //   }
+  // };
 
-  const onDateChange = (date, type) => {
-    if (!isValid(date)) return;
+  // const resetSelection = () => {
+  //   setSelectedStartDate(null);
+  //   setSelectedEndDate(null);
+  // };
 
-    if (type === 'START_DATE') {
-      setSelectedStartDate(date);
-      setSelectedEndDate(null);
-    } else if (type === 'END_DATE') {
-      if (selectedStartDate && date < selectedStartDate) {
-        setSelectedEndDate(null);
-      } else {
-        setSelectedEndDate(date);
-      }
-    }
-  };
+  // const months = [
+  //   'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+  //   'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık',
+  // ];
+  // const weekdays = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
 
-  const resetSelection = () => {
-    setSelectedStartDate(null);
-    setSelectedEndDate(null);
-  };
+  // const formatDateString = (date) => {
+  //   if (!date) return '';
+  //   try {
+  //     return format(date, 'dd MMMM', { locale: tr });
+  //   } catch (error) {
+  //     console.error('Error formatting date:', error);
+  //     return '';
+  //   }
+  // };
 
-  const months = [
-    'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
-    'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık',
-  ];
-  const weekdays = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
+  // const startDate = formatDateString(selectedStartDate);
+  // const endDate = formatDateString(selectedEndDate);
 
-  const formatDateString = (date) => {
-    if (!date) return '';
-    try {
-      return format(date, 'dd MMMM', { locale: tr });
-    } catch (error) {
-      console.error('Error formatting date:', error);
-      return '';
-    }
-  };
+  // const RenderNextButton = () => {
+  //   return <Icon name="chevron-right" size={20} color="#d7dadd" />;
+  // };
 
-  const startDate = formatDateString(selectedStartDate);
-  const endDate = formatDateString(selectedEndDate);
+  // const RenderPreviousButton = () => {
+  //   return <Icon name="chevron-left" size={20} color="#d7dadd" />;
+  // };
 
-  const RenderNextButton = () => {
-    return <Icon name="chevron-right" size={20} color="#d7dadd" />;
-  };
+  // const getCustomDatesStyles = () => {
+  //   return bookedDates.map((date) => {
+  //     try {
+  //       const parsedDate = parseISO(date);
+  //       return {
+  //         date: parsedDate,
+  //         style: { backgroundColor: '#ea2b2e' },
+  //         textStyle: { color: 'white' },
+  //         containerStyle: [{ backgroundColor: '#ea2b2e' }],
+  //       };
+  //     } catch (error) {
+  //       console.error('Error parsing date:', error);
+  //       return null;
+  //     }
+  //   }).filter(Boolean);
+  // };
 
-  const RenderPreviousButton = () => {
-    return <Icon name="chevron-left" size={20} color="#d7dadd" />;
-  };
+  // const isDateDisabled = (date) => {
+  //   return bookedDates.includes(format(date, 'yyyy-MM-dd'));
+  // };
 
-  const getCustomDatesStyles = () => {
-    return bookedDates.map((date) => {
-      try {
-        const parsedDate = parseISO(date);
-        return {
-          date: parsedDate,
-          style: { backgroundColor: 'red' },
-          textStyle: { color: 'white' },
-          containerStyle: [{ backgroundColor: 'red' }],
-        };
-      } catch (error) {
-        console.error('Error parsing date:', error);
-        return null;
-      }
-    }).filter(Boolean);
-  };
-
-  const isDateDisabled = (date) => {
-    return bookedDates.includes(format(date, 'yyyy-MM-dd'));
-  };
-
-  const today = new Date();
-  const formattedDate = format(today, 'dd MMMM yyyy', { locale: tr });
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(amount);
-  };
-  const totalCost = selectedStartDate && selectedEndDate ? JSON.parse(data.housing_type_data).daily_rent * totalNights : 0;
-  const formattedTotalCost = formatCurrency(totalCost);
-  const halfTotalCost = totalCost / 2;
-  const formattedHalfTotalCost = formatCurrency(halfTotalCost);
-  const totalPrice =formatCurrency(checked? halfTotalCost +1000:halfTotalCost)
+  // const today = new Date();
+  // const formattedDate = format(today, 'dd MMMM yyyy', { locale: tr });
+  // const formatCurrency = (amount) => {
+  //   return new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(amount);
+  // };
+  // const totalCost = selectedStartDate && selectedEndDate ? JSON.parse(data.housing_type_data).daily_rent * totalNights : 0;
+  // const formattedTotalCost = formatCurrency(totalCost);
+  // const halfTotalCost = totalCost / 2;
+  // const formattedHalfTotalCost = formatCurrency(halfTotalCost);
+  // const totalPrice =formatCurrency(checked? halfTotalCost +1000:halfTotalCost)
   const saveData = async (key, value) => {
     try {
       await SecureStore.setItemAsync(key, value);
@@ -164,13 +164,17 @@ const App = () => {
       console.log('Error saving states:', error);
     }
   };
-      
+  // useEffect(() => {
+  //   console.log('Selected Start Date:', selectedStartDate);
+  //   console.log('Selected End Date:', selectedEndDate);
+  // }, [selectedStartDate, selectedEndDate,onDateChange]);
+ 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 50 }}>
       <View style={styles.card}>
         <CalendarPicker
-          nextComponent={<RenderNextButton />}
-          previousComponent={<RenderPreviousButton />}
+          // nextComponent={<RenderNextButton />}
+          // previousComponent={<RenderPreviousButton />}
           selectYearTitle="Yıl Seçin"
           selectMonthTitle="Ay Seçin "
           yearTitleStyle={{ color: "#333", fontWeight: "500" }}
@@ -184,18 +188,17 @@ const App = () => {
           todayBackgroundColor="#B9E2F4"
           selectedDayColor="#569FF7"
           selectedDayTextColor="#FFFFFF"
-          onDateChange={onDateChange}
-          months={months}
-          weekdays={weekdays}
-        
+          // onDateChange={onDateChange}
+          // months={months}
+          // weekdays={weekdays}
           nextTitle={"İleri"}
           previousTitle={"Geri"}
-          customDatesStyles={getCustomDatesStyles()}
-          disabledDates={isDateDisabled}
+          // customDatesStyles={getCustomDatesStyles()}
+          
         
         />
       </View>
-
+     
       <View style={styles.dateContainer}>
      
         <View>
@@ -204,10 +207,10 @@ const App = () => {
         </View>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 15 }}>
           <Text style={{ color: "#569FF7", fontWeight: "500" }}>
-            {startDate}
+       
           </Text>
           <Icon name="long-arrow-right" color={"#53C2FD"} size={17} />
-          <Text style={{ color: "#569FF7", fontWeight: "500" }}>{endDate}</Text>
+          <Text style={{ color: "#569FF7", fontWeight: "500" }}></Text>
         </View>
 
         <View style={{ paddingTop: 10 }}>
@@ -322,7 +325,7 @@ const App = () => {
           >
             <Text style={styles.DetailTitle}>Rezervasyon Tarihi:</Text>
             <View style={{ width: "50%", alignItems: "flex-end" }}>
-              <Text style={styles.DetailTitle}>{formattedDate}</Text>
+              {/* <Text style={styles.DetailTitle}>{formattedDate}</Text> */}
             </View>
           </View>
           <View

@@ -176,14 +176,22 @@ const indexChange=(index)=>{
                     ıconName="user"
                   />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>{
+                  navigation.navigate('RealtorClubExplore')
+                  setIsDrawerOpen(false)
+                }}>
                   <Categories
                     category="Emlak Kulüp"
                     bordernone="none"
                     showImage={true}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity 
+                onPress={()=>{
+                  navigation.navigate('ShareAdvert')
+                  setIsDrawerOpen(false)
+                }}
+                >
                   <Categories
                     category="İlan Ver"
                     bordernone="none"

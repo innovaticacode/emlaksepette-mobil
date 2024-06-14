@@ -13,7 +13,7 @@ import {
   Pressable,
 } from "react-native";
 import { React, useRef, useState, useEffect } from "react";
-import Icon from "react-native-vector-icons/AntDesign";
+import Icon2 from "react-native-vector-icons/AntDesign";
 import Phone from "react-native-vector-icons/Entypo";
 import { Platform } from "react-native";
 import PagerView from "react-native-pager-view";
@@ -21,9 +21,9 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
 import DetailsSettings from "../components/PostDetailsSettings/DetailsSettings";
-import Icon2 from "react-native-vector-icons/AntDesign";
+import Icon4 from "react-native-vector-icons/AntDesign";
 import Swiper from "react-native-swiper";
-
+import { SocialIcon, Icon } from "react-native-elements";
 import LinkIcon3 from "react-native-vector-icons/Feather";
 import LinkIcon4 from "react-native-vector-icons/Fontisto";
 import LinkIcon2 from "react-native-vector-icons/FontAwesome";
@@ -519,7 +519,7 @@ console.log(selectedCollectionName2)
       console.error("post isteği olmadı", error);
     }
   };
-
+  const { width, height } = Dimensions.get("window");
   return (
     <>
       {loading ? (
@@ -1411,7 +1411,7 @@ console.log(selectedCollectionName2)
                          justifyContent: "center",
                        }}
                      >
-                       <Icon name="pluscircleo" size={27} color={"#19181C"} />
+                       <Icon4 name="pluscircleo" size={27} color={"#19181C"} />
                      </View>
                      <View
                        style={{
@@ -1497,7 +1497,7 @@ console.log(selectedCollectionName2)
                           justifyContent: "center",
                         }}
                       >
-                        <Icon name="close" size={27} color={"#19181C"} />
+                        <Icon4 name="close" size={27} color={"#19181C"} />
                       </View>
                     </TouchableOpacity>
                     <View style={{ flex: 1 / 2 }}>
@@ -1545,139 +1545,7 @@ console.log(selectedCollectionName2)
               </ScrollView>
             </View>
           </Modal>
-          <Modal
-            isVisible={IsOpenSheet}
-            onBackdropPress={ToggleSheet}
-            swipeDirection={["down"]}
-            backdropColor="transparent"
-            style={styles.modal2}
-          >
-            <View
-              style={[
-                styles.card,
-                { backgroundColor: "white", height: "14%", padding: 10 },
-              ]}
-            >
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-              >
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    gap: 27,
-                  }}
-                >
-                  <TouchableOpacity style={{ alignItems: "center" }}>
-                    <View
-                      style={{
-                        backgroundColor: "#E54242",
-                        width: 40,
-                        height: 40,
-                        borderRadius: 20,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <LinkIcon name="link" size={23} color={"white"} />
-                    </View>
-                    <Text style={{ color: "#333", fontSize: 12 }}>Kopyala</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ alignItems: "center" }}>
-                    <View
-                      style={{
-                        backgroundColor: "#24D366",
-                        width: 40,
-                        height: 40,
-                        borderRadius: 20,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <LinkIcon2 name="whatsapp" size={23} color={"white"} />
-                    </View>
-                    <Text style={{ color: "#333", fontSize: 12 }}>
-                      Whatsapp
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ alignItems: "center" }}>
-                    <View
-                      style={{
-                        backgroundColor: "#E1306C",
-                        width: 40,
-                        height: 40,
-                        borderRadius: 20,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <LinkIcon name="instagram" size={23} color={"white"} />
-                    </View>
-                    <Text style={{ color: "#333", fontSize: 12 }}>
-                      İnstagram
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ alignItems: "center" }}>
-                    <View
-                      style={{
-                        backgroundColor: "#1877F2",
-                        width: 40,
-                        height: 40,
-                        borderRadius: 20,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <LinkIcon2 name="facebook" size={23} color={"white"} />
-                    </View>
-                    <Text style={{ color: "#333", fontSize: 12 }}>
-                      Facebook
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ alignItems: "center" }}>
-                    <View
-                      style={{
-                        backgroundColor: "#51b0e6",
-                        width: 40,
-                        height: 40,
-                        borderRadius: 20,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <LinkIcon3
-                        name="message-circle"
-                        size={23}
-                        color={"white"}
-                      />
-                    </View>
-                    <Text style={{ color: "#333", fontSize: 12 }}>
-                      Mesajlar
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{ alignItems: "center" }}>
-                    <View
-                      style={{
-                        backgroundColor: "#7698E3",
-                        width: 40,
-                        height: 40,
-                        borderRadius: 20,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <LinkIcon4 name="messenger" size={23} color={"white"} />
-                    </View>
-                    <Text style={{ color: "#333", fontSize: 12 }}>
-                      Messenger
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </ScrollView>
-            </View>
-          </Modal>
+          
           <Modal
           isVisible={ModalForAddToCart}
           onBackdropPress={() => setModalForAddToCart(false)}
@@ -1754,6 +1622,150 @@ console.log(selectedCollectionName2)
             </>
             }
            
+          </View>
+        </Modal>
+        <Modal
+          isVisible={IsOpenSheet}
+          onBackdropPress={() => setIsOpenSheet(false)}
+          backdropColor="transparent"
+          style={styles.modal2}
+          animationIn={"fadeInDown"}
+          animationOut={"fadeOutDown"}
+        >
+          <View
+            style={[
+              styles.card,
+              {
+                backgroundColor: "white",
+                height: width > 400 ? "30%" : "37%",
+                padding: 10,
+                borderTopLeftRadius: 25,
+                borderTopRightRadius: 25,
+              },
+            ]}
+          >
+            <View style={{ gap: 7 }}>
+              <View style={{ padding: 10, paddingTop: 25 }}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    color: "#333",
+                    fontWeight: "700",
+                    textAlign: "center",
+                  }}
+                >
+                  Paylaş
+                </Text>
+              </View>
+              <ScrollView
+                horizontal
+                contentContainerStyle={{ gap: 20 }}
+                showsHorizontalScrollIndicator={false}
+              >
+                <TouchableOpacity
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    paddingTop: 5,
+                  }}
+                >
+                  <Icon
+                    name="link"
+                    size={32}
+                    iconStyle={{ color: "#ffffff" }}
+                    style={{
+                      backgroundColor: "red",
+                      padding: 12,
+                      borderRadius: 8,
+                    }}
+                    reverseColor={"orange"}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: "#333",
+                      textAlign: "center",
+                      top: 5,
+                    }}
+                  >
+                    Bağlantı Kopyala
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <SocialIcon
+                    iconSize={30}
+                    style={{ backgroundColor: "#52CD60", borderRadius: 8 }}
+                    raised
+                    type="whatsapp"
+                  />
+                  <Text
+                    style={{ fontSize: 12, color: "#333", textAlign: "center" }}
+                  >
+                    Whatsapp
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <SocialIcon
+                    iconSize={30}
+                    style={{ backgroundColor: "#D33380", borderRadius: 8 }}
+                    raised
+                    type="instagram"
+                  />
+                  <Text
+                    style={{ fontSize: 12, color: "#333", textAlign: "center" }}
+                  >
+                    İnstagram
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <SocialIcon
+                    iconSize={30}
+                    style={{ borderRadius: 8 }}
+                    raised
+                    type="facebook"
+                  />
+                  <Text
+                    style={{ fontSize: 12, color: "#333", textAlign: "center" }}
+                  >
+                    Facebook
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity>
+                  <SocialIcon
+                    iconSize={30}
+                    style={{ borderRadius: 8 }}
+                    raised
+                    type="twitter"
+                  />
+                  <Text
+                    style={{ fontSize: 12, color: "#333", textAlign: "center" }}
+                  >
+                    Twitter
+                  </Text>
+                </TouchableOpacity>
+              </ScrollView>
+              <View style={{ paddingTop: 20 }}>
+                <TouchableOpacity
+                  onPress={() => setIsOpenSheet(false)}
+                  style={{
+                    backgroundColor: "#F0F0F0",
+                    padding: 17,
+                    borderRadius: 20,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "#7A7A7A",
+                      fontWeight: "bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    İptal
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         </Modal>
         </SafeAreaView>

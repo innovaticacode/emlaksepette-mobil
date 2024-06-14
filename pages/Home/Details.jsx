@@ -278,6 +278,7 @@ export default function Details({ navigation }) {
       .then(() => console.log("WhatsApp açıldı ve link paylaşıldı"))
       .catch((error) => console.error("WhatsApp açılamadı:", error));
   };
+  
   const shareLinkOnInstagram = (text) => {
     const url = `https://mobil.emlaksepette.com/${slug}/100${ProjectId}/detay`;
 
@@ -1039,10 +1040,10 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
-              <View style={styles.ıcon}>
-                <Icon2 name="sharealt" size={18} />
-              </View>
-            </TouchableOpacity>
+                  <View style={styles.ıcon}>
+                    <Icon2 name="sharealt" size={18} />
+                  </View>
+                </TouchableOpacity>
           </View>
           <View style={styles.clubRateContainer}>
             {user &&
@@ -2166,7 +2167,7 @@ const styles = StyleSheet.create({
     justifyContent: "start",
     alignItems: "center",
     gap: 20,
-    zIndex: 1,
+    zIndex: 2,
   },
   ıcon: {
     backgroundColor: "#FFFFFFAD",
