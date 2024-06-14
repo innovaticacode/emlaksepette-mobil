@@ -34,8 +34,8 @@ export default function PostMap({ data }) {
       </TouchableOpacity>
       <MapView
         initialRegion={{
-          latitude: locationCoords[0],
-          longitude: locationCoords[1],
+          latitude: parseFloat(locationCoords[0]),
+          longitude: parseFloat(locationCoords[1]),
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
           altidute: 50.03281021118164,
@@ -44,8 +44,8 @@ export default function PostMap({ data }) {
       >
         <Marker
           coordinate={{
-            latitude: locationCoords[0],
-            longitude: locationCoords[1],
+            latitude: parseFloat(locationCoords[0]),
+            longitude:parseFloat(locationCoords[1]),
           }}
           title={data.project.city.title + "/" + data.project.county.ilce_title}
           description="Proje Konumu"

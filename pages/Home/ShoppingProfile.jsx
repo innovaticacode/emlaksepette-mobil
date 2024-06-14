@@ -408,7 +408,7 @@ const style = StyleSheet.create({
   opacity: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#DE4241E6",
+
     position: "absolute",
     zIndex: 1,
 

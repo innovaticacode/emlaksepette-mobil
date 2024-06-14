@@ -15,6 +15,9 @@ import Search from './Search';
 import Categories from '../../components/Categories';
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from '@react-navigation/native';
+import Prefabrik from './Home Pages/Prefabrik';
+import BookHouse from './Home Pages/BookHouse';
+import SellAcil from './Home Pages/SellAcil';
 const FirstRoute = () => (
   <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
 );
@@ -33,6 +36,12 @@ const renderScene = ({ route,index }) => {
             return <Shop index={index} />;
             case 'area':
                 return <Area  index={index}/>;
+                case 'prefabrik':
+                  return <Prefabrik  index={index}/>;
+                  case 'bookhouse':
+                  return <BookHouse  index={index}/>;
+                  case 'sellacil':
+                  return <SellAcil  index={index}/>;
       default:
         return null;
     }
@@ -107,7 +116,11 @@ export default function HomePage2() {
     { key: 'first', title: 'First' },
     { key: 'second', title: 'Second' },
     { key: 'shop', title: 'Shop' },
-    { key: 'area', title: 'Area' }
+    { key: 'area', title: 'Area' },
+    { key: 'prefabrik', title: 'Prefabrik' },
+    { key: 'bookhouse', title: 'Bookhouse' },
+    { key: 'sellacil', title: 'Sellacil' }
+
   ]);
 const indexChange=(index)=>{
             setIndex(index)
@@ -163,14 +176,22 @@ const indexChange=(index)=>{
                     ıconName="user"
                   />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>{
+                  navigation.navigate('RealtorClubExplore')
+                  setIsDrawerOpen(false)
+                }}>
                   <Categories
                     category="Emlak Kulüp"
                     bordernone="none"
                     showImage={true}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity 
+                onPress={()=>{
+                  navigation.navigate('ShareAdvert')
+                  setIsDrawerOpen(false)
+                }}
+                >
                   <Categories
                     category="İlan Ver"
                     bordernone="none"

@@ -31,7 +31,7 @@ import userData, { getValueFor } from "../../components/methods/user";
 
 import { ActivityIndicator } from "react-native-paper";
 
-export default function HomePage({index}) {
+export default function HomePage({ index }) {
   const navigation = useNavigation();
 
   const apiUrl = "https://mobil.emlaksepette.com/";
@@ -41,6 +41,7 @@ export default function HomePage({index}) {
   const [featuredProjects, setFeaturedProjects] = useState([]);
 
   const fetchFeaturedProjects = async () => {
+  
     try {
       const response = await axios.get(
         "https://mobil.emlaksepette.com/api/featured-projects"
@@ -49,45 +50,20 @@ export default function HomePage({index}) {
       setloadingPrjoects(true);
     } catch (error) {
       console.log(error);
+    }finally{
+      setloadingPrjoects(false)
     }
   };
 
   useEffect(() => {
-    if (index==0) {
+    if (index == 0) {
       fetchFeaturedProjects();
-    }else{
-      setFeaturedProjects([])
+    } else {
+      setFeaturedProjects([]);
     }
- 
   }, [index]);
 
-
-
-
-
-
-
-
-
-
-
-
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-
  
-
-  const [tab, settab] = useState(0);
-  const scrollViewRef = useRef(null);
-
-
-
-  const [searchText, setSearchText] = useState("");
-
-  const handleSearch = (text) => {
-    setSearchText(text);
-    // Burada arama işlemleri yapılabilir
-  };
   const [featuredSliders, setFeaturedSliders] = useState([]);
 
   const fetchFeaturedSliders = async () => {
@@ -102,10 +78,9 @@ export default function HomePage({index}) {
     }
   };
   useEffect(() => {
-    if (index==0) {
+    if (index == 0) {
       fetchFeaturedSliders();
     }
-  
   }, []);
   const [currentPage, setCurrentPage] = useState(1);
   const pagerViewRef = useRef(null);
@@ -125,246 +100,153 @@ export default function HomePage({index}) {
     return () => clearInterval(interval);
   }, [currentPage]);
 
-
-
-
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
 
-
-  const addToCard = async () => {
-    const formData = new FormData();
-    formData.append("id", selectedCartItem);
-    formData.append("isShare", null);
-    formData.append("numbershare", null);
-    formData.append("qt", 1);
-    formData.append("type", "housing");
-    formData.append("project", null);
-    formData.append("clear_cart", "no");
-
-    try {
-      if (user?.access_token) {
-        const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
-        setModalForAddToCart(false);
-        navigation.navigate("Sepetim");
-      }
-    } catch (error) {
-      console.error("post isteği olmadı", error);
-    }
-  };
+  
   const { width: screenWidth } = Dimensions.get("window");
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-
-      
       <SafeAreaView
         style={{ flex: 1, paddingTop: 25, backgroundColor: "white" }}
       >
-      
-      
-          <ScrollView
-            stickyHeaderIndices={[2]}
-      
-            contentContainerStyle={{ gap: 8 }}
-         
-            scrollEventThrottle={16}
-          >
-            <View style={{ height: 100, padding: 8, borderRadius: 10 }}>
-              <PagerView
-                style={{ height: "100%" }}
-                ref={pagerViewRef}
-                initialPage={currentPage}
-                onPageSelected={(event) =>
-                  setCurrentPage(event.nativeEvent.position)
-                }
-              >
-                {featuredSliders.map((item, index) => (
-                  <View
-                    style={{
-                      borderRadius: 15,
-                      width: "100%",
-                      height: "100%",
-                    }}
-                    key={index}
-                  >
-                    <ImageBackground
-                      source={{
-                        uri: `${apiUrl}/storage/sliders/${item.image}`,
-                      }}
-                      style={{ width: "100%", height: "100%" }}
-                      resizeMode="contain"
-                      borderRadius={10}
-                    />
-                  </View>
-                ))}
-              </PagerView>
-            </View>
-
-            <View style={{ height: 100 }}>
-              <SliderBar loading={loadingPrjoects} />
-            </View>
-
-            <View
-              style={
-                {
-                  // display: isHidden ? "none" : "flex",
-                }
+        <ScrollView
+          stickyHeaderIndices={[2]}
+          contentContainerStyle={{ gap: 8 }}
+          scrollEventThrottle={16}
+        >
+          <View style={{ height: 100, padding: 8, borderRadius: 10 }}>
+            <PagerView
+              style={{ height: "100%" }}
+              ref={pagerViewRef}
+              initialPage={currentPage}
+              onPageSelected={(event) =>
+                setCurrentPage(event.nativeEvent.position)
               }
             >
-              <View
-                style={{
-                  paddingBottom: 3,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  alignItems: "center",
-                  backgroundColor: "white",
-                }}
-              >
-                <Text style={{ fontSize: 12, fontWeight: 700 }}>
-                  ÖNE ÇIKAN PROJELER
-                </Text>
-
-                <TouchableOpacity
-                  style={styles.allBtn}
-                  onPress={() =>
-                    navigation.navigate("AllProject", {
-                      name: "Tüm Projeler",
-                      slug: "tum-projeler",
-                      data: featuredProjects,
-                      count: featuredProjects.length,
-                      type: null,
-                      optional: "satilik",
-                      title: "konut",
-                      check: "villa",
-                      city: null,
-                      county: null,
-                      hood: null,
-                    })
-                  }
+              {featuredSliders.map((item, index) => (
+                <View
+                  style={{
+                    borderRadius: 15,
+                    width: "100%",
+                    height: "100%",
+                  }}
+                  key={index}
                 >
-                  <Text style={{ color: "white", fontSize: 11 }}>
-                    Tüm Projeleri Gör
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-      
-            <View style={styles.slide1}>
-              <View style={{ gap: 0, paddingTop: 0 }}>
-                {loadingPrjoects == false ? (
-                  <View style={{ padding: 10 }}>
-                    <ActivityIndicator/>
-                  </View>
-                ) : (
-                  <>
-                    <FlatList
-                    
-                      data={featuredProjects}
-                      renderItem={({ item, index }) => (
-                        <View
-                          style={{
-                            marginTop:7,
-                            paddingLeft: 10,
-                            paddingRight: 10,
-                            width: "100%",
-                          }}
-                        >
-                          <ProjectPost
-                            key={index}
-                            project={item}
-                            caption={item.project_title}
-                            ımage={`${apiUrl}/${item.image.replace(
-                              "public/",
-                              "storage/"
-                            )}`}
-                            user={item.user}
-                            location={item.city.title}
-                            city={item.county.ilce_title}
-                            ProjectNo={item.id}
-                            // acıklama={item.description
-                            //   .replace(/<\/?[^>]+(>|$)/g, "")
-                            //   .replace(/&nbsp;/g, " ")}
+                  <ImageBackground
+                    source={{
+                      uri: `${apiUrl}/storage/sliders/${item.image}`,
+                    }}
+                    style={{ width: "100%", height: "100%" }}
+                    resizeMode="contain"
+                    borderRadius={10}
+                  />
+                </View>
+              ))}
+            </PagerView>
+          </View>
 
-                            ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                            loading={loadingPrjoects}
-                          />
-                        </View>
-                      )}
-                      scrollEnabled={false}
-                    />
-                  </>
-                )}
-              </View>
-            </View>
-          </ScrollView>
-        
-        {/* <Modal
-          isVisible={ModalForAddToCart}
-          onBackdropPress={() => setModalForAddToCart(false)}
-          animationType="fade" // veya "fade", "none" gibi
-          transparent={true}
-          useNativeDriver={true}
-          style={styles.modal4}
-        >
-          <View style={styles.modalContent4}>
-            <View style={{ padding: 10, gap: 10 }}>
-              <Text style={{ textAlign: "center" }}>
-                #1000{selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
-                Eminmisiniz?
+          <View style={{ height: 100 }}>
+            <SliderBar loading={loadingPrjoects} />
+          </View>
+
+          <View
+            style={
+              {
+                // display: isHidden ? "none" : "flex",
+              }
+            }
+          >
+            <View
+              style={{
+                paddingBottom: 3,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingLeft: 10,
+                paddingRight: 10,
+                alignItems: "center",
+                backgroundColor: "white",
+              }}
+            >
+              <Text style={{ fontSize: 12, fontWeight: 700 }}>
+                ÖNE ÇIKAN PROJELER
               </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  gap: 20,
-                }}
-              >
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "green",
-                    padding: 10,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    addToCard();
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Sepete Ekle</Text>
-                </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#e44242",
-                    padding: 10,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    setModalForAddToCart(false);
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Vazgeç</Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                style={styles.allBtn}
+                onPress={() =>
+                  navigation.navigate("AllProject", {
+                    name: "Tüm Projeler",
+                    slug: "tum-projeler",
+                    data: featuredProjects,
+                    count: featuredProjects.length,
+                    type: null,
+                    optional: "satilik",
+                    title: "konut",
+                    check: "villa",
+                    city: null,
+                    county: null,
+                    hood: null,
+                  })
+                }
+              >
+                <Text style={{ color: "white", fontSize: 11 }}>
+                  Tüm Projeleri Gör
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
-        </Modal> */}
+
+          <View style={styles.slide1}>
+            <View style={{ gap: 0, paddingTop: 0 }}>
+              {loadingPrjoects == true ? (
+                <View style={{ padding: 10 }}>
+                  <ActivityIndicator />
+                </View>
+              ) : (
+                <>
+                  <FlatList
+                    data={featuredProjects}
+                    renderItem={({ item, index }) => (
+                      <View
+                        style={{
+                          marginTop: 7,
+                          paddingLeft: 10,
+                          paddingRight: 10,
+                          width: "100%",
+                        }}
+                      >
+                        <ProjectPost
+                          key={index}
+                          project={item}
+                          caption={item.project_title}
+                          ımage={`${apiUrl}/${item.image.replace(
+                            "public/",
+                            "storage/"
+                          )}`}
+                          user={item.user}
+                          location={item.city.title}
+                          city={item.county.ilce_title}
+                          ProjectNo={item.id}
+                          // acıklama={item.description
+                          //   .replace(/<\/?[^>]+(>|$)/g, "")
+                          //   .replace(/&nbsp;/g, " ")}
+
+                          ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
+                          loading={loadingPrjoects}
+                        />
+                      </View>
+                    )}
+                    scrollEnabled={false}
+                  />
+                </>
+              )}
+            </View>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

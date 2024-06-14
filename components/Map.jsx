@@ -36,9 +36,10 @@ export default function Map({ mapData }) {
       </TouchableOpacity>
 
       <MapView
-        initialRegion={{
-          latitude: locationCoords[0],
-          longitude: locationCoords[1],
+      
+      region={{
+          latitude: parseFloat(locationCoords[0]),
+          longitude:parseFloat(locationCoords[1]),
 
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
@@ -48,8 +49,8 @@ export default function Map({ mapData }) {
       >
         <Marker
           coordinate={{
-            latitude: locationCoords[0],
-            longitude: locationCoords[1],
+            latitude: parseFloat(locationCoords[0]),
+            longitude: parseFloat(locationCoords[1]),
           }}
           title={
             mapData.project.city.title + "/" + mapData.project.county.ilce_title
