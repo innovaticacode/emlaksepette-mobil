@@ -536,16 +536,42 @@ export default function App({ route }) {
             name="Public"
             component={PublicPage}
             options={({ route }) => ({
-              title: route.params.name,
+              headerShown: true,
+              title: route.params.title,
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTitleStyle: {
+                fontSize: 14,
+              },
+              headerBackTitleStyle: {
+                fontSize: 14,
+              },
             })}
           />
           <Stack.Screen
             name="SubCategory"
             component={SubCategory}
-            options={({ route }) => ({
-              title: route.params.name,
-            })}
+            options={({ route }) => {
+              const title =
+                route.params.title === "Projeler"
+                  ? route.params.name + route.params.title
+                  : route.params.name;
+
+              return {
+                headerShown: true,
+                title: title,
+                headerBackTitle: route.params.title,
+                headerBackTitleVisible: true,
+                headerTitleStyle: {
+                  fontSize: 14,
+                },
+                headerBackTitleStyle: {
+                  fontSize: 14,
+                },
+              };
+            }}
           />
+
 
           <Stack.Screen
             name="HomeList"
@@ -558,7 +584,18 @@ export default function App({ route }) {
             name="SubCategoryChild"
             component={SubCategoryChild}
             options={({ route }) => ({
-              title: route.params.name,
+              headerShown: true,
+              title: route.params.text,
+              headerBackTitle: route.params.title === "Projeler"
+                ? route.params.name + route.params.title
+                : route.params.name,
+              headerBackTitleVisible: true,
+              headerTitleStyle: {
+                fontSize: 14,
+              },
+              headerBackTitleStyle: {
+                fontSize: 14,
+              },
             })}
           />
           <Stack.Screen
