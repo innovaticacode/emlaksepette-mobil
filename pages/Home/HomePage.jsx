@@ -72,7 +72,7 @@ export default function HomePage({ index }) {
         "https://mobil.emlaksepette.com/api/featured-sliders"
       );
       setFeaturedSliders(response.data);
-      setloadingEstates(true);
+  
     } catch (error) {
       console.log(error);
     }
