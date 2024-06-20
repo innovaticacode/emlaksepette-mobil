@@ -85,6 +85,10 @@ export default function AllProjects() {
       { value: 7, label: "Son 7 Gün" },
       { value: 15, label: "Son 15 Gün" },
       { value: 30, label: "Son 30 Gün" },
+      { value: 45, label: "Son 45 Gün" },
+      { value: 60, label: "Son 60 Gün" },
+      { value: 75, label: "Son 75 Gün" },
+      { value: 90, label: "Son 90 Gün" },
     ],
   });
 
@@ -826,16 +830,20 @@ export default function AllProjects() {
                     {state.listingDates.map((date) => (
                       <View style={styles.option} key={date.value}>
                         <TouchableOpacity
-                          style={styles.checkboxContainer}
+                          style={styles.radioContainer}
                           onPress={() =>
-                            handleCheckboxChange("listing_date", date.value)
+                            handleRadioChange("listing_date", date.value)
                           }
                         >
-                          <Text style={styles.checkboxLabel}>{date.label}</Text>
-                          <View style={styles.checkbox}>
-                            {state.selectedCheckboxes["listing_date"]?.[
-                              date.value
-                            ] && <View style={styles.checkboxInner} />}
+                          <Text style={styles.radioLabel}>{date.label}</Text>
+                          <View style={styles.radio}>
+                            <View
+                              style={[
+                                styles.radioInner,
+                                state.selectedRadio["listing_date"] ===
+                                  date.value && styles.radioSelected,
+                              ]}
+                            />
                           </View>
                         </TouchableOpacity>
                       </View>

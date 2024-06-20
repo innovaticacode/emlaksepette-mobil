@@ -111,8 +111,8 @@ export default function App({ route }) {
           screenOptions={{
             gestureEnabled: true,
             ...TransitionPresets.SlideFromRightIOS,
-            headerTintColor:'#333',
-          
+            headerTintColor: '#333',
+
           }}
         >
           {showSplash ? (
@@ -146,7 +146,7 @@ export default function App({ route }) {
           )}
 
           <Stack.Group>
-            <Stack.Screen name="Login" options={{ title: "Giriş Yap" , headerBackTitleVisible:false}}>
+            <Stack.Screen name="Login" options={{ title: "Giriş Yap", headerBackTitleVisible: false }}>
               {(props) => <Login {...props} />}
             </Stack.Screen>
             <Stack.Screen
@@ -576,7 +576,7 @@ export default function App({ route }) {
               headerStyle: {
                 backgroundColor: '#EA2B2E',
               },
-              title: route.params.name + " - " + route.params.count + " Proje" ,
+              title: route.params.name + " - " + route.params.count + " Proje",
               headerBackTitle: "",
               headerBackTitleVisible: false,
               headerTintColor: "white",
@@ -638,10 +638,20 @@ export default function App({ route }) {
             })}
           />
           <Stack.Screen
-            name="AllRealtor"
+            name="AllRealtorAdverts"
             component={AllRealtorAdverts}
             options={({ route }) => ({
               headerShown: false,
+              headerStyle: {
+                backgroundColor: '#EA2B2E',
+              },
+              title: route.params.name + " - " + route.params.count + " Emlak İlanları",
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "white",
+              headerTitleStyle: {
+                fontSize: 14,
+              },
             })}
           />
           <Stack.Screen
@@ -763,7 +773,7 @@ export default function App({ route }) {
               },
             })}
           />
-             <Stack.Screen
+          <Stack.Screen
             name="CreateCollections"
             component={CreateCollections}
             options={({ route }) => ({
@@ -772,9 +782,9 @@ export default function App({ route }) {
               headerStyle: {
                 backgroundColor: "#f7f7f7",
               },
-             
+
             })}
-            
+
           />
         </Stack.Navigator>
       </NavigationContainer>
