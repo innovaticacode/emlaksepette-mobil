@@ -41,6 +41,7 @@ export default function HomePage({ index }) {
   const [featuredProjects, setFeaturedProjects] = useState([]);
 
   const fetchFeaturedProjects = async () => {
+  
     try {
       const response = await axios.get(
         "https://mobil.emlaksepette.com/api/featured-projects"
@@ -49,6 +50,8 @@ export default function HomePage({ index }) {
       setloadingPrjoects(true);
     } catch (error) {
       console.log(error);
+    }finally{
+      setloadingPrjoects(false)
     }
   };
 
@@ -59,6 +62,7 @@ export default function HomePage({ index }) {
       setFeaturedProjects([]);
     }
   }, [index]);
+
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -71,6 +75,7 @@ export default function HomePage({ index }) {
     setSearchText(text);
     // Burada arama işlemleri yapılabilir
   };
+
   const [featuredSliders, setFeaturedSliders] = useState([]);
 
   const fetchFeaturedSliders = async () => {
@@ -112,6 +117,7 @@ export default function HomePage({ index }) {
     getValueFor("user", setuser);
   }, []);
 
+
   const addToCard = async () => {
     const formData = new FormData();
     formData.append("id", selectedCartItem);
@@ -140,6 +146,7 @@ export default function HomePage({ index }) {
       console.error("post isteği olmadı", error);
     }
   };
+
   const { width: screenWidth } = Dimensions.get("window");
 
   return (
@@ -231,6 +238,7 @@ export default function HomePage({ index }) {
                   Tüm Projeleri Gör
                 </Text>
               </TouchableOpacity>
+
             </View>
           </View>
 
@@ -318,24 +326,54 @@ export default function HomePage({ index }) {
                   <Text style={{ color: "white" }}>Sepete Ekle</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#e44242",
-                    padding: 10,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    setModalForAddToCart(false);
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Vazgeç</Text>
-                </TouchableOpacity>
-              </View>
+
+          <View style={styles.slide1}>
+            <View style={{ gap: 0, paddingTop: 0 }}>
+              {loadingPrjoects == true ? (
+                <View style={{ padding: 10 }}>
+                  <ActivityIndicator />
+                </View>
+              ) : (
+                <>
+                  <FlatList
+                    data={featuredProjects}
+                    renderItem={({ item, index }) => (
+                      <View
+                        style={{
+                          marginTop: 7,
+                          paddingLeft: 10,
+                          paddingRight: 10,
+                          width: "100%",
+                        }}
+                      >
+                        <ProjectPost
+                          key={index}
+                          project={item}
+                          caption={item.project_title}
+                          ımage={`${apiUrl}/${item.image.replace(
+                            "public/",
+                            "storage/"
+                          )}`}
+                          user={item.user}
+                          location={item.city.title}
+                          city={item.county.ilce_title}
+                          ProjectNo={item.id}
+                          // acıklama={item.description
+                          //   .replace(/<\/?[^>]+(>|$)/g, "")
+                          //   .replace(/&nbsp;/g, " ")}
+
+                          ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
+                          loading={loadingPrjoects}
+                        />
+                      </View>
+                    )}
+                    scrollEnabled={false}
+                  />
+                </>
+              )}
             </View>
           </View>
-        </Modal> */}
+        </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

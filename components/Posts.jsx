@@ -103,6 +103,7 @@ export default function Posts({
       offSaleCheck: offSaleCheck,
       soldCheck: soldCheck,
       shareSaleEmpty: shareSaleEmpty,
+      sold:sold
     };
   
     navigation.navigate("PostDetails", params);

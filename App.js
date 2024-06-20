@@ -146,7 +146,7 @@ export default function App({ route }) {
           )}
 
           <Stack.Group>
-            <Stack.Screen name="Login" options={{ title: "Giriş Yap" }}>
+            <Stack.Screen name="Login" options={{ title: "Giriş Yap" , headerBackTitleVisible:false}}>
               {(props) => <Login {...props} />}
             </Stack.Screen>
             <Stack.Screen

@@ -201,10 +201,10 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
                     ) : (
                       <>
                         <Text>
-                          {item.sharePrice.balance &&
-                          item.sharePrice.status === "0" ? (
+                          {item?.sharePrice?.balance &&
+                          item?.sharePrice?.status === "0" ? (
                             <Text style={styles.orange}>
-                              {item.sharePrice.balance % 1 === 0
+                              {item?.sharePrice?.balance % 1 === 0
                                 ? addDotEveryThreeDigits(
                                     item.sharePrice.balance
                                   )
@@ -212,23 +212,23 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
                               ₺ {"\n"}
                               <Text>Onay Bekleniyor</Text>
                             </Text>
-                          ) : item.sharePrice.balance &&
-                            item.sharePrice.status === "1" ? (
+                          ) : item?.sharePrice?.balance &&
+                            item?.sharePrice?.status === "1" ? (
                             <Text style={styles.green}>
-                              {item.sharePrice.balance % 1 === 0
+                              {item?.sharePrice?.balance % 1 === 0
                                 ? addDotEveryThreeDigits(
-                                    item.sharePrice.balance
+                                    item?.sharePrice?.balance
                                   )
-                                : item.sharePrice.balance.toFixed(2)}{" "}
+                                : item?.sharePrice?.balance.toFixed(2)}{" "}
                               ₺ {"\n"}
                               <Text>Komisyon Kazandınız</Text>
                             </Text>
-                          ) : item.sharePrice.balance &&
-                            item.sharePrice.status === "2" ? (
+                          ) : item?.sharePrice?.balance &&
+                            item?.sharePrice?.status === "2" ? (
                             <Text style={styles.red}>
-                              {item.sharePrice.balance % 1 === 0
+                              {item?.sharePrice?.balance % 1 === 0
                                 ? addDotEveryThreeDigits(
-                                    item.sharePrice.balance
+                                    item?.sharePrice?.balance
                                   )
                                 : item.sharePrice.balance.toFixed(2)}{" "}
                               ₺ {"\n"}
