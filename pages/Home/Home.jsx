@@ -119,13 +119,12 @@ const Home = () => {
       />
 
       <Tab.Screen
-        name={'Hesabım'}
-        
+        name={"Hesabım"}
         component={user.access_token ? ShoppingProfile : Login}
         options={{
-          tabBarLabel:user.role === "Kurumsal Hesap" ? "Mağazam" : "Hesabım",
+          tabBarLabel: user.role === "Kurumsal Hesap" ? "Mağazam" : "Hesabım",
           headerShown: false,
-          
+
           tabBarIcon: ({ color, focused }) =>
             user.role == "Kurumsal Hesap" ? (
               <IconStore

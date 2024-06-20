@@ -41,7 +41,6 @@ export default function HomePage({ index }) {
   const [featuredProjects, setFeaturedProjects] = useState([]);
 
   const fetchFeaturedProjects = async () => {
-  
     try {
       const response = await axios.get(
         "https://mobil.emlaksepette.com/api/featured-projects"
@@ -50,8 +49,8 @@ export default function HomePage({ index }) {
       setloadingPrjoects(true);
     } catch (error) {
       console.log(error);
-    }finally{
-      setloadingPrjoects(false)
+    } finally {
+      setloadingPrjoects(false);
     }
   };
 
@@ -63,19 +62,6 @@ export default function HomePage({ index }) {
     }
   }, [index]);
 
-
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const [tab, settab] = useState(0);
-  const scrollViewRef = useRef(null);
-
-  const [searchText, setSearchText] = useState("");
-
-  const handleSearch = (text) => {
-    setSearchText(text);
-    // Burada arama işlemleri yapılabilir
-  };
-
   const [featuredSliders, setFeaturedSliders] = useState([]);
 
   const fetchFeaturedSliders = async () => {
@@ -84,7 +70,6 @@ export default function HomePage({ index }) {
         "https://mobil.emlaksepette.com/api/featured-sliders"
       );
       setFeaturedSliders(response.data);
-  
     } catch (error) {
       console.log(error);
     }
@@ -116,36 +101,6 @@ export default function HomePage({ index }) {
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-
-
-  const addToCard = async () => {
-    const formData = new FormData();
-    formData.append("id", selectedCartItem);
-    formData.append("isShare", null);
-    formData.append("numbershare", null);
-    formData.append("qt", 1);
-    formData.append("type", "housing");
-    formData.append("project", null);
-    formData.append("clear_cart", "no");
-
-    try {
-      if (user?.access_token) {
-        const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
-        setModalForAddToCart(false);
-        navigation.navigate("Sepetim");
-      }
-    } catch (error) {
-      console.error("post isteği olmadı", error);
-    }
-  };
 
   const { width: screenWidth } = Dimensions.get("window");
 
@@ -238,94 +193,8 @@ export default function HomePage({ index }) {
                   Tüm Projeleri Gör
                 </Text>
               </TouchableOpacity>
-
             </View>
           </View>
-
-          <View style={styles.slide1}>
-            <View style={{ gap: 0, paddingTop: 0 }}>
-              {loadingPrjoects == false ? (
-                <View style={{ padding: 10 }}>
-                  <ActivityIndicator />
-                </View>
-              ) : (
-                <>
-                  <FlatList
-                    data={featuredProjects}
-                    renderItem={({ item, index }) => (
-                      <View
-                        style={{
-                          marginTop: 7,
-                          paddingLeft: 10,
-                          paddingRight: 10,
-                          width: "100%",
-                        }}
-                      >
-                        <ProjectPost
-                          key={index}
-                          project={item}
-                          caption={item.project_title}
-                          ımage={`${apiUrl}/${item.image.replace(
-                            "public/",
-                            "storage/"
-                          )}`}
-                          user={item.user}
-                          location={item.city.title}
-                          city={item.county.ilce_title}
-                          ProjectNo={item.id}
-                          // acıklama={item.description
-                          //   .replace(/<\/?[^>]+(>|$)/g, "")
-                          //   .replace(/&nbsp;/g, " ")}
-
-                          ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                          loading={loadingPrjoects}
-                        />
-                      </View>
-                    )}
-                    scrollEnabled={false}
-                  />
-                </>
-              )}
-            </View>
-          </View>
-        </ScrollView>
-
-        {/* <Modal
-          isVisible={ModalForAddToCart}
-          onBackdropPress={() => setModalForAddToCart(false)}
-          animationType="fade" // veya "fade", "none" gibi
-          transparent={true}
-          useNativeDriver={true}
-          style={styles.modal4}
-        >
-          <View style={styles.modalContent4}>
-            <View style={{ padding: 10, gap: 10 }}>
-              <Text style={{ textAlign: "center" }}>
-                #1000{selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
-                Eminmisiniz?
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  gap: 20,
-                }}
-              >
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "green",
-                    padding: 10,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    addToCard();
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Sepete Ekle</Text>
-                </TouchableOpacity>
-
 
           <View style={styles.slide1}>
             <View style={{ gap: 0, paddingTop: 0 }}>
@@ -468,42 +337,3 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
-{
-  /*   */
-}
-
-{
-  /*    <View style={{ paddingTop: 20, padding: 10 }}>
-            {loadingPrjoects == false ? <></> : <Text>Emlak İlanları</Text>}
-
-            <View>
-            {
-                loadingPrjoects == false ?
-                  '' :
-                  <FlatList
-                    data={featuredEstates}
-                    renderItem={({ item }) =>
-                      <RealtorPost
-                        price={`${JSON.parse(item.housing_type_data)['price']} `}
-                        title={item.housing_title}
-                        loading={loadingEstates}
-                        location={item.city_title + ' / ' + item.county_title}
-                        image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image}`}
-                        m2={`${JSON.parse(item.housing_type_data)['squaremeters']} `}
-                        roomCount={`${JSON.parse(item.housing_type_data)['room_count']} `}
-                        floor={`${JSON.parse(item.housing_type_data)['floorlocation']} `}
-
-                      />
-
-                    }
-
-                    scrollEnabled={false}
-                  />
-              } 
-       
-            </View>
-          </View> */
-}
-{
-  /*  */
-}
