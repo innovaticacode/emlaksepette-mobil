@@ -520,6 +520,8 @@ console.log(selectedCollectionName2)
     }
   };
   const { width, height } = Dimensions.get("window");
+    const [index, setindex] = useState(0)
+    const [tab, settab] = useState(0)
   return (
     <>
       {loading ? (
@@ -528,7 +530,7 @@ console.log(selectedCollectionName2)
         </View>
       ) : (
         <SafeAreaView style={{ backgroundColor: "white", flex: 1,paddingTop:30 }}>
-          <Header onPress={toggleDrawer} />
+          <Header onPress={toggleDrawer}  index={setindex} tab={settab} />
           <Modal
             isVisible={isDrawerOpen}
             onBackdropPress={() => setIsDrawerOpen(false)}

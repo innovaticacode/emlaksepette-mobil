@@ -827,11 +827,12 @@ export default function Details({ navigation }) {
       maximumFractionDigits: 0,
     }).format(amount);
   };
-
+  const [index, setindex] = useState(0)
+  const [tab, settab] = useState(0)
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header onPress={toggleDrawer} />
+      <Header onPress={toggleDrawer} index={setindex} tab={settab}/>
       <Modal
         isVisible={isDrawerOpen}
         onBackdropPress={() => setIsDrawerOpen(false)}

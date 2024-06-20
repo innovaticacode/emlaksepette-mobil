@@ -4,7 +4,7 @@ import { ImageBackground } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo';
 import * as Clipboard from "expo-clipboard";
 import { useNavigation } from '@react-navigation/native';
-export default function EftPay({ onPress,selectedDocumentName}) {
+export default function EftPay({ onPress,selectedDocumentName,pdfUri}) {
     const navigation=useNavigation()
     const [selectedIban, setselectedIban] = useState(false)
     const [selectedBank, setselectedBank] = useState(0)
@@ -87,7 +87,7 @@ export default function EftPay({ onPress,selectedDocumentName}) {
                 <View style={{padding:10}}>
                        <TouchableOpacity style={{flexDirection:'row',alignItems:'center',backgroundColor: '#1d8027', padding:13,justifyContent:'center',gap:15,borderRadius:5 ,width:'50%'}}
                     onPress={()=>{
-                       navigation.navigate('DecontPdf',{name:selectedDocumentName})
+                       navigation.navigate('DecontPdf',{name:selectedDocumentName,pdfUri:pdfUri})
                     }}
             >
                 <Icon name='link' color={'white'} size={17}/>

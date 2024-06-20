@@ -406,11 +406,13 @@ const onShare = async () => {
     alert(error.message);
   }
 };
+const [index, setindex] = useState(0)
+const [tab, settab] = useState(0)
 return (
   
   <SafeAreaView style={{  backgroundColor: "white",flex:1}}>
 
-  <Header onPress={toggleDrawer} />
+  <Header onPress={toggleDrawer} index={setindex} tab={settab} />
     <Modal
       isVisible={isDrawerOpen}
       onBackdropPress={() => setIsDrawerOpen(false)}

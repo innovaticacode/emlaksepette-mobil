@@ -129,7 +129,7 @@ const indexChange=(index)=>{
 
   return (
     <SafeAreaView style={{flex:1,backgroundColor:'#ffffff',paddingTop:30}}>
-       <Header onPress={toggleDrawer} />
+       <Header onPress={toggleDrawer} index={setIndex} tab={settab} />
        
        <Modal
         isVisible={isDrawerOpen}

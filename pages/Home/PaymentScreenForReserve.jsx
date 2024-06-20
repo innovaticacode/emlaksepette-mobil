@@ -14,6 +14,8 @@ import { useRoute } from '@react-navigation/native';
 import { format, parseISO, eachDayOfInterval, isValid , differenceInDays} from "date-fns";
 import { da, he, tr } from "date-fns/locale";
 import { ImageBackground } from 'react-native';
+import * as FileSystem from 'expo-file-system';
+
 import Icon from "react-native-vector-icons/FontAwesome";
 
 
@@ -53,19 +55,26 @@ useEffect(() => {
 const [modalVisible, setModalVisible] = useState(false)
 const [selectedDocumentName, setSelectedDocumentName] = useState(null);
 const [pdfUri, setPdfUri] = useState(null);
+const [pdfBase64, setPdfBase64] = useState(null);
 const pickDocument = async () => {
   try {
     console.log('Belge seçme işlemi başladı.');
-    const result = await DocumentPicker.getDocumentAsync();
+    const result = await DocumentPicker.getDocumentAsync({ type: 'application/pdf' });
     console.log('Belge seçme işlemi tamamlandı:', result);
 
     // Eğer result nesnesi varsa ve assets dizisi doluysa veya uri özelliği varsa belge seçilmiştir
     if (result && result.assets && result.assets.length > 0 && result.assets[0].uri) {
-      console.log('Belge seçildi:', result.assets[0].uri);
-      const documentName = result.assets[0].name || getFileNameFromUri(result.assets[0].uri); // Belge adını al
-      console.log('Belge adı:', documentName);
-      setPdfUri(result.assets[0].uri);
-      setSelectedDocumentName(documentName)
+      const { uri, name } = result.assets[0];
+      console.log('Belge seçildi:', uri);
+      const fileUri = `${FileSystem.documentDirectory}${name || getFileNameFromUri(uri)}`;
+    
+      const base64 = await FileSystem.readAsStringAsync(uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      setPdfBase64(`data:application/pdf;base64,${base64}`);
+      setPdfUri(fileUri);
+      setSelectedDocumentName(name || getFileNameFromUri(uri));
     } else {
       console.log('Belge seçilmedi veya işlem iptal edildi.');
     }
@@ -74,6 +83,7 @@ const pickDocument = async () => {
     Alert.alert('Hata', 'Belge seçerken bir hata oluştu.');
   }
 };
+
   
   const getFileNameFromUri = (uri) => {
     const uriComponents = uri.split('/');
@@ -473,7 +483,7 @@ const pickDocument = async () => {
    
 
             {tabs==0 && <CreditCardScreen CompeletePayment={completeCreditCardPay}/>}
-            {tabs==1 && <EftPay onPress={pickDocument} selectedDocumentName={selectedDocumentName}/>}
+            {tabs==1 && <EftPay onPress={pickDocument} selectedDocumentName={selectedDocumentName} pdfUri={pdfUri}/>}
             <Modal
         isVisible={modalVisible}
         onBackdropPress={() => setModalVisible(false)}
