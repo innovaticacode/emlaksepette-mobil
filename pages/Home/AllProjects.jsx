@@ -37,14 +37,14 @@ export default function AllProjects() {
     modalVisible: false,
     neighborhoodTitle: "",
     neighborhoodSlug: "",
-    neighborhoods : [],
+    neighborhoods: [],
     countySlug: "",
     countyTitle: "",
     citySlug: "",
     cityTitle: "",
     cityID: null,
     neighborhoodID: null,
-    searchStatus : "Yükleniyor...",
+    searchStatus: "Yükleniyor...",
     countyID: null,
     filters: [],
     slugItem: null,
@@ -97,16 +97,13 @@ export default function AllProjects() {
     fetchFilteredProjects(buildApiUrl(params), null);
   }, [params]);
 
-
   useEffect(() => {
     const newCityItems = state.cities.map((city) => ({
       label: city.title,
       value: city.id,
     }));
     setCityItems(newCityItems);
-    return () => {
-      
-    };
+    return () => {};
   }, [state.cities]);
 
   useEffect(() => {
@@ -211,7 +208,11 @@ export default function AllProjects() {
       selectedProjectStatus: state.selectedProjectStatus,
       selectedListingDate: state.selectedListingDate,
     };
-    setState((prevState) => ({ ...prevState, modalVisible: false,  searchStatus : "Filtreleniyor...", }));
+    setState((prevState) => ({
+      ...prevState,
+      modalVisible: false,
+      searchStatus: "Filtreleniyor...",
+    }));
     fetchFilteredProjects(buildApiUrl(params), filterData);
   };
 
@@ -219,7 +220,7 @@ export default function AllProjects() {
     try {
       const response = await axios.get(apiUrlFilter, { params: filterData });
       const data = response.data;
-  
+
       const newState = {
         neighborhoodTitle: data.neighborhoodTitle,
         neighborhoodSlug: data.neighborhoodSlug,
@@ -252,15 +253,15 @@ export default function AllProjects() {
         titleParam: data.title,
         typeParam: data.type,
         term: data.term,
-        searchStatus : "Yükleniyor...",
+        searchStatus: "Yükleniyor...",
         projects: data.projects,
       };
-  
+
       // FilterData varsa ve projects array boşsa searchStatus güncelle
       if (filterData && data.projects.length === 0) {
-        newState.searchStatus = 'Sonuç bulunamadı';
+        newState.searchStatus = "Sonuç bulunamadı";
       }
-  
+
       setState((prevState) => ({
         ...prevState,
         ...newState,
@@ -269,7 +270,6 @@ export default function AllProjects() {
       console.error(error);
     }
   };
-  
 
   const handleCheckboxChange = (filterName, value) => {
     setState((prevState) => ({
@@ -288,7 +288,7 @@ export default function AllProjects() {
     setState((prevState) => ({
       ...prevState,
       selectedCheckboxes: {},
-      projects : [],
+      projects: [],
       selectedCity: "",
       selectedCounty: "",
       selectedNeighborhood: "",
@@ -298,16 +298,15 @@ export default function AllProjects() {
       searchStatus: "Filtre Temizleniyor...",
       modalVisible: false,
     }));
-  
+
     await fetchFilteredProjects(buildApiUrl(params), null);
-  
+
     setState((prevState) => ({
       ...prevState,
       modalVisible: false,
       loading: false,
     }));
   };
-  
 
   const handleRadioChange = (filterName, value) => {
     setState((prevState) => ({
@@ -518,7 +517,7 @@ export default function AllProjects() {
                 }}
               >
                 <Text style={{ fontSize: 13, color: "gray", fontWeight: 700 }}>
-                <Text>{state.searchStatus}</Text>
+                  <Text>{state.searchStatus}</Text>
                 </Text>
               </View>
             }
@@ -535,6 +534,17 @@ export default function AllProjects() {
         style={styles.modal2}
       >
         <View style={styles.modalContent2}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() =>
+              setState((prevState) => ({ ...prevState, modalVisible: false }))
+            }
+          >
+            <Text style={styles.closeButtonText}>
+            <Text>  Kapat </Text>
+              <FontAwesome5Icon name="times" size={13} color="black" />
+            </Text>
+          </TouchableOpacity>
           <ScrollView
             style={styles.scrollView}
             showsVerticalScrollIndicator={false}
@@ -1171,8 +1181,17 @@ const styles = StyleSheet.create({
   },
   filterButtonText: {
     color: "white",
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
+  },
+  closeButton: {
+    justifyContent: "right",
+    alignItems: "right",
+    marginBottom: 10,
+  },
+  closeButtonText: {
+    color: "black",
+    fontSize: 14
   },
 });
 
@@ -1193,5 +1212,6 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 14,
     margin: "0 auto",
     marginBottom: 5,
-  },
+  }
+ 
 });
