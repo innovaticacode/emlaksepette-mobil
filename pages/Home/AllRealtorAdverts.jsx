@@ -267,7 +267,7 @@ export default function AllRealtorAdverts() {
         projects: data.projects,
       };
 
-      if (filterData && data.secondhandHousings.length === 0) {
+      if (data.secondhandHousings.length == 0) {
         newState.searchStatus = "Sonuç bulunamadı";
       }
 
@@ -1014,8 +1014,7 @@ export default function AllRealtorAdverts() {
               <Text style={styles.filterButtonText}>
                 İlanları Listele
                 {" ("}
-                {state.secondhandHousings.length != 0 &&
-                  state.secondhandHousings.length}
+                {state.secondhandHousings.length}
                 {")"}
               </Text>
             </TouchableOpacity>
