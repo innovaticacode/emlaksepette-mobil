@@ -88,8 +88,8 @@ export default function RealtorPost({
       >
         <ImageBackground
           source={{ uri: image }}
-          style={{ width: "100%", height: "100%" }}
-          resizeMode="contain"
+          style={{ width: "100%", height: 80 }}
+          resizeMode="cover"
         />
       </TouchableOpacity>
 
