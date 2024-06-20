@@ -82,11 +82,11 @@ export default function Header({ loading, onPress }) {
         }}
       >
         <ImageBackground
-          source={require("./emlaksepettelogo.png")}
+          source={{uri:'https://mobil.emlaksepette.com/images/emlaksepettelogo.png'}}
           resizeMode="contain"
           style={{
             width: "100%",
-            flex: 1,
+            height:'100%',
             justifyContent: "center",
           }}
         />

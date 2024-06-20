@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet } from "react-native";
-import React from "react";
+import React,{useState,useEffect} from "react";
 import PaymentItem from "../PaymentItem";
 import { addDotEveryThreeDigits } from "../methods/merhod";
 import { Platform } from "react-native";
 
-export default function PostPayment({ data, roomOrder }) {
+export default function PostPayment({ data, HomeId }) {
   var months = [
     "Ocak",
     "Şubat",
@@ -20,46 +20,78 @@ export default function PostPayment({ data, roomOrder }) {
     "Aralık",
   ];
 
-  const paymentItems = [];
+  const [paymentItems, setPaymentItems] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
-  // for döngüsü kullanarak PaymentItem bileşenlerini oluşturuyoruz
-  for (
-    let _index = 0;
-    _index < data.projectHousingsList[roomOrder]["pay-dec-count" + roomOrder];
-    _index++
-  ) {
-    const item =
-      data.projectHousingsList[roomOrder]["pay-dec-count" + roomOrder][_index];
-    const date = new Date(
-      data.projectHousingsList[roomOrder]["pay_desc_date" + roomOrder + _index]
-    );
+  const formatPrice2= (price) => addDotEveryThreeDigits(Math.round(price));
 
-    paymentItems.push(
-      <View key={_index}>
-        <PaymentItem
-          header={`${_index + 1} . Ara Ödeme`}
-          price={addDotEveryThreeDigits(
-            data.projectHousingsList[roomOrder][
-              `pay_desc_price${roomOrder}` + _index
-            ]
-          )}
-          date={
-            months[date.getMonth()] +
-            ", " +
-            date.getDate() +
-            " " +
-            date.getFullYear()
-          }
-          dFlex="column"
-        />
-      </View>
-    );
-  }
+  useEffect(() => {
+    setPaymentItems([]);
+    setTotalPrice(0);
+    if (data && data.projectHousingsList && HomeId !== null) {
+      let total = 0;
+      const items = [];
+
+      for (
+        let _index = 0;
+        _index <
+        data.projectHousingsList[HomeId][
+          "pay-dec-count" + HomeId
+        ];
+        _index++
+      ) {
+        const priceString = addDotEveryThreeDigits(
+          data.projectHousingsList[HomeId][
+            `pay_desc_price${HomeId}` + _index
+          ]
+        );
+
+        const price = parseInt(priceString.replace(/\./g, ""), 10);
+        total += price;
+
+        const date = new Date(
+          data.projectHousingsList[HomeId][
+            "pay_desc_date" + HomeId+ _index
+          ]
+        );
+
+        const padZero = (num) => (num < 10 ? `0${num}` : num);
+
+        const formattedDate = `${padZero(date.getDate())}.${padZero(
+          date.getMonth() + 1
+        )}.${date.getFullYear()}`;
+
+        items.push(
+          <View key={_index}>
+            <PaymentItem
+              header={`${_index + 1} . Ara Ödeme`}
+              price={formatPrice2(price)}
+              date={formattedDate}
+              dFlex="column"
+            />
+          </View>
+        );
+      }
+      
+
+      setTotalPrice(total);
+
+      setPaymentItems(items);
+    }
+  }, [data, HomeId]);
+  const formatAmount = (amount) => {
+    return new Intl.NumberFormat("tr-TR", {
+      style: "currency",
+      currency: "TRY",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
   return (
     <View style={{ padding: 8 }}>
       <View style={styles.container}>
         <View style={styles.PaymentPlan}>
-          {data.projectHousingsList[roomOrder]["off_sale[]"] != "[]" ? (
+          {data?.projectHousingsList[HomeId]["off_sale[]"] != "[]" ? (
             <>
               <Text
                 style={{
@@ -77,16 +109,16 @@ export default function PostPayment({ data, roomOrder }) {
               <PaymentItem
                 header="Peşin Fiyat:"
                 price={addDotEveryThreeDigits(
-                  data.projectHousingsList[roomOrder]["price[]"]
+                  data?.projectHousingsList[HomeId]["price[]"]
                 )}
                 align="center"
                 style={{fontSize: 11}}
                 top="7"
               />
               <PaymentItem
-                header={`${data.projectHousingsList[roomOrder]["installments[]"]} Ay Taksitli Fiyat: `}
+                header={`${data?.projectHousingsList[HomeId]["installments[]"]} Ay Taksitli Fiyat: `}
                 price={addDotEveryThreeDigits(
-                  data.projectHousingsList[roomOrder]["installments-price[]"]
+                  data?.projectHousingsList[HomeId]["installments-price[]"]
                 )}
                 align="center"
                 top="7"
@@ -94,7 +126,7 @@ export default function PostPayment({ data, roomOrder }) {
               <PaymentItem
                 header="Peşinat:"
                 price={addDotEveryThreeDigits(
-                  data.projectHousingsList[roomOrder]["advance[]"]
+                  data?.projectHousingsList[HomeId]["advance[]"]
                 )}
                 align="center"
                 top="7"
@@ -102,15 +134,9 @@ export default function PostPayment({ data, roomOrder }) {
               {/* {data.projectHousingsList[roomOrder]} */}
               <PaymentItem
                 header="Aylık Ödenecek Miktar: "
-                price={addDotEveryThreeDigits(
-                  (
-                    (data.projectHousingsList[roomOrder][
-                      "installments-price[]"
-                    ] -
-                      data.projectHousingsList[roomOrder]["advance[]"]) /
-                    data.projectHousingsList[roomOrder]["installments[]"]
-                  ).toFixed(0)
-                )}
+                price={
+                  formatAmount( ( parseInt( data.projectHousingsList[HomeId]['installments-price[]'] ) -  ( parseInt( data.projectHousingsList[HomeId]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[HomeId]['installments[]'] ) ) 
+                }
               />
               {paymentItems}
             </>

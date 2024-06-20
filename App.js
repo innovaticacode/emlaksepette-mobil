@@ -81,6 +81,7 @@ import Takeds from "./pages/Home/ProfilePages/Takeds";
 import Invoice from "./pages/Home/Invoice";
 import CreateReservation from "./pages/Home/RealtorPages/CreateReservation";
 import PaymentScreenForReserve from "./pages/Home/PaymentScreenForReserve";
+import CreateCollections from "./pages/Home/CreateCollections";
 
 const Stack = createNativeStackNavigator();
 
@@ -110,6 +111,8 @@ export default function App({ route }) {
           screenOptions={{
             gestureEnabled: true,
             ...TransitionPresets.SlideFromRightIOS,
+            headerTintColor:'#333',
+          
           }}
         >
           {showSplash ? (
@@ -143,7 +146,7 @@ export default function App({ route }) {
           )}
 
           <Stack.Group>
-            <Stack.Screen name="Login" options={{ title: "Giriş Yap" }}>
+            <Stack.Screen name="Login" options={{ title: "Giriş Yap" , headerBackTitleVisible:false}}>
               {(props) => <Login {...props} />}
             </Stack.Screen>
             <Stack.Screen
@@ -759,6 +762,19 @@ export default function App({ route }) {
                 backgroundColor: "#f7f7f7",
               },
             })}
+          />
+             <Stack.Screen
+            name="CreateCollections"
+            component={CreateCollections}
+            options={({ route }) => ({
+              title: "Koleksiyon Oluştur Ve Ekle",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+             
+            })}
+            
           />
         </Stack.Navigator>
       </NavigationContainer>

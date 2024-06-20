@@ -58,6 +58,7 @@ import { StatusBar } from "expo-status-bar";
 
 import { Skeleton } from "@rneui/base";
 import PaymentItem from "../../components/PaymentItem";
+import { err } from "react-native-svg";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -117,9 +118,10 @@ export default function Details({ navigation }) {
 
   useEffect(() => {
     apiRequestGet("project/" + ProjectId).then((res) => {
-      setData(res.data);
-    });
-  }, [ProjectId]);
+      setData(res?.data)
+    })
+    
+  },[ProjectId])
 
   const getLastItemCount = () => {
     var lastBlockItemsCount = 0;
@@ -276,6 +278,7 @@ export default function Details({ navigation }) {
       .then(() => console.log("WhatsApp açıldı ve link paylaşıldı"))
       .catch((error) => console.error("WhatsApp açılamadı:", error));
   };
+  
   const shareLinkOnInstagram = (text) => {
     const url = `https://mobil.emlaksepette.com/${slug}/100${ProjectId}/detay`;
 
@@ -456,9 +459,9 @@ export default function Details({ navigation }) {
     setselectedCollectionId(id);
     setselectedCollectionName2(name);
   };
-  const addSelectedCollection = (id) => {
+  const addSelectedCollection = (id,name) => {
     const collectionData = {
-      collection_name: selectedCollectionName2,
+      collection_name: name,
       clear_cart: "no",
       id: selectedHouse,
       project: data.project.id,
@@ -808,7 +811,7 @@ export default function Details({ navigation }) {
           </View>
         );
       }
-      console.log(items);
+      
 
       setTotalPrice(total);
 
@@ -824,6 +827,7 @@ export default function Details({ navigation }) {
       maximumFractionDigits: 0,
     }).format(amount);
   };
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -956,7 +960,7 @@ export default function Details({ navigation }) {
                 color: "white",
                 fontWeight: 600,
                 fontSize: 12,
-                paddingLeft: "10px",
+                paddingLeft: 10,
               }}
             >
               {data?.project?.user?.name ? `${data?.project?.user?.name} ` : ""}
@@ -1036,10 +1040,10 @@ export default function Details({ navigation }) {
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
-              <View style={styles.ıcon}>
-                <Icon2 name="sharealt" size={18} />
-              </View>
-            </TouchableOpacity>
+                  <View style={styles.ıcon}>
+                    <Icon2 name="sharealt" size={18} />
+                  </View>
+                </TouchableOpacity>
           </View>
           <View style={styles.clubRateContainer}>
             {user &&
@@ -1205,12 +1209,12 @@ export default function Details({ navigation }) {
 
         <Modal
           animationType="fade" // veya "fade", "none" gibi
-          transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
             setModalVisible(!modalVisible);
           }}
           style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", margin: 0 }}
+          
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
@@ -1322,19 +1326,7 @@ export default function Details({ navigation }) {
                     <SettingsItem
                       info="Aylık Ödenecek Tutar"
                       numbers={
-                        addDotEveryThreeDigits(
-                          (
-                            (data.projectHousingsList[paymentModalShowOrder][
-                              "installments-price[]"
-                            ] -
-                              data.projectHousingsList[paymentModalShowOrder][
-                                "advance[]"
-                              ]) /
-                            data.projectHousingsList[paymentModalShowOrder][
-                              "installments[]"
-                            ]
-                          ).toFixed(0)
-                        ) + "₺"
+                        formatAmount( ( parseInt( data.projectHousingsList[paymentModalShowOrder]['installments-price[]'] ) -  ( parseInt( data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'] ) ) 
                       }
                     />
                   ) : (
@@ -1562,36 +1554,53 @@ export default function Details({ navigation }) {
                   paddingRight: 10,
                   paddingTop: 4,
                   gap: 10,
-                  paddingBottom: 100,
+                  paddingBottom: 150,
                 }}
               >
                 {
-                  user?.has_club == 0 ?
+                user.access_token && user?.has_club == 0 ?
                   <>
-                  <View style={{gap:15,flexDirection:'column',justifyContent:'center'}}>
-                    <View>
-                    <Text style={{color:'#EA2A28',fontWeight:'600',textAlign:'center',fontSize:14}}>Koleksiyon Eklemek İçin Emlak Kulüp üyesi olmalısınız</Text>
+                  
+                  
+                    <View style={{paddingTop:10}}>
+                      <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}> Emlak Kulüp Üyeliğiniz Bulunmamaktadır!</Text>
                     </View>
-        
-                  <View style={{alignItems:'center'}}>
-                    <TouchableOpacity style={{
-                      backgroundColor:'#EA2A28',
-                      padding:12,
-                      borderRadius:5
+                    <View style={{width:'100%'}}>
+                      <Text style={{textAlign:'center',color:'#7A8A95'}}>Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir</Text>
+                    </View>
+                    <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
+                       onPress={()=>{
+                        navigation.navigate('Collecitons')
+                        setColectionSheet(false)
                     }}
-                        onPress={()=>{
-                          navigation.navigate('Collecitons')
-                          setColectionSheet(false)
-                        }}
                     >
-                      <Text style={{color:'white',fontSize:12,fontWeight:'bold'}}>Üye Olmak İçin Tıklayınız</Text>
-                    </TouchableOpacity>
-                  </View>
-                  </View>
+                  <Text style={{color:'#FFFFFF',textAlign:'center'}}>Emlak Kulüp Üyesi Ol </Text>
+                </TouchableOpacity>
+                
                     
                   </>
                
                   :
+                  !user.access_token ?
+                  <>
+                    <View style={{gap:10}}>
+                   
+                        <View style={{paddingTop:10}}>
+                          <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}>Üyeliğiniz Bulunmamaktadır!</Text>
+                        </View>
+                        <View style={{width:'100%'}}>
+                          <Text style={{textAlign:'center',color:'#7A8A95'}}>Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
+                        </View>
+                        <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
+                           onPress={()=>{
+                            setColectionSheet(false)
+                            navigation.navigate('Login')
+                        }}
+                        >
+                      <Text style={{color:'#FFFFFF',textAlign:'center'}}>Giriş Yap</Text>
+                    </TouchableOpacity>
+                    </View>
+                  </>:
                   <>
                     <TouchableOpacity
                   style={{ flexDirection: "row", alignItems: "center" }}
@@ -2006,7 +2015,10 @@ export default function Details({ navigation }) {
           style={styles.modal4}
         >
           <View style={styles.modalContent4}>
-            <View style={{ padding: 10, gap: 10 }}>
+            {
+              user.access_token  ?
+              <> 
+              <View style={{ padding: 10, gap: 10 }}>
               <Text style={{ textAlign: "center" }}>
                 {selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
                 Eminmisiniz?
@@ -2049,6 +2061,28 @@ export default function Details({ navigation }) {
                 </TouchableOpacity>
               </View>
             </View>
+              </>:
+            <>
+                 <View style={{gap:10}}>
+                     
+                        <View style={{}}>
+                          <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}>Üyeliğiniz Bulunmamaktadır!</Text>
+                        </View>
+                        <View style={{width:'100%'}}>
+                          <Text style={{textAlign:'center',color:'#7A8A95'}}>Sepetinize konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
+                        </View>
+                        <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
+                           onPress={()=>{
+                            setModalForAddToCart(false)
+                            navigation.navigate('Login')
+                        }}
+                        >
+                      <Text style={{color:'#FFFFFF',textAlign:'center'}}>Giriş Yap</Text>
+                    </TouchableOpacity>
+                    </View>
+            </>
+            }
+           
           </View>
         </Modal>
       </ScrollView>
@@ -2133,7 +2167,7 @@ const styles = StyleSheet.create({
     justifyContent: "start",
     alignItems: "center",
     gap: 20,
-    zIndex: 1,
+    zIndex: 2,
   },
   ıcon: {
     backgroundColor: "#FFFFFFAD",

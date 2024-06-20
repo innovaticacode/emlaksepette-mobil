@@ -22,7 +22,7 @@ export default function Categories({category,ıconDisplay,showImage,bordernone, 
         </>
        :''
       }
-      <Text style={{fontSize:19,color: bordernone? 'white' :'#333',fontWeight:'500'}}>{category}</Text>
+      <Text style={{fontSize:15,color: bordernone? 'white' :'#333',fontWeight:'700'}}>{category}</Text>
       </View>
       <View style={{flex:0.3/2,alignItems:'center',justifyContent:'center'}}>
       <Icon name='arrow-forward-ios'size={18} color={ bordernone? 'white':'#bebebe'} style={{display:ıconDisplay==='none'? 'none':'flex',}}/>
@@ -36,7 +36,7 @@ const styles=StyleSheet.create({
   category:{
  
       margin:5,
-     padding:8,
+     padding:3,
       display:'flex',
       flexDirection:'row',
     borderBottomWidth:1,

@@ -14,7 +14,7 @@ export default function AddCollection({removeItemOnCollection,checkFunc,item,get
             // setPopUpForRemoveItem(true)
             removeItemOnCollection(item.id)
           }else{
-            addLink(item.id)
+            addLink(item.id,item.name)
           }
         }}
     >

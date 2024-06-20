@@ -15,6 +15,7 @@ import Login from "./Login&Register/Login";
 import userData, { getValueFor } from "../../components/methods/user";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
+import HomePage2 from "./HomePage2";
 
 const Tab = createBottomTabNavigator();
 
@@ -23,7 +24,6 @@ const Home = () => {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-
 
   const { width, height } = Dimensions.get("window");
   return (
@@ -44,7 +44,7 @@ const Home = () => {
     >
       <Tab.Screen
         name="HomePage"
-        component={HomePage}
+        component={HomePage2}
         options={{
           title: "Ana Sayfa",
 
@@ -119,11 +119,13 @@ const Home = () => {
       />
 
       <Tab.Screen
-        name={user.role === "Kurumsal Hesap" ? "Mağazam" : "Hesabım"}
+        name={'Hesabım'}
+        
         component={user.access_token ? ShoppingProfile : Login}
         options={{
+          tabBarLabel:user.role === "Kurumsal Hesap" ? "Mağazam" : "Hesabım",
           headerShown: false,
-
+          
           tabBarIcon: ({ color, focused }) =>
             user.role == "Kurumsal Hesap" ? (
               <IconStore
