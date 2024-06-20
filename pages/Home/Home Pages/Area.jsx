@@ -15,6 +15,7 @@ import { getValueFor } from "../../../components/methods/user";
 import Modal from "react-native-modal";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
+import { AlertNotificationRoot } from "react-native-alert-notification";
 const PAGE_SIZE = 10;
 
 const Area= ({index}) => {
@@ -25,13 +26,17 @@ const Area= ({index}) => {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+    const [user, setuser] = useState({});
   
     const fetchFeaturedEstates = async (reset = false) => {
       if (loading || (!hasMore && !reset)) return;
+      const config = {
+        headers: { Authorization: `Bearer ${user?.access_token}` }
+      };
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`
+          `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,config
         );
         const newEstates = response.data;
   
@@ -67,7 +72,7 @@ const Area= ({index}) => {
             setFeaturedEstates([])
         }
    
-    }, [index]);
+    }, [index,user]);
   
     const filteredHomes = featuredEstates.filter((estate) => estate.step1_slug === "arsa");
   
@@ -86,7 +91,6 @@ const Area= ({index}) => {
       setselectedCartItem(id);
       setModalForAddToCart(true);
     };
-    const [user, setuser] = useState({});
     useEffect(() => {
       getValueFor("user", setuser);
     }, []);
@@ -148,39 +152,41 @@ const Area= ({index}) => {
           <ActivityIndicator animating={true} size="small" color="#000000" />
         </View>
       )}
-      <FlatList
-        data={filteredHomes}
-        renderItem={({ item }) => (
-          <RealtorPost
-            GetId={GetIdForCart}
-            HouseId={item.id}
-            price={`${JSON.parse(item.housing_type_data)["price"]} `}
-            housing={item}
-            title={item.housing_title}
-            loading={loading}
-            location={item.city_title + " / " + item.county_title}
-            image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image}`}
-            column1_name={`${JSON.parse(item.housing_type_data)[item.column1_name]} `}
-            column1_additional={item.column1_additional}
-            column2_name={`${JSON.parse(item.housing_type_data)[item.column2_name]} `}
-            column2_additional={item.column2_additional}
-            column3_name={`${JSON.parse(item.housing_type_data)[item.column3_name]} `}
-            column3_additional={item.column3_additional}
-            column4_name={`${JSON.parse(item.housing_type_data)[item.column4_name]} `}
-            column4_additional={item.column4_additional}
-            bookmarkStatus={true}
-            dailyRent={false}
-          />
-        )}
-        keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
-      
-        onEndReachedThreshold={0.1}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+      <AlertNotificationRoot>
+        <FlatList
+          data={filteredHomes}
+          renderItem={({ item }) => (
+            <RealtorPost
+              GetId={GetIdForCart}
+              HouseId={item.id}
+              price={`${JSON.parse(item.housing_type_data)["price"]} `}
+              housing={item}
+              title={item.housing_title}
+              loading={loading}
+              location={item.city_title + " / " + item.county_title}
+              image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image}`}
+              column1_name={`${JSON.parse(item.housing_type_data)[item.column1_name]} `}
+              column1_additional={item.column1_additional}
+              column2_name={`${JSON.parse(item.housing_type_data)[item.column2_name]} `}
+              column2_additional={item.column2_additional}
+              column3_name={`${JSON.parse(item.housing_type_data)[item.column3_name]} `}
+              column3_additional={item.column3_additional}
+              column4_name={`${JSON.parse(item.housing_type_data)[item.column4_name]} `}
+              column4_additional={item.column4_additional}
+              bookmarkStatus={true}
+              dailyRent={false}
+            />
+          )}
+          keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
         
-        ListFooterComponent={renderFooter}
-      />
+          onEndReachedThreshold={0.1}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          
+          ListFooterComponent={renderFooter}
+        />
+      </AlertNotificationRoot>
 <Modal
           isVisible={ModalForAddToCart}
           onBackdropPress={() => setModalForAddToCart(false)}

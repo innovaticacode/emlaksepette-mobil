@@ -110,6 +110,7 @@ export default function OtherHomeInProject({
                     GetIdForCart={GetIdForCart}
                     openCollection={openCollection}
                     project={data.project}
+                    projectFavorites={data.projectFavorites}
                     data={data}
                     roomOrder={i + 1}
                     location={`${data.project.city.title} / ${data.project.county.ilce_title}`}

@@ -59,6 +59,7 @@ import { StatusBar } from "expo-status-bar";
 import { Skeleton } from "@rneui/base";
 import PaymentItem from "../../components/PaymentItem";
 import { err } from "react-native-svg";
+import { AlertNotificationRoot } from "react-native-alert-notification";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -73,6 +74,7 @@ export default function Details({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
+  const [user, setUser] = useState({});
   const [FormVisible, setFormVisible] = useState(false);
   const apiUrl = "https://mobil.emlaksepette.com/";
   const [data, setData] = useState({
@@ -117,11 +119,14 @@ export default function Details({ navigation }) {
   };
 
   useEffect(() => {
-    apiRequestGet("project/" + ProjectId).then((res) => {
+    const config = {
+      headers: { Authorization: `Bearer ${user?.access_token}` }
+    };
+    axios.get('https://mobil.emlaksepette.com/api/project/'+ProjectId,config).then((res) => {
       setData(res?.data)
     })
     
-  },[ProjectId])
+  },[ProjectId,user])
 
   const getLastItemCount = () => {
     var lastBlockItemsCount = 0;
@@ -358,7 +363,6 @@ export default function Details({ navigation }) {
   };
 
   const [addCollection, setaddCollection] = useState(false);
-  const [user, setUser] = useState({});
 
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   useEffect(() => {
@@ -830,7 +834,8 @@ export default function Details({ navigation }) {
 
 
   return (
-    <SafeAreaView style={styles.container}>
+    <AlertNotificationRoot>
+      <SafeAreaView style={styles.container}>
       <Header onPress={toggleDrawer} />
       <Modal
         isVisible={isDrawerOpen}
@@ -2087,6 +2092,7 @@ export default function Details({ navigation }) {
         </Modal>
       </ScrollView>
     </SafeAreaView>
+    </AlertNotificationRoot>
   );
 }
 
