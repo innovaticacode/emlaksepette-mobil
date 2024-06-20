@@ -228,8 +228,6 @@ export default function AllRealtorAdverts() {
 
   const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
     try {
-      console.log(apiUrlFilter);
-      console.log(filterData);
       const response = await axios.get(apiUrlFilter, { params: filterData });
       const data = response.data;
 
@@ -277,6 +275,8 @@ export default function AllRealtorAdverts() {
         ...prevState,
         ...newState,
       }));
+
+      console.log(state.secondhandHousings);
     } catch (error) {
       console.error(error);
     }
@@ -511,35 +511,26 @@ export default function AllRealtorAdverts() {
               data={state.secondhandHousings}
               renderItem={({ item }) => (
                 <RealtorPost
-                  GetId={GetIdForCart}
-                  HouseId={item.id}
-                  price={`${JSON.parse(item.housing_type_data)["price"]} `}
-                  housing={item}
-                  title={item.housing_title}
-                  loading={state.loading}
-                  location={item.city_title + " / " + item.county_title}
-                  image={`${apiUrl}/housing_images/${
-                    JSON.parse(item.housing_type_data).image
-                  }`}
-                  column1_name={`${
-                    JSON.parse(item.housing_type_data)[item.column1_name]
-                  } `}
-                  column1_additional={item.column1_additional}
-                  column2_name={`${
-                    JSON.parse(item.housing_type_data)[item.column2_name]
-                  } `}
-                  column2_additional={item.column2_additional}
-                  column3_name={`${
-                    JSON.parse(item.housing_type_data)[item.column3_name]
-                  } `}
-                  column3_additional={item.column3_additional}
-                  column4_name={`${
-                    JSON.parse(item.housing_type_data)[item.column4_name]
-                  } `}
-                  column4_additional={item.column4_additional}
-                  bookmarkStatus={true}
-                  dailyRent={false}
-                />
+                GetId={GetIdForCart}
+                HouseId={item.id}
+                price={`${JSON.parse(item.housing_type_data)?.price ?? ''}`} // Safely access price
+                housing={item}
+                title={item.housing_title}
+                loading={state.loading}
+                location={`${item.city_title} / ${item.county_title}`} // Combine location
+                image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data)?.image ?? ''}`} // Safely access image
+                column1_name={`${JSON.parse(item.housing_type_data)?.[item.column1_name] ?? ''}`} // Safely access column1_name
+                column1_additional={item.column1_additional}
+                column2_name={`${JSON.parse(item.housing_type_data)?.[item.column2_name] ?? ''}`} // Safely access column2_name
+                column2_additional={item.column2_additional}
+                column3_name={`${JSON.parse(item.housing_type_data)?.[item.column3_name] ?? ''}`} // Safely access column3_name
+                column3_additional={item.column3_additional}
+                column4_name={`${JSON.parse(item.housing_type_data)?.[item.column4_name] ?? ''}`} // Safely access column4_name
+                column4_additional={item.column4_additional}
+                bookmarkStatus={true}
+                dailyRent={false}
+              />
+              
               )}
               keyExtractor={(item) => item.id.toString()}
               ListEmptyComponent={

@@ -134,12 +134,29 @@ const Prefabrik = ({index}) => {
         }}
       >
         <Text style={{ fontSize: 12, fontWeight: 700 }}>
-          ÖNE ÇIKAN PREFABRİK YAPILAR
+          ÖNE ÇIKAN PREFABRİK İLANLARI
         </Text>
 
         <TouchableOpacity style={styles.allBtn}>
-          <Text style={{ color: "white", fontSize: 11 ,fontWeight:'bold'}}>
-            Tüm Konutları Gör
+          <Text
+            style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
+            onPress={() =>
+              navigation.navigate("AllRealtorAdverts", {
+                name: "Emlak İlanları",
+                slug: "emlak-ilanlari",
+                data: filteredHomes,
+                count: filteredHomes.length,
+                type: "konut",
+                optional: "satilik",
+                title: "prefabrik-ev",
+                check: null,
+                city: null,
+                county: null,
+                hood: null,
+              })
+            }
+          >
+            Tüm İlanları Gör
           </Text>
         </TouchableOpacity>
       </View>

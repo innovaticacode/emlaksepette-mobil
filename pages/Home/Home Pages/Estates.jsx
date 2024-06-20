@@ -161,7 +161,7 @@ const Estates = ({ index }) => {
               })
             }
           >
-            Tüm Konutları Gör
+            Tüm İlanları Gör
           </Text>
         </TouchableOpacity>
       </View>

@@ -138,8 +138,25 @@ const BookHouse = ({index}) => {
         </Text>
 
         <TouchableOpacity style={styles.allBtn}>
-          <Text style={{ color: "white", fontSize: 11 ,fontWeight:'bold'}}>
-            Tüm Konutları Gör
+          <Text
+            style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
+            onPress={() =>
+              navigation.navigate("AllRealtorAdverts", {
+                name: "Emlak İlanları",
+                slug: "emlak-ilanlari",
+                data: filteredHomes,
+                count: filteredHomes.length,
+                type: "mustakil-tatil",
+                optional: null,
+                title: null,
+                check: null,
+                city: null,
+                county: null,
+                hood: null,
+              })
+            }
+          >
+            Tüm İlanları Gör
           </Text>
         </TouchableOpacity>
       </View>
