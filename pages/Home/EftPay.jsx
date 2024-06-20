@@ -3,7 +3,9 @@ import React,{useState} from 'react'
 import { ImageBackground } from 'react-native'
 import Icon from 'react-native-vector-icons/Entypo';
 import * as Clipboard from "expo-clipboard";
+import { useNavigation } from '@react-navigation/native';
 export default function EftPay({ onPress,selectedDocumentName}) {
+    const navigation=useNavigation()
     const [selectedIban, setselectedIban] = useState(false)
     const [selectedBank, setselectedBank] = useState(0)
     const [showCopyAlert, setshowCopyAlert] = useState(false)
@@ -74,7 +76,28 @@ export default function EftPay({ onPress,selectedDocumentName}) {
                 <Icon name='link' color={'white'} size={17}/>
                 <Text style={{color:'white'}}>Dekont Ekle</Text>
             </TouchableOpacity>
-            <Text>{selectedDocumentName}</Text>
+            {
+                selectedDocumentName &&
+                <View style={{padding:20}}>
+                <Text style={{fontWeight:'bold'}}>{selectedDocumentName}</Text>
+                </View>
+            }
+              {
+                selectedDocumentName &&
+                <View style={{padding:10}}>
+                       <TouchableOpacity style={{flexDirection:'row',alignItems:'center',backgroundColor: '#1d8027', padding:13,justifyContent:'center',gap:15,borderRadius:5 ,width:'50%'}}
+                    onPress={()=>{
+                       navigation.navigate('DecontPdf',{name:selectedDocumentName})
+                    }}
+            >
+                <Icon name='link' color={'white'} size={17}/>
+                <Text style={{color:'white',fontWeight:'bold'}}>Dekontu Görüntüle</Text>
+            </TouchableOpacity>
+             
+                </View>
+            }
+        
+          
           </View>
 
             <View style={{padding:10,paddingTop:20}}>

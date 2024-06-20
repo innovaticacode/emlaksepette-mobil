@@ -82,6 +82,7 @@ import Invoice from "./pages/Home/Invoice";
 import CreateReservation from "./pages/Home/RealtorPages/CreateReservation";
 import PaymentScreenForReserve from "./pages/Home/PaymentScreenForReserve";
 import CreateCollections from "./pages/Home/CreateCollections";
+import DecontPdf from "./pages/Home/DecontPdf";
 
 const Stack = createNativeStackNavigator();
 
@@ -768,6 +769,19 @@ export default function App({ route }) {
             component={CreateCollections}
             options={({ route }) => ({
               title: "Koleksiyon Oluştur Ve Ekle",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+             
+            })}
+            
+          />
+          <Stack.Screen
+            name="DecontPdf"
+            component={DecontPdf}
+            options={({ route }) => ({
+              title: route.params.name,
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",

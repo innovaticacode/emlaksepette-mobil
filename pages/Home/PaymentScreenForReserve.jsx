@@ -12,10 +12,11 @@ import { Platform } from "react-native";
 import { apiRequestGet } from '../../components/methods/apiRequest';
 import { useRoute } from '@react-navigation/native';
 import { format, parseISO, eachDayOfInterval, isValid , differenceInDays} from "date-fns";
-import { da, tr } from "date-fns/locale";
+import { da, he, tr } from "date-fns/locale";
 import { ImageBackground } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome";
-import Icon2 from "react-native-vector-icons/AntDesign";
+
+
 export default function PaymentScreenForReserve() {
     const [data, setData] = useState({})
     const route =useRoute()
@@ -51,27 +52,28 @@ useEffect(() => {
 {/** State Of Inputs **/}
 const [modalVisible, setModalVisible] = useState(false)
 const [selectedDocumentName, setSelectedDocumentName] = useState(null);
+const [pdfUri, setPdfUri] = useState(null);
 const pickDocument = async () => {
-    try {
-      // Kullanıcıya belge seçmesine izin ver
-      console.log('Belge seçme işlemi başladı.');
-      // Kullanıcıya belge seçmesine izin ver
-      const result = await DocumentPicker.getDocumentAsync();
-      console.log('Belge seçme işlemi tamamlandı.');
-      
-      // Belge seçilirse, belge bilgilerini göster
-      if (result && result === 'success') {
-        console.log('Belge seçildi:', result.uri);
-        const documentName = getFileNameFromUri(result.uri); // Belge adını al
-        setSelectedDocumentName(documentName); 
-      } else {
-        console.log('Belge seçilmedi veya işlem iptal edildi.');
-      }
-    } catch (err) {
-      console.log('Belge seçerken hata oluştu:', err);
+  try {
+    console.log('Belge seçme işlemi başladı.');
+    const result = await DocumentPicker.getDocumentAsync();
+    console.log('Belge seçme işlemi tamamlandı:', result);
+
+    // Eğer result nesnesi varsa ve assets dizisi doluysa veya uri özelliği varsa belge seçilmiştir
+    if (result && result.assets && result.assets.length > 0 && result.assets[0].uri) {
+      console.log('Belge seçildi:', result.assets[0].uri);
+      const documentName = result.assets[0].name || getFileNameFromUri(result.assets[0].uri); // Belge adını al
+      console.log('Belge adı:', documentName);
+      setPdfUri(result.assets[0].uri);
+      setSelectedDocumentName(documentName)
+    } else {
+      console.log('Belge seçilmedi veya işlem iptal edildi.');
     }
-  
+  } catch (err) {
+    console.log('Belge seçerken hata oluştu:', err);
+    Alert.alert('Hata', 'Belge seçerken bir hata oluştu.');
   }
+};
   
   const getFileNameFromUri = (uri) => {
     const uriComponents = uri.split('/');
@@ -130,7 +132,7 @@ const pickDocument = async () => {
   
 
 
-  
+  console.log(pdfUri , 'ssfds')
   const today = new Date();
   const formattedDate = format(today, 'dd MMMM yyyy', { locale: tr });
   const formatCurrency = (amount) => {
@@ -467,9 +469,8 @@ const pickDocument = async () => {
                 <Text style={{textAlign:'center',color: tabs==1?'white':'#333'}}>EFT / Havale ile Ödeme</Text>
             </TouchableOpacity>
         </View>
-        {selectedDocumentName && (
-        <Text>Seçilen Belge: {selectedDocumentName}</Text>
-      )}
+      
+   
 
             {tabs==0 && <CreditCardScreen CompeletePayment={completeCreditCardPay}/>}
             {tabs==1 && <EftPay onPress={pickDocument} selectedDocumentName={selectedDocumentName}/>}
