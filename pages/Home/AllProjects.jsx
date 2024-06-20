@@ -206,12 +206,13 @@ export default function AllProjects() {
       selectedCounty: state.selectedCounty,
       selectedNeighborhood: state.selectedNeighborhood,
       selectedProjectStatus: state.selectedProjectStatus,
-      selectedListingDate: state.selectedListingDate,
+      selectedListingDate: state.selectedListingDate
     };
     setState((prevState) => ({
       ...prevState,
       modalVisible: false,
       searchStatus: "Filtreleniyor...",
+      openFilterIndex: null
     }));
     fetchFilteredProjects(buildApiUrl(params), filterData);
   };
@@ -257,7 +258,6 @@ export default function AllProjects() {
         projects: data.projects,
       };
 
-      // FilterData varsa ve projects array boşsa searchStatus güncelle
       if (filterData && data.projects.length === 0) {
         newState.searchStatus = "Sonuç bulunamadı";
       }
@@ -305,6 +305,7 @@ export default function AllProjects() {
       ...prevState,
       modalVisible: false,
       loading: false,
+      openFilterIndex: null
     }));
   };
 
@@ -483,45 +484,57 @@ export default function AllProjects() {
             <ActivityIndicator size="large" color="#000000" />
           </View>
         ) : (
-          <FlatList
-            data={state.projects}
-            renderItem={({ item }) => (
-              <ProjectPost
-                project={item}
-                key={item.id}
-                caption={item.project_title}
-                ımage={`${apiUrl}/${item.image.replace("public/", "storage/")}`}
-                user={item.user}
-                location={item.city.title}
-                city={item.county.ilce_title}
-                ProjectNo={item.id}
-                slug={item.slug}
-                acıklama={item.description
-                  .replace(/<\/?[^>]+(>|$)/g, "")
-                  .replace(/&nbsp;/g, " ")}
-                ShoppingName={item.user.name}
-                ShoppingMail={item.user.email}
-                Phone={item.user.phone}
-                ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                ShopingInfo={item.user.corporate_type}
-              />
-            )}
-            keyExtractor={(item) => item.id.toString()}
-            ListEmptyComponent={
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: 20,
-                }}
-              >
-                <Text style={{ fontSize: 13, color: "gray", fontWeight: 700 }}>
-                  <Text>{state.searchStatus}</Text>
-                </Text>
-              </View>
-            }
-          />
+          <>
+          {state.projects.length != 0 &&
+           <Text style={styles.resultCount}>
+           {state.projects.length} ilan bulundu
+         </Text>}
+           
+            <FlatList
+              data={state.projects}
+              renderItem={({ item }) => (
+                <ProjectPost
+                  project={item}
+                  key={item.id}
+                  caption={item.project_title}
+                  ımage={`${apiUrl}/${item.image.replace(
+                    "public/",
+                    "storage/"
+                  )}`}
+                  user={item.user}
+                  location={item.city.title}
+                  city={item.county.ilce_title}
+                  ProjectNo={item.id}
+                  slug={item.slug}
+                  acıklama={item.description
+                    .replace(/<\/?[^>]+(>|$)/g, "")
+                    .replace(/&nbsp;/g, " ")}
+                  ShoppingName={item.user.name}
+                  ShoppingMail={item.user.email}
+                  Phone={item.user.phone}
+                  ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
+                  ShopingInfo={item.user.corporate_type}
+                />
+              )}
+              keyExtractor={(item) => item.id.toString()}
+              ListEmptyComponent={
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: 20,
+                  }}
+                >
+                  <Text
+                    style={{ fontSize: 13, color: "gray", fontWeight: 700 }}
+                  >
+                    <Text>{state.searchStatus}</Text>
+                  </Text>
+                </View>
+              }
+            />
+          </>
         )}
       </View>
 
@@ -541,7 +554,7 @@ export default function AllProjects() {
             }
           >
             <Text style={styles.closeButtonText}>
-            <Text>  Kapat </Text>
+              <Text> Kapat </Text>
               <FontAwesome5Icon name="times" size={13} color="black" />
             </Text>
           </TouchableOpacity>
@@ -1000,6 +1013,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
+  resultCount: {
+    fontSize: 15,
+    padding: 10,
+    textAlign: "center",
+  },
   toggleButton: {
     fontSize: 20,
     marginBottom: 20,
@@ -1191,7 +1209,7 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     color: "black",
-    fontSize: 14
+    fontSize: 14,
   },
 });
 
@@ -1212,6 +1230,5 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 14,
     margin: "0 auto",
     marginBottom: 5,
-  }
- 
+  },
 });
