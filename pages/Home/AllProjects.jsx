@@ -206,13 +206,13 @@ export default function AllProjects() {
       selectedCounty: state.selectedCounty,
       selectedNeighborhood: state.selectedNeighborhood,
       selectedProjectStatus: state.selectedProjectStatus,
-      selectedListingDate: state.selectedListingDate
+      selectedListingDate: state.selectedListingDate,
     };
     setState((prevState) => ({
       ...prevState,
       modalVisible: false,
       searchStatus: "Filtreleniyor...",
-      openFilterIndex: null
+      openFilterIndex: null,
     }));
     fetchFilteredProjects(buildApiUrl(params), filterData);
   };
@@ -305,7 +305,7 @@ export default function AllProjects() {
       ...prevState,
       modalVisible: false,
       loading: false,
-      openFilterIndex: null
+      openFilterIndex: null,
     }));
   };
 
@@ -463,7 +463,9 @@ export default function AllProjects() {
             setState((prevState) => ({ ...prevState, modalVisible: true }))
           }
         >
-          <Text style={{ color: "white", fontSize: 13 }}>Filtrele</Text>
+          <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
+            Filtrele
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
@@ -472,7 +474,9 @@ export default function AllProjects() {
             borderLeftWidth: 1,
           }}
         >
-          <Text style={{ color: "white", fontSize: 13 }}>Sırala</Text>
+          <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
+            Sırala
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -485,11 +489,12 @@ export default function AllProjects() {
           </View>
         ) : (
           <>
-          {state.projects.length != 0 &&
-           <Text style={styles.resultCount}>
-           {state.projects.length} ilan bulundu
-         </Text>}
-           
+            {/* {state.projects.length != 0 && (
+              <Text style={styles.resultCount}>
+                {state.projects.length} ilan bulundu
+              </Text>
+            )} */}
+
             <FlatList
               data={state.projects}
               renderItem={({ item }) => (
@@ -547,17 +552,23 @@ export default function AllProjects() {
         style={styles.modal2}
       >
         <View style={styles.modalContent2}>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() =>
-              setState((prevState) => ({ ...prevState, modalVisible: false }))
-            }
-          >
-            <Text style={styles.closeButtonText}>
-              <Text> Kapat </Text>
-              <FontAwesome5Icon name="times" size={13} color="black" />
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.modalHeader}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() =>
+                setState((prevState) => ({ ...prevState, modalVisible: false }))
+              }
+            >
+              <FontAwesome5Icon name="times" size={20} color="black" />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>FİLTRELE</Text>
+            <TouchableOpacity
+              style={styles.clearButton}
+              onPress={handleClearFilters}
+            >
+              <Text style={styles.clearButtonText}>TEMİZLE</Text>
+            </TouchableOpacity>
+          </View>
           <ScrollView
             style={styles.scrollView}
             showsVerticalScrollIndicator={false}
@@ -978,20 +989,21 @@ export default function AllProjects() {
                   )}
                 </View>
               ))}
-              <TouchableOpacity
-                onPress={handleFilterSubmit}
-                style={styles.filterButton}
-              >
-                <Text style={styles.filterButtonText}>Filtrele</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleClearFilters}
-                style={[styles.filterButton, { backgroundColor: "#EA2B2E" }]} // Arka plan rengi isteğe göre ayarlanabilir
-              >
-                <Text style={styles.filterButtonText}>Temizle</Text>
-              </TouchableOpacity>
             </View>
           </ScrollView>
+          <View style={styles.modalFooter}>
+            <TouchableOpacity
+              onPress={handleFilterSubmit}
+              style={styles.filterButton}
+            >
+              <Text style={styles.filterButtonText}>
+                İlanları Listele
+                {" ("}
+                {state.projects.length != 0 && state.projects.length}
+                {")"}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </SafeAreaView>
@@ -1009,9 +1021,54 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eaeaea",
+  },
+  closeButton: {
+    flex: 1,
+    alignItems: "flex-start",
+  },
+  headerTitle: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  clearButton: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  clearButtonText: {
+    fontSize: 12,
+    color: "red",
+  },
   modalBackdrop: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalFooter: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderTopColor: "#eaeaea",
+  },
+  footerButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    borderRadius: 5,
+  },
+  footerButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#007BFF",
   },
   resultCount: {
     fontSize: 15,
@@ -1056,13 +1113,8 @@ const styles = StyleSheet.create({
   },
   modalContent2: {
     backgroundColor: "#FFFFFF",
-    padding: 20,
-    height: "80%",
-    marginTop: 10,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    height: "95%",
   },
-
   modal: {
     margin: 0,
   },
@@ -1094,7 +1146,7 @@ const styles = StyleSheet.create({
   },
   filterLabel: {
     fontWeight: "bold",
-    padding: 10,
+    padding: 12.7,
   },
 
   switchContainer: {
@@ -1119,6 +1171,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 1,
+    marginRight: 10,
     borderColor: "green",
     justifyContent: "center",
     alignItems: "center",
@@ -1187,35 +1240,31 @@ const styles = StyleSheet.create({
   brandName: {
     color: "black",
     marginRight: 3,
+    fontSize: 12
   },
   filterButton: {
     backgroundColor: "#274abb",
-    padding: 10,
-    width: "100%",
+    padding: 12,
+    width: "90%",
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
   },
   filterButtonText: {
     color: "white",
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "bold",
   },
-  closeButton: {
-    justifyContent: "right",
-    alignItems: "right",
-    marginBottom: 10,
-  },
   closeButtonText: {
-    color: "black",
+    color: "white",
     fontSize: 14,
+    fontWeight: "bold",
   },
 });
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-    borderWidth: 1,
+    borderTopWidth: 1,
     borderColor: "#eaeff5",
     padding: 10,
     fontSize: 14,
