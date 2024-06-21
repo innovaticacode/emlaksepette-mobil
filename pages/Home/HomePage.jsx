@@ -63,19 +63,7 @@ export default function HomePage({ index }) {
     }
   }, [index]);
 
-
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const [tab, settab] = useState(0);
-  const scrollViewRef = useRef(null);
-
-  const [searchText, setSearchText] = useState("");
-
-  const handleSearch = (text) => {
-    setSearchText(text);
-    // Burada arama işlemleri yapılabilir
-  };
-
+ 
   const [featuredSliders, setFeaturedSliders] = useState([]);
 
   const fetchFeaturedSliders = async () => {
@@ -117,36 +105,7 @@ export default function HomePage({ index }) {
     getValueFor("user", setuser);
   }, []);
 
-
-  const addToCard = async () => {
-    const formData = new FormData();
-    formData.append("id", selectedCartItem);
-    formData.append("isShare", null);
-    formData.append("numbershare", null);
-    formData.append("qt", 1);
-    formData.append("type", "housing");
-    formData.append("project", null);
-    formData.append("clear_cart", "no");
-
-    try {
-      if (user?.access_token) {
-        const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
-        setModalForAddToCart(false);
-        navigation.navigate("Sepetim");
-      }
-    } catch (error) {
-      console.error("post isteği olmadı", error);
-    }
-  };
-
+  
   const { width: screenWidth } = Dimensions.get("window");
 
   return (
@@ -238,94 +197,8 @@ export default function HomePage({ index }) {
                   Tüm Projeleri Gör
                 </Text>
               </TouchableOpacity>
-
             </View>
           </View>
-
-          <View style={styles.slide1}>
-            <View style={{ gap: 0, paddingTop: 0 }}>
-              {loadingPrjoects == false ? (
-                <View style={{ padding: 10 }}>
-                  <ActivityIndicator />
-                </View>
-              ) : (
-                <>
-                  <FlatList
-                    data={featuredProjects}
-                    renderItem={({ item, index }) => (
-                      <View
-                        style={{
-                          marginTop: 7,
-                          paddingLeft: 10,
-                          paddingRight: 10,
-                          width: "100%",
-                        }}
-                      >
-                        <ProjectPost
-                          key={index}
-                          project={item}
-                          caption={item.project_title}
-                          ımage={`${apiUrl}/${item.image.replace(
-                            "public/",
-                            "storage/"
-                          )}`}
-                          user={item.user}
-                          location={item.city.title}
-                          city={item.county.ilce_title}
-                          ProjectNo={item.id}
-                          // acıklama={item.description
-                          //   .replace(/<\/?[^>]+(>|$)/g, "")
-                          //   .replace(/&nbsp;/g, " ")}
-
-                          ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                          loading={loadingPrjoects}
-                        />
-                      </View>
-                    )}
-                    scrollEnabled={false}
-                  />
-                </>
-              )}
-            </View>
-          </View>
-        </ScrollView>
-
-        {/* <Modal
-          isVisible={ModalForAddToCart}
-          onBackdropPress={() => setModalForAddToCart(false)}
-          animationType="fade" // veya "fade", "none" gibi
-          transparent={true}
-          useNativeDriver={true}
-          style={styles.modal4}
-        >
-          <View style={styles.modalContent4}>
-            <View style={{ padding: 10, gap: 10 }}>
-              <Text style={{ textAlign: "center" }}>
-                #1000{selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
-                Eminmisiniz?
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  gap: 20,
-                }}
-              >
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "green",
-                    padding: 10,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    addToCard();
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Sepete Ekle</Text>
-                </TouchableOpacity>
-
 
           <View style={styles.slide1}>
             <View style={{ gap: 0, paddingTop: 0 }}>
