@@ -247,7 +247,7 @@ export default function ShopVitrin({ data, housingdata }) {
               <Text style={{ color: "white" }}>Tümünü Gör</Text>
             </TouchableOpacity>
           </View>
-          {featuredProjects.slice(0, 1).map((item, i) => (
+          {featuredProjects.map((item, i) => (
             <ProjectPost
               key={i}
               project={item}
