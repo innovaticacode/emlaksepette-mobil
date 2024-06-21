@@ -69,7 +69,7 @@ import UserTypeList from "./pages/Home/ProfilePages/UserTypeList";
 import PaymentScreen from "./pages/Home/PaymentScreen";
 import Onboard from "./pages/Home/Onboarding/Onboard";
 import SplashScreen from "./pages/Home/Onboarding/SplashScreen";
-import { getValueFor } from "./components/methods/user";
+import { getValueFor, getValueFor2 } from "./components/methods/user";
 import Verification from "./pages/Home/ProfilePages/Verification";
 import ForgotPassword from "./pages/Home/Login&Register/ForgotPassword";
 import UpdateUserType from "./pages/Home/ProfilePages/UpdateUserType";
@@ -82,6 +82,7 @@ import PaymentScreenForReserve from "./pages/Home/PaymentScreenForReserve";
 import CreateCollections from "./pages/Home/CreateCollections";
 import WelcomePage from "./pages/Home/Onboarding/WelcomePage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 const Stack = createNativeStackNavigator();
 
@@ -92,6 +93,7 @@ export default function App({ route }) {
   const [showWelcome, setShowWelcome] = useState(true);
 
   const [showSplash, setShowSplash] = useState(true);
+  const [showSplashTemp, setShowSplashTemp] = useState(null);
 
   useEffect(() => {
     // AsyncStorage'de saklanan bilgiyi kontrol et
@@ -130,9 +132,20 @@ export default function App({ route }) {
 
   useEffect(() => {
     getValueFor("user", setUser);
+
+    getValueFor2("welcome_screen_show", setShowSplashTemp);
   }, []);
 
+  console.log(showSplashTemp);
+
+  useEffect(() => {
+    if (showSplashTemp == "ff") {
+      setShowSplash(false);
+    }
+  }, [showSplashTemp]);
+
   const hideSplash = () => {
+    SecureStore.setItemAsync("welcome_screen_show", "ff");
     setShowSplash(false);
   };
 

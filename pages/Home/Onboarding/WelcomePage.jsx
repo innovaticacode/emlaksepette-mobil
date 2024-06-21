@@ -44,7 +44,7 @@ export default function WelcomePage({ hideSplash }) {
         <View style={styles.slide}>
           <Image
             source={{
-              uri: "https://foyr.com/learn/wp-content/uploads/2021/08/design-your-dream-home.jpg",
+              uri: "https://coralhomes.com.au/wp-content/uploads/Home-Builders.jpg",
             }}
             style={styles.image}
           />
@@ -64,7 +64,7 @@ export default function WelcomePage({ hideSplash }) {
         <View style={styles.slide}>
           <Image
             source={{
-              uri: "https://foyr.com/learn/wp-content/uploads/2021/08/design-your-dream-home.jpg",
+              uri: "https://cityfurnish.com/blog/wp-content/uploads/2023/07/living-room-filled-with-furniture-red-wall-generative-ai-image-min.jpg",
             }}
             style={styles.image}
           />
