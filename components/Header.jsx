@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
 
-export default function Header({ loading, onPress }) {
+export default function Header({ loading, onPress,index, tab }) {
   const navigation = useNavigation();
   const [notificationCount, setNotificationCount] = useState(0);
   const [user, setuser] = useState({});
@@ -68,6 +68,7 @@ export default function Header({ loading, onPress }) {
       <TouchableOpacity
         onPress={() => {
           onPress();
+         
         }}
       >
         <IconMenu name="menu" size={37} color={"#333"} />
@@ -75,6 +76,8 @@ export default function Header({ loading, onPress }) {
       <View
         onTouchStart={() => {
           navigation.navigate("HomePage");
+          index(0)
+          tab(0)
         }}
         style={{
           width: 200,
