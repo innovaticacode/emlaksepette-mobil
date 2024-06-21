@@ -139,10 +139,12 @@ export default function HomePage2() {
   };
 
   return (
-    <SafeAreaView style={{flex:1,backgroundColor:'#ffffff',paddingTop:30}}>
-       <Header onPress={toggleDrawer} index={setIndex} tab={settab} />
-       
-       <Modal
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}
+    >
+      <Header onPress={toggleDrawer} index={setIndex} tab={settab} />
+
+      <Modal
         isVisible={isDrawerOpen}
         onBackdropPress={() => setIsDrawerOpen(false)}
         animationIn="bounceInLeft"
@@ -152,7 +154,7 @@ export default function HomePage2() {
         onSwipeComplete={() => setIsDrawerOpen(false)}
       >
         <View style={styles.modalContent}>
-        <View
+          <View
             style={{
               backgroundColor: "#EA2C2E",
               flex: 1 / 3,
@@ -160,8 +162,7 @@ export default function HomePage2() {
               borderBottomRightRadius: 20,
             }}
           >
-          <DrawerMenu/>
-          
+            <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
           </View>
           <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
             <Search onpres={toggleDrawer} />
