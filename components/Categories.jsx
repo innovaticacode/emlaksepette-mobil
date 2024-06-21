@@ -14,19 +14,16 @@ export default function Categories({
       style={[
         styles.category,
         {
-          borderBottomWidth: bordernone ? 0 : 1,
+          borderBottomWidth: 0
         },
       ]}
     >
       <View
         style={{
-          flex: 1.7 / 2,
           flexDirection: "row",
           alignItems: "center",
-          gap: 5,
         }}
       >
-        {/* <Icon name={ıconName}size={25} color={ bordernone? 'white':'#bebebe'} style={{display:ıconDisplay==='none'? 'none':'flex',}}/> */}
         <UserIcon
           name={ıconName}
           size={23}
@@ -67,7 +64,6 @@ export default function Categories({
       </View>
       <View
         style={{
-          flex: 0.3 / 2,
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -84,11 +80,12 @@ export default function Categories({
 }
 const styles = StyleSheet.create({
   category: {
-    margin: 5,
-    padding: 3,
+    padding: 5,
+    margin: 8,
     display: "flex",
     flexDirection: "row",
-    borderBottomWidth: 1,
+    justifyContent: "space-between",
+    borderBottomWidth: 0,
     borderBottomColor: "#ebebeb",
   },
 });

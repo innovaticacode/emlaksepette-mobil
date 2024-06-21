@@ -156,9 +156,26 @@ const SellAcil = ({index}) => {
           ÖNE ÇIKAN ACİL İLANLAR
         </Text>
 
-        <TouchableOpacity style={styles.allBtn}>
-          <Text style={{ color: "white", fontSize: 11 ,fontWeight:'bold'}}>
-            Tüm Konutları Gör
+        <TouchableOpacity
+          style={styles.allBtn}
+          onPress={() =>
+            navigation.navigate("AllRealtorAdverts", {
+              name: "Al Sat Acil",
+              slug: "al-sat-acil",
+              data: filteredHomes,
+              count: filteredHomes.length,
+              type: null,
+              optional: null,
+              title: null,
+              check: null,
+              city: null,
+              county: null,
+              hood: null,
+            })
+          }
+        >
+          <Text style={{ color: "white", fontSize: 11, fontWeight: "bold" }}>
+            Tüm İlanları Gör
           </Text>
         </TouchableOpacity>
       </View>
