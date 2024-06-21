@@ -14,6 +14,7 @@ import {
   TextInput,
   Pressable,
   Dimensions,
+  Share
 } from "react-native";
 
 import { React, useEffect, useRef, useState } from "react";
@@ -834,11 +835,29 @@ export default function Details({ navigation }) {
   };
   const [index, setindex] = useState(0)
   const [tab, settab] = useState(0)
-
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message:  `https://test.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
+      });
+  
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log('Link belirli bir aktivitede paylaşıldı');
+        } else {
+          console.log('Link paylaşıldı');
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log('Paylaşım iptal edildi');
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   return (
     <AlertNotificationRoot>
       <SafeAreaView style={styles.container}>
-        <Header onPress={toggleDrawer} />
+        <Header onPress={toggleDrawer} index={setindex} tab={settab} />
         <Modal
           isVisible={isDrawerOpen}
           onBackdropPress={() => setIsDrawerOpen(false)}
@@ -1046,7 +1065,7 @@ export default function Details({ navigation }) {
                   />
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
+              <TouchableOpacity onPress={onShare}>
                 <View style={styles.ıcon}>
                   <Icon2 name="sharealt" size={18} />
                 </View>
