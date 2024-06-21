@@ -144,10 +144,12 @@ export default function AllRealtorAdverts() {
     setRefreshing(true);
     fetchFeaturedEstates();
   };
+  const [index, setindex] = useState(0)
+  const [tab, settab] = useState(0)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View style={styles.container}>
-        <Header onPress={toggleDrawer} />
+        <Header onPress={toggleDrawer} index={setindex} tab={settab} />
 
         <Modal
           swipeDirection="left"

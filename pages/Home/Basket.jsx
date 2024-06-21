@@ -230,7 +230,9 @@ export default function Basket() {
     }
   };
 
-  console.log(messageUpdateCart);
+
+  const [index, setindex] = useState(0)
+  const [tab, settab] = useState(0)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View
@@ -243,7 +245,7 @@ export default function Basket() {
           }),
         }}
       >
-        <Header onPress={toggleDrawer} />
+        <Header onPress={toggleDrawer} index={setindex} tab={settab} />
       </View>
 
       <Modal

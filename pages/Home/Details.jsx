@@ -832,7 +832,8 @@ export default function Details({ navigation }) {
       maximumFractionDigits: 0,
     }).format(amount);
   };
-
+  const [index, setindex] = useState(0)
+  const [tab, settab] = useState(0)
 
   return (
     <AlertNotificationRoot>
