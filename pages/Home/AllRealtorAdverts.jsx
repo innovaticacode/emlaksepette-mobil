@@ -90,6 +90,16 @@ export default function AllRealtorAdverts() {
     ],
   });
 
+// Fiyatı biçimlendiren işlev
+const formatPrice = (value) => {
+  if (!value) return "";
+  // Sadece sayı ve noktayı izin veriyoruz
+  const cleanedValue = value.replace(/[^0-9]/g, "");
+  const intValue = parseInt(cleanedValue, 10);
+  if (isNaN(intValue)) return "";
+  return intValue.toLocaleString("tr-TR");
+};
+
   const apiUrl = "https://mobil.emlaksepette.com/";
   const route = useRoute();
   const navigation = useNavigation();
@@ -314,19 +324,35 @@ export default function AllRealtorAdverts() {
       console.error(error);
     }
   };
-
   const handleCheckboxChange = (filterName, value) => {
-    setState((prevState) => ({
-      ...prevState,
-      selectedCheckboxes: {
-        ...prevState.selectedCheckboxes,
-        [filterName]: {
-          ...prevState.selectedCheckboxes[filterName],
-          [value]: !prevState.selectedCheckboxes[filterName]?.[value],
-        },
-      },
-    }));
+    setState((prevState) => {
+      // Seçilenleri tutacak yeni bir nesne oluşturuyoruz
+      const selectedCheckboxes = { ...prevState.selectedCheckboxes };
+  
+      // İlgili filtrenin değerlerinin bir kopyasını alıyoruz
+      const updatedFilterValues = { ...selectedCheckboxes[filterName] };
+  
+      // Değerleri güncelliyoruz
+      updatedFilterValues[value] = !prevState.selectedCheckboxes[filterName]?.[value];
+  
+      // Seçilmemiş olanları temizliyoruz
+      for (const key in updatedFilterValues) {
+        if (!updatedFilterValues[key]) {
+          delete updatedFilterValues[key];
+        }
+      }
+  
+      // Güncellenmiş filtreyi ana filtre nesnesine ekliyoruz
+      selectedCheckboxes[filterName] = updatedFilterValues;
+  
+      // Yeni state'i döndürüyoruz
+      return {
+        ...prevState,
+        selectedCheckboxes,
+      };
+    });
   };
+  
 
   const handleClearFilters = async () => {
     setState((prevState) => ({
@@ -970,7 +996,7 @@ export default function AllRealtorAdverts() {
                             style={styles.textInput}
                             keyboardType="numeric"
                             onChangeText={(value) =>
-                              handleTextInputChange(filter.name, "min", value)
+                              handleTextInputChange(filter.name, "min", filter.name == "price" || filter.name == "daily_rent" ?  formatPrice(value) : value)
                             }
                             value={state.textInputs[filter.name]?.min || ""}
                           />
@@ -979,7 +1005,7 @@ export default function AllRealtorAdverts() {
                             style={styles.textInput}
                             keyboardType="numeric"
                             onChangeText={(value) =>
-                              handleTextInputChange(filter.name, "max", value)
+                              handleTextInputChange(filter.name, "max", filter.name == "price" || filter.name == "daily_rent" ?  formatPrice(value) : value)
                             }
                             value={state.textInputs[filter.name]?.max || ""}
                           />
@@ -999,7 +1025,7 @@ export default function AllRealtorAdverts() {
               <Text style={styles.filterButtonText}>
                 İlanları Listele
                 {" ("}
-                {state.secondhandHousings.length}
+                {state.secondhandHousings && state.secondhandHousings.length}
                 {")"}
               </Text>
             </TouchableOpacity>

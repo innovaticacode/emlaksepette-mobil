@@ -154,7 +154,7 @@ export default function RealtorPost({
               <ImageBackground
                 source={{ uri: image }}
                 style={{ width: "100%", height: "100%" }}
-                resizeMode="contain"
+                resizeMode="cover"
               />
             </TouchableOpacity>
 
