@@ -25,13 +25,17 @@ const Prefabrik = ({index}) => {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+    const [user, setuser] = useState({});
   
     const fetchFeaturedEstates = async (reset = false) => {
       if (loading || (!hasMore && !reset)) return;
       setLoading(true);
+      const config = {
+        headers: { Authorization: `Bearer ${user?.access_token}` }
+      };
       try {
         const response = await axios.get(
-          `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`
+          `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,config
         );
         const newEstates = response.data;
   
@@ -67,7 +71,7 @@ const Prefabrik = ({index}) => {
             setFeaturedEstates([])
         }
  
-    }, [index]);
+    }, [index,user]);
   
     const filteredHomes = featuredEstates.filter((estate) => estate.step1_slug === "konut");
   
@@ -86,7 +90,6 @@ const Prefabrik = ({index}) => {
       setselectedCartItem(id);
       setModalForAddToCart(true);
     };
-    const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);

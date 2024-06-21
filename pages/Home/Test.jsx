@@ -35,7 +35,8 @@ export default function Test() {
   },[]);
 
 
-
+  const [index, setindex] = useState(0)
+  const [tab, settab] = useState(0)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
  
@@ -49,7 +50,7 @@ export default function Test() {
           }),
         }}
       >
-        <Header onPress={toggleDrawer} />
+        <Header onPress={toggleDrawer}  index={setindex} tab={settab}/>
       </View>
 
       <Modal

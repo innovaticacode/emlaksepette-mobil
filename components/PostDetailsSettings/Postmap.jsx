@@ -47,7 +47,7 @@ export default function PostMap({ data }) {
             latitude: parseFloat(locationCoords[0]),
             longitude:parseFloat(locationCoords[1]),
           }}
-          title={data.project.city.title + "/" + data.project.county.ilce_title}
+          title={data?.project?.city?.title + "/" + data?.project?.county?.ilce_title}
           description="Proje Konumu"
         />
       </MapView>

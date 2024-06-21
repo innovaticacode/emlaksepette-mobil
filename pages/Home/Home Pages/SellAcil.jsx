@@ -16,80 +16,64 @@ import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 const PAGE_SIZE = 10;
 
-const SellAcil = ({ index }) => {
-  const navigation = useNavigation();
-  const apiUrl = "https://mobil.emlaksepette.com/";
-  const [featuredEstates, setFeaturedEstates] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const fetchFeaturedEstates = async (reset = false) => {
-    if (loading || (!hasMore && !reset)) return;
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        `https://mobil.emlaksepette.com/api/real-estates?page=${
-          reset ? 1 : page
-        }&limit=${PAGE_SIZE}`
-      );
-      const newEstates = response.data;
-
-      if (reset) {
-        setFeaturedEstates(newEstates);
-        setPage(2);
-        setHasMore(true);
-      } else {
-        if (newEstates.length > 0) {
-          setFeaturedEstates((prevEstates) => {
-            const newUniqueEstates = newEstates.filter(
-              (estate) =>
-                !prevEstates.some((prevEstate) => prevEstate.id === estate.id)
-            );
-            return [...prevEstates, ...newUniqueEstates];
-          });
-          setPage((prevPage) => prevPage + 1);
+const SellAcil = ({index}) => {
+     const navigation = useNavigation()
+    const apiUrl = "https://mobil.emlaksepette.com/";
+    const [featuredEstates, setFeaturedEstates] = useState([]);
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
+    const [user, setuser] = useState({});
+  
+    const fetchFeaturedEstates = async (reset = false) => {
+      if (loading || (!hasMore && !reset)) return;
+      setLoading(true);
+      const config = {
+        headers: { Authorization: `Bearer ${user?.access_token}` }
+      };
+      try {
+        const response = await axios.get(
+          `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,config
+        );
+        const newEstates = response.data;
+  
+        if (reset) {
+          setFeaturedEstates(newEstates);
+          setPage(2);
+          setHasMore(true);
         } else {
           setHasMore(false);
         }
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
-
-  useEffect(() => {
-    if (index == 6) {
-      fetchFeaturedEstates();
-    } else {
-      setFeaturedEstates([]);
-    }
-  }, [index]);
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    fetchFeaturedEstates(true);
-  };
-  const filteredHomes = featuredEstates.filter(
-    (estate) => estate.step1_slug === "konut"
-  );
-  const renderFooter = () => {
-    if (!loading) return null;
-    return (
-      <ActivityIndicator style={{ margin: 20 }} size="small" color="#000000" />
-    );
-  };
-  const [ModalForAddToCart, setModalForAddToCart] = useState(false);
-  const [selectedCartItem, setselectedCartItem] = useState(0);
-  const GetIdForCart = (id) => {
-    setselectedCartItem(id);
-    setModalForAddToCart(true);
-  };
-  const [user, setuser] = useState({});
+    };
+  
+    useEffect(() => {
+        if (index==6) {
+            fetchFeaturedEstates();
+        }else{
+            setFeaturedEstates([])
+        }
+ 
+    }, [index,user]);
+  
+   
+  
+    const onRefresh = () => {
+      setRefreshing(true);
+      fetchFeaturedEstates(true);
+    };
+    const filteredHomes = featuredEstates.filter((estate) =>  estate.step1_slug === "konut");
+    const renderFooter = () => {
+      if (!loading) return null;
+      return <ActivityIndicator style={{ margin: 20 }} size="small" color="#000000" />;
+    };
+    const [ModalForAddToCart, setModalForAddToCart] = useState(false);
+    const [selectedCartItem, setselectedCartItem] = useState(0);
+    const GetIdForCart = (id) => {
+      setselectedCartItem(id);
+      setModalForAddToCart(true);
+    };
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);

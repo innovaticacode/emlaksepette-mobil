@@ -380,9 +380,11 @@ export default function AllProjects() {
       isDrawerOpen: !prevState.isDrawerOpen,
     }));
   };
+  const [index, setindex] = useState(0)
+  const [tab, settab] = useState(0)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <Header onPress={toggleDrawer} />
+      <Header onPress={toggleDrawer} index={setindex} tab={settab}/>
 
       <Modal
         swipeDirection="left"

@@ -11,6 +11,7 @@ import {
   Linking,
   TextInput,
   Pressable,
+  Share
 } from "react-native";
 import { React, useRef, useState, useEffect } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
@@ -25,8 +26,7 @@ import Icon4 from "react-native-vector-icons/AntDesign";
 import Swiper from "react-native-swiper";
 import { SocialIcon, Icon } from "react-native-elements";
 import LinkIcon3 from "react-native-vector-icons/Feather";
-import LinkIcon4 from "react-native-vector-icons/Fontisto";
-import LinkIcon2 from "react-native-vector-icons/FontAwesome";
+
 
 import PostMap from "../components/PostDetailsSettings/Postmap";
 import PostPayment from "../components/PostDetailsSettings/PostPayment";
@@ -520,6 +520,27 @@ console.log(selectedCollectionName2)
     }
   };
   const { width, height } = Dimensions.get("window");
+    const [index, setindex] = useState(0)
+    const [tab, settab] = useState(0)
+    const onShare = async () => {
+      try {
+        const result = await Share.share({
+          message:  `https://test.emlaksepette.com/ilan/${ProjectHomeData?.housing?.step1_slug}-${ProjectHomeData?.housing?.step2_slug}-${ProjectHomeData?.housing?.slug}/2000${ProjectHomeData?.housing?.id}/detay`,
+        });
+    
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            console.log('Link belirli bir aktivitede paylaşıldı');
+          } else {
+            console.log('Link paylaşıldı');
+          }
+        } else if (result.action === Share.dismissedAction) {
+          console.log('Paylaşım iptal edildi');
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    };
   return (
     <>
       {loading ? (
@@ -528,7 +549,7 @@ console.log(selectedCollectionName2)
         </View>
       ) : (
         <SafeAreaView style={{ backgroundColor: "white", flex: 1,paddingTop:30 }}>
-          <Header onPress={toggleDrawer} />
+          <Header onPress={toggleDrawer}  index={setindex} tab={settab} />
           <Modal
             isVisible={isDrawerOpen}
             onBackdropPress={() => setIsDrawerOpen(false)}
@@ -727,7 +748,7 @@ console.log(selectedCollectionName2)
                     />
                   </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
+                <TouchableOpacity onPress={onShare}>
                   <View style={styles.ıcon}>
                     <Icon2 name="sharealt" size={18} />
                   </View>

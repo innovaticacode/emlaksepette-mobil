@@ -138,12 +138,10 @@ export default function HomePage2() {
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}
-    >
-      <Header onPress={toggleDrawer} />
-
-      <Modal
+    <SafeAreaView style={{flex:1,backgroundColor:'#ffffff',paddingTop:30}}>
+       <Header onPress={toggleDrawer} index={setIndex} tab={settab} />
+       
+       <Modal
         isVisible={isDrawerOpen}
         onBackdropPress={() => setIsDrawerOpen(false)}
         animationIn="bounceInLeft"
