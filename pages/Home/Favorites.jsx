@@ -29,7 +29,7 @@ export default function Favorites() {
     })
   },[user,focused])
 
-  console.log(favorites);
+  // console.log(favorites);
 
   const changeFavorites = (type , housingId, projectId) => {
     if(type == 1){
@@ -88,7 +88,7 @@ export default function Favorites() {
                     }
                     var no = 1000000 + favorite?.project.id
                     return(
-                      <RealtorPostFavorited changeFavorites={changeFavorites} type={1} projectId={favorite?.project?.id} housingId={favorite?.housing_id} no={no} column1={column1} column2={column2} column3={column3} image={'https://mobil.emlaksepette.com/project_housing_images/'+image} title={favorite?.project?.project_title + " adlı projede "+favorite?.housing_id+" No'lu konut"} price={favorite?.project_housing?.find((projectHousing) => {if(projectHousing.room_order == favorite?.housing_id && projectHousing.name == 'price[]'){return projectHousing}})?.value} m2="20" />
+                      <RealtorPostFavorited changeFavorites={changeFavorites} type={1} projectId={favorite?.project?.id} HouseId={favorite?.housing_id} no={no} column1={column1} column2={column2} column3={column3} image={'https://mobil.emlaksepette.com/project_housing_images/'+image} title={favorite?.project?.project_title + " adlı projede "+favorite?.housing_id+" No'lu konut"} price={favorite?.project_housing?.find((projectHousing) => {if(projectHousing.room_order == favorite?.housing_id && projectHousing.name == 'price[]'){return projectHousing}})?.value} m2="20" />
                     )
                   }else{
                     if(favorite?.housing){
@@ -97,7 +97,7 @@ export default function Favorites() {
                       housingData = {};
                     }
                     return(
-                      <RealtorPostFavorited changeFavorites={changeFavorites} type={2} housingId={favorite?.housing?.id} no={favorite?.housing?.id + 2000000} image={'https://mobil.emlaksepette.com/housing_images/'+housingData?.image} title={favorite?.housing?.title} price={housingData && housingData.price ? housingData.price : "0"} column1={housingData[favorite?.housing?.list_items?.column1_name] ? housingData[favorite?.housing?.list_items?.column1_name] +" "+(favorite?.housing?.list_items?.column1_additional ? favorite?.housing?.list_items?.column1_additional : '') : ''} column2={housingData[favorite?.housing?.list_items?.column2_name] ? housingData[favorite?.housing?.list_items?.column2_name] +" "+ (favorite?.housing?.list_items?.column2_additional ? favorite?.housing?.list_items?.column2_additional : '') : ''} column3={ housingData[favorite?.housing?.list_items?.column3_name] ? housingData[favorite?.housing?.list_items?.column3_name] +" "+ (favorite?.housing?.list_items?.column3_additional ? favorite?.housing?.list_items?.column3_additional : '') : ''} />
+                      <RealtorPostFavorited changeFavorites={changeFavorites} type={2} HouseId={favorite?.housing?.id} no={favorite?.housing?.id + 2000000} image={'https://mobil.emlaksepette.com/housing_images/'+housingData?.image} title={favorite?.housing?.title} price={housingData && housingData.price ? housingData.price : "0"} column1={housingData[favorite?.housing?.list_items?.column1_name] ? housingData[favorite?.housing?.list_items?.column1_name] +" "+(favorite?.housing?.list_items?.column1_additional ? favorite?.housing?.list_items?.column1_additional : '') : ''} column2={housingData[favorite?.housing?.list_items?.column2_name] ? housingData[favorite?.housing?.list_items?.column2_name] +" "+ (favorite?.housing?.list_items?.column2_additional ? favorite?.housing?.list_items?.column2_additional : '') : ''} column3={ housingData[favorite?.housing?.list_items?.column3_name] ? housingData[favorite?.housing?.list_items?.column3_name] +" "+ (favorite?.housing?.list_items?.column3_additional ? favorite?.housing?.list_items?.column3_additional : '') : ''} />
                     )
                   }
                 
