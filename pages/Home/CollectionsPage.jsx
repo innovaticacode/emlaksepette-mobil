@@ -220,7 +220,7 @@ export default function CollectionsPage() {
   };
 
   return (
-    <View style={{ height: "100%" }}>
+    <View style={{ height: "100%" ,paddingTop:20}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 120 }}
