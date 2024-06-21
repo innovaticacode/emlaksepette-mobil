@@ -7,12 +7,16 @@ import {
   Dimensions,
   ImageBackground,
 } from "react-native";
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
 import Info from "./Info";
 import { Platform } from "react-native";
+import AwesomeAlert from "react-native-awesome-alerts";
+import axios from "axios";
+import { getValueFor } from "./methods/user";
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast} from 'react-native-alert-notification';
 
 export default function RealtorPost({
   title,
@@ -43,9 +47,26 @@ export default function RealtorPost({
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
   const [bookmark, setbookmark] = useState("bookmark-o");
+  const [user,setUser] = useState({});
+  const [inFavorite,setInFavorite] = useState(false);
+  useEffect(() => {
+    getValueFor('user',setUser);
+  },[])
+
   const changeHeart = () => {
     setHeart(heart === "hearto" ? "heart" : "hearto");
   };
+
+  useEffect(() => {
+    if(!housing.is_housing_favorite){
+      setHeart("hearto")
+      setInFavorite(false);
+    }else{
+      setHeart("heart")
+      setInFavorite(true);
+    }
+  },[])
+
   const [getPostId, setgetPostId] = useState(0)
   const CreateCollection = (id) => {
       setgetPostId(id)
@@ -76,173 +97,215 @@ export default function RealtorPost({
   const handlePress = () => GetId(HouseId);
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
+  const [showAlert,setShowAlert] = useState(false);
+  
+  const addFavorites = () => {
+    const config = {
+      headers: { Authorization: `Bearer ${user.access_token}` }
+    };
+    axios.post('https://mobil.emlaksepette.com/api/add_housing_to_favorites/'+HouseId,{},config).then((res) => {
+      changeHeart();
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Başarılı',
+        textBody: res.data.message,
+        button: 'Tamam',
+      })
+      if(res.data.status == "removed"){
+        setInFavorite(false);
+      }else{
+        setInFavorite(true);
+      }
+    })
+    setShowAlert(false);
+  }
+
 
   return (
-    <View
-     
-    >
-      <View style={styles.container}>
-        <View style={styles.İlan}>
-          <TouchableOpacity style={{ width: "30%", height: 80 }}
-           onPress={() =>
-            navigation.navigate("Realtor details", { houseId: HouseId })
-          }
-          >
-            <ImageBackground
-              source={{ uri: image }}
-              style={{ width: "100%", height: "100%" }}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
+    <AlertNotificationRoot>
+      <View>
+        <AwesomeAlert
+          show={showAlert}
+          showProgress={false}
+          title={inFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle"}
+          message={inFavorite ? "Bu konutu favorilerden çıkarmak istediğinize emin misiniz?" : "Bu konutu favorilere eklemek istediğinize emin misiniz?"}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="İptal"
+          confirmText="Evet"
+          confirmButtonColor="#22bb33"
+          onCancelPressed={() => {
+            setShowAlert(false);
+          }}
+          onConfirmPressed={() => {
+            addFavorites();
+          }}
+        />
+        <View style={styles.container}>
+          <View style={styles.İlan}>
+            <TouchableOpacity style={{ width: "30%", height: 80 }}
+            onPress={() =>
+              navigation.navigate("Realtor details", { houseId: HouseId })
+            }
+            >
+              <ImageBackground
+                source={{ uri: image }}
+                style={{ width: "100%", height: "100%" }}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
 
-          <View style={styles.container2}>
-            <View style={styles.captionAndIcons}>
-              <View style={styles.caption}>
-                <Text style={{ fontSize: 9, color: "black" }}>
-                  İlan No: {2000000 + HouseId}
-                </Text>
-                <Text
-                  style={{ fontSize: 10, fontWeight: 700 }}
-                  numberOfLines={3}
+            <View style={styles.container2}>
+              <View style={styles.captionAndIcons}>
+                <View style={styles.caption}>
+                  <Text style={{ fontSize: 9, color: "black" }}>
+                    İlan No: {2000000 + HouseId}
+                  </Text>
+                  <Text
+                    style={{ fontSize: 10, fontWeight: 700 }}
+                    numberOfLines={3}
+                  >
+                    {title}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    ...styles.ıcons, // Diğer stil özelliklerini ekleyin
+                    justifyContent:
+                      bookmarkStatus && bookmarkStatus == true
+                        ? "space-between"
+                        : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
+                  }}
                 >
-                  {title}
-                </Text>
-              </View>
-              <View
-                style={{
-                  ...styles.ıcons, // Diğer stil özelliklerini ekleyin
-                  justifyContent:
-                    bookmarkStatus && bookmarkStatus == true
-                      ? "space-between"
-                      : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
-                }}
-              >
-                {bookmarkStatus && bookmarkStatus == true && (
-                  <TouchableOpacity onPress={()=>{
-                        CreateCollection(HouseId)
-                  }}>
+                  {bookmarkStatus && bookmarkStatus == true && (
+                    <TouchableOpacity onPress={()=>{
+                          CreateCollection(HouseId)
+                    }}>
+                      <View style={styles.ıconContainer}>
+                        <Bookmark
+                          name={bookmark}
+                          size={13}
+                          color={bookmark == "bookmark-o" ? "black" : "red"}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  )}
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowAlert(true);
+                    }}
+                  >
                     <View style={styles.ıconContainer}>
-                      <Bookmark
-                        name={bookmark}
+                      <Heart
+                        name={heart}
                         size={13}
-                        color={bookmark == "bookmark-o" ? "black" : "red"}
+                        color={heart == "hearto" ? "black" : "red"}
                       />
                     </View>
                   </TouchableOpacity>
-                )}
+                </View>
+              </View>
 
-                <TouchableOpacity
-                  onPress={() => {
-                    changeHeart();
-                  }}
-                >
-                  <View style={styles.ıconContainer}>
-                    <Heart
-                      name={heart}
-                      size={13}
-                      color={heart == "hearto" ? "black" : "red"}
-                    />
-                  </View>
+              <View style={styles.PriceAndButtons}>
+                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                  {formattedDiscountedPrice ? (
+                    <>
+                      <Text style={styles.discountedPriceText}>
+                        {formattedPrice}₺
+                      </Text>
+                      <Text style={styles.priceText}>
+                        {formattedDiscountedPrice}₺
+                      </Text>
+                    </>
+                  ) : (
+                    <Text style={styles.priceText}>{formattedPrice}₺</Text>
+                  )}
+                </View>
+                <TouchableOpacity style={styles.addBasket} onPress={handlePress}>
+                  {step2_slug &&
+                  step2_slug == "gunluk-kiralik" &&
+                  step1_slug == "mustakil-tatil" ? (
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "500",
+                        fontSize: 12,
+                      }}
+                    >
+                      Rezervasyon
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "500",
+                        fontSize: 12,
+                      }}
+                    >
+                      Sepete Ekle
+                    </Text>
+                  )}
                 </TouchableOpacity>
               </View>
             </View>
-
-            <View style={styles.PriceAndButtons}>
-              <View style={{ alignItems: "center", justifyContent: "center" }}>
-                {formattedDiscountedPrice ? (
-                  <>
-                    <Text style={styles.discountedPriceText}>
-                      {formattedPrice}₺
-                    </Text>
-                    <Text style={styles.priceText}>
-                      {formattedDiscountedPrice}₺
-                    </Text>
-                  </>
-                ) : (
-                  <Text style={styles.priceText}>{formattedPrice}₺</Text>
-                )}
-              </View>
-              <TouchableOpacity style={styles.addBasket} onPress={handlePress}>
-                {step2_slug &&
-                step2_slug == "gunluk-kiralik" &&
-                step1_slug == "mustakil-tatil" ? (
-                  <Text
-                    style={{
-                      color: "white",
-                      fontWeight: "500",
-                      fontSize: 12,
-                    }}
-                  >
-                    Rezervasyon
-                  </Text>
-                ) : (
-                  <Text
-                    style={{
-                      color: "white",
-                      fontWeight: "500",
-                      fontSize: 12,
-                    }}
-                  >
-                    Sepete Ekle
-                  </Text>
-                )}
-              </TouchableOpacity>
-            </View>
           </View>
-        </View>
-        <View
-          style={{
-            backgroundColor: "#E8E8E8",
-            height: 30,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <View style={{ flexDirection: "row" }}>
-            {column1_name && (
-              <Info
-                text={`${column1_name} ${
-                  column1_additional ? column1_additional : ""
-                }`}
-              />
-            )}
-            {column2_name && (
-              <Info
-                text={`${column2_name} ${
-                  column2_additional ? column2_additional : ""
-                }`}
-              />
-            )}
-            {column3_name && (
-              <Info
-                text={`${column3_name} ${
-                  column3_additional ? column3_additional : ".Kat"
-                }`}
-              />
-            )}
-          </View>
-          <View style={{ justifyContent: "center" }}>
-            <Text style={styles.InformationText}>{location}</Text>
-          </View>
-        </View>
-        {/* {discountRate ? (
           <View
             style={{
               backgroundColor: "#E8E8E8",
-              justifyContent: "center",
-              alignItems: "center",
+              height: 30,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
             }}
           >
-            <Text style={styles.discountText}>
-              #{2000000 + HouseId} Numaralı İlan İçin: Satın alma işlemi
-              gerçekleştirdiğinizde, Emlak Kulüp üyesi tarafından paylaşılan
-              link aracılığıyla %{discountRate}indirim uygulanacaktır.
-            </Text>
+            <View style={{ flexDirection: "row" }}>
+              {column1_name && (
+                <Info
+                  text={`${column1_name} ${
+                    column1_additional ? column1_additional : ""
+                  }`}
+                />
+              )}
+              {column2_name && (
+                <Info
+                  text={`${column2_name} ${
+                    column2_additional ? column2_additional : ""
+                  }`}
+                />
+              )}
+              {column3_name && (
+                <Info
+                  text={`${column3_name} ${
+                    column3_additional ? column3_additional : ".Kat"
+                  }`}
+                />
+              )}
+            </View>
+            <View style={{ justifyContent: "center" }}>
+              <Text style={styles.InformationText}>{location}</Text>
+            </View>
           </View>
-        ) : null} */}
+          {/* {discountRate ? (
+            <View
+              style={{
+                backgroundColor: "#E8E8E8",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={styles.discountText}>
+                #{2000000 + HouseId} Numaralı İlan İçin: Satın alma işlemi
+                gerçekleştirdiğinizde, Emlak Kulüp üyesi tarafından paylaşılan
+                link aracılığıyla %{discountRate}indirim uygulanacaktır.
+              </Text>
+            </View>
+          ) : null} */}
+        </View>
       </View>
-    </View>
+    </AlertNotificationRoot>
   );
 }
 const { width, height } = Dimensions.get("window");

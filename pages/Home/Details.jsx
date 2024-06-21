@@ -59,6 +59,7 @@ import { StatusBar } from "expo-status-bar";
 import { Skeleton } from "@rneui/base";
 import PaymentItem from "../../components/PaymentItem";
 import { err } from "react-native-svg";
+import { AlertNotificationRoot } from "react-native-alert-notification";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -73,6 +74,7 @@ export default function Details({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
+  const [user, setUser] = useState({});
   const [FormVisible, setFormVisible] = useState(false);
   const apiUrl = "https://mobil.emlaksepette.com/";
   const [data, setData] = useState({
@@ -117,11 +119,14 @@ export default function Details({ navigation }) {
   };
 
   useEffect(() => {
-    apiRequestGet("project/" + ProjectId).then((res) => {
+    const config = {
+      headers: { Authorization: `Bearer ${user?.access_token}` }
+    };
+    axios.get('https://mobil.emlaksepette.com/api/project/' + ProjectId, config).then((res) => {
       setData(res?.data)
     })
-    
-  },[ProjectId])
+
+  }, [ProjectId, user])
 
   const getLastItemCount = () => {
     var lastBlockItemsCount = 0;
@@ -140,12 +145,13 @@ export default function Details({ navigation }) {
     }
     apiRequestGet(
       "project_housings/" +
-        ProjectId +
-        "?start=" +
-        lastBlockItemsCount +
-        "&end=" +
-        (lastBlockItemsCount + 10)
+      ProjectId +
+      "?start=" +
+      lastBlockItemsCount +
+      "&end=" +
+      (lastBlockItemsCount + 10)
     ).then((res) => {
+      console.log(res);
       setData({
         ...data,
         projectHousingsList: res.data.housings,
@@ -161,13 +167,13 @@ export default function Details({ navigation }) {
         setIsLoading(true);
         apiRequestGet(
           "project_housings/" +
-            ProjectId +
-            "?start=" +
-            page * 10 +
-            "&end=" +
-            ((page + 1) * 10 > data.project.blocks[selectedTab].housing_count
-              ? data.project.blocks[selectedTab].housing_count
-              : (page + 1) * 10)
+          ProjectId +
+          "?start=" +
+          page * 10 +
+          "&end=" +
+          ((page + 1) * 10 > data.project.blocks[selectedTab].housing_count
+            ? data.project.blocks[selectedTab].housing_count
+            : (page + 1) * 10)
         ).then((res) => {
           setData({
             ...data,
@@ -189,11 +195,11 @@ export default function Details({ navigation }) {
         setIsLoading(true);
         apiRequestGet(
           "project_housings/" +
-            ProjectId +
-            "?start=" +
-            page * 10 +
-            "&end=" +
-            (page + 1) * 10
+          ProjectId +
+          "?start=" +
+          page * 10 +
+          "&end=" +
+          (page + 1) * 10
         ).then((res) => {
           setData({
             ...data,
@@ -278,7 +284,7 @@ export default function Details({ navigation }) {
       .then(() => console.log("WhatsApp açıldı ve link paylaşıldı"))
       .catch((error) => console.error("WhatsApp açılamadı:", error));
   };
-  
+
   const shareLinkOnInstagram = (text) => {
     const url = `https://mobil.emlaksepette.com/${slug}/100${ProjectId}/detay`;
 
@@ -358,7 +364,6 @@ export default function Details({ navigation }) {
   };
 
   const [addCollection, setaddCollection] = useState(false);
-  const [user, setUser] = useState({});
 
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   useEffect(() => {
@@ -459,7 +464,7 @@ export default function Details({ navigation }) {
     setselectedCollectionId(id);
     setselectedCollectionName2(name);
   };
-  const addSelectedCollection = (id,name) => {
+  const addSelectedCollection = (id, name) => {
     const collectionData = {
       collection_name: name,
       clear_cart: "no",
@@ -471,11 +476,11 @@ export default function Details({ navigation }) {
 
     axios.post("https://mobil.emlaksepette.com/api/addLink", collectionData, {
 
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.access_token}`,
-        },
-      })
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.access_token}`,
+      },
+    })
       .then((response) => {
         setTimeout(() => {
           setcollectionAddedSucces(true);
@@ -775,13 +780,13 @@ export default function Details({ navigation }) {
         let _index = 0;
         _index <
         data.projectHousingsList[paymentModalShowOrder][
-          "pay-dec-count" + paymentModalShowOrder
+        "pay-dec-count" + paymentModalShowOrder
         ];
         _index++
       ) {
         const priceString = addDotEveryThreeDigits(
           data.projectHousingsList[paymentModalShowOrder][
-            `pay_desc_price${paymentModalShowOrder}` + _index
+          `pay_desc_price${paymentModalShowOrder}` + _index
           ]
         );
 
@@ -790,7 +795,7 @@ export default function Details({ navigation }) {
 
         const date = new Date(
           data.projectHousingsList[paymentModalShowOrder][
-            "pay_desc_date" + paymentModalShowOrder + _index
+          "pay_desc_date" + paymentModalShowOrder + _index
           ]
         );
 
@@ -811,7 +816,7 @@ export default function Details({ navigation }) {
           </View>
         );
       }
-      
+
 
       setTotalPrice(total);
 
@@ -831,257 +836,258 @@ export default function Details({ navigation }) {
   const [tab, settab] = useState(0)
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header onPress={toggleDrawer} index={setindex} tab={settab}/>
-      <Modal
-        isVisible={isDrawerOpen}
-        onBackdropPress={() => setIsDrawerOpen(false)}
-        animationIn="fadeInLeftBig"
-        swipeDirection={["left"]}
-        onSwipeComplete={() => setIsDrawerOpen(false)}
-        animationOut="fadeOutLeftBig"
-        style={styles.modal}
-      >
-        <View style={styles.modalContent}>
-          <View
-            style={{
-              backgroundColor: "#EA2C2E",
-              flex: 0.7 / 2,
-              borderBottomLeftRadius: 30,
-              borderBottomRightRadius: 30,
-            }}
-          >
-            <SafeAreaView style={{ zIndex: 1 }}>
-              <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("HomePage");
-                    setIsDrawerOpen(false);
-                  }}
-                >
-                  <Categories
-                    category="Ana Sayfa"
-                    bordernone="none"
-                    ıconName="home"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("Hesabım");
-                    setIsDrawerOpen(false);
-                  }}
-                >
-                  <Categories
-                    category="Hesabım"
-                    bordernone="none"
-                    ıconName="user"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("RealtorClubExplore");
-                    setIsDrawerOpen(false);
-                  }}
-                >
-                  <Categories
-                    category="Emlak Kulüp"
-                    bordernone="none"
-                    showImage={true}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Categories
-                    category="İlan Ver"
-                    bordernone="none"
-                    ıconName="plus"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Categories
-                    category="Sat Kirala"
-                    bordernone="none"
-                    ıconName="search-plus"
-                  />
-                </TouchableOpacity>
-              </ScrollView>
-            </SafeAreaView>
-            <ImageBackground
-              source={require("./MenuBg.jpg")}
-              style={{
-                width: "100%",
-                height: "100%",
-                position: "absolute",
-                opacity: 0.2,
-              }}
-              resizeMode="cover"
-              borderBottomLeftRadius={30}
-              borderBottomRightRadius={30}
-            />
-          </View>
-          <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
-            <Search onpres={toggleDrawer} />
-          </View>
-        </View>
-      </Modal>
-
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          backgroundColor: data?.project.user?.banner_hex_code,
-        }}
-      >
-        <TouchableOpacity
-          style={{
-            padding: 5,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-          onPress={() =>
-            navigation.navigate("Profile", {
-              name: "",
-              id: data?.project?.user?.id,
-            })
-          }
+    <AlertNotificationRoot>
+      <SafeAreaView style={styles.container}>
+        <Header onPress={toggleDrawer} />
+        <Modal
+          isVisible={isDrawerOpen}
+          onBackdropPress={() => setIsDrawerOpen(false)}
+          animationIn="fadeInLeftBig"
+          swipeDirection={["left"]}
+          onSwipeComplete={() => setIsDrawerOpen(false)}
+          animationOut="fadeOutLeftBig"
+          style={styles.modal}
         >
-          <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
-            <View style={{ height: 35, width: 35 }}>
+          <View style={styles.modalContent}>
+            <View
+              style={{
+                backgroundColor: "#EA2C2E",
+                flex: 0.7 / 2,
+                borderBottomLeftRadius: 30,
+                borderBottomRightRadius: 30,
+              }}
+            >
+              <SafeAreaView style={{ zIndex: 1 }}>
+                <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("HomePage");
+                      setIsDrawerOpen(false);
+                    }}
+                  >
+                    <Categories
+                      category="Ana Sayfa"
+                      bordernone="none"
+                      ıconName="home"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("Hesabım");
+                      setIsDrawerOpen(false);
+                    }}
+                  >
+                    <Categories
+                      category="Hesabım"
+                      bordernone="none"
+                      ıconName="user"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("RealtorClubExplore");
+                      setIsDrawerOpen(false);
+                    }}
+                  >
+                    <Categories
+                      category="Emlak Kulüp"
+                      bordernone="none"
+                      showImage={true}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Categories
+                      category="İlan Ver"
+                      bordernone="none"
+                      ıconName="plus"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Categories
+                      category="Sat Kirala"
+                      bordernone="none"
+                      ıconName="search-plus"
+                    />
+                  </TouchableOpacity>
+                </ScrollView>
+              </SafeAreaView>
               <ImageBackground
-                source={{
-                  uri: `${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`,
+                source={require("./MenuBg.jpg")}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  opacity: 0.2,
                 }}
-                style={{ width: "100%", height: "100%", marginRight: 10 }}
-                borderRadius={20}
+                resizeMode="cover"
+                borderBottomLeftRadius={30}
+                borderBottomRightRadius={30}
               />
             </View>
+            <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
+              <Search onpres={toggleDrawer} />
+            </View>
+          </View>
+        </Modal>
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            backgroundColor: data?.project.user?.banner_hex_code,
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              padding: 5,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+            onPress={() =>
+              navigation.navigate("Profile", {
+                name: "",
+                id: data?.project?.user?.id,
+              })
+            }
+          >
+            <View style={{ flexDirection: "row", gap: 6, alignItems: "center" }}>
+              <View style={{ height: 35, width: 35 }}>
+                <ImageBackground
+                  source={{
+                    uri: `${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`,
+                  }}
+                  style={{ width: "100%", height: "100%", marginRight: 10 }}
+                  borderRadius={20}
+                />
+              </View>
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: 600,
+                  fontSize: 12,
+                  paddingLeft: 10,
+                }}
+              >
+                {data?.project?.user?.name ? `${data?.project?.user?.name} ` : ""}
+              </Text>
+              <View
+                style={{
+                  width: 18,
+                  height: 18,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <LinkIcon
+                  name="check"
+                  style={{ position: "absolute", zIndex: 1 }}
+                  color={"#333"}
+                />
+                <ImageBackground
+                  source={require("./BadgeYellow.png")}
+                  style={{ width: "100%", height: "100%" }}
+                />
+              </View>
+            </View>
+
             <Text
               style={{
                 color: "white",
                 fontWeight: 600,
                 fontSize: 12,
-                paddingLeft: 10,
+                paddingLeft: "10px",
               }}
             >
-              {data?.project?.user?.name ? `${data?.project?.user?.name} ` : ""}
+              Proje No: {1000000 + data.project.id}
             </Text>
-            <View
-              style={{
-                width: 18,
-                height: 18,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <LinkIcon
-                name="check"
-                style={{ position: "absolute", zIndex: 1 }}
-                color={"#333"}
-              />
-              <ImageBackground
-                source={require("./BadgeYellow.png")}
-                style={{ width: "100%", height: "100%" }}
-              />
-            </View>
-          </View>
-
-          <Text
-            style={{
-              color: "white",
-              fontWeight: 600,
-              fontSize: 12,
-              paddingLeft: "10px",
-            }}
-          >
-            Proje No: {1000000 + data.project.id}
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView
-        scrollEventThrottle={16}
-        onScroll={({ nativeEvent }) => {
-          if (isCloseToBottom(nativeEvent)) {
-            clearTimeout(debounceTimeout);
-            debounceTimeout = setTimeout(() => {
-              if (!isLoading) {
-                fetchHousings(page + 1);
-                setPage(page + 1);
-              }
-            }, 1000); // 500ms içinde yeni bir istek yapılmazsa gerçekleştir
-          }
-        }}
-      >
-        <View style={{ height: 250 }}>
-          <View style={styles.pagination}>
-            <View
-              style={{
-                backgroundColor: "#333",
-                padding: 5,
-                paddingLeft: 8,
-                paddingRight: 8,
-                borderRadius: 5,
-              }}
-            >
-              <Text style={{ color: "white", fontSize: 12 }}>
-                {pagination + 1} / {data.project.images.length}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.ıconContainer}>
-            <TouchableOpacity onPress={changeHeart}>
-              <View style={styles.ıcon}>
-                <Heart
-                  name={heart}
-                  size={18}
-                  color={heart === "hearto" ? "black" : "red"}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
-                  <View style={styles.ıcon}>
-                    <Icon2 name="sharealt" size={18} />
-                  </View>
-                </TouchableOpacity>
-          </View>
-          <View style={styles.clubRateContainer}>
-            {user &&
-              user.corporate_type == "Emlak Ofisi" &&
-              data.project.club_rate && (
-                <View style={styles.commissionBadge}>
-                  <Text style={styles.commissionText}>
-                    %{data.project.club_rate} KOMİSYON!
-                  </Text>
-                </View>
-              )}
-          </View>
-          <Swiper
-            style={{ height: 250 }}
-            showsPagination={false}
-            onIndexChanged={(index) => setPagination(index)}
-            loop={true}
-            index={pagination}
-          >
-            {data.project.images &&
-              data.project.images.map((image, index) => {
-                const uri = `${apiUrl}${image.image.replace(
-                  "public",
-                  "storage"
-                )}`;
-                return (
-                  <Pressable key={index}>
-                    <ImageBackground
-                      source={{ uri: uri }}
-                      style={{ width: "100%", height: "100%" }}
-                    />
-                  </Pressable>
-                );
-              })}
-          </Swiper>
+          </TouchableOpacity>
         </View>
-        {/* <View style={{ height: 250 }}>
+
+        <ScrollView
+          scrollEventThrottle={16}
+          onScroll={({ nativeEvent }) => {
+            if (isCloseToBottom(nativeEvent)) {
+              clearTimeout(debounceTimeout);
+              debounceTimeout = setTimeout(() => {
+                if (!isLoading) {
+                  fetchHousings(page + 1);
+                  setPage(page + 1);
+                }
+              }, 1000); // 500ms içinde yeni bir istek yapılmazsa gerçekleştir
+            }
+          }}
+        >
+          <View style={{ height: 250 }}>
+            <View style={styles.pagination}>
+              <View
+                style={{
+                  backgroundColor: "#333",
+                  padding: 5,
+                  paddingLeft: 8,
+                  paddingRight: 8,
+                  borderRadius: 5,
+                }}
+              >
+                <Text style={{ color: "white", fontSize: 12 }}>
+                  {pagination + 1} / {data.project.images.length}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.ıconContainer}>
+              <TouchableOpacity onPress={changeHeart}>
+                <View style={styles.ıcon}>
+                  <Heart
+                    name={heart}
+                    size={18}
+                    color={heart === "hearto" ? "black" : "red"}
+                  />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
+                <View style={styles.ıcon}>
+                  <Icon2 name="sharealt" size={18} />
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.clubRateContainer}>
+              {user &&
+                user.corporate_type == "Emlak Ofisi" &&
+                data.project.club_rate && (
+                  <View style={styles.commissionBadge}>
+                    <Text style={styles.commissionText}>
+                      %{data.project.club_rate} KOMİSYON!
+                    </Text>
+                  </View>
+                )}
+            </View>
+            <Swiper
+              style={{ height: 250 }}
+              showsPagination={false}
+              onIndexChanged={(index) => setPagination(index)}
+              loop={true}
+              index={pagination}
+            >
+              {data.project.images &&
+                data.project.images.map((image, index) => {
+                  const uri = `${apiUrl}${image.image.replace(
+                    "public",
+                    "storage"
+                  )}`;
+                  return (
+                    <Pressable key={index}>
+                      <ImageBackground
+                        source={{ uri: uri }}
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    </Pressable>
+                  );
+                })}
+            </Swiper>
+          </View>
+          {/* <View style={{ height: 250 }}>
           <View style={styles.pagination}>
             <View
               style={{
@@ -1148,837 +1154,837 @@ export default function Details({ navigation }) {
               })}
           </PagerView>
         </View> */}
-        <View
-          style={{
-            paddingTop: 8,
-            gap: 5,
-            borderBottomWidth: 1,
-            borderColor: "#e8e8e8",
-            paddingBottom: 10,
-          }}
-        >
-          <Text
+          <View
             style={{
-              textAlign: "center",
-              fontSize: 11,
-              color: "#333",
-              fontWeight: "700",
+              paddingTop: 8,
+              gap: 5,
+              borderBottomWidth: 1,
+              borderColor: "#e8e8e8",
+              paddingBottom: 10,
             }}
           >
-            {data?.project?.city?.title
-              ? `${data.project.city.title} / ${data.project.county.ilce_title} `
-              : ""}
-          </Text>
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 16,
-              color: "#264ABB",
-              fontWeight: "700",
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 11,
+                color: "#333",
+                fontWeight: "700",
+              }}
+            >
+              {data?.project?.city?.title
+                ? `${data.project.city.title} / ${data.project.county.ilce_title} `
+                : ""}
+            </Text>
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 16,
+                color: "#264ABB",
+                fontWeight: "700",
+              }}
+            >
+              {data?.project?.project_title}
+            </Text>
+          </View>
+          <View>
+            <SliderMenuDetails
+              tab={tabs}
+              setTab={setTabs}
+              changeTab={changeTab}
+            />
+          </View>
+          {tabs == 0 && (
+            <OtherHomeInProject
+              GetID={getRoomID}
+              GetIdForCart={GetIdForCart}
+              openCollection={openCollection}
+              itemCount={itemCount}
+              data={data}
+              getLastItemCount={getLastItemCount}
+              setSelectedTab={setSelectedTab}
+              selectedTab={selectedTab}
+              openModal={openModal}
+              getBlockItems={getBlockItems}
+              OpenFormModal={OpenFormModal}
+            />
+          )}
+          <View>{tabs == 1 && <Caption data={data} />}</View>
+          {tabs == 2 && <Information settings={data} />}
+          <View style={{}}>{tabs === 3 && <Map mapData={data} />}</View>
+
+          {tabs == 4 && <FloorPlan data={data} />}
+
+          <Modal
+            animationType="fade" // veya "fade", "none" gibi
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
             }}
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", margin: 0 }}
+
           >
-            {data?.project?.project_title}
-          </Text>
-        </View>
-        <View>
-          <SliderMenuDetails
-            tab={tabs}
-            setTab={setTabs}
-            changeTab={changeTab}
-          />
-        </View>
-        {tabs == 0 && (
-          <OtherHomeInProject
-            GetID={getRoomID}
-            GetIdForCart={GetIdForCart}
-            openCollection={openCollection}
-            itemCount={itemCount}
-            data={data}
-            getLastItemCount={getLastItemCount}
-            setSelectedTab={setSelectedTab}
-            selectedTab={selectedTab}
-            openModal={openModal}
-            getBlockItems={getBlockItems}
-            OpenFormModal={OpenFormModal}
-          />
-        )}
-        <View>{tabs == 1 && <Caption data={data} />}</View>
-        {tabs == 2 && <Information settings={data} />}
-        <View style={{}}>{tabs === 3 && <Map mapData={data} />}</View>
-
-        {tabs == 4 && <FloorPlan data={data} />}
-
-        <Modal
-          animationType="fade" // veya "fade", "none" gibi
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", margin: 0 }}
-          
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <TouchableOpacity
-                style={{
-                  position: "absolute",
-                  right: -5,
-                  backgroundColor: "#333",
-                  padding: 6,
-                  zIndex: 1,
-                  borderRadius: 30,
-                  top: -15,
-                }}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Heart name="close" size={20} color={"white"} />
-              </TouchableOpacity>
-              <View style={{ backgroundColor: "#EEEEEE", padding: 10 }}>
-                <Text style={{ fontWeight: "bold", fontSize: 12 }}>
-                  {data?.project?.project_title} projesinde{" "}
-                  {paymentModalShowOrder} No'lu ilan Ödeme Planı
-                </Text>
-              </View>
-              <View>
-                <SettingsItem
-                  info="Peşin Fiyat"
-                  numbers={
-                    paymentModalShowOrder != null
-                      ? addDotEveryThreeDigits(
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <TouchableOpacity
+                  style={{
+                    position: "absolute",
+                    right: -5,
+                    backgroundColor: "#333",
+                    padding: 6,
+                    zIndex: 1,
+                    borderRadius: 30,
+                    top: -15,
+                  }}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Heart name="close" size={20} color={"white"} />
+                </TouchableOpacity>
+                <View style={{ backgroundColor: "#EEEEEE", padding: 10 }}>
+                  <Text style={{ fontWeight: "bold", fontSize: 12 }}>
+                    {data?.project?.project_title} projesinde{" "}
+                    {paymentModalShowOrder} No'lu ilan Ödeme Planı
+                  </Text>
+                </View>
+                <View>
+                  <SettingsItem
+                    info="Peşin Fiyat"
+                    numbers={
+                      paymentModalShowOrder != null
+                        ? addDotEveryThreeDigits(
                           data.projectHousingsList[paymentModalShowOrder][
-                            "price[]"
+                          "price[]"
                           ]
                         ) + " ₺"
-                      : "0"
-                  }
-                />
-                {paymentModalShowOrder != null ? (
-                  JSON.parse(
-                    data.projectHousingsList[paymentModalShowOrder][
+                        : "0"
+                    }
+                  />
+                  {paymentModalShowOrder != null ? (
+                    JSON.parse(
+                      data.projectHousingsList[paymentModalShowOrder][
                       "payment-plan[]"
-                    ]
-                  ) &&
-                  JSON.parse(
-                    data.projectHousingsList[paymentModalShowOrder][
-                      "payment-plan[]"
-                    ]
-                  ).includes("taksitli") ? (
-                    <SettingsItem
-                      info={
+                      ]
+                    ) &&
+                      JSON.parse(
                         data.projectHousingsList[paymentModalShowOrder][
-                          "installments[]"
-                        ] +
-                        " " +
-                        "Ay Taksitli Fiyat"
-                      }
-                      numbers={
-                        addDotEveryThreeDigits(
+                        "payment-plan[]"
+                        ]
+                      ).includes("taksitli") ? (
+                      <SettingsItem
+                        info={
                           data.projectHousingsList[paymentModalShowOrder][
+                          "installments[]"
+                          ] +
+                          " " +
+                          "Ay Taksitli Fiyat"
+                        }
+                        numbers={
+                          addDotEveryThreeDigits(
+                            data.projectHousingsList[paymentModalShowOrder][
                             "installments-price[]"
-                          ]
-                        ) + "₺"
-                      }
-                    />
+                            ]
+                          ) + "₺"
+                        }
+                      />
+                    ) : (
+                      <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="0" />
+                    )
                   ) : (
                     <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="0" />
-                  )
-                ) : (
-                  <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="0" />
-                )}
-                {paymentModalShowOrder != null ? (
-                  JSON.parse(
-                    data.projectHousingsList[paymentModalShowOrder][
+                  )}
+                  {paymentModalShowOrder != null ? (
+                    JSON.parse(
+                      data.projectHousingsList[paymentModalShowOrder][
                       "payment-plan[]"
-                    ]
-                  ) &&
-                  JSON.parse(
-                    data.projectHousingsList[paymentModalShowOrder][
-                      "payment-plan[]"
-                    ]
-                  ).includes("taksitli") ? (
-                    <SettingsItem
-                      info="Peşinat"
-                      numbers={
-                        addDotEveryThreeDigits(
-                          data.projectHousingsList[paymentModalShowOrder][
+                      ]
+                    ) &&
+                      JSON.parse(
+                        data.projectHousingsList[paymentModalShowOrder][
+                        "payment-plan[]"
+                        ]
+                      ).includes("taksitli") ? (
+                      <SettingsItem
+                        info="Peşinat"
+                        numbers={
+                          addDotEveryThreeDigits(
+                            data.projectHousingsList[paymentModalShowOrder][
                             "advance[]"
-                          ]
-                        ) + "₺"
-                      }
-                    />
+                            ]
+                          ) + "₺"
+                        }
+                      />
+                    ) : (
+                      <SettingsItem info="Peşinat" numbers="0" />
+                    )
                   ) : (
                     <SettingsItem info="Peşinat" numbers="0" />
-                  )
-                ) : (
-                  <SettingsItem info="Peşinat" numbers="0" />
-                )}
+                  )}
 
-                {paymentModalShowOrder != null ? (
-                  JSON.parse(
-                    data.projectHousingsList[paymentModalShowOrder][
+                  {paymentModalShowOrder != null ? (
+                    JSON.parse(
+                      data.projectHousingsList[paymentModalShowOrder][
                       "payment-plan[]"
-                    ]
-                  ) &&
-                  JSON.parse(
-                    data.projectHousingsList[paymentModalShowOrder][
-                      "payment-plan[]"
-                    ]
-                  ).includes("taksitli") ? (
-                    <SettingsItem
-                      info="Aylık Ödenecek Tutar"
-                      numbers={
-                        formatAmount( ( parseInt( data.projectHousingsList[paymentModalShowOrder]['installments-price[]'] ) -  ( parseInt( data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'] ) ) 
-                      }
-                    />
+                      ]
+                    ) &&
+                      JSON.parse(
+                        data.projectHousingsList[paymentModalShowOrder][
+                        "payment-plan[]"
+                        ]
+                      ).includes("taksitli") ? (
+                      <SettingsItem
+                        info="Aylık Ödenecek Tutar"
+                        numbers={
+                          formatAmount((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]']))
+                        }
+                      />
+                    ) : (
+                      <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
+                    )
                   ) : (
                     <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
-                  )
-                ) : (
-                  <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
-                )}
-                {paymentItems && paymentItems}
-              </View>
+                  )}
+                  {paymentItems && paymentItems}
+                </View>
 
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#EA2C2E",
-                  padding: 10,
-                  borderRadius: 5,
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "white",
-                    fontSize: 15,
-                    fontWeight: "bold",
-                  }}
-                >
-                  Sepete Ekle
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-
-        <Modal
-          isVisible={IsOpenSheet}
-          onBackdropPress={() => setIsOpenSheet(false)}
-          backdropColor="transparent"
-          style={styles.modal2}
-          animationIn={"fadeInDown"}
-          animationOut={"fadeOutDown"}
-        >
-          <View
-            style={[
-              styles.card,
-              {
-                backgroundColor: "white",
-                height: width > 400 ? "30%" : "37%",
-                padding: 10,
-                borderTopLeftRadius: 25,
-                borderTopRightRadius: 25,
-              },
-            ]}
-          >
-            <View style={{ gap: 7 }}>
-              <View style={{ padding: 10, paddingTop: 25 }}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    color: "#333",
-                    fontWeight: "700",
-                    textAlign: "center",
-                  }}
-                >
-                  Paylaş
-                </Text>
-              </View>
-              <ScrollView
-                horizontal
-                contentContainerStyle={{ gap: 20 }}
-                showsHorizontalScrollIndicator={false}
-              >
                 <TouchableOpacity
                   style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                    paddingTop: 5,
+                    backgroundColor: "#EA2C2E",
+                    padding: 10,
+                    borderRadius: 5,
                   }}
                 >
-                  <Icon
-                    name="link"
-                    size={32}
-                    iconStyle={{ color: "#ffffff" }}
-                    style={{
-                      backgroundColor: "red",
-                      padding: 12,
-                      borderRadius: 8,
-                    }}
-                    reverseColor={"orange"}
-                  />
                   <Text
                     style={{
-                      fontSize: 12,
-                      color: "#333",
                       textAlign: "center",
-                      top: 5,
-                    }}
-                  >
-                    Bağlantı Kopyala
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <SocialIcon
-                    iconSize={30}
-                    style={{ backgroundColor: "#52CD60", borderRadius: 8 }}
-                    raised
-                    type="whatsapp"
-                  />
-                  <Text
-                    style={{ fontSize: 12, color: "#333", textAlign: "center" }}
-                  >
-                    Whatsapp
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <SocialIcon
-                    iconSize={30}
-                    style={{ backgroundColor: "#D33380", borderRadius: 8 }}
-                    raised
-                    type="instagram"
-                  />
-                  <Text
-                    style={{ fontSize: 12, color: "#333", textAlign: "center" }}
-                  >
-                    İnstagram
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <SocialIcon
-                    iconSize={30}
-                    style={{ borderRadius: 8 }}
-                    raised
-                    type="facebook"
-                  />
-                  <Text
-                    style={{ fontSize: 12, color: "#333", textAlign: "center" }}
-                  >
-                    Facebook
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity>
-                  <SocialIcon
-                    iconSize={30}
-                    style={{ borderRadius: 8 }}
-                    raised
-                    type="twitter"
-                  />
-                  <Text
-                    style={{ fontSize: 12, color: "#333", textAlign: "center" }}
-                  >
-                    Twitter
-                  </Text>
-                </TouchableOpacity>
-              </ScrollView>
-              <View style={{ paddingTop: 20 }}>
-                <TouchableOpacity
-                  onPress={() => setIsOpenSheet(false)}
-                  style={{
-                    backgroundColor: "#F0F0F0",
-                    padding: 17,
-                    borderRadius: 20,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#7A7A7A",
+                      color: "white",
+                      fontSize: 15,
                       fontWeight: "bold",
-                      textAlign: "center",
                     }}
                   >
-                    İptal
+                    Sepete Ekle
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
-          </View>
-        </Modal>
+          </Modal>
 
-        <Modal
-          isVisible={ColectionSheet}
-          onBackdropPress={ToggleColSheet}
-          animationIn={"fadeInDown"}
-          animationOut={"fadeOutDown"}
-          animationInTiming={200}
-          animationOutTiming={200}
-          backdropColor="transparent"
-          style={styles.modal2}
-        >
-          <View style={styles.modalContent2}>
-            <SafeAreaView>
-              <View
-                style={{
-                  padding: 20,
-                  paddingTop: 24,
-                  gap: 13,
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#ebebeb",
-                }}
-              >
-                <Text
+          <Modal
+            isVisible={IsOpenSheet}
+            onBackdropPress={() => setIsOpenSheet(false)}
+            backdropColor="transparent"
+            style={styles.modal2}
+            animationIn={"fadeInDown"}
+            animationOut={"fadeOutDown"}
+          >
+            <View
+              style={[
+                styles.card,
+                {
+                  backgroundColor: "white",
+                  height: width > 400 ? "30%" : "37%",
+                  padding: 10,
+                  borderTopLeftRadius: 25,
+                  borderTopRightRadius: 25,
+                },
+              ]}
+            >
+              <View style={{ gap: 7 }}>
+                <View style={{ padding: 10, paddingTop: 25 }}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: "#333",
+                      fontWeight: "700",
+                      textAlign: "center",
+                    }}
+                  >
+                    Paylaş
+                  </Text>
+                </View>
+                <ScrollView
+                  horizontal
+                  contentContainerStyle={{ gap: 20 }}
+                  showsHorizontalScrollIndicator={false}
+                >
+                  <TouchableOpacity
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      paddingTop: 5,
+                    }}
+                  >
+                    <Icon
+                      name="link"
+                      size={32}
+                      iconStyle={{ color: "#ffffff" }}
+                      style={{
+                        backgroundColor: "red",
+                        padding: 12,
+                        borderRadius: 8,
+                      }}
+                      reverseColor={"orange"}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        color: "#333",
+                        textAlign: "center",
+                        top: 5,
+                      }}
+                    >
+                      Bağlantı Kopyala
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <SocialIcon
+                      iconSize={30}
+                      style={{ backgroundColor: "#52CD60", borderRadius: 8 }}
+                      raised
+                      type="whatsapp"
+                    />
+                    <Text
+                      style={{ fontSize: 12, color: "#333", textAlign: "center" }}
+                    >
+                      Whatsapp
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <SocialIcon
+                      iconSize={30}
+                      style={{ backgroundColor: "#D33380", borderRadius: 8 }}
+                      raised
+                      type="instagram"
+                    />
+                    <Text
+                      style={{ fontSize: 12, color: "#333", textAlign: "center" }}
+                    >
+                      İnstagram
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <SocialIcon
+                      iconSize={30}
+                      style={{ borderRadius: 8 }}
+                      raised
+                      type="facebook"
+                    />
+                    <Text
+                      style={{ fontSize: 12, color: "#333", textAlign: "center" }}
+                    >
+                      Facebook
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity>
+                    <SocialIcon
+                      iconSize={30}
+                      style={{ borderRadius: 8 }}
+                      raised
+                      type="twitter"
+                    />
+                    <Text
+                      style={{ fontSize: 12, color: "#333", textAlign: "center" }}
+                    >
+                      Twitter
+                    </Text>
+                  </TouchableOpacity>
+                </ScrollView>
+                <View style={{ paddingTop: 20 }}>
+                  <TouchableOpacity
+                    onPress={() => setIsOpenSheet(false)}
+                    style={{
+                      backgroundColor: "#F0F0F0",
+                      padding: 17,
+                      borderRadius: 20,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "#7A7A7A",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                      }}
+                    >
+                      İptal
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+
+          <Modal
+            isVisible={ColectionSheet}
+            onBackdropPress={ToggleColSheet}
+            animationIn={"fadeInDown"}
+            animationOut={"fadeOutDown"}
+            animationInTiming={200}
+            animationOutTiming={200}
+            backdropColor="transparent"
+            style={styles.modal2}
+          >
+            <View style={styles.modalContent2}>
+              <SafeAreaView>
+                <View
                   style={{
-                    color: "#19181C",
-                    textAlign: "center",
-                    fontSize: 16,
-                    fontWeight: "400",
+                    padding: 20,
+                    paddingTop: 24,
+                    gap: 13,
+                    borderBottomWidth: 1,
+                    borderBottomColor: "#ebebeb",
                   }}
                 >
-                  Koleksiyona Ekle
-                </Text>
+                  <Text
+                    style={{
+                      color: "#19181C",
+                      textAlign: "center",
+                      fontSize: 16,
+                      fontWeight: "400",
+                    }}
+                  >
+                    Koleksiyona Ekle
+                  </Text>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "#B2B2B2",
+                      fontSize: 14,
+                    }}
+                  >
+                    Konutu koleksiyonlarından birine ekleyebilir veya yeni bir
+                    koleksiyon oluşturabilirsin
+                  </Text>
+                </View>
+
+                <ScrollView
+                  contentContainerStyle={{
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    paddingTop: 4,
+                    gap: 10,
+                    paddingBottom: 150,
+                  }}
+                >
+                  {
+                    user.access_token && user?.has_club == 0 ?
+                      <>
+
+
+                        <View style={{ paddingTop: 10 }}>
+                          <Text style={{ textAlign: 'center', color: '#4C6272', fontWeight: 'bold', fontSize: 16 }}> Emlak Kulüp Üyeliğiniz Bulunmamaktadır!</Text>
+                        </View>
+                        <View style={{ width: '100%' }}>
+                          <Text style={{ textAlign: 'center', color: '#7A8A95' }}>Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir</Text>
+                        </View>
+                        <TouchableOpacity style={{ backgroundColor: '#F65656', width: '100%', padding: 10 }}
+                          onPress={() => {
+                            navigation.navigate('Collecitons')
+                            setColectionSheet(false)
+                          }}
+                        >
+                          <Text style={{ color: '#FFFFFF', textAlign: 'center' }}>Emlak Kulüp Üyesi Ol </Text>
+                        </TouchableOpacity>
+
+
+                      </>
+
+                      :
+                      !user.access_token ?
+                        <>
+                          <View style={{ gap: 10 }}>
+
+                            <View style={{ paddingTop: 10 }}>
+                              <Text style={{ textAlign: 'center', color: '#4C6272', fontWeight: 'bold', fontSize: 16 }}>Üyeliğiniz Bulunmamaktadır!</Text>
+                            </View>
+                            <View style={{ width: '100%' }}>
+                              <Text style={{ textAlign: 'center', color: '#7A8A95' }}>Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
+                            </View>
+                            <TouchableOpacity style={{ backgroundColor: '#F65656', width: '100%', padding: 10 }}
+                              onPress={() => {
+                                setColectionSheet(false)
+                                navigation.navigate('Login')
+                              }}
+                            >
+                              <Text style={{ color: '#FFFFFF', textAlign: 'center' }}>Giriş Yap</Text>
+                            </TouchableOpacity>
+                          </View>
+                        </> :
+                        <>
+                          <TouchableOpacity
+                            style={{ flexDirection: "row", alignItems: "center" }}
+                            onPress={() => {
+                              setColectionSheet(false);
+                              setTimeout(() => {
+                                setaddCollection(true);
+                              }, 700);
+                            }}
+                          >
+                            <View
+                              style={{
+                                padding: 0,
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Icon2 name="pluscircleo" size={27} color={"#19181C"} />
+                            </View>
+                            <View
+                              style={{
+                                width: "100%",
+                                borderBottomWidth: 1,
+                                padding: 15,
+                                borderBottomColor: "#ebebeb",
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  fontSize: 13,
+                                  color: "#19181C",
+                                  fontWeight: "600",
+                                }}
+                              >
+                                Yeni Oluştur
+                              </Text>
+                            </View>
+                          </TouchableOpacity>
+                          {collections.map((item, index) => (
+                            <AddCollection
+                              checkFunc={ıtemOnCollection}
+                              setPopUpForRemoveItem={setsetPopUpForRemoveItem}
+                              key={index}
+                              item={item}
+                              getCollectionId={getCollectionId}
+                              removeItemOnCollection={removeItemOnCollection}
+                              addLink={addSelectedCollection}
+                            />
+                          ))}
+
+                        </>
+                  }
+                </ScrollView>
+              </SafeAreaView>
+            </View>
+          </Modal>
+
+          <Modal
+            isVisible={collectionAddedSucces}
+            onBackdropPress={() => setcollectionAddedSucces(false)}
+            animationIn={"fadeInDown"}
+            animationOut={"fadeOutDown"}
+            animationInTiming={200}
+            animationOutTiming={200}
+            backdropColor="transparent"
+            style={styles.modal4}
+          >
+            <View style={styles.modalContent4}>
+              <View style={{ padding: 10 }}>
                 <Text
                   style={{
                     textAlign: "center",
-                    color: "#B2B2B2",
-                    fontSize: 14,
+                    color: "green",
+                    fontWeight: "500",
                   }}
                 >
-                  Konutu koleksiyonlarından birine ekleyebilir veya yeni bir
-                  koleksiyon oluşturabilirsin
+                  {selectedHouse} No'lu konutu {selectedCollectionName} adlı
+                  koleksiyonunuza eklendi
                 </Text>
               </View>
+            </View>
+          </Modal>
 
+          {/* */}
+          <Modal
+            isVisible={addCollection}
+            onBackdropPress={() => setaddCollection(false)}
+            animationIn={"fadeInRight"}
+            animationOut={"lightSpeedOut"}
+            animationInTiming={200}
+            animationOutTiming={200}
+            style={styles.modal3}
+          >
+            <View style={styles.modalContent3}>
               <ScrollView
+                bounces={false}
                 contentContainerStyle={{
                   paddingLeft: 10,
                   paddingRight: 10,
                   paddingTop: 4,
                   gap: 10,
-                  paddingBottom: 150,
+                  paddingBottom: 20,
                 }}
               >
-                {
-                user.access_token && user?.has_club == 0 ?
-                  <>
-                  
-                  
-                    <View style={{paddingTop:10}}>
-                      <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}> Emlak Kulüp Üyeliğiniz Bulunmamaktadır!</Text>
-                    </View>
-                    <View style={{width:'100%'}}>
-                      <Text style={{textAlign:'center',color:'#7A8A95'}}>Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir</Text>
-                    </View>
-                    <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
-                       onPress={()=>{
-                        navigation.navigate('Collecitons')
-                        setColectionSheet(false)
-                    }}
-                    >
-                  <Text style={{color:'#FFFFFF',textAlign:'center'}}>Emlak Kulüp Üyesi Ol </Text>
-                </TouchableOpacity>
-                
-                    
-                  </>
-               
-                  :
-                  !user.access_token ?
-                  <>
-                    <View style={{gap:10}}>
-                   
-                        <View style={{paddingTop:10}}>
-                          <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}>Üyeliğiniz Bulunmamaktadır!</Text>
-                        </View>
-                        <View style={{width:'100%'}}>
-                          <Text style={{textAlign:'center',color:'#7A8A95'}}>Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
-                        </View>
-                        <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
-                           onPress={()=>{
-                            setColectionSheet(false)
-                            navigation.navigate('Login')
-                        }}
-                        >
-                      <Text style={{color:'#FFFFFF',textAlign:'center'}}>Giriş Yap</Text>
-                    </TouchableOpacity>
-                    </View>
-                  </>:
-                  <>
-                    <TouchableOpacity
-                  style={{ flexDirection: "row", alignItems: "center" }}
-                  onPress={() => {
-                    setColectionSheet(false);
-                    setTimeout(() => {
-                      setaddCollection(true);
-                    }, 700);
-                  }}
-                >
+                <SafeAreaView>
                   <View
                     style={{
-                      padding: 0,
+                      flexDirection: "row",
+                      padding: 10,
                       alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Icon2 name="pluscircleo" size={27} color={"#19181C"} />
-                  </View>
-                  <View
-                    style={{
-                      width: "100%",
                       borderBottomWidth: 1,
-                      padding: 15,
                       borderBottomColor: "#ebebeb",
                     }}
                   >
-                    <Text
+                    <TouchableOpacity
                       style={{
-                        fontSize: 13,
-                        color: "#19181C",
-                        fontWeight: "600",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        flex: 0.5 / 2,
+                      }}
+                      onPress={() => {
+                        setaddCollection(false);
                       }}
                     >
-                      Yeni Oluştur
-                    </Text>
+                      <View
+                        style={{
+                          padding: 0,
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Icon name="close" size={27} color={"#19181C"} />
+                      </View>
+                    </TouchableOpacity>
+                    <View style={{ flex: 1 / 2 }}>
+                      <Text
+                        style={{
+                          color: "#19181C",
+                          textAlign: "center",
+                          fontSize: 16,
+                          fontWeight: "400",
+                        }}
+                      >
+                        Koleksiyon Oluştur
+                      </Text>
+                    </View>
                   </View>
-                </TouchableOpacity>
-                {collections.map((item, index) => (
-                  <AddCollection
-                    checkFunc={ıtemOnCollection}
-                    setPopUpForRemoveItem={setsetPopUpForRemoveItem}
-                    key={index}
-                    item={item}
-                    getCollectionId={getCollectionId}
-                    removeItemOnCollection={removeItemOnCollection}
-                    addLink={addSelectedCollection}
-                  />
-                ))}
-           
-                  </>
-                }
-                 </ScrollView>
-            </SafeAreaView>
-          </View>
-        </Modal>
-
-        <Modal
-          isVisible={collectionAddedSucces}
-          onBackdropPress={() => setcollectionAddedSucces(false)}
-          animationIn={"fadeInDown"}
-          animationOut={"fadeOutDown"}
-          animationInTiming={200}
-          animationOutTiming={200}
-          backdropColor="transparent"
-          style={styles.modal4}
-        >
-          <View style={styles.modalContent4}>
-            <View style={{ padding: 10 }}>
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "green",
-                  fontWeight: "500",
-                }}
-              >
-                {selectedHouse} No'lu konutu {selectedCollectionName} adlı
-                koleksiyonunuza eklendi
-              </Text>
+                  <View
+                    style={{ gap: 6, justifyContent: "center", paddingTop: 20 }}
+                  >
+                    <Text style={{ fontSize: 13, color: "#19181C" }}>
+                      Koleksiyon İsmi
+                    </Text>
+                    <TextInput
+                      style={styles.Input}
+                      value={newCollectionNameCreate}
+                      onChangeText={(value) => setnewCollectionNameCreate(value)}
+                    />
+                  </View>
+                  <View style={{ paddingTop: 80 }}>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#EA2A28",
+                        padding: 10,
+                        borderRadius: 5,
+                      }}
+                      onPress={addCollectionPost}
+                    >
+                      <Text style={{ textAlign: "center", color: "white" }}>
+                        Koleksiyon Oluştur
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </SafeAreaView>
+              </ScrollView>
             </View>
-          </View>
-        </Modal>
-
-        {/* */}
-        <Modal
-          isVisible={addCollection}
-          onBackdropPress={() => setaddCollection(false)}
-          animationIn={"fadeInRight"}
-          animationOut={"lightSpeedOut"}
-          animationInTiming={200}
-          animationOutTiming={200}
-          style={styles.modal3}
-        >
-          <View style={styles.modalContent3}>
-            <ScrollView
-              bounces={false}
-              contentContainerStyle={{
-                paddingLeft: 10,
-                paddingRight: 10,
-                paddingTop: 4,
-                gap: 10,
-                paddingBottom: 20,
-              }}
-            >
-              <SafeAreaView>
-                <View
+          </Modal>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            onBackdropPress={() => setFormVisible(false)}
+            visible={FormVisible}
+            onRequestClose={() => {
+              setFormVisible(false);
+            }}
+          >
+            <View style={[styles.centeredView, { padding: 0 }]}>
+              <View style={[styles.modalView, { height: "90%" }]}>
+                <Text
                   style={{
-                    flexDirection: "row",
-                    padding: 10,
-                    alignItems: "center",
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#ebebeb",
+                    fontWeight: "bold",
+                    fontSize: 12,
+                    textAlign: "center",
                   }}
                 >
-                  <TouchableOpacity
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      flex: 0.5 / 2,
-                    }}
-                    onPress={() => {
-                      setaddCollection(false);
-                    }}
-                  >
-                    <View
-                      style={{
-                        padding: 0,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Icon name="close" size={27} color={"#19181C"} />
+                  {data?.project?.project_title} projesinde{" "}
+                  {paymentModalShowOrder} No'lu Konut Başvuru Formu
+                </Text>
+                <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+                  <View style={{ gap: 15 }}>
+                    <View style={{ gap: 7 }}>
+                      <Text style={styles.label}>Ad Soyad</Text>
+                      <TextInput
+                        style={styles.Input}
+                        value={nameid}
+                        onChangeText={(value) => setNameId(value)}
+                      />
+                      {errorStatu == 1 && (
+                        <Text style={{ color: "red", fontSize: 12 }}>
+                          {errorMessage}
+                        </Text>
+                      )}
                     </View>
-                  </TouchableOpacity>
-                  <View style={{ flex: 1 / 2 }}>
-                    <Text
-                      style={{
-                        color: "#19181C",
-                        textAlign: "center",
-                        fontSize: 16,
-                        fontWeight: "400",
-                      }}
-                    >
-                      Koleksiyon Oluştur
-                    </Text>
+                    <View style={{ gap: 7 }}>
+                      <Text style={styles.label}>Telefon Numarası</Text>
+                      <TextInput
+                        style={styles.Input}
+                        value={phoneid}
+                        onChangeText={(value) => setPhoneId(value)}
+                      />
+                      {errorStatu == 2 && (
+                        <Text style={{ color: "red", fontSize: 12 }}>
+                          {errorMessage}
+                        </Text>
+                      )}
+                    </View>
+                    <View style={{ gap: 7 }}>
+                      <Text style={styles.label}>E-Posta</Text>
+                      <TextInput
+                        style={styles.Input}
+                        value={emailid}
+                        onChangeText={(value) => setEmailId(value)}
+                      />
+                      {errorStatu == 6 && (
+                        <Text style={{ color: "red", fontSize: 12 }}>
+                          {errorMessage}
+                        </Text>
+                      )}
+                    </View>
+                    <View style={{ gap: 7 }}>
+                      <Text style={styles.label} value={titleid}>
+                        Meslek
+                      </Text>
+                      <TextInput
+                        style={styles.Input}
+                        value={titleid}
+                        onChangeText={(value) => setTitleId(value)}
+                      />
+                      {errorStatu == 3 && (
+                        <Text style={{ color: "red", fontSize: 12 }}>
+                          {errorMessage}
+                        </Text>
+                      )}
+                    </View>
+                    <View style={{ gap: 7 }}>
+                      <Text style={styles.label}>Açıklama</Text>
+                      <TextInput
+                        style={styles.Input}
+                        value={offerid}
+                        onChangeText={(value) => setOfferId(value)}
+                      />
+                      {errorStatu == 7 && (
+                        <Text style={{ color: "red", fontSize: 12 }}>
+                          {errorMessage}
+                        </Text>
+                      )}
+                    </View>
+
+                    <View style={{ gap: 6 }}>
+                      <Text
+                        style={{ fontSize: 14, color: "grey", fontWeight: 600 }}
+                      >
+                        Şehir
+                      </Text>
+                      <RNPickerSelect doneText="Tamam"
+                        placeholder={{
+                          label: "Şehir Seçiniz...",
+                          value: null,
+                        }}
+                        style={pickerSelectStyles}
+                        value={city}
+                        onValueChange={(value) => {
+                          onChangeCity(value);
+                        }}
+                        items={citites}
+                      />
+                      {errorStatu == 4 && (
+                        <Text style={{ color: "red", fontSize: 12 }}>
+                          {errorMessage}
+                        </Text>
+                      )}
+                    </View>
+                    <View style={{ gap: 6 }}>
+                      <Text
+                        style={{ fontSize: 14, color: "grey", fontWeight: 600 }}
+                      >
+                        İlçe
+                      </Text>
+                      <RNPickerSelect doneText="Tamam"
+                        placeholder={{
+                          label: "İlçe Seçiniz...",
+                          value: null,
+                        }}
+                        value={county}
+                        style={pickerSelectStyles}
+                        onValueChange={(value) => setcounty(value)}
+                        items={counties}
+                      />
+                      {errorStatu == 5 && (
+                        <Text style={{ color: "red", fontSize: 12 }}>
+                          {errorMessage}
+                        </Text>
+                      )}
+                    </View>
                   </View>
-                </View>
+                </KeyboardAwareScrollView>
                 <View
-                  style={{ gap: 6, justifyContent: "center", paddingTop: 20 }}
+                  style={{ flexDirection: "row", justifyContent: "space-around" }}
                 >
-                  <Text style={{ fontSize: 13, color: "#19181C" }}>
-                    Koleksiyon İsmi
-                  </Text>
-                  <TextInput
-                    style={styles.Input}
-                    value={newCollectionNameCreate}
-                    onChangeText={(value) => setnewCollectionNameCreate(value)}
-                  />
-                </View>
-                <View style={{ paddingTop: 80 }}>
                   <TouchableOpacity
                     style={{
-                      backgroundColor: "#EA2A28",
-                      padding: 10,
+                      backgroundColor: "#28A745",
+                      width: "40%",
+                      padding: 15,
                       borderRadius: 5,
                     }}
-                    onPress={addCollectionPost}
+                    onPress={GiveOffer}
                   >
-                    <Text style={{ textAlign: "center", color: "white" }}>
-                      Koleksiyon Oluştur
+                    <Text style={{ color: "white", textAlign: "center" }}>
+                      Gönder
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#DC3545",
+                      width: "40%",
+                      padding: 15,
+                      borderRadius: 5,
+                    }}
+                    onPress={() => {
+                      setFormVisible(false);
+                    }}
+                  >
+                    <Text style={{ color: "white", textAlign: "center" }}>
+                      Kapat
                     </Text>
                   </TouchableOpacity>
                 </View>
-              </SafeAreaView>
-            </ScrollView>
-          </View>
-        </Modal>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          onBackdropPress={() => setFormVisible(false)}
-          visible={FormVisible}
-          onRequestClose={() => {
-            setFormVisible(false);
-          }}
-        >
-          <View style={[styles.centeredView, { padding: 0 }]}>
-            <View style={[styles.modalView, { height: "90%" }]}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 12,
-                  textAlign: "center",
-                }}
-              >
-                {data?.project?.project_title} projesinde{" "}
-                {paymentModalShowOrder} No'lu Konut Başvuru Formu
-              </Text>
-              <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-                <View style={{ gap: 15 }}>
-                  <View style={{ gap: 7 }}>
-                    <Text style={styles.label}>Ad Soyad</Text>
-                    <TextInput
-                      style={styles.Input}
-                      value={nameid}
-                      onChangeText={(value) => setNameId(value)}
-                    />
-                    {errorStatu == 1 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
-                  </View>
-                  <View style={{ gap: 7 }}>
-                    <Text style={styles.label}>Telefon Numarası</Text>
-                    <TextInput
-                      style={styles.Input}
-                      value={phoneid}
-                      onChangeText={(value) => setPhoneId(value)}
-                    />
-                    {errorStatu == 2 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
-                  </View>
-                  <View style={{ gap: 7 }}>
-                    <Text style={styles.label}>E-Posta</Text>
-                    <TextInput
-                      style={styles.Input}
-                      value={emailid}
-                      onChangeText={(value) => setEmailId(value)}
-                    />
-                    {errorStatu == 6 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
-                  </View>
-                  <View style={{ gap: 7 }}>
-                    <Text style={styles.label} value={titleid}>
-                      Meslek
-                    </Text>
-                    <TextInput
-                      style={styles.Input}
-                      value={titleid}
-                      onChangeText={(value) => setTitleId(value)}
-                    />
-                    {errorStatu == 3 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
-                  </View>
-                  <View style={{ gap: 7 }}>
-                    <Text style={styles.label}>Açıklama</Text>
-                    <TextInput
-                      style={styles.Input}
-                      value={offerid}
-                      onChangeText={(value) => setOfferId(value)}
-                    />
-                    {errorStatu == 7 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
-                  </View>
-
-                  <View style={{ gap: 6 }}>
-                    <Text
-                      style={{ fontSize: 14, color: "grey", fontWeight: 600 }}
-                    >
-                      Şehir
-                    </Text>
-                    <RNPickerSelect doneText="Tamam"
-                      placeholder={{
-                        label: "Şehir Seçiniz...",
-                        value: null,
-                      }}
-                      style={pickerSelectStyles}
-                      value={city}
-                      onValueChange={(value) => {
-                        onChangeCity(value);
-                      }}
-                      items={citites}
-                    />
-                    {errorStatu == 4 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
-                  </View>
-                  <View style={{ gap: 6 }}>
-                    <Text
-                      style={{ fontSize: 14, color: "grey", fontWeight: 600 }}
-                    >
-                      İlçe
-                    </Text>
-                    <RNPickerSelect doneText="Tamam"
-                      placeholder={{
-                        label: "İlçe Seçiniz...",
-                        value: null,
-                      }}
-                      value={county}
-                      style={pickerSelectStyles}
-                      onValueChange={(value) => setcounty(value)}
-                      items={counties}
-                    />
-                    {errorStatu == 5 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
-                    )}
-                  </View>
-                </View>
-              </KeyboardAwareScrollView>
-              <View
-                style={{ flexDirection: "row", justifyContent: "space-around" }}
-              >
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#28A745",
-                    width: "40%",
-                    padding: 15,
-                    borderRadius: 5,
-                  }}
-                  onPress={GiveOffer}
-                >
-                  <Text style={{ color: "white", textAlign: "center" }}>
-                    Gönder
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#DC3545",
-                    width: "40%",
-                    padding: 15,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    setFormVisible(false);
-                  }}
-                >
-                  <Text style={{ color: "white", textAlign: "center" }}>
-                    Kapat
-                  </Text>
-                </TouchableOpacity>
               </View>
             </View>
+          </Modal>
+
+          <View style={{ padding: 10 }}>
+            <ActivityIndicator
+              size="large"
+              color="grey"
+              style={{ display: isLoading ? "flex" : "none" }}
+            />
           </View>
-        </Modal>
+          <Modal
+            isVisible={showCoverImageModal}
+            onBackdropPress={() => setCoverImageModal(false)}
+            swipeDirection={["down"]}
+            animationIn={"fadeInRightBig"}
+            animationOut={"fadeOutDownBig"}
+            onSwipeComplete={() => setCoverImageModal(false)}
+            backdropColor="transparent"
+            style={styles.modalImage}
+          >
+            <View style={styles.modalContentImage}>
+              <View style={{ alignItems: "flex-end", marginBottom: 20 }}>
+                <TouchableOpacity onPress={() => setCoverImageModal(false)}>
+                  <CloseIcon name="close" color={"white"} size={30} />
+                </TouchableOpacity>
+              </View>
 
-        <View style={{ padding: 10 }}>
-          <ActivityIndicator
-            size="large"
-            color="grey"
-            style={{ display: isLoading ? "flex" : "none" }}
-          />
-        </View>
-        <Modal
-          isVisible={showCoverImageModal}
-          onBackdropPress={() => setCoverImageModal(false)}
-          swipeDirection={["down"]}
-          animationIn={"fadeInRightBig"}
-          animationOut={"fadeOutDownBig"}
-          onSwipeComplete={() => setCoverImageModal(false)}
-          backdropColor="transparent"
-          style={styles.modalImage}
-        >
-          <View style={styles.modalContentImage}>
-            <View style={{ alignItems: "flex-end", marginBottom: 20 }}>
-              <TouchableOpacity onPress={() => setCoverImageModal(false)}>
-                <CloseIcon name="close" color={"white"} size={30} />
-              </TouchableOpacity>
-            </View>
-
-            {/* <PagerView
+              {/* <PagerView
               style={{ height: 300 }}
               initialPage={selectedImage}
               onPageSelected={(event) =>
@@ -2005,89 +2011,90 @@ export default function Details({ navigation }) {
                 );
               })}
             </PagerView> */}
-          </View>
-        </Modal>
-
-        <Modal
-          isVisible={ModalForAddToCart}
-          onBackdropPress={() => setModalForAddToCart(false)}
-          animationType="fade"
-          transparent={true}
-          style={styles.modal4}
-        >
-          <View style={styles.modalContent4}>
-            {
-              user.access_token  ?
-              <> 
-              <View style={{ padding: 10, gap: 10 }}>
-              <Text style={{ textAlign: "center" }}>
-                {selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
-                Eminmisiniz?
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  gap: 20,
-                }}
-              >
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "green",
-                    padding: 10,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    addToCard();
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Sepete Ekle</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#e44242",
-                    padding: 10,
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    setModalForAddToCart(false);
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Vazgeç</Text>
-                </TouchableOpacity>
-              </View>
             </View>
-              </>:
-            <>
-                 <View style={{gap:10}}>
-                     
-                        <View style={{}}>
-                          <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}>Üyeliğiniz Bulunmamaktadır!</Text>
-                        </View>
-                        <View style={{width:'100%'}}>
-                          <Text style={{textAlign:'center',color:'#7A8A95'}}>Sepetinize konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
-                        </View>
-                        <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
-                           onPress={()=>{
-                            setModalForAddToCart(false)
-                            navigation.navigate('Login')
+          </Modal>
+
+          <Modal
+            isVisible={ModalForAddToCart}
+            onBackdropPress={() => setModalForAddToCart(false)}
+            animationType="fade"
+            transparent={true}
+            style={styles.modal4}
+          >
+            <View style={styles.modalContent4}>
+              {
+                user.access_token ?
+                  <>
+                    <View style={{ padding: 10, gap: 10 }}>
+                      <Text style={{ textAlign: "center" }}>
+                        {selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
+                        Eminmisiniz?
+                      </Text>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          gap: 20,
                         }}
+                      >
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: "green",
+                            padding: 10,
+                            paddingLeft: 20,
+                            paddingRight: 20,
+                            borderRadius: 5,
+                          }}
+                          onPress={() => {
+                            addToCard();
+                          }}
                         >
-                      <Text style={{color:'#FFFFFF',textAlign:'center'}}>Giriş Yap</Text>
-                    </TouchableOpacity>
+                          <Text style={{ color: "white" }}>Sepete Ekle</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: "#e44242",
+                            padding: 10,
+                            paddingLeft: 20,
+                            paddingRight: 20,
+                            borderRadius: 5,
+                          }}
+                          onPress={() => {
+                            setModalForAddToCart(false);
+                          }}
+                        >
+                          <Text style={{ color: "white" }}>Vazgeç</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
-            </>
-            }
-           
-          </View>
-        </Modal>
-      </ScrollView>
-    </SafeAreaView>
+                  </> :
+                  <>
+                    <View style={{ gap: 10 }}>
+
+                      <View style={{}}>
+                        <Text style={{ textAlign: 'center', color: '#4C6272', fontWeight: 'bold', fontSize: 16 }}>Üyeliğiniz Bulunmamaktadır!</Text>
+                      </View>
+                      <View style={{ width: '100%' }}>
+                        <Text style={{ textAlign: 'center', color: '#7A8A95' }}>Sepetinize konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
+                      </View>
+                      <TouchableOpacity style={{ backgroundColor: '#F65656', width: '100%', padding: 10 }}
+                        onPress={() => {
+                          setModalForAddToCart(false)
+                          navigation.navigate('Login')
+                        }}
+                      >
+                        <Text style={{ color: '#FFFFFF', textAlign: 'center' }}>Giriş Yap</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </>
+              }
+
+            </View>
+          </Modal>
+        </ScrollView>
+      </SafeAreaView>
+    </AlertNotificationRoot>
   );
 }
 
