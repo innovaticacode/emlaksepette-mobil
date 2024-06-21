@@ -308,16 +308,32 @@ export default function AllProjects() {
   };
 
   const handleCheckboxChange = (filterName, value) => {
-    setState((prevState) => ({
-      ...prevState,
-      selectedCheckboxes: {
-        ...prevState.selectedCheckboxes,
-        [filterName]: {
-          ...prevState.selectedCheckboxes[filterName],
-          [value]: !prevState.selectedCheckboxes[filterName]?.[value],
-        },
-      },
-    }));
+    setState((prevState) => {
+      // Seçilenleri tutacak yeni bir nesne oluşturuyoruz
+      const selectedCheckboxes = { ...prevState.selectedCheckboxes };
+  
+      // İlgili filtrenin değerlerinin bir kopyasını alıyoruz
+      const updatedFilterValues = { ...selectedCheckboxes[filterName] };
+  
+      // Değerleri güncelliyoruz
+      updatedFilterValues[value] = !prevState.selectedCheckboxes[filterName]?.[value];
+  
+      // Seçilmemiş olanları temizliyoruz
+      for (const key in updatedFilterValues) {
+        if (!updatedFilterValues[key]) {
+          delete updatedFilterValues[key];
+        }
+      }
+  
+      // Güncellenmiş filtreyi ana filtre nesnesine ekliyoruz
+      selectedCheckboxes[filterName] = updatedFilterValues;
+  
+      // Yeni state'i döndürüyoruz
+      return {
+        ...prevState,
+        selectedCheckboxes,
+      };
+    });
   };
 
   const handleClearFilters = async () => {
