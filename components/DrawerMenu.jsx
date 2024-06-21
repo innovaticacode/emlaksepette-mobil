@@ -7,8 +7,11 @@ import {
   ImageBackground,
 } from "react-native";
 import Categories from "./Categories"; // Bu import, Categories bileşeninizi temsil eden dosyaya göre değişebilir
+import { useNavigation } from "@react-navigation/native";
 
-const DrawerMenu = ({ navigation, setIsDrawerOpen }) => {
+const DrawerMenu = ({setIsDrawerOpen }) => {
+    const navigation = useNavigation();
+
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
     setIsDrawerOpen(false);

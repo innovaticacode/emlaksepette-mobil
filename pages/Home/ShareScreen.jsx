@@ -65,7 +65,7 @@ export default function ShareScreen() {
               borderBottomRightRadius: 20,
             }}
           >
-          <DrawerMenu/>
+          <DrawerMenu setIsDrawerOpen={setIsDrawerOpen}/>
            
           </View>
           <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>

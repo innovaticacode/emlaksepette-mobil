@@ -72,7 +72,7 @@ export default function Test() {
               borderBottomRightRadius: 20,
             }}
           >
-          <DrawerMenu/>
+          <DrawerMenu setIsDrawerOpen={setIsDrawerOpen}/>
           </View>
           <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
             <Search onpres={toggleDrawer} />
