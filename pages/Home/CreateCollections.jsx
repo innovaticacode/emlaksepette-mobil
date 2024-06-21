@@ -5,7 +5,6 @@ import { getValueFor } from '../../components/methods/user'
 import axios from 'axios'
 import AddCollection from '../../components/AddCollection'
 import { ActivityIndicator } from 'react-native-paper'
-import Icon from 'react-native-vector-icons/Entypo'
 export default function CreateCollections() {
     const route=useRoute()
     const {HouseID}= route.params

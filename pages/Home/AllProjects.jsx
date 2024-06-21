@@ -37,14 +37,14 @@ export default function AllProjects() {
     modalVisible: false,
     neighborhoodTitle: "",
     neighborhoodSlug: "",
-    neighborhoods : [],
+    neighborhoods: [],
     countySlug: "",
     countyTitle: "",
     citySlug: "",
     cityTitle: "",
     cityID: null,
     neighborhoodID: null,
-    searchStatus : "Yükleniyor...",
+    searchStatus: "Yükleniyor...",
     countyID: null,
     filters: [],
     slugItem: null,
@@ -85,6 +85,10 @@ export default function AllProjects() {
       { value: 7, label: "Son 7 Gün" },
       { value: 15, label: "Son 15 Gün" },
       { value: 30, label: "Son 30 Gün" },
+      { value: 45, label: "Son 45 Gün" },
+      { value: 60, label: "Son 60 Gün" },
+      { value: 75, label: "Son 75 Gün" },
+      { value: 90, label: "Son 90 Gün" },
     ],
   });
 
@@ -93,10 +97,40 @@ export default function AllProjects() {
   const navigation = useNavigation();
   const { params } = route;
 
-  useEffect(() => {
-    fetchFilteredProjects(buildApiUrl(params), null);
-  }, [params]);
 
+  useEffect(() => {
+    if (params.href) {
+      const baseUrl = "https://emlaksepette.com";
+      const relativeUrl = params.href.replace(`${baseUrl}/kategori`, ""); // 'kategori' kısmını çıkar
+      const urlSegments = relativeUrl.split("/").filter((segment) => segment);
+
+      const slug = urlSegments[0] || ""; 
+      const title = urlSegments[1] || ""; 
+      const optional = urlSegments[2] || ""; 
+      const type = urlSegments[3] || "";
+      const check = urlSegments[4] || "";
+      const city = urlSegments[5] || "";
+      const county = urlSegments[6] || "";
+      const hood = urlSegments[7] || "";
+  
+      const apiUrlFilter = buildApiUrl({
+        slug,
+        title,
+        optional,
+        type,
+        check,
+        city,
+        county,
+        hood,
+      });
+  
+      fetchFilteredProjects(apiUrlFilter, null);
+    }else{
+      fetchFilteredProjects(buildApiUrl(params), null);
+
+    }
+  }, [params]);
+  
 
   useEffect(() => {
     const newCityItems = state.cities.map((city) => ({
@@ -104,9 +138,7 @@ export default function AllProjects() {
       value: city.id,
     }));
     setCityItems(newCityItems);
-    return () => {
-      
-    };
+    return () => {};
   }, [state.cities]);
 
   useEffect(() => {
@@ -211,7 +243,12 @@ export default function AllProjects() {
       selectedProjectStatus: state.selectedProjectStatus,
       selectedListingDate: state.selectedListingDate,
     };
-    setState((prevState) => ({ ...prevState, modalVisible: false,  searchStatus : "Filtreleniyor...", }));
+    setState((prevState) => ({
+      ...prevState,
+      modalVisible: false,
+      searchStatus: "Filtreleniyor...",
+      openFilterIndex: null,
+    }));
     fetchFilteredProjects(buildApiUrl(params), filterData);
   };
 
@@ -219,7 +256,7 @@ export default function AllProjects() {
     try {
       const response = await axios.get(apiUrlFilter, { params: filterData });
       const data = response.data;
-  
+
       const newState = {
         neighborhoodTitle: data.neighborhoodTitle,
         neighborhoodSlug: data.neighborhoodSlug,
@@ -252,15 +289,14 @@ export default function AllProjects() {
         titleParam: data.title,
         typeParam: data.type,
         term: data.term,
-        searchStatus : "Yükleniyor...",
+        searchStatus: "Yükleniyor...",
         projects: data.projects,
       };
-  
-      // FilterData varsa ve projects array boşsa searchStatus güncelle
-      if (filterData && data.projects.length === 0) {
-        newState.searchStatus = 'Sonuç bulunamadı';
+
+      if (data.projects.length === 0) {
+        newState.searchStatus = "Sonuç bulunamadı";
       }
-  
+
       setState((prevState) => ({
         ...prevState,
         ...newState,
@@ -269,7 +305,6 @@ export default function AllProjects() {
       console.error(error);
     }
   };
-  
 
   const handleCheckboxChange = (filterName, value) => {
     setState((prevState) => ({
@@ -288,7 +323,7 @@ export default function AllProjects() {
     setState((prevState) => ({
       ...prevState,
       selectedCheckboxes: {},
-      projects : [],
+      projects: [],
       selectedCity: "",
       selectedCounty: "",
       selectedNeighborhood: "",
@@ -298,16 +333,16 @@ export default function AllProjects() {
       searchStatus: "Filtre Temizleniyor...",
       modalVisible: false,
     }));
-  
+
     await fetchFilteredProjects(buildApiUrl(params), null);
-  
+
     setState((prevState) => ({
       ...prevState,
       modalVisible: false,
       loading: false,
+      openFilterIndex: null,
     }));
   };
-  
 
   const handleRadioChange = (filterName, value) => {
     setState((prevState) => ({
@@ -465,7 +500,9 @@ export default function AllProjects() {
             setState((prevState) => ({ ...prevState, modalVisible: true }))
           }
         >
-          <Text style={{ color: "white", fontSize: 13 }}>Filtrele</Text>
+          <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
+            Filtrele
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{
@@ -474,7 +511,9 @@ export default function AllProjects() {
             borderLeftWidth: 1,
           }}
         >
-          <Text style={{ color: "white", fontSize: 13 }}>Sırala</Text>
+          <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
+            Sırala
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -486,45 +525,58 @@ export default function AllProjects() {
             <ActivityIndicator size="large" color="#000000" />
           </View>
         ) : (
-          <FlatList
-            data={state.projects}
-            renderItem={({ item }) => (
-              <ProjectPost
-                project={item}
-                key={item.id}
-                caption={item.project_title}
-                ımage={`${apiUrl}/${item.image.replace("public/", "storage/")}`}
-                user={item.user}
-                location={item.city.title}
-                city={item.county.ilce_title}
-                ProjectNo={item.id}
-                slug={item.slug}
-                acıklama={item.description
-                  .replace(/<\/?[^>]+(>|$)/g, "")
-                  .replace(/&nbsp;/g, " ")}
-                ShoppingName={item.user.name}
-                ShoppingMail={item.user.email}
-                Phone={item.user.phone}
-                ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                ShopingInfo={item.user.corporate_type}
-              />
-            )}
-            keyExtractor={(item) => item.id.toString()}
-            ListEmptyComponent={
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: 20,
-                }}
-              >
-                <Text style={{ fontSize: 13, color: "gray", fontWeight: 700 }}>
-                <Text>{state.searchStatus}</Text>
-                </Text>
-              </View>
-            }
-          />
+          <>
+            {/* {state.projects.length != 0 && (
+              <Text style={styles.resultCount}>
+                {state.projects.length} ilan bulundu
+              </Text>
+            )} */}
+
+            <FlatList
+              data={state.projects}
+              renderItem={({ item }) => (
+                <ProjectPost
+                  project={item}
+                  key={item.id}
+                  caption={item.project_title}
+                  ımage={`${apiUrl}/${item.image.replace(
+                    "public/",
+                    "storage/"
+                  )}`}
+                  user={item.user}
+                  location={item.city?.title}
+                  city={item.county?.ilce_title}
+                  ProjectNo={item.id}
+                  slug={item.slug}
+                  acıklama={item.description
+                    .replace(/<\/?[^>]+(>|$)/g, "")
+                    .replace(/&nbsp;/g, " ")}
+                  ShoppingName={item.user?.name}
+                  ShoppingMail={item.user?.email}
+                  Phone={item.user?.phone}
+                  ProfilImage={`${apiUrl}/storage/profile_images/${item.user?.profile_image}`}
+                  ShopingInfo={item.user?.corporate_type}
+                />
+              )}
+              keyExtractor={(item) => item.id.toString()}
+              ListEmptyComponent={
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: 20,
+                  }}
+                >
+                  <Text
+                    style={{ fontSize: 13, color: "gray", fontWeight: 700 }}
+                  >
+                    <Text>{state.searchStatus}</Text>
+                  </Text>
+                </View>
+              }
+            />
+          </>
         )}
       </View>
 
@@ -537,6 +589,23 @@ export default function AllProjects() {
         style={styles.modal2}
       >
         <View style={styles.modalContent2}>
+          <View style={styles.modalHeader}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() =>
+                setState((prevState) => ({ ...prevState, modalVisible: false }))
+              }
+            >
+              <FontAwesome5Icon name="times" size={20} color="black" />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>FİLTRELE</Text>
+            <TouchableOpacity
+              style={styles.clearButton}
+              onPress={handleClearFilters}
+            >
+              <Text style={styles.clearButtonText}>TEMİZLE</Text>
+            </TouchableOpacity>
+          </View>
           <ScrollView
             style={styles.scrollView}
             showsVerticalScrollIndicator={false}
@@ -794,16 +863,20 @@ export default function AllProjects() {
                     {state.listingDates.map((date) => (
                       <View style={styles.option} key={date.value}>
                         <TouchableOpacity
-                          style={styles.checkboxContainer}
+                          style={styles.radioContainer}
                           onPress={() =>
-                            handleCheckboxChange("listing_date", date.value)
+                            handleRadioChange("listing_date", date.value)
                           }
                         >
-                          <Text style={styles.checkboxLabel}>{date.label}</Text>
-                          <View style={styles.checkbox}>
-                            {state.selectedCheckboxes["listing_date"]?.[
-                              date.value
-                            ] && <View style={styles.checkboxInner} />}
+                          <Text style={styles.radioLabel}>{date.label}</Text>
+                          <View style={styles.radio}>
+                            <View
+                              style={[
+                                styles.radioInner,
+                                state.selectedRadio["listing_date"] ===
+                                  date.value && styles.radioSelected,
+                              ]}
+                            />
                           </View>
                         </TouchableOpacity>
                       </View>
@@ -957,20 +1030,21 @@ export default function AllProjects() {
                   )}
                 </View>
               ))}
-              <TouchableOpacity
-                onPress={handleFilterSubmit}
-                style={styles.filterButton}
-              >
-                <Text style={styles.filterButtonText}>Filtrele</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleClearFilters}
-                style={[styles.filterButton, { backgroundColor: "#EA2B2E" }]} // Arka plan rengi isteğe göre ayarlanabilir
-              >
-                <Text style={styles.filterButtonText}>Temizle</Text>
-              </TouchableOpacity>
             </View>
           </ScrollView>
+          <View style={styles.modalFooter}>
+            <TouchableOpacity
+              onPress={handleFilterSubmit}
+              style={styles.filterButton}
+            >
+              <Text style={styles.filterButtonText}>
+                İlanları Listele
+                {" ("}
+                {state.projects.length != 0 && state.projects.length}
+                {")"}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </SafeAreaView>
@@ -988,9 +1062,59 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eaeaea",
+  },
+  closeButton: {
+    flex: 1,
+    alignItems: "flex-start",
+  },
+  headerTitle: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  clearButton: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  clearButtonText: {
+    fontSize: 12,
+    color: "red",
+  },
   modalBackdrop: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalFooter: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderTopColor: "#eaeaea",
+  },
+  footerButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    borderRadius: 5,
+  },
+  footerButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#007BFF",
+  },
+  resultCount: {
+    fontSize: 15,
+    padding: 10,
+    textAlign: "center",
   },
   toggleButton: {
     fontSize: 20,
@@ -1030,13 +1154,8 @@ const styles = StyleSheet.create({
   },
   modalContent2: {
     backgroundColor: "#FFFFFF",
-    padding: 20,
-    height: "80%",
-    marginTop: 10,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    height: "95%",
   },
-
   modal: {
     margin: 0,
   },
@@ -1068,7 +1187,7 @@ const styles = StyleSheet.create({
   },
   filterLabel: {
     fontWeight: "bold",
-    padding: 10,
+    padding: 12.7,
   },
 
   switchContainer: {
@@ -1093,6 +1212,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 1,
+    marginRight: 10,
     borderColor: "green",
     justifyContent: "center",
     alignItems: "center",
@@ -1161,26 +1281,31 @@ const styles = StyleSheet.create({
   brandName: {
     color: "black",
     marginRight: 3,
+    fontSize: 12,
   },
   filterButton: {
     backgroundColor: "#274abb",
-    padding: 10,
-    width: "100%",
+    padding: 12,
+    width: "90%",
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
   },
   filterButtonText: {
     color: "white",
-    fontSize: 16,
+    fontSize: 13,
+    fontWeight: "bold",
+  },
+  closeButtonText: {
+    color: "white",
+    fontSize: 14,
     fontWeight: "bold",
   },
 });
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-    borderWidth: 1,
+    borderTopWidth: 1,
     borderColor: "#eaeff5",
     padding: 10,
     fontSize: 14,
