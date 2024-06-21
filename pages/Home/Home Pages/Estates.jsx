@@ -3,6 +3,7 @@ import {
   View,
   Text,
   FlatList,
+
   StyleSheet,
   TouchableOpacity,
   RefreshControl,
@@ -43,8 +44,23 @@ const Estates = ({index}) => {
           setPage(2);
           setHasMore(true);
         } else {
-          setHasMore(false);
+          if (newEstates.length > 0) {
+            setFeaturedEstates((prevEstates) => {
+              const newUniqueEstates = newEstates.filter(
+                (estate) => !prevEstates.some((prevEstate) => prevEstate.id === estate.id)
+              );
+              return [...prevEstates, ...newUniqueEstates];
+            });
+            setPage((prevPage) => prevPage + 1);
+          } else {
+            setHasMore(false);
+          }
         }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
       }
     };
   
@@ -99,7 +115,7 @@ const Estates = ({index}) => {
             },
           }
         );
-
+        
         setModalForAddToCart(false);
         navigation.navigate("Sepetim");
       }
@@ -125,40 +141,17 @@ const Estates = ({index}) => {
         </Text>
 
         <TouchableOpacity style={styles.allBtn}>
-          <Text
-            style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
-            onPress={() =>
-              navigation.navigate("AllRealtorAdverts", {
-                name: "Emlak İlanları",
-                slug: "emlak-ilanlari",
-                data: filteredHomes,
-                count: filteredHomes.length,
-                type: "konut",
-                optional: null,
-                title: null,
-                check: null,
-                city: null,
-                county: null,
-                hood: null,
-              })
-            }
-          >
-            Tüm İlanları Gör
+          <Text style={{ color: "white", fontSize: 11 ,fontWeight:'bold'}}>
+            Tüm Konutları Gör
           </Text>
         </TouchableOpacity>
       </View>
       {refreshing && (
-        <View
-          style={{
-            padding: 10,
-            backgroundColor: "white",
-            alignItems: "center",
-          }}
-        >
+        <View style={{ padding: 10, backgroundColor: 'white', alignItems: 'center' }}>
           <ActivityIndicator animating={true} size="small" color="#000000" />
         </View>
       )}
-
+          
       <FlatList
         data={filteredHomes}
         renderItem={({ item }) => (
@@ -170,137 +163,110 @@ const Estates = ({index}) => {
             title={item.housing_title}
             loading={loading}
             location={item.city_title + " / " + item.county_title}
-            image={`${apiUrl}/housing_images/${
-              JSON.parse(item.housing_type_data).image
-            }`}
-            column1_name={`${
-              JSON.parse(item.housing_type_data)[item.column1_name]
-            } `}
+            image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image}`}
+            column1_name={`${JSON.parse(item.housing_type_data)[item.column1_name]} `}
             column1_additional={item.column1_additional}
-            column2_name={`${
-              JSON.parse(item.housing_type_data)[item.column2_name]
-            } `}
+            column2_name={`${JSON.parse(item.housing_type_data)[item.column2_name]} `}
             column2_additional={item.column2_additional}
-            column3_name={`${
-              JSON.parse(item.housing_type_data)[item.column3_name]
-            } `}
+            column3_name={`${JSON.parse(item.housing_type_data)[item.column3_name]} `}
             column3_additional={item.column3_additional}
-            column4_name={`${
-              JSON.parse(item.housing_type_data)[item.column4_name]
-            } `}
+            column4_name={`${JSON.parse(item.housing_type_data)[item.column4_name]} `}
             column4_additional={item.column4_additional}
             bookmarkStatus={true}
             dailyRent={false}
           />
         )}
-        keyExtractor={(item, index) =>
-          item.id ? item.id.toString() : index.toString()
-        }
+        keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
         onEndReached={() => fetchFeaturedEstates()}
         onEndReachedThreshold={0.1}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        
         ListFooterComponent={renderFooter}
       />
 
-      <Modal
-        isVisible={ModalForAddToCart}
-        onBackdropPress={() => setModalForAddToCart(false)}
-        animationIn={"zoomIn"}
-        animationOut={"zoomOut"}
-        transparent={true}
-        useNativeDriver={true}
-        style={styles.modal4}
-      >
-        <View style={styles.modalContent4}>
-          {user.access_token ? (
-            <>
+     
+<Modal
+          isVisible={ModalForAddToCart}
+          onBackdropPress={() => setModalForAddToCart(false)}
+            animationIn={'zoomIn'}
+            animationOut={'zoomOut'}
+          transparent={true}
+          useNativeDriver={true}
+          style={styles.modal4}
+        >
+         
+          <View style={styles.modalContent4}>
+          {
+              user.access_token  ?
+              <> 
               <View style={{ padding: 10, gap: 10 }}>
-                <Text style={{ textAlign: "center" }}>
-                  #1000{selectedCartItem} No'lu Konutu Sepete Eklemek
-                  İsteiğinize Eminmisiniz?
-                </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    gap: 20,
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "green",
-                      padding: 10,
-                      paddingLeft: 20,
-                      paddingRight: 20,
-                      borderRadius: 5,
-                    }}
-                    onPress={() => {
-                      addToCard();
-                    }}
-                  >
-                    <Text style={{ color: "white" }}>Sepete Ekle</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "#e44242",
-                      padding: 10,
-                      paddingLeft: 20,
-                      paddingRight: 20,
-                      borderRadius: 5,
-                    }}
-                    onPress={() => {
-                      setModalForAddToCart(false);
-                    }}
-                  >
-                    <Text style={{ color: "white" }}>Vazgeç</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </>
-          ) : (
-            <>
-              <View style={{ gap: 10 }}>
-                <View>
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "#4C6272",
-                      fontWeight: "bold",
-                      fontSize: 16,
-                    }}
-                  >
-                    Üyeliğiniz Bulunmamaktadır!
-                  </Text>
-                </View>
-                <View style={{ width: "100%" }}>
-                  <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                    Sepetinize konut ekleyebilmeniz için giriş yapmanız
-                    gerekmektedir
-                  </Text>
-                </View>
+              <Text style={{ textAlign: "center" }}>
+               #1000{selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
+                Eminmisiniz?
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  gap: 20,
+                }}
+              >
                 <TouchableOpacity
                   style={{
-                    backgroundColor: "#F65656",
-                    width: "100%",
+                    backgroundColor: "green",
                     padding: 10,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    borderRadius: 5,
+                  }}
+                  onPress={() => {
+                    addToCard();
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Sepete Ekle</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#e44242",
+                    padding: 10,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                    borderRadius: 5,
                   }}
                   onPress={() => {
                     setModalForAddToCart(false);
-                    navigation.navigate("Login");
                   }}
                 >
-                  <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
-                    Giriş Yap
-                  </Text>
+                  <Text style={{ color: "white" }}>Vazgeç</Text>
                 </TouchableOpacity>
               </View>
+            </View>
+              </>:
+            <>
+                 <View style={{gap:10}}>
+                      
+                        <View>
+                          <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}>Üyeliğiniz Bulunmamaktadır!</Text>
+                        </View>
+                        <View style={{width:'100%'}}>
+                          <Text style={{textAlign:'center',color:'#7A8A95'}}>Sepetinize konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
+                        </View>
+                        <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
+                           onPress={()=>{
+                            setModalForAddToCart(false)
+                            navigation.navigate('Login')
+                        }}
+                        >
+                      <Text style={{color:'#FFFFFF',textAlign:'center'}}>Giriş Yap</Text>
+                    </TouchableOpacity>
+                    </View>
             </>
-          )}
-        </View>
-      </Modal>
+            }
+          </View>
+        </Modal>
     </View>
   );
 };
@@ -320,8 +286,8 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     padding: 5,
     borderRadius: 4,
-  },
-  modal4: {
+  }, 
+   modal4: {
     justifyContent: "center",
     margin: 0,
     padding: 20,

@@ -97,7 +97,7 @@ export default function AllRealtorAdverts() {
   useEffect(() => {
     if (params.href) {
       const baseUrl = "https://emlaksepette.com";
-      const relativeUrl = params.href.replace(`${baseUrl}/kategori`, ""); // 'kategori' kısmını çıkar
+      const relativeUrl = params.href.replace(`${baseUrl}/kategori`, "");
       let urlSegments = relativeUrl.split("/").filter((segment) => segment);
 
       if (urlSegments[0] !== "emlak-ilanlari" && urlSegments[0] != "al-sat-acil" && urlSegments[0] != "paylasimli-ilanlar" ) {
@@ -389,29 +389,100 @@ export default function AllRealtorAdverts() {
       isDrawerOpen: !prevState.isDrawerOpen,
     }));
   };
-  const [index, setindex] = useState(0)
-  const [tab, settab] = useState(0)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <View style={styles.container}>
-        <Header onPress={toggleDrawer} index={setindex} tab={settab} />
+      <Header onPress={toggleDrawer} />
 
-        <Modal
-          swipeDirection="left"
-          onSwipeComplete={() => setModalVisible(false)}
-          onSwipeThreshold={(gestureState) => {
-            return {
-              horizontal: gestureState.ly > Dimensions.get("window").width / 10,
-            };
-          }}
-          isVisible={isDrawerOpen}
-          onBackdropPress={() => setIsDrawerOpen(false)}
-          animationIn="bounceInLeft"
-          animationOut="bounceOutLeft"
-          style={styles.modal}
-        >
-          <View style={styles.modalContent}>
-            <View
+      <Modal
+        swipeDirection="left"
+        onSwipeComplete={() =>
+          setState((prevState) => ({ ...prevState, isDrawerOpen: false }))
+        }
+        onSwipeThreshold={(gestureState) => ({
+          horizontal: gestureState.ly > Dimensions.get("window").width / 10,
+        })}
+        isVisible={state.isDrawerOpen}
+        onBackdropPress={() =>
+          setState((prevState) => ({ ...prevState, isDrawerOpen: false }))
+        }
+        animationIn="bounceInLeft"
+        animationOut="bounceOutLeft"
+        style={styles.modal}
+      >
+        <View style={styles.modalContent}>
+          <View
+            style={{
+              backgroundColor: "#EA2C2E",
+              flex: 0.7 / 2,
+              borderBottomLeftRadius: 30,
+              borderBottomRightRadius: 30,
+            }}
+          >
+            <SafeAreaView style={{ zIndex: 1 }}>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("HomePage");
+                    setState((prevState) => ({
+                      ...prevState,
+                      isDrawerOpen: false,
+                    }));
+                  }}
+                >
+                  <Categories
+                    category="Ana Sayfa"
+                    bordernone="none"
+                    ıconName="home"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("Hesabım");
+                    setState((prevState) => ({
+                      ...prevState,
+                      isDrawerOpen: false,
+                    }));
+                  }}
+                >
+                  <Categories
+                    category="Hesabım"
+                    bordernone="none"
+                    ıconName="user"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("RealtorClubExplore");
+                    setState((prevState) => ({
+                      ...prevState,
+                      isDrawerOpen: false,
+                    }));
+                  }}
+                >
+                  <Categories
+                    category="Emlak Kulüp"
+                    bordernone="none"
+                    showImage={true}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Categories
+                    category="İlan Ver"
+                    bordernone="none"
+                    ıconName="plus"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Categories
+                    category="Sat Kirala"
+                    bordernone="none"
+                    ıconName="search-plus"
+                  />
+                </TouchableOpacity>
+              </ScrollView>
+            </SafeAreaView>
+            <ImageBackground
+              source={require("./MenuBg.jpg")}
               style={{
                 width: "100%",
                 height: "100%",
