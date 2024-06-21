@@ -95,7 +95,38 @@ export default function AllRealtorAdverts() {
   const { params } = route;
 
   useEffect(() => {
-    fetchFilteredProjects(buildApiUrl(params), null);
+    if (params.href) {
+      const baseUrl = "https://emlaksepette.com";
+      const relativeUrl = params.href.replace(`${baseUrl}/kategori`, ""); // 'kategori' kısmını çıkar
+      let urlSegments = relativeUrl.split("/").filter((segment) => segment);
+
+      if (urlSegments[0] !== "emlak-ilanlari" && urlSegments[0] != "al-sat-acil" && urlSegments[0] != "paylasimli-ilanlar" ) {
+        urlSegments = ["emlak-ilanlari", ...urlSegments];
+      }
+      const slug = urlSegments[0] || "";
+      const title = urlSegments[1] || "";
+      const optional = urlSegments[2] || "";
+      const type = urlSegments[3] || "";
+      const check = urlSegments[4] || "";
+      const city = urlSegments[5] || "";
+      const county = urlSegments[6] || "";
+      const hood = urlSegments[7] || "";
+
+      const apiUrlFilter = buildApiUrl({
+        slug,
+        title,
+        optional,
+        type,
+        check,
+        city,
+        county,
+        hood,
+      });
+
+      fetchFilteredProjects(apiUrlFilter, null);
+    } else {
+      fetchFilteredProjects(buildApiUrl(params), null);
+    }
   }, [params]);
 
   useEffect(() => {
@@ -133,7 +164,8 @@ export default function AllRealtorAdverts() {
     county,
     hood,
   }) => {
-    let url = `${apiUrl}api/kategori/${slug}`;
+    let url = `${apiUrl}api/kategori`;
+    if (slug) url += `/${slug}`;
     if (title) url += `/${title}`;
     if (optional) url += `/${optional}`;
     if (type) url += `/${type}`;
@@ -228,7 +260,6 @@ export default function AllRealtorAdverts() {
 
   const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
     try {
-
       const response = await axios.get(apiUrlFilter, { params: filterData });
       const data = response.data;
 

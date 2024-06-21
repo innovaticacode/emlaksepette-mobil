@@ -16,6 +16,7 @@ import Header from "../../components/Header";
 import { SearchBar } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import slugify from "react-slugify";
 
 import { Platform } from "react-native";
 
@@ -55,10 +56,46 @@ export default function Search({ onpres }) {
             <TouchableOpacity
               onPress={() => {
                 onpres();
-                navigation.navigate("Public", {
-                  title: item.text,
-                  data: item.submenus,
-                });
+
+                if (item.submenus && item.submenus.length > 0) {
+                  navigation.navigate("Public", {
+                    title: item.text,
+                    data: item.submenus,
+                  });
+                } else {
+                  navigation.navigate(
+                    item.text == "Projeler"
+                      ? "AllProject"
+                      : "AllRealtorAdverts",
+                    {
+                      name:
+                        item.text != "Al Sat Acil" ||
+                        item.text != "Paylaşımlı İlanlar"
+                          ? item.text
+                          : "Emlak İlanları",
+                      slug: slugify(
+                        item.text != "Al Sat Acil" ||
+                          item.text != "Paylaşımlı İlanlar"
+                          ? item.text
+                          : "emlak-ilanlari"
+                      ),
+                      data: null,
+                      count: 0,
+                      type: null,
+                      optional: null,
+                      title:
+                        item.text != "Al Sat Acil" ||
+                        item.text != "Paylaşımlı İlanlar"
+                          ? item.text
+                          : null,
+                      check: null,
+                      city: null,
+                      county: null,
+                      hood: null,
+                      href: item.href,
+                    }
+                  );
+                }
               }}
               key={index}
             >
