@@ -97,9 +97,40 @@ export default function AllProjects() {
   const navigation = useNavigation();
   const { params } = route;
 
+
   useEffect(() => {
-    fetchFilteredProjects(buildApiUrl(params), null);
+    if (params.href) {
+      const baseUrl = "https://emlaksepette.com";
+      const relativeUrl = params.href.replace(`${baseUrl}/kategori`, ""); // 'kategori' kısmını çıkar
+      const urlSegments = relativeUrl.split("/").filter((segment) => segment);
+
+      const slug = urlSegments[0] || ""; 
+      const title = urlSegments[1] || ""; 
+      const optional = urlSegments[2] || ""; 
+      const type = urlSegments[3] || "";
+      const check = urlSegments[4] || "";
+      const city = urlSegments[5] || "";
+      const county = urlSegments[6] || "";
+      const hood = urlSegments[7] || "";
+  
+      const apiUrlFilter = buildApiUrl({
+        slug,
+        title,
+        optional,
+        type,
+        check,
+        city,
+        county,
+        hood,
+      });
+  
+      fetchFilteredProjects(apiUrlFilter, null);
+    }else{
+      fetchFilteredProjects(buildApiUrl(params), null);
+
+    }
   }, [params]);
+  
 
   useEffect(() => {
     const newCityItems = state.cities.map((city) => ({
@@ -262,7 +293,7 @@ export default function AllProjects() {
         projects: data.projects,
       };
 
-      if (filterData && data.projects.length === 0) {
+      if (data.projects.length === 0) {
         newState.searchStatus = "Sonuç bulunamadı";
       }
 
@@ -511,18 +542,18 @@ export default function AllProjects() {
                     "storage/"
                   )}`}
                   user={item.user}
-                  location={item.city.title}
-                  city={item.county.ilce_title}
+                  location={item.city?.title}
+                  city={item.county?.ilce_title}
                   ProjectNo={item.id}
                   slug={item.slug}
                   acıklama={item.description
                     .replace(/<\/?[^>]+(>|$)/g, "")
                     .replace(/&nbsp;/g, " ")}
-                  ShoppingName={item.user.name}
-                  ShoppingMail={item.user.email}
-                  Phone={item.user.phone}
-                  ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                  ShopingInfo={item.user.corporate_type}
+                  ShoppingName={item.user?.name}
+                  ShoppingMail={item.user?.email}
+                  Phone={item.user?.phone}
+                  ProfilImage={`${apiUrl}/storage/profile_images/${item.user?.profile_image}`}
+                  ShopingInfo={item.user?.corporate_type}
                 />
               )}
               keyExtractor={(item) => item.id.toString()}
@@ -1248,7 +1279,7 @@ const styles = StyleSheet.create({
   brandName: {
     color: "black",
     marginRight: 3,
-    fontSize: 12
+    fontSize: 12,
   },
   filterButton: {
     backgroundColor: "#274abb",

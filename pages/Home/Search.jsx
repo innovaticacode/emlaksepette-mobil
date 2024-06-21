@@ -66,18 +66,6 @@ export default function Search({ onpres }) {
             </TouchableOpacity>
           ))}
         </View>
-
-        {/* <TouchableOpacity 
-            onPress={()=>{
-              navigation.navigate('RealtorClubExplore')
-            }}
-          >
-          <View style={styles.RealtorClub}>
-            <Image source={require('./emlakkulüplogo.png')} style={{position:'absolute',width:50,height:30,top:4}}/>
-              <Text style={{fontWeight:'500',color:'white'}}>EMLAK KULÜP</Text>
-              <Text style={{color:'white'}}>Hemen Keşfet</Text>
-          </View>
-          </TouchableOpacity> */}
       </ScrollView>
     </SafeAreaView>
   );

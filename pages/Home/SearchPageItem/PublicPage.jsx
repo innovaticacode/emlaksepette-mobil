@@ -10,7 +10,7 @@ export default function PublicPage() {
   const { id, data, title } = route.params;
   const goToSubCategoriesPage = (subcategories) => {};
   const filteredData = data.filter((item) => item.text !== "Tüm Projeler");
-console.log(filteredData);
+  
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <View>
