@@ -18,7 +18,7 @@ import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ShopVitrin({ data, housingdata }) {
+export default function ShopVitrin({ data, housingdata, settab }) {
   const navigation = useNavigation();
   const ApiUrl = "https://mobil.emlaksepette.com/storage/store_banners/";
   const ApiUrls = "https://mobil.emlaksepette.com";
@@ -169,9 +169,12 @@ export default function ShopVitrin({ data, housingdata }) {
               >
                 <Text style={{ fontSize: 18 }}>Emlak İlanları</Text>
                 <TouchableOpacity
-                  style={{ backgroundColor: "red", padding: 10 }}
+                  style={styles.allBtn}
+                  onPress={() => settab(2)}
                 >
-                  <Text style={{ color: "white" }}>Tümünü Gör</Text>
+                  <Text style={{ color: "white", fontSize: 11 }}>
+                    Tüm İlanları Gör
+                  </Text>
                 </TouchableOpacity>
               </View>
               <FlatList
@@ -230,39 +233,45 @@ export default function ShopVitrin({ data, housingdata }) {
           ))}
       </View>
 
-      {featuredProjects.length > 0 && (
-        <View>
-          <View
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 50,
-              marginBottom: 10,
-            }}
-          >
-            <Text style={{ fontSize: 18 }}>Proje İlanları</Text>
-            <TouchableOpacity style={{ backgroundColor: "red", padding: 10 }}>
-              <Text style={{ color: "white" }}>Tümünü Gör</Text>
-            </TouchableOpacity>
+      {data?.data?.corporate_type !== "Emlak Ofisi" &&
+        featuredProjects.length > 0 && (
+          <View>
+            <View
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 50,
+                marginBottom: 10,
+              }}
+            >
+              <Text style={{ fontSize: 18 }}>Proje İlanları</Text>
+              <TouchableOpacity style={styles.allBtn} onPress={() => settab(1)}>
+                <Text style={{ color: "white", fontSize: 11 }}>
+                  Tüm Projeleri Gör
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {featuredProjects.slice(0, 1).map((item, i) => (
+              <ProjectPost
+                key={i}
+                project={item}
+                caption={item.project_title}
+                ımage={`${ApiUrls}/${item.image.replace(
+                  "public/",
+                  "storage/"
+                )}`}
+                location={item?.city?.title}
+                city={item?.county?.ilce_title}
+                ProjectNo={item.id}
+                user={data.data}
+                ProfilImage={`${ApiUrls}/storage/profile_images/${data.data.profile_image}`}
+                loading={loadingPrjoects}
+              />
+            ))}
           </View>
-          {featuredProjects.slice(0, 1).map((item, i) => (
-            <ProjectPost
-              key={i}
-              project={item}
-              caption={item.project_title}
-              ımage={`${ApiUrls}/${item.image.replace("public/", "storage/")}`}
-              location={item?.city?.title}
-              city={item?.county?.ilce_title}
-              ProjectNo={item.id}
-              user={data.data}
-              ProfilImage={`${ApiUrls}/storage/profile_images/${data.data.profile_image}`}
-              loading={loadingPrjoects}
-            />
-          ))}
-        </View>
-      )}
+        )}
       <Modal
         isVisible={ModalForAddToCart}
         onBackdropPress={() => setModalForAddToCart(false)}
@@ -383,5 +392,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#fefefe",
     padding: 20,
     borderRadius: 5,
+  },
+  allBtn: {
+    backgroundColor: "#EA2C2E",
+    paddingLeft: 15,
+    paddingRight: 15,
+    padding: 5,
+    borderRadius: 4,
   },
 });
