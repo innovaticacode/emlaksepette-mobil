@@ -114,7 +114,7 @@ export default function AllProjects() {
 
   useEffect(() => {
     if (params.href) {
-      const baseUrl = "https://emlaksepette.com";
+      const baseUrl = "https://mobil.emlaksepette.com";
       const relativeUrl = params.href.replace(`${baseUrl}/kategori`, ""); // 'kategori' kısmını çıkar
       const urlSegments = relativeUrl.split("/").filter((segment) => segment);
 

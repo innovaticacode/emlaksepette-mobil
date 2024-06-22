@@ -63,19 +63,20 @@ export default function Search({ onpres }) {
                     data: item.submenus,
                   });
                 } else {
+                  console.log(item.text);
                   navigation.navigate(
                     item.text == "Projeler"
                       ? "AllProject"
                       : "AllRealtorAdverts",
                     {
                       name:
-                        item.text != "Al Sat Acil" ||
-                        item.text != "Paylaşımlı İlanlar"
+                        item.text == "Al Sat Acil" ||
+                        item.text == "Paylaşımlı İlanlar"
                           ? item.text
                           : "Emlak İlanları",
                       slug: slugify(
-                        item.text != "Al Sat Acil" ||
-                          item.text != "Paylaşımlı İlanlar"
+                        item.text == "Al Sat Acil" ||
+                          item.text == "Paylaşımlı İlanlar"
                           ? item.text
                           : "emlak-ilanlari"
                       ),
@@ -84,8 +85,8 @@ export default function Search({ onpres }) {
                       type: null,
                       optional: null,
                       title:
-                        item.text != "Al Sat Acil" ||
-                        item.text != "Paylaşımlı İlanlar"
+                        item.text == "Al Sat Acil" ||
+                        item.text == "Paylaşımlı İlanlar"
                           ? item.text
                           : null,
                       check: null,

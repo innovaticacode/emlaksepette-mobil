@@ -141,7 +141,19 @@ export default function HomePage({ index }) {
               </PagerView>
             </View>
 
-            <View style={{ height: 100 }}>
+            <View
+                style={{
+                  paddingBottom: 3,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  backgroundColor: "white",
+                }}
+              >
+                <Text style={{ fontSize: 12, fontWeight: 700,marginBottom: 7 }}>
+                POPÜLER İNŞAAT MARKALARI
+
+                </Text>
+
               <SliderBar loading={loadingPrjoects} />
             </View>
 
@@ -158,6 +170,7 @@ export default function HomePage({ index }) {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   paddingLeft: 10,
+                  marginTop: 7,
                   paddingRight: 10,
                   alignItems: "center",
                   backgroundColor: "white",
