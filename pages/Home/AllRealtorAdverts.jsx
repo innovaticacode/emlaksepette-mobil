@@ -147,12 +147,7 @@ export default function AllRealtorAdverts() {
     }
   }, [params]);
 
-  const handleSortChange = (value) => {
-    setSelectedSortOption(value);
-    fetchFilteredProjects(buildApiUrl(params), {
-      sortValue: value,
-    });
-  };
+
 
   useEffect(() => {
     const newCityItems = state.cities.map((city) => ({
@@ -262,8 +257,10 @@ export default function AllRealtorAdverts() {
     setState((prevState) => ({ ...prevState, selectedProjectStatus: value }));
   };
 
+  const [filterData, setFilterData] = useState({}); // filterData için bir state değişkeni tanımla
+
   const handleFilterSubmit = () => {
-    const filterData = {
+    const newFilterData = {
       selectedCheckboxes: state.selectedCheckboxes,
       selectedRadio: state.selectedRadio,
       textInputs: state.textInputs,
@@ -273,6 +270,7 @@ export default function AllRealtorAdverts() {
       selectedProjectStatus: state.selectedProjectStatus,
       selectedListingDate: state.selectedListingDate,
     };
+  
     setState((prevState) => ({
       ...prevState,
       modalVisible: false,
@@ -281,8 +279,25 @@ export default function AllRealtorAdverts() {
       openFilterIndex: null,
       secondhandHousings: [],
     }));
-    fetchFilteredProjects(buildApiUrl(params), filterData);
+  
+    setFilterData(newFilterData); // filterData'yı güncelle
+  
+    fetchFilteredProjects(buildApiUrl(params), newFilterData);
   };
+  
+  const handleSortChange = (value) => {
+    setSelectedSortOption(value);
+    setState((prevState) => ({
+      ...prevState,
+      searchStatus: "Sıralanıyor...",
+    }));
+  
+    fetchFilteredProjects(buildApiUrl(params), {
+      ...filterData, // Son filtreleme verilerini kullan
+      sortValue: value,
+    });
+  };
+  
 
   const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
     try {
@@ -500,6 +515,7 @@ export default function AllRealtorAdverts() {
         onClose={() =>
           setState((prevState) => ({ ...prevState, sortModalVisible: false }))
         }
+         type="housing"
         onSortChange={handleSortChange}
         selectedSortOption={selectedSortOption}
       />
