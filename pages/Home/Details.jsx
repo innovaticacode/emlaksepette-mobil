@@ -76,6 +76,10 @@ export default function Details({ navigation }) {
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const [user, setUser] = useState({});
   const [FormVisible, setFormVisible] = useState(false);
+  const [selectedBlockx,setSelectedBlockx] = useState(0);
+  const [lastBlockItemCount,setLastBlockItemCount] = useState(0);
+  const [showInstallment,setShowInstallment] = useState(false);
+  const scrollViewRef = useRef();
   const apiUrl = "https://mobil.emlaksepette.com/";
   const [data, setData] = useState({
     project: {
@@ -88,7 +92,6 @@ export default function Details({ navigation }) {
   });
 
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     // Yüklenme durumu için zaman aşımı ekliyoruz
     const timer = setTimeout(() => {
@@ -111,6 +114,11 @@ export default function Details({ navigation }) {
   const translateY = useRef(new Animated.Value(400)).current;
   const openModal = (roomOrder) => {
     setPaymentModalShowOrder(roomOrder);
+    if(JSON.parse(data.projectHousingsList[roomOrder]['payment-plan[]']).includes("taksitli")){
+      setShowInstallment(true);
+    }else{
+      setShowInstallment(false);
+    }
     setModalVisible(!modalVisible);
   };
   const OpenFormModal = (no) => {
@@ -139,10 +147,11 @@ export default function Details({ navigation }) {
 
   const getBlockItems = (selectedOrder) => {
     var lastBlockItemsCount = 0;
-
+    setIsLoading(true);
     for (var i = 0; i < selectedOrder; i++) {
       lastBlockItemsCount += data.project.blocks[i].housing_count;
     }
+    setItemCount(10);
     apiRequestGet(
       "project_housings/" +
       ProjectId +
@@ -157,24 +166,24 @@ export default function Details({ navigation }) {
         projectHousingsList: res.data.housings,
       });
 
-      setItemCount(10);
+      setIsLoading(false);
     });
   };
 
   const fetchHousings = (page) => {
     if (data.project.have_blocks) {
-      if (page * 10 <= data.project.blocks[selectedTab].housing_count) {
-        setIsLoading(true);
+      if (page * 10 < data.project.blocks[selectedTab].housing_count) {
         apiRequestGet(
           "project_housings/" +
           ProjectId +
           "?start=" +
-          page * 10 +
+          (parseInt(lastBlockItemCount) + parseInt(page * 10)) +
           "&end=" +
           ((page + 1) * 10 > data.project.blocks[selectedTab].housing_count
-            ? data.project.blocks[selectedTab].housing_count
-            : (page + 1) * 10)
+            ? parseInt(lastBlockItemCount) + parseInt(data.project.blocks[selectedTab].housing_count)
+            : parseInt(lastBlockItemCount) + parseInt((page + 1) * 10))
         ).then((res) => {
+          console.log(res);
           setData({
             ...data,
             projectHousingsList: {
@@ -191,7 +200,7 @@ export default function Details({ navigation }) {
         });
       }
     } else {
-      if (page * 10 <= data.project.room_count) {
+      if (page * 10 < data.project.room_count) {
         setIsLoading(true);
         apiRequestGet(
           "project_housings/" +
@@ -208,6 +217,7 @@ export default function Details({ navigation }) {
               ...res.data.housings,
             },
           });
+
           setItemCount(
             (page + 1) * 10 > data.project.room_count
               ? data.project.room_count
@@ -1006,16 +1016,38 @@ export default function Details({ navigation }) {
         </View>
 
         <ScrollView
+          ref={scrollViewRef}
           scrollEventThrottle={16}
           onScroll={({ nativeEvent }) => {
             if (isCloseToBottom(nativeEvent)) {
-              clearTimeout(debounceTimeout);
-              debounceTimeout = setTimeout(() => {
-                if (!isLoading) {
-                  fetchHousings(page + 1);
-                  setPage(page + 1);
+              if (data.project.have_blocks) {
+                console.log((page + 1) * 10 , data.project.blocks[selectedTab].housing_count)
+                if ((page + 1) * 10 < data.project.blocks[selectedTab].housing_count) {
+                  setIsLoading(true);
+                  clearTimeout(debounceTimeout);
+                  debounceTimeout = setTimeout(() => {
+                    if (!isLoading) {
+                      fetchHousings(page + 1);
+                      setPage(page + 1);
+                    }
+                  }, 1000); // 500ms içinde yeni bir istek yapılmazsa gerçekleştir
+                }else{
+                  setIsLoading(false);
                 }
-              }, 1000); // 500ms içinde yeni bir istek yapılmazsa gerçekleştir
+              }else{
+                if ((page + 1) * 10 < data.project.room_count) {
+                  setIsLoading(true);
+                  clearTimeout(debounceTimeout);
+                  debounceTimeout = setTimeout(() => {
+                    if (!isLoading) {
+                      fetchHousings(page + 1);
+                      setPage(page + 1);
+                    }
+                  }, 1000); // 500ms içinde yeni bir istek yapılmazsa gerçekleştir
+                }
+                
+              }
+              
             }
           }}
         >
@@ -1204,8 +1236,15 @@ export default function Details({ navigation }) {
               setSelectedTab={setSelectedTab}
               selectedTab={selectedTab}
               openModal={openModal}
+              isLoading={isLoading}
               getBlockItems={getBlockItems}
               OpenFormModal={OpenFormModal}
+              selectedBlock={selectedBlockx}
+              setSelectedBlock={setSelectedBlockx}
+              setLastBlockItemCount={setLastBlockItemCount}
+              lastBlockItemCount={lastBlockItemCount}
+              setPage={setPage}
+              setPaymentModalShowOrder={setPaymentModalShowOrder}
             />
           )}
           <View>{tabs == 1 && <Caption data={data} />}</View>
@@ -1223,148 +1262,184 @@ export default function Details({ navigation }) {
             style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", margin: 0 }}
 
           >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <TouchableOpacity
-                  style={{
-                    position: "absolute",
-                    right: -5,
-                    backgroundColor: "#333",
-                    padding: 6,
-                    zIndex: 1,
-                    borderRadius: 30,
-                    top: -15,
-                  }}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >
-                  <Heart name="close" size={20} color={"white"} />
-                </TouchableOpacity>
-                <View style={{ backgroundColor: "#EEEEEE", padding: 10 }}>
-                  <Text style={{ fontWeight: "bold", fontSize: 12 }}>
-                    {data?.project?.project_title} projesinde{" "}
-                    {paymentModalShowOrder} No'lu ilan Ödeme Planı
-                  </Text>
-                </View>
-                <View>
-                  <SettingsItem
-                    info="Peşin Fiyat"
-                    numbers={
-                      paymentModalShowOrder != null
-                        ? addDotEveryThreeDigits(
-                          data.projectHousingsList[paymentModalShowOrder][
-                          "price[]"
-                          ]
-                        ) + " ₺"
-                        : "0"
-                    }
-                  />
-                  {paymentModalShowOrder != null ? (
-                    JSON.parse(
-                      data.projectHousingsList[paymentModalShowOrder][
-                      "payment-plan[]"
-                      ]
-                    ) &&
-                      JSON.parse(
-                        data.projectHousingsList[paymentModalShowOrder][
-                        "payment-plan[]"
-                        ]
-                      ).includes("taksitli") ? (
-                      <SettingsItem
-                        info={
-                          data.projectHousingsList[paymentModalShowOrder][
-                          "installments[]"
-                          ] +
-                          " " +
-                          "Ay Taksitli Fiyat"
+            {
+              data.projectHousingsList[paymentModalShowOrder] ? 
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <TouchableOpacity
+                      style={{
+                        position: "absolute",
+                        right: -5,
+                        backgroundColor: "#333",
+                        padding: 6,
+                        zIndex: 1,
+                        borderRadius: 30,
+                        top: -15,
+                      }}
+                      onPress={() => setModalVisible(!modalVisible)}
+                    >
+                      <Heart name="close" size={20} color={"white"} />
+                    </TouchableOpacity>
+                    <View style={{ backgroundColor: "#EEEEEE", padding: 10 }}>
+                      <Text style={{ fontWeight: "bold", fontSize: 12 }}>
+                        {
+                          data.project.have_blocks ? 
+                          <>
+                            {data?.project?.project_title} projesinde {data.project.blocks[selectedBlockx].block_name}{" "}
+                            {paymentModalShowOrder - lastBlockItemCount} No'lu ilan Ödeme Planı
+                          </>
+                          : 
+                          <>
+                            {data?.project?.project_title} projesinde{" "}
+                            {paymentModalShowOrder - lastBlockItemCount} No'lu ilan Ödeme Planı
+                          </>
                         }
+                        
+                      </Text>
+                    </View>
+                    <View>
+                      <SettingsItem
+                        info="Peşin Fiyat"
                         numbers={
-                          addDotEveryThreeDigits(
-                            data.projectHousingsList[paymentModalShowOrder][
-                            "installments-price[]"
-                            ]
-                          ) + "₺"
+                          paymentModalShowOrder != null ?
+                            (
+                              data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
+                                addDotEveryThreeDigits(parseInt(data.projectHousingsList[paymentModalShowOrder]["price[]"]) / parseInt(data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'])) + " ₺"
+                              : 
+                              addDotEveryThreeDigits(
+                                data.projectHousingsList[paymentModalShowOrder][
+                                "price[]"
+                                ]
+                              ) + " ₺"
+                            )
+                             
+                            : "0"
                         }
                       />
-                    ) : (
-                      <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="0" />
-                    )
-                  ) : (
-                    <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="0" />
-                  )}
-                  {paymentModalShowOrder != null ? (
-                    JSON.parse(
-                      data.projectHousingsList[paymentModalShowOrder][
-                      "payment-plan[]"
-                      ]
-                    ) &&
-                      JSON.parse(
-                        data.projectHousingsList[paymentModalShowOrder][
-                        "payment-plan[]"
-                        ]
-                      ).includes("taksitli") ? (
-                      <SettingsItem
-                        info="Peşinat"
-                        numbers={
-                          addDotEveryThreeDigits(
-                            data.projectHousingsList[paymentModalShowOrder][
-                            "advance[]"
-                            ]
-                          ) + "₺"
-                        }
-                      />
-                    ) : (
-                      <SettingsItem info="Peşinat" numbers="0" />
-                    )
-                  ) : (
-                    <SettingsItem info="Peşinat" numbers="0" />
-                  )}
+                      {
+                        showInstallment ? 
+                          <>
+                            {paymentModalShowOrder != null ? (
+                              JSON.parse(
+                                data.projectHousingsList[paymentModalShowOrder][
+                                "payment-plan[]"
+                                ]
+                              ) &&
+                                JSON.parse(
+                                  data.projectHousingsList[paymentModalShowOrder][
+                                  "payment-plan[]"
+                                  ]
+                                ).includes("taksitli") ? (
+                                <SettingsItem
+                                  info={
+                                    data.projectHousingsList[paymentModalShowOrder][
+                                    "installments[]"
+                                    ] +
+                                    " " +
+                                    "Ay Taksitli Fiyat"
+                                  }
+                                  numbers={
+                                    data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
+                                      addDotEveryThreeDigits(data.projectHousingsList[paymentModalShowOrder]["installments-price[]"] / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]']) + "₺"
+                                    : addDotEveryThreeDigits(
+                                      data.projectHousingsList[paymentModalShowOrder][
+                                      "installments-price[]"
+                                      ]
+                                    ) + "₺"
+                                  }
+                                />
+                              ) : (
+                                <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="0" />
+                              )
+                            ) : (
+                              <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="0" />
+                            )}
+                            {paymentModalShowOrder != null ? (
+                              JSON.parse(
+                                data.projectHousingsList[paymentModalShowOrder][
+                                "payment-plan[]"
+                                ]
+                              ) &&
+                                JSON.parse(
+                                  data.projectHousingsList[paymentModalShowOrder][
+                                  "payment-plan[]"
+                                  ]
+                                ).includes("taksitli") ? (
+                                <SettingsItem
+                                  info="Peşinat"
+                                  numbers={
+                                    data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
+                                      addDotEveryThreeDigits(data.projectHousingsList[paymentModalShowOrder]["advance[]"] / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'])+ "₺"
+                                    :
+                                      addDotEveryThreeDigits(
+                                        data.projectHousingsList[paymentModalShowOrder][
+                                        "advance[]"
+                                        ]
+                                      ) + "₺"
+                                  }
+                                />
+                              ) : (
+                                <SettingsItem info="Peşinat" numbers="0" />
+                              )
+                            ) : (
+                              <SettingsItem info="Peşinat" numbers="0" />
+                            )}
+      
+                            {paymentModalShowOrder != null ? (
+                              JSON.parse(
+                                data.projectHousingsList[paymentModalShowOrder][
+                                "payment-plan[]"
+                                ]
+                              ) &&
+                                JSON.parse(
+                                  data.projectHousingsList[paymentModalShowOrder][
+                                  "payment-plan[]"
+                                  ]
+                                ).includes("taksitli") ? (
+                                <SettingsItem
+                                  info="Aylık Ödenecek Tutar"
+                                  numbers={
+                                    data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ?
+                                      addDotEveryThreeDigits((((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])) / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]']).toFixed(0)) + "₺"
+                                    : 
+                                      addDotEveryThreeDigits(((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])).toFixed(0)) + "₺"
+                                  }
+                                />
+                              ) : (
+                                <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
+                              )
+                            ) : (
+                              <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
+                            )}
+                            {paymentItems && paymentItems}
+                          </>
+                        : ''
+                      }
+                    </View>
 
-                  {paymentModalShowOrder != null ? (
-                    JSON.parse(
-                      data.projectHousingsList[paymentModalShowOrder][
-                      "payment-plan[]"
-                      ]
-                    ) &&
-                      JSON.parse(
-                        data.projectHousingsList[paymentModalShowOrder][
-                        "payment-plan[]"
-                        ]
-                      ).includes("taksitli") ? (
-                      <SettingsItem
-                        info="Aylık Ödenecek Tutar"
-                        numbers={
-                          formatAmount((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]']))
-                        }
-                      />
-                    ) : (
-                      <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
-                    )
-                  ) : (
-                    <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
-                  )}
-                  {paymentItems && paymentItems}
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#EA2C2E",
+                        padding: 10,
+                        borderRadius: 5,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "white",
+                          fontSize: 15,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Sepete Ekle
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#EA2C2E",
-                    padding: 10,
-                    borderRadius: 5,
-                  }}
-                >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "white",
-                      fontSize: 15,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Sepete Ekle
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+              : ''
+            }
+            
           </Modal>
 
           <Modal
@@ -1959,14 +2034,6 @@ export default function Details({ navigation }) {
               </View>
             </View>
           </Modal>
-
-          <View style={{ padding: 10 }}>
-            <ActivityIndicator
-              size="large"
-              color="grey"
-              style={{ display: isLoading ? "flex" : "none" }}
-            />
-          </View>
           <Modal
             isVisible={showCoverImageModal}
             onBackdropPress={() => setCoverImageModal(false)}
@@ -2093,6 +2160,7 @@ export default function Details({ navigation }) {
             </View>
           </Modal>
         </ScrollView>
+        
       </SafeAreaView>
     </AlertNotificationRoot>
   );

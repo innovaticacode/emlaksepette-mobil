@@ -170,7 +170,7 @@ export default function RealtorPostFavorited({
                   </Text>
                 </View>
                 <View style={styles.btns}>
-                  <TouchableOpacity style={styles.addBasket}>
+                  <TouchableOpacity onPress={() => {console.log(type == 1 ? projectId+'-'+housingId : housingId)}} style={styles.addBasket}>
                     <Text
                       style={{ color: "white", fontWeight: "500", fontSize: 12 }}
                     >
