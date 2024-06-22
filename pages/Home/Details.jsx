@@ -1258,17 +1258,12 @@ export default function Details({ navigation }) {
                         numbers={
                           paymentModalShowOrder != null ?
                             (
-                              data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
-                                addDotEveryThreeDigits(parseInt(data.projectHousingsList[paymentModalShowOrder]["price[]"]) / parseInt(data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'])) + " ₺"
+                              data.projectHousingsList[paymentModalShowOrder]['share_sale[]'] != "[]" && data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
+                                addDotEveryThreeDigits((parseInt(data.projectHousingsList[paymentModalShowOrder]["price[]"]) / parseInt(data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'])).toFixed(0)) + " ₺"
                               : 
-                              addDotEveryThreeDigits(
-                                data.projectHousingsList[paymentModalShowOrder][
-                                "price[]"
-                                ]
-                              ) + " ₺"
+                                addDotEveryThreeDigits(data.projectHousingsList[paymentModalShowOrder]["price[]"]) + " ₺"
                             )
-                             
-                            : "0"
+                          : "0"
                         }
                       />
                       {
@@ -1294,7 +1289,7 @@ export default function Details({ navigation }) {
                                     "Ay Taksitli Fiyat"
                                   }
                                   numbers={
-                                    data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
+                                    data.projectHousingsList[paymentModalShowOrder]['share_sale[]'] != "[]" && data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
                                       addDotEveryThreeDigits(data.projectHousingsList[paymentModalShowOrder]["installments-price[]"] / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]']) + "₺"
                                     : addDotEveryThreeDigits(
                                       data.projectHousingsList[paymentModalShowOrder][
@@ -1323,7 +1318,7 @@ export default function Details({ navigation }) {
                                 <SettingsItem
                                   info="Peşinat"
                                   numbers={
-                                    data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
+                                    data.projectHousingsList[paymentModalShowOrder]['share_sale[]'] != "[]" && data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
                                       addDotEveryThreeDigits(data.projectHousingsList[paymentModalShowOrder]["advance[]"] / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'])+ "₺"
                                     :
                                       addDotEveryThreeDigits(
@@ -1354,7 +1349,7 @@ export default function Details({ navigation }) {
                                 <SettingsItem
                                   info="Aylık Ödenecek Tutar"
                                   numbers={
-                                    data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ?
+                                    data.projectHousingsList[paymentModalShowOrder]['share_sale[]'] != "[]" && data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ?
                                       addDotEveryThreeDigits((((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])) / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]']).toFixed(0)) + "₺"
                                     : 
                                       addDotEveryThreeDigits(((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])).toFixed(0)) + "₺"

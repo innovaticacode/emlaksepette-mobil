@@ -200,8 +200,8 @@ const styles = StyleSheet.create({
   },
 
   blockBtn: {
-    paddingLeft: 30,
-    paddingRight: 30,
+    paddingLeft: 20,
+    paddingRight: 20,
     padding: 8,
     borderBottomWidth: 1,
   },
