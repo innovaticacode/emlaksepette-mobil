@@ -54,8 +54,6 @@ export default function OtherHomeInProject({
     return <ActivityIndicator size="large" color={"red"} style={styles.loading} />;
   };
 
-  console.log(data);
-
   const renderItem = ({ item, index }) => {
     const sold = projectCartOrders[index + 1] || null;
     index = lastBlockItemCount + index;
@@ -103,52 +101,54 @@ export default function OtherHomeInProject({
     <SafeAreaView>
       <View>
         <View style={styles.container}>
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              flexGrow: 1,
-              backgroundColor: "#ebebeb",
-              padding: 3,
-              gap: 10,
-              display:'flex'
-            }}
-            bounces={false}
-          >
-            {data.project.blocks && data.project.blocks.map((block, blockIndex) => (
-              <TouchableOpacity
-                key={blockIndex}
-                onPress={() => {
-                  setPaymentModalShowOrder(null);
-                  setSelectedBlock(blockIndex);
-                  var lastBlockItemCountTemp = 0;
-                  for(var i = 0; i < blockIndex; i++){
-                    lastBlockItemCountTemp += data.project.blocks[i].housing_count;
-                  }
-                  setLastBlockItemCount(lastBlockItemCountTemp);
-                  getBlockItems(blockIndex);
-                  setSelectedTab(blockIndex);
-                  setPage(0);
-                }}
-                style={[
-                  styles.blockBtn,
-                  {
-                    borderBottomWidth: selectedBlock === blockIndex ? 1 : 0,
-                  },
-                ]}
-              >
-                <Text
-                  style={{
-                    fontWeight: selectedBlock === blockIndex ? "700" : "normal",
-                    color: "#333",
-                  }}
-                >
-                  {block.block_name}
-                </Text>
-              </TouchableOpacity>
-            ))}
+          {data.project.blocks &&
+           <ScrollView
+           horizontal={true}
+           showsHorizontalScrollIndicator={false}
+           contentContainerStyle={{
+             flexGrow: 1,
+             backgroundColor: "#ebebeb",
+             padding: 3,
+             gap: 10,
+             display:'flex'
+           }}
+           bounces={false}
+         >
+           { data.project.blocks.map((block, blockIndex) => (
+             <TouchableOpacity
+               key={blockIndex}
+               onPress={() => {
+                 setPaymentModalShowOrder(null);
+                 setSelectedBlock(blockIndex);
+                 var lastBlockItemCountTemp = 0;
+                 for(var i = 0; i < blockIndex; i++){
+                   lastBlockItemCountTemp += data.project.blocks[i].housing_count;
+                 }
+                 setLastBlockItemCount(lastBlockItemCountTemp);
+                 getBlockItems(blockIndex);
+                 setSelectedTab(blockIndex);
+                 setPage(0);
+               }}
+               style={[
+                 styles.blockBtn,
+                 {
+                   borderBottomWidth: selectedBlock === blockIndex ? 1 : 0,
+                 },
+               ]}
+             >
+               <Text
+                 style={{
+                   fontWeight: selectedBlock === blockIndex ? "700" : "normal",
+                   color: "#333",
+                 }}
+               >
+                 {block.block_name}
+               </Text>
+             </TouchableOpacity>
+           ))}
 
-            </ScrollView>
+           </ScrollView> }
+         
 
           <FlatList
             data={Array.from({ length: Math.min(data.project.room_count, itemCount) })}

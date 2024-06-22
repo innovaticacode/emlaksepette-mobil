@@ -110,7 +110,7 @@ export default function AllRealtorAdverts() {
 
   useEffect(() => {
     if (params.href) {
-      const baseUrl = "https://emlaksepette.com";
+      const baseUrl = "https://mobil.emlaksepette.com";
       const relativeUrl = params.href.replace(`${baseUrl}/kategori`, "");
       let urlSegments = relativeUrl.split("/").filter((segment) => segment);
 
