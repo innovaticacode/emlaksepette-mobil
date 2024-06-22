@@ -329,12 +329,13 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     paddingLeft: 5,
-
+    
     paddingRight: 5,
 
     paddingTop: 5,
   },
   captionAndIcons: {
+    
     display: "flex",
     flexDirection: "row",
     width: "100%",

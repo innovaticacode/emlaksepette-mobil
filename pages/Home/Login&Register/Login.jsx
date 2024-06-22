@@ -75,7 +75,10 @@ export default function Login({ navigation }) {
     }).then((res) => {
       if (res.data.status) {
         SecureStore.setItemAsync("user", JSON.stringify(res.data));
-        navigation.navigate("HomePage");
+        navigation.push("Home",{
+          "status" : "login"
+        });
+        
       } else {
         setshowMailSendAlert(true);
         setStatus(false);
