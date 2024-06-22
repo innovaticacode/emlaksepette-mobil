@@ -68,9 +68,10 @@ export default function RealtorPost({
   },[])
 
   const [getPostId, setgetPostId] = useState(0)
+  
   const CreateCollection = (id) => {
-      setgetPostId(id)
-      navigation.navigate('CreateCollections',{HouseID:id})
+    setgetPostId(id);
+    navigation.navigate("CreateCollections", { HouseID: id });
   };
   const discountedPrice = discountRate
     ? price - (price * discountRate) / 100
@@ -153,7 +154,7 @@ export default function RealtorPost({
               <ImageBackground
                 source={{ uri: image }}
                 style={{ width: "100%", height: "100%" }}
-                resizeMode="contain"
+                resizeMode="cover"
               />
             </TouchableOpacity>
 
@@ -312,8 +313,6 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    marginTop: 10,
-    paddingBottom: 10,
     display: "flex",
     flexDirection: "column",
     borderBottomWidth: 1,
@@ -330,12 +329,13 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     paddingLeft: 5,
-
+    
     paddingRight: 5,
 
     paddingTop: 5,
   },
   captionAndIcons: {
+    
     display: "flex",
     flexDirection: "row",
     width: "100%",
@@ -357,6 +357,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "25%",
     bottom: 5,
+    top:2
   },
   btns: {
     display: "flex",

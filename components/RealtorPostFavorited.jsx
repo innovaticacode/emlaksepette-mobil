@@ -34,7 +34,8 @@ export default function RealtorPostFavorited({
   projectId,
   housingId,
   no,
-  changeFavorites
+  changeFavorites,
+  GetId
 }) {
   const [user,setUser] = useState({});
   const navigation = useNavigation();
@@ -135,22 +136,21 @@ export default function RealtorPostFavorited({
             }}
           />
           <View style={styles.İlan}>
-            <View style={{ width: "35%" }}>
-              <View
-                style={{ backgroundColor: "#E54242", padding: 2, width: "90%" }}
-              >
-                <Text style={{ fontSize: 9, color: "white" }}>{no}</Text>
-              </View>
+            <View style={{ width: "30%",height:80 }}>
+             
               <Image
                 source={{ uri: image }}
-                style={{ width: "90%", height: "90%" }}
+                style={{ width: "100%", height: '100%'}}
               />
             </View>
 
             <View style={styles.container2}>
               <View style={styles.captionAndIcons}>
                 <View style={styles.caption}>
-                  <Text style={{ fontSize: 11 }} numberOfLines={3}>
+                <Text style={{ fontSize: 9, color: "black" }}>
+                    İlan No: {2000000 + HouseId}
+                  </Text>
+                  <Text style={{ fontSize: 10,fontWeight: 700  }} numberOfLines={3}>
                     {title}
                   </Text>
                 </View>
@@ -170,7 +170,15 @@ export default function RealtorPostFavorited({
                   </Text>
                 </View>
                 <View style={styles.btns}>
+<<<<<<< HEAD
                   <TouchableOpacity onPress={() => {console.log(type == 1 ? projectId+'-'+housingId : housingId)}} style={styles.addBasket}>
+=======
+                  <TouchableOpacity style={styles.addBasket}
+                      onPress={()=>{
+                        GetId(type==1 ? projectId : HouseId , type==1 ? housingId: null , type)
+                      }}
+                  >
+>>>>>>> 696bb16787e2efda7620428cf3e75e38d094b858
                     <Text
                       style={{ color: "white", fontWeight: "500", fontSize: 12 }}
                     >
@@ -220,7 +228,7 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: 150,
+  
 
     marginTop: 10,
 
@@ -234,7 +242,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     flex: 1,
-
+   
+    gap:8,
     justifyContent: "space-between",
   },
   container2: {
@@ -244,7 +253,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   captionAndIcons: {
-    height: "50%",
+ 
     display: "flex",
     flexDirection: "row",
   },
@@ -256,7 +265,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   caption: {
-    width: "60%",
+    width: "70%",
   },
   ıcons: {
     display: "flex",

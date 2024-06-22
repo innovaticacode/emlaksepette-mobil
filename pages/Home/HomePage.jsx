@@ -42,7 +42,6 @@ export default function HomePage({ index }) {
   const [featuredProjects, setFeaturedProjects] = useState([]);
 
   const fetchFeaturedProjects = async () => {
-  
     try {
       const response = await axios.get(
         "https://mobil.emlaksepette.com/api/featured-projects"
@@ -51,20 +50,15 @@ export default function HomePage({ index }) {
       setloadingPrjoects(true);
     } catch (error) {
       console.log(error);
-    }finally{
-      setloadingPrjoects(false)
+    } finally {
+      setloadingPrjoects(false);
     }
   };
 
   useEffect(() => {
-    if (index == 0) {
-      fetchFeaturedProjects();
-    } else {
-      setFeaturedProjects([]);
-    }
+    fetchFeaturedProjects();
   }, [index]);
 
- 
   const [featuredSliders, setFeaturedSliders] = useState([]);
 
   const fetchFeaturedSliders = async () => {
@@ -73,16 +67,11 @@ export default function HomePage({ index }) {
         "https://mobil.emlaksepette.com/api/featured-sliders"
       );
       setFeaturedSliders(response.data);
-  
     } catch (error) {
       console.log(error);
     }
   };
-  useEffect(() => {
-    if (index == 0) {
-      fetchFeaturedSliders();
-    }
-  }, []);
+
   const [currentPage, setCurrentPage] = useState(1);
   const pagerViewRef = useRef(null);
 
@@ -106,7 +95,6 @@ export default function HomePage({ index }) {
     getValueFor("user", setuser);
   }, []);
 
-  
   const { width: screenWidth } = Dimensions.get("window");
 
   return (
@@ -130,6 +118,7 @@ export default function HomePage({ index }) {
                   setCurrentPage(event.nativeEvent.position)
                 }
               >
+
                 {featuredSliders.map((item, index) => (
                   <View
                     style={{
@@ -345,42 +334,3 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
-{
-  /*   */
-}
-
-{
-  /*    <View style={{ paddingTop: 20, padding: 10 }}>
-            {loadingPrjoects == false ? <></> : <Text>Emlak İlanları</Text>}
-
-            <View>
-            {
-                loadingPrjoects == false ?
-                  '' :
-                  <FlatList
-                    data={featuredEstates}
-                    renderItem={({ item }) =>
-                      <RealtorPost
-                        price={`${JSON.parse(item.housing_type_data)['price']} `}
-                        title={item.housing_title}
-                        loading={loadingEstates}
-                        location={item.city_title + ' / ' + item.county_title}
-                        image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image}`}
-                        m2={`${JSON.parse(item.housing_type_data)['squaremeters']} `}
-                        roomCount={`${JSON.parse(item.housing_type_data)['room_count']} `}
-                        floor={`${JSON.parse(item.housing_type_data)['floorlocation']} `}
-
-                      />
-
-                    }
-
-                    scrollEnabled={false}
-                  />
-              } 
-       
-            </View>
-          </View> */
-}
-{
-  /*  */
-}

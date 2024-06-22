@@ -14,6 +14,7 @@ import {
   TextInput,
   Pressable,
   Dimensions,
+  Share
 } from "react-native";
 
 import { React, useEffect, useRef, useState } from "react";
@@ -60,6 +61,7 @@ import { Skeleton } from "@rneui/base";
 import PaymentItem from "../../components/PaymentItem";
 import { err } from "react-native-svg";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import DrawerMenu from "../../components/DrawerMenu";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -844,11 +846,29 @@ export default function Details({ navigation }) {
   };
   const [index, setindex] = useState(0)
   const [tab, settab] = useState(0)
-
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message:  `https://test.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
+      });
+  
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log('Link belirli bir aktivitede paylaşıldı');
+        } else {
+          console.log('Link paylaşıldı');
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log('Paylaşım iptal edildi');
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   return (
     <AlertNotificationRoot>
       <SafeAreaView style={styles.container}>
-        <Header onPress={toggleDrawer} />
+        <Header onPress={toggleDrawer} index={setindex} tab={settab} />
         <Modal
           isVisible={isDrawerOpen}
           onBackdropPress={() => setIsDrawerOpen(false)}
@@ -859,80 +879,15 @@ export default function Details({ navigation }) {
           style={styles.modal}
         >
           <View style={styles.modalContent}>
-            <View
-              style={{
-                backgroundColor: "#EA2C2E",
-                flex: 0.7 / 2,
-                borderBottomLeftRadius: 30,
-                borderBottomRightRadius: 30,
-              }}
-            >
-              <SafeAreaView style={{ zIndex: 1 }}>
-                <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("HomePage");
-                      setIsDrawerOpen(false);
-                    }}
-                  >
-                    <Categories
-                      category="Ana Sayfa"
-                      bordernone="none"
-                      ıconName="home"
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("Hesabım");
-                      setIsDrawerOpen(false);
-                    }}
-                  >
-                    <Categories
-                      category="Hesabım"
-                      bordernone="none"
-                      ıconName="user"
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("RealtorClubExplore");
-                      setIsDrawerOpen(false);
-                    }}
-                  >
-                    <Categories
-                      category="Emlak Kulüp"
-                      bordernone="none"
-                      showImage={true}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity>
-                    <Categories
-                      category="İlan Ver"
-                      bordernone="none"
-                      ıconName="plus"
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity>
-                    <Categories
-                      category="Sat Kirala"
-                      bordernone="none"
-                      ıconName="search-plus"
-                    />
-                  </TouchableOpacity>
-                </ScrollView>
-              </SafeAreaView>
-              <ImageBackground
-                source={require("./MenuBg.jpg")}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  position: "absolute",
-                  opacity: 0.2,
-                }}
-                resizeMode="cover"
-                borderBottomLeftRadius={30}
-                borderBottomRightRadius={30}
-              />
+          <View
+            style={{
+              backgroundColor: "#EA2C2E",
+              flex: 1 / 3,
+              borderBottomLeftRadius: 20,
+              borderBottomRightRadius: 20,
+            }}
+          >
+          <DrawerMenu setIsDrawerOpen={setIsDrawerOpen}/>
             </View>
             <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
               <Search onpres={toggleDrawer} />
@@ -1078,7 +1033,7 @@ export default function Details({ navigation }) {
                   />
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
+              <TouchableOpacity onPress={onShare}>
                 <View style={styles.ıcon}>
                   <Icon2 name="sharealt" size={18} />
                 </View>
