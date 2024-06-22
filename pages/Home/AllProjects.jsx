@@ -110,6 +110,7 @@ export default function AllProjects() {
   const route = useRoute();
   const navigation = useNavigation();
   const { params } = route;
+  const [apiUrlFilterState, setFilterDataState] = useState(null); // filterData için bir state değişkeni tanımla
 
   useEffect(() => {
     if (params.href) {
@@ -137,6 +138,7 @@ export default function AllProjects() {
         hood,
       });
   
+      setFilterDataState(apiUrlFilter)
       fetchFilteredProjects(apiUrlFilter, null);
     }else{
       fetchFilteredProjects(buildApiUrl(params), null);
@@ -268,7 +270,7 @@ export default function AllProjects() {
       secondhandHousings: [],
     }));
   
-    setFilterData(newFilterData); // filterData'yı güncelle
+    setFilterData(newFilterData); 
   
     fetchFilteredProjects(buildApiUrl(params), newFilterData);
   };
@@ -288,7 +290,7 @@ export default function AllProjects() {
 
   const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
     try {
-      const response = await axios.get(apiUrlFilter, { params: filterData });
+      const response = await axios.get(apiUrlFilterState ? apiUrlFilterState : apiUrlFilter, { params: filterData });
       const data = response.data;
 
       const newState = {
