@@ -26,6 +26,7 @@ import RNPickerSelect from "react-native-picker-select";
 import { RefreshControl } from "react-native-gesture-handler";
 import RealtorPost from "../../components/RealtorPost";
 import DrawerMenu from "../../components/DrawerMenu";
+import SortModal from "../../components/SortModal";
 
 export default function AllRealtorAdverts() {
   const [cityItems, setCityItems] = useState();
@@ -38,6 +39,7 @@ export default function AllRealtorAdverts() {
     selectedCounty: "",
     selectedNeighborhood: "",
     modalVisible: false,
+    sortModalVisible: false,
     neighborhoodTitle: "",
     neighborhoodSlug: "",
     neighborhoods: [],
@@ -90,15 +92,16 @@ export default function AllRealtorAdverts() {
     ],
   });
 
-// Fiyatı biçimlendiren işlev
-const formatPrice = (value) => {
-  if (!value) return "";
-  // Sadece sayı ve noktayı izin veriyoruz
-  const cleanedValue = value.replace(/[^0-9]/g, "");
-  const intValue = parseInt(cleanedValue, 10);
-  if (isNaN(intValue)) return "";
-  return intValue.toLocaleString("tr-TR");
-};
+  const [selectedSortOption, setSelectedSortOption] = useState("sort"); // Varsayılan olarak sırala
+
+  const formatPrice = (value) => {
+    if (!value) return "";
+    // Sadece sayı ve noktayı izin veriyoruz
+    const cleanedValue = value.replace(/[^0-9]/g, "");
+    const intValue = parseInt(cleanedValue, 10);
+    if (isNaN(intValue)) return "";
+    return intValue.toLocaleString("tr-TR");
+  };
 
   const apiUrl = "https://mobil.emlaksepette.com/";
   const route = useRoute();
@@ -111,7 +114,11 @@ const formatPrice = (value) => {
       const relativeUrl = params.href.replace(`${baseUrl}/kategori`, "");
       let urlSegments = relativeUrl.split("/").filter((segment) => segment);
 
-      if (urlSegments[0] !== "emlak-ilanlari" && urlSegments[0] != "al-sat-acil" && urlSegments[0] != "paylasimli-ilanlar" ) {
+      if (
+        urlSegments[0] !== "emlak-ilanlari" &&
+        urlSegments[0] != "al-sat-acil" &&
+        urlSegments[0] != "paylasimli-ilanlar"
+      ) {
         urlSegments = ["emlak-ilanlari", ...urlSegments];
       }
       const slug = urlSegments[0] || "";
@@ -139,6 +146,8 @@ const formatPrice = (value) => {
       fetchFilteredProjects(buildApiUrl(params), null);
     }
   }, [params]);
+
+
 
   useEffect(() => {
     const newCityItems = state.cities.map((city) => ({
@@ -248,8 +257,10 @@ const formatPrice = (value) => {
     setState((prevState) => ({ ...prevState, selectedProjectStatus: value }));
   };
 
+  const [filterData, setFilterData] = useState({}); // filterData için bir state değişkeni tanımla
+
   const handleFilterSubmit = () => {
-    const filterData = {
+    const newFilterData = {
       selectedCheckboxes: state.selectedCheckboxes,
       selectedRadio: state.selectedRadio,
       textInputs: state.textInputs,
@@ -259,15 +270,34 @@ const formatPrice = (value) => {
       selectedProjectStatus: state.selectedProjectStatus,
       selectedListingDate: state.selectedListingDate,
     };
+  
     setState((prevState) => ({
       ...prevState,
       modalVisible: false,
+      sortModalVisible: false,
       searchStatus: "Filtreleniyor...",
       openFilterIndex: null,
       secondhandHousings: [],
     }));
-    fetchFilteredProjects(buildApiUrl(params), filterData);
+  
+    setFilterData(newFilterData); // filterData'yı güncelle
+  
+    fetchFilteredProjects(buildApiUrl(params), newFilterData);
   };
+  
+  const handleSortChange = (value) => {
+    setSelectedSortOption(value);
+    setState((prevState) => ({
+      ...prevState,
+      searchStatus: "Sıralanıyor...",
+    }));
+  
+    fetchFilteredProjects(buildApiUrl(params), {
+      ...filterData, // Son filtreleme verilerini kullan
+      sortValue: value,
+    });
+  };
+  
 
   const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
     try {
@@ -319,7 +349,6 @@ const formatPrice = (value) => {
         ...newState,
       }));
 
-      console.log(state.secondhandHousings);
     } catch (error) {
       console.error(error);
     }
@@ -328,23 +357,24 @@ const formatPrice = (value) => {
     setState((prevState) => {
       // Seçilenleri tutacak yeni bir nesne oluşturuyoruz
       const selectedCheckboxes = { ...prevState.selectedCheckboxes };
-  
+
       // İlgili filtrenin değerlerinin bir kopyasını alıyoruz
       const updatedFilterValues = { ...selectedCheckboxes[filterName] };
-  
+
       // Değerleri güncelliyoruz
-      updatedFilterValues[value] = !prevState.selectedCheckboxes[filterName]?.[value];
-  
+      updatedFilterValues[value] =
+        !prevState.selectedCheckboxes[filterName]?.[value];
+
       // Seçilmemiş olanları temizliyoruz
       for (const key in updatedFilterValues) {
         if (!updatedFilterValues[key]) {
           delete updatedFilterValues[key];
         }
       }
-  
+
       // Güncellenmiş filtreyi ana filtre nesnesine ekliyoruz
       selectedCheckboxes[filterName] = updatedFilterValues;
-  
+
       // Yeni state'i döndürüyoruz
       return {
         ...prevState,
@@ -352,7 +382,6 @@ const formatPrice = (value) => {
       };
     });
   };
-  
 
   const handleClearFilters = async () => {
     setState((prevState) => ({
@@ -368,6 +397,7 @@ const formatPrice = (value) => {
       textInputs: {},
       searchStatus: "Filtre Temizleniyor...",
       modalVisible: false,
+      sortModalVisible: false,
     }));
 
     await fetchFilteredProjects(buildApiUrl(params), null);
@@ -375,6 +405,7 @@ const formatPrice = (value) => {
     setState((prevState) => ({
       ...prevState,
       modalVisible: false,
+      sortModalVisible: false,
       loading: false,
       openFilterIndex: null,
     }));
@@ -437,7 +468,7 @@ const formatPrice = (value) => {
         style={styles.modal}
       >
         <View style={styles.modalContent}>
-        <View
+          <View
             style={{
               backgroundColor: "#EA2C2E",
               flex: 1 / 3,
@@ -445,7 +476,7 @@ const formatPrice = (value) => {
               borderBottomRightRadius: 20,
             }}
           >
-          <DrawerMenu setIsDrawerOpen={setState}/>
+            <DrawerMenu setIsDrawerOpen={setState} />
           </View>
           <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
             <Search onpres={toggleDrawer} />
@@ -465,6 +496,9 @@ const formatPrice = (value) => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() =>
+            setState((prevState) => ({ ...prevState, sortModalVisible: true }))
+          }
           style={{
             ...styles.btn,
             borderLeftColor: "white",
@@ -476,6 +510,15 @@ const formatPrice = (value) => {
           </Text>
         </TouchableOpacity>
       </View>
+      <SortModal
+        isVisible={state.sortModalVisible}
+        onClose={() =>
+          setState((prevState) => ({ ...prevState, sortModalVisible: false }))
+        }
+         type="housing"
+        onSortChange={handleSortChange}
+        selectedSortOption={selectedSortOption}
+      />
 
       <View style={styles.container}>
         {state.loading == true ? (
@@ -996,7 +1039,14 @@ const formatPrice = (value) => {
                             style={styles.textInput}
                             keyboardType="numeric"
                             onChangeText={(value) =>
-                              handleTextInputChange(filter.name, "min", filter.name == "price" || filter.name == "daily_rent" ?  formatPrice(value) : value)
+                              handleTextInputChange(
+                                filter.name,
+                                "min",
+                                filter.name == "price" ||
+                                  filter.name == "daily_rent"
+                                  ? formatPrice(value)
+                                  : value
+                              )
                             }
                             value={state.textInputs[filter.name]?.min || ""}
                           />
@@ -1005,7 +1055,14 @@ const formatPrice = (value) => {
                             style={styles.textInput}
                             keyboardType="numeric"
                             onChangeText={(value) =>
-                              handleTextInputChange(filter.name, "max", filter.name == "price" || filter.name == "daily_rent" ?  formatPrice(value) : value)
+                              handleTextInputChange(
+                                filter.name,
+                                "max",
+                                filter.name == "price" ||
+                                  filter.name == "daily_rent"
+                                  ? formatPrice(value)
+                                  : value
+                              )
                             }
                             value={state.textInputs[filter.name]?.max || ""}
                           />

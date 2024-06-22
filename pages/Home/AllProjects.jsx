@@ -24,6 +24,7 @@ import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
 import DrawerMenu from "../../components/DrawerMenu";
+import SortModal from "../../components/SortModal";
 
 export default function AllProjects() {
   const [cityItems, setCityItems] = useState();
@@ -36,6 +37,7 @@ export default function AllProjects() {
     selectedCounty: "",
     selectedNeighborhood: "",
     modalVisible: false,
+    sortModalVisible: false,
     neighborhoodTitle: "",
     neighborhoodSlug: "",
     neighborhoods: [],
@@ -93,11 +95,22 @@ export default function AllProjects() {
     ],
   });
 
+  const [selectedSortOption, setSelectedSortOption] = useState("sort"); // Varsayılan olarak sırala
+
+  const formatPrice = (value) => {
+    if (!value) return "";
+    // Sadece sayı ve noktayı izin veriyoruz
+    const cleanedValue = value.replace(/[^0-9]/g, "");
+    const intValue = parseInt(cleanedValue, 10);
+    if (isNaN(intValue)) return "";
+    return intValue.toLocaleString("tr-TR");
+  };
+
   const apiUrl = "https://mobil.emlaksepette.com/";
   const route = useRoute();
   const navigation = useNavigation();
   const { params } = route;
-
+  const [apiUrlFilterState, setFilterDataState] = useState(null); // filterData için bir state değişkeni tanımla
 
   useEffect(() => {
     if (params.href) {
@@ -125,6 +138,7 @@ export default function AllProjects() {
         hood,
       });
   
+      setFilterDataState(apiUrlFilter)
       fetchFilteredProjects(apiUrlFilter, null);
     }else{
       fetchFilteredProjects(buildApiUrl(params), null);
@@ -233,8 +247,10 @@ export default function AllProjects() {
     setState((prevState) => ({ ...prevState, selectedProjectStatus: value }));
   };
 
+  const [filterData, setFilterData] = useState({}); // filterData için bir state değişkeni tanımla
+
   const handleFilterSubmit = () => {
-    const filterData = {
+    const newFilterData = {
       selectedCheckboxes: state.selectedCheckboxes,
       selectedRadio: state.selectedRadio,
       textInputs: state.textInputs,
@@ -244,18 +260,37 @@ export default function AllProjects() {
       selectedProjectStatus: state.selectedProjectStatus,
       selectedListingDate: state.selectedListingDate,
     };
+  
     setState((prevState) => ({
       ...prevState,
       modalVisible: false,
+      sortModalVisible: false,
       searchStatus: "Filtreleniyor...",
       openFilterIndex: null,
+      secondhandHousings: [],
     }));
-    fetchFilteredProjects(buildApiUrl(params), filterData);
+  
+    setFilterData(newFilterData); 
+  
+    fetchFilteredProjects(buildApiUrl(params), newFilterData);
+  };
+  
+  const handleSortChange = (value) => {
+    setSelectedSortOption(value);
+    setState((prevState) => ({
+      ...prevState,
+      searchStatus: "Sıralanıyor...",
+    }));
+  
+    fetchFilteredProjects(buildApiUrl(params), {
+      ...filterData, // Son filtreleme verilerini kullan
+      sortValue: value,
+    });
   };
 
   const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
     try {
-      const response = await axios.get(apiUrlFilter, { params: filterData });
+      const response = await axios.get(apiUrlFilterState ? apiUrlFilterState : apiUrlFilter, { params: filterData });
       const data = response.data;
 
       const newState = {
@@ -308,16 +343,32 @@ export default function AllProjects() {
   };
 
   const handleCheckboxChange = (filterName, value) => {
-    setState((prevState) => ({
-      ...prevState,
-      selectedCheckboxes: {
-        ...prevState.selectedCheckboxes,
-        [filterName]: {
-          ...prevState.selectedCheckboxes[filterName],
-          [value]: !prevState.selectedCheckboxes[filterName]?.[value],
-        },
-      },
-    }));
+    setState((prevState) => {
+      // Seçilenleri tutacak yeni bir nesne oluşturuyoruz
+      const selectedCheckboxes = { ...prevState.selectedCheckboxes };
+  
+      // İlgili filtrenin değerlerinin bir kopyasını alıyoruz
+      const updatedFilterValues = { ...selectedCheckboxes[filterName] };
+  
+      // Değerleri güncelliyoruz
+      updatedFilterValues[value] = !prevState.selectedCheckboxes[filterName]?.[value];
+  
+      // Seçilmemiş olanları temizliyoruz
+      for (const key in updatedFilterValues) {
+        if (!updatedFilterValues[key]) {
+          delete updatedFilterValues[key];
+        }
+      }
+  
+      // Güncellenmiş filtreyi ana filtre nesnesine ekliyoruz
+      selectedCheckboxes[filterName] = updatedFilterValues;
+  
+      // Yeni state'i döndürüyoruz
+      return {
+        ...prevState,
+        selectedCheckboxes,
+      };
+    });
   };
 
   const handleClearFilters = async () => {
@@ -333,6 +384,7 @@ export default function AllProjects() {
       textInputs: {},
       searchStatus: "Filtre Temizleniyor...",
       modalVisible: false,
+      sortModalVisible: false
     }));
 
     await fetchFilteredProjects(buildApiUrl(params), null);
@@ -340,6 +392,7 @@ export default function AllProjects() {
     setState((prevState) => ({
       ...prevState,
       modalVisible: false,
+      sortModalVisible: false,
       loading: false,
       openFilterIndex: null,
     }));
@@ -432,6 +485,9 @@ export default function AllProjects() {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() =>
+            setState((prevState) => ({ ...prevState, sortModalVisible: true }))
+          }
           style={{
             ...styles.btn,
             borderLeftColor: "white",
@@ -443,7 +499,15 @@ export default function AllProjects() {
           </Text>
         </TouchableOpacity>
       </View>
-
+      <SortModal
+        isVisible={state.sortModalVisible}
+        onClose={() =>
+          setState((prevState) => ({ ...prevState, sortModalVisible: false }))
+        }
+        onSortChange={handleSortChange}
+        type="project"
+        selectedSortOption={selectedSortOption}
+      />
       <View style={styles.container}>
         {state.loading == true ? (
           <View
@@ -937,8 +1001,15 @@ export default function AllProjects() {
                             placeholder={`Min`}
                             style={styles.textInput}
                             keyboardType="numeric"
-                            onChangeText={(value) =>
-                              handleTextInputChange(filter.name, "min", value)
+                          onChangeText={(value) =>
+                              handleTextInputChange(
+                                filter.name,
+                                "min",
+                                filter.name == "price" ||
+                                  filter.name == "daily_rent"
+                                  ? formatPrice(value)
+                                  : value
+                              )
                             }
                             value={state.textInputs[filter.name]?.min || ""}
                           />
@@ -947,7 +1018,14 @@ export default function AllProjects() {
                             style={styles.textInput}
                             keyboardType="numeric"
                             onChangeText={(value) =>
-                              handleTextInputChange(filter.name, "max", value)
+                              handleTextInputChange(
+                                filter.name,
+                                "max",
+                                filter.name == "price" ||
+                                  filter.name == "daily_rent"
+                                  ? formatPrice(value)
+                                  : value
+                              )
                             }
                             value={state.textInputs[filter.name]?.max || ""}
                           />
