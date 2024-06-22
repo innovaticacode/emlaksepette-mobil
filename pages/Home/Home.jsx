@@ -8,7 +8,7 @@ import Search from "./Search";
 import ShareScreen from "./ShareScreen";
 import Test from "./Test";
 import Basket from "./Basket";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import IconStore from "react-native-vector-icons/MaterialCommunityIcons";
 import ShoppingProfile from "./ShoppingProfile";
 import Login from "./Login&Register/Login";
@@ -19,11 +19,18 @@ import HomePage2 from "./HomePage2";
 
 const Tab = createBottomTabNavigator();
 
-const Home = () => {
+const Home = ({route}) => {
+  const isFocused = useIsFocused();
   const [user, setUser] = useState({});
+  console.log(route?.params?.status)
+
   useEffect(() => {
-    getValueFor("user", setUser);
-  }, []);
+    if(route?.params?.status == "login"){
+      getValueFor("user", setUser);
+    }else if(route?.params?.status == "logout"){
+      setUser({});
+    }
+  },[route?.params?.status])
 
   const { width, height } = Dimensions.get("window");
   return (

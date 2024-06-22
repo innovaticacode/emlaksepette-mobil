@@ -122,7 +122,7 @@ export default function ShoppingProfile() {
   const logout = () => {
     setDialogVisible(false);
     SecureStore.setItemAsync("user", "");
-    navigation.navigate("HomePage");
+    navigation.push("Home",{status : "logout"});
   };
 
   const toggleAccor = (index) => {
