@@ -110,21 +110,22 @@ export default function AllRealtorAdverts() {
 
   useEffect(() => {
     if (params.href) {
-      const baseUrl = "https://mobil.emlaksepette.com";
+      const baseUrl = "https://emlaksepette.com";
       const relativeUrl = params.href.replace(`${baseUrl}/kategori`, "");
       let urlSegments = relativeUrl.split("/").filter((segment) => segment);
 
-       // Check if the first segment is one of the special cases
-    const isSpecialCase = 
-    urlSegments[0] === "al-sat-acil" || 
-    urlSegments[0] === "paylasimli-ilanlar";
+    
+    // Check if the first segment is one of the special cases
+    const isSpecialCase =
+      urlSegments[0] === "al-sat-acil" ||
+      urlSegments[0] === "paylasimli-ilanlar";
 
-  if (!isSpecialCase && urlSegments[0] !== "emlak-ilanlari") {
-    urlSegments = ["emlak-ilanlari", ...urlSegments];
-  } else if (isSpecialCase && urlSegments[0] === "emlak-ilanlari") {
-    // If it's a special case but the URL contains "emlak-ilanlari", remove it
-    urlSegments.shift();
-  }
+    if (!isSpecialCase && urlSegments[0] !== "emlak-ilanlari") {
+      urlSegments = ["emlak-ilanlari", ...urlSegments];
+    } else if (isSpecialCase && urlSegments[0] === "emlak-ilanlari") {
+      urlSegments.shift();
+    }
+
       const slug = urlSegments[0] || "";
       const title = urlSegments[1] || "";
       const optional = urlSegments[2] || "";
@@ -150,8 +151,6 @@ export default function AllRealtorAdverts() {
       fetchFilteredProjects(buildApiUrl(params), null);
     }
   }, [params]);
-
-
 
   useEffect(() => {
     const newCityItems = state.cities.map((city) => ({
@@ -274,7 +273,7 @@ export default function AllRealtorAdverts() {
       selectedProjectStatus: state.selectedProjectStatus,
       selectedListingDate: state.selectedListingDate,
     };
-  
+
     setState((prevState) => ({
       ...prevState,
       modalVisible: false,
@@ -283,25 +282,24 @@ export default function AllRealtorAdverts() {
       openFilterIndex: null,
       secondhandHousings: [],
     }));
-  
+
     setFilterData(newFilterData); // filterData'yı güncelle
-  
+
     fetchFilteredProjects(buildApiUrl(params), newFilterData);
   };
-  
+
   const handleSortChange = (value) => {
     setSelectedSortOption(value);
     setState((prevState) => ({
       ...prevState,
       searchStatus: "Sıralanıyor...",
     }));
-  
+
     fetchFilteredProjects(buildApiUrl(params), {
       ...filterData, // Son filtreleme verilerini kullan
       sortValue: value,
     });
   };
-  
 
   const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
     try {
@@ -352,7 +350,6 @@ export default function AllRealtorAdverts() {
         ...prevState,
         ...newState,
       }));
-
     } catch (error) {
       console.error(error);
     }
@@ -519,7 +516,7 @@ export default function AllRealtorAdverts() {
         onClose={() =>
           setState((prevState) => ({ ...prevState, sortModalVisible: false }))
         }
-         type="housing"
+        type="housing"
         onSortChange={handleSortChange}
         selectedSortOption={selectedSortOption}
       />
