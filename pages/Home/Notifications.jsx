@@ -20,7 +20,7 @@ export default function Notifications() {
   const { notifications } = route.params;
 
   const renderRightActions = () => (
-    <TouchableOpacity style={styles.deleteButton} onPress={() => {}}>
+    <TouchableOpacity style={styles.deleteButton}>
       <Text style={styles.deleteButtonText}>Sil</Text>
     </TouchableOpacity>
   );

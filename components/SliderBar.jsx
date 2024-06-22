@@ -15,7 +15,7 @@ export default function SliderBar() {
   const fetchFeaturedStores = async () => {
     try {
       const response = await axios.get(
-        "https://mobil.emlaksepette.com/api/featured-stores"
+        "https://mobil.emlaksepette.com/api/popular-construction-brands"
       );
       if (response.data.length > 0) {
         setFeaturedStores(response.data);
