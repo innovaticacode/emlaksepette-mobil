@@ -184,7 +184,7 @@ export default function Company() {
       );
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
-      console.log("İstek başarıyla tamamlandı:", response.data);
+     
       setmessage(response.data.message);
       setIsSucces(response.data.status);
 

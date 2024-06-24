@@ -236,7 +236,7 @@ export default function PostDetail() {
     setselectedCollectionId(id);
     setselectedCollectionName2(name);
   };
-console.log(selectedCollectionName2)
+
   const addSelectedCollection = (id ,name) => {
     const collectionData = {
       collection_name: name,

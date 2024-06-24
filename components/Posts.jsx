@@ -152,7 +152,7 @@ export default function Posts({
   }
 
   useEffect(() => {
-    console.log(roomOrder,projectFavorites);
+    
     if(projectFavorites?.includes(roomOrder)){
       setHeart("heart")
       setInFavorite(true);

@@ -22,7 +22,7 @@ const Tab = createBottomTabNavigator();
 const Home = ({route}) => {
   const isFocused = useIsFocused();
   const [user, setUser] = useState({});
-  console.log(route?.params?.status)
+ 
 
   useEffect(() => {
     if(route?.params?.status == "login"){

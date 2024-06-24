@@ -161,7 +161,7 @@ export default function Profile() {
       setTeamm(res.data.data.child);
     });
   }, []);
-  console.log(teamm);
+
   const ApiUrl = "https://mobil.emlaksepette.com/";
   const handleOpenPhone = () => {
     // Telefon uygulamasını açmak için

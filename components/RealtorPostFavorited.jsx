@@ -55,7 +55,7 @@ export default function RealtorPostFavorited({
 
   const removeItem = () => {
     if(type == 1){
-      console.log("qqq1");
+      
       const config = {
         headers: { Authorization: `Bearer ${user.access_token}` }
       };
@@ -70,11 +70,11 @@ export default function RealtorPostFavorited({
           button: 'Tamam',
         })
         changeFavorites(1,housingId,projectId)
-        console.log("qqq");
+        
       })
       setShowAlert(false);
     }else{
-      console.log("qqq2");
+     
       const config = {
         headers: { Authorization: `Bearer ${user.access_token}` }
       };
