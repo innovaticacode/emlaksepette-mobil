@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
   ScrollView,
+  Alert
 } from "react-native";
 import { useRef, useState, useEffect } from "react";
 import Editıcon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -32,6 +33,8 @@ export default function UpdateProfile() {
   const handleMapPress = (event) => {
     const { coordinate } = event.nativeEvent;
     setSelectedLocation(coordinate);
+  
+   getAddressFromCoordinates(coordinate.latitude,coordinate.longitude)
   
   };
 
@@ -175,7 +178,9 @@ export default function UpdateProfile() {
   const [latitude, setLatitude] = useState(39.1667);
   const [longitude, setLongitude] = useState(35.6667);
   const [errorMsg, setErrorMsg] = useState(null);
-
+  const [city, setcity] = useState(null);
+  const [county, setcounty] = useState(null);
+  const [neigbourhod, setneigbourhod] = useState(null);
   useEffect(() => {
     if (user.access_token) {
       (async () => {
@@ -192,7 +197,35 @@ export default function UpdateProfile() {
     }
    
   }, [user, userLocation]);
+  const [address, setAddress] = useState({ city: '', district: '', neighborhood: '' });
 
+
+  const getAddressFromCoordinates = (latitude, longitude) => {
+    const API_KEY = 'AIzaSyB-ip8tV3D9tyRNS8RMUwxU8n7mCJ9WCl0';
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`;
+
+    axios.get(url)
+      .then(response => {
+        const result = response.data.results[0];
+        const addressComponents = result.address_components;
+
+        const city = addressComponents.find(component => component.types.includes('administrative_area_level_1'))?.long_name || '';
+        const district = addressComponents.find(component => component.types.includes('administrative_area_level_2'))?.long_name || '';
+        const neighborhood = addressComponents.find(component => component.types.includes('sublocality'))?.long_name 
+        || addressComponents.find(component => component.types.includes('neighborhood'))?.long_name 
+        || addressComponents.find(component => component.types.includes('locality'))?.long_name 
+        || addressComponents.find(component => component.types.includes('sublocality_level_1'))?.long_name 
+        || addressComponents.find(component => component.types.includes('sublocality_level_2'))?.long_name 
+        || '';
+
+        setAddress({ city, district, neighborhood });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+console.log(address)
 const postData = async () => {
 
   try {
@@ -242,6 +275,171 @@ const postData = async () => {
     setloadingModal(false);
   }
 };
+
+
+// const fetchData = async () => {
+//   try {
+//     const response = await axios.get(
+//       "https://mobil.emlaksepette.com/api/cities"
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error("Hata:", error);
+//     throw error;
+//   }
+// };
+
+// const [citites, setCities] = useState([]);
+// useEffect(() => {
+//   fetchData()
+//     .then((citites) => setCities(citites.data))
+//     .catch((error) =>
+//       console.error("Veri alınırken bir hata oluştu:", error)
+//     );
+// }, []);
+
+// const [counties, setcounties] = useState([]);
+// const fetchDataCounty = async (value) => {
+//   try {
+//     const response = await axios.get(
+//       `https://mobil.emlaksepette.com/api/counties/${value}`
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error("Hata:", error);
+//     throw error;
+//   }
+// };
+// const onChangeCity = (value) => {
+//   setcity(value);
+//   if (value) {
+//     fetchDataCounty(value)
+//       .then((county) => setcounties(county.data))
+//       .catch((error) =>
+//         console.error("Veri alınırken bir hata oluştu:", error)
+//       );
+//   } else {
+//     setcounties([]);
+//   }
+// };
+// const [Neigbour, setNeigbour] = useState([]);
+// const fetchDataNeigbour = async (value) => {
+//   try {
+//     const response = await axios.get(
+//       `https://mobil.emlaksepette.com/api/neighborhoods/${value}`
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error("Hata:", error);
+//     throw error;
+//   }
+// };
+// const onChangeCounty = (value) => {
+//   setcounty(value);
+//   if (value) {
+//     fetchDataNeigbour(value)
+//       .then((county) => setNeigbour(county.data))
+//       .catch((error) =>
+//         console.error("Veri alınırken bir hata oluştu:", error)
+//       );
+//   } else {
+//     setNeigbour([]);
+//   }
+// };
+
+const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [counties, setCounties] = useState([]);
+  const [selectedCounty, setSelectedCounty] = useState(null);
+  const [neighborhoods, setNeighborhoods] = useState([]);
+  const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
+  const [coordinates, setCoordinates] = useState({ latitude: 41.0082, longitude: 28.9784 });
+  const [mapRef, setMapRef] = useState(null);
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await axios.get('https://mobil.emlaksepette.com/api/cities');
+        setCities(response.data.data);
+      } catch (error) {
+        console.error('Hata:', error);
+        Alert.alert('Error', 'Could not load cities');
+      }
+    };
+
+    fetchCities();
+  }, []);
+
+  const fetchCounties = async (cityId) => {
+    try {
+      const response = await axios.get(`https://mobil.emlaksepette.com/api/counties/${cityId}`);
+      setCounties(response.data.data);
+    } catch (error) {
+      console.error('Hata:', error);
+      Alert.alert('Error', 'Could not load counties');
+    }
+  };
+
+  const fetchNeighborhoods = async (countyId) => {
+    try {
+      const response = await axios.get(`https://mobil.emlaksepette.com/api/neighborhoods/${countyId}`);
+      setNeighborhoods(response.data.data);
+    } catch (error) {
+      console.error('Hata:', error);
+      Alert.alert('Error', 'Could not load neighborhoods');
+    }
+  };
+
+  const getCoordinates = async (query) => {
+    try {
+      const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`);
+      if (response.data.length > 0) {
+        const { lat, lon } = response.data[0];
+        const coords = { latitude: parseFloat(lat), longitude: parseFloat(lon) };
+        setCoordinates(coords);
+        mapRef.animateToRegion({
+          ...coords,
+          latitudeDelta: 0.07,
+          longitudeDelta: 0.07,
+        });
+      } else {
+        Alert.alert('Error', 'Could not find coordinates for selected location');
+      }
+    } catch (error) {
+      console.error('Hata:', error);
+      Alert.alert('Error', 'Could not load coordinates');
+    }
+  };
+
+  const onChangeCity = (value) => {
+    setSelectedCity(value);
+    setSelectedCounty(null);
+    setSelectedNeighborhood(null);
+    console.log(value)
+    setCounties([]);
+    setNeighborhoods([]);
+    if (value) {
+      fetchCounties(value);
+      getCoordinates(value);
+    }
+  };
+
+  const onChangeCounty = (value) => {
+    setSelectedCounty(value);
+    setSelectedNeighborhood(null);
+    setNeighborhoods([]);
+    if (value) {
+      fetchNeighborhoods(value);
+      getCoordinates(`${selectedCity}, ${value}`);
+    }
+  };
+
+  const onChangeNeighborhood = (value) => {
+    setSelectedNeighborhood(value);
+    if (value) {
+      getCoordinates(`${selectedCity}, ${selectedCounty}, ${value}`);
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -411,19 +609,68 @@ const postData = async () => {
                 useNativeLayout={false}
               />
             </View>
-
+         <View style={{gap:15}}>
+          <View>
+            <Text style={styles.label}>İl</Text>
+            <RNPickerSelect doneText="Tamam"
+                value={selectedCity}
+                placeholder={{
+                  label: "Seçiniz...",
+                  value: null,
+                }}
+                style={pickerSelectStyles}
+                onValueChange={(value) => {
+                  onChangeCity(value)
+                }}
+                items={cities}
+              />
+          </View>
+          <View>
+            <Text style={styles.label}>İlçe</Text>
+            <RNPickerSelect doneText="Tamam"
+                value={selectedCounty}
+                placeholder={{
+                  label: "Seçiniz...",
+                  value: null,
+                }}
+                style={pickerSelectStyles}
+                onValueChange={(value) => {
+                  onChangeCounty(value)
+                }}
+                items={counties}
+              />
+          </View>
+          <View>
+            <Text style={styles.label}>Mahalle</Text>
+            <RNPickerSelect doneText="Tamam"
+                value={selectedNeighborhood}
+                placeholder={{
+                  label: "Seçiniz...",
+                  value: null,
+                }}
+                style={pickerSelectStyles}
+                onValueChange={(value)=>{
+                  onChangeNeighborhood(value)
+                }}
+                items={neighborhoods}
+              />
+          </View>
+        
+         </View>
             {user?.role === "Kurumsal Hesap" &&  (
               <View style={{ height: 300 }}>
                 <MapView
                   style={{ flex: 1 }}
                   zoomControlEnabled={true}
                   region={{
-                    latitude: parseFloat(user?.latitude) == null ? parseFloat(latitude) : parseFloat(user.latitude) , // Türkiye'nin merkezi Ankara'nın enlemi
-                    longitude:parseFloat(user?.longitude) == null ? parseFloat(longitude) : parseFloat(user.longitude), // Türkiye'nin merkezi Ankara'nın boylamı
+                    latitude: parseFloat(user?.latitude) == null ? coordinates.latitude: parseFloat(user.latitude) , // Türkiye'nin merkezi Ankara'nın enlemi
+                    longitude:parseFloat(user?.longitude) == null ? coordinates.longitude : parseFloat(user.longitude), // Türkiye'nin merkezi Ankara'nın boylamı
                     latitudeDelta: 9, // Harita yakınlığı
                     longitudeDelta: 9,
                   }}
                   onPress={handleMapPress}
+                  ref={(ref) => setMapRef(ref)}
+
                 >
                        {selectedLocation ? (
               <Marker coordinate={selectedLocation} />
