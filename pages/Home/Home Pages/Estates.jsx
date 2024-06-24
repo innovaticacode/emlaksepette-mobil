@@ -14,6 +14,7 @@ import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
+import SliderEstateBar from "../../../components/SliderEstateBar";
 const PAGE_SIZE = 10;
 
 const Estates = ({ index }) => {
@@ -131,6 +132,22 @@ const Estates = ({ index }) => {
   };
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          paddingBottom: 3,
+          paddingLeft: 10,
+          paddingRight: 10,
+          marginTop: 10,
+          backgroundColor: "white",
+          height: 130,
+        }}
+      >
+        <Text style={{ fontSize: 12, fontWeight: 700, marginBottom: 7 }}>
+          POPÜLER GAYRİMENKUL MARKALARI
+        </Text>
+
+        <SliderEstateBar />
+      </View>
       <View
         style={{
           paddingBottom: 3,

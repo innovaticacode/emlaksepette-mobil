@@ -17,7 +17,7 @@ import Icon2 from "react-native-vector-icons/AntDesign";
 import Phone from "react-native-vector-icons/Entypo";
 import { Platform } from "react-native";
 import PagerView from "react-native-pager-view";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useIsFocused, useNavigation, useRoute } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
 import DetailsSettings from "../components/PostDetailsSettings/DetailsSettings";
@@ -165,7 +165,7 @@ export default function PostDetail() {
   const [collections, setCollections] = useState([]);
 
   const [user, setUser] = useState({});
-
+  const isFocused = useIsFocused();
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   const fetchData = async (token, setCollections) => {
     try {
@@ -189,7 +189,7 @@ export default function PostDetail() {
   };
   useEffect(() => {
     getValueFor("user", setUser);
-  }, []);
+  }, [isFocused]);
 
   useEffect(() => {
     if (user?.access_token) {

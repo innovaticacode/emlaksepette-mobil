@@ -52,6 +52,8 @@ export default function Posts({
   previousBlockHousingCount,
   projectFavorites,
   isUserSame,
+  haveBlocks,
+  lastBlockItemCount
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -150,6 +152,7 @@ export default function Posts({
   }
 
   useEffect(() => {
+    console.log(roomOrder,projectFavorites);
     if(projectFavorites?.includes(roomOrder)){
       setHeart("heart")
       setInFavorite(true);
@@ -195,7 +198,7 @@ export default function Posts({
                 padding: 4,
               }}
             >
-              <Text style={styles.noText}>No {roomOrder}</Text>
+              <Text style={styles.noText}>No {haveBlocks ? roomOrder - lastBlockItemCount : roomOrder}</Text>
             </View>
             <Image
               source={{
