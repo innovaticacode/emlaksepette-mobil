@@ -16,6 +16,7 @@ import ProfileMap from "./ProfileMap";
 import { Skeleton } from "@rneui/themed";
 import CommentItem from "../RealtorPages/CommentItem";
 import { Platform } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
 export default function ShopInfo({ data, loading }) {
   const { width, height } = Dimensions.get("window");
@@ -26,6 +27,8 @@ export default function ShopInfo({ data, loading }) {
   const year = dateTime.getFullYear();
 
   const formattedDate = `${day}/${month}/${year}`;
+  console.log(data?.data.latitude);
+  const [selectedLocation, setSelectedLocation] = useState(null);
 
   return (
     <ScrollView
@@ -287,6 +290,43 @@ export default function ShopInfo({ data, loading }) {
                 styles.shadow,
               ]}
             >
+              <MapView
+                initialRegion={{
+                  latitude:
+                    parseFloat(
+                      data?.data?.latitude == null
+                        ? 38.9637
+                        : data?.data?.latitude
+                    ) || 0,
+                  longitude:
+                    parseFloat(
+                      data?.data?.longitude == null
+                        ? 35.2433
+                        : data?.data?.longitude
+                    ) || 0,
+                  latitudeDelta: data?.data?.latitude == null ? 8.0 : 0.0922,
+                  longitudeDelta: data?.data?.lingitude == null ? 8.0 : 0.0421,
+                  altidute: 50.03281021118164,
+                }}
+                style={{ flex: 1 }}
+              >
+                <Marker
+                  coordinate={{
+                    latitude:
+                      parseFloat(
+                        data?.data?.latitude == null ? "" : data?.data?.latitude
+                      ) || 0,
+                    longitude:
+                      parseFloat(
+                        data?.data?.longitude == null
+                          ? ""
+                          : data?.data?.longitude
+                      ) || 0,
+                  }}
+                  title={data?.name}
+                  description="Proje Konumu"
+                />
+              </MapView>
               {/* <ProfileMap mapData={data}/>   */}
             </View>
           </>

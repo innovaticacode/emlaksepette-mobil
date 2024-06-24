@@ -66,6 +66,7 @@ export default function Profile() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
+  console.log(user);
   const postData = async () => {
     try {
       var formData = new FormData();
@@ -152,15 +153,16 @@ export default function Profile() {
     }).start();
   };
   const [loading, setloading] = useState(false);
-  const [storeData, setstoreSata] = useState([]);
+  const [storeData, setstoreData] = useState([]);
   useEffect(() => {
     apiRequestGet("brand/" + id).then((res) => {
       setloading(true + "true oldu");
-      setstoreSata(res.data);
+      setstoreData(res.data);
       setHousings(res.data.data.housings);
       setTeamm(res.data.data.child);
     });
   }, []);
+
   console.log(teamm);
   const ApiUrl = "https://mobil.emlaksepette.com/";
   const handleOpenPhone = () => {
@@ -485,28 +487,30 @@ export default function Profile() {
                     </Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={[
-                      styles.TabBarBtn,
-                      {
-                        borderBottomWidth: tab === 1 ? 3 : 0,
-                        borderBottomColor:
-                          tab === 1 ? "#264ABB" : "transparent",
-                        top: 2,
-                      },
-                    ]}
-                    onPress={() => settab(1)}
-                  >
-                    <Text
-                      style={{
-                        color: tab === 1 ? "black" : "grey",
-                        fontWeight: tab === 1 ? "500" : "normal",
-                        bottom: width > 400 ? 0 : 1,
-                      }}
+                  {storeData?.data?.corporate_type !== "Emlak Ofisi" && (
+                    <TouchableOpacity
+                      style={[
+                        styles.TabBarBtn,
+                        {
+                          borderBottomWidth: tab === 1 ? 3 : 0,
+                          borderBottomColor:
+                            tab === 1 ? "#264ABB" : "transparent",
+                          top: 2,
+                        },
+                      ]}
+                      onPress={() => settab(1)}
                     >
-                      Proje İlanları({storeData?.data?.projects?.length})
-                    </Text>
-                  </TouchableOpacity>
+                      <Text
+                        style={{
+                          color: tab === 1 ? "black" : "grey",
+                          fontWeight: tab === 1 ? "500" : "normal",
+                          bottom: width > 400 ? 0 : 1,
+                        }}
+                      >
+                        Proje İlanları({storeData?.data?.projects?.length})
+                      </Text>
+                    </TouchableOpacity>
+                  )}
 
                   <TouchableOpacity
                     style={[
@@ -608,6 +612,7 @@ export default function Profile() {
             housingdata={Housings}
             data={storeData}
             loading={loading}
+            settab={settab}
           />
         )}
         {tab === 1 && <ProjectAdverts data={storeData} />}
