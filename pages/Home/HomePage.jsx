@@ -119,6 +119,7 @@ export default function HomePage({ index }) {
                 }
               >
 
+
                 {featuredSliders.map((item, index) => (
                   <View
                     style={{
@@ -139,6 +140,7 @@ export default function HomePage({ index }) {
                   </View>
                 ))}
               </PagerView>
+
             </View>
 
             <View

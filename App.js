@@ -1,5 +1,3 @@
-
-
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { TransitionPresets } from "@react-navigation/stack";
@@ -71,7 +69,7 @@ import UserTypeList from "./pages/Home/ProfilePages/UserTypeList";
 import PaymentScreen from "./pages/Home/PaymentScreen";
 import Onboard from "./pages/Home/Onboarding/Onboard";
 import SplashScreen from "./pages/Home/Onboarding/SplashScreen";
-import { getValueFor } from "./components/methods/user";
+import { getValueFor, getValueFor2 } from "./components/methods/user";
 import Verification from "./pages/Home/ProfilePages/Verification";
 import ForgotPassword from "./pages/Home/Login&Register/ForgotPassword";
 import UpdateUserType from "./pages/Home/ProfilePages/UpdateUserType";
@@ -82,7 +80,13 @@ import Invoice from "./pages/Home/Invoice";
 import CreateReservation from "./pages/Home/RealtorPages/CreateReservation";
 import PaymentScreenForReserve from "./pages/Home/PaymentScreenForReserve";
 import CreateCollections from "./pages/Home/CreateCollections";
+
+import WelcomePage from "./pages/Home/Onboarding/WelcomePage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
+
 import DecontPdf from "./pages/Home/DecontPdf";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -90,20 +94,79 @@ export default function App({ route }) {
   const [İsLoggedIn, setİsLoggedIn] = useState(false);
   const [ShowOnBoard, setShowOnBoard] = useState(true);
   const [showBackIcon, setshowBackIcon] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
 
+  const [housingTypes, setHousingTypes] = useState([]);
+  const [selectedTypes, setSelectedTypes] = useState([]);
   const [showSplash, setShowSplash] = useState(true);
+  const [showSplashTemp, setShowSplashTemp] = useState(null);
 
   useEffect(() => {
-    setTimeout(() => {
-      setShowSplash(false);
-    }, 1000); // 3 saniye sonra splash ekranını kaldır
+    // AsyncStorage'de saklanan bilgiyi kontrol et
+    const checkWelcomeStatus = async () => {
+      try {
+        const value = await AsyncStorage.getItem("@welcome_screen_shown");
+        if (value === "true") {
+          // Welcome screen daha önce gösterilmiş, gösterme
+          setShowWelcome(false);
+        }
+      } catch (error) {
+        console.error("AsyncStorage hatası:", error);
+      }
+    };
+
+    checkWelcomeStatus();
   }, []);
+
+  const handleWelcomeScreenDone = async () => {
+    // Welcome screen gösterildi olarak işaretlenir
+    try {
+      await AsyncStorage.setItem("@welcome_screen_shown", "true");
+    } catch (error) {
+      console.error("AsyncStorage hatası:", error);
+    }
+    setShowWelcome(false);
+  };
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setShowSplash(false);
+  //   }, 1000); // 3 saniye sonra splash ekranını kaldır
+  // }, []);
 
   const [user, setUser] = useState({});
 
   useEffect(() => {
     getValueFor("user", setUser);
+
+    getValueFor2("welcome_screen_show", setShowSplashTemp);
   }, []);
+
+
+  useEffect(() => {
+    if (showSplashTemp == "ff") {
+      setShowSplash(false);
+    }
+  }, [showSplashTemp]);
+
+  const hideSplash = () => {
+    SecureStore.setItemAsync("welcome_screen_show", "ff");
+    setShowSplash(false);
+  };
+  function StepScreen({ step, navigation, setHousingTypes, setSelectedTypes, housingTypes, selectedTypes }) {
+    return (
+      <View style={styles.container}>
+        <TypeListScreen
+          step={step}
+          navigation={navigation}
+          setHousingTypes={setHousingTypes}
+          setSelectedTypes={setSelectedTypes}
+          housingTypes={housingTypes}
+          selectedTypes={selectedTypes}
+        />
+      </View>
+    );
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -112,17 +175,22 @@ export default function App({ route }) {
           screenOptions={{
             gestureEnabled: true,
             ...TransitionPresets.SlideFromRightIOS,
+
             headerTintColor: '#333',
+
 
           }}
         >
           {showSplash ? (
             <Stack.Screen
               name="SplashScreen"
-              component={SplashScreen}
-              options={{
-                headerShown: false,
-              }}
+              component={() => (
+                <WelcomePage
+                  hideSplash={hideSplash}
+                  onFinish={handleWelcomeScreenDone}
+                />
+              )}
+              options={{ headerShown: false }}
             />
           ) : (
             //   ShowOnBoard?
@@ -147,7 +215,9 @@ export default function App({ route }) {
           )}
 
           <Stack.Group>
+
             <Stack.Screen name="Login" options={{ title: "Giriş Yap", headerBackTitleVisible: false }}>
+
               {(props) => <Login {...props} />}
             </Stack.Screen>
             <Stack.Screen
@@ -157,12 +227,49 @@ export default function App({ route }) {
             />
           </Stack.Group>
 
+          <Stack.Screen name="Step1">
+          {(props) => (
+            <StepScreen
+              {...props}
+              step={1}
+              setHousingTypes={setHousingTypes}
+              setSelectedTypes={setSelectedTypes}
+              housingTypes={housingTypes}
+              selectedTypes={selectedTypes}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="Step2">
+          {(props) => (
+            <StepScreen
+              {...props}
+              step={2}
+              setHousingTypes={setHousingTypes}
+              setSelectedTypes={setSelectedTypes}
+              housingTypes={housingTypes}
+              selectedTypes={selectedTypes}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="Step3">
+          {(props) => (
+            <StepScreen
+              {...props}
+              step={3}
+              setHousingTypes={setHousingTypes}
+              setSelectedTypes={setSelectedTypes}
+              housingTypes={housingTypes}
+              selectedTypes={selectedTypes}
+            />
+          )}
+        </Stack.Screen>
+
           <Stack.Screen
             name="Emlak"
             component={Emlakİlanı}
             options={({ route }) => ({
-              title:route.params.name,
-              headerBackTitleVisible:false
+              title: route.params.name,
+              headerBackTitleVisible: false
             })}
           />
           <Stack.Screen
@@ -371,7 +478,7 @@ export default function App({ route }) {
             <Stack.Screen
               name="EditColection"
               component={EditCollection}
-              initialParams={{ item: { name: 'Koleksiyon Düzenle' } }}
+              initialParams={{ item: { name: "Koleksiyon Düzenle" } }}
               options={{
                 headerBackTitle: "",
                 headerBackTitleVisible: false,
@@ -490,7 +597,7 @@ export default function App({ route }) {
             {(props) => <ShareScreenProject {...props} />}
           </Stack.Screen>
 
-         
+
           <Stack.Screen
             name="Notifications"
             component={Notifications}
@@ -587,7 +694,7 @@ export default function App({ route }) {
             options={({ route }) => ({
               headerShown: false,
               headerStyle: {
-                backgroundColor: '#EA2B2E',
+                backgroundColor: "#EA2B2E",
               },
               title: route.params.name + " - " + route.params.count + " Proje",
               headerBackTitle: "",
@@ -796,6 +903,7 @@ export default function App({ route }) {
                 backgroundColor: "#f7f7f7",
               },
 
+
             })}
 
           />
@@ -808,9 +916,8 @@ export default function App({ route }) {
               headerStyle: {
                 backgroundColor: "#f7f7f7",
               },
-             
+
             })}
-            
           />
         </Stack.Navigator>
       </NavigationContainer>
