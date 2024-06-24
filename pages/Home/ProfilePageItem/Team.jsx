@@ -3,7 +3,7 @@ import React from "react";
 import { Platform } from "react-native";
 
 export default function Team({ teamm }) {
-  console.log(teamm, "asw332d");
+
   const getInitials = (name) => {
     const nameParts = name.split(" ");
     if (nameParts.length >= 2) {

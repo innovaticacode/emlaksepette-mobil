@@ -225,7 +225,7 @@ export default function UpdateProfile() {
       });
   };
 
-console.log(address)
+
 const postData = async () => {
 
   try {
@@ -253,7 +253,7 @@ const postData = async () => {
           },
         }
       );
-      console.log('sdfsfsfsdfsdfstbdg')
+  
       setName("");
 
       setUpdateSuccess(true);
@@ -415,7 +415,7 @@ const [cities, setCities] = useState([]);
     setSelectedCity(value);
     setSelectedCounty(null);
     setSelectedNeighborhood(null);
-    console.log(value)
+
     setCounties([]);
     setNeighborhoods([]);
     if (value) {

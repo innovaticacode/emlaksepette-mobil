@@ -162,7 +162,7 @@ export default function Details({ navigation }) {
       "&end=" +
       (lastBlockItemsCount + 10)
     ).then((res) => {
-      console.log(res);
+     
       setData({
         ...data,
         projectHousingsList: res.data.housings,

@@ -72,7 +72,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
       );
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
-      console.log("İstek başarıyla tamamlandı:", response.data);
+     
       setmessage(response.data.message);
       navigation.navigate("Login",{showAlert:true ,message:message});
       setname("");
