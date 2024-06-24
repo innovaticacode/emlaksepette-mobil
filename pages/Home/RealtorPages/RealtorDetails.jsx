@@ -84,9 +84,9 @@ export default function PostDetail() {
   const windowWidth = Dimensions.get("window").width;
   const handleOpenPhone = () => {
     // Telefon uygulamasını açmak için
-    Linking.openURL("tel:+905537064474");
+    Linking.openURL(`tel:+90${data?.housing?.user?.phone}`);
   };
-
+console.log(data?.user?.mobile_phone)
   const changeTab = (tabs) => {
     setTabs(tabs);
   };
@@ -443,6 +443,7 @@ export default function PostDetail() {
           style={{ flexDirection: "row", gap: 20, justifyContent: "center" }}
         >
           <TouchableOpacity
+          onPress={handleOpenPhone}
             style={{
               backgroundColor: "#EA2A28",
               padding: 10,
