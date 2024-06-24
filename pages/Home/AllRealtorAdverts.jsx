@@ -114,17 +114,15 @@ export default function AllRealtorAdverts() {
       const relativeUrl = params.href.replace(`${baseUrl}/kategori`, "");
       let urlSegments = relativeUrl.split("/").filter((segment) => segment);
 
-    
-    // Check if the first segment is one of the special cases
-    const isSpecialCase =
-      urlSegments[0] === "al-sat-acil" ||
-      urlSegments[0] === "paylasimli-ilanlar";
+      const isSpecialCase =
+        urlSegments[0] === "al-sat-acil" ||
+        urlSegments[0] === "paylasimli-ilanlar";
 
-    if (!isSpecialCase && urlSegments[0] !== "emlak-ilanlari") {
-      urlSegments = ["emlak-ilanlari", ...urlSegments];
-    } else if (isSpecialCase && urlSegments[0] === "emlak-ilanlari") {
-      urlSegments.shift();
-    }
+      if (!isSpecialCase && urlSegments[0] !== "emlak-ilanlari") {
+        urlSegments = ["emlak-ilanlari", ...urlSegments];
+      } else if (isSpecialCase && urlSegments[0] === "emlak-ilanlari") {
+        urlSegments.shift();
+      }
 
       const slug = urlSegments[0] || "";
       const title = urlSegments[1] || "";
