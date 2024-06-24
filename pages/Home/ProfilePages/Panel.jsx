@@ -53,7 +53,7 @@ export default function Panel({ options, onSelect }) {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            `https://mobil.emlaksepette.com/api/institutional/users/${user.id}`,
+            `https://mobil.emlaksepette.com/api/users/${user.id}`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,

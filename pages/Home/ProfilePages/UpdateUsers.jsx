@@ -137,7 +137,7 @@ import {
         try {
           if (user?.access_token) {
             const response = await axios.get(
-              `https://mobil.emlaksepette.com/api/institutional/users/${UserID}`,
+              `https://mobil.emlaksepette.com/api/users/${UserID}`,
               {
                 headers: {
                   Authorization: `Bearer ${user.access_token}`,
