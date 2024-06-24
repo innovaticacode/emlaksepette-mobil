@@ -121,8 +121,10 @@ export default function Login({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <View style={[styles.header, {}]}></View>
-        <View style={{ padding: 10 }}>
+        {!IsShowAlert &&  <View style={[styles.header, {}]}></View>}
+       
+        <View style={!IsShowAlert ? { padding: 10 } : null}>
+
           <View
             style={{
               backgroundColor: "#E7FCEB",

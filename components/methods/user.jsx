@@ -9,7 +9,7 @@ export default async function userData() {
 
 export async function getValueFor(key, setState) {
   let result = await SecureStore.getItemAsync(key);
-  console.log(result, key);
+  
   if (result) {
     setState(JSON.parse(result));
   }
@@ -17,7 +17,7 @@ export async function getValueFor(key, setState) {
 
 export async function getValueFor2(key, setState) {
   let result = await SecureStore.getItemAsync(key);
-  console.log(result, key);
+  
   if (result) {
     setState(result);
   }

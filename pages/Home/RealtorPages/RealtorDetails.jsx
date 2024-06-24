@@ -62,12 +62,12 @@ export default function PostDetail() {
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(
-      `https://test.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`
+      `https://mobil.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`
     );
     alert("Metin kopyalandı!");
   };
   const shareLinkOnWhatsApp = () => {
-    const url = `https://test.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`;
+    const url = `https://mobil.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -383,7 +383,7 @@ export default function PostDetail() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://test.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
+        message: `https://mobil.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
       });
 
       if (result.action === Share.sharedAction) {
