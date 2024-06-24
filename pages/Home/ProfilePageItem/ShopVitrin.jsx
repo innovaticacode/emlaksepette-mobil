@@ -272,6 +272,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
             ))}
           </View>
         )}
+
       <Modal
         isVisible={ModalForAddToCart}
         onBackdropPress={() => setModalForAddToCart(false)}

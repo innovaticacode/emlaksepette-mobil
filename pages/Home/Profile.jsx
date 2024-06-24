@@ -157,7 +157,7 @@ export default function Profile() {
   useEffect(() => {
     apiRequestGet("brand/" + id).then((res) => {
       setloading(true + "true oldu");
-      setstoreSata(res.data);
+      setstoreData(res.data);
       setHousings(res.data.data.housings);
       setTeamm(res.data.data.child);
     });
