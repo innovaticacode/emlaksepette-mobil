@@ -192,7 +192,7 @@ export default function ShareScreen() {
                   style={[styles.addBtn, { backgroundColor: "#274ABB" }]}
                   onPress={() => {
                     navigation.navigate("Emlak", {
-                      name: "Kategori Seçimi",
+                      name: "İlan Ver",
                     });
                   }}
                 >
