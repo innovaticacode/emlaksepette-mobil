@@ -18,6 +18,7 @@ import Categories from "../../components/Categories";
 import Search from "./Search";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
+import DrawerMenu from "../../components/DrawerMenu";
 export default function ShareScreen() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -30,6 +31,8 @@ export default function ShareScreen() {
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
+  const [index, setindex] = useState(0)
+  const [tab, settab] = useState(0)
   return (
     <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
       <View
@@ -42,7 +45,7 @@ export default function ShareScreen() {
           }),
         }}
       >
-        <Header onPress={toggleDrawer} />
+        <Header onPress={toggleDrawer} index={setindex}  tab={settab}/>
       </View>
       <Modal
         isVisible={isDrawerOpen}
@@ -54,81 +57,16 @@ export default function ShareScreen() {
         onSwipeComplete={() => setIsDrawerOpen(false)}
       >
         <View style={styles.modalContent}>
-          <View
+        <View
             style={{
               backgroundColor: "#EA2C2E",
-              flex: 0.7 / 2,
-              borderBottomLeftRadius: 30,
-              borderBottomRightRadius: 30,
+              flex: 1 / 3,
+              borderBottomLeftRadius: 20,
+              borderBottomRightRadius: 20,
             }}
           >
-            <SafeAreaView style={{ zIndex: 1 }}>
-              <ScrollView showsVerticalScrollIndicator={false}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("HomePage");
-                    setIsDrawerOpen(false);
-                  }}
-                >
-                  <Categories
-                    category="Ana Sayfa"
-                    bordernone="none"
-                    ıconName="home"
-                  />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("Hesabım");
-                    setIsDrawerOpen(false);
-                  }}
-                >
-                  <Categories
-                    category="Hesabım"
-                    bordernone="none"
-                    ıconName="user"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("RealtorClubExplore");
-                    setIsDrawerOpen(false);
-                  }}
-                >
-                  <Categories
-                    category="Emlak Kulüp"
-                    bordernone="none"
-                    showImage={true}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Categories
-                    category="İlan Ver"
-                    bordernone="none"
-                    ıconName="plus"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Categories
-                    category="Sat Kirala"
-                    bordernone="none"
-                    ıconName="search-plus"
-                  />
-                </TouchableOpacity>
-              </ScrollView>
-            </SafeAreaView>
-            <ImageBackground
-              source={require("./MenuBg.jpg")}
-              style={{
-                width: "100%",
-                height: "100%",
-                position: "absolute",
-                opacity: 0.2,
-              }}
-              resizeMode="cover"
-              borderBottomLeftRadius={30}
-              borderBottomRightRadius={30}
-            />
+          <DrawerMenu setIsDrawerOpen={setIsDrawerOpen}/>
+           
           </View>
           <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
             <Search onpres={toggleDrawer} />
@@ -253,8 +191,8 @@ export default function ShareScreen() {
                 <TouchableOpacity
                   style={[styles.addBtn, { backgroundColor: "#274ABB" }]}
                   onPress={() => {
-                    navigation.navigate("RealtorAdd", {
-                      name: "Emlak İlanı Yayınla",
+                    navigation.navigate("Emlak", {
+                      name: "Kategori Seçimi",
                     });
                   }}
                 >

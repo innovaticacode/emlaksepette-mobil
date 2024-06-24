@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
@@ -21,6 +21,10 @@ import moment from "moment";
 import "moment/locale/tr";
 import { Svg } from "react-native-svg";
 import { Polyline } from "react-native-maps";
+import AwesomeAlert from "react-native-awesome-alerts";
+import axios from "axios";
+import { getValueFor } from "./methods/user";
+import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 
 export default function Posts({
   project,
@@ -46,12 +50,22 @@ export default function Posts({
   allCounts,
   blockHousingCount,
   previousBlockHousingCount,
+  projectFavorites,
   isUserSame,
+  haveBlocks,
+  lastBlockItemCount
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
+  const [showAlert,setShowAlert] = useState(false);
+  const [inFavorite,setInFavorite] = useState(false);
   const [bookmark, setBookmark] = useState("bookmark-o");
   const roomData = data.projectHousingsList[roomOrder] || {};
+  const [user,setUser] = useState({});
+
+  useEffect(() => {
+    getValueFor('user',setUser);
+  },[])
 
   const changeHeart = () => {
     setHeart(heart === "hearto" ? "heart" : "hearto");
@@ -108,9 +122,67 @@ export default function Posts({
   
     navigation.navigate("PostDetails", params);
   }
-  
+
+  const changeFavorite = () => {
+    setShowAlert(true);
+  }
+
+  const addFavorites = () => {
+    const config = {
+      headers: { Authorization: `Bearer ${user.access_token}` }
+    };
+    axios.post('https://mobil.emlaksepette.com/api/add_project_to_favorites/'+roomOrder,{
+      project_id : project.id,
+      housing_id : roomOrder
+    },config).then((res) => {
+      changeHeart();
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Başarılı',
+        textBody: res.data.message,
+        button: 'Tamam',
+      })
+      if(res.data.status == "removed"){
+        setInFavorite(false);
+      }else{
+        setInFavorite(true);
+      }
+    })
+    setShowAlert(false);
+  }
+
+  useEffect(() => {
+    console.log(roomOrder,projectFavorites);
+    if(projectFavorites?.includes(roomOrder)){
+      setHeart("heart")
+      setInFavorite(true);
+    }else{
+      setHeart("hearto")
+      setInFavorite(false);
+    }
+  },[projectFavorites])
+
   return (
     <View style={styles.container}>
+      <AwesomeAlert
+        show={showAlert}
+        showProgress={false}
+        title={inFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle"}
+        message={inFavorite ? "Bu konutu favorilerden çıkarmak istediğinize emin misiniz?" : "Bu konutu favorilere eklemek istediğinize emin misiniz?"}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="İptal"
+        confirmText="Evet"
+        confirmButtonColor="#22bb33"
+        onCancelPressed={() => {
+          setShowAlert(false);
+        }}
+        onConfirmPressed={() => {
+          addFavorites();
+        }}
+      />
       <View style={styles.İlan}>
         <TouchableOpacity
           style={{ width: "30%" }}
@@ -126,7 +198,7 @@ export default function Posts({
                 padding: 4,
               }}
             >
-              <Text style={styles.noText}>No {roomOrder}</Text>
+              <Text style={styles.noText}>No {haveBlocks ? roomOrder - lastBlockItemCount : roomOrder}</Text>
             </View>
             <Image
               source={{
@@ -173,7 +245,7 @@ export default function Posts({
               )}
 
               {!isUserSame ? (
-                <TouchableOpacity onPress={changeHeart}>
+                <TouchableOpacity onPress={changeFavorite}>
                   <View style={styles.ıconContainer}>
                     <Heart
                       name={heart}

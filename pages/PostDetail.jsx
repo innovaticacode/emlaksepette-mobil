@@ -17,7 +17,7 @@ import Icon2 from "react-native-vector-icons/AntDesign";
 import Phone from "react-native-vector-icons/Entypo";
 import { Platform } from "react-native";
 import PagerView from "react-native-pager-view";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useIsFocused, useNavigation, useRoute } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
 import DetailsSettings from "../components/PostDetailsSettings/DetailsSettings";
@@ -55,6 +55,7 @@ import FloorPlan from "../components/FloorPlan";
 import { Svg } from "react-native-svg";
 import { Polyline } from "react-native-maps";
 import PaymentItem from "../components/PaymentItem";
+import DrawerMenu from "../components/DrawerMenu";
 
 export default function PostDetail() {
   const apiUrl = "https://mobil.emlaksepette.com/";
@@ -164,7 +165,7 @@ export default function PostDetail() {
   const [collections, setCollections] = useState([]);
 
   const [user, setUser] = useState({});
-
+  const isFocused = useIsFocused();
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   const fetchData = async (token, setCollections) => {
     try {
@@ -188,7 +189,7 @@ export default function PostDetail() {
   };
   useEffect(() => {
     getValueFor("user", setUser);
-  }, []);
+  }, [isFocused]);
 
   useEffect(() => {
     if (user?.access_token) {
@@ -540,80 +541,15 @@ export default function PostDetail() {
             onSwipeComplete={() => setIsDrawerOpen(false)}
           >
             <View style={styles.modalContent}>
-              <View
-                style={{
-                  backgroundColor: "#EA2C2E",
-                  flex: 0.7 / 2,
-                  borderBottomLeftRadius: 30,
-                  borderBottomRightRadius: 30,
-                }}
-              >
-                <SafeAreaView style={{ zIndex: 1 }}>
-                  <ScrollView showsVerticalScrollIndicator={false}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("HomePage");
-                        setIsDrawerOpen(false);
-                      }}
-                    >
-                      <Categories
-                        category="Ana Sayfa"
-                        bordernone="none"
-                        ıconName="home"
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("Hesabım");
-                        setIsDrawerOpen(false);
-                      }}
-                    >
-                      <Categories
-                        category="Hesabım"
-                        bordernone="none"
-                        ıconName="user"
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("RealtorClubExplore");
-                        setIsDrawerOpen(false);
-                      }}
-                    >
-                      <Categories
-                        category="Emlak Kulüp"
-                        bordernone="none"
-                        showImage={true}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                      <Categories
-                        category="İlan Ver"
-                        bordernone="none"
-                        ıconName="plus"
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                      <Categories
-                        category="Sat Kirala"
-                        bordernone="none"
-                        ıconName="search-plus"
-                      />
-                    </TouchableOpacity>
-                  </ScrollView>
-                </SafeAreaView>
-                <ImageBackground
-                  source={require("../pages/Home/MenuBg.jpg")}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    position: "absolute",
-                    opacity: 0.2,
-                  }}
-                  resizeMode="cover"
-                  borderBottomLeftRadius={30}
-                  borderBottomRightRadius={30}
-                />
+            <View
+            style={{
+              backgroundColor: "#EA2C2E",
+              flex: 1 / 3,
+              borderBottomLeftRadius: 20,
+              borderBottomRightRadius: 20,
+            }}
+          >
+                <DrawerMenu setIsDrawerOpen={setIsDrawerOpen}/>
               </View>
               <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
                 <Search onpres={toggleDrawer} />

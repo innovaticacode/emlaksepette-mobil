@@ -39,9 +39,9 @@ import AdvertsPlace from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/AdvertsPl
 import ShareScreenProject from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/ShareScreenProject";
 import AdvertForm from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/AdvertForm";
 
-import AdvertStatu from "./pages/Home/İlanYükleme/RealtorAdvertsAdd/AdvertStatu";
-import AdvertType from "./pages/Home/İlanYükleme/RealtorAdvertsAdd/AdvertType";
-import RealtorAdvertAdd from "./pages/Home/İlanYükleme/RealtorAdvertsAdd/RealtorAdvertAdd";
+
+
+
 import Notifications from "./pages/Home/Notifications";
 import RealtorClub from "./pages/Home/RealtorClub";
 
@@ -80,9 +80,13 @@ import Invoice from "./pages/Home/Invoice";
 import CreateReservation from "./pages/Home/RealtorPages/CreateReservation";
 import PaymentScreenForReserve from "./pages/Home/PaymentScreenForReserve";
 import CreateCollections from "./pages/Home/CreateCollections";
+
 import WelcomePage from "./pages/Home/Onboarding/WelcomePage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
+
+import DecontPdf from "./pages/Home/DecontPdf";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -156,7 +160,10 @@ export default function App({ route }) {
           screenOptions={{
             gestureEnabled: true,
             ...TransitionPresets.SlideFromRightIOS,
-            headerTintColor: "#333",
+
+            headerTintColor: '#333',
+
+
           }}
         >
           {showSplash ? (
@@ -193,10 +200,9 @@ export default function App({ route }) {
           )}
 
           <Stack.Group>
-            <Stack.Screen
-              name="Login"
-              options={{ title: "Giriş Yap", headerBackTitleVisible: false }}
-            >
+
+            <Stack.Screen name="Login" options={{ title: "Giriş Yap", headerBackTitleVisible: false }}>
+
               {(props) => <Login {...props} />}
             </Stack.Screen>
             <Stack.Screen
@@ -209,7 +215,10 @@ export default function App({ route }) {
           <Stack.Screen
             name="Emlak"
             component={Emlakİlanı}
-            options={({ route }) => ({})}
+            options={({ route }) => ({
+              title:route.params.name,
+              headerBackTitleVisible:false
+            })}
           />
           <Stack.Screen
             name="Proje"
@@ -536,35 +545,7 @@ export default function App({ route }) {
             {(props) => <ShareScreenProject {...props} />}
           </Stack.Screen>
 
-          <Stack.Screen
-            name="AdvertStatu"
-            component={AdvertStatu}
-            options={({ route }) => ({
-              headerBackTitle: "",
-              headerBackTitleVisible: false,
-              headerTintColor: "black",
-              title: route.params.name,
-            })}
-          />
-
-          <Stack.Screen
-            name="AdvertType"
-            component={AdvertType}
-            options={({ route }) => ({
-              headerBackTitle: "",
-              headerBackTitleVisible: false,
-              headerTintColor: "black",
-              title: route.params.name,
-            })}
-          />
-          <Stack.Screen
-            name="RealtorAdd"
-            component={RealtorAdvertAdd}
-            options={({ route }) => ({
-              headerBackTitleVisible: false,
-              title: "İlanı Paylaş",
-            })}
-          />
+         
           <Stack.Screen
             name="Notifications"
             component={Notifications}
@@ -586,16 +567,42 @@ export default function App({ route }) {
             name="Public"
             component={PublicPage}
             options={({ route }) => ({
-              title: route.params.name,
+              headerShown: true,
+              title: route.params.title,
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTitleStyle: {
+                fontSize: 14,
+              },
+              headerBackTitleStyle: {
+                fontSize: 14,
+              },
             })}
           />
           <Stack.Screen
             name="SubCategory"
             component={SubCategory}
-            options={({ route }) => ({
-              title: route.params.name,
-            })}
+            options={({ route }) => {
+              const title =
+                route.params.title === "Projeler"
+                  ? route.params.name + route.params.title
+                  : route.params.name;
+
+              return {
+                headerShown: true,
+                title: title,
+                headerBackTitle: route.params.title,
+                headerBackTitleVisible: true,
+                headerTitleStyle: {
+                  fontSize: 14,
+                },
+                headerBackTitleStyle: {
+                  fontSize: 14,
+                },
+              };
+            }}
           />
+
 
           <Stack.Screen
             name="HomeList"
@@ -608,7 +615,18 @@ export default function App({ route }) {
             name="SubCategoryChild"
             component={SubCategoryChild}
             options={({ route }) => ({
-              title: route.params.name,
+              headerShown: true,
+              title: route.params.text,
+              headerBackTitle: route.params.title === "Projeler"
+                ? route.params.name + route.params.title
+                : route.params.name,
+              headerBackTitleVisible: true,
+              headerTitleStyle: {
+                fontSize: 14,
+              },
+              headerBackTitleStyle: {
+                fontSize: 14,
+              },
             })}
           />
           <Stack.Screen
@@ -688,10 +706,20 @@ export default function App({ route }) {
             })}
           />
           <Stack.Screen
-            name="AllRealtor"
+            name="AllRealtorAdverts"
             component={AllRealtorAdverts}
             options={({ route }) => ({
               headerShown: false,
+              headerStyle: {
+                backgroundColor: '#EA2B2E',
+              },
+              title: route.params.name + " - " + route.params.count + " Emlak İlanları",
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "white",
+              headerTitleStyle: {
+                fontSize: 14,
+              },
             })}
           />
           <Stack.Screen
@@ -822,6 +850,22 @@ export default function App({ route }) {
               headerStyle: {
                 backgroundColor: "#f7f7f7",
               },
+
+
+            })}
+
+          />
+          <Stack.Screen
+            name="DecontPdf"
+            component={DecontPdf}
+            options={({ route }) => ({
+              title: route.params.name,
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+             
+
             })}
           />
         </Stack.Navigator>

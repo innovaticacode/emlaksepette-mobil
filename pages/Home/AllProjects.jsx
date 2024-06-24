@@ -23,6 +23,8 @@ import { ActivityIndicator, Switch, TextInput } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
+import DrawerMenu from "../../components/DrawerMenu";
+import SortModal from "../../components/SortModal";
 
 export default function AllProjects() {
   const [cityItems, setCityItems] = useState();
@@ -35,16 +37,17 @@ export default function AllProjects() {
     selectedCounty: "",
     selectedNeighborhood: "",
     modalVisible: false,
+    sortModalVisible: false,
     neighborhoodTitle: "",
     neighborhoodSlug: "",
-    neighborhoods : [],
+    neighborhoods: [],
     countySlug: "",
     countyTitle: "",
     citySlug: "",
     cityTitle: "",
     cityID: null,
     neighborhoodID: null,
-    searchStatus : "Yükleniyor...",
+    searchStatus: "Yükleniyor...",
     countyID: null,
     filters: [],
     slugItem: null,
@@ -85,18 +88,64 @@ export default function AllProjects() {
       { value: 7, label: "Son 7 Gün" },
       { value: 15, label: "Son 15 Gün" },
       { value: 30, label: "Son 30 Gün" },
+      { value: 45, label: "Son 45 Gün" },
+      { value: 60, label: "Son 60 Gün" },
+      { value: 75, label: "Son 75 Gün" },
+      { value: 90, label: "Son 90 Gün" },
     ],
   });
+
+  const [selectedSortOption, setSelectedSortOption] = useState("sort"); // Varsayılan olarak sırala
+
+  const formatPrice = (value) => {
+    if (!value) return "";
+    // Sadece sayı ve noktayı izin veriyoruz
+    const cleanedValue = value.replace(/[^0-9]/g, "");
+    const intValue = parseInt(cleanedValue, 10);
+    if (isNaN(intValue)) return "";
+    return intValue.toLocaleString("tr-TR");
+  };
 
   const apiUrl = "https://mobil.emlaksepette.com/";
   const route = useRoute();
   const navigation = useNavigation();
   const { params } = route;
+  const [apiUrlFilterState, setFilterDataState] = useState(null); // filterData için bir state değişkeni tanımla
 
   useEffect(() => {
-    fetchFilteredProjects(buildApiUrl(params), null);
-  }, [params]);
+    if (params.href) {
+      const baseUrl = "https://mobil.emlaksepette.com";
+      const relativeUrl = params.href.replace(`${baseUrl}/kategori`, ""); // 'kategori' kısmını çıkar
+      const urlSegments = relativeUrl.split("/").filter((segment) => segment);
 
+      const slug = urlSegments[0] || ""; 
+      const title = urlSegments[1] || ""; 
+      const optional = urlSegments[2] || ""; 
+      const type = urlSegments[3] || "";
+      const check = urlSegments[4] || "";
+      const city = urlSegments[5] || "";
+      const county = urlSegments[6] || "";
+      const hood = urlSegments[7] || "";
+  
+      const apiUrlFilter = buildApiUrl({
+        slug,
+        title,
+        optional,
+        type,
+        check,
+        city,
+        county,
+        hood,
+      });
+  
+      setFilterDataState(apiUrlFilter)
+      fetchFilteredProjects(apiUrlFilter, null);
+    }else{
+      fetchFilteredProjects(buildApiUrl(params), null);
+
+    }
+  }, [params]);
+  
 
   useEffect(() => {
     const newCityItems = state.cities.map((city) => ({
@@ -104,9 +153,7 @@ export default function AllProjects() {
       value: city.id,
     }));
     setCityItems(newCityItems);
-    return () => {
-      
-    };
+    return () => {};
   }, [state.cities]);
 
   useEffect(() => {
@@ -200,8 +247,10 @@ export default function AllProjects() {
     setState((prevState) => ({ ...prevState, selectedProjectStatus: value }));
   };
 
+  const [filterData, setFilterData] = useState({}); // filterData için bir state değişkeni tanımla
+
   const handleFilterSubmit = () => {
-    const filterData = {
+    const newFilterData = {
       selectedCheckboxes: state.selectedCheckboxes,
       selectedRadio: state.selectedRadio,
       textInputs: state.textInputs,
@@ -211,15 +260,39 @@ export default function AllProjects() {
       selectedProjectStatus: state.selectedProjectStatus,
       selectedListingDate: state.selectedListingDate,
     };
-    setState((prevState) => ({ ...prevState, modalVisible: false,  searchStatus : "Filtreleniyor...", }));
-    fetchFilteredProjects(buildApiUrl(params), filterData);
+  
+    setState((prevState) => ({
+      ...prevState,
+      modalVisible: false,
+      sortModalVisible: false,
+      searchStatus: "Filtreleniyor...",
+      openFilterIndex: null,
+      secondhandHousings: [],
+    }));
+  
+    setFilterData(newFilterData); 
+  
+    fetchFilteredProjects(buildApiUrl(params), newFilterData);
+  };
+  
+  const handleSortChange = (value) => {
+    setSelectedSortOption(value);
+    setState((prevState) => ({
+      ...prevState,
+      searchStatus: "Sıralanıyor...",
+    }));
+  
+    fetchFilteredProjects(buildApiUrl(params), {
+      ...filterData, // Son filtreleme verilerini kullan
+      sortValue: value,
+    });
   };
 
   const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
     try {
-      const response = await axios.get(apiUrlFilter, { params: filterData });
+      const response = await axios.get(apiUrlFilterState ? apiUrlFilterState : apiUrlFilter, { params: filterData });
       const data = response.data;
-  
+
       const newState = {
         neighborhoodTitle: data.neighborhoodTitle,
         neighborhoodSlug: data.neighborhoodSlug,
@@ -252,15 +325,14 @@ export default function AllProjects() {
         titleParam: data.title,
         typeParam: data.type,
         term: data.term,
-        searchStatus : "Yükleniyor...",
+        searchStatus: "Yükleniyor...",
         projects: data.projects,
       };
-  
-      // FilterData varsa ve projects array boşsa searchStatus güncelle
-      if (filterData && data.projects.length === 0) {
-        newState.searchStatus = 'Sonuç bulunamadı';
+
+      if (data.projects.length === 0) {
+        newState.searchStatus = "Sonuç bulunamadı";
       }
-  
+
       setState((prevState) => ({
         ...prevState,
         ...newState,
@@ -269,26 +341,41 @@ export default function AllProjects() {
       console.error(error);
     }
   };
-  
 
   const handleCheckboxChange = (filterName, value) => {
-    setState((prevState) => ({
-      ...prevState,
-      selectedCheckboxes: {
-        ...prevState.selectedCheckboxes,
-        [filterName]: {
-          ...prevState.selectedCheckboxes[filterName],
-          [value]: !prevState.selectedCheckboxes[filterName]?.[value],
-        },
-      },
-    }));
+    setState((prevState) => {
+      // Seçilenleri tutacak yeni bir nesne oluşturuyoruz
+      const selectedCheckboxes = { ...prevState.selectedCheckboxes };
+  
+      // İlgili filtrenin değerlerinin bir kopyasını alıyoruz
+      const updatedFilterValues = { ...selectedCheckboxes[filterName] };
+  
+      // Değerleri güncelliyoruz
+      updatedFilterValues[value] = !prevState.selectedCheckboxes[filterName]?.[value];
+  
+      // Seçilmemiş olanları temizliyoruz
+      for (const key in updatedFilterValues) {
+        if (!updatedFilterValues[key]) {
+          delete updatedFilterValues[key];
+        }
+      }
+  
+      // Güncellenmiş filtreyi ana filtre nesnesine ekliyoruz
+      selectedCheckboxes[filterName] = updatedFilterValues;
+  
+      // Yeni state'i döndürüyoruz
+      return {
+        ...prevState,
+        selectedCheckboxes,
+      };
+    });
   };
 
   const handleClearFilters = async () => {
     setState((prevState) => ({
       ...prevState,
       selectedCheckboxes: {},
-      projects : [],
+      projects: [],
       selectedCity: "",
       selectedCounty: "",
       selectedNeighborhood: "",
@@ -297,17 +384,19 @@ export default function AllProjects() {
       textInputs: {},
       searchStatus: "Filtre Temizleniyor...",
       modalVisible: false,
+      sortModalVisible: false
     }));
-  
+
     await fetchFilteredProjects(buildApiUrl(params), null);
-  
+
     setState((prevState) => ({
       ...prevState,
       modalVisible: false,
+      sortModalVisible: false,
       loading: false,
+      openFilterIndex: null,
     }));
   };
-  
 
   const handleRadioChange = (filterName, value) => {
     setState((prevState) => ({
@@ -345,9 +434,11 @@ export default function AllProjects() {
       isDrawerOpen: !prevState.isDrawerOpen,
     }));
   };
+  const [index, setindex] = useState(0)
+  const [tab, settab] = useState(0)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <Header onPress={toggleDrawer} />
+      <Header onPress={toggleDrawer} index={setindex} tab={settab}/>
 
       <Modal
         swipeDirection="left"
@@ -366,89 +457,15 @@ export default function AllProjects() {
         style={styles.modal}
       >
         <View style={styles.modalContent}>
-          <View
+        <View
             style={{
               backgroundColor: "#EA2C2E",
-              flex: 0.7 / 2,
-              borderBottomLeftRadius: 30,
-              borderBottomRightRadius: 30,
+              flex: 1 / 3,
+              borderBottomLeftRadius: 20,
+              borderBottomRightRadius: 20,
             }}
           >
-            <SafeAreaView style={{ zIndex: 1 }}>
-              <ScrollView showsVerticalScrollIndicator={false}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("HomePage");
-                    setState((prevState) => ({
-                      ...prevState,
-                      isDrawerOpen: false,
-                    }));
-                  }}
-                >
-                  <Categories
-                    category="Ana Sayfa"
-                    bordernone="none"
-                    ıconName="home"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("Hesabım");
-                    setState((prevState) => ({
-                      ...prevState,
-                      isDrawerOpen: false,
-                    }));
-                  }}
-                >
-                  <Categories
-                    category="Hesabım"
-                    bordernone="none"
-                    ıconName="user"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("RealtorClubExplore");
-                    setState((prevState) => ({
-                      ...prevState,
-                      isDrawerOpen: false,
-                    }));
-                  }}
-                >
-                  <Categories
-                    category="Emlak Kulüp"
-                    bordernone="none"
-                    showImage={true}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Categories
-                    category="İlan Ver"
-                    bordernone="none"
-                    ıconName="plus"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Categories
-                    category="Sat Kirala"
-                    bordernone="none"
-                    ıconName="search-plus"
-                  />
-                </TouchableOpacity>
-              </ScrollView>
-            </SafeAreaView>
-            <ImageBackground
-              source={require("./MenuBg.jpg")}
-              style={{
-                width: "100%",
-                height: "100%",
-                position: "absolute",
-                opacity: 0.2,
-              }}
-              resizeMode="cover"
-              borderBottomLeftRadius={30}
-              borderBottomRightRadius={30}
-            />
+          <DrawerMenu setIsDrawerOpen={setState}/>
           </View>
           <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
             <Search onpres={toggleDrawer} />
@@ -463,19 +480,34 @@ export default function AllProjects() {
             setState((prevState) => ({ ...prevState, modalVisible: true }))
           }
         >
-          <Text style={{ color: "white", fontSize: 13 }}>Filtrele</Text>
+          <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
+            Filtrele
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={() =>
+            setState((prevState) => ({ ...prevState, sortModalVisible: true }))
+          }
           style={{
             ...styles.btn,
             borderLeftColor: "white",
             borderLeftWidth: 1,
           }}
         >
-          <Text style={{ color: "white", fontSize: 13 }}>Sırala</Text>
+          <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
+            Sırala
+          </Text>
         </TouchableOpacity>
       </View>
-
+      <SortModal
+        isVisible={state.sortModalVisible}
+        onClose={() =>
+          setState((prevState) => ({ ...prevState, sortModalVisible: false }))
+        }
+        onSortChange={handleSortChange}
+        type="project"
+        selectedSortOption={selectedSortOption}
+      />
       <View style={styles.container}>
         {state.loading == true ? (
           <View
@@ -484,45 +516,58 @@ export default function AllProjects() {
             <ActivityIndicator size="large" color="#000000" />
           </View>
         ) : (
-          <FlatList
-            data={state.projects}
-            renderItem={({ item }) => (
-              <ProjectPost
-                project={item}
-                key={item.id}
-                caption={item.project_title}
-                ımage={`${apiUrl}/${item.image.replace("public/", "storage/")}`}
-                user={item.user}
-                location={item.city.title}
-                city={item.county.ilce_title}
-                ProjectNo={item.id}
-                slug={item.slug}
-                acıklama={item.description
-                  .replace(/<\/?[^>]+(>|$)/g, "")
-                  .replace(/&nbsp;/g, " ")}
-                ShoppingName={item.user.name}
-                ShoppingMail={item.user.email}
-                Phone={item.user.phone}
-                ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                ShopingInfo={item.user.corporate_type}
-              />
-            )}
-            keyExtractor={(item) => item.id.toString()}
-            ListEmptyComponent={
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: 20,
-                }}
-              >
-                <Text style={{ fontSize: 13, color: "gray", fontWeight: 700 }}>
-                <Text>{state.searchStatus}</Text>
-                </Text>
-              </View>
-            }
-          />
+          <>
+            {/* {state.projects.length != 0 && (
+              <Text style={styles.resultCount}>
+                {state.projects.length} ilan bulundu
+              </Text>
+            )} */}
+
+            <FlatList
+              data={state.projects}
+              renderItem={({ item }) => (
+                <ProjectPost
+                  project={item}
+                  key={item.id}
+                  caption={item.project_title}
+                  ımage={`${apiUrl}/${item.image.replace(
+                    "public/",
+                    "storage/"
+                  )}`}
+                  user={item.user}
+                  location={item.city?.title}
+                  city={item.county?.ilce_title}
+                  ProjectNo={item.id}
+                  slug={item.slug}
+                  acıklama={item.description
+                    .replace(/<\/?[^>]+(>|$)/g, "")
+                    .replace(/&nbsp;/g, " ")}
+                  ShoppingName={item.user?.name}
+                  ShoppingMail={item.user?.email}
+                  Phone={item.user?.phone}
+                  ProfilImage={`${apiUrl}/storage/profile_images/${item.user?.profile_image}`}
+                  ShopingInfo={item.user?.corporate_type}
+                />
+              )}
+              keyExtractor={(item) => item.id.toString()}
+              ListEmptyComponent={
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: 20,
+                  }}
+                >
+                  <Text
+                    style={{ fontSize: 13, color: "gray", fontWeight: 700 }}
+                  >
+                    <Text>{state.searchStatus}</Text>
+                  </Text>
+                </View>
+              }
+            />
+          </>
         )}
       </View>
 
@@ -535,6 +580,23 @@ export default function AllProjects() {
         style={styles.modal2}
       >
         <View style={styles.modalContent2}>
+          <View style={styles.modalHeader}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() =>
+                setState((prevState) => ({ ...prevState, modalVisible: false }))
+              }
+            >
+              <FontAwesome5Icon name="times" size={20} color="black" />
+            </TouchableOpacity>
+            <Text style={styles.headerTitle}>FİLTRELE</Text>
+            <TouchableOpacity
+              style={styles.clearButton}
+              onPress={handleClearFilters}
+            >
+              <Text style={styles.clearButtonText}>TEMİZLE</Text>
+            </TouchableOpacity>
+          </View>
           <ScrollView
             style={styles.scrollView}
             showsVerticalScrollIndicator={false}
@@ -792,16 +854,20 @@ export default function AllProjects() {
                     {state.listingDates.map((date) => (
                       <View style={styles.option} key={date.value}>
                         <TouchableOpacity
-                          style={styles.checkboxContainer}
+                          style={styles.radioContainer}
                           onPress={() =>
-                            handleCheckboxChange("listing_date", date.value)
+                            handleRadioChange("listing_date", date.value)
                           }
                         >
-                          <Text style={styles.checkboxLabel}>{date.label}</Text>
-                          <View style={styles.checkbox}>
-                            {state.selectedCheckboxes["listing_date"]?.[
-                              date.value
-                            ] && <View style={styles.checkboxInner} />}
+                          <Text style={styles.radioLabel}>{date.label}</Text>
+                          <View style={styles.radio}>
+                            <View
+                              style={[
+                                styles.radioInner,
+                                state.selectedRadio["listing_date"] ===
+                                  date.value && styles.radioSelected,
+                              ]}
+                            />
                           </View>
                         </TouchableOpacity>
                       </View>
@@ -935,8 +1001,15 @@ export default function AllProjects() {
                             placeholder={`Min`}
                             style={styles.textInput}
                             keyboardType="numeric"
-                            onChangeText={(value) =>
-                              handleTextInputChange(filter.name, "min", value)
+                          onChangeText={(value) =>
+                              handleTextInputChange(
+                                filter.name,
+                                "min",
+                                filter.name == "price" ||
+                                  filter.name == "daily_rent"
+                                  ? formatPrice(value)
+                                  : value
+                              )
                             }
                             value={state.textInputs[filter.name]?.min || ""}
                           />
@@ -945,7 +1018,14 @@ export default function AllProjects() {
                             style={styles.textInput}
                             keyboardType="numeric"
                             onChangeText={(value) =>
-                              handleTextInputChange(filter.name, "max", value)
+                              handleTextInputChange(
+                                filter.name,
+                                "max",
+                                filter.name == "price" ||
+                                  filter.name == "daily_rent"
+                                  ? formatPrice(value)
+                                  : value
+                              )
                             }
                             value={state.textInputs[filter.name]?.max || ""}
                           />
@@ -955,20 +1035,21 @@ export default function AllProjects() {
                   )}
                 </View>
               ))}
-              <TouchableOpacity
-                onPress={handleFilterSubmit}
-                style={styles.filterButton}
-              >
-                <Text style={styles.filterButtonText}>Filtrele</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleClearFilters}
-                style={[styles.filterButton, { backgroundColor: "#EA2B2E" }]} // Arka plan rengi isteğe göre ayarlanabilir
-              >
-                <Text style={styles.filterButtonText}>Temizle</Text>
-              </TouchableOpacity>
             </View>
           </ScrollView>
+          <View style={styles.modalFooter}>
+            <TouchableOpacity
+              onPress={handleFilterSubmit}
+              style={styles.filterButton}
+            >
+              <Text style={styles.filterButtonText}>
+                İlanları Listele
+                {" ("}
+                {state.projects.length != 0 && state.projects.length}
+                {")"}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     </SafeAreaView>
@@ -986,9 +1067,59 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eaeaea",
+  },
+  closeButton: {
+    flex: 1,
+    alignItems: "flex-start",
+  },
+  headerTitle: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  clearButton: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  clearButtonText: {
+    fontSize: 12,
+    color: "red",
+  },
   modalBackdrop: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalFooter: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderTopColor: "#eaeaea",
+  },
+  footerButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginHorizontal: 5,
+    borderRadius: 5,
+  },
+  footerButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#007BFF",
+  },
+  resultCount: {
+    fontSize: 15,
+    padding: 10,
+    textAlign: "center",
   },
   toggleButton: {
     fontSize: 20,
@@ -1028,13 +1159,8 @@ const styles = StyleSheet.create({
   },
   modalContent2: {
     backgroundColor: "#FFFFFF",
-    padding: 20,
-    height: "80%",
-    marginTop: 10,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    height: "95%",
   },
-
   modal: {
     margin: 0,
   },
@@ -1066,7 +1192,7 @@ const styles = StyleSheet.create({
   },
   filterLabel: {
     fontWeight: "bold",
-    padding: 10,
+    padding: 12.7,
   },
 
   switchContainer: {
@@ -1091,6 +1217,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 1,
+    marginRight: 10,
     borderColor: "green",
     justifyContent: "center",
     alignItems: "center",
@@ -1159,26 +1286,31 @@ const styles = StyleSheet.create({
   brandName: {
     color: "black",
     marginRight: 3,
+    fontSize: 12,
   },
   filterButton: {
     backgroundColor: "#274abb",
-    padding: 10,
-    width: "100%",
+    padding: 12,
+    width: "90%",
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
   },
   filterButtonText: {
     color: "white",
-    fontSize: 16,
+    fontSize: 13,
+    fontWeight: "bold",
+  },
+  closeButtonText: {
+    color: "white",
+    fontSize: 14,
     fontWeight: "bold",
   },
 });
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-    borderWidth: 1,
+    borderTopWidth: 1,
     borderColor: "#eaeff5",
     padding: 10,
     fontSize: 14,

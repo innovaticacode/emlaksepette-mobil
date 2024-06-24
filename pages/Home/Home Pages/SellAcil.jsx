@@ -25,13 +25,17 @@ const SellAcil = ({index}) => {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+    const [user, setuser] = useState({});
   
     const fetchFeaturedEstates = async (reset = false) => {
       if (loading || (!hasMore && !reset)) return;
       setLoading(true);
+      const config = {
+        headers: { Authorization: `Bearer ${user?.access_token}` }
+      };
       try {
         const response = await axios.get(
-          `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`
+          `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,config
         );
         const newEstates = response.data;
   
@@ -67,7 +71,7 @@ const SellAcil = ({index}) => {
             setFeaturedEstates([])
         }
  
-    }, [index]);
+    }, [index,user]);
   
    
   
@@ -86,7 +90,6 @@ const SellAcil = ({index}) => {
       setselectedCartItem(id);
       setModalForAddToCart(true);
     };
-    const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
@@ -153,9 +156,26 @@ const SellAcil = ({index}) => {
           ÖNE ÇIKAN ACİL İLANLAR
         </Text>
 
-        <TouchableOpacity style={styles.allBtn}>
-          <Text style={{ color: "white", fontSize: 11 ,fontWeight:'bold'}}>
-            Tüm Konutları Gör
+        <TouchableOpacity
+          style={styles.allBtn}
+          onPress={() =>
+            navigation.navigate("AllRealtorAdverts", {
+              name: "Al Sat Acil",
+              slug: "al-sat-acil",
+              data: filteredHomes,
+              count: filteredHomes.length,
+              type: null,
+              optional: null,
+              title: null,
+              check: null,
+              city: null,
+              county: null,
+              hood: null,
+            })
+          }
+        >
+          <Text style={{ color: "white", fontSize: 11, fontWeight: "bold" }}>
+            Tüm İlanları Gör
           </Text>
         </TouchableOpacity>
       </View>

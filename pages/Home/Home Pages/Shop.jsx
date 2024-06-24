@@ -25,13 +25,17 @@ const Shop = ({index}) => {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+    const [user, setuser] = useState({});
   
     const fetchFeaturedEstates = async (reset = false) => {
       if (loading || (!hasMore && !reset)) return;
       setLoading(true);
+      const config = {
+        headers: { Authorization: `Bearer ${user?.access_token}` }
+      };
       try {
         const response = await axios.get(
-          `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`
+          `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,config
         );
         const newEstates = response.data;
   
@@ -67,7 +71,7 @@ const Shop = ({index}) => {
             setFeaturedEstates([])
         }
     
-    }, [index]);
+    }, [index,user]);
   
     const filteredHomes = featuredEstates.filter((estate) => estate.step1_slug === "is-yeri");
   
@@ -87,7 +91,6 @@ const Shop = ({index}) => {
       setModalForAddToCart(true);
     };
 
-    const [user, setuser] = useState({});
     useEffect(() => {
       getValueFor("user", setuser);
     }, []);
@@ -138,8 +141,25 @@ const Shop = ({index}) => {
         </Text>
 
         <TouchableOpacity style={styles.allBtn}>
-          <Text style={{ color: "white", fontSize: 11 ,fontWeight:'bold'}}>
-            Tüm Konutları Gör
+          <Text
+            style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
+            onPress={() =>
+              navigation.navigate("AllRealtorAdverts", {
+                name: "Emlak İlanları",
+                slug: "emlak-ilanlari",
+                data: filteredHomes,
+                count: filteredHomes.length,
+                type: "is-yeri",
+                optional: null,
+                title: null,
+                check: null,
+                city: null,
+                county: null,
+                hood: null,
+              })
+            }
+          >
+            Tüm İlanları Gör
           </Text>
         </TouchableOpacity>
       </View>

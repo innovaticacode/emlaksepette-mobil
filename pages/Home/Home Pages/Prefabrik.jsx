@@ -25,13 +25,17 @@ const Prefabrik = ({index}) => {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
+    const [user, setuser] = useState({});
   
     const fetchFeaturedEstates = async (reset = false) => {
       if (loading || (!hasMore && !reset)) return;
       setLoading(true);
+      const config = {
+        headers: { Authorization: `Bearer ${user?.access_token}` }
+      };
       try {
         const response = await axios.get(
-          `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`
+          `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,config
         );
         const newEstates = response.data;
   
@@ -67,7 +71,7 @@ const Prefabrik = ({index}) => {
             setFeaturedEstates([])
         }
  
-    }, [index]);
+    }, [index,user]);
   
     const filteredHomes = featuredEstates.filter((estate) => estate.step1_slug === "konut");
   
@@ -86,7 +90,6 @@ const Prefabrik = ({index}) => {
       setselectedCartItem(id);
       setModalForAddToCart(true);
     };
-    const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
@@ -134,12 +137,29 @@ const Prefabrik = ({index}) => {
         }}
       >
         <Text style={{ fontSize: 12, fontWeight: 700 }}>
-          ÖNE ÇIKAN PREFABRİK YAPILAR
+          ÖNE ÇIKAN PREFABRİK İLANLARI
         </Text>
 
         <TouchableOpacity style={styles.allBtn}>
-          <Text style={{ color: "white", fontSize: 11 ,fontWeight:'bold'}}>
-            Tüm Konutları Gör
+          <Text
+            style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
+            onPress={() =>
+              navigation.navigate("AllRealtorAdverts", {
+                name: "Emlak İlanları",
+                slug: "emlak-ilanlari",
+                data: filteredHomes,
+                count: filteredHomes.length,
+                type: null,
+                optional: "satilik",
+                title: "konut",
+                check: "prefabrik-ev",
+                city: null,
+                county: null,
+                hood: null,
+              })
+            }
+          >
+            Tüm İlanları Gör
           </Text>
         </TouchableOpacity>
       </View>

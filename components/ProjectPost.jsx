@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   ShoppingName: {
     position: "absolute",
-    width: 100,
+    width: 120,
     backgroundColor: "#FFFFFF",
     left: "35%",
     height: 70,
