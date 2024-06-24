@@ -41,9 +41,9 @@ import AdvertsPlace from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/AdvertsPl
 import ShareScreenProject from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/ShareScreenProject";
 import AdvertForm from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/AdvertForm";
 
-import AdvertStatu from "./pages/Home/İlanYükleme/RealtorAdvertsAdd/AdvertStatu";
-import AdvertType from "./pages/Home/İlanYükleme/RealtorAdvertsAdd/AdvertType";
-import RealtorAdvertAdd from "./pages/Home/İlanYükleme/RealtorAdvertsAdd/RealtorAdvertAdd";
+
+
+
 import Notifications from "./pages/Home/Notifications";
 import RealtorClub from "./pages/Home/RealtorClub";
 
@@ -160,7 +160,10 @@ export default function App({ route }) {
           <Stack.Screen
             name="Emlak"
             component={Emlakİlanı}
-            options={({ route }) => ({})}
+            options={({ route }) => ({
+              title:route.params.name,
+              headerBackTitleVisible:false
+            })}
           />
           <Stack.Screen
             name="Proje"
@@ -487,35 +490,7 @@ export default function App({ route }) {
             {(props) => <ShareScreenProject {...props} />}
           </Stack.Screen>
 
-          <Stack.Screen
-            name="AdvertStatu"
-            component={AdvertStatu}
-            options={({ route }) => ({
-              headerBackTitle: "",
-              headerBackTitleVisible: false,
-              headerTintColor: "black",
-              title: route.params.name,
-            })}
-          />
-
-          <Stack.Screen
-            name="AdvertType"
-            component={AdvertType}
-            options={({ route }) => ({
-              headerBackTitle: "",
-              headerBackTitleVisible: false,
-              headerTintColor: "black",
-              title: route.params.name,
-            })}
-          />
-          <Stack.Screen
-            name="RealtorAdd"
-            component={RealtorAdvertAdd}
-            options={({ route }) => ({
-              headerBackTitleVisible: false,
-              title: "İlanı Paylaş",
-            })}
-          />
+         
           <Stack.Screen
             name="Notifications"
             component={Notifications}

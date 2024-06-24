@@ -170,7 +170,7 @@ export default function HomePage({ index }) {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   paddingLeft: 10,
-                  marginTop: 7,
+                  
                   paddingRight: 10,
                   alignItems: "center",
                   backgroundColor: "white",
