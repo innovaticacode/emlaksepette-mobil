@@ -191,8 +191,8 @@ export default function ShareScreen() {
                 <TouchableOpacity
                   style={[styles.addBtn, { backgroundColor: "#274ABB" }]}
                   onPress={() => {
-                    navigation.navigate("RealtorAdd", {
-                      name: "Emlak İlanı Yayınla",
+                    navigation.navigate("Emlak", {
+                      name: "Kategori Seçimi",
                     });
                   }}
                 >
