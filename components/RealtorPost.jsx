@@ -111,26 +111,31 @@ export default function RealtorPost({
   const [showAlert, setShowAlert] = useState(false);
 
   const addFavorites = () => {
-    const config = {
-      headers: { Authorization: `Bearer ${user.access_token}` },
-    };
-    axios
-      .post(
-        "https://mobil.emlaksepette.com/api/add_housing_to_favorites/" +
-          HouseId,
-        {},
-        config
-      )
-      .then((res) => {
-        changeHeart();
-    
-        if (res.data.status == "removed") {
-          setInFavorite(false);
-        } else {
-          setInFavorite(true);
-        }
-      });
-    setShowAlert(false);
+    if (user.access_token) {
+      const config = {
+        headers: { Authorization: `Bearer ${user.access_token}` },
+      };
+      axios
+        .post(
+          "https://mobil.emlaksepette.com/api/add_housing_to_favorites/" +
+            HouseId,
+          {},
+          config
+        )
+        .then((res) => {
+          changeHeart();
+      
+          if (res.data.status == "removed") {
+            setInFavorite(false);
+          } else {
+            setInFavorite(true);
+          }
+        });
+      setShowAlert(false);
+    }else{
+      setalertForFavorite(true)
+    }
+
   };
 
   const [AddCartShow, setAddCartShow] = useState(false);
@@ -168,9 +173,37 @@ export default function RealtorPost({
     }
   };
 const [alertForSign, setalertForSign] = useState(false)
+const [alertForFavorite, setalertForFavorite] = useState(false)
   return (
     <AlertNotificationRoot>
       <View>
+      <AwesomeAlert
+            
+            show={alertForFavorite}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={'Giriş Yap'}
+              messageStyle={{textAlign:'center'}}
+              message={`Favorilerinize Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Vazgeç"
+            confirmText="Giriş Yap"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+              setalertForFavorite(false)
+            }}
+            onConfirmPressed={() => {
+              navigation.navigate('Login')
+              setalertForFavorite(false)
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
       <AwesomeAlert
             
             show={alertForSign}
@@ -282,7 +315,7 @@ const [alertForSign, setalertForSign] = useState(false)
 
                   <TouchableOpacity
                     onPress={() => {
-                      setShowAlert(true);
+                     
                       addFavorites()
                     }}
                   >
