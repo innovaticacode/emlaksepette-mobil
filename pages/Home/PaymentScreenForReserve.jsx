@@ -140,9 +140,6 @@ const pickDocument = async () => {
     getUsername();
   }, [username,endDate,totalNight]);
   
-
-
-  console.log(pdfUri , 'ssfds')
   const today = new Date();
   const formattedDate = format(today, 'dd MMMM yyyy', { locale: tr });
   const formatCurrency = (amount) => {

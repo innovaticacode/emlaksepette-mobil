@@ -526,6 +526,12 @@ export default function AllProjects() {
             <FlatList
               data={state.projects}
               renderItem={({ item }) => (
+                <View
+                style={{
+                  marginBottom: 7,
+                  width: "100%",
+                }}
+              >
                 <ProjectPost
                   project={item}
                   key={item.id}
@@ -548,6 +554,7 @@ export default function AllProjects() {
                   ProfilImage={`${apiUrl}/storage/profile_images/${item.user?.profile_image}`}
                   ShopingInfo={item.user?.corporate_type}
                 />
+                </View>
               )}
               keyExtractor={(item) => item.id.toString()}
               ListEmptyComponent={

@@ -66,7 +66,7 @@ export default function Profile() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  console.log(user);
+  
   const postData = async () => {
     try {
       var formData = new FormData();

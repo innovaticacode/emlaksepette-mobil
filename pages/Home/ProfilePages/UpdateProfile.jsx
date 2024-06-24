@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   ActivityIndicator,
   ScrollView,
-  Alert
+  Alert,
 } from "react-native";
 import { useRef, useState, useEffect } from "react";
 import Editıcon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -24,18 +24,15 @@ import Icon from "react-native-vector-icons/Fontisto";
 import { CheckBox } from "@rneui/themed";
 import RNPickerSelect from "react-native-picker-select";
 import { Platform } from "react-native";
-import * as Location from 'expo-location';
+import * as Location from "expo-location";
 export default function UpdateProfile() {
- 
-  
   const [selectedLocation, setSelectedLocation] = useState(null);
 
   const handleMapPress = (event) => {
     const { coordinate } = event.nativeEvent;
     setSelectedLocation(coordinate);
-  
-   getAddressFromCoordinates(coordinate.latitude,coordinate.longitude)
-  
+
+    getAddressFromCoordinates(coordinate.latitude, coordinate.longitude);
   };
 
   const [user, setuser] = useState({});
@@ -62,12 +59,10 @@ export default function UpdateProfile() {
   const [loadingModal, setloadingModal] = useState(false);
   const [name, setName] = useState("");
 
-  
   useEffect(() => {
     setCurrentColor(user?.banner_hex_code);
   }, [user]);
 
-  
   const [iban, setiban] = useState("");
   const [link, setlink] = useState("");
   const [yearsOfSector, setyearsOfSector] = useState("");
@@ -168,12 +163,17 @@ export default function UpdateProfile() {
     setName(user.name);
     setiban(user.iban);
     setmobilPhone(user.mobile_phone);
-  
-
   }, [user]);
   const PhotoUrl = "https://mobil.emlaksepette.com/storage/profile_images/";
   const [ChoosePhotoModal, setChoosePhotoModal] = useState(false);
-  const userLocation = user && { latitude: parseFloat(user?.latitude) == null ? latitude : parseFloat(user.latitude), longitude: parseFloat(user?.longitude) == null ? longitude:parseFloat(user.longitude) };
+  const userLocation = user && {
+    latitude:
+      parseFloat(user?.latitude) == null ? latitude : parseFloat(user.latitude),
+    longitude:
+      parseFloat(user?.longitude) == null
+        ? longitude
+        : parseFloat(user.longitude),
+  };
 
   const [latitude, setLatitude] = useState(39.1667);
   const [longitude, setLongitude] = useState(35.6667);
@@ -185,185 +185,203 @@ export default function UpdateProfile() {
     if (user.access_token) {
       (async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Konum izni reddedildi');
+        if (status !== "granted") {
+          setErrorMsg("Konum izni reddedildi");
           return;
         }
-  
+
         let currentLocation = await Location.getCurrentPositionAsync({});
         setLatitude(parseFloat(currentLocation.coords.latitude));
         setLongitude(parseFloat(currentLocation.coords.longitude));
       })();
     }
-   
   }, [user, userLocation]);
-  const [address, setAddress] = useState({ city: '', district: '', neighborhood: '' });
-
+  const [address, setAddress] = useState({
+    city: "",
+    district: "",
+    neighborhood: "",
+  });
 
   const getAddressFromCoordinates = (latitude, longitude) => {
-    const API_KEY = 'AIzaSyB-ip8tV3D9tyRNS8RMUwxU8n7mCJ9WCl0';
+    const API_KEY = "AIzaSyB-ip8tV3D9tyRNS8RMUwxU8n7mCJ9WCl0";
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`;
 
-    axios.get(url)
-      .then(response => {
+    axios
+      .get(url)
+      .then((response) => {
         const result = response.data.results[0];
         const addressComponents = result.address_components;
 
-        const city = addressComponents.find(component => component.types.includes('administrative_area_level_1'))?.long_name || '';
-        const district = addressComponents.find(component => component.types.includes('administrative_area_level_2'))?.long_name || '';
-        const neighborhood = addressComponents.find(component => component.types.includes('sublocality'))?.long_name 
-        || addressComponents.find(component => component.types.includes('neighborhood'))?.long_name 
-        || addressComponents.find(component => component.types.includes('locality'))?.long_name 
-        || addressComponents.find(component => component.types.includes('sublocality_level_1'))?.long_name 
-        || addressComponents.find(component => component.types.includes('sublocality_level_2'))?.long_name 
-        || '';
+        const city =
+          addressComponents.find((component) =>
+            component.types.includes("administrative_area_level_1")
+          )?.long_name || "";
+        const district =
+          addressComponents.find((component) =>
+            component.types.includes("administrative_area_level_2")
+          )?.long_name || "";
+        const neighborhood =
+          addressComponents.find((component) =>
+            component.types.includes("sublocality")
+          )?.long_name ||
+          addressComponents.find((component) =>
+            component.types.includes("neighborhood")
+          )?.long_name ||
+          addressComponents.find((component) =>
+            component.types.includes("locality")
+          )?.long_name ||
+          addressComponents.find((component) =>
+            component.types.includes("sublocality_level_1")
+          )?.long_name ||
+          addressComponents.find((component) =>
+            component.types.includes("sublocality_level_2")
+          )?.long_name ||
+          "";
 
         setAddress({ city, district, neighborhood });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   };
 
-
-const postData = async () => {
-
-  try {
-    if (name) {
-      let fullNumber = `${cityCode}${phone} `;
-      var formData = new FormData();
-
-      formData.append("name", name);
-      formData.append("banner_hex_code", currentColor);
-      formData.append("iban", iban);
-      formData.append("website", link);
-      formData.append("phone", fullNumber);
-      formData.append("year", yearsOfSector);
-      formData.append("mobile_phone", mobilPhone);
-      formData.append("latitude",selectedLocation?.latitude );
-      formData.append("longitude",selectedLocation?.longitude );
-      formData.append("_method", "PUT");
-
-      const response = await axios.post(
-        "https://mobil.emlaksepette.com/api/client/profile/update",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
-  
-      setName("");
-
-      setUpdateSuccess(true);
-      500;
-
-      setTimeout(() => {
+  const postData = async () => {
+    try {
+      if (name) {
         setUpdateSuccess(false);
-      }, 1500); 
-    
+        let fullNumber = `${cityCode}${phone}`;
+        var formData = new FormData();
+
+        formData.append("name", name);
+        formData.append("banner_hex_code", currentColor);
+        formData.append("iban", iban);
+        formData.append("website", link);
+        formData.append("phone", fullNumber);
+        formData.append("year", yearsOfSector);
+        formData.append("mobile_phone", mobilPhone);
+        formData.append("latitude", selectedLocation?.latitude);
+        formData.append("longitude", selectedLocation?.longitude);
+        formData.append("_method", "PUT");
+
+        const response = await axios.post(
+          "https://mobil.emlaksepette.com/api/client/profile/update",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+
+        setName("");
+
+        setUpdateSuccess(true);
+        getValueFor("user", setuser);
+        setTimeout(() => {
+          setUpdateSuccess(false);
+        }, 1500);
+      }
+    } catch (error) {
+      console.error("Hata:", error);
+      // Hata durumunda ek işlemler yapılabilir
+    } finally {
+      setloadingModal(false);
     }
-     
-  
-    // İsteğin başarılı bir şekilde tamamlandığı durum
-  } catch (error) {
-    // Hata durumunda
-
-    console.error("Hata:", error + "post isteği başarısız ");
-  } finally {
-    setloadingModal(false);
-  }
-};
+  };
 
 
-// const fetchData = async () => {
-//   try {
-//     const response = await axios.get(
-//       "https://mobil.emlaksepette.com/api/cities"
-//     );
-//     return response.data;
-//   } catch (error) {
-//     console.error("Hata:", error);
-//     throw error;
-//   }
-// };
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       "https://mobil.emlaksepette.com/api/cities"
+  //     );
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error("Hata:", error);
+  //     throw error;
+  //   }
+  // };
 
-// const [citites, setCities] = useState([]);
-// useEffect(() => {
-//   fetchData()
-//     .then((citites) => setCities(citites.data))
-//     .catch((error) =>
-//       console.error("Veri alınırken bir hata oluştu:", error)
-//     );
-// }, []);
+  // const [citites, setCities] = useState([]);
+  // useEffect(() => {
+  //   fetchData()
+  //     .then((citites) => setCities(citites.data))
+  //     .catch((error) =>
+  //       console.error("Veri alınırken bir hata oluştu:", error)
+  //     );
+  // }, []);
 
-// const [counties, setcounties] = useState([]);
-// const fetchDataCounty = async (value) => {
-//   try {
-//     const response = await axios.get(
-//       `https://mobil.emlaksepette.com/api/counties/${value}`
-//     );
-//     return response.data;
-//   } catch (error) {
-//     console.error("Hata:", error);
-//     throw error;
-//   }
-// };
-// const onChangeCity = (value) => {
-//   setcity(value);
-//   if (value) {
-//     fetchDataCounty(value)
-//       .then((county) => setcounties(county.data))
-//       .catch((error) =>
-//         console.error("Veri alınırken bir hata oluştu:", error)
-//       );
-//   } else {
-//     setcounties([]);
-//   }
-// };
-// const [Neigbour, setNeigbour] = useState([]);
-// const fetchDataNeigbour = async (value) => {
-//   try {
-//     const response = await axios.get(
-//       `https://mobil.emlaksepette.com/api/neighborhoods/${value}`
-//     );
-//     return response.data;
-//   } catch (error) {
-//     console.error("Hata:", error);
-//     throw error;
-//   }
-// };
-// const onChangeCounty = (value) => {
-//   setcounty(value);
-//   if (value) {
-//     fetchDataNeigbour(value)
-//       .then((county) => setNeigbour(county.data))
-//       .catch((error) =>
-//         console.error("Veri alınırken bir hata oluştu:", error)
-//       );
-//   } else {
-//     setNeigbour([]);
-//   }
-// };
+  // const [counties, setcounties] = useState([]);
+  // const fetchDataCounty = async (value) => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://mobil.emlaksepette.com/api/counties/${value}`
+  //     );
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error("Hata:", error);
+  //     throw error;
+  //   }
+  // };
+  // const onChangeCity = (value) => {
+  //   setcity(value);
+  //   if (value) {
+  //     fetchDataCounty(value)
+  //       .then((county) => setcounties(county.data))
+  //       .catch((error) =>
+  //         console.error("Veri alınırken bir hata oluştu:", error)
+  //       );
+  //   } else {
+  //     setcounties([]);
+  //   }
+  // };
+  // const [Neigbour, setNeigbour] = useState([]);
+  // const fetchDataNeigbour = async (value) => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://mobil.emlaksepette.com/api/neighborhoods/${value}`
+  //     );
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error("Hata:", error);
+  //     throw error;
+  //   }
+  // };
+  // const onChangeCounty = (value) => {
+  //   setcounty(value);
+  //   if (value) {
+  //     fetchDataNeigbour(value)
+  //       .then((county) => setNeigbour(county.data))
+  //       .catch((error) =>
+  //         console.error("Veri alınırken bir hata oluştu:", error)
+  //       );
+  //   } else {
+  //     setNeigbour([]);
+  //   }
+  // };
 
-const [cities, setCities] = useState([]);
+  const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
   const [counties, setCounties] = useState([]);
   const [selectedCounty, setSelectedCounty] = useState(null);
   const [neighborhoods, setNeighborhoods] = useState([]);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
-  const [coordinates, setCoordinates] = useState({ latitude: 41.0082, longitude: 28.9784 });
+  const [coordinates, setCoordinates] = useState({
+    latitude: 41.0082,
+    longitude: 28.9784,
+  });
   const [mapRef, setMapRef] = useState(null);
 
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const response = await axios.get('https://mobil.emlaksepette.com/api/cities');
+        const response = await axios.get(
+          "https://mobil.emlaksepette.com/api/cities"
+        );
         setCities(response.data.data);
       } catch (error) {
-        console.error('Hata:', error);
-        Alert.alert('Error', 'Could not load cities');
+        console.error("Hata:", error);
+        Alert.alert("Error", "Could not load cities");
       }
     };
 
@@ -372,30 +390,41 @@ const [cities, setCities] = useState([]);
 
   const fetchCounties = async (cityId) => {
     try {
-      const response = await axios.get(`https://mobil.emlaksepette.com/api/counties/${cityId}`);
+      const response = await axios.get(
+        `https://mobil.emlaksepette.com/api/counties/${cityId}`
+      );
       setCounties(response.data.data);
     } catch (error) {
-      console.error('Hata:', error);
-      Alert.alert('Error', 'Could not load counties');
+      console.error("Hata:", error);
+      Alert.alert("Error", "Could not load counties");
     }
   };
 
   const fetchNeighborhoods = async (countyId) => {
     try {
-      const response = await axios.get(`https://mobil.emlaksepette.com/api/neighborhoods/${countyId}`);
+      const response = await axios.get(
+        `https://mobil.emlaksepette.com/api/neighborhoods/${countyId}`
+      );
       setNeighborhoods(response.data.data);
     } catch (error) {
-      console.error('Hata:', error);
-      Alert.alert('Error', 'Could not load neighborhoods');
+      console.error("Hata:", error);
+      Alert.alert("Error", "Could not load neighborhoods");
     }
   };
 
   const getCoordinates = async (query) => {
     try {
-      const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`);
+      const response = await axios.get(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          query
+        )}&limit=1`
+      );
       if (response.data.length > 0) {
         const { lat, lon } = response.data[0];
-        const coords = { latitude: parseFloat(lat), longitude: parseFloat(lon) };
+        const coords = {
+          latitude: parseFloat(lat),
+          longitude: parseFloat(lon),
+        };
         setCoordinates(coords);
         mapRef.animateToRegion({
           ...coords,
@@ -403,11 +432,14 @@ const [cities, setCities] = useState([]);
           longitudeDelta: 0.07,
         });
       } else {
-        Alert.alert('Error', 'Could not find coordinates for selected location');
+        Alert.alert(
+          "Error",
+          "Could not find coordinates for selected location"
+        );
       }
     } catch (error) {
-      console.error('Hata:', error);
-      Alert.alert('Error', 'Could not load coordinates');
+      console.error("Hata:", error);
+      Alert.alert("Error", "Could not load coordinates");
     }
   };
 
@@ -443,9 +475,11 @@ const [cities, setCities] = useState([]);
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <ScrollView style={{ flex: 1, backgroundColor: "white" }} scrollEnabled={!openColorPicker}>
+      <ScrollView
+        style={{ flex: 1, backgroundColor: "white" }}
+        scrollEnabled={!openColorPicker}
+      >
         <View style={styles.ProfileEditArea}>
-        
           <View style={{ width: 90, height: 90 }}>
             <TouchableOpacity
               style={styles.ProfilImage}
@@ -604,84 +638,86 @@ const [cities, setCities] = useState([]);
                 swatchesLast={swatchesLast}
                 swatches={swatchesEnabled}
                 discrete={false}
-              
                 useNativeDriver={true}
                 useNativeLayout={false}
               />
             </View>
-         <View style={{gap:15}}>
-          <View>
-            <Text style={styles.label}>İl</Text>
-            <RNPickerSelect doneText="Tamam"
-                value={selectedCity}
-                placeholder={{
-                  label: "Seçiniz...",
-                  value: null,
-                }}
-                style={pickerSelectStyles}
-                onValueChange={(value) => {
-                  onChangeCity(value)
-                }}
-                items={cities}
-              />
-          </View>
-          <View>
-            <Text style={styles.label}>İlçe</Text>
-            <RNPickerSelect doneText="Tamam"
-                value={selectedCounty}
-                placeholder={{
-                  label: "Seçiniz...",
-                  value: null,
-                }}
-                style={pickerSelectStyles}
-                onValueChange={(value) => {
-                  onChangeCounty(value)
-                }}
-                items={counties}
-              />
-          </View>
-          <View>
-            <Text style={styles.label}>Mahalle</Text>
-            <RNPickerSelect doneText="Tamam"
-                value={selectedNeighborhood}
-                placeholder={{
-                  label: "Seçiniz...",
-                  value: null,
-                }}
-                style={pickerSelectStyles}
-                onValueChange={(value)=>{
-                  onChangeNeighborhood(value)
-                }}
-                items={neighborhoods}
-              />
-          </View>
-        
-         </View>
-            {user?.role === "Kurumsal Hesap" &&  (
+            <View style={{ gap: 15 }}>
+              <View>
+                <Text style={styles.label}>İl</Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  value={selectedCity}
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => {
+                    onChangeCity(value);
+                  }}
+                  items={cities}
+                />
+              </View>
+              <View>
+                <Text style={styles.label}>İlçe</Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  value={selectedCounty}
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => {
+                    onChangeCounty(value);
+                  }}
+                  items={counties}
+                />
+              </View>
+              <View>
+                <Text style={styles.label}>Mahalle</Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  value={selectedNeighborhood}
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => {
+                    onChangeNeighborhood(value);
+                  }}
+                  items={neighborhoods}
+                />
+              </View>
+            </View>
+            {user?.role === "Kurumsal Hesap" && (
               <View style={{ height: 300 }}>
                 <MapView
                   style={{ flex: 1 }}
                   zoomControlEnabled={true}
                   region={{
-                    latitude: parseFloat(user?.latitude) == null ? coordinates.latitude: parseFloat(user.latitude) , // Türkiye'nin merkezi Ankara'nın enlemi
-                    longitude:parseFloat(user?.longitude) == null ? coordinates.longitude : parseFloat(user.longitude), // Türkiye'nin merkezi Ankara'nın boylamı
+                    latitude:
+                      parseFloat(user?.latitude) == null
+                        ? coordinates.latitude
+                        : parseFloat(user.latitude), // Türkiye'nin merkezi Ankara'nın enlemi
+                    longitude:
+                      parseFloat(user?.longitude) == null
+                        ? coordinates.longitude
+                        : parseFloat(user.longitude), // Türkiye'nin merkezi Ankara'nın boylamı
                     latitudeDelta: 9, // Harita yakınlığı
                     longitudeDelta: 9,
                   }}
                   onPress={handleMapPress}
                   ref={(ref) => setMapRef(ref)}
-
                 >
-                       {selectedLocation ? (
-              <Marker coordinate={selectedLocation} />
-            ) : (
-              <Marker coordinate={userLocation} />
-            )}
-      
-               
-                  
-                </MapView> 
-              
+                  {selectedLocation ? (
+                    <Marker coordinate={selectedLocation} />
+                  ) : (
+                    <Marker coordinate={userLocation} />
+                  )}
+                </MapView>
               </View>
             )}
 
