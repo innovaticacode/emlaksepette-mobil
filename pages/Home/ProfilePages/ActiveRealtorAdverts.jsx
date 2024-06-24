@@ -31,7 +31,7 @@ export default function ActiveRealtorAdverts() {
       })
       .then((res) => {
         sethousings(res?.data?.activeHousingTypes);
-        // console.log(user)
+  
       })
       .catch((e) => {
         console.log(e + "hata");

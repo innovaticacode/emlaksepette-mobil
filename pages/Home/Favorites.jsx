@@ -30,7 +30,7 @@ export default function Favorites() {
     })
   },[user,focused])
 
-  // console.log(favorites);
+
 
   const changeFavorites = (type , housingId, projectId) => {
     if(type == 1){

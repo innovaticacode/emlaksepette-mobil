@@ -86,7 +86,7 @@ export default function PostDetail() {
     // Telefon uygulamasını açmak için
     Linking.openURL(`tel:+90${data?.housing?.user?.phone}`);
   };
-console.log(data?.user?.mobile_phone)
+
   const changeTab = (tabs) => {
     setTabs(tabs);
   };
@@ -175,7 +175,7 @@ console.log(data?.user?.mobile_phone)
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  console.log(user);
+ 
   const fetchData = async () => {
     try {
       if (user.access_token) {

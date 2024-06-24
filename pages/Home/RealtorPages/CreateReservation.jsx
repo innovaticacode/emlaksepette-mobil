@@ -143,7 +143,7 @@ const App = () => {
   const saveData = async (key, value) => {
     try {
       await SecureStore.setItemAsync(key, value);
-      console.log('Data saved successfully');
+     
     } catch (error) {
       console.log('Error saving data:', error);
     }

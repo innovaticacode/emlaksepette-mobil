@@ -16,7 +16,13 @@ import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
-import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast} from 'react-native-alert-notification';
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
+import { color } from "@rneui/base";
 
 export default function RealtorPost({
   title,
@@ -47,28 +53,28 @@ export default function RealtorPost({
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
   const [bookmark, setbookmark] = useState("bookmark-o");
-  const [user,setUser] = useState({});
-  const [inFavorite,setInFavorite] = useState(false);
+  const [user, setUser] = useState({});
+  const [inFavorite, setInFavorite] = useState(false);
   useEffect(() => {
-    getValueFor('user',setUser);
-  },[])
+    getValueFor("user", setUser);
+  }, []);
 
   const changeHeart = () => {
     setHeart(heart === "hearto" ? "heart" : "hearto");
   };
 
   useEffect(() => {
-    if(!housing.is_housing_favorite){
-      setHeart("hearto")
+    if (!housing.is_housing_favorite) {
+      setHeart("hearto");
       setInFavorite(false);
-    }else{
-      setHeart("heart")
+    } else {
+      setHeart("heart");
       setInFavorite(true);
     }
-  },[])
+  }, []);
 
-  const [getPostId, setgetPostId] = useState(0)
-  
+  const [getPostId, setgetPostId] = useState(0);
+
   const CreateCollection = (id) => {
     setgetPostId(id);
     navigation.navigate("CreateCollections", { HouseID: id });
@@ -95,61 +101,110 @@ export default function RealtorPost({
       : null
     : 0;
 
-  const handlePress = () => GetId(HouseId);
+  const handlePress = () => {
+    setAddCartShow(true);
+  };
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
-  const [showAlert,setShowAlert] = useState(false);
-  
+  const [showAlert, setShowAlert] = useState(false);
+
   const addFavorites = () => {
     const config = {
-      headers: { Authorization: `Bearer ${user.access_token}` }
+      headers: { Authorization: `Bearer ${user.access_token}` },
     };
-    axios.post('https://mobil.emlaksepette.com/api/add_housing_to_favorites/'+HouseId,{},config).then((res) => {
-      changeHeart();
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: 'Başarılı',
-        textBody: res.data.message,
-        button: 'Tamam',
-      })
-      if(res.data.status == "removed"){
-        setInFavorite(false);
-      }else{
-        setInFavorite(true);
-      }
-    })
+    axios
+      .post(
+        "https://mobil.emlaksepette.com/api/add_housing_to_favorites/" +
+          HouseId,
+        {},
+        config
+      )
+      .then((res) => {
+        changeHeart();
+    
+        if (res.data.status == "removed") {
+          setInFavorite(false);
+        } else {
+          setInFavorite(true);
+        }
+      });
     setShowAlert(false);
-  }
+  };
 
+  const [AddCartShow, setAddCartShow] = useState(false);
+  
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
+  const addToCard = async () => {
+    const formData = new FormData();
+    formData.append("id", HouseId);
+    formData.append("isShare", null);
+    formData.append("numbershare", null);
+    formData.append("qt", 1);
+    formData.append("type", "housing");
+    formData.append("project", null);
+    formData.append("clear_cart", "no");
+
+    try {
+      if (user?.access_token) {
+        const response = await axios.post(
+          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+        
+        setAddCartShow(false)
+        navigation.navigate("Sepetim");
+      }
+    } catch (error) {
+      console.error("post isteği olmadı", error);
+    }
+  };
 
   return (
     <AlertNotificationRoot>
       <View>
-        <AwesomeAlert
-          show={showAlert}
-          showProgress={false}
-          title={inFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle"}
-          message={inFavorite ? "Bu konutu favorilerden çıkarmak istediğinize emin misiniz?" : "Bu konutu favorilere eklemek istediğinize emin misiniz?"}
-          closeOnTouchOutside={true}
-          closeOnHardwareBackPress={false}
-          showCancelButton={true}
-          showConfirmButton={true}
-          cancelText="İptal"
-          confirmText="Evet"
-          confirmButtonColor="#22bb33"
-          onCancelPressed={() => {
-            setShowAlert(false);
-          }}
-          onConfirmPressed={() => {
-            addFavorites();
-          }}
-        />
+    
+     
+          <AwesomeAlert
+            
+            show={AddCartShow}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+            title={title}
+            messageStyle={{textAlign:'center'}}
+            message={`#1000${HouseId} No' lu Konutu Sepete Eklemek İstiyor Musunuz?`}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Hayır"
+            confirmText="Evet"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+              setAddCartShow(false);
+            }}
+            onConfirmPressed={() => {
+              addToCard()
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
+   
         <View style={styles.container}>
           <View style={styles.İlan}>
-            <TouchableOpacity style={{ width: "30%", height: 80 }}
-            onPress={() =>
-              navigation.navigate("Realtor details", { houseId: HouseId })
-            }
+            <TouchableOpacity
+              style={{ width: "30%", height: 80 }}
+              onPress={() =>
+                navigation.navigate("Realtor details", { houseId: HouseId })
+              }
             >
               <ImageBackground
                 source={{ uri: image }}
@@ -181,9 +236,11 @@ export default function RealtorPost({
                   }}
                 >
                   {bookmarkStatus && bookmarkStatus == true && (
-                    <TouchableOpacity onPress={()=>{
-                          CreateCollection(HouseId)
-                    }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        CreateCollection(HouseId);
+                      }}
+                    >
                       <View style={styles.ıconContainer}>
                         <Bookmark
                           name={bookmark}
@@ -197,6 +254,7 @@ export default function RealtorPost({
                   <TouchableOpacity
                     onPress={() => {
                       setShowAlert(true);
+                      addFavorites()
                     }}
                   >
                     <View style={styles.ıconContainer}>
@@ -211,7 +269,9 @@ export default function RealtorPost({
               </View>
 
               <View style={styles.PriceAndButtons}>
-                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                <View
+                  style={{ alignItems: "center", justifyContent: "center" }}
+                >
                   {formattedDiscountedPrice ? (
                     <>
                       <Text style={styles.discountedPriceText}>
@@ -225,7 +285,10 @@ export default function RealtorPost({
                     <Text style={styles.priceText}>{formattedPrice}₺</Text>
                   )}
                 </View>
-                <TouchableOpacity style={styles.addBasket} onPress={handlePress}>
+                <TouchableOpacity
+                  style={styles.addBasket}
+                  onPress={handlePress}
+                >
                   {step2_slug &&
                   step2_slug == "gunluk-kiralik" &&
                   step1_slug == "mustakil-tatil" ? (
@@ -329,13 +392,12 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     paddingLeft: 5,
-    
+
     paddingRight: 5,
 
     paddingTop: 5,
   },
   captionAndIcons: {
-    
     display: "flex",
     flexDirection: "row",
     width: "100%",
@@ -357,7 +419,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "25%",
     bottom: 5,
-    top:2
+    top: 2,
   },
   btns: {
     display: "flex",
@@ -413,4 +475,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     padding: 5,
   },
+  text:{
+    textAlign:'center'
+  }
 });

@@ -13,10 +13,7 @@ export default function SubCategoryChild() {
 
 
   const handlePress = (item) => {
-    console.log(title);
-    console.log(text);
-    console.log(name);
-    console.log(item.text);
+  
 
     navigation.navigate(
       title == "Projeler" ? "AllProject" : "AllRealtorAdverts",
