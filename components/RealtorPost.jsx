@@ -102,7 +102,9 @@ export default function RealtorPost({
     : 0;
 
   const handlePress = () => {
-    setAddCartShow(true);
+    user.access_token ? 
+    setAddCartShow(true):
+    setalertForSign(true)
   };
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
@@ -165,11 +167,38 @@ export default function RealtorPost({
       console.error("post isteği olmadı", error);
     }
   };
-
+const [alertForSign, setalertForSign] = useState(false)
   return (
     <AlertNotificationRoot>
       <View>
-    
+      <AwesomeAlert
+            
+            show={alertForSign}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+            title={'Giriş Yap'}
+            messageStyle={{textAlign:'center'}}
+            message={`Sepetine Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+           
+            confirmText="Giriş Yap"
+            cancelText="Vazgeç"
+            cancelButtonColor="#E54564"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+              setalertForSign(false)
+            }}
+            onConfirmPressed={() => {
+              navigation.navigate('Login')
+              setalertForSign(false)
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
      
           <AwesomeAlert
             
@@ -178,7 +207,7 @@ export default function RealtorPost({
               titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
             title={title}
             messageStyle={{textAlign:'center'}}
-            message={`#1000${HouseId} No' lu Konutu Sepete Eklemek İstiyor Musunuz?`}
+            message={`#2000${HouseId} No' lu Konutu Sepete Eklemek İstiyor Musunuz?`}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
             showCancelButton={true}
