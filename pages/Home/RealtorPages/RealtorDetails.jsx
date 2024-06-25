@@ -62,12 +62,12 @@ export default function PostDetail() {
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(
-      `https://test.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`
+      `https://mobil.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`
     );
     alert("Metin kopyalandı!");
   };
   const shareLinkOnWhatsApp = () => {
-    const url = `https://test.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`;
+    const url = `https://mobil.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -86,7 +86,7 @@ export default function PostDetail() {
     // Telefon uygulamasını açmak için
     Linking.openURL(`tel:+90${data?.housing?.user?.phone}`);
   };
-console.log(data?.user?.mobile_phone)
+
   const changeTab = (tabs) => {
     setTabs(tabs);
   };
@@ -175,7 +175,7 @@ console.log(data?.user?.mobile_phone)
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  console.log(user);
+ 
   const fetchData = async () => {
     try {
       if (user.access_token) {
@@ -383,7 +383,7 @@ console.log(data?.user?.mobile_phone)
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://test.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
+        message: `https://mobil.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
       });
 
       if (result.action === Share.sharedAction) {

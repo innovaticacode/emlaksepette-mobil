@@ -63,7 +63,7 @@ export default function Search({ onpres }) {
                     data: item.submenus,
                   });
                 } else {
-                  console.log(item.text);
+                 
                   navigation.navigate(
                     item.text == "Projeler"
                       ? "AllProject"

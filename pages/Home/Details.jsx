@@ -162,7 +162,7 @@ export default function Details({ navigation }) {
       "&end=" +
       (lastBlockItemsCount + 10)
     ).then((res) => {
-      console.log(res);
+     
       setData({
         ...data,
         projectHousingsList: res.data.housings,
@@ -849,7 +849,7 @@ export default function Details({ navigation }) {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message:  `https://test.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
+        message:  `https://mobil.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
       });
   
       if (result.action === Share.sharedAction) {

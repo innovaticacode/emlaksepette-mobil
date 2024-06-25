@@ -41,7 +41,7 @@ export default function Order({ item }) {
   const cartObject = JSON.parse(cartString);
   // Image URL'sine eriş
   const imageUrl = cartObject.item.image;
-  console.log(imageUrl);
+
 
 
   const navigation = useNavigation();

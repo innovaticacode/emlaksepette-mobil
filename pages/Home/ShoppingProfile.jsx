@@ -44,19 +44,11 @@ export default function ShoppingProfile() {
     getValueFor("user", setUser);
   }, []);
 
-  useEffect(() => {
-    if (user.role === "Kurumsal Hesap") {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, [user]);
-
   const fetchPermissionUser = async () => {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          `https://mobil.emlaksepette.com/api/institutional/users/${user?.id}`,
+          `https://mobil.emlaksepette.com/api/users/${user?.id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -96,6 +88,7 @@ export default function ShoppingProfile() {
           }
           return permissionsUser?.includes(item.key);
         });
+     
         setData(filteredMenu);
       } catch (error) {
         console.error(error);
@@ -106,7 +99,6 @@ export default function ShoppingProfile() {
 
     fetchData();
   }, [permissionsUser]);
-
   const groupedData = data.reduce((acc, item) => {
     const existingGroupIndex = acc.findIndex(
       (group) => group.label === item.label
@@ -118,6 +110,7 @@ export default function ShoppingProfile() {
     }
     return acc;
   }, []);
+
 
   const logout = () => {
     setDialogVisible(false);

@@ -66,7 +66,7 @@ export default function Profile() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  console.log(user);
+  
   const postData = async () => {
     try {
       var formData = new FormData();
@@ -163,7 +163,7 @@ export default function Profile() {
     });
   }, []);
 
-  console.log(teamm);
+
   const ApiUrl = "https://mobil.emlaksepette.com/";
   const handleOpenPhone = () => {
     // Telefon uygulamasını açmak için

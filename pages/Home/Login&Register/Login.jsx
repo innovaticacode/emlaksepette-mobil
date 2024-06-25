@@ -121,8 +121,10 @@ export default function Login({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <View style={[styles.header, {}]}></View>
-        <View style={{ padding: 10 }}>
+        {!IsShowAlert &&  <View style={[styles.header, {}]}></View>}
+       
+        <View style={!IsShowAlert ? { padding: 10 } : null}>
+
           <View
             style={{
               backgroundColor: "#E7FCEB",
@@ -172,7 +174,7 @@ export default function Login({ navigation }) {
 
                 <TextInput
                   style={styles.Input}
-                  placeholder="example@gmail.com"
+                  placeholder="E-Posta Adresi"
                   value={email}
                   onChangeText={handleTextInputChange}
                 />
@@ -213,7 +215,7 @@ export default function Login({ navigation }) {
                   </TouchableOpacity>
                   <TextInput
                     style={styles.Input}
-                    placeholder="Şifrenizi Girin"
+                    placeholder="Şifre"
                     secureTextEntry={Show ? false : true}
                     value={password}
                     onChangeText={handlePasswordChange}

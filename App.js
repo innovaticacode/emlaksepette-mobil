@@ -96,6 +96,8 @@ export default function App({ route }) {
   const [showBackIcon, setshowBackIcon] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
 
+  const [housingTypes, setHousingTypes] = useState([]);
+  const [selectedTypes, setSelectedTypes] = useState([]);
   const [showSplash, setShowSplash] = useState(true);
   const [showSplashTemp, setShowSplashTemp] = useState(null);
 
@@ -140,7 +142,6 @@ export default function App({ route }) {
     getValueFor2("welcome_screen_show", setShowSplashTemp);
   }, []);
 
-  console.log(showSplashTemp);
 
   useEffect(() => {
     if (showSplashTemp == "ff") {
@@ -152,6 +153,20 @@ export default function App({ route }) {
     SecureStore.setItemAsync("welcome_screen_show", "ff");
     setShowSplash(false);
   };
+  function StepScreen({ step, navigation, setHousingTypes, setSelectedTypes, housingTypes, selectedTypes }) {
+    return (
+      <View style={styles.container}>
+        <TypeListScreen
+          step={step}
+          navigation={navigation}
+          setHousingTypes={setHousingTypes}
+          setSelectedTypes={setSelectedTypes}
+          housingTypes={housingTypes}
+          selectedTypes={selectedTypes}
+        />
+      </View>
+    );
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -212,12 +227,49 @@ export default function App({ route }) {
             />
           </Stack.Group>
 
+          <Stack.Screen name="Step1">
+          {(props) => (
+            <StepScreen
+              {...props}
+              step={1}
+              setHousingTypes={setHousingTypes}
+              setSelectedTypes={setSelectedTypes}
+              housingTypes={housingTypes}
+              selectedTypes={selectedTypes}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="Step2">
+          {(props) => (
+            <StepScreen
+              {...props}
+              step={2}
+              setHousingTypes={setHousingTypes}
+              setSelectedTypes={setSelectedTypes}
+              housingTypes={housingTypes}
+              selectedTypes={selectedTypes}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="Step3">
+          {(props) => (
+            <StepScreen
+              {...props}
+              step={3}
+              setHousingTypes={setHousingTypes}
+              setSelectedTypes={setSelectedTypes}
+              housingTypes={housingTypes}
+              selectedTypes={selectedTypes}
+            />
+          )}
+        </Stack.Screen>
+
           <Stack.Screen
             name="Emlak"
             component={Emlakİlanı}
             options={({ route }) => ({
-              title:route.params.name,
-              headerBackTitleVisible:false
+              title: route.params.name,
+              headerBackTitleVisible: false
             })}
           />
           <Stack.Screen
@@ -545,7 +597,7 @@ export default function App({ route }) {
             {(props) => <ShareScreenProject {...props} />}
           </Stack.Screen>
 
-         
+
           <Stack.Screen
             name="Notifications"
             component={Notifications}
@@ -864,7 +916,6 @@ export default function App({ route }) {
               headerStyle: {
                 backgroundColor: "#f7f7f7",
               },
-             
 
             })}
           />

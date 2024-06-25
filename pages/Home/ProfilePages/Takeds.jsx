@@ -28,11 +28,7 @@ export default function Takeds() {
     { id: 3, date: "2022-12-05" },
   ]);
 
-  //  const date = new Date();
-  //  const dayName = date.toLocaleDateString('tr-TR', { weekday: 'long' });
-  //  const monthName = date.toLocaleDateString('tr-TR', { month: 'long' });
-
-  //  console.log("Gün: ", dayName);
+ 
   const [user, setUser] = useState({});
 
   useEffect(() => {

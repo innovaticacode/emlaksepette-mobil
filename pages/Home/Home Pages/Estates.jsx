@@ -91,45 +91,7 @@ const Estates = ({ index }) => {
       <ActivityIndicator style={{ margin: 20 }} size="small" color="#000000" />
     );
   };
-  const [ModalForAddToCart, setModalForAddToCart] = useState(false);
-  const [selectedCartItem, setselectedCartItem] = useState(0);
-  const GetIdForCart = (id) => {
-    setselectedCartItem(id);
-    setModalForAddToCart(true);
-  };
-  useEffect(() => {
-    getValueFor("user", setuser);
-  }, []);
 
-  const addToCard = async () => {
-    const formData = new FormData();
-    formData.append("id", selectedCartItem);
-    formData.append("isShare", null);
-    formData.append("numbershare", null);
-    formData.append("qt", 1);
-    formData.append("type", "housing");
-    formData.append("project", null);
-    formData.append("clear_cart", "no");
-
-    try {
-      if (user?.access_token) {
-        const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
-
-        setModalForAddToCart(false);
-        navigation.navigate("Sepetim");
-      }
-    } catch (error) {
-      console.error("post isteği olmadı", error);
-    }
-  };
   return (
     <View style={styles.container}>
       <View
@@ -202,7 +164,7 @@ const Estates = ({ index }) => {
         data={filteredHomes}
         renderItem={({ item }) => (
           <RealtorPost
-            GetId={GetIdForCart}
+           
             HouseId={item.id}
             price={`${JSON.parse(item.housing_type_data)["price"]} `}
             housing={item}
@@ -243,103 +205,7 @@ const Estates = ({ index }) => {
         ListFooterComponent={renderFooter}
       />
 
-      <Modal
-        isVisible={ModalForAddToCart}
-        onBackdropPress={() => setModalForAddToCart(false)}
-        animationIn={"zoomIn"}
-        animationOut={"zoomOut"}
-        transparent={true}
-        useNativeDriver={true}
-        style={styles.modal4}
-      >
-        <View style={styles.modalContent4}>
-          {user.access_token ? (
-            <>
-              <View style={{ padding: 10, gap: 10 }}>
-                <Text style={{ textAlign: "center" }}>
-                  #1000{selectedCartItem} No'lu Konutu Sepete Eklemek
-                  İsteiğinize Eminmisiniz?
-                </Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    gap: 20,
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "green",
-                      padding: 10,
-                      paddingLeft: 20,
-                      paddingRight: 20,
-                      borderRadius: 5,
-                    }}
-                    onPress={() => {
-                      addToCard();
-                    }}
-                  >
-                    <Text style={{ color: "white" }}>Sepete Ekle</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "#e44242",
-                      padding: 10,
-                      paddingLeft: 20,
-                      paddingRight: 20,
-                      borderRadius: 5,
-                    }}
-                    onPress={() => {
-                      setModalForAddToCart(false);
-                    }}
-                  >
-                    <Text style={{ color: "white" }}>Vazgeç</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </>
-          ) : (
-            <>
-              <View style={{ gap: 10 }}>
-                <View>
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "#4C6272",
-                      fontWeight: "bold",
-                      fontSize: 16,
-                    }}
-                  >
-                    Üyeliğiniz Bulunmamaktadır!
-                  </Text>
-                </View>
-                <View style={{ width: "100%" }}>
-                  <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                    Sepetinize konut ekleyebilmeniz için giriş yapmanız
-                    gerekmektedir
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#F65656",
-                    width: "100%",
-                    padding: 10,
-                  }}
-                  onPress={() => {
-                    setModalForAddToCart(false);
-                    navigation.navigate("Login");
-                  }}
-                >
-                  <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
-                    Giriş Yap
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </>
-          )}
-        </View>
-      </Modal>
+    
     </View>
   );
 };

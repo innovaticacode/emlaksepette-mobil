@@ -51,8 +51,9 @@ export default function Personal({ type }) {
   const [phoneNumber, setphoneNumber] = useState("");
   const [message, setmessage] = useState("");
   const [Isloading, setIsloading] = useState(false);
-  
-const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
+
+  const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] =
+    useState(false);
   const postData = async () => {
     setIsloading(true);
     try {
@@ -72,9 +73,9 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
       );
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
-      console.log("İstek başarıyla tamamlandı:", response.data);
+
       setmessage(response.data.message);
-      navigation.navigate("Login",{showAlert:true ,message:message});
+      navigation.navigate("Login", { showAlert: true, message: message });
       setname("");
       setePosta("");
       setpassword("");
@@ -105,7 +106,6 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
       console.error("Beklenmeyen bir hata oluştu:", error);
     } finally {
       setIsloading(false);
-     
     }
   };
   const [errorStatu, seterrorStatu] = useState(0);
@@ -196,12 +196,37 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
     }
   };
 
-  // Fonksiyonu çağırarak isteği gerçekleştirin
+ 
+  const formatPhoneNumber = (value) => {
+    // Sadece rakamları al
+    const cleaned = ('' + value).replace(/\D/g, '');
+    
+    // 0 ile başlıyorsa, ilk karakteri çıkar
+    const cleanedWithoutLeadingZero = cleaned.startsWith('0') ? cleaned.substring(1) : cleaned;
 
+    let formattedNumber = '';
+
+    for (let i = 0; i < cleanedWithoutLeadingZero.length; i++) {
+      if (i === 0) formattedNumber += '(';
+      if (i === 3) formattedNumber += ') ';
+      if (i === 6 || i === 8) formattedNumber += ' ';
+      formattedNumber += cleanedWithoutLeadingZero[i];
+    }
+
+    return formattedNumber;
+  };
+  const handlePhoneNumberChange = (value) => {
+    const formattedPhoneNumber = formatPhoneNumber(value);
+    setphoneNumber(formattedPhoneNumber);
+  };
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false} onScroll={()=>Keyboard.dismiss()} scrollEventThrottle={16}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          onScroll={() => Keyboard.dismiss()}
+          scrollEventThrottle={16}
+        >
           <View style={{ padding: 15, gap: 20 }}>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
@@ -219,7 +244,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                 ]}
                 value={name}
                 onChangeText={(value) => setname(value)}
-                placeholder="Adınızı Giriniz..."
+                placeholder="İsim Soyisim"
               />
               {errorStatu == 1 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
@@ -245,7 +270,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                 ]}
                 value={ePosta}
                 onChangeText={(value) => setePosta(value)}
-                placeholder="example@gmail.com"
+                placeholder="E-Posta Adresi"
               />
               {errorStatu == 2 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
@@ -270,9 +295,10 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                   },
                 ]}
                 value={phoneNumber}
-                onChangeText={(value) => setphoneNumber(value)}
-                placeholder="5555555555"
+                onChangeText={handlePhoneNumberChange}
+                placeholder="Cep Telefonu"
                 keyboardType="number-pad"
+                maxLength={15}
               />
               {errorStatu == 3 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
@@ -298,7 +324,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                   ]}
                   value={password}
                   onChangeText={(value) => setpassword(value)}
-                  placeholder="*********"
+                  placeholder="Şifre"
                   secureTextEntry={Show ? false : true}
                 />
                 <TouchableOpacity
@@ -337,7 +363,6 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                   checked ? setModalVisible(false) : setModalVisible(true);
                   setChecked(false);
                 }}
-                // Use ThemeProvider to make change for all checkbox
                 iconType="material-community"
                 checkedIcon="checkbox-marked"
                 uncheckedIcon="checkbox-blank-outline"
@@ -356,9 +381,9 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                     <Text style={{ fontSize: 13 }}> okudum onaylıyorum</Text>
                   </Text>
                 }
-                textStyle={{ fontSize: 13, fontWeight: 400 }}
+                textStyle={{ fontSize: 13, fontWeight: 400, }}
                 size={22}
-                containerStyle={{ padding: 0, width: "100%" }}
+                containerStyle={{ padding: 0, width: "100%"}}
               />
               <CheckBox
                 checked={checked1}
@@ -447,7 +472,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                   backgroundColor: "#E54242",
                   padding: 9,
                   borderRadius: 5,
-                  width: "90%",
+                  width: "100%",
                 }}
                 onPress={registerPersonal}
               >
@@ -490,7 +515,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                       setModalVisible(false);
                     }}
                   >
-                    <Text style={{ color: "white", fontWeight: "bold" }}>
+                    <Text style={{ color: "white", fontWeight: "bold", width: "100%", textAlign: "center" }}>
                       Okudum Kabul ediyorum
                     </Text>
                   </TouchableOpacity>
@@ -521,7 +546,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                       setModalVisible2(false);
                     }}
                   >
-                    <Text style={{ color: "white", fontWeight: "bold" }}>
+                    <Text style={{ color: "white", fontWeight: "bold",  width: "100%", textAlign: "center" }}>
                       Okudum Kabul ediyorum
                     </Text>
                   </TouchableOpacity>
@@ -552,7 +577,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                       setModalVisible3(false);
                     }}
                   >
-                    <Text style={{ color: "white", fontWeight: "bold" }}>
+                    <Text style={{ color: "white", fontWeight: "bold", textAlign: "center", width: "100%" }}>
                       Okudum Kabul ediyorum
                     </Text>
                   </TouchableOpacity>
@@ -730,6 +755,9 @@ const styles = StyleSheet.create({
   Acceptbtn: {
     backgroundColor: "#2aaa46",
     padding: 10,
+    width: "100%",
+    textAlign: "center",
     borderRadius: 5,
+    alignItems: "center"
   },
 });

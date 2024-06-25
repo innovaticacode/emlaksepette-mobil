@@ -266,7 +266,7 @@ export default function Collections() {
           });
       }
     const [isChoosed, setisChoosed] = useState(false)
-    console.log(CollectionsRemoveIds)
+    
 const [ereror, setereror] = useState({})
 
     const RemoveSelectedCollections= async () => {
@@ -779,7 +779,7 @@ const [ereror, setereror] = useState({})
             <View style={styles.centeredView3}>
               <View style={styles.modalView3}>
                 <Text style={styles.modalText3}>
-                  Koleksiyonu Silmek İStediğinize eminmisin?
+                  Koleksiyonu Silmek İstediğinize eminmisin?
                 </Text>
                 <View
                   style={{ display: "flex", flexDirection: "row", gap: 25 }}
