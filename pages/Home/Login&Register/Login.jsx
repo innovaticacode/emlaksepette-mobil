@@ -174,7 +174,7 @@ export default function Login({ navigation }) {
 
                 <TextInput
                   style={styles.Input}
-                  placeholder="example@gmail.com"
+                  placeholder="E-Posta Adresi"
                   value={email}
                   onChangeText={handleTextInputChange}
                 />
@@ -215,7 +215,7 @@ export default function Login({ navigation }) {
                   </TouchableOpacity>
                   <TextInput
                     style={styles.Input}
-                    placeholder="Şifrenizi Girin"
+                    placeholder="Şifre"
                     secureTextEntry={Show ? false : true}
                     value={password}
                     onChangeText={handlePasswordChange}
