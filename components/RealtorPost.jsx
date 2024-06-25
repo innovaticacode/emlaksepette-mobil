@@ -102,33 +102,40 @@ export default function RealtorPost({
     : 0;
 
   const handlePress = () => {
-    setAddCartShow(true);
+    user.access_token ? 
+    setAddCartShow(true):
+    setalertForSign(true)
   };
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
   const [showAlert, setShowAlert] = useState(false);
 
   const addFavorites = () => {
-    const config = {
-      headers: { Authorization: `Bearer ${user.access_token}` },
-    };
-    axios
-      .post(
-        "https://mobil.emlaksepette.com/api/add_housing_to_favorites/" +
-          HouseId,
-        {},
-        config
-      )
-      .then((res) => {
-        changeHeart();
-    
-        if (res.data.status == "removed") {
-          setInFavorite(false);
-        } else {
-          setInFavorite(true);
-        }
-      });
-    setShowAlert(false);
+    if (user.access_token) {
+      const config = {
+        headers: { Authorization: `Bearer ${user.access_token}` },
+      };
+      axios
+        .post(
+          "https://mobil.emlaksepette.com/api/add_housing_to_favorites/" +
+            HouseId,
+          {},
+          config
+        )
+        .then((res) => {
+          changeHeart();
+      
+          if (res.data.status == "removed") {
+            setInFavorite(false);
+          } else {
+            setInFavorite(true);
+          }
+        });
+      setShowAlert(false);
+    }else{
+      setalertForFavorite(true)
+    }
+
   };
 
   const [AddCartShow, setAddCartShow] = useState(false);
@@ -165,11 +172,66 @@ export default function RealtorPost({
       console.error("post isteği olmadı", error);
     }
   };
-
+const [alertForSign, setalertForSign] = useState(false)
+const [alertForFavorite, setalertForFavorite] = useState(false)
   return (
     <AlertNotificationRoot>
       <View>
-    
+      <AwesomeAlert
+            
+            show={alertForFavorite}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={'Giriş Yap'}
+              messageStyle={{textAlign:'center'}}
+              message={`Favorilerinize Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Vazgeç"
+            confirmText="Giriş Yap"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+              setalertForFavorite(false)
+            }}
+            onConfirmPressed={() => {
+              navigation.navigate('Login')
+              setalertForFavorite(false)
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
+      <AwesomeAlert
+            
+            show={alertForSign}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+            title={'Giriş Yap'}
+            messageStyle={{textAlign:'center'}}
+            message={`Sepetine Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+           
+            confirmText="Giriş Yap"
+            cancelText="Vazgeç"
+            cancelButtonColor="#E54564"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+              setalertForSign(false)
+            }}
+            onConfirmPressed={() => {
+              navigation.navigate('Login')
+              setalertForSign(false)
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
      
           <AwesomeAlert
             
@@ -178,7 +240,7 @@ export default function RealtorPost({
               titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
             title={title}
             messageStyle={{textAlign:'center'}}
-            message={`#1000${HouseId} No' lu Konutu Sepete Eklemek İstiyor Musunuz?`}
+            message={`#2000${HouseId} No' lu Konutu Sepete Eklemek İstiyor Musunuz?`}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
             showCancelButton={true}
@@ -253,7 +315,7 @@ export default function RealtorPost({
 
                   <TouchableOpacity
                     onPress={() => {
-                      setShowAlert(true);
+                     
                       addFavorites()
                     }}
                   >

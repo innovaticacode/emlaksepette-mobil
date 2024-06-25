@@ -128,6 +128,7 @@ export default function Posts({
   }
 
   const addFavorites = () => {
+   if (user.access_token) {
     const config = {
       headers: { Authorization: `Bearer ${user.access_token}` }
     };
@@ -136,12 +137,7 @@ export default function Posts({
       housing_id : roomOrder
     },config).then((res) => {
       changeHeart();
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: 'Başarılı',
-        textBody: res.data.message,
-        button: 'Tamam',
-      })
+    
       if(res.data.status == "removed"){
         setInFavorite(false);
       }else{
@@ -149,6 +145,10 @@ export default function Posts({
       }
     })
     setShowAlert(false);
+   }else{
+    setalertForFavorite(true)
+   }
+ 
   }
 
   useEffect(() => {
@@ -160,28 +160,125 @@ export default function Posts({
       setInFavorite(false);
     }
   },[projectFavorites])
+  console.log(roomData)
+  const [addShowCart, setaddShowCart] = useState(false)
 
+  const addToCard = async () => {
+    const formData = new FormData();
+    formData.append("id", roomOrder);
+    formData.append(
+      "isShare",
+      roomData["share_sale[]"]?
+      roomData["share_sale[]"]:null
+    );
+    formData.append(
+      "numbershare",roomData["number_of_shares[]"]?
+      roomData["number_of_shares[]"]:null
+    );
+    formData.append("qt", 1);
+    formData.append("type", "project");
+    formData.append("clear_cart", "no");
+    formData.append("project", project.id);
+    try {
+      if (user?.access_token) {
+        const response = await axios.post(
+          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+
+        navigation.navigate("Sepetim");
+      }
+    } catch (error) {
+      console.error("post isteği olmadı", error);
+    }
+  };
+const [alertForSign, setalertForSign] = useState(false)
+const [alertForFavorite, setalertForFavorite] = useState(false)
   return (
     <View style={styles.container}>
-      <AwesomeAlert
-        show={showAlert}
-        showProgress={false}
-        title={inFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle"}
-        message={inFavorite ? "Bu konutu favorilerden çıkarmak istediğinize emin misiniz?" : "Bu konutu favorilere eklemek istediğinize emin misiniz?"}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={true}
-        showConfirmButton={true}
-        cancelText="İptal"
-        confirmText="Evet"
-        confirmButtonColor="#22bb33"
-        onCancelPressed={() => {
-          setShowAlert(false);
-        }}
-        onConfirmPressed={() => {
-          addFavorites();
-        }}
-      />
+        <AwesomeAlert
+            
+            show={alertForFavorite}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={'Giriş Yap'}
+              messageStyle={{textAlign:'center'}}
+              message={`Favorilerinize Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Vazgeç"
+            confirmText="Giriş Yap"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+              setalertForFavorite(false)
+            }}
+            onConfirmPressed={() => {
+              navigation.navigate('Login')
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
+    <AwesomeAlert
+            
+            show={alertForSign}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={'Giriş Yap'}
+              messageStyle={{textAlign:'center'}}
+              message={`Sepetine Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Vazgeç"
+            confirmText="Giriş Yap"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+         setalertForSign(false)
+            }}
+            onConfirmPressed={() => {
+              navigation.navigate('Login')
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
+       <AwesomeAlert
+            
+            show={addShowCart}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+            title={   truncateText(roomData["advertise_title[]"], 4)}
+            messageStyle={{textAlign:'center'}}
+            message={`#1000${project.id} No'lu Projenin ${roomOrder} No'lu Konutu'nu Sepete Eklemek İstiyor Musunuz?`}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Hayır"
+            confirmText="Evet"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+             setaddShowCart(false)
+            }}
+            onConfirmPressed={() => {
+             addToCard()
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
       <View style={styles.İlan}>
         <TouchableOpacity
           style={{ width: "30%" }}
@@ -244,7 +341,7 @@ export default function Posts({
               )}
 
               {!isUserSame ? (
-                <TouchableOpacity onPress={changeFavorite}>
+                <TouchableOpacity onPress={addFavorites}>
                   <View style={styles.ıconContainer}>
                     <Heart
                       name={heart}
@@ -340,7 +437,11 @@ export default function Posts({
                   <View style={styles.priceContainer}>
                     <TouchableOpacity
                       style={styles.addBasket}
-                      onPress={() => GetIdForCart(roomOrder)}
+                      onPress={() =>  
+                          user.access_token?
+                        setaddShowCart(true)
+                        :setalertForSign(true)
+                      }
                     >
                       <Text style={styles.addBasketText}>Sepete Ekle</Text>
                     </TouchableOpacity>
