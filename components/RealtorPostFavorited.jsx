@@ -99,11 +99,11 @@ export default function RealtorPostFavorited({
 
   const LeftAction = () => {
     return (
-      <View  style={styles.leftAction}>
-        <TouchableOpacity onPress={() => {setShowAlert(true);}}>
+      <TouchableOpacity onPress={() => {setShowAlert(true);}}  style={styles.leftAction}>
+        <View >
           <Text style={styles.actionText}><Icon name="delete" size={20} color={'#fff'}/></Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
     );
   };
 

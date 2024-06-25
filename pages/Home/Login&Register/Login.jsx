@@ -10,7 +10,7 @@ import {
   Dimensions,
   Image,
 } from "react-native";
-import { React, useState } from "react";
+import { React, useState,useEffect,useCallback} from "react";
 import BackIcon from "react-native-vector-icons/AntDesign";
 import EyeIcon from "react-native-vector-icons/Ionicons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -21,7 +21,8 @@ import { CheckBox } from "react-native-elements";
 import Modal from "react-native-modal";
 import { apiRequestPost } from "../../../components/methods/apiRequest";
 import * as SecureStore from "expo-secure-store";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function Login({ navigation }) {
   const route = useRoute();
@@ -118,9 +119,34 @@ export default function Login({ navigation }) {
   Login.navigationOptions = {
     headerShown: false, // Başlık gizleme
   };
+
+
+  const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }, [])
+  );
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    
+
+      
       <View style={styles.container}>
+      {
+        loading ?
+        <View style={{alignItems:'center',justifyContent:'center'}}>
+                  <ActivityIndicator size={"large"} color="#333" />
+        </View>
+              :
+        <>
         {!IsShowAlert &&  <View style={[styles.header, {}]}></View>}
        
         <View style={!IsShowAlert ? { padding: 10 } : null}>
@@ -462,7 +488,10 @@ export default function Login({ navigation }) {
             </View>
           </View>
         </Modal>
+        </>
+}
       </View>
+
     </TouchableWithoutFeedback>
   );
 }
@@ -472,6 +501,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+    alignItems:'center',
+    justifyContent:'center'
   },
   header: {
     flex: 0.2,

@@ -171,7 +171,7 @@ const Estates = ({ index }) => {
             title={item.housing_title}
             loading={loading}
             location={item.city_title + " / " + item.county_title}
-            image={`${apiUrl}/housing_images/${
+            image={`${apiUrl}housing_images/${
               JSON.parse(item.housing_type_data).image
             }`}
             column1_name={`${
