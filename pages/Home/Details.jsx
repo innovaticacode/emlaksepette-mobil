@@ -1613,7 +1613,7 @@ export default function Details({ navigation }) {
                         </View>
                         <TouchableOpacity style={{ backgroundColor: '#F65656', width: '100%', padding: 10 }}
                           onPress={() => {
-                            navigation.navigate('Collecitons')
+                            navigation.navigate('Collections')
                             setColectionSheet(false)
                           }}
                         >

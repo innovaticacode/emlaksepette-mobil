@@ -1333,7 +1333,7 @@ export default function PostDetail() {
                           padding: 10,
                         }}
                         onPress={() => {
-                          navigation.navigate("Collecitons");
+                          navigation.navigate("Collections");
                           setColectionSheet(false);
                         }}
                       >

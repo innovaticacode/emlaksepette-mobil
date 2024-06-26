@@ -48,7 +48,7 @@ export default function ShopInfo({ data, loading }) {
               <View
                 style={[
                   styles.ınformation,
-                  { top: 10, borderRadius: 10 },
+                  { borderRadius: 10 },
                   styles.commentArea,
                 ]}
               >
@@ -59,11 +59,12 @@ export default function ShopInfo({ data, loading }) {
                     width: width > 400 ? "10%" : "11%",
                     left: 10,
                     alignItems: "center",
+                    borderRadius: 100,
                   }}
                 >
                   <Icon name="calendar" size={20} color={"white"} />
                 </View>
-                <View style={{ gap: 5 }}>
+                <View style={{ gap: 5, left: 20 }}>
                   <Text>Katılma Tarihi</Text>
                   <Text style={{ fontWeight: "600" }}>{formattedDate}</Text>
                 </View>
@@ -144,14 +145,15 @@ export default function ShopInfo({ data, loading }) {
                     height: "70%",
                     left: 10,
                     alignItems: "center",
+                    borderRadius: 100,
                   }}
                 >
                   <Icon name="phone" size={20} color={"white"} />
                 </View>
-                <View style={{ gap: 5 }}>
+                <View style={{ gap: 5, left: 20 }}>
                   <Text>İletişim</Text>
                   <Text style={{ fontWeight: "600" }}>
-                    Telefon : {data?.data?.phone}
+                    Telefon : {data?.data?.phone} {data?.data?.mobile_phone}
                   </Text>
                   <Text style={{ fontWeight: "600" }}>
                     E-Mail : {data?.data?.email}{" "}
@@ -213,7 +215,7 @@ export default function ShopInfo({ data, loading }) {
               <View
                 style={[
                   styles.ınformation,
-                  { top: 40, borderRadius: 10 },
+                  { borderRadius: 10 },
                   styles.commentArea,
                 ]}
               >
@@ -225,11 +227,12 @@ export default function ShopInfo({ data, loading }) {
                     height: "100%",
                     left: 10,
                     alignItems: "center",
+                    borderRadius: 100,
                   }}
                 >
                   <Icon name="map-pin" size={20} color={"white"} />
                 </View>
-                <View style={{ gap: 5 }}>
+                <View style={{ gap: 5, left: 20 }}>
                   <Text>Konum</Text>
                   <Text style={{ fontWeight: "600" }}>
                     {data?.data?.town?.sehir_title}/{" "}
@@ -286,7 +289,7 @@ export default function ShopInfo({ data, loading }) {
           <>
             <View
               style={[
-                { width: "100%", height: 150, top: 60, borderRadius: 10 },
+                { width: "100%", height: 150, borderRadius: 10 },
                 styles.shadow,
               ]}
             >
@@ -314,11 +317,13 @@ export default function ShopInfo({ data, loading }) {
                   coordinate={{
                     latitude:
                       parseFloat(
-                        data?.data?.latitude == null ? "" : data?.data?.latitude
+                        data?.data?.latitude == null || undefined
+                          ? ""
+                          : data?.data?.latitude
                       ) || 0,
                     longitude:
                       parseFloat(
-                        data?.data?.longitude == null
+                        data?.data?.longitude == null || undefined
                           ? ""
                           : data?.data?.longitude
                       ) || 0,
@@ -666,14 +671,17 @@ const styles = StyleSheet.create({
     height: "auto",
   },
   ınformation: {
-    padding: 5,
-    display: "flex",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    width: "100%",
+    marginVertical: 10,
     flexDirection: "row",
-    top: 30,
-    gap: 30,
+
+    alignItems: "center",
   },
   comment: {
-    top: 50,
     width: "100%",
     padding: 10,
   },

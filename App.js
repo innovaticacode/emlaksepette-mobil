@@ -319,7 +319,7 @@ export default function App({ route }) {
 
           <Stack.Group>
             <Stack.Screen
-              name="Collecitons"
+              name="Collections"
               component={Collections}
               options={{
                 title: "Koleksiyonlarım",

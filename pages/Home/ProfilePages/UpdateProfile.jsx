@@ -18,13 +18,15 @@ import Editıcon from "react-native-vector-icons/MaterialCommunityIcons";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import Modal from "react-native-modal";
 import ColorPicker from "react-native-wheel-color-picker";
-import { getValueFor } from "../../../components/methods/user";
+import userData, { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
 import Icon from "react-native-vector-icons/Fontisto";
 import { CheckBox } from "@rneui/themed";
 import RNPickerSelect from "react-native-picker-select";
 import { Platform } from "react-native";
 import * as Location from "expo-location";
+import * as SecureStore from "expo-secure-store";
+
 export default function UpdateProfile() {
   const [selectedLocation, setSelectedLocation] = useState(null);
 
@@ -35,11 +37,51 @@ export default function UpdateProfile() {
     getAddressFromCoordinates(coordinate.latitude, coordinate.longitude);
   };
 
-  const [user, setuser] = useState({});
-  useEffect(() => {
-    getValueFor("user", setuser);
-  }, []);
+  const [user, setUser] = useState({});
 
+  useEffect(() => {
+    // Function to fetch initial user data from local storage
+    const fetchInitialUserData = async () => {
+      try {
+        // Retrieve user data from SecureStore
+        const storedUser = await SecureStore.getItemAsync("user");
+  
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (error) {
+        console.error("Error fetching initial user data:", error);
+      }
+    };
+  
+    // Function to fetch additional user data using getValueFor
+    const fetchAdditionalUserData = async () => {
+      try {
+        // Example of using getValueFor to fetch user data
+        const updatedUser = await getValueFor("user");
+  
+        // Update user state with the fetched data
+        setUser(updatedUser);
+  
+        // Update SecureStore with the fetched user data
+        await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
+      } catch (error) {
+        console.error("Error fetching additional user data:", error);
+      }
+    };
+  
+    // On component mount, fetch initial user data from SecureStore
+    fetchInitialUserData();
+  
+    // Optionally, fetch additional user data asynchronously using getValueFor
+    fetchAdditionalUserData();
+  
+    // Clean-up function (optional)
+    return () => {
+      // Perform any cleanup here if needed
+    };
+  }, []); // Empty dependency array ensures this runs only once on mount
+  
   const [currentColor, setCurrentColor] = useState(user.banner_hex_code);
   const [swatchesOnly, setSwatchesOnly] = useState(false);
   const [swatchesLast, setSwatchesLast] = useState(false);
@@ -263,6 +305,7 @@ export default function UpdateProfile() {
         formData.append("longitude", selectedLocation?.longitude);
         formData.append("_method", "PUT");
 
+        // Perform the profile update
         const response = await axios.post(
           "https://mobil.emlaksepette.com/api/client/profile/update",
           formData,
@@ -273,92 +316,47 @@ export default function UpdateProfile() {
           }
         );
 
+        // Clear the form field after successful update
         setName("");
 
+        // Fetch updated user data after successful update
+        const updateResponse = await axios.get(
+          `https://mobil.emlaksepette.com/api/users/${user?.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+
+        // Log the fetched updated user data
+        console.log(updateResponse);
+
+        // Update user state with the updated data
+        setUser(updateResponse.data.user);
+
+        // Update SecureStore with the updated user data
+        await SecureStore.setItemAsync(
+          "user",
+          JSON.stringify(updateResponse.data)
+        );
+
+        // Set update success flag and reset after a timeout
         setUpdateSuccess(true);
-        getValueFor("user", setuser);
         setTimeout(() => {
           setUpdateSuccess(false);
         }, 1500);
       }
     } catch (error) {
-      console.error("Hata:", error);
-      // Hata durumunda ek işlemler yapılabilir
+      console.error("Error:", error);
+      // Handle error
     } finally {
-      setloadingModal(false);
+      setLoadingModal(false);
     }
   };
 
-
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       "https://mobil.emlaksepette.com/api/cities"
-  //     );
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error("Hata:", error);
-  //     throw error;
-  //   }
-  // };
-
-  // const [citites, setCities] = useState([]);
-  // useEffect(() => {
-  //   fetchData()
-  //     .then((citites) => setCities(citites.data))
-  //     .catch((error) =>
-  //       console.error("Veri alınırken bir hata oluştu:", error)
-  //     );
-  // }, []);
-
-  // const [counties, setcounties] = useState([]);
-  // const fetchDataCounty = async (value) => {
-  //   try {
-  //     const response = await axios.get(
-  //       `https://mobil.emlaksepette.com/api/counties/${value}`
-  //     );
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error("Hata:", error);
-  //     throw error;
-  //   }
-  // };
-  // const onChangeCity = (value) => {
-  //   setcity(value);
-  //   if (value) {
-  //     fetchDataCounty(value)
-  //       .then((county) => setcounties(county.data))
-  //       .catch((error) =>
-  //         console.error("Veri alınırken bir hata oluştu:", error)
-  //       );
-  //   } else {
-  //     setcounties([]);
-  //   }
-  // };
-  // const [Neigbour, setNeigbour] = useState([]);
-  // const fetchDataNeigbour = async (value) => {
-  //   try {
-  //     const response = await axios.get(
-  //       `https://mobil.emlaksepette.com/api/neighborhoods/${value}`
-  //     );
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error("Hata:", error);
-  //     throw error;
-  //   }
-  // };
-  // const onChangeCounty = (value) => {
-  //   setcounty(value);
-  //   if (value) {
-  //     fetchDataNeigbour(value)
-  //       .then((county) => setNeigbour(county.data))
-  //       .catch((error) =>
-  //         console.error("Veri alınırken bir hata oluştu:", error)
-  //       );
-  //   } else {
-  //     setNeigbour([]);
-  //   }
-  // };
+  // Print the entire refactored postData function
+  console.log(postData.toString());
 
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -432,14 +430,10 @@ export default function UpdateProfile() {
           longitudeDelta: 0.07,
         });
       } else {
-        Alert.alert(
-          "Error",
-          "Could not find coordinates for selected location"
-        );
+        
       }
     } catch (error) {
       console.error("Hata:", error);
-      Alert.alert("Error", "Could not load coordinates");
     }
   };
 

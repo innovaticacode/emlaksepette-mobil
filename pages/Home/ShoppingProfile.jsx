@@ -55,8 +55,7 @@ export default function ShoppingProfile() {
             },
           }
         );
-        // console.log(response);
-        // console.log(response.data.permissions);
+
         setPermissionsUser(response.data.permissions);
         setLoading(true);
       }
