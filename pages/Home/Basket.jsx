@@ -29,7 +29,7 @@ import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { Alert } from "react-native";
-
+import * as SecureStore from "expo-secure-store";
 import { Image } from "react-native-svg";
 
 import DrawerMenu from "../../components/DrawerMenu";
@@ -207,13 +207,15 @@ export default function Basket() {
       if (user.access_token) {
         const response = await axios.post(
           "https://mobil.emlaksepette.com/api/remove-from-cart",
-          {}, // Gövdeye boş bir obje gönderiyoruz
+          {}, 
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
             },
           }
         );
+        setuser({...user , cartItem:null})
+        SecureStore.setItemAsync("user", JSON.stringify({...user , cartItem:null}));
         fetchData();
       }
     } catch (error) {
