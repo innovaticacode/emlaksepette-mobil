@@ -41,12 +41,7 @@ export default function Basket() {
 
   const navigation = useNavigation();
 
-  const renderRightActions = () => (
-    <TouchableOpacity style={styles.deleteButton} onPress={() => {}}>
-      <Text style={styles.deleteButtonText}>Sil</Text>
-      <TrashIcon name="trash" size={23} color={"white"} />
-    </TouchableOpacity>
-  );
+
   const [Basket, SetBasket] = useState([
     {
       name: "MASTER ORMAN KÖY EVLERİ",
@@ -206,7 +201,26 @@ export default function Basket() {
       console.error("Error fetching data:", error);
     }
   };
-
+  console.log(user.access_token + 'DFSfdsfds')
+  const DeleteBasket = async () => {
+    try {
+      if (user.access_token) {
+        const response = await axios.post(
+          "https://mobil.emlaksepette.com/api/remove-from-cart",
+          {}, // Gövdeye boş bir obje gönderiyoruz
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+        fetchData();
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("tr-TR", {
       style: "currency",
@@ -249,6 +263,12 @@ export default function Basket() {
   const [index, setindex] = useState(0)
   const [tab, settab] = useState(0)
  console.log(CartLength)
+ const renderRightActions = () => (
+  <TouchableOpacity style={styles.deleteButton} onPress={DeleteBasket}>
+    <Text style={styles.deleteButtonText}>Sil</Text>
+    <TrashIcon name="trash" size={23} color={"white"} />
+  </TouchableOpacity>
+);
   return (
     <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
       {

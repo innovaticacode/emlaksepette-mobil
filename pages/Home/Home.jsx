@@ -31,6 +31,11 @@ const Home = ({route}) => {
       setUser({});
     }
   },[route?.params?.status])
+useEffect(() => {
+    if (isFocused) {
+      getValueFor("user", setUser);
+    }
+}, [isFocused])
 
   const { width, height } = Dimensions.get("window");
   return (
