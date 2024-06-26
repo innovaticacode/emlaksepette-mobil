@@ -102,9 +102,12 @@ export default function RealtorPost({
     : 0;
 
   const handlePress = () => {
+    if (user.cartItem !== null ) {
+        setcartIsNull(true)
+    }
     user.access_token ? 
     setAddCartShow(true):
-    setalertForSign(true)
+    setalertForSign(true) 
   };
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
@@ -174,9 +177,37 @@ export default function RealtorPost({
   };
 const [alertForSign, setalertForSign] = useState(false)
 const [alertForFavorite, setalertForFavorite] = useState(false)
+const [cartIsNull, setcartIsNull] = useState(false)
   return (
     <AlertNotificationRoot>
       <View>
+      <AwesomeAlert
+            
+            show={cartIsNull}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={'Sepetinize sadece 1 Ürün Ekleyebilirsiniz '}
+              messageStyle={{textAlign:'center'}}
+              message={`Mevcut sepeti silmek istermisiniz`}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Hayır"
+            confirmText="Evet"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+              setcartIsNull(false)
+            }}
+            onConfirmPressed={() => {
+             addToCard()
+              setcartIsNull(false)
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
       <AwesomeAlert
             
             show={alertForFavorite}

@@ -134,7 +134,7 @@ export default function Favorites() {
       console.error("post isteği olmadı", error);
     }
   };
-
+console.log(user)
   return (
     
     <View style={styles.container}>
