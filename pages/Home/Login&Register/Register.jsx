@@ -88,7 +88,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   TabBar: {
-    padding: 15,
+    paddingVertical: 0,
+    padding: 10,
     paddingTop: 10,
     flexDirection: "row",
     justifyContent: "space-between",
