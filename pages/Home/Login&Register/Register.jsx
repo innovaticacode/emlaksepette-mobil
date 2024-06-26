@@ -37,6 +37,7 @@ export default function Register() {
               <Text
                 style={{
                   textAlign: "center",
+                  fontWeight: 700,
                   color:
                     tabs == 1
                       ? "white"
@@ -62,6 +63,7 @@ export default function Register() {
               <Text
                 style={{
                   textAlign: "center",
+                  fontWeight: 700,
                   color:
                     tabs == 2
                       ? "white"

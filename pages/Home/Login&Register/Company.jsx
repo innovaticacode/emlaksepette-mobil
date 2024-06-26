@@ -202,7 +202,7 @@ export default function Company() {
       );
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
-     
+
       setmessage(response.data.message);
       setIsSucces(response.data.status);
 
@@ -387,7 +387,6 @@ export default function Company() {
       default:
         postData();
     }
-
   };
   const fetchTaxOfficeCity = async () => {
     try {
@@ -491,7 +490,7 @@ export default function Company() {
           <View style={{ padding: 15, gap: 20 }}>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Yetkili İsim Soyisim
                 </Text>
               </View>
@@ -517,7 +516,7 @@ export default function Company() {
 
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   E-Posta
                 </Text>
               </View>
@@ -542,7 +541,7 @@ export default function Company() {
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Şifre
                 </Text>
               </View>
@@ -580,7 +579,7 @@ export default function Company() {
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Cep Telefonu
                 </Text>
               </View>
@@ -608,7 +607,7 @@ export default function Company() {
 
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Ticaret Ünvanı
                 </Text>
               </View>
@@ -633,7 +632,7 @@ export default function Company() {
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Mağaza Adı
                 </Text>
               </View>
@@ -658,7 +657,7 @@ export default function Company() {
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Sabit Telefon (Opsiyonel)
                 </Text>
               </View>
@@ -672,10 +671,11 @@ export default function Company() {
             </View>
 
             <View style={{ gap: 5 }}>
-              <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 Faaliyet Alanınız
               </Text>
-              <RNPickerSelect doneText="Tamam"
+              <RNPickerSelect
+                doneText="Tamam"
                 value={focusArea}
                 placeholder={{
                   label: "Seçiniz...",
@@ -704,10 +704,11 @@ export default function Company() {
               )}
             </View>
             <View style={{ gap: 6 }}>
-              <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 İl
               </Text>
-              <RNPickerSelect doneText="Tamam"
+              <RNPickerSelect
+                doneText="Tamam"
                 value={city}
                 placeholder={{
                   label: "Seçiniz...",
@@ -728,10 +729,11 @@ export default function Company() {
               )}
             </View>
             <View style={{ gap: 6 }}>
-              <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 İlçe
               </Text>
-              <RNPickerSelect doneText="Tamam"
+              <RNPickerSelect
+                doneText="Tamam"
                 value={county}
                 placeholder={{
                   label: "Seçiniz...",
@@ -752,10 +754,11 @@ export default function Company() {
               )}
             </View>
             <View style={{ gap: 6 }}>
-              <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 Mahalle
               </Text>
-              <RNPickerSelect doneText="Tamam"
+              <RNPickerSelect
+                doneText="Tamam"
                 value={neigbourhod}
                 placeholder={{
                   label: "Seçiniz...",
@@ -824,10 +827,11 @@ export default function Company() {
               </View>
             </View>
             <View style={{ gap: 6 }}>
-              <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 Vergi Dairesi İli
               </Text>
-              <RNPickerSelect doneText="Tamam"
+              <RNPickerSelect
+                doneText="Tamam"
                 value={TaxPlaceCity}
                 placeholder={{
                   label: "Seçiniz...",
@@ -848,10 +852,11 @@ export default function Company() {
               )}
             </View>
             <View style={{ gap: 6 }}>
-              <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 Vergi Dairesi
               </Text>
-              <RNPickerSelect doneText="Tamam"
+              <RNPickerSelect
+                doneText="Tamam"
                 value={TaxPlace}
                 placeholder={{
                   label: "Seçiniz...",
@@ -871,7 +876,7 @@ export default function Company() {
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Vergi No
                 </Text>
               </View>
@@ -893,7 +898,7 @@ export default function Company() {
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Yetki Belgesi No
                 </Text>
               </View>
@@ -920,7 +925,7 @@ export default function Company() {
               }}
             >
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Tc Kimlik No
                 </Text>
               </View>
@@ -947,19 +952,15 @@ export default function Company() {
                 }
                 style={styles.checkboxContainer}
               >
-                    {checked ? (
-                          <FontAwesome5Icon
-                            name="check-square"
-                            size={22}
-                            color="#EA2C2E"
-                          />
-                        ) : (
-                          <FontAwesome5Icon
-                            name="square"
-                            size={22}
-                            color="#EA2C2E"
-                          />
-                        )}
+                {checked ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
                 <Text
                   style={[
                     styles.checkboxLabel,
@@ -972,7 +973,7 @@ export default function Company() {
                       fontSize: 13,
                     }}
                   >
-                     Kurumsal üyelik sözleşmesini
+                    Kurumsal üyelik sözleşmesini
                   </Text>{" "}
                   okudum onaylıyorum
                 </Text>
@@ -989,19 +990,15 @@ export default function Company() {
                 }
                 style={styles.checkboxContainer}
               >
-                    {checked1 ? (
-                          <FontAwesome5Icon
-                            name="check-square"
-                            size={22}
-                            color="#EA2C2E"
-                          />
-                        ) : (
-                          <FontAwesome5Icon
-                            name="square"
-                            size={22}
-                            color="#EA2C2E"
-                          />
-                        )}
+                {checked1 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
                 <Text
                   style={[
                     styles.checkboxLabel,
@@ -1032,19 +1029,15 @@ export default function Company() {
                 }
                 style={styles.checkboxContainer}
               >
-                    {checked2 ? (
-                          <FontAwesome5Icon
-                            name="check-square"
-                            size={22}
-                            color="#EA2C2E"
-                          />
-                        ) : (
-                          <FontAwesome5Icon
-                            name="square"
-                            size={22}
-                            color="#EA2C2E"
-                          />
-                        )}
+                {checked2 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
                 <Text
                   style={[
                     styles.checkboxLabel,
@@ -1067,19 +1060,15 @@ export default function Company() {
                 onPress={toggleCheked3}
                 style={styles.checkboxContainer}
               >
-                   {checked3 ? (
-                          <FontAwesome5Icon
-                            name="check-square"
-                            size={22}
-                            color="#EA2C2E"
-                          />
-                        ) : (
-                          <FontAwesome5Icon
-                            name="square"
-                            size={22}
-                            color="#EA2C2E"
-                          />
-                        )}
+                {checked3 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
                 <Text style={styles.checkboxLabel}>
                   İletişim bilgilerime kampanya, tanıtım ve reklam içerikli
                   ticari elektronik ileti gönderilmesine, bu amaçla kişisel
@@ -1215,7 +1204,7 @@ export default function Company() {
                   }}
                 >
                   <Text style={{ color: "white", fontWeight: "bold" }}>
-                  Okudum kabul ediyorum
+                    Okudum kabul ediyorum
                   </Text>
                 </TouchableOpacity>
               </View>
