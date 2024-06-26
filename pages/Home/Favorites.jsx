@@ -21,14 +21,17 @@ export default function Favorites() {
   },[])
 
   useEffect(() => {
-    setLoading(true);
-    const config = {
-      headers: { Authorization: `Bearer ${user?.access_token}` }
-    };
-    axios.get('https://mobil.emlaksepette.com/api/favorites',config).then((res) => {
-      setFavorites(Object.values(res.data.mergedFavorites));
-      setLoading(false);
-    })
+    if (user.access_token) {
+      setLoading(true);
+      const config = {
+        headers: { Authorization: `Bearer ${user?.access_token}` }
+      };
+      axios.get('https://mobil.emlaksepette.com/api/favorites',config).then((res) => {
+        setFavorites(Object.values(res.data.mergedFavorites));
+        setLoading(false);
+      })
+    }
+   
   },[user,focused])
 
 
@@ -151,7 +154,7 @@ console.log(user)
               loading ? 
                 <ActivityIndicator size="small" color={"red"} />
               : 
-                favorites?.map((favorite) => {
+                favorites?.map((favorite,i) => {
                   if(favorite?.project){
                     var image = favorite?.project_housing?.find((projectHousing) => {if(projectHousing.room_order == favorite?.housing_id && projectHousing.name == 'image[]' && projectHousing.project_id == favorite?.project?.id){return projectHousing}})?.value;
                     var column1 = favorite?.project_housing?.find((projectHousing) => {if(projectHousing.room_order == favorite?.housing_id && projectHousing.name == favorite?.project?.list_item_values?.column1_name+'[]' && projectHousing.project_id == favorite?.project?.id){return projectHousing}})?.value;
@@ -168,7 +171,7 @@ console.log(user)
                     }
                     var no = 1000000 + favorite?.project.id
                     return(
-                      <RealtorPostFavorited changeFavorites={changeFavorites} type={1} projectId={favorite?.project?.id} housingId={favorite?.housing_id} no={no} column1={column1} column2={column2} column3={column3} image={'https://mobil.emlaksepette.com/project_housing_images/'+image} title={favorite?.project?.project_title + " adlı projede "+favorite?.housing_id+" No'lu konut"} price={favorite?.project_housing?.find((projectHousing) => {if(projectHousing.room_order == favorite?.housing_id && projectHousing.name == 'price[]'){return projectHousing}})?.value} m2="20"  GetId={GetIdForCart}/>
+                      <RealtorPostFavorited key={i} changeFavorites={changeFavorites} type={1} projectId={favorite?.project?.id} housingId={favorite?.housing_id} no={no} column1={column1} column2={column2} column3={column3} image={'https://mobil.emlaksepette.com/project_housing_images/'+image} title={favorite?.project?.project_title + " adlı projede "+favorite?.housing_id+" No'lu konut"} price={favorite?.project_housing?.find((projectHousing) => {if(projectHousing.room_order == favorite?.housing_id && projectHousing.name == 'price[]'){return projectHousing}})?.value} m2="20"  GetId={GetIdForCart}/>
                     )
                   }else{
                     if(favorite?.housing){
@@ -177,7 +180,7 @@ console.log(user)
                       housingData = {};
                     }
                     return(
-                      <RealtorPostFavorited changeFavorites={changeFavorites} type={2} HouseId={favorite?.housing?.id} no={favorite?.housing?.id + 2000000} image={'https://mobil.emlaksepette.com/housing_images/'+housingData?.image} title={favorite?.housing?.title} price={housingData && housingData.price ? housingData.price : "0"} column1={housingData[favorite?.housing?.list_items?.column1_name] ? housingData[favorite?.housing?.list_items?.column1_name] +" "+(favorite?.housing?.list_items?.column1_additional ? favorite?.housing?.list_items?.column1_additional : '') : ''} column2={housingData[favorite?.housing?.list_items?.column2_name] ? housingData[favorite?.housing?.list_items?.column2_name] +" "+ (favorite?.housing?.list_items?.column2_additional ? favorite?.housing?.list_items?.column2_additional : '') : ''} column3={ housingData[favorite?.housing?.list_items?.column3_name] ? housingData[favorite?.housing?.list_items?.column3_name] +" "+ (favorite?.housing?.list_items?.column3_additional ? favorite?.housing?.list_items?.column3_additional : '') : ''}  location={favorite?.housing?.city?.title + ' / ' + favorite?.housing?.county?.title} GetId={GetIdForCart}  />
+                      <RealtorPostFavorited key={i} changeFavorites={changeFavorites} type={2} HouseId={favorite?.housing?.id} no={favorite?.housing?.id + 2000000} image={'https://mobil.emlaksepette.com/housing_images/'+housingData?.image} title={favorite?.housing?.title} price={housingData && housingData.price ? housingData.price : "0"} column1={housingData[favorite?.housing?.list_items?.column1_name] ? housingData[favorite?.housing?.list_items?.column1_name] +" "+(favorite?.housing?.list_items?.column1_additional ? favorite?.housing?.list_items?.column1_additional : '') : ''} column2={housingData[favorite?.housing?.list_items?.column2_name] ? housingData[favorite?.housing?.list_items?.column2_name] +" "+ (favorite?.housing?.list_items?.column2_additional ? favorite?.housing?.list_items?.column2_additional : '') : ''} column3={ housingData[favorite?.housing?.list_items?.column3_name] ? housingData[favorite?.housing?.list_items?.column3_name] +" "+ (favorite?.housing?.list_items?.column3_additional ? favorite?.housing?.list_items?.column3_additional : '') : ''}  location={favorite?.housing?.city?.title + ' / ' + favorite?.housing?.county?.title} GetId={GetIdForCart}  />
                     )
                   }
                 
