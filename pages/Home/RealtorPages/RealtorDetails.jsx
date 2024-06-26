@@ -47,7 +47,7 @@ import axios from "axios";
 import DrawerMenu from "../../../components/DrawerMenu";
 
 export default function PostDetail() {
-  const apiUrl = "https://mobil.emlaksepette.com";
+  const apiUrl = "https://mobil.emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [images, setImages] = useState([]);
@@ -429,7 +429,7 @@ export default function PostDetail() {
           </View>
         </View>
       </Modal>
-      <View
+      {/* <View
         style={{
           width: "100%",
           height: "10%",
@@ -509,7 +509,7 @@ export default function PostDetail() {
             </TouchableOpacity>
           )}
         </View>
-      </View>
+      </View> */}
       <View
         style={{
           flexDirection: "row",
@@ -669,7 +669,7 @@ export default function PostDetail() {
                   source={{ uri: `${apiUrl}/housing_images/${item}` }}
                   style={{ width: "100%", height: "100%" }}
                 />
-              </Pressable>,
+              </Pressable>
             ])}
             {/*        
                     <ImageBackground
@@ -1034,7 +1034,7 @@ export default function PostDetail() {
                           justifyContent: "center",
                         }}
                       >
-                        <Icon name="pluscircleo" size={27} color={"#19181C"} />
+                        <Icon2 name="pluscircleo" size={27} color={"#19181C"} />
                       </View>
                       <View
                         style={{

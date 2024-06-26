@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, RefreshControl,TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, ScrollView, RefreshControl,TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import RealtorPostFavorited from "../../components/RealtorPostFavorited";
 import { getValueFor } from "../../components/methods/user";
@@ -7,6 +7,7 @@ import { AlertNotificationRoot } from "react-native-alert-notification";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import Modal from "react-native-modal";
+import { ActivityIndicator } from "react-native-paper";
 export default function Favorites() {
   const navigation=useNavigation()
   const [user,setUser] = useState({});
@@ -148,7 +149,7 @@ export default function Favorites() {
           >
             {
               loading ? 
-                <ActivityIndicator size="large" color={"red"} />
+                <ActivityIndicator size="small" color={"red"} />
               : 
                 favorites?.map((favorite) => {
                   if(favorite?.project){
