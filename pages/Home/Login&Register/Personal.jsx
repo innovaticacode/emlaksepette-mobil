@@ -196,20 +196,21 @@ export default function Personal({ type }) {
     }
   };
 
- 
   const formatPhoneNumber = (value) => {
     // Sadece rakamları al
-    const cleaned = ('' + value).replace(/\D/g, '');
-    
-    // 0 ile başlıyorsa, ilk karakteri çıkar
-    const cleanedWithoutLeadingZero = cleaned.startsWith('0') ? cleaned.substring(1) : cleaned;
+    const cleaned = ("" + value).replace(/\D/g, "");
 
-    let formattedNumber = '';
+    // 0 ile başlıyorsa, ilk karakteri çıkar
+    const cleanedWithoutLeadingZero = cleaned.startsWith("0")
+      ? cleaned.substring(1)
+      : cleaned;
+
+    let formattedNumber = "";
 
     for (let i = 0; i < cleanedWithoutLeadingZero.length; i++) {
-      if (i === 0) formattedNumber += '(';
-      if (i === 3) formattedNumber += ') ';
-      if (i === 6 || i === 8) formattedNumber += ' ';
+      if (i === 0) formattedNumber += "(";
+      if (i === 3) formattedNumber += ") ";
+      if (i === 6 || i === 8) formattedNumber += " ";
       formattedNumber += cleanedWithoutLeadingZero[i];
     }
 
@@ -219,6 +220,25 @@ export default function Personal({ type }) {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setphoneNumber(formattedPhoneNumber);
   };
+
+  const handleCheckboxChange = (
+    checked,
+    setChecked,
+    modalVisible,
+    setModalVisible,
+    deal
+  ) => {
+    if (checked) {
+      setModalVisible(false);
+      setChecked(false);
+    } else {
+      setModalVisible(true);
+      if (deal) {
+        GetDeal(deal);
+      }
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
@@ -246,13 +266,6 @@ export default function Personal({ type }) {
                 onChangeText={(value) => setname(value)}
                 placeholder="İsim Soyisim"
               />
-              {errorStatu == 1 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
             </View>
 
             <View style={{ gap: 5 }}>
@@ -272,13 +285,6 @@ export default function Personal({ type }) {
                 onChangeText={(value) => setePosta(value)}
                 placeholder="E-Posta Adresi"
               />
-              {errorStatu == 2 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
             </View>
 
             <View style={{ gap: 5 }}>
@@ -300,13 +306,6 @@ export default function Personal({ type }) {
                 keyboardType="number-pad"
                 maxLength={15}
               />
-              {errorStatu == 3 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
@@ -338,133 +337,122 @@ export default function Personal({ type }) {
                   />
                 </TouchableOpacity>
               </View>
-              {errorStatu == 4 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
-              {errorStatu == 6 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
             </View>
+            <View style={styles.container}>
+              <TouchableOpacity
+                onPress={() =>
+                  handleCheckboxChange(
+                    checked,
+                    setChecked,
+                    modalVisible,
+                    setModalVisible,
+                    "bireysel-uyelik-sozlesmesi"
+                  )
+                }
+                style={styles.checkboxContainer}
+              >
+                <View style={styles.checkbox}>
+                  {checked ? <View style={styles.checkboxInner} /> : null}
+                </View>
+                <Text
+                  style={[
+                    styles.checkboxLabel,
+                    { color: errorStatu === 5 ? "red" : "black" },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      fontSize: 13,
+                    }}
+                  >
+                    Bireysel üyelik sözleşmesini
+                  </Text>{" "}
+                  okudum onaylıyorum
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  handleCheckboxChange(
+                    checked1,
+                    setChecked1,
+                    modalVisible2,
+                    setModalVisible2,
+                    "kvkk-politikasi"
+                  )
+                }
+                style={styles.checkboxContainer}
+              >
+                <View style={styles.checkbox}>
+                  {checked1 && <View style={styles.checkboxInner} />}
+                </View>
+                <Text
+                  style={[
+                    styles.checkboxLabel,
+                    { color: errorStatu === 5 ? "red" : "black" },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      fontSize: 13,
+                    }}
+                  >
+                    KVKK metnini
+                  </Text>{" "}
+                  okudum onaylıyorum
+                </Text>
+              </TouchableOpacity>
 
-            <View>
-              <CheckBox
-                checked={checked}
-                onPress={() => {
-                  GetDeal("bireysel-uyelik-sozlesmesi");
+              <TouchableOpacity
+                onPress={() =>
+                  handleCheckboxChange(
+                    checked2,
+                    setChecked2,
+                    modalVisible3,
+                    setModalVisible3,
+                    "gizlilik-sozlesmesi-ve-aydinlatma-metni"
+                  )
+                }
+                style={styles.checkboxContainer}
+              >
+                <View style={styles.checkbox}>
+                  {checked2 && <View style={styles.checkboxInner} />}
+                </View>
+                <Text
+                  style={[
+                    styles.checkboxLabel,
+                    { color: errorStatu === 5 ? "red" : "black" },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      fontSize: 13,
+                    }}
+                  >
+                    Gizlilik sözleşmesi ve aydınlatma metnini
+                  </Text>{" "}
+                  okudum onaylıyorum
+                </Text>
+              </TouchableOpacity>
 
-                  checked ? setModalVisible(false) : setModalVisible(true);
-                  setChecked(false);
-                }}
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="#E54242"
-                title={
-                  <Text style={{ color: errorStatu === 5 ? "red" : "black" }}>
-                    <Text
-                      style={{
-                        color: errorStatu === 5 ? "red" : "#027BFF",
-                        fontSize: 13,
-                      }}
-                    >
-                      {" "}
-                      Bireysel üyelik sözleşmesini
-                    </Text>
-                    <Text style={{ fontSize: 13 }}> okudum onaylıyorum</Text>
-                  </Text>
-                }
-                textStyle={{ fontSize: 13, fontWeight: 400, }}
-                size={22}
-                containerStyle={{ padding: 0, width: "100%"}}
-              />
-              <CheckBox
-                checked={checked1}
-                onPress={() => {
-                  GetDeal("kvkk-politikasi");
-                  checked1 ? setModalVisible2(false) : setModalVisible2(true);
-                  setChecked1(false);
-                }}
-                // Use ThemeProvider to make change for all checkbox
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="#E54242"
-                title={
-                  <Text style={{ color: errorStatu === 5 ? "red" : "black" }}>
-                    <Text
-                      style={{
-                        color: errorStatu === 5 ? "red" : "#027BFF",
-                        fontSize: 13,
-                      }}
-                    >
-                      {" "}
-                      Kvkk metnini
-                    </Text>
-                    <Text style={{ fontSize: 13 }}> okudum onaylıyorum</Text>
-                  </Text>
-                }
-                textStyle={{ fontSize: 13, fontWeight: 400 }}
-                size={22}
-                containerStyle={{ padding: 1 }}
-              />
-              <CheckBox
-                checked={checked2}
-                onPress={() => {
-                  GetDeal("gizlilik-sozlesmesi-ve-aydinlatma-metni");
-                  checked2 ? setModalVisible3(false) : setModalVisible3(true);
-                  setChecked2(false);
-                }}
-                // Use ThemeProvider to make change for all checkbox
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="#E54242"
-                title={
-                  <View style={{ paddingLeft: 5 }}>
-                    <Text style={{ color: errorStatu === 5 ? "red" : "black" }}>
-                      <Text
-                        style={{
-                          color: errorStatu === 5 ? "red" : "#027BFF",
-                          fontSize: 13,
-                        }}
-                      >
-                        Gizlilik sözleşmesi ve aydınlatma metnini
-                      </Text>
-                      <Text style={{ fontSize: 13 }}> okudum onaylıyorum</Text>
-                    </Text>
-                  </View>
-                }
-                textStyle={{ fontSize: 13, fontWeight: 400 }}
-                size={22}
-                containerStyle={{ padding: 1 }}
-              />
-              <CheckBox
-                checked={checked3}
+              <TouchableOpacity
                 onPress={toggleCheked3}
-                // Use ThemeProvider to make change for all checkbox
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="#E54242"
-                title={
-                  <View style={{ paddingLeft: 5 }}>
-                    <Text>
-                      Tarafıma elektronik ileti gönderilmesini kabul ediyorum.
-                    </Text>
-                  </View>
-                }
-                textStyle={{ fontSize: 13, fontWeight: 400 }}
-                size={22}
-                containerStyle={{ padding: 1 }}
-              />
+                style={styles.checkboxContainer}
+              >
+                <View style={styles.checkbox}>
+                  {checked3 && <View style={styles.checkboxInner} />}
+                </View>
+                <Text style={styles.checkboxLabel}>
+                  İletişim bilgilerime kampanya, tanıtım ve reklam içerikli
+                  ticari elektronik ileti gönderilmesine, bu amaçla kişisel
+                  verilerimin “Emlaksepette” tarafından işlenmesine ve
+                  tedarikçileri ve işbirlikçileri ile paylaşılmasına, bu
+                  amaçlarla verilerimin yurt dışına aktarılmasına izin
+                  veriyorum.
+                </Text>
+              </TouchableOpacity>
             </View>
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity
@@ -515,7 +503,14 @@ export default function Personal({ type }) {
                       setModalVisible(false);
                     }}
                   >
-                    <Text style={{ color: "white", fontWeight: "bold", width: "100%", textAlign: "center" }}>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "bold",
+                        width: "100%",
+                        textAlign: "center",
+                      }}
+                    >
                       Okudum Kabul ediyorum
                     </Text>
                   </TouchableOpacity>
@@ -546,7 +541,14 @@ export default function Personal({ type }) {
                       setModalVisible2(false);
                     }}
                   >
-                    <Text style={{ color: "white", fontWeight: "bold",  width: "100%", textAlign: "center" }}>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "bold",
+                        width: "100%",
+                        textAlign: "center",
+                      }}
+                    >
                       Okudum Kabul ediyorum
                     </Text>
                   </TouchableOpacity>
@@ -577,7 +579,14 @@ export default function Personal({ type }) {
                       setModalVisible3(false);
                     }}
                   >
-                    <Text style={{ color: "white", fontWeight: "bold", textAlign: "center", width: "100%" }}>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        width: "100%",
+                      }}
+                    >
                       Okudum Kabul ediyorum
                     </Text>
                   </TouchableOpacity>
@@ -758,6 +767,29 @@ const styles = StyleSheet.create({
     width: "100%",
     textAlign: "center",
     borderRadius: 5,
-    alignItems: "center"
+    alignItems: "center",
+  },
+
+  checkboxContainer: {
+    flexDirection: "row",
+    marginBottom: 10,
+  },
+  checkboxLabel: {
+    fontSize: 13,
+    flex: 1,
+    marginLeft: 5,
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  checkboxInner: {
+    width: 18,
+    height: 18,
+    backgroundColor: "#E54242",
   },
 });
