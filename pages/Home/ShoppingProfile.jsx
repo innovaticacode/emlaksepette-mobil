@@ -56,9 +56,12 @@ export default function ShoppingProfile() {
           }
         );
         setPermissionsUser(response.data.permissions);
+        setLoading(true); 
       }
     } catch (error) {
       console.error("error", error);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -70,7 +73,7 @@ export default function ShoppingProfile() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true); 
+     
       try {
        // Yükleme başladı
 
@@ -92,8 +95,6 @@ export default function ShoppingProfile() {
         setData(filteredMenu);
       } catch (error) {
         console.error(error);
-      } finally {
-        setLoading(false); // Yükleme tamamlandı
       }
     };
 
@@ -126,10 +127,14 @@ export default function ShoppingProfile() {
   };
 
   return (
-
-
+<>
+      {
+        loading == true
+        ?
+        <ActivityIndicator/>
+        :
         <View style={style.container}>
-
+          
         <View style={style.header}>
           <View
             style={[
@@ -380,9 +385,13 @@ export default function ShoppingProfile() {
             </Modal>
           </ScrollView>
         )}
+   
       </View>
 
-   
+      }
+
+       
+      </>
   );
 }
 const { width, height, fontScale } = Dimensions.get("window");
