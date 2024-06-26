@@ -1189,7 +1189,7 @@ export default function Company() {
                   }}
                 >
                   <Text style={{ color: "white", fontWeight: "bold" }}>
-                    Okudum Kabul ediyorum
+                    Okudum kabul ediyorum
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -1215,7 +1215,7 @@ export default function Company() {
                   }}
                 >
                   <Text style={{ color: "white", fontWeight: "bold" }}>
-                    Okudum Kabul ediyorum
+                  Okudum kabul ediyorum
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -1241,7 +1241,7 @@ export default function Company() {
                   }}
                 >
                   <Text style={{ color: "white", fontWeight: "bold" }}>
-                    Okudum Kabul ediyorum
+                    Okudum kabul ediyorum
                   </Text>
                 </TouchableOpacity>
               </View>

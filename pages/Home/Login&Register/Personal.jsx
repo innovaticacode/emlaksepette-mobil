@@ -537,7 +537,7 @@ export default function Personal({ type }) {
                         textAlign: "center",
                       }}
                     >
-                      Okudum Kabul ediyorum
+                       Okudum kabul ediyorum
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -575,7 +575,7 @@ export default function Personal({ type }) {
                         textAlign: "center",
                       }}
                     >
-                      Okudum Kabul ediyorum
+                       Okudum kabul ediyorum
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -613,7 +613,7 @@ export default function Personal({ type }) {
                         width: "100%",
                       }}
                     >
-                      Okudum Kabul ediyorum
+                       Okudum kabul ediyorum
                     </Text>
                   </TouchableOpacity>
                 </View>
