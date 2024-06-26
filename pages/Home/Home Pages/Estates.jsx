@@ -161,6 +161,7 @@ const Estates = ({ index }) => {
       )}
 
       <FlatList
+      
         data={filteredHomes}
         renderItem={({ item }) => (
           <RealtorPost
