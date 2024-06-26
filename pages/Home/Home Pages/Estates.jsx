@@ -91,7 +91,7 @@ const Estates = ({ index }) => {
       <ActivityIndicator style={{ margin: 20 }} size="small" color="#000000" />
     );
   };
-
+console.log(user)
   return (
     <View style={styles.container}>
       <View
