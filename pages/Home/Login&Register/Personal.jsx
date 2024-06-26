@@ -18,6 +18,8 @@ import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
 import HTML from "react-native-render-html";
 import { useNavigation } from "@react-navigation/native";
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+
 export default function Personal({ type }) {
   const navigation = useNavigation();
   const [eye, seteye] = useState("eye-off-sharp");
@@ -351,9 +353,15 @@ export default function Personal({ type }) {
                 }
                 style={styles.checkboxContainer}
               >
-                <View style={styles.checkbox}>
-                  {checked ? <View style={styles.checkboxInner} /> : null}
-                </View>
+                {checked ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={22}
+                    color="#EA2C2E"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={22} color="#EA2C2E" />
+                )}
                 <Text
                   style={[
                     styles.checkboxLabel,
@@ -383,9 +391,15 @@ export default function Personal({ type }) {
                 }
                 style={styles.checkboxContainer}
               >
-                <View style={styles.checkbox}>
-                  {checked1 && <View style={styles.checkboxInner} />}
-                </View>
+                {checked1 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={22}
+                    color="#EA2C2E"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={22} color="#EA2C2E" />
+                )}
                 <Text
                   style={[
                     styles.checkboxLabel,
@@ -416,9 +430,15 @@ export default function Personal({ type }) {
                 }
                 style={styles.checkboxContainer}
               >
-                <View style={styles.checkbox}>
-                  {checked2 && <View style={styles.checkboxInner} />}
-                </View>
+                {checked2 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={22}
+                    color="#EA2C2E"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={22} color="#EA2C2E" />
+                )}
                 <Text
                   style={[
                     styles.checkboxLabel,
@@ -441,9 +461,15 @@ export default function Personal({ type }) {
                 onPress={toggleCheked3}
                 style={styles.checkboxContainer}
               >
-                <View style={styles.checkbox}>
-                  {checked3 && <View style={styles.checkboxInner} />}
-                </View>
+                {checked3 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={22}
+                    color="#EA2C2E"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={22} color="#EA2C2E" />
+                )}
                 <Text style={styles.checkboxLabel}>
                   İletişim bilgilerime kampanya, tanıtım ve reklam içerikli
                   ticari elektronik ileti gönderilmesine, bu amaçla kişisel

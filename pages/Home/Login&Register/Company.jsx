@@ -22,6 +22,8 @@ import HTML from "react-native-render-html";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+
 export default function Company() {
   const Navigation = useNavigation();
   const [selectedIndexRadio, setIndexRadio] = useState(0);
@@ -945,9 +947,19 @@ export default function Company() {
                 }
                 style={styles.checkboxContainer}
               >
-                <View style={styles.checkbox}>
-                  {checked ? <View style={styles.checkboxInner} /> : null}
-                </View>
+                    {checked ? (
+                          <FontAwesome5Icon
+                            name="check-square"
+                            size={22}
+                            color="#EA2C2E"
+                          />
+                        ) : (
+                          <FontAwesome5Icon
+                            name="square"
+                            size={22}
+                            color="#EA2C2E"
+                          />
+                        )}
                 <Text
                   style={[
                     styles.checkboxLabel,
@@ -977,9 +989,19 @@ export default function Company() {
                 }
                 style={styles.checkboxContainer}
               >
-                <View style={styles.checkbox}>
-                  {checked1 && <View style={styles.checkboxInner} />}
-                </View>
+                    {checked1 ? (
+                          <FontAwesome5Icon
+                            name="check-square"
+                            size={22}
+                            color="#EA2C2E"
+                          />
+                        ) : (
+                          <FontAwesome5Icon
+                            name="square"
+                            size={22}
+                            color="#EA2C2E"
+                          />
+                        )}
                 <Text
                   style={[
                     styles.checkboxLabel,
@@ -1010,9 +1032,19 @@ export default function Company() {
                 }
                 style={styles.checkboxContainer}
               >
-                <View style={styles.checkbox}>
-                  {checked2 && <View style={styles.checkboxInner} />}
-                </View>
+                    {checked2 ? (
+                          <FontAwesome5Icon
+                            name="check-square"
+                            size={22}
+                            color="#EA2C2E"
+                          />
+                        ) : (
+                          <FontAwesome5Icon
+                            name="square"
+                            size={22}
+                            color="#EA2C2E"
+                          />
+                        )}
                 <Text
                   style={[
                     styles.checkboxLabel,
@@ -1035,9 +1067,19 @@ export default function Company() {
                 onPress={toggleCheked3}
                 style={styles.checkboxContainer}
               >
-                <View style={styles.checkbox}>
-                  {checked3 && <View style={styles.checkboxInner} />}
-                </View>
+                   {checked3 ? (
+                          <FontAwesome5Icon
+                            name="check-square"
+                            size={22}
+                            color="#EA2C2E"
+                          />
+                        ) : (
+                          <FontAwesome5Icon
+                            name="square"
+                            size={22}
+                            color="#EA2C2E"
+                          />
+                        )}
                 <Text style={styles.checkboxLabel}>
                   İletişim bilgilerime kampanya, tanıtım ve reklam içerikli
                   ticari elektronik ileti gönderilmesine, bu amaçla kişisel
