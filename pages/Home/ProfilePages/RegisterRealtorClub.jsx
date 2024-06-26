@@ -247,7 +247,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <View style={styles.header}>
-          {user.has_club == 0 || user.has_club == 3 && (
+          {user.has_club == 0 && (
             <>
             <Text style={styles.headerText}>
               Emlak Sepette | Emlak Kulüp Başvurusu
@@ -257,6 +257,17 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
              Emlak Kulüp ayrıcalıklarından faydalanmak için lütfen aşağıdaki bilgileri eksiksiz doldurun ve üyelik sözleşmesini onaylayın.
    
              </Text></>
+          )}
+          {user.has_club == 3 && (
+           <>
+           <Text style={styles.headerText}>
+             Emlak Sepette | Emlak Kulüp Başvurusu
+           </Text>
+            <Text
+            style={{textAlign: "center", paddingTop: 10}}>
+            Emlak Kulüp ayrıcalıklarından faydalanmak için lütfen aşağıdaki bilgileri eksiksiz doldurun ve üyelik sözleşmesini onaylayın.
+  
+            </Text></>
           )}
           {user.has_club == 2 && (
             <View style={{ gap: 10 }}>
@@ -271,7 +282,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
                 }}
               >
                 <Text
-                  style={{ color: "green", fontSize: 16, fontWeight: "500", textAlign:  "center" }}
+                  style={{ color: "green", fontSize: 16, fontWeight: "500", textAlign: "center" }}
                 >
                   Üyelik başvurunuz alındı. Bilgileriniz incelendikten sonra
                   hesabınız aktive edilecek.
