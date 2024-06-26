@@ -102,12 +102,20 @@ export default function RealtorPost({
     : 0;
 
   const handlePress = () => {
-    if (user.cartItem !== null ) {
+   
+    if (user.access_token) {
+      if (user.cartItem !== null ) {
         setcartIsNull(true)
+    }else{
+      setAddCartShow(true)
     }
-    user.access_token ? 
-    setAddCartShow(true):
-    setalertForSign(true) 
+      
+    }else{
+      setalertForSign(true) 
+    }
+   
+  
+   
   };
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
@@ -182,7 +190,10 @@ const [cartIsNull, setcartIsNull] = useState(false)
     <AlertNotificationRoot>
       <View>
       <AwesomeAlert
-            
+              // contentContainerStyle={{
+              //   transform: [{ scale: 1 }], // Uyarıyı animasyonsuz hale getirmek için
+              //   opacity: 2, // Uyarıyı animasyonsuz hale getirmek için
+              // }}
             show={cartIsNull}
             showProgress={false}
               titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
