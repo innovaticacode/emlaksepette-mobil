@@ -86,6 +86,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 
 import DecontPdf from "./pages/Home/DecontPdf";
+import AddComment from "./pages/Home/AddComment";
+import SuccesScreen from "./pages/Home/SuccesScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -918,6 +920,34 @@ export default function App({ route }) {
               },
 
             })}
+          />
+             <Stack.Screen
+            name="AddComment"
+            component={AddComment}
+            options={({ route }) => ({
+              title: "Konutu Değerlendir",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+
+
+            })}
+
+          />
+               <Stack.Screen
+            name="Success"
+            component={SuccesScreen}
+            options={({ route }) => ({
+              title: route.params.name,
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+
+
+            })}
+
           />
         </Stack.Navigator>
       </NavigationContainer>

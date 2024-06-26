@@ -926,7 +926,6 @@ const styles = StyleSheet.create({
   InfoContainer: {
     paddingTop: width < 400 ? 30 : 50,
     padding: 15,
-
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
