@@ -288,7 +288,7 @@ const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
                     </View>
                     <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
                        onPress={()=>{
-                        navigation.navigate('Collecitons')
+                        navigation.navigate('Collections')
                     }}
                     >
                   <Text style={{color:'#FFFFFF',textAlign:'center'}}>Emlak Kulüp Üyesi Ol </Text>

@@ -252,7 +252,7 @@ export default function Personal({ type }) {
           <View style={{ padding: 15, gap: 20 }}>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   İsim
                 </Text>
               </View>
@@ -272,7 +272,7 @@ export default function Personal({ type }) {
 
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   E-Posta
                 </Text>
               </View>
@@ -291,7 +291,7 @@ export default function Personal({ type }) {
 
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Cep Telefonu
                 </Text>
               </View>
@@ -311,7 +311,7 @@ export default function Personal({ type }) {
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Şifre
                 </Text>
               </View>
@@ -356,11 +356,11 @@ export default function Personal({ type }) {
                 {checked ? (
                   <FontAwesome5Icon
                     name="check-square"
-                    size={22}
-                    color="#EA2C2E"
+                    size={18}
+                    color="black"
                   />
                 ) : (
-                  <FontAwesome5Icon name="square" size={22} color="#EA2C2E" />
+                  <FontAwesome5Icon name="square" size={18} color="black" />
                 )}
                 <Text
                   style={[
@@ -394,11 +394,11 @@ export default function Personal({ type }) {
                 {checked1 ? (
                   <FontAwesome5Icon
                     name="check-square"
-                    size={22}
-                    color="#EA2C2E"
+                    size={18}
+                    color="black"
                   />
                 ) : (
-                  <FontAwesome5Icon name="square" size={22} color="#EA2C2E" />
+                  <FontAwesome5Icon name="square" size={18} color="black" />
                 )}
                 <Text
                   style={[
@@ -433,11 +433,11 @@ export default function Personal({ type }) {
                 {checked2 ? (
                   <FontAwesome5Icon
                     name="check-square"
-                    size={22}
-                    color="#EA2C2E"
+                    size={18}
+                    color="black"
                   />
                 ) : (
-                  <FontAwesome5Icon name="square" size={22} color="#EA2C2E" />
+                  <FontAwesome5Icon name="square" size={18} color="black" />
                 )}
                 <Text
                   style={[
@@ -464,11 +464,11 @@ export default function Personal({ type }) {
                 {checked3 ? (
                   <FontAwesome5Icon
                     name="check-square"
-                    size={22}
-                    color="#EA2C2E"
+                    size={18}
+                    color="black"
                   />
                 ) : (
-                  <FontAwesome5Icon name="square" size={22} color="#EA2C2E" />
+                  <FontAwesome5Icon name="square" size={18} color="black" />
                 )}
                 <Text style={styles.checkboxLabel}>
                   İletişim bilgilerime kampanya, tanıtım ve reklam içerikli
@@ -537,7 +537,7 @@ export default function Personal({ type }) {
                         textAlign: "center",
                       }}
                     >
-                       Okudum kabul ediyorum
+                      Okudum kabul ediyorum
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -575,7 +575,7 @@ export default function Personal({ type }) {
                         textAlign: "center",
                       }}
                     >
-                       Okudum kabul ediyorum
+                      Okudum kabul ediyorum
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -613,7 +613,7 @@ export default function Personal({ type }) {
                         width: "100%",
                       }}
                     >
-                       Okudum kabul ediyorum
+                      Okudum kabul ediyorum
                     </Text>
                   </TouchableOpacity>
                 </View>

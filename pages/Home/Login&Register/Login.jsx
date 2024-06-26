@@ -287,20 +287,19 @@ export default function Login({ navigation }) {
                         style={[
                           styles.checkbox,
                           checked ? styles.checked : null,
-                          
                         ]}
                       >
                         {checked ? (
                           <FontAwesome5Icon
                             name="check-square"
-                            size={22}
-                            color="#EA2C2E"
+                            size={18}
+                            color="black"
                           />
                         ) : (
                           <FontAwesome5Icon
                             name="square"
-                            size={22}
-                            color="#EA2C2E"
+                            size={18}
+                            color="black"
                           />
                         )}
                         <Text style={styles.checkboxLabel}>Beni Hatırla</Text>
@@ -526,12 +525,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   checkbox: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   checkboxLabel: {
     fontSize: 13,
-    color: '#333',
+    color: "#333",
     marginLeft: 5,
   },
   form: {
