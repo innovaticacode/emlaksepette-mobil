@@ -16,6 +16,7 @@ import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
+import * as SecureStore from "expo-secure-store";
 import {
   ALERT_TYPE,
   Dialog,
@@ -154,6 +155,23 @@ export default function RealtorPost({
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
+  // const updateResponse = async()=>{
+  //   const response= await axios.get(
+  //   "https://mobil.emlaksepette.com/api/users/" + user?.id ,
+  //   {
+  //     headers: {
+  //       Authorization: `Bearer ${user.access_token}`,
+  //     },
+  //   }
+  // );
+  //  // Update user state with the updated data
+  //  setUser(response.data.user);
+
+  //  // Update SecureStore with the updated user data
+  //  await SecureStore.setItemAsync(
+  //    "user",
+  //    JSON.stringify(response.data.user)
+  //  )}
   const addToCard = async () => {
     const formData = new FormData();
     formData.append("id", HouseId);
