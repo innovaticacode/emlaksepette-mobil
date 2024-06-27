@@ -55,8 +55,7 @@ export default function ShoppingProfile() {
             },
           }
         );
-
-        setPermissionsUser(response.data.permissions);
+        setPermissionsUser(response.data.user.permissions);
         setLoading(true);
       }
     } catch (error) {
@@ -69,18 +68,20 @@ export default function ShoppingProfile() {
   }, [user]);
 
   
-
   useEffect(() => {
     const fetchData = async () => {
-     
+      setLoading(true); // Yükleme başladı
+      
       try {
-       // Yükleme başladı
-
         const response = require("./Menu.json");
+  
+        // permissionsUser'ı bir diziye dönüştürme
+        const permissionsArray = Object.values(permissionsUser);
+        
         const filteredMenu = response.filter((item) => {
           if (item.subMenu) {
             const filteredSubMenu = item.subMenu.filter((subItem) =>
-              permissionsUser?.includes(subItem.key)
+              permissionsArray.includes(subItem.key)
             );
             if (filteredSubMenu.length > 0) {
               item.subMenu = filteredSubMenu;
@@ -88,19 +89,21 @@ export default function ShoppingProfile() {
             }
             return false;
           }
-          return permissionsUser?.includes(item.key);
+          return permissionsArray.includes(item.key);
         });
-        setLoading(true);
+  
         setData(filteredMenu);
       } catch (error) {
         console.error(error);
-      }finally{
-        setLoading(false)
+      } finally {
+        setLoading(false); // Yükleme bitti
       }
     };
-
+  
     fetchData();
   }, [permissionsUser]);
+  
+
   const groupedData = data.reduce((acc, item) => {
     const existingGroupIndex = acc.findIndex(
       (group) => group.label === item.label

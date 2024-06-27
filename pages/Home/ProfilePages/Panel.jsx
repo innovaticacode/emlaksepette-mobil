@@ -66,8 +66,8 @@ export default function Panel({ options, onSelect }) {
               },
             }
           );
-          setPanelInfo(response?.data);
-          setLinks(response?.data.collections.links);
+          setPanelInfo(response?.data?.user);
+          setLinks(response?.data.user.collections.links);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
