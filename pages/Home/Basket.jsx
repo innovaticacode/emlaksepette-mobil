@@ -833,9 +833,10 @@ export default function Basket() {
           </ScrollView>
         </TouchableWithoutFeedback>
       ) : (
-        <View>
-          <Image source={require("./sepetTasarim.png")} />
-          <Text>Sepetinizde ürün yoktur. Ürünlere bakmak için tıklayınız!</Text>
+        <View style={{}}>
+  
+         
+          <Text style={{textAlign:'center',fontWeight:'700'}}>Sepetinizde ürün yoktur. Ürünlere bakmak için tıklayınız!</Text>
         </View>
       )}
     </SafeAreaView>
