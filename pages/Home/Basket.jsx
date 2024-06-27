@@ -20,7 +20,7 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import TrashIcon from "react-native-vector-icons/EvilIcons";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useRoute, useNavigation, useIsFocused } from "@react-navigation/native";
 import Header from "../../components/Header";
 import Search from "./Search";
 import Categories from "../../components/Categories";
@@ -29,10 +29,11 @@ import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { Alert } from "react-native";
-
+import * as SecureStore from "expo-secure-store";
 import { Image } from "react-native-svg";
 
 import DrawerMenu from "../../components/DrawerMenu";
+import { ActivityIndicator } from "react-native-paper";
 
 
 export default function Basket() {
@@ -40,12 +41,7 @@ export default function Basket() {
 
   const navigation = useNavigation();
 
-  const renderRightActions = () => (
-    <TouchableOpacity style={styles.deleteButton} onPress={() => {}}>
-      <Text style={styles.deleteButtonText}>Sil</Text>
-      <TrashIcon name="trash" size={23} color={"white"} />
-    </TouchableOpacity>
-  );
+
   const [Basket, SetBasket] = useState([
     {
       name: "MASTER ORMAN KÖY EVLERİ",
@@ -68,13 +64,17 @@ export default function Basket() {
   const [offerControl, setofferControl] = useState({});
   const [payDec, setpayDec] = useState([]);
   const [isShare, setisShare] = useState([]);
+  const [CartLength, setCartLength] = useState([])
+  const isFocused = useIsFocused();
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
 
   const fetchData = async () => {
     try {
-      if (user?.access_token) {
+      if (user?.access_token && isFocused) {
+        setLoading(true);
         const response = await axios.get(
           "https://mobil.emlaksepette.com/api/institutional/my-cart",
           {
@@ -89,15 +89,20 @@ export default function Basket() {
         setofferControl(response?.data);
         setpayDec(response?.data?.cart?.item?.pay_decs);
         setisShare(response?.data?.cart?.item?.isShare);
+        setCartLength(response?.data?.cart);
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchData();
-  }, [user]);
+    if (user?.access_token) {
+      fetchData();
+    }
+  }, [isFocused, user]);
   const [parsedshare, setparsedshare] = useState("");
   const Parse = async () => {
     try {
@@ -196,7 +201,28 @@ export default function Basket() {
       console.error("Error fetching data:", error);
     }
   };
-
+  console.log(user.access_token + 'DFSfdsfds')
+  const DeleteBasket = async () => {
+    try {
+      if (user.access_token) {
+        const response = await axios.post(
+          "https://mobil.emlaksepette.com/api/remove-from-cart",
+          {}, 
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+        setuser({...user , cartItem:null})
+        SecureStore.setItemAsync("user", JSON.stringify({...user , cartItem:null}));
+        fetchData();
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("tr-TR", {
       style: "currency",
@@ -238,8 +264,21 @@ export default function Basket() {
 
   const [index, setindex] = useState(0)
   const [tab, settab] = useState(0)
+ console.log(CartLength)
+ const renderRightActions = () => (
+  <TouchableOpacity style={styles.deleteButton} onPress={DeleteBasket}>
+    <Text style={styles.deleteButtonText}>Sil</Text>
+    <TrashIcon name="trash" size={23} color={"white"} />
+  </TouchableOpacity>
+);
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+      {
+        loading ? 
+        <ActivityIndicator color="#333" size='large'/>:
+
+   
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white", }}>
       <View
         style={{
           ...Platform.select({
@@ -279,7 +318,7 @@ export default function Basket() {
         </View>
       </Modal>
 
-      {Cart.length > 0 ? (
+      {CartLength !== false ? (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <ScrollView
             style={styles.container}
@@ -794,12 +833,15 @@ export default function Basket() {
           </ScrollView>
         </TouchableWithoutFeedback>
       ) : (
-        <View>
-          <Image source={require("./sepetTasarim.png")} />
-          <Text>Sepetinizde ürün yoktur. Ürünlere bakmak için tıklayınız!</Text>
+        <View style={{}}>
+  
+         
+          <Text style={{textAlign:'center',fontWeight:'700'}}>Sepetinizde ürün yoktur. Ürünlere bakmak için tıklayınız!</Text>
         </View>
       )}
     </SafeAreaView>
+       }
+    </View>
   );
 }
 const styles = StyleSheet.create({

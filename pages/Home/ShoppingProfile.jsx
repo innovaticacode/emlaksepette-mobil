@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -18,7 +18,7 @@ import {
 } from "accordion-collapse-react-native";
 import Modal from "react-native-modal";
 import ProfileSettingsItem from "../../components/ProfileSettingsItem";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useRoute, useNavigation, useFocusEffect } from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
@@ -55,7 +55,9 @@ export default function ShoppingProfile() {
             },
           }
         );
+
         setPermissionsUser(response.data.permissions);
+        setLoading(true);
       }
     } catch (error) {
       console.error("error", error);
@@ -70,7 +72,7 @@ export default function ShoppingProfile() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true); 
+     
       try {
        // Yükleme başladı
 
@@ -88,12 +90,12 @@ export default function ShoppingProfile() {
           }
           return permissionsUser?.includes(item.key);
         });
-     
+        setLoading(true);
         setData(filteredMenu);
       } catch (error) {
         console.error(error);
-      } finally {
-        setLoading(false); // Yükleme tamamlandı
+      }finally{
+        setLoading(false)
       }
     };
 
@@ -124,12 +126,26 @@ export default function ShoppingProfile() {
       [index]: !prevState[index],
     }));
   };
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     setLoading(true);
 
+  //     const timer = setTimeout(() => {
+  //       setLoading(false);
+  //     }, 1000);
+
+  //     return () => clearTimeout(timer);
+  //   }, [])
+  // );
   return (
-
-
+<>
+      {
+        loading ==true
+        ?
+        <ActivityIndicator/>
+        :
         <View style={style.container}>
-
+          
         <View style={style.header}>
           <View
             style={[
@@ -380,9 +396,13 @@ export default function ShoppingProfile() {
             </Modal>
           </ScrollView>
         )}
+   
       </View>
 
-   
+      }
+
+       
+      </>
   );
 }
 const { width, height, fontScale } = Dimensions.get("window");

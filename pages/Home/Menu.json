@@ -32,7 +32,7 @@
     "icon": "bookmark",
     "text": "Koleksiyonlarım",
     "key": "GetMyCollection",
-    "url": "Collecitons",
+    "url": "Collections",
     "activePath": "/hesabim/koleksiyonlarim*"
   },
   {

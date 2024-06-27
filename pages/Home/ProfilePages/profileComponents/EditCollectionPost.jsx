@@ -36,17 +36,17 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
     defaultPrice: 0,
   };
 
-  if (item.item_type === 1) {
-    const discountRate = item.project_values["discount_rate[]"] || 0;
-    const price = item.project_values["price[]"]
-      ? parseInt(item.project_values["price[]"])
+  if (item && item?.item_type === 1) {
+    const discountRate = item?.project_values["discount_rate[]"] || 0;
+    const price = item?.project_values["price[]"]
+      ? parseInt(item?.project_values["price[]"])
       : 0;
     const discountedPrice = price - (price * discountRate) / 100;
 
     itemData = {
-      id: item.project.id,
+      id: item?.project.id,
       idOran: 1000000,
-      roomOrder: item.project_values["daily_rent[]"]
+      roomOrder: item?.project_values["daily_rent[]"]
         ? addDotEveryThreeDigits(item.project_values["daily_rent[]"])
         : 0,
       price: price ? addDotEveryThreeDigits(price) : addDotEveryThreeDigits(0),

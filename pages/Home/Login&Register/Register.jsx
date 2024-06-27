@@ -37,6 +37,7 @@ export default function Register() {
               <Text
                 style={{
                   textAlign: "center",
+                  fontWeight: 700,
                   color:
                     tabs == 1
                       ? "white"
@@ -62,6 +63,7 @@ export default function Register() {
               <Text
                 style={{
                   textAlign: "center",
+                  fontWeight: 700,
                   color:
                     tabs == 2
                       ? "white"
@@ -88,7 +90,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   TabBar: {
-    padding: 15,
+    paddingVertical: 0,
+    padding: 10,
     paddingTop: 10,
     flexDirection: "row",
     justifyContent: "space-between",

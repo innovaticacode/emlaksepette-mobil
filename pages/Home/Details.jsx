@@ -10,7 +10,7 @@ import {
   Button,
   Platform,
   Linking,
-  ActivityIndicator,
+
   TextInput,
   Pressable,
   Dimensions,
@@ -62,6 +62,7 @@ import PaymentItem from "../../components/PaymentItem";
 import { err } from "react-native-svg";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import DrawerMenu from "../../components/DrawerMenu";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -127,17 +128,20 @@ export default function Details({ navigation }) {
     setPaymentModalShowOrder(no);
     setFormVisible(!FormVisible);
   };
+  
 
+  const [loadingDetails, setloadingDetails] = useState(false)
   useEffect(() => {
     const config = {
       headers: { Authorization: `Bearer ${user?.access_token}` }
     };
     axios.get('https://mobil.emlaksepette.com/api/project/' + ProjectId, config).then((res) => {
       setData(res?.data)
+      setloadingDetails(true)
     })
 
   }, [ProjectId, user])
-
+   
   const getLastItemCount = () => {
     var lastBlockItemsCount = 0;
     for (var i = 0; i < selectedTab; i++) {
@@ -866,8 +870,15 @@ export default function Details({ navigation }) {
     }
   };
   return (
-    <AlertNotificationRoot>
+    <>
+     <AlertNotificationRoot>
       <SafeAreaView style={styles.container}>
+        {
+          loading == true ? 
+          <ActivityIndicator size={'large'} color="#333"/>
+          :
+      
+        <>
         <Header onPress={toggleDrawer} index={setindex} tab={settab} />
         <Modal
           isVisible={isDrawerOpen}
@@ -1602,7 +1613,7 @@ export default function Details({ navigation }) {
                         </View>
                         <TouchableOpacity style={{ backgroundColor: '#F65656', width: '100%', padding: 10 }}
                           onPress={() => {
-                            navigation.navigate('Collecitons')
+                            navigation.navigate('Collections')
                             setColectionSheet(false)
                           }}
                         >
@@ -2110,14 +2121,19 @@ export default function Details({ navigation }) {
             </View>
           </Modal>
         </ScrollView>
-        
+        </>
+          }
       </SafeAreaView>
     </AlertNotificationRoot>
+    </>
+   
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    alignItems:'center',
+    justifyContent:'center',
     backgroundColor: "white",
     flex: 1,
     ...Platform.select({

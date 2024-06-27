@@ -91,7 +91,7 @@ const Estates = ({ index }) => {
       <ActivityIndicator style={{ margin: 20 }} size="small" color="#000000" />
     );
   };
-
+console.log(user)
   return (
     <View style={styles.container}>
       <View
@@ -161,6 +161,7 @@ const Estates = ({ index }) => {
       )}
 
       <FlatList
+      
         data={filteredHomes}
         renderItem={({ item }) => (
           <RealtorPost
@@ -171,7 +172,7 @@ const Estates = ({ index }) => {
             title={item.housing_title}
             loading={loading}
             location={item.city_title + " / " + item.county_title}
-            image={`${apiUrl}/housing_images/${
+            image={`${apiUrl}housing_images/${
               JSON.parse(item.housing_type_data).image
             }`}
             column1_name={`${

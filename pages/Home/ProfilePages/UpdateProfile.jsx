@@ -329,9 +329,6 @@ export default function UpdateProfile() {
           }
         );
 
-        // Log the fetched updated user data
-        console.log(updateResponse);
-
         // Update user state with the updated data
         setUser(updateResponse.data.user);
 

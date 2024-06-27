@@ -6,8 +6,9 @@ import CommentItem from './CommentItem'
 import UploadIcon from 'react-native-vector-icons/AntDesign'
 import { CheckBox } from '@rneui/themed';
 import { Shadow } from 'react-native-shadow-2';
+import { useNavigation } from '@react-navigation/native'
 export default function Comment({data, handleModal}) {
-  
+  const navigation = useNavigation()
   const [checked, setChecked] = React.useState(false);
   const toggleCheckbox = () => setChecked(!checked);
   const [checked2, setChecked2] = React.useState(false);
@@ -37,23 +38,23 @@ export default function Comment({data, handleModal}) {
             </View>
             <View>
               <View style={{flexDirection:'row',gap:5}}> 
-                <Text>{data.housingComments.rate}</Text>
+                <Text>{data?.housingComments?.rate}</Text>
                 <Text>10 puan</Text>
                 <Text>|</Text>
-                <Text>{data.housingComments.length} Yorum</Text>
+                <Text>{data?.housingComments?.length} Yorum</Text>
               </View>
             </View>
             <ScrollView horizontal contentContainerStyle={{padding:10,gap:10}} showsHorizontalScrollIndicator={false} >
                
 
               {
-                 data.housingComments.length <1?
+                 data?.housingComments?.length <1?
                  <View style={{width:'100%'}}>
                      <Text style={{textAlign:'center',color:'red'}}>Bu konut için yorum yapılmadı</Text>
                  </View>
               :
-                data.housingComments.map((itemComment,_index)=>(
-                  <CommentItem username={itemComment.user.name} key={_index} comment={itemComment.comment} date={itemComment.created_at} rate={itemComment.rate}/>
+                data?.housingComments?.map((itemComment,_index)=>(
+                  <CommentItem username={itemComment?.user?.name} key={_index} comment={itemComment?.comment} date={itemComment?.created_at} rate={itemComment.rate}/>
                 ))
               }
         
@@ -64,7 +65,7 @@ export default function Comment({data, handleModal}) {
             <View>
             <TouchableOpacity
               onPress={()=>{
-                handleModal()
+                  navigation.navigate('AddComment',{HouseID:data.housing.id})
               }}
             style={{
               backgroundColor:'#E54242',

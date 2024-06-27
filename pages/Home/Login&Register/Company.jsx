@@ -22,6 +22,8 @@ import HTML from "react-native-render-html";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+
 export default function Company() {
   const Navigation = useNavigation();
   const [selectedIndexRadio, setIndexRadio] = useState(0);
@@ -67,7 +69,23 @@ export default function Company() {
   const show = () => {
     setShow(!Show);
   };
-
+  const handleCheckboxChange = (
+    checked,
+    setChecked,
+    modalVisible,
+    setModalVisible,
+    deal
+  ) => {
+    if (checked) {
+      setModalVisible(false);
+      setChecked(false);
+    } else {
+      setModalVisible(true);
+      if (deal) {
+        GetDeal(deal);
+      }
+    }
+  };
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -184,7 +202,7 @@ export default function Company() {
       );
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
-     
+
       setmessage(response.data.message);
       setIsSucces(response.data.status);
 
@@ -369,7 +387,6 @@ export default function Company() {
       default:
         postData();
     }
-
   };
   const fetchTaxOfficeCity = async () => {
     try {
@@ -432,6 +449,11 @@ export default function Company() {
   const [modalVisible3, setModalVisible3] = useState(false);
   const [Deals, setDeals] = useState("");
 
+  const handlePhoneNumberChange = (value) => {
+    const formattedPhoneNumber = formatPhoneNumber(value);
+    setphoneNumber(formattedPhoneNumber);
+  };
+
   const GetDeal = (deal) => {
     fetchDataDeal(deal);
   };
@@ -468,7 +490,7 @@ export default function Company() {
           <View style={{ padding: 15, gap: 20 }}>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Yetkili İsim Soyisim
                 </Text>
               </View>
@@ -481,7 +503,7 @@ export default function Company() {
                 ]}
                 value={bossName}
                 onChangeText={(value) => setbossName(value)}
-                placeholder=""
+                placeholder="Yetkili İsim Soyisim"
               />
               {errorStatu == 1 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
@@ -494,7 +516,7 @@ export default function Company() {
 
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   E-Posta
                 </Text>
               </View>
@@ -507,7 +529,7 @@ export default function Company() {
                 ]}
                 value={eposta}
                 onChangeText={(value) => seteposta(value)}
-                placeholder="example@gmail.com"
+                placeholder="E-Posta Adresi"
               />
               {errorStatu == 2 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
@@ -519,7 +541,7 @@ export default function Company() {
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Şifre
                 </Text>
               </View>
@@ -533,7 +555,7 @@ export default function Company() {
                       borderColor: errorStatu === 3 ? "red" : "#ebebeb",
                     },
                   ]}
-                  placeholder="*********"
+                  placeholder="Şifre"
                   secureTextEntry={Show ? false : true}
                 />
                 <TouchableOpacity
@@ -557,21 +579,22 @@ export default function Company() {
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Cep Telefonu
                 </Text>
               </View>
               <TextInput
                 value={phoneNumber}
-                onChangeText={(value) => setphoneNumber(value)}
                 style={[
                   styles.Input,
                   {
                     borderColor: errorStatu == 4 ? "red" : "#ebebeb",
                   },
                 ]}
-                placeholder=""
+                onChangeText={handlePhoneNumberChange}
+                placeholder="Cep Telefonu"
                 keyboardType="number-pad"
+                maxLength={15}
               />
               {errorStatu == 4 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
@@ -584,7 +607,7 @@ export default function Company() {
 
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Ticaret Ünvanı
                 </Text>
               </View>
@@ -597,7 +620,7 @@ export default function Company() {
                 ]}
                 value={companyName}
                 onChangeText={(value) => setcompanyName(value)}
-                placeholder=""
+                placeholder="Ticaret Ünvanı"
               />
               {errorStatu == 5 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
@@ -609,7 +632,7 @@ export default function Company() {
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Mağaza Adı
                 </Text>
               </View>
@@ -622,7 +645,7 @@ export default function Company() {
                 ]}
                 value={ShoppingName}
                 onChangeText={(value) => setShoppingName(value)}
-                placeholder=""
+                placeholder="Mağaza Adı"
               />
               {errorStatu == 6 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
@@ -634,7 +657,7 @@ export default function Company() {
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Sabit Telefon (Opsiyonel)
                 </Text>
               </View>
@@ -642,16 +665,17 @@ export default function Company() {
                 value={companyPhone}
                 onChangeText={(value) => setcompanyPhone(value)}
                 style={styles.Input}
-                placeholder=""
+                placeholder="Sabit Telefon"
                 keyboardType="number-pad"
               />
             </View>
 
             <View style={{ gap: 5 }}>
-              <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 Faaliyet Alanınız
               </Text>
-              <RNPickerSelect doneText="Tamam"
+              <RNPickerSelect
+                doneText="Tamam"
                 value={focusArea}
                 placeholder={{
                   label: "Seçiniz...",
@@ -680,10 +704,11 @@ export default function Company() {
               )}
             </View>
             <View style={{ gap: 6 }}>
-              <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 İl
               </Text>
-              <RNPickerSelect doneText="Tamam"
+              <RNPickerSelect
+                doneText="Tamam"
                 value={city}
                 placeholder={{
                   label: "Seçiniz...",
@@ -704,10 +729,11 @@ export default function Company() {
               )}
             </View>
             <View style={{ gap: 6 }}>
-              <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 İlçe
               </Text>
-              <RNPickerSelect doneText="Tamam"
+              <RNPickerSelect
+                doneText="Tamam"
                 value={county}
                 placeholder={{
                   label: "Seçiniz...",
@@ -728,10 +754,11 @@ export default function Company() {
               )}
             </View>
             <View style={{ gap: 6 }}>
-              <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 Mahalle
               </Text>
-              <RNPickerSelect doneText="Tamam"
+              <RNPickerSelect
+                doneText="Tamam"
                 value={neigbourhod}
                 placeholder={{
                   label: "Seçiniz...",
@@ -800,10 +827,11 @@ export default function Company() {
               </View>
             </View>
             <View style={{ gap: 6 }}>
-              <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 Vergi Dairesi İli
               </Text>
-              <RNPickerSelect doneText="Tamam"
+              <RNPickerSelect
+                doneText="Tamam"
                 value={TaxPlaceCity}
                 placeholder={{
                   label: "Seçiniz...",
@@ -824,10 +852,11 @@ export default function Company() {
               )}
             </View>
             <View style={{ gap: 6 }}>
-              <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 Vergi Dairesi
               </Text>
-              <RNPickerSelect doneText="Tamam"
+              <RNPickerSelect
+                doneText="Tamam"
                 value={TaxPlace}
                 placeholder={{
                   label: "Seçiniz...",
@@ -847,7 +876,7 @@ export default function Company() {
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Vergi No
                 </Text>
               </View>
@@ -855,9 +884,9 @@ export default function Company() {
                 value={taxNumber}
                 onChangeText={(value) => settaxNumber(value)}
                 style={styles.Input}
-                placeholder=""
+                placeholder="Vergi No"
                 keyboardType="number-pad"
-                maxLength={11}
+                maxLength={10}
               />
               {errorStatu == 13 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
@@ -869,7 +898,7 @@ export default function Company() {
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Yetki Belgesi No
                 </Text>
               </View>
@@ -877,9 +906,9 @@ export default function Company() {
                 value={licence}
                 onChangeText={(value) => setlicence(value)}
                 style={styles.Input}
-                placeholder=""
+                placeholder="Yetki Belgesi No"
                 keyboardType="number-pad"
-                maxLength={11}
+                maxLength={7}
               />
               {errorStatu == 14 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
@@ -896,7 +925,7 @@ export default function Company() {
               }}
             >
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Tc Kimlik No
                 </Text>
               </View>
@@ -904,129 +933,151 @@ export default function Company() {
                 value={IdCardNo}
                 onChangeText={(value) => setIdCardNo(value)}
                 style={styles.Input}
-                placeholder=""
+                placeholder="Tc Kimlik No"
                 keyboardType="number-pad"
                 maxLength={11}
               />
             </View>
             {/* Contracts */}
-            <View>
-              <CheckBox
-                checked={checked}
-                onPress={() => {
-                  GetDeal("kurumsal-uyelik-sozlesmesi");
-
-                  checked ? setModalVisible(false) : setModalVisible(true);
-                  setChecked(false);
-                }}
-                // Use ThemeProvider to make change for all checkbox
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="#E54242"
-                title={
-                  <View style={{ paddingLeft: 10 }}>
-                    <Text style={{ color: errorStatu == 15 ? "red" : "#333" }}>
-                      <Text
-                        style={{
-                          color: errorStatu == 15 ? "red" : "#027BFF",
-                          fontSize: 13,
-                        }}
-                      >
-                        {" "}
-                        Kurumsal üyelik sözleşmesini
-                      </Text>
-                      <Text style={{ fontSize: 13 }}> okudum onaylıyorum</Text>
-                    </Text>
-                  </View>
+            <View style={styles.container}>
+              <TouchableOpacity
+                onPress={() =>
+                  handleCheckboxChange(
+                    checked,
+                    setChecked,
+                    modalVisible,
+                    setModalVisible,
+                    "kurumsal-uyelik-sozlesmesi"
+                  )
                 }
-                textStyle={{ fontSize: 13, fontWeight: 400 }}
-                size={22}
-                containerStyle={{ padding: 0, width: "100%" }}
-              />
-              <CheckBox
-                checked={checked1}
-                onPress={() => {
-                  GetDeal("kvkk-politikasi");
-
-                  checked1 ? setModalVisible2(false) : setModalVisible2(true);
-                  setChecked1(false);
-                }}
-                // Use ThemeProvider to make change for all checkbox
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="#E54242"
-                title={
-                  <View style={{ paddingLeft: 10 }}>
-                    <Text style={{ color: errorStatu == 15 ? "red" : "#333" }}>
-                      <Text
-                        style={{
-                          color: errorStatu == 15 ? "red" : "#027BFF",
-                          fontSize: 13,
-                        }}
-                      >
-                        Kvkk metnini
-                      </Text>
-                      <Text style={{ fontSize: 13 }}> okudum onaylıyorum</Text>
-                    </Text>
-                  </View>
+                style={styles.checkboxContainer}
+              >
+                {checked ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
+                <Text
+                  style={[
+                    styles.checkboxLabel,
+                    { color: errorStatu === 5 ? "red" : "black" },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      fontSize: 13,
+                    }}
+                  >
+                    Kurumsal üyelik sözleşmesini
+                  </Text>{" "}
+                  okudum onaylıyorum
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  handleCheckboxChange(
+                    checked1,
+                    setChecked1,
+                    modalVisible2,
+                    setModalVisible2,
+                    "kvkk-politikasi"
+                  )
                 }
-                textStyle={{ fontSize: 13, fontWeight: 400 }}
-                size={22}
-                containerStyle={{ padding: 1 }}
-              />
-              <CheckBox
-                checked={checked2}
-                onPress={() => {
-                  GetDeal("gizlilik-sozlesmesi-ve-aydinlatma-metni");
+                style={styles.checkboxContainer}
+              >
+                {checked1 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
+                <Text
+                  style={[
+                    styles.checkboxLabel,
+                    { color: errorStatu === 5 ? "red" : "black" },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      fontSize: 13,
+                    }}
+                  >
+                    KVKK metnini
+                  </Text>{" "}
+                  okudum onaylıyorum
+                </Text>
+              </TouchableOpacity>
 
-                  checked2 ? setModalVisible3(false) : setModalVisible3(true);
-                  setChecked2(false);
-                }}
-                // Use ThemeProvider to make change for all checkbox
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="#E54242"
-                title={
-                  <View style={{ paddingLeft: 10 }}>
-                    <Text style={{ color: errorStatu == 15 ? "red" : "#333" }}>
-                      <Text
-                        style={{
-                          color: errorStatu == 15 ? "red" : "#027BFF",
-                          fontSize: 13,
-                        }}
-                      >
-                        Gizlilik sözleşmesi ve aydınlatma metnini
-                      </Text>
-                      <Text style={{ fontSize: 13 }}> okudum onaylıyorum</Text>
-                    </Text>
-                  </View>
+              <TouchableOpacity
+                onPress={() =>
+                  handleCheckboxChange(
+                    checked2,
+                    setChecked2,
+                    modalVisible3,
+                    setModalVisible3,
+                    "gizlilik-sozlesmesi-ve-aydinlatma-metni"
+                  )
                 }
-                textStyle={{ fontSize: 13, fontWeight: 400 }}
-                size={22}
-                containerStyle={{ padding: 1 }}
-              />
-              <CheckBox
-                checked={checked3}
+                style={styles.checkboxContainer}
+              >
+                {checked2 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
+                <Text
+                  style={[
+                    styles.checkboxLabel,
+                    { color: errorStatu === 5 ? "red" : "black" },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      fontSize: 13,
+                    }}
+                  >
+                    Gizlilik sözleşmesi ve aydınlatma metnini
+                  </Text>{" "}
+                  okudum onaylıyorum
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 onPress={toggleCheked3}
-                // Use ThemeProvider to make change for all checkbox
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="#E54242"
-                title={
-                  <View style={{ paddingLeft: 10 }}>
-                    <Text>
-                      Tarafıma elektronik ileti gönderilmesini kabul ediyorum.
-                    </Text>
-                  </View>
-                }
-                textStyle={{ fontSize: 13, fontWeight: 400 }}
-                size={22}
-                containerStyle={{ padding: 1 }}
-              />
+                style={styles.checkboxContainer}
+              >
+                {checked3 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
+                <Text style={styles.checkboxLabel}>
+                  İletişim bilgilerime kampanya, tanıtım ve reklam içerikli
+                  ticari elektronik ileti gönderilmesine, bu amaçla kişisel
+                  verilerimin “Emlaksepette” tarafından işlenmesine ve
+                  tedarikçileri ve işbirlikçileri ile paylaşılmasına, bu
+                  amaçlarla verilerimin yurt dışına aktarılmasına izin
+                  veriyorum.
+                </Text>
+              </TouchableOpacity>
             </View>
             {/* Contract Finish */}
 
@@ -1127,7 +1178,7 @@ export default function Company() {
                   }}
                 >
                   <Text style={{ color: "white", fontWeight: "bold" }}>
-                    Okudum Kabul ediyorum
+                    Okudum kabul ediyorum
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -1153,7 +1204,7 @@ export default function Company() {
                   }}
                 >
                   <Text style={{ color: "white", fontWeight: "bold" }}>
-                    Okudum Kabul ediyorum
+                    Okudum kabul ediyorum
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -1179,7 +1230,7 @@ export default function Company() {
                   }}
                 >
                   <Text style={{ color: "white", fontWeight: "bold" }}>
-                    Okudum Kabul ediyorum
+                    Okudum kabul ediyorum
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -1269,5 +1320,27 @@ const styles = StyleSheet.create({
     backgroundColor: "#2aaa46",
     padding: 10,
     borderRadius: 5,
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    marginBottom: 10,
+  },
+  checkboxLabel: {
+    fontSize: 13,
+    flex: 1,
+    marginLeft: 5,
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  checkboxInner: {
+    width: 18,
+    height: 18,
+    backgroundColor: "green",
   },
 });

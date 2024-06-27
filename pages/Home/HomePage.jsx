@@ -11,7 +11,7 @@ import {
   FlatList,
   Dimensions,
   ImageBackground,
-  ActivityIndicator,
+
 } from "react-native";
 import axios from "axios";
 import PagerView from "react-native-pager-view";
@@ -21,6 +21,7 @@ import Header from "../../components/Header";
 import userData, { getValueFor } from "../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import { ActivityIndicator } from "react-native-paper";
 
 const apiUrl = "https://mobil.emlaksepette.com";
 
@@ -112,7 +113,7 @@ const HomePage = ({ index }) => {
             {/* Featured Sliders */}
             <View style={styles.sliderContainer}>
               {loadingSliders ? (
-                <ActivityIndicator style={styles.loadingIndicator} />
+                <ActivityIndicator style={styles.loadingIndicator} size={'small'}/>
               ) : (
                 <PagerView
                   style={styles.pagerView}
@@ -164,7 +165,7 @@ const HomePage = ({ index }) => {
                 <View style={{ gap: 0, paddingTop: 0 }}>
                   {loadingProjects == true ? (
                     <View>
-                      <ActivityIndicator size="large" color="#000000" />
+                      <ActivityIndicator size="small" color="#000000" />
                     </View>
                   ) : (
                     <>

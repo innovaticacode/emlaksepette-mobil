@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
-  ActivityIndicator,
+ 
 } from "react-native";
 import { React, useCallback, useEffect, useState } from "react";
 import Ablok from "./Bloks/Ablok";
@@ -16,6 +16,7 @@ import Posts from "./Posts";
 import { apiRequestGet } from "./methods/apiRequest";
 import { Platform } from "react-native";
 import { getValueFor } from "./methods/user";
+import { ActivityIndicator } from "react-native-paper";
 export default function OtherHomeInProject({
   selectedTab,
   loadData,
@@ -51,7 +52,7 @@ export default function OtherHomeInProject({
 
   const renderFooter = () => {
     if (!isLoading) return null;
-    return <ActivityIndicator size="large" color={"red"} style={styles.loading} />;
+    return <ActivityIndicator size="small" color={"red"} style={styles.loading} />;
   };
 
   const renderItem = ({ item, index }) => {
