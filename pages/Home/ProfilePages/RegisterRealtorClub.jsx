@@ -90,14 +90,12 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
   const [user, setUser] = useState({});
   const [check, setcheck] = useState(false);
 
-
   useEffect(() => {
-    // Function to fetch initial user data from local storage
     const fetchInitialUserData = async () => {
       try {
         // Retrieve user data from SecureStore
         const storedUser = await SecureStore.getItemAsync("user");
-  
+
         if (storedUser) {
           setUser(JSON.parse(storedUser));
         }
@@ -105,42 +103,16 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
         console.error("Error fetching initial user data:", error);
       }
     };
-  
-    // Function to fetch additional user data using getValueFor
-    const fetchAdditionalUserData = async () => {
-      try {
-        // Example of using getValueFor to fetch user data
-        const updatedUser = await getValueFor("user");
-  
-        // Update user state with the fetched data
-        setUser(updatedUser);
-  
-        // Update SecureStore with the fetched user data
-        await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
-      } catch (error) {
-        console.error("Error fetching additional user data:", error);
-      }
-    };
-  
-    // On component mount, fetch initial user data from SecureStore
+
     fetchInitialUserData();
-  
-    // Optionally, fetch additional user data asynchronously using getValueFor
-    fetchAdditionalUserData();
-  
-    // Clean-up function (optional)
-    return () => {
-      // Perform any cleanup here if needed
-    };
-  }, []); // Empty dependency array ensures this runs only once on mount
-  
+  }, []);
+
   useEffect(() => {
     user.has_club == 3 ? setIban(user.iban) : setIban("");
   }, [user]);
   useEffect(() => {
     setFullName(user.bank_name);
     setTcNo(user.id_);
-
   }, [user]);
 
   const [StatusMessage, setStatusMessage] = useState(false);
@@ -169,21 +141,21 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
       );
 
       const updateResponse = await axios.get(
-        "https://mobil.emlaksepette.com/api/users/" + user?.id ,
+        "https://mobil.emlaksepette.com/api/users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
         }
       );
-       // Update user state with the updated data
-       setUser(updateResponse.data.user);
+      // Update user state with the updated data
+      setUser(updateResponse.data.user);
 
-       // Update SecureStore with the updated user data
-       await SecureStore.setItemAsync(
-         "user",
-         JSON.stringify(updateResponse.data.user)
-       );
+      // Update SecureStore with the updated user data
+      await SecureStore.setItemAsync(
+        "user",
+        JSON.stringify(updateResponse.data.user)
+      );
 
       setTcNo("");
       setIban("");
@@ -247,16 +219,27 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <View style={styles.header}>
-          {user.has_club == 0 || user.has_club == 3 && (
+          {user.has_club == 0 && (
             <>
-            <Text style={styles.headerText}>
-              Emlak Sepette | Emlak Kulüp Başvurusu
-            </Text>
-             <Text
-             style={{textAlign: "center", paddingTop: 10}}>
-             Emlak Kulüp ayrıcalıklarından faydalanmak için lütfen aşağıdaki bilgileri eksiksiz doldurun ve üyelik sözleşmesini onaylayın.
-   
-             </Text></>
+              <Text style={styles.headerText}>
+                Emlak Sepette | Emlak Kulüp Başvurusu
+              </Text>
+              <Text style={{ textAlign: "center", paddingTop: 10 }}>
+                Emlak Kulüp ayrıcalıklarından faydalanmak için lütfen aşağıdaki
+                bilgileri eksiksiz doldurun ve üyelik sözleşmesini onaylayın.
+              </Text>
+            </>
+          )}
+          {user.has_club == 3 && (
+            <>
+              <Text style={styles.headerText}>
+                Emlak Sepette | Emlak Kulüp Başvurusu
+              </Text>
+              <Text style={{ textAlign: "center", paddingTop: 10 }}>
+                Emlak Kulüp ayrıcalıklarından faydalanmak için lütfen aşağıdaki
+                bilgileri eksiksiz doldurun ve üyelik sözleşmesini onaylayın.
+              </Text>
+            </>
           )}
           {user.has_club == 2 && (
             <View style={{ gap: 10 }}>
@@ -271,7 +254,12 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
                 }}
               >
                 <Text
-                  style={{ color: "green", fontSize: 16, fontWeight: "500", textAlign:  "center" }}
+                  style={{
+                    color: "green",
+                    fontSize: 16,
+                    fontWeight: "500",
+                    textAlign: "center",
+                  }}
                 >
                   Üyelik başvurunuz alındı. Bilgileriniz incelendikten sonra
                   hesabınız aktive edilecek.
@@ -279,7 +267,6 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
               </View>
             </View>
           )}
-         
         </View>
         {user.has_club == 3 && (
           <View
@@ -299,28 +286,30 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
           </View>
         )}
 
-        {user.has_club == "0" || user.has_club == "3" ?  (
+        {user.has_club == "0" || user.has_club == "3" ? (
           <>
             <View style={{ alignItems: "center", height: "100%" }}>
               <View style={styles.FormContainer}>
                 <View style={styles.Inputs}>
-                  {(user.account_type !== "Limited veya Anonim Şirketi" && user.role_id == "2") || user.role_id == "1" &&
-                    <View>
-                      <Text style={styles.Label}>Tc Kimlik No</Text>
-                      <TextInput
-                        style={styles.Input}
-                        keyboardType="number-pad"
-                        value={tcNo}
-                        onChangeText={onChangeTC}
-                        maxLength={15}
-                      />
-                      {errorStatu == 1 && (
-                        <Text style={{ fontSize: 12, color: "red" }}>
-                          Tc kimlik numarası zorunludur
-                        </Text>
-                      )}
-                    </View>
-                  }
+                  {(user.account_type !== "Limited veya Anonim Şirketi" &&
+                    user.role_id == "2") ||
+                    (user.role_id == "1" && (
+                      <View>
+                        <Text style={styles.Label}>Tc Kimlik No</Text>
+                        <TextInput
+                          style={styles.Input}
+                          keyboardType="number-pad"
+                          value={tcNo}
+                          onChangeText={onChangeTC}
+                          maxLength={15}
+                        />
+                        {errorStatu == 1 && (
+                          <Text style={{ fontSize: 12, color: "red" }}>
+                            Tc kimlik numarası zorunludur
+                          </Text>
+                        )}
+                      </View>
+                    ))}
                   <View>
                     <Text style={styles.Label}>Hesap Sahibinin Adı Soyadı</Text>
                     <TextInput
@@ -374,16 +363,14 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
                         fontWeight: "500",
                       }}
                     >
-                     Başvuru Yap
+                      Başvuru Yap
                     </Text>
                   </TouchableOpacity>
                 </View>
               </View>
             </View>
           </>
-         
         ) : null}
-
 
         <Modal
           isVisible={succesRegister}

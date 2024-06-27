@@ -40,12 +40,11 @@ export default function UpdateProfile() {
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    // Function to fetch initial user data from local storage
     const fetchInitialUserData = async () => {
       try {
         // Retrieve user data from SecureStore
         const storedUser = await SecureStore.getItemAsync("user");
-  
+
         if (storedUser) {
           setUser(JSON.parse(storedUser));
         }
@@ -53,35 +52,9 @@ export default function UpdateProfile() {
         console.error("Error fetching initial user data:", error);
       }
     };
-  
-    // Function to fetch additional user data using getValueFor
-    const fetchAdditionalUserData = async () => {
-      try {
-        // Example of using getValueFor to fetch user data
-        const updatedUser = await getValueFor("user");
-  
-        // Update user state with the fetched data
-        setUser(updatedUser);
-  
-        // Update SecureStore with the fetched user data
-        await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
-      } catch (error) {
-        console.error("Error fetching additional user data:", error);
-      }
-    };
-  
-    // On component mount, fetch initial user data from SecureStore
+
     fetchInitialUserData();
-  
-    // Optionally, fetch additional user data asynchronously using getValueFor
-    fetchAdditionalUserData();
-  
-    // Clean-up function (optional)
-    return () => {
-      // Perform any cleanup here if needed
-    };
-  }, []); // Empty dependency array ensures this runs only once on mount
-  
+  }, []);
   const [currentColor, setCurrentColor] = useState(user.banner_hex_code);
   const [swatchesOnly, setSwatchesOnly] = useState(false);
   const [swatchesLast, setSwatchesLast] = useState(false);
