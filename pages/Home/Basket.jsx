@@ -201,7 +201,26 @@ export default function Basket() {
       console.error("Error fetching data:", error);
     }
   };
-  console.log(user.access_token + 'DFSfdsfds')
+
+  // const updateResponse = async()=>{
+  //   const response= await axios.get(
+  //   "https://mobil.emlaksepette.com/api/users/" + user?.id ,
+  //   {
+  //     headers: {
+  //       Authorization: `Bearer ${user.access_token}`,
+  //     },
+  //   }
+  // );
+  //  // Update user state with the updated data
+  //  setuser(response.data.user);
+
+  //  // Update SecureStore with the updated user data
+  //  await SecureStore.setItemAsync(
+  //    "user",
+  //    JSON.stringify(response.data.user)
+  //  )}
+
+
   const DeleteBasket = async () => {
     try {
       if (user.access_token) {
@@ -214,10 +233,12 @@ export default function Basket() {
             },
           }
         );
-        setuser({...user , cartItem:null})
-        SecureStore.setItemAsync("user", JSON.stringify({...user , cartItem:null}));
+     
         fetchData();
-      }
+        // updateResponse()
+   
+        //  console.log(updateResponse.data + 'User')
+      }                                                            
     } catch (error) {
       console.error("Error fetching data:", error);
     }
