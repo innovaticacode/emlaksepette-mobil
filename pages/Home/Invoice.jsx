@@ -8,7 +8,6 @@ import { Platform } from "react-native";
 
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
-
 export default function Invoice() {
   const [user, setUser] = useState({});
   const route = useRoute();
@@ -125,9 +124,7 @@ export default function Invoice() {
       };
 
       Share.open(shareOptions)
-        .then((res) => {
-        
-        })
+        .then((res) => {})
         .catch((err) => {
           err && console.log(err);
         });
@@ -234,7 +231,7 @@ export default function Invoice() {
             {" "}
             {data?.invoice?.invoice_number}{" "}
           </Text>
-          <Text>Tarih</Text>
+          <Text>Tarih:</Text>
           <Text style={{ fontWeight: "700" }}> {formattedDate} </Text>
         </View>
       </View>
@@ -334,7 +331,6 @@ export default function Invoice() {
           <Text>{data?.invoice?.order?.store?.email}</Text>
           <Text>Vergi No: {data?.invoice?.order?.store?.taxNumber}</Text>
           <Text>İletişim No: {data?.invoice?.order?.store?.phone}</Text>
-       
         </View>
       </View>
     </ScrollView>

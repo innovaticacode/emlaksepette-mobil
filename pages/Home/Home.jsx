@@ -19,23 +19,22 @@ import HomePage2 from "./HomePage2";
 
 const Tab = createBottomTabNavigator();
 
-const Home = ({route}) => {
+const Home = ({ route }) => {
   const isFocused = useIsFocused();
   const [user, setUser] = useState({});
- 
 
   useEffect(() => {
-    if(route?.params?.status == "login"){
+    if (route?.params?.status == "login") {
       getValueFor("user", setUser);
-    }else if(route?.params?.status == "logout"){
+    } else if (route?.params?.status == "logout") {
       setUser({});
     }
-  },[route?.params?.status])
-useEffect(() => {
+  }, [route?.params?.status]);
+  useEffect(() => {
     if (isFocused) {
       getValueFor("user", setUser);
     }
-}, [isFocused])
+  }, [isFocused]);
 
   const { width, height } = Dimensions.get("window");
   return (
@@ -129,12 +128,16 @@ useEffect(() => {
           },
         })}
       />
-
+      {}
       <Tab.Screen
         name={"Hesabım"}
         component={user.access_token ? ShoppingProfile : Login}
         options={{
-          tabBarLabel: user.role === "Kurumsal Hesap" ? "Mağazam" : "Hesabım",
+          tabBarLabel: user.access_token
+            ? user.role === "Kurumsal Hesap"
+              ? "Mağazam"
+              : "Hesabım"
+            : "Giriş Yap",
           headerShown: false,
 
           tabBarIcon: ({ color, focused }) =>
