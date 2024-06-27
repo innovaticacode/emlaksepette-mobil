@@ -260,6 +260,34 @@ export default function UpdateProfile() {
       });
   };
 
+  const updateUserData = async () => {
+    try {
+      const updateResponse = await axios.get(
+        "https://mobil.emlaksepette.com/api/users/" + user?.id,
+        {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        }
+      );
+  
+      // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
+      const updatedUser = {
+        ...user,
+        ...updateResponse.data.user,
+        access_token: user.access_token, // access token'ı koruma
+      };
+  
+      // Kullanıcı durumunu güncelleme
+      setUser(updatedUser);
+  
+      // SecureStore ile güncellenmiş kullanıcı verilerini kaydetme
+      await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
+    } catch (error) {
+      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+    }
+  };
+
   const postData = async () => {
     try {
       if (name) {
@@ -292,26 +320,8 @@ export default function UpdateProfile() {
         // Clear the form field after successful update
         setName("");
 
-        // Fetch updated user data after successful update
-        const updateResponse = await axios.get(
-          `https://mobil.emlaksepette.com/api/users/${user?.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        updateUserData();
 
-        // Update user state with the updated data
-        setUser(updateResponse.data.user);
-
-        // Update SecureStore with the updated user data
-        await SecureStore.setItemAsync(
-          "user",
-          JSON.stringify(updateResponse.data)
-        );
-
-        // Set update success flag and reset after a timeout
         setUpdateSuccess(true);
         setTimeout(() => {
           setUpdateSuccess(false);

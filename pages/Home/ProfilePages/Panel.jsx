@@ -34,7 +34,8 @@ export default function Panel({ options, onSelect }) {
     onSelect(option);
   };
   const [links, setLinks] = useState({});
-
+  const [notifications, setNotifications] = useState([]);
+  const [notificationCount, setNotificationCount] = useState(0);
   const calculateButtonPosition = () => {
     if (buttonRef.current) {
       buttonRef.current.measure((x, y, width, height, pageX, pageY) => {
@@ -66,8 +67,8 @@ export default function Panel({ options, onSelect }) {
               },
             }
           );
-          setPanelInfo(response?.data);
-          setLinks(response?.data.collections.links);
+          setPanelInfo(response?.data?.user);
+          setLinks(response?.data.user.collections.links);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -89,6 +90,47 @@ export default function Panel({ options, onSelect }) {
     };
     loadData();
   }, []);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        if (!user?.access_token) {
+          setNotifications([]);
+          setNotificationCount(0);
+          return;
+        }
+
+        const response = await axios.get(
+          "https://mobil.emlaksepette.com/api/user/notification",
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+
+        if (response.data) {
+          setNotifications(response.data);
+        } else {
+          setNotifications([]);
+        }
+
+        const unreadCount = response.data.filter(
+          (notification) => notification.readed === 0
+        ).length;
+        setNotificationCount(unreadCount);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+        setNotifications([]);
+        setNotificationCount(0); // Set unreadCount to 0 in case of an error
+      }
+    };
+
+    if (user?.access_token) {
+      fetchNotifications();
+    }
+  }, [user?.access_token]);
+
   return (
     <>
       <View style={style.container}>
@@ -162,7 +204,11 @@ export default function Panel({ options, onSelect }) {
                         </View>
 
                         <TouchableOpacity
-                          onPress={() => navigation.navigate("Notifications")}
+                          onPress={() =>
+                            navigation.navigate("Notifications", {
+                              notifications,
+                            })
+                          }
                           style={{
                             width: 50,
                             alignItems: "center",
