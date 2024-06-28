@@ -9,7 +9,7 @@ import {
   Keyboard,
   Animated,
   TouchableWithoutFeedback,
-  ActivityIndicator,
+
   ScrollView,
   Alert,
 } from "react-native";
@@ -21,26 +21,26 @@ import ColorPicker from "react-native-wheel-color-picker";
 import userData, { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
 import Icon from "react-native-vector-icons/Fontisto";
+import Icon3 from "react-native-vector-icons/MaterialIcons";
 import { CheckBox } from "@rneui/themed";
 import RNPickerSelect from "react-native-picker-select";
 import { Platform } from "react-native";
 import * as Location from "expo-location";
 import * as SecureStore from "expo-secure-store";
+import * as ImagePicker from 'expo-image-picker';
 
+import * as Camera from 'expo-camera';
+import { ActivityIndicator } from "react-native-paper";
 export default function UpdateProfile() {
-  const [selectedLocation, setSelectedLocation] = useState(null);
+  
 
-  const handleMapPress = (event) => {
-    const { coordinate } = event.nativeEvent;
-    setSelectedLocation(coordinate);
 
-    getAddressFromCoordinates(coordinate.latitude, coordinate.longitude);
-  };
 
   const [user, setUser] = useState({});
 
   useEffect(() => {
     const fetchInitialUserData = async () => {
+      setloadingModal(true)
       try {
         // Retrieve user data from SecureStore
         const storedUser = await SecureStore.getItemAsync("user");
@@ -50,6 +50,11 @@ export default function UpdateProfile() {
         }
       } catch (error) {
         console.error("Error fetching initial user data:", error);
+      }finally{
+        setTimeout(() => {
+          setloadingModal(false)
+        }, 500);
+
       }
     };
 
@@ -178,89 +183,23 @@ export default function UpdateProfile() {
     setName(user.name);
     setiban(user.iban);
     setmobilPhone(user.mobile_phone);
+    
   }, [user]);
   const PhotoUrl = "https://mobil.emlaksepette.com/storage/profile_images/";
   const [ChoosePhotoModal, setChoosePhotoModal] = useState(false);
-  const userLocation = user && {
-    latitude:
-      parseFloat(user?.latitude) == null ? latitude : parseFloat(user.latitude),
-    longitude:
-      parseFloat(user?.longitude) == null
-        ? longitude
-        : parseFloat(user.longitude),
-  };
+ 
 
-  const [latitude, setLatitude] = useState(39.1667);
-  const [longitude, setLongitude] = useState(35.6667);
+
   const [errorMsg, setErrorMsg] = useState(null);
   const [city, setcity] = useState(null);
   const [county, setcounty] = useState(null);
   const [neigbourhod, setneigbourhod] = useState(null);
-  useEffect(() => {
-    if (user.access_token) {
-      (async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setErrorMsg("Konum izni reddedildi");
-          return;
-        }
 
-        let currentLocation = await Location.getCurrentPositionAsync({});
-        setLatitude(parseFloat(currentLocation.coords.latitude));
-        setLongitude(parseFloat(currentLocation.coords.longitude));
-      })();
-    }
-  }, [user, userLocation]);
-  const [address, setAddress] = useState({
-    city: "",
-    district: "",
-    neighborhood: "",
-  });
 
-  const getAddressFromCoordinates = (latitude, longitude) => {
-    const API_KEY = "AIzaSyB-ip8tV3D9tyRNS8RMUwxU8n7mCJ9WCl0";
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`;
-
-    axios
-      .get(url)
-      .then((response) => {
-        const result = response.data.results[0];
-        const addressComponents = result.address_components;
-
-        const city =
-          addressComponents.find((component) =>
-            component.types.includes("administrative_area_level_1")
-          )?.long_name || "";
-        const district =
-          addressComponents.find((component) =>
-            component.types.includes("administrative_area_level_2")
-          )?.long_name || "";
-        const neighborhood =
-          addressComponents.find((component) =>
-            component.types.includes("sublocality")
-          )?.long_name ||
-          addressComponents.find((component) =>
-            component.types.includes("neighborhood")
-          )?.long_name ||
-          addressComponents.find((component) =>
-            component.types.includes("locality")
-          )?.long_name ||
-          addressComponents.find((component) =>
-            component.types.includes("sublocality_level_1")
-          )?.long_name ||
-          addressComponents.find((component) =>
-            component.types.includes("sublocality_level_2")
-          )?.long_name ||
-          "";
-
-        setAddress({ city, district, neighborhood });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+ 
 
   const updateUserData = async () => {
+      setloadingModal(true)
     try {
       const updateResponse = await axios.get(
         "https://mobil.emlaksepette.com/api/users/" + user?.id,
@@ -285,6 +224,12 @@ export default function UpdateProfile() {
       await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+    }finally{
+      setloadingModal(false)
+      setUpdateSuccess(true)
+      setTimeout(() => {
+          setUpdateSuccess(false)
+      }, 2000);
     }
   };
 
@@ -294,7 +239,10 @@ export default function UpdateProfile() {
         setUpdateSuccess(false);
         let fullNumber = `${cityCode}${phone}`;
         var formData = new FormData();
-
+        formData.append('profile_image',image)
+        formData.append('city_id', selectedCity)
+        formData.append('county_id',selectedCounty)
+       formData.append('neighborhood_id',selectedNeighborhood)
         formData.append("name", name);
         formData.append("banner_hex_code", currentColor);
         formData.append("iban", iban);
@@ -302,8 +250,8 @@ export default function UpdateProfile() {
         formData.append("phone", fullNumber);
         formData.append("year", yearsOfSector);
         formData.append("mobile_phone", mobilPhone);
-        formData.append("latitude", selectedLocation?.latitude);
-        formData.append("longitude", selectedLocation?.longitude);
+        formData.append("latitude", selectedLocation.latitude);
+        formData.append("longitude", selectedLocation.longitude);
         formData.append("_method", "PUT");
 
         // Perform the profile update
@@ -331,7 +279,7 @@ export default function UpdateProfile() {
       console.error("Error:", error);
       // Handle error
     } finally {
-      setLoadingModal(false);
+     
     }
   };
 
@@ -344,111 +292,190 @@ export default function UpdateProfile() {
   const [selectedCounty, setSelectedCounty] = useState(null);
   const [neighborhoods, setNeighborhoods] = useState([]);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
-  const [coordinates, setCoordinates] = useState({
-    latitude: 41.0082,
-    longitude: 28.9784,
-  });
-  const [mapRef, setMapRef] = useState(null);
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const response = await axios.get(
-          "https://mobil.emlaksepette.com/api/cities"
-        );
-        setCities(response.data.data);
-      } catch (error) {
-        console.error("Hata:", error);
-        Alert.alert("Error", "Could not load cities");
+
+
+   useEffect(() => {
+     const fetchCities = async () => {
+       try {
+       const response = await axios.get(
+           "https://mobil.emlaksepette.com/api/cities"
+         );
+         setCities(response.data.data);
+       } catch (error) {
+         console.error("Hata:", error);
+         Alert.alert("Error", "Could not load cities");
+       }
+     };
+
+     fetchCities();
+   }, []);
+
+   const fetchCounties = async (cityId) => {
+     try {
+       const response = await axios.get(
+         `https://mobil.emlaksepette.com/api/counties/${cityId}`
+       );
+       setCounties(response.data.data);
+     } catch (error) {
+       console.error("Hata:", error);
+       Alert.alert("Error", "Could not load counties");
+     }
+   };
+
+   const fetchNeighborhoods = async (countyId) => {
+     try {
+       const response = await axios.get(
+         `https://mobil.emlaksepette.com/api/neighborhoods/${countyId}`
+       );
+       setNeighborhoods(response.data.data);
+     } catch (error) {
+       console.error("Hata:", error);
+   Alert.alert("Error", "Could not load neighborhoods");
+  }
+   };
+
+
+
+   const onChangeCity = (value) => {
+     setSelectedCity(value);
+     setSelectedCounty(null);
+     setSelectedNeighborhood(null);
+
+     setCounties([]);
+     setNeighborhoods([]);
+     if (value) {
+       fetchCounties(value);
+      
+     }
+   };
+
+   const onChangeCounty = (value) => {
+     setSelectedCounty(value);
+     setSelectedNeighborhood(null);
+     setNeighborhoods([]);
+     if (value) {
+       fetchNeighborhoods(value);
+       
+     }
+   };
+
+   const onChangeNeighborhood = (value) => {
+     setSelectedNeighborhood(value);
+     if (value) {
+    
+   }
+   };
+    const [choose, setchoose] = useState(false)
+
+    const [image, setImage] = useState(null);
+
+    useEffect(() => {
+      (async () => {
+        if (Platform.OS !== 'web') {
+          const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+          if (status !== 'granted') {
+            alert('Sorry, we need camera roll permissions to make this work!');
+          }
+        }
+      })();
+    }, []);
+  
+    const pickImage = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      console.log(result);
+  
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
       }
     };
+    useEffect(() => {
+      (async () => {
+        if (Platform.OS !== 'web') {
+          const { status } = await ImagePicker.requestCameraPermissionsAsync();
+          if (status !== 'granted') {
+            alert('Sorry, we need camera permissions to make this work!');
+          }
+        }
+      })();
+    }, []);
+  
+    const takePhoto = async () => {
+      let result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      console.log(result);
+  
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+      }
+    };
+    const [region, setRegion] = useState(null);
+    const [marker, setMarker] = useState(null);
+  
+    
+    const [selectedLocation, setSelectedLocation] = useState(null);
+  const [address, setAddress] = useState('');
 
-    fetchCities();
-  }, []);
-
-  const fetchCounties = async (cityId) => {
-    try {
-      const response = await axios.get(
-        `https://mobil.emlaksepette.com/api/counties/${cityId}`
-      );
-      setCounties(response.data.data);
-    } catch (error) {
-      console.error("Hata:", error);
-      Alert.alert("Error", "Could not load counties");
-    }
+  const handleSelectLocation = (event) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    console.log('Selected coordinates:', latitude, longitude); // Koordinatları konsola yazdırın
+    setSelectedLocation({ latitude, longitude });
+    fetchAddress(latitude, longitude);
   };
 
-  const fetchNeighborhoods = async (countyId) => {
+  const fetchAddress = async (latitude, longitude) => {
     try {
+      const apiKey = 'AIzaSyB-ip8tV3D9tyRNS8RMUwxU8n7mCJ9WCl0'; // API anahtarınızı buraya ekleyin
       const response = await axios.get(
-        `https://mobil.emlaksepette.com/api/neighborhoods/${countyId}`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
       );
-      setNeighborhoods(response.data.data);
-    } catch (error) {
-      console.error("Hata:", error);
-      Alert.alert("Error", "Could not load neighborhoods");
-    }
-  };
+      console.log('API response:', response.data); // Yanıtı konsola yazdırın
 
-  const getCoordinates = async (query) => {
-    try {
-      const response = await axios.get(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          query
-        )}&limit=1`
-      );
-      if (response.data.length > 0) {
-        const { lat, lon } = response.data[0];
-        const coords = {
-          latitude: parseFloat(lat),
-          longitude: parseFloat(lon),
-        };
-        setCoordinates(coords);
-        mapRef.animateToRegion({
-          ...coords,
-          latitudeDelta: 0.07,
-          longitudeDelta: 0.07,
-        });
+      if (response.data.results.length > 0) {
+        const addressComponents = response.data.results[0].address_components;
+        const city = addressComponents.find(component =>
+          component.types.includes('administrative_area_level_2')
+        )?.long_name || 'Bilinmiyor';
+        const state = addressComponents.find(component =>
+          component.types.includes('administrative_area_level_1')
+        )?.long_name || 'Bilinmiyor';
+        console.log('Parsed address:', city, state); // Adres bilgisini konsola yazdırın
+        setAddress(`${city}, ${state}`);
+      
       } else {
-        
+        setAddress('Adres bulunamadı');
       }
     } catch (error) {
-      console.error("Hata:", error);
+      console.error(error);
+      setAddress('Adres alınamadı');
     }
   };
-
-  const onChangeCity = (value) => {
-    setSelectedCity(value);
-    setSelectedCounty(null);
-    setSelectedNeighborhood(null);
-
-    setCounties([]);
-    setNeighborhoods([]);
-    if (value) {
-      fetchCounties(value);
-      getCoordinates(value);
-    }
-  };
-
-  const onChangeCounty = (value) => {
-    setSelectedCounty(value);
-    setSelectedNeighborhood(null);
-    setNeighborhoods([]);
-    if (value) {
-      fetchNeighborhoods(value);
-      getCoordinates(`${selectedCity}, ${value}`);
-    }
-  };
-
-  const onChangeNeighborhood = (value) => {
-    setSelectedNeighborhood(value);
-    if (value) {
-      getCoordinates(`${selectedCity}, ${selectedCounty}, ${value}`);
-    }
-  };
-
+  const userLocation = user && { latitude: parseFloat(user?.latitude) == null ? latitude : parseFloat(user.latitude), longitude: parseFloat(user?.longitude) == null ? longitude:parseFloat(user.longitude) };
+  const [latitude, setLatitude] = useState(39.1667);
+  const [longitude, setLongitude] = useState(35.6667);
+  
   return (
+    <>
+    {
+      loadingModal ? 
+ 
+        <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+          <ActivityIndicator size={'large'} color="#333"/>
+        </View>
+:
+  
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+     
       <ScrollView
         style={{ flex: 1, backgroundColor: "white" }}
         scrollEnabled={!openColorPicker}
@@ -458,16 +485,16 @@ export default function UpdateProfile() {
             <TouchableOpacity
               style={styles.ProfilImage}
               onPress={() => {
-                setChoosePhotoModal(true);
+                setchoose(true);
               }}
             >
               <Image
-                source={{ uri: `${PhotoUrl}${user.profile_image}` }}
+                source={{ uri: image ? image : `${PhotoUrl}${user.profile_image}` }}
                 style={{ width: "100%", height: "100%" }}
                 borderRadius={50}
               />
             </TouchableOpacity>
-            <TouchableOpacity
+            <TouchableOpacity onPress={()=>setchoose(true)}
               style={{
                 position: "absolute",
                 bottom: 0,
@@ -484,7 +511,7 @@ export default function UpdateProfile() {
         <View style={{ padding: 10 }}>
           <View style={styles.Form}>
             <View>
-              <Text style={styles.label}>İsim</Text>
+              <Text style={styles.label}>Ad Soyad</Text>
               <TextInput
                 style={styles.Input}
                 value={name}
@@ -497,7 +524,7 @@ export default function UpdateProfile() {
             {user.role == "Kurumsal Hesap" ? (
               <>
                 <View>
-                  <Text style={styles.label}>Iban Numarası</Text>
+                  <Text style={styles.label}>IBAN Numarası</Text>
                   <TextInput
                     style={styles.Input}
                     value={iban}
@@ -520,9 +547,11 @@ export default function UpdateProfile() {
                       <RNPickerSelect
                         doneText="Tamam"
                         value={cityCode}
+                        
                         placeholder={{
                           label: "Alan Kodu",
                           value: null,
+                          
                         }}
                         style={pickerSelectStyles}
                         onValueChange={(value) => {
@@ -665,33 +694,27 @@ export default function UpdateProfile() {
                   items={neighborhoods}
                 />
               </View>
-            </View>
+            </View> 
             {user?.role === "Kurumsal Hesap" && (
               <View style={{ height: 300 }}>
-                <MapView
-                  style={{ flex: 1 }}
-                  zoomControlEnabled={true}
-                  region={{
-                    latitude:
-                      parseFloat(user?.latitude) == null
-                        ? coordinates.latitude
-                        : parseFloat(user.latitude), // Türkiye'nin merkezi Ankara'nın enlemi
-                    longitude:
-                      parseFloat(user?.longitude) == null
-                        ? coordinates.longitude
-                        : parseFloat(user.longitude), // Türkiye'nin merkezi Ankara'nın boylamı
-                    latitudeDelta: 9, // Harita yakınlığı
-                    longitudeDelta: 9,
-                  }}
-                  onPress={handleMapPress}
-                  ref={(ref) => setMapRef(ref)}
-                >
+            <MapView
+        style={{ flex: 1 }}
+        onPress={handleSelectLocation}
+        region={{
+          latitude: parseFloat(user?.latitude) == null ? parseFloat(latitude) : parseFloat(user.latitude) , // Türkiye'nin merkezi Ankara'nın enlemi
+          longitude:parseFloat(user?.longitude) == null ? parseFloat(longitude) : parseFloat(user.longitude), // Türkiye'nin merkezi Ankara'nın boylamı
+          latitudeDelta: 9, // Harita yakınlığı
+          longitudeDelta: 9,
+        }}
+      >
                   {selectedLocation ? (
-                    <Marker coordinate={selectedLocation} />
-                  ) : (
-                    <Marker coordinate={userLocation} />
-                  )}
-                </MapView>
+              <Marker coordinate={selectedLocation} />
+            ) : (
+              <Marker coordinate={userLocation} />
+            )}
+      </MapView>
+    
+
               </View>
             )}
 
@@ -712,7 +735,7 @@ export default function UpdateProfile() {
                 uncheckedIcon="checkbox-blank-outline"
                 checkedColor="red"
                 title={"Güncellemek İstiyorum"}
-                containerStyle={{ marginRight: 0, paddingRight: 0 }}
+                containerStyle={{ marginRight: 0, paddingRight: 0,marginLeft:-10}}
                 style={{ margin: 0 }}
               />
             </View>
@@ -769,7 +792,7 @@ export default function UpdateProfile() {
               </View>
             </View>
           </View>
-          <View style={{ alignItems: "center" }}>
+          <View style={{ alignItems: "center",paddingBottom:40 }}>
             <TouchableOpacity style={styles.updatebtn} onPress={postData}>
               <Text style={styles.btnText}>Güncelle</Text>
             </TouchableOpacity>
@@ -794,6 +817,7 @@ export default function UpdateProfile() {
           style={styles.modal}
           animationIn={"fadeInRight"}
           animationOut={"fadeOutLeft"}
+        
         >
           <View style={styles.modalContent}>
             <ActivityIndicator size="large" />
@@ -802,8 +826,42 @@ export default function UpdateProfile() {
             </Text>
           </View>
         </Modal>
+        <Modal
+          isVisible={choose}
+          style={styles.modal2}
+          animationIn={"fadeInDown"}
+          animationOut={"fadeOutDown"}
+          onBackdropPress={()=>setchoose(false)}
+          swipeDirection={['down']}
+          onSwipeComplete={()=>setchoose(false)}
+        >
+          <View style={styles.modalContent2}>
+            <View style={{padding:10,alignItems:'center'}}>
+              <TouchableOpacity style={{width:'15%',backgroundColor:'#c2c4c6',padding:4,borderRadius:50}}>
+
+              </TouchableOpacity>
+            </View>
+            <View style={{padding:20,gap:35}}>
+            <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={pickImage}>
+                      <Icon3 name="photo" size={23} color={'#333'}/>
+                      <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Kütüphaneden Seç</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={takePhoto}>
+                      <Icon3 name="add-a-photo" size={21} color={'#333'}/>
+                      <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Fotoğraf Çek</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}}>
+                      <Icon3 name="restore-from-trash" size={22} color={'#d83131'}/>
+                      <Text style={{fontSize:14,color:'#d83131',fontWeight:'700'}}>Mevcut Fotoğrafı Kaldır</Text>
+              </TouchableOpacity>
+            </View>
+            
+          </View>
+        </Modal>
       </ScrollView>
     </TouchableWithoutFeedback>
+    } 
+    </>
   );
 }
 const pickerSelectStyles = StyleSheet.create({
@@ -828,7 +886,7 @@ const { width, height } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F7F7F9",
+    backgroundColor: "#f1f1f1",
   },
   ProfileEditArea: {
     width: "100%",
@@ -919,6 +977,31 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  modal2: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContent2: {
+    gap: 10,
+  
+    backgroundColor: "#F8F7F4",
+    padding: 10,
+    height: "30%",
+
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    ...Platform.select({
+      ios: {
+        shadowColor: "white",
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 5,
