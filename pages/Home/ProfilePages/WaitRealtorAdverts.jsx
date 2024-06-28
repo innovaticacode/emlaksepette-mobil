@@ -35,19 +35,22 @@ export default function WaitRealtorAdverts() {
   return (
     <ScrollView>
     <View style={{
-          paddingTop:20,
-          paddingLeft:20
+          paddingTop:6,
+          paddingLeft:20,
+          paddingBottom:6
     }}>
   
-        <Text style={{
-          fontSize:20,
-          color:'#141824',
-          fontWeight:'600'
-       }}>Onay Bekleyen İlanlar ({housings?.length})</Text>
+        <Text 
+         style={{
+          fontSize: 16,
+          color: "#333",
+          fontWeight: "600",
+        }}
+        >Onay Bekleyen İlanlar ({housings?.length})</Text>
       
   
     </View>
-    <View style={{padding:10}}>
+    <View style={{gap:10}}>
     {
       housings.map((item,index)=>(
         <RealtorAdvertPost  key={index} housing={item} Onpress={openSheet}/>

@@ -200,6 +200,7 @@ export default function Posts({
 const [alertForSign, setalertForSign] = useState(false)
 const [alertForFavorite, setalertForFavorite] = useState(false)
 const [cartIsNull, setcartIsNull] = useState(false)
+const [AddCartShow, setAddCartShow] = useState(false);
   return (
     <View style={styles.container}>
          <AwesomeAlert
@@ -472,7 +473,7 @@ const [cartIsNull, setcartIsNull] = useState(false)
                             if (user.cartItem !== null ) {
                               setcartIsNull(true)
                           }else{
-                            setAddCartShow(true)
+                            setaddShowCart(true)
                           }
                             
                           }else{

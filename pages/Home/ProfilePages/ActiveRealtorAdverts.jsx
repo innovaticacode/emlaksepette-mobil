@@ -4,6 +4,7 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  TextInput,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -14,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import RealtorAdvertPost from "./profileComponents/RealtorAdvertPost";
 import Modal from "react-native-modal";
 import { Platform } from "react-native";
+
 export default function ActiveRealtorAdverts() {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
@@ -44,25 +46,33 @@ export default function ActiveRealtorAdverts() {
   };
   const [selectedProject, setSelectedProject] = useState(null);
   return (
-    <ScrollView>
+    <ScrollView stickyHeaderIndices={[0]}>
+    
       <View
         style={{
-          paddingTop: 20,
-          paddingLeft: 20,
-          paddingBottom: 20,
+          paddingTop: 6,
+          paddingLeft: 12,
+          paddingBottom: 6,
+        backgroundColor:'#ffff'
         }}
       >
         <Text
           style={{
-            fontSize: 20,
-            color: "#141824",
+            fontSize: 16,
+            color: "#333",
             fontWeight: "600",
           }}
         >
           Emlak İlanları ({housings?.length})
         </Text>
       </View>
-      <View style={{ padding: 10 }}>
+      <View style={{padding:2,paddingLeft:10,paddingRight:10,flexDirection:'row'}}>
+        <TextInput style={styles.Input} placeholder="Kelime veya İlan No ile ara" />
+        <TouchableOpacity>
+
+        </TouchableOpacity>
+      </View>
+      <View style={{paddingTop:10 }}>
         {housings.map((item, index) => (
           <RealtorAdvertPost key={index} housing={item} Onpress={openSheet} />
         ))}
@@ -283,4 +293,10 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  Input:{
+    backgroundColor:'#ebebeb',
+    padding:10,
+    borderRadius:5,
+    width:'90%'
+  }
 });
