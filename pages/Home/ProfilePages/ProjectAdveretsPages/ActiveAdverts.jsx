@@ -9,7 +9,7 @@ import axios from "axios"
 import { getValueFor } from '../../../../components/methods/user';
 import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
-export default function ActiveAdverts({header,header2,hidden}) {
+export default function ActiveAdverts({}) {
 
   const navigation = useNavigation()
     const translateY = useRef(new Animated.Value(400)).current;
@@ -44,7 +44,8 @@ export default function ActiveAdverts({header,header2,hidden}) {
             paddingTop:20,
             paddingLeft:20
         }}>
-            <Text style={styles.headerText}>{header}{header2}({projects.length})</Text>
+            <Text style={styles.headerText}>
+              Aktif İlanlar({projects.length})</Text>
         </View>
         <View style={styles.Adverts}>
           {
