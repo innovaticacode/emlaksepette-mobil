@@ -94,11 +94,10 @@ export default function Rent({ display }) {
                   <TouchableOpacity
                     key={index}
                     style={[
-                      styles.TabBarBtn,
+                      styles.tabBtn,
                       {
-                        backgroundColor: Tabs == index ? "#ebebeb" : "#E54242",
-                        borderWidth: Tabs == index ? 1 : 0,
-                        borderColor: "#E54242",
+                        backgroundColor: Tabs== index ? "#EEEDEB" : "white",
+                        borderWidth: Tabs == index ? 0 : 1,
                       },
                     ]}
                     onPress={() => {
@@ -107,13 +106,12 @@ export default function Rent({ display }) {
                     }}
                   >
                     <Text
-                      style={[
-                        styles.tabBarText,
-                        {
-                          color: Tabs === index ? "#E54242" : "white",
-                          fontWeight: Tabs === index ? "600" : "normal",
-                        },
-                      ]}
+                       style={{
+                        textAlign: "center",
+                        color: Tabs == index ? "#333" : "#333",
+                        fontSize: 12,
+                        fontWeight:'600'
+                      }}
                     >
                       {item.label}
                     </Text>
@@ -204,5 +202,16 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingLeft: 10,
     paddingRight: 20,
+  },
+  tabBtn: {
+    backgroundColor: "white",
+    paddingLeft: 15,
+    paddingRight: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ebebeb",
   },
 });
