@@ -9,16 +9,19 @@ import CalendarIcon from 'react-native-vector-icons/FontAwesome';
 import { TextInput } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RNPickerSelect from 'react-native-picker-select';
-import { useRoute } from "@react-navigation/native";
+import { useIsFocused, useRoute } from "@react-navigation/native";
 import { actions, RichEditor, RichToolbar }  from "react-native-pell-rich-editor"; 
 import MapView, { Marker } from 'react-native-maps';
 import { apiRequestGet, apiRequestPost, frontEndUri } from '../../../../../components/methods/apiRequest';
 import { addDotEveryThreeDigits } from '../../../../../components/methods/merhod';
 import CloseIcon from 'react-native-vector-icons/AntDesign';
+import axios from 'axios';
+import { ActivityIndicator } from 'react-native-paper';
+
 
 export default function EditProject() {
   const route = useRoute();
-  const { id } = route.params;
+  const { id ,name} = route.params;
 
   const [data,setData] = useState({
     start_date : new Date(),
@@ -27,9 +30,11 @@ export default function EditProject() {
 
   const [showCoverImageModal,setCoverImageModal] = useState(false);
   const [selectedImage,setSelectedImage] = useState("");
-  
+  const [loading, setloading] = useState(false)
   useEffect(() => {
+    setloading(true)
     apiRequestGet('get_my_project/'+id).then((res) => {
+      setloading(false)
       setData({
         ...res.data.project,
         start_date : new Date(res.data.project.start_date),
@@ -42,7 +47,7 @@ export default function EditProject() {
 
   const [open,setOpen] = useState(false);
   
-  const richText = useRef(); 
+  const richText = useRef(null); 
   const setDataFunc = (key,value) => {
     setData({
       ...data,
@@ -52,6 +57,7 @@ export default function EditProject() {
 
   const deleteImage = (id) => {
     apiRequestPost('delete_project_gallery_image/'+id,{'_method' : 'DELETE'}).then((res) => {
+      
       const newImages = data.images.filter((image) => {
         if(image.id != id){
           return image;
@@ -66,19 +72,113 @@ export default function EditProject() {
       setCoverImageModal(false);
     })
   }
+  const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [counties, setCounties] = useState([]);
+  const [selectedCounty, setSelectedCounty] = useState(null);
+  const [neighborhoods, setNeighborhoods] = useState([]);
+  const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
+
+
+
+   useEffect(() => {
+     const fetchCities = async () => {
+       try {
+       const response = await axios.get(
+           "https://mobil.emlaksepette.com/api/cities"
+         );
+         setCities(response.data.data);
+       } catch (error) {
+         console.error("Hata:", error);
+         Alert.alert("Error", "Could not load cities");
+       }
+     };
+
+     fetchCities();
+   }, []);
+
+   const fetchCounties = async (cityId) => {
+     try {
+       const response = await axios.get(
+         `https://mobil.emlaksepette.com/api/counties/${cityId}`
+       );
+       setCounties(response.data.data);
+     } catch (error) {
+       console.error("Hata:", error);
+       Alert.alert("Error", "Could not load counties");
+     }
+   };
+
+   const fetchNeighborhoods = async (countyId) => {
+     try {
+       const response = await axios.get(
+         `https://mobil.emlaksepette.com/api/neighborhoods/${countyId}`
+       );
+       setNeighborhoods(response.data.data);
+     } catch (error) {
+       console.error("Hata:", error);
+   Alert.alert("Error", "Could not load neighborhoods");
+  }
+   };
+
+
+
+   const onChangeCity = (value) => {
+     setSelectedCity(value);
+     setSelectedCounty(null);
+     setSelectedNeighborhood(null);
+
+     setCounties([]);
+     setNeighborhoods([]);
+     if (value) {
+       fetchCounties(value);
+      
+     }
+   };
+
+   const onChangeCounty = (value) => {
+     setSelectedCounty(value);
+     setSelectedNeighborhood(null);
+     setNeighborhoods([]);
+     if (value) {
+       fetchNeighborhoods(value);
+       
+     }
+   };
+
+   const onChangeNeighborhood = (value) => {
+     setSelectedNeighborhood(value);
+     if (value) {
+    
+   }
+   };
+   const isFocused =useIsFocused(false)
+   useEffect(() => {
+  
+        setSelectedCity(data?.city?.id)
+        setSelectedCounty(data?.county?.ilce_key)
+
+   }, [data,selectedCity,selectedCounty])
+
 
   return (
-    <ScrollView >
-      <View style={{paddingBottom:20}}>
+    <>
+    {
+      loading ?
+      <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+        <ActivityIndicator/>
+      </View>
+      :
+      <ScrollView style={{backgroundColor:'#f7f7f7'}} >
+      <View style={{backgroundColor:'transparent'}}>
         <View style={styles.breadcrumb}>
-          <HomeIcon style={styles.breadcrumbHome} size={20} name='home'/>
-          <Text style={{marginLeft:5,fontWeight:'bold'}}>Emlak </Text>
+      
+          <Text style={{marginLeft:5,fontWeight:'bold',fontSize:12}}>Proje İlanlarım </Text>
+          <ArrowRightIcon style={{marginLeft:5,fontWeight:'bold',fontSize:12}} name='right'/>
+          <Text style={{marginLeft:5,fontWeight:'bold',fontSize:12}}>Genel Düzenleme</Text>
           <ArrowRightIcon style={{marginLeft:5,fontWeight:'bold'}} name='right'/>
-          <Text style={{marginLeft:5,fontWeight:'bold'}}>Konut</Text>
-          <ArrowRightIcon style={{marginLeft:5,fontWeight:'bold'}} name='right'/>
-          <Text style={{marginLeft:5,fontWeight:'bold'}}>Satılık</Text>
-          <ArrowRightIcon style={{marginLeft:5,fontWeight:'bold'}} name='right'/>
-          <Text style={{marginLeft:5,fontWeight:'bold'}}>Villa</Text>
+          <Text style={{marginLeft:5,fontWeight:'bold',fontSize:12}}>{name}</Text>
+         
         </View>
         <View style={styles.card}>
           <Modal
@@ -280,7 +380,7 @@ export default function EditProject() {
           </View>
         </View>
         
-        <Text style={{fontSize:20,marginTop:10,fontWeight:'bold',padding:10,paddingTop:0,paddingBottom:0}}>Adres Bilgileri</Text>
+        <Text style={{fontSize:15,marginTop:10,fontWeight:'bold',padding:10,paddingTop:0,paddingBottom:0}}>Adres Bilgileri</Text>
         <View style={styles.card}>
           <Text style={styles.label}>İl <Text style={{color :'red'}}>*</Text></Text>
           <RNPickerSelect doneText="Tamam"
@@ -288,13 +388,12 @@ export default function EditProject() {
               label: 'İl Seçiniz...',
               value: null,
             }}
+            value={selectedCity}
             style={pickerSelectStyles}
-            onValueChange={(value) => console.log(value)}
-            items={[
-              { label: 'Football', value: 'football' },
-              { label: 'Baseball', value: 'baseball' },
-              { label: 'Hockey', value: 'hockey' },
-            ]}
+            onValueChange={(value) => {
+              onChangeCity(value);
+            }}
+            items={cities}
           />
           <Text style={{...styles.label,marginTop:15}}>İlçe <Text style={{color :'red'}}>*</Text></Text>
           <RNPickerSelect doneText="Tamam"
@@ -302,13 +401,12 @@ export default function EditProject() {
               label: 'İlçe Seçiniz...',
               value: null,
             }}
+            value={selectedCounty}
             style={pickerSelectStyles}
-            onValueChange={(value) => console.log(value)}
-            items={[
-              { label: 'Football', value: 'football' },
-              { label: 'Baseball', value: 'baseball' },
-              { label: 'Hockey', value: 'hockey' },
-            ]}
+            onValueChange={(value) => {
+              onChangeCounty(value);
+            }}
+            items={counties}
           />
           <Text style={{...styles.label,marginTop:15}}>Mahalle <Text style={{color :'red'}}>*</Text></Text>
           <RNPickerSelect doneText="Tamam"
@@ -316,13 +414,12 @@ export default function EditProject() {
               label: 'Mahalle Seçiniz...',
               value: null,
             }}
+            value={selectedNeighborhood}
             style={pickerSelectStyles}
-            onValueChange={(value) => console.log(value)}
-            items={[
-              { label: 'Football', value: 'football' },
-              { label: 'Baseball', value: 'baseball' },
-              { label: 'Hockey', value: 'hockey' },
-            ]}
+            onValueChange={(value) => {
+              onChangeNeighborhood(value);
+            }}
+            items={neighborhoods}
           />
           <MapView
             style={{marginTop:15}}
@@ -341,9 +438,22 @@ export default function EditProject() {
               description="asd"
             />
           </MapView>
+          <View style={{padding:10,paddingBottom:50,paddingTop:15}}>
+      <TouchableOpacity style={styles.updateBtn}>
+        <Text style={{color:'white',textAlign:'center',fontWeight:'600'}}>Güncelle</Text>
+      </TouchableOpacity>
+      </View> 
         </View>
+       
       </View>
+   
+
+
     </ScrollView>
+    }
+     
+    </>
+
   )
 }
 
@@ -351,24 +461,20 @@ const handleHead = ({tintColor}) => <Text style={{color: tintColor}}>H1</Text>
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
+    backgroundColor: "#FAFAFA",
     borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30, // to ensure the text is never behind the icon
+    borderColor: "#ebebeb",
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 14, // to ensure the text is never behind the icon
   },
   inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: 'purple',
-    borderRadius: 8,
-    color: 'black',
-    paddingRight: 30, // to ensure the text is never behind the icon
+    backgroundColor: "#FAFAFA",
+    borderWidth: 1,
+    borderColor: "#eaeff5",
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 14, // to ensure the text is never behind the icon
   },
 });
 
@@ -428,7 +534,7 @@ const styles=StyleSheet.create({
     flex:1,
   },
   label : {
-    fontSize : 14,
+    fontSize : 12,
     marginBottom : 7,
     fontWeight : 'bold'
   },  
@@ -495,7 +601,8 @@ const styles=StyleSheet.create({
     display : 'flex',
     flexDirection : 'row',
     paddingLeft : 15,
-    alignItems : 'center'
+    alignItems : 'center',
+    flexWrap:'wrap'
   },
   deleteButton:{
     paddingLeft:30,
@@ -558,4 +665,9 @@ const styles=StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
+  updateBtn:{
+    backgroundColor : '#e54242',
+    padding:12,
+    borderRadius:5
+  }
 })

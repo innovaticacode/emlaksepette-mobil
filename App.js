@@ -723,7 +723,12 @@ export default function App({ route }) {
             })}
           />
           <Stack.Screen name="Archieve" component={Archieve} />
-          <Stack.Screen name="EditProject" component={EditProject} />
+          <Stack.Screen name="EditProject" component={EditProject} 
+              options={({route})=>({
+                title:route.params.name,
+                headerBackTitleVisible:false
+              })}
+          />
           <Stack.Screen
             name="SellAndRent"
             component={SellAndRentFormPage}

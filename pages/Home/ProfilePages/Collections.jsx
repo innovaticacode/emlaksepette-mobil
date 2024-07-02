@@ -286,6 +286,31 @@ export default function Collections() {
       console.error("Error fetching data:", error);
     }
   };
+  const collectionIDS = collections.map(collection=>collection.id)
+const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
+  const RemoveAllCollection = async () => {
+    const data = {
+      ids: collectionIDS,
+    };
+    try {
+      const response = await axios.delete(
+        `https://mobil.emlaksepette.com/api/collections`,
+
+        {
+          data: data,
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+            "Content-Type": "application/json", // FormData kullanıldığı için Content-Type belirtilmelidir
+          },
+        }
+      );
+      setmodalForRemoveAll(false)
+      fetchData();
+      
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   
   return (
     <>
@@ -364,7 +389,7 @@ export default function Collections() {
                       >
                         <TouchableOpacity
                           style={styles.btnRemove}
-                          onPress={() => {}}
+                          onPress={()=>setmodalForRemoveAll(true)}
                         >
                           <Text
                             style={{
@@ -569,6 +594,34 @@ export default function Collections() {
                   </View>
                 </Animated.View>
               </View>
+              <Modal
+              onTouchStart={()=>setmodalForRemoveAll(false)}
+                animationType="fade" // veya "fade", "none" gibi
+                transparent={true}
+                visible={modalForRemoveAll}
+                onRequestClose={() => {
+                  setmodalForRemoveAll(false);
+                }}
+                
+              >
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <View>
+                      <Text>Tüm koleksiyonları silmek istediğinize eminmisiniz?</Text>
+                    </View>
+                    <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-around'}}>
+                    <TouchableOpacity onPress={()=>setmodalForRemoveAll(false)} style={{backgroundColor:'red',padding:10,paddingLeft:25,paddingRight:25,borderRadius:5}}>
+                          <Text style={{color:'#ffffff',fontWeight:'600'}}>Hayır</Text>
+                        </TouchableOpacity>
+                    <TouchableOpacity onPress={RemoveAllCollection} style={{backgroundColor:'green',padding:10,paddingLeft:25,paddingRight:25,borderRadius:5}} >
+                          <Text style={{color:'#ffffff',fontWeight:'600'}}>Evet</Text>
+                        </TouchableOpacity>
+                       
+                    </View>
+                      
+                  </View>
+                </View>
+              </Modal>
               <Modal
                 animationType="fade" // veya "fade", "none" gibi
                 transparent={true}

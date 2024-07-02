@@ -7,20 +7,20 @@ import { Platform } from "react-native";
 import { addDotEveryThreeDigits } from '../../../../components/methods/merhod'
 export default function RealtorAdvertPost({Onpress,housing}) {
     const [status, setStatus] = useState(housing.status)
-
+const apiUrl ='https://test.emlaksepette.com/'
     const {width,height}=Dimensions.get('window')
   return (
     <View style={[style.card,{gap:5}]}>
                 
                   <View style={{flexDirection:'row',width:'100%',gap:10}}>
                         <View style={{backgroundColor:'red',width:90,height:80}}>
-
+                        <ImageBackground source={{uri : `${apiUrl}housing_images/${housing.image}`}} style={{width:'100%',height:'100%'}} resizeMode='cover' /> 
                         </View>
                         <View>
                         <View style={{gap:5}}>
                             <View style={{flexDirection:'row',alignItems:'center'}}>
                                 <View style={{width:'80%'}}>
-                                <Text style={{color:'grey',fontSize:9,fontWeight:'600'}}>#1000{housing.id}</Text>
+                                <Text style={{color:'grey',fontSize:9,fontWeight:'600'}}>#2000{housing.id}</Text>
                                 <Text style={{fontSize:15,fontWeight:'600',color:'#333'}} numberOfLines={1}>{housing.housing_title}</Text>
                                 </View>
                                 <View style={{alignItems:'center',justifyContent:'center'}}>
