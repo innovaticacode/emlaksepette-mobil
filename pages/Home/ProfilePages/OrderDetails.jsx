@@ -425,17 +425,7 @@ export default function OrderDetails() {
             </View>
           </View>
           <View style={{ gap: 14 }}>
-            <TouchableOpacity
-              style={{
-                paddingTop: 10,
-                flexDirection: "row",
-                gap: 10,
-                alignItems: "center",
-              }}
-            >
-              <Icon3 name="comment-question" size={21} color={"red"} />
-              <Text>Canlı Destek</Text>
-            </TouchableOpacity>
+          
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("Invoice", { OrderId: Detail.id })

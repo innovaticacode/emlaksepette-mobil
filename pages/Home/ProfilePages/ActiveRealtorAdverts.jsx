@@ -31,7 +31,7 @@ export default function ActiveRealtorAdverts({index}) {
   const [start, setStart] = useState(0);
   const [take, setTake] = useState(10);
   const [loading, setloading] = useState(false)
- 
+  const [housingRecords, sethousingRecords] = useState([])
 
       const fetchHousings = async () => {
         setloading(true)
@@ -40,6 +40,7 @@ export default function ActiveRealtorAdverts({index}) {
             headers: { Authorization: "Bearer " + user.access_token },
           });
           sethousings(res?.data?.activeHousingTypes);
+          sethousingRecords(res?.data?.activeHousingTypes)
           setloading(true);
         } catch (e) {
           console.log(e + " hata");
@@ -73,6 +74,17 @@ export default function ActiveRealtorAdverts({index}) {
       }, 600);
         
   }
+  const [searchValue, setsearchValue] = useState('')
+
+  const handleSearch = (value) =>{
+    setsearchValue(value)
+    const filteredData = value
+    ? housings.filter((item) =>
+        item?.housing_title.toLowerCase().includes(value.toLowerCase())
+      )
+    : housings;
+  sethousingRecords(filteredData);
+  }
   return (
     <>
     {
@@ -102,7 +114,7 @@ export default function ActiveRealtorAdverts({index}) {
     </Text>
   </View>
   <View style={{padding:2,paddingLeft:10,paddingRight:10,flexDirection:'row',gap:4}}>
-    <TextInput style={styles.Input} placeholder="Kelime veya İlan No ile ara" />
+    <TextInput style={styles.Input} placeholder="Kelime veya İlan No ile ara" value={searchValue} onChangeText={handleSearch}/>
     <TouchableOpacity style={{backgroundColor:'#ebebeb',width:'10%',borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center'}} onPress={()=>{
       setSortLıstModal(true)
     }}>
@@ -110,7 +122,7 @@ export default function ActiveRealtorAdverts({index}) {
     </TouchableOpacity>
   </View>
   <View style={{paddingTop:10,gap:10 }}>
-    {housings.map((item, index) => (
+    {housingRecords.map((item, index) => (
       <RealtorAdvertPost key={index} housing={item} Onpress={openSheet} />
     ))}
   </View>

@@ -33,7 +33,7 @@ export default function ActiveAdverts({}) {
     },[]);
     const [start,setStart] = useState(0);
     const [take,setTake] = useState(10);
-  
+    const [ProjectRecords, setProjectRecords] = useState([])
       const fetchProjects = async () => {
         try {
           const response = await axios.get('https://mobil.emlaksepette.com/api/get_my_projects?status=0&start='+start+'&take='+take, {
@@ -41,6 +41,7 @@ export default function ActiveAdverts({}) {
           });
           setProjects(response.data.data);
           setProjectCount(response.data.total_projects_count);
+          setProjectRecords(response.data.data)
         } catch (error) {
           console.log(error);
         }
@@ -64,7 +65,16 @@ const handleRadio =(index)=>{
   }, 600);
     
 }
-
+const [searchValue, setsearchValue] = useState('')
+const handleSearch = (value)=>{
+        setsearchValue(value)
+        const filteredData = value
+        ? projects.filter((item) =>
+            item?.project_title.toLowerCase().includes(value.toLowerCase())
+          )
+        : projects;
+      setProjectRecords(filteredData);
+}
   return (
     <View style={{flex:1}}>
     <ScrollView>
@@ -86,7 +96,7 @@ const handleRadio =(index)=>{
     
       </View>
         <View style={{padding:2,paddingLeft:10,paddingRight:10,flexDirection:'row',gap:4}}>
-    <TextInput style={styles.Input} placeholder="Kelime veya İlan No ile ara" />
+    <TextInput style={styles.Input} placeholder="Kelime veya İlan No ile ara" value={searchValue} onChangeText={handleSearch}  />
     <TouchableOpacity style={{backgroundColor:'#ebebeb',width:'10%',borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center'}} onPress={()=>{
       setSortLıstModal(true)
     }}>
@@ -95,7 +105,7 @@ const handleRadio =(index)=>{
   </View>
         <View style={styles.Adverts}>
           {
-            projects.map((project,index) => {
+            ProjectRecords.map((project,index) => {
             
               return(
                 <ProjectAdvertPost key={index} project={project} Onpress={openSheet}/>
@@ -208,46 +218,7 @@ const handleRadio =(index)=>{
               </View>
             </View>
           </Modal>
-    {/* <Modal
-          isVisible={EditModalVisible}
-          onBackdropPress={openSheet}
-     
-          backdropColor="transparent"
-          style={styles.modal}
-        >
-          <View style={styles.modalContent}>
-            <View style={{width:'100%',}}> 
-              <ScrollView style={{gap:10}} contentContainerStyle={{gap:10,alignItems:'center'}} showsVerticalScrollIndicator={false}>  
-            <View>
-              <TouchableOpacity style={{backgroundColor:'grey',padding:3,width:40,borderRadius:10}}/>
-            </View>
-           <TouchableOpacity style={{backgroundColor:'#DAFBD0',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#1B6C0A94'}}>
-            <Text style={{textAlign:'center',color:'#1B6C0A',fontWeight:'bold'}}>İlanları Düzenle</Text>
-            <MaterialIcon name='home-edit' size={18} color={'#1B6C0A'}/>
-           </TouchableOpacity>
-           <TouchableOpacity style={{backgroundColor:'#FFEFCA',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#BD3803'}}>
-            <Text style={{textAlign:'center',color:'#BD3803',fontWeight:'bold'}}>İşlem Kayıtları</Text>
-            <MaterialIcon name='archive' size={18} color={'#BD3803'}/>
-           </TouchableOpacity>
-           <TouchableOpacity onPress={()=>{
-              navigation.navigate('EditProject',{id : selectedProject})
-              setEditModalVisible(false)
-            }} style={{backgroundColor:'#DAFBD0',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#1B6C0A94'}}>
-            <Text style={{textAlign:'center',color:'#1B6C0A',fontWeight:'bold'}}>Genel Düzenleme</Text>
-            <MaterialIcon name='view-dashboard-edit' size={18} color={'#1B6C0A'}/>
-           </TouchableOpacity>
-           <TouchableOpacity style={{backgroundColor:'#FFE0DB',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#BC260F'}}>
-            <Text style={{textAlign:'center',color:'#BC260F',fontWeight:'bold'}}>Sil</Text>
-            <MaterialIcon name='delete-outline' size={18} color={'#BC260F'}/>
-           </TouchableOpacity>
-           <TouchableOpacity style={{backgroundColor:'#FFE0DB',width:'90%',padding:10,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:15,borderWidth:0.4,borderColor:'#BC260F'}}>
-            <Text style={{textAlign:'center',color:'#BC260F',fontWeight:'bold'}}>Pasife Al</Text>
-            <MaterialIcon name='delete-outline' size={18} color={'#BC260F'}/>
-           </TouchableOpacity>
-           </ScrollView>
-           </View>
-          </View>
-        </Modal> */}
+
     </View>
   )
 }

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView ,Animated,TouchableOpacity} from 'react-native'
+import { View, Text, StyleSheet, ScrollView ,Animated,TouchableOpacity, Keyboard} from 'react-native'
 import {useState,useRef, useEffect} from 'react'
 import ProjectAdvertPost from '../profileComponents/ProjectAdvertPost'
 import Modal from "react-native-modal";
@@ -22,6 +22,7 @@ export default function ActiveAdverts({}) {
     const [selectedProject,setSelectedProject] = useState(null);
     const [display, setdisplay] = useState(false)
     const [projectName, setprojectName] = useState(null)
+
     const openSheet = (id,name) => {
         setSelectedProject(id);
         setEditModalVisible(!EditModalVisible)
@@ -36,6 +37,7 @@ export default function ActiveAdverts({}) {
     const [start,setStart] = useState(0);
     const [take,setTake] = useState(10);
   const [loading, setloading] = useState(false)
+  const [ProjectRecords, setProjectRecords] = useState([])
       const fetchProjects = async () => {
         setloading(true)
         try {
@@ -46,6 +48,7 @@ export default function ActiveAdverts({}) {
         
           setProjects(response.data.data);
           setProjectCount(response.data.total_projects_count);
+          setProjectRecords(response.data.data)
         } catch (error) {
           console.log(error);
         }finally{
@@ -71,7 +74,17 @@ const handleRadio =(index)=>{
     }, 600);
       
 }
-console.log(user.access_token)
+const [searchValue, setsearchValue] = useState('')
+const handleSearch = (value)=>{
+        setsearchValue(value)
+        const filteredData = value
+        ? projects.filter((item) =>
+            item?.project_title.toLowerCase().includes(value.toLowerCase())
+          )
+        : projects;
+      setProjectRecords(filteredData);
+}
+
   return (
     <>
     {
@@ -100,7 +113,7 @@ console.log(user.access_token)
     
       </View>
         <View style={{padding:2,paddingLeft:10,paddingRight:10,flexDirection:'row',gap:4}}>
-    <TextInput style={styles.Input} placeholder="Kelime veya İlan No ile ara" />
+    <TextInput style={styles.Input} placeholder="Kelime veya İlan No ile ara" value={searchValue} onChangeText={handleSearch} />
     <TouchableOpacity style={{backgroundColor:'#ebebeb',width:'10%',borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center'}} onPress={()=>{
       setSortLıstModal(true)
     }}>
@@ -109,7 +122,7 @@ console.log(user.access_token)
   </View>
         <View style={styles.Adverts}>
           {
-            projects.map((project,index) => {
+            ProjectRecords.map((project,index) => {
               return(
                 <ProjectAdvertPost key={index} project={project} Onpress={openSheet}/>
               )
@@ -212,7 +225,11 @@ console.log(user.access_token)
                         <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>İlanları Düzenle</Text>
                 </TouchableOpacity>
          
-                <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}}>
+                <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={()=>{
+                  
+                  navigation.navigate('EditProject',{id:selectedProject,name:projectName})
+                    setEditModalVisible(false)
+                  }}>
                 <MaterialIcon name="home-edit" size={23} color={'#333'} />
                         <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Genel Düzenleme</Text>
                 </TouchableOpacity>
