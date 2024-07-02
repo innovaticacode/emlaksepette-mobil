@@ -202,23 +202,33 @@ export default function Basket() {
     }
   };
 
-  // const updateResponse = async()=>{
-  //   const response= await axios.get(
-  //   "https://mobil.emlaksepette.com/api/users/" + user?.id ,
-  //   {
-  //     headers: {
-  //       Authorization: `Bearer ${user.access_token}`,
-  //     },
-  //   }
-  // );
-  //  // Update user state with the updated data
-  //  setuser(response.data.user);
-
-  //  // Update SecureStore with the updated user data
-  //  await SecureStore.setItemAsync(
-  //    "user",
-  //    JSON.stringify(response.data.user)
-  //  )}
+  const updateUserData = async () => {
+    try {
+      const updateResponse = await axios.get(
+        "https://mobil.emlaksepette.com/api/users/" + user?.id,
+        {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        }
+      );
+  
+      // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
+      const updatedUser = {
+        ...user,
+        ...updateResponse.data.user,
+        access_token: user.access_token, // access token'ı koruma
+      };
+      console.log(updatedUser)
+      // Kullanıcı durumunu güncelleme
+      setuser(updatedUser);
+  
+      // SecureStore ile güncellenmiş kullanıcı verilerini kaydetme
+      await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
+    } catch (error) {
+      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+    }
+  };
 
 
   const DeleteBasket = async () => {
@@ -233,9 +243,9 @@ export default function Basket() {
             },
           }
         );
-     
+        updateUserData()
         fetchData();
-        // updateResponse()
+       
    
         //  console.log(updateResponse.data + 'User')
       }                                                            

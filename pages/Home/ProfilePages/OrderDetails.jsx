@@ -233,6 +233,9 @@ export default function OrderDetails() {
             }}
           >
             <TouchableOpacity
+            onPress={()=>{
+              navigation.navigate('AddComment',{HouseID:Detail.id})
+            }}
               style={{
                 backgroundColor: "#EA2C2E",
                 padding: 5,
