@@ -29,6 +29,7 @@ export default function OrderDetails() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
+  console.log(user);
 
   const [Detail, setDetail] = useState({});
   const [projectDetail, setprojectDetail] = useState({});
@@ -53,6 +54,7 @@ export default function OrderDetails() {
         console.error("Error fetching data:", error);
       }
     };
+    console.log(OrderId);
 
     fetchData();
   }, [user, OrderId]);
@@ -232,24 +234,27 @@ export default function OrderDetails() {
               paddingBottom: 7,
             }}
           >
-            <TouchableOpacity
-            onPress={()=>{
-              navigation.navigate('AddComment',{HouseID:Detail.id})
-            }}
-              style={{
-                backgroundColor: "#EA2C2E",
-                padding: 5,
-                borderRadius: 2,
-                flexDirection: "row",
-                gap: 6,
-                alignItems: "center",
-              }}
-            >
-              <Icon3 name="store-edit-outline" size={20} color={"white"} />
-              <Text style={{ color: "white", fontSize: 12 }}>
-                İlanı Değerlendir
-              </Text>
-            </TouchableOpacity>
+            {parsedData?.type == "housing" && (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("AddComment", { HouseID: Detail.id });
+                }}
+                style={{
+                  backgroundColor: "#EA2C2E",
+                  padding: 5,
+                  borderRadius: 2,
+                  flexDirection: "row",
+                  gap: 6,
+                  alignItems: "center",
+                }}
+              >
+                <Icon3 name="store-edit-outline" size={20} color={"white"} />
+                <Text style={{ color: "white", fontSize: 12 }}>
+                  İlanı Değerlendir
+                </Text>
+              </TouchableOpacity>
+            )}
+
             <TouchableOpacity
               style={{
                 backgroundColor: "transparent",
