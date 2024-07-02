@@ -10,7 +10,7 @@ import Icon from "react-native-vector-icons/SimpleLineIcons";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import StarIcon from "react-native-vector-icons/FontAwesome";
 import Warning from "react-native-vector-icons/Entypo";
-import Icon4 from 'react-native-vector-icons/FontAwesome5'
+import Icon4 from "react-native-vector-icons/FontAwesome5";
 import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
 export default function Order({ item }) {
@@ -42,12 +42,12 @@ export default function Order({ item }) {
   // Image URL'sine eriş
   const imageUrl = cartObject.item.image;
 
-
-
   const navigation = useNavigation();
-  const PhotoUrl= 'https://mobil.emlaksepette.com/storage/profile_images/'
+  const PhotoUrl = "https://mobil.emlaksepette.com/storage/profile_images/";
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("OrderDetail", {OrderId:item.id})}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("OrderDetail", { OrderId: item.id })}
+    >
       <View style={style.container}>
         <View style={style.InfoDateButton}>
           <View style={style.Info}>
@@ -66,39 +66,111 @@ export default function Order({ item }) {
         <View style={style.PhotoAndComment}>
           <View
             style={{
-           
               display: "flex",
               width: "100%",
-          
             }}
           >
-            
-                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                 <View style={{ height: 80, width: 80 }}>
-              <ImageBackground
-                source={{ uri: imageUrl }}
-                style={{ width: "100%", height: "100%" }}
-                resizeMode="cover"
-              />
-            </View>
-            <View style={{gap:10,width:'35%',justifyContent:'space-between'}}>
-              {item.status ==0 &&   <View style={{backgroundColor:'#FFEFCA',borderWidth:1,borderColor:'#FFCC85',padding:2,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:10}}>
-                  
-                      <Text style={{color:'#BC3913',textAlign:'center',fontSize:12}}>Onay Bekliyor</Text>
-                      <FeatherIcon name="clock" color={'#BC3913'}/>
-                  </View>}
-                  {item.status ==1 &&   <View style={{backgroundColor:'#D9F9D0',borderWidth:1,borderColor:'#BEE8B4',padding:2,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:10}}>
-                      <Text style={{color:'#4B8F3C',textAlign:'center',fontSize:12}}>Onaylandı</Text>
-                      <FeatherIcon name="check" color={'#4B8F3C'} size={16}/>
-                  </View>}
-                  {item.status == 2 &&   <View style={{backgroundColor:'#FFE0DB',borderWidth:1,borderColor:'#FABCB3',paddingLeft:6,paddingRight:6,padding:4,borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:6,overflow:'hidden'}}>
-                      <Text style={{color:'#B81911',textAlign:'center',fontSize:11}}>Ödeme reddedildi</Text>
-                      <StarIcon name="close" color={'#B81911'}/>
-                  </View>}
-          
-                  {
-                    item.status==1 && 
-                    <TouchableOpacity
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <View style={{ height: 80, width: 80 }}>
+                <ImageBackground
+                  source={{ uri: imageUrl }}
+                  style={{ width: "100%", height: "100%" }}
+                  resizeMode="cover"
+                />
+              </View>
+              <View
+                style={{
+                  gap: 10,
+                  width: "35%",
+                  justifyContent: "space-between",
+                }}
+              >
+                {item.status == 0 && (
+                  <View
+                    style={{
+                      backgroundColor: "#FFEFCA",
+                      borderWidth: 1,
+                      borderColor: "#FFCC85",
+                      padding: 2,
+                      borderRadius: 5,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "#BC3913",
+                        textAlign: "center",
+                        fontSize: 12,
+                      }}
+                    >
+                      Onay Bekliyor
+                    </Text>
+                    <FeatherIcon name="clock" color={"#BC3913"} />
+                  </View>
+                )}
+                {item.status == 1 && (
+                  <View
+                    style={{
+                      backgroundColor: "#D9F9D0",
+                      borderWidth: 1,
+                      borderColor: "#BEE8B4",
+                      padding: 2,
+                      borderRadius: 5,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "#4B8F3C",
+                        textAlign: "center",
+                        fontSize: 12,
+                      }}
+                    >
+                      Onaylandı
+                    </Text>
+                    <FeatherIcon name="check" color={"#4B8F3C"} size={16} />
+                  </View>
+                )}
+                {item.status == 2 && (
+                  <View
+                    style={{
+                      backgroundColor: "#FFE0DB",
+                      borderWidth: 1,
+                      borderColor: "#FABCB3",
+                      paddingLeft: 6,
+                      paddingRight: 6,
+                      padding: 4,
+                      borderRadius: 5,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 6,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "#B81911",
+                        textAlign: "center",
+                        fontSize: 11,
+                      }}
+                    >
+                      Ödeme reddedildi
+                    </Text>
+                    <StarIcon name="close" color={"#B81911"} />
+                  </View>
+                )}
+
+                {item.status == 1 && (
+                  <TouchableOpacity
                     style={{
                       borderWidth: 1,
                       borderColor: "#ebebeb",
@@ -108,31 +180,50 @@ export default function Order({ item }) {
                       alignItems: "center",
                       gap: 7,
                     }}
+                    onPress={() =>
+                      navigation.navigate("Invoice", { OrderId: item.id })
+                    }
                   >
                     <Icon4 name="file-invoice" size={14} color={"green"} />
                     <Text style={{ color: "#353030", fontSize: 11 }}>
-                     Faturayı Görüntüle
+                      Faturayı Görüntüle
                     </Text>
                   </TouchableOpacity>
-                  }
-                  
-                  <View style={{flexDirection:'row',gap:10,alignItems:'center',justifyContent:'flex-end'}}>
-              <Text style={{fontSize:13,color:'#333'}}>{item?.user?.name}</Text>
-                  <View style={{width:35,height:35}}>
-                        <ImageBackground source={{uri:`${PhotoUrl}${item?.user?.profile_image}`}}  style={{width:'100%',height:'100%'}} borderRadius={20}/>
-                  </View>
-                 
-              </View>
+                )}
 
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 10,
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <Text style={{ fontSize: 13, color: "#333" }}>
+                    {item?.user?.name}
+                  </Text>
+                  <View style={{ width: 35, height: 35 }}>
+                    <ImageBackground
+                      source={{
+                        uri: `${PhotoUrl}${item?.user?.profile_image}`,
+                      }}
+                      style={{ width: "100%", height: "100%" }}
+                      borderRadius={20}
+                    />
+                  </View>
+                </View>
+              </View>
             </View>
-                
-               </View>
-         
-       
           </View>
 
-          <View style={{ gap: 9,marginTop:5,flexDirection:'row' ,justifyContent:'space-between'}}>
-         
+          <View
+            style={{
+              gap: 9,
+              marginTop: 5,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
             {/* <View style={{justifyContent:'flex-end'}} >
            
             </View> */}

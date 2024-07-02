@@ -28,7 +28,6 @@ export default function Takeds() {
     { id: 3, date: "2022-12-05" },
   ]);
 
- 
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -110,7 +109,6 @@ export default function Takeds() {
           {takeds.map((taked, i) => (
             <Order key={i} item={taked} />
           ))}
-
         </View>
       </ScrollView>
     </View>

@@ -7,12 +7,13 @@ import { useRoute } from "@react-navigation/native";
 import { Platform } from "react-native";
 
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
-
+import { ActivityIndicator } from "react-native-paper";
 
 export default function Invoice() {
   const [user, setUser] = useState({});
   const route = useRoute();
   const { OrderId } = route.params;
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -20,6 +21,7 @@ export default function Invoice() {
   const [data, setData] = useState([]);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       if (user?.access_token) {
         const response = await axios.get(
@@ -36,6 +38,7 @@ export default function Invoice() {
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
+      setLoading(false);
     }
   };
 
@@ -125,9 +128,7 @@ export default function Invoice() {
       };
 
       Share.open(shareOptions)
-        .then((res) => {
-        
-        })
+        .then((res) => {})
         .catch((err) => {
           err && console.log(err);
         });
@@ -137,207 +138,215 @@ export default function Invoice() {
   };
 
   return (
-    <ScrollView style={{}} contentContainerStyle={{ flexGrow: 1 }}>
-      <View
-        style={{
-          paddingRight: 10,
-          paddingLeft: 10,
-          backgroundColor: "#0879FB",
-          position: "relative",
-          height: 170,
-        }}
-      >
-        <Text
-          style={{
-            color: "#3B82FC",
-            textAlign: "center",
-            fontSize: 80,
-            justifyContent: "center",
-            display: "flex",
-
-            position: "absolute",
-            right: 40,
-            top: 20,
-          }}
-        >
-          {" "}
-          FATURA{" "}
-        </Text>
-        <View style={{ padding: 25 }}>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <View style={{ width: "40%" }}>
-              <View style={{ width: 100, height: 100 }}>
-                <ImageBackground
-                  source={require("../../components/emlaksepettelogo.png")}
-                  resizeMode="contain"
-                  style={{
-                    width: "100%",
-                    flex: 1,
-                    justifyContent: "center",
-                  }}
-                />
-              </View>
-            </View>
-            <View width={{ width: "60%" }}>
-              <Text style={{ color: "white", fontWeight: "500", fontSize: 12 }}>
-                Cevizli, Çanakkale Cd. No:103A, 34865
-              </Text>
-              <Text style={{ color: "white", fontWeight: "500", fontSize: 12 }}>
-                Kartal/İstanbul
-              </Text>
-              <Text style={{ color: "white", fontWeight: "500", fontSize: 12 }}>
-                Müşteri Hizmetleri : 444 3 284
-              </Text>
-              <Text style={{ color: "white", fontWeight: "500", fontSize: 12 }}>
-                Email: info@test.emlaksepette.com
-              </Text>
-            </View>
-          </View>
-        </View>
-      </View>
-      <View
-        style={{
-          paddingRight: 10,
-          paddingLeft: 10,
-          display: "flex",
-          flexDirection: "row",
-          gap: 20,
-        }}
-      >
+    <>
+      {loading ? (
         <View
-          style={{
-            backgroundColor: "#F5F6FA",
-            width: 230,
-            paddingRight: 20,
-            paddingLeft: 20,
-            paddingBottom: 10,
-            paddingTop: 10,
-            marginTop: -15,
-            borderRadius: 5,
-          }}
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
-          <Text style={{ fontWeight: "700" }}>Alıcı Bilgisi:</Text>
-          <Text> {data?.invoice?.order?.user?.name} </Text>
-          <Text>{data?.invoice?.order?.user?.email}</Text>
-          <Text>İş: {data?.invoice?.order?.user?.phone}</Text>
+          <ActivityIndicator />
         </View>
-        <View style={{ gap: 3 }}>
-          <Text>Fatura No:</Text>
-          <Text style={{ fontWeight: "700" }}>
-            {" "}
-            {data?.invoice?.invoice_number}{" "}
-          </Text>
-          <Text>Tarih</Text>
-          <Text style={{ fontWeight: "700" }}> {formattedDate} </Text>
-        </View>
-      </View>
-      <View style={{ marginTop: 40 }}>
-        <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+      ) : (
+        <ScrollView style={{}} contentContainerStyle={{ flexGrow: 1 }}>
           <View
             style={{
-              backgroundColor: "#0879FB",
               paddingRight: 10,
               paddingLeft: 10,
-              paddingTop: 20,
-              paddingBottom: 20,
+              backgroundColor: "#0879FB",
+              position: "relative",
+              height: 170,
+            }}
+          >
+            <Text
+              style={{
+                color: "#3B82FC",
+                textAlign: "center",
+                fontSize: 80,
+                justifyContent: "center",
+                display: "flex",
+                position: "absolute",
+                right: 40,
+                top: 20,
+              }}
+            >
+              FATURA
+            </Text>
+            <View style={{ padding: 25 }}>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <View style={{ width: "40%" }}>
+                  <View style={{ width: 100, height: 100 }}>
+                    <ImageBackground
+                      source={require("../../components/emlaksepettelogo.png")}
+                      resizeMode="contain"
+                      style={{
+                        width: "100%",
+                        flex: 1,
+                        justifyContent: "center",
+                      }}
+                    />
+                  </View>
+                </View>
+                <View style={{ width: "60%" }}>
+                  <Text
+                    style={{ color: "white", fontWeight: "500", fontSize: 12 }}
+                  >
+                    Cevizli, Çanakkale Cd. No:103A, 34865
+                  </Text>
+                  <Text
+                    style={{ color: "white", fontWeight: "500", fontSize: 12 }}
+                  >
+                    Kartal/İstanbul
+                  </Text>
+                  <Text
+                    style={{ color: "white", fontWeight: "500", fontSize: 12 }}
+                  >
+                    Müşteri Hizmetleri : 444 3 284
+                  </Text>
+                  <Text
+                    style={{ color: "white", fontWeight: "500", fontSize: 12 }}
+                  >
+                    Email: info@test.emlaksepette.com
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            style={{
+              paddingRight: 10,
+              paddingLeft: 10,
               display: "flex",
               flexDirection: "row",
               gap: 20,
             }}
           >
-            <Text style={{ color: "white", width: "25%" }}>Kapak Görseli</Text>
-            <Text style={{ color: "white", width: "75%" }}>İlan Başlığı</Text>
-          </View>
-        </View>
-        <View style={{ paddingLeft: 10, paddingRight: 10 }}>
-          <View
-            style={{
-              backgroundColor: "#E7E7E7",
-              paddingRight: 10,
-              paddingLeft: 10,
-              paddingTop: 20,
-              paddingBottom: 20,
-              display: "flex",
-              flexDirection: "row",
-            }}
-          >
-            <View style={{ width: 100, height: 100 }}>
-              {parsedData.item && parsedData.item.image ? (
-                <Image
-                  style={{ width: "100%", height: "100%" }}
-                  source={{ uri: parsedData.item.image }}
-                />
-              ) : (
-                <Text>Resim yüklenemedi</Text> // Eğer item veya image yoksa bir mesaj göster
-              )}
-            </View>
             <View
               style={{
-                paddingLeft: 10,
-                paddingRight: 10,
-                width: "75%",
+                backgroundColor: "#F5F6FA",
+                width: "60%",
+                padding: 20,
+                marginTop: -15,
+                borderRadius: 5,
               }}
             >
-              {parsedData && parsedData.item ? (
-                <>
-                  <Text>{parsedData.item.title}</Text>
-                  {/* Title'ı yazdırıyoruz */}
-                </>
-              ) : (
-                <Text>Veri yüklenemedi</Text> // Eğer item veya image yoksa bir mesaj göster
-              )}
-              <Text style={{ fontWeight: "700" }}>İSTANBUL / KARTAL</Text>
+              <Text style={{ fontWeight: "700" }}>Alıcı Bilgisi:</Text>
+              <Text> {data?.invoice?.order?.user?.name} </Text>
+              <Text>{data?.invoice?.order?.user?.email}</Text>
+              <Text>İş: {data?.invoice?.order?.user?.phone}</Text>
+            </View>
+            <View style={{ width: "40%", gap: 3 }}>
+              <Text>Fatura No:</Text>
+              <Text style={{ fontWeight: "700" }}>
+                {data?.invoice?.invoice_number}
+              </Text>
+              <Text>Tarih:</Text>
+              <Text style={{ fontWeight: "700" }}>{formattedDate}</Text>
             </View>
           </View>
-        </View>
-      </View>
-      <View style={{}}>
-        <View style={[styles.card, { paddingLeft: 10, paddingRight: 10 }]}>
-          <Text style={{ fontWeight: "700" }}>Ödeme Bilgileri:</Text>
-          <Text>
-            {data?.invoice?.order?.bank?.receipent_full_name} -{" "}
-            {data?.invoice?.order?.bank?.iban}
-          </Text>
-          <Text>Kapora: {data?.invoice?.order?.amount}</Text>
-        </View>
-        <View
-          style={[
-            styles.card,
-            {
-              display: "flex",
-              justifyContent: "space-around",
-              flexDirection: "row",
-            },
-          ]}
-        >
-          <View>
-            <Text style={{ fontWeight: "700" }}> Toplam Fiyat </Text>
-            <Text> {addDotEveryThreeDigits(parsedData?.item?.price)} ₺</Text>
+          <View style={{ marginTop: 40 }}>
+            <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+              <View
+                style={{
+                  backgroundColor: "#0879FB",
+                  padding: 20,
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: 20,
+                }}
+              >
+                <Text style={{ color: "white", width: "25%" }}>
+                  Kapak Görseli
+                </Text>
+                <Text style={{ color: "white", width: "75%" }}>
+                  İlan Başlığı
+                </Text>
+              </View>
+            </View>
+            <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+              <View
+                style={{
+                  backgroundColor: "#E7E7E7",
+                  padding: 20,
+                  display: "flex",
+                  flexDirection: "row",
+                }}
+              >
+                <View style={{ width: 100, height: 100 }}>
+                  {parsedData.item && parsedData.item.image ? (
+                    <Image
+                      style={{ width: "100%", height: "100%" }}
+                      source={{ uri: parsedData.item.image }}
+                    />
+                  ) : (
+                    <Text>Resim yüklenemedi</Text>
+                  )}
+                </View>
+                <View
+                  style={{
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    width: "75%",
+                  }}
+                >
+                  {parsedData && parsedData.item ? (
+                    <>
+                      <Text>{parsedData.item.title}</Text>
+                    </>
+                  ) : (
+                    <Text>Veri yüklenemedi</Text>
+                  )}
+                  <Text style={{ fontWeight: "700" }}>İSTANBUL / KARTAL</Text>
+                </View>
+              </View>
+            </View>
           </View>
           <View>
-            <Text style={{ fontWeight: "700" }}> Kapora </Text>
-            <Text> {data?.invoice?.order?.amount} ₺ </Text>
+            <View style={[styles.card, { paddingLeft: 10, paddingRight: 10 }]}>
+              <Text style={{ fontWeight: "700" }}>Ödeme Bilgileri:</Text>
+              <Text>
+                {data?.invoice?.order?.bank?.receipent_full_name} -{" "}
+                {data?.invoice?.order?.bank?.iban}
+              </Text>
+              <Text>Kapora: {data?.invoice?.order?.amount}</Text>
+            </View>
+            <View
+              style={[
+                styles.card,
+                {
+                  display: "flex",
+                  justifyContent: "space-around",
+                  flexDirection: "row",
+                },
+              ]}
+            >
+              <View>
+                <Text style={{ fontWeight: "700" }}> Toplam Fiyat </Text>
+                <Text>{addDotEveryThreeDigits(parsedData?.item?.price)} ₺</Text>
+              </View>
+              <View>
+                <Text style={{ fontWeight: "700" }}> Kapora </Text>
+                <Text>{data?.invoice?.order?.amount} ₺</Text>
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
-      <View style={{}}>
-        <View style={[styles.card, { paddingLeft: 10, paddingRight: 10 }]}>
-          <Text style={{ fontWeight: "700" }}>Satıcı Bilgileri:</Text>
-          <Text>{data?.invoice?.order?.store?.name}</Text>
-          <Text>{data?.invoice?.order?.store?.email}</Text>
-          <Text>Vergi No: {data?.invoice?.order?.store?.taxNumber}</Text>
-          <Text>İletişim No: {data?.invoice?.order?.store?.phone}</Text>
-       
-        </View>
-      </View>
-    </ScrollView>
+          <View>
+            <View style={[styles.card, { paddingLeft: 10, paddingRight: 10 }]}>
+              <Text style={{ fontWeight: "700" }}>Satıcı Bilgileri:</Text>
+              <Text>{data?.invoice?.order?.store?.name}</Text>
+              <Text>{data?.invoice?.order?.store?.email}</Text>
+              <Text>Vergi No: {data?.invoice?.order?.store?.taxNumber}</Text>
+              <Text>İletişim No: {data?.invoice?.order?.store?.phone}</Text>
+            </View>
+          </View>
+        </ScrollView>
+      )}
+    </>
   );
 }
 
