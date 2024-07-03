@@ -31,10 +31,10 @@ export default function PasiveRealtorAdverts() {
 }; 
 const [loading, setloading] = useState(false)
 const [housingRecords, sethousingRecords] = useState([])
-  const fetchInactiveHousings = async () => {
+  const fetchInactiveHousings = async (sort) => {
     setloading(true)
     try {
-      const res = await axios.get('https://mobil.emlaksepette.com/api/get_my_housings', {
+      const res = await axios.get("https://mobil.emlaksepette.com/api/get_my_housings?orderByHousings="+sort, {
         headers: { Authorization: 'Bearer ' + user.access_token }
       });
       sethousings(res.data.inactiveHousingTypes);
@@ -54,13 +54,13 @@ useEffect(() => {
 
 const [selectedIndex, setIndex] = React.useState(0);
 const [SortLıstModal, setSortLıstModal] = useState(false)
-const handleRadio =(index)=>{
+const handleRadio =(index,sort)=>{
     setIndex(index)
     setTimeout(() => {
       setSortLıstModal(false)
-      fetchInactiveHousings();
+      fetchInactiveHousings(sort);
     }, 600);
-      
+        console.log(sort)
 }
 const [searchValue, setsearchValue] = useState('')
 
@@ -127,9 +127,12 @@ sethousingRecords(filteredData);
         </View>
       <View>
       <Stack row align="center" spacing={4}>
-         <CheckBox
+      <CheckBox
            checked={selectedIndex === 0}
-           onPress={() => handleRadio(0)}
+           onPress={() => {
+            handleRadio(0,'asc-price')
+              
+          }}
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={<Text  style={{color:'#333',fontWeight:'600'}}>
@@ -140,7 +143,7 @@ sethousingRecords(filteredData);
          />
          <CheckBox
            checked={selectedIndex === 1}
-           onPress={() => handleRadio(1)}
+           onPress={() =>{ handleRadio(1,'desc-price') }}
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={<Text style={{color:'#333',fontWeight:'600'}}>
@@ -151,7 +154,7 @@ sethousingRecords(filteredData);
          />
            <CheckBox
            checked={selectedIndex === 2}
-           onPress={() => handleRadio(2)}
+           onPress={() => handleRadio(2,'asc-date')}
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={<Text  style={{color:'#333',fontWeight:'600'}}>
@@ -162,7 +165,7 @@ sethousingRecords(filteredData);
          />
               <CheckBox
            checked={selectedIndex === 3}
-           onPress={() => handleRadio(3)}
+           onPress={() => handleRadio(3,'desc-date')}
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={<Text  style={{color:'#333',fontWeight:'600'}}>

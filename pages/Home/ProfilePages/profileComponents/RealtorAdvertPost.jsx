@@ -7,7 +7,7 @@ import { Platform } from "react-native";
 import { addDotEveryThreeDigits } from '../../../../components/methods/merhod'
 export default function RealtorAdvertPost({Onpress,housing}) {
     const [status, setStatus] = useState(housing.status)
-const apiUrl ='https://test.emlaksepette.com/'
+const apiUrl ='https://mobil.emlaksepette.com/'
     const {width,height}=Dimensions.get('window')
   return (
     <View style={[style.card,{gap:5}]}>
@@ -34,7 +34,7 @@ const apiUrl ='https://test.emlaksepette.com/'
                     <Text style={{fontSize:11,color:'grey',fontWeight:'600'}}>İlan Bitiş Tarihi: 1 Tem 2024 13:18</Text>
                 </View>
                 <View style={{paddingTop:9}} >
-                    <Text style={{fontSize:13,fontWeight:'700',color:'#333',}}>5.000.000 TL</Text>
+                    <Text style={{fontSize:13,fontWeight:'700',color:'#333',}}>{addDotEveryThreeDigits(housing.price)} TL</Text>
                 </View>
                         </View>
                   </View>

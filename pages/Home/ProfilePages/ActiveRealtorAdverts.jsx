@@ -32,22 +32,34 @@ export default function ActiveRealtorAdverts({index}) {
   const [take, setTake] = useState(10);
   const [loading, setloading] = useState(false)
   const [housingRecords, sethousingRecords] = useState([])
+const [sort, setsort] = useState(null)
 
-      const fetchHousings = async () => {
-        setloading(true)
-        try {
-          const res = await axios.get("https://mobil.emlaksepette.com/api/get_my_housings", {
-            headers: { Authorization: "Bearer " + user.access_token },
-          });
-          sethousings(res?.data?.activeHousingTypes);
-          sethousingRecords(res?.data?.activeHousingTypes)
-          setloading(true);
-        } catch (e) {
-          console.log(e + " hata");
-        }finally{
-          setloading(false)
-        }
-      };
+const fetchHousings = async (sort) => {
+  setloading(true);
+    // let formData= new FormData()
+    // formData.append('orderByHousings',sort)
+    const data = {
+      orderByHousings: sort,
+    };
+  try {
+      const res = await axios.get(
+          "https://mobil.emlaksepette.com/api/get_my_housings?orderByHousings="+sort,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+              "Content-Type": "application/json", // FormData kullanıldığı için Content-Type belirtilmelidir
+            },
+          }
+      );
+      console.log(res.data);
+      sethousings(res?.data?.activeHousingTypes);
+      sethousingRecords(res?.data?.activeHousingTypes);
+  } catch (e) {
+      console.log(e + " hataasdasd");
+  } finally {
+      setloading(false);
+  }
+};
     
      
 
@@ -64,15 +76,15 @@ export default function ActiveRealtorAdverts({index}) {
   const [selectedProject, setSelectedProject] = useState(null);
 
 
-  const [selectedIndex, setIndex] = React.useState(0);
+  const [selectedIndex, setIndex] = React.useState(null);
 
-  const handleRadio =(index)=>{
+  const handleRadio =(index,sort)=>{
       setIndex(index)
       setTimeout(() => {
         setSortLıstModal(false)
-        fetchHousings()
+        fetchHousings(sort)
       }, 600);
-        
+       
   }
   const [searchValue, setsearchValue] = useState('')
 
@@ -122,7 +134,7 @@ export default function ActiveRealtorAdverts({index}) {
     </TouchableOpacity>
   </View>
   <View style={{paddingTop:10,gap:10 }}>
-    {housingRecords.map((item, index) => (
+    {housingRecords?.map((item, index) => (
       <RealtorAdvertPost key={index} housing={item} Onpress={openSheet} />
     ))}
   </View>
@@ -145,7 +157,10 @@ export default function ActiveRealtorAdverts({index}) {
       <Stack row align="center" spacing={4}>
          <CheckBox
            checked={selectedIndex === 0}
-           onPress={() => handleRadio(0)}
+           onPress={() => {
+            handleRadio(0,'asc-price')
+              
+          }}
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={<Text  style={{color:'#333',fontWeight:'600'}}>
@@ -156,7 +171,7 @@ export default function ActiveRealtorAdverts({index}) {
          />
          <CheckBox
            checked={selectedIndex === 1}
-           onPress={() => handleRadio(1)}
+           onPress={() =>{ handleRadio(1,'desc-price') }}
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={<Text style={{color:'#333',fontWeight:'600'}}>
@@ -167,7 +182,7 @@ export default function ActiveRealtorAdverts({index}) {
          />
            <CheckBox
            checked={selectedIndex === 2}
-           onPress={() => handleRadio(2)}
+           onPress={() => handleRadio(2,'asc-date')}
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={<Text  style={{color:'#333',fontWeight:'600'}}>
@@ -178,7 +193,7 @@ export default function ActiveRealtorAdverts({index}) {
          />
               <CheckBox
            checked={selectedIndex === 3}
-           onPress={() => handleRadio(3)}
+           onPress={() => handleRadio(3,'desc-date')}
            checkedIcon="dot-circle-o"
            uncheckedIcon="circle-o"
            title={<Text  style={{color:'#333',fontWeight:'600'}}>
