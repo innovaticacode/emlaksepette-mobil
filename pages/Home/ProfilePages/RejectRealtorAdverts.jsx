@@ -30,7 +30,7 @@ export default function RejectRealtorAdverts() {
     setEditModalVisible(!EditModalVisible)
 }; 
 const [loading, setloading] = useState(false)
-
+const [housingRecords, sethousingRecords] = useState([])
   const fetchDisabledHousings = async () => {
     setloading(true)
     try {
@@ -38,6 +38,7 @@ const [loading, setloading] = useState(false)
         headers: { Authorization: 'Bearer ' + user.access_token }
       });
       sethousings(res.data.disabledHousingTypes);
+      sethousingRecords(res.data.disabledHousingTypes)
     } catch (e) {
       console.log(e + ' hata');
     }finally{
@@ -59,6 +60,17 @@ const handleRadio =(index)=>{
       fetchDisabledHousings();
     }, 600);
       
+}
+const [searchValue, setsearchValue] = useState('')
+
+const handleSearch = (value) =>{
+  setsearchValue(value)
+  const filteredData = value
+  ? housings.filter((item) =>
+      item?.housing_title.toLowerCase().includes(value.toLowerCase())
+    )
+  : housings;
+sethousingRecords(filteredData);
 }
   return (
     <>
@@ -85,14 +97,14 @@ const handleRadio =(index)=>{
   
     </View>
     <View style={{padding:2,paddingLeft:10,paddingRight:10,flexDirection:'row',gap:4}}>
-          <TextInput style={styles.Input} placeholder="Kelime veya İlan No ile ara" />
+          <TextInput style={styles.Input} placeholder="Kelime veya İlan No ile ara"  value={searchValue} onChangeText={handleSearch} />
           <TouchableOpacity style={{backgroundColor:'#ebebeb',width:'10%',borderRadius:5,flexDirection:'row',alignItems:'center',justifyContent:'center'}} onPress={()=>setSortLıstModal(true)} >
                 <MaterialIcon name="swap-vertical" size={23} color={'#333'}/>
           </TouchableOpacity>
         </View>
     <View style={{paddingTop:10,gap:10}}>
     {
-      housings.map((item,index)=>(
+      housingRecords.map((item,index)=>(
         <RealtorAdvertPost  key={index} housing={item} Onpress={openSheet}/>
       ))
     }
