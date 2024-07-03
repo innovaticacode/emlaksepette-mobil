@@ -78,8 +78,8 @@ export default function RealtorPostFavorited({
       const config = {
         headers: { Authorization: `Bearer ${user.access_token}` }
       };
-      axios.post('https://mobil.emlaksepette.com/api/add_housing_to_favorites/'+housingId,{
-        housing_id : housingId
+      axios.post('https://mobil.emlaksepette.com/api/add_housing_to_favorites/'+HouseId,{
+        housing_id : HouseId
       },config).then((res) => {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,

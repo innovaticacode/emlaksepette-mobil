@@ -17,6 +17,7 @@ import Modal from "react-native-modal";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function ShopVitrin({ data, housingdata, settab }) {
   const navigation = useNavigation();
@@ -224,7 +225,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
                     <ActivityIndicator
                       style={{ margin: 20 }}
                       size="small"
-                      color="#000000"
+                      color="#333"
                     />
                   ) : null
                 }

@@ -143,7 +143,7 @@ export default function Invoice() {
         <View
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
-          <ActivityIndicator />
+          <ActivityIndicator color="#333" />
         </View>
       ) : (
         <ScrollView style={{}} contentContainerStyle={{ flexGrow: 1 }}>

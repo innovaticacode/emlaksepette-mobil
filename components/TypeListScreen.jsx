@@ -86,7 +86,7 @@ function TypeListScreen({
     >
       <Text>{item.title}</Text>
       {loadingOrder === order && loadingOrderStatusId === item.id && (
-        <ActivityIndicator style={styles.loadingIcon} />
+        <ActivityIndicator  color={'#333'} style={styles.loadingIcon} />
       )}
     </TouchableOpacity>
   );

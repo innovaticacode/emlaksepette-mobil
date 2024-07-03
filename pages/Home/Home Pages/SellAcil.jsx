@@ -82,7 +82,7 @@ const SellAcil = ({index}) => {
     const filteredHomes = featuredEstates.filter((estate) =>  estate.step1_slug === "konut");
     const renderFooter = () => {
       if (!loading) return null;
-      return <ActivityIndicator style={{ margin: 20 }} size="small" color="#000000" />;
+      return <ActivityIndicator style={{ margin: 20 }} size="small" color="#333" />;
     };
    
 
@@ -130,7 +130,7 @@ const SellAcil = ({index}) => {
       </View>
       {refreshing && (
         <View style={{ padding: 10, backgroundColor: 'white', alignItems: 'center' }}>
-          <ActivityIndicator animating={true} size="small" color="#000000" />
+          <ActivityIndicator animating={true} size="small" color="#333" />
         </View>
       )}
           

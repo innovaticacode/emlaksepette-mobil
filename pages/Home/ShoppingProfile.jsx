@@ -24,7 +24,8 @@ import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import Menu from "./Menu.json";
 import { Platform } from "react-native";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
+
 
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
@@ -187,7 +188,7 @@ export default function ShoppingProfile() {
       {
         loading ==true
         ?
-        <ActivityIndicator/>
+        <ActivityIndicator color="#333"/>
         :
         <View style={style.container}>
           
@@ -270,7 +271,7 @@ export default function ShoppingProfile() {
           </View>
         </View>
         {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#333" />
         ) : (
           <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
             <View style={{ gap: 20, padding: 10 }}>

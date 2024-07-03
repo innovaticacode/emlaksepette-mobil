@@ -244,7 +244,7 @@ const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
          
               {
                       loading== true ?
-                        <ActivityIndicator/>:
+                        <ActivityIndicator color='#333'/>:
                         collections.map((item,index)=>(
 
                           <AddCollection  checkFunc={ıtemOnCollection} key={index} item={item} getCollectionId={getCollectionId} addLink={addSelectedCollection}   removeItemOnCollection={removeItemOnCollection}    setPopUpForRemoveItem={setsetPopUpForRemoveItem}/> 

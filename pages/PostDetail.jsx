@@ -526,7 +526,7 @@ export default function PostDetail() {
     <>
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#000000" />
+          <ActivityIndicator size="large" color="#333" />
         </View>
       ) : (
         <SafeAreaView

@@ -7,7 +7,7 @@ import {
   ScrollView,
   Animated,
   Linking,
-  ActivityIndicator,
+
   TextInput,
   Pressable,
   Dimensions,
@@ -41,6 +41,7 @@ import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 import { styles } from "./Details";
 import DrawerMenu from "../../components/DrawerMenu";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -1442,7 +1443,7 @@ export default function Details({ navigation }) {
         <View style={{ padding: 10 }}>
           <ActivityIndicator
             size="large"
-            color="grey"
+            color="#333"
             style={{ display: isLoading ? "flex" : "none" }}
           />
         </View>

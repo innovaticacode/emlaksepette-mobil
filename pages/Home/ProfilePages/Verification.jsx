@@ -1,9 +1,10 @@
-import { View, Text ,StyleSheet, TouchableOpacity, Pressable, ActivityIndicator} from 'react-native'
+import { View, Text ,StyleSheet, TouchableOpacity,} from 'react-native'
 import React,{useState,useRef, useEffect} from 'react'
 import { TextInput } from 'react-native'
 import { getValueFor } from '../../../components/methods/user';
 import axios from 'axios';
 import Modal from "react-native-modal";
+import { ActivityIndicator } from 'react-native-paper';
 export default function Verification() {
   const [codes, setCodes] = useState('');
   const inputs = useRef([]);
@@ -153,7 +154,7 @@ useEffect(() => {
           animationOut={'fadeOutLeft'}
         >
           <View style={styles.modalContent}>
-                <ActivityIndicator size='large' color={'red'}/>
+                <ActivityIndicator size='large' color='#333'/>
                 <Text style={{textAlign:'center'}}>Doğrulanıyor...</Text>
           </View>
         </Modal>

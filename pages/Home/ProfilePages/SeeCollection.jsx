@@ -957,7 +957,7 @@ export default function SeeCollection() {
           </ScrollView>
         ) : (
           <View style={style.loadingContainer}>
-            <ActivityIndicator size="large" color="#000000" />
+            <ActivityIndicator size="large" color="#333" />
           </View>
         )}
       </View>

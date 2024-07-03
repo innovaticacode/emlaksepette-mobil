@@ -264,7 +264,7 @@ export default function CollectionsPage() {
             );
           })
         ) : (
-          <ActivityIndicator size="large" color={"red"} />
+          <ActivityIndicator size="large" color={"#333"} />
         )}
       </ScrollView>
    

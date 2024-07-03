@@ -152,7 +152,7 @@ console.log(user)
           >
             {
               loading ? 
-                <ActivityIndicator size="small" color={"red"} />
+                <ActivityIndicator size="small" color={"#333"} />
               : 
                 favorites?.map((favorite,i) => {
                   if(favorite?.project){

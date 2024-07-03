@@ -7,7 +7,7 @@ import {
   Keyboard,
   Alert,
   TouchableWithoutFeedback,
-  ActivityIndicator,
+
 } from "react-native";
 import { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
@@ -18,6 +18,7 @@ import { getValueFor } from "../../../components/methods/user";
 import { Icon } from "react-native-elements";
 import { Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
+import { ActivityIndicator } from "react-native-paper";
 export default function RegisterRealtorClub({ setİsLoggedIn }) {
   const route = useRoute();
   const navigation = useNavigation();
@@ -414,7 +415,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
                     Emlak Kulüp Başvurunuz Alınmıştır!
                   </Text>
                 ) : (
-                  <ActivityIndicator />
+                  <ActivityIndicator color="#333"/>
                 )}
               </View>
             </View>

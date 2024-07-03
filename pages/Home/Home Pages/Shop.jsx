@@ -82,7 +82,7 @@ const Shop = ({index}) => {
   
     const renderFooter = () => {
       if (!loading) return null;
-      return <ActivityIndicator style={{ margin: 20 }} size="small" color="#000000" />;
+      return <ActivityIndicator style={{ margin: 20 }} size="small" color="#333" />;
     };
    
   return (

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-  ActivityIndicator,
+
 } from "react-native";
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -15,6 +15,7 @@ import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
 import Modal from "react-native-modal";
 import { Platform } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 export default function ChangePassword() {
   const navigation = useNavigation();
 
@@ -171,7 +172,7 @@ export default function ChangePassword() {
                 alignItems: "center",
               }}
             >
-              <ActivityIndicator size="large" color={"red"} />
+              <ActivityIndicator size="large" color="#333" />
             </View>
           </View>
         </Modal>
