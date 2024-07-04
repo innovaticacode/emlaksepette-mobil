@@ -320,7 +320,7 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
         <View style={styles.container}>
           {loading ? (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#000000" />
+              <ActivityIndicator size="large" color="#333" />
             </View>
           ) : (
             <View style={{ flex: 1 }}>
@@ -487,7 +487,7 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                       })
                     ) : (
                       <View style={styles.loadingContainer}>
-                        <ActivityIndicator size="large" color="#000000" />
+                        <ActivityIndicator size="large" color="#333" />
                       </View>
                     )}
                   </ScrollView>

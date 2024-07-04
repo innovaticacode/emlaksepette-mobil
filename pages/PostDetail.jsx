@@ -11,6 +11,7 @@ import {
   Linking,
   TextInput,
   Pressable,
+  Share
 } from "react-native";
 import { React, useRef, useState, useEffect } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
@@ -522,17 +523,38 @@ export default function PostDetail() {
     }
   };
   const { width, height } = Dimensions.get("window");
+  const [tab, settab] = useState(0)
+  const [index, setindex] = useState(0)
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `https://mobil.emlaksepette.com/`,
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log("Link belirli bir aktivitede paylaşıldı");
+        } else {
+          console.log("Link paylaşıldı");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Paylaşım iptal edildi");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   return (
     <>
       {loading ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#000000" />
+          <ActivityIndicator size="large" color="#333" />
         </View>
       ) : (
         <SafeAreaView
           style={{ backgroundColor: "white", flex: 1, paddingTop: 30 }}
         >
-          <Header onPress={toggleDrawer} />
+          <Header onPress={toggleDrawer}  tab={settab} index={setindex}/>
           <Modal
             isVisible={isDrawerOpen}
             onBackdropPress={() => setIsDrawerOpen(false)}
@@ -666,7 +688,7 @@ export default function PostDetail() {
                     />
                   </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => setIsOpenSheet(true)}>
+                <TouchableOpacity onPress={onShare}>
                   <View style={styles.ıcon}>
                     <Icon2 name="sharealt" size={18} />
                   </View>

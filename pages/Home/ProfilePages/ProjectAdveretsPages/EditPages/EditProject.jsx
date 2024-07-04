@@ -166,7 +166,7 @@ export default function EditProject() {
     {
       loading ?
       <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-        <ActivityIndicator/>
+        <ActivityIndicator color='#333'/>
       </View>
       :
       <ScrollView style={{backgroundColor:'#f7f7f7'}} >

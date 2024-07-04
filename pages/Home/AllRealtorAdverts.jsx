@@ -535,7 +535,7 @@ export default function AllRealtorAdverts() {
           <View
             style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
           >
-            <ActivityIndicator size="large" color="#000000" />
+            <ActivityIndicator size="large" color="#333" />
           </View>
         ) : (
           <>

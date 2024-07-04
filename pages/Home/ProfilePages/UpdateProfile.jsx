@@ -820,7 +820,7 @@ export default function UpdateProfile() {
         
         >
           <View style={styles.modalContent}>
-            <ActivityIndicator size="large" />
+            <ActivityIndicator size="large" color="#333"/>
             <Text style={{ textAlign: "center", color: "green" }}>
               Profiliniz Güncelleniyor
             </Text>

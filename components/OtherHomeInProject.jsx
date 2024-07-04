@@ -52,7 +52,7 @@ export default function OtherHomeInProject({
 
   const renderFooter = () => {
     if (!isLoading) return null;
-    return <ActivityIndicator size="small" color={"red"} style={styles.loading} />;
+    return <ActivityIndicator size="small" color={"#333"} style={styles.loading} />;
   };
 
   const renderItem = ({ item, index }) => {

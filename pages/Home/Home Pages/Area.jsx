@@ -83,7 +83,7 @@ const Area= ({index}) => {
   
     const renderFooter = () => {
       if (!loading) return null;
-      return <ActivityIndicator style={{ margin: 20 }} size="small" color="#000000" />;
+      return <ActivityIndicator style={{ margin: 20 }} size="small" color="#333" />;
     };
   
  
@@ -129,7 +129,7 @@ const Area= ({index}) => {
       </View>
       {refreshing && (
         <View style={{ padding: 10, backgroundColor: 'white', alignItems: 'center' }}>
-          <ActivityIndicator animating={true} size="small" color="#000000" />
+          <ActivityIndicator animating={true} size="small" color="#333" />
         </View>
       )}
       <AlertNotificationRoot>

@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
-  ActivityIndicator,
+ 
 } from "react-native";
 import { React, useState, useEffect, useRef } from "react";
 import Modal from "react-native-modal";
@@ -23,6 +23,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function Company() {
   const Navigation = useNavigation();
@@ -1152,7 +1153,7 @@ export default function Company() {
           style={styles.modal}
         >
           <View style={styles.modalContent}>
-            <ActivityIndicator size="large" />
+            <ActivityIndicator size="large" color="#333"/>
             <Text style={{ textAlign: "center", fontWeight: "bold" }}>
               Giriş Sayfasına Yönlendiriliyorsunuz
             </Text>

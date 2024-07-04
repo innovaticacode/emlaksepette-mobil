@@ -43,7 +43,10 @@ const DrawerMenu = ({setIsDrawerOpen }) => {
           <TouchableOpacity>
             <Categories category="İlan Ver" bordernone="none" iconName="plus" />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=> {
+            navigation.navigate('Emlak',{name:'İlan Ver'})
+            setIsDrawerOpen(false)
+          }}>
             <Categories
               category="Sat Kirala"
               bordernone="none"

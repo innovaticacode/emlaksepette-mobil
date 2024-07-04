@@ -88,7 +88,7 @@ const Estates = ({ index }) => {
   const renderFooter = () => {
     if (!loading) return null;
     return (
-      <ActivityIndicator style={{ margin: 20 }} size="small" color="#000000" />
+      <ActivityIndicator style={{ margin: 20 }} size="small" color="#333" />
     );
   };
 console.log(user)

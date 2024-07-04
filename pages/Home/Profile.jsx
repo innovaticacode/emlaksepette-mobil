@@ -14,6 +14,7 @@ import {
   Animated,
   ActivityIndicator,
   Linking,
+  Share,
 } from "react-native";
 import { React, useState, useRef, useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -201,9 +202,27 @@ export default function Profile() {
       }}
     />
   );
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `https://mobil.emlaksepette.com/`,
+      });
 
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log("Link belirli bir aktivitede paylaşıldı");
+        } else {
+          console.log("Link paylaşıldı");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Paylaşım iptal edildi");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 ,backgroundColor:'white'}}>
       <View
         style={styles.container}
         onTouchStart={() => {
@@ -261,7 +280,7 @@ export default function Profile() {
 
                   <TouchableOpacity
                     style={styles.shareIcons}
-                    onPress={openSheet}
+                    onPress={onShare}
                   >
                     <Icon name="sharealt" size={18} />
                   </TouchableOpacity>
@@ -620,74 +639,8 @@ export default function Profile() {
         {tab === 3 && <Team teamm={teamm} />}
         {tab === 4 && <ShopInfo data={storeData} loading={loading} />}
       </View>
-      <View style={{ flex: 1, position: "absolute", bottom: 0 }}>
-        <Animated.View
-          style={{
-            zIndex: 1,
-            backgroundColor: "#eeeeee",
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            paddingTop: 20,
-            paddingBottom: 30,
-            paddingLeft: 10,
-            paddingRight: 10,
-
-            transform: [{ translateY }],
-          }}
-        >
-          <ScrollView
-            horizontal
-            style={{ padding: 5 }}
-            showsHorizontalScrollIndicator={false}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-around",
-                gap: 27,
-              }}
-            >
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={styles.shareIcons}>
-                  <LinkIcon name="link" size={23} />
-                </View>
-                <Text>Kopyala</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={styles.shareIcons}>
-                  <LinkIcon2 name="whatsapp" size={23} />
-                </View>
-                <Text>Whatsapp</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={styles.shareIcons}>
-                  <LinkIcon name="instagram" size={23} />
-                </View>
-                <Text>İnstagram</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={styles.shareIcons}>
-                  <LinkIcon2 name="facebook" size={23} />
-                </View>
-                <Text>Facebook</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={styles.shareIcons}>
-                  <LinkIcon3 name="message-circle" size={23} />
-                </View>
-                <Text>Mesajlar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={styles.shareIcons}>
-                  <LinkIcon4 name="messenger" size={23} />
-                </View>
-                <Text>Messenger</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </Animated.View>
-      </View>
+     
+      
       <View>
         <View
           style={{
@@ -695,7 +648,7 @@ export default function Profile() {
             display: "flex",
             justifyContent: "space-between",
             flexDirection: "row",
-            backgroundColor: "transparent",
+          
             zIndex: 1,
           }}
         >

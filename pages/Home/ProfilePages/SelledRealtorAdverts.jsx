@@ -75,7 +75,7 @@ const handleRadio =(index)=>{
         {
             loading ?
             <View style={{flex:1,backgroundColor:'#ffffff',alignItems:'center',justifyContent:'center'}}>
-                <ActivityIndicator/>
+                <ActivityIndicator color="#333" />
             </View>
             :
             <ScrollView stickyHeaderIndices={[0]}>

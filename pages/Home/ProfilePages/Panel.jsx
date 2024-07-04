@@ -136,7 +136,7 @@ export default function Panel({ options, onSelect }) {
       <View style={style.container}>
         {isLoading ? (
           <View style={style.loadingContainer}>
-            <ActivityIndicator size="large" color="#000000" />
+            <ActivityIndicator size="large" color="#333" />
           </View>
         ) : (
           <ScrollView

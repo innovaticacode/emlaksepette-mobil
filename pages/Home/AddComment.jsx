@@ -84,7 +84,7 @@ console.log(rate)
 {
     loading ? 
     <View style={{alignItems:'center',justifyContent:'center'}}>
-            <ActivityIndicator/>
+            <ActivityIndicator color='#333'/>
     </View>
 
     : 
