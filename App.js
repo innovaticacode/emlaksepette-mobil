@@ -39,9 +39,6 @@ import AdvertsPlace from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/AdvertsPl
 import ShareScreenProject from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/ShareScreenProject";
 import AdvertForm from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/AdvertForm";
 
-
-
-
 import Notifications from "./pages/Home/Notifications";
 import RealtorClub from "./pages/Home/RealtorClub";
 
@@ -88,7 +85,6 @@ import * as SecureStore from "expo-secure-store";
 import DecontPdf from "./pages/Home/DecontPdf";
 import AddComment from "./pages/Home/AddComment";
 import SuccesScreen from "./pages/Home/SuccesScreen";
-
 
 const Stack = createNativeStackNavigator();
 
@@ -144,10 +140,9 @@ export default function App({ route }) {
     getValueFor2("welcome_screen_show", setShowSplashTemp);
   }, []);
 
-
   useEffect(() => {
     if (showSplashTemp == "ff") {
-      setShowSplash(false);
+      setShowSplash(true);
     }
   }, [showSplashTemp]);
 
@@ -155,7 +150,14 @@ export default function App({ route }) {
     SecureStore.setItemAsync("welcome_screen_show", "ff");
     setShowSplash(false);
   };
-  function StepScreen({ step, navigation, setHousingTypes, setSelectedTypes, housingTypes, selectedTypes }) {
+  function StepScreen({
+    step,
+    navigation,
+    setHousingTypes,
+    setSelectedTypes,
+    housingTypes,
+    selectedTypes,
+  }) {
     return (
       <View style={styles.container}>
         <TypeListScreen
@@ -178,9 +180,7 @@ export default function App({ route }) {
             gestureEnabled: true,
             ...TransitionPresets.SlideFromRightIOS,
 
-            headerTintColor: '#333',
-
-
+            headerTintColor: "#333",
           }}
         >
           {showSplash ? (
@@ -217,9 +217,10 @@ export default function App({ route }) {
           )}
 
           <Stack.Group>
-
-            <Stack.Screen name="Login" options={{ title: "Giriş Yap", headerBackTitleVisible: false }}>
-
+            <Stack.Screen
+              name="Login"
+              options={{ title: "Giriş Yap", headerBackTitleVisible: false }}
+            >
               {(props) => <Login {...props} />}
             </Stack.Screen>
             <Stack.Screen
@@ -230,48 +231,48 @@ export default function App({ route }) {
           </Stack.Group>
 
           <Stack.Screen name="Step1">
-          {(props) => (
-            <StepScreen
-              {...props}
-              step={1}
-              setHousingTypes={setHousingTypes}
-              setSelectedTypes={setSelectedTypes}
-              housingTypes={housingTypes}
-              selectedTypes={selectedTypes}
-            />
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="Step2">
-          {(props) => (
-            <StepScreen
-              {...props}
-              step={2}
-              setHousingTypes={setHousingTypes}
-              setSelectedTypes={setSelectedTypes}
-              housingTypes={housingTypes}
-              selectedTypes={selectedTypes}
-            />
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="Step3">
-          {(props) => (
-            <StepScreen
-              {...props}
-              step={3}
-              setHousingTypes={setHousingTypes}
-              setSelectedTypes={setSelectedTypes}
-              housingTypes={housingTypes}
-              selectedTypes={selectedTypes}
-            />
-          )}
-        </Stack.Screen>
+            {(props) => (
+              <StepScreen
+                {...props}
+                step={1}
+                setHousingTypes={setHousingTypes}
+                setSelectedTypes={setSelectedTypes}
+                housingTypes={housingTypes}
+                selectedTypes={selectedTypes}
+              />
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="Step2">
+            {(props) => (
+              <StepScreen
+                {...props}
+                step={2}
+                setHousingTypes={setHousingTypes}
+                setSelectedTypes={setSelectedTypes}
+                housingTypes={housingTypes}
+                selectedTypes={selectedTypes}
+              />
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="Step3">
+            {(props) => (
+              <StepScreen
+                {...props}
+                step={3}
+                setHousingTypes={setHousingTypes}
+                setSelectedTypes={setSelectedTypes}
+                housingTypes={housingTypes}
+                selectedTypes={selectedTypes}
+              />
+            )}
+          </Stack.Screen>
 
           <Stack.Screen
             name="Emlak"
             component={Emlakİlanı}
             options={({ route }) => ({
               title: route.params.name,
-              headerBackTitleVisible: false
+              headerBackTitleVisible: false,
             })}
           />
           <Stack.Screen
@@ -599,7 +600,6 @@ export default function App({ route }) {
             {(props) => <ShareScreenProject {...props} />}
           </Stack.Screen>
 
-
           <Stack.Screen
             name="Notifications"
             component={Notifications}
@@ -657,7 +657,6 @@ export default function App({ route }) {
             }}
           />
 
-
           <Stack.Screen
             name="HomeList"
             component={HomeList}
@@ -671,9 +670,10 @@ export default function App({ route }) {
             options={({ route }) => ({
               headerShown: true,
               title: route.params.text,
-              headerBackTitle: route.params.title === "Projeler"
-                ? route.params.name + route.params.title
-                : route.params.name,
+              headerBackTitle:
+                route.params.title === "Projeler"
+                  ? route.params.name + route.params.title
+                  : route.params.name,
               headerBackTitleVisible: true,
               headerTitleStyle: {
                 fontSize: 14,
@@ -765,9 +765,13 @@ export default function App({ route }) {
             options={({ route }) => ({
               headerShown: false,
               headerStyle: {
-                backgroundColor: '#EA2B2E',
+                backgroundColor: "#EA2B2E",
               },
-              title: route.params.name + " - " + route.params.count + " Emlak İlanları",
+              title:
+                route.params.name +
+                " - " +
+                route.params.count +
+                " Emlak İlanları",
               headerBackTitle: "",
               headerBackTitleVisible: false,
               headerTintColor: "white",
@@ -904,10 +908,7 @@ export default function App({ route }) {
               headerStyle: {
                 backgroundColor: "#f7f7f7",
               },
-
-
             })}
-
           />
           <Stack.Screen
             name="DecontPdf"
@@ -918,10 +919,9 @@ export default function App({ route }) {
               headerStyle: {
                 backgroundColor: "#f7f7f7",
               },
-
             })}
           />
-             <Stack.Screen
+          <Stack.Screen
             name="AddComment"
             component={AddComment}
             options={({ route }) => ({
@@ -930,12 +930,9 @@ export default function App({ route }) {
               headerStyle: {
                 backgroundColor: "#f7f7f7",
               },
-
-
             })}
-
           />
-               <Stack.Screen
+          <Stack.Screen
             name="Success"
             component={SuccesScreen}
             options={({ route }) => ({
@@ -944,10 +941,7 @@ export default function App({ route }) {
               headerStyle: {
                 backgroundColor: "#f7f7f7",
               },
-
-
             })}
-
           />
         </Stack.Navigator>
       </NavigationContainer>
