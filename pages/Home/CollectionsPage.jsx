@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Modal,
   Linking,
-  ActivityIndicator,
+
 } from "react-native";
 import { useState, useRef, useEffect } from "react";
 
@@ -27,6 +27,7 @@ import axios from "axios";
 
 import CollectionsItem from "./ProfilePages/profileComponents/CollectionsItem";
 import { getValueFor } from "../../components/methods/user";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function CollectionsPage() {
   const [showAlert, setshowAlert] = useState(false);
@@ -220,7 +221,15 @@ export default function CollectionsPage() {
   };
 
   return (
-    <View style={{ height: "100%" ,paddingTop:20}}>
+    <>
+    {
+      loading ?
+      <View style={{alignItems:'center',justifyContent:'center',height:'100%'}}>
+        <ActivityIndicator color="#333" size={'large'}/>
+      </View>
+      :
+ 
+   <View style={{ height: "100%" ,paddingTop:20}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 120 }}
@@ -252,6 +261,7 @@ export default function CollectionsPage() {
           collections.map((collection, index) => {
             return (
               <CollectionsItem
+        
                 projectItems={projectItems}
                 item={collection}
                 getId={getId}
@@ -264,7 +274,7 @@ export default function CollectionsPage() {
             );
           })
         ) : (
-          <ActivityIndicator size="large" color={"#333"} />
+          <></>
         )}
       </ScrollView>
    
@@ -578,6 +588,9 @@ export default function CollectionsPage() {
         </View>
       </Modal>
     </View>
+       }
+    </>
+ 
   );
 }
 const styles = StyleSheet.create({

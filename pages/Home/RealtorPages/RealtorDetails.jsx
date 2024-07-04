@@ -420,7 +420,7 @@ export default function PostDetail() {
         )
         .then((res) => {
           changeHeart();
-          alert('eklendi')
+        
           if (res.data.status == "removed") {
             setInFavorite(false);
           } else {
@@ -442,6 +442,7 @@ export default function PostDetail() {
           </View>
           :
           <SafeAreaView style={{ backgroundColor: "white", flex: 1,paddingTop:20 }}>
+
           <Header onPress={toggleDrawer} index={setindex} tab={settab} />
           <Modal
             isVisible={isDrawerOpen}
@@ -468,87 +469,34 @@ export default function PostDetail() {
               </View>
             </View>
           </Modal>
-          {/* <View
-            style={{
-              width: "100%",
-              height: "10%",
-              backgroundColor: "transparent",
-              position: "absolute",
-              bottom: 15,
-              zIndex: 1,
-            }}
-          >
-            <View
-              style={{ flexDirection: "row", gap: 20, justifyContent: "center" }}
-            >
-              <TouchableOpacity
-              onPress={handleOpenPhone}
-                style={{
-                  backgroundColor: "#EA2A28",
-                  padding: 10,
-                  width: "40%",
-                  borderRadius: 5,
+              <View style={{width:'100%',backgroundColor:'white',position:'absolute',bottom:0,padding:10,zIndex:1}}>
+                  <View style={{flexDirection:'row',justifyContent:'space-around',paddingBottom:width>400? 14:7}}>
+                    <TouchableOpacity  style={{
+                      backgroundColor:'#ffffff',
+                      width:'45%',
+                      padding:10,
+                      borderRadius:5,
+                      borderWidth:1,
+                      borderColor:'#EB2B2E'
+                }}>
+                    
+                      <Text style={{textAlign:'center',color:'#EB2B2E',fontWeight:'700'}}>Ara</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                    onPress={()=>{
+                    setModalForAddToCart(true)
+                    }}
+                    style={{
+                      backgroundColor:'#EB2B2E',
+                      width:'45%',
+                      padding:10,
+                      borderRadius:5
                 }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "#ffffff",
-                    fontWeight: "500",
-                  }}
-                >
-                  Ara
-                </Text>
-              </TouchableOpacity>
-              {data?.housing?.step2_slug == "gunluk-kiralik" ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("CreateReservation", {
-                      data: data.housing,
-                    });
-                  }}
-                  style={{
-                    backgroundColor: "#EA2A28",
-                    padding: 10,
-                    width: "40%",
-                    borderRadius: 5,
-                  }}
-                >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "#ffffff",
-                      fontWeight: "500",
-                    }}
-                  >
-                    Rezervasyon Yap
-                  </Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  onPress={() => {
-                    setModalForAddToCart(true);
-                  }}
-                  style={{
-                    backgroundColor: "#EA2A28",
-                    padding: 10,
-                    width: "40%",
-                    borderRadius: 5,
-                  }}
-                >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "#ffffff",
-                      fontWeight: "500",
-                    }}
-                  >
-                    Sepete Ekle
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </View> */}
+                    >
+                      <Text style={{textAlign:'center',color:'#ffffff',fontWeight:'700'}}>Sepete Ekle</Text>
+                    </TouchableOpacity>
+                  </View>
+              </View>
           <View
             style={{
               flexDirection: "row",
@@ -640,7 +588,7 @@ export default function PostDetail() {
               </View>
             </TouchableOpacity>
           </View>
-          <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16}>
+          <ScrollView showsVerticalScrollIndicator={false} scrollEventThrottle={16} contentContainerStyle={{paddingBottom:50}}>
             <View style={{ height: 250 }}>
               <View style={styles.pagination}>
                 <View
@@ -787,7 +735,7 @@ export default function PostDetail() {
                     ))
                   } */}
     
-            <Modal
+            {/* <Modal
               isVisible={IsOpenSheet}
               onBackdropPress={() => setIsOpenSheet(false)}
               backdropColor="transparent"
@@ -931,7 +879,7 @@ export default function PostDetail() {
                   </View>
                 </View>
               </View>
-            </Modal>
+            </Modal> */}
             <Modal
               isVisible={ColectionSheet}
               onBackdropPress={ToggleColSheet}
@@ -1208,7 +1156,7 @@ export default function PostDetail() {
               </View>
             </Modal>
     
-            <Modal
+            {/* <Modal
               isVisible={modalVisibleComennet}
               onBackdropPress={() => setmodalVisibleComment(false)}
               backdropColor="transparent"
@@ -1393,7 +1341,7 @@ export default function PostDetail() {
                   />
                 </View>
               </View>
-            </Modal>
+            </Modal> */}
             <Modal
               animationType="slide"
               transparent={true}
@@ -1497,8 +1445,8 @@ export default function PostDetail() {
             <Modal
               isVisible={ModalForAddToCart}
               onBackdropPress={() => setModalForAddToCart(false)}
-              animationIn={"zoomInUp"}
-              animationOut={"zoomOutUp"}
+              animationIn={'fadeIn'}
+              animationOut={'fadeOut'}
               animationInTiming={200}
               animationOutTiming={200}
               backdropColor="transparent"
@@ -1592,6 +1540,7 @@ export default function PostDetail() {
                 )}
               </View>
             </Modal>
+            
           </ScrollView>
         </SafeAreaView>
         }

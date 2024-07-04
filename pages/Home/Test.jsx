@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   tabBarBtn: {
     width: "50%",
 
-    padding: 10,
+    padding: 7,
     borderRadius: 5,
   },
 });

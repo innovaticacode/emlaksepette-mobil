@@ -808,6 +808,7 @@ export default function App({ route }) {
             component={UserTypeList}
             options={({ route }) => ({
               title: "Kullanıcı Tipleri",
+              headerBackTitleVisible:false,
               headerStyle: {
                 backgroundColor: "#F5F5F7",
               },
