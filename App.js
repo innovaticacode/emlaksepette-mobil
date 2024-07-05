@@ -85,6 +85,7 @@ import * as SecureStore from "expo-secure-store";
 import DecontPdf from "./pages/Home/DecontPdf";
 import AddComment from "./pages/Home/AddComment";
 import SuccesScreen from "./pages/Home/SuccesScreen";
+import ExtradionRequest from "./components/ExtraditionRequest";
 
 const Stack = createNativeStackNavigator();
 
@@ -142,7 +143,7 @@ export default function App({ route }) {
 
   useEffect(() => {
     if (showSplashTemp == "ff") {
-      setShowSplash(true);
+      setShowSplash(false);
     }
   }, [showSplashTemp]);
 
@@ -926,6 +927,17 @@ export default function App({ route }) {
             component={AddComment}
             options={({ route }) => ({
               title: "Konutu Değerlendir",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="ExtraditionRequest"
+            component={ExtradionRequest}
+            options={({ route }) => ({
+              title: "İade İşlemleri",
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",

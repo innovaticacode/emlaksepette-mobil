@@ -356,6 +356,7 @@ export default function Basket() {
                 <GestureHandlerRootView style={{ backgroundColor: "white" }}>
                   <Swipeable renderRightActions={renderRightActions}>
                     <BasketItem
+                      DeleteBasket={DeleteBasket}
                       name={Cart?.title}
                       ımage={Cart?.image}
                       price={Cart?.amount}

@@ -47,7 +47,7 @@ export default function WelcomePage({ hideSplash }) {
           />
         </Animated.View>
       </View>
-      <View style={styles.body}>
+      {/* <View style={styles.body}>
         <Text style={styles.title}>
           <Text style={styles.highlight}>Emlak sepette'ye</Text> hoşgeldiniz.
         </Text>
@@ -58,7 +58,7 @@ export default function WelcomePage({ hideSplash }) {
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Kayıt Ol</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 }
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   imageContainer: {
-    height: "60%",
+    height: "100%",
     width: "100%",
     justifyContent: "center",
     alignItems: "center",

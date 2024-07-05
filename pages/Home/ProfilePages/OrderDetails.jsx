@@ -656,6 +656,7 @@ export default function OrderDetails() {
                 padding: 13,
                 borderRadius: 5,
               }}
+              onPress={() => navigation.navigate("ExtraditionRequest")}
             >
               <Text
                 style={{
