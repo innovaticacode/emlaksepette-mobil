@@ -311,7 +311,7 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
       console.error("Error fetching data:", error);
     }
   };
-  
+  console.log(user.has_club )
   return (
     <>
       {user.has_club != 1 ? (
@@ -454,19 +454,7 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                         <></>
                       )}
                     </View>
-                    {loading == false ? (
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          fontSize: 18,
-                          display: collections?.length == 0 ? "flex" : "none",
-                        }}
-                      >
-                        Koleksiyonunuz bulunmamaktadır
-                      </Text>
-                    ) : (
-                      ""
-                    )}
+                 
                     {loading == false ? (
                       collectionsRecods.map((collection, index) => {
                         return (

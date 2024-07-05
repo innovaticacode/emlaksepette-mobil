@@ -277,7 +277,7 @@ const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
                     </View>
                       }
                   {
-                    user.access_token && user.has_club == 0 &&
+                    user.access_token && user.has_club == 0  && 
                     <View style={styles.card}>
                  
                     <View style={{paddingTop:10}}>
@@ -295,7 +295,38 @@ const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
                 </TouchableOpacity>
                 </View>
                   }
-                      
+                        {
+                    user.access_token && user.has_club == 2  && 
+                    <View style={styles.card}>
+                 
+                    <View style={{paddingTop:10}}>
+                      <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}> Emlak Kulüp Üyeliğiniz Başvuru Sürecindedir!</Text>
+                    </View>
+                    <View style={{width:'80%',paddingBottom:10}}>
+                      <Text style={{textAlign:'center',color:'#7A8A95'}}>Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir</Text>
+                    </View>
+                    
+                </View>
+                  } 
+                    {
+                    user.access_token && user.has_club == 3  && 
+                    <View style={styles.card}>
+                 
+                    <View style={{paddingTop:10}}>
+                      <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}> Emlak Kulüp Üyeliğiniz Reddedildi</Text>
+                    </View>
+                    <View style={{width:'80%',paddingBottom:10}}>
+                      <Text style={{textAlign:'center',color:'#7A8A95'}}>Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir</Text>
+                    </View>
+                    <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
+                       onPress={()=>{
+                        navigation.navigate('Collections')
+                    }}
+                    >
+                  <Text style={{color:'#FFFFFF',textAlign:'center'}}>Tekrar Başvur</Text>
+                </TouchableOpacity>
+                </View>
+                  } 
                 </View>
             
                 <View style={{alignItems:'center'}}>

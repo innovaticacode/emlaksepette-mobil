@@ -24,10 +24,12 @@ import * as Clipboard from "expo-clipboard";
 import { Platform } from "react-native";
 import { SearchBar } from "@rneui/themed";
 import axios from "axios";
-
+import Icon2 from "react-native-vector-icons/MaterialCommunityIcons"
+import Icon3 from "react-native-vector-icons/MaterialIcons"
 import CollectionsItem from "./ProfilePages/profileComponents/CollectionsItem";
 import { getValueFor } from "../../components/methods/user";
 import { ActivityIndicator } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 export default function CollectionsPage() {
   const [showAlert, setshowAlert] = useState(false);
@@ -219,49 +221,304 @@ export default function CollectionsPage() {
       console.error("Error fetching data:", error);
     }
   };
+  const [CollectionIDForRemove, setCollectionIDForRemove] = useState(0);
+  const SelectCollection = (id) => {
+    setCollectionIDForRemove(id);
+    setCollectionsRemoveIds((prevIds) => {
+      if (prevIds.includes(id)) {
+        return prevIds.filter((item) => item !== id);
+      } else {
+        return [...prevIds, id];
+      }
+    });
+  };
+  const [isChoosed, setisChoosed] = useState(false);
+  const RemoveSelectedCollections = async () => {
+    const data = {
+      ids: CollectionsRemoveIds,
+    };
+    try {
+      const response = await axios.delete(
+        `https://mobil.emlaksepette.com/api/collections`,
 
+        {
+          data: data,
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+            "Content-Type": "application/json", // FormData kullanıldığı için Content-Type belirtilmelidir
+          },
+        }
+      );
+      fetchData();
+    
+      alert("fsdfsdf");
+      setModalVisible(false);
+      setCollectionsRemoveIds([]);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  const collectionIDS = collections.map(collection=>collection.id)
+const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
+  const RemoveAllCollection = async () => {
+    const data = {
+      ids: collectionIDS,
+    };
+    try {
+      const response = await axios.delete(
+        `https://mobil.emlaksepette.com/api/collections`,
+
+        {
+          data: data,
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+            "Content-Type": "application/json", // FormData kullanıldığı için Content-Type belirtilmelidir
+          },
+        }
+      );
+      setmodalForRemoveAll(false)
+      fetchData();
+      
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  const [CollectionsRemoveIds, setCollectionsRemoveIds] = useState([]);
+  const nav =useNavigation()
   return (
     <>
-    {
+       {
+                           user.has_club ==2 &&
+                          <>
+                        <View style={{ paddingTop: 10 }}>
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              color: "#4C6272",
+                              fontWeight: "bold",
+                              fontSize: 16,
+                            }}
+                          >
+                            {" "}
+                            Emlak Kulüp Üyeliğiniz Başvuru Sürecinde!
+                          </Text>
+                        </View>
+                        <View style={{ width: "100%" }}>
+                          <Text style={{ textAlign: "center", color: "#7A8A95" }}>
+                            Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi
+                            olmaız gerekmektedir
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: "#F65656",
+                            width: "100%",
+                            padding: 10,
+                          }}
+                          onPress={() => {
+                            navigation.navigate("Collections");
+                            setColectionSheet(false);
+                          }}
+                        >
+                          <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
+                            Tekrar Başvur
+                          </Text>
+                        </TouchableOpacity>
+                      </>
+                        }
+       {
+                           user.has_club ==3 &&
+                          <>
+                        <View style={{ paddingTop: 10 }}>
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              color: "#4C6272",
+                              fontWeight: "bold",
+                              fontSize: 16,
+                            }}
+                          >
+                            {" "}
+                            Emlak Kulüp Üyeliğiniz Reddedildi!
+                          </Text>
+                        </View>
+                        <View style={{ width: "100%" }}>
+                          <Text style={{ textAlign: "center", color: "#7A8A95" }}>
+                            Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi
+                            olmaız gerekmektedir
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: "#F65656",
+                            width: "100%",
+                            padding: 10,
+                          }}
+                          onPress={() => {
+                            navigation.navigate("Collections");
+                            setColectionSheet(false);
+                          }}
+                        >
+                          <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
+                            Tekrar Başvur
+                          </Text>
+                        </TouchableOpacity>
+                      </>
+                        }
+                         {
+                           user.has_club ==0 &&
+                          <>
+                        <View style={{ paddingTop: 10 }}>
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              color: "#4C6272",
+                              fontWeight: "bold",
+                              fontSize: 16,
+                            }}
+                          >
+                            {" "}
+                            Emlak Kulüp Üyeliğiniz Bulunmamaktadır!
+                          </Text>
+                        </View>
+                        <View style={{ width: "100%" }}>
+                          <Text style={{ textAlign: "center", color: "#7A8A95" }}>
+                            Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi
+                            olmaız gerekmektedir
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: "#F65656",
+                            width: "100%",
+                            padding: 10,
+                          }}
+                          onPress={() => {
+                            navigation.navigate("Collections");
+                            setColectionSheet(false);
+                          }}
+                        >
+                          <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
+                            Tekrar Başvur
+                          </Text>
+                        </TouchableOpacity>
+                      </>
+                        }
+
+     {
+        user.has_club == 1  &&
+
+
       loading ?
       <View style={{alignItems:'center',justifyContent:'center',height:'100%'}}>
         <ActivityIndicator color="#333" size={'large'}/>
       </View>
       :
- 
-   <View style={{ height: "100%" ,paddingTop:20}}>
+        collections.length == 0  ?
+        <View style={{alignItems:'center',justifyContent:'center',height:'90%',gap:10}}>
+        <View style={[styles.card, {alignItems:'center',justifyContent:'center'}]}>
+            <Icon3 name="bookmark-add" size={50} color={'#EA2A28'}/>
+        </View>
+        <View>
+        <Text style={{color:'grey',fontSize:16,fontWeight:'600'}}>Koleksiyonunuzda ilan bulunmamaktadır</Text>
+        
+        </View>
+        <View style={{width:'100%',alignItems:'center'}}>
+          <TouchableOpacity style={{backgroundColor:'#EA2A28',width:'90%',padding:8,borderRadius:5}} onPress={()=>{
+             
+              setloading(true)
+              setTimeout(() => {
+                nav.navigate('HomePage')
+                  setloading(false)
+              },700);
+          }}>
+            <Text style={{color:'#ffffff',fontWeight:'600',textAlign:'center'}}>Ana Sayfa'ya dön</Text>
+          </TouchableOpacity>
+        </View>
+
+      </View>:
+   <View style={{ height: "100%" ,paddingTop:5}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 120 }}
         onTouchStart={closeSheet}
       >
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
-          {message ? (
-            <Text style={{ color: "green", textAlign: "center" }}>
-              {colectionName} adlı Koleksiyonunuz silindi
-            </Text>
-          ) : (
-            <></>
-          )}
-        </View>
-        {loading == false ? (
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 18,
-              display: collections?.length == 0 ? "flex" : "none",
-            }}
-          >
-            Koleksiyonunuz bulunmamaktadır
-          </Text>
-        ) : (
-          ""
-        )}
-        {loading == false ? (
+          <View
+                      style={{
+                        flexDirection: "row",
+                        padding: 5,
+                        paddingTop: 9,
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          gap: 25,
+                          alignItems: "center",
+                        }}
+                      >
+                        <TouchableOpacity
+                          style={styles.btnRemove}
+                          onPress={()=>setmodalForRemoveAll(true)}
+                        >
+                          <Text
+                            style={{
+                              fontSize: 12,
+                              textAlign: "center",
+                              fontWeight: "bold",
+                              color: "#ffffff",
+                            }}
+                          >
+                            Tümünü Sil
+                          </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.btnRemove}
+                          onPress={() => {
+                            setisChoosed(!isChoosed);
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: 12,
+                              textAlign: "center",
+                              fontWeight: "bold",
+                              color: "#ffffff",
+                            }}
+                          >
+                            Toplu Seç
+                          </Text>
+                        </TouchableOpacity>
+                        {isChoosed && (
+                          <Text style={{ fontSize: 14 }}>
+                            Seçili ({CollectionsRemoveIds.length})
+                          </Text>
+                        )}
+                      </View>
+                      <View style={{ display: isChoosed ? "flex" : "none" }}>
+                        <TouchableOpacity
+                          style={[
+                            styles.btnRemove,
+                            { paddingLeft: 15, paddingRight: 15 },
+                          ]}
+                          onPress={() => {
+                            RemoveSelectedCollections();
+                          }}
+                        >
+                          <Icon name="trash" size={18} color={"#ffffff"} />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+      
+       
+       {
           collections.map((collection, index) => {
             return (
               <CollectionsItem
-        
+              isChoosed={isChoosed}
+                 SelectCollection={SelectCollection}
                 projectItems={projectItems}
                 item={collection}
                 getId={getId}
@@ -273,9 +530,7 @@ export default function CollectionsPage() {
               />
             );
           })
-        ) : (
-          <></>
-        )}
+        }
       </ScrollView>
    
       <View
@@ -588,7 +843,7 @@ export default function CollectionsPage() {
         </View>
       </Modal>
     </View>
-       }
+       } 
     </>
  
   );
@@ -717,4 +972,29 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
   },
+  btnRemove: {
+    backgroundColor: "#EA2A28",
+    padding: 7,
+    borderRadius: 5,
+  },
+  card: {
+    backgroundColor: "#FFFFFF",
+    padding:15,
+   
+  borderRadius:50,
+
+    borderWidth: 0.7,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  }
 });
