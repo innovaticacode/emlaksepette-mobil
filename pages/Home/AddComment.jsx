@@ -15,10 +15,10 @@ export default function AddComment() {
     const [data, setData] = useState({});
     const route = useRoute()
     const nav =useNavigation()
-     const {HouseID}=route.params
+     const {HouseID} = route.params
      const [loading, setloading] = useState(true)
     useEffect(() => {
-      apiRequestGet("housing/" + HouseID).then((res) => {
+      apiRequestGet("housing/"+HouseID).then((res) => {
         setData(res.data.housing);
         setloading(false)
       });

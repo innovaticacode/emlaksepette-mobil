@@ -228,6 +228,7 @@ export default function PostDetail() {
       )
       .then((response) => {
         setaddCollection(false);
+        setnewCollectionNameCreate('')
         // Başarılı yanıtı işleyin
         // setselectedCollectionName(response.data.collection.name)
       })
@@ -471,7 +472,11 @@ export default function PostDetail() {
           </Modal>
               <View style={{width:'100%',backgroundColor:'white',position:'absolute',bottom:0,padding:10,zIndex:1}}>
                   <View style={{flexDirection:'row',justifyContent:'space-around',paddingBottom:width>400? 14:7}}>
-                    <TouchableOpacity  style={{
+                    <TouchableOpacity 
+                        onPress={()=>{
+                          navigation.navigate('CreateReservation',{ data:data })
+                        }}
+                    style={{
                       backgroundColor:'#ffffff',
                       width:'45%',
                       padding:10,
@@ -1325,9 +1330,9 @@ export default function PostDetail() {
                       </View>
                     </View>
                     <View
-                      style={{ gap: 6, justifyContent: "center", paddingTop: 20 }}
+                      style={{ gap: 6, justifyContent: "center", paddingTop: 15 }}
                     >
-                      <Text style={{ fontSize: 13, color: "#19181C" }}>
+                      <Text style={{ fontSize: 13, color: "#19181C" ,fontWeight:'500'}}>
                         Koleksiyon İsmi
                       </Text>
                       <TextInput
@@ -1336,18 +1341,20 @@ export default function PostDetail() {
                         onChangeText={(value) => setnewCollectionNameCreate(value)}
                       />
                     </View>
-                    <View style={{ paddingTop: 80 }}>
+                    <View style={{ paddingTop: 15 }}>
                       <TouchableOpacity
+                      disabled={newCollectionNameCreate ? false :true}
                         style={{
                           backgroundColor: "#EA2A28",
                           padding: 10,
                           borderRadius: 6,
+                          opacity:newCollectionNameCreate ? 1:0.3
                         }}
                         onPress={() => {
                           addCollectionPost();
                         }}
                       >
-                        <Text style={{ textAlign: "center", color: "white" }}>
+                        <Text style={{ textAlign: "center", color: "white",fontWeight:'500' }}>
                           Koleksiyon Oluştur
                         </Text>
                       </TouchableOpacity>
