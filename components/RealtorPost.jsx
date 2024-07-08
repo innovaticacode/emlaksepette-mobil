@@ -65,7 +65,7 @@ export default function RealtorPost({
   };
 
   useEffect(() => {
-    if (!housing.is_housing_favorite) {
+    if (housing.is_housing_favorite == null) {
       setHeart("hearto");
       setInFavorite(false);
     } else {

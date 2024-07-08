@@ -46,9 +46,11 @@ export default function Order({ item }) {
   const PhotoUrl = "https://mobil.emlaksepette.com/storage/profile_images/";
   console.log(JSON.parse(item.cart)['item']['id'] )
   const HouseId=item && item.cart &&  JSON.parse(item.cart)['item']['id']
+  console.log(HouseId)
+  
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate("OrderDetail", { OrderId: item && item.cart &&  JSON.parse(item.cart)['item']['id'] })}
+      onPress={() => navigation.navigate("OrderDetail", { OrderId: item.id , id:HouseId})}
     >
       <View style={style.container}>
         <View style={style.InfoDateButton}>
@@ -57,6 +59,7 @@ export default function Order({ item }) {
             <View style={{ flexDirection: "row" }}>
               <Text>Toplam: </Text>
               <Text style={{ color: "green" }}> {item.amount} ₺ </Text>
+             
             </View>
           </View>
           <View style={style.Button}>

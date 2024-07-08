@@ -10,10 +10,11 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
-  ActivityIndicator,
+
   Keyboard,
   Platform,
   TextInput,
+  Share
 } from "react-native";
 import Posts from "../../../components/Posts";
 import LinkIcon3 from "react-native-vector-icons/Feather";
@@ -40,7 +41,8 @@ import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import Categories from "../../../components/Categories";
 import { getValueFor } from "../../../components/methods/user";
 import AddCollection from "../../../components/AddCollection";
-
+import Arrow from "react-native-vector-icons/MaterialIcons";
+import { ActivityIndicator } from "react-native-paper";
 export default function SeeCollection() {
   const route = useRoute();
 
@@ -593,6 +595,27 @@ export default function SeeCollection() {
     setPaymentModalShowOrder(no);
     setFormVisible(!FormVisible);
   };
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `https://mobil.emlaksepette.com/`,
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log("Link belirli bir aktivitede paylaşıldı");
+        } else {
+          console.log("Link paylaşıldı");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Paylaşım iptal edildi");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+ 
+    const ApiUrl = "https://mobil.emlaksepette.com/"
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -602,7 +625,118 @@ export default function SeeCollection() {
           Keyboard.dismiss();
         }}
       >
-        <View style={style.header}>
+          <View
+              style={{
+                width: "100%",
+                
+                 height:
+                 collectionUser?.name > 30
+                    ? width < 400
+                      ? ""
+                       : 240
+                     : width < 400
+                    ? 200
+                   : 220,
+              }}
+            >
+              <View
+                style={{
+                  position: "absolute",
+                  zIndex: 1,
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor:collectionUser?.banner_hex_code + 94,
+                  borderBottomLeftRadius: 30,
+                  borderBottomRightRadius: 30,
+                }}
+              >
+                <View style={style.InfoContainer}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#ebebeb94",
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                      borderRadius: 5,
+                      justifyContent: "center",
+                      width: 45,
+                      height: 30,
+                      alignItems: "center",
+                    }}
+                    onPress={() => navigation.goBack()}
+                  >
+                    <Arrow
+                      name="arrow-back-ios"
+                      size={20}
+                      style={{ left: 3 }}
+                      color={"white"}
+                    />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={style.shareIcons}
+                     onPress={onShare}
+                  >
+                    <Icon name="sharealt" size={18} />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ paddingLeft: 15, paddingRight: 15 }}>
+                  <View style={{ paddingTop: 10 }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+
+                        gap: 10,
+                      }}
+                    >
+                      <View style={{ width: 40, height: 40, borderRadius: 20 }}>
+                         <ImageBackground
+                          source={{
+                            uri: `${ApiUrl}storage/profile_images/${collectionUser?.profile_image}`,
+                          }}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: 20,
+                          }}
+                        /> 
+                      </View>
+                      <View style={{ width: "90%" }}>
+                        <Text style={{ fontSize: 12, color: "white" }}>
+                        Koleksiyon Adı: {item.name}
+                        </Text>
+                        <Text style={{ color: "white", fontSize: 15 }}>
+                        {collectionUser.name}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={{ width: "60%", paddingTop: 10 }}>
+                    <TextInput
+                      style={{
+                        padding: 9,
+                        backgroundColor: "#f5f5f53d",
+                        borderWidth: 0,
+                        borderColor: "#ebebeb",
+                        borderRadius: 5,
+                      }}
+                      placeholder="Ara..."
+                      placeholderTextColor={"#333"}
+                    />
+                  </View>
+                </View>
+              </View>
+
+               <ImageBackground
+                source={require('../profilePhoto.jpg')}
+                style={{ width: "100%", height: "100%" }}
+                imageStyle={{
+                  borderBottomLeftRadius: 30,
+                  borderBottomRightRadius: 30,
+                }}
+              /> 
+            </View>
+        {/* <View style={style.header}>
           <View
             style={{
               position: "absolute",
@@ -689,11 +823,12 @@ export default function SeeCollection() {
               borderBottomRightRadius: 30,
             }}
           />
-        </View>
+        </View> */}
         {mergedItems.length > 0 ? (
-          <ScrollView showsVerticalScrollIndicator={false}>
+       
             <View style={style.PostContainer}>
               <FlatList
+              
                 data={mergedItems}
                 renderItem={({ item, index }) => (
                   <View
@@ -951,10 +1086,10 @@ export default function SeeCollection() {
                     )}
                   </View>
                 )}
-                scrollEnabled={false}
+               
               />
             </View>
-          </ScrollView>
+       
         ) : (
           <View style={style.loadingContainer}>
             <ActivityIndicator size="large" color="#333" />
@@ -1703,7 +1838,8 @@ const style = StyleSheet.create({
     color: "grey",
   },
   PostContainer: {
-    height: 1000,
+    paddingBottom:160,
+    flex:1,
     backgroundColor: "#FFFFFF",
     width: "100%",
   },
@@ -1843,6 +1979,13 @@ const style = StyleSheet.create({
     padding: 20,
     borderRadius: 5,
   },
+  InfoContainer: {
+    paddingTop: width < 400 ? 30 : 50,
+    padding: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
@@ -1859,4 +2002,5 @@ const pickerSelectStyles = StyleSheet.create({
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon
   },
+
 });

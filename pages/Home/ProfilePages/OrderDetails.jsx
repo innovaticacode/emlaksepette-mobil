@@ -22,7 +22,7 @@ import { Platform } from "react-native";
 export default function OrderDetails() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { OrderId } = route.params;
+  const { OrderId,id } = route.params;
 
   const [user, setUser] = useState({});
 
@@ -38,7 +38,7 @@ export default function OrderDetails() {
       try {
         if (user?.access_token ) {
           const response = await axios.get(
-            `https://mobil.emlaksepette.com/api/institutional/order_detail/${182}`,
+            `https://mobil.emlaksepette.com/api/institutional/order_detail/${OrderId}`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -139,7 +139,7 @@ console.log(user.access_token +'zehra abla token')
           <View style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "400", fontSize: 13 }}>İlan No: </Text>
             <Text style={{ fontSize: 13, color: "grey" }}>
-              #2000{Detail.id}
+              #2000{OrderId} + {id}
             </Text>
           </View>
           <View style={{ flexDirection: "row" }}>
@@ -235,7 +235,7 @@ console.log(user.access_token +'zehra abla token')
           >
             <TouchableOpacity
             onPress={()=>{
-              navigation.navigate('AddComment',{HouseID:Detail?.id})
+              navigation.navigate('AddComment',{HouseID:id})
             }}
               style={{
                 backgroundColor: "#EA2C2E",
