@@ -11,8 +11,12 @@ import PagerView from "react-native-pager-view";
 import { TextInput } from "react-native-gesture-handler";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const ExtradionRequest = () => {
+  const route = useRoute();
+  const { OrderId } = route.params;
+  console.log(OrderId);
   const pagerRef = useRef(null);
   const [checked, setChecked] = useState(false);
   const [adSoyad, setAdSoyad] = useState("");
@@ -22,6 +26,9 @@ const ExtradionRequest = () => {
   const [iban, setIban] = useState("TR");
   const [ekNotlar, setEkNotlar] = useState("");
   const [errors, setErrors] = useState({});
+  const [terms, setTerms] = useState("");
+
+  const navigation = useNavigation();
 
   const handleNextPage = (page) => {
     if (page === 1 && !checked) {
@@ -53,7 +60,9 @@ const ExtradionRequest = () => {
 
   const toggleCheckbox = () => {
     setChecked(!checked);
+    setTerms(1);
   };
+  console.log(terms);
 
   const validateEmail = (email) => {
     // Basic email validation
@@ -97,25 +106,29 @@ const ExtradionRequest = () => {
 
   const handleSendData = () => {
     const formData = new FormData();
-    formData.append("adSoyad", adSoyad);
-    formData.append("telefon", telefon);
+    formData.append("name", adSoyad);
+    formData.append("phone", telefon);
     formData.append("email", email);
-    formData.append("banka", banka);
-    formData.append("iban", iban);
-    formData.append("ekNotlar", ekNotlar);
+    formData.append("return_bank", banka);
+    formData.append("return_iban", iban);
+    formData.append("content", ekNotlar);
+    formData.append("cart_order_id", OrderId);
+    formData.append("terms", terms ? "1" : "0");
+
     axios
-      .post("https://api.example.com/send-data", formData, {
+      .post("https://test.emlaksepette.com/api/return", formData, {
         headers: {
-          Authorization: `Bearer ${user.access_token}`,
+          Authorization: `Bearer ${user?.access_token}`,
+          "Content-Type": "multipart/form-data",
         },
       })
       .then((res) => {
-        console.log(response.data);
-        alert("Başarılı");
+        console.log(res.data);
+        navigation.navigate("OrderDetail", { OrderId: OrderId });
       })
       .catch((err) => {
-        console.log(err);
-        alert("hatali");
+        console.error(err);
+        alert("Hata oluştu");
       });
   };
 
@@ -252,7 +265,7 @@ const ExtradionRequest = () => {
             defaultValue="TR"
             keyboardType="numeric"
             value={iban}
-            maxLength={26}
+            maxLength={24}
             onChangeText={setIban}
           />
           {errors.iban && <Text style={styles.errorText}>{errors.iban}</Text>}
