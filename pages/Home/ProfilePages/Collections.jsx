@@ -7,11 +7,11 @@ import {
   Keyboard,
   Animated,
   TouchableOpacity,
-  Modal,
+  
   Linking,
 } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
-
+import Modal from "react-native-modal";
 import { useState, useRef, useEffect } from "react";
 import CollectionsItem from "./profileComponents/CollectionsItem";
 import { Platform } from "react-native";
@@ -25,6 +25,7 @@ import IconSms from "react-native-vector-icons/Feather";
 import * as Clipboard from "expo-clipboard";
 import Icon2 from "react-native-vector-icons/Feather";
 
+import Icon3 from "react-native-vector-icons/MaterialIcons";
 import { SearchBar } from "@rneui/themed";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
@@ -45,11 +46,7 @@ export default function Collections() {
   const openSheet = () => {
     setIsDisabled(true);
     setdisplay(true);
-    Animated.timing(translateY, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+ setchoose(!choose)
   };
 
   const closeSheet = () => {
@@ -312,8 +309,7 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
     }
   };
   console.log(user.has_club )
-
-
+  const [choose, setchoose] = useState(false)
   return (
     <>
       {user.has_club != 1 ? (
@@ -598,17 +594,51 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                 </Animated.View>
               </View>
               <Modal
+          isVisible={choose}
+          style={styles.modal2}
+          animationIn={"fadeInDown"}
+          animationOut={"fadeOutDown"}
+          onBackdropPress={()=>setchoose(false)}
+          swipeDirection={['down']}
+          onSwipeComplete={()=>setchoose(false)}
+        >
+          <View style={styles.modalContent2}>
+            <View style={{padding:10,alignItems:'center'}}>
+              <TouchableOpacity style={{width:'15%',backgroundColor:'#c2c4c6',padding:4,borderRadius:50}}>
+
+              </TouchableOpacity>
+            </View>
+            <View style={{padding:20,gap:35}}>
+            <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={{}}>
+                      <Icon3 name="photo" size={23} color={'#333'}/>
+                      <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Kütüphaneden Seç</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={{}}>
+                      <Icon3 name="add-a-photo" size={21} color={'#333'}/>
+                      <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Fotoğraf Çek</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}}>
+                      <Icon3 name="restore-from-trash" size={22} color={'#d83131'}/>
+                      <Text style={{fontSize:14,color:'#d83131',fontWeight:'700'}}>Mevcut Fotoğrafı Kaldır</Text>
+              </TouchableOpacity>
+            </View>
+            
+          </View>
+        </Modal>
+              <Modal
               onTouchStart={()=>setmodalForRemoveAll(false)}
-                animationType="fade" // veya "fade", "none" gibi
+            
+                animationIn={'fadeIn'}
+                animationOut={'fadeOut'}// veya "fade", "none" gibi
                 transparent={true}
                 visible={modalForRemoveAll}
                 onRequestClose={() => {
                   setmodalForRemoveAll(false);
                 }}
-                
+                style={styles.modal4}
               >
-                <View style={styles.centeredView}>
-                  <View style={styles.modalView}>
+                
+                  <View style={styles.modalView4}>
                     <View>
                       <Text>Tüm koleksiyonları silmek istediğinize eminmisiniz?</Text>
                     </View>
@@ -623,18 +653,21 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                     </View>
                       
                   </View>
-                </View>
+           
               </Modal>
               <Modal
-                animationType="fade" // veya "fade", "none" gibi
+                
+                animationIn={'fadeIn'}
+                animationOut={'fadeOut'} // veya "fade", "none" gibi
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => {
                   setModalVisible(!modalVisible);
                 }}
+                style={styles.modal4}
               >
-                <View style={styles.centeredView}>
-                  <View style={styles.modalView}>
+              
+                  <View style={styles.modalView4}>
                     <View style={styles.closeButtonContainer}>
                       <Text
                         style={{
@@ -717,7 +750,7 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                       </TouchableOpacity>
                     </View>
                   </View>
-                </View>
+                
               </Modal>
               <Modal
                 animationType="fade" // veya "fade", "none" gibi
@@ -841,15 +874,18 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                 </View>
               </Modal>
               <Modal
-                animationType="fade" // veya "fade", "none" gibi
+               
+                animationIn={'fadeIn'}
+                animationOut={'fadeOut'}// veya "fade", "none" gibi
                 transparent={true}
                 visible={modalVisible2}
                 onRequestClose={() => {
                   setModalVisible2(!modalVisible2);
                 }}
+                style={styles.modal4}
               >
-                <View style={styles.centeredView3}>
-                  <View style={styles.modalView3}>
+               
+                  <View style={styles.modalView4}>
                     <Text style={styles.modalText3}>
                       Koleksiyonu Silmek İstediğinize eminmisin?
                     </Text>
@@ -886,7 +922,7 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                       </TouchableOpacity>
                     </View>
                   </View>
-                </View>
+                
               </Modal>
             </View>
           )}
@@ -951,15 +987,16 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   centeredView: {
-    padding: 20,
+  margin:0,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)", // modal dışı koyu arkaplan
   },
   modalView: {
+  
     width: "100%",
-    margin: 20,
+    margin:0,
     backgroundColor: "white",
     borderRadius: 5,
     padding: 20,
@@ -1039,4 +1076,50 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 5,
   },
+  modal2: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContent2: {
+    gap: 10,
+  
+    backgroundColor: "#F8F7F4",
+    padding: 10,
+    height: "30%",
+
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    ...Platform.select({
+      ios: {
+        shadowColor: "white",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  modalView4:{
+    width: "100%",
+    
+    backgroundColor: "white",
+    borderRadius: 5,
+    padding: 20,
+    gap: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modal4:{
+    backgroundColor: "rgba(0,0,0,0.5)",
+      margin:0,
+      padding:10,
+  }
 });
