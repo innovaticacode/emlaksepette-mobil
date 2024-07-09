@@ -24,7 +24,8 @@ import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import Menu from "./Menu.json";
 import { Platform } from "react-native";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
+
 
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
@@ -40,7 +41,7 @@ export default function ShoppingProfile() {
   const [permissionsUser, setPermissionsUser] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [openAccor, setOpenAccor] = useState({});
-  const PhotoUrl = "https://mobil.emlaksepette.com/storage/profile_images/";
+  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -56,7 +57,7 @@ export default function ShoppingProfile() {
         }
 
         const response = await axios.get(
-          "https://mobil.emlaksepette.com/api/user/notification",
+          "https://private.emlaksepette.com/api/user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -90,7 +91,7 @@ export default function ShoppingProfile() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          `https://mobil.emlaksepette.com/api/users/${user?.id}`,
+          `https://private.emlaksepette.com/api/users/${user?.id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -187,7 +188,7 @@ export default function ShoppingProfile() {
       {
         loading ==true
         ?
-        <ActivityIndicator/>
+        <ActivityIndicator color="#333"/>
         :
         <View style={style.container}>
           
@@ -270,7 +271,7 @@ export default function ShoppingProfile() {
           </View>
         </View>
         {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
+          <ActivityIndicator size="large" color="#333" />
         ) : (
           <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
             <View style={{ gap: 20, padding: 10 }}>

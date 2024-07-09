@@ -35,7 +35,8 @@ export default function RealtorPostFavorited({
   housingId,
   no,
   changeFavorites,
-  GetId
+  GetId,
+  fetchData
 }) {
   const [user,setUser] = useState({});
   const navigation = useNavigation();
@@ -55,11 +56,11 @@ export default function RealtorPostFavorited({
 
   const removeItem = () => {
     if(type == 1){
-      
+      fetchData()
       const config = {
         headers: { Authorization: `Bearer ${user.access_token}` }
       };
-      axios.post('https://mobil.emlaksepette.com/api/add_project_to_favorites/'+housingId,{
+      axios.post('https://private.emlaksepette.com/api/add_project_to_favorites/'+housingId,{
         project_id : projectId,
         housing_id : housingId
       },config).then((res) => {
@@ -74,12 +75,12 @@ export default function RealtorPostFavorited({
       })
       setShowAlert(false);
     }else{
-     
+      fetchData()
       const config = {
         headers: { Authorization: `Bearer ${user.access_token}` }
       };
-      axios.post('https://mobil.emlaksepette.com/api/add_housing_to_favorites/'+housingId,{
-        housing_id : housingId
+      axios.post('https://private.emlaksepette.com/api/add_housing_to_favorites/'+HouseId,{
+        housing_id : HouseId
       },config).then((res) => {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,

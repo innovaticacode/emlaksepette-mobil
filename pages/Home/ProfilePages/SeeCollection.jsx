@@ -10,10 +10,11 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
-  ActivityIndicator,
+
   Keyboard,
   Platform,
   TextInput,
+  Share
 } from "react-native";
 import Posts from "../../../components/Posts";
 import LinkIcon3 from "react-native-vector-icons/Feather";
@@ -40,7 +41,8 @@ import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import Categories from "../../../components/Categories";
 import { getValueFor } from "../../../components/methods/user";
 import AddCollection from "../../../components/AddCollection";
-
+import Arrow from "react-native-vector-icons/MaterialIcons";
+import { ActivityIndicator } from "react-native-paper";
 export default function SeeCollection() {
   const route = useRoute();
 
@@ -62,7 +64,7 @@ export default function SeeCollection() {
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const [FormVisible, setFormVisible] = useState(false);
-  const apiUrl = "https://mobil.emlaksepette.com/";
+  const apiUrl = "https://private.emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -92,7 +94,7 @@ export default function SeeCollection() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://mobil.emlaksepette.com/api/emlak-kulup/${collectionUser.id}/koleksiyonlar/${item.id}`
+          `https://private.emlaksepette.com/api/emlak-kulup/${collectionUser.id}/koleksiyonlar/${item.id}`
         );
         setCollectionData(response.data);
         setMergedItems(response.data.mergedItems);
@@ -145,7 +147,7 @@ export default function SeeCollection() {
 
     axios
       .post(
-        "https://mobil.emlaksepette.com/api/remove_item_on_collection",
+        "https://private.emlaksepette.com/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -214,7 +216,7 @@ export default function SeeCollection() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://mobil.emlaksepette.com/api/client/collections",
+          "https://private.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -267,7 +269,7 @@ export default function SeeCollection() {
 
     axios
       .post(
-        "https://mobil.emlaksepette.com/api/add/collection",
+        "https://private.emlaksepette.com/api/add/collection",
         collectionData,
         {
           headers: {
@@ -315,7 +317,7 @@ export default function SeeCollection() {
     };
 
     axios
-      .post("https://mobil.emlaksepette.com/api/addLink", collectionData, {
+      .post("https://private.emlaksepette.com/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -384,7 +386,7 @@ export default function SeeCollection() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -434,7 +436,7 @@ export default function SeeCollection() {
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        "https://mobil.emlaksepette.com/api/institutional/give_offer",
+        "https://private.emlaksepette.com/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -476,7 +478,7 @@ export default function SeeCollection() {
   const fetchCity = async () => {
     try {
       const response = await axios.get(
-        "https://mobil.emlaksepette.com/api/cities"
+        "https://private.emlaksepette.com/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -498,7 +500,7 @@ export default function SeeCollection() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://mobil.emlaksepette.com/api/counties/${value}`
+        `https://private.emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -593,6 +595,27 @@ export default function SeeCollection() {
     setPaymentModalShowOrder(no);
     setFormVisible(!FormVisible);
   };
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `https://private.emlaksepette.com/`,
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log("Link belirli bir aktivitede paylaşıldı");
+        } else {
+          console.log("Link paylaşıldı");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Paylaşım iptal edildi");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+ 
+    const ApiUrl = "https://private.emlaksepette.com/"
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -602,7 +625,118 @@ export default function SeeCollection() {
           Keyboard.dismiss();
         }}
       >
-        <View style={style.header}>
+          <View
+              style={{
+                width: "100%",
+                
+                 height:
+                 collectionUser?.name > 30
+                    ? width < 400
+                      ? ""
+                       : 240
+                     : width < 400
+                    ? 200
+                   : 220,
+              }}
+            >
+              <View
+                style={{
+                  position: "absolute",
+                  zIndex: 1,
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor:collectionUser?.banner_hex_code + 94,
+                  borderBottomLeftRadius: 30,
+                  borderBottomRightRadius: 30,
+                }}
+              >
+                <View style={style.InfoContainer}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#ebebeb94",
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                      borderRadius: 5,
+                      justifyContent: "center",
+                      width: 45,
+                      height: 30,
+                      alignItems: "center",
+                    }}
+                    onPress={() => navigation.goBack()}
+                  >
+                    <Arrow
+                      name="arrow-back-ios"
+                      size={20}
+                      style={{ left: 3 }}
+                      color={"white"}
+                    />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={style.shareIcons}
+                     onPress={onShare}
+                  >
+                    <Icon name="sharealt" size={18} />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ paddingLeft: 15, paddingRight: 15 }}>
+                  <View style={{ paddingTop: 10 }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+
+                        gap: 10,
+                      }}
+                    >
+                      <View style={{ width: 40, height: 40, borderRadius: 20 }}>
+                         <ImageBackground
+                          source={{
+                            uri: `${ApiUrl}storage/profile_images/${collectionUser?.profile_image}`,
+                          }}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: 20,
+                          }}
+                        /> 
+                      </View>
+                      <View style={{ width: "90%" }}>
+                        <Text style={{ fontSize: 12, color: "white" }}>
+                        Koleksiyon Adı: {item.name}
+                        </Text>
+                        <Text style={{ color: "white", fontSize: 15 }}>
+                        {collectionUser.name}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={{ width: "60%", paddingTop: 10 }}>
+                    <TextInput
+                      style={{
+                        padding: 9,
+                        backgroundColor: "#f5f5f53d",
+                        borderWidth: 0,
+                        borderColor: "#ebebeb",
+                        borderRadius: 5,
+                      }}
+                      placeholder="Ara..."
+                      placeholderTextColor={"#333"}
+                    />
+                  </View>
+                </View>
+              </View>
+
+               <ImageBackground
+                source={require('../profilePhoto.jpg')}
+                style={{ width: "100%", height: "100%" }}
+                imageStyle={{
+                  borderBottomLeftRadius: 30,
+                  borderBottomRightRadius: 30,
+                }}
+              /> 
+            </View>
+        {/* <View style={style.header}>
           <View
             style={{
               position: "absolute",
@@ -689,11 +823,12 @@ export default function SeeCollection() {
               borderBottomRightRadius: 30,
             }}
           />
-        </View>
+        </View> */}
         {mergedItems.length > 0 ? (
-          <ScrollView showsVerticalScrollIndicator={false}>
+       
             <View style={style.PostContainer}>
               <FlatList
+              
                 data={mergedItems}
                 renderItem={({ item, index }) => (
                   <View
@@ -951,13 +1086,13 @@ export default function SeeCollection() {
                     )}
                   </View>
                 )}
-                scrollEnabled={false}
+               
               />
             </View>
-          </ScrollView>
+       
         ) : (
           <View style={style.loadingContainer}>
-            <ActivityIndicator size="large" color="#000000" />
+            <ActivityIndicator size="large" color="#333" />
           </View>
         )}
       </View>
@@ -1703,7 +1838,8 @@ const style = StyleSheet.create({
     color: "grey",
   },
   PostContainer: {
-    height: 1000,
+    paddingBottom:160,
+    flex:1,
     backgroundColor: "#FFFFFF",
     width: "100%",
   },
@@ -1843,6 +1979,13 @@ const style = StyleSheet.create({
     padding: 20,
     borderRadius: 5,
   },
+  InfoContainer: {
+    paddingTop: width < 400 ? 30 : 50,
+    padding: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
@@ -1859,4 +2002,5 @@ const pickerSelectStyles = StyleSheet.create({
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon
   },
+
 });

@@ -98,7 +98,7 @@ const pickDocument = async () => {
 
             <View style={[styles.AdvertDetail,{flexDirection:'row'}]}>
                 <View style={styles.image}>
-                    <ImageBackground source={{uri:`https://mobil.emlaksepette.com/project_housing_images/${project['image[]']}`}}style={{width:'100%',height:'100%'}} />
+                    <ImageBackground source={{uri:`https://private.emlaksepette.com/project_housing_images/${project['image[]']}`}}style={{width:'100%',height:'100%'}} />
                 </View>
                 <View style={styles.Description}>
                     <View style={{gap:2}}>

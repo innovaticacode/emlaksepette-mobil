@@ -7,20 +7,20 @@ import { Platform } from "react-native";
 import { addDotEveryThreeDigits } from '../../../../components/methods/merhod'
 export default function RealtorAdvertPost({Onpress,housing}) {
     const [status, setStatus] = useState(housing.status)
-
+const apiUrl ='https://private.emlaksepette.com/'
     const {width,height}=Dimensions.get('window')
   return (
     <View style={[style.card,{gap:5}]}>
                 
                   <View style={{flexDirection:'row',width:'100%',gap:10}}>
                         <View style={{backgroundColor:'red',width:90,height:80}}>
-
+                        <ImageBackground source={{uri : `${apiUrl}housing_images/${housing.image}`}} style={{width:'100%',height:'100%'}} resizeMode='cover' /> 
                         </View>
                         <View>
                         <View style={{gap:5}}>
                             <View style={{flexDirection:'row',alignItems:'center'}}>
                                 <View style={{width:'80%'}}>
-                                <Text style={{color:'grey',fontSize:9,fontWeight:'600'}}>#1000{housing.id}</Text>
+                                <Text style={{color:'grey',fontSize:9,fontWeight:'600'}}>#2000{housing.id}</Text>
                                 <Text style={{fontSize:15,fontWeight:'600',color:'#333'}} numberOfLines={1}>{housing.housing_title}</Text>
                                 </View>
                                 <View style={{alignItems:'center',justifyContent:'center'}}>
@@ -34,7 +34,7 @@ export default function RealtorAdvertPost({Onpress,housing}) {
                     <Text style={{fontSize:11,color:'grey',fontWeight:'600'}}>İlan Bitiş Tarihi: 1 Tem 2024 13:18</Text>
                 </View>
                 <View style={{paddingTop:9}} >
-                    <Text style={{fontSize:13,fontWeight:'700',color:'#333',}}>5.000.000 TL</Text>
+                    <Text style={{fontSize:13,fontWeight:'700',color:'#333',}}>{addDotEveryThreeDigits(housing.price)} TL</Text>
                 </View>
                         </View>
                   </View>

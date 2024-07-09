@@ -19,7 +19,7 @@ function TypeListScreen({
   selectedTypes,
   nextStep,
 }) {
-  const baseUrl = 'https://mobil.emlaksepette.com/react/';
+  const baseUrl = 'https://private.emlaksepette.com/react/';
 
   const [loadingOrder, setLoadingOrder] = useState(null);
   const [loadingOrderStatusId, setLoadingOrderStatusId] = useState(null);
@@ -86,7 +86,7 @@ function TypeListScreen({
     >
       <Text>{item.title}</Text>
       {loadingOrder === order && loadingOrderStatusId === item.id && (
-        <ActivityIndicator style={styles.loadingIcon} />
+        <ActivityIndicator  color={'#333'} style={styles.loadingIcon} />
       )}
     </TouchableOpacity>
   );

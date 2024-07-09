@@ -24,7 +24,7 @@ const {Project_Id, Project_name}=route.params
       getValueFor("user",setUser)
     },[]);
     useEffect(() => {
-      axios.get(`https://mobil.emlaksepette.com/api/project_housings/${Project_Id}?start=${start}&end=${end}`+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
+      axios.get(`https://private.emlaksepette.com/api/project_housings/${Project_Id}?start=${start}&end=${end}`+start+'&take='+take,{ headers: { Authorization: 'Bearer ' + user.access_token } }).then((res) => {
         sethousings(res.data.housings + 'evler');
       }).catch((e) => {
         console.log(e);

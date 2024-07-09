@@ -83,7 +83,7 @@ export default function Details({ navigation }) {
   const [lastBlockItemCount,setLastBlockItemCount] = useState(0);
   const [showInstallment,setShowInstallment] = useState(false);
   const scrollViewRef = useRef();
-  const apiUrl = "https://mobil.emlaksepette.com/";
+  const apiUrl = "https://private.emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -135,7 +135,7 @@ export default function Details({ navigation }) {
     const config = {
       headers: { Authorization: `Bearer ${user?.access_token}` }
     };
-    axios.get('https://mobil.emlaksepette.com/api/project/' + ProjectId, config).then((res) => {
+    axios.get('https://private.emlaksepette.com/api/project/' + ProjectId, config).then((res) => {
       setData(res?.data)
       setloadingDetails(true)
     })
@@ -245,7 +245,7 @@ export default function Details({ navigation }) {
 
     axios
       .post(
-        "https://mobil.emlaksepette.com/api/remove_item_on_collection",
+        "https://private.emlaksepette.com/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -292,7 +292,7 @@ export default function Details({ navigation }) {
   };
 
   const shareLinkOnWhatsApp = () => {
-    const url = `https://mobil.emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
+    const url = `https://private.emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -302,7 +302,7 @@ export default function Details({ navigation }) {
   };
 
   const shareLinkOnInstagram = (text) => {
-    const url = `https://mobil.emlaksepette.com/${slug}/100${ProjectId}/detay`;
+    const url = `https://private.emlaksepette.com/${slug}/100${ProjectId}/detay`;
 
     const instagramShareURL = `instagram://story/?text=${encodeURIComponent(
       url
@@ -313,7 +313,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("Instagram açılamadı:", error));
   };
   const copyToClipboard = () => {
-    const url = `https://mobil.emlaksepette.com/${slug}/1000${ProjectId}/detay`;
+    const url = `https://private.emlaksepette.com/${slug}/1000${ProjectId}/detay`;
     Clipboard.setStringAsync(url);
     ShowAlert();
   };
@@ -392,7 +392,7 @@ export default function Details({ navigation }) {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://mobil.emlaksepette.com/api/client/collections",
+          "https://private.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -445,7 +445,7 @@ export default function Details({ navigation }) {
 
     axios
       .post(
-        "https://mobil.emlaksepette.com/api/add/collection",
+        "https://private.emlaksepette.com/api/add/collection",
         collectionData,
         {
           headers: {
@@ -490,7 +490,7 @@ export default function Details({ navigation }) {
       type: "project",
     };
 
-    axios.post("https://mobil.emlaksepette.com/api/addLink", collectionData, {
+    axios.post("https://private.emlaksepette.com/api/addLink", collectionData, {
 
       headers: {
         "Content-Type": "application/json",
@@ -559,7 +559,7 @@ export default function Details({ navigation }) {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -574,7 +574,39 @@ export default function Details({ navigation }) {
       console.error("post isteği olmadı", error);
     }
   };
+  const addToCardPaymentModal = async () => {
+    const formData = new FormData();
+    formData.append("id", paymentModalShowOrder);
+    formData.append(
+      "isShare",
+      data.projectHousingsList[paymentModalShowOrder]["share_sale[]"]
+    );
+    formData.append(
+      "numbershare",
+      data.projectHousingsList[paymentModalShowOrder]["number_of_shares[]"]
+    );
+    formData.append("qt", 1);
+    formData.append("type", "project");
+    formData.append("clear_cart", "no");
+    formData.append("project", data.project.id);
+    try {
+      if (user?.access_token) {
+        const response = await axios.post(
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
 
+        navigation.navigate("Sepetim");
+      }
+    } catch (error) {
+      console.error("post isteği olmadı", error);
+    }
+  };
   const [userid, setUserId] = useState("");
   const [storeid, setStoreId] = useState("");
   const [projectid, setProjectId] = useState("");
@@ -609,7 +641,7 @@ export default function Details({ navigation }) {
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        "https://mobil.emlaksepette.com/api/institutional/give_offer",
+        "https://private.emlaksepette.com/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -651,7 +683,7 @@ export default function Details({ navigation }) {
   const fetchCity = async () => {
     try {
       const response = await axios.get(
-        "https://mobil.emlaksepette.com/api/cities"
+        "https://private.emlaksepette.com/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -673,7 +705,7 @@ export default function Details({ navigation }) {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://mobil.emlaksepette.com/api/counties/${value}`
+        `https://private.emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -853,7 +885,7 @@ export default function Details({ navigation }) {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message:  `https://mobil.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
+        message:  `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
       });
   
       if (result.action === Share.sharedAction) {
@@ -1379,6 +1411,9 @@ export default function Details({ navigation }) {
                     </View>
 
                     <TouchableOpacity
+                    onPress={()=>{
+                      addToCardPaymentModal()
+                    }}
                       style={{
                         backgroundColor: "#EA2C2E",
                         padding: 10,
@@ -1600,7 +1635,196 @@ export default function Details({ navigation }) {
                     paddingBottom: 150,
                   }}
                 >
-                  {
+
+            {
+              user.access_token?
+              <>
+               {user.has_club == 2 && (
+        <>
+          <View style={{ paddingTop: 10,gap:10,gap:10}}>
+            <View>
+            <Text
+              style={{
+                textAlign: "center",
+                color: "#4C6272",
+                fontWeight: "bold",
+                fontSize: 16,
+              }}
+            >
+              {" "}
+              Emlak Kulüp Üyeliğiniz Başvuru Sürecinde!
+            </Text>
+            </View>
+           
+       
+          <View style={{ width: "100%" }}>
+            <Text style={{ textAlign: "center", color: "#7A8A95" }}>
+              Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız
+              gerekmektedir
+            </Text>
+          </View>
+          </View>
+        </>
+      )}
+      {user.has_club == 3 && (
+        <>
+          <View style={{ paddingTop: 10 }}>
+            <Text
+              style={{
+                textAlign: "center",
+                color: "#4C6272",
+                fontWeight: "bold",
+                fontSize: 16,
+              }}
+            >
+              {" "}
+              Emlak Kulüp Üyeliğiniz Reddedildi!
+            </Text>
+          </View>
+          <View style={{ width: "100%" }}>
+            <Text style={{ textAlign: "center", color: "#7A8A95" }}>
+              Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız
+              gerekmektedir
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#F65656",
+              width: "100%",
+              padding: 10,
+            }}
+            onPress={() => {
+              navigation.navigate("Collections");
+              setColectionSheet(false);
+            }}
+          >
+            <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
+              Tekrar Başvur
+            </Text>
+          </TouchableOpacity>
+        </>
+      )}
+      {user.has_club == 0 && (
+        <>
+          <View style={{ paddingTop: 10,gap:10 }}>
+            <View>
+            <Text
+              style={{
+                textAlign: "center",
+                color: "#4C6272",
+                fontWeight: "bold",
+                fontSize: 16,
+              }}
+            >
+             
+              Emlak Kulüp Üyeliğiniz Bulunmamaktadır!
+            </Text>
+            </View>
+           
+         
+          <View style={{ width: "100%" }}>
+            <Text style={{ textAlign: "center", color: "#7A8A95" }}>
+              Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız
+              gerekmektedir
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#F65656",
+              width: "100%",
+              padding: 10,
+            }}
+            onPress={() => {
+              nav.navigate("Collections");
+            }}
+          >
+            <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
+              Tekrar Başvur
+            </Text>
+          </TouchableOpacity>
+          </View>
+        </>
+      )}
+
+        {
+          user.has_club == 1  &&
+          <>
+           <TouchableOpacity
+                            style={{ flexDirection: "row", alignItems: "center" }}
+                            onPress={() => {
+                              setColectionSheet(false);
+                              setTimeout(() => {
+                                setaddCollection(true);
+                              }, 700);
+                            }}
+                          >
+                            <View
+                              style={{
+                                padding: 0,
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Icon2 name="pluscircleo" size={27} color={"#19181C"} />
+                            </View>
+                            <View
+                              style={{
+                                width: "100%",
+                                borderBottomWidth: 1,
+                                padding: 15,
+                                borderBottomColor: "#ebebeb",
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  fontSize: 13,
+                                  color: "#19181C",
+                                  fontWeight: "600",
+                                }}
+                              >
+                                Yeni Oluştur
+                              </Text>
+                            </View>
+                          </TouchableOpacity>
+                          {collections.map((item, index) => (
+                            <AddCollection
+                              checkFunc={ıtemOnCollection}
+                              setPopUpForRemoveItem={setsetPopUpForRemoveItem}
+                              key={index}
+                              item={item}
+                              getCollectionId={getCollectionId}
+                              removeItemOnCollection={removeItemOnCollection}
+                              addLink={addSelectedCollection}
+                            />
+                          ))}
+
+          </>
+        }
+              </>
+              : <> 
+                <View style={{ gap: 10 }}>
+
+<View style={{ paddingTop: 10 }}>
+  <Text style={{ textAlign: 'center', color: '#4C6272', fontWeight: 'bold', fontSize: 16 }}>Üyeliğiniz Bulunmamaktadır!</Text>
+</View>
+<View style={{ width: '100%' }}>
+  <Text style={{ textAlign: 'center', color: '#7A8A95' }}>Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
+</View>
+<TouchableOpacity style={{ backgroundColor: '#F65656', width: '100%', padding: 10 }}
+  onPress={() => {
+    setColectionSheet(false)
+    navigation.navigate('Login')
+  }}
+>
+  <Text style={{ color: '#FFFFFF', textAlign: 'center' }}>Giriş Yap</Text>
+</TouchableOpacity>
+</View>
+              </>
+            }
+      
+
+
+                  {/* {
                     user.access_token && user?.has_club == 0 ?
                       <>
 
@@ -1695,7 +1919,7 @@ export default function Details({ navigation }) {
                           ))}
 
                         </>
-                  }
+                  } */}
                 </ScrollView>
               </SafeAreaView>
             </View>
@@ -1794,7 +2018,7 @@ export default function Details({ navigation }) {
                   <View
                     style={{ gap: 6, justifyContent: "center", paddingTop: 20 }}
                   >
-                    <Text style={{ fontSize: 13, color: "#19181C" }}>
+                    <Text style={{ fontSize: 13, color: "#19181C",fontWeight:'500' }}>
                       Koleksiyon İsmi
                     </Text>
                     <TextInput
@@ -1803,16 +2027,18 @@ export default function Details({ navigation }) {
                       onChangeText={(value) => setnewCollectionNameCreate(value)}
                     />
                   </View>
-                  <View style={{ paddingTop: 80 }}>
+                  <View style={{ paddingTop: 10 }}>
                     <TouchableOpacity
+                    disabled={newCollectionNameCreate?false:true}
                       style={{
                         backgroundColor: "#EA2A28",
                         padding: 10,
                         borderRadius: 5,
+                        opacity:newCollectionNameCreate ? 1:0.3
                       }}
                       onPress={addCollectionPost}
                     >
-                      <Text style={{ textAlign: "center", color: "white" }}>
+                      <Text style={{ textAlign: "center", color: "white" ,fontWeight:'500'}}>
                         Koleksiyon Oluştur
                       </Text>
                     </TouchableOpacity>

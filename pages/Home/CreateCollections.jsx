@@ -20,7 +20,7 @@ const [loading, setloading] = useState(false)
         setloading(true)
       try {
         if (user.access_token) {
-          const response = await axios.get('https://mobil.emlaksepette.com/api/client/collections',{
+          const response = await axios.get('https://private.emlaksepette.com/api/client/collections',{
             headers: {
               'Authorization': `Bearer ${user.access_token}`
             }
@@ -61,7 +61,7 @@ const [disabledTrue, setdisabledTrue] = useState(false)
       };
     
     
-      axios.post('https://mobil.emlaksepette.com/api/add/collection', collectionData, {
+      axios.post('https://private.emlaksepette.com/api/add/collection', collectionData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.access_token}`,
@@ -100,7 +100,7 @@ const [disabledTrue, setdisabledTrue] = useState(false)
       };
     
     
-      axios.post('https://mobil.emlaksepette.com/api/addLink', collectionData, {
+      axios.post('https://private.emlaksepette.com/api/addLink', collectionData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.access_token}`,
@@ -170,7 +170,7 @@ const removeItemOnCollection = (collectionId) => {
 
   axios
     .post(
-      "https://mobil.emlaksepette.com/api/remove_item_on_collection",
+      "https://private.emlaksepette.com/api/remove_item_on_collection",
       collectionData,
       {
         headers: {
@@ -244,7 +244,7 @@ const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
          
               {
                       loading== true ?
-                        <ActivityIndicator/>:
+                        <ActivityIndicator color='#333'/>:
                         collections.map((item,index)=>(
 
                           <AddCollection  checkFunc={ıtemOnCollection} key={index} item={item} getCollectionId={getCollectionId} addLink={addSelectedCollection}   removeItemOnCollection={removeItemOnCollection}    setPopUpForRemoveItem={setsetPopUpForRemoveItem}/> 
@@ -277,7 +277,7 @@ const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
                     </View>
                       }
                   {
-                    user.access_token && user.has_club == 0 &&
+                    user.access_token && user.has_club == 0  && 
                     <View style={styles.card}>
                  
                     <View style={{paddingTop:10}}>
@@ -295,7 +295,38 @@ const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
                 </TouchableOpacity>
                 </View>
                   }
-                      
+                        {
+                    user.access_token && user.has_club == 2  && 
+                    <View style={styles.card}>
+                 
+                    <View style={{paddingTop:10}}>
+                      <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}> Emlak Kulüp Üyeliğiniz Başvuru Sürecindedir!</Text>
+                    </View>
+                    <View style={{width:'80%',paddingBottom:10}}>
+                      <Text style={{textAlign:'center',color:'#7A8A95'}}>Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir</Text>
+                    </View>
+                    
+                </View>
+                  } 
+                    {
+                    user.access_token && user.has_club == 3  && 
+                    <View style={styles.card}>
+                 
+                    <View style={{paddingTop:10}}>
+                      <Text style={{textAlign:'center',color:'#4C6272',fontWeight:'bold',fontSize:16}}> Emlak Kulüp Üyeliğiniz Reddedildi</Text>
+                    </View>
+                    <View style={{width:'80%',paddingBottom:10}}>
+                      <Text style={{textAlign:'center',color:'#7A8A95'}}>Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir</Text>
+                    </View>
+                    <TouchableOpacity style={{backgroundColor:'#F65656',width:'100%',padding:10}}
+                       onPress={()=>{
+                        navigation.navigate('Collections')
+                    }}
+                    >
+                  <Text style={{color:'#FFFFFF',textAlign:'center'}}>Tekrar Başvur</Text>
+                </TouchableOpacity>
+                </View>
+                  } 
                 </View>
             
                 <View style={{alignItems:'center'}}>

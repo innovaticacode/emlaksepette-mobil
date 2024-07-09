@@ -34,15 +34,43 @@ export default function Suggests() {
       <View style={styles.tabBar}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={{display:'flex',flexDirection:'row',gap:20}}>
-            <TouchableOpacity style={[styles.TabBarBtn,{backgroundColor:Tabs==0? '#ebebeb':'#E54242'}]}
+            <TouchableOpacity 
+              style={[
+                styles.tabBtn,
+                {
+                  backgroundColor: Tabs== 0 ? "#EEEDEB" : "white",
+                  borderWidth: Tabs == 0 ? 0 : 1,
+                },
+              ]}
               onPress={()=>setTabs(0)}
             >
-              <Text style={[styles.tabBarText,{color:Tabs===0? 'red':'white',fontWeight:Tabs===0?'600':'normal'}]}>asdasdas</Text>
+              <Text 
+               style={{
+                textAlign: "center",
+                color: Tabs == 0? "#333" : "#333",
+                fontSize: 12,
+                fontWeight:'600'
+              }}
+              >asdasdas</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.TabBarBtn,{backgroundColor:Tabs==1? '#ebebeb':'#E54242'}]}
+            <TouchableOpacity 
+               style={[
+                styles.tabBtn,
+                {
+                  backgroundColor: Tabs== 1 ? "#EEEDEB" : "white",
+                  borderWidth: Tabs == 1 ? 0 : 1,
+                },
+              ]}
             onPress={()=>setTabs(1)}
             >
-              <Text style={[styles.tabBarText,{color:Tabs===1? 'red':'white',fontWeight:Tabs===1?'600':'normal'}]}>Başvurularım</Text>
+              <Text
+               style={{
+                textAlign: "center",
+                color: Tabs == 1? "#333" : "#333",
+                fontSize: 12,
+                fontWeight:'600'
+              }}
+              >Başvurularım</Text>
             </TouchableOpacity>
            
           
@@ -173,6 +201,17 @@ const styles=StyleSheet.create({
         fontSize: 17,
         borderRadius: 4,
           
+    },
+    tabBtn: {
+      backgroundColor: "white",
+      paddingLeft: 15,
+      paddingRight: 15,
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 6,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: "#ebebeb",
     },
       
 })

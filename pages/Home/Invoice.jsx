@@ -25,7 +25,7 @@ export default function Invoice() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://mobil.emlaksepette.com/api/institutional/invoice/${OrderId}`,
+          `https://private.emlaksepette.com/api/institutional/invoice/${OrderId}`,
 
           {
             headers: {
@@ -143,7 +143,7 @@ export default function Invoice() {
         <View
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >
-          <ActivityIndicator />
+          <ActivityIndicator color="#333" />
         </View>
       ) : (
         <ScrollView style={{}} contentContainerStyle={{ flexGrow: 1 }}>

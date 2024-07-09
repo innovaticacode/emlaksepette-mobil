@@ -17,11 +17,12 @@ import Modal from "react-native-modal";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function ShopVitrin({ data, housingdata, settab }) {
   const navigation = useNavigation();
-  const ApiUrl = "https://mobil.emlaksepette.com/storage/store_banners/";
-  const ApiUrls = "https://mobil.emlaksepette.com";
+  const ApiUrl = "https://private.emlaksepette.com/storage/store_banners/";
+  const ApiUrls = "https://private.emlaksepette.com";
 
   const [banners, setBanners] = useState([]);
   const [owners, setOwners] = useState([]);
@@ -76,7 +77,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -224,7 +225,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
                     <ActivityIndicator
                       style={{ margin: 20 }}
                       size="small"
-                      color="#000000"
+                      color="#333"
                     />
                   ) : null
                 }

@@ -9,6 +9,7 @@ import {
 import React, { useState, useEffect } from "react";
 import RealtorPost from "../../../components/RealtorPost";
 import { FlatList } from "react-native-gesture-handler";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function RealtorAdverts({ housingdata }) {
   const [featuredEstates, setFeaturedEstates] = useState({});
@@ -25,7 +26,7 @@ export default function RealtorAdverts({ housingdata }) {
   //   fetchFeaturedEstates();
   // }, []);
   const { width, height } = Dimensions.get("window");
-  const ApiUrl = "https://mobil.emlaksepette.com";
+  const ApiUrl = "https://private.emlaksepette.com";
   const objectKeys = Object.keys(housingdata);
   const onRefresh = () => {
     setRefreshing(true);
@@ -92,7 +93,7 @@ export default function RealtorAdverts({ housingdata }) {
             <ActivityIndicator
               style={{ margin: 20 }}
               size="small"
-              color="#000000"
+              color="#333"
             />
           ) : null
         }

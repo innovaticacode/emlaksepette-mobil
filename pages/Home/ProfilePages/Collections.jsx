@@ -156,7 +156,7 @@ export default function Collections() {
 
       if (user.access_token) {
         const response = await axios.get(
-          "https://mobil.emlaksepette.com/api/client/collections",
+          "https://private.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -190,7 +190,7 @@ export default function Collections() {
       let formData = new FormData();
       formData.append();
       const response = await axios.delete(
-        `https://mobil.emlaksepette.com/api/collection/${id}/delete`,
+        `https://private.emlaksepette.com/api/collection/${id}/delete`,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -217,7 +217,7 @@ export default function Collections() {
       formData.append("collectionName", newName);
 
       const response = await axios.post(
-        `https://mobil.emlaksepette.com/api/collection/${id}/edit`,
+        `https://private.emlaksepette.com/api/collection/${id}/edit`,
         formData,
         {
           headers: {
@@ -267,7 +267,7 @@ export default function Collections() {
     };
     try {
       const response = await axios.delete(
-        `https://mobil.emlaksepette.com/api/collections`,
+        `https://private.emlaksepette.com/api/collections`,
 
         {
           data: data,
@@ -286,7 +286,34 @@ export default function Collections() {
       console.error("Error fetching data:", error);
     }
   };
-  
+  const collectionIDS = collections.map(collection=>collection.id)
+const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
+  const RemoveAllCollection = async () => {
+    const data = {
+      ids: collectionIDS,
+    };
+    try {
+      const response = await axios.delete(
+        `https://private.emlaksepette.com/api/collections`,
+
+        {
+          data: data,
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+            "Content-Type": "application/json", // FormData kullanıldığı için Content-Type belirtilmelidir
+          },
+        }
+      );
+      setmodalForRemoveAll(false)
+      fetchData();
+      
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  console.log(user.has_club )
+
+
   return (
     <>
       {user.has_club != 1 ? (
@@ -295,7 +322,7 @@ export default function Collections() {
         <View style={styles.container}>
           {loading ? (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#000000" />
+              <ActivityIndicator size="large" color="#333" />
             </View>
           ) : (
             <View style={{ flex: 1 }}>
@@ -315,6 +342,7 @@ export default function Collections() {
                   <ScrollView
                     showsVerticalScrollIndicator={false}
                     stickyHeaderIndices={[0]}
+                    contentContainerStyle={{paddingBottom:20}}
                   >
                     <View style={styles.SearchArea}>
                       <SearchBar
@@ -363,22 +391,34 @@ export default function Collections() {
                         }}
                       >
                         <TouchableOpacity
-                          style={styles.btnRemove}
-                          onPress={() => {}}
+                          style={[styles.btnRemove,
+                            {
+                              backgroundColor:"#EEEDEB",
+                              borderWidth:  1, 
+                              borderColor: "#ebebeb",
+                            },
+                          ]}
+                          onPress={()=>setmodalForRemoveAll(true)}
                         >
                           <Text
                             style={{
                               fontSize: 12,
                               textAlign: "center",
                               fontWeight: "bold",
-                              color: "#ffffff",
+                              color: "#333",
                             }}
                           >
                             Tümünü Sil
                           </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                          style={styles.btnRemove}
+                          style={[styles.btnRemove,
+                            {
+                              backgroundColor:"#EEEDEB",
+                              borderWidth:  1, 
+                              borderColor: "#ebebeb",
+                            },
+                          ]}
                           onPress={() => {
                             setisChoosed(!isChoosed);
                           }}
@@ -388,7 +428,7 @@ export default function Collections() {
                               fontSize: 12,
                               textAlign: "center",
                               fontWeight: "bold",
-                              color: "#ffffff",
+                              color: "#333",
                             }}
                           >
                             Toplu Seç
@@ -429,19 +469,7 @@ export default function Collections() {
                         <></>
                       )}
                     </View>
-                    {loading == false ? (
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          fontSize: 18,
-                          display: collections?.length == 0 ? "flex" : "none",
-                        }}
-                      >
-                        Koleksiyonunuz bulunmamaktadır
-                      </Text>
-                    ) : (
-                      ""
-                    )}
+                 
                     {loading == false ? (
                       collectionsRecods.map((collection, index) => {
                         return (
@@ -462,7 +490,7 @@ export default function Collections() {
                       })
                     ) : (
                       <View style={styles.loadingContainer}>
-                        <ActivityIndicator size="large" color="#000000" />
+                        <ActivityIndicator size="large" color="#333" />
                       </View>
                     )}
                   </ScrollView>
@@ -569,6 +597,34 @@ export default function Collections() {
                   </View>
                 </Animated.View>
               </View>
+              <Modal
+              onTouchStart={()=>setmodalForRemoveAll(false)}
+                animationType="fade" // veya "fade", "none" gibi
+                transparent={true}
+                visible={modalForRemoveAll}
+                onRequestClose={() => {
+                  setmodalForRemoveAll(false);
+                }}
+                
+              >
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <View>
+                      <Text>Tüm koleksiyonları silmek istediğinize eminmisiniz?</Text>
+                    </View>
+                    <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-around'}}>
+                    <TouchableOpacity onPress={()=>setmodalForRemoveAll(false)} style={{backgroundColor:'red',padding:10,paddingLeft:25,paddingRight:25,borderRadius:5}}>
+                          <Text style={{color:'#ffffff',fontWeight:'600'}}>Hayır</Text>
+                        </TouchableOpacity>
+                    <TouchableOpacity onPress={RemoveAllCollection} style={{backgroundColor:'green',padding:10,paddingLeft:25,paddingRight:25,borderRadius:5}} >
+                          <Text style={{color:'#ffffff',fontWeight:'600'}}>Evet</Text>
+                        </TouchableOpacity>
+                       
+                    </View>
+                      
+                  </View>
+                </View>
+              </Modal>
               <Modal
                 animationType="fade" // veya "fade", "none" gibi
                 transparent={true}
@@ -980,7 +1036,7 @@ const styles = StyleSheet.create({
   },
   btnRemove: {
     backgroundColor: "#EA2A28",
-    padding: 7,
+    padding: 5,
     borderRadius: 5,
   },
 });

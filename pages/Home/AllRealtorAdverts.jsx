@@ -107,14 +107,14 @@ export default function AllRealtorAdverts() {
     return intValue.toLocaleString("tr-TR");
   };
 
-  const apiUrl = "https://mobil.emlaksepette.com/";
+  const apiUrl = "https://private.emlaksepette.com/";
   const route = useRoute();
   const navigation = useNavigation();
   const { params } = route;
 
   useEffect(() => {
     if (params.href) {
-      const baseUrl = "https://mobil.emlaksepette.com";
+      const baseUrl = "https://private.emlaksepette.com";
       const relativeUrl = params.href.replace(`${baseUrl}/kategori`, "");
       let urlSegments = relativeUrl.split("/").filter((segment) => segment);
 
@@ -535,7 +535,7 @@ export default function AllRealtorAdverts() {
           <View
             style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
           >
-            <ActivityIndicator size="large" color="#000000" />
+            <ActivityIndicator size="large" color="#333" />
           </View>
         ) : (
           <>

@@ -15,10 +15,10 @@ export default function AddComment() {
     const [data, setData] = useState({});
     const route = useRoute()
     const nav =useNavigation()
-     const {HouseID}=route.params
+     const {HouseID} = route.params
      const [loading, setloading] = useState(true)
     useEffect(() => {
-      apiRequestGet("housing/" + HouseID).then((res) => {
+      apiRequestGet("housing/"+HouseID).then((res) => {
         setData(res.data.housing);
         setloading(false)
       });
@@ -41,7 +41,7 @@ console.log(rate)
       setCheckedForm(!checkedForm)
       
     };
-    const apiUrl = "https://mobil.emlaksepette.com/";
+    const apiUrl = "https://private.emlaksepette.com/";
     const [user, setUser] = useState({});
 
 
@@ -57,7 +57,7 @@ console.log(rate)
         try {
           if (user?.access_token &&  rating>0 ) {
             const response = await axios.post(
-              `https://mobil.emlaksepette.com/api/housing/${HouseID}/send-comment`,
+              `https://private.emlaksepette.com/api/housing/${HouseID}/send-comment`,
               formData,
               {
                 headers: {
@@ -84,7 +84,7 @@ console.log(rate)
 {
     loading ? 
     <View style={{alignItems:'center',justifyContent:'center'}}>
-            <ActivityIndicator/>
+            <ActivityIndicator color='#333'/>
     </View>
 
     : 

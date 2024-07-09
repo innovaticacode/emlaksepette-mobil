@@ -8,7 +8,7 @@ import {
   Keyboard,
   ScrollView,
   SafeAreaView,
-  ActivityIndicator,
+  
 } from "react-native";
 import { React, useState, useRef } from "react";
 import EyeIcon from "react-native-vector-icons/Ionicons";
@@ -19,6 +19,7 @@ import axios from "axios";
 import HTML from "react-native-render-html";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function Personal({ type }) {
   const navigation = useNavigation();
@@ -70,7 +71,7 @@ export default function Personal({ type }) {
       formData.append("check-c", checked2);
       formData.append("check-e", checked3);
       const response = await axios.post(
-        "https://mobil.emlaksepette.com/api/register",
+        "https://private.emlaksepette.com/api/register",
         formData
       );
 
@@ -187,7 +188,7 @@ export default function Personal({ type }) {
   // Örnek kullanım
 
   const fetchData = async (deal) => {
-    const url = `https://mobil.emlaksepette.com/api/sayfa/${deal}`;
+    const url = `https://private.emlaksepette.com/api/sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
@@ -741,7 +742,7 @@ export default function Personal({ type }) {
             style={styles.modal}
           >
             <View style={styles.modalContent}>
-              <ActivityIndicator size="large" />
+              <ActivityIndicator size="large"color="#333"/>
               <Text style={{ textAlign: "center", fontWeight: "bold" }}>
                 Giriş Sayfasına Yönlendiriliyorsunuz
               </Text>

@@ -60,7 +60,7 @@ export default function Panel({ options, onSelect }) {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            `https://mobil.emlaksepette.com/api/users/${user.id}`,
+            `https://private.emlaksepette.com/api/users/${user.id}`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -78,7 +78,7 @@ export default function Panel({ options, onSelect }) {
     fetchData();
   }, [user]);
 
-  const PhotoUrl = "https://mobil.emlaksepette.com/storage/profile_images/";
+  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -101,7 +101,7 @@ export default function Panel({ options, onSelect }) {
         }
 
         const response = await axios.get(
-          "https://mobil.emlaksepette.com/api/user/notification",
+          "https://private.emlaksepette.com/api/user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -136,7 +136,7 @@ export default function Panel({ options, onSelect }) {
       <View style={style.container}>
         {isLoading ? (
           <View style={style.loadingContainer}>
-            <ActivityIndicator size="large" color="#000000" />
+            <ActivityIndicator size="large" color="#333" />
           </View>
         ) : (
           <ScrollView
@@ -173,7 +173,7 @@ export default function Panel({ options, onSelect }) {
                           <View style={style.ProfileImage}>
                             <Image
                               source={{
-                                uri: `https://mobil.emlaksepette.com/storage/profile_images/${user.profile_image}`,
+                                uri: `https://private.emlaksepette.com/storage/profile_images/${user.profile_image}`,
                               }}
                               style={{
                                 width: 50,
@@ -491,7 +491,7 @@ export default function Panel({ options, onSelect }) {
                   >
                     <Image
                       source={{
-                        uri: "https://mobil.emlaksepette.com/images/emlak-kulup-banner.png",
+                        uri: "https://private.emlaksepette.com/images/emlak-kulup-banner.png",
                       }}
                       style={styles.image}
                     />

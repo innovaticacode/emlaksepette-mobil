@@ -26,7 +26,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function OrderDetails() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { OrderId } = route.params;
+  const { OrderId,id } = route.params;
 
   const [user, setUser] = useState({});
 
@@ -42,9 +42,11 @@ export default function OrderDetails() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (user?.access_token) {
+        if (user?.access_token ) {
           const response = await axios.get(
-            `https://test.emlaksepette.com/api/institutional/order_detail/${OrderId}`,
+
+            `https://private.emlaksepette.com/api/institutional/order_detail/${OrderId}`,
+
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -64,6 +66,7 @@ export default function OrderDetails() {
 
     fetchData();
   }, [user, OrderId]);
+  console.log(OrderId + 'dsfsdf')
   const [parsedData, setparsedData] = useState("");
   useEffect(() => {
     if (Detail?.cart && typeof Detail.cart === "string" && user.access_token) {
@@ -139,6 +142,7 @@ export default function OrderDetails() {
     maximumFractionDigits: 2,
   }).format(indirim_yuzdesi / 100);
 
+
   const [Deals, setDeals] = useState("");
 
   const fetchDataDeal = async () => {
@@ -169,6 +173,7 @@ export default function OrderDetails() {
   const closeModal = () => {
     setModalVisible(false);
   };
+
   return (
     <ScrollView style={{ backgroundColor: "white" }}>
       <View style={style.container}>
@@ -176,7 +181,7 @@ export default function OrderDetails() {
           <View style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "400", fontSize: 13 }}>İlan No: </Text>
             <Text style={{ fontSize: 13, color: "grey" }}>
-              #1000{Detail.id}
+              #2000{OrderId} + {id}
             </Text>
           </View>
           <View style={{ flexDirection: "row" }}>
@@ -278,25 +283,26 @@ export default function OrderDetails() {
               paddingBottom: 7,
             }}
           >
+
             {parsedData?.type == "housing" && (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("AddComment", { HouseID: Detail.id });
-                }}
-                style={{
-                  backgroundColor: "#EA2C2E",
-                  padding: 5,
-                  borderRadius: 2,
-                  flexDirection: "row",
-                  gap: 6,
-                  alignItems: "center",
-                }}
-              >
-                <Icon3 name="store-edit-outline" size={20} color={"white"} />
-                <Text style={{ color: "white", fontSize: 12 }}>
-                  İlanı Değerlendir
-                </Text>
-              </TouchableOpacity>
+      <TouchableOpacity
+            onPress={()=>{
+              navigation.navigate('AddComment',{HouseID:id})
+            }}
+              style={{
+                backgroundColor: "#EA2C2E",
+                padding: 5,
+                borderRadius: 2,
+                flexDirection: "row",
+                gap: 6,
+                alignItems: "center",
+              }}
+            >
+              <Icon3 name="store-edit-outline" size={20} color={"white"} />
+              <Text style={{ color: "white", fontSize: 12 }}>
+                İlanı Değerlendir
+              </Text>
+            </TouchableOpacity>
             )}
 
             <TouchableOpacity
@@ -311,7 +317,7 @@ export default function OrderDetails() {
                 alignItems: "center",
               }}
               onPress={() => {
-                navigation.navigate("Profile", { id: Detail.store.id });
+                navigation.navigate("Profile", { id: Detail?.store?.id });
               }}
             >
               <Icon2 name="shopping-store" color={"#EA2C2E"} />
@@ -503,17 +509,7 @@ export default function OrderDetails() {
             </View>
           </View>
           <View style={{ gap: 14 }}>
-            <TouchableOpacity
-              style={{
-                paddingTop: 10,
-                flexDirection: "row",
-                gap: 10,
-                alignItems: "center",
-              }}
-            >
-              <Icon3 name="comment-question" size={21} color={"red"} />
-              <Text>Canlı Destek</Text>
-            </TouchableOpacity>
+          
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("Invoice", { OrderId: Detail.id })

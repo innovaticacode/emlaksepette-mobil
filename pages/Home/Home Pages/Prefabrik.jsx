@@ -19,7 +19,7 @@ const PAGE_SIZE = 10;
 
 const Prefabrik = ({index}) => {
      const navigation = useNavigation()
-    const apiUrl = "https://mobil.emlaksepette.com/";
+    const apiUrl = "https://private.emlaksepette.com/";
     const [featuredEstates, setFeaturedEstates] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -35,7 +35,7 @@ const Prefabrik = ({index}) => {
       };
       try {
         const response = await axios.get(
-          `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,config
+          `https://private.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,config
         );
         const newEstates = response.data;
   
@@ -82,7 +82,7 @@ const Prefabrik = ({index}) => {
 
     const renderFooter = () => {
       if (!loading) return null;
-      return <ActivityIndicator style={{ margin: 20 }} size="small" color="#000000" />;
+      return <ActivityIndicator style={{ margin: 20 }} size="small" color="#333" />;
     };
   
   return (
@@ -127,7 +127,7 @@ const Prefabrik = ({index}) => {
       </View>
       {refreshing && (
         <View style={{ padding: 10, backgroundColor: 'white', alignItems: 'center' }}>
-          <ActivityIndicator animating={true} size="small" color="#000000" />
+          <ActivityIndicator animating={true} size="small" color="#333" />
         </View>
       )}
           

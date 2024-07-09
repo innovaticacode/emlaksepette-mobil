@@ -91,7 +91,7 @@ export default function Posts({
   
     const params = {
       HomeId: roomOrder,
-      projectId: data.project.id,
+      projectId: data?.project?.id,
       isLoading: true,
       shareSale:shareSale,
       sumCartOrderQt:sumCartOrderQt,
@@ -132,8 +132,8 @@ export default function Posts({
     const config = {
       headers: { Authorization: `Bearer ${user.access_token}` }
     };
-    axios.post('https://mobil.emlaksepette.com/api/add_project_to_favorites/'+roomOrder,{
-      project_id : project.id,
+    axios.post('https://private.emlaksepette.com/api/add_project_to_favorites/'+roomOrder,{
+      project_id : project?.id,
       housing_id : roomOrder
     },config).then((res) => {
       changeHeart();
@@ -178,11 +178,11 @@ export default function Posts({
     formData.append("qt", 1);
     formData.append("type", "project");
     formData.append("clear_cart", "no");
-    formData.append("project", project.id);
+    formData.append("project", project?.id);
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -289,7 +289,7 @@ const [AddCartShow, setAddCartShow] = useState(false);
               titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
             title={   truncateText(roomData["advertise_title[]"], 4)}
             messageStyle={{textAlign:'center'}}
-            message={`#1000${project.id} No'lu Projenin ${roomOrder} No'lu Konutu'nu Sepete Eklemek İstiyor Musunuz?`}
+            message={`#1000${project?.id} No'lu Projenin ${roomOrder} No'lu Konutu'nu Sepete Eklemek İstiyor Musunuz?`}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
             showCancelButton={true}
@@ -328,7 +328,7 @@ const [AddCartShow, setAddCartShow] = useState(false);
             <Image
               source={{
                 uri:
-                  "https://mobil.emlaksepette.com/project_housing_images/" +
+                  "https://private.emlaksepette.com/project_housing_images/" +
                   roomData["image[]"],
               }}
               style={styles.image}

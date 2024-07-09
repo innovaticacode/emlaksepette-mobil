@@ -33,7 +33,7 @@ export default function Search({ onpres }) {
   const fetchmenuItems = async () => {
     try {
       const response = await axios.get(
-        "https://mobil.emlaksepette.com/api/menu-list"
+        "https://private.emlaksepette.com/api/menu-list"
       );
       setMenuItems(response.data);
       const submenus = response.data[0].submenus;

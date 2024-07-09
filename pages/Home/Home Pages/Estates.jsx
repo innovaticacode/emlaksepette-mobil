@@ -19,7 +19,7 @@ const PAGE_SIZE = 10;
 
 const Estates = ({ index }) => {
   const navigation = useNavigation();
-  const apiUrl = "https://mobil.emlaksepette.com/";
+  const apiUrl = "https://private.emlaksepette.com/";
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -33,12 +33,15 @@ const Estates = ({ index }) => {
     const config = {
       headers: { Authorization: `Bearer ${user?.access_token}` },
     };
+
+    console.log(config)
     try {
+      
       const response = await axios.get(
-        `https://mobil.emlaksepette.com/api/real-estates?page=${
+        `https://private.emlaksepette.com/api/real-estates?page=${
           reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
-        config
+       config
       );
       const newEstates = response.data;
 
@@ -76,6 +79,10 @@ const Estates = ({ index }) => {
     }
   }, [index, user]);
 
+  useEffect(() => {
+    getValueFor("user",setuser)
+  },[])
+
   const filteredHomes = featuredEstates.filter(
     (estate) => estate.step1_slug === "konut"
   );
@@ -88,9 +95,10 @@ const Estates = ({ index }) => {
   const renderFooter = () => {
     if (!loading) return null;
     return (
-      <ActivityIndicator style={{ margin: 20 }} size="small" color="#000000" />
+      <ActivityIndicator style={{ margin: 20 }} size="small" color="#333" />
     );
   };
+  console.log(filteredHomes)
 console.log(user)
   return (
     <View style={styles.container}>

@@ -23,7 +23,7 @@ import { useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 
-const apiUrl = "https://mobil.emlaksepette.com";
+const apiUrl = "https://private.emlaksepette.com";
 
 const HomePage = ({ index }) => {
   const navigation = useNavigation();
@@ -113,7 +113,7 @@ const HomePage = ({ index }) => {
             {/* Featured Sliders */}
             <View style={styles.sliderContainer}>
               {loadingSliders ? (
-                <ActivityIndicator style={styles.loadingIndicator} size={'small'}/>
+                <ActivityIndicator style={styles.loadingIndicator} size={'small'} color="#333"/>
               ) : (
                 <PagerView
                   style={styles.pagerView}
@@ -165,7 +165,7 @@ const HomePage = ({ index }) => {
                 <View style={{ gap: 0, paddingTop: 0 }}>
                   {loadingProjects == true ? (
                     <View>
-                      <ActivityIndicator size="small" color="#000000" />
+                      <ActivityIndicator size="small" color="#333" />
                     </View>
                   ) : (
                     <>

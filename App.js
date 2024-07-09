@@ -724,7 +724,12 @@ export default function App({ route }) {
             })}
           />
           <Stack.Screen name="Archieve" component={Archieve} />
-          <Stack.Screen name="EditProject" component={EditProject} />
+          <Stack.Screen name="EditProject" component={EditProject} 
+              options={({route})=>({
+                title:route.params.name,
+                headerBackTitleVisible:false
+              })}
+          />
           <Stack.Screen
             name="SellAndRent"
             component={SellAndRentFormPage}
@@ -808,6 +813,7 @@ export default function App({ route }) {
             component={UserTypeList}
             options={({ route }) => ({
               title: "Kullanıcı Tipleri",
+              headerBackTitleVisible:false,
               headerStyle: {
                 backgroundColor: "#F5F5F7",
               },
