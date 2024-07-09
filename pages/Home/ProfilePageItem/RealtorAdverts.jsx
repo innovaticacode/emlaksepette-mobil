@@ -26,7 +26,7 @@ export default function RealtorAdverts({ housingdata }) {
   //   fetchFeaturedEstates();
   // }, []);
   const { width, height } = Dimensions.get("window");
-  const ApiUrl = "https://mobil.emlaksepette.com";
+  const ApiUrl = "https://private.emlaksepette.com";
   const objectKeys = Object.keys(housingdata);
   const onRefresh = () => {
     setRefreshing(true);

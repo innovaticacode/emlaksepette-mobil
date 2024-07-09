@@ -85,7 +85,7 @@ export default function EditProject() {
      const fetchCities = async () => {
        try {
        const response = await axios.get(
-           "https://mobil.emlaksepette.com/api/cities"
+           "https://private.emlaksepette.com/api/cities"
          );
          setCities(response.data.data);
        } catch (error) {
@@ -100,7 +100,7 @@ export default function EditProject() {
    const fetchCounties = async (cityId) => {
      try {
        const response = await axios.get(
-         `https://mobil.emlaksepette.com/api/counties/${cityId}`
+         `https://private.emlaksepette.com/api/counties/${cityId}`
        );
        setCounties(response.data.data);
      } catch (error) {
@@ -112,7 +112,7 @@ export default function EditProject() {
    const fetchNeighborhoods = async (countyId) => {
      try {
        const response = await axios.get(
-         `https://mobil.emlaksepette.com/api/neighborhoods/${countyId}`
+         `https://private.emlaksepette.com/api/neighborhoods/${countyId}`
        );
        setNeighborhoods(response.data.data);
      } catch (error) {

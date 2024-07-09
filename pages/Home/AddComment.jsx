@@ -41,7 +41,7 @@ console.log(rate)
       setCheckedForm(!checkedForm)
       
     };
-    const apiUrl = "https://mobil.emlaksepette.com/";
+    const apiUrl = "https://private.emlaksepette.com/";
     const [user, setUser] = useState({});
 
 
@@ -57,7 +57,7 @@ console.log(rate)
         try {
           if (user?.access_token &&  rating>0 ) {
             const response = await axios.post(
-              `https://mobil.emlaksepette.com/api/housing/${HouseID}/send-comment`,
+              `https://private.emlaksepette.com/api/housing/${HouseID}/send-comment`,
               formData,
               {
                 headers: {

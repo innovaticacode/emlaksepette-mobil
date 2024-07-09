@@ -60,7 +60,7 @@ export default function RealtorPostFavorited({
       const config = {
         headers: { Authorization: `Bearer ${user.access_token}` }
       };
-      axios.post('https://mobil.emlaksepette.com/api/add_project_to_favorites/'+housingId,{
+      axios.post('https://private.emlaksepette.com/api/add_project_to_favorites/'+housingId,{
         project_id : projectId,
         housing_id : housingId
       },config).then((res) => {
@@ -79,7 +79,7 @@ export default function RealtorPostFavorited({
       const config = {
         headers: { Authorization: `Bearer ${user.access_token}` }
       };
-      axios.post('https://mobil.emlaksepette.com/api/add_housing_to_favorites/'+HouseId,{
+      axios.post('https://private.emlaksepette.com/api/add_housing_to_favorites/'+HouseId,{
         housing_id : HouseId
       },config).then((res) => {
         Dialog.show({

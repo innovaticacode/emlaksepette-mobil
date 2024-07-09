@@ -30,7 +30,7 @@ export default function ProjectAdverts({ data }) {
   }, []);
 
   const { width, height } = Dimensions.get("window");
-  const ApiUrl = "https://mobil.emlaksepette.com";
+  const ApiUrl = "https://private.emlaksepette.com";
   return (
     <>
       {featuredProjects && featuredProjects.length > 0 ? (

@@ -28,7 +28,7 @@ export default function Favorites() {
       const config = {
         headers: { Authorization: `Bearer ${user?.access_token}` },
       };
-      const response = await axios.get('https://mobil.emlaksepette.com/api/favorites', config);
+      const response = await axios.get('https://private.emlaksepette.com/api/favorites', config);
       setFavorites(Object.values(response.data.mergedFavorites));
     } catch (error) {
       console.error('Error fetching favorites:', error);
@@ -62,7 +62,7 @@ export default function Favorites() {
     };
     // Yenileme işlemi burada yapılır
     setTimeout(() => {
-      axios.get('https://mobil.emlaksepette.com/api/favorites',config).then((res) => {
+      axios.get('https://private.emlaksepette.com/api/favorites',config).then((res) => {
         setFavorites(Object.values(res.data.mergedFavorites));
         setRefreshing(false);
       })
@@ -96,7 +96,7 @@ export default function Favorites() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -132,7 +132,7 @@ export default function Favorites() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -149,7 +149,7 @@ export default function Favorites() {
   };
   const deleteRequestWithToken = async () => {
     try {
-      const response = await axios.delete('https://mobil.emlaksepette.com/api/institutional/housing-favorite', {
+      const response = await axios.delete('https://private.emlaksepette.com/api/institutional/housing-favorite', {
         headers: {
           Authorization: `Bearer ${user.access_token}`,
         },
@@ -165,7 +165,7 @@ export default function Favorites() {
   };
   const deleteRequestWithTokenProject = async () => {
     try {
-      const response = await axios.delete('https://mobil.emlaksepette.com/api/institutional/project-favorite', {
+      const response = await axios.delete('https://private.emlaksepette.com/api/institutional/project-favorite', {
         headers: {
           Authorization: `Bearer ${user.access_token}`,
         },
@@ -257,7 +257,7 @@ export default function Favorites() {
               }
               var no = 1000000 + favorite?.project.id
               return(
-                <RealtorPostFavorited key={i} changeFavorites={changeFavorites} type={1} projectId={favorite?.project?.id} housingId={favorite?.housing_id} no={no} column1={column1} column2={column2} column3={column3} image={'https://mobil.emlaksepette.com/project_housing_images/'+image} title={favorite?.project?.project_title + " adlı projede "+favorite?.housing_id+" No'lu konut"} price={favorite?.project_housing?.find((projectHousing) => {if(projectHousing.room_order == favorite?.housing_id && projectHousing.name == 'price[]'){return projectHousing}})?.value} m2="20"  GetId={GetIdForCart} fetchData={fetchFavorites}/>
+                <RealtorPostFavorited key={i} changeFavorites={changeFavorites} type={1} projectId={favorite?.project?.id} housingId={favorite?.housing_id} no={no} column1={column1} column2={column2} column3={column3} image={'https://private.emlaksepette.com/project_housing_images/'+image} title={favorite?.project?.project_title + " adlı projede "+favorite?.housing_id+" No'lu konut"} price={favorite?.project_housing?.find((projectHousing) => {if(projectHousing.room_order == favorite?.housing_id && projectHousing.name == 'price[]'){return projectHousing}})?.value} m2="20"  GetId={GetIdForCart} fetchData={fetchFavorites}/>
               )
             }else{
               if(favorite?.housing){
@@ -266,7 +266,7 @@ export default function Favorites() {
                 housingData = {};
               }
               return(
-                <RealtorPostFavorited key={i} changeFavorites={changeFavorites} type={2} HouseId={favorite?.housing?.id} no={favorite?.housing?.id + 2000000} image={'https://mobil.emlaksepette.com/housing_images/'+housingData?.image} title={favorite?.housing?.title} price={housingData && housingData.price ? housingData.price : "0"} column1={housingData[favorite?.housing?.list_items?.column1_name] ? housingData[favorite?.housing?.list_items?.column1_name] +" "+(favorite?.housing?.list_items?.column1_additional ? favorite?.housing?.list_items?.column1_additional : '') : ''} column2={housingData[favorite?.housing?.list_items?.column2_name] ? housingData[favorite?.housing?.list_items?.column2_name] +" "+ (favorite?.housing?.list_items?.column2_additional ? favorite?.housing?.list_items?.column2_additional : '') : ''} column3={ housingData[favorite?.housing?.list_items?.column3_name] ? housingData[favorite?.housing?.list_items?.column3_name] +" "+ (favorite?.housing?.list_items?.column3_additional ? favorite?.housing?.list_items?.column3_additional : '') : ''}  location={favorite?.housing?.city?.title + ' / ' + favorite?.housing?.county?.title} GetId={GetIdForCart} fetchData={fetchFavorites}  />
+                <RealtorPostFavorited key={i} changeFavorites={changeFavorites} type={2} HouseId={favorite?.housing?.id} no={favorite?.housing?.id + 2000000} image={'https://private.emlaksepette.com/housing_images/'+housingData?.image} title={favorite?.housing?.title} price={housingData && housingData.price ? housingData.price : "0"} column1={housingData[favorite?.housing?.list_items?.column1_name] ? housingData[favorite?.housing?.list_items?.column1_name] +" "+(favorite?.housing?.list_items?.column1_additional ? favorite?.housing?.list_items?.column1_additional : '') : ''} column2={housingData[favorite?.housing?.list_items?.column2_name] ? housingData[favorite?.housing?.list_items?.column2_name] +" "+ (favorite?.housing?.list_items?.column2_additional ? favorite?.housing?.list_items?.column2_additional : '') : ''} column3={ housingData[favorite?.housing?.list_items?.column3_name] ? housingData[favorite?.housing?.list_items?.column3_name] +" "+ (favorite?.housing?.list_items?.column3_additional ? favorite?.housing?.list_items?.column3_additional : '') : ''}  location={favorite?.housing?.city?.title + ' / ' + favorite?.housing?.county?.title} GetId={GetIdForCart} fetchData={fetchFavorites}  />
               )
             }
           

@@ -35,7 +35,7 @@ import { Stack } from "@react-native-material/core";
         const fetchHousings = async () => {
             setloading(true)
           try {
-            const res = await axios.get("https://mobil.emlaksepette.com/api/get_my_housings", {
+            const res = await axios.get("https://private.emlaksepette.com/api/get_my_housings", {
               headers: { Authorization: "Bearer " + user.access_token },
             });
             sethousings(res?.data?.activeHousingTypes);

@@ -20,7 +20,7 @@ const [loading, setloading] = useState(false)
         setloading(true)
       try {
         if (user.access_token) {
-          const response = await axios.get('https://mobil.emlaksepette.com/api/client/collections',{
+          const response = await axios.get('https://private.emlaksepette.com/api/client/collections',{
             headers: {
               'Authorization': `Bearer ${user.access_token}`
             }
@@ -61,7 +61,7 @@ const [disabledTrue, setdisabledTrue] = useState(false)
       };
     
     
-      axios.post('https://mobil.emlaksepette.com/api/add/collection', collectionData, {
+      axios.post('https://private.emlaksepette.com/api/add/collection', collectionData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.access_token}`,
@@ -100,7 +100,7 @@ const [disabledTrue, setdisabledTrue] = useState(false)
       };
     
     
-      axios.post('https://mobil.emlaksepette.com/api/addLink', collectionData, {
+      axios.post('https://private.emlaksepette.com/api/addLink', collectionData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${user.access_token}`,
@@ -170,7 +170,7 @@ const removeItemOnCollection = (collectionId) => {
 
   axios
     .post(
-      "https://mobil.emlaksepette.com/api/remove_item_on_collection",
+      "https://private.emlaksepette.com/api/remove_item_on_collection",
       collectionData,
       {
         headers: {

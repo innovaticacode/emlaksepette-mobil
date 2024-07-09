@@ -156,7 +156,7 @@ export default function Collections() {
 
       if (user.access_token) {
         const response = await axios.get(
-          "https://mobil.emlaksepette.com/api/client/collections",
+          "https://private.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -190,7 +190,7 @@ export default function Collections() {
       let formData = new FormData();
       formData.append();
       const response = await axios.delete(
-        `https://mobil.emlaksepette.com/api/collection/${id}/delete`,
+        `https://private.emlaksepette.com/api/collection/${id}/delete`,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -217,7 +217,7 @@ export default function Collections() {
       formData.append("collectionName", newName);
 
       const response = await axios.post(
-        `https://mobil.emlaksepette.com/api/collection/${id}/edit`,
+        `https://private.emlaksepette.com/api/collection/${id}/edit`,
         formData,
         {
           headers: {
@@ -267,7 +267,7 @@ export default function Collections() {
     };
     try {
       const response = await axios.delete(
-        `https://mobil.emlaksepette.com/api/collections`,
+        `https://private.emlaksepette.com/api/collections`,
 
         {
           data: data,
@@ -294,7 +294,7 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
     };
     try {
       const response = await axios.delete(
-        `https://mobil.emlaksepette.com/api/collections`,
+        `https://private.emlaksepette.com/api/collections`,
 
         {
           data: data,
@@ -312,6 +312,8 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
     }
   };
   console.log(user.has_club )
+
+
   return (
     <>
       {user.has_club != 1 ? (
@@ -340,6 +342,7 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                   <ScrollView
                     showsVerticalScrollIndicator={false}
                     stickyHeaderIndices={[0]}
+                    contentContainerStyle={{paddingBottom:20}}
                   >
                     <View style={styles.SearchArea}>
                       <SearchBar
@@ -388,7 +391,13 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                         }}
                       >
                         <TouchableOpacity
-                          style={styles.btnRemove}
+                          style={[styles.btnRemove,
+                            {
+                              backgroundColor:"#EEEDEB",
+                              borderWidth:  1, 
+                              borderColor: "#ebebeb",
+                            },
+                          ]}
                           onPress={()=>setmodalForRemoveAll(true)}
                         >
                           <Text
@@ -396,14 +405,20 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                               fontSize: 12,
                               textAlign: "center",
                               fontWeight: "bold",
-                              color: "#ffffff",
+                              color: "#333",
                             }}
                           >
                             Tümünü Sil
                           </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                          style={styles.btnRemove}
+                          style={[styles.btnRemove,
+                            {
+                              backgroundColor:"#EEEDEB",
+                              borderWidth:  1, 
+                              borderColor: "#ebebeb",
+                            },
+                          ]}
                           onPress={() => {
                             setisChoosed(!isChoosed);
                           }}
@@ -413,7 +428,7 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                               fontSize: 12,
                               textAlign: "center",
                               fontWeight: "bold",
-                              color: "#ffffff",
+                              color: "#333",
                             }}
                           >
                             Toplu Seç
@@ -1021,7 +1036,7 @@ const styles = StyleSheet.create({
   },
   btnRemove: {
     backgroundColor: "#EA2A28",
-    padding: 7,
+    padding: 5,
     borderRadius: 5,
   },
 });

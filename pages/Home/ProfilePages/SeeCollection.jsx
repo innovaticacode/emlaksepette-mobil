@@ -64,7 +64,7 @@ export default function SeeCollection() {
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const [FormVisible, setFormVisible] = useState(false);
-  const apiUrl = "https://mobil.emlaksepette.com/";
+  const apiUrl = "https://private.emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -94,7 +94,7 @@ export default function SeeCollection() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://mobil.emlaksepette.com/api/emlak-kulup/${collectionUser.id}/koleksiyonlar/${item.id}`
+          `https://private.emlaksepette.com/api/emlak-kulup/${collectionUser.id}/koleksiyonlar/${item.id}`
         );
         setCollectionData(response.data);
         setMergedItems(response.data.mergedItems);
@@ -147,7 +147,7 @@ export default function SeeCollection() {
 
     axios
       .post(
-        "https://mobil.emlaksepette.com/api/remove_item_on_collection",
+        "https://private.emlaksepette.com/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -216,7 +216,7 @@ export default function SeeCollection() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://mobil.emlaksepette.com/api/client/collections",
+          "https://private.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -269,7 +269,7 @@ export default function SeeCollection() {
 
     axios
       .post(
-        "https://mobil.emlaksepette.com/api/add/collection",
+        "https://private.emlaksepette.com/api/add/collection",
         collectionData,
         {
           headers: {
@@ -317,7 +317,7 @@ export default function SeeCollection() {
     };
 
     axios
-      .post("https://mobil.emlaksepette.com/api/addLink", collectionData, {
+      .post("https://private.emlaksepette.com/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -386,7 +386,7 @@ export default function SeeCollection() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -436,7 +436,7 @@ export default function SeeCollection() {
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        "https://mobil.emlaksepette.com/api/institutional/give_offer",
+        "https://private.emlaksepette.com/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -478,7 +478,7 @@ export default function SeeCollection() {
   const fetchCity = async () => {
     try {
       const response = await axios.get(
-        "https://mobil.emlaksepette.com/api/cities"
+        "https://private.emlaksepette.com/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -500,7 +500,7 @@ export default function SeeCollection() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://mobil.emlaksepette.com/api/counties/${value}`
+        `https://private.emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -598,7 +598,7 @@ export default function SeeCollection() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://mobil.emlaksepette.com/`,
+        message: `https://private.emlaksepette.com/`,
       });
 
       if (result.action === Share.sharedAction) {
@@ -615,7 +615,7 @@ export default function SeeCollection() {
     }
   };
  
-    const ApiUrl = "https://mobil.emlaksepette.com/"
+    const ApiUrl = "https://private.emlaksepette.com/"
   return (
     <View style={{ flex: 1 }}>
       <View

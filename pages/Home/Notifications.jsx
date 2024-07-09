@@ -37,7 +37,7 @@ export default function Notifications() {
 
   const deleteRequestWithToken = async () => {
     try {
-      const response = await axios.delete('https://mobil.emlaksepette.com/api/institutional/notifications', {
+      const response = await axios.delete('https://private.emlaksepette.com/api/institutional/notifications', {
         headers: {
           Authorization: `Bearer ${user?.access_token}`,
         },
