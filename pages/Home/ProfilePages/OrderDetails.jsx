@@ -22,7 +22,7 @@ import { Platform } from "react-native";
 export default function OrderDetails() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { OrderId } = route.params;
+  const { OrderId,id } = route.params;
 
   const [user, setUser] = useState({});
 
@@ -36,7 +36,7 @@ export default function OrderDetails() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (user?.access_token) {
+        if (user?.access_token ) {
           const response = await axios.get(
             `https://mobil.emlaksepette.com/api/institutional/order_detail/${OrderId}`,
             {
@@ -56,6 +56,7 @@ export default function OrderDetails() {
 
     fetchData();
   }, [user, OrderId]);
+  console.log(OrderId + 'dsfsdf')
   const [parsedData, setparsedData] = useState("");
   useEffect(() => {
     if (Detail?.cart && typeof Detail.cart === "string" && user.access_token) {
@@ -130,7 +131,7 @@ export default function OrderDetails() {
     style: "percent",
     maximumFractionDigits: 2,
   }).format(indirim_yuzdesi / 100);
-
+console.log(user.access_token +'zehra abla token')
   return (
     <ScrollView style={{ backgroundColor: "white" }}>
       <View style={style.container}>
@@ -138,7 +139,7 @@ export default function OrderDetails() {
           <View style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "400", fontSize: 13 }}>İlan No: </Text>
             <Text style={{ fontSize: 13, color: "grey" }}>
-              #1000{Detail.id}
+              #2000{OrderId} + {id}
             </Text>
           </View>
           <View style={{ flexDirection: "row" }}>
@@ -234,7 +235,7 @@ export default function OrderDetails() {
           >
             <TouchableOpacity
             onPress={()=>{
-              navigation.navigate('AddComment',{HouseID:Detail.id})
+              navigation.navigate('AddComment',{HouseID:id})
             }}
               style={{
                 backgroundColor: "#EA2C2E",
@@ -262,7 +263,7 @@ export default function OrderDetails() {
                 alignItems: "center",
               }}
               onPress={() => {
-                navigation.navigate("Profile", { id: Detail.store.id });
+                navigation.navigate("Profile", { id: Detail?.store?.id });
               }}
             >
               <Icon2 name="shopping-store" color={"#EA2C2E"} />

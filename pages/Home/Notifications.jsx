@@ -12,12 +12,13 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import Notificate from "../../components/Notificate";
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import moment from "moment";
 import "moment/locale/tr";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
-
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import { Platform } from "react-native";
 
 export default function Notifications() {
   const route = useRoute();
@@ -48,15 +49,32 @@ export default function Notifications() {
       console.error('Error making DELETE request:', error);
     }
   };
-
+const navigation=useNavigation()
 console.log(user?.access_token)
   return (
     <View style={styles.container}>
           {
             notifications?.length ==0?
-            <View>
-              <Text>Bildirim Yok</Text>
+            <View style={{alignItems:'center',justifyContent:'center',height:'100%',gap:10}}>
+            <View style={[ styles.card, {alignItems:'center',justifyContent:'center'}]}>
+                <Icon name="bell" size={50} color={'#EA2A28'}/>
             </View>
+            <View>
+            <Text style={{color:'grey',fontSize:16,fontWeight:'600'}}>Bildiriminiz bulunmamaktadır</Text>
+              <Text></Text>
+            </View>
+            <View style={{width:'100%',alignItems:'center'}}>
+              <TouchableOpacity style={{backgroundColor:'#EA2A28',width:'90%',padding:8,borderRadius:5}} onPress={()=>{
+             
+                  navigation.navigate('HomePage')
+           
+             
+              }}>
+                <Text style={{color:'#ffffff',fontWeight:'600',textAlign:'center'}}>Ana Sayfa'ya dön</Text>
+              </TouchableOpacity>
+            </View>
+  
+          </View>
             :
        
           <>
@@ -104,4 +122,24 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 15,
   },
+  card: {
+    backgroundColor: "#FFFFFF",
+    padding:15,
+   
+  borderRadius:50,
+
+    borderWidth: 0.7,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  }
 });

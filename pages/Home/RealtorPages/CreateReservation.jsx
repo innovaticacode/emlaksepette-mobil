@@ -84,7 +84,7 @@ const App = () => {
   };
   const getBookedDates = (reservations) => {
     let dates = [];
-    reservations.forEach((reservation) => {
+    reservations?.forEach((reservation) => {
       const { check_in_date, check_out_date } = reservation;
       const startDate = parseISO(check_in_date);
       const endDate = parseISO(check_out_date);
@@ -134,7 +134,7 @@ const App = () => {
   }, [selectedStartDate, selectedEndDate]);
   const today = new Date();
   const formattedDate = format(today, 'dd MMMM yyyy', { locale: tr });
-  const totalCost = selectedStartDate && selectedEndDate ? JSON.parse(data.housing_type_data).daily_rent * totalNights : 0;
+  const totalCost = selectedStartDate && selectedEndDate && data.housing_type_data ? JSON.parse(data.housing_type_data).daily_rent * totalNights : 0;
   const formattedTotalCost = formatCurrency(totalCost);
   const halfTotalCost = totalCost / 2;
   const formattedHalfTotalCost = formatCurrency(halfTotalCost);
@@ -374,7 +374,7 @@ const App = () => {
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <Text style={styles.DetailTitle}>Gecelik {JSON.parse(data.housing_type_data).daily_rent} TL</Text>
+            <Text style={styles.DetailTitle}>Gecelik {data &&data.housing_type_data && JSON.parse(data.housing_type_data).daily_rent} TL</Text>
             <View style={{ width: "50%", alignItems: "flex-end" }}>
               <Text style={styles.DetailTitle}>
                 {totalNights} x Gece

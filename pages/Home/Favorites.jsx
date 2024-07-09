@@ -8,6 +8,8 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import Modal from "react-native-modal";
 import { ActivityIndicator } from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import { Platform } from "react-native";
 export default function Favorites() {
   const navigation=useNavigation()
   const [user,setUser] = useState({});
@@ -192,7 +194,30 @@ export default function Favorites() {
 
 {
   favorites.length ==0 ?
-  <Text>Favorileriniz Boş</Text>
+    <>
+        <View style={{alignItems:'center',justifyContent:'center',height:'100%',gap:10}}>
+          <View style={[ styles.card, {alignItems:'center',justifyContent:'center'}]}>
+              <Icon name="heart-plus" size={50} color={'#EA2A28'}/>
+          </View>
+          <View>
+          <Text style={{color:'grey',fontSize:16,fontWeight:'600'}}>Favorilerinizde ilan bulunmamaktadır</Text>
+            <Text></Text>
+          </View>
+          <View style={{width:'100%',alignItems:'center'}}>
+            <TouchableOpacity style={{backgroundColor:'#EA2A28',width:'90%',padding:8,borderRadius:5}} onPress={()=>{
+              setLoading(true)
+              setTimeout(() => {
+                navigation.navigate('HomePage')
+                setLoading(false)
+              }, 700);
+           
+            }}>
+              <Text style={{color:'#ffffff',fontWeight:'600',textAlign:'center'}}>Ana Sayfa'ya dön</Text>
+            </TouchableOpacity>
+          </View>
+
+        </View>
+    </>
   :
 
 
@@ -438,4 +463,24 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 5,
   },
+  card: {
+    backgroundColor: "#FFFFFF",
+    padding:15,
+   
+  borderRadius:50,
+
+    borderWidth: 0.7,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  }
 });
