@@ -6,9 +6,12 @@ import {
   ImageBackground,
   ScrollView,
 } from "react-native";
+import Modal from "react-native-modal";
 import React, { useState, useEffect } from "react";
+import HTML from "react-native-render-html";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import Icon2 from "react-native-vector-icons/Fontisto";
+
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import Icon4 from "react-native-vector-icons/FontAwesome5";
@@ -18,6 +21,7 @@ import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import { Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function OrderDetails() {
   const navigation = useNavigation();
@@ -29,8 +33,10 @@ export default function OrderDetails() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-
+  console.log(user);
+  console.log(OrderId);
   const [Detail, setDetail] = useState({});
+  const [refund, setRefund] = useState({});
   const [projectDetail, setprojectDetail] = useState({});
   const [housingDetail, sethousingDetail] = useState({});
   useEffect(() => {
@@ -38,7 +44,9 @@ export default function OrderDetails() {
       try {
         if (user?.access_token ) {
           const response = await axios.get(
+
             `https://private.emlaksepette.com/api/institutional/order_detail/${OrderId}`,
+
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -46,6 +54,7 @@ export default function OrderDetails() {
             }
           );
           setDetail(response?.data?.order);
+          setRefund(response?.data?.order?.refund);
           setprojectDetail(response.data.project);
           sethousingDetail(response.data.housing);
         }
@@ -53,6 +62,7 @@ export default function OrderDetails() {
         console.error("Error fetching data:", error);
       }
     };
+    console.log(OrderId);
 
     fetchData();
   }, [user, OrderId]);
@@ -131,7 +141,39 @@ export default function OrderDetails() {
     style: "percent",
     maximumFractionDigits: 2,
   }).format(indirim_yuzdesi / 100);
-console.log(user.access_token +'zehra abla token')
+
+
+  const [Deals, setDeals] = useState("");
+
+  const fetchDataDeal = async () => {
+    const url = `https://mobil.emlaksepette.com/api/sayfa/mesafeli-kapora-emanet-sozlesmesi`;
+    try {
+      const response = await fetch(url);
+      // const data = await fetchFromURL(url);
+      const data = await response.json();
+      console.log(data);
+      setDeals(data.content);
+      // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
+    } catch (error) {
+      console.error("İstek hatası:", error);
+      // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
+    }
+  };
+  const [modalVisible2, setModalVisible2] = useState(false);
+  useEffect(() => {
+    fetchDataDeal();
+  }, []);
+
+  console.log(refund?.name + "asdasd");
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const handlePress = () => {
+    setModalVisible(true);
+  };
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <ScrollView style={{ backgroundColor: "white" }}>
       <View style={style.container}>
@@ -163,9 +205,14 @@ console.log(user.access_token +'zehra abla token')
                   1 Onaylandı
                 </Text>
               )}
-              {Detail.status == 2 && (
+              {Detail.status == 2 && !refund && (
                 <Text style={{ fontSize: 13, color: "#B81911" }}>
                   Reddedildi
+                </Text>
+              )}
+              {Detail.status == 2 && refund.status == 1 && (
+                <Text style={{ fontSize: 13, color: "green" }}>
+                  İade Edildi
                 </Text>
               )}
             </Text>
@@ -183,8 +230,11 @@ console.log(user.access_token +'zehra abla token')
             {Detail.status == 1 && (
               <Text style={{ fontSize: 13, color: "#4B8F3C" }}>Onaylandı</Text>
             )}
-            {Detail.status == 2 && (
+            {Detail.status == 2 && !refund && (
               <Text style={{ fontSize: 13, color: "#B81911" }}>Reddedildi</Text>
+            )}
+            {Detail.status == 2 && refund.status == 1 && (
+              <Text style={{ fontSize: 13, color: "green" }}>İade Edildi</Text>
             )}
           </View>
           <View style={{ flexDirection: "row" }}>
@@ -233,7 +283,9 @@ console.log(user.access_token +'zehra abla token')
               paddingBottom: 7,
             }}
           >
-            <TouchableOpacity
+
+            {parsedData?.type == "housing" && (
+      <TouchableOpacity
             onPress={()=>{
               navigation.navigate('AddComment',{HouseID:id})
             }}
@@ -251,6 +303,8 @@ console.log(user.access_token +'zehra abla token')
                 İlanı Değerlendir
               </Text>
             </TouchableOpacity>
+            )}
+
             <TouchableOpacity
               style={{
                 backgroundColor: "transparent",
@@ -306,6 +360,7 @@ console.log(user.access_token +'zehra abla token')
                 <FeatherIcon name="clock" color={"#BC3913"} />
               </View>
             )}
+
             {Detail.status == 1 && (
               <View
                 style={{
@@ -333,7 +388,7 @@ console.log(user.access_token +'zehra abla token')
                 <FeatherIcon name="check" color={"#4B8F3C"} size={16} />
               </View>
             )}
-            {Detail.status == 2 && (
+            {Detail.status == 2 && !refund && (
               <View
                 style={{
                   backgroundColor: "#FFE0DB",
@@ -360,6 +415,34 @@ console.log(user.access_token +'zehra abla token')
                   Ödeme reddedildi
                 </Text>
                 <StarIcon name="close" color={"#B81911"} />
+              </View>
+            )}
+            {Detail.status == 2 && refund.status == 1 && (
+              <View
+                style={{
+                  backgroundColor: "green",
+                  borderWidth: 1,
+                  borderColor: "grey",
+                  paddingLeft: 6,
+                  paddingRight: 6,
+                  padding: 4,
+                  borderRadius: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  overflow: "hidden",
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    textAlign: "center",
+                    fontSize: 11,
+                  }}
+                >
+                  İade Onaylandı
+                </Text>
               </View>
             )}
           </View>
@@ -634,14 +717,17 @@ console.log(user.access_token +'zehra abla token')
             </View>
           </View>
         </View>
-        {user?.id == Detail?.user?.id && (
+        {user?.id === Detail?.user?.id && Detail.status == 1 && !refund && (
           <View>
             <TouchableOpacity
               style={{
-                backgroundColor: "#E54242",
+                backgroundColor: "red",
                 padding: 13,
                 borderRadius: 5,
               }}
+              onPress={() =>
+                navigation.navigate("ExtraditionRequest", { OrderId: OrderId })
+              }
             >
               <Text
                 style={{
@@ -655,6 +741,115 @@ console.log(user.access_token +'zehra abla token')
             </TouchableOpacity>
           </View>
         )}
+
+        {user?.id === Detail?.user?.id &&
+          Detail.status == 2 &&
+          refund &&
+          refund.status == 1 && (
+            <View>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "green",
+                  padding: 13,
+                  borderRadius: 5,
+                }}
+                onPress={() => {}}
+              >
+                <Text
+                  style={{
+                    color: "#ffffff",
+                    textAlign: "center",
+                    fontWeight: "500",
+                  }}
+                  onPress={handlePress}
+                >
+                  İade Talebiniz Onaylandı
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={closeModal}
+        >
+          <View style={style.modalContainer}>
+            <View style={style.modalView}>
+              <TouchableOpacity onPress={closeModal} style={style.closeButton}>
+                <Icon3 name="close-circle" size={30} color="black" />
+              </TouchableOpacity>
+              <Text style={style.modalText}>İade talebiniz onaylandı</Text>
+              {refund && (
+                <View style={style.modalContent}>
+                  <Text style={style.modalText}>İsim: {refund.name}</Text>
+                  <Text style={style.modalText}>Email: {refund.email}</Text>
+                </View>
+              )}
+            </View>
+          </View>
+        </Modal>
+
+        {user?.id === Detail?.user?.id &&
+          Detail.status == 2 &&
+          refund.status == 2 && (
+            <View>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "red",
+                  padding: 13,
+                  borderRadius: 5,
+                }}
+                onPress={() =>
+                  navigation.navigate("ExtraditionRequest", {
+                    OrderId: OrderId,
+                  })
+                }
+              >
+                <Text
+                  style={{
+                    color: "#ffffff",
+                    textAlign: "center",
+                    fontWeight: "500",
+                  }}
+                >
+                  İade Talebiniz Reddedildi
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+        {user?.id === Detail?.user?.id &&
+          Detail.status == 1 &&
+          refund &&
+          refund.status == 0 && (
+            <View>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "red",
+                  padding: 13,
+                  borderRadius: 5,
+                }}
+                onPress={() =>
+                  navigation.navigate("ExtraditionRequest", {
+                    OrderId: OrderId,
+                  })
+                }
+              >
+                <Text
+                  style={{
+                    color: "#ffffff",
+                    textAlign: "center",
+                    fontWeight: "500",
+                  }}
+                >
+                  İade Talebiniz İnceleniyor
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
         {user?.id !== Detail?.user?.id && (
           <View style={[style.PersonalInfoArea, { gap: 25 }]}>
             <Text style={{ fontSize: 16 }}>Sözleşme Ekle</Text>
@@ -678,7 +873,10 @@ console.log(user.access_token +'zehra abla token')
           </View>
         )}
 
-        <TouchableOpacity style={style.orderInfo}>
+        <TouchableOpacity
+          style={style.orderInfo}
+          onPress={() => setModalVisible2(true)}
+        >
           <Text
             style={{
               textAlign: "center",
@@ -690,6 +888,31 @@ console.log(user.access_token +'zehra abla token')
             Mesafeli Satış Sözleşmesi
           </Text>
         </TouchableOpacity>
+        <Modal
+          isVisible={modalVisible2}
+          onBackdropPress={() => setModalVisible2(false)}
+          backdropColor="transparent"
+          style={{ justifyContent: "center", alignItems: "center", margin: 0 }}
+        >
+          <SafeAreaView
+            style={{ backgroundColor: "white", borderRadius: 10, padding: 20 }}
+          >
+            <ScrollView style={{ padding: 10 }}>
+              <View
+                style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}
+              >
+                <TouchableOpacity onPress={() => setModalVisible2(false)}>
+                  <Icon3 name="close-circle" size={31} color={"red"} />
+                </TouchableOpacity>
+              </View>
+              {Deals ? (
+                <HTML source={{ html: Deals }} contentWidth={100} />
+              ) : (
+                <Text>Yükleniyor...</Text>
+              )}
+            </ScrollView>
+          </SafeAreaView>
+        </Modal>
       </View>
     </ScrollView>
   );
@@ -703,6 +926,47 @@ const style = StyleSheet.create({
     paddingRight: 7,
     gap: 11,
     paddingBottom: 20,
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+    backgroundColor: "white",
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  modal2: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContent: {
+    alignSelf: "flex-start",
+  },
+
+  modalContent2: {
+    backgroundColor: "#f4f4f4",
+    padding: 20,
+    height: "100%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
   },
   orderInfo: {
     padding: 10,
@@ -755,13 +1019,11 @@ const style = StyleSheet.create({
   },
   Image: {
     flex: 0.5 / 2,
-
     padding: 2,
     height: 90,
   },
   caption: {
     flex: 1.4 / 2,
-
     padding: 2,
     gap: 4,
   },
@@ -783,6 +1045,45 @@ const style = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  button: {
+    backgroundColor: "green",
+    padding: 13,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "#ffffff",
+    textAlign: "center",
+    fontWeight: "500",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    width: "100%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    height: "50%",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+  },
+  modalText: {
+    marginBottom: 15,
   },
   PersonalInfoArea: {
     padding: 10,

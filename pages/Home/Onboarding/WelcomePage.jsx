@@ -1,168 +1,118 @@
+import React, { useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  Image,
   Dimensions,
   TouchableOpacity,
+  ImageBackground,
 } from "react-native";
-import React from "react";
-import Swiper from "react-native-swiper";
-import { LinearGradient } from "expo-linear-gradient";
+import { StatusBar } from "expo-status-bar";
+import Animated, {
+  Easing,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 export default function WelcomePage({ hideSplash }) {
+  const scale = useSharedValue(0);
+
+  useEffect(() => {
+    scale.value = withTiming(1, {
+      duration: 2000, // Adjust duration as per your preference
+      easing: Easing.out(Easing.ease), // Smooth easing
+    });
+  }, [scale]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    };
+  });
+
   return (
-    <View style={{ flex: 1 }}>
-      <Swiper
-        paginationStyle={styles.paginationStyle}
-        dotStyle={styles.dotStyle}
-        activeDotStyle={styles.activeDotStyle}
-        autoplay={false}
-      >
-        <View style={styles.slide}>
-          <Image
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" />
+      <View style={styles.imageContainer}>
+        <Animated.View style={[styles.animatedView, animatedStyle]}>
+          <ImageBackground
             source={{
-              uri: "https://foyr.com/learn/wp-content/uploads/2021/08/design-your-dream-home.jpg",
+              uri: "https://test.emlaksepette.com/images/emlaksepettelogo.png",
             }}
             style={styles.image}
+            resizeMode="contain"
           />
-          <LinearGradient
-            colors={["rgba(255,255,255,1)", "rgba(255,255,255,0)"]}
-            style={styles.overlay}
-            start={{ x: 0.5, y: 1 }}
-            end={{ x: 0.5, y: 0 }}
-          />
-          <Text style={styles.text}>Emlaksepetteye hoşgeldiniz</Text>
-          <Text style={styles.description}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Est, at
-            saepe facilis labore pariatur praesentium nesciunt unde. Minima
-            culpa qui voluptas, velit consectetur ad?
-          </Text>
-        </View>
-        <View style={styles.slide}>
-          <Image
-            source={{
-              uri: "https://coralhomes.com.au/wp-content/uploads/Home-Builders.jpg",
-            }}
-            style={styles.image}
-          />
-          <LinearGradient
-            colors={["rgba(255,255,255,1)", "rgba(255,255,255,0)"]}
-            style={styles.overlay}
-            start={{ x: 0.5, y: 1 }}
-            end={{ x: 0.5, y: 0 }}
-          />
-          <Text style={styles.text}>Emlaksepetteye hoşgeldiniz</Text>
-          <Text style={styles.description}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Est, at
-            saepe facilis labore pariatur praesentium nesciunt unde. Minima
-            culpa qui voluptas, velit consectetur ad?
-          </Text>
-        </View>
-        <View style={styles.slide}>
-          <Image
-            source={{
-              uri: "https://cityfurnish.com/blog/wp-content/uploads/2023/07/living-room-filled-with-furniture-red-wall-generative-ai-image-min.jpg",
-            }}
-            style={styles.image}
-          />
-          <LinearGradient
-            colors={["rgba(255,255,255,1)", "rgba(255,255,255,0)"]}
-            style={styles.overlay}
-            start={{ x: 0.5, y: 1 }}
-            end={{ x: 0.5, y: 0 }}
-          />
-          <Text style={styles.text}>Emlaksepetteye hoşgeldiniz</Text>
-          <Text style={styles.description}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Est, at
-            saepe facilis labore pariatur praesentium nesciunt unde. Minima
-            culpa qui voluptas, velit consectetur ad?
-          </Text>
-          <TouchableOpacity style={styles.description2} onPress={hideSplash}>
-            <Text style={styles.description2Text}>HEMEN BAŞLA</Text>
-          </TouchableOpacity>
-        </View>
-      </Swiper>
+        </Animated.View>
+      </View>
+      {/* <View style={styles.body}>
+        <Text style={styles.title}>
+          <Text style={styles.highlight}>Emlak sepette'ye</Text> hoşgeldiniz.
+        </Text>
+        <Text style={styles.subtitle}>
+          Kaporanız güvende sistemiyle güvenle alışveriş yap
+        </Text>
+
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Kayıt Ol</Text>
+        </TouchableOpacity>
+      </View> */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  slide: {
+  container: {
     flex: 1,
+    backgroundColor: "#fff",
+  },
+  imageContainer: {
+    height: "100%",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  animatedView: {
+    width: width * 0.8,
+    height: width * 0.8,
     justifyContent: "center",
     alignItems: "center",
   },
   image: {
     width: "100%",
     height: "100%",
-    resizeMode: "cover",
   },
-  overlay: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: height,
-  },
-  text: {
-    position: "absolute",
-    color: "#333",
-    fontSize: 27,
-    fontWeight: "bold",
-    fontWeight: "900",
-  },
-  description: {
-    position: "absolute",
-    color: "#333",
-    fontSize: 15,
-    textAlign: "center",
-    paddingHorizontal: 20,
-    bottom: 0, // Metnin konumunu ayarlamak için
-    top: 470, // Metnin konumunu ayarlamak için
-    fontWeight: "500",
-  },
-  description2: {
-    position: "absolute",
-    width: 300, // Örneğin istediğiniz genişliği buradan ayarlayabilirsiniz
-    backgroundColor: "green",
-    paddingVertical: 12,
-    paddingHorizontal: 50,
-    borderRadius: 50,
-    justifyContent: "center",
+  body: {
+    flex: 1,
     alignItems: "center",
-    marginTop: 20, // İstediğiniz aralığı buradan ayarlayabilirsiniz
-    bottom: 100, //
+    justifyContent: "center",
+    padding: 10,
   },
-  description2Text: {
-    color: "#fff",
-    fontSize: 16,
+  title: {
+    fontSize: 24,
     fontWeight: "bold",
+    textAlign: "center",
   },
-
-  paginationStyle: {
-    bottom: 10,
+  highlight: {
+    color: "#007bff",
   },
-  dotStyle: {
-    backgroundColor: "rgba(0,0,0,.2)",
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginLeft: 8,
-    marginRight: 8,
-    marginTop: 3,
-    marginBottom: 3,
+  subtitle: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    marginVertical: 20,
   },
-  activeDotStyle: {
-    backgroundColor: "#007aff",
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginLeft: 8,
-    marginRight: 8,
-    marginTop: 3,
-    marginBottom: 3,
+  button: {
+    backgroundColor: "#007bff",
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });

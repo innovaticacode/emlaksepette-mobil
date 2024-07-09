@@ -79,7 +79,7 @@ export default function Basket() {
           "https://private.emlaksepette.com/api/institutional/my-cart",
           {
             headers: {
-              Authorization: `Bearer ${user?.access_token}`,
+              Authorization: Bearer ${user?.access_token},
             },
           }
         );
@@ -146,7 +146,7 @@ export default function Basket() {
     const month = monthNames[date.getMonth()];
     const year = date.getFullYear();
 
-    return `${month}, ${day} ${year}`;
+    return ${month}, ${day} ${year};
   };
 
   // Sepetteki Hisse Sayısını Arttırma Ve Fİyat Güncelleme
@@ -164,7 +164,7 @@ export default function Basket() {
           formData,
           {
             headers: {
-              Authorization: `Bearer ${user?.access_token}`,
+              Authorization: Bearer ${user?.access_token},
             },
           }
         );
@@ -189,7 +189,7 @@ export default function Basket() {
           formData,
           {
             headers: {
-              Authorization: `Bearer ${user?.access_token}`,
+              Authorization: Bearer ${user?.access_token},
             },
           }
         );
@@ -208,7 +208,7 @@ export default function Basket() {
         "https://private.emlaksepette.com/api/users/" + user?.id,
         {
           headers: {
-            Authorization: `Bearer ${user.access_token}`,
+            Authorization: Bearer ${user.access_token},
           },
         }
       );
@@ -239,7 +239,7 @@ export default function Basket() {
           {}, 
           {
             headers: {
-              Authorization: `Bearer ${user?.access_token}`,
+              Authorization: Bearer ${user?.access_token},
             },
           }
         );
@@ -280,7 +280,7 @@ export default function Basket() {
           formData,
           {
             headers: {
-              Authorization: `Bearer ${user?.access_token}`,
+              Authorization: Bearer ${user?.access_token},
             },
           }
         );
@@ -529,19 +529,19 @@ const nav=useNavigation()
                           textAlign: "right",
                         }}
                       >
-                        {addDotEveryThreeDigits(item[`pay_dec_price${_index}`])}{" "}
+                        {addDotEveryThreeDigits(item[pay_dec_price${_index}])}{" "}
                         ₺
                       </Text>
                       <Text style={{ color: "#7E7E7E", fontWeight: "600" }}>
-                        {formatDate(item[`pay_dec_date${_index}`])}
+                        {formatDate(item[pay_dec_date${_index}])}
                       </Text>
                     </View>
                   </View>
                   // <View style={{flexDirection:'column',gap:5,alignItems:'center'}}>
 
                   //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{payDec.length}. Ara Ödeme</Text>
-                  //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{addDotEveryThreeDigits(item[`pay_dec_price${_index}`])} ₺</Text>
-                  //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{formatDate(item[`pay_dec_date${_index}`])}</Text>
+                  //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{addDotEveryThreeDigits(item[pay_dec_price${_index}])} ₺</Text>
+                  //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{formatDate(item[pay_dec_date${_index}])}</Text>
                   // </View>
                 ))}
               </View>
