@@ -34,7 +34,7 @@ export default function OrderDetails() {
     getValueFor("user", setUser);
   }, []);
   console.log(user);
-
+  console.log(OrderId);
   const [Detail, setDetail] = useState({});
   const [refund, setRefund] = useState({});
   const [projectDetail, setprojectDetail] = useState({});
@@ -161,6 +161,14 @@ export default function OrderDetails() {
   }, []);
 
   console.log(refund?.name + "asdasd");
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const handlePress = () => {
+    setModalVisible(true);
+  };
+  const closeModal = () => {
+    setModalVisible(false);
+  };
   return (
     <ScrollView style={{ backgroundColor: "white" }}>
       <View style={style.container}>
@@ -192,9 +200,14 @@ export default function OrderDetails() {
                   1 Onaylandı
                 </Text>
               )}
-              {Detail.status == 2 && (
+              {Detail.status == 2 && !refund && (
                 <Text style={{ fontSize: 13, color: "#B81911" }}>
                   Reddedildi
+                </Text>
+              )}
+              {Detail.status == 2 && refund.status == 1 && (
+                <Text style={{ fontSize: 13, color: "green" }}>
+                  İade Edildi
                 </Text>
               )}
             </Text>
@@ -212,8 +225,11 @@ export default function OrderDetails() {
             {Detail.status == 1 && (
               <Text style={{ fontSize: 13, color: "#4B8F3C" }}>Onaylandı</Text>
             )}
-            {Detail.status == 2 && (
+            {Detail.status == 2 && !refund && (
               <Text style={{ fontSize: 13, color: "#B81911" }}>Reddedildi</Text>
+            )}
+            {Detail.status == 2 && refund.status == 1 && (
+              <Text style={{ fontSize: 13, color: "green" }}>İade Edildi</Text>
             )}
           </View>
           <View style={{ flexDirection: "row" }}>
@@ -338,6 +354,7 @@ export default function OrderDetails() {
                 <FeatherIcon name="clock" color={"#BC3913"} />
               </View>
             )}
+
             {Detail.status == 1 && (
               <View
                 style={{
@@ -365,7 +382,7 @@ export default function OrderDetails() {
                 <FeatherIcon name="check" color={"#4B8F3C"} size={16} />
               </View>
             )}
-            {Detail.status == 2 && (
+            {Detail.status == 2 && !refund && (
               <View
                 style={{
                   backgroundColor: "#FFE0DB",
@@ -392,6 +409,34 @@ export default function OrderDetails() {
                   Ödeme reddedildi
                 </Text>
                 <StarIcon name="close" color={"#B81911"} />
+              </View>
+            )}
+            {Detail.status == 2 && refund.status == 1 && (
+              <View
+                style={{
+                  backgroundColor: "green",
+                  borderWidth: 1,
+                  borderColor: "grey",
+                  paddingLeft: 6,
+                  paddingRight: 6,
+                  padding: 4,
+                  borderRadius: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  overflow: "hidden",
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    textAlign: "center",
+                    fontSize: 11,
+                  }}
+                >
+                  İade Onaylandı
+                </Text>
               </View>
             )}
           </View>
@@ -700,22 +745,19 @@ export default function OrderDetails() {
             </TouchableOpacity>
           </View>
         )}
+
         {user?.id === Detail?.user?.id &&
-          Detail.status == 1 &&
+          Detail.status == 2 &&
           refund &&
           refund.status == 1 && (
             <View>
               <TouchableOpacity
                 style={{
-                  backgroundColor: "red",
+                  backgroundColor: "green",
                   padding: 13,
                   borderRadius: 5,
                 }}
-                onPress={() =>
-                  navigation.navigate("ExtraditionRequest", {
-                    OrderId: OrderId,
-                  })
-                }
+                onPress={() => {}}
               >
                 <Text
                   style={{
@@ -723,12 +765,36 @@ export default function OrderDetails() {
                     textAlign: "center",
                     fontWeight: "500",
                   }}
+                  onPress={handlePress}
                 >
                   İade Talebiniz Onaylandı
                 </Text>
               </TouchableOpacity>
             </View>
           )}
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={closeModal}
+        >
+          <View style={style.modalContainer}>
+            <View style={style.modalView}>
+              <TouchableOpacity onPress={closeModal} style={style.closeButton}>
+                <Icon3 name="close-circle" size={30} color="black" />
+              </TouchableOpacity>
+              <Text style={style.modalText}>İade talebiniz onaylandı</Text>
+              {refund && (
+                <View style={style.modalContent}>
+                  <Text style={style.modalText}>İsim: {refund.name}</Text>
+                  <Text style={style.modalText}>Email: {refund.email}</Text>
+                </View>
+              )}
+            </View>
+          </View>
+        </Modal>
+
         {user?.id === Detail?.user?.id &&
           Detail.status == 2 &&
           refund.status == 2 && (
@@ -757,6 +823,7 @@ export default function OrderDetails() {
               </TouchableOpacity>
             </View>
           )}
+
         {user?.id === Detail?.user?.id &&
           Detail.status == 1 &&
           refund &&
@@ -864,16 +931,46 @@ const style = StyleSheet.create({
     gap: 11,
     paddingBottom: 20,
   },
+  modalView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+    backgroundColor: "white",
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
   modal2: {
     justifyContent: "flex-end",
     margin: 0,
   },
+  modalContent: {
+    alignSelf: "flex-start",
+  },
+
   modalContent2: {
     backgroundColor: "#f4f4f4",
     padding: 20,
     height: "100%",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
   },
   orderInfo: {
     padding: 10,
@@ -926,13 +1023,11 @@ const style = StyleSheet.create({
   },
   Image: {
     flex: 0.5 / 2,
-
     padding: 2,
     height: 90,
   },
   caption: {
     flex: 1.4 / 2,
-
     padding: 2,
     gap: 4,
   },
@@ -954,6 +1049,45 @@ const style = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  button: {
+    backgroundColor: "green",
+    padding: 13,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "#ffffff",
+    textAlign: "center",
+    fontWeight: "500",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    width: "100%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    height: "50%",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+  },
+  modalText: {
+    marginBottom: 15,
   },
   PersonalInfoArea: {
     padding: 10,
