@@ -15,7 +15,7 @@ import { Platform } from "react-native";
 
 export default function ProjectAdvertPost({ Onpress, project }) {
   const [status, setStatus] = useState(project.status);
-const apiUrl ='https://mobil.emlaksepette.com/'
+const apiUrl ='https://private.emlaksepette.com/'
   const { width, height } = Dimensions.get("window");
   return (
     <View style={[style.card, { gap: 5 }]}>

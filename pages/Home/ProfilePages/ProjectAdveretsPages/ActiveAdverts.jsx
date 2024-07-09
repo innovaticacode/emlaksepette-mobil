@@ -42,7 +42,7 @@ export default function ActiveAdverts({}) {
         setloading(true)
         try {
         
-          const response = await axios.get('https://mobil.emlaksepette.com/api/get_my_projects?status=1&start='+start+'&take='+take, {
+          const response = await axios.get('https://private.emlaksepette.com/api/get_my_projects?status=1&start='+start+'&take='+take, {
             headers: { Authorization: 'Bearer ' + user.access_token }
           });
         

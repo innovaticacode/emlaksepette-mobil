@@ -132,7 +132,7 @@ export default function Posts({
     const config = {
       headers: { Authorization: `Bearer ${user.access_token}` }
     };
-    axios.post('https://mobil.emlaksepette.com/api/add_project_to_favorites/'+roomOrder,{
+    axios.post('https://private.emlaksepette.com/api/add_project_to_favorites/'+roomOrder,{
       project_id : project?.id,
       housing_id : roomOrder
     },config).then((res) => {
@@ -182,7 +182,7 @@ export default function Posts({
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -328,7 +328,7 @@ const [AddCartShow, setAddCartShow] = useState(false);
             <Image
               source={{
                 uri:
-                  "https://mobil.emlaksepette.com/project_housing_images/" +
+                  "https://private.emlaksepette.com/project_housing_images/" +
                   roomData["image[]"],
               }}
               style={styles.image}

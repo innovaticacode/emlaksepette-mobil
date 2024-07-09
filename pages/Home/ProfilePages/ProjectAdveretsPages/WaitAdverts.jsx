@@ -38,7 +38,7 @@ export default function ActiveAdverts({}) {
     const [ProjectRecords, setProjectRecords] = useState([])
       const fetchProjects = async () => {
         try {
-          const response = await axios.get('https://mobil.emlaksepette.com/api/get_my_projects?status=2&start='+start+'&take='+take, {
+          const response = await axios.get('https://private.emlaksepette.com/api/get_my_projects?status=2&start='+start+'&take='+take, {
             headers: { Authorization: 'Bearer ' + user.access_token }
           });
           setProjects(response.data.data);

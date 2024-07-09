@@ -59,7 +59,7 @@ export default function Rent({ display }) {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          "https://mobil.emlaksepette.com/api/institutional/kiraladiklarim",
+          "https://private.emlaksepette.com/api/institutional/kiraladiklarim",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,

@@ -9,14 +9,14 @@ import {
 } from "react-native-gesture-handler";
 
 export default function SliderBar() {
-  const apiUrl = "https://mobil.emlaksepette.com";
+  const apiUrl = "https://private.emlaksepette.com";
   const [loading, setloading] = useState(false);
   const [featuredStores, setFeaturedStores] = useState([]);
 
   const fetchFeaturedStores = async () => {
     try {
       const response = await axios.get(
-        "https://mobil.emlaksepette.com/api/popular-construction-brands"
+        "https://private.emlaksepette.com/api/popular-construction-brands"
       );
       if (response.data.length > 0) {
         setFeaturedStores(response.data);

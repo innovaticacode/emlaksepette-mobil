@@ -34,7 +34,7 @@ const [housingRecords, sethousingRecords] = useState([])
   const fetchPendingHousings = async (sort) => {
     setloading(true)
     try {
-      const res = await axios.get("https://mobil.emlaksepette.com/api/get_my_housings?orderByHousings="+sort, {
+      const res = await axios.get("https://private.emlaksepette.com/api/get_my_housings?orderByHousings="+sort, {
         headers: { Authorization: 'Bearer ' + user.access_token }
       });
       sethousings(res.data.pendingHousingTypes);

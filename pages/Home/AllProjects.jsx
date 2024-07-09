@@ -106,7 +106,7 @@ export default function AllProjects() {
     return intValue.toLocaleString("tr-TR");
   };
 
-  const apiUrl = "https://mobil.emlaksepette.com/";
+  const apiUrl = "https://private.emlaksepette.com/";
   const route = useRoute();
   const navigation = useNavigation();
   const { params } = route;
@@ -114,7 +114,7 @@ export default function AllProjects() {
 
   useEffect(() => {
     if (params.href) {
-      const baseUrl = "https://mobil.emlaksepette.com";
+      const baseUrl = "https://private.emlaksepette.com";
       const relativeUrl = params.href.replace(`${baseUrl}/kategori`, ""); // 'kategori' kısmını çıkar
       const urlSegments = relativeUrl.split("/").filter((segment) => segment);
 

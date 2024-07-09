@@ -53,7 +53,7 @@ import {
       try {
         if (user?.access_token) {
           const response = await axios.get(
-            `https://mobil.emlaksepette.com/api/institutional/roles`,
+            `https://private.emlaksepette.com/api/institutional/roles`,
             {
               headers: {
                 Authorization: `Bearer ${user.access_token}`,
@@ -106,7 +106,7 @@ import {
       try {
         if (user?.access_token) {
           const response = await axios.post(
-            `https://mobil.emlaksepette.com/api/institutional/users/${UserID}`,
+            `https://private.emlaksepette.com/api/institutional/users/${UserID}`,
             formdata,
             {
               headers: {
@@ -137,7 +137,7 @@ import {
         try {
           if (user?.access_token) {
             const response = await axios.get(
-              `https://mobil.emlaksepette.com/api/users/${UserID}`,
+              `https://private.emlaksepette.com/api/users/${UserID}`,
               {
                 headers: {
                   Authorization: `Bearer ${user.access_token}`,

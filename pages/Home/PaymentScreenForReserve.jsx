@@ -165,7 +165,7 @@ const pickDocument = async () => {
                 <View style={styles.image}>
                     {
                         data && data.housing&& data.housing.housing_type_data&&
-                        <ImageBackground source={{uri:`https://mobil.emlaksepette.com/housing_images/${JSON.parse(data?.housing?.housing_type_data).image}`}} style={{width:'100%',height:'100%'}}/>  
+                        <ImageBackground source={{uri:`https://private.emlaksepette.com/housing_images/${JSON.parse(data?.housing?.housing_type_data).image}`}} style={{width:'100%',height:'100%'}}/>  
                     }
 
                 </View>

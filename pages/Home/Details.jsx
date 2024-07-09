@@ -83,7 +83,7 @@ export default function Details({ navigation }) {
   const [lastBlockItemCount,setLastBlockItemCount] = useState(0);
   const [showInstallment,setShowInstallment] = useState(false);
   const scrollViewRef = useRef();
-  const apiUrl = "https://mobil.emlaksepette.com/";
+  const apiUrl = "https://private.emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -135,7 +135,7 @@ export default function Details({ navigation }) {
     const config = {
       headers: { Authorization: `Bearer ${user?.access_token}` }
     };
-    axios.get('https://mobil.emlaksepette.com/api/project/' + ProjectId, config).then((res) => {
+    axios.get('https://private.emlaksepette.com/api/project/' + ProjectId, config).then((res) => {
       setData(res?.data)
       setloadingDetails(true)
     })
@@ -245,7 +245,7 @@ export default function Details({ navigation }) {
 
     axios
       .post(
-        "https://mobil.emlaksepette.com/api/remove_item_on_collection",
+        "https://private.emlaksepette.com/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -292,7 +292,7 @@ export default function Details({ navigation }) {
   };
 
   const shareLinkOnWhatsApp = () => {
-    const url = `https://mobil.emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
+    const url = `https://private.emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -302,7 +302,7 @@ export default function Details({ navigation }) {
   };
 
   const shareLinkOnInstagram = (text) => {
-    const url = `https://mobil.emlaksepette.com/${slug}/100${ProjectId}/detay`;
+    const url = `https://private.emlaksepette.com/${slug}/100${ProjectId}/detay`;
 
     const instagramShareURL = `instagram://story/?text=${encodeURIComponent(
       url
@@ -313,7 +313,7 @@ export default function Details({ navigation }) {
       .catch((error) => console.error("Instagram açılamadı:", error));
   };
   const copyToClipboard = () => {
-    const url = `https://mobil.emlaksepette.com/${slug}/1000${ProjectId}/detay`;
+    const url = `https://private.emlaksepette.com/${slug}/1000${ProjectId}/detay`;
     Clipboard.setStringAsync(url);
     ShowAlert();
   };
@@ -392,7 +392,7 @@ export default function Details({ navigation }) {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://mobil.emlaksepette.com/api/client/collections",
+          "https://private.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -445,7 +445,7 @@ export default function Details({ navigation }) {
 
     axios
       .post(
-        "https://mobil.emlaksepette.com/api/add/collection",
+        "https://private.emlaksepette.com/api/add/collection",
         collectionData,
         {
           headers: {
@@ -490,7 +490,7 @@ export default function Details({ navigation }) {
       type: "project",
     };
 
-    axios.post("https://mobil.emlaksepette.com/api/addLink", collectionData, {
+    axios.post("https://private.emlaksepette.com/api/addLink", collectionData, {
 
       headers: {
         "Content-Type": "application/json",
@@ -559,7 +559,7 @@ export default function Details({ navigation }) {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -592,7 +592,7 @@ export default function Details({ navigation }) {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://mobil.emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -641,7 +641,7 @@ export default function Details({ navigation }) {
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        "https://mobil.emlaksepette.com/api/institutional/give_offer",
+        "https://private.emlaksepette.com/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -683,7 +683,7 @@ export default function Details({ navigation }) {
   const fetchCity = async () => {
     try {
       const response = await axios.get(
-        "https://mobil.emlaksepette.com/api/cities"
+        "https://private.emlaksepette.com/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -705,7 +705,7 @@ export default function Details({ navigation }) {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://mobil.emlaksepette.com/api/counties/${value}`
+        `https://private.emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -885,7 +885,7 @@ export default function Details({ navigation }) {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message:  `https://mobil.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
+        message:  `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
       });
   
       if (result.action === Share.sharedAction) {

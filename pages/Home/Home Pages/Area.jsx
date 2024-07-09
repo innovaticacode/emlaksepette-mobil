@@ -20,7 +20,7 @@ const PAGE_SIZE = 10;
 
 const Area= ({index}) => {
   const navigation = useNavigation()
-    const apiUrl = "https://mobil.emlaksepette.com/";
+    const apiUrl = "https://private.emlaksepette.com/";
     const [featuredEstates, setFeaturedEstates] = useState([]);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ const Area= ({index}) => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `https://mobil.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,config
+          `https://private.emlaksepette.com/api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,config
         );
         const newEstates = response.data;
   

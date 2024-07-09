@@ -15,7 +15,7 @@ export default function UserTypeList() {
   const fetchData = async () => {
     try {
       if(user.access_token){
-        const response = await axios.get('https://mobil.emlaksepette.com/api/institutional/roles',{
+        const response = await axios.get('https://private.emlaksepette.com/api/institutional/roles',{
           headers: {
             'Authorization':`Bearer ${user?.access_token}`
           }
@@ -46,7 +46,7 @@ const [DeletedData, setDeletedData] = useState({})
 const [deletedSuccessMessage, setdeletedSuccessMessage] = useState(false)
 const DeleteUser = async (UserId) => {
   try {
-    const response = await axios.delete(`https://mobil.emlaksepette.com/api/institutional/roles/${UserId}`,{
+    const response = await axios.delete(`https://private.emlaksepette.com/api/institutional/roles/${UserId}`,{
       headers:{
         'Authorization':`Bearer ${user.access_token}`
       }

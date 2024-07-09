@@ -34,7 +34,7 @@ export default function Header({ loading, onPress,index, tab }) {
         }
 
         const response = await axios.get(
-          "https://mobil.emlaksepette.com/api/user/notification",
+          "https://private.emlaksepette.com/api/user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -85,7 +85,7 @@ export default function Header({ loading, onPress,index, tab }) {
         }}
       >
         <ImageBackground
-          source={{uri:'https://mobil.emlaksepette.com/images/emlaksepettelogo.png'}}
+          source={{uri:'https://private.emlaksepette.com/images/emlaksepettelogo.png'}}
           resizeMode="contain"
           style={{
             width: "100%",

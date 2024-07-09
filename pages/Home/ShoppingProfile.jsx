@@ -41,7 +41,7 @@ export default function ShoppingProfile() {
   const [permissionsUser, setPermissionsUser] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [openAccor, setOpenAccor] = useState({});
-  const PhotoUrl = "https://mobil.emlaksepette.com/storage/profile_images/";
+  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -57,7 +57,7 @@ export default function ShoppingProfile() {
         }
 
         const response = await axios.get(
-          "https://mobil.emlaksepette.com/api/user/notification",
+          "https://private.emlaksepette.com/api/user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -91,7 +91,7 @@ export default function ShoppingProfile() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          `https://mobil.emlaksepette.com/api/users/${user?.id}`,
+          `https://private.emlaksepette.com/api/users/${user?.id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,

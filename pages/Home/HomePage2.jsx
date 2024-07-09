@@ -70,7 +70,7 @@ const CustomTabBar = ({
     const fetchMenuItems = async () => {
       try {
         const response = await axios.get(
-          "https://mobil.emlaksepette.com/api/menu-list"
+          "https://private.emlaksepette.com/api/menu-list"
         );
         setMenuItems(response.data);
       } catch (error) {

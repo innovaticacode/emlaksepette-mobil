@@ -23,7 +23,7 @@ import { useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 
-const apiUrl = "https://mobil.emlaksepette.com";
+const apiUrl = "https://private.emlaksepette.com";
 
 const HomePage = ({ index }) => {
   const navigation = useNavigation();
