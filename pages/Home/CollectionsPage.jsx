@@ -477,7 +477,13 @@ export default function CollectionsPage() {
                 }}
               >
                 <TouchableOpacity
-                  style={styles.btnRemove}
+                  style={[styles.btnRemove,{
+                    
+                      backgroundColor:"#EEEDEB",
+                      borderWidth:  1, 
+                      borderColor: "#ebebeb",
+                    
+                  }]}
                   onPress={() => setmodalForRemoveAll(true)}
                 >
                   <Text
@@ -485,14 +491,20 @@ export default function CollectionsPage() {
                       fontSize: 12,
                       textAlign: "center",
                       fontWeight: "bold",
-                      color: "#ffffff",
+                      color: "#333",
                     }}
                   >
                     Tümünü Sil
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.btnRemove}
+                  style={[styles.btnRemove,
+                    {
+                      backgroundColor:"#EEEDEB",
+                      borderWidth:  1, 
+                      borderColor: "#ebebeb",
+                    }
+                  ]}
                   onPress={() => {
                     setisChoosed(!isChoosed);
                   }}
@@ -502,7 +514,7 @@ export default function CollectionsPage() {
                       fontSize: 12,
                       textAlign: "center",
                       fontWeight: "bold",
-                      color: "#ffffff",
+                      color: "#333",
                     }}
                   >
                     Toplu Seç
