@@ -50,7 +50,7 @@ export default function SeeCollection() {
   const navigation = useNavigation();
   const [collectionData, setCollectionData] = useState();
   const [mergedItems, setMergedItems] = useState([]);
-  const { collectionUser, item } = route.params;
+  const { collectionUser, item ,id} = route.params;
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [IsOpenSheet, setIsOpenSheet] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);

@@ -128,6 +128,7 @@ export default function App({ route }) {
   };
 
   useEffect(() => {
+
     setTimeout(() => {
       setShowSplash(false);
     }, 1000); // 3 saniye sonra splash ekranını kaldır

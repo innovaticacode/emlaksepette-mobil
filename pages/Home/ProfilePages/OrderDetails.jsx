@@ -199,17 +199,17 @@ export default function OrderDetails() {
                   1 Onay Bekliyor
                 </Text>
               )}
-              {Detail.status == 1 && (
+              {Detail?.status == 1 && (
                 <Text style={{ fontSize: 13, color: "#4B8F3C" }}>
                   1 Onaylandı
                 </Text>
               )}
-              {Detail.status == 2 && !refund && (
+              {Detail?.status == 2 && !refund && (
                 <Text style={{ fontSize: 13, color: "#B81911" }}>
                   Reddedildi
                 </Text>
               )}
-              {Detail.status == 2 && refund.status == 1 && (
+              {Detail?.status == 2 && refund?.status == 1 && (
                 <Text style={{ fontSize: 13, color: "green" }}>
                   İade Edildi
                 </Text>
@@ -221,6 +221,7 @@ export default function OrderDetails() {
             <Text style={{ fontWeight: "400", fontSize: 13 }}>
               Sipariş Durumu:{" "}
             </Text>
+
 
             {!refund ? (
               <>
@@ -258,6 +259,7 @@ export default function OrderDetails() {
                   </Text>
                 )}
               </>
+
             )}
           </View>
 
@@ -291,7 +293,7 @@ export default function OrderDetails() {
               Kapora Tutarı:{" "}
             </Text>
             <Text style={{ fontSize: 13, color: "green" }}>
-              {Detail.amount} ₺
+              {Detail?.amount} ₺
             </Text>
           </View>
         </View>
@@ -378,6 +380,129 @@ export default function OrderDetails() {
           </View>
           <View
             style={{
+
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 5,
+              paddingTop: 5,
+            }}
+          >
+            {Detail.status == 0 && (
+              <View
+                style={{
+                  backgroundColor: "#FFEFCA",
+                  borderWidth: 1,
+                  borderColor: "#FFCC85",
+                  padding: 5,
+                  borderRadius: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#BC3913",
+                    textAlign: "center",
+                    fontSize: 12,
+                  }}
+                >
+                  Onay Bekliyor
+                </Text>
+                <FeatherIcon name="clock" color={"#BC3913"} />
+              </View>
+            )}
+
+            {Detail.status == 1 && (
+              <View
+                style={{
+                  backgroundColor: "#D9F9D0",
+                  borderWidth: 1,
+                  borderColor: "#BEE8B4",
+                  padding: 5,
+                  borderRadius: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#4B8F3C",
+                    textAlign: "center",
+                    fontSize: 12,
+                  }}
+                >
+                  {" "}
+                  Ödeme Onaylandı
+                </Text>
+                <FeatherIcon name="check" color={"#4B8F3C"} size={16} />
+              </View>
+            )}
+            {Detail.status == 2 && !refund && (
+              <View
+                style={{
+                  backgroundColor: "#FFE0DB",
+                  borderWidth: 1,
+                  borderColor: "#FABCB3",
+                  paddingLeft: 6,
+                  paddingRight: 6,
+                  padding: 4,
+                  borderRadius: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  overflow: "hidden",
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#B81911",
+                    textAlign: "center",
+                    fontSize: 11,
+                  }}
+                >
+                  Ödeme reddedildi
+                </Text>
+                <StarIcon name="close" color={"#B81911"} />
+              </View>
+            )}
+            {Detail?.status == 2 && refund?.status == 1 && (
+              <View
+                style={{
+                  backgroundColor: "green",
+                  borderWidth: 1,
+                  borderColor: "grey",
+                  paddingLeft: 6,
+                  paddingRight: 6,
+                  padding: 4,
+                  borderRadius: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  overflow: "hidden",
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    textAlign: "center",
+                    fontSize: 11,
+                  }}
+                >
+                  İade Onaylandı
+                </Text>
+              </View>
+            )}
+          </View>
+
+          <View
+            style={{
+
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
@@ -730,8 +855,8 @@ export default function OrderDetails() {
         </Modal>
         {/* 
         {user?.id === Detail?.user?.id &&
-          Detail.status == 2 &&
-          refund.status == 2 && (
+          Detail?.status == 2 &&
+          refund?.status == 2 && (
             <View>
               <TouchableOpacity
                 style={{
