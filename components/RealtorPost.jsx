@@ -50,6 +50,7 @@ export default function RealtorPost({
   column4_additional,
   step2_slug,
   step1_slug,
+  filteredResults,
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -103,20 +104,15 @@ export default function RealtorPost({
     : 0;
 
   const handlePress = () => {
-   
     if (user.access_token) {
-      if (user.cartItem !== null ) {
-        setcartIsNull(true)
-    }else{
-      setAddCartShow(true)
+      if (user.cartItem !== null) {
+        setcartIsNull(true);
+      } else {
+        setAddCartShow(true);
+      }
+    } else {
+      setalertForSign(true);
     }
-      
-    }else{
-      setalertForSign(true) 
-    }
-   
-  
-   
   };
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
@@ -136,7 +132,7 @@ export default function RealtorPost({
         )
         .then((res) => {
           changeHeart();
-      
+
           if (res.data.status == "removed") {
             setInFavorite(false);
           } else {
@@ -144,14 +140,13 @@ export default function RealtorPost({
           }
         });
       setShowAlert(false);
-    }else{
-      setalertForFavorite(true)
+    } else {
+      setalertForFavorite(true);
     }
-
   };
 
   const [AddCartShow, setAddCartShow] = useState(false);
-  
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -166,17 +161,17 @@ export default function RealtorPost({
           },
         }
       );
-  
+
       // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
       const updatedUser = {
         ...user,
         ...updateResponse.data.user,
         access_token: user.access_token, // access token'ı koruma
       };
-  
+
       // Kullanıcı durumunu güncelleme
       setUser(updatedUser);
-  
+
       // SecureStore ile güncellenmiş kullanıcı verilerini kaydetme
       await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
     } catch (error) {
@@ -204,134 +199,150 @@ export default function RealtorPost({
             },
           }
         );
-        updateUserData()
-        setAddCartShow(false)
+        updateUserData();
+        setAddCartShow(false);
         navigation.navigate("Sepetim");
-        console.log(user + 'Güncel Kullanıcı')
+        console.log(user + "Güncel Kullanıcı");
       }
     } catch (error) {
       console.error("post isteği olmadı", error);
     }
   };
-const [alertForSign, setalertForSign] = useState(false)
-const [alertForFavorite, setalertForFavorite] = useState(false)
-const [cartIsNull, setcartIsNull] = useState(false)
+  const [alertForSign, setalertForSign] = useState(false);
+  const [alertForFavorite, setalertForFavorite] = useState(false);
+  const [cartIsNull, setcartIsNull] = useState(false);
   return (
     <AlertNotificationRoot>
       <View>
-      <AwesomeAlert
-              // contentContainerStyle={{
-              //   transform: [{ scale: 1 }], // Uyarıyı animasyonsuz hale getirmek için
-              //   opacity: 2, // Uyarıyı animasyonsuz hale getirmek için
-              // }}
-            show={cartIsNull}
-            showProgress={false}
-              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
-              title={'Sepetinize sadece 1 Ürün Ekleyebilirsiniz '}
-              messageStyle={{textAlign:'center'}}
-              message={`Mevcut sepeti silmek istermisiniz`}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={true}
-            showConfirmButton={true}
+        <AwesomeAlert
+          // contentContainerStyle={{
+          //   transform: [{ scale: 1 }], // Uyarıyı animasyonsuz hale getirmek için
+          //   opacity: 2, // Uyarıyı animasyonsuz hale getirmek için
+          // }}
+          show={cartIsNull}
+          showProgress={false}
+          titleStyle={{
+            color: "#333",
+            fontSize: 13,
+            fontWeight: "700",
+            textAlign: "center",
+            margin: 5,
+          }}
+          title={"Sepetinize sadece 1 Ürün Ekleyebilirsiniz "}
+          messageStyle={{ textAlign: "center" }}
+          message={`Mevcut sepeti silmek istermisiniz`}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Hayır"
+          confirmText="Evet"
+          cancelButtonColor="#ce4d63"
+          confirmButtonColor="#1d8027"
+          onCancelPressed={() => {
+            setcartIsNull(false);
+          }}
+          onConfirmPressed={() => {
+            addToCard();
+            setcartIsNull(false);
+          }}
+          confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        />
+        <AwesomeAlert
+          show={alertForFavorite}
+          showProgress={false}
+          titleStyle={{
+            color: "#333",
+            fontSize: 13,
+            fontWeight: "700",
+            textAlign: "center",
+            margin: 5,
+          }}
+          title={"Giriş Yap"}
+          messageStyle={{ textAlign: "center" }}
+          message={`Favorilerinize Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Vazgeç"
+          confirmText="Giriş Yap"
+          cancelButtonColor="#ce4d63"
+          confirmButtonColor="#1d8027"
+          onCancelPressed={() => {
+            setalertForFavorite(false);
+          }}
+          onConfirmPressed={() => {
+            navigation.navigate("Login");
+            setalertForFavorite(false);
+          }}
+          confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        />
+        <AwesomeAlert
+          show={alertForSign}
+          showProgress={false}
+          titleStyle={{
+            color: "#333",
+            fontSize: 13,
+            fontWeight: "700",
+            textAlign: "center",
+            margin: 5,
+          }}
+          title={"Giriş Yap"}
+          messageStyle={{ textAlign: "center" }}
+          message={`Sepetine Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          confirmText="Giriş Yap"
+          cancelText="Vazgeç"
+          cancelButtonColor="#E54564"
+          confirmButtonColor="#1d8027"
+          onCancelPressed={() => {
+            setalertForSign(false);
+          }}
+          onConfirmPressed={() => {
+            navigation.navigate("Login");
+            setalertForSign(false);
+          }}
+          confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        />
 
-            cancelText="Hayır"
-            confirmText="Evet"
-            cancelButtonColor="#ce4d63"
-            confirmButtonColor="#1d8027"
-            onCancelPressed={() => {
-              setcartIsNull(false)
-            }}
-            onConfirmPressed={() => {
-             addToCard()
-              setcartIsNull(false)
-            }}
-            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
-            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
-          />
-      <AwesomeAlert
-            
-            show={alertForFavorite}
-            showProgress={false}
-              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
-              title={'Giriş Yap'}
-              messageStyle={{textAlign:'center'}}
-              message={`Favorilerinize Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={true}
-            showConfirmButton={true}
+        <AwesomeAlert
+          show={AddCartShow}
+          showProgress={false}
+          titleStyle={{
+            color: "#333",
+            fontSize: 13,
+            fontWeight: "700",
+            textAlign: "center",
+            margin: 5,
+          }}
+          title={title}
+          messageStyle={{ textAlign: "center" }}
+          message={`#2000${HouseId} No' lu Konutu Sepete Eklemek İstiyor Musunuz?`}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Hayır"
+          confirmText="Evet"
+          cancelButtonColor="#ce4d63"
+          confirmButtonColor="#1d8027"
+          onCancelPressed={() => {
+            setAddCartShow(false);
+          }}
+          onConfirmPressed={() => {
+            addToCard();
+          }}
+          confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        />
 
-            cancelText="Vazgeç"
-            confirmText="Giriş Yap"
-            cancelButtonColor="#ce4d63"
-            confirmButtonColor="#1d8027"
-            onCancelPressed={() => {
-              setalertForFavorite(false)
-            }}
-            onConfirmPressed={() => {
-              navigation.navigate('Login')
-              setalertForFavorite(false)
-            }}
-            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
-            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
-          />
-      <AwesomeAlert
-            
-            show={alertForSign}
-            showProgress={false}
-              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
-            title={'Giriş Yap'}
-            messageStyle={{textAlign:'center'}}
-            message={`Sepetine Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={true}
-            showConfirmButton={true}
-
-           
-            confirmText="Giriş Yap"
-            cancelText="Vazgeç"
-            cancelButtonColor="#E54564"
-            confirmButtonColor="#1d8027"
-            onCancelPressed={() => {
-              setalertForSign(false)
-            }}
-            onConfirmPressed={() => {
-              navigation.navigate('Login')
-              setalertForSign(false)
-            }}
-            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
-            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
-          />
-     
-          <AwesomeAlert
-            
-            show={AddCartShow}
-            showProgress={false}
-              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
-            title={title}
-            messageStyle={{textAlign:'center'}}
-            message={`#2000${HouseId} No' lu Konutu Sepete Eklemek İstiyor Musunuz?`}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={true}
-            showConfirmButton={true}
-
-            cancelText="Hayır"
-            confirmText="Evet"
-            cancelButtonColor="#ce4d63"
-            confirmButtonColor="#1d8027"
-            onCancelPressed={() => {
-              setAddCartShow(false);
-            }}
-            onConfirmPressed={() => {
-              addToCard()
-            }}
-            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
-            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
-          />
-   
         <View style={styles.container}>
           <View style={styles.İlan}>
             <TouchableOpacity
@@ -387,8 +398,7 @@ const [cartIsNull, setcartIsNull] = useState(false)
 
                   <TouchableOpacity
                     onPress={() => {
-                     
-                      addFavorites()
+                      addFavorites();
                     }}
                   >
                     <View style={styles.ıconContainer}>
@@ -609,7 +619,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     padding: 5,
   },
-  text:{
-    textAlign:'center'
-  }
+  text: {
+    textAlign: "center",
+  },
 });
