@@ -67,7 +67,7 @@ export default function Profile() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  
+
   const postData = async () => {
     try {
       var formData = new FormData();
@@ -164,7 +164,6 @@ export default function Profile() {
     });
   }, []);
 
-
   const ApiUrl = "https://private.emlaksepette.com/";
   const handleOpenPhone = () => {
     // Telefon uygulamasını açmak için
@@ -222,7 +221,7 @@ export default function Profile() {
     }
   };
   return (
-    <View style={{ flex: 1 ,backgroundColor:'white'}}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
       <View
         style={styles.container}
         onTouchStart={() => {
@@ -278,10 +277,7 @@ export default function Profile() {
                     />
                   </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={styles.shareIcons}
-                    onPress={onShare}
-                  >
+                  <TouchableOpacity style={styles.shareIcons} onPress={onShare}>
                     <Icon name="sharealt" size={18} />
                   </TouchableOpacity>
                 </View>
@@ -639,8 +635,7 @@ export default function Profile() {
         {tab === 3 && <Team teamm={teamm} />}
         {tab === 4 && <ShopInfo data={storeData} loading={loading} />}
       </View>
-     
-      
+
       <View>
         <View
           style={{
@@ -648,7 +643,7 @@ export default function Profile() {
             display: "flex",
             justifyContent: "space-between",
             flexDirection: "row",
-          
+
             zIndex: 1,
           }}
         >
@@ -662,7 +657,10 @@ export default function Profile() {
                   justifyContent: "center",
                   alignItems: "center",
                 }}
-                onPress={() => setLoading(true)} // Burada yükleme durumunu göstermek için geçici bir işlem
+                onPress={() => {
+                  setloading(true);
+                  handleOpenPhone();
+                }} // Burada yükleme durumunu göstermek için geçici bir işlem
               >
                 <Text
                   style={{
@@ -684,7 +682,10 @@ export default function Profile() {
                   justifyContent: "center",
                   alignItems: "center",
                 }}
-                onPress={() => setLoading(true)} // Burada yükleme durumunu göstermek için geçici bir işlem
+                onPress={() => {
+                  setloading(true);
+                  setFormVisible(true); // veya hangi işlevi çağırmak istiyorsanız
+                }} // Burada yükleme durumunu göstermek için geçici bir işlem
               >
                 <Text
                   style={{

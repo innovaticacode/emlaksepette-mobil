@@ -106,7 +106,7 @@ export default function Takeds() {
 
       <ScrollView>
         <View style={style.orders}>
-          {takeds.map((taked, i) => (
+          {takeds?.map((taked, i) => (
             <Order key={i} item={taked} />
           ))}
         </View>

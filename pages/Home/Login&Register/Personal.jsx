@@ -8,7 +8,6 @@ import {
   Keyboard,
   ScrollView,
   SafeAreaView,
-  
 } from "react-native";
 import { React, useState, useRef } from "react";
 import EyeIcon from "react-native-vector-icons/Ionicons";
@@ -156,7 +155,7 @@ export default function Personal({ type }) {
         break;
       case password.length < 6:
         seterrorStatu(6);
-        seterrorMessage("Şifreniz En Az 6 Karakter Olmalıdır");
+        seterrorMessage("Şifreniz En Az 5 Karakter Olmalıdır");
         setTimeout(() => {
           seterrorStatu(0);
         }, 1000);
@@ -330,7 +329,12 @@ export default function Personal({ type }) {
                   secureTextEntry={Show ? false : true}
                 />
                 <TouchableOpacity
-                  style={{ position: "absolute", right: 10, bottom: 9 }}
+                  style={{
+                    position: "absolute",
+                    right: 10,
+                    bottom: 9,
+                    top: 15,
+                  }}
                   onPress={show}
                 >
                   <EyeIcon
@@ -742,7 +746,7 @@ export default function Personal({ type }) {
             style={styles.modal}
           >
             <View style={styles.modalContent}>
-              <ActivityIndicator size="large"color="#333"/>
+              <ActivityIndicator size="large" color="#333" />
               <Text style={{ textAlign: "center", fontWeight: "bold" }}>
                 Giriş Sayfasına Yönlendiriliyorsunuz
               </Text>
