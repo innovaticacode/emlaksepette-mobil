@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import Modal from "react-native-modal";
 import React, { useState, useEffect } from "react";
@@ -26,7 +27,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function OrderDetails() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { OrderId,id } = route.params;
+  const { OrderId, id } = route.params;
 
   const [user, setUser] = useState({});
 
@@ -42,9 +43,8 @@ export default function OrderDetails() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (user?.access_token ) {
+        if (user?.access_token) {
           const response = await axios.get(
-
             `https://private.emlaksepette.com/api/institutional/order_detail/${OrderId}`,
 
             {
@@ -66,7 +66,7 @@ export default function OrderDetails() {
 
     fetchData();
   }, [user, OrderId]);
-  console.log(OrderId + 'dsfsdf')
+  console.log(OrderId + "dsfsdf");
   const [parsedData, setparsedData] = useState("");
   useEffect(() => {
     if (Detail?.cart && typeof Detail.cart === "string" && user.access_token) {
@@ -142,11 +142,10 @@ export default function OrderDetails() {
     maximumFractionDigits: 2,
   }).format(indirim_yuzdesi / 100);
 
-
   const [Deals, setDeals] = useState("");
 
   const fetchDataDeal = async () => {
-    const url = `https://mobil.emlaksepette.com/api/sayfa/mesafeli-kapora-emanet-sozlesmesi`;
+    const url = `https://private.emlaksepette.com/api/sayfa/mesafeli-kapora-emanet-sozlesmesi`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);
@@ -179,10 +178,10 @@ export default function OrderDetails() {
       <View style={style.container}>
         <View style={style.orderInfo}>
           <View style={{ flexDirection: "row" }}>
-            <Text style={{ fontWeight: "400", fontSize: 13 }}>İlan No: </Text>
-            <Text style={{ fontSize: 13, color: "grey" }}>
-              #2000{OrderId} + {id}
+            <Text style={{ fontWeight: "400", fontSize: 13 }}>
+              Sipariş No:{" "}
             </Text>
+            <Text style={{ fontSize: 13, color: "grey" }}>#{OrderId}</Text>
           </View>
           <View style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "400", fontSize: 13 }}>
@@ -190,7 +189,7 @@ export default function OrderDetails() {
             </Text>
             <Text style={{ fontSize: 13, color: "grey" }}>{formattedDate}</Text>
           </View>
-          <View style={{ flexDirection: "row" }}>
+          {/* <View style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "400", fontSize: 13 }}>
               Sipariş Özeti:{" "}
             </Text>
@@ -217,28 +216,80 @@ export default function OrderDetails() {
               )}
             </Text>
             <Text style={{ fontSize: 13, color: "#333" }}> 1 Ürün</Text>
-          </View>
+          </View> */}
           <View style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "400", fontSize: 13 }}>
-              Sipariş Detayı:{" "}
+              Sipariş Durumu:{" "}
             </Text>
-            {Detail.status == 0 && (
-              <Text style={{ fontSize: 13, color: "#BC3913" }}>
-                Onay Bekliyor
-              </Text>
-            )}
-            {Detail.status == 1 && (
-              <Text style={{ fontSize: 13, color: "#4B8F3C" }}>Onaylandı</Text>
-            )}
-            {Detail.status == 2 && !refund && (
-              <Text style={{ fontSize: 13, color: "#B81911" }}>Reddedildi</Text>
-            )}
-            {Detail.status == 2 && refund.status == 1 && (
-              <Text style={{ fontSize: 13, color: "green" }}>İade Edildi</Text>
+
+            {!refund ? (
+              <>
+                {Detail.status == 0 && (
+                  <Text style={{ fontSize: 13, color: "#BC3913" }}>
+                    Ödeme Onayı Bekliyor
+                  </Text>
+                )}
+                {Detail.status == 1 && (
+                  <Text style={{ fontSize: 13, color: "#BC3913" }}>
+                    Siparişiniz Onaylandı
+                  </Text>
+                )}
+                {Detail.status == 2 && (
+                  <Text style={{ fontSize: 13, color: "#BC3913" }}>
+                    Siparişiniz İptal Edildi
+                  </Text>
+                )}
+              </>
+            ) : (
+              <>
+                {refund && refund.status == 0 && (
+                  <Text style={{ fontSize: 13, color: "#BC3913" }}>
+                    İade Talebiniz İnceleniyor
+                  </Text>
+                )}
+                {refund && refund.status == 1 && (
+                  <Text style={{ fontSize: 13, color: "#BC3913" }}>
+                    Sipariş İptal Edildi
+                  </Text>
+                )}
+                {refund && refund.status == 2 && (
+                  <Text style={{ fontSize: 13, color: "#BC3913" }}>
+                    İade Talebiniz Reddedildi
+                  </Text>
+                )}
+              </>
             )}
           </View>
+
+          {Detail.status == 1 && refund && refund.status == 0 && (
+            <View
+              style={{
+                backgroundColor: "#FFBF00",
+                borderWidth: 1,
+                borderColor: "#BEE8B4",
+                padding: 5,
+                borderRadius: 5,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 10,
+              }}
+            >
+              <Text
+                style={{
+                  color: "#333",
+                  textAlign: "center",
+                  fontSize: 12,
+                }}
+              >
+                İade Talebiniz İnceleniyor
+              </Text>
+            </View>
+          )}
           <View style={{ flexDirection: "row" }}>
-            <Text style={{ fontWeight: "400", fontSize: 13 }}>Toplam: </Text>
+            <Text style={{ fontWeight: "400", fontSize: 13 }}>
+              Kapora Tutarı:{" "}
+            </Text>
             <Text style={{ fontSize: 13, color: "green" }}>
               {Detail.amount} ₺
             </Text>
@@ -247,10 +298,10 @@ export default function OrderDetails() {
         <View style={style.orderDetail}>
           <View style={{ gap: 10 }}>
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontWeight: "400", fontSize: 13 }}>
-                Teslimat No:{" "}
+              <Text style={{ fontWeight: "400", fontSize: 13 }}>İlan No: </Text>
+              <Text style={{ fontSize: 13, color: "green" }}>
+                #{2000000 + OrderId}
               </Text>
-              <Text style={{ fontSize: 13, color: "green" }}>{Detail.key}</Text>
             </View>
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
@@ -283,26 +334,25 @@ export default function OrderDetails() {
               paddingBottom: 7,
             }}
           >
-
             {parsedData?.type == "housing" && (
-      <TouchableOpacity
-            onPress={()=>{
-              navigation.navigate('AddComment',{HouseID:id})
-            }}
-              style={{
-                backgroundColor: "#EA2C2E",
-                padding: 5,
-                borderRadius: 2,
-                flexDirection: "row",
-                gap: 6,
-                alignItems: "center",
-              }}
-            >
-              <Icon3 name="store-edit-outline" size={20} color={"white"} />
-              <Text style={{ color: "white", fontSize: 12 }}>
-                İlanı Değerlendir
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("AddComment", { HouseID: id });
+                }}
+                style={{
+                  backgroundColor: "#EA2C2E",
+                  padding: 5,
+                  borderRadius: 2,
+                  flexDirection: "row",
+                  gap: 6,
+                  alignItems: "center",
+                }}
+              >
+                <Icon3 name="store-edit-outline" size={20} color={"white"} />
+                <Text style={{ color: "white", fontSize: 12 }}>
+                  İlanı Değerlendir
+                </Text>
+              </TouchableOpacity>
             )}
 
             <TouchableOpacity
@@ -328,131 +378,9 @@ export default function OrderDetails() {
           </View>
           <View
             style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-              paddingTop: 5,
-            }}
-          >
-            {Detail.status == 0 && (
-              <View
-                style={{
-                  backgroundColor: "#FFEFCA",
-                  borderWidth: 1,
-                  borderColor: "#FFCC85",
-                  padding: 5,
-                  borderRadius: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 10,
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#BC3913",
-                    textAlign: "center",
-                    fontSize: 12,
-                  }}
-                >
-                  Onay Bekliyor
-                </Text>
-                <FeatherIcon name="clock" color={"#BC3913"} />
-              </View>
-            )}
-
-            {Detail.status == 1 && (
-              <View
-                style={{
-                  backgroundColor: "#D9F9D0",
-                  borderWidth: 1,
-                  borderColor: "#BEE8B4",
-                  padding: 5,
-                  borderRadius: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 10,
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#4B8F3C",
-                    textAlign: "center",
-                    fontSize: 12,
-                  }}
-                >
-                  {" "}
-                  Ödeme Onaylandı
-                </Text>
-                <FeatherIcon name="check" color={"#4B8F3C"} size={16} />
-              </View>
-            )}
-            {Detail.status == 2 && !refund && (
-              <View
-                style={{
-                  backgroundColor: "#FFE0DB",
-                  borderWidth: 1,
-                  borderColor: "#FABCB3",
-                  paddingLeft: 6,
-                  paddingRight: 6,
-                  padding: 4,
-                  borderRadius: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 6,
-                  overflow: "hidden",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#B81911",
-                    textAlign: "center",
-                    fontSize: 11,
-                  }}
-                >
-                  Ödeme reddedildi
-                </Text>
-                <StarIcon name="close" color={"#B81911"} />
-              </View>
-            )}
-            {Detail.status == 2 && refund.status == 1 && (
-              <View
-                style={{
-                  backgroundColor: "green",
-                  borderWidth: 1,
-                  borderColor: "grey",
-                  paddingLeft: 6,
-                  paddingRight: 6,
-                  padding: 4,
-                  borderRadius: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 6,
-                  overflow: "hidden",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "white",
-                    textAlign: "center",
-                    fontSize: 11,
-                  }}
-                >
-                  İade Onaylandı
-                </Text>
-              </View>
-            )}
-          </View>
-
-          <View
-            style={{
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
-              paddingTop: 20,
               paddingLeft: 10,
               paddingRight: 10,
               alignItems: "center",
@@ -509,7 +437,6 @@ export default function OrderDetails() {
             </View>
           </View>
           <View style={{ gap: 14 }}>
-          
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("Invoice", { OrderId: Detail.id })
@@ -717,30 +644,33 @@ export default function OrderDetails() {
             </View>
           </View>
         </View>
-        {user?.id === Detail?.user?.id && Detail.status == 1 && !refund && (
-          <View>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "red",
-                padding: 13,
-                borderRadius: 5,
-              }}
-              onPress={() =>
-                navigation.navigate("ExtraditionRequest", { OrderId: OrderId })
-              }
-            >
-              <Text
+        {(user?.id === Detail?.user?.id && Detail.status == 1 && !refund) ||
+          (user?.id === Detail?.user?.id && refund?.status == "2" && (
+            <View>
+              <TouchableOpacity
                 style={{
-                  color: "#ffffff",
-                  textAlign: "center",
-                  fontWeight: "500",
+                  backgroundColor: "red",
+                  padding: 13,
+                  borderRadius: 5,
                 }}
+                onPress={() =>
+                  navigation.navigate("ExtraditionRequest", {
+                    OrderId: OrderId,
+                  })
+                }
               >
-                İade Talebi Oluştur
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
+                <Text
+                  style={{
+                    color: "#ffffff",
+                    textAlign: "center",
+                    fontWeight: "500",
+                  }}
+                >
+                  Tekrar İade Talebi Oluştur
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ))}
 
         {user?.id === Detail?.user?.id &&
           Detail.status == 2 &&
@@ -780,17 +710,25 @@ export default function OrderDetails() {
               <TouchableOpacity onPress={closeModal} style={style.closeButton}>
                 <Icon3 name="close-circle" size={30} color="black" />
               </TouchableOpacity>
-              <Text style={style.modalText}>İade talebiniz onaylandı</Text>
+              <Text style={style.modalText}>İade talebiniz inceleniyor</Text>
               {refund && (
                 <View style={style.modalContent}>
                   <Text style={style.modalText}>İsim: {refund.name}</Text>
+                  <Text style={style.modalText}>Telefon: {refund.phone}</Text>
                   <Text style={style.modalText}>Email: {refund.email}</Text>
+                  <Text style={style.modalText}>
+                    Banka: {refund.return_bank}
+                  </Text>
+                  <Text style={style.modalText}>
+                    IBAN: {refund.return_iban}
+                  </Text>
+                  <Text style={style.modalText}>Notlar: {refund.ekNotlar}</Text>
                 </View>
               )}
             </View>
           </View>
         </Modal>
-
+        {/* 
         {user?.id === Detail?.user?.id &&
           Detail.status == 2 &&
           refund.status == 2 && (
@@ -818,37 +756,30 @@ export default function OrderDetails() {
                 </Text>
               </TouchableOpacity>
             </View>
-          )}
+          )} */}
 
-        {user?.id === Detail?.user?.id &&
-          Detail.status == 1 &&
-          refund &&
-          refund.status == 0 && (
-            <View>
-              <TouchableOpacity
+        {user?.id === Detail?.user?.id && refund && refund.status == 0 && (
+          <View>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#FFBF00",
+                padding: 13,
+                borderRadius: 5,
+              }}
+              onPress={handlePress}
+            >
+              <Text
                 style={{
-                  backgroundColor: "red",
-                  padding: 13,
-                  borderRadius: 5,
+                  color: "#333",
+                  textAlign: "center",
+                  fontWeight: "500",
                 }}
-                onPress={() =>
-                  navigation.navigate("ExtraditionRequest", {
-                    OrderId: OrderId,
-                  })
-                }
               >
-                <Text
-                  style={{
-                    color: "#ffffff",
-                    textAlign: "center",
-                    fontWeight: "500",
-                  }}
-                >
-                  İade Talebiniz İnceleniyor
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
+                İade Talebiniz İnceleniyor
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {user?.id !== Detail?.user?.id && (
           <View style={[style.PersonalInfoArea, { gap: 25 }]}>
@@ -891,24 +822,41 @@ export default function OrderDetails() {
         <Modal
           isVisible={modalVisible2}
           onBackdropPress={() => setModalVisible2(false)}
-          backdropColor="transparent"
+          backdropColor="rgba(0, 0, 0, 0.5)"
           style={{ justifyContent: "center", alignItems: "center", margin: 0 }}
         >
           <SafeAreaView
-            style={{ backgroundColor: "white", borderRadius: 10, padding: 20 }}
+            style={{
+              backgroundColor: "white",
+              borderRadius: 10,
+              padding: 20,
+              width: "90%",
+              maxHeight: "80%",
+            }}
           >
-            <ScrollView style={{ padding: 10 }}>
-              <View
-                style={{ position: "absolute", top: 0, right: 0, zIndex: 1 }}
-              >
-                <TouchableOpacity onPress={() => setModalVisible2(false)}>
-                  <Icon3 name="close-circle" size={31} color={"red"} />
-                </TouchableOpacity>
-              </View>
+            <View
+              style={{ position: "absolute", top: 10, right: 10, zIndex: 1 }}
+            >
+              <TouchableOpacity onPress={() => setModalVisible2(false)}>
+                <Icon3 name="close-circle" size={31} color={"red"} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView>
               {Deals ? (
-                <HTML source={{ html: Deals }} contentWidth={100} />
+                <HTML
+                  source={{ html: Deals }}
+                  contentWidth={Dimensions.get("window").width * 0.8}
+                />
               ) : (
-                <Text>Yükleniyor...</Text>
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: 200,
+                  }}
+                >
+                  <Text>Yükleniyor...</Text>
+                </View>
               )}
             </ScrollView>
           </SafeAreaView>
