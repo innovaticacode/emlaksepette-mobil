@@ -8,7 +8,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
- 
 } from "react-native";
 import { React, useState, useEffect, useRef } from "react";
 import Modal from "react-native-modal";
@@ -560,7 +559,12 @@ export default function Company() {
                   secureTextEntry={Show ? false : true}
                 />
                 <TouchableOpacity
-                  style={{ position: "absolute", right: 10, bottom: 9 }}
+                  style={{
+                    position: "absolute",
+                    right: 10,
+                    bottom: 9,
+                    top: 15,
+                  }}
                   onPress={show}
                 >
                   <EyeIcon
@@ -1153,7 +1157,7 @@ export default function Company() {
           style={styles.modal}
         >
           <View style={styles.modalContent}>
-            <ActivityIndicator size="large" color="#333"/>
+            <ActivityIndicator size="large" color="#333" />
             <Text style={{ textAlign: "center", fontWeight: "bold" }}>
               Giriş Sayfasına Yönlendiriliyorsunuz
             </Text>

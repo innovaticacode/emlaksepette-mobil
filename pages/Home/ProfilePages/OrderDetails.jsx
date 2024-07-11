@@ -40,6 +40,8 @@ export default function OrderDetails() {
   const [refund, setRefund] = useState({});
   const [projectDetail, setprojectDetail] = useState({});
   const [housingDetail, sethousingDetail] = useState({});
+  const [housing, setHousing] = useState({});
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,6 +56,7 @@ export default function OrderDetails() {
             }
           );
           setDetail(response?.data?.order);
+          setHousing(response?.data?.housing);
           setRefund(response?.data?.order?.refund);
           setprojectDetail(response.data.project);
           sethousingDetail(response.data.housing);
@@ -222,7 +225,6 @@ export default function OrderDetails() {
               Sipariş Durumu:{" "}
             </Text>
 
-
             {!refund ? (
               <>
                 {Detail.status == 0 && (
@@ -259,7 +261,6 @@ export default function OrderDetails() {
                   </Text>
                 )}
               </>
-
             )}
           </View>
 
@@ -302,7 +303,7 @@ export default function OrderDetails() {
             <View style={{ flexDirection: "row" }}>
               <Text style={{ fontWeight: "400", fontSize: 13 }}>İlan No: </Text>
               <Text style={{ fontSize: 13, color: "green" }}>
-                #{2000000 + OrderId}
+                #{2000000 + id}
               </Text>
             </View>
             <View
@@ -380,139 +381,28 @@ export default function OrderDetails() {
           </View>
           <View
             style={{
-
               flexDirection: "row",
               alignItems: "center",
               gap: 5,
               paddingTop: 5,
             }}
-          >
-            {Detail.status == 0 && (
-              <View
-                style={{
-                  backgroundColor: "#FFEFCA",
-                  borderWidth: 1,
-                  borderColor: "#FFCC85",
-                  padding: 5,
-                  borderRadius: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 10,
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#BC3913",
-                    textAlign: "center",
-                    fontSize: 12,
-                  }}
-                >
-                  Onay Bekliyor
-                </Text>
-                <FeatherIcon name="clock" color={"#BC3913"} />
-              </View>
-            )}
-
-            {Detail.status == 1 && (
-              <View
-                style={{
-                  backgroundColor: "#D9F9D0",
-                  borderWidth: 1,
-                  borderColor: "#BEE8B4",
-                  padding: 5,
-                  borderRadius: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 10,
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#4B8F3C",
-                    textAlign: "center",
-                    fontSize: 12,
-                  }}
-                >
-                  {" "}
-                  Ödeme Onaylandı
-                </Text>
-                <FeatherIcon name="check" color={"#4B8F3C"} size={16} />
-              </View>
-            )}
-            {Detail.status == 2 && !refund && (
-              <View
-                style={{
-                  backgroundColor: "#FFE0DB",
-                  borderWidth: 1,
-                  borderColor: "#FABCB3",
-                  paddingLeft: 6,
-                  paddingRight: 6,
-                  padding: 4,
-                  borderRadius: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 6,
-                  overflow: "hidden",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#B81911",
-                    textAlign: "center",
-                    fontSize: 11,
-                  }}
-                >
-                  Ödeme reddedildi
-                </Text>
-                <StarIcon name="close" color={"#B81911"} />
-              </View>
-            )}
-            {Detail?.status == 2 && refund?.status == 1 && (
-              <View
-                style={{
-                  backgroundColor: "green",
-                  borderWidth: 1,
-                  borderColor: "grey",
-                  paddingLeft: 6,
-                  paddingRight: 6,
-                  padding: 4,
-                  borderRadius: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 6,
-                  overflow: "hidden",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "white",
-                    textAlign: "center",
-                    fontSize: 11,
-                  }}
-                >
-                  İade Onaylandı
-                </Text>
-              </View>
-            )}
-          </View>
+          ></View>
 
           <View
             style={{
-
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
-              paddingLeft: 10,
+
               paddingRight: 10,
               alignItems: "center",
             }}
           >
-            <View>
-              <Text style={{ fontSize: 13 }}>İstanbul / Kartal / Cevizli</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={{ fontSize: 13 }}>{housing?.city?.title}</Text>
+              <Text style={{ fontSize: 13, marginLeft: 5 }}>
+                {housing?.county?.title}
+              </Text>
             </View>
             <View
               style={{ borderWidth: 1, padding: 8, borderColor: "#ebebeb" }}
@@ -556,7 +446,7 @@ export default function OrderDetails() {
                     fontWeight: "bold",
                   }}
                 >
-                  {Detail?.amount}
+                  {Detail?.amount} ₺
                 </Text>
               </View>
             </View>
