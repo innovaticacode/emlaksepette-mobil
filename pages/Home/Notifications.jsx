@@ -52,55 +52,82 @@ export default function Notifications() {
 const navigation=useNavigation()
 console.log(user?.access_token)
   return (
-    <View style={styles.container}>
-          {
-            notifications?.length ==0?
-            <View style={{alignItems:'center',justifyContent:'center',height:'100%',gap:10}}>
-            <View style={[ styles.card, {alignItems:'center',justifyContent:'center'}]}>
-                <Icon name="bell" size={50} color={'#EA2A28'}/>
-            </View>
-            <View>
-            <Text style={{color:'grey',fontSize:16,fontWeight:'600'}}>Bildiriminiz bulunmamaktadır</Text>
-              <Text></Text>
-            </View>
-            <View style={{width:'100%',alignItems:'center'}}>
-              <TouchableOpacity style={{backgroundColor:'#EA2A28',width:'90%',padding:8,borderRadius:5}} onPress={()=>{
-             
-                  navigation.navigate('HomePage')
-           
-             
-              }}>
-                <Text style={{color:'#ffffff',fontWeight:'600',textAlign:'center'}}>Ana Sayfa'ya dön</Text>
-              </TouchableOpacity>
-            </View>
-  
-          </View>
-            :
-       
-          <>
-          <View style={{ paddingBottom: 5 ,flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
-        <Text style={{ color: "grey" }}>Bugün</Text>
-        <TouchableOpacity style={{backgroundColor:'#EB2B2E',paddingLeft:20,paddingRight:20,padding:3,borderRadius:5}} onPress={deleteRequestWithToken}>
-          <Text style={{alignItems:'center',color:'#ffffff',fontWeight:'700'}}>Tümünü Sil</Text>
-        </TouchableOpacity>
-      </View>
-      <ScrollView style={{}}>
-        <View style={{ gap: 15 }}>
-          {notifications.map((item, index) => (
-            <GestureHandlerRootView key={index}>
-              <Swipeable renderRightActions={renderRightActions}>
-                <Notificate
-                  key={index}
-                  name={item.text}
-                  time={moment(item.created_at).locale("tr").format("LLL")}
-                />
-              </Swipeable>
-            </GestureHandlerRootView>
-          ))}
+    <>
+    {
+      user.access_token ?
+      <View style={styles.container}>
+      {
+        notifications?.length ==0?
+        <View style={{alignItems:'center',justifyContent:'center',height:'100%',gap:10}}>
+        <View style={[ styles.card, {alignItems:'center',justifyContent:'center'}]}>
+            <Icon name="bell" size={50} color={'#EA2A28'}/>
         </View>
-      </ScrollView></>
-       }
+        <View>
+        <Text style={{color:'grey',fontSize:16,fontWeight:'600'}}>Bildiriminiz bulunmamaktadır</Text>
+          <Text></Text>
+        </View>
+        <View style={{width:'100%',alignItems:'center'}}>
+          <TouchableOpacity style={{backgroundColor:'#EA2A28',width:'90%',padding:8,borderRadius:5}} onPress={()=>{
+         
+              navigation.navigate('HomePage')
+       
+         
+          }}>
+            <Text style={{color:'#ffffff',fontWeight:'600',textAlign:'center'}}>Ana Sayfa'ya dön</Text>
+          </TouchableOpacity>
+        </View>
+
+      </View>
+        :
+   
+      <>
+      <View style={{ paddingBottom: 5 ,flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
+    <Text style={{ color: "grey" }}>Bugün</Text>
+    <TouchableOpacity style={{backgroundColor:'#EB2B2E',paddingLeft:20,paddingRight:20,padding:3,borderRadius:5}} onPress={deleteRequestWithToken}>
+      <Text style={{alignItems:'center',color:'#ffffff',fontWeight:'700'}}>Tümünü Sil</Text>
+    </TouchableOpacity>
+  </View>
+  <ScrollView style={{}}>
+    <View style={{ gap: 15 }}>
+      {notifications.map((item, index) => (
+        <GestureHandlerRootView key={index}>
+          <Swipeable renderRightActions={renderRightActions}>
+            <Notificate
+              key={index}
+              name={item.text}
+              time={moment(item.created_at).locale("tr").format("LLL")}
+            />
+          </Swipeable>
+        </GestureHandlerRootView>
+      ))}
     </View>
+  </ScrollView></>
+   }
+</View>:
+   <View style={{alignItems:'center',justifyContent:'center',height:'100%',gap:10,backgroundColor:'white'}}>
+   <View style={[ styles.card, {alignItems:'center',justifyContent:'center'}]}>
+       <Icon name="bell" size={50} color={'#EA2A28'}/>
+   </View>
+   <View>
+   <Text style={{color:'grey',fontSize:16,fontWeight:'600'}}>Bildirimlerinizi görmek için giriş yapmanız gerekmektedir</Text>
+     <Text></Text>
+   </View>
+   <View style={{width:'100%',alignItems:'center'}}>
+     <TouchableOpacity style={{backgroundColor:'#EA2A28',width:'90%',padding:8,borderRadius:5}} onPress={()=>{
+    
+         navigation.navigate('Login')
+  
+    
+     }}>
+       <Text style={{color:'#ffffff',fontWeight:'600',textAlign:'center'}}>Giriş Yap</Text>
+     </TouchableOpacity>
+   </View>
+
+ </View>
+    }
+      
+    </>
+
   );
 }
 const styles = StyleSheet.create({

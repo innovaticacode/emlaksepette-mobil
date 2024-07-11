@@ -24,6 +24,7 @@ import * as SecureStore from "expo-secure-store";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import { getValueFor } from "../../../components/methods/user";
 
 export default function Login({ navigation }) {
   const route = useRoute();
@@ -55,7 +56,11 @@ export default function Login({ navigation }) {
   const handleTextInputChange = (text) => {
     setEmail(text);
   };
+  const [user, setUser] = useState({});
 
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
   const Submit = () => {
     if (!(email.trim() !== "" && email.includes("@"))) {
       setemailControl(true);
@@ -77,9 +82,21 @@ export default function Login({ navigation }) {
     }).then((res) => {
       if (res.data.status) {
         SecureStore.setItemAsync("user", JSON.stringify(res.data));
-        navigation.push("Home", {
-          status: "login",
-        });
+        if(res.data.phone_verification_status){
+          navigation.push("Home", {
+            status: "login"
+
+          })
+        }else{
+          navigation.push("VerifyPhone", {
+            status: "login"
+          });
+        }
+         
+        
+     
+  
+  
       } else {
         setshowMailSendAlert(true);
         setStatus(false);
@@ -229,7 +246,7 @@ export default function Login({ navigation }) {
                       >
                         <EyeIcon
                           name={Show ? "eye" : "eye-off-sharp"}
-                          size={20}
+                          size={23}
                           color={"#333"}
                         />
                       </TouchableOpacity>

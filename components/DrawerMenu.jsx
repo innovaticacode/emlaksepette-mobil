@@ -50,7 +50,10 @@ const DrawerMenu = ({setIsDrawerOpen }) => {
               showImage={true}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>{
+            navigation.navigate('ShareAdvert')
+            setIsDrawerOpen(false)
+          }}>
             <Categories category="İlan Ver" bordernone="none" iconName="plus" />
           </TouchableOpacity>
           <TouchableOpacity onPress={()=> {

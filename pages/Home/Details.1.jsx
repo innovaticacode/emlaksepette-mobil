@@ -895,6 +895,7 @@ export default function Details({ navigation }) {
               </View>
 
               <TouchableOpacity
+              
                 style={{
                   backgroundColor: "#EA2C2E",
                   padding: 10,

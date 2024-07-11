@@ -46,6 +46,7 @@ import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
 import DrawerMenu from "../../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
@@ -120,14 +121,52 @@ export default function PostDetail() {
   };
   const [data, setData] = useState({});
   const [loading, setloading] = useState(false)
+  // useEffect(() => {
+  //   setloading(true)
+  //   apiRequestGet("housing/" + houseId).then((res) => {
+  //     setloading(false)
+  //     setData(res.data);
+  //     setImages(JSON.parse(res.data.housing.housing_type_data).images);
+  //   });
+  // }, []);
+  const fetchDetails = async () => {
+    try {
+      setloading(true);
+
+      if (user.access_token) {
+        const response = await axios.get(
+          `https://private.emlaksepette.com/api/housing/${houseId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+        setloading(false)
+        setData(res.data);
+        setImages(JSON.parse(res.data.housing.housing_type_data).images);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setloading(false); // İstek tamamlandığında loading durumunu false yap
+    }
+  };
+  
   useEffect(() => {
-    setloading(true)
-    apiRequestGet("housing/" + houseId).then((res) => {
-      setloading(false)
-      setData(res.data);
-      setImages(JSON.parse(res.data.housing.housing_type_data).images);
-    });
+fetchDetails()
+  }, [])
+  
+  useEffect(() => {
+    if (data?.housing?.isFavoritedByUser != null) {
+      setHeart("hearto");
+      setInFavorite(false);
+    } else {
+      setHeart("heart");
+      setInFavorite(true);
+    }
   }, []);
+  console.log(data?.housing?.isFavoritedByUser )
   const [modalVisibleComennet, setmodalVisibleComment] = useState(false);
   const handleModal = () => setmodalVisibleComment(!modalVisibleComennet);
   const [rating, setRating] = useState(0); // Başlangıçta hiçbir yıldız dolu değil
@@ -407,6 +446,7 @@ export default function PostDetail() {
   const [index, setindex] = useState(0);
   const [tab, settab] = useState(0);
   const [inFavorite, setInFavorite] = useState(false);
+  const [AlertForFavorite, setAlertForFavorite] = useState(false)
   const addFavorites = () => {
     if (user.access_token) {
       const config = {
@@ -430,7 +470,7 @@ export default function PostDetail() {
         });
       
     }else{
-    alert('dsfsdf')
+          setAlertForFavorite(true)
     }
 
   };
@@ -1750,6 +1790,35 @@ export default function PostDetail() {
             </Modal>
             
           </ScrollView>
+          <AwesomeAlert
+            
+            show={AlertForFavorite}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={'Favorilerinize İlan Ekleyebilmek İçin Giriş Yapmanız Gerekir'}
+              messageStyle={{textAlign:'center'}}
+           
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Vazgeç"
+            confirmText="Giriş Yap"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+                setAlertForFavorite(false)
+             
+            }}
+            onConfirmPressed={() => {
+              navigation.navigate('Login')
+                setAlertForFavorite(false)
+               
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
         </SafeAreaView>
         }
     </>

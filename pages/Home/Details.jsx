@@ -63,6 +63,7 @@ import { err } from "react-native-svg";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import DrawerMenu from "../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -602,7 +603,17 @@ export default function Details({ navigation }) {
         );
 
         navigation.navigate("Sepetim");
+      }else{
+          setModalVisible(false)
+          setTimeout(() => {
+            setAlertForSign(true)
+          }, 400);
+      
+       
+      
+        
       }
+
     } catch (error) {
       console.error("post isteği olmadı", error);
     }
@@ -901,6 +912,7 @@ export default function Details({ navigation }) {
       alert(error.message);
     }
   };
+  const [AlertForSign, setAlertForSign] = useState(false)
   return (
     <>
      <AlertNotificationRoot>
@@ -1067,15 +1079,7 @@ export default function Details({ navigation }) {
             </View>
 
             <View style={styles.ıconContainer}>
-              <TouchableOpacity onPress={changeHeart}>
-                <View style={styles.ıcon}>
-                  <Heart
-                    name={heart}
-                    size={18}
-                    color={heart === "hearto" ? "black" : "red"}
-                  />
-                </View>
-              </TouchableOpacity>
+           
               <TouchableOpacity onPress={onShare}>
                 <View style={styles.ıcon}>
                   <Icon2 name="sharealt" size={18} />
@@ -1409,10 +1413,11 @@ export default function Details({ navigation }) {
                         : ''
                       }
                     </View>
-
+             
                     <TouchableOpacity
                     onPress={()=>{
-                      addToCardPaymentModal()
+                    
+                      addToCardPaymentModal() 
                     }}
                       style={{
                         backgroundColor: "#EA2C2E",
@@ -1435,7 +1440,7 @@ export default function Details({ navigation }) {
                 </View>
               : ''
             }
-            
+                
           </Modal>
 
           <Modal
@@ -1824,102 +1829,6 @@ export default function Details({ navigation }) {
       
 
 
-                  {/* {
-                    user.access_token && user?.has_club == 0 ?
-                      <>
-
-
-                        <View style={{ paddingTop: 10 }}>
-                          <Text style={{ textAlign: 'center', color: '#4C6272', fontWeight: 'bold', fontSize: 16 }}> Emlak Kulüp Üyeliğiniz Bulunmamaktadır!</Text>
-                        </View>
-                        <View style={{ width: '100%' }}>
-                          <Text style={{ textAlign: 'center', color: '#7A8A95' }}>Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir</Text>
-                        </View>
-                        <TouchableOpacity style={{ backgroundColor: '#F65656', width: '100%', padding: 10 }}
-                          onPress={() => {
-                            navigation.navigate('Collections')
-                            setColectionSheet(false)
-                          }}
-                        >
-                          <Text style={{ color: '#FFFFFF', textAlign: 'center' }}>Emlak Kulüp Üyesi Ol </Text>
-                        </TouchableOpacity>
-
-
-                      </>
-
-                      :
-                      !user.access_token ?
-                        <>
-                          <View style={{ gap: 10 }}>
-
-                            <View style={{ paddingTop: 10 }}>
-                              <Text style={{ textAlign: 'center', color: '#4C6272', fontWeight: 'bold', fontSize: 16 }}>Üyeliğiniz Bulunmamaktadır!</Text>
-                            </View>
-                            <View style={{ width: '100%' }}>
-                              <Text style={{ textAlign: 'center', color: '#7A8A95' }}>Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
-                            </View>
-                            <TouchableOpacity style={{ backgroundColor: '#F65656', width: '100%', padding: 10 }}
-                              onPress={() => {
-                                setColectionSheet(false)
-                                navigation.navigate('Login')
-                              }}
-                            >
-                              <Text style={{ color: '#FFFFFF', textAlign: 'center' }}>Giriş Yap</Text>
-                            </TouchableOpacity>
-                          </View>
-                        </> :
-                        <>
-                          <TouchableOpacity
-                            style={{ flexDirection: "row", alignItems: "center" }}
-                            onPress={() => {
-                              setColectionSheet(false);
-                              setTimeout(() => {
-                                setaddCollection(true);
-                              }, 700);
-                            }}
-                          >
-                            <View
-                              style={{
-                                padding: 0,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Icon2 name="pluscircleo" size={27} color={"#19181C"} />
-                            </View>
-                            <View
-                              style={{
-                                width: "100%",
-                                borderBottomWidth: 1,
-                                padding: 15,
-                                borderBottomColor: "#ebebeb",
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontSize: 13,
-                                  color: "#19181C",
-                                  fontWeight: "600",
-                                }}
-                              >
-                                Yeni Oluştur
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                          {collections.map((item, index) => (
-                            <AddCollection
-                              checkFunc={ıtemOnCollection}
-                              setPopUpForRemoveItem={setsetPopUpForRemoveItem}
-                              key={index}
-                              item={item}
-                              getCollectionId={getCollectionId}
-                              removeItemOnCollection={removeItemOnCollection}
-                              addLink={addSelectedCollection}
-                            />
-                          ))}
-
-                        </>
-                  } */}
                 </ScrollView>
               </SafeAreaView>
             </View>
@@ -2349,6 +2258,35 @@ export default function Details({ navigation }) {
         </ScrollView>
         </>
           }
+             <AwesomeAlert
+            
+            show={AlertForSign}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={'Sepetinize Ürün Ekleyebilmek İçin Giriş Yapmanız Gerekir'}
+              messageStyle={{textAlign:'center'}}
+           
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Vazgeç"
+            confirmText="Giriş Yap"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+                setAlertForSign(false)
+                setModalVisible(false)
+            }}
+            onConfirmPressed={() => {
+              navigation.navigate('Login')
+                setAlertForSign(false)
+                setModalVisible(false)
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
       </SafeAreaView>
     </AlertNotificationRoot>
     </>

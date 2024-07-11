@@ -163,7 +163,7 @@ export default function OrderDetails() {
     fetchDataDeal();
   }, []);
 
-  console.log(refund?.name + "asdasd");
+
 
   const [modalVisible, setModalVisible] = useState(false);
   const handlePress = () => {
@@ -302,7 +302,7 @@ export default function OrderDetails() {
             <View style={{ flexDirection: "row" }}>
               <Text style={{ fontWeight: "400", fontSize: 13 }}>İlan No: </Text>
               <Text style={{ fontSize: 13, color: "green" }}>
-                #{2000000 + OrderId}
+                #2000{id}
               </Text>
             </View>
             <View
@@ -561,7 +561,9 @@ export default function OrderDetails() {
               </View>
             </View>
           </View>
-          <View style={{ gap: 14 }}>
+          {
+            Detail?.status == 1 &&
+            <View style={{ gap: 14 }}>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("Invoice", { OrderId: Detail.id })
@@ -577,6 +579,8 @@ export default function OrderDetails() {
               <Text>Faturayı Görüntüle</Text>
             </TouchableOpacity>
           </View>
+          }
+       
         </View>
         <View style={[style.PersonalInfoArea]}>
           <Text
@@ -596,7 +600,7 @@ export default function OrderDetails() {
               <Text>İsim Soyisim</Text>
             </View>
             <View>
-              <Text>{Detail?.user?.name}</Text>
+              <Text numberOfLines={1}>{Detail?.user?.name}</Text>
             </View>
           </View>
 
@@ -644,10 +648,10 @@ export default function OrderDetails() {
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             <View>
-              <Text>İsim Soyisim</Text>
+              <Text>İsim Soyisim:</Text>
             </View>
-            <View>
-              <Text>{Detail?.store?.name}</Text>
+            <View style={{width:'75%'}}>
+              <Text numberOfLines={1}>{Detail?.store?.name}</Text>
             </View>
           </View>
 
@@ -748,7 +752,7 @@ export default function OrderDetails() {
               <Text>Kapora Oranı:</Text>
             </View>
             <View>
-              <Text> %{kapora_orani}</Text>
+              <Text> %{parseFloat(kapora_orani)}</Text>
             </View>
           </View>
           <View

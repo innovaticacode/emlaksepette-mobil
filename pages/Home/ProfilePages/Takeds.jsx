@@ -33,7 +33,7 @@ export default function Takeds() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-
+console.log(user)
   const [takeds, setTakeds] = useState([]);
   useEffect(() => {
     const fetchData = async () => {

@@ -303,9 +303,10 @@ export default function Personal({ type }) {
                     borderColor: errorStatu === 3 ? "#E54242" : "#ebebeb",
                   },
                 ]}
+                
                 value={phoneNumber}
                 onChangeText={handlePhoneNumberChange}
-                placeholder="Cep Telefonu"
+                placeholder="5*********"
                 keyboardType="number-pad"
                 maxLength={15}
               />
@@ -335,7 +336,7 @@ export default function Personal({ type }) {
                 >
                   <EyeIcon
                     name={Show ? "eye" : "eye-off-sharp"}
-                    size={20}
+                    size={23}
                     color={"#333"}
                   />
                 </TouchableOpacity>
