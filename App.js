@@ -127,11 +127,11 @@ export default function App({ route }) {
     setShowWelcome(false);
   };
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setShowSplash(false);
-  //   }, 1000); // 3 saniye sonra splash ekranını kaldır
-  // }, []);
+   useEffect(() => {
+    setTimeout(() => {
+      setShowSplash(false);
+    }, 1000); // 3 saniye sonra splash ekranını kaldır
+  }, []);
 
   const [user, setUser] = useState({});
 

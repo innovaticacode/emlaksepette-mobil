@@ -10,7 +10,7 @@
   },
   {
     "id": "projects",
-    "label": "Hesabım Emlak Sepette",
+    "label": "İlanlarım",
     "icon": "plus",
     "text": "Proje İlanlarım",
     "key": "GetProjects",
@@ -18,23 +18,33 @@
     "activePath": "/hesabim/projects"
   },
   {
-    "id": "projects",
-    "label": "Hesabım Emlak Sepette",
-    "icon": "plus",
-    "text": "Emlak İlanlarım",
-    "key": "GetHousings",
-    "url": "MyRealtor",
-    "activePath": "/hesabim/konutlar"
-  },
-  {
     "id": "shopping-bag",
-    "label": "Hesabım Emlak Sepette",
+    "label": "Emlak Kulüp",
     "icon": "bookmark",
     "text": "Koleksiyonlarım",
     "key": "GetMyCollection",
     "url": "Collections",
     "activePath": "/hesabim/koleksiyonlarim*"
   },
+  {
+    "id": "neighbors",
+    "label": "Komşumu Gör",
+    "icon": "eye",
+    "text": "Komşumu Gör Kayıtlarım",
+    "key": "neighborView",
+    "url": "SeeNeigbourHood",
+    "activePath": "/hesabim/komsumu-gor"
+  },
+  {
+    "id": "projects",
+    "label": "İlanlarım",
+    "icon": "plus",
+    "text": "Emlak İlanlarım",
+    "key": "GetHousings",
+    "url": "MyRealtor",
+    "activePath": "/hesabim/konutlar"
+  },
+ 
   {
     "id": "shopping-bag",
     "label": "Hesabım Emlak Sepette",
@@ -45,7 +55,7 @@
     "activePath": ["/hesabim/sattiklarim*", "/hesabim/aldiklarim"],
     "subMenu": [
       {
-        "text": "Aldıklarım",
+        "text": "Siparişlerim",
         "key": "ShowCartOrders",
         "url": "Taked",
         "activePath": "/hesabim/aldiklarim"
@@ -90,15 +100,7 @@
     "url": "institutional.estate.club.users",
     "activePath": "/hesabim/estate_club_users"
   },
-  {
-    "id": "neighbors",
-    "label": "Hesabım Emlak Sepette",
-    "icon": "eye",
-    "text": "Komşumu Gör Kayıtlarım",
-    "key": "neighborView",
-    "url": "SeeNeigbourHood",
-    "activePath": "/hesabim/komsumu-gor"
-  },
+
  
   {
     "id": "GetSwapApplications",
@@ -122,7 +124,7 @@
     "id": "GetGivenOffers",
     "label": "Başvurular",
     "icon": "users",
-    "text": "Başvurularım",
+    "text": "Projelere Yaptığım Başvurular",
     "key": "GetGivenOffers",
     "url": "Suggest",
     "activePath": "/hesabim/basvurularim"

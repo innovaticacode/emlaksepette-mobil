@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import {
   View,
   ScrollView,
@@ -8,10 +8,15 @@ import {
 } from "react-native";
 import Categories from "./Categories"; // Bu import, Categories bileşeninizi temsil eden dosyaya göre değişebilir
 import { useNavigation } from "@react-navigation/native";
+import { getValueFor } from "./methods/user";
 
 const DrawerMenu = ({setIsDrawerOpen }) => {
     const navigation = useNavigation();
-
+    const [user, setUser] = useState({});
+    useEffect(() => {
+      getValueFor("user", setUser);
+    }, []);
+  
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
     setIsDrawerOpen(false);
@@ -29,7 +34,12 @@ const DrawerMenu = ({setIsDrawerOpen }) => {
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigateToScreen("Hesabım")}>
-            <Categories category="Hesabım" bordernone="none" iconName="user" />
+            {
+                user.access_token ?
+                <Categories category="Hesabım" bordernone="none" iconName="user" />:
+                <Categories category="Giriş Yap" bordernone="none" iconName="user" />
+            }
+            
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigateToScreen("RealtorClubExplore")}

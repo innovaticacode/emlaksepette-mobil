@@ -46,7 +46,8 @@ export default function Order({ item }) {
   const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
   console.log(JSON.parse(item.cart)['item']['id'] )
   const HouseId=item && item.cart &&  JSON.parse(item.cart)['item']['id']
-  console.log(HouseId)
+  const Type=item && item.cart &&  JSON.parse(item.cart)['type']
+  console.log(Type)
   
   return (
     <TouchableOpacity
@@ -55,7 +56,7 @@ export default function Order({ item }) {
       <View style={style.container}>
         <View style={style.InfoDateButton}>
           <View style={style.Info}>
-            <Text> {formattedDate} </Text>
+            <Text style={{color:'grey'}}>{formattedDate} </Text>
             <View style={{ flexDirection: "row" }}>
               <Text>Toplam: </Text>
               <Text style={{ color: "green" }}> {item.amount} ₺ </Text>
@@ -78,13 +79,27 @@ export default function Order({ item }) {
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
-              <View style={{ height: 80, width: 80 }}>
+              <View style={{flexDirection:'row',gap:10}}>
+              <View style={{ height: 80, width: 80 ,flexDirection:'row'}}>
                 <ImageBackground
                   source={{ uri: imageUrl }}
                   style={{ width: "100%", height: "100%" }}
                   resizeMode="cover"
                 />
+           
               </View>
+              <View style={{gap:5}}>
+                <Text style={{fontSize:12,color:'#333'}}>Sipariş No: {item.id}</Text>
+                {
+                  Type=='project'?
+                  <Text style={{fontSize:12,color:'#333'}}>İlan No: 1000{HouseId}</Text>
+                  :
+                  <Text style={{fontSize:12,color:'#333'}}>İlan No: 2000{HouseId}</Text>
+                }
+            
+              </View>
+              </View>
+           
               <View
                 style={{
                   gap: 10,
@@ -92,7 +107,7 @@ export default function Order({ item }) {
                   justifyContent: "space-between",
                 }}
               >
-                {item.status == 0 && (
+                {item.status == 0 && item.refund==null&& (
                   <View
                     style={{
                       backgroundColor: "#FFEFCA",
@@ -118,7 +133,7 @@ export default function Order({ item }) {
                     <FeatherIcon name="clock" color={"#BC3913"} />
                   </View>
                 )}
-                {item.status == 1 && (
+                {item.status == 1 && item.refund==null&& (
                   <View
                     style={{
                       backgroundColor: "#D9F9D0",
@@ -144,7 +159,88 @@ export default function Order({ item }) {
                     <FeatherIcon name="check" color={"#4B8F3C"} size={16} />
                   </View>
                 )}
-                {item.status == 2 && (
+                  {item.status == 1 && item?.refund?.status==0&& (
+                  <View
+                    style={{
+                      backgroundColor: "#FFEFCA",
+                      borderWidth: 1,
+                      borderColor: "#BEE8B4",
+                      padding: 2,
+                      borderRadius: 5,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "#BC3913",
+                        textAlign: "center",
+                        fontSize: 12,
+                      }}
+                    >
+                      İade Onayda
+                    </Text>
+                    <FeatherIcon name="clock" color={"#BC3913"} size={16} />
+                  </View>
+                )}
+                  {item.status == 2 && item?.refund?.status == 1 && (
+                  <View
+                    style={{
+                      backgroundColor: "#D9F9D0",
+                      borderWidth: 1,
+                      borderColor: "#BEE8B4",
+                      padding: 2,
+                      borderRadius: 5,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 10,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "#4B8F3C",
+                        textAlign: "center",
+                        fontSize: 12,
+                      }}
+                    >
+                      İade Edildi
+                    </Text>
+                    <FeatherIcon name="check" color={"#4B8F3C"} size={16} />
+                  </View>
+                )}
+                  {item.status == 2 && item?.refund?.status == 2 && (
+                   <View
+                   style={{
+                     backgroundColor: "#FFE0DB",
+                     borderWidth: 1,
+                     borderColor: "#FABCB3",
+                     paddingLeft: 6,
+                     paddingRight: 6,
+                     padding: 4,
+                     borderRadius: 5,
+                     flexDirection: "row",
+                     alignItems: "center",
+                     justifyContent: "center",
+                     gap: 6,
+                     overflow: "hidden",
+                   }}
+                 >
+                   <Text
+                     style={{
+                       color: "#B81911",
+                       textAlign: "center",
+                       fontSize: 11,
+                     }}
+                   >
+                     İade reddedildi
+                   </Text>
+                   <StarIcon name="close" color={"#B81911"} />
+                 </View>
+                )}
+                {item.status == 2 && item.refund==null&&(
                   <View
                     style={{
                       backgroundColor: "#FFE0DB",

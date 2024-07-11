@@ -77,6 +77,8 @@ export default function CollectionsItem({
                 <Text style={{color:'#333',fontSize:15,fontWeight:'600'}}>{item.name}</Text>
               </View>
               <TouchableOpacity 
+            hitSlop={{ top: 20, bottom: 20, left: 40, right: 20 }}
+            
                  onPress={() => {
                   openBottom();
                   getId(item.id, item.name);

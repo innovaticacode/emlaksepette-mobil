@@ -30,6 +30,7 @@ import { SearchBar } from "@rneui/themed";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import RegisterRealtorClub from "./RegisterRealtorClub";
+import AwesomeAlert from "react-native-awesome-alerts";
 export default function Collections() {
   const [showAlert, setshowAlert] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -181,6 +182,7 @@ export default function Collections() {
     setselectedCollection(id);
     setcolectionName(name);
   };
+
   const [message, setmessage] = useState(false);
   const deleteCollection = async (id) => {
     try {
@@ -285,6 +287,7 @@ export default function Collections() {
   };
   const collectionIDS = collections.map(collection=>collection.id)
 const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
+
   const RemoveAllCollection = async () => {
     const data = {
       ids: collectionIDS,
@@ -310,18 +313,47 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
   };
   console.log(user.has_club )
   const [choose, setchoose] = useState(false)
+
+
   return (
     <>
       {user.has_club != 1 ? (
         <RegisterRealtorClub />
       ) : (
         <View style={styles.container}>
+        
           {loading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#333" />
             </View>
           ) : (
             <View style={{ flex: 1 }}>
+                  <AwesomeAlert
+            
+            show={modalVisible2}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={ `${colectionName} adlı koleksiyonu silmek istediğinize eminmisiniz?`}
+              messageStyle={{textAlign:'center'}}
+            
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Hayır"
+            confirmText="Evet"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+             setModalVisible2(false)
+            }}
+            onConfirmPressed={() => {
+                deleteCollection(selectedCollection)
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
               <View
                 style={{
                   alignItems: "center",
@@ -593,33 +625,58 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                   </View>
                 </Animated.View>
               </View>
-              <Modal
+              <Modal 
           isVisible={choose}
           style={styles.modal2}
-          animationIn={"fadeInDown"}
-          animationOut={"fadeOutDown"}
+          animationIn={'slideInUp'}
+          animationOut={'slideOutDown'}
           onBackdropPress={()=>setchoose(false)}
           swipeDirection={['down']}
           onSwipeComplete={()=>setchoose(false)}
         >
           <View style={styles.modalContent2}>
-            <View style={{padding:10,alignItems:'center'}}>
+            <View style={{alignItems:'center',paddingTop:10}}>
               <TouchableOpacity style={{width:'15%',backgroundColor:'#c2c4c6',padding:4,borderRadius:50}}>
 
               </TouchableOpacity>
             </View>
-            <View style={{padding:20,gap:35}}>
+            <View style={{gap:30,paddingBottom:20,paddingLeft:20,paddingRight:20,paddingTop:10}}>
             <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={{}}>
-                      <Icon3 name="photo" size={23} color={'#333'}/>
-                      <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Kütüphaneden Seç</Text>
+                      <PencilIcon name="link" size={23} color={'#333'}/>
+                      <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Linki Kopyala</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={{}}>
-                      <Icon3 name="add-a-photo" size={21} color={'#333'}/>
-                      <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Fotoğraf Çek</Text>
+              <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} 
+                  onPress={()=>{
+                
+                   
+                  }}
+              >
+                      <IconMessenger name="whatsapp" size={22} color={'#333'}/>
+                      <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Paylaş</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}}>
+              <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={()=>{
+                setchoose(false)
+                setloading(true)
+                setTimeout(() => {
+                  setModalVisible(true)
+                  setloading(false)
+                }, 1000);
+            
+              }}>
+                      <PencilIcon name="edit" size={21} color={'#333'}/>
+                      <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Koleksiyon Adını Düzenle</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}}
+                  onPress={()=>{
+                    setchoose(false)
+                    setTimeout(() => {
+                      setModalVisible2(true)
+                    },700);
+                  
+                  }}
+              >
                       <Icon3 name="restore-from-trash" size={22} color={'#d83131'}/>
-                      <Text style={{fontSize:14,color:'#d83131',fontWeight:'700'}}>Mevcut Fotoğrafı Kaldır</Text>
+                      <Text style={{fontSize:14,color:'#d83131',fontWeight:'700'}}>Koleksiyonu Sil</Text>
               </TouchableOpacity>
             </View>
             
@@ -873,7 +930,7 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                   </View>
                 </View>
               </Modal>
-              <Modal
+              {/* <Modal
                
                 animationIn={'fadeIn'}
                 animationOut={'fadeOut'}// veya "fade", "none" gibi
@@ -923,7 +980,7 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
                     </View>
                   </View>
                 
-              </Modal>
+              </Modal> */}
             </View>
           )}
         </View>
@@ -1085,7 +1142,7 @@ const styles = StyleSheet.create({
   
     backgroundColor: "#F8F7F4",
     padding: 10,
-    height: "30%",
+  
 
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

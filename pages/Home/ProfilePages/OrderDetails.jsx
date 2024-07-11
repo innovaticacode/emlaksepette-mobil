@@ -200,17 +200,17 @@ export default function OrderDetails() {
                   1 Onay Bekliyor
                 </Text>
               )}
-              {Detail.status == 1 && (
+              {Detail?.status == 1 && (
                 <Text style={{ fontSize: 13, color: "#4B8F3C" }}>
                   1 Onaylandı
                 </Text>
               )}
-              {Detail.status == 2 && !refund && (
+              {Detail?.status == 2 && !refund && (
                 <Text style={{ fontSize: 13, color: "#B81911" }}>
                   Reddedildi
                 </Text>
               )}
-              {Detail.status == 2 && refund.status == 1 && (
+              {Detail?.status == 2 && refund?.status == 1 && (
                 <Text style={{ fontSize: 13, color: "green" }}>
                   İade Edildi
                 </Text>
@@ -222,25 +222,25 @@ export default function OrderDetails() {
             <Text style={{ fontWeight: "400", fontSize: 13 }}>
               Sipariş Detayı:{" "}
             </Text>
-            {Detail.status == 0 && (
+            {Detail?.status == 0 && (
               <Text style={{ fontSize: 13, color: "#BC3913" }}>
                 Onay Bekliyor
               </Text>
             )}
-            {Detail.status == 1 && (
+            {Detail?.status == 1 && (
               <Text style={{ fontSize: 13, color: "#4B8F3C" }}>Onaylandı</Text>
             )}
-            {Detail.status == 2 && !refund && (
+            {Detail?.status == 2 && !refund && (
               <Text style={{ fontSize: 13, color: "#B81911" }}>Reddedildi</Text>
             )}
-            {Detail.status == 2 && refund.status == 1 && (
+            {Detail?.status == 2 && refund?.status == 1 && (
               <Text style={{ fontSize: 13, color: "green" }}>İade Edildi</Text>
             )}
           </View>
           <View style={{ flexDirection: "row" }}>
             <Text style={{ fontWeight: "400", fontSize: 13 }}>Toplam: </Text>
             <Text style={{ fontSize: 13, color: "green" }}>
-              {Detail.amount} ₺
+              {Detail?.amount} ₺
             </Text>
           </View>
         </View>
@@ -417,7 +417,7 @@ export default function OrderDetails() {
                 <StarIcon name="close" color={"#B81911"} />
               </View>
             )}
-            {Detail.status == 2 && refund.status == 1 && (
+            {Detail?.status == 2 && refund?.status == 1 && (
               <View
                 style={{
                   backgroundColor: "green",
@@ -792,8 +792,8 @@ export default function OrderDetails() {
         </Modal>
 
         {user?.id === Detail?.user?.id &&
-          Detail.status == 2 &&
-          refund.status == 2 && (
+          Detail?.status == 2 &&
+          refund?.status == 2 && (
             <View>
               <TouchableOpacity
                 style={{
