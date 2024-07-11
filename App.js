@@ -127,7 +127,8 @@ export default function App({ route }) {
     setShowWelcome(false);
   };
 
-   useEffect(() => {
+  useEffect(() => {
+
     setTimeout(() => {
       setShowSplash(false);
     }, 1000); // 3 saniye sonra splash ekranını kaldır
@@ -724,11 +725,13 @@ export default function App({ route }) {
             })}
           />
           <Stack.Screen name="Archieve" component={Archieve} />
-          <Stack.Screen name="EditProject" component={EditProject} 
-              options={({route})=>({
-                title:route.params.name,
-                headerBackTitleVisible:false
-              })}
+          <Stack.Screen
+            name="EditProject"
+            component={EditProject}
+            options={({ route }) => ({
+              title: route.params.name,
+              headerBackTitleVisible: false,
+            })}
           />
           <Stack.Screen
             name="SellAndRent"
@@ -813,7 +816,7 @@ export default function App({ route }) {
             component={UserTypeList}
             options={({ route }) => ({
               title: "Kullanıcı Tipleri",
-              headerBackTitleVisible:false,
+              headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#F5F5F7",
               },

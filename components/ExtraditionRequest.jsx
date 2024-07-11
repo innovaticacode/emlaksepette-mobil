@@ -116,7 +116,7 @@ const ExtradionRequest = () => {
     formData.append("terms", terms ? "1" : "0");
 
     axios
-      .post("https://test.emlaksepette.com/api/return", formData, {
+      .post("https://private.emlaksepette.com/api/return", formData, {
         headers: {
           Authorization: `Bearer ${user?.access_token}`,
           "Content-Type": "multipart/form-data",
