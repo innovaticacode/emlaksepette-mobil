@@ -1,4 +1,4 @@
-import { View, Text ,StyleSheet, TouchableOpacity,} from 'react-native'
+import { View, Text ,StyleSheet, TouchableOpacity, SafeAreaView,} from 'react-native'
 import React,{useState,useRef, useEffect} from 'react'
 import { TextInput } from 'react-native'
 import { getValueFor } from '../../../components/methods/user';
@@ -92,9 +92,36 @@ useEffect(() => {
 
  
   return (
-    <View style={styles.container}>
-      {
-        user.phone_verification_status==1 ?
+    <SafeAreaView style={styles.container}>
+        <View style={{padding:10,paddingTop:50}}>
+            <View>
+              <Text style={{fontSize:30,color:'#333',fontWeight:'800'}}>Hoş Geldiniz!</Text>
+              <View style={{paddingTop:30}}>
+              <Text style={{fontSize:13,color:'#262020',fontWeight:'400',letterSpacing:0.8}}>Lütfen hesabınızı doğrulamak için <Text style={{color:'red'}}>{user?.mobile_phone}</Text> No'lu telefona gönderdiğimiz 6 haneli doğrulama kodunu giriniz</Text>
+              </View>
+              
+            </View>
+
+        </View>
+        <View style={{paddingTop:40}}>
+        <View style={{flexDirection:'row',justifyContent:'center',gap:10,}}> 
+         
+         {[...Array(6)].map((_, index) => (
+         <TextInput
+           key={index}
+           ref={(ref) => (inputs.current[index] = ref)}
+           style={styles.Input}
+           value={codes[index] || ''}
+           maxLength={1}
+           keyboardType="numeric"
+           onChangeText={(text) => handleInputChange(index, text)}
+         />
+       ))}
+ 
+         </View>
+        </View>
+      {/* {
+        user.phone_verification_status!=1 ?
         <>
           <Text>Onaylandı</Text>
         </>:
@@ -159,27 +186,27 @@ useEffect(() => {
           </View>
         </Modal>
         </>
-      }
+      } */}
        
-    </View>
+    </SafeAreaView>
   )
 }
 const styles = StyleSheet.create({
   container:{
       flex:1,
+      backgroundColor:'#FCFCFC',
       
   },
   Input:{
-    backgroundColor:'#F3f8ff',
-    borderWidth:1,
-    borderColor:'#d9d9d9',
+    backgroundColor:'#ebebeb',
+   
     borderRadius:6,
-    paddingLeft:20,
-    paddingRight:20,
-    paddingTop:11,
-    paddingBottom:11,
+   width:50,
+   height:50,
+   padding:10,
     fontSize:20,
-    fontWeight:'bold'
+    fontWeight:'bold',
+    textAlign:'center'
   },
   modal: {
     justifyContent: "center",

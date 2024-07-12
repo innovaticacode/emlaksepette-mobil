@@ -116,8 +116,9 @@ const Home = ({ route }) => {
               size={20}
             />
           ),
-          tabBarBadge: 0,
+          tabBarBadge:user.cartItem !=null ? 1:'',
           tabBarBadgeStyle: {
+              display:user.cartItem ==null ?'none':'flex',
             fontSize: 10,
             height: 17,
             width: 20,

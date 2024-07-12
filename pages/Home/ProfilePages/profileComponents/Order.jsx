@@ -211,7 +211,7 @@ export default function Order({ item }) {
                     <FeatherIcon name="check" color={"#4B8F3C"} size={16} />
                   </View>
                 )}
-                  {item.status == 2 && item?.refund?.status == 2 && (
+                  {item.status == 1 && item?.refund?.status == 2 && (
                    <View
                    style={{
                      backgroundColor: "#FFE0DB",

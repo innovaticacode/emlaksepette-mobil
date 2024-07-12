@@ -215,26 +215,29 @@ export default function Panel({ options, onSelect }) {
 
                             borderRadius: 15,
                           }}
-                        >
+                        >{
+                          notificationCount >0 &&
                           <View
-                            style={{
-                              position: "absolute",
-                              backgroundColor: "red",
-                              paddingLeft: 6,
-                              paddingRight: 6,
+                          style={{
+                            position: "absolute",
+                            backgroundColor: "red",
+                            paddingLeft: 6,
+                            paddingRight: 6,
 
-                              paddingTop: 2,
-                              paddingBottom: 2,
-                              bottom: 15,
-                              left: 23,
-                              zIndex: 1,
-                              borderRadius: 20,
-                            }}
-                          >
-                            <Text style={{ color: "white", fontSize: 11 }}>
-                              1
-                            </Text>
-                          </View>
+                            paddingTop: 2,
+                            paddingBottom: 2,
+                            bottom: 15,
+                            left: 23,
+                            zIndex: 1,
+                            borderRadius: 20,
+                          }}
+                        >
+                          <Text style={{ color: "white", fontSize: 11 }}>
+                            {notificationCount}
+                          </Text>
+                        </View>
+                        }
+                         
                           <Icon name="bell" size={28} />
                         </TouchableOpacity>
                       </View>

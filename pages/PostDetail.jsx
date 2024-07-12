@@ -57,6 +57,7 @@ import { Svg } from "react-native-svg";
 import { Polyline } from "react-native-maps";
 import PaymentItem from "../components/PaymentItem";
 import DrawerMenu from "../components/DrawerMenu";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
@@ -553,6 +554,13 @@ export default function PostDetail() {
 
         navigation.navigate("Sepetim");
       }
+      else{
+          setModalVisible(false)
+          setTimeout(() => {
+            setAlertForSign(true)
+          }, 400);
+     
+      }
     } catch (error) {
       console.error("post isteği olmadı", error);
     }
@@ -579,6 +587,33 @@ export default function PostDetail() {
       alert(error.message);
     }
   };
+  const [AlertForSign, setAlertForSign] = useState(false)
+  const [inFavorite, setInFavorite] = useState(false);
+  const [AlertForFavorite, setAlertForFavorite] = useState(false)
+  const addFavorites = () => {
+    if (user.access_token) {
+     const config = {
+       headers: { Authorization: `Bearer ${user.access_token}` }
+     };
+     axios.post('https://private.emlaksepette.com/api/add_project_to_favorites/'+HomeId,{
+       project_id : projectId,
+       housing_id : HomeId
+     },config).then((res) => {
+       changeHeart();
+     
+       if(res.data.status == "removed"){
+         setInFavorite(false);
+       }else{
+         setInFavorite(true);
+       }
+     })
+  
+    }else{
+      setAlertForFavorite(true)
+    }
+  
+   }
+
   return (
     <>
       {loading ? (
@@ -616,6 +651,7 @@ export default function PostDetail() {
             </View>
           </Modal>
 
+     
           <View
             style={{
               flexDirection: "row",
@@ -714,7 +750,7 @@ export default function PostDetail() {
               </View>
 
               <View style={styles.ıconContainer}>
-                <TouchableOpacity onPress={changeHeart}>
+                <TouchableOpacity onPress={addFavorites}>
                   <View style={styles.ıcon}>
                     <Heart
                       name={heart}
@@ -1176,6 +1212,7 @@ export default function PostDetail() {
                 </View>
               </View>
             </Modal>
+          
             <Modal
               animationType="fade"
               transparent={true}
@@ -1309,6 +1346,7 @@ export default function PostDetail() {
               </View>
             </Modal>
           </ScrollView>
+      
           <Modal
             isVisible={ColectionSheet}
             onBackdropPress={() => setColectionSheet(false)}
@@ -2050,6 +2088,64 @@ export default function PostDetail() {
               </View>
             </View>
           </Modal>
+          <AwesomeAlert
+            
+            show={AlertForSign}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={'Sepetinize İlan Ekleyebilmek İçin Giriş Yapmanız Gerekir'}
+              messageStyle={{textAlign:'center'}}
+           
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Vazgeç"
+            confirmText="Giriş Yap"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+                setAlertForSign(false)
+                setModalVisible(false)
+            }}
+            onConfirmPressed={() => {
+              navigation.navigate('Login')
+                setAlertForSign(false)
+                setModalVisible(false)
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
+             <AwesomeAlert
+            
+            show={AlertForFavorite}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={'Favorilerinize İlan Ekleyebilmek İçin Giriş Yapmanız Gerekir'}
+              messageStyle={{textAlign:'center'}}
+           
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Vazgeç"
+            confirmText="Giriş Yap"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+                setAlertForFavorite(false)
+             
+            }}
+            onConfirmPressed={() => {
+              navigation.navigate('Login')
+                setAlertForFavorite(false)
+               
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
         </SafeAreaView>
       )}
     </>
