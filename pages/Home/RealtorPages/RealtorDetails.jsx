@@ -129,23 +129,29 @@ export default function PostDetail() {
   //     setImages(JSON.parse(res.data.housing.housing_type_data).images);
   //   });
   // }, []);
-  const fetchDetails = async () => {
-    try {
-      setloading(true);
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
 
-      if (user.access_token) {
+
+  const fetchDetails = async () => {
+    const config = {
+      headers: { Authorization: `Bearer ${user?.access_token}` },
+    };
+    try {
+    
+      setloading(true)
         const response = await axios.get(
           `https://private.emlaksepette.com/api/housing/${houseId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
+              config
+          
+       
         );
         setloading(false)
-        setData(res.data);
-        setImages(JSON.parse(res.data.housing.housing_type_data).images);
-      }
+        setData(response.data);
+        setImages(JSON.parse(response.data.housing.housing_type_data).images);
+      
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -154,19 +160,19 @@ export default function PostDetail() {
   };
   
   useEffect(() => {
-fetchDetails()
-  }, [])
-  
+    fetchDetails()
+  }, [user])
+  console.log(user?.access_token + 'detay')
   useEffect(() => {
-    if (data?.housing?.isFavoritedByUser != null) {
-      setHeart("hearto");
-      setInFavorite(false);
-    } else {
+    if (data?.housing?.isFavoritedByUser == 1) {
       setHeart("heart");
       setInFavorite(true);
+    } else {
+      setHeart("hearto");
+      setInFavorite(false);
     }
-  }, []);
-  console.log(data?.housing?.isFavoritedByUser )
+  }, [fetchDetails]);
+  console.log(data?.housing?.isFavoritedByUser + 'gdlfkgmlkfd')
   const [modalVisibleComennet, setmodalVisibleComment] = useState(false);
   const handleModal = () => setmodalVisibleComment(!modalVisibleComennet);
   const [rating, setRating] = useState(0); // Başlangıçta hiçbir yıldız dolu değil
@@ -212,12 +218,10 @@ fetchDetails()
   const [addCollection, setaddCollection] = useState(false);
   const [collections, setcollections] = useState([]);
 
-  const [user, setUser] = useState({});
+
 
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
-  useEffect(() => {
-    getValueFor("user", setUser);
-  }, []);
+
  
   const fetchData = async () => {
     try {
@@ -460,11 +464,13 @@ fetchDetails()
           config
         )
         .then((res) => {
-          changeHeart();
+                changeHeart()
         
           if (res.data.status == "removed") {
             setInFavorite(false);
+          
           } else {
+           
             setInFavorite(true);
           }
         });

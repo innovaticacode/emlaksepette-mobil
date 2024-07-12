@@ -24,7 +24,7 @@ export default function Header({ loading, onPress,index, tab }) {
     getValueFor("user", setuser);
   }, []);
 
-  useEffect(() => {
+ 
     const fetchNotifications = async () => {
       try {
         if (!user?.access_token) {
@@ -59,10 +59,15 @@ export default function Header({ loading, onPress,index, tab }) {
       }
     };
 
+ 
+
+
+  useEffect(() => {
     if (user?.access_token) {
       fetchNotifications();
     }
-  }, [user?.access_token]);
+  }, [user.access_token])
+  
   return (
     <View style={styles.header}>
       <TouchableOpacity
@@ -98,7 +103,7 @@ export default function Header({ loading, onPress,index, tab }) {
       <View style={{ display: "flex", flexDirection: "row-reverse" }}>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate("Notifications", { notifications })
+            navigation.navigate("Notifications", )
           }
           style={{
             width: 50,
