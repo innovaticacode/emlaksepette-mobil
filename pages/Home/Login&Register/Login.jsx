@@ -239,7 +239,7 @@ export default function Login({ navigation }) {
                         style={{
                           position: "absolute",
                           right: 10,
-                          top: 7,
+                          top: 15, // Bu değeri TextInput'un yüksekliğine göre ayarlayın
                           zIndex: 1,
                         }}
                         onPress={show}
@@ -271,7 +271,7 @@ export default function Login({ navigation }) {
                       )}
                       {showLengthAlert && (
                         <Text style={{ color: "red" }}>
-                          Şifreniz en az 6 karakter olmalıdır!
+                          Şifreniz en az 5 karakter olmalıdır!
                         </Text>
                       )}
                       {showNumberAlert && (
