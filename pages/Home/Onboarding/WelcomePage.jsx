@@ -14,10 +14,10 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-
 const { width } = Dimensions.get("window");
 
 export default function WelcomePage({ hideSplash }) {
+  const video = React.useRef(null);
   const scale = useSharedValue(0);
 
   useEffect(() => {
