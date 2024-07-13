@@ -128,7 +128,6 @@ export default function App({ route }) {
   };
 
   useEffect(() => {
-
     setTimeout(() => {
       setShowSplash(false);
     }, 1000); // 3 saniye sonra splash ekranını kaldır
@@ -877,7 +876,7 @@ export default function App({ route }) {
             options={({ route }) => ({
               headerBackTitleVisible: false,
               headerShown: true,
-              title: "Aldıklarım",
+              title: "Siparişlerim",
             })}
           />
           <Stack.Screen

@@ -11,6 +11,8 @@ import RNPickerSelect from "react-native-picker-select";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function SwapForm({ data, openModal, color }) {
   const [SwapChoose, setSwapChoose] = useState("");
@@ -111,14 +113,13 @@ export default function SwapForm({ data, openModal, color }) {
       formData.append("vites_tipi", shiftType);
       formData.append("arac_satis_rakami", Price);
       formData.append("barter_detay", Barter);
-    
+
       const response = await axios.post(
         "https://private.emlaksepette.com/api/swap",
         formData
       );
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
-  
 
       openModal(JSON.stringify(response.data.message));
       color("#d4edda");
@@ -417,7 +418,8 @@ export default function SwapForm({ data, openModal, color }) {
         <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
           Şehir
         </Text>
-        <RNPickerSelect doneText="Tamam"
+        <RNPickerSelect
+          doneText="Tamam"
           placeholder={{
             label: "Şehir Seçiniz...",
             value: null,
@@ -434,7 +436,8 @@ export default function SwapForm({ data, openModal, color }) {
         <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
           İlçe
         </Text>
-        <RNPickerSelect doneText="Tamam"
+        <RNPickerSelect
+          doneText="Tamam"
           placeholder={{
             label: "İlçe Seçiniz...",
             value: null,
@@ -449,7 +452,8 @@ export default function SwapForm({ data, openModal, color }) {
         <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
           Takas Tercihiniz
         </Text>
-        <RNPickerSelect doneText="Tamam"
+        <RNPickerSelect
+          doneText="Tamam"
           placeholder={{
             label: "Seçiniz...",
             value: null,
@@ -471,7 +475,8 @@ export default function SwapForm({ data, openModal, color }) {
         <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
           Emlak Tipi
         </Text>
-        <RNPickerSelect doneText="Tamam"
+        <RNPickerSelect
+          doneText="Tamam"
           placeholder={{
             label: "Seçiniz...",
             value: null,
@@ -491,7 +496,8 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Konut Tipi
             </Text>
-            <RNPickerSelect doneText="Tamam"
+            <RNPickerSelect
+              doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -511,7 +517,8 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Oda Sayısı
             </Text>
-            <RNPickerSelect doneText="Tamam"
+            <RNPickerSelect
+              doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -525,7 +532,8 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Konut Yaşı
             </Text>
-            <RNPickerSelect doneText="Tamam"
+            <RNPickerSelect
+              doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -539,7 +547,8 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Kullanım Durumu
             </Text>
-            <RNPickerSelect doneText="Tamam"
+            <RNPickerSelect
+              doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -590,7 +599,8 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Arsa İli
             </Text>
-            <RNPickerSelect doneText="Tamam"
+            <RNPickerSelect
+              doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -607,7 +617,8 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Arsa İlçe
             </Text>
-            <RNPickerSelect doneText="Tamam"
+            <RNPickerSelect
+              doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -624,7 +635,8 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Arsa Mahalle
             </Text>
-            <RNPickerSelect doneText="Tamam"
+            <RNPickerSelect
+              doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -648,7 +660,8 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Arsa İmar Durumu
             </Text>
-            <RNPickerSelect doneText="Tamam"
+            <RNPickerSelect
+              doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -688,7 +701,8 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Araç Model Yılı
             </Text>
-            <RNPickerSelect doneText="Tamam"
+            <RNPickerSelect
+              doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -703,7 +717,8 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Araba Markası
             </Text>
-            <RNPickerSelect doneText="Tamam"
+            <RNPickerSelect
+              doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -718,7 +733,8 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Yakıt Tipi
             </Text>
-            <RNPickerSelect doneText="Tamam"
+            <RNPickerSelect
+              doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -737,7 +753,8 @@ export default function SwapForm({ data, openModal, color }) {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               Vites Tipi
             </Text>
-            <RNPickerSelect doneText="Tamam"
+            <RNPickerSelect
+              doneText="Tamam"
               placeholder={{
                 label: "Seçiniz...",
                 value: null,
@@ -837,20 +854,15 @@ export default function SwapForm({ data, openModal, color }) {
       ) : (
         <></>
       )}
-      <View>
-        <TouchableOpacity
-          onPress={handleButtonPress}
-          style={{
-            backgroundColor: "red",
-            padding: 10,
-            borderRadius: 5,
-          }}
-        >
-          <Text style={{ color: "white", textAlign: "center" }}>
-            Başvuruyu Tamamla
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <SafeAreaView style={styles.safeArea}>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <View style={styles.container}>
+            <TouchableOpacity onPress={handleButtonPress} style={styles.button}>
+              <Text style={styles.buttonText}>Başvuruyu Tamamla</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     </KeyboardAwareScrollView>
   );
 }
@@ -877,5 +889,28 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 8,
     fontSize: 14,
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#f7f7f7", // isteğe bağlı
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  container: {
+    width: "100%",
+    padding: 20,
+  },
+  button: {
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 5,
+    width: "100%",
+  },
+  buttonText: {
+    color: "white",
+    textAlign: "center",
   },
 });

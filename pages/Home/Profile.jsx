@@ -64,20 +64,6 @@ export default function Profile() {
   const [teamm, setTeamm] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [housingRecords, sethousingRecords] = useState([]);
-  const handleSearch = (text) => {
-    setSearchText(text);
-
-    // Eğer searchText doluysa, collections array'ini filtrele
-    // Aksi takdirde, collections array'ini olduğu gibi bırak
-    const filteredData = text
-      ? Housings.filter((item) =>
-          item.title.toLowerCase().includes(text.toLowerCase())
-        )
-      : Housings;
-    sethousingRecords(filteredData);
-
-    // Burada arama işlemleri yapılabilir
-  };
 
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   useEffect(() => {
@@ -172,13 +158,26 @@ export default function Profile() {
   const [loading, setloading] = useState(false);
   const [storeData, setstoreData] = useState([]);
   useEffect(() => {
+    // Örnek API isteği
     apiRequestGet("brand/" + id).then((res) => {
-      setloading(true + "true oldu");
+      setloading(true);
       setstoreData(res.data);
       setHousings(res.data.data.housings);
       setTeamm(res.data.data.child);
+      sethousingRecords(res.data.data.housings); // Housings dizisini başlangıçta kopyala
     });
   }, []);
+
+  const handleSearch = (text) => {
+    setSearchText(text);
+
+    const filteredData = text
+      ? Housings.filter((item) =>
+          item.title.toLowerCase().includes(text.toLowerCase())
+        )
+      : Housings;
+    sethousingRecords(filteredData);
+  };
 
   const ApiUrl = "https://private.emlaksepette.com/";
   const handleOpenPhone = () => {

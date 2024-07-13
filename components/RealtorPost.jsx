@@ -470,26 +470,46 @@ export default function RealtorPost({
             }}
           >
             <View style={{ flexDirection: "row" }}>
-              {column1_name && (
-                <Info
-                  text={`${column1_name} ${
-                    column1_additional ? column1_additional : ""
-                  }`}
-                />
+              {typeof column1_additional == undefined ||
+              column1_additional == null ||
+              column1_additional == "" ? (
+                ""
+              ) : (
+                <>
+                  <Info
+                    text={`${column1_name} ${
+                      column1_additional ? column1_additional : ""
+                    }`}
+                  />
+                </>
               )}
-              {column2_name && (
-                <Info
-                  text={`${column2_name} ${
-                    column2_additional ? column2_additional : ""
-                  }`}
-                />
+
+              {typeof column2_additional == undefined ||
+              column2_additional == null ||
+              column2_additional == "" ? (
+                ""
+              ) : (
+                <>
+                  <Info
+                    text={`${column2_name} ${
+                      column2_additional ? column2_additional : ""
+                    }`}
+                  />
+                </>
               )}
-              {column3_name && (
-                <Info
-                  text={`${column3_name} ${
-                    column3_additional ? column3_additional : ".Kat"
-                  }`}
-                />
+
+              {typeof column3_additional == undefined ||
+              column3_additional == null ||
+              column3_additional == "" ? (
+                ""
+              ) : (
+                <>
+                  <Info
+                    text={`${column3_name} ${
+                      column3_additional ? column3_additional : ""
+                    }`}
+                  />
+                </>
               )}
             </View>
             <View style={{ justifyContent: "center" }}>

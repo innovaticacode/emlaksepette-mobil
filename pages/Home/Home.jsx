@@ -16,6 +16,7 @@ import userData, { getValueFor } from "../../components/methods/user";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 import HomePage2 from "./HomePage2";
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 
 const Tab = createBottomTabNavigator();
 
@@ -63,7 +64,7 @@ const Home = ({ route }) => {
 
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name="home-outline"
+              name={focused ? "home" : "home-outline"}
               color={focused ? "black" : "grey"}
               size={20}
             />
@@ -77,7 +78,7 @@ const Home = ({ route }) => {
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name="heart-outline"
+              name={focused ? "heart" : "heart-outline"}
               color={focused ? "black" : "grey"}
               size={20}
             />
@@ -109,13 +110,12 @@ const Home = ({ route }) => {
         name="Sepetim"
         options={({ route }) => ({
           headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
-            <Feather
-              name="shopping-cart"
-              color={focused ? "black" : "grey"}
-              size={20}
-            />
-          ),
+          tabBarIcon: ({ color, focused }) =>
+            focused ? (
+              <FontAwesome5Icon name="shopping-cart" color="black" size={20} />
+            ) : (
+              <Feather name="shopping-cart" color="black" size={20} />
+            ),
           tabBarBadge: 0,
           tabBarBadgeStyle: {
             fontSize: 10,
@@ -143,7 +143,7 @@ const Home = ({ route }) => {
           tabBarIcon: ({ color, focused }) =>
             user.role == "Kurumsal Hesap" ? (
               <IconStore
-                name="storefront-outline"
+                name={focused ? "storefront" : "storefront-outline"}
                 size={28}
                 color={focused ? "#333" : "grey"}
               />
