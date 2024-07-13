@@ -154,7 +154,7 @@
     "icon": "lock",
     "text": "Şifreyi Değiştir",
     "key": "ChangePassword",
-    "url": "VerifyPhone", 
+    "url": "ChangePas", 
     "activePath": "/hesabim/sifre/guncelleme"
   },
   {

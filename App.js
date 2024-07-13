@@ -206,6 +206,7 @@ export default function App({ route }) {
               name="Home"
               options={{
                 headerShown: false,
+                gestureEnabled:false
               }}
             >
               {(props) => (
@@ -969,6 +970,7 @@ export default function App({ route }) {
             component={Verification}
             options={({ route }) => ({
               headerShown:false,
+              gestureEnabled:false,
               title: "Konutu Değerlendir",
               headerBackTitleVisible: false,
               headerStyle: {

@@ -112,8 +112,9 @@ const deleteNotifacte = async () => {
       },
       data: formData,
     });
-    Alert.alert('Başarılı', 'Silme işlemi başarılı!');
     fetchNotifications()
+    Alert.alert('Başarılı', 'Silme işlemi başarılı!');
+
     console.log('Delete request successful:', response.data);
     setalertFordeleteNotificate(false)
     

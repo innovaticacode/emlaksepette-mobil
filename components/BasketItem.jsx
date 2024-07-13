@@ -305,7 +305,7 @@ export default function BasketItem({
             setModalVisible(!modalVisible);
           }}
           onConfirmPressed={() => {
-            DeleteBasket();
+            DeleteBasket()
             setModalVisible(false); // Modalı kapat
           }}
           confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
