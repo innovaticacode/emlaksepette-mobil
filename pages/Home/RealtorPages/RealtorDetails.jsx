@@ -47,7 +47,7 @@ import axios from "axios";
 import DrawerMenu from "../../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
-
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
@@ -304,6 +304,18 @@ export default function PostDetail() {
         },
       })
       .then((response) => {
+        setTimeout(() => {
+          setColectionSheet(false)
+        }, 500);
+       
+        setTimeout(() => {
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: 'Koleksiyona ekleme başarılı',
+            textBody: `${id} No'lu Konut ${name} Adlı Koleksiyonunuza Eklendi`,
+          })
+  
+        }, 700);
         var newCollections = collections.map((collection) => {
           if (collection.id == id) {
             return {
@@ -482,6 +494,7 @@ export default function PostDetail() {
   };
   return (
     <>
+    <AlertNotificationRoot>
         {
           loading ? 
           <View style={{alignItems:'center',justifyContent:'center',flex:1}}>
@@ -743,7 +756,7 @@ export default function PostDetail() {
                   <Text
                     style={{
                       textAlign: "center",
-                      color: "#64B72C",
+                      color: "green",
                       fontWeight: "bold",
                       fontSize: 13,
                     }}
@@ -1827,6 +1840,7 @@ export default function PostDetail() {
           />
         </SafeAreaView>
         }
+        </AlertNotificationRoot>
     </>
    
   );

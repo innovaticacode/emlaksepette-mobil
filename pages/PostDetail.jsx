@@ -11,7 +11,8 @@ import {
   Linking,
   TextInput,
   Pressable,
-  Share
+  Share,
+  Button
 } from "react-native";
 import { React, useRef, useState, useEffect } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
@@ -28,7 +29,7 @@ import { SocialIcon, Icon } from "react-native-elements";
 import LinkIcon3 from "react-native-vector-icons/Feather";
 import LinkIcon4 from "react-native-vector-icons/Fontisto";
 import LinkIcon2 from "react-native-vector-icons/FontAwesome";
-
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 import PostMap from "../components/PostDetailsSettings/Postmap";
 import PostPayment from "../components/PostDetailsSettings/PostPayment";
 import PostCaption from "../components/PostDetailsSettings/PostCaption";
@@ -75,7 +76,7 @@ export default function PostDetail() {
     setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
   };
   const route = useRoute();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const {
     HomeId,
@@ -128,6 +129,7 @@ export default function PostDetail() {
   useEffect(() => {
     apiRequestGet("project/" + projectId).then((res) => {
       setProjectHomeData(res.data);
+        
     });
   }, []);
 
@@ -223,7 +225,16 @@ export default function PostDetail() {
         }
       )
       .then((response) => {
-        alert("fsdfds");
+        setaddCollection(false);
+                setnewCollectionNameCreate('')
+        setTimeout(() => {
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: `${newCollectionNameCreate} Adlı koleksiyonunuz oluşturuldu `,
+            textBody: `${selectedroomId} No'lu Konut ${newCollectionNameCreate} Adlı Koleksiyonuza Eklendi`,
+          })
+  
+        }, 700);
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -257,6 +268,18 @@ export default function PostDetail() {
         },
       })
       .then((response) => {
+        setTimeout(() => {
+          setColectionSheet(false)
+        }, 500);
+       
+        setTimeout(() => {
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: 'Koleksiyona ekleme başarılı',
+            textBody: `${selectedroomId} No'lu Konut ${name} Adlı Koleksiyonunuza Eklendi`,
+          })
+  
+        }, 700);
         // setselectedCollectionName(response.data.collection.name)
         var newCollections = collections.map((collection) => {
           if (collection.id == id) {
@@ -616,6 +639,7 @@ export default function PostDetail() {
 
   return (
     <>
+    <AlertNotificationRoot>
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#333" />
@@ -652,6 +676,7 @@ export default function PostDetail() {
           </Modal>
 
      
+
           <View
             style={{
               flexDirection: "row",
@@ -957,7 +982,7 @@ export default function PostDetail() {
                     <TouchableOpacity
                       onPress={() => {
                         openFormModal(HomeId);
-                        GetID(HomeId);
+                      
                       }}
                       style={styles.payDetailBtn}
                     >
@@ -1058,6 +1083,7 @@ export default function PostDetail() {
               onRequestClose={() => {
                 setModalVisible(!modalVisible);
               }}
+              style={{margin:0}}
             >
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
@@ -1085,7 +1111,8 @@ export default function PostDetail() {
                     <SettingsItem
                       info="Peşin Fiyat"
                       numbers={
-                        paymentModalShowOrder != null
+                        
+                        paymentModalShowOrder != null && ProjectHomeData && ProjectHomeData.projectHousingsList
                           ? addDotEveryThreeDigits(
                               ProjectHomeData.projectHousingsList[
                                 paymentModalShowOrder
@@ -1221,8 +1248,9 @@ export default function PostDetail() {
               onRequestClose={() => {
                 setFormVisible(false);
               }}
+              style={{margin:0}}
             >
-              <View style={[styles.centeredView, { padding: 0 }]}>
+              <View style={[styles.centeredView, { padding: 10 }]}>
                 <View style={[styles.modalView, { height: "90%" }]}>
                   <Text
                     style={{
@@ -2148,6 +2176,7 @@ export default function PostDetail() {
           />
         </SafeAreaView>
       )}
+      </AlertNotificationRoot>
     </>
   );
 }
@@ -2253,7 +2282,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     // modal dışı koyu arkaplan
   },
   modalView: {

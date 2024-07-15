@@ -20,7 +20,12 @@ import { getValueFor } from "../../components/methods/user";
 import { ActivityIndicator } from "react-native";
 import { Platform } from 'react-native';
 import DrawerMenu from "../../components/DrawerMenu";
-
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
 export default function Test() {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -39,6 +44,7 @@ export default function Test() {
   const [index, setindex] = useState(0)
   const [tab, settab] = useState(0)
   return (
+    <AlertNotificationRoot>
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
  
       <View
@@ -132,18 +138,19 @@ export default function Test() {
         </View>
       </View>
    
-      <View style={{}}>
+    
         {tabs == 1 && <Favorites />}
         {tabs == 2 && <CollectionsPage/>}
-      </View>
+     
       </>:<>
  
       
       </>
       }
   
-    
+     
     </SafeAreaView>
+    </AlertNotificationRoot>
   );
 }
 const styles = StyleSheet.create({
