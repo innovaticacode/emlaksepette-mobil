@@ -10,6 +10,7 @@ import Modal from "react-native-modal";
 import { ActivityIndicator } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import { Platform } from "react-native";
+import AwesomeAlert from "react-native-awesome-alerts";
 export default function Favorites() {
   const navigation=useNavigation()
   const [user,setUser] = useState({});
@@ -230,6 +231,27 @@ export default function Favorites() {
         <Text style={{textAlign:'center',color:'#ffffff',fontWeight:'700'}}>Tümünü Sil</Text>
       </TouchableOpacity>
     </View>
+    <AwesomeAlert
+            show={modalForDeleteFavorites}
+            showProgress={false}
+            title={"Tümünü Sil"}
+            message={"Tüm Favorileri Silmek İstediğinize Emin misiniz?"}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+            cancelText="Hayır"
+            confirmText="Evet"
+            cancelButtonColor="#1d8027"
+                confirmButtonColor="#ce4d63"
+            onCancelPressed={() => {
+             setmodalForDeleteFavorites(false)
+            }}
+            onConfirmPressed={() => {
+           deleteRequestWithToken()
+           deleteRequestWithTokenProject()
+            }}
+          />
     <ScrollView
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -371,7 +393,7 @@ export default function Favorites() {
       }
     </View>
   </Modal>
-  <Modal
+  {/* <Modal
     isVisible={modalForDeleteFavorites}
     onBackdropPress={() => setmodalForDeleteFavorites(false)}
       animationIn={'fadeIn'}
@@ -431,7 +453,7 @@ export default function Favorites() {
           </TouchableOpacity>
         </View>
     </View>
-  </Modal>
+  </Modal> */}
 </View>
  }
     </>

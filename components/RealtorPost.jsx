@@ -460,21 +460,22 @@ const [cartIsNull, setcartIsNull] = useState(false)
             }}
           >
             <View style={{ flexDirection: "row" }}>
-              {column1_name && (
+            
+              {column1_name  && (
                 <Info
-                  text={`${column1_name} ${
-                    column1_additional ? column1_additional : ""
-                  }`}
+                  text={ column1_name != null && column1_name && column1_name != "" ? `${ column1_name } ${ column1_additional ? column1_additional : "" }` 
+                  : false}
                 />
+                
               )}
-              {column2_name && (
+              {column2_name  && (
                 <Info
                   text={`${column2_name} ${
                     column2_additional ? column2_additional : ""
                   }`}
                 />
               )}
-              {column3_name && (
+              {column3_name  && (
                 <Info
                   text={`${column3_name} ${
                     column3_additional ? column3_additional : ".Kat"

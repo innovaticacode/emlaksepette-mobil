@@ -90,6 +90,14 @@ const Area= ({index}) => {
   
  
   return (
+<>
+      {
+        loading ?
+        <View style={{alignItems:'center',justifyContent:'center',flex:1}}>
+        <ActivityIndicator size={'large'} color="#333"/>
+      </View>:
+    
+
     <View style={styles.container}>
       <View
         style={{
@@ -135,8 +143,17 @@ const Area= ({index}) => {
         </View>
       )}
       <AlertNotificationRoot>
+        {
+          filteredHomes.length==0?
+          <View style={{width:'100%',paddingTop:10}}>
+          <Text style={{textAlign:'center',color:'grey',fontWeight:'700'}}>Konut İlanı Bulunamadı</Text>
+         </View>:
+     
+     
         <FlatList
+        
           data={filteredHomes}
+       
           renderItem={({ item }) => (
             <RealtorPost
          
@@ -147,7 +164,7 @@ const Area= ({index}) => {
               loading={loading}
               location={item.city_title + " / " + item.county_title}
               image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image}`}
-              column1_name={`${JSON.parse(item.housing_type_data)[item.column1_name]} `}
+              column1_name={JSON.parse(item.housing_type_data)[item.column1_name] ? JSON.parse(item.housing_type_data)[item.column1_name] : ""}
               column1_additional={item.column1_additional}
               column2_name={`${JSON.parse(item.housing_type_data)[item.column2_name]} `}
               column2_additional={item.column2_additional}
@@ -168,10 +185,13 @@ const Area= ({index}) => {
           
           ListFooterComponent={renderFooter}
         />
+      }
       </AlertNotificationRoot>
 
       
     </View>
+      }
+    </>
   );
 };
 

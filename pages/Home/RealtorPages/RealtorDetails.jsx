@@ -733,13 +733,14 @@ export default function PostDetail() {
               </PagerView>
             </View>
             <Shadow style={{ width: "100%", margin: 7, padding: 10 }}>
-              <View style={{ paddingTop: 8, gap: 10 }}>
+              <View style={{ paddingTop: 0, gap: 5, }}>
                 <Text
                   style={{
                     textAlign: "center",
                     fontSize: 12,
                     color: "#333",
-                    fontWeight: "400",
+                    fontWeight: "600",
+                    
                   }}
                 >
                   {data?.housing?.city?.title} / {data?.housing?.county?.title}
@@ -767,6 +768,10 @@ export default function PostDetail() {
                     ₺
                   </Text>
                 )}
+                <View style={{paddingTop:5}}>
+                <Text style={{textAlign:'center',fontSize:11,color:'grey',fontWeight:'700'}} > {'Emlak' + ' > '+  data?.housing?.step1_slug.charAt(0).toUpperCase() + data?.housing?.step1_slug.slice(1) + ' > ' + data?.housing?.step2_slug.charAt(0).toUpperCase() + data?.housing?.step2_slug.slice(1) }</Text>
+                </View>
+
               </View>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <SliderMenuRealtorDetails

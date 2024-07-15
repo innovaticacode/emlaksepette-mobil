@@ -126,9 +126,10 @@ export default function RealtorPostFavorited({
             closeOnHardwareBackPress={false}
             showCancelButton={true}
             showConfirmButton={true}
-            cancelText="İptal"
+            cancelText="Hayır"
             confirmText="Evet"
-            confirmButtonColor="#22bb33"
+            cancelButtonColor="#1d8027"
+                confirmButtonColor="#ce4d63"
             onCancelPressed={() => {
               setShowAlert(false);
             }}

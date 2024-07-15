@@ -196,7 +196,8 @@ export default function CollectionsPage() {
 
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
-        title: 'Success',
+        title: 'Koleksiyon silindi',
+      textBody:`${colectionName} Adlı koleksiyon silindi`
       })
       setmessage(true);
      
@@ -260,8 +261,12 @@ export default function CollectionsPage() {
         }
       );
       fetchData();
-
-      alert("fsdfsdf");
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: `${CollectionsRemoveIds.length} Koleksiyon silindi`,
+        
+      })
+        setmodalForSelectedCollection(false)
       setModalVisible(false);
       setCollectionsRemoveIds([]);
     } catch (error) {
@@ -286,6 +291,11 @@ export default function CollectionsPage() {
           },
         }
       );
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: `Tüm koleksiyonlar silindi`,
+        
+      })
       setmodalForRemoveAll(false);
       fetchData();
     } catch (error) {
@@ -300,7 +310,7 @@ export default function CollectionsPage() {
  
     
   return (
-    <>
+    <AlertNotificationRoot>
       {user.has_club == 2 && (
         <>
           <View style={{ paddingTop: 10, gap: 10, gap: 10 }}>
@@ -481,7 +491,7 @@ export default function CollectionsPage() {
                   style={{
                     flexDirection: "row",
                     padding: 5,
-                    paddingTop: 9,
+                    paddingTop: 0,
                     alignItems: "center",
                     justifyContent: "space-between",
                   }}
@@ -554,7 +564,17 @@ export default function CollectionsPage() {
                         { paddingLeft: 15, paddingRight: 15 },
                       ]}
                       onPress={() => {
-                        setmodalForSelectedCollection(true);
+                        if (CollectionsRemoveIds.length == 0) {
+                          Toast.show({
+                            type: ALERT_TYPE.WARNING,
+                            title: `Seçili koleksiyon bulunmamaktadır`,
+                            titleStyle:{fontSize:14},
+                            textBody:'Lütfen silmek istediğiniz koleksiyonu seçin'
+                          })
+                        }else{
+                          setmodalForSelectedCollection(true);
+                        }
+                     
                       }}
                     >
                       <Icon name="trash" size={18} color={"#ffffff"} />
@@ -1004,7 +1024,7 @@ export default function CollectionsPage() {
           )}
         </>
       )}
-    </>
+    </AlertNotificationRoot>
   );
 }
 const styles = StyleSheet.create({

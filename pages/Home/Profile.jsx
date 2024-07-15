@@ -237,7 +237,7 @@ export default function Profile() {
                 height:
                   storeData?.data?.name?.length > 30
                     ? width < 400
-                      ? ""
+                      ? 220
                       : 240
                     : width < 400
                     ? 200
