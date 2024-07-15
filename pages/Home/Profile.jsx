@@ -62,6 +62,8 @@ export default function Profile() {
   const [errorMessage, seterrorMessage] = useState("");
   const [user, setUser] = useState({});
   const [teamm, setTeamm] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [housingRecords, sethousingRecords] = useState([]);
 
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   useEffect(() => {
@@ -156,13 +158,26 @@ export default function Profile() {
   const [loading, setloading] = useState(false);
   const [storeData, setstoreData] = useState([]);
   useEffect(() => {
+    // Örnek API isteği
     apiRequestGet("brand/" + id).then((res) => {
-      setloading(true + "true oldu");
+      setloading(true);
       setstoreData(res.data);
       setHousings(res.data.data.housings);
       setTeamm(res.data.data.child);
+      sethousingRecords(res.data.data.housings); // Housings dizisini başlangıçta kopyala
     });
   }, []);
+
+  const handleSearch = (text) => {
+    setSearchText(text);
+
+    const filteredData = text
+      ? Housings.filter((item) =>
+          item.title.toLowerCase().includes(text.toLowerCase())
+        )
+      : Housings;
+    sethousingRecords(filteredData);
+  };
 
   const ApiUrl = "https://private.emlaksepette.com/";
   const handleOpenPhone = () => {
@@ -220,6 +235,7 @@ export default function Profile() {
       alert(error.message);
     }
   };
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View
@@ -322,6 +338,8 @@ export default function Profile() {
                         borderColor: "#ebebeb",
                         borderRadius: 5,
                       }}
+                      value={searchText}
+                      onChangeText={handleSearch}
                       placeholder="Ara..."
                       placeholderTextColor={"#333"}
                     />
@@ -631,7 +649,7 @@ export default function Profile() {
           />
         )}
         {tab === 1 && <ProjectAdverts data={storeData} />}
-        {tab === 2 && <RealtorAdverts housingdata={Housings} />}
+        {tab === 2 && <RealtorAdverts housingdata={housingRecords} />}
         {tab === 3 && <Team teamm={teamm} />}
         {tab === 4 && <ShopInfo data={storeData} loading={loading} />}
       </View>

@@ -11,7 +11,7 @@ import RealtorPost from "../../../components/RealtorPost";
 import { FlatList } from "react-native-gesture-handler";
 import { ActivityIndicator } from "react-native-paper";
 
-export default function RealtorAdverts({ housingdata }) {
+export default function RealtorAdverts({ housingdata, filteredResults }) {
   const [featuredEstates, setFeaturedEstates] = useState({});
 
   const fetchFeaturedEstates = async () => {
@@ -50,6 +50,7 @@ export default function RealtorAdverts({ housingdata }) {
             HouseId={item.id}
             price={`${JSON.parse(item.housing_type_data)["price"]} `}
             housing={item}
+            filteredResults={filteredResults}
             title={item.title}
             loading={loadingEstates}
             location={item.city["title"] + " / " + item.county["title"]}
