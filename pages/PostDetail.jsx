@@ -11,7 +11,8 @@ import {
   Linking,
   TextInput,
   Pressable,
-  Share
+  Share,
+  Button
 } from "react-native";
 import { React, useRef, useState, useEffect } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
@@ -28,7 +29,7 @@ import { SocialIcon, Icon } from "react-native-elements";
 import LinkIcon3 from "react-native-vector-icons/Feather";
 import LinkIcon4 from "react-native-vector-icons/Fontisto";
 import LinkIcon2 from "react-native-vector-icons/FontAwesome";
-
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 import PostMap from "../components/PostDetailsSettings/Postmap";
 import PostPayment from "../components/PostDetailsSettings/PostPayment";
 import PostCaption from "../components/PostDetailsSettings/PostCaption";
@@ -57,6 +58,7 @@ import { Svg } from "react-native-svg";
 import { Polyline } from "react-native-maps";
 import PaymentItem from "../components/PaymentItem";
 import DrawerMenu from "../components/DrawerMenu";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
@@ -74,7 +76,7 @@ export default function PostDetail() {
     setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
   };
   const route = useRoute();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const {
     HomeId,
@@ -127,6 +129,7 @@ export default function PostDetail() {
   useEffect(() => {
     apiRequestGet("project/" + projectId).then((res) => {
       setProjectHomeData(res.data);
+        
     });
   }, []);
 
@@ -222,7 +225,16 @@ export default function PostDetail() {
         }
       )
       .then((response) => {
-        alert("fsdfds");
+        setaddCollection(false);
+                setnewCollectionNameCreate('')
+        setTimeout(() => {
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: `${newCollectionNameCreate} Adlı koleksiyonunuz oluşturuldu `,
+            textBody: `${selectedroomId} No'lu Konut ${newCollectionNameCreate} Adlı Koleksiyonuza Eklendi`,
+          })
+  
+        }, 700);
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -256,6 +268,18 @@ export default function PostDetail() {
         },
       })
       .then((response) => {
+        setTimeout(() => {
+          setColectionSheet(false)
+        }, 500);
+       
+        setTimeout(() => {
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: 'Koleksiyona ekleme başarılı',
+            textBody: `${selectedroomId} No'lu Konut ${name} Adlı Koleksiyonunuza Eklendi`,
+          })
+  
+        }, 700);
         // setselectedCollectionName(response.data.collection.name)
         var newCollections = collections.map((collection) => {
           if (collection.id == id) {
@@ -553,6 +577,13 @@ export default function PostDetail() {
 
         navigation.navigate("Sepetim");
       }
+      else{
+          setModalVisible(false)
+          setTimeout(() => {
+            setAlertForSign(true)
+          }, 400);
+     
+      }
     } catch (error) {
       console.error("post isteği olmadı", error);
     }
@@ -579,8 +610,36 @@ export default function PostDetail() {
       alert(error.message);
     }
   };
+  const [AlertForSign, setAlertForSign] = useState(false)
+  const [inFavorite, setInFavorite] = useState(false);
+  const [AlertForFavorite, setAlertForFavorite] = useState(false)
+  const addFavorites = () => {
+    if (user.access_token) {
+     const config = {
+       headers: { Authorization: `Bearer ${user.access_token}` }
+     };
+     axios.post('https://private.emlaksepette.com/api/add_project_to_favorites/'+HomeId,{
+       project_id : projectId,
+       housing_id : HomeId
+     },config).then((res) => {
+       changeHeart();
+     
+       if(res.data.status == "removed"){
+         setInFavorite(false);
+       }else{
+         setInFavorite(true);
+       }
+     })
+  
+    }else{
+      setAlertForFavorite(true)
+    }
+  
+   }
+
   return (
     <>
+    <AlertNotificationRoot>
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#333" />
@@ -615,6 +674,8 @@ export default function PostDetail() {
               </View>
             </View>
           </Modal>
+
+     
 
           <View
             style={{
@@ -714,7 +775,7 @@ export default function PostDetail() {
               </View>
 
               <View style={styles.ıconContainer}>
-                <TouchableOpacity onPress={changeHeart}>
+                <TouchableOpacity onPress={addFavorites}>
                   <View style={styles.ıcon}>
                     <Heart
                       name={heart}
@@ -921,7 +982,7 @@ export default function PostDetail() {
                     <TouchableOpacity
                       onPress={() => {
                         openFormModal(HomeId);
-                        GetID(HomeId);
+                      
                       }}
                       style={styles.payDetailBtn}
                     >
@@ -1022,6 +1083,7 @@ export default function PostDetail() {
               onRequestClose={() => {
                 setModalVisible(!modalVisible);
               }}
+              style={{margin:0}}
             >
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
@@ -1049,7 +1111,8 @@ export default function PostDetail() {
                     <SettingsItem
                       info="Peşin Fiyat"
                       numbers={
-                        paymentModalShowOrder != null
+                        
+                        paymentModalShowOrder != null && ProjectHomeData && ProjectHomeData.projectHousingsList
                           ? addDotEveryThreeDigits(
                               ProjectHomeData.projectHousingsList[
                                 paymentModalShowOrder
@@ -1176,6 +1239,7 @@ export default function PostDetail() {
                 </View>
               </View>
             </Modal>
+          
             <Modal
               animationType="fade"
               transparent={true}
@@ -1184,8 +1248,9 @@ export default function PostDetail() {
               onRequestClose={() => {
                 setFormVisible(false);
               }}
+              style={{margin:0}}
             >
-              <View style={[styles.centeredView, { padding: 0 }]}>
+              <View style={[styles.centeredView, { padding: 10 }]}>
                 <View style={[styles.modalView, { height: "90%" }]}>
                   <Text
                     style={{
@@ -1309,6 +1374,7 @@ export default function PostDetail() {
               </View>
             </Modal>
           </ScrollView>
+      
           <Modal
             isVisible={ColectionSheet}
             onBackdropPress={() => setColectionSheet(false)}
@@ -2050,8 +2116,67 @@ export default function PostDetail() {
               </View>
             </View>
           </Modal>
+          <AwesomeAlert
+            
+            show={AlertForSign}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={'Sepetinize İlan Ekleyebilmek İçin Giriş Yapmanız Gerekir'}
+              messageStyle={{textAlign:'center'}}
+           
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Vazgeç"
+            confirmText="Giriş Yap"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+                setAlertForSign(false)
+                setModalVisible(false)
+            }}
+            onConfirmPressed={() => {
+              navigation.navigate('Login')
+                setAlertForSign(false)
+                setModalVisible(false)
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
+             <AwesomeAlert
+            
+            show={AlertForFavorite}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={'Favorilerinize İlan Ekleyebilmek İçin Giriş Yapmanız Gerekir'}
+              messageStyle={{textAlign:'center'}}
+           
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Vazgeç"
+            confirmText="Giriş Yap"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+                setAlertForFavorite(false)
+             
+            }}
+            onConfirmPressed={() => {
+              navigation.navigate('Login')
+                setAlertForFavorite(false)
+               
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
         </SafeAreaView>
       )}
+      </AlertNotificationRoot>
     </>
   );
 }
@@ -2157,7 +2282,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     // modal dışı koyu arkaplan
   },
   modalView: {

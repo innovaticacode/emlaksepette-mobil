@@ -21,7 +21,7 @@ const DrawerMenu = ({setIsDrawerOpen }) => {
     navigation.navigate(screenName);
     setIsDrawerOpen(false);
   };
-
+console.log(user)
   return (
     <>
       <SafeAreaView style={{ flex: 1, zIndex: 1 }}>
@@ -50,19 +50,26 @@ const DrawerMenu = ({setIsDrawerOpen }) => {
               showImage={true}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Categories category="İlan Ver" bordernone="none" iconName="plus" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={()=> {
-            navigation.navigate('Emlak',{name:'İlan Ver'})
+          <TouchableOpacity onPress={()=>{
+            navigation.navigate('ShareAdvert')
             setIsDrawerOpen(false)
           }}>
-            <Categories
-              category="Sat Kirala"
-              bordernone="none"
-              iconName="search-plus"
-            />
+            <Categories category="İlan Ver" bordernone="none" iconName="plus" />
           </TouchableOpacity>
+          {
+            user.role =='Bireysel Hesap' &&
+            <TouchableOpacity onPress={()=> {
+              navigation.navigate('Emlak',{name:'İlan Ver'})
+              setIsDrawerOpen(false)
+            }}>
+              <Categories
+                category="Sat Kirala"
+                bordernone="none"
+                iconName="search-plus"
+              />
+            </TouchableOpacity>
+          }
+      
         </ScrollView>
       </SafeAreaView>
       <ImageBackground

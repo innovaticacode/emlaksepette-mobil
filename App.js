@@ -205,6 +205,7 @@ export default function App({ route }) {
               name="Home"
               options={{
                 headerShown: false,
+                gestureEnabled:false
               }}
             >
               {(props) => (
@@ -220,7 +221,7 @@ export default function App({ route }) {
           <Stack.Group>
             <Stack.Screen
               name="Login"
-              options={{ title: "Giriş Yap", headerBackTitleVisible: false }}
+              options={{ title: "Giriş Yap", headerBackTitleVisible: false ,headerShown:false}}
             >
               {(props) => <Login {...props} />}
             </Stack.Screen>
@@ -957,6 +958,19 @@ export default function App({ route }) {
             component={SuccesScreen}
             options={({ route }) => ({
               title: route.params.name,
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+             <Stack.Screen
+            name="VerifyPhone"
+            component={Verification}
+            options={({ route }) => ({
+              headerShown:false,
+              gestureEnabled:false,
+              title: "Konutu Değerlendir",
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",

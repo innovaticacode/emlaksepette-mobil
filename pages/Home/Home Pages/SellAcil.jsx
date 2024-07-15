@@ -26,7 +26,9 @@ const SellAcil = ({index}) => {
     const [hasMore, setHasMore] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [user, setuser] = useState({});
-  
+    useEffect(() => {
+      getValueFor("user",setuser)
+    },[])
     const fetchFeaturedEstates = async (reset = false) => {
       if (loading || (!hasMore && !reset)) return;
       setLoading(true);

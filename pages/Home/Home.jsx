@@ -110,6 +110,7 @@ const Home = ({ route }) => {
         name="Sepetim"
         options={({ route }) => ({
           headerShown: false,
+
           tabBarIcon: ({ color, focused }) =>
             focused ? (
               <FontAwesome5Icon name="shopping-cart" color="black" size={20} />
@@ -117,7 +118,9 @@ const Home = ({ route }) => {
               <Feather name="shopping-cart" color="black" size={20} />
             ),
           tabBarBadge: 0,
+
           tabBarBadgeStyle: {
+              display:user.cartItem ==null ?'none':'flex',
             fontSize: 10,
             height: 17,
             width: 20,

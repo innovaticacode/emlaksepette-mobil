@@ -253,7 +253,7 @@ export default function Basket() {
       console.error("Error fetching data:", error);
     }
   };
-  
+  console.log(user.access_token + 'token')
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("tr-TR", {
       style: "currency",
@@ -360,6 +360,7 @@ const nav=useNavigation()
             <GestureHandlerRootView style={{ backgroundColor: "white" }}>
               <Swipeable renderRightActions={renderRightActions}>
                 <BasketItem
+                DeleteBasket={DeleteBasket}
                   name={Cart?.title}
                   ımage={Cart?.image}
                   price={Cart?.amount}
@@ -374,32 +375,9 @@ const nav=useNavigation()
               </Swipeable>
             </GestureHandlerRootView>
 
-            {/* <View>
-            <View style={[styles.HouseInfo, { padding: 15 }]}>
-              <View style={{ flexDirection: "row", gap: 5 }}>
-                <Text style={{ fontSize: 12 }}>İlan Adı:</Text>
-                {
-                  type.type=='housing'?
-                  <Text>{Cart.title}</Text>
-                  :
-                  <Text style={{ fontSize: 12 }}>
-                    {Cart.title} Projesinde {Cart.housing} No'lu Konut
-                  </Text>
-                }
-              
-              </View>
-              <View style={{ flexDirection: "row", gap: 5 }}>
-                <Text style={{ fontSize: 12 }}>İlan Konumu:</Text>
-                <Text style={{ fontSize: 12 }}>{Cart.city} / Hendek</Text>
-              </View>
-              <View style={{ flexDirection: "row", gap: 5 }}>
-                <Text style={{ fontSize: 12 }}>Mağaza:</Text>
-                <Text style={{ fontSize: 12 }}>Maliyetine Ev</Text>
-              </View>
-            </View>
-          </View> */}
+         
 
-            {type.type == "project" && (
+            {type?.type == "project" && (
               <View
                 style={{
                   flexDirection: "row",
@@ -547,7 +525,7 @@ const nav=useNavigation()
               </View>
             )}
 
-            {type.type == "project" ? (
+            {type?.type == "project" ? (
               <View style={[styles.acceptCart, { borderRadius: 3 }]}>
                 <View
                   style={{
@@ -637,7 +615,7 @@ const nav=useNavigation()
                   <Text>Sepet Özeti</Text>
                 </View>
                 <View style={{ gap: 20 }}>
-                  {type.hasCounter == true ? (
+                  {type?.hasCounter == true ? (
                     <>
                       <View
                         style={{
@@ -735,43 +713,7 @@ const nav=useNavigation()
                     </>
                   )}
 
-                  {/* 
-                                    <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                        <Text>Toplam Fiyat:</Text>
-                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
-                                    </View>
-                                      {
-                                        saleType=='kiralik'?
-                                        <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                        <Text>Bir Kira Kapora</Text>
-                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
-                                    </View>:
-                                          type.hasCounter==true? 
-                                       <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                       <Text>%2 Kapora</Text>
-                                       <Text>{addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺</Text>
-                                   </View>:  <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                       <Text>%2 Kapora</Text>
-                                       <Text>{addDotEveryThreeDigits(Cart.amount * 2 /100)} ₺</Text>
-                                   </View>
-                                      }
-
-                                      {
-                                          type.hasCounter==true?
-                                          <>
-                                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                          <Text>Emlak Kulüp İndirimi</Text>
-                                          <Text>%{Cart.discount_rate}</Text>
-                                      </View>
-                                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                          <Text>İndirimli Fiyat</Text>
-                                          <Text>{DiscountPrice} ₺</Text>
-                                      </View>
-                                          </>
-                                          :<></>
-                                      
-                                      }
-                               */}
+              
                 </View>
               </View>
             )}
@@ -818,22 +760,22 @@ const nav=useNavigation()
                   <Text style={{ color: "grey", fontSize: 12 }}>Toplam</Text>
                   <Text style={{ fontWeight: "500" }}>
                     {isInstallament == 1 &&
-                      type.type == "project" &&
+                      type?.type == "project" &&
                       formatAmount(
                         (Cart?.amount * offerControl?.project?.deposit_rate) /
                           100
                       )}
                     {isInstallament == 2 &&
-                      type.type == "project" &&
+                      type?.type == "project" &&
                       addDotEveryThreeDigits(
                         (Cart?.installmentPrice *
                           offerControl?.project?.deposit_rate) /
                           100
                       )}
-                    {type.type == "housing" &&
+                    {type?.type == "housing" &&
                       saleType == "kiralik" &&
                       addDotEveryThreeDigits(Cart.price)}
-                    {type.type == "housing" &&
+                    {type?.type == "housing" &&
                       saleType == "satilik" &&
                       addDotEveryThreeDigits(
                         Math.round((Cart?.price * 2) / 100)
