@@ -359,25 +359,35 @@ const [AddCartShow, setAddCartShow] = useState(false);
                     GetID(roomOrder)
                   }}
                 >
-                  <View style={styles.ıconContainer}>
+                  {
+                    sold?.status ==1 ?
+                    <></>:
+                    <View style={styles.ıconContainer}>
                     <Bookmark
                       name={bookmark}
                       size={13}
                       color={bookmark === "bookmark-o" ? "black" : "red"}
                     />
                   </View>
+                  }
+               
                 </TouchableOpacity>
               )}
 
               {!isUserSame ? (
                 <TouchableOpacity onPress={addFavorites}>
-                  <View style={styles.ıconContainer}>
-                    <Heart
-                      name={heart}
-                      size={13}
-                      color={heart === "hearto" ? "black" : "red"}
-                    />
-                  </View>
+                  {
+                     sold?.status == 1  ?
+                     <></>:
+                     <View style={styles.ıconContainer}>
+                     <Heart
+                       name={heart}
+                       size={13}
+                       color={heart === "hearto" ? "black" : "red"}
+                     />
+                   </View>
+                  }
+                
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity onPress={() => setModalVisible(true)}>

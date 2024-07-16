@@ -86,6 +86,7 @@ import DecontPdf from "./pages/Home/DecontPdf";
 import AddComment from "./pages/Home/AddComment";
 import SuccesScreen from "./pages/Home/SuccesScreen";
 import ExtradionRequest from "./components/ExtraditionRequest";
+import UpgradeProfile from "./pages/Home/ProfilePages/UpgradeProfile";
 
 const Stack = createNativeStackNavigator();
 
@@ -972,6 +973,17 @@ export default function App({ route }) {
               headerShown:false,
               gestureEnabled:false,
               title: "Konutu Değerlendir",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+             <Stack.Screen
+            name="Upgrade"
+            component={UpgradeProfile}
+            options={({ route }) => ({
+              title: route.params.name,
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
