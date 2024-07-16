@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
 import { addDotEveryThreeDigits } from "./methods/merhod";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { useRoute } from "@react-navigation/native";
 
 export default function BasketItem({
   name,
@@ -34,6 +35,7 @@ export default function BasketItem({
   storeName,
   DeleteBasket,
 }) {
+  const route = useRoute();
   const navigation = useNavigation();
 
   const [chechked, setchechked] = useState(false);
@@ -127,128 +129,137 @@ export default function BasketItem({
               />
             </TouchableOpacity>
           </View>
-
-          <View style={{ flexDirection: "row", gap: 10 }}>
-            <View style={{ justifyContent: "center" }}>
-              <TouchableOpacity
-                style={{
-                  borderWidth: 0.9,
-                  borderColor: "grey",
-                  padding: 2,
-                  backgroundColor: chechked ? "#EA2C2E" : "white",
-                  borderRadius: 20,
-                }}
-                onPress={() => setchechked(!chechked)}
-              >
-                <Icon name="check" size={12} color={"white"} />
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ flex: 0.6 / 2, height: 90 }}>
-              <Image
-                source={{ uri: ımage }}
-                style={{ width: "100%", height: "100%" }}
-              />
-            </View>
-            <View
-              style={{ flex: 1.4 / 2, padding: 7, flexDirection: "column" }}
-            >
-              <View style={{ flex: 1.5 / 2 }}>
-                {type == "housing" ? (
-                  <Text style={{ fontSize: 12, color: "#333" }}>{name}</Text>
-                ) : (
-                  <Text style={{ fontSize: 12, color: "#333" }}>
-                    {name} Projesinde {roomOrder} No'lu Konut{" "}
-                  </Text>
-                )}
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("PostDetails", { HomeId: roomOrder })
+            }
+          >
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              <View style={{ justifyContent: "center" }}>
+                <TouchableOpacity
+                  style={{
+                    borderWidth: 0.9,
+                    borderColor: "grey",
+                    padding: 2,
+                    backgroundColor: chechked ? "#EA2C2E" : "white",
+                    borderRadius: 20,
+                  }}
+                  onPress={() => setchechked(!chechked)}
+                >
+                  <Icon name="check" size={12} color={"white"} />
+                </TouchableOpacity>
               </View>
-
+              <View style={{ flex: 0.6 / 2, height: 90 }}>
+                <Image
+                  source={{ uri: ımage }}
+                  style={{ width: "100%", height: "100%" }}
+                />
+              </View>
               <View
-                style={{
-                  flex: 0.7 / 2,
-                  flexDirection: "row",
-                  justifyContent: share == "Var" ? "space-between" : "flex-end",
-                }}
+                style={{ flex: 1.4 / 2, padding: 7, flexDirection: "column" }}
               >
+                <View style={{ flex: 1.5 / 2 }}>
+                  {type == "housing" ? (
+                    <Text style={{ fontSize: 12, color: "#333" }}>{name}</Text>
+                  ) : (
+                    <Text style={{ fontSize: 12, color: "#333" }}>
+                      {name} Projesinde {roomOrder} No'lu Konut{" "}
+                    </Text>
+                  )}
+                </View>
+
                 <View
                   style={{
-                    borderWidth: 0,
-                    borderColor: "#ebebeb",
-                    paddingLeft: 7,
-                    paddingRight: 7,
-                    borderRadius: 10,
-                    display: share == "Var" ? "flex" : "none",
+                    flex: 0.7 / 2,
                     flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
+                    justifyContent:
+                      share == "Var" ? "space-between" : "flex-end",
                   }}
                 >
-                  <TouchableOpacity
-                    style={{ padding: 5 }}
-                    onPress={() => {
-                      minus();
-                    }}
-                  >
-                    <Icon3 name="minus" color={"grey"} size={18} />
-                  </TouchableOpacity>
                   <View
                     style={{
-                      backgroundColor: "#efbdbd",
-                      paddingLeft: 8,
-                      paddingRight: 8,
-                      paddingTop: 4,
-                      paddingBottom: 4,
-                      borderRadius: 20,
+                      borderWidth: 0,
+                      borderColor: "#ebebeb",
+                      paddingLeft: 7,
+                      paddingRight: 7,
+                      borderRadius: 10,
+                      display: share == "Var" ? "flex" : "none",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={{ padding: 5 }}
+                      onPress={() => {
+                        minus();
+                      }}
+                    >
+                      <Icon3 name="minus" color={"grey"} size={18} />
+                    </TouchableOpacity>
+                    <View
+                      style={{
+                        backgroundColor: "#efbdbd",
+                        paddingLeft: 8,
+                        paddingRight: 8,
+                        paddingTop: 4,
+                        paddingBottom: 4,
+                        borderRadius: 20,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontWeight: "bold",
+                          color: "#FFF",
+                        }}
+                      >
+                        {counter}
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      style={{ padding: 5 }}
+                      onPress={() => {
+                        update();
+                      }}
+                    >
+                      <Icon3 name="plus" color={"red"} size={18} />
+                    </TouchableOpacity>
+                  </View>
+                  <View
+                    style={{
+                      paddingLeft: 0,
+                      paddingRight: 0,
+                      justifyContent: "center",
+                      alignItems: "flex-end",
                     }}
                   >
                     <Text
                       style={{
-                        fontSize: 12,
+                        fontSize: 13,
+                        color: "green",
                         fontWeight: "bold",
-                        color: "#FFF",
                       }}
                     >
-                      {counter}
+                      {formatAmount(price)} ₺
                     </Text>
-                  </View>
-                  <TouchableOpacity
-                    style={{ padding: 5 }}
-                    onPress={() => {
-                      update();
-                    }}
-                  >
-                    <Icon3 name="plus" color={"red"} size={18} />
-                  </TouchableOpacity>
-                </View>
-                <View
-                  style={{
-                    paddingLeft: 0,
-                    paddingRight: 0,
-                    justifyContent: "center",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <Text
-                    style={{ fontSize: 13, color: "green", fontWeight: "bold" }}
-                  >
-                    {formatAmount(price)} ₺
-                  </Text>
-                  <View
-                    style={{
-                      backgroundColor: "green",
-                      padding: 5,
-                      display: hisse ? "flex" : "none",
-                    }}
-                  >
-                    <Text style={{ fontSize: 10, color: "white" }}>
-                      {" "}
-                      Hisse Satın Aldınız
-                    </Text>
+                    <View
+                      style={{
+                        backgroundColor: "green",
+                        padding: 5,
+                        display: hisse ? "flex" : "none",
+                      }}
+                    >
+                      <Text style={{ fontSize: 10, color: "white" }}>
+                        {" "}
+                        Hisse Satın Aldınız
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
 
         {/* <Modal

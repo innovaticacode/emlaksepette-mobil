@@ -36,6 +36,7 @@ export default function WelcomePage({ hideSplash }) {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
+
       <View style={styles.imageContainer}>
         <Animated.View style={[styles.animatedView, animatedStyle]}>
           <ImageBackground
