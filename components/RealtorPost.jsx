@@ -544,6 +544,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     borderBottomWidth: 1,
     borderBlockColor: "#E8E8E8",
+    marginBottom: 5,
   },
   İlan: {
     padding: 3,

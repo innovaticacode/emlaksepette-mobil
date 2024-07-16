@@ -34,14 +34,13 @@ const Estates = ({ index }) => {
       headers: { Authorization: `Bearer ${user?.access_token}` },
     };
 
-    console.log(config)
+    console.log(config);
     try {
-      
       const response = await axios.get(
         `https://private.emlaksepette.com/api/real-estates?page=${
           reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
-       config
+        config
       );
       const newEstates = response.data;
 
@@ -80,8 +79,8 @@ const Estates = ({ index }) => {
   }, [index, user]);
 
   useEffect(() => {
-    getValueFor("user",setuser)
-  },[])
+    getValueFor("user", setuser);
+  }, []);
 
   const filteredHomes = featuredEstates.filter(
     (estate) => estate.step1_slug === "konut"
@@ -98,8 +97,8 @@ const Estates = ({ index }) => {
       <ActivityIndicator style={{ margin: 20 }} size="small" color="#333" />
     );
   };
-  console.log(filteredHomes)
-console.log(user)
+  console.log(filteredHomes);
+  console.log(user);
   return (
     <View style={styles.container}>
       <View
@@ -169,11 +168,9 @@ console.log(user)
       )}
 
       <FlatList
-      
         data={filteredHomes}
         renderItem={({ item }) => (
           <RealtorPost
-           
             HouseId={item.id}
             price={`${JSON.parse(item.housing_type_data)["price"]} `}
             housing={item}
@@ -213,8 +210,6 @@ console.log(user)
         }
         ListFooterComponent={renderFooter}
       />
-
-    
     </View>
   );
 };

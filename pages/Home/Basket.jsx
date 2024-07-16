@@ -20,7 +20,11 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import TrashIcon from "react-native-vector-icons/EvilIcons";
-import { useRoute, useNavigation, useIsFocused } from "@react-navigation/native";
+import {
+  useRoute,
+  useNavigation,
+  useIsFocused,
+} from "@react-navigation/native";
 import Header from "../../components/Header";
 import Search from "./Search";
 import Categories from "../../components/Categories";
@@ -31,16 +35,14 @@ import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { Image } from "react-native-svg";
-import Icon2 from "react-native-vector-icons/MaterialCommunityIcons"
+import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import DrawerMenu from "../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
-
 
 export default function Basket() {
   const route = useRoute();
 
   const navigation = useNavigation();
-
 
   const [Basket, SetBasket] = useState([
     {
@@ -64,7 +66,7 @@ export default function Basket() {
   const [offerControl, setofferControl] = useState({});
   const [payDec, setpayDec] = useState([]);
   const [isShare, setisShare] = useState([]);
-  const [CartLength, setCartLength] = useState([])
+  const [CartLength, setCartLength] = useState([]);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -212,17 +214,17 @@ export default function Basket() {
           },
         }
       );
-  
+
       // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
       const updatedUser = {
         ...user,
         ...updateResponse.data.user,
         access_token: user.access_token, // access token'ı koruma
       };
-      console.log(updatedUser)
+      console.log(updatedUser);
       // Kullanıcı durumunu güncelleme
       setuser(updatedUser);
-  
+
       // SecureStore ile güncellenmiş kullanıcı verilerini kaydetme
       await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
     } catch (error) {
@@ -230,29 +232,28 @@ export default function Basket() {
     }
   };
 
-
   const DeleteBasket = async () => {
     try {
       if (user.access_token) {
         const response = await axios.post(
           "https://private.emlaksepette.com/api/remove-from-cart",
-          {}, 
+          {},
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
             },
           }
         );
-        updateUserData()
+        updateUserData();
         fetchData();
-       
-   
+
         //  console.log(updateResponse.data + 'User')
-      }                                                            
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
   console.log(user.access_token + 'token')
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("tr-TR", {
@@ -292,63 +293,61 @@ export default function Basket() {
     }
   };
 
-const nav=useNavigation()
-  const [index, setindex] = useState(0)
-  const [tab, settab] = useState(0)
- console.log(CartLength)
+  const nav = useNavigation();
+  const [index, setindex] = useState(0);
+  const [tab, settab] = useState(0);
+  console.log(CartLength);
 
- const renderRightActions = () => (
-  <TouchableOpacity style={styles.deleteButton} onPress={DeleteBasket}>
-    <Text style={styles.deleteButtonText}>Sil</Text>
-    <TrashIcon name="trash" size={23} color={"white"} />
-  </TouchableOpacity>
-);
+  const renderRightActions = () => (
+    <TouchableOpacity style={styles.deleteButton} onPress={DeleteBasket}>
+      <Text style={styles.deleteButtonText}>Sil</Text>
+      <TrashIcon name="trash" size={23} color={"white"} />
+    </TouchableOpacity>
+  );
   return (
-    <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
-      {
-        loading ? 
-        <ActivityIndicator color="#333" size='large'/>:
-
-   
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white", }}>
-      <View
-        style={{
-          ...Platform.select({
-            ios: {},
-            android: {
-              paddingTop: 25,
-            },
-          }),
-        }}
-      >
-        <Header onPress={toggleDrawer} index={setindex} tab={settab} />
-      </View>
-
-      <Modal
-        isVisible={isDrawerOpen}
-        onBackdropPress={() => setIsDrawerOpen(false)}
-        animationIn="bounceInLeft"
-        animationOut="bounceOutLeft"
-        swipeDirection={["left"]}
-        onSwipeComplete={() => setIsDrawerOpen(false)}
-        style={styles.modal}
-      >
-        <View style={styles.modalContent}>
-        <View
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      {loading ? (
+        <ActivityIndicator color="#333" size="large" />
+      ) : (
+        <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+          <View
             style={{
-              backgroundColor: "#EA2C2E",
-              flex: 1 / 3,
-              borderBottomLeftRadius: 20,
-              borderBottomRightRadius: 20,
+              ...Platform.select({
+                ios: {},
+                android: {
+                  paddingTop: 25,
+                },
+              }),
             }}
           >
-          <DrawerMenu setIsDrawerOpen={setIsDrawerOpen}/>
+            <Header onPress={toggleDrawer} index={setindex} tab={settab} />
           </View>
-          <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
-            <Search onpres={toggleDrawer} />
-          </View>
-        </View>
-      </Modal>
+
+          <Modal
+            isVisible={isDrawerOpen}
+            onBackdropPress={() => setIsDrawerOpen(false)}
+            animationIn="bounceInLeft"
+            animationOut="bounceOutLeft"
+            swipeDirection={["left"]}
+            onSwipeComplete={() => setIsDrawerOpen(false)}
+            style={styles.modal}
+          >
+            <View style={styles.modalContent}>
+              <View
+                style={{
+                  backgroundColor: "#EA2C2E",
+                  flex: 1 / 3,
+                  borderBottomLeftRadius: 20,
+                  borderBottomRightRadius: 20,
+                }}
+              >
+                <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
+              </View>
+              <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
+                <Search onpres={toggleDrawer} />
+              </View>
+            </View>
+          </Modal>
 
       {CartLength !== false ? (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -517,13 +516,13 @@ const nav=useNavigation()
                   </View>
                   // <View style={{flexDirection:'column',gap:5,alignItems:'center'}}>
 
-                  //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{payDec.length}. Ara Ödeme</Text>
-                  //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{addDotEveryThreeDigits(item[`pay_dec_price${_index}`])} ₺</Text>
-                  //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{formatDate(item[`pay_dec_date${_index}`])}</Text>
-                  // </View>
-                ))}
-              </View>
-            )}
+                      //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{payDec.length}. Ara Ödeme</Text>
+                      //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{addDotEveryThreeDigits(item[`pay_dec_price${_index}`])} ₺</Text>
+                      //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{formatDate(item[`pay_dec_date${_index}`])}</Text>
+                      // </View>
+                    ))}
+                  </View>
+                )}
 
             {type?.type == "project" ? (
               <View style={[styles.acceptCart, { borderRadius: 3 }]}>
@@ -961,9 +960,9 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: "#FFFFFF",
-    padding:15,
-   
-  borderRadius:50,
+    padding: 15,
+
+    borderRadius: 50,
 
     borderWidth: 0.7,
     borderColor: "#e6e6e6",
@@ -978,5 +977,5 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
-  }
+  },
 });
