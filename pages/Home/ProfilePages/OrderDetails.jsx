@@ -168,7 +168,7 @@ export default function OrderDetails() {
     fetchDataDeal();
   }, []);
 
-
+  console.log(refund?.name + "asdasd");
 
   const [modalVisible, setModalVisible] = useState(false);
   const handlePress = () => {
@@ -305,9 +305,7 @@ export default function OrderDetails() {
                 Kapora Tutarı:{" "}
               </Text>
               <Text style={{ fontSize: 13, color: "green" }}>
-
                 {Detail?.amount} ₺
-
               </Text>
             </View>
           </View>
@@ -483,18 +481,8 @@ export default function OrderDetails() {
               </TouchableOpacity>
             </View>
           </View>
-
           <View style={[style.PersonalInfoArea]}>
             <Text
-
-          {
-            Detail?.status == 1 &&
-            <View style={{ gap: 14 }}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Invoice", { OrderId: Detail.id })
-              }
-
               style={{
                 textAlign: "center",
                 fontSize: 15,
@@ -502,7 +490,6 @@ export default function OrderDetails() {
                 fontWeight: "500",
               }}
             >
-
               Alıcı Bilgileri
             </Text>
             <View
@@ -514,34 +501,6 @@ export default function OrderDetails() {
               <View>
                 <Text>{Detail?.user?.name}</Text>
               </View>
-
-              <Icon4 name="file-invoice" size={20} color={"red"} />
-              <Text>Faturayı Görüntüle</Text>
-            </TouchableOpacity>
-          </View>
-          }
-       
-        </View>
-        <View style={[style.PersonalInfoArea]}>
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 15,
-              color: "#333",
-              fontWeight: "500",
-            }}
-          >
-            Alıcı Bilgileri
-          </Text>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <View>
-              <Text>İsim Soyisim</Text>
-            </View>
-            <View>
-              <Text numberOfLines={1}>{Detail?.user?.name}</Text>
-
             </View>
 
             <View
@@ -573,28 +532,26 @@ export default function OrderDetails() {
               </View>
             </View>
           </View>
-
-        </View>
-        <View style={[style.PersonalInfoArea]}>
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 15,
-              color: "#333",
-              fontWeight: "500",
-            }}
-          >
-            Satıcı Bilgileri
-          </Text>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <View>
-              <Text>İsim Soyisim:</Text>
-            </View>
-            <View style={{width:'75%'}}>
-              <Text numberOfLines={1}>{Detail?.store?.name}</Text>
-
+          <View style={[style.PersonalInfoArea]}>
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 15,
+                color: "#333",
+                fontWeight: "500",
+              }}
+            >
+              Satıcı Bilgileri
+            </Text>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <View>
+                <Text>İsim Soyisim</Text>
+              </View>
+              <View>
+                <Text>{Detail?.store?.name}</Text>
+              </View>
             </View>
 
             <View
@@ -697,7 +654,6 @@ export default function OrderDetails() {
                 <Text> %{kapora_orani}</Text>
               </View>
             </View>
-
             <View
               style={{
                 flexDirection: "row",
@@ -714,8 +670,6 @@ export default function OrderDetails() {
               <View>
                 <Text> {addDotEveryThreeDigits(kapora_tutari)} ₺</Text>
               </View>
-   <View>
-
             </View>
           </View>
           {(user?.id === Detail?.user?.id && Detail.status == 1 && !refund) ||
