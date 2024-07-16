@@ -25,6 +25,7 @@ import {
   useNavigation,
   useIsFocused,
 } from "@react-navigation/native";
+
 import Header from "../../components/Header";
 import Search from "./Search";
 import Categories from "../../components/Categories";
@@ -36,6 +37,7 @@ import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { Image } from "react-native-svg";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
+
 import DrawerMenu from "../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
 
@@ -221,7 +223,7 @@ export default function Basket() {
         ...updateResponse.data.user,
         access_token: user.access_token, // access token'ı koruma
       };
-      console.log(updatedUser);
+
       // Kullanıcı durumunu güncelleme
       setuser(updatedUser);
 
@@ -254,7 +256,6 @@ export default function Basket() {
     }
   };
 
-  console.log(user.access_token + "token");
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("tr-TR", {
       style: "currency",
@@ -348,6 +349,31 @@ export default function Basket() {
               </View>
             </View>
           </Modal>
+          <Modal
+            isVisible={isDrawerOpen}
+            onBackdropPress={() => setIsDrawerOpen(false)}
+            animationIn="bounceInLeft"
+            animationOut="bounceOutLeft"
+            swipeDirection={["left"]}
+            onSwipeComplete={() => setIsDrawerOpen(false)}
+            style={styles.modal}
+          >
+            <View style={styles.modalContent}>
+              <View
+                style={{
+                  backgroundColor: "#EA2C2E",
+                  flex: 1 / 3,
+                  borderBottomLeftRadius: 20,
+                  borderBottomRightRadius: 20,
+                }}
+              >
+                <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
+              </View>
+              <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
+                <Search onpres={toggleDrawer} />
+              </View>
+            </View>
+          </Modal>
 
           {CartLength !== false ? (
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -359,7 +385,6 @@ export default function Basket() {
                 <GestureHandlerRootView style={{ backgroundColor: "white" }}>
                   <Swipeable renderRightActions={renderRightActions}>
                     <BasketItem
-                      DeleteBasket={DeleteBasket}
                       name={Cart?.title}
                       ımage={Cart?.image}
                       price={Cart?.amount}
@@ -370,11 +395,39 @@ export default function Basket() {
                       minus={UpdateShareMinus}
                       counter={counter}
                       storeName={offerControl?.store}
+                      onPress={() =>
+                        navigation.navigate("RealtorDetails", { id: Cart.id })
+                      }
                     />
                   </Swipeable>
                 </GestureHandlerRootView>
 
-                {type?.type == "project" && (
+                {/* <View>
+            <View style={[styles.HouseInfo, { padding: 15 }]}>
+              <View style={{ flexDirection: "row", gap: 5 }}>
+                <Text style={{ fontSize: 12 }}>İlan Adı:</Text>
+                {
+                  type.type=='housing'?
+                  <Text>{Cart.title}</Text>
+                  :
+                  <Text style={{ fontSize: 12 }}>
+                    {Cart.title} Projesinde {Cart.housing} No'lu Konut
+                  </Text>
+                }
+              
+              </View>
+              <View style={{ flexDirection: "row", gap: 5 }}>
+                <Text style={{ fontSize: 12 }}>İlan Konumu:</Text>
+                <Text style={{ fontSize: 12 }}>{Cart.city} / Hendek</Text>
+              </View>
+              <View style={{ flexDirection: "row", gap: 5 }}>
+                <Text style={{ fontSize: 12 }}>Mağaza:</Text>
+                <Text style={{ fontSize: 12 }}>Maliyetine Ev</Text>
+              </View>
+            </View>
+          </View> */}
+
+                {type.type == "project" && (
                   <View
                     style={{
                       flexDirection: "row",
@@ -524,7 +577,7 @@ export default function Basket() {
                   </View>
                 )}
 
-                {type?.type == "project" ? (
+                {type.type == "project" ? (
                   <View style={[styles.acceptCart, { borderRadius: 3 }]}>
                     <View
                       style={{
@@ -616,7 +669,7 @@ export default function Basket() {
                       <Text>Sepet Özeti</Text>
                     </View>
                     <View style={{ gap: 20 }}>
-                      {type?.hasCounter == true ? (
+                      {type.hasCounter == true ? (
                         <>
                           <View
                             style={{
@@ -716,6 +769,44 @@ export default function Basket() {
                           )}
                         </>
                       )}
+
+                      {/* 
+                                    <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                        <Text>Toplam Fiyat:</Text>
+                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
+                                    </View>
+                                      {
+                                        saleType=='kiralik'?
+                                        <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                        <Text>Bir Kira Kapora</Text>
+                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
+                                    </View>:
+                                          type.hasCounter==true? 
+                                       <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                       <Text>%2 Kapora</Text>
+                                       <Text>{addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺</Text>
+                                   </View>:  <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                       <Text>%2 Kapora</Text>
+                                       <Text>{addDotEveryThreeDigits(Cart.amount * 2 /100)} ₺</Text>
+                                   </View>
+                                      }
+
+                                      {
+                                          type.hasCounter==true?
+                                          <>
+                                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                          <Text>Emlak Kulüp İndirimi</Text>
+                                          <Text>%{Cart.discount_rate}</Text>
+                                      </View>
+                                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
+                                          <Text>İndirimli Fiyat</Text>
+                                          <Text>{DiscountPrice} ₺</Text>
+                                      </View>
+                                          </>
+                                          :<></>
+                                      
+                                      }
+                               */}
                     </View>
                   </View>
                 )}
@@ -769,23 +860,23 @@ export default function Basket() {
                       </Text>
                       <Text style={{ fontWeight: "500" }}>
                         {isInstallament == 1 &&
-                          type?.type == "project" &&
+                          type.type == "project" &&
                           formatAmount(
                             (Cart?.amount *
                               offerControl?.project?.deposit_rate) /
                               100
                           )}
                         {isInstallament == 2 &&
-                          type?.type == "project" &&
+                          type.type == "project" &&
                           addDotEveryThreeDigits(
                             (Cart?.installmentPrice *
                               offerControl?.project?.deposit_rate) /
                               100
                           )}
-                        {type?.type == "housing" &&
+                        {type.type == "housing" &&
                           saleType == "kiralik" &&
                           addDotEveryThreeDigits(Cart.price)}
-                        {type?.type == "housing" &&
+                        {type.type == "housing" &&
                           saleType == "satilik" &&
                           addDotEveryThreeDigits(
                             Math.round((Cart?.price * 2) / 100)
@@ -799,6 +890,9 @@ export default function Basket() {
                           slug: type?.type,
                           id: Cart.id,
                           roomOrder: Cart.housing,
+                          price: Cart.price, // İlan fiyatı
+                          totalPrice: DiscountPrice, // Toplam fiyat
+                          deposit: KaporaForDiscountPrice, // Kapora
                         });
                       }}
                       style={{
