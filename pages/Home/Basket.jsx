@@ -395,6 +395,7 @@ export default function Basket() {
                       minus={UpdateShareMinus}
                       counter={counter}
                       storeName={offerControl?.store}
+                      DeleteBasket={DeleteBasket}
                       onPress={() =>
                         navigation.navigate("RealtorDetails", { id: Cart.id })
                       }
@@ -812,40 +813,6 @@ export default function Basket() {
                 )}
 
                 <View style={styles.acceptCart}>
-                  <View
-                    style={{
-                      width: "100%",
-                      padding: 5,
-                      flexDirection: "row",
-                    }}
-                  >
-                    <View style={{ flex: 1.5 / 2 }}>
-                      <TextInput
-                        placeholder="İndirim Kuponu Uygula"
-                        style={{
-                          borderWidth: 1,
-                          borderColor: "#ebebeb",
-                          padding: 11,
-                          fontSize: 13,
-                          borderTopLeftRadius: 10,
-                          borderBottomLeftRadius: 10,
-                        }}
-                      />
-                    </View>
-                    <TouchableOpacity
-                      style={{
-                        flex: 0.5 / 2,
-                        backgroundColor: "#ea2b2e",
-                        justifyContent: "center",
-                        borderTopRightRadius: 5,
-                        borderBottomRightRadius: 5,
-                      }}
-                    >
-                      <Text style={{ textAlign: "center", color: "white" }}>
-                        Uygula
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
                   <View style={{ flexDirection: "row" }}>
                     <View
                       style={{
