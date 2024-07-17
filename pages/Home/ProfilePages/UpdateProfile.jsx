@@ -517,7 +517,7 @@ export default function UpdateProfile() {
                   <View style={{gap:10,paddingBottom:5}}>
                     <SettingItem text={'Genel Bilgiler'} tab={2}/>
                     <SettingItem text={'Konum'} tab={3}/>
-                    
+                    <SettingItem text={'Logo'} tab={4}/>
                   </View>
               </View>
           }
@@ -600,40 +600,40 @@ export default function UpdateProfile() {
 //                     onChangeText={(value) => setlink(value)}
 //                   />
 //                 </View>
-//                 <View>
-//                   <Text style={styles.label}>Sabit Telefon (Opsiyonel)</Text>
+                // <View>
+                //   <Text style={styles.label}>Sabit Telefon (Opsiyonel)</Text>
 
-//                   <View style={{ flexDirection: "row" }}>
-//                     <View style={{ width: "32%" }}>
-//                       <RNPickerSelect
-//                         doneText="Tamam"
-//                         value={cityCode}
+                //   <View style={{ flexDirection: "row" }}>
+                //     <View style={{ width: "32%" }}>
+                //       <RNPickerSelect
+                //         doneText="Tamam"
+                //         value={cityCode}
                         
-//                         placeholder={{
-//                           label: "Alan Kodu",
-//                           value: null,
+                //         placeholder={{
+                //           label: "Alan Kodu",
+                //           value: null,
                           
-//                         }}
-//                         style={pickerSelectStyles}
-//                         onValueChange={(value) => {
-//                           setcityCode(value);
-//                         }}
-//                         items={cityData}
-//                       />
-//                     </View>
-//                     <View style={{ width: "70%" }}>
-//                       <TextInput
-//                         style={[
-//                           styles.Input,
-//                           { width: "100%", borderRadius: 0 },
-//                         ]}
-//                         value={`${phone}`}
-//                         onChangeText={(value) => setphone(value)}
-//                         keyboardType="name-phone-pad"
-//                       />
-//                     </View>
-//                   </View>
-//                 </View>
+                //         }}
+                //         style={pickerSelectStyles}
+                //         onValueChange={(value) => {
+                //           setcityCode(value);
+                //         }}
+                //         items={cityData}
+                //       />
+                //     </View>
+                //     <View style={{ width: "70%" }}>
+                //       <TextInput
+                //         style={[
+                //           styles.Input,
+                //           { width: "100%", borderRadius: 0 },
+                //         ]}
+                //         value={`${phone}`}
+                //         onChangeText={(value) => setphone(value)}
+                //         keyboardType="name-phone-pad"
+                //       />
+                //     </View>
+                //   </View>
+                // </View>
 //                 <View>
 //                   <Text style={styles.label}>Kaç yıldır sektördesiniz?</Text>
 //                   <TextInput
@@ -651,111 +651,111 @@ export default function UpdateProfile() {
 //             <Text style={styles.label}>Cep Telefonu</Text>
 //             <TextInput style={styles.Input} keyboardType='number-pad' value={phoneNumber} onChangeText={onChangeText} placeholder='0544 444 44 44' maxLength={14}/>
 //           </View> */}
-//             <View style={{ gap: 10 }}>
-//               <Text style={{ fontSize: 13, color: "#333" }}>
-//                 Profil arka plan rengi
-//               </Text>
-//               <View
-//                 style={{ flexDirection: "row", alignItems: "center", gap: 20 }}
-//               >
-//                 <TouchableOpacity
-//                   style={{
-//                     padding: 20,
-//                     backgroundColor: currentColor,
-//                     width: "20%",
-//                     borderWidth: 1,
-//                   }}
-//                   onPress={() => setopenColorPicker(!openColorPicker)}
-//                 ></TouchableOpacity>
-//                 <TouchableOpacity
-//                   style={{
-//                     backgroundColor: "#E54242",
-//                     padding: 10,
-//                     borderRadius: 10,
-//                   }}
-//                   onPress={() => setopenColorPicker(!openColorPicker)}
-//                 >
-//                   <Text style={{ color: "white" }}>
-//                     {openColorPicker == true ? "Kapat" : "Seç"}
-//                   </Text>
-//                 </TouchableOpacity>
-//               </View>
-//             </View>
+            // <View style={{ gap: 10 }}>
+            //   <Text style={{ fontSize: 13, color: "#333" }}>
+            //     Profil arka plan rengi
+            //   </Text>
+            //   <View
+            //     style={{ flexDirection: "row", alignItems: "center", gap: 20 }}
+            //   >
+            //     <TouchableOpacity
+            //       style={{
+            //         padding: 20,
+            //         backgroundColor: currentColor,
+            //         width: "20%",
+            //         borderWidth: 1,
+            //       }}
+            //       onPress={() => setopenColorPicker(!openColorPicker)}
+            //     ></TouchableOpacity>
+            //     <TouchableOpacity
+            //       style={{
+            //         backgroundColor: "#E54242",
+            //         padding: 10,
+            //         borderRadius: 10,
+            //       }}
+            //       onPress={() => setopenColorPicker(!openColorPicker)}
+            //     >
+            //       <Text style={{ color: "white" }}>
+            //         {openColorPicker == true ? "Kapat" : "Seç"}
+            //       </Text>
+            //     </TouchableOpacity>
+            //   </View>
+            // </View>
 
-//             <View
-//               style={[
-//                 styles.card,
-//                 { display: openColorPicker ? "flex" : "none" },
-//               ]}
-//             >
-//               <ColorPicker
-//                 color={currentColor}
-//                 swatchesOnly={false}
-//                 onColorChange={onColorChange}
-//                 onColorChangeComplete={onColorChangeComplete}
-//                 thumbSize={50}
-//                 sliderSize={20}
-//                 noSnap={true}
-//                 gapSize={0}
-//                 sliderHidden={true}
-//                 row={false}
-//                 swatchesLast={swatchesLast}
-//                 swatches={swatchesEnabled}
-//                 discrete={false}
-//                 useNativeDriver={true}
-//                 useNativeLayout={false}
-//               />
-//             </View>
-//             <View style={{ gap: 15 }}>
-//               <View>
-//                 <Text style={styles.label}>İl</Text>
-//                 <RNPickerSelect
-//                   doneText="Tamam"
-//                   value={selectedCity}
-//                   placeholder={{
-//                     label: "Seçiniz...",
-//                     value: null,
-//                   }}
-//                   style={pickerSelectStyles}
-//                   onValueChange={(value) => {
-//                     onChangeCity(value);
-//                   }}
-//                   items={cities}
-//                 />
-//               </View>
-//               <View>
-//                 <Text style={styles.label}>İlçe</Text>
-//                 <RNPickerSelect
-//                   doneText="Tamam"
-//                   value={selectedCounty}
-//                   placeholder={{
-//                     label: "Seçiniz...",
-//                     value: null,
-//                   }}
-//                   style={pickerSelectStyles}
-//                   onValueChange={(value) => {
-//                     onChangeCounty(value);
-//                   }}
-//                   items={counties}
-//                 />
-//               </View>
-//               <View>
-//                 <Text style={styles.label}>Mahalle</Text>
-//                 <RNPickerSelect
-//                   doneText="Tamam"
-//                   value={selectedNeighborhood}
-//                   placeholder={{
-//                     label: "Seçiniz...",
-//                     value: null,
-//                   }}
-//                   style={pickerSelectStyles}
-//                   onValueChange={(value) => {
-//                     onChangeNeighborhood(value);
-//                   }}
-//                   items={neighborhoods}
-//                 />
-//               </View>
-//             </View> 
+            // <View
+            //   style={[
+            //     styles.card,
+            //     { display: openColorPicker ? "flex" : "none" },
+            //   ]}
+            // >
+            //   <ColorPicker
+            //     color={currentColor}
+            //     swatchesOnly={false}
+            //     onColorChange={onColorChange}
+            //     onColorChangeComplete={onColorChangeComplete}
+            //     thumbSize={50}
+            //     sliderSize={20}
+            //     noSnap={true}
+            //     gapSize={0}
+            //     sliderHidden={true}
+            //     row={false}
+            //     swatchesLast={swatchesLast}
+            //     swatches={swatchesEnabled}
+            //     discrete={false}
+            //     useNativeDriver={true}
+            //     useNativeLayout={false}
+            //   />
+            // </View>
+            // <View style={{ gap: 15 }}>
+            //   <View>
+            //     <Text style={styles.label}>İl</Text>
+            //     <RNPickerSelect
+            //       doneText="Tamam"
+            //       value={selectedCity}
+            //       placeholder={{
+            //         label: "Seçiniz...",
+            //         value: null,
+            //       }}
+            //       style={pickerSelectStyles}
+            //       onValueChange={(value) => {
+            //         onChangeCity(value);
+            //       }}
+            //       items={cities}
+            //     />
+            //   </View>
+            //   <View>
+            //     <Text style={styles.label}>İlçe</Text>
+            //     <RNPickerSelect
+            //       doneText="Tamam"
+            //       value={selectedCounty}
+            //       placeholder={{
+            //         label: "Seçiniz...",
+            //         value: null,
+            //       }}
+            //       style={pickerSelectStyles}
+            //       onValueChange={(value) => {
+            //         onChangeCounty(value);
+            //       }}
+            //       items={counties}
+            //     />
+            //   </View>
+            //   <View>
+            //     <Text style={styles.label}>Mahalle</Text>
+            //     <RNPickerSelect
+            //       doneText="Tamam"
+            //       value={selectedNeighborhood}
+            //       placeholder={{
+            //         label: "Seçiniz...",
+            //         value: null,
+            //       }}
+            //       style={pickerSelectStyles}
+            //       onValueChange={(value) => {
+            //         onChangeNeighborhood(value);
+            //       }}
+            //       items={neighborhoods}
+            //     />
+            //   </View>
+            // </View> 
 //             {user?.role === "Kurumsal Hesap" && (
 //               <View style={{ height: 300 }}>
 //             <MapView
