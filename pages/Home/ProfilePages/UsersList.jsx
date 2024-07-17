@@ -11,8 +11,9 @@ import ModalEdit from "react-native-modal";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-paper";
 export default function UsersList() {
-    const navigation=useNavigation()
+  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [subUsers, setsubUsers] = useState([]);
   const [user, setuser] = useState({});
@@ -40,7 +41,7 @@ export default function UsersList() {
   useEffect(() => {
     fetchData();
   }, [user]);
-  const [SuccessDelete, setSuccessDelete] = useState(false)
+  const [SuccessDelete, setSuccessDelete] = useState(false);
   const DeleteUser = async () => {
     try {
       if (user.access_token) {
@@ -54,10 +55,10 @@ export default function UsersList() {
         );
         setModalVisible(false);
         setTimeout(() => {
-            setSuccessDelete(true)
+          setSuccessDelete(true);
         }, 500);
         setTimeout(() => {
-                setSuccessDelete(false)
+          setSuccessDelete(false);
         }, 2500);
         fetchData();
 
@@ -68,24 +69,23 @@ export default function UsersList() {
     }
   };
   const [selectedUser, setselectedUser] = useState(0);
-  const [selectedUserName, setselectedUserName] = useState('')
-  const GetId = (UserID,name) => {
+  const [selectedUserName, setselectedUserName] = useState("");
+  const GetId = (UserID, name) => {
     setselectedUser(UserID);
-    setselectedUserName(name)
+    setselectedUserName(name);
   };
   return (
     <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
       <View style={{ backgroundColor: "#ffffff", padding: 10 }}>
-        {
-            subUsers?.length==0 ? 
-            <View>
-                <Text style={{color:'red',fontSize:18,textAlign:'center',fontWeight:'bold'}}>Alt Kullanıcınız Bulunmamaktadır</Text>
-                </View>:
-                 <Text style={{ color: "#333", fontSize: 18 }}>
-                 Alt Kullanıcı Listesi ({subUsers?.length})
-               </Text>
-        }
-       
+        {subUsers?.length == 0 ? (
+          <View style={{ alignItems: "center", justifyContent: "center" }}>
+            <ActivityIndicator color="#333" />
+          </View>
+        ) : (
+          <Text style={{ color: "#333", fontSize: 18 }}>
+            Alt Kullanıcı Listesi ({subUsers?.length})
+          </Text>
+        )}
       </View>
       <View style={{ padding: 10, gap: 10, paddingBottom: 100 }}>
         {subUsers?.map((item, index) => (
@@ -96,12 +96,10 @@ export default function UsersList() {
             GetId={GetId}
           />
         ))}
-        
       </View>
       <ModalEdit
         animationIn={"fadeInDown"}
         animationOut={"fadeOutDownBig"}
-      
         isVisible={modalVisible}
         onBackdropPress={() => setModalVisible(false)}
         swipeDirection={["down"]}
@@ -135,10 +133,13 @@ export default function UsersList() {
               <Text style={{ color: "white" }}>Kullanıcıyı Sil</Text>
             </TouchableOpacity>
             <TouchableOpacity
-            onPress={()=>{
-                setModalVisible(false)
-                    navigation.navigate('UpdateUsers' ,{UserID:selectedUser , fetcData:fetchData})
-            }}
+              onPress={() => {
+                setModalVisible(false);
+                navigation.navigate("UpdateUsers", {
+                  UserID: selectedUser,
+                  fetcData: fetchData,
+                });
+              }}
               style={{
                 padding: 10,
                 backgroundColor: "#79ad69",
@@ -165,7 +166,12 @@ export default function UsersList() {
         backdropColor="transparent"
         style={styles.modal4}
       >
-        <View style={[styles.modalContent4, { gap: 10 ,alignItems:'center',justifyContent:'center'}]}>
+        <View
+          style={[
+            styles.modalContent4,
+            { gap: 10, alignItems: "center", justifyContent: "center" },
+          ]}
+        >
           <Text>{selectedUserName} adlı Kullanıcınız silindi</Text>
         </View>
       </ModalEdit>
@@ -192,14 +198,13 @@ const styles = StyleSheet.create({
   modal4: {
     justifyContent: "center",
     alignItems: "center",
-    margin:0,
+    margin: 0,
     backgroundColor: "#18181897",
   },
   modalContent4: {
     backgroundColor: "#f5f5f7",
-    width:'80%',
+    width: "80%",
     height: "10%",
-    borderRadius:5
-
+    borderRadius: 5,
   },
 });
