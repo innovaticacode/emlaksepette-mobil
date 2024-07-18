@@ -1,18 +1,24 @@
-import { View, Text,StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text,StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native'
 import React,{useState,useEffect} from 'react'
 import Users from './profileComponents/Users'
 import { getValueFor } from '../../../components/methods/user';
 import Modal from "react-native-modal";
 import axios from 'axios';
-
+import Icon from 'react-native-vector-icons/FontAwesome6'
+import AwesomeAlert from "react-native-awesome-alerts";
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
+import { ActivityIndicator } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 export default function UserTypeList() {
   const [userList, setuserList] = useState([]);
-
+  const navigation=useNavigation()
   const [user, setuser] = useState({})
   useEffect(() => {
     getValueFor('user',setuser)
   }, []);
+  const [loading, setloading] = useState(false)
   const fetchData = async () => {
+    setloading(true)
     try {
       if(user.access_token){
         const response = await axios.get('https://private.emlaksepette.com/api/institutional/roles',{
@@ -24,6 +30,8 @@ export default function UserTypeList() {
       }
     } catch (error) {
       console.error('Error fetching data:', error);
+    }finally{
+      setloading(false)
     }
   };
 
@@ -54,6 +62,11 @@ const DeleteUser = async (UserId) => {
     fetchData()
      setDeletedData(response.data)
      setdeletedSuccessMessage(false)
+     Toast.show({
+      type: ALERT_TYPE.SUCCESS,
+      title: 'Silme Başarılı',
+      textBody: `${selectedUserName} Adlı kullanıcı silindi`,
+    })
   } catch (error) {
     console.error('Delete request error:', error);
   }
@@ -66,7 +79,67 @@ const [selectedUserId, setselectedUserId] = useState(0)
   setselectedUserName(name)
  }
   return (
-    <ScrollView style={styles.container}
+    <AlertNotificationRoot>
+      {
+          loading ? 
+          <View style={{alignItems:'center',justifyContent:'center',flex:1}}>
+            <ActivityIndicator color='#333' size={'large'}/>
+          </View>
+          :
+          transformedRoles.length==0 ?
+          <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            gap: 10,
+            backgroundColor:'white'
+          }}
+        >
+          <View
+            style={[
+              styles.card,
+              { alignItems: "center", justifyContent: "center" },
+            ]}
+          >
+            <Icon name="user-tie" size={50} color={"#EA2A28"} />
+          </View>
+          <View>
+            <Text
+              style={{ color: "grey", fontSize: 16, fontWeight: "600" }}
+            >
+              Kullanıcı Tipi Bulunanmadı
+            </Text>
+          </View>
+          <View style={{ width: "100%", alignItems: "center" }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#EA2A28",
+                width: "90%",
+                padding: 8,
+                borderRadius: 5,
+              }}
+              onPress={() => {
+                setloading(true);
+                setTimeout(() => {
+                  navigation.navigate("CreateUserType");
+                  setloading(false);
+                }, 700);
+              }}
+            >
+              <Text
+                style={{
+                  color: "#ffffff",
+                  fontWeight: "600",
+                  textAlign: "center",
+                }}
+              >
+                Oluştur
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>:
+          <ScrollView style={styles.container}
     stickyHeaderIndices={[0]}
     contentContainerStyle={{paddingBottom:40}}
     showsVerticalScrollIndicator={false}
@@ -85,38 +158,37 @@ const [selectedUserId, setselectedUserId] = useState(0)
 
    
       </View>
-      <Modal
-          isVisible={deletedSuccessMessage}
-          onBackdropPress={() => setdeletedSuccessMessage(false)}
-          animationIn={'zoomInUp'}
-          animationOut={'zoomOutUp'}
-          animationInTiming={200}
-          animationOutTiming={200}
-          backdropColor="transparent"
-          style={styles.modal4}
-        >
-          <View style={styles.modalContent4}>
-            <View style={{ padding: 10 ,}}>
-              <Text style={{textAlign:'center'}}> {selectedUserName} adlı kullanıcı tipini silmek istediğinize eminmisiniz</Text>
-            </View>
-            <View style={{flexDirection:'row',gap:5,alignItems:'center',justifyContent:'center',}}>
-              <TouchableOpacity 
-                style={{backgroundColor:'#e54242',padding:10,width:'40%',borderRadius:6,alignItems:'center'}}
-              onPress={()=>{
-                DeleteUser(selectedUserId)
-              }}>
-                <Text style={{color:'#ffffff',fontWeight:'500'}}>Sil</Text>
-              </TouchableOpacity>
-              <TouchableOpacity 
-              onPress={()=>setdeletedSuccessMessage(false)}
-                style={{backgroundColor:'#1d8027',padding:10,width:'40%',borderRadius:6,alignItems:'center'}}
-              >
-                <Text style={{color:'#ffffff',fontWeight:'500'}}>Vazgeç</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+      <AwesomeAlert
+      
+      show={deletedSuccessMessage}
+      showProgress={false}
+        titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+        title={ `${selectedUserName} adlı kullanıcı tipini silmek istediğinize emin misiniz?`}
+        messageStyle={{textAlign:'center'}}
+      
+      closeOnTouchOutside={true}
+      closeOnHardwareBackPress={false}
+      showCancelButton={true}
+      showConfirmButton={true}
+
+      cancelText="Hayır"
+      confirmText="Evet"
+      cancelButtonColor="#ce4d63"
+      confirmButtonColor="#1d8027"
+      onCancelPressed={() => {
+       setdeletedSuccessMessage(false)
+      }}
+      onConfirmPressed={() => {
+        DeleteUser(selectedUserId)
+      }}
+      confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+      cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+    />
+    
     </ScrollView>
+      }
+    
+    </AlertNotificationRoot>
   )
 }
 const styles = StyleSheet.create({
@@ -135,5 +207,25 @@ const styles = StyleSheet.create({
     padding: 20,
     gap:20,
     borderRadius: 5,
+  },
+  card: {
+    backgroundColor: "#FFFFFF",
+    padding: 15,
+
+    borderRadius: 50,
+
+    borderWidth: 0.7,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
 })

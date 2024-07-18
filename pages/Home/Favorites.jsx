@@ -3,14 +3,21 @@ import React, { useEffect, useState } from "react";
 import RealtorPostFavorited from "../../components/RealtorPostFavorited";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
-import { AlertNotificationRoot } from "react-native-alert-notification";
+
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 import Modal from "react-native-modal";
 import { ActivityIndicator } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import Icon2 from "react-native-vector-icons/FontAwesome";
 import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
 export default function Favorites() {
   const navigation=useNavigation()
   const [user,setUser] = useState({});
@@ -181,7 +188,49 @@ export default function Favorites() {
     }
   };
   const [modalForDeleteFavorites, setmodalForDeleteFavorites] = useState(false)
+  const [FavoriteRemoveIDS, setFavoriteRemoveIDS] = useState([]);
+ 
+ const [setFavoriteRemoveItem, setsetFavoriteRemoveItem] = useState(0)
+  const SelectFavorite = (id) => {
+   
+    setFavoriteRemoveIDS((prevIds) => {
+      if (prevIds.includes(id)) {
+        return prevIds.filter((item) => item !== id);
+      } else {
+        return [...prevIds, id];
+      }
+    });
+  };
+  const [FavoriteRemoveIDSForProject, setFavoriteRemoveIDSForProject] = useState([]);
+ 
 
+ 
+  console.log(FavoriteRemoveIDS)
+  const deleteSelectedFavorite = async () => {
+    const data = {
+      housing_ids:FavoriteRemoveIDS,
+   
+    };
+    try {
+      const response = await axios.delete('https://private.emlaksepette.com/api/institutional/favorites/delete', {
+        data:data,
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
+      Alert.alert('Başarılı', 'Silme işlemi başarılı!');
+      fetchFavorites()
+      setFavoriteRemoveIDS([])
+      setFavoriteRemoveIDSForProject([])
+      setRemoveSelectedCollectionsModal(false)
+      console.log('Delete request successful:', response.data);
+    } catch (error) {
+      Alert.alert('Hata', 'Silme işlemi başarısız oldu!');
+      console.error('Error making DELETE request:', error);
+    }
+  };
+  const [isChoosed, setisChoosed] = useState(false);
+  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] = useState(false)
   return (
     <>
     {
@@ -224,13 +273,83 @@ export default function Favorites() {
 
 <AlertNotificationRoot>
   <GestureHandlerRootView>
-    <View style={{width:'40%'}}>
-      <TouchableOpacity style={{backgroundColor:'#EB2C2A',padding:8,borderRadius:10}} onPress={()=>{
+    <View style={{width:'100%',flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
+      <View style={{flexDirection:'row',gap:10,}}>
+      <TouchableOpacity style={{backgroundColor:'#EEEDEB',padding:7,borderRadius:5,borderWidth: 1, borderColor: "#ebebeb",}} onPress={()=>{
         setmodalForDeleteFavorites(true)
       } }>
-        <Text style={{textAlign:'center',color:'#ffffff',fontWeight:'700'}}>Tümünü Sil</Text>
+        <Text style={{ fontSize: 12,
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          color: "#333",}}>Tümünü Sil</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={{backgroundColor:'#EEEDEB',padding:7,borderRadius:5,borderWidth: 1, borderColor: "#ebebeb",}} onPress={()=>{
+         setisChoosed(!isChoosed);
+      } }>
+        <Text style={{ fontSize: 12,
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          color: "#333",}}>Toplu Seç</Text>
+      </TouchableOpacity>
+      </View>
+      {
+        isChoosed &&
+        <View style={{flexDirection:'row',alignItems:'center',gap:10}}>
+        <Text>Seçili({FavoriteRemoveIDS.length + FavoriteRemoveIDSForProject.length})</Text>
+        <View >
+                    <TouchableOpacity
+                      style={[
+                        styles.btnRemove,
+                        { paddingLeft: 10, paddingRight: 10 },
+                      ]}
+                      onPress={() => {
+                    
+                          // Toast.show({
+                          //   type: ALERT_TYPE.WARNING,
+                          //   title: `Seçili ilan bulunmamaktadır`,
+                          //   titleStyle:{fontSize:14},
+                          //   textBody:'Lütfen silmek istediğiniz ilanı seçin seçin'
+                          // })
+                    
+                          setRemoveSelectedCollectionsModal(true)
+                        
+                     
+                      }}
+                    >
+                      <Icon2 name="trash" size={18} color={'white'} />
+                    </TouchableOpacity>
+                  </View>
+      </View>
+      }
+     
+  
     </View>
+    <AwesomeAlert
+      
+      show={RemoveSelectedCollectionsModal}
+      showProgress={false}
+        titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+        title={`${FavoriteRemoveIDS.length} Seçili Koleksiyonu silmek istediğinize emin misin`}
+        messageStyle={{textAlign:'center'}}
+      
+      closeOnTouchOutside={true}
+      closeOnHardwareBackPress={false}
+      showCancelButton={true}
+      showConfirmButton={true}
+
+      cancelText="Hayır"
+      confirmText="Evet"
+      cancelButtonColor="#ce4d63"
+      confirmButtonColor="#1d8027"
+      onCancelPressed={() => {
+      setRemoveSelectedCollectionsModal(false)
+      }}
+      onConfirmPressed={() => {
+          deleteSelectedFavorite()
+      }}
+      confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+      cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+    />
     <AwesomeAlert
             show={modalForDeleteFavorites}
             showProgress={false}
@@ -279,7 +398,7 @@ export default function Favorites() {
               }
               var no = 1000000 + favorite?.project.id
               return(
-                <RealtorPostFavorited key={i} changeFavorites={changeFavorites} type={1} projectId={favorite?.project?.id} housingId={favorite?.housing_id} no={no} column1={column1} column2={column2} column3={column3} image={'https://private.emlaksepette.com/project_housing_images/'+image} title={favorite?.project?.project_title + " adlı projede "+favorite?.housing_id+" No'lu konut"} price={favorite?.project_housing?.find((projectHousing) => {if(projectHousing.room_order == favorite?.housing_id && projectHousing.name == 'price[]'){return projectHousing}})?.value} m2="20"  GetId={GetIdForCart} fetchData={fetchFavorites}/>
+                <RealtorPostFavorited key={i} changeFavorites={changeFavorites} type={1} projectId={favorite?.project?.id} housingId={favorite?.housing_id} no={no} column1={column1} column2={column2} column3={column3} image={'https://private.emlaksepette.com/project_housing_images/'+image} title={favorite?.project?.project_title + " adlı projede "+favorite?.housing_id+" No'lu konut"} price={favorite?.project_housing?.find((projectHousing) => {if(projectHousing.room_order == favorite?.housing_id && projectHousing.name == 'price[]'){return projectHousing}})?.value} m2="20"  GetId={GetIdForCart} fetchData={fetchFavorites} selectFavorite={SelectFavorite} isChoosed={isChoosed} />
               )
             }else{
               if(favorite?.housing){
@@ -288,7 +407,7 @@ export default function Favorites() {
                 housingData = {};
               }
               return(
-                <RealtorPostFavorited key={i} changeFavorites={changeFavorites} type={2} HouseId={favorite?.housing?.id} no={favorite?.housing?.id + 2000000} image={'https://private.emlaksepette.com/housing_images/'+housingData?.image} title={favorite?.housing?.title} price={housingData && housingData.price ? housingData.price : "0"} column1={housingData[favorite?.housing?.list_items?.column1_name] ? housingData[favorite?.housing?.list_items?.column1_name] +" "+(favorite?.housing?.list_items?.column1_additional ? favorite?.housing?.list_items?.column1_additional : '') : ''} column2={housingData[favorite?.housing?.list_items?.column2_name] ? housingData[favorite?.housing?.list_items?.column2_name] +" "+ (favorite?.housing?.list_items?.column2_additional ? favorite?.housing?.list_items?.column2_additional : '') : ''} column3={ housingData[favorite?.housing?.list_items?.column3_name] ? housingData[favorite?.housing?.list_items?.column3_name] +" "+ (favorite?.housing?.list_items?.column3_additional ? favorite?.housing?.list_items?.column3_additional : '') : ''}  location={favorite?.housing?.city?.title + ' / ' + favorite?.housing?.county?.title} GetId={GetIdForCart} fetchData={fetchFavorites}  />
+                <RealtorPostFavorited key={i} changeFavorites={changeFavorites} type={2} HouseId={favorite?.housing?.id} no={favorite?.housing?.id + 2000000} image={'https://private.emlaksepette.com/housing_images/'+housingData?.image} title={favorite?.housing?.title} price={housingData && housingData.price ? housingData.price : "0"} column1={housingData[favorite?.housing?.list_items?.column1_name] ? housingData[favorite?.housing?.list_items?.column1_name] +" "+(favorite?.housing?.list_items?.column1_additional ? favorite?.housing?.list_items?.column1_additional : '') : ''} column2={housingData[favorite?.housing?.list_items?.column2_name] ? housingData[favorite?.housing?.list_items?.column2_name] +" "+ (favorite?.housing?.list_items?.column2_additional ? favorite?.housing?.list_items?.column2_additional : '') : ''} column3={ housingData[favorite?.housing?.list_items?.column3_name] ? housingData[favorite?.housing?.list_items?.column3_name] +" "+ (favorite?.housing?.list_items?.column3_additional ? favorite?.housing?.list_items?.column3_additional : '') : ''}  location={favorite?.housing?.city?.title + ' / ' + favorite?.housing?.county?.title} GetId={GetIdForCart} fetchData={fetchFavorites} selectFavorite={SelectFavorite} isChoosed={isChoosed} />
               )
             }
           
@@ -463,7 +582,7 @@ export default function Favorites() {
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 100,
-    padding: 1,
+    padding: 10,
     height: "100%",
     paddingTop:10
   },
@@ -504,5 +623,10 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
-  }
+  },
+  btnRemove: {
+    backgroundColor: "#EA2A28",
+    padding: 7,
+    borderRadius: 5,
+  },
 });

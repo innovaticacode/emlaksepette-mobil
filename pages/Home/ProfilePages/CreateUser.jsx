@@ -20,6 +20,7 @@ import ModalEdit from "react-native-modal";
 import DotIcon from "react-native-vector-icons/Entypo";
 import RNPickerSelect from "react-native-picker-select";
 import { getValueFor } from "../../../components/methods/user";
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 import axios from "axios";
 export default function CreateUser() {
   const route = useRoute();
@@ -181,7 +182,7 @@ export default function CreateUser() {
             <View>
               <Text style={style.Label}>Kullanıcı Tipi</Text>
               <RNPickerSelect doneText="Tamam"
-                doneText="Tamam"
+             
                 value={UserType}
                 placeholder={{
                   label: "Seçiniz...",

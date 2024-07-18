@@ -36,7 +36,10 @@ export default function RealtorPostFavorited({
   no,
   changeFavorites,
   GetId,
-  fetchData
+  fetchData,
+  selectFavorite,
+  isChoosed,
+  SelectFavoriteProject
 }) {
   const [user,setUser] = useState({});
   const navigation = useNavigation();
@@ -107,14 +110,25 @@ export default function RealtorPostFavorited({
       </TouchableOpacity>
     );
   };
-
+  const [isHighlighted, setIsHighlighted] = useState(false);
   return (
     
     <Swipeable renderRightActions={LeftAction}>
       <TouchableOpacity
-        onPress={() =>
-          navigation.navigate("Realtor details", { houseId: HouseId })
-        }
+      style={{ borderWidth: isHighlighted?1:0,borderColor:'red'}}
+        onPress={() =>{
+         if (isChoosed==true) {
+          setIsHighlighted(!isHighlighted)
+          if (type==1) {
+            
+            selectFavorite(housingId)
+          }else{
+            selectFavorite(HouseId)
+          }
+         }
+          
+          // navigation.navigate("Realtor details", { houseId: HouseId })
+        }}
       >
         <View style={styles.container}>
           <AwesomeAlert

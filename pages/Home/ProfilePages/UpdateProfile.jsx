@@ -517,7 +517,7 @@ export default function UpdateProfile() {
                   <View style={{gap:10,paddingBottom:5}}>
                     <SettingItem text={'Genel Bilgiler'} tab={2}/>
                     <SettingItem text={'Konum'} tab={3}/>
-                    <SettingItem text={'Logo'} tab={4}/>
+                   
                   </View>
               </View>
           }

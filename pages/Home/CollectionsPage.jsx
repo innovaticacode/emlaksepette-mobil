@@ -307,7 +307,7 @@ export default function CollectionsPage() {
   const [modalForRemoveAllCollection, setmodalForRemoveAllCollection] =
     useState(false);
   const [modalForSelectedCollection, setmodalForSelectedCollection] = useState(false);
- 
+  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] = useState(false)
     
   return (
     <AlertNotificationRoot>

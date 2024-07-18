@@ -11,6 +11,8 @@ import ModalEdit from "react-native-modal";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
+import AwesomeAlert from "react-native-awesome-alerts";
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 export default function UsersList() {
     const navigation=useNavigation()
   const [modalVisible, setModalVisible] = useState(false);
@@ -24,7 +26,7 @@ export default function UsersList() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/users",
+          "https://private.emlaksepette.com/api/institutional/users",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -52,13 +54,12 @@ export default function UsersList() {
             },
           }
         );
-        setModalVisible(false);
-        setTimeout(() => {
-            setSuccessDelete(true)
-        }, 500);
-        setTimeout(() => {
-                setSuccessDelete(false)
-        }, 2500);
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: 'Silme Başarılı',
+          textBody: `${selectedUserName} Adlı kullanıcı silindi`,
+        })
+        setopenDeleteModal(false)
         fetchData();
 
         setsubUsers(response.data.users);
@@ -73,8 +74,36 @@ export default function UsersList() {
     setselectedUser(UserID);
     setselectedUserName(name)
   };
+  const [openDeleteModal, setopenDeleteModal] = useState(false)
   return (
+    <AlertNotificationRoot>
     <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
+    <AwesomeAlert
+      
+      show={openDeleteModal}
+      showProgress={false}
+        titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+        title={ `${selectedUserName} adlı kullanıcıyı silmek istediğinize emin misiniz?`}
+        messageStyle={{textAlign:'center'}}
+      
+      closeOnTouchOutside={true}
+      closeOnHardwareBackPress={false}
+      showCancelButton={true}
+      showConfirmButton={true}
+
+      cancelText="Hayır"
+      confirmText="Evet"
+      cancelButtonColor="#ce4d63"
+      confirmButtonColor="#1d8027"
+      onCancelPressed={() => {
+       setopenDeleteModal(false)
+      }}
+      onConfirmPressed={() => {
+        DeleteUser()
+      }}
+      confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+      cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+    />
       <View style={{ backgroundColor: "#ffffff", padding: 10 }}>
         {
             subUsers?.length==0 ? 
@@ -122,7 +151,13 @@ export default function UsersList() {
           </View>
           <View style={{ gap: 10, padding: 10 }}>
             <TouchableOpacity
-              onPress={DeleteUser}
+              onPress={()=>{
+         
+                setModalVisible(false)
+                setTimeout(() => {
+                  setopenDeleteModal(true)
+                }, 600);
+              }}
               style={{
                 padding: 10,
                 backgroundColor: "#EA2A28",
@@ -170,6 +205,7 @@ export default function UsersList() {
         </View>
       </ModalEdit>
     </ScrollView>
+    </AlertNotificationRoot>
   );
 }
 const styles = StyleSheet.create({

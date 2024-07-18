@@ -30,6 +30,7 @@ import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as Progress from 'react-native-progress';
+import { AlertNotificationRoot, Toast ,ALERT_TYPE, Dialog} from "react-native-alert-notification";
 export default function UpgradeProfile() {
   const route = useRoute();
   const { name, tab } = route.params;
@@ -178,7 +179,7 @@ const [loading, setloading] = useState(false)
           setData('shoopingName',userData.username)
           setData('SectorYear',userData.year)
           setData('webSiteLink',userData.website)
-          setData('phoneCompany',userData.phone)
+          setData('phoneCompany',userData.phone.substring(3))
           setData('cityCode',userData.taxOffice)
           setSelectedLocation({
             latitude: userData.latitude,
@@ -231,7 +232,11 @@ const [loading, setloading] = useState(false)
     setData('newPhone',formattedPhoneNumber);
 
   };
-  
+  const handlePhoneChange = (value) => {
+    const formattedPhoneNumber = formatPhoneNumber(value);
+    setData('phoneCompany',formattedPhoneNumber);
+
+  };
   useEffect(() => {
         GetUserInfo()
   }, [user,selectedCity,selectedCounty,selectedNeighborhood])
@@ -326,6 +331,8 @@ const [loading, setloading] = useState(false)
   }
   };
   const cityData = [
+    { label: "İstanbul Avrupa Yakası (212)", value: 212 },
+    { label: "İstanbul Anadolu Yakası (216)", value: 216 },
     { label: "Adana (322)", value: 322 },
     { label: "Adıyaman (416)", value: 416 },
     { label: "Afyon (272)", value: 272 },
@@ -366,8 +373,7 @@ const [loading, setloading] = useState(false)
     { label: "Iğdır (476)", value: 476 },
     { label: "Isparta (246)", value: 246 },
     { label: "İçel (Mersin) (324)", value: 324 },
-    { label: "İstanbul Avrupa Yakası (212)", value: 212 },
-    { label: "İstanbul Anadolu Yakası (216)", value: 216 },
+  
     { label: "İzmir (232)", value: 232 },
     { label: "Kahramanmaraş (344)", value: 344 },
     { label: "Karabük (370)", value: 370 },
@@ -432,13 +438,13 @@ const [loading, setloading] = useState(false)
   const [FormDatas, setFormDatas] = useState({
     userName: '',
     shoopingName:'',
-    Iban: '',
-    oldPhone: '',
+    Iban: null,
+    oldPhone: null,
     newPhone:null,
-    fileForPhone:'',
-    phoneCompany:'',
+    fileForPhone:null,
+    phoneCompany:null,
     cityCode:null,
-    webSiteLink:'',
+    webSiteLink:null,
     SectorYear:null,
     backgroundColor:null
     // Diğer form alanları buraya eklenebilir
@@ -476,33 +482,57 @@ const [loading, setloading] = useState(false)
     await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
   } catch (error) {
     console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
-  }finally{
-    alert('kaydedildi')
-
   }
 };
+const handleIbanChange = (text) => {
+  // Harf ve rakamlardan başka karakterlerin girişini engelle
+  text = text.replace(/[^A-Za-z0-9]/g, '');
+  
+  // Metnin başında TR olup olmadığını kontrol edin
+  if (text.startsWith('TR')) {
+    text = 'TR' + text.substring(2).replace(/^TR/, ''); // Eğer başta TR varsa, fazladan TR'yi kaldırın
+  } else {
+    text = 'TR' + text; // Eğer başta TR yoksa, başına TR ekleyin
+  }
+
+  // IBAN'ı 4 haneli gruplar halinde formatla
+  const formattedText = text.match(/.{1,4}/g)?.join(' ') ?? text;
+
+  setData('Iban', formattedText);
+};
+
 const postData = async () => {
   try {
    
    
       let fullNumber = `${FormDatas.cityCode}${FormDatas.phoneCompany}`;
       var formData = new FormData();
-      formData.append('profile_image',image)
-      formData.append('city_id', selectedCity)
-      formData.append('county_id',selectedCounty)
-     formData.append('neighborhood_id',selectedNeighborhood)
-      formData.append("name", FormDatas.userName);
-      formData.append("username", FormDatas.shoopingName)
-      formData.append("banner_hex_code", FormDatas.backgroundColor);
-      formData.append("iban", FormDatas.Iban);
-      formData.append("website", FormDatas.webSiteLink);
-      formData.append("phone", fullNumber);
-      formData.append("year",FormDatas.SectorYear );
-      formData.append("mobile_phone", FormDatas.newPhone  ? FormDatas.newPhone :FormDatas.newPhone);
-      formData.append("latitude", selectedLocation.latitude);
-      formData.append("longitude", selectedLocation.longitude);
-     
-      formData.append("_method", "PUT");
+      if (user.role =='Bireysel Hesap') {
+        formData.append("name", FormDatas.userName);
+        formData.append("iban", FormDatas.Iban);
+        formData.append('profile_image',image)
+        formData.append("mobile_phone", FormDatas.newPhone  ? FormDatas.newPhone :FormDatas.newPhone);
+        formData.append("banner_hex_code", FormDatas.backgroundColor);
+        formData.append("_method", "PUT");
+      }else{
+        formData.append('profile_image',image)
+        formData.append('city_id', selectedCity)
+        formData.append('county_id',selectedCounty)
+       formData.append('neighborhood_id',selectedNeighborhood)
+        formData.append("name", FormDatas.userName);
+        formData.append("username", FormDatas.shoopingName)
+        formData.append("banner_hex_code", FormDatas.backgroundColor);
+        formData.append("iban", FormDatas.Iban);
+        formData.append("website", FormDatas.webSiteLink);
+        formData.append("phone", fullNumber);
+        formData.append("year",FormDatas.SectorYear );
+        formData.append("mobile_phone", FormDatas.newPhone  ? FormDatas.newPhone :FormDatas.newPhone);
+        formData.append("latitude", selectedLocation.latitude);
+        formData.append("longitude", selectedLocation.longitude);
+       
+        formData.append("_method", "PUT");
+      }
+
 
       // Perform the profile update
       const response = await axios.post(
@@ -514,9 +544,27 @@ const postData = async () => {
           },
         }
       );
-
+        Dialog.show({
+          type:ALERT_TYPE.SUCCESS,
+          textBody:'Profiliniz başarıyla güncellendi',
+          button: 'Tamam',
+          
+        })
       // Clear the form field after successful update
-  
+      setFormDatas({
+        userName: '',
+        shoopingName: '',
+        Iban: 'TR',
+        oldPhone: '',
+        newPhone: null,
+        fileForPhone: '',
+        phoneCompany: '',
+        cityCode: null,
+        webSiteLink: '',
+        SectorYear: null,
+        backgroundColor: null,
+        // Diğer form alanları buraya eklenebilir
+      })
       GetUserInfo()
       updateUserData();
 
@@ -531,7 +579,7 @@ const postData = async () => {
 };
 const [chooseFile, setchooseFile] = useState(false)
   return (
-    <>
+    <AlertNotificationRoot>
         {
           loading ?
           <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
@@ -547,6 +595,31 @@ const [chooseFile, setchooseFile] = useState(false)
               alignItems: "center",
             }}
                 >
+                  {
+                    (tab == 0 || tab==2) && 
+                    <View style={{width:'100%',alignItems:'flex-start'}}>
+                    <View style={{backgroundColor:'white',flexDirection:'row',padding:4,borderRadius:50,position:'absolute',right:0}}>
+               
+                    <TouchableOpacity
+                            style={{
+                              padding:4,
+                              backgroundColor: currentColor,
+                              
+                              
+                              borderWidth: 1,
+                              borderColor:'#ebebeb',
+                              borderRadius:50
+                            }}
+                            onPress={() => setopenColorPicker(!openColorPicker)}
+                          >
+                             <Feather name="color-palette" color={'white'} size={35}/>
+                          </TouchableOpacity>
+                  
+                    </View>
+                   
+                    </View>
+                  }
+                
             <View>
               <View
                 style={{
@@ -572,25 +645,30 @@ const [chooseFile, setchooseFile] = useState(false)
     }
     
               </View>
-              <TouchableOpacity
-                    onPress={()=>{
-                    setchoose(true)
-                    }}
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  bottom: 0,
-                  backgroundColor: "#777777",
-                  borderRadius: 50,
-                  padding: 4,
+              {
+                (tab == 0 || tab==2) &&
+                <TouchableOpacity
+                onPress={()=>{
+                setchoose(true)
                 }}
-              >
-                <View>
-                  <Icon name="account-edit" size={25} color={"white"} />
-                </View>
-              </TouchableOpacity>
+            style={{
+              position: "absolute",
+              right: 0,
+              bottom: 0,
+              backgroundColor: "#777777",
+              borderRadius: 50,
+              padding: 4,
+            }}
+          >
+            <View>
+              <Icon name="account-edit" size={25} color={"white"} />
             </View>
-    
+          </TouchableOpacity>
+              }
+          
+          
+            </View>
+          
             <View style={{ alignItems: "center", paddingTop: 10, gap: 5 }}>
               {
                   (tab ==0 || tab==1) &&
@@ -609,12 +687,38 @@ const [chooseFile, setchooseFile] = useState(false)
                 {user?.role}
               </Text>
             </View>
+           
           </View>
          
           <View style={{ width: "100%", alignItems: "center" }}>
          
             <View style={{ padding: 5, width: "90%", gap: 25 }}>
-    
+          <View
+          style={[
+            styles.card,
+            { display: openColorPicker ? "flex" : "none" },
+          ]}
+        >
+          <ColorPicker
+          
+            color={currentColor}
+            swatchesOnly={false}
+            onColorChange={onColorChange}
+            onColorChangeComplete={onColorChangeComplete}
+            thumbSize={50}
+            sliderSize={20}
+            noSnap={true}
+            gapSize={0}
+            
+            sliderHidden={true}
+            row={false}
+            swatchesLast={swatchesLast}
+            swatches={swatchesEnabled}
+            discrete={false}
+            useNativeDriver={true}
+            useNativeLayout={false}
+          />
+        </View>
                 {
                     tab ==1 && 
                     <>
@@ -624,7 +728,7 @@ const [chooseFile, setchooseFile] = useState(false)
                 <Text style={styles.label}>Mevcut Telefon Numarası</Text>
               </View>
               <View>
-                <TextInput style={styles.ınput} value={FormDatas.oldPhone} onChangeText={handlePhoneNumberChange}/>
+                <TextInput style={styles.ınput} value={FormDatas.oldPhone} onChangeText={handlePhoneNumberChange} maxLength={15} placeholder="5**********"/>
               </View>
             </View>
     
@@ -634,7 +738,17 @@ const [chooseFile, setchooseFile] = useState(false)
                 <Text style={styles.label}>Yeni Telefon Numarası</Text>
               </View>
               <View>
-                <TextInput style={styles.ınput} keyboardType='numeric' value={FormDatas.newPhone} onChangeText={handlePhoneNumberChangeFornewPhone} />
+                <TextInput style={styles.ınput} keyboardType='numeric' value={FormDatas.newPhone} onChangeText={handlePhoneNumberChangeFornewPhone} editable={file==null ? false:true}
+                maxLength={15} placeholder="5**********"
+                 onPress={()=>{
+                  if (file==null) {
+                    Toast.show({
+                      type: ALERT_TYPE.WARNING,
+                      title: 'Dosya Yükleyiniz',
+                    textBody:'Aşşağıda örnek belge formatı bulunmaktadır'
+                    })
+                  }
+                }} />
               </View>
             </View> 
             <View style={[styles.card,{gap:10}]}>
@@ -648,7 +762,7 @@ const [chooseFile, setchooseFile] = useState(false)
                   {
                     file &&!isLoading ?
                     <View style={{width:'100%',height:'100%'}}>
-                      <Image source={{uri:file}} style={{width:'100%',height:'100%'}}/>
+                      <Image source={{uri:file}} style={{width:'100%',height:'100%'}} borderRadius={9}/>
                     </View>
                     :
                     <View style={{alignItems:'center',backgroundColor:'#FDEAEA',width:'100%',height:'100%',justifyContent:'center'}}>
@@ -769,9 +883,11 @@ const [chooseFile, setchooseFile] = useState(false)
                         <View style={{ width: "70%" }}>
                           <TextInput
                             style={styles.ınput}
+
                             value={FormDatas.phoneCompany}
-                            onChangeText={(value) => setData('phoneCompany',value)}
-                            keyboardType="name-phone-pad"
+                            onChangeText={(value) => handlePhoneChange(value)}
+                            keyboardType='number-pad'
+                            maxLength={12}
                           />
                         </View>
                       </View>
@@ -783,7 +899,7 @@ const [chooseFile, setchooseFile] = useState(false)
                 <Text style={styles.label}>Iban Numarası</Text>
               </View>
               <View>
-                <TextInput style={styles.ınput} keyboardType='numeric' value={FormDatas.Iban} onChangeText={(value)=>setData('Iban',value)} />
+                <TextInput style={styles.ınput} keyboardType='number-pad' value={FormDatas.Iban} onChangeText={(value)=>handleIbanChange(value)}  maxLength={29} />
               </View>
             </View>
             <View style={{ width: "100%" ,gap:10}}>
@@ -827,7 +943,7 @@ const [chooseFile, setchooseFile] = useState(false)
                <Text style={styles.label}>Iban Numarası</Text>
              </View>
              <View>
-               <TextInput style={styles.ınput} keyboardType='numeric' value={FormDatas.Iban} onChangeText={(value)=>setData('Iban',value)} />
+               <TextInput style={styles.ınput} keyboardType='number-pad' value={FormDatas.Iban} onChangeText={(value)=>handleIbanChange(value)}    maxLength={29}/>
              </View>
            </View>
      
@@ -917,68 +1033,9 @@ const [chooseFile, setchooseFile] = useState(false)
                 </View>
                 </>
             }
-        {
-          tab == 4 &&
-          <>
-               <View style={{ gap: 10 }}>
-                  <Text style={{ fontSize: 13, color: "#333" }}>
-                    Profil arka plan rengi
-                  </Text>
-                  <View
-                    style={{ flexDirection: "row", alignItems: "center", gap: 20 }}
-                  >
-                    <TouchableOpacity
-                      style={{
-                        padding: 20,
-                        backgroundColor: currentColor,
-                        width: "25%",
-                        borderWidth: 1,
-                        borderColor:'#ebebeb',
-                        borderRadius:5
-                      }}
-                      onPress={() => setopenColorPicker(!openColorPicker)}
-                    ></TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: "#E54242",
-                        padding: 10,
-                        borderRadius: 10,
-                      }}
-                      onPress={() => setopenColorPicker(!openColorPicker)}
-                    >
-                      <Text style={{ color: "white" }}>
-                        {openColorPicker == true ? "Kapat" : "Seç"}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-             <View
-          style={[
-            styles.card,
-            { display: openColorPicker ? "flex" : "none" },
-          ]}
-        >
-          <ColorPicker
-            color={currentColor}
-            swatchesOnly={false}
-            onColorChange={onColorChange}
-            onColorChangeComplete={onColorChangeComplete}
-            thumbSize={50}
-            sliderSize={20}
-            noSnap={true}
-            gapSize={0}
-            sliderHidden={true}
-            row={false}
-            swatchesLast={swatchesLast}
-            swatches={swatchesEnabled}
-            discrete={false}
-            useNativeDriver={true}
-            useNativeLayout={false}
-          />
-        </View>
-          </>
+      
        
-        }
+      
              
           </View>
      
@@ -1060,7 +1117,7 @@ const [chooseFile, setchooseFile] = useState(false)
             </Modal>
         </KeyboardAwareScrollView>
         }
-    </>
+    </AlertNotificationRoot>
    
   );
 }
@@ -1126,7 +1183,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
-    paddingVertical: 20,
+    paddingVertical: 10,
     paddingHorizontal: 20,
     width: "100%",
   
