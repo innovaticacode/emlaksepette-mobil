@@ -93,7 +93,6 @@ export default function CreateUserType() {
       );
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
-    
     } catch (error) {
       // Hata durumunda
 

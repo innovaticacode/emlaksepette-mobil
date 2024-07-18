@@ -19,6 +19,7 @@ import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as DocumentPicker from "expo-document-picker";
 import * as SecureStore from "expo-secure-store";
+import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
 import { Platform } from "react-native";
 import { apiRequestGet } from "../../components/methods/apiRequest";
@@ -27,7 +28,25 @@ export default function PaymentScreen() {
   // Kullanarak bu değerleri göstermek için devam edin
 
   const route = useRoute();
-  const { slug, id, roomOrder, price, totalPrice, deposit } = route.params;
+  const {
+    slug,
+    id,
+    roomOrder,
+    price,
+    totalPrice,
+    deposit,
+    kapora,
+    isInstallament,
+    installementPrice,
+    paymentMethod,
+    Cart,
+    payDec,
+    formatDate,
+    type,
+    offerControl,
+  } = route.params;
+
+  console.log(route.params);
   const [checked, setChecked] = React.useState(false);
   const toggleCheckbox = () => setChecked(!checked);
   const [checked2, setChecked2] = React.useState(false);
@@ -128,13 +147,14 @@ export default function PaymentScreen() {
   useEffect(() => {
     fetchDataDeal();
   }, []);
-
+  console.log(isInstallament);
   return (
     <KeyboardAwareScrollView
       style={styles.container}
       contentContainerStyle={{ gap: 20, paddingBottom: 50 }}
       showsVerticalScrollIndicator={false}
     >
+      <></>
       <View>
         <View style={[styles.AdvertDetail, { flexDirection: "row" }]}>
           <View style={styles.image}>
@@ -340,50 +360,626 @@ export default function PaymentScreen() {
           />
         </View>
       </View>
+      {slug == "housing" ? (
+        <View style={[styles.AdvertDetail, { borderRadius: 3 }]}>
+          <View
+            style={{
+              flexDirection: "row",
+              borderBottomWidth: 0.5,
+              borderBottomColor: "grey",
+              gap: 10,
+              paddingBottom: 5,
+              alignItems: "center",
+            }}
+          >
+            <IconIdCard name="star-o" size={15} />
+            <Text>Sepet Özeti</Text>
+          </View>
+          <Text>{project.price}</Text>
+          <View style={{ gap: 20 }}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text>İlan Fiyatı:</Text>
+              <Text> {formatAmount(route.params.price)} ₺ </Text>
+            </View>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text>Toplam Fiyat:</Text>
+              <Text>{formatAmount(route.params.totalPrice)} ₺ </Text>
+            </View>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text>Bir Kira Kapora</Text>
+              <Text>{formatAmount(route.params.deposit)} ₺ </Text>
+            </View>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={{ color: "green" }}>Ödenecek Tutar:</Text>
+              <Text style={{ color: "green" }}>
+                {formatAmount(route.params.deposit)} ₺
+              </Text>
+            </View>
+          </View>
+        </View>
+      ) : (
+        <View style={[styles.AdvertDetail, { borderRadius: 3 }]}>
+          {1 && (
+            <View>
+              {isInstallament == 2 && (
+                <View style={[styles.acceptCart, { gap: 20 }]}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                      Peşinat:
+                    </Text>
+                    <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                      {addDotEveryThreeDigits(Cart?.pesinat)} ₺
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                      Taksit Sayısı:
+                    </Text>
+                    <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                      {Cart?.taksitSayisi}{" "}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                      Aylık Ödenecek Tutar:
+                    </Text>
+                    <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                      {addDotEveryThreeDigits(Cart.aylik)} ₺
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                      Toplam Fiyat:
+                    </Text>
+                    <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                      {addDotEveryThreeDigits(Cart.installmentPrice)} ₺
+                    </Text>
+                  </View>
+                  {payDec.map((item, _index) => (
+                    <View
+                      key={_index}
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text style={{ color: "#7E7E7E", fontWeight: "600" }}>
+                        {_index + 1}. Ara Ödeme
+                      </Text>
+                      <View>
+                        <Text
+                          style={{
+                            color: "#7E7E7E",
+                            fontWeight: "600",
+                            textAlign: "right",
+                          }}
+                        >
+                          {addDotEveryThreeDigits(
+                            item[`pay_dec_price${_index}`]
+                          )}{" "}
+                          ₺
+                        </Text>
+                        <Text style={{ color: "#7E7E7E", fontWeight: "600" }}>
+                          {formatDate(item[`pay_dec_date${_index}`])}
+                        </Text>
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              )}
+              <View
+                style={[
+                  styles.AdvertDetail,
+                  { borderRadius: 3, marginTop: 10 },
+                ]}
+              >
+                {type.type == "project" ? (
+                  <View style={[styles.acceptCart, { borderRadius: 3 }]}>
+                    <View
+                      style={{
+                        flexDirection: "row",
 
-      <View style={[styles.AdvertDetail, { borderRadius: 3 }]}>
-        <View
-          style={{
-            flexDirection: "row",
-            borderBottomWidth: 0.5,
-            borderBottomColor: "grey",
-            gap: 10,
-            paddingBottom: 5,
-            alignItems: "center",
-          }}
-        >
-          <IconIdCard name="star-o" size={15} />
-          <Text>Sepet Özeti</Text>
+                        gap: 10,
+                        paddingBottom: 5,
+                        alignItems: "center",
+                      }}
+                    >
+                      <IconIdCard name="star-o" size={15} />
+                      <Text>Sepet Özeti</Text>
+                    </View>
+                    <View style={{ gap: 20 }}>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          marginTop: 10,
+                        }}
+                      >
+                        <Text>İlan Fiyatı:</Text>
+
+                        <Text>
+                          {formatAmount(
+                            isInstallament == 2
+                              ? Cart?.installmentPrice
+                              : Cart?.amount
+                          )}{" "}
+                          ₺
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Text>Toplam Fiyat:</Text>
+                        <Text>
+                          {formatAmount(
+                            isInstallament == 2
+                              ? Cart.installmentPrice
+                              : Cart.amount
+                          )}{" "}
+                          ₺
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Text>
+                          %{offerControl?.project?.deposit_rate} Kapora:
+                        </Text>
+                        <Text>
+                          {" "}
+                          {isInstallament == 2
+                            ? formatAmount(
+                                (Cart?.installmentPrice *
+                                  offerControl?.project?.deposit_rate) /
+                                  100
+                              )
+                            : formatAmount(
+                                (Cart?.amount *
+                                  offerControl?.project?.deposit_rate) /
+                                  100
+                              )}{" "}
+                          ₺
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                ) : (
+                  <View style={[styles.acceptCart, { borderRadius: 3 }]}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        borderBottomWidth: 0.5,
+                        borderBottomColor: "grey",
+                        gap: 10,
+                        paddingBottom: 5,
+                        alignItems: "center",
+                      }}
+                    >
+                      <IconIdCard name="star-o" size={15} />
+                      <Text>Sepet Özeti</Text>
+                    </View>
+                    <View style={{ gap: 20 }}>
+                      {type.hasCounter == true ? (
+                        <>
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text>İlan Fiyatı:</Text>
+                            <Text>{addDotEveryThreeDigits(Cart.price)} ₺</Text>
+                          </View>
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text style={{ color: "red" }}>
+                              Emlak Kulüp İndirim Oranı:
+                            </Text>
+                            <Text style={{ color: "red" }}>
+                              {Cart.discount_rate}%
+                            </Text>
+                          </View>
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text style={{}}>Toplam Fiyatı:</Text>
+                            <Text style={{}}>
+                              {addDotEveryThreeDigits(DiscountPrice)} ₺
+                            </Text>
+                          </View>
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text style={{}}>%2 Kapora:</Text>
+                            <Text style={{}}>
+                              {addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺
+                            </Text>
+                          </View>
+                        </>
+                      ) : (
+                        <>
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text>İlan Fiyatı:</Text>
+                            <Text>{addDotEveryThreeDigits(Cart?.price)} ₺</Text>
+                          </View>
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text>Toplam Fiyatı:</Text>
+                            <Text>{addDotEveryThreeDigits(Cart?.price)} ₺</Text>
+                          </View>
+                          {saleType == "kiralik" ? (
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              <Text>Bir Kira Kapora:</Text>
+                              <Text>
+                                {addDotEveryThreeDigits(
+                                  Math.round(Cart?.price)
+                                )}{" "}
+                                ₺
+                              </Text>
+                            </View>
+                          ) : (
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              <Text>%2 Kapora:</Text>
+                              <Text>
+                                {addDotEveryThreeDigits(
+                                  Math.round((Cart?.price * 2) / 100)
+                                )}{" "}
+                                ₺
+                              </Text>
+                            </View>
+                          )}
+                        </>
+                      )}
+                    </View>
+                  </View>
+                )}
+              </View>
+            </View>
+          )}
         </View>
-        <View style={{ gap: 20 }}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text>İlan Fiyatı:</Text>
-            <Text> {formatAmount(route.params.price)} ₺ </Text>
-          </View>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text>Toplam Fiyat:</Text>
-            <Text>{formatAmount(route.params.totalPrice)} ₺ </Text>
-          </View>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text>Bir Kira Kapora</Text>
-            <Text>{formatAmount(route.params.deposit)} ₺ </Text>
-          </View>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text style={{ color: "green" }}>Ödenecek Tutar:</Text>
-            <Text style={{ color: "green" }}>
-              {formatAmount(route.params.deposit)} ₺
-            </Text>
-          </View>
+      )}
+
+      {/* {paymentMethod === "credit_card" && (
+        <Text>Kredi Kartı ile ödeme seçtiniz.</Text>
+      )}
+      {paymentMethod === "installment" && (
+        <View>
+          {isInstallament == 2 && (
+            <View style={[styles.acceptCart, { gap: 20 }]}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                  Peşinat:
+                </Text>
+                <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                  {addDotEveryThreeDigits(Cart?.pesinat)} ₺
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                  Taksit Sayısı:
+                </Text>
+                <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                  {Cart?.taksitSayisi}{" "}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                  Aylık Ödenecek Tutar:
+                </Text>
+                <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                  {addDotEveryThreeDigits(Cart.aylik)} ₺
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                  Toplam Fiyat:
+                </Text>
+                <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                  {addDotEveryThreeDigits(Cart.installmentPrice)} ₺
+                </Text>
+              </View>
+              {payDec.map((item, _index) => (
+                <View
+                  key={_index}
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{ color: "#7E7E7E", fontWeight: "600" }}>
+                    {_index + 1}. Ara Ödeme
+                  </Text>
+                  <View>
+                    <Text
+                      style={{
+                        color: "#7E7E7E",
+                        fontWeight: "600",
+                        textAlign: "right",
+                      }}
+                    >
+                      {addDotEveryThreeDigits(item[`pay_dec_price${_index}`])} ₺
+                    </Text>
+                    <Text style={{ color: "#7E7E7E", fontWeight: "600" }}>
+                      {formatDate(item[`pay_dec_date${_index}`])}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {type.type == "project" ? (
+            <View style={[styles.acceptCart, { borderRadius: 3 }]}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: "grey",
+                  gap: 10,
+                  paddingBottom: 5,
+                  alignItems: "center",
+                }}
+              >
+                <IconIdCard name="star-o" size={15} />
+                <Text>Sepet Özeti</Text>
+              </View>
+              <View style={{ gap: 20 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>İlan Fiyatı:</Text>
+
+                  <Text>
+                    {formatAmount(
+                      isInstallament == 2
+                        ? Cart?.installmentPrice
+                        : Cart?.amount
+                    )}{" "}
+                    ₺
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>Toplam Fiyat:</Text>
+                  <Text>
+                    {formatAmount(
+                      isInstallament == 2 ? Cart.installmentPrice : Cart.amount
+                    )}{" "}
+                    ₺
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>%{offerControl?.project?.deposit_rate} Kapora:</Text>
+                  <Text>
+                    {" "}
+                    {isInstallament == 2
+                      ? formatAmount(
+                          (Cart?.installmentPrice *
+                            offerControl?.project?.deposit_rate) /
+                            100
+                        )
+                      : formatAmount(
+                          (Cart?.amount * offerControl?.project?.deposit_rate) /
+                            100
+                        )}{" "}
+                    ₺
+                  </Text>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <View style={[styles.acceptCart, { borderRadius: 3 }]}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: "grey",
+                  gap: 10,
+                  paddingBottom: 5,
+                  alignItems: "center",
+                }}
+              >
+                <IconIdCard name="star-o" size={15} />
+                <Text>Sepet Özeti</Text>
+              </View>
+              <View style={{ gap: 20 }}>
+                {type.hasCounter == true ? (
+                  <>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text>İlan Fiyatı:</Text>
+                      <Text>{addDotEveryThreeDigits(Cart.price)} ₺</Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text style={{ color: "red" }}>
+                        Emlak Kulüp İndirim Oranı:
+                      </Text>
+                      <Text style={{ color: "red" }}>
+                        {Cart.discount_rate}%
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text style={{}}>Toplam Fiyatı:</Text>
+                      <Text style={{}}>
+                        {addDotEveryThreeDigits(DiscountPrice)} ₺
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text style={{}}>%2 Kapora:</Text>
+                      <Text style={{}}>
+                        {addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺
+                      </Text>
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text>İlan Fiyatı:</Text>
+                      <Text>{addDotEveryThreeDigits(Cart?.price)} ₺</Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text>Toplam Fiyatı:</Text>
+                      <Text>{addDotEveryThreeDigits(Cart?.price)} ₺</Text>
+                    </View>
+                    {saleType == "kiralik" ? (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Text>Bir Kira Kapora:</Text>
+                        <Text>
+                          {addDotEveryThreeDigits(Math.round(Cart?.price))} ₺
+                        </Text>
+                      </View>
+                    ) : (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Text>%2 Kapora:</Text>
+                        <Text>
+                          {addDotEveryThreeDigits(
+                            Math.round((Cart?.price * 2) / 100)
+                          )}{" "}
+                          ₺
+                        </Text>
+                      </View>
+                    )}
+                  </>
+                )}
+              </View>
+            </View>
+          )}
         </View>
-      </View>
+      )} */}
 
       <View
         style={{

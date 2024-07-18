@@ -960,7 +960,8 @@ export default function PostDetail() {
                           <Text style={styles.pendingText}>Rezerve Edildi</Text>
                         </View>
                       )
-                    ) : roomData["off_sale[]"] !== "[]" ? (
+                    ) : roomData && ["off_sale[]"] &&
+                      roomData["off_sale[]"] !== "[]" ? (
                       <View style={styles.offSale} disabled>
                         <Text style={styles.offSaleText}>Satışa Kapalı</Text>
                       </View>
@@ -992,7 +993,9 @@ export default function PostDetail() {
                           <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                         </TouchableOpacity>
                       )
-                    ) : roomData["off_sale[]"] !== "[]" ? (
+                    ) : roomData &&
+                      roomData["off_sale[]"] &&
+                      roomData["off_sale[]"] !== "[]" ? (
                       <TouchableOpacity
                         onPress={() => {
                           openFormModal(HomeId);
@@ -1013,24 +1016,31 @@ export default function PostDetail() {
                 </View>
               </View>
               <View>
-                {roomData["projected_earnings[]"] && (
-                  <SettingsItem
-                    info="Öngörülen Yıllık Kazanç"
-                    color={"green"}
-                    fontWeight={"700"}
-                    icon={
-                      <LinkIcon3
-                        name="arrow-up-circle"
-                        size={15}
-                        color={"green"}
-                      />
-                    }
-                    numbers={"%" + roomData["projected_earnings[]"]}
-                  />
-                )}
+                {roomData &&
+                  roomData["projected_earnings[]"] &&
+                  roomData["projected_earnings[]"] && (
+                    <SettingsItem
+                      info="Öngörülen Yıllık Kazanç"
+                      color={"green"}
+                      fontWeight={"700"}
+                      icon={
+                        <LinkIcon3
+                          name="arrow-up-circle"
+                          size={15}
+                          color={"green"}
+                        />
+                      }
+                      numbers={
+                        "%" +
+                        (roomData && roomData["projected_earnings[]"]
+                          ? roomData["projected_earnings[]"]
+                          : 0)
+                      }
+                    />
+                  )}
               </View>
               <View>
-                {roomData["swap[]"] && (
+                {roomData && roomData["swap[]"] && (
                   <SettingsItem
                     info="Takas Başvurusu Yap"
                     color={"orange"}
@@ -1045,7 +1055,7 @@ export default function PostDetail() {
                   setColectionSheet(true);
                 }}
               >
-                {roomData["off_sale[]"] && (
+                {roomData && roomData["off_sale[]"] && (
                   <SettingsItem
                     info="Koleksiyona Ekle"
                     color={"red"}

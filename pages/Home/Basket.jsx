@@ -299,6 +299,8 @@ export default function Basket() {
   const [tab, settab] = useState(0);
   console.log(CartLength);
 
+  const [paymentMethod, setPaymentMethod] = useState("");
+
   const renderRightActions = () => (
     <TouchableOpacity style={styles.deleteButton} onPress={DeleteBasket}>
       <Text style={styles.deleteButtonText}>Sil</Text>
@@ -449,6 +451,7 @@ export default function Basket() {
                       }}
                       onPress={() => {
                         setisInstallament(1);
+                        setPaymentMethod("credit_card");
                       }}
                     >
                       <Text
@@ -471,6 +474,7 @@ export default function Basket() {
                       }}
                       onPress={() => {
                         setisInstallament(2);
+                        setPaymentMethod("installment");
                         UpdateCartForInstallemnt("taksitli");
                       }}
                     >
@@ -859,7 +863,16 @@ export default function Basket() {
                           roomOrder: Cart.housing,
                           price: Cart.price, // İlan fiyatı
                           totalPrice: DiscountPrice, // Toplam fiyat
-                          deposit: KaporaForDiscountPrice, // Kapora
+                          deposit: KaporaForDiscountPrice,
+                          kapora: offerControl?.project?.deposit_rate,
+                          isInstallament: isInstallament,
+                          installementPrice: Cart?.installmentPrice,
+                          paymentMethod: paymentMethod,
+                          Cart: Cart,
+                          payDec,
+                          type: type,
+                          formatDate: formatDate,
+                          offerControl: offerControl,
                         });
                       }}
                       style={{
