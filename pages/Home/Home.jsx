@@ -80,7 +80,7 @@ const Home = ({ route }) => {
             <Ionicons
               name={focused ? "heart" : "heart-outline"}
               color={focused ? "black" : "grey"}
-              size={20}
+              size={25}
             />
           ),
         }}
@@ -120,7 +120,7 @@ const Home = ({ route }) => {
           tabBarBadge: 0,
 
           tabBarBadgeStyle: {
-              display:user.cartItem ==null ?'none':'flex',
+            display: user.cartItem == null ? "none" : "flex",
             fontSize: 10,
             height: 17,
             width: 20,

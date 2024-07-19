@@ -44,7 +44,7 @@
     "url": "MyRealtor",
     "activePath": "/hesabim/konutlar"
   },
- 
+
   {
     "id": "shopping-bag",
     "label": "Hesabım Emlak Sepette",
@@ -101,7 +101,6 @@
     "activePath": "/hesabim/estate_club_users"
   },
 
- 
   {
     "id": "GetSwapApplications",
     "label": "Başvurular",
@@ -154,9 +153,10 @@
     "icon": "lock",
     "text": "Şifreyi Değiştir",
     "key": "ChangePassword",
-    "url": "ChangePas", 
+    "url": "ChangePas",
     "activePath": "/hesabim/sifre/guncelleme"
   },
+
   {
     "id": "role",
     "label": "Hesabım & Yardım",
@@ -204,6 +204,7 @@
       }
     ]
   },
+
   {
     "id": "offers",
     "label": "Hesabım Emlak Sepette",
@@ -272,6 +273,15 @@
         "activePath": "/hesabim/reklam-gorselleri"
       }
     ]
+  },
+  {
+    "id": "ChangePassword",
+    "label": "Hesabım & Yardım",
+    "icon": "lock",
+    "text": "Destek & Talep",
+    "key": "ChangePassword",
+    "url": "Support",
+    "activePath": "/hesabim/sifre/guncelleme"
   },
   {
     "id": "membershipType",

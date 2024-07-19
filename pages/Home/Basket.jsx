@@ -398,6 +398,8 @@ export default function Basket() {
                       counter={counter}
                       storeName={offerControl?.store}
                       DeleteBasket={DeleteBasket}
+                      isInstallament={isInstallament}
+                      installmentPrice={Cart?.installmentPrice}
                       onPress={() =>
                         navigation.navigate("RealtorDetails", { id: Cart.id })
                       }
@@ -489,6 +491,7 @@ export default function Basket() {
                     </TouchableOpacity>
                   </View>
                 )}
+
                 {isInstallament == 2 && (
                   <View style={[styles.acceptCart, { gap: 20 }]}>
                     <View
@@ -866,7 +869,7 @@ export default function Basket() {
                           deposit: KaporaForDiscountPrice,
                           kapora: offerControl?.project?.deposit_rate,
                           isInstallament: isInstallament,
-                          installementPrice: Cart?.installmentPrice,
+                          installmentPrice: Cart?.installmentPrice,
                           paymentMethod: paymentMethod,
                           Cart: Cart,
                           payDec,
