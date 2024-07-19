@@ -44,7 +44,7 @@ export default function Test() {
   const [index, setindex] = useState(0)
   const [tab, settab] = useState(0)
   return (
-
+<AlertNotificationRoot>
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
  
       <View
@@ -150,6 +150,7 @@ export default function Test() {
   
      
     </SafeAreaView>
+    </AlertNotificationRoot>
 
   );
 }

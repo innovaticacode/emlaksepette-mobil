@@ -218,7 +218,12 @@ export default function Favorites() {
           Authorization: `Bearer ${user.access_token}`,
         },
       });
-      Alert.alert('Başarılı', 'Silme işlemi başarılı!');
+      Toast.show({
+        type: ALERT_TYPE.WARNING,
+        title: `Silme işlemi başarılı`,
+        titleStyle:{fontSize:14},
+        textBody:`${FavoriteRemoveIDS.length} İlan silindi`
+      })
       fetchFavorites()
       setFavoriteRemoveIDS([])
       setFavoriteRemoveIDSForProject([])
@@ -304,12 +309,7 @@ export default function Favorites() {
                       ]}
                       onPress={() => {
                     
-                          // Toast.show({
-                          //   type: ALERT_TYPE.WARNING,
-                          //   title: `Seçili ilan bulunmamaktadır`,
-                          //   titleStyle:{fontSize:14},
-                          //   textBody:'Lütfen silmek istediğiniz ilanı seçin seçin'
-                          // })
+                        
                     
                           setRemoveSelectedCollectionsModal(true)
                         
