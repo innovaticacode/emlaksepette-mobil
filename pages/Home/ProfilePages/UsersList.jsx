@@ -11,22 +11,22 @@ import ModalEdit from "react-native-modal";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
-import { ActivityIndicator } from "react-native-paper";
+import AwesomeAlert from "react-native-awesome-alerts";
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 export default function UsersList() {
-  const navigation = useNavigation();
+    const navigation=useNavigation()
   const [modalVisible, setModalVisible] = useState(false);
   const [subUsers, setsubUsers] = useState([]);
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-  const [loading, setloading] = useState(false);
+
   const fetchData = async () => {
-    setloading(true);
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/users",
+          "https://private.emlaksepette.com/api/institutional/users",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -37,14 +37,12 @@ export default function UsersList() {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-    } finally {
-      setloading(false);
     }
   };
   useEffect(() => {
     fetchData();
   }, [user]);
-  const [SuccessDelete, setSuccessDelete] = useState(false);
+  const [SuccessDelete, setSuccessDelete] = useState(false)
   const DeleteUser = async () => {
     try {
       if (user.access_token) {
@@ -56,13 +54,12 @@ export default function UsersList() {
             },
           }
         );
-        setModalVisible(false);
-        setTimeout(() => {
-          setSuccessDelete(true);
-        }, 500);
-        setTimeout(() => {
-          setSuccessDelete(false);
-        }, 2500);
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: 'Silme Başarılı',
+          textBody: `${selectedUserName} Adlı kullanıcı silindi`,
+        })
+        setopenDeleteModal(false)
         fetchData();
 
         setsubUsers(response.data.users);
@@ -72,117 +69,143 @@ export default function UsersList() {
     }
   };
   const [selectedUser, setselectedUser] = useState(0);
-  const [selectedUserName, setselectedUserName] = useState("");
-  const GetId = (UserID, name) => {
+  const [selectedUserName, setselectedUserName] = useState('')
+  const GetId = (UserID,name) => {
     setselectedUser(UserID);
-    setselectedUserName(name);
+    setselectedUserName(name)
   };
+  const [openDeleteModal, setopenDeleteModal] = useState(false)
   return (
-    <>
-      {loading ? (
-        <View
-          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
-        >
-          <ActivityIndicator size={"large"} color="#333" />
-        </View>
-      ) : (
-        <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
-          <View style={{ backgroundColor: "#ffffff", padding: 10 }}>
-            <Text style={{ color: "#333", fontSize: 18 }}>
-              Alt Kullanıcı Listesi ({subUsers?.length})
-            </Text>
+    <AlertNotificationRoot>
+    <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
+    <AwesomeAlert
+      
+      show={openDeleteModal}
+      showProgress={false}
+        titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+        title={ `${selectedUserName} adlı kullanıcıyı silmek istediğinize emin misiniz?`}
+        messageStyle={{textAlign:'center'}}
+      
+      closeOnTouchOutside={true}
+      closeOnHardwareBackPress={false}
+      showCancelButton={true}
+      showConfirmButton={true}
+
+      cancelText="Hayır"
+      confirmText="Evet"
+      cancelButtonColor="#ce4d63"
+      confirmButtonColor="#1d8027"
+      onCancelPressed={() => {
+       setopenDeleteModal(false)
+      }}
+      onConfirmPressed={() => {
+        DeleteUser()
+      }}
+      confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+      cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+    />
+      <View style={{ backgroundColor: "#ffffff", padding: 10 }}>
+        {
+            subUsers?.length==0 ? 
+            <View>
+                <Text style={{color:'red',fontSize:18,textAlign:'center',fontWeight:'bold'}}>Alt Kullanıcınız Bulunmamaktadır</Text>
+                </View>:
+                 <Text style={{ color: "#333", fontSize: 18 }}>
+                 Alt Kullanıcı Listesi ({subUsers?.length})
+               </Text>
+        }
+       
+      </View>
+      <View style={{ padding: 10, gap: 10, paddingBottom: 100 }}>
+        {subUsers?.map((item, index) => (
+          <SubUser
+            key={index}
+            setModalVisible={setModalVisible}
+            item={item}
+            GetId={GetId}
+          />
+        ))}
+        
+      </View>
+      <ModalEdit
+        animationIn={"fadeInDown"}
+        animationOut={"fadeOutDownBig"}
+      
+        isVisible={modalVisible}
+        onBackdropPress={() => setModalVisible(false)}
+        swipeDirection={["down"]}
+        onSwipeComplete={() => setModalVisible(false)}
+        backdropColor="transparent"
+        style={styles.modal3}
+      >
+        <View style={[styles.modalContent3, { gap: 10 }]}>
+          <View style={{ alignItems: "center", paddingTop: 15 }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#eaeff5",
+                padding: 4,
+                width: "15%",
+                borderRadius: 20,
+              }}
+            />
           </View>
-          <View style={{ padding: 10, gap: 10, paddingBottom: 100 }}>
-            {subUsers?.map((item, index) => (
-              <SubUser
-                key={index}
-                setModalVisible={setModalVisible}
-                item={item}
-                GetId={GetId}
-              />
-            ))}
-          </View>
-          <ModalEdit
-            animationIn={"fadeInDown"}
-            animationOut={"fadeOutDownBig"}
-            isVisible={modalVisible}
-            onBackdropPress={() => setModalVisible(false)}
-            swipeDirection={["down"]}
-            onSwipeComplete={() => setModalVisible(false)}
-            backdropColor="transparent"
-            style={styles.modal3}
-          >
-            <View style={[styles.modalContent3, { gap: 10 }]}>
-              <View style={{ alignItems: "center", paddingTop: 15 }}>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#eaeff5",
-                    padding: 4,
-                    width: "15%",
-                    borderRadius: 20,
-                  }}
-                />
-              </View>
-              <View style={{ gap: 10, padding: 10 }}>
-                <TouchableOpacity
-                  onPress={DeleteUser}
-                  style={{
-                    padding: 10,
-                    backgroundColor: "#EA2A28",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 5,
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Kullanıcıyı Sil</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    setModalVisible(false);
-                    navigation.navigate("UpdateUsers", {
-                      UserID: selectedUser,
-                      fetcData: fetchData,
-                    });
-                  }}
-                  style={{
-                    padding: 10,
-                    backgroundColor: "#79ad69",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 5,
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Kullanıcıyı Düzenle</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </ModalEdit>
-          <ModalEdit
-            animationIn={"zoomInUp"}
-            animationOut={"zoomOutUp"}
-            animationInTiming={200}
-            animationOutTiming={300}
-            isVisible={SuccessDelete}
-            onBackdropPress={() => setSuccessDelete(false)}
-            swipeDirection={["down"]}
-            onSwipeComplete={() => setSuccessDelete(false)}
-            backdropColor="transparent"
-            style={styles.modal4}
-          >
-            <View
-              style={[
-                styles.modalContent4,
-                { gap: 10, alignItems: "center", justifyContent: "center" },
-              ]}
+          <View style={{ gap: 10, padding: 10 }}>
+            <TouchableOpacity
+              onPress={()=>{
+         
+                setModalVisible(false)
+                setTimeout(() => {
+                  setopenDeleteModal(true)
+                }, 600);
+              }}
+              style={{
+                padding: 10,
+                backgroundColor: "#EA2A28",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 5,
+              }}
             >
-              <Text>{selectedUserName} adlı Kullanıcınız silindi</Text>
-            </View>
-          </ModalEdit>
-        </ScrollView>
-      )}
-    </>
+              <Text style={{ color: "white" }}>Kullanıcıyı Sil</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+            onPress={()=>{
+                setModalVisible(false)
+                    navigation.navigate('UpdateUsers' ,{UserID:selectedUser , fetcData:fetchData})
+            }}
+              style={{
+                padding: 10,
+                backgroundColor: "#79ad69",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ color: "white" }}>Kullanıcıyı Düzenle</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ModalEdit>
+      <ModalEdit
+        animationIn={"zoomInUp"}
+        animationOut={"zoomOutUp"}
+        animationInTiming={200}
+        animationOutTiming={300}
+        isVisible={SuccessDelete}
+        onBackdropPress={() => setSuccessDelete(false)}
+        swipeDirection={["down"]}
+        onSwipeComplete={() => setSuccessDelete(false)}
+        backdropColor="transparent"
+        style={styles.modal4}
+      >
+        <View style={[styles.modalContent4, { gap: 10 ,alignItems:'center',justifyContent:'center'}]}>
+          <Text>{selectedUserName} adlı Kullanıcınız silindi</Text>
+        </View>
+      </ModalEdit>
+    </ScrollView>
+    </AlertNotificationRoot>
   );
 }
 const styles = StyleSheet.create({
@@ -205,13 +228,14 @@ const styles = StyleSheet.create({
   modal4: {
     justifyContent: "center",
     alignItems: "center",
-    margin: 0,
+    margin:0,
     backgroundColor: "#18181897",
   },
   modalContent4: {
     backgroundColor: "#f5f5f7",
-    width: "80%",
+    width:'80%',
     height: "10%",
-    borderRadius: 5,
+    borderRadius:5
+
   },
 });

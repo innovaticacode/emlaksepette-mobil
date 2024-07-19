@@ -15,6 +15,7 @@ import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import SliderEstateBar from "../../../components/SliderEstateBar";
+import { AlertNotificationRoot } from "react-native-alert-notification";
 const PAGE_SIZE = 10;
 
 const Estates = ({ index }) => {
@@ -34,13 +35,14 @@ const Estates = ({ index }) => {
       headers: { Authorization: `Bearer ${user?.access_token}` },
     };
 
-    console.log(config);
+    console.log(config)
     try {
+      
       const response = await axios.get(
         `https://private.emlaksepette.com/api/real-estates?page=${
           reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
-        config
+       config
       );
       const newEstates = response.data;
 
@@ -79,8 +81,8 @@ const Estates = ({ index }) => {
   }, [index, user]);
 
   useEffect(() => {
-    getValueFor("user", setuser);
-  }, []);
+    getValueFor("user",setuser)
+  },[])
 
   const filteredHomes = featuredEstates.filter(
     (estate) => estate.step1_slug === "konut"
@@ -97,10 +99,17 @@ const Estates = ({ index }) => {
       <ActivityIndicator style={{ margin: 20 }} size="small" color="#333" />
     );
   };
-  console.log(filteredHomes);
-  console.log(user);
+  console.log(filteredHomes)
+console.log(user)
   return (
-    <View style={styles.container}>
+    <>
+    {
+      loading ?
+      <View style={{alignItems:'center',justifyContent:'center',flex:1}}>
+        <ActivityIndicator size={'large'} color="#333"/>
+      </View>:
+  
+       <View style={styles.container}>
       <View
         style={{
           paddingBottom: 3,
@@ -167,50 +176,58 @@ const Estates = ({ index }) => {
         </View>
       )}
 
-      <FlatList
-        data={filteredHomes}
-        renderItem={({ item }) => (
-          <RealtorPost
-            HouseId={item.id}
-            price={`${JSON.parse(item.housing_type_data)["price"]} `}
-            housing={item}
-            title={item.housing_title}
-            loading={loading}
-            location={item.city_title + " / " + item.county_title}
-            image={`${apiUrl}housing_images/${
-              JSON.parse(item.housing_type_data).image
-            }`}
-            column1_name={`${
-              JSON.parse(item.housing_type_data)[item.column1_name]
-            } `}
-            column1_additional={item.column1_additional}
-            column2_name={`${
-              JSON.parse(item.housing_type_data)[item.column2_name]
-            } `}
-            column2_additional={item.column2_additional}
-            column3_name={`${
-              JSON.parse(item.housing_type_data)[item.column3_name]
-            } `}
-            column3_additional={item.column3_additional}
-            column4_name={`${
-              JSON.parse(item.housing_type_data)[item.column4_name]
-            } `}
-            column4_additional={item.column4_additional}
-            bookmarkStatus={true}
-            dailyRent={false}
-          />
-        )}
-        keyExtractor={(item, index) =>
-          item.id ? item.id.toString() : index.toString()
-        }
-        onEndReached={() => fetchFeaturedEstates()}
-        onEndReachedThreshold={0.1}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        ListFooterComponent={renderFooter}
-      />
+<AlertNotificationRoot>
+        {
+          filteredHomes.length==0?
+           <View style={{width:'100%',paddingTop:10}}>
+            <Text style={{textAlign:'center',color:'grey',fontWeight:'700'}}>Konut İlanı Bulunamadı</Text>
+           </View>:
+     
+     
+        <FlatList
+        
+          data={filteredHomes}
+       
+          renderItem={({ item }) => (
+            <RealtorPost
+         
+              HouseId={item.id}
+              price={`${JSON.parse(item.housing_type_data)["price"]} `}
+              housing={item}
+              title={item.housing_title}
+              loading={loading}
+              location={item.city_title + " / " + item.county_title}
+              image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image}`}
+             
+              column1_additional={item.column1_additional}
+              column1_name={JSON.parse(item.housing_type_data)[item.column1_name] ? JSON.parse(item.housing_type_data)[item.column1_name] : ""}
+              column2_name={`${JSON.parse(item.housing_type_data)[item.column2_name]} `}
+              column2_additional={item.column2_additional}
+              column3_name={`${JSON.parse(item.housing_type_data)[item.column3_name]} `}
+              column3_additional={item.column3_additional}
+              column4_name={`${JSON.parse(item.housing_type_data)[item.column4_name]} `}
+              column4_additional={item.column4_additional}
+              bookmarkStatus={true}
+              dailyRent={false}
+            />
+          )}
+          keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
+        
+          onEndReachedThreshold={0.1}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          
+          ListFooterComponent={renderFooter}
+        />
+      }
+      </AlertNotificationRoot>
+
+    
     </View>
+      }
+    </>
+ 
   );
 };
 

@@ -89,18 +89,7 @@ export default function BasketItem({
                   navigation.navigate("Profile", { id: storeName.id })
                 }
               >
-                <TouchableOpacity
-                  style={{
-                    borderWidth: 0.9,
-                    borderColor: "grey",
-                    padding: 2,
-                    backgroundColor: chechked ? "#EA2C2E" : "white",
-                    borderRadius: 20,
-                  }}
-                  onPress={() => setchechked(!chechked)}
-                >
-                  <Icon name="check" size={12} color={"white"} />
-                </TouchableOpacity>
+              
                 <View>
                   <Text>{storeName?.name}</Text>
                 </View>
@@ -129,6 +118,7 @@ export default function BasketItem({
               />
             </TouchableOpacity>
           </View>
+
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("PostDetails", { HomeId: roomOrder })
@@ -154,6 +144,7 @@ export default function BasketItem({
                   source={{ uri: ımage }}
                   style={{ width: "100%", height: "100%" }}
                 />
+
               </View>
               <View
                 style={{ flex: 1.4 / 2, padding: 7, flexDirection: "column" }}

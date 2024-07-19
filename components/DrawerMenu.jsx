@@ -50,12 +50,16 @@ console.log(user)
               showImage={true}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={()=>{
-            navigation.navigate('ShareAdvert')
-            setIsDrawerOpen(false)
-          }}>
-            <Categories category="İlan Ver" bordernone="none" iconName="plus" />
-          </TouchableOpacity>
+          {
+            user.role =='Kurumsal Hesap' &&
+            <TouchableOpacity onPress={()=>{
+              navigation.navigate('ShareAdvert')
+              setIsDrawerOpen(false)
+            }}>
+              <Categories category="İlan Ver" bordernone="none" iconName="plus" />
+            </TouchableOpacity>
+          }
+      
           {
             user.role =='Bireysel Hesap' &&
             <TouchableOpacity onPress={()=> {
@@ -69,6 +73,7 @@ console.log(user)
               />
             </TouchableOpacity>
           }
+          
       
         </ScrollView>
       </SafeAreaView>

@@ -14,7 +14,9 @@ import Checkbox from "./profileComponents/Checkbox";
 import { Platform } from "react-native";
 import Users from "./profileComponents/Users";
 import axios from "axios";
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 import { getValueFor } from "../../../components/methods/user";
+import { ActivityIndicator } from "react-native-paper";
 export default function CreateUserType() {
   const route = useRoute();
 
@@ -29,7 +31,9 @@ export default function CreateUserType() {
   const [groupNames, setGroupNames] = useState([]);
 
   // fetchData fonksiyonunu tanımlayın
+  const [loadig, setloadig] = useState(false)
   const fetchData = async () => {
+    setloadig(true)
     try {
       if (user.access_token) {
         const response = await axios.get(
@@ -45,6 +49,8 @@ export default function CreateUserType() {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+    }finally{
+      setloadig(false)
     }
   };
   useEffect(() => {
@@ -73,7 +79,7 @@ export default function CreateUserType() {
   };
   const handleShowCheckedItems = () => {
     postData();
-    navigation.navigate("UserTypes");
+    
   };
   const postData = async () => {
     try {
@@ -92,6 +98,15 @@ export default function CreateUserType() {
         }
       );
 
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Başarılı',
+        textBody: `${TypeName} Adlı kullanıcı Tipi Oluşturuldu`,
+        
+      })
+      setTimeout(() => {
+        navigation.navigate("UserTypes");
+      }, 2000);
       // İsteğin başarılı bir şekilde tamamlandığı durum
     } catch (error) {
       // Hata durumunda
@@ -101,66 +116,76 @@ export default function CreateUserType() {
   };
 
   return (
+    <AlertNotificationRoot>
+    {
+      loadig ?
+      <View style={{alignItems:'center',justifyContent:'center',flex:1}}>
+      <ActivityIndicator color='#333' size={'large'}/>
+    </View>:
     <ScrollView style={{ backgroundColor: "white" }}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.container}>
-          <View style={[styles.InputArea, {}]}>
-            <Text style={[styles.label]}>Kullanıcı Rolü Belirle</Text>
-            <TextInput
-              style={styles.Input}
-              value={TypeName}
-              placeholder="Rol"
-              onChangeText={(value) => setTypeName(value)}
-            />
-          </View>
-          <View style={{}}>
-            <View>
-              {Object.values(Permissions).map((array, index) => (
-                <View
-                  key={index}
-                  style={{ gap: 10, marginTop: 10, marginBottom: 10 }}
-                >
-                  <Text
-                    style={{ fontSize: 15, color: "#333", fontWeight: "500" }}
-                  >
-                    {groupNames[index]}
-                  </Text>
-
-                  {array.map((item, subIndex) => (
-                    <Checkbox
-                      title={item.description}
-                      key={subIndex}
-                      id={item.id}
-                      chechked={handleCheckboxChange}
-                    />
-                  ))}
-                </View>
-              ))}
-            </View>
-          </View>
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#EA2A29",
-                padding: 13,
-                width: "50%",
-                borderRadius: 5,
-              }}
-              onPress={handleShowCheckedItems}
-            >
-              <Text
-                style={[
-                  styles.label2,
-                  { color: "white", textAlign: "center", fontSize: 16 },
-                ]}
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <View style={[styles.InputArea, {}]}>
+          <Text style={[styles.label]}>Kullanıcı Rolü Belirle</Text>
+          <TextInput
+            style={styles.Input}
+            value={TypeName}
+            placeholder="Rol"
+            onChangeText={(value) => setTypeName(value)}
+          />
+        </View>
+        <View style={{}}>
+          <View>
+            {Object.values(Permissions).map((array, index) => (
+              <View
+                key={index}
+                style={{ gap: 10, marginTop: 10, marginBottom: 10 }}
               >
-                Kaydet
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{ fontSize: 15, color: "#333", fontWeight: "500" }}
+                >
+                  {groupNames[index]}
+                </Text>
+
+                {array.map((item, subIndex) => (
+                  <Checkbox
+                    title={item.description}
+                    key={subIndex}
+                    id={item.id}
+                    chechked={handleCheckboxChange}
+                  />
+                ))}
+              </View>
+            ))}
           </View>
         </View>
-      </TouchableWithoutFeedback>
-    </ScrollView>
+        <View style={{ width: "100%", alignItems: "center" }}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#EA2A29",
+              padding: 13,
+              width: "50%",
+              borderRadius: 5,
+            }}
+            onPress={handleShowCheckedItems}
+          >
+            <Text
+              style={[
+                styles.label2,
+                { color: "white", textAlign: "center", fontSize: 16 },
+              ]}
+            >
+              Kaydet
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </TouchableWithoutFeedback>
+  </ScrollView>
+    }
+   
+    
+    </AlertNotificationRoot>
   );
 }
 const styles = StyleSheet.create({

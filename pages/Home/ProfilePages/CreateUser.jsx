@@ -20,6 +20,7 @@ import ModalEdit from "react-native-modal";
 import DotIcon from "react-native-vector-icons/Entypo";
 import RNPickerSelect from "react-native-picker-select";
 import { getValueFor } from "../../../components/methods/user";
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 import axios from "axios";
 export default function CreateUser() {
   const route = useRoute();
@@ -85,24 +86,8 @@ export default function CreateUser() {
   const [isEnabled, setIsEnabled] = useState(true);
   const [isActive, setisActive] = useState(1);
   const [Succesalert, setSuccesalert] = useState(false);
-
-  const [validationErrors, setValidationErrors] = useState({});
-
-  const validateForm = () => {
-    const errors = {};
-    if (!nameAndSurname) errors.nameAndSurname = "Bu alan zorunludur";
-    if (!title) errors.title = "Bu alan zorunludur";
-    if (!email) errors.email = "Bu alan zorunludur";
-    if (!phoneNumber) errors.phoneNumber = "Bu alan zorunludur";
-    if (!password) errors.password = "Bu alan zorunludur";
-    if (!UserType) errors.UserType = "Bu alan zorunludur";
-
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
+  const [errorMessage, seterrorMessage] = useState([]);
   const createUser = async () => {
-    if (!validateForm()) return;
     let formdata = new FormData();
     formdata.append("name", nameAndSurname);
     formdata.append("title", title);
@@ -142,11 +127,6 @@ export default function CreateUser() {
     }
   };
 
-  const handlePhoneNumberChange = (value) => {
-    // Sadece rakamları alacak şekilde güncelleme
-    const formattedValue = value.replace(/[^0-9]/g, "");
-    setphoneNumber(formattedValue);
-  };
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -163,11 +143,6 @@ export default function CreateUser() {
                 value={nameAndSurname}
                 onChangeText={(value) => setnameAndSurname(value)}
               />
-              {validationErrors.nameAndSurname && (
-                <Text style={style.errorText}>
-                  {validationErrors.nameAndSurname}
-                </Text>
-              )}
             </View>
             <View>
               <Text style={style.Label}>Unvan</Text>
@@ -176,9 +151,6 @@ export default function CreateUser() {
                 value={title}
                 onChangeText={(value) => settitle(value)}
               />
-              {validationErrors.title && (
-                <Text style={style.errorText}> {validationErrors.title} </Text>
-              )}
             </View>
             <View>
               <Text style={style.Label}>Email</Text>
@@ -187,25 +159,14 @@ export default function CreateUser() {
                 value={email}
                 onChangeText={(value) => setemail(value)}
               />
-              {validationErrors.email && (
-                <Text style={style.errorText}> {validationErrors.email} </Text>
-              )}
             </View>
             <View>
               <Text style={style.Label}>Cep No</Text>
               <TextInput
                 style={style.Input}
-                keyboardType="numeric"
                 value={phoneNumber}
-                maxLength={11}
-                onChangeText={handlePhoneNumberChange}
+                onChangeText={(value) => setphoneNumber(value)}
               />
-              {validationErrors.phoneNumber && (
-                <Text style={style.errorText}>
-                  {" "}
-                  {validationErrors.phoneNumber}{" "}
-                </Text>
-              )}
             </View>
             <View>
               <View style={{ flexDirection: "row", gap: 10 }}>
@@ -217,17 +178,11 @@ export default function CreateUser() {
                 value={password}
                 onChangeText={(value) => setpassword(value)}
               />
-              {validationErrors.password && (
-                <Text style={style.errorText}>
-                  {" "}
-                  {validationErrors.password}{" "}
-                </Text>
-              )}
             </View>
             <View>
               <Text style={style.Label}>Kullanıcı Tipi</Text>
-              <RNPickerSelect
-                doneText="Tamam"
+              <RNPickerSelect doneText="Tamam"
+             
                 value={UserType}
                 placeholder={{
                   label: "Seçiniz...",
@@ -237,9 +192,6 @@ export default function CreateUser() {
                 onValueChange={(value) => setUserType(value)}
                 items={roleItems}
               />
-              {validationErrors.UserType && (
-                <Text style={style.errorText}>{validationErrors.UserType}</Text>
-              )}
             </View>
           </View>
           <View style={{ width: "100%", alignItems: "center" }}>
@@ -389,12 +341,6 @@ const style = StyleSheet.create({
     left: 6,
     fontWeight: "300",
     letterSpacing: 0.5,
-  },
-  errorText: {
-    color: "red",
-    fontSize: 12,
-    marginTop: 5,
-    marginLeft: 10,
   },
   bottomSheetItem: {
     width: "100%",

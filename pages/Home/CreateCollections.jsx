@@ -3,8 +3,14 @@ import React, { useState,useEffect } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { getValueFor } from '../../components/methods/user'
 import axios from 'axios'
+import Icon3 from "react-native-vector-icons/MaterialIcons";
 import AddCollection from '../../components/AddCollection'
 import { ActivityIndicator } from 'react-native-paper'
+import { 
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,} from 'react-native-alert-notification'
 export default function CreateCollections() {
     const route=useRoute()
     const {HouseID}= route.params
@@ -70,7 +76,11 @@ const [disabledTrue, setdisabledTrue] = useState(false)
         },
       })
       .then(response => {
-             
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: 'Koleksiyon oluşturuldu',
+        textBody:`${CollectionName} Adlı koleksiyon oluşturuldu`
+        })
               fetchData()
         // Başarılı yanıtı işleyin
         // setselectedCollectionName(response.data.collection.name)
@@ -109,10 +119,12 @@ const [disabledTrue, setdisabledTrue] = useState(false)
         },
       })
       .then(response => {
-        setshowAlert(true)
-        setTimeout(() => {
-          setshowAlert(false)
-        }, 2000);
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: 'Koleksiyona Eklendi',
+        textBody:`Konut ${selectedCollectionName2} Adlı koleksiyona eklendi`
+        })
+     
         var newCollections = collections.map((collection) => {
           if (collection.id ==id) {
             return {
@@ -180,10 +192,12 @@ const removeItemOnCollection = (collectionId) => {
       }
     )
     .then((response) => {
-      setshowDeleteAlert(true)
-      setTimeout(() => {
-          setshowDeleteAlert(false)
-      }, 2000);
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Koleksiyon silindi',
+      textBody:`${selectedCollectionName2} Adlı koleksiyon silindi`
+      })
+   
       var newCollections = collections.map((collection) => {
         if (collection.id == collectionId) {
           var newLinks = collection.links.filter((link) => {
@@ -217,7 +231,7 @@ const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
   const navigation =useNavigation()
   return (
     
-   <>
+   <AlertNotificationRoot>
           {
             user.access_token  && user.has_club == 1
             ?
@@ -241,10 +255,72 @@ const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
               <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Koleksiyonlarım</Text>
             </View>
               <View style={{gap:5,padding:10}}>
-         
-              {
-                      loading== true ?
-                        <ActivityIndicator color='#333'/>:
+
+              {       
+              loading ? 
+
+              <>
+                  <View>
+                    <ActivityIndicator size={'small'} color='#333'/>
+                  </View>
+              </>
+              :
+                
+              collections.length==0 ?
+                              <>
+                                  <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                height: "90%",
+                gap: 10,
+              }}
+            >
+              <View
+                style={[
+                  styles.card2,
+                  { alignItems: "center", justifyContent: "center" },
+                ]}
+              >
+                <Icon3 name="bookmark-add" size={50} color={"#EA2A28"} />
+              </View>
+              <View>
+                <Text
+                  style={{ color: "grey", fontSize: 16, fontWeight: "600" }}
+                >
+                  Koleksiyonunuzda ilan bulunmamaktadır
+                </Text>
+              </View>
+              <View style={{ width: "100%", alignItems: "center" }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#EA2A28",
+                    width: "90%",
+                    padding: 8,
+                    borderRadius: 5,
+                  }}
+                  onPress={() => {
+                    setloading(true);
+                    setTimeout(() => {
+                      nav.navigate("HomePage");
+                      setloading(false);
+                    }, 700);
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "#ffffff",
+                      fontWeight: "600",
+                      textAlign: "center",
+                    }}
+                  >
+                    Ana Sayfa'ya dön
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+                              </>:
                         collections.map((item,index)=>(
 
                           <AddCollection  checkFunc={ıtemOnCollection} key={index} item={item} getCollectionId={getCollectionId} addLink={addSelectedCollection}   removeItemOnCollection={removeItemOnCollection}    setPopUpForRemoveItem={setsetPopUpForRemoveItem}/> 
@@ -366,7 +442,7 @@ const [PopUpForRemoveItem, setsetPopUpForRemoveItem] = useState(false);
       </View>
           </View>
  
-   </>
+   </AlertNotificationRoot>
   
    
   
@@ -391,6 +467,26 @@ const styles=StyleSheet.create({
      gap:10,
         width: "100%",
        
+        borderWidth: 0.7,
+        borderColor: "#e6e6e6",
+        ...Platform.select({
+          ios: {
+            shadowColor: " #e6e6e6",
+            shadowOffset: { width: 1, height: 1 },
+            shadowOpacity: 0.1,
+            shadowRadius: 5,
+          },
+          android: {
+            elevation: 5,
+          },
+        }),
+      },
+      card2: {
+        backgroundColor: "#FFFFFF",
+        padding: 15,
+    
+        borderRadius: 50,
+    
         borderWidth: 0.7,
         borderColor: "#e6e6e6",
         ...Platform.select({
