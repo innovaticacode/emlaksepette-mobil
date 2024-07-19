@@ -3,7 +3,7 @@ import React,{useState} from 'react'
 import RNPickerSelect from "react-native-picker-select";
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Platform } from "react-native";
-export default function CreditCardScreen({CompeletePayment}) {
+export default function CreditCardScreen({CompeletePayment,creditCartData,setCreditCartData}) {
     const months = [
         { label: 'Ocak', value: 1 },
         { label: 'Şubat', value: 2 },
@@ -72,7 +72,7 @@ export default function CreditCardScreen({CompeletePayment}) {
        <View style={{paddingTop:10,gap:10}}>
        <View style={{gap:6}}>
                     <Text style={styles.label}>Kart Numarası</Text>
-                    <TextInput value={cardNumber} style={styles.Input} onChangeText={handleCreditCardNumberChange} keyboardType='number-pad' maxLength={19}/>
+                    <TextInput value={creditCartData.card_number} style={styles.Input} onChangeText={(value) => {setCreditCartData({...creditCartData,card_number : value}); handleCreditCardNumberChange(value)}} keyboardType='number-pad' maxLength={19}/>
                 </View>
                 <View style={{gap:6}}>
                     <Text style={styles.label}>Kart Sahibin Adı Soyadı</Text>
@@ -84,9 +84,9 @@ export default function CreditCardScreen({CompeletePayment}) {
             label: "Ay ",
             value: null,
           }}
-          onValueChange={(value)=>setmonth(value)}
+          onValueChange={(value)=>{setmonth(value);setCreditCartData({...creditCartData,month : value})}}
           style={pickerSelectStyles}
-          value={month}
+          value={creditCartData.month}
           items={months}
         />
                 <RNPickerSelect doneText="Tamam"
@@ -94,9 +94,9 @@ export default function CreditCardScreen({CompeletePayment}) {
             label: "Yıl ",
             value: null,
           }}
-          onValueChange={(value)=>setYear(value)}
+          onValueChange={(value)=>{setYear(value);setCreditCartData({...creditCartData,year : value})}}
           style={pickerSelectStyles}
-          value={Year}
+          value={creditCartData.year}
           items={years}
         />
                 </View>

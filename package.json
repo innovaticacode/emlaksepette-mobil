@@ -61,6 +61,7 @@
     "react-native-elements": "^3.4.3",
     "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "~2.16.1",
+    "react-native-htmlview": "^0.17.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-lightbox": "^0.8.1",
     "react-native-linear-gradient": "^2.8.3",

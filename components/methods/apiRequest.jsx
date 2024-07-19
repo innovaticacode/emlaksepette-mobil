@@ -1,7 +1,7 @@
 import axios from "axios"
 import { getValueFor } from "./user";
 import { useState } from "react";
-const apiUrl = "https://private.emlaksepette.com/api/";
+export const apiUrl = "https://private.emlaksepette.com/api/";
 export const frontEndUri = "https://private.emlaksepette.com/api/"
 
 
