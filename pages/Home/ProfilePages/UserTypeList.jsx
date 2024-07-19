@@ -1,14 +1,15 @@
-import { View, Text,StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native'
+import { View, Text,StyleSheet, ScrollView, TouchableOpacity, Platform, Alert } from 'react-native'
 import React,{useState,useEffect} from 'react'
 import Users from './profileComponents/Users'
 import { getValueFor } from '../../../components/methods/user';
 import Modal from "react-native-modal";
 import axios from 'axios';
-import Icon from 'react-native-vector-icons/FontAwesome6'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon2 from 'react-native-vector-icons/FontAwesome6'
 import AwesomeAlert from "react-native-awesome-alerts";
 import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 import { ActivityIndicator } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 export default function UserTypeList() {
   const [userList, setuserList] = useState([]);
   const navigation=useNavigation()
@@ -34,11 +35,11 @@ export default function UserTypeList() {
       setloading(false)
     }
   };
-
+const isFocused =useIsFocused()
 useEffect(() => {
  
   fetchData();
-}, [user])
+}, [user,isFocused])
 const roles = userList;
 
 // Her bir rolü map fonksiyonu ile dönüştür ve yeni bir dizi oluştur
@@ -78,6 +79,94 @@ const [selectedUserId, setselectedUserId] = useState(0)
   setselectedUserId(UserId)
   setselectedUserName(name)
  }
+ useEffect(() => {
+  navigation.setOptions({
+    title:`Kullanıcı Tipleri (${transformedRoles?.length})` ,
+  });
+}, [navigation,transformedRoles]);
+const [isChoosed, setisChoosed] = useState(false)
+const [isShowDeleteButon, setisShowDeleteButon] = useState(false)
+const [SelecteduserID, setSelecteduserID] = useState(0)
+const [SelectedUserIDS, setSelectedUserIDS] = useState([])
+const [deleteUserModal, setdeleteUserModal] = useState(false)
+const [deleteAllUserType, setdeleteAllUserType] = useState(false)
+      const SelectUser =(id)=>{
+            setSelecteduserID(id)
+            setSelectedUserIDS((prevIds) => {
+              if (prevIds.includes(id)) {
+                return prevIds.filter((item) => item !== id);
+              } else {
+                return [...prevIds, id];
+              }
+            });
+      }
+
+      const deleteSelectedUserType= async () => {
+        const data = {
+          role_ids :SelectedUserIDS,
+       
+        };
+        try {
+          const response = await axios.delete('https://private.emlaksepette.com/api/institutional/rol-users', {
+            data:data,
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          });
+          Toast.show({
+            type: ALERT_TYPE.WARNING,
+            title: `Silme işlemi başarılı`,
+            titleStyle:{fontSize:14},
+            textBody:`${SelectedUserIDS.length} İlan silindi`
+          })
+          fetchData()
+          setSelectedUserIDS([])
+        setdeleteUserModal(false)
+         
+        } catch (error) {
+        
+          console.error('Error making DELETE request:', error);
+        }
+      }
+
+      const [UsersId, setUsersId] = useState([])
+      useEffect(() => {
+       
+          
+            console.log(UsersId)
+       
+      }, [isFocused])
+      
+     
+    
+      const deleteAllUsers= async () => {
+        const data = {
+          role_ids :UsersId,
+       
+        };
+        try {
+          const response = await axios.delete('https://private.emlaksepette.com/api/institutional/rol-users', {
+            data:data,
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          });
+          Toast.show({
+            type: ALERT_TYPE.WARNING,
+            title: `Silme işlemi başarılı`,
+            titleStyle:{fontSize:14},
+            textBody:`${userList.length} İlan silindi`
+          })
+          fetchData()
+         setUsersId([])
+        setdeleteAllUserType(false)
+         
+        } catch (error) {
+        
+          console.error('Error making DELETE request:', error);
+        }
+      }
+
   return (
     <AlertNotificationRoot>
       {
@@ -102,7 +191,7 @@ const [selectedUserId, setselectedUserId] = useState(0)
               { alignItems: "center", justifyContent: "center" },
             ]}
           >
-            <Icon name="user-tie" size={50} color={"#EA2A28"} />
+            <Icon2 name="user-tie" size={50} color={"#EA2A28"} />
           </View>
           <View>
             <Text
@@ -140,24 +229,81 @@ const [selectedUserId, setselectedUserId] = useState(0)
           </View>
         </View>:
           <ScrollView style={styles.container}
-    stickyHeaderIndices={[0]}
+  
     contentContainerStyle={{paddingBottom:40}}
     showsVerticalScrollIndicator={false}
     >
-      <View style={{padding:10, backgroundColor: "#F5F5F7",}}>
-        <Text style={{color:'#333',fontSize:18}}>Kullanıcı Tipi Listesi ({userList.length})</Text>
-      </View>
-      <View style={{padding:10,gap:10}}>
+        <View style={{flexDirection:'row',padding:6,paddingTop:10,alignItems:'center',justifyContent:'space-between'}}>
+          <View style={{flexDirection:'row',gap:10}}>
+          <TouchableOpacity style={styles.btnRemove}
+              onPress={()=>{
+                setdeleteAllUserType(true)
+                const Users = userList.map(item=>item.id)
+                setUsersId(Users)
+
+              }}
+          >
+            <Text style={{fontSize:13,fontWeight:'700',color:'#333'}}>Tümünü Sil</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.btnRemove} 
+              onPress={()=>{
+                setisShowDeleteButon(!isShowDeleteButon)
+                setisChoosed(!isChoosed)
+              }}
+          >
+            <Text style={{fontSize:13,fontWeight:'700',color:'#333'}}>Toplu Seç</Text>
+          </TouchableOpacity>
+          </View>
+      
+                {
+                  isShowDeleteButon &&
+                  <View style={{flexDirection:'row',gap:9,alignItems:'center'}}>
+                    <Text>Seçili({SelectedUserIDS.length})</Text>
+                  <TouchableOpacity style={{backgroundColor:'red',paddingLeft:8,paddingRight:8,paddingTop:5,paddingBottom:5,borderRadius:6}}
+                      onPress={()=>{
+                        setdeleteUserModal(true)
+                      }}
+                  >
+                  <Icon name="trash" size={18} color={"#ffffff"} />
+                  </TouchableOpacity>
+                </View>
+                }
+        
+        </View>
+      <View style={{padding:7,gap:10}}>
         {
             transformedRoles.map((item,index)=>(
-             <Users name={item.name} id='1' key={index} index={index} item={item} deleteUser={getUserIdAndName}/>
+             <Users name={item.name} id='1' key={index} index={index} item={item} deleteUser={getUserIdAndName} isChoosed={isChoosed} SelectUserFunc={SelectUser}/>
             ))
         }
-  
-    
-
-   
       </View>
+      <AwesomeAlert
+      
+      show={deleteAllUserType}
+      showProgress={false}
+        titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+        title={ `${UsersId.length} Kullanıcı tipini silmek istediğinize eminm misiniz?`}
+        messageStyle={{textAlign:'center'}}
+      
+      closeOnTouchOutside={true}
+      closeOnHardwareBackPress={false}
+      showCancelButton={true}
+      showConfirmButton={true}
+
+      cancelText="Hayır"
+      confirmText="Evet"
+      cancelButtonColor="#ce4d63"
+      confirmButtonColor="#1d8027"
+      onCancelPressed={() => {
+            setdeleteAllUserType(false)
+      }}
+      onConfirmPressed={() => {
+        deleteAllUsers()
+      }}
+      confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+      cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+    />
       <AwesomeAlert
       
       show={deletedSuccessMessage}
@@ -180,6 +326,32 @@ const [selectedUserId, setselectedUserId] = useState(0)
       }}
       onConfirmPressed={() => {
         DeleteUser(selectedUserId)
+      }}
+      confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+      cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+    />
+     <AwesomeAlert
+      
+      show={deleteUserModal}
+      showProgress={false}
+        titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+        title={ `${SelectedUserIDS.length} Kullanıcı tipini silmek istediğinize emin misiniz?`}
+        messageStyle={{textAlign:'center'}}
+      
+      closeOnTouchOutside={true}
+      closeOnHardwareBackPress={false}
+      showCancelButton={true}
+      showConfirmButton={true}
+
+      cancelText="Hayır"
+      confirmText="Evet"
+      cancelButtonColor="#ce4d63"
+      confirmButtonColor="#1d8027"
+      onCancelPressed={() => {
+       setdeleteUserModal(false)
+      }}
+      onConfirmPressed={() => {
+          deleteSelectedUserType()
       }}
       confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
       cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
@@ -228,4 +400,12 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  btnRemove: {
+    backgroundColor: "#EEEDEB",
+    borderWidth: 1,
+    borderColor: "#ebebeb",
+    padding:7,
+    borderRadius:5
+  },    
+
 })

@@ -22,6 +22,7 @@ import RNPickerSelect from "react-native-picker-select";
 import { getValueFor } from "../../../components/methods/user";
 import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 import axios from "axios";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 export default function CreateUser() {
   const route = useRoute();
   const navigation = useNavigation();
@@ -87,7 +88,24 @@ export default function CreateUser() {
   const [isActive, setisActive] = useState(1);
   const [Succesalert, setSuccesalert] = useState(false);
   const [errorMessage, seterrorMessage] = useState([]);
+  const [validationErrors, setValidationErrors] = useState({});
+
+  const validateForm = () => {
+    const errors = {};
+    if (!nameAndSurname) errors.nameAndSurname = "Bu alan zorunludur";
+    if (!title) errors.title = "Bu alan zorunludur";
+    if (!email) errors.email = "Bu alan zorunludur";
+    if (!phoneNumber) errors.phoneNumber = "Bu alan zorunludur";
+    if (!password) errors.password = "Bu alan zorunludur";
+    if (!UserType) errors.UserType = "Bu alan zorunludur";
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const createUser = async () => {
+
+    if (!validateForm()) return;
     let formdata = new FormData();
     formdata.append("name", nameAndSurname);
     formdata.append("title", title);
@@ -107,29 +125,41 @@ export default function CreateUser() {
             },
           }
         );
-        // seterrorMessage(response.data.success,'fsdfdfds')
-        // setSuccesalert(true)
-        // setTimeout(() => {
-        //     setSuccesalert(false)
-        // }, 2000);
+        setmessage(response.data.message);
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: 'Başarılı',
+          textBody: `${message}`,
+          
+        })
+        
         setnameAndSurname("");
         setemail("");
         setpassword("");
         settitle("");
         setphoneNumber("");
         setUserType("");
-        setmessage(response.data.message);
+    
 
         // Dönüştürülmüş veriyi state'e atama
       }
     } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.WARNING,
+        title: 'Başarılı',
+        textBody: `${error}`,
+        
+      })
       console.error(error);
     }
   };
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
+    <AlertNotificationRoot>
+    <KeyboardAwareScrollView
+    contentContainerStyle={{flex:1}}
+   
+      onTouchStart={()=>{
         Keyboard.dismiss();
       }}
     >
@@ -143,6 +173,11 @@ export default function CreateUser() {
                 value={nameAndSurname}
                 onChangeText={(value) => setnameAndSurname(value)}
               />
+                {validationErrors.nameAndSurname && (
+                <Text style={style.errorText}>
+                  {validationErrors.nameAndSurname}
+                </Text>
+              )}
             </View>
             <View>
               <Text style={style.Label}>Unvan</Text>
@@ -151,6 +186,9 @@ export default function CreateUser() {
                 value={title}
                 onChangeText={(value) => settitle(value)}
               />
+                  {validationErrors.title && (
+                <Text style={style.errorText}> {validationErrors.title} </Text>
+              )}
             </View>
             <View>
               <Text style={style.Label}>Email</Text>
@@ -159,6 +197,9 @@ export default function CreateUser() {
                 value={email}
                 onChangeText={(value) => setemail(value)}
               />
+                  {validationErrors.email && (
+                <Text style={style.errorText}> {validationErrors.email} </Text>
+              )}
             </View>
             <View>
               <Text style={style.Label}>Cep No</Text>
@@ -167,6 +208,12 @@ export default function CreateUser() {
                 value={phoneNumber}
                 onChangeText={(value) => setphoneNumber(value)}
               />
+                 {validationErrors.phoneNumber && (
+                <Text style={style.errorText}>
+                  {" "}
+                  {validationErrors.phoneNumber}{" "}
+                </Text>
+              )}
             </View>
             <View>
               <View style={{ flexDirection: "row", gap: 10 }}>
@@ -178,6 +225,12 @@ export default function CreateUser() {
                 value={password}
                 onChangeText={(value) => setpassword(value)}
               />
+              {validationErrors.password && (
+                <Text style={style.errorText}>
+                  {" "}
+                  {validationErrors.password}{" "}
+                </Text>
+              )}
             </View>
             <View>
               <Text style={style.Label}>Kullanıcı Tipi</Text>
@@ -192,7 +245,11 @@ export default function CreateUser() {
                 onValueChange={(value) => setUserType(value)}
                 items={roleItems}
               />
+                {validationErrors.UserType && (
+                <Text style={style.errorText}>{validationErrors.UserType}</Text>
+              )}
             </View>
+          
           </View>
           <View style={{ width: "100%", alignItems: "center" }}>
             <TouchableOpacity
@@ -293,7 +350,8 @@ export default function CreateUser() {
           </View>
         </ModalEdit>
       </View>
-    </TouchableWithoutFeedback>
+    </KeyboardAwareScrollView>
+    </AlertNotificationRoot>
   );
 }
 const pickerSelectStyles = StyleSheet.create({
@@ -473,5 +531,11 @@ const style = StyleSheet.create({
     margin: 10,
     borderRadius: 5,
     height: "15%",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 5,
+    marginLeft: 10,
   },
 });

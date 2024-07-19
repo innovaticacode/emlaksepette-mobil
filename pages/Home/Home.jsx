@@ -17,6 +17,7 @@ import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 import HomePage2 from "./HomePage2";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import axios from "axios";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,9 +35,39 @@ const Home = ({ route }) => {
   useEffect(() => {
     if (isFocused) {
       getValueFor("user", setUser);
+   
     }
   }, [isFocused]);
 
+
+  
+const [userdata, setuserdata] = useState({})
+  const GetUserInfo =async ()=>{
+   
+    try {
+      if (user.access_token) {
+        const userInfo = await axios.get(
+          "https://private.emlaksepette.com/api/users/" + user?.id,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+
+          setuserdata(userInfo?.data?.user)
+      }
+    
+  
+    
+  
+    } catch (error) {
+      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+    }
+  }
+  useEffect(() => {
+    GetUserInfo()
+  }, [user])
   const { width, height } = Dimensions.get("window");
   return (
     <Tab.Navigator
@@ -117,10 +148,10 @@ const Home = ({ route }) => {
             ) : (
               <Feather name="shopping-cart" color="black" size={20} />
             ),
-          tabBarBadge: 0,
+          tabBarBadge: 1,
 
           tabBarBadgeStyle: {
-              display:user.cartItem ==null ?'none':'flex',
+              display:userdata.cartItem ==null ?'none':'flex',
             fontSize: 10,
             height: 17,
             width: 20,

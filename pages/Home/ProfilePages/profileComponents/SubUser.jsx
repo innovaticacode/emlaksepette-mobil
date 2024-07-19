@@ -1,10 +1,17 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
+import React,{useState} from "react";
 import Icon from "react-native-vector-icons/Entypo";
 import { Platform } from "react-native";
-export default function SubUser({ setModalVisible, item, GetId }) {
+export default function SubUser({ setModalVisible, item, GetId ,isChoosed,getUserID}) {
+    const [isHighLighted, setisHighLighted] = useState(false)
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={[styles.card,{borderWidth:isHighLighted?1:0,borderColor:'red'}]}
+    disabled={!isChoosed}
+        onPress={()=>{
+            getUserID(item.id)
+            setisHighLighted(!isHighLighted)
+        }}
+    >
       <View style={{ flexDirection: "column" }}>
         <View
           style={{
@@ -83,7 +90,7 @@ export default function SubUser({ setModalVisible, item, GetId }) {
           )}
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 const styles = StyleSheet.create({

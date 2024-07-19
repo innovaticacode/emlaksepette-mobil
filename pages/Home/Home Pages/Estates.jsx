@@ -99,8 +99,7 @@ const Estates = ({ index }) => {
       <ActivityIndicator style={{ margin: 20 }} size="small" color="#333" />
     );
   };
-  console.log(filteredHomes)
-console.log(user)
+
   return (
     <>
     {

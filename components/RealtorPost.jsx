@@ -50,6 +50,7 @@ export default function RealtorPost({
   column4_additional,
   step2_slug,
   step1_slug,
+
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
