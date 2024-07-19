@@ -14,10 +14,10 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-
 const { width } = Dimensions.get("window");
 
 export default function WelcomePage({ hideSplash }) {
+  const video = React.useRef(null);
   const scale = useSharedValue(0);
 
   useEffect(() => {
@@ -36,6 +36,7 @@ export default function WelcomePage({ hideSplash }) {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
+
       <View style={styles.imageContainer}>
         <Animated.View style={[styles.animatedView, animatedStyle]}>
           <ImageBackground

@@ -108,7 +108,6 @@ export default function CreateUserType() {
         navigation.navigate("UserTypes");
       }, 2000);
       // İsteğin başarılı bir şekilde tamamlandığı durum
-    
     } catch (error) {
       // Hata durumunda
 

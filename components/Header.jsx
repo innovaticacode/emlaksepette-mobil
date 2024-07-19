@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
 
-export default function Header({ loading, onPress,index, tab }) {
+export default function Header({ loading, onPress, index, tab }) {
   const navigation = useNavigation();
   const [notificationCount, setNotificationCount] = useState(0);
   const [user, setuser] = useState({});
@@ -73,7 +73,6 @@ export default function Header({ loading, onPress,index, tab }) {
       <TouchableOpacity
         onPress={() => {
           onPress();
-         
         }}
       >
         <IconMenu name="menu" size={37} color={"#333"} />
@@ -81,8 +80,8 @@ export default function Header({ loading, onPress,index, tab }) {
       <View
         onTouchStart={() => {
           navigation.navigate("HomePage");
-          index(0)
-          tab(0)
+          index(0);
+          tab(0);
         }}
         style={{
           width: 200,
@@ -90,11 +89,13 @@ export default function Header({ loading, onPress,index, tab }) {
         }}
       >
         <ImageBackground
-          source={{uri:'https://private.emlaksepette.com/images/emlaksepettelogo.png'}}
+          source={{
+            uri: "https://private.emlaksepette.com/images/emlaksepettelogo.png",
+          }}
           resizeMode="contain"
           style={{
             width: "100%",
-            height:'100%',
+            height: "100%",
             justifyContent: "center",
           }}
         />
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 15,
     padding: 10,
-    paddingTop: Platform.OS === "android" ? 20 : 0,
+    paddingTop: Platform.OS === "android" ? 0 : 0,
     width: "100%",
   },
 });
