@@ -159,26 +159,39 @@ export default function Profile() {
   const [storeData, setstoreData] = useState([]);
   useEffect(() => {
     // Örnek API isteği
-    apiRequestGet("brand/" + id).then((res) => {
-      setloading(true);
-      setstoreData(res.data);
-      setHousings(res.data.data.housings);
-      setTeamm(res.data.data.child);
-      sethousingRecords(res.data.data.housings); // Housings dizisini başlangıçta kopyala
-    });
+    apiRequestGet("brand/" + id)
+      .then((res) => {
+        setloading(true);
+        const housingsWithPrefixedID = res.data.data.housings.map(
+          (housing) => ({
+            ...housing,
+            prefixedID: `20000${housing.id}`,
+          })
+        );
+        setstoreData(res.data);
+        setHousings(housingsWithPrefixedID);
+        setTeamm(res.data.data.child);
+        sethousingRecords(housingsWithPrefixedID); // Housings dizisini başlangıçta kopyala
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }, []);
 
   const handleSearch = (text) => {
     setSearchText(text);
-
+    ("");
     const filteredData = text
-      ? Housings.filter((item) =>
-          item.title.toLowerCase().includes(text.toLowerCase())
+      ? Housings.filter(
+          (item) =>
+            item.title.toLowerCase().includes(text.toLowerCase()) ||
+            item.prefixedID.includes(text) || // prefixedID'yi kontrol et
+            item.id.toString().includes(text) // id'yi kontrol et
         )
       : Housings;
+
     sethousingRecords(filteredData);
   };
-
   const ApiUrl = "https://private.emlaksepette.com/";
   const handleOpenPhone = () => {
     // Telefon uygulamasını açmak için
