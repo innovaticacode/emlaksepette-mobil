@@ -87,6 +87,7 @@ import AddComment from "./pages/Home/AddComment";
 import SuccesScreen from "./pages/Home/SuccesScreen";
 import ExtradionRequest from "./components/ExtraditionRequest";
 import UpgradeProfile from "./pages/Home/ProfilePages/UpgradeProfile";
+import SearchPage from "./pages/Home/SearchPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -526,7 +527,7 @@ export default function App({ route }) {
               component={Suggests}
               options={({ route }) => ({
                 animationTypeForReplace: "pop",
-                title: "Gelen Konut Başvuruları",
+                title: "Başvurularım",
                 headerBackTitle: "",
                 headerBackTitleVisible: false,
                 headerTintColor: "black",
@@ -752,7 +753,8 @@ export default function App({ route }) {
             name="SeeNeigbourHood"
             component={SeeNeigbourhood}
             options={({ route }) => ({
-              title: "Komuşumu Gör",
+              headerBackTitleVisible:false,
+              title: "Komşumu Gör",
             })}
           />
           <Stack.Screen
@@ -983,6 +985,18 @@ export default function App({ route }) {
             component={UpgradeProfile}
             options={({ route }) => ({
               title: route.params.name,
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+              <Stack.Screen
+            name="SearchPage"
+            component={SearchPage}
+            options={({ route }) => ({
+              title: 'Ara',
+              headerShown:false,
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
