@@ -1,44 +1,102 @@
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import SupportAdd from "./SupportAdd";
+import SupportList from "./SupportList";
 
 export default function Support() {
-  const [step, setStep] = useState(0);
+  const [tabs, setTabs] = useState(1);
   return (
-    <View style={{ padding: 20 }}>
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <TouchableOpacity
-          style={{
-            paddingVertical: 10,
-            paddingHorizontal: 40,
-            backgroundColor: step == 1 ? "blue" : "gray",
-          }}
-          onPress={() => setStep(1)}
-        >
-          <Text style={{ color: "#333" }}>Talep Gönder</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            paddingVertical: 10,
-            paddingHorizontal: 40,
-            backgroundColor: step == 2 ? "blue" : "gray",
-          }}
-          onPress={() => setStep(2)}
-        >
-          <Text style={{ color: "#333" }}>Gelen Talepler</Text>
-        </TouchableOpacity>
+    <View style={{ flex: 1, padding: 5 }}>
+      <View
+        style={{
+          width: "100%",
+          flexDirection: "row",
+          borderRadius: 6,
+          borderWidth: 2,
+          borderColor: "#E9E9E9",
+        }}
+      >
+        <View style={{ width: "50%" }}>
+          <TouchableOpacity
+            style={{
+              padding: 10,
+              backgroundColor: tabs == 1 ? "red" : "transparent",
+              borderRadius: 6,
+              alignItems: "center",
+            }}
+            onPress={() => {
+              setTabs(1);
+            }}
+          >
+            <Text
+              style={{
+                color: tabs == 1 ? "white" : "#333",
+              }}
+            >
+              Yeni Talep
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ width: "50%" }}>
+          <TouchableOpacity
+            style={{
+              width: "100%",
+              padding: 10,
+              backgroundColor: tabs == 2 ? "red" : "transparent",
+              borderRadius: 6,
+              alignItems: "center",
+            }}
+            onPress={() => {
+              setTabs(2);
+            }}
+          >
+            <Text style={{ color: tabs == 2 ? "white" : "#333" }}>
+              Geçmiş Talepler
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      {step == 1 && (
-        <View>
-          <Text>asd</Text>
-        </View>
-      )}
-
-      {step == 2 && (
-        <View>
-          <Text>looloololo</Text>
-        </View>
-      )}
+      {tabs == 1 && <SupportAdd />}
+      {tabs == 2 && <SupportList />}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  toggleButton: {
+    fontSize: 20,
+    marginBottom: 20,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  toggleButton: {
+    fontSize: 20,
+    marginBottom: 20,
+  },
+
+  modal: {
+    margin: 0,
+  },
+  modalContent: {
+    backgroundColor: "white",
+
+    flex: 1,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    width: 320,
+  },
+  TabBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  tabBarBtn: {
+    width: "50%",
+
+    padding: 7,
+    borderRadius: 5,
+  },
+});
