@@ -5,13 +5,23 @@ import {
   Image,
   TouchableOpacity,
   ImageBackground,
+  Modal,
 } from "react-native";
-import React from "react";
+import React,{useState} from "react";
 import { Platform } from "react-native";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
+import Icon2 from 'react-native-vector-icons/Feather'
 import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
+
 export default function SuggestItem({ item }) {
+  const [modalVisible, setModalVisible] = useState(false);
   const apiUrl = "https://private.emlaksepette.com";
+  const stripHtmlTags = (str) => {
+    if (str) {
+      return str.replace(/<\/?[^>]+(>|$)/g, "");
+    }
+    return "";
+  };
   return (
     <View style={style.container}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -57,7 +67,9 @@ export default function SuggestItem({ item }) {
         </View>
 
         <View style={{ justifyContent: "space-between" }}>
-          <View
+          {
+            item.offer_response == 0 && 
+            <View
             style={{
               backgroundColor: "#FFEFCA",
               padding: 6,
@@ -73,6 +85,28 @@ export default function SuggestItem({ item }) {
               Yanıt Bekliyor
             </Text>
           </View>
+          }
+                {
+            item.offer_response == 1 && 
+            <TouchableOpacity
+            style={{
+              backgroundColor: "#E1F2E6",
+              padding: 6,
+              borderRadius: 4,
+              flexDirection: "row",
+              gap: 6,
+              alignItems: "center",
+              justifyContent:'center'
+            }}
+            onPress={() => setModalVisible(true)}
+          >
+            <Icon2 name="check-circle" color={"#10A958"} />
+            <Text style={{ fontSize: 10, color: "#10A958", fontWeight: "600" }}>
+              Yanıtı Gör
+            </Text>
+          </TouchableOpacity>
+          }
+   
           <TouchableOpacity
             style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
           >
@@ -83,9 +117,66 @@ export default function SuggestItem({ item }) {
           </TouchableOpacity>
         </View>
       </View>
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Mağaza Yanıtı</Text>
+            <Text style={styles.modalText}>{stripHtmlTags(item.response_description)}</Text>
+
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.closeButtonText}>Kapat</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: 300,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+  },
+  modalTitle: {
+    fontSize: 15,
+    fontWeight: '500',
+    marginBottom: 10,
+    textAlign:'center'
+  },
+  modalText: {
+    fontSize: 14,
+    marginBottom: 10,
+    textAlign:'center',
+    fontWeight:'600'
+  },
+  closeButton: {
+    backgroundColor: '#EA2C2E',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+});
 const style = StyleSheet.create({
   container: {
     backgroundColor: "#FAFAFA",

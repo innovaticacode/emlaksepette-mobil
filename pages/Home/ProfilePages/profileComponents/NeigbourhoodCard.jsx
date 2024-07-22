@@ -1,35 +1,100 @@
-import { View, Text,StyleSheet, TouchableOpacity,Linking } from 'react-native'
+import { View, Text,StyleSheet, TouchableOpacity,Linking, ImageBackground } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/Feather'
 import { Platform } from "react-native";
-export default function NeigbourhoodCard() {
+export default function NeigbourhoodCard({NeigBourHoodInfo,project,projectInfo}) {
     const handleOpenPhone = () => {
         // Telefon uygulamasını açmak için
-        Linking.openURL('tel:+905537064474');
+        Linking.openURL(`tel:+90${NeigBourHoodInfo.mobile_phone}`);
       };
+      const formatPhoneNumber = (value) => {
+        // Sadece rakamları al
+        const cleaned = ("" + value).replace(/\D/g, "");
+    
+        // 0 ile başlıyorsa, ilk karakteri çıkar
+        const cleanedWithoutLeadingZero = cleaned.startsWith("0")
+          ? cleaned.substring(1)
+          : cleaned;
+    
+        let formattedNumber = "";
+    
+        for (let i = 0; i < cleanedWithoutLeadingZero.length; i++) {
+          if (i === 0) formattedNumber += "(";
+          if (i === 3) formattedNumber += ") ";
+          if (i === 6 || i === 8) formattedNumber += " ";
+          formattedNumber += cleanedWithoutLeadingZero[i];
+        }
+    
+        return formattedNumber;
+      };
+      const apiUrl = "https://private.emlaksepette.com";
   return (
     <View style={styles.contain}>
-        <View style={{flexDirection:'row',gap:3}}>
-            <Text style={styles.Text}>Mülk Sahibi Adı:</Text>
-            <Text  style={styles.Text}>Kerem Bozmaz</Text>
+        <View style={{padding:17,gap:20}}>
+        <View style={{flexDirection:'row',gap:13,alignItems:'center'}}>
+            <View style={{width:90,height:90,backgroundColor:'red',borderRadius:5}}>
+                    <ImageBackground 
+                            source={{uri:`${apiUrl}/${projectInfo.image.replace(
+                                "public/",
+                                "storage/"
+                              )}`}}
+                              style={{width:'100%',height:'100%'}}
+                              borderRadius={5}
+                    />
+            </View>
+            <View style={{gap:4}}>
+                    <View style={{gap:1}}>
+                        <Text style={styles.header}>Mülk Sahibi Adı</Text>
+                        <Text style={styles.Text}>{NeigBourHoodInfo.name}</Text>
+                    </View>
+                    <View style={{gap:1}}>
+                        <Text style={styles.header}>Mülk Sahibi Telefonu</Text>
+                        <Text style={styles.Text}> { formatPhoneNumber(NeigBourHoodInfo.mobile_phone)}</Text>
+                    </View>
+                    <View style={{gap:1}}>
+                        <Text style={styles.header}>Konut Bilgisi</Text>
+                        <Text style={styles.Text}>{
+                            NeigBourHoodInfo && project &&
+                            JSON.parse(project)['item']['title'] + ' '+
+                            JSON.parse(project)['item']['housing'] 
+} {""}No'lu İlan </Text>
+                    </View>
+            </View>
         </View>
-        <View style={{flexDirection:'row',gap:3}}>
-            <Text style={styles.Text}>Mülk Sahibi Telefonu:</Text>
-            <Text  style={styles.Text}>(553) 706 44 74</Text>
-        </View>
-        <View  style={{paddingTop:15}}>
-            <Text style={{textAlign:'center',fontSize:18,color:'#333',fontWeight:'500'}}>Master Sonsuz Tatil Köyü Projesinden 3 No'lu Konut </Text>
-        </View>
-        <View style={{flexDirection:'row',justifyContent:'space-between',padding:10,gap:10}}>
-            <TouchableOpacity style={{backgroundColor:'#D1ECF1',flex:1/2,padding:10,borderRadius:6,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:10}}
-            onPress={handleOpenPhone}
-            >
-                <Icon name='phone' color={'#0C5460'}/>
-                <Text style={{textAlign:'center',color:'#0C5460',}}>Ara</Text>
+        <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+            <TouchableOpacity
+                onPress={()=>{
+                    handleOpenPhone()
+                }}
+            style={{
+                backgroundColor:'#10A958',
+                width:'45%',
+                padding:6,
+                borderRadius:6,
+                flexDirection:'row',
+                alignItems:'center',
+                justifyContent:'center',gap:10
+            }}>
+                <Icon name='phone' color={'#fff'}/>
+                <Text style={{color:'#FFFFFF',textAlign:'center'}}>
+                    Komşumu Ara
+                </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{backgroundColor:'#D4EDDA',flex:1/2,padding:10,borderRadius:6}} >
-                <Text style={{color:'#457C54',textAlign:'center'}}>İlanı Görüntüle</Text>
+            <TouchableOpacity style={{
+                backgroundColor:'#000000',
+                width:'45%',
+                padding:6,
+                borderRadius:6,
+                flexDirection:'row',
+                alignItems:'center',
+                justifyContent:'center',gap:10
+            }}>
+                     <Icon name='eye' color={'#fff'}/>
+                <Text style={{color:'#FFFFFF',textAlign:'center'}}>
+                    İlanı Görüntüle
+                </Text>
             </TouchableOpacity>
+        </View>
         </View>
     </View>
   )
@@ -37,11 +102,10 @@ export default function NeigbourhoodCard() {
 const styles = StyleSheet.create({
     contain:{
     
-       gap:10,
+      
         backgroundColor: '#FFFFFF',  
-        borderRadius: 5,  
-        paddingVertical: 22,  
-        paddingHorizontal: 10,  
+        borderRadius: 12,  
+        
         width: '100%',  
      
        
@@ -61,6 +125,12 @@ const styles = StyleSheet.create({
 
     },
     Text:{
-        color:'#333'
+        color:'#333',
+        fontSize:11,
+        fontWeight:'600'
+    },
+    header:{
+        fontSize:12,
+        fontWeight:'300'
     }
 })

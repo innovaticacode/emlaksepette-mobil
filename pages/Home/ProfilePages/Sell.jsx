@@ -151,7 +151,7 @@ const style=StyleSheet.create({
     },
     orders:{
       width:'100%',
-      padding:15,
+    padding:5,
       gap:15
     }
 })

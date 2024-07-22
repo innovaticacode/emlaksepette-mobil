@@ -886,7 +886,7 @@ export default function PostDetail() {
                       ProjectHomeData.project.step1_slug.slice(1) // Geri kalanı olduğu gibi bırakma
                     : ""}
                 </Text>
-
+                
                 {offSaleCheck && !soldCheck && shareSaleEmpty ? (
                   <>
                     {discountAmount != 0 ? (
@@ -932,7 +932,7 @@ export default function PostDetail() {
                     shareSale !== "[]" &&
                     !sumCartOrderQt[HomeId]) ? (
                   <View>
-                    <Text style={styles.regularPrice}>
+                    <Text style={[styles.regularPrice,{color:'red'}]}>
                       {shareSale &&
                         shareSale !== "[]" &&
                         numberOfShare !== 0 && (
