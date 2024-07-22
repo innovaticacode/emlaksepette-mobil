@@ -7,22 +7,22 @@ import SupportList from "./SupportList";
 export default function Support() {
   const [tabs, setTabs] = useState(1);
   return (
-    <View style={{ flex: 1, padding: 5 }}>
+    <View style={{ flex: 1, padding: 5, backgroundColor: "white" }}>
       <View
         style={{
           width: "100%",
           flexDirection: "row",
-          borderRadius: 6,
-          borderWidth: 2,
-          borderColor: "#E9E9E9",
+          borderRadius: 50,
+          marginTop: 10,
+          justifyContent: "center",
         }}
       >
-        <View style={{ width: "50%" }}>
+        <View style={{ width: "45%" }}>
           <TouchableOpacity
             style={{
               padding: 10,
-              backgroundColor: tabs == 1 ? "red" : "transparent",
-              borderRadius: 6,
+              backgroundColor: tabs == 1 ? "red" : "#F2F2F2",
+              borderRadius: 50,
               alignItems: "center",
             }}
             onPress={() => {
@@ -38,13 +38,13 @@ export default function Support() {
             </Text>
           </TouchableOpacity>
         </View>
-        <View style={{ width: "50%" }}>
+        <View style={{ width: "45%" }}>
           <TouchableOpacity
             style={{
               width: "100%",
               padding: 10,
-              backgroundColor: tabs == 2 ? "red" : "transparent",
-              borderRadius: 6,
+              backgroundColor: tabs == 2 ? "red" : "#F2F2F2",
+              borderRadius: 50,
               alignItems: "center",
             }}
             onPress={() => {
@@ -57,6 +57,7 @@ export default function Support() {
           </TouchableOpacity>
         </View>
       </View>
+
       {tabs == 1 && <SupportAdd />}
       {tabs == 2 && <SupportList />}
     </View>

@@ -3,16 +3,12 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  Button,
-  Dimensions,
   TouchableOpacity,
   Alert,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import RNPickerSelect from "react-native-picker-select";
-import * as DocumentPicker from "expo-document-picker";
-import * as FileSystem from "expo-file-system";
-import { WebView } from "react-native-webview";
 import { getValueFor } from "../../../../components/methods/user";
 import axios from "axios";
 import {
@@ -20,20 +16,51 @@ import {
   Toast,
   ALERT_TYPE,
 } from "react-native-alert-notification";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function SupportAdd() {
   const [selectedValue, setSelectedValue] = useState("");
   const [textAreaValue, setTextAreaValue] = useState("");
-  const [pdfBase64, setPdfBase64] = useState(null);
-  const [user, setuser] = useState({});
-  const [pdfUri, setPdfUri] = useState(null);
-  const [selectedDocumentName, setSelectedDocumentName] = useState(null);
+  const [user, setUser] = useState({});
   const [additionalOption, setAdditionalOption] = useState("");
   const [pickerKey, setPickerKey] = useState(Math.random());
+  const [loading, setLoading] = useState(true);
+  const [isPicker1Open, setIsPicker1Open] = useState(false);
+  const [isPicker2Open, setIsPicker2Open] = useState(false);
+  const [iconName1, setIconName1] = useState("angle-down");
+  const [iconName2, setIconName2] = useState("angle-down");
 
   useEffect(() => {
-    getValueFor("user", setuser);
+    getValueFor("user", setUser);
   }, []);
+
+  const handlePicker1Open = () => {
+    setIsPicker1Open(true);
+    setIconName1("angle-up");
+    if (isPicker2Open) {
+      setIsPicker2Open(false);
+      setIconName2("angle-down");
+    }
+  };
+
+  const handlePicker1Close = () => {
+    setIsPicker1Open(false);
+    setIconName1("angle-down");
+  };
+
+  const handlePicker2Open = () => {
+    setIsPicker2Open(true);
+    setIconName2("angle-up");
+    if (isPicker1Open) {
+      setIsPicker1Open(false);
+      setIconName1("angle-down");
+    }
+  };
+
+  const handlePicker2Close = () => {
+    setIsPicker2Open(false);
+    setIconName2("angle-down");
+  };
 
   const submitData = async () => {
     if (!selectedValue || !textAreaValue) {
@@ -53,7 +80,7 @@ export default function SupportAdd() {
 
       // Ek seçenek varsa, onu da ekle
       if (selectedValue === "Evrak Gönderimi" && additionalOption) {
-        formData.append("sendReason", additionalOption); // sendReason anahtarı kullanılıyor
+        formData.append("send_reason", additionalOption); // sendReason anahtarı kullanılıyor
       }
 
       // API'ye veri gönder
@@ -69,29 +96,35 @@ export default function SupportAdd() {
       );
 
       if (response.status === 200) {
-      } else {
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: `Talebiniz oluşturuldu`,
-          textBody: `gönderi başarılı`,
+          textBody: `Gönderi başarılı`,
         });
         // Tüm state'leri sıfırla
         setSelectedValue("");
         setTextAreaValue("");
         setAdditionalOption("");
         setPickerKey(Math.random());
+      } else {
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: `Talebiniz oluşturulamadı`,
+          textBody: `Bir hata oluştu`,
+        });
       }
     } catch (error) {
       if (error.response) {
         Toast.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: `Talebiniz oluşturuldu`,
-          textBody: `gönderi başarılı`,
+          type: ALERT_TYPE.DANGER,
+          title: `Talebiniz oluşturulamadı`,
+          textBody: `Hata: ${error.response.data.message || error.message}`,
         });
       } else {
-        // Diğer hata durumlarını yönet
         Alert.alert("Gönderim sırasında bir hata oluştu.");
       }
+    } finally {
+      setLoading(false); // Loading state'ini kapat
     }
   };
 
@@ -102,6 +135,8 @@ export default function SupportAdd() {
           <Text style={styles.label}>Kategori Seç</Text>
           <RNPickerSelect
             onValueChange={(value) => setSelectedValue(value)}
+            onOpen={handlePicker1Open}
+            onClose={handlePicker1Close}
             items={[
               { label: "Bilgi", value: "Bilgi" },
               { label: "Evrak Gönderimi", value: "Evrak Gönderimi" },
@@ -115,6 +150,16 @@ export default function SupportAdd() {
               color: "#333",
             }}
             style={pickerSelectStyles}
+            Icon={() => {
+              return (
+                <Icon
+                  style={{ marginRight: 20, marginTop: 10 }}
+                  name={iconName1}
+                  size={20}
+                  color="gray"
+                />
+              );
+            }}
           />
         </View>
         <View style={{ marginTop: 10 }}>
@@ -122,6 +167,8 @@ export default function SupportAdd() {
             <View style={{ paddingRight: 20, paddingLeft: 20, marginTop: 10 }}>
               <RNPickerSelect
                 onValueChange={(value) => setAdditionalOption(value)}
+                onOpen={handlePicker2Open}
+                onClose={handlePicker2Close}
                 items={[
                   {
                     label: "Turizm Amaçlı Kiralama",
@@ -144,12 +191,29 @@ export default function SupportAdd() {
                   color: "#333",
                 }}
                 style={pickerSelectStyles}
+                Icon={() => {
+                  return (
+                    <Icon
+                      style={{ marginRight: 20, marginTop: 10 }}
+                      name={iconName2}
+                      size={20}
+                      color="gray"
+                    />
+                  );
+                }}
               />
             </View>
           )}
         </View>
-        <View style={{ paddingRight: 20, paddingLeft: 20, marginTop: 10 }}>
-          <Text style={styles.label}>Bir metin girin:</Text>
+        <View
+          style={{
+            paddingRight: 20,
+            paddingLeft: 20,
+            marginTop: 10,
+            borderRadius: 50,
+            borderColor: "#e6e6e6",
+          }}
+        >
           <TextInput
             style={styles.textArea}
             multiline
@@ -159,7 +223,7 @@ export default function SupportAdd() {
             placeholder="Metin girin..."
           />
         </View>
-        <View style={{ marginTop: 10 }}>
+        <View style={{ marginTop: 10, paddingRight: 20, paddingLeft: 20 }}>
           <TouchableOpacity
             style={{
               backgroundColor: "#ea2b2e",
@@ -186,11 +250,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginBottom: 10,
   },
-  selectedValue: {
-    marginTop: 20,
-    fontSize: 18,
-    color: "blue",
-  },
   textArea: {
     height: 100,
     justifyContent: "flex-start",
@@ -201,40 +260,18 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     fontSize: 16,
     marginTop: 20,
-  },
-  selectedValue: {
-    marginTop: 20,
-    fontSize: 18,
-    color: "blue",
-  },
-  noPdfText: {
-    marginTop: 20,
-    fontSize: 16,
-    color: "red",
-  },
-  pdf: {
-    flex: 1,
-    marginTop: 20,
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height - 100, // Buton ve margin alanı için yer bırakılır
-  },
-  noPdfText: {
-    marginTop: 20,
-    fontSize: 16,
-    color: "gray",
-  },
-  button: {
-    backgroundColor: "red",
-    paddingVertical: 8,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-    alignItems: "center", // Buton metnini ortalar
-    marginBottom: 20, // Buton ve PDF arasına boşluk bırakır
-  },
-  buttonText: {
-    color: "#fff", // Buton metninin rengini beyaz yapar
-    fontSize: 16,
-    fontWeight: "bold",
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: "gray",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
 });
 
@@ -242,12 +279,23 @@ const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     fontSize: 16,
     paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: "gray",
+    paddingHorizontal: 20,
     borderRadius: 4,
     color: "black",
     paddingRight: 30, // to ensure the text is never behind the icon
+    borderWidth: 1,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: "gray",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
   inputAndroid: {
     fontSize: 16,
