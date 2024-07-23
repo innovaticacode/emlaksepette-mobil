@@ -8,6 +8,7 @@ import {
   Modal,
   StyleSheet,
   TouchableWithoutFeedback,
+  Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native-paper";

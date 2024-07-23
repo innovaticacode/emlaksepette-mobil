@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
+  Alert,
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { getValueFor } from "../../../../components/methods/user";
@@ -17,7 +18,6 @@ import {
 } from "react-native-alert-notification";
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as DocumentPicker from "expo-document-picker";
-import * as FileSystem from "expo-file-system";
 
 export default function SupportAdd() {
   const [selectedValue, setSelectedValue] = useState("");
@@ -25,11 +25,12 @@ export default function SupportAdd() {
   const [user, setUser] = useState({});
   const [additionalOption, setAdditionalOption] = useState("");
   const [pickerKey, setPickerKey] = useState(Math.random());
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isPicker1Open, setIsPicker1Open] = useState(false);
   const [isPicker2Open, setIsPicker2Open] = useState(false);
   const [iconName1, setIconName1] = useState("angle-down");
   const [iconName2, setIconName2] = useState("angle-down");
+  const [pdfFile, setPdfFile] = useState(null);
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -41,6 +42,35 @@ export default function SupportAdd() {
     if (isPicker2Open) {
       setIsPicker2Open(false);
       setIconName2("angle-down");
+    }
+  };
+
+  const pickPDF = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "application/pdf",
+      });
+
+      console.log(
+        "Seçilen PDF Dosyasının İçeriği:",
+        JSON.stringify(result, null, 2)
+      );
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const pdfAsset = result.assets[0];
+        setPdfFile(pdfAsset);
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "PDF Seçildi",
+          textBody: `Seçtiğiniz PDF: ${pdfFile.name}`,
+        });
+      }
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Hata",
+        textBody: "PDF seçilirken bir hata oluştu",
+      });
     }
   };
 
@@ -73,30 +103,24 @@ export default function SupportAdd() {
       return;
     }
 
-    setLoading(true); // Loading state'ini true yap
+    setLoading(true);
 
     try {
       const formData = new FormData();
 
-      // Form verilerini ekle
       formData.append("category", selectedValue);
       formData.append("description", textAreaValue);
 
-      // Ek seçenek varsa, onu da ekle
       if (selectedValue === "Evrak Gönderimi" && additionalOption) {
-        formData.append("sendReason", additionalOption); // sendReason anahtarı kullanılıyor
+        formData.append("sendReason", additionalOption);
       }
 
-      // PDF dosyasını ekle
-      if (pdfFile) {
-        formData.append("file", {
-          uri: pdfFile.uri,
-          name: pdfFile.name,
-          type: "application/pdf",
-        });
-      }
+      formData.append("file", {
+        uri: pdfFile.uri,
+        type: pdfFile.mimeType,
+        name: pdfFile.name,
+      });
 
-      // API'ye veri gönder
       const response = await axios.post(
         "https://private.emlaksepette.com/api/support",
         formData,
@@ -108,7 +132,7 @@ export default function SupportAdd() {
         }
       );
 
-      console.log("API Yanıtı:", response); // API yanıtını konsola yazdır
+      console.log("API Yanıtı:", response);
 
       if (response.status === 200 || response.status === 201) {
         Toast.show({
@@ -116,12 +140,11 @@ export default function SupportAdd() {
           title: "Talebiniz oluşturuldu",
           textBody: "Gönderi başarılı",
         });
-        // Tüm state'leri sıfırla
         setSelectedValue("");
         setTextAreaValue("");
         setAdditionalOption("");
-        setPickerKey(Math.random());
         setPdfFile(null); // PDF dosyasını sıfırla
+        setPickerKey(Math.random());
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
@@ -132,7 +155,7 @@ export default function SupportAdd() {
         });
       }
     } catch (error) {
-      console.error("Hata Detayı:", error); // Hata detaylarını konsola yazdır
+      console.error("Hata Detayı:", error);
 
       if (error.response) {
         Toast.show({
@@ -144,7 +167,7 @@ export default function SupportAdd() {
         Alert.alert("Gönderim sırasında bir hata oluştu.");
       }
     } finally {
-      setLoading(false); // Loading state'ini false yap
+      setLoading(false);
     }
   };
 
@@ -253,9 +276,17 @@ export default function SupportAdd() {
               padding: 10,
               marginBottom: 10,
             }}
+            onPress={pickPDF}
+            // PDF seçmek için tıklanabilir
           >
             <Text style={{ textAlign: "center", color: "black" }}>PDF Seç</Text>
           </TouchableOpacity>
+
+          {pdfFile && (
+            <View style={styles.pdfContainer}>
+              <Text style={styles.pdfText}>Seçtiğiniz PDF: {pdfFile.name}</Text>
+            </View>
+          )}
 
           <TouchableOpacity
             style={{
@@ -265,8 +296,11 @@ export default function SupportAdd() {
               padding: 10,
             }}
             onPress={submitData}
+            disabled={loading} // Gönderim sırasında butona tıklanmasını engelle
           >
-            <Text style={{ textAlign: "center", color: "white" }}>Gönder</Text>
+            <Text style={{ textAlign: "center", color: "white" }}>
+              {loading ? "Gönderiliyor..." : "Gönder"}
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -306,6 +340,20 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  pdf: {
+    width: "100%",
+    height: 400,
+  },
+  pdfContainer: {
+    marginTop: 20,
+    padding: 15,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 8,
+  },
+  pdfText: {
+    fontSize: 16,
+    color: "black",
+  },
 });
 
 const pickerSelectStyles = StyleSheet.create({
@@ -315,7 +363,7 @@ const pickerSelectStyles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 4,
     color: "black",
-    paddingRight: 30, // to ensure the text is never behind the icon
+    paddingRight: 30,
     borderWidth: 1,
     borderColor: "#e6e6e6",
     ...Platform.select({
@@ -338,6 +386,6 @@ const pickerSelectStyles = StyleSheet.create({
     borderColor: "purple",
     borderRadius: 8,
     color: "black",
-    paddingRight: 30, // to ensure the text is never behind the icon
+    paddingRight: 30,
   },
 });
