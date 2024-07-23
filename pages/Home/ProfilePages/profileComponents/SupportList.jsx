@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   StyleSheet,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native-paper";
@@ -14,6 +15,8 @@ import axios from "axios";
 import { getValueFor } from "../../../../components/methods/user";
 import moment from "moment";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import AntDesign from "react-native-vector-icons/AntDesign";
+import RenderHtml from "react-native-render-html";
 
 export default function SupportList() {
   const [supportData, setSupportData] = useState([]);
@@ -111,7 +114,7 @@ export default function SupportList() {
                         Kategori
                       </Text>
                       <Text style={{ fontSize: 13 }}>{support.category}</Text>
-                      {support.send_reason && (
+                      {support?.send_reason && (
                         <View style={{ marginTop: 10 }}>
                           <Text
                             style={{
@@ -123,7 +126,7 @@ export default function SupportList() {
                             Evrak Gönderme Nedeni
                           </Text>
                           <Text style={{ fontSize: 13 }}>
-                            {support.send_reason}
+                            {support?.send_reason}
                           </Text>
                         </View>
                       )}
@@ -177,59 +180,78 @@ export default function SupportList() {
                           flex: 1 / 2,
                         }}
                       >
-                        <Text style={{ textAlign: "center", color: "red" }}>
-                          Belge1.pdf
-                        </Text>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <AntDesign
+                            style={{ marginRight: 10 }}
+                            name="pdffile1"
+                            color={"red"}
+                          />
+                          <Text style={{ textAlign: "center", color: "red" }}>
+                            Belge1.pdf
+                          </Text>
+                        </View>
                       </TouchableOpacity>
                     </View>
-
-                    {/* <View style={{ width: "45%" }}>
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: "rgba(234, 43, 46, 0.2)",
-                          justifyContent: "center",
-                          borderRadius: 5,
-                          padding: 10,
-                          flex: 1 / 2,
-                          backgroundColor: "#FFCE86",
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                        <FeatherIcon
-                          style={{ marginRight: 10 }}
-                          name="clock"
-                          color={"#FF9907"}
-                        />
-                        <Text style={{ textAlign: "center", color: "#FF9907" }}>
-                          Yanıt Bekleniyor
-                        </Text>
-                      </TouchableOpacity>
-                    </View> */}
-                    <View style={{ width: "45%" }}>
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: "rgba(234, 43, 46, 0.2)",
-                          justifyContent: "center",
-                          borderRadius: 5,
-                          padding: 10,
-                          flex: 1 / 2,
-                          backgroundColor: "#0FA958",
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                        onPress={() => openModal(support)}
-                      >
-                        <FeatherIcon
-                          style={{ marginRight: 10 }}
-                          name="check-circle"
-                          color={"#107641"}
-                        />
-                        <Text style={{ textAlign: "center", color: "#107641" }}>
-                          Yanıtı Gör
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
+                    {support.return_support ? (
+                      <View style={{ width: "45%" }}>
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: "rgba(234, 43, 46, 0.2)",
+                            justifyContent: "center",
+                            borderRadius: 5,
+                            padding: 10,
+                            flex: 1 / 2,
+                            backgroundColor: "#0FA958",
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                          onPress={() => openModal(support)}
+                        >
+                          <FeatherIcon
+                            style={{ marginRight: 10 }}
+                            name="check-circle"
+                            color={"#107641"}
+                          />
+                          <Text
+                            style={{ textAlign: "center", color: "#107641" }}
+                          >
+                            Yanıtı Gör
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    ) : (
+                      <View style={{ width: "45%" }}>
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: "rgba(234, 43, 46, 0.2)",
+                            justifyContent: "center",
+                            borderRadius: 5,
+                            padding: 10,
+                            flex: 1 / 2,
+                            backgroundColor: "#FFCE86",
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          <FeatherIcon
+                            style={{ marginRight: 10 }}
+                            name="clock"
+                            color={"#FF9907"}
+                          />
+                          <Text
+                            style={{ textAlign: "center", color: "#FF9907" }}
+                          >
+                            Yanıt Bekleniyor
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
                   </View>
                 </TouchableOpacity>
               </View>
@@ -243,17 +265,29 @@ export default function SupportList() {
         visible={modalVisible}
         onRequestClose={closeModal}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Yanıt</Text>
-            <Text style={styles.modalContent}>
-              {selectedSupport ? selectedSupport.response : ""}
-            </Text>
-            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-              <Text style={styles.closeButtonText}>Kapat</Text>
-            </TouchableOpacity>
+        <TouchableWithoutFeedback onPress={closeModal}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContainer}>
+                <Text style={styles.modalTitle}>Yanıt</Text>
+                <Text style={styles.modalContent}>
+                  {selectedSupport && (
+                    <RenderHtml
+                      contentWidth={300}
+                      source={{ html: selectedSupport.return_support }}
+                    />
+                  )}
+                </Text>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={closeModal}
+                >
+                  <Text style={styles.closeButtonText}>Kapat</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </View>
   );

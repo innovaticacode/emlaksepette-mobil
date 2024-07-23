@@ -15,6 +15,7 @@ export default function Support() {
           borderRadius: 50,
           marginTop: 10,
           justifyContent: "center",
+          gap: 10,
         }}
       >
         <View style={{ width: "45%" }}>

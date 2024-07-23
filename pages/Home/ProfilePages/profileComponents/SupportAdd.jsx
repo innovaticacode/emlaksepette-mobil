@@ -1,13 +1,12 @@
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  Alert,
   Platform,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import RNPickerSelect from "react-native-picker-select";
 import { getValueFor } from "../../../../components/methods/user";
 import axios from "axios";
@@ -17,6 +16,8 @@ import {
   ALERT_TYPE,
 } from "react-native-alert-notification";
 import Icon from "react-native-vector-icons/FontAwesome";
+import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
 
 export default function SupportAdd() {
   const [selectedValue, setSelectedValue] = useState("");
@@ -66,11 +67,14 @@ export default function SupportAdd() {
     if (!selectedValue || !textAreaValue) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: `Talebiniz Oluşturulmadı`,
-        textBody: `Gerekli Alanları Doldurun`,
+        title: "Talebiniz Oluşturulmadı",
+        textBody: "Gerekli Alanları Doldurun",
       });
       return;
     }
+
+    setLoading(true); // Loading state'ini true yap
+
     try {
       const formData = new FormData();
 
@@ -80,7 +84,16 @@ export default function SupportAdd() {
 
       // Ek seçenek varsa, onu da ekle
       if (selectedValue === "Evrak Gönderimi" && additionalOption) {
-        formData.append("send_reason", additionalOption); // sendReason anahtarı kullanılıyor
+        formData.append("sendReason", additionalOption); // sendReason anahtarı kullanılıyor
+      }
+
+      // PDF dosyasını ekle
+      if (pdfFile) {
+        formData.append("file", {
+          uri: pdfFile.uri,
+          name: pdfFile.name,
+          type: "application/pdf",
+        });
       }
 
       // API'ye veri gönder
@@ -95,36 +108,43 @@ export default function SupportAdd() {
         }
       );
 
-      if (response.status === 200) {
+      console.log("API Yanıtı:", response); // API yanıtını konsola yazdır
+
+      if (response.status === 200 || response.status === 201) {
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
-          title: `Talebiniz oluşturuldu`,
-          textBody: `Gönderi başarılı`,
+          title: "Talebiniz oluşturuldu",
+          textBody: "Gönderi başarılı",
         });
         // Tüm state'leri sıfırla
         setSelectedValue("");
         setTextAreaValue("");
         setAdditionalOption("");
         setPickerKey(Math.random());
+        setPdfFile(null); // PDF dosyasını sıfırla
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: `Talebiniz oluşturulamadı`,
-          textBody: `Bir hata oluştu`,
+          title: "Talebiniz oluşturulamadı",
+          textBody: `Bir hata oluştu: ${
+            response.data.message || "Bilinmeyen hata"
+          }`,
         });
       }
     } catch (error) {
+      console.error("Hata Detayı:", error); // Hata detaylarını konsola yazdır
+
       if (error.response) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
-          title: `Talebiniz oluşturulamadı`,
+          title: "Talebiniz oluşturulamadı",
           textBody: `Hata: ${error.response.data.message || error.message}`,
         });
       } else {
         Alert.alert("Gönderim sırasında bir hata oluştu.");
       }
     } finally {
-      setLoading(false); // Loading state'ini kapat
+      setLoading(false); // Loading state'ini false yap
     }
   };
 
@@ -135,6 +155,7 @@ export default function SupportAdd() {
           <Text style={styles.label}>Kategori Seç</Text>
           <RNPickerSelect
             onValueChange={(value) => setSelectedValue(value)}
+            key={pickerKey}
             onOpen={handlePicker1Open}
             onClose={handlePicker1Close}
             items={[
@@ -224,6 +245,18 @@ export default function SupportAdd() {
           />
         </View>
         <View style={{ marginTop: 10, paddingRight: 20, paddingLeft: 20 }}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#FFCE86",
+              justifyContent: "center",
+              borderRadius: 5,
+              padding: 10,
+              marginBottom: 10,
+            }}
+          >
+            <Text style={{ textAlign: "center", color: "black" }}>PDF Seç</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity
             style={{
               backgroundColor: "#ea2b2e",
