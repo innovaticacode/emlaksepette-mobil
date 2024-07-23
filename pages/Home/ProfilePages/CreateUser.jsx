@@ -207,6 +207,7 @@ export default function CreateUser() {
                 style={style.Input}
                 value={phoneNumber}
                 onChangeText={(value) => setphoneNumber(value)}
+                keyboardType='phone-pad'
               />
                  {validationErrors.phoneNumber && (
                 <Text style={style.errorText}>

@@ -52,7 +52,9 @@ export default function Order({ item }) {
   console.log(Type)
   const { width, height } = Dimensions.get("window");
   return (
-    <TouchableOpacity style={style.container}>
+    <TouchableOpacity style={style.container}
+    onPress={() => navigation.navigate("OrderDetail", { OrderId: item.id , id:HouseId})}
+    >
         <View style={{flexDirection:'row'}}>
           <View style={{width: width > 400?'24%':'28%',padding:2}}>
           <View style={{width:85,height:85,borderRadius:1}}>
@@ -69,7 +71,7 @@ export default function Order({ item }) {
 
     <Text style={{fontSize:12,fontWeight:'600',color:'#333'}} numberOfLines={1}>{Title}</Text>
 <Text style={{fontSize:11,fontWeight:'500',color:'#333'}}>Toplam: {item.amount} ₺</Text>
-  <Text style={{fontSize:11,fontWeight:'500',color:'#333'}}>12 temmuz 2024</Text>
+  <Text style={{fontSize:11,fontWeight:'500',color:'#333'}}>{formattedDate}</Text>
   <Text style={{fontSize:11,fontWeight:'500',color:'#333'}}>Sipariş No:{item.id}</Text>
   {
               Type=='project'?
@@ -270,13 +272,7 @@ export default function Order({ item }) {
                   </TouchableOpacity>
                 )}
             </View>
-            <View style={{alignItems:'center',width:'100%'}}>
-              <View style={{flexDirection:'row',alignItems:'center'}}>
-              <Text style={{fontSize:12,color:'#EA2C2E',textDecorationLine:'underline'}}>Detaylar</Text>
-              <Icon name="arrow-right" size={10} color={'#EA2C2E'}/>
-              </View>
-  
-  </View>
+      
             </View>
 
         </View>
