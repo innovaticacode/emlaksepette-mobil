@@ -19,7 +19,7 @@ export default function Invoice() {
     getValueFor("user", setUser);
   }, []);
   const [data, setData] = useState([]);
-
+  console.log(OrderId);
   const fetchData = async () => {
     setLoading(true);
     try {
