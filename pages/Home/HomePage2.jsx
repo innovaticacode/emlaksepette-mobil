@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ImageBackground,
+  TextInput,
 } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
 import HomePage from "./HomePage";
@@ -83,6 +84,7 @@ const CustomTabBar = ({
 
   return (
     <View>
+    
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         <View style={{ padding: 10, flexDirection: "row", gap: 10 }}>
           {menuItems.map((item, index) => (
@@ -169,6 +171,13 @@ export default function HomePage2() {
           </View>
         </View>
       </Modal>
+      <View style={{paddingLeft:10,paddingRight:10}}>
+        <TextInput style={{padding:8,backgroundColor:'#ebebeb',borderRadius:5,}} placeholder="Kelime veya İlan no ile ara.." 
+            onPress={()=>{
+                navigation.navigate('SearchPage')
+            }}
+        />
+      </View>
       <TabView
         navigationState={{ index, routes }}
         renderScene={({ route, jumpTo }) =>

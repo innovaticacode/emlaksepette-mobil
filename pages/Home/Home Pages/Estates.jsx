@@ -99,8 +99,7 @@ const Estates = ({ index }) => {
       <ActivityIndicator style={{ margin: 20 }} size="small" color="#333" />
     );
   };
-  console.log(filteredHomes)
-console.log(user)
+
   return (
     <>
     {
@@ -190,7 +189,7 @@ console.log(user)
        
           renderItem={({ item }) => (
             <RealtorPost
-         
+            sold={item.sold}
               HouseId={item.id}
               price={`${JSON.parse(item.housing_type_data)["price"]} `}
               housing={item}

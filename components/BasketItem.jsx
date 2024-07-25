@@ -34,8 +34,12 @@ export default function BasketItem({
   counter,
   storeName,
   DeleteBasket,
+
+  id
+
   isInstallament,
   installmentPrice,
+
 }) {
   const route = useRoute();
   const navigation = useNavigation();
@@ -121,9 +125,14 @@ export default function BasketItem({
           </View>
 
           <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("PostDetails", { HomeId: roomOrder })
+            onPress={() =>{
+            if (type=='project') {
+              navigation.navigate("PostDetails", { HomeId: roomOrder ,projectId:id })
+            }else{
+              navigation.navigate('Realtor details',{houseId:id})
             }
+              
+            }}
           >
             <View style={{ flexDirection: "row", gap: 10 }}>
               <View style={{ justifyContent: "center" }}>

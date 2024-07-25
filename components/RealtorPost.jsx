@@ -50,6 +50,8 @@ export default function RealtorPost({
   column4_additional,
   step2_slug,
   step1_slug,
+  sold
+
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -419,6 +421,7 @@ const [cartIsNull, setcartIsNull] = useState(false)
                     <Text style={styles.priceText}>{formattedPrice}₺</Text>
                   )}
                 </View>
+                
                 <TouchableOpacity
                   style={styles.addBasket}
                   onPress={handlePress}
@@ -436,6 +439,7 @@ const [cartIsNull, setcartIsNull] = useState(false)
                       Rezervasyon
                     </Text>
                   ) : (
+                   
                     <Text
                       style={{
                         color: "white",
@@ -450,6 +454,7 @@ const [cartIsNull, setcartIsNull] = useState(false)
               </View>
             </View>
           </View>
+       
           <View
             style={{
               backgroundColor: "#E8E8E8",

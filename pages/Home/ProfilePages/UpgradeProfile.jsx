@@ -612,7 +612,7 @@ const [chooseFile, setchooseFile] = useState(false)
                             }}
                             onPress={() => setopenColorPicker(!openColorPicker)}
                           >
-                             <Feather name="color-palette" color={'white'} size={35}/>
+                             <Feather name="brush" color={'white'} size={25}/>
                           </TouchableOpacity>
                   
                     </View>

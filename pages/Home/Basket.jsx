@@ -387,6 +387,7 @@ export default function Basket() {
                 <GestureHandlerRootView style={{ backgroundColor: "white" }}>
                   <Swipeable renderRightActions={renderRightActions}>
                     <BasketItem
+                    id={Cart.id}
                       name={Cart?.title}
                       ımage={Cart?.image}
                       price={Cart?.amount}
@@ -398,11 +399,11 @@ export default function Basket() {
                       counter={counter}
                       storeName={offerControl?.store}
                       DeleteBasket={DeleteBasket}
+
                       isInstallament={isInstallament}
                       installmentPrice={Cart?.installmentPrice}
-                      onPress={() =>
-                        navigation.navigate("RealtorDetails", { id: Cart.id })
-                      }
+                 
+
                     />
                   </Swipeable>
                 </GestureHandlerRootView>
