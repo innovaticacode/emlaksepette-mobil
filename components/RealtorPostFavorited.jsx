@@ -110,6 +110,25 @@ export default function RealtorPostFavorited({
       </TouchableOpacity>
     );
   };
+
+  const goToPostDetail=()=>{
+    if (isChoosed==true) {
+      selectFavorite(housingId)
+      setIsHighlighted(!isHighlighted)
+    }else{
+      navigation.navigate('PostDetails',{ HomeId:housingId,projectId:projectId})
+    }
+   
+  }
+  const goToRealtorDetails=()=>{
+    if (isChoosed==true) {
+      selectFavorite(HouseId)
+      setIsHighlighted(!isHighlighted)
+    }else{
+      navigation.navigate('Realtor details',{  houseId:HouseId,})
+    }
+   
+  }
   const [isHighlighted, setIsHighlighted] = useState(false);
   return (
     
@@ -117,15 +136,24 @@ export default function RealtorPostFavorited({
       <TouchableOpacity
       style={{ borderWidth: isHighlighted?1:0,borderColor:'red'}}
         onPress={() =>{
-         if (isChoosed==true) {
-          setIsHighlighted(!isHighlighted)
+       
           if (type==1) {
-            
-            selectFavorite(housingId)
+            goToPostDetail()
           }else{
-            selectFavorite(HouseId)
+            goToRealtorDetails()
           }
-         }
+
+        //  if (isChoosed==true) {
+        //   setIsHighlighted(!isHighlighted)
+        //   if (type==1) {
+            
+        //     alert('dsff')
+        //     selectFavorite(housingId)
+        //   }else{
+
+        //     selectFavorite(HouseId)
+        //   }
+        //  }
           
           // navigation.navigate("Realtor details", { houseId: HouseId })
         }}

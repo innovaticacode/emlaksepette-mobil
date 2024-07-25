@@ -2,6 +2,7 @@ import { View, Text,StyleSheet, TouchableOpacity,Linking, ImageBackground } from
 import React from 'react'
 import Icon from 'react-native-vector-icons/Feather'
 import { Platform } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 export default function NeigbourhoodCard({NeigBourHoodInfo,project,projectInfo}) {
     const handleOpenPhone = () => {
         // Telefon uygulamasını açmak için
@@ -28,6 +29,8 @@ export default function NeigbourhoodCard({NeigBourHoodInfo,project,projectInfo})
         return formattedNumber;
       };
       const apiUrl = "https://private.emlaksepette.com";
+      console.log(project)
+      const navigation =useNavigation()
   return (
     <View style={styles.contain}>
         <View style={{padding:17,gap:20}}>
@@ -80,7 +83,11 @@ export default function NeigbourhoodCard({NeigBourHoodInfo,project,projectInfo})
                     Komşumu Ara
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{
+            <TouchableOpacity 
+                onPress={()=>{
+                    navigation.navigate('PostDetails',{HomeId: JSON.parse(project)['item']['housing'] , projectId:projectInfo.id})
+                }}
+            style={{
                 backgroundColor:'#000000',
                 width:'45%',
                 padding:6,
@@ -91,7 +98,7 @@ export default function NeigbourhoodCard({NeigBourHoodInfo,project,projectInfo})
             }}>
                      <Icon name='eye' color={'#fff'}/>
                 <Text style={{color:'#FFFFFF',textAlign:'center'}}>
-                    İlanı Görüntüle
+                    İlanı Görüntüle 
                 </Text>
             </TouchableOpacity>
         </View>

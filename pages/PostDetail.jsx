@@ -31,8 +31,7 @@ import Icon4 from "react-native-vector-icons/AntDesign";
 import Swiper from "react-native-swiper";
 import { SocialIcon, Icon } from "react-native-elements";
 import LinkIcon3 from "react-native-vector-icons/Feather";
-import LinkIcon4 from "react-native-vector-icons/Fontisto";
-import LinkIcon2 from "react-native-vector-icons/FontAwesome";
+
 import {
   ALERT_TYPE,
   Dialog,
@@ -89,20 +88,12 @@ export default function PostDetail() {
 
   const {
     HomeId,
-    discount,
-    isLoading,
-    roomData,
-    numberOfShare,
-    price,
+  
     projectId,
-    sold,
-    discountedPrice,
-    discountAmount,
-    offSaleCheck,
-    soldCheck,
-    shareSale,
-    shareSaleEmpty,
-    sumCartOrderQt,
+    // price,
+    //  discountAmount,
+    // offSaleCheck,
+    // soldCheck,
   } = route.params;
 
   const navigation = useNavigation();
@@ -134,12 +125,22 @@ export default function PostDetail() {
       location: "0,0",
     },
     projectHousingsList: {},
+    projectCartOrders:{},
+    sumCartOrderQt:{}
   });
+  const [ShareSaleEmpty, setShareSaleEmpty] = useState(null)
   useEffect(() => {
     apiRequestGet("project/" + projectId).then((res) => {
       setProjectHomeData(res.data);
+     
+   
     });
-  }, []);
+  }, []);   
+  const roomData = ProjectHomeData.projectHousingsList[HomeId] || {}
+  useEffect(() => {
+    setShareSaleEmpty(!roomData["share_sale[]"] || roomData["share_sale[]"] === "[]")
+  }, [ProjectHomeData])
+  
 
   const [pagination, setPagination] = useState(0);
   const handlePageChange = (pageNumber) => {
@@ -643,6 +644,24 @@ export default function PostDetail() {
       setAlertForFavorite(true);
     }
   };
+  const getDiscountAmount = (project, roomIndex) => {
+    const projectOffer = ProjectHomeData.offer;
+    return projectOffer ? projectOffer.discount_amount : 0;
+  };
+
+  const discountAmount=getDiscountAmount(ProjectHomeData.project, HomeId)
+ const soldCheck=ProjectHomeData?.projectCartOrders && ["1", "0"].includes(ProjectHomeData?.projectCartOrders[HomeId]?.status)
+const offSaleCheck=false
+  const  discountedPrice=(roomData['price[]'] - discountAmount)
+  const isShareSale = roomData['share_sale[]']  && roomData['share_sale[]']  !== "[]" && roomData['number_of_shares[]'] !== 0;
+ const price= isShareSale
+  ? discountAmount != 0
+    ? formatPrice(discountedPrice / roomData['number_of_shares[]'])
+    : formatPrice(roomData['price[]'] / roomData['number_of_shares[]'] )
+  : discountAmount != 0
+  ? formatPrice(discountedPrice)
+  : formatPrice(roomData['price[]'])
+console.log()
 
   return (
     <>
@@ -886,11 +905,13 @@ export default function PostDetail() {
                       ProjectHomeData.project.step1_slug.slice(1) // Geri kalanı olduğu gibi bırakma
                     : ""}
                 </Text>
-                
-                {offSaleCheck && !soldCheck && shareSaleEmpty ? (
+              
+                {offSaleCheck && !soldCheck && ShareSaleEmpty  ? (
                   <>
+                  
                     {discountAmount != 0 ? (
                       <View style={styles.discountContainer}>
+                       
                         <Svg
                           viewBox="0 0 24 24"
                           width={18}
@@ -925,19 +946,19 @@ export default function PostDetail() {
                       </View>
                     )}
                   </>
-                ) : (shareSale &&
-                    shareSale !== "[]" &&
-                    sumCartOrderQt[HomeId]?.qt_total !== numberOfShare) ||
-                  (shareSale &&
-                    shareSale !== "[]" &&
-                    !sumCartOrderQt[HomeId]) ? (
+                ) : (roomData['share_sale[]'] &&
+                  roomData['share_sale[]'] !== "[]" &&
+                   ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total !== roomData['number_of_shares[]'] ) ||
+                  (roomData['share_sale[]'] &&
+                    roomData['share_sale[]'] !== "[]" &&
+                    !ProjectHomeData.sumCartOrderQt[HomeId]) ? (
                   <View>
-                    <Text style={[styles.regularPrice,{color:'red'}]}>
-                      {shareSale &&
-                        shareSale !== "[]" &&
-                        numberOfShare !== 0 && (
+                    <Text style={[styles.regularPrice]}>
+                      {roomData['share_sale[]'] &&
+                       roomData['share_sale[]']!== "[]" &&
+                        roomData['number_of_shares[]']  !== 0 && (
                           <Text style={styles.shareSaleText}>
-                            1/{numberOfShare}
+                            1/{roomData['number_of_shares[]'] }
                           </Text>
                         )}
                       {" Pay Fiyatı - "}
@@ -946,16 +967,52 @@ export default function PostDetail() {
                   </View>
                 ) : null}
               </View>
-
+               
               <View style={styles.priceAndButtons}>
                 <View style={styles.btns}>
-                  <View style={{ width: "50%" }}>
-                    {sold ? (
-                      sold.status == 1 ? (
+                  <View style={{ width:ProjectHomeData?.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData?.projectCartOrders && 
+                        !ProjectHomeData?.projectCartOrders[HomeId]?.is_show_user === "on"? "100%" :'50%'}}>
+                    {
+                       ProjectHomeData?.projectCartOrders[HomeId]?.status == 1 &&
+                       <View style={styles.sold}>
+                       <Text style={styles.soldText}>Satıldı</Text>
+                     </View>
+                    }
+                     {
+                       ProjectHomeData?.projectCartOrders[HomeId]?.status == 0 &&
+                       <View style={styles.pending}>
+                       <Text style={styles.pendingText}>Rezerve Edildi</Text>
+                     </View>
+                    }
+                    {
+                       roomData && ["off_sale[]"] &&
+                       roomData["off_sale[]"] !== "[]" && (
+                       <View style={styles.offSale} disabled>
+                         <Text style={styles.offSaleText}>Satışa Kapalı</Text>
+                       </View>
+                       )
+                    }
+                    {
+                      roomData && ["off_sale[]"] &&
+                      roomData["off_sale[]"] === "[]" && ProjectHomeData?.projectCartOrders[HomeId]?.status != 0 &&
+                      ProjectHomeData?.projectCartOrders[HomeId]?.status != 1
+                      && 
+                      <View style={styles.priceContainer}>
+                      <TouchableOpacity
+                        style={styles.addBasket}
+                        onPress={() => GetIdForCart(HomeId)}
+                      >
+                        <Text style={styles.addBasketText}>Sepete Ekle</Text>
+                      </TouchableOpacity>
+                    </View>
+                    }
+                     
+                    {/* {ProjectHomeData?.projectCartOrders ? (
+                      ProjectHomeData?.projectCartOrders[HomeId]?.status == 1 ? (
                         <View style={styles.sold}>
                           <Text style={styles.soldText}>Satıldı</Text>
                         </View>
-                      ) : (
+                      ) :  (
                         <View style={styles.pending}>
                           <Text style={styles.pendingText}>Rezerve Edildi</Text>
                         </View>
@@ -974,12 +1031,46 @@ export default function PostDetail() {
                           <Text style={styles.addBasketText}>Sepete Ekle</Text>
                         </TouchableOpacity>
                       </View>
-                    )}
+                    )} */}
                   </View>
-
+                      
                   <View style={{ width: "50%" }}>
-                    {sold ? (
-                      sold.is_show_user === "on" ? (
+                    {
+                      roomData && ["off_sale[]"] &&
+                      roomData["off_sale[]"] !== "[]" &&
+                      <TouchableOpacity
+                      onPress={() => {
+                        openFormModal(HomeId);
+                      }}
+                      style={styles.payDetailBtn}
+                    >
+                      <Text style={styles.payDetailText}>Başvuru Yap</Text>
+                    </TouchableOpacity>
+                    }
+                    {
+                      ProjectHomeData?.projectCartOrders && 
+                        ProjectHomeData?.projectCartOrders[HomeId]?.is_show_user === "on" &&
+                        <TouchableOpacity style={styles.showCustomer}>
+                        <Text style={styles.showCustomerText}>
+                          Komşumu Gör
+                        </Text>
+                      </TouchableOpacity>
+                    }
+                    {
+                        roomData && ["off_sale[]"] &&
+                        roomData["off_sale[]"] === "[]" && ProjectHomeData?.projectCartOrders[HomeId]?.status != 0 &&
+                        ProjectHomeData?.projectCartOrders[HomeId]?.status != 1
+                        && 
+                        <TouchableOpacity
+                        style={styles.payDetailBtn}
+                        onPress={() => openModal(HomeId)}
+                      >
+                        <Text style={styles.payDetailText}>Ödeme Detayı</Text>
+                      </TouchableOpacity>
+                    }
+
+                    {/* {ProjectHomeData?.projectCartOrders ? (
+                       ProjectHomeData?.projectCartOrders[HomeId]?.is_show_user === "on" ? (
                         <TouchableOpacity style={styles.showCustomer}>
                           <Text style={styles.showCustomerText}>
                             Komşumu Gör
@@ -988,7 +1079,9 @@ export default function PostDetail() {
                       ) : (
                         <TouchableOpacity
                           style={styles.payDetailBtn}
-                          onPress={openModal}
+                          onPress={()=>{
+                            openModal(HomeId)
+                          }}
                         >
                           <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                         </TouchableOpacity>
@@ -1011,7 +1104,7 @@ export default function PostDetail() {
                       >
                         <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                       </TouchableOpacity>
-                    )}
+                    )} */}
                   </View>
                 </View>
               </View>
@@ -1135,10 +1228,10 @@ export default function PostDetail() {
                         info="Peşin Fiyat"
                         numbers={
                           paymentModalShowOrder != null &&
-                          ProjectHomeData &&
-                          ProjectHomeData.projectHousingsList
+                          ProjectHomeData  && roomData&&
+                          ProjectHomeData?.projectHousingsList
                             ? addDotEveryThreeDigits(
-                                ProjectHomeData.projectHousingsList[
+                                ProjectHomeData?.projectHousingsList[
                                   paymentModalShowOrder
                                 ]["price[]"]
                               ) + " ₺"
@@ -1147,12 +1240,12 @@ export default function PostDetail() {
                       />
                       {paymentModalShowOrder != null ? (
                         JSON.parse(
-                          ProjectHomeData.projectHousingsList[
+                          ProjectHomeData?.projectHousingsList[
                             paymentModalShowOrder
                           ]["payment-plan[]"]
                         ) &&
                         JSON.parse(
-                          ProjectHomeData.projectHousingsList[
+                          ProjectHomeData?.projectHousingsList[
                             paymentModalShowOrder
                           ]["payment-plan[]"]
                         ).includes("taksitli") ? (
@@ -1160,7 +1253,7 @@ export default function PostDetail() {
                             info="Taksitli 12 Ay Fiyat"
                             numbers={
                               addDotEveryThreeDigits(
-                                ProjectHomeData.projectHousingsList[
+                                ProjectHomeData?.projectHousingsList[
                                   paymentModalShowOrder
                                 ]["installments-price[]"]
                               ) + "₺"
@@ -1177,12 +1270,12 @@ export default function PostDetail() {
                       )}
                       {paymentModalShowOrder != null ? (
                         JSON.parse(
-                          ProjectHomeData.projectHousingsList[
+                          ProjectHomeData?.projectHousingsList[
                             paymentModalShowOrder
                           ]["payment-plan[]"]
                         ) &&
                         JSON.parse(
-                          ProjectHomeData.projectHousingsList[
+                          ProjectHomeData?.projectHousingsList[
                             paymentModalShowOrder
                           ]["payment-plan[]"]
                         ).includes("taksitli") ? (
@@ -1190,7 +1283,7 @@ export default function PostDetail() {
                             info="Peşinat"
                             numbers={
                               addDotEveryThreeDigits(
-                                ProjectHomeData.projectHousingsList[
+                                ProjectHomeData?.projectHousingsList[
                                   paymentModalShowOrder
                                 ]["advance[]"]
                               ) + "₺"
@@ -1205,12 +1298,12 @@ export default function PostDetail() {
 
                       {paymentModalShowOrder != null ? (
                         JSON.parse(
-                          ProjectHomeData.projectHousingsList[
+                          ProjectHomeData?.projectHousingsList[
                             paymentModalShowOrder
                           ]["payment-plan[]"]
                         ) &&
                         JSON.parse(
-                          ProjectHomeData.projectHousingsList[
+                          ProjectHomeData?.projectHousingsList[
                             paymentModalShowOrder
                           ]["payment-plan[]"]
                         ).includes("taksitli") ? (
@@ -1218,18 +1311,18 @@ export default function PostDetail() {
                             info="Aylık Ödenecek Tutar"
                             numbers={formatAmount(
                               (parseInt(
-                                ProjectHomeData.projectHousingsList[
+                                ProjectHomeData?.projectHousingsList[
                                   paymentModalShowOrder
                                 ]["installments-price[]"]
                               ) -
                                 (parseInt(
-                                  ProjectHomeData.projectHousingsList[
+                                  ProjectHomeData?.projectHousingsList[
                                     paymentModalShowOrder
                                   ]["advance[]"]
                                 ) +
                                   parseInt(totalPrice))) /
                                 parseInt(
-                                  ProjectHomeData.projectHousingsList[
+                                  ProjectHomeData?.projectHousingsList[
                                     paymentModalShowOrder
                                   ]["installments[]"]
                                 )

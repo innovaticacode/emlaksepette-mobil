@@ -189,7 +189,7 @@ const Estates = ({ index }) => {
        
           renderItem={({ item }) => (
             <RealtorPost
-         
+            sold={item.sold}
               HouseId={item.id}
               price={`${JSON.parse(item.housing_type_data)["price"]} `}
               housing={item}

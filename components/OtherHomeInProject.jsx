@@ -82,7 +82,7 @@ export default function OtherHomeInProject({
           shareSale={data.projectHousingsList[index + 1]["share_sale[]"] ?? null}
           numberOfShare={data.projectHousingsList[index + 1]["number_of_shares[]"] ?? null}
           shareSaleEmpty={!data.projectHousingsList[index + 1]["share_sale[]"] || data.projectHousingsList[index + 1]["share_sale[]"] === "[]"}
-          soldCheck={sold && ["1", "0"].includes(sold.status)}
+         
           sumCartOrderQt={data.sumCartOrderQt}
           openModal={openModal}
           bookmarkStatus={true}
@@ -101,6 +101,7 @@ export default function OtherHomeInProject({
   return (
     <SafeAreaView>
       <View>
+       
         <View style={styles.container}>
           {data.project.blocks &&
            <ScrollView

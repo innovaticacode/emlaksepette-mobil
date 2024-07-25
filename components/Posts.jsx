@@ -92,32 +92,32 @@ export default function Posts({
     const params = {
       HomeId: roomOrder,
       projectId: data?.project?.id,
-      isLoading: true,
-      shareSale:shareSale,
-      sumCartOrderQt:sumCartOrderQt,
-      roomData:roomData,
-      price: isShareSale
-        ? discountAmount != 0
-          ? formatPrice(discountedPrice / numberOfShare)
-          : formatPrice(price / numberOfShare)
-        : discountAmount != 0
-        ? formatPrice(discountedPrice)
-        : formatPrice(price),
-      discount: isShareSale
-        ? discountAmount != 0
-          ? formatPrice(discountAmount / numberOfShare)
-          : 0
-        : discountAmount
-        ? formatPrice(discountAmount)
-        : 0,
-      numberOfShare: numberOfShare,
-      totalPrice: price,
-      discountedPrice: formattedDiscountedPrice,
-      discountAmount: discountAmount,
-      offSaleCheck: offSaleCheck,
-      soldCheck: soldCheck,
-      shareSaleEmpty: shareSaleEmpty,
-      sold:sold
+      // isLoading: true,
+      // shareSale:shareSale,
+      // sumCartOrderQt:sumCartOrderQt,
+      // roomData:roomData,
+      // price: isShareSale
+      //   ? discountAmount != 0
+      //     ? formatPrice(discountedPrice / numberOfShare)
+      //     : formatPrice(price / numberOfShare)
+      //   : discountAmount != 0
+      //   ? formatPrice(discountedPrice)
+      //   : formatPrice(price),
+      // discount: isShareSale
+      //   ? discountAmount != 0
+      //     ? formatPrice(discountAmount / numberOfShare)
+      //     : 0
+      //   : discountAmount
+      //   ? formatPrice(discountAmount)
+      //   : 0,
+      // numberOfShare: numberOfShare,
+      // totalPrice: price,
+      // discountedPrice: formattedDiscountedPrice,
+      // discountAmount: discountAmount,
+      // offSaleCheck: offSaleCheck,
+      // soldCheck: soldCheck,
+      // shareSaleEmpty: shareSaleEmpty,
+     
     };
   
     navigation.navigate("PostDetails", params);

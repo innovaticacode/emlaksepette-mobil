@@ -83,24 +83,34 @@ export default function PaymentScreen() {
   }
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDocumentName, setSelectedDocumentName] = useState(null);
+  const [pdfFile, setPdfFile] = useState(null);
+const [selectedPdfUrl, setselectedPdfUrl] = useState(null)
   const pickDocument = async () => {
-    try {
-      // Kullanıcıya belge seçmesine izin ver
+    DocumentPicker.getDocumentAsync({ type: "application/pdf" })
+    .then((result) => {
+      console.log(
+        "Seçilen PDF Dosyasının İçeriği:",
+        JSON.stringify(result, null, 2)
+      );
 
-      // Kullanıcıya belge seçmesine izin ver
-      const result = await DocumentPicker.getDocumentAsync();
-
-      // Belge seçilirse, belge bilgilerini göster
-      if (result && result === "success") {
-        console.log("Belge seçildi:", result.uri);
-        const documentName = getFileNameFromUri(result.uri); // Belge adını al
-        setSelectedDocumentName(documentName);
-      } else {
-        console.log("Belge seçilmedi veya işlem iptal edildi.");
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const pdfAsset = result.assets[0];
+        setPdfFile(pdfAsset);
+        setSelectedDocumentName(pdfAsset.name)
+        console.log(pdfAsset.uri)
+        setselectedPdfUrl(pdfAsset.uri)
+        // Toast.show({
+        //   type: ALERT_TYPE.SUCCESS,
+        //   title: "PDF Seçildi",
+        //   textBody: `Seçtiğiniz PDF: ${pdfAsset.name}`,
+        // });
+        console.log(selectedDocumentName)
       }
-    } catch (err) {
-      console.log("Belge seçerken hata oluştu:", err);
-    }
+    })
+    .catch((error) => {
+     alert('hata')
+    });
+
   };
 
   const getFileNameFromUri = (uri) => {
@@ -1037,6 +1047,7 @@ export default function PaymentScreen() {
         <EftPay
           onPress={pickDocument}
           selectedDocumentName={selectedDocumentName}
+          url={selectedPdfUrl}
         />
       )}
       <Modal

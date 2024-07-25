@@ -300,7 +300,7 @@ export default function App({ route }) {
             options={({ route }) => ({
               headerShown: false,
               headerBackTitleVisible: false,
-              title: route.params.name,
+             
             })}
           />
 
