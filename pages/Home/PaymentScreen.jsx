@@ -22,8 +22,11 @@ import * as SecureStore from "expo-secure-store";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
 import { Platform } from "react-native";
-import { apiRequestGet } from "../../components/methods/apiRequest";
+import { apiRequestGet, apiUrl } from "../../components/methods/apiRequest";
 import { useRoute } from "@react-navigation/native";
+import axios from "axios";
+import WebView from "react-native-webview";
+import HTMLView from "react-native-htmlview";
 export default function PaymentScreen() {
   // Kullanarak bu değerleri göstermek için devam edin
 
@@ -52,6 +55,20 @@ export default function PaymentScreen() {
   const [checked2, setChecked2] = React.useState(false);
   const toggleCheckbox2 = () => setChecked2(!checked2);
   const [tabs, settabs] = useState(0);
+  const [paymentModal,setPaymentModal] = useState(false);
+  const [paymentModalContent,setPaymentModalContent] = useState("");
+
+  useEffect(() => {
+    setIdNumber("53872475124");
+    setNameAndSurnam("Abdurrahman İslamoğlu");
+    setePosta("islamoglu.abd@gmail.com");
+    setphoneNumber("5511083652");
+    setadress("Güzelyalı");
+    setnotes("Deneme notu");
+    setChecked("true");
+    setChecked2("true");
+  },[])
+
   const completeCreditCardPay = () => {
     if (
       IdNumber &&
@@ -63,11 +80,15 @@ export default function PaymentScreen() {
       checked &&
       checked2
     ) {
-      alert("ödeme alındı");
+      axios.post(apiUrl+'pay',creditCartData).then((res) => {
+        setPaymentModal(true)
+        setPaymentModalContent(res.data)
+      }) 
     } else {
       alert("tüm alanları doldur");
     }
   };
+  console.log(paymentModalContent);
   {
     /** State Of Inputs **/
   }
@@ -83,8 +104,14 @@ export default function PaymentScreen() {
   }
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDocumentName, setSelectedDocumentName] = useState(null);
+
   const [pdfFile, setPdfFile] = useState(null);
 const [selectedPdfUrl, setselectedPdfUrl] = useState(null)
+
+  const [creditCartData,setCreditCartData] = useState({
+    amount : 1000
+  });
+
   const pickDocument = async () => {
     DocumentPicker.getDocumentAsync({ type: "application/pdf" })
     .then((result) => {
@@ -157,7 +184,7 @@ const [selectedPdfUrl, setselectedPdfUrl] = useState(null)
   useEffect(() => {
     fetchDataDeal();
   }, []);
-  console.log(isInstallament);
+  console.log(paymentModalContent);
   return (
     <KeyboardAwareScrollView
       style={styles.container}
@@ -165,6 +192,14 @@ const [selectedPdfUrl, setselectedPdfUrl] = useState(null)
       showsVerticalScrollIndicator={false}
     >
       <></>
+      <Modal
+        isVisible={paymentModal}
+        onBackdropPress={() => setPaymentModal(false)}
+      >
+        <View style={{width:'100%',backgroundColor:'#fff'}}>
+          <HTMLView value={paymentModalContent}/>
+        </View>
+      </Modal>
       <View>
         <View style={[styles.AdvertDetail, { flexDirection: "row" }]}>
           <View style={styles.image}>
@@ -1041,7 +1076,7 @@ const [selectedPdfUrl, setselectedPdfUrl] = useState(null)
       )}
 
       {tabs == 0 && (
-        <CreditCardScreen CompeletePayment={completeCreditCardPay} />
+        <CreditCardScreen setCreditCartData={setCreditCartData} creditCartData={creditCartData} CompeletePayment={completeCreditCardPay} />
       )}
       {tabs == 1 && (
         <EftPay

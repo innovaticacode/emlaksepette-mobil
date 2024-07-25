@@ -87,7 +87,12 @@ import AddComment from "./pages/Home/AddComment";
 import SuccesScreen from "./pages/Home/SuccesScreen";
 import ExtradionRequest from "./components/ExtraditionRequest";
 import UpgradeProfile from "./pages/Home/ProfilePages/UpgradeProfile";
+
 import SearchPage from "./pages/Home/SearchPage";
+
+import Support from "./pages/Home/ProfilePages/profileComponents/Support";
+import RequestPage from "./pages/Home/ProfilePages/RequestPage";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -207,7 +212,7 @@ export default function App({ route }) {
               name="Home"
               options={{
                 headerShown: false,
-                gestureEnabled:false
+                gestureEnabled: false,
               }}
             >
               {(props) => (
@@ -223,7 +228,11 @@ export default function App({ route }) {
           <Stack.Group>
             <Stack.Screen
               name="Login"
-              options={{ title: "Giriş Yap", headerBackTitleVisible: false ,headerShown:false}}
+              options={{
+                title: "Giriş Yap",
+                headerBackTitleVisible: false,
+                headerShown: false,
+              }}
             >
               {(props) => <Login {...props} />}
             </Stack.Screen>
@@ -967,12 +976,12 @@ export default function App({ route }) {
               },
             })}
           />
-             <Stack.Screen
+          <Stack.Screen
             name="VerifyPhone"
             component={Verification}
             options={({ route }) => ({
-              headerShown:false,
-              gestureEnabled:false,
+              headerShown: false,
+              gestureEnabled: false,
               title: "Konutu Değerlendir",
               headerBackTitleVisible: false,
               headerStyle: {
@@ -980,7 +989,7 @@ export default function App({ route }) {
               },
             })}
           />
-             <Stack.Screen
+          <Stack.Screen
             name="Upgrade"
             component={UpgradeProfile}
             options={({ route }) => ({
@@ -991,12 +1000,20 @@ export default function App({ route }) {
               },
             })}
           />
+
               <Stack.Screen
             name="SearchPage"
             component={SearchPage}
             options={({ route }) => ({
               title: 'Ara',
               headerShown:false,
+
+          <Stack.Screen
+            name="Support"
+            component={Support}
+            options={({ route }) => ({
+              title: "Destek",
+
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",

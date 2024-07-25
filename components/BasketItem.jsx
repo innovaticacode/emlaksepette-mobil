@@ -34,7 +34,12 @@ export default function BasketItem({
   counter,
   storeName,
   DeleteBasket,
+
   id
+
+  isInstallament,
+  installmentPrice,
+
 }) {
   const route = useRoute();
   const navigation = useNavigation();
@@ -90,7 +95,6 @@ export default function BasketItem({
                   navigation.navigate("Profile", { id: storeName.id })
                 }
               >
-              
                 <View>
                   <Text>{storeName?.name}</Text>
                 </View>
@@ -150,7 +154,6 @@ export default function BasketItem({
                   source={{ uri: ımage }}
                   style={{ width: "100%", height: "100%" }}
                 />
-
               </View>
               <View
                 style={{ flex: 1.4 / 2, padding: 7, flexDirection: "column" }}
@@ -238,7 +241,9 @@ export default function BasketItem({
                         fontWeight: "bold",
                       }}
                     >
-                      {formatAmount(price)} ₺
+                      {isInstallament == 2
+                        ? formatAmount(installmentPrice) + " ₺"
+                        : formatAmount(price) + " ₺"}
                     </Text>
                     <View
                       style={{

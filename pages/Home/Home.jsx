@@ -111,7 +111,7 @@ const [userdata, setuserdata] = useState({})
             <Ionicons
               name={focused ? "heart" : "heart-outline"}
               color={focused ? "black" : "grey"}
-              size={20}
+              size={25}
             />
           ),
         }}
@@ -151,7 +151,9 @@ const [userdata, setuserdata] = useState({})
           tabBarBadge: 1,
 
           tabBarBadgeStyle: {
+
               display:userdata.cartItem ==null ?'none':'flex',
+
             fontSize: 10,
             height: 17,
             width: 20,
