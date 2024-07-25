@@ -1007,6 +1007,11 @@ export default function App({ route }) {
             options={({ route }) => ({
               title: 'Ara',
               headerShown:false,
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}/>
 
           <Stack.Screen
             name="Support"

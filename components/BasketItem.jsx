@@ -35,7 +35,7 @@ export default function BasketItem({
   storeName,
   DeleteBasket,
 
-  id
+  id,
 
   isInstallament,
   installmentPrice,
