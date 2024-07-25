@@ -18,6 +18,7 @@ import {
 } from "react-native-alert-notification";
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
 
 export default function SupportAdd() {
   const [selectedValue, setSelectedValue] = useState("");
@@ -45,35 +46,65 @@ export default function SupportAdd() {
     }
   };
 
-  const pickPDF = async () => {
-    try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: "application/pdf",
-      });
+  const pickPDF = () => {
+    DocumentPicker.getDocumentAsync({ type: "application/pdf" })
+      .then((result) => {
+        console.log(
+          "Seçilen PDF Dosyasının İçeriği:",
+          JSON.stringify(result, null, 2)
+        );
 
-      console.log(
-        "Seçilen PDF Dosyasının İçeriği:",
-        JSON.stringify(result, null, 2)
-      );
-
-      if (!result.canceled && result.assets && result.assets.length > 0) {
-        const pdfAsset = result.assets[0];
-        setPdfFile(pdfAsset);
+        if (!result.canceled && result.assets && result.assets.length > 0) {
+          const pdfAsset = result.assets[0];
+          setPdfFile(pdfAsset);
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "PDF Seçildi",
+            textBody: `Seçtiğiniz PDF: ${pdfAsset.name}`,
+          });
+        }
+      })
+      .catch((error) => {
         Toast.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "PDF Seçildi",
-          textBody: `Seçtiğiniz PDF: ${pdfFile.name}`,
+          type: ALERT_TYPE.DANGER,
+          title: "Hata",
+          textBody: "PDF seçilirken bir hata oluştu",
         });
-      }
-    } catch (error) {
+      });
+  };
+
+  const downloadPDF = () => {
+    if (pdfFile && pdfFile.uri) {
+      // İndirilmiş dosyanın hedef yolu
+      const downloadUri = FileSystem.documentDirectory + pdfFile.name;
+
+      FileSystem.downloadAsync(pdfFile.uri, downloadUri)
+        .then(() => {
+          console.log("Dosya başarıyla indirildi:", downloadUri);
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "PDF İndirildi",
+            textBody: `PDF başarıyla indirildi: ${pdfFile.name}`,
+          });
+        })
+        .catch((error) => {
+          console.error("PDF İndirme Hatası:", error);
+          Toast.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Hata",
+            textBody: "PDF indirilirken bir hata oluştu",
+          });
+        });
+    } else {
       Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Hata",
-        textBody: "PDF seçilirken bir hata oluştu",
+        type: ALERT_TYPE.WARNING,
+        title: "Uyarı",
+        textBody: "İndirilmek için bir PDF seçilmedi",
       });
     }
   };
 
+  console.log(pdfFile);
   const handlePicker1Close = () => {
     setIsPicker1Open(false);
     setIconName1("angle-down");
@@ -283,9 +314,9 @@ export default function SupportAdd() {
           </TouchableOpacity>
 
           {pdfFile && (
-            <View style={styles.pdfContainer}>
+            <TouchableOpacity style={styles.pdfContainer} onPress={downloadPDF}>
               <Text style={styles.pdfText}>Seçtiğiniz PDF: {pdfFile.name}</Text>
-            </View>
+            </TouchableOpacity>
           )}
 
           <TouchableOpacity
@@ -336,7 +367,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
       },
       android: {
-        elevation: 5,
+        elevation: 0,
       },
     }),
   },
