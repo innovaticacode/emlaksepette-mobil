@@ -41,7 +41,7 @@ export default function Invoice() {
       setLoading(false);
     }
   };
-
+  console.log(OrderId);
   useEffect(() => {
     fetchData();
   }, [user]);
@@ -218,7 +218,9 @@ export default function Invoice() {
                   ) : (
                     <Text>Veri yüklenemedi</Text>
                   )}
-                  <Text>İlan bilgisi çekilcek</Text>
+
+                  <Text>{data?.project?.room_info?.[9]?.value} m2</Text>
+
                   <Text>İlan bilgisi çekilcek</Text>
                   <Text>İlan bilgisi çekilcek</Text>
                 </View>

@@ -93,7 +93,6 @@ import SearchPage from "./pages/Home/SearchPage";
 import Support from "./pages/Home/ProfilePages/profileComponents/Support";
 import RequestPage from "./pages/Home/ProfilePages/RequestPage";
 
-
 const Stack = createNativeStackNavigator();
 
 export default function App({ route }) {
@@ -309,7 +308,6 @@ export default function App({ route }) {
             options={({ route }) => ({
               headerShown: false,
               headerBackTitleVisible: false,
-             
             })}
           />
 
@@ -762,7 +760,7 @@ export default function App({ route }) {
             name="SeeNeigbourHood"
             component={SeeNeigbourhood}
             options={({ route }) => ({
-              headerBackTitleVisible:false,
+              headerBackTitleVisible: false,
               title: "Komşumu Gör",
             })}
           />
@@ -1001,13 +999,17 @@ export default function App({ route }) {
             })}
           />
 
-              <Stack.Screen
+          <Stack.Screen
             name="SearchPage"
             component={SearchPage}
             options={({ route }) => ({
-              title: 'Ara',
-              headerShown:false,
-
+              title: "Ara",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
           <Stack.Screen
             name="Support"
             component={Support}
