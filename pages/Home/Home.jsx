@@ -123,6 +123,7 @@ const [userdata, setuserdata] = useState({})
         options={{
           headerShown: false,
           tabBarLabel: "İlan Ver",
+        
           tabBarIcon: ({ color, focused }) => (
             <View style={styles.ilanVerIconContainer}>
               <Ionicons

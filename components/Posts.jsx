@@ -169,11 +169,11 @@ export default function Posts({
     formData.append(
       "isShare",
       roomData["share_sale[]"]?
-      roomData["share_sale[]"]:null
+      roomData["share_sale[]"]:'[]'
     );
     formData.append(
       "numbershare",roomData["number_of_shares[]"]?
-      roomData["number_of_shares[]"]:null
+      roomData["number_of_shares[]"]:'[]'
     );
     formData.append("qt", 1);
     formData.append("type", "project");
@@ -201,6 +201,7 @@ const [alertForSign, setalertForSign] = useState(false)
 const [alertForFavorite, setalertForFavorite] = useState(false)
 const [cartIsNull, setcartIsNull] = useState(false)
 const [AddCartShow, setAddCartShow] = useState(false);
+console.log( roomData["number_of_shares[]"])
   return (
     <View style={styles.container}>
          <AwesomeAlert

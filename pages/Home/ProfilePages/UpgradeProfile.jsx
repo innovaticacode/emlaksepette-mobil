@@ -48,10 +48,7 @@ export default function UpgradeProfile() {
       }
     })();
   }, []);
-  const [user, setUser] = useState({});
-  useEffect(() => {
-    getValueFor("user", setUser);
-  }, []);
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -157,10 +154,14 @@ export default function UpgradeProfile() {
   const [mobilPhone, setmobilPhone] = useState("");
 const [namFromGetUser, setnamFromGetUser] = useState({})
 const [loading, setloading] = useState(false)
+const [user, setUser] = useState({});
+useEffect(() => {
+  getValueFor("user", setUser);
+}, []);
   const GetUserInfo =async ()=>{
     setloading(true)
     try {
-      if (user.access_token) {
+      if (user.access_token && user) {
         const userInfo = await axios.get(
           "https://private.emlaksepette.com/api/users/" + user?.id,
           {
@@ -415,6 +416,7 @@ const [loading, setloading] = useState(false)
     { label: "Yozgat (354)", value: 354 },
     { label: "Zonguldak (372)", value: 372 },
   ];
+
   const [cityCode, setcityCode] = useState("");
   const [openColorPicker, setopenColorPicker] = useState(false);
   const [currentColor, setCurrentColor] = useState(user.banner_hex_code);
@@ -455,7 +457,13 @@ const [loading, setloading] = useState(false)
       ...prevState,
       [key]: value,
     }));
+ 
   };
+
+
+
+
+
   const updateUserData = async () => {
    
   try {
@@ -500,6 +508,57 @@ const handleIbanChange = (text) => {
 
   setData('Iban', formattedText);
 };
+
+const checkInput=()=>{
+    if (tab==0) {
+        if (FormDatas.userName.length===0 || FormDatas.Iban.length<29) {
+          Dialog.show({
+            type:ALERT_TYPE.WARNING,
+            textBody:'Lütfen Boş Bırakmayın',
+            button: 'Tamam',
+            
+          })
+        }else{
+          postData()
+        }
+    }
+    if (tab==1) {
+        if (FormDatas?.newPhone?.length < 15 || FormDatas.oldPhone.length < 15 || file==null) {
+          Dialog.show({
+            type:ALERT_TYPE.WARNING,
+            textBody:'Lütfen Girdiğiniz Numaraları Kontrol Ediniz',
+            button: 'Tamam',
+            
+          })
+        }else{
+          postData()
+        }
+    }
+    if (user.role == 'Kurumsal Hesap' && tab==2) {
+      if (FormDatas?.shoopingName?.length ===0 || FormDatas?.Iban?.length<29 || FormDatas?.SectorYear?.length === 0 ) {
+        Dialog.show({
+          type:ALERT_TYPE.WARNING,
+          textBody:'Lütfen Boş Bırakmayınız',
+          button: 'Tamam',
+          
+        })
+      }else{
+        postData()
+      } 
+    }
+    if (user.role == 'Kurumsal Hesap' && tab==3) {
+        if (selectedCity ==null || selectedCounty ==null  || selectedNeighborhood ==null) {
+          Dialog.show({
+            type:ALERT_TYPE.WARNING,
+            textBody:'Lütfen İl İlçe Bilgileri Giriniz',
+            button: 'Tamam',
+            
+          })
+        }else{
+          postData()
+        }
+    }
+}
 
 const postData = async () => {
   try {
@@ -578,6 +637,10 @@ const postData = async () => {
   }
 };
 const [chooseFile, setchooseFile] = useState(false)
+
+console.log(tab)
+
+console.log(FormDatas.userName.length===0)
   return (
     <AlertNotificationRoot>
         {
@@ -683,6 +746,7 @@ const [chooseFile, setchooseFile] = useState(false)
                   {namFromGetUser?.username}
                 </Text>
                 }
+                <Text style={{fontSize:11,color:'#fff',fontWeight:'700'}}>{user.email}</Text>
               <Text style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}>
                 {user?.role}
               </Text>
@@ -728,7 +792,7 @@ const [chooseFile, setchooseFile] = useState(false)
                 <Text style={styles.label}>Mevcut Telefon Numarası</Text>
               </View>
               <View>
-                <TextInput style={styles.ınput} value={FormDatas.oldPhone} onChangeText={handlePhoneNumberChange} maxLength={15} placeholder="5**********"/>
+                <TextInput style={styles.ınput} value={FormDatas.oldPhone} onChangeText={handlePhoneNumberChange} maxLength={15} placeholder="5**********" keyboardType='numeric'/>
               </View>
             </View>
     
@@ -1046,7 +1110,7 @@ const [chooseFile, setchooseFile] = useState(false)
           </View>
           <View style={{alignItems:'center'}}>
             <TouchableOpacity style={{width:'100%',backgroundColor:'#EA2B2E',width:'90%',padding:10,borderRadius:10}}
-              onPress={postData}
+              onPress={checkInput}
             >
                 <Text style={{textAlign:'center',color:'#fff',fontWeight:'600'}}>Güncelle</Text>
             </TouchableOpacity>

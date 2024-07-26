@@ -307,6 +307,7 @@ export default function Basket() {
       <TrashIcon name="trash" size={23} color={"white"} />
     </TouchableOpacity>
   );
+  console.log(Cart['payment-plan'])
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       {loading ? (
@@ -376,7 +377,7 @@ export default function Basket() {
               </View>
             </View>
           </Modal>
-
+                
           {CartLength !== false ? (
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
               <ScrollView
@@ -387,7 +388,7 @@ export default function Basket() {
                 <GestureHandlerRootView style={{ backgroundColor: "white" }}>
                   <Swipeable renderRightActions={renderRightActions}>
                     <BasketItem
-                    id={Cart.id}
+                    id={Cart?.id}
                       name={Cart?.title}
                       ımage={Cart?.image}
                       price={Cart?.amount}
@@ -433,7 +434,7 @@ export default function Basket() {
             </View>
           </View> */}
 
-                {type.type == "project" && (
+                {Cart?.installmentPrice   && (
                   <View
                     style={{
                       flexDirection: "row",
@@ -493,7 +494,7 @@ export default function Basket() {
                   </View>
                 )}
 
-                {isInstallament == 2 && (
+                {isInstallament == 2 &&Cart?.installmentPrice  && (
                   <View style={[styles.acceptCart, { gap: 20 }]}>
                     <View
                       style={{
@@ -505,7 +506,7 @@ export default function Basket() {
                         Peşinat:
                       </Text>
                       <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
-                        {addDotEveryThreeDigits(Cart?.pesinat)} ₺
+                        {addDotEveryThreeDigits(Math.round(Cart?.pesinat))} ₺
                       </Text>
                     </View>
                     <View
@@ -521,6 +522,7 @@ export default function Basket() {
                         {Cart?.taksitSayisi}{" "}
                       </Text>
                     </View>
+                  
                     <View
                       style={{
                         flexDirection: "row",
@@ -530,8 +532,23 @@ export default function Basket() {
                       <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
                         Aylık Ödenecek Tutar:
                       </Text>
+
                       <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
-                        {addDotEveryThreeDigits(Cart.aylik)} ₺
+                        {addDotEveryThreeDigits(Math.round(Cart.aylik))} ₺
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                        Ara Ödeme Sayısı
+                      </Text>
+                      
+                      <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                        {payDec.length}
                       </Text>
                     </View>
                     <View
@@ -544,7 +561,7 @@ export default function Basket() {
                         Toplam Fiyat:
                       </Text>
                       <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
-                        {addDotEveryThreeDigits(Cart.installmentPrice)} ₺
+                        {addDotEveryThreeDigits(Math.round(Cart.installmentPrice))} ₺
                       </Text>
                     </View>
                     {payDec.map((item, _index) => (

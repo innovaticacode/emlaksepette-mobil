@@ -289,44 +289,10 @@ export default function Details({ navigation }) {
       });
   };
 
-  const shareLinkOnWhatsApp = () => {
-    const url = `https://private.emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
 
-    const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
-    Linking.openURL(whatsappShareURL)
-      .then(() => console.log("WhatsApp açıldı ve link paylaşıldı"))
-      .catch((error) => console.error("WhatsApp açılamadı:", error));
-  };
 
-  const shareLinkOnInstagram = (text) => {
-    const url = `https://private.emlaksepette.com/${slug}/100${ProjectId}/detay`;
-
-    const instagramShareURL = `instagram://story/?text=${encodeURIComponent(
-      url
-    )}`;
-
-    Linking.openURL(instagramShareURL)
-      .then(() => console.log("Instagram açıldı ve link paylaşıldı"))
-      .catch((error) => console.error("Instagram açılamadı:", error));
-  };
-  const copyToClipboard = () => {
-    const url = `https://private.emlaksepette.com/${slug}/1000${ProjectId}/detay`;
-    Clipboard.setStringAsync(url);
-    ShowAlert();
-  };
-  const handleShareViaSMS = (text) => {
-    const url = text;
-    const message = `Bu linki kontrol et: ${url}`;
-
-    Linking.openURL(`sms:?body=${encodeURIComponent(message)}`);
-  };
-  const ShowAlert = () => {
-    setshowAlert(true);
-    setTimeout(() => {
-      setshowAlert(false);
-    }, 2000);
-  };
+ 
 
   const isCloseToBottom = ({
     layoutMeasurement,
@@ -428,7 +394,15 @@ export default function Details({ navigation }) {
   useEffect(() => {
     fetchData();
   }, [user]);
-
+  const filterEmojis = (text) => {
+    // Emoji kod noktalarını içeren regex deseni
+    const emojiRegex = /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu;
+    return text.replace(emojiRegex, '');
+  };
+    const handleChangeText = (input) => {
+      const filteredText = filterEmojis(input);
+      setnewCollectionNameCreate(filteredText);
+    };
   const addCollectionPost = () => {
     const collectionData = {
       collection_name: newCollectionNameCreate,
@@ -1875,7 +1849,7 @@ export default function Details({ navigation }) {
                     <TextInput
                       style={styles.Input}
                       value={newCollectionNameCreate}
-                      onChangeText={(value) => setnewCollectionNameCreate(value)}
+                      onChangeText={(value) => handleChangeText(value)}
                     />
                   </View>
                   <View style={{ paddingTop: 10 }}>
