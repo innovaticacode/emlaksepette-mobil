@@ -61,6 +61,7 @@ export default function Basket() {
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
+
   const [user, setuser] = useState({});
   const [Cart, setCart] = useState({});
   const [type, settype] = useState({});
@@ -387,7 +388,7 @@ export default function Basket() {
                 <GestureHandlerRootView style={{ backgroundColor: "white" }}>
                   <Swipeable renderRightActions={renderRightActions}>
                     <BasketItem
-                    id={Cart.id}
+                      id={Cart?.id}
                       name={Cart?.title}
                       ımage={Cart?.image}
                       price={Cart?.amount}
@@ -399,11 +400,8 @@ export default function Basket() {
                       counter={counter}
                       storeName={offerControl?.store}
                       DeleteBasket={DeleteBasket}
-
                       isInstallament={isInstallament}
                       installmentPrice={Cart?.installmentPrice}
-                 
-
                     />
                   </Swipeable>
                 </GestureHandlerRootView>
@@ -433,7 +431,7 @@ export default function Basket() {
             </View>
           </View> */}
 
-                {type.type == "project" && (
+                {type?.type == "project" && (
                   <View
                     style={{
                       flexDirection: "row",
@@ -586,7 +584,7 @@ export default function Basket() {
                   </View>
                 )}
 
-                {type.type == "project" ? (
+                {type?.type == "project" ? (
                   <View style={[styles.acceptCart, { borderRadius: 3 }]}>
                     <View
                       style={{
@@ -678,7 +676,7 @@ export default function Basket() {
                       <Text>Sepet Özeti</Text>
                     </View>
                     <View style={{ gap: 20 }}>
-                      {type.hasCounter == true ? (
+                      {type?.hasCounter == true ? (
                         <>
                           <View
                             style={{
@@ -835,23 +833,23 @@ export default function Basket() {
                       </Text>
                       <Text style={{ fontWeight: "500" }}>
                         {isInstallament == 1 &&
-                          type.type == "project" &&
+                          type?.type == "project" &&
                           formatAmount(
                             (Cart?.amount *
                               offerControl?.project?.deposit_rate) /
                               100
                           )}
                         {isInstallament == 2 &&
-                          type.type == "project" &&
+                          type?.type == "project" &&
                           addDotEveryThreeDigits(
                             (Cart?.installmentPrice *
                               offerControl?.project?.deposit_rate) /
                               100
                           )}
-                        {type.type == "housing" &&
+                        {type?.type == "housing" &&
                           saleType == "kiralik" &&
                           addDotEveryThreeDigits(Cart.price)}
-                        {type.type == "housing" &&
+                        {type?.type == "housing" &&
                           saleType == "satilik" &&
                           addDotEveryThreeDigits(
                             Math.round((Cart?.price * 2) / 100)

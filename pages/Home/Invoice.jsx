@@ -211,18 +211,15 @@ export default function Invoice() {
                 <View>
                   {parsedData && parsedData.item ? (
                     <>
-                      <Text style={{ fontWeight: "700" }}>
-                        {parsedData.item.title}
-                      </Text>
+                      <View style={{ width: "90%" }}>
+                        <Text style={{ fontWeight: "700" }}>
+                          {parsedData.item.title}
+                        </Text>
+                      </View>
                     </>
                   ) : (
                     <Text>Veri yüklenemedi</Text>
                   )}
-
-                  <Text>{data?.project?.room_info?.[9]?.value} m2</Text>
-
-                  <Text>İlan bilgisi çekilcek</Text>
-                  <Text>İlan bilgisi çekilcek</Text>
                 </View>
               </View>
             </View>
