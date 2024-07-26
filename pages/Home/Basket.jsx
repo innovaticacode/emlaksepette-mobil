@@ -307,7 +307,7 @@ export default function Basket() {
       <TrashIcon name="trash" size={23} color={"white"} />
     </TouchableOpacity>
   );
-  console.log(Cart['payment-plan'])
+ 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       {loading ? (

@@ -201,7 +201,7 @@ const [alertForSign, setalertForSign] = useState(false)
 const [alertForFavorite, setalertForFavorite] = useState(false)
 const [cartIsNull, setcartIsNull] = useState(false)
 const [AddCartShow, setAddCartShow] = useState(false);
-console.log( roomData["number_of_shares[]"])
+
   return (
     <View style={styles.container}>
          <AwesomeAlert
