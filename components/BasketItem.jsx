@@ -34,9 +34,7 @@ export default function BasketItem({
   counter,
   storeName,
   DeleteBasket,
-
   id,
-
   isInstallament,
   installmentPrice,
 }) {
@@ -51,8 +49,7 @@ export default function BasketItem({
 
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("tr-TR", {
-      style: "currency",
-      currency: "TRY",
+      currencyDisplay: "code",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
