@@ -98,7 +98,7 @@ export default function Basket() {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -153,9 +153,9 @@ export default function Basket() {
     return `${month}, ${day} ${year}`;
   };
 
-  // Sepetteki Hisse Sayısını Arttırma Ve Fİyat Güncelleme
+
   const [shareCounter, setshareCounter] = useState(1);
-  //Arttırma
+
   const [message, setmessage] = useState({});
   const [counter, setcounter] = useState(1);
   const UpdateCart = async () => {
@@ -307,7 +307,7 @@ export default function Basket() {
       <TrashIcon name="trash" size={23} color={"white"} />
     </TouchableOpacity>
   );
- 
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       {loading ? (
@@ -377,7 +377,7 @@ export default function Basket() {
               </View>
             </View>
           </Modal>
-                
+
           {CartLength !== false ? (
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
               <ScrollView
@@ -388,7 +388,7 @@ export default function Basket() {
                 <GestureHandlerRootView style={{ backgroundColor: "white" }}>
                   <Swipeable renderRightActions={renderRightActions}>
                     <BasketItem
-                    id={Cart?.id}
+                      id={Cart?.id}
                       name={Cart?.title}
                       ımage={Cart?.image}
                       price={Cart?.amount}
@@ -400,11 +400,8 @@ export default function Basket() {
                       counter={counter}
                       storeName={offerControl?.store}
                       DeleteBasket={DeleteBasket}
-
                       isInstallament={isInstallament}
                       installmentPrice={Cart?.installmentPrice}
-                 
-
                     />
                   </Swipeable>
                 </GestureHandlerRootView>
@@ -434,7 +431,7 @@ export default function Basket() {
             </View>
           </View> */}
 
-                {Cart?.installmentPrice   && (
+                {Cart?.installmentPrice !=0 &&Cart?.installmentPrice != null && (
                   <View
                     style={{
                       flexDirection: "row",
@@ -494,7 +491,7 @@ export default function Basket() {
                   </View>
                 )}
 
-                {isInstallament == 2 &&Cart?.installmentPrice  && (
+                 {isInstallament == 2 && Cart?.installmentPrice && (
                   <View style={[styles.acceptCart, { gap: 20 }]}>
                     <View
                       style={{
@@ -522,7 +519,7 @@ export default function Basket() {
                         {Cart?.taksitSayisi}{" "}
                       </Text>
                     </View>
-                  
+
                     <View
                       style={{
                         flexDirection: "row",
@@ -546,7 +543,7 @@ export default function Basket() {
                       <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
                         Ara Ödeme Sayısı
                       </Text>
-                      
+
                       <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
                         {payDec.length}
                       </Text>
@@ -561,7 +558,10 @@ export default function Basket() {
                         Toplam Fiyat:
                       </Text>
                       <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
-                        {addDotEveryThreeDigits(Math.round(Cart.installmentPrice))} ₺
+                        {addDotEveryThreeDigits(
+                          Math.round(Cart.installmentPrice)
+                        )}{" "}
+                        ₺
                       </Text>
                     </View>
                     {payDec.map((item, _index) => (
@@ -601,9 +601,10 @@ export default function Basket() {
                       // </View>
                     ))}
                   </View>
-                )}
+                )} 
 
                 {type.type == "project" ? (
+               
                   <View style={[styles.acceptCart, { borderRadius: 3 }]}>
                     <View
                       style={{
@@ -680,6 +681,7 @@ export default function Basket() {
                     </View>
                   </View>
                 ) : (
+               
                   <View style={[styles.acceptCart, { borderRadius: 3 }]}>
                     <View
                       style={{
@@ -736,8 +738,8 @@ export default function Basket() {
                               justifyContent: "space-between",
                             }}
                           >
-                            <Text style={{}}>%2 Kapora:</Text>
-                            <Text style={{}}>
+                            <Text style={{color:'#333'}}>%2 Kapora:</Text>
+                            <Text style={{color:'#333'}}>
                               {addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺
                             </Text>
                           </View>
@@ -882,8 +884,8 @@ export default function Basket() {
                           slug: type?.type,
                           id: Cart.id,
                           roomOrder: Cart.housing,
-                          price: Cart.price, // İlan fiyatı
-                          totalPrice: DiscountPrice, // Toplam fiyat
+                          price: Cart.price, 
+                          totalPrice: DiscountPrice, 
                           deposit: KaporaForDiscountPrice,
                           kapora: offerControl?.project?.deposit_rate,
                           isInstallament: isInstallament,
@@ -923,7 +925,7 @@ export default function Basket() {
               <View
                 style={[
                   styles.card,
-                  { alignItems: "center", justifyContent: "center" },
+                  { alignItems: "center", justifyContent: "center" }
                 ]}
               >
                 <Icon2 name="basket-plus" size={50} color={"#EA2A28"} />
@@ -934,7 +936,7 @@ export default function Basket() {
                 >
                   Sepetinizde ilan bulunmamaktadır
                 </Text>
-                <Text></Text>
+         
               </View>
               <View style={{ width: "100%", alignItems: "center" }}>
                 <TouchableOpacity

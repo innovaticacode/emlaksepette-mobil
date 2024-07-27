@@ -64,6 +64,7 @@ import { err } from "react-native-svg";
 import DrawerMenu from "../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
+import CommentForProject from "../../components/CommentForProject";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -1170,6 +1171,7 @@ export default function Details({ navigation }) {
           <View style={{}}>{tabs === 3 && <Map mapData={data} />}</View>
 
           {tabs == 4 && <FloorPlan data={data} />}
+          {tabs==5 && <CommentForProject projectId={data?.project?.id}/>}
 
           <Modal
             animationType="fade" // veya "fade", "none" gibi

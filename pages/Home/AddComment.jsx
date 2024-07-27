@@ -91,6 +91,7 @@ export default function AddComment() {
           name: "Yorum başarılı",
           message: "Değerlendirmeniz İçin Teşekkürler",
           HouseID: HouseID,
+          type:'House'
         });
       } else {
         alert("yorum boş");

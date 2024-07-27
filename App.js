@@ -92,6 +92,7 @@ import SearchPage from "./pages/Home/SearchPage";
 
 import Support from "./pages/Home/ProfilePages/profileComponents/Support";
 import RequestPage from "./pages/Home/ProfilePages/RequestPage";
+import AddCommentForProject from "./pages/Home/AddCommentForProject";
 
 
 const Stack = createNativeStackNavigator();
@@ -1019,6 +1020,17 @@ export default function App({ route }) {
             options={({ route }) => ({
               title: "Destek",
 
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+            <Stack.Screen
+            name="AddCommentForProject"
+            component={AddCommentForProject}
+            options={({ route }) => ({
+              title: "Konutu Değerlendir",
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",

@@ -67,6 +67,7 @@ import { Polyline } from "react-native-maps";
 import PaymentItem from "../components/PaymentItem";
 import DrawerMenu from "../components/DrawerMenu";
 import AwesomeAlert from "react-native-awesome-alerts";
+import CommentForProject from "../components/CommentForProject";
 
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
@@ -1198,6 +1199,7 @@ console.log()
               )}
               {tabs == 4 && <PostMap data={ProjectHomeData} />}
               {tabs == 5 && <FloorPlan data={ProjectHomeData} />}
+              {tabs == 6 && <CommentForProject projectId={ProjectHomeData?.project?.id} />}
 
               <View style={{ padding: 10 }}></View>
 

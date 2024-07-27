@@ -1,13 +1,16 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, ScrollView} from 'react-native'
-import React, { useState } from 'react'
+import React, { useState ,useEffect} from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { TouchableWithoutFeedback, Keyboard, } from 'react-native'
-import CommentItem from './CommentItem'
+
 import UploadIcon from 'react-native-vector-icons/AntDesign'
 import { CheckBox } from '@rneui/themed';
 import { Shadow } from 'react-native-shadow-2';
 import { useNavigation } from '@react-navigation/native'
-export default function Comment({data, handleModal}) {
+import axios from 'axios'
+import { getValueFor } from './methods/user'
+import CommentItem from '../pages/Home/RealtorPages/CommentItem'
+export default function CommentForProject({projectId}) {
   const navigation = useNavigation()
   const [checked, setChecked] = React.useState(false);
   const toggleCheckbox = () => setChecked(!checked);
@@ -23,11 +26,32 @@ export default function Comment({data, handleModal}) {
     const newStarStates = starStates.map((_, i) => i <= index);
     setStarStates(newStarStates);
   };
+  const [user, setuser] = useState({});
 
+  useEffect(() => {
+    getValueFor("user", setuser);
+  }, []);
+ const [comments, setcomments] = useState([])
+  const fetchData = async () => {
+    try {
+      if (user?.access_token ) {
+       
+        const response = await axios.get(
+          `https://private.emlaksepette.com/api/project/${projectId}/comments`,
+        );
+            setcomments(response.data)
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    
+    }
+  };
+useEffect(() => {
+    fetchData()
+}, [user])
 
-
-  const totalRate =  data?.housingComments.map(item => parseFloat(item?.rate) || 0).reduce((acc, rate) => acc + rate, 0); 
-
+console.log(comments)
+const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc, rate) => acc + rate, 0); 
   return (
     <Shadow startColor='#ebebeb'>
     <View style={styles.container} onTouchMove={()=>Keyboard.dismiss()}>
@@ -38,30 +62,23 @@ export default function Comment({data, handleModal}) {
             </View>
             <View>
               <View style={{flexDirection:'row',gap:5}}> 
-               {
-                data?.housingComments?.length >0 &&
-                <>
-                  <Text>{(totalRate/data?.housingComments?.length).toFixed(1)}</Text>
-                 <Text>|</Text>
-                </>
-               
-               }
-               
-               
-                <Text>{data?.housingComments?.length} Yorum</Text>
+                {/* <Text>{data?.housingComments?.rate}</Text> */}
+                <Text>{(totalRate /comments.length).toFixed(1)}</Text>
+                <Text>|</Text>
+                <Text>{comments.length} Yorum</Text>
               </View>
             </View>
             <ScrollView horizontal contentContainerStyle={{padding:10,gap:10}} showsHorizontalScrollIndicator={false} >
                
                        
               {
-                 data?.housingComments?.length  <1 ?
+                comments.length <1?
                  <View style={{width:'100%'}}>
                      <Text style={{textAlign:'center',color:'red'}}>Bu konut için yorum yapılmadı</Text>
                  </View>
               :
-                data?.housingComments?.map((itemComment,_index)=>(
-                  <CommentItem username={itemComment?.user?.name} key={_index} comment={itemComment?.comment} date={itemComment?.created_at} rate={itemComment.rate}/>
+                comments.map((itemComment,_index)=>(
+                  <CommentItem username={'Anonim'} key={_index} comment={itemComment?.comment} date={itemComment?.created_at} rate={itemComment.rate}/>
                 ))
               }
         
@@ -72,7 +89,7 @@ export default function Comment({data, handleModal}) {
             <View>
             <TouchableOpacity
               onPress={()=>{
-                  navigation.navigate('AddComment',{HouseID:data.housing.id})
+                  navigation.navigate('AddCommentForProject',{projectId :projectId})
               }}
             style={{
               backgroundColor:'#E54242',
