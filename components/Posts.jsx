@@ -458,7 +458,7 @@ const [AddCartShow, setAddCartShow] = useState(false);
 
           <View style={styles.priceAndButtons}>
             <View style={styles.btns}>
-              <View style={{ width: "50%" }}>
+              <View style={{ width: sold?.status ==1 &&  sold?.is_show_user !== "on" ?"100%":'50%' }}>
                 {sold ? (
                   sold.status == 1 ? (
                     <TouchableOpacity style={styles.sold}>
@@ -509,6 +509,7 @@ const [AddCartShow, setAddCartShow] = useState(false);
                       <Text style={styles.showCustomerText}>Komşumu Gör</Text>
                     </TouchableOpacity>
                   ) : (
+                    sold.status!=1 &&
                     <TouchableOpacity
                       style={styles.payDetailBtn}
                       onPress={openModal}

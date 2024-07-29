@@ -36,21 +36,29 @@ import {
 import { da } from "date-fns/locale";
 import AwesomeAlert from "react-native-awesome-alerts";
   
-  export default function AddCommentForProject() {
+  export default function EditCommentForProject() {
     const [data, setData] = useState({});
     const route = useRoute();
     const nav = useNavigation();
-    const { projectId } = route.params;
+    const { projectId ,commentInfo,commentID} = route.params;
     const [loading, setloading] = useState(true);
+    const [UserImages, setUserImages] = useState([])
+    const [image, setImage] = useState([null, null, null]);
     useEffect(() => {
       apiRequestGet("project/" + projectId).then((res) => {
         setData(res.data.project);
         setloading(false);
+        setRating(commentInfo.rate)
+        setcomment(commentInfo?.comment)
+        const Images= projectId && commentInfo && commentInfo?.images && JSON.parse(commentInfo.images)
+        setImage(Images)
       });
     }, []);
-  
+  console.log(UserImages )
     const [rating, setRating] = useState(0); // Başlangıçta hiçbir yıldız dolu değil
     const [rate, setrate] = useState(0);
+  
+    
     const handleStarPress = (index) => {
       // Tıklanan yıldıza kadar olan tüm yıldızları dolu yap
       setRating(index + 1);
@@ -70,7 +78,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
     useEffect(() => {
       getValueFor("user", setUser);
     }, []);
-    const [image, setImage] = useState([null, null, null]);
+ 
 
     const [selectedIndex, setselectedIndex] = useState(null)
     const [removeImage, setremoveImage] = useState(false)
@@ -150,27 +158,28 @@ import AwesomeAlert from "react-native-awesome-alerts";
       formData.append("comment", comment);
       formData.append("owner_id", data?.user?.id);
       formData.append("project_id", projectId);
-      console.log(image);
-      for(var i = 0; i < image.length; i++){
-        console.log(image[i][0].fileName)
-        if(image != null){
-            console.log({
-                name : image[i][0].fileName,
-                type : image[i][0].type,
-                uri : Platform.OS === 'android' ? image[i][0].uri : image[i][0].uri.replace('file://', ''),
-            })
-            formData.append('images['+i+']',{
-                name : image[i][0].fileName,
-                type : image[i][0].type,
-                uri : Platform.OS === 'android' ? image[i][0].uri : image[i][0].uri.replace('file://', ''),
-            })
-        }
+      formData.append('comment_id',commentID)
+      // console.log(image);
+      // for(var i = 0; i < image.length; i++){
+      //   console.log(image[i][0].fileName)
+      //   if(image != null){
+      //       console.log({
+      //           name : image[i][0].fileName,
+      //           type : image[i][0].type,
+      //           uri : Platform.OS === 'android' ? image[i][0].uri : image[i][0].uri.replace('file://', ''),
+      //       })
+      //       formData.append('images['+i+']',{
+      //           name : image[i][0].fileName,
+      //           type : image[i][0].type,
+      //           uri : Platform.OS === 'android' ? image[i][0].uri : image[i][0].uri.replace('file://', ''),
+      //       })
+      //   }
         
-      }
+      // }
       try {
         if (user?.access_token && rating > 0) {
           const response = await axios.post(
-            `https://private.emlaksepette.com/api/project/${projectId}/add-comment`,
+            `https://private.emlaksepette.com/api/user/${user.id}/${projectId}/comments/${commentID}/update`,
             formData,
             {
               headers: {
@@ -183,7 +192,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
           setrate(0);
           setRating(0);
           nav.navigate("Success", {
-            name: "Yorum başarılı",
+            name: "Yorum Güncelleme başarılı",
             message: "Değerlendirmeniz İçin Teşekkürler",
             HouseID: projectId,
             type:'Project'
@@ -195,7 +204,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
         console.error("post isteği olmadı", error);
       }
     };
-  
+
     const [modalVisible2, setModalVisible2] = useState(false);
     const [Deals, setDeals] = useState("");
     useEffect(() => {

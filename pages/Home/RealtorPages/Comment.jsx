@@ -61,7 +61,7 @@ export default function Comment({data, handleModal}) {
                  </View>
               :
                 data?.housingComments?.map((itemComment,_index)=>(
-                  <CommentItem username={itemComment?.user?.name} key={_index} comment={itemComment?.comment} date={itemComment?.created_at} rate={itemComment.rate}/>
+                  <CommentItem username={itemComment?.user?.name} key={_index} comment={itemComment?.comment} date={itemComment?.created_at} rate={itemComment.rate} image={itemComment.images}/>
                 ))
               }
         
@@ -69,14 +69,14 @@ export default function Comment({data, handleModal}) {
       
 
             </ScrollView>
-            <View>
+            <View style={{width:'100%'}}>
             <TouchableOpacity
               onPress={()=>{
                   navigation.navigate('AddComment',{HouseID:data.housing.id})
               }}
             style={{
               backgroundColor:'#E54242',
-              width:'30%',
+             
               padding:8,
               borderTopRightRadius:10,
               borderBottomRightRadius:10,

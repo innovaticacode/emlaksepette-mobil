@@ -78,7 +78,7 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
                  </View>
               :
                 comments.map((itemComment,_index)=>(
-                  <CommentItem username={'Anonim'} key={_index} comment={itemComment?.comment} date={itemComment?.created_at} rate={itemComment.rate}/>
+                  <CommentItem username={'Anonim'} key={_index} comment={itemComment?.comment} date={itemComment?.created_at} rate={itemComment.rate} image={itemComment.images}/>
                 ))
               }
         

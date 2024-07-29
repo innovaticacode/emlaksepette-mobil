@@ -93,6 +93,8 @@ import SearchPage from "./pages/Home/SearchPage";
 import Support from "./pages/Home/ProfilePages/profileComponents/Support";
 import RequestPage from "./pages/Home/ProfilePages/RequestPage";
 import AddCommentForProject from "./pages/Home/AddCommentForProject";
+import MyComments from "./pages/Home/MyComments";
+import EditCommentForProject from "./pages/Home/EditCommentForProject";
 
 
 const Stack = createNativeStackNavigator();
@@ -1031,6 +1033,28 @@ export default function App({ route }) {
             component={AddCommentForProject}
             options={({ route }) => ({
               title: "Konutu Değerlendir",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+              <Stack.Screen
+            name="MyComments"
+            component={MyComments}
+            options={({ route }) => ({
+              title: "Değerlendirmelerim",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+              <Stack.Screen
+            name="EditProjectComment"
+            component={EditCommentForProject}
+            options={({ route }) => ({
+              title: "Yorumu Düzenle",
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",

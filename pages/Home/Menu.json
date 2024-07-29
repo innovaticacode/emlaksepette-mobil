@@ -277,11 +277,20 @@
   {
     "id": "ChangePassword",
     "label": "Hesabım & Yardım",
-    "icon": "lock",
+    "icon": "info",
     "text": "Destek & Talep",
     "key": "ChangePassword",
     "url": "Support",
     "activePath": "/hesabim/sifre/guncelleme"
+  },
+  {
+    "id": "EditProfile",
+    "label": "Hesabım & Yardım",
+    "icon": "message-circle",
+    "text": "Değerlendirmelerim",
+    "key": "EditProfile",
+    "url": "MyComments",
+    "activePath": "/hesabim/profil/duzenleme"
   },
   {
     "id": "membershipType",
