@@ -79,13 +79,25 @@ export default function Posts({
 
   const [neightboord, setNeightboord] = useState(false);
 
-  const saveData = async (title, amount, imageUrl, neightboord, ilanNo) => {
+  const saveData = async (
+    title,
+    amount,
+    imageUrl,
+    neightboord,
+    ilanNo,
+    roomOrderString
+  ) => {
     try {
+      // SecureStore'a verileri kaydediyoruz
       await SecureStore.setItemAsync("advertise_title", title);
-      await SecureStore.setItemAsync("amount", amount.toString());
+      await SecureStore.setItemAsync("amount", amount.toString()); // Amount'u string olarak kaydediyoruz
       await SecureStore.setItemAsync("imageUrl", imageUrl);
-      await SecureStore.setItemAsync("neightboord", neightboord.toString());
-      await SecureStore.setItemAsync("ilanNo", ilanNo.toString());
+      await SecureStore.setItemAsync("neightboord", neightboord.toString()); // Boolean'ı string olarak kaydediyoruz
+      await SecureStore.setItemAsync("ilanNo", ilanNo.toString()); // İlan numarasını string olarak kaydediyoruz
+      await SecureStore.setItemAsync(
+        "roomOrderString",
+        roomOrderString.toString()
+      ); // Oda sırasını string olarak kaydediyoruz
     } catch (error) {
       console.error("Veri saklanırken bir hata oluştu:", error);
     }
@@ -103,9 +115,10 @@ export default function Posts({
       : ""; // Resim URL'sini burada belirleyin
     const neightboord = false;
     const ilanNo = 1000000 + data.project.id + roomOrder; // İlan numarasını belirliyoruz
+    const roomOrderString = roomOrder.toString();
 
     // Verileri secureStore ile saklayın
-    saveData(title, amount, imageUrl, neightboord, ilanNo)
+    saveData(title, amount, imageUrl, neightboord, ilanNo, roomOrderString)
       .then(() => {
         // Basket bileşenine yönlendirin
         navigation.navigate("Basket2");

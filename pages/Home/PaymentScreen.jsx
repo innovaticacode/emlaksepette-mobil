@@ -55,8 +55,8 @@ export default function PaymentScreen() {
   const [checked2, setChecked2] = React.useState(false);
   const toggleCheckbox2 = () => setChecked2(!checked2);
   const [tabs, settabs] = useState(0);
-  const [paymentModal,setPaymentModal] = useState(false);
-  const [paymentModalContent,setPaymentModalContent] = useState("");
+  const [paymentModal, setPaymentModal] = useState(false);
+  const [paymentModalContent, setPaymentModalContent] = useState("");
 
   useEffect(() => {
     setIdNumber("53872475124");
@@ -67,7 +67,7 @@ export default function PaymentScreen() {
     setnotes("Deneme notu");
     setChecked("true");
     setChecked2("true");
-  },[])
+  }, []);
 
   const completeCreditCardPay = () => {
     if (
@@ -80,10 +80,10 @@ export default function PaymentScreen() {
       checked &&
       checked2
     ) {
-      axios.post(apiUrl+'pay',creditCartData).then((res) => {
-        setPaymentModal(true)
-        setPaymentModalContent(res.data)
-      }) 
+      axios.post(apiUrl + "pay", creditCartData).then((res) => {
+        setPaymentModal(true);
+        setPaymentModalContent(res.data);
+      });
     } else {
       alert("tüm alanları doldur");
     }
@@ -106,38 +106,37 @@ export default function PaymentScreen() {
   const [selectedDocumentName, setSelectedDocumentName] = useState(null);
 
   const [pdfFile, setPdfFile] = useState(null);
-const [selectedPdfUrl, setselectedPdfUrl] = useState(null)
+  const [selectedPdfUrl, setselectedPdfUrl] = useState(null);
 
-  const [creditCartData,setCreditCartData] = useState({
-    amount : 1000
+  const [creditCartData, setCreditCartData] = useState({
+    amount: 1000,
   });
 
   const pickDocument = async () => {
     DocumentPicker.getDocumentAsync({ type: "application/pdf" })
-    .then((result) => {
-      console.log(
-        "Seçilen PDF Dosyasının İçeriği:",
-        JSON.stringify(result, null, 2)
-      );
+      .then((result) => {
+        console.log(
+          "Seçilen PDF Dosyasının İçeriği:",
+          JSON.stringify(result, null, 2)
+        );
 
-      if (!result.canceled && result.assets && result.assets.length > 0) {
-        const pdfAsset = result.assets[0];
-        setPdfFile(pdfAsset);
-        setSelectedDocumentName(pdfAsset.name)
-        console.log(pdfAsset.uri)
-        setselectedPdfUrl(pdfAsset.uri)
-        // Toast.show({
-        //   type: ALERT_TYPE.SUCCESS,
-        //   title: "PDF Seçildi",
-        //   textBody: `Seçtiğiniz PDF: ${pdfAsset.name}`,
-        // });
-        console.log(selectedDocumentName)
-      }
-    })
-    .catch((error) => {
-     alert('hata')
-    });
-
+        if (!result.canceled && result.assets && result.assets.length > 0) {
+          const pdfAsset = result.assets[0];
+          setPdfFile(pdfAsset);
+          setSelectedDocumentName(pdfAsset.name);
+          console.log(pdfAsset.uri);
+          setselectedPdfUrl(pdfAsset.uri);
+          // Toast.show({
+          //   type: ALERT_TYPE.SUCCESS,
+          //   title: "PDF Seçildi",
+          //   textBody: `Seçtiğiniz PDF: ${pdfAsset.name}`,
+          // });
+          console.log(selectedDocumentName);
+        }
+      })
+      .catch((error) => {
+        alert("hata");
+      });
   };
 
   const getFileNameFromUri = (uri) => {
@@ -196,8 +195,8 @@ const [selectedPdfUrl, setselectedPdfUrl] = useState(null)
         isVisible={paymentModal}
         onBackdropPress={() => setPaymentModal(false)}
       >
-        <View style={{width:'100%',backgroundColor:'#fff'}}>
-          <HTMLView value={paymentModalContent}/>
+        <View style={{ width: "100%", backgroundColor: "#fff" }}>
+          <HTMLView value={paymentModalContent} />
         </View>
       </Modal>
       <View>
@@ -1076,7 +1075,11 @@ const [selectedPdfUrl, setselectedPdfUrl] = useState(null)
       )}
 
       {tabs == 0 && (
-        <CreditCardScreen setCreditCartData={setCreditCartData} creditCartData={creditCartData} CompeletePayment={completeCreditCardPay} />
+        <CreditCardScreen
+          setCreditCartData={setCreditCartData}
+          creditCartData={creditCartData}
+          CompeletePayment={completeCreditCardPay}
+        />
       )}
       {tabs == 1 && (
         <EftPay

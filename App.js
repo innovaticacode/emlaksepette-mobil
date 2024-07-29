@@ -93,6 +93,7 @@ import SearchPage from "./pages/Home/SearchPage";
 import Support from "./pages/Home/ProfilePages/profileComponents/Support";
 import RequestPage from "./pages/Home/ProfilePages/RequestPage";
 import Basket2 from "./pages/Home/Basket2";
+import PaymentScreen2 from "./pages/Home/PaymentScreen2";
 
 const Stack = createNativeStackNavigator();
 
@@ -1026,6 +1027,17 @@ export default function App({ route }) {
           <Stack.Screen
             name="Basket2"
             component={Basket2}
+            options={({ route }) => ({
+              title: "Komşumu Gör Satın Alma",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="PaymentScreen2"
+            component={PaymentScreen2}
             options={({ route }) => ({
               title: "Komşumu Gör Satın Alma",
               headerBackTitleVisible: false,
