@@ -164,29 +164,34 @@ const [selectedIndex, setselectedIndex] = useState(null)
     }
 
     try {
-      if (user?.access_token && rating > 0) {
-        const response = await axios.post(
-          `https://private.emlaksepette.com/api/housing/${HouseID}/send-comment`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
-        setcomment("");
-        setrate(0);
-        setRating(0);
-        setImage([null,null,null])
-        nav.navigate("Success", {
-          name: "Yorum başarılı",
-          message: "Değerlendirmeniz İçin Teşekkürler",
-          HouseID: HouseID,
-          type:'House'
-        });
-      } else {
-        alert("yorum boş");
+      if (rating>0 || comment) {
+        if (user?.access_token ) {
+          const response = await axios.post(
+            `https://private.emlaksepette.com/api/housing/${HouseID}/send-comment`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${user?.access_token}`,
+              },
+            }
+          );
+          setcomment("");
+          setrate(0);
+          setRating(0);
+          setImage([null,null,null])
+          nav.navigate("Success", {
+            name: "Yorum başarılı",
+            message: "Değerlendirmeniz İçin Teşekkürler",
+            HouseID: HouseID,
+            type:'House'
+          });
+        } else {
+          alert("yorum boş");
+        }
+      }else{
+        alert('slgjflskj')
       }
+    
     } catch (error) {
       console.error("post isteği olmadı", error);
     }
@@ -249,7 +254,7 @@ const [selectedIndex, setselectedIndex] = useState(null)
                 style={{ width: "100%", height: "100%" }}
               />
             </View>
-            <View style={{ flexDirection: "column", gap: 5 }}>
+            <View style={{ flexDirection: "column", gap: 5 ,width:'100%'}}>
               <View style={{ paddingLeft: 5, width: "80%" }}>
                 <Text
                   numberOfLines={2}
@@ -260,12 +265,15 @@ const [selectedIndex, setselectedIndex] = useState(null)
               </View>
               <View style={{ paddingLeft: 5, gap: 5, width: "70%" }}>
                 <Text
+                onPress={()=>{
+                  nav.navigate('Profile',{id:data?.user?.id})
+                }}
                   style={{ fontSize: 12, color: "grey", fontWeight: "600" }}
                   numberOfLines={2}
                 >
-                  Satıcı:{" "}
-                  <Text style={{ color: "#274ABB" }}>{data?.user?.name}</Text>
+                  Satıcı:{data?.user?.name}
                 </Text>
+
                 <Text
                   style={{ fontSize: 13, color: "green", fontWeight: "600" }}
                 >

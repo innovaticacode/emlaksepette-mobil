@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     TextInput,
     Dimensions,
+    Alert
   } from "react-native";
   import React, { useState, useEffect } from "react";
   import {
@@ -142,8 +143,10 @@ import AwesomeAlert from "react-native-awesome-alerts";
       }
         
       };
+      const [loadingForPost, setloadingForPost] = useState(false)
     const [comment, setcomment] = useState("");
     const shareComment = async () => {
+      setloadingForPost(true)
       const formData = new FormData();
       formData.append("rate", rate);
       formData.append("user_id", user?.id);
@@ -168,31 +171,38 @@ import AwesomeAlert from "react-native-awesome-alerts";
         
       }
       try {
-        if (user?.access_token && rating > 0) {
-          const response = await axios.post(
-            `https://private.emlaksepette.com/api/project/${projectId}/add-comment`,
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${user?.access_token}`,
-                "Content-Type": "multipart/form-data", 
-              },
-            }
-          );
-          setcomment("");
-          setrate(0);
-          setRating(0);
-          nav.navigate("Success", {
-            name: "Yorum başarılı",
-            message: "Değerlendirmeniz İçin Teşekkürler",
-            HouseID: projectId,
-            type:'Project'
-          });
-        } else {
-          alert("yorum boş");
+        if (rating>0 || comment) {
+          if (user?.access_token && rating > 0) {
+            const response = await axios.post(
+              `https://private.emlaksepette.com/api/project/${projectId}/add-comment`,
+              formData,
+              {
+                headers: {
+                  Authorization: `Bearer ${user?.access_token}`,
+                  "Content-Type": "multipart/form-data", 
+                },
+              }
+            );
+            setcomment("");
+            setrate(0);
+            setRating(0);
+            nav.navigate("Success", {
+              name: "Yorum başarılı",
+              message: "Değerlendirmeniz İçin Teşekkürler",
+              HouseID: projectId,
+              type:'Project'
+            });
+          } else {
+            alert("yorum boş");
+          }
+        }else{
+          alert('fsdfsdf')
         }
+      
       } catch (error) {
         console.error("post isteği olmadı", error);
+      }finally{
+        setloadingForPost(false)
       }
     };
   
@@ -263,6 +273,9 @@ import AwesomeAlert from "react-native-awesome-alerts";
                 </View>
                 <View style={{ paddingLeft: 5, gap: 5, width: "70%" }}>
                   <Text
+                  onPress={()=>{
+                        nav.navigate('Profile',{id:data?.user?.id})
+                  }}
                     style={{ fontSize: 12, color: "grey", fontWeight: "600" }}
                     numberOfLines={2}
                   >
@@ -443,6 +456,22 @@ import AwesomeAlert from "react-native-awesome-alerts";
                           </TouchableOpacity>
                         ))
                     }
+                       <Modal
+            animationType="fade" // veya "fade", "none" gibi
+            visible={loadingForPost}
+          
+            style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", margin: 0 }}
+
+          >
+            
+                <View style={style.centeredView}>
+                  <View style={style.modalView}>
+                      <ActivityIndicator color="#fff"/>
+                  </View>
+                </View>
+             
+              
+          </Modal>
              <AwesomeAlert
             
             show={removeImage}
@@ -551,6 +580,33 @@ import AwesomeAlert from "react-native-awesome-alerts";
       borderWidth: 0.3,
       borderColor: "#dce1ea",
       borderRadius: 4,
+    },
+    centeredView: {
+      padding: 10,
+      margin: 0,
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+  
+      // modal dışı koyu arkaplan
+    },
+    modalView: {
+      
+  
+      backgroundColor: '#333',
+      borderRadius: 6,
+      padding: 20,
+    
+  
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
     },
   });
   

@@ -35,7 +35,7 @@ export default function SupportAdd() {
   const [isPicker2Open, setIsPicker2Open] = useState(false);
   const [iconName1, setIconName1] = useState("angle-down");
   const [iconName2, setIconName2] = useState("angle-down");
-  const [pdfFile, setPdfFile] = useState(null);
+  const [pdfFile, setPdfFile] = useState('');
   const navigation=useNavigation ()
   useEffect(() => {
     getValueFor("user", setUser);

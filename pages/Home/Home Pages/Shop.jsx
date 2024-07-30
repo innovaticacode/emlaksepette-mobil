@@ -156,7 +156,7 @@ const Shop = ({index}) => {
        
           renderItem={({ item }) => (
             <RealtorPost
-         
+            openSharing={JSON.parse(item.housing_type_data)['open_sharing1']}
               HouseId={item.id}
               price={`${JSON.parse(item.housing_type_data)["price"]} `}
               housing={item}
@@ -164,15 +164,13 @@ const Shop = ({index}) => {
               loading={loading}
               location={item.city_title + " / " + item.county_title}
               image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image}`}
-              column1_name={JSON.parse(item.housing_type_data)[item.column1_name] ? JSON.parse(item.housing_type_data)[item.column1_name] : ""}
               column1_additional={item.column1_additional}
-            
-              column2_name={JSON.parse(item.housing_type_data)[item.column2_name] ? JSON.parse(item.housing_type_data)[item.column2_name] : ""}
+              column1_name={JSON.parse(item.housing_type_data)[item.column1_name] ? JSON.parse(item.housing_type_data)[item.column1_name] : ""}
+              column2_name={JSON.parse(item.housing_type_data)[item.column2_name]? JSON.parse(item.housing_type_data)[item.column2_name]:""} 
               column2_additional={item.column2_additional}
-              
-              column3_name={JSON.parse(item.housing_type_data)[item.column3_name] ? JSON.parse(item.housing_type_data)[item.column3_name] : ""}
+              column3_name={JSON.parse(item.housing_type_data)[item.column3_name] ?JSON.parse(item.housing_type_data)[item.column3_name] :"" } 
               column3_additional={item.column3_additional}
-              column4_name={`${JSON.parse(item.housing_type_data)[item.column4_name]} `}
+              column4_name={JSON.parse(item.housing_type_data)[item.column4_name] ?JSON.parse(item.housing_type_data)[item.column4_name]:"" } 
               column4_additional={item.column4_additional}
               bookmarkStatus={true}
               dailyRent={false}

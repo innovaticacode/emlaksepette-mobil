@@ -11,6 +11,7 @@ import { React, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
+import Icon from 'react-native-vector-icons/FontAwesome6'
 import Info from "./Info";
 import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -50,8 +51,8 @@ export default function RealtorPost({
   column4_additional,
   step2_slug,
   step1_slug,
-  sold
-
+  sold,
+  openSharing
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -336,12 +337,20 @@ const [cartIsNull, setcartIsNull] = useState(false)
    
         <View style={styles.container}>
           <View style={styles.İlan}>
+          
             <TouchableOpacity
               style={{ width: "30%", height: 80 }}
               onPress={() =>
                 navigation.navigate("Realtor details", { houseId: HouseId })
               }
             >
+              {
+                openSharing === 'Evet' && 
+                <View style={{backgroundColor:'#208011',position:'absolute',zIndex:1,padding:5,bottom:3,left:3}}>
+                <Icon name="handshake-simple" color={'#fff'} size={13}/>
+              </View>
+              }
+               
               <ImageBackground
                 source={{ uri: image }}
                 style={{ width: "100%", height: "100%" }}
@@ -360,6 +369,7 @@ const [cartIsNull, setcartIsNull] = useState(false)
                     numberOfLines={3}
                   >
                     {title}
+                 
                   </Text>
                 </View>
                 <View
@@ -371,7 +381,7 @@ const [cartIsNull, setcartIsNull] = useState(false)
                         : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
                   }}
                 >
-                  {bookmarkStatus && bookmarkStatus == true && (
+                  {bookmarkStatus && bookmarkStatus == true &&  openSharing === 'Evet'&& 
                     <TouchableOpacity
                       onPress={() => {
                         CreateCollection(HouseId);
@@ -385,7 +395,7 @@ const [cartIsNull, setcartIsNull] = useState(false)
                         />
                       </View>
                     </TouchableOpacity>
-                  )}
+                  }
 
                   <TouchableOpacity
                     onPress={() => {
@@ -411,14 +421,16 @@ const [cartIsNull, setcartIsNull] = useState(false)
                   {formattedDiscountedPrice ? (
                     <>
                       <Text style={styles.discountedPriceText}>
-                        {formattedPrice}₺
+                        {formattedPrice}
                       </Text>
                       <Text style={styles.priceText}>
                         {formattedDiscountedPrice}₺
                       </Text>
                     </>
                   ) : (
-                    <Text style={styles.priceText}>{formattedPrice}₺</Text>
+                    housing.step2_slug =='gunluk-kiralik'?
+                    <Text style={styles.priceText}>{formattedPrice} ₺ <Text style={{fontSize:11,color:'#D32729'}}>/ Gecelik</Text> </Text>
+                    : <Text style={styles.priceText}>{formattedPrice} </Text>
                   )}
                 </View>
                 
@@ -448,6 +460,7 @@ const [cartIsNull, setcartIsNull] = useState(false)
                       }}
                     >
                       Sepete Ekle
+                     
                     </Text>
                   )}
                 </TouchableOpacity>

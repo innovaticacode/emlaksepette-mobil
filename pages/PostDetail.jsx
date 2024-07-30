@@ -149,8 +149,14 @@ export default function PostDetail() {
     setSelectedImage(pageNumber);
   };
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
+  const [showInstallment,setShowInstallment] = useState(false);
   const openModal = (HomeId) => {
     setPaymentModalShowOrder(HomeId);
+    if(JSON.parse(ProjectHomeData.projectHousingsList[HomeId]['payment-plan[]']).includes("taksitli")){
+      setShowInstallment(true);
+    }else{
+      setShowInstallment(false);
+    }
     setModalVisible(!modalVisible);
   };
   const [FormVisible, setFormVisible] = useState(false);
@@ -672,7 +678,25 @@ const offSaleCheck=false
   ? formatPrice(discountedPrice)
   : formatPrice(roomData['price[]'])
 console.log()
-
+const [comments, setcomments] = useState([])
+const fetchCommentTotalRate = async () => {
+  try {
+    if (user?.access_token ) {
+     
+      const response = await axios.get(
+        `https://private.emlaksepette.com/api/project/${projectId}/comments`,
+      );
+          setcomments(response.data)
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  
+  }
+};
+useEffect(() => {
+ fetchCommentTotalRate()
+}, [user])
+const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc, rate) => acc + rate, 0); 
   return (
     <>
       <AlertNotificationRoot>
@@ -880,6 +904,15 @@ console.log()
                   paddingBottom: 10,
                 }}
               >
+                
+                     {
+              totalRate !=0 && 
+              <View style={{position:'absolute',right:10,flexDirection:'row',alignItems:'center',gap:4,top:10,zIndex:1}}>
+              <Text style={{color:'#264ABB',fontWeight:'600',fontSize:13}}>{(totalRate /comments.length).toFixed(1)}</Text>
+            
+              <Icon2 name="star" color={'gold'}/>
+            </View>
+            }
                 <Text
                   style={{
                     textAlign: "center",
@@ -1249,7 +1282,8 @@ console.log()
                             : "0"
                         }
                       />
-                      {paymentModalShowOrder != null ? (
+                    
+                      {paymentModalShowOrder != null ?(
                         JSON.parse(
                           ProjectHomeData?.projectHousingsList[
                             paymentModalShowOrder
@@ -1271,10 +1305,7 @@ console.log()
                             }
                           />
                         ) : (
-                          <SettingsItem
-                            info="Taksitli 12 Ay Fiyat"
-                            numbers="0"
-                          />
+                         ''
                         )
                       ) : (
                         <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="0" />
@@ -1301,7 +1332,7 @@ console.log()
                             }
                           />
                         ) : (
-                          <SettingsItem info="Peşinat" numbers="0" />
+                        ''
                         )
                       ) : (
                         <SettingsItem info="Peşinat" numbers="0" />
@@ -1340,10 +1371,7 @@ console.log()
                             )}
                           />
                         ) : (
-                          <SettingsItem
-                            info="Aylık Ödenecek Tutar"
-                            numbers="0"
-                          />
+                          ''
                         )
                       ) : (
                         <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />

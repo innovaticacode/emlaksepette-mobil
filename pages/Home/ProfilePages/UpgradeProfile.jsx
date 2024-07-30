@@ -1124,13 +1124,13 @@ console.log(FormDatas.userName.length===0)
               swipeDirection={['down']}
               onSwipeComplete={()=>setchoose(false)}
             >
-              <View style={styles.modalContent2}>
-                <View style={{padding:10,alignItems:'center'}}>
+              <View style={[styles.modalContent2,{paddingBottom:10}]}>
+                <View style={{paddingTop:10,alignItems:'center'}}>
                   <TouchableOpacity style={{width:'15%',backgroundColor:'#c2c4c6',padding:4,borderRadius:50}}>
     
                   </TouchableOpacity>
                 </View>
-                <View style={{padding:20,gap:35}}>
+                <View style={{padding:20,gap:35,marginBottom:10}}>
                 <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={pickImage}>
                           <Icon3 name="photo" size={23} color={'#333'}/>
                           <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Kütüphaneden Seç</Text>
@@ -1225,10 +1225,10 @@ const styles = StyleSheet.create({
   },
   modalContent2: {
     gap: 10,
-  
+    paddingBottom:20,
     backgroundColor: "#F8F7F4",
     padding: 10,
-    height: "30%",
+
 
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

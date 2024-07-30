@@ -501,6 +501,9 @@ export default function PostDetail() {
     }
 
   };
+  const OpenSharing= data && data.housing && data.housing.housing_type_data &&  JSON.parse(data.housing.housing_type_data)["open_sharing1"]
+  console.log(OpenSharing + 'dkfsdkfsdkfşlsdfsdfsd')
+  const totalRate =  data?.housingComments.map(item => parseFloat(item?.rate) || 0).reduce((acc, rate) => acc + rate, 0); 
   return (
     <>
     <AlertNotificationRoot>
@@ -698,8 +701,9 @@ export default function PostDetail() {
                     />
                   </View>
                 </TouchableOpacity>
-    
-                <TouchableOpacity
+    {
+      OpenSharing == 'Evet' &&
+      <TouchableOpacity
                   onPress={() => {
                     openCollection();
                   }}
@@ -712,6 +716,8 @@ export default function PostDetail() {
                     />
                   </View>
                 </TouchableOpacity>
+    }
+                
               </View>
     
               <PagerView
@@ -742,7 +748,16 @@ export default function PostDetail() {
               </PagerView>
             </View>
             <Shadow style={{ width: "100%", margin: 7, padding: 10 }}>
+           
               <View style={{ paddingTop: 0, gap: 5, }}>
+              {
+              totalRate!=0 && 
+              <View style={{position:'absolute',right:10,flexDirection:'row',alignItems:'center',gap:4}}>
+              <Text style={{color:'#264ABB',fontWeight:'600',fontSize:13}}>{(totalRate /data?.housingComments?.length).toFixed(1)}</Text>
+              <Icon2 name="star" color={'gold'}/>
+            </View>
+            }
+                 
                 <Text
                   style={{
                     textAlign: "center",
@@ -754,12 +769,16 @@ export default function PostDetail() {
                 >
                   {data?.housing?.city?.title} / {data?.housing?.county?.title}
                 </Text>
+                
+               
+              
                 {/* <Text style={{textAlign:'center',color: "#264A" ,fontSize:15}}>{addDotEveryThreeDigits(JSON.parse(data?.housing?.housing_type_data)?.price)} ₺</Text>   */}
                 <Text
                   style={{ textAlign: "center", fontSize: 15, color: "#264ABB" }}
                 >
                   {data?.pageInfo?.meta_title}
                 </Text>
+                
               </View>
               <View style={{ padding: 10 }}>
                 {data && data.housing && data.housing.housing_type_data && (
@@ -772,9 +791,11 @@ export default function PostDetail() {
                     }}
                   >
                     {addDotEveryThreeDigits(
-                      JSON.parse(data.housing.housing_type_data)["price"]
+                      JSON.parse(data.housing.housing_type_data)["price"] ?
+                      JSON.parse(data.housing.housing_type_data)["price"]:
+                      JSON.parse(data.housing.housing_type_data)["daily_rent"]
                     )}{" "}
-                    ₺
+                    ₺ {JSON.parse(data.housing.housing_type_data)["daily_rent"] && <Text style={{color:'#EA2A28'}}>/ Gecelik</Text>}
                   </Text>
                 )}
                 <View style={{paddingTop:5}}>

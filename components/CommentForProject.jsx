@@ -86,7 +86,9 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
       
 
             </ScrollView>
-            <View>
+            {
+              user.access_token && 
+              <View>
             <TouchableOpacity
               onPress={()=>{
                   navigation.navigate('AddCommentForProject',{projectId :projectId})
@@ -102,6 +104,8 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
         <Text style={{textAlign:'center',color:'white'}}>Yorum Yap</Text>
       </TouchableOpacity>
             </View>
+            }
+            
          
       </View>
     

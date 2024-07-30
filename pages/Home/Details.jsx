@@ -10,7 +10,7 @@ import {
   Button,
   Platform,
   Linking,
-
+  
   TextInput,
   Pressable,
   Dimensions,
@@ -895,6 +895,25 @@ export default function Details({ navigation }) {
     }
   };
   const [AlertForSign, setAlertForSign] = useState(false)
+  const [comments, setcomments] = useState([])
+  const fetchCommentTotalRate = async () => {
+    try {
+      if (user?.access_token ) {
+       
+        const response = await axios.get(
+          `https://private.emlaksepette.com/api/project/${ProjectId}/comments`,
+        );
+            setcomments(response.data)
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    
+    }
+  };
+useEffect(() => {
+   fetchCommentTotalRate()
+}, [user])
+const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc, rate) => acc + rate, 0); 
   return (
     <>
      <AlertNotificationRoot>
@@ -1107,13 +1126,20 @@ export default function Details({ navigation }) {
    
           <View
             style={{
-              paddingTop: 8,
+              paddingTop: 13,
               gap: 5,
               borderBottomWidth: 1,
               borderColor: "#e8e8e8",
               paddingBottom: 10,
             }}
           >
+              {
+              totalRate!=0 && 
+              <View style={{position:'absolute',right:10,flexDirection:'row',alignItems:'center',gap:4,top:10}}>
+              <Text style={{color:'#264ABB',fontWeight:'600',fontSize:13}}>{(totalRate /comments.length).toFixed(1)}</Text>
+              <Icon2 name="star" color={'gold'}/>
+            </View>
+            }
             <Text
               style={{
                 textAlign: "center",

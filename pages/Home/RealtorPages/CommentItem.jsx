@@ -76,7 +76,7 @@ console.log(commentImages + 'dizi efsd')
         </View>
         <View>
           <View style={{flexDirection:'row',width:'100%',gap:15}}>
-                  {
+                  {/* {
                     commentImages.map((image,i)=>(
                   <View style={{width:40,height:40,backgroundColor:'red'}}>
                             <Lightbox>
@@ -99,7 +99,7 @@ console.log(commentImages + 'dizi efsd')
               </View>
                     
                     ))
-                  }
+                  } */}
           </View>
         </View>
     </View>

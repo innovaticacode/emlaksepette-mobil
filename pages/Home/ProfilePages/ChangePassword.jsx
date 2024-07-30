@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import Eye from "react-native-vector-icons/Ionicons";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
+import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 import Modal from "react-native-modal";
 import { Platform } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
@@ -42,7 +43,7 @@ export default function ChangePassword() {
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-
+const [message, setmessage] = useState({})
   const postData = async () => {
     setchangeLoading(true);
 
@@ -61,6 +62,9 @@ export default function ChangePassword() {
           },
         }
       );
+    
+
+      
       setcurrentPasword("");
       setnewPassword("");
       setnewPasswordconfirmation("");
@@ -68,9 +72,13 @@ export default function ChangePassword() {
       setTimeout(() => {
         setchangeSuccess(false);
       }, 5000);
-    } catch (error) {
-      // Hata durumunda
-
+    } catch (error) {   
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: 'Hata',
+        textBody: error.response.data.message,
+      })
+    
       console.error("Hata:", error + "post isteği başarısız ");
     } finally {
       setchangeLoading(false);
@@ -81,7 +89,9 @@ export default function ChangePassword() {
       postData();
     }
   };
+  console.log(message + 'dsfsdfjsd')
   return (
+    <AlertNotificationRoot>
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <Text
@@ -178,6 +188,7 @@ export default function ChangePassword() {
         </Modal>
       </View>
     </TouchableWithoutFeedback>
+    </AlertNotificationRoot>
   );
 }
 const styles = StyleSheet.create({

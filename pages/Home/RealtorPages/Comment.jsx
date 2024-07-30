@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, ScrollView} from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { TouchableWithoutFeedback, Keyboard, } from 'react-native'
 import CommentItem from './CommentItem'
@@ -7,6 +7,7 @@ import UploadIcon from 'react-native-vector-icons/AntDesign'
 import { CheckBox } from '@rneui/themed';
 import { Shadow } from 'react-native-shadow-2';
 import { useNavigation } from '@react-navigation/native'
+import { getValueFor } from '../../../components/methods/user'
 export default function Comment({data, handleModal}) {
   const navigation = useNavigation()
   const [checked, setChecked] = React.useState(false);
@@ -27,7 +28,11 @@ export default function Comment({data, handleModal}) {
 
 
   const totalRate =  data?.housingComments.map(item => parseFloat(item?.rate) || 0).reduce((acc, rate) => acc + rate, 0); 
+  const [user, setuser] = useState({});
 
+  useEffect(() => {
+    getValueFor("user", setuser);
+  }, []);
   return (
     <Shadow startColor='#ebebeb'>
     <View style={styles.container} onTouchMove={()=>Keyboard.dismiss()}>
@@ -69,22 +74,27 @@ export default function Comment({data, handleModal}) {
       
 
             </ScrollView>
-            <View style={{width:'100%'}}>
-            <TouchableOpacity
-              onPress={()=>{
-                  navigation.navigate('AddComment',{HouseID:data.housing.id})
-              }}
-            style={{
-              backgroundColor:'#E54242',
-             
-              padding:8,
-              borderTopRightRadius:10,
-              borderBottomRightRadius:10,
-              borderBottomLeftRadius:15
-            }}>
-        <Text style={{textAlign:'center',color:'white'}}>Yorum Yap</Text>
-      </TouchableOpacity>
-            </View>
+            {   
+               user.access_token && 
+                <View style={{width:'100%'}}>
+                <TouchableOpacity
+                  onPress={()=>{
+                      navigation.navigate('AddComment',{HouseID:data.housing.id})
+                  }}
+                style={{
+                  backgroundColor:'#E54242',
+                 
+                  padding:8,
+                  borderTopRightRadius:10,
+                  borderBottomRightRadius:10,
+                  borderBottomLeftRadius:15
+                }}>
+            <Text style={{textAlign:'center',color:'white'}}>Yorum Yap</Text>
+          </TouchableOpacity>
+                </View>
+              
+            }
+        
          
       </View>
     

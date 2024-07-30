@@ -845,6 +845,7 @@ export default function SeeCollection() {
                             "daily_rent"
                           ]
                         } `}
+                        openSharing={JSON.parse(item.housing_type_data)['open_sharing1']}
                         discount_amount={item.discount_amount}
                         discountRate={`${
                           JSON.parse(item.housing.housing_type_data)[
