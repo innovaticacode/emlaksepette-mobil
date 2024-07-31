@@ -248,11 +248,11 @@ export default function Posts({
     formData.append("id", roomOrder);
     formData.append(
       "isShare",
-      roomData["share_sale[]"] ? roomData["share_sale[]"] : null
+      roomData["share_sale[]"] ? roomData["share_sale[]"] : "[]"
     );
     formData.append(
       "numbershare",
-      roomData["number_of_shares[]"] ? roomData["number_of_shares[]"] : null
+      roomData["number_of_shares[]"] ? roomData["number_of_shares[]"] : "[]"
     );
     formData.append("qt", 1);
     formData.append("type", "project");
@@ -280,6 +280,7 @@ export default function Posts({
   const [alertForFavorite, setalertForFavorite] = useState(false);
   const [cartIsNull, setcartIsNull] = useState(false);
   const [AddCartShow, setAddCartShow] = useState(false);
+
   return (
     <View style={styles.container}>
       <AwesomeAlert
@@ -552,7 +553,14 @@ export default function Posts({
 
           <View style={styles.priceAndButtons}>
             <View style={styles.btns}>
-              <View style={{ width: "50%" }}>
+              <View
+                style={{
+                  width:
+                    sold?.status == 1 && sold?.is_show_user !== "on"
+                      ? "100%"
+                      : "50%",
+                }}
+              >
                 {sold ? (
                   sold.status == 1 ? (
                     <TouchableOpacity style={styles.sold}>
@@ -599,12 +607,14 @@ export default function Posts({
                       <Text style={styles.showCustomerText}>Komşumu Gör</Text>
                     </TouchableOpacity>
                   ) : (
-                    <TouchableOpacity
-                      style={styles.payDetailBtn}
-                      onPress={openModal}
-                    >
-                      <Text style={styles.payDetailText}>Ödeme Detayı</Text>
-                    </TouchableOpacity>
+                    sold.status != 1 && (
+                      <TouchableOpacity
+                        style={styles.payDetailBtn}
+                        onPress={openModal}
+                      >
+                        <Text style={styles.payDetailText}>Ödeme Detayı</Text>
+                      </TouchableOpacity>
+                    )
                   )
                 ) : roomData["off_sale[]"] !== "[]" ? (
                   <TouchableOpacity

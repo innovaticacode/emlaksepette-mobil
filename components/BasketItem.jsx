@@ -34,7 +34,9 @@ export default function BasketItem({
   counter,
   storeName,
   DeleteBasket,
+
   id,
+
   isInstallament,
   installmentPrice,
 }) {
@@ -133,20 +135,6 @@ export default function BasketItem({
             }}
           >
             <View style={{ flexDirection: "row", gap: 10 }}>
-              <View style={{ justifyContent: "center" }}>
-                <TouchableOpacity
-                  style={{
-                    borderWidth: 0.9,
-                    borderColor: "grey",
-                    padding: 2,
-                    backgroundColor: chechked ? "#EA2C2E" : "white",
-                    borderRadius: 20,
-                  }}
-                  onPress={() => setchechked(!chechked)}
-                >
-                  <Icon name="check" size={12} color={"white"} />
-                </TouchableOpacity>
-              </View>
               <View style={{ flex: 0.6 / 2, height: 90 }}>
                 <Image
                   source={{ uri: ımage }}
@@ -161,7 +149,7 @@ export default function BasketItem({
                     <Text style={{ fontSize: 12, color: "#333" }}>{name}</Text>
                   ) : (
                     <Text style={{ fontSize: 12, color: "#333" }}>
-                      {name} Projesinde {roomOrder} No'lu Konut{" "}
+                      {name} Projesinde {roomOrder} No'lu Konut
                     </Text>
                   )}
                 </View>
@@ -358,7 +346,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)", // modal dışı koyu arkaplan
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalView: {
     width: "100%",

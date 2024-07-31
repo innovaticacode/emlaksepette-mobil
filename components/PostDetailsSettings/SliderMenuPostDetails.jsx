@@ -8,7 +8,8 @@ export default function SliderMenuPostDetails({tab,setTab,changeTab}) {
         {text:'Özellikler'},
         {text:'Ödeme Planı'},
         {text:'Harita'},
-        {text:'Vaziyet & Kat Planı'}
+        {text:'Vaziyet & Kat Planı'},
+        {text:'Yorumlar'}
     ]
   return (
     <ScrollView

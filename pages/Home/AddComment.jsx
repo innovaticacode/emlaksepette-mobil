@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Dimensions,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import {
@@ -20,6 +21,7 @@ import { CheckBox } from "react-native-elements";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { ImageBackground } from "expo-image";
 import axios from "axios";
+import * as ImagePicker from 'expo-image-picker';
 import { getValueFor } from "../../components/methods/user";
 import {
   ALERT_TYPE,
@@ -32,6 +34,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import HTML from "react-native-render-html";
 import Modal from "react-native-modal";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 export default function AddComment() {
   const [data, setData] = useState({});
@@ -68,33 +71,127 @@ export default function AddComment() {
     getValueFor("user", setUser);
   }, []);
   const [comment, setcomment] = useState("");
+  const [image, setImage] = useState([null, null, null]);
+  console.log(image)
+const [selectedIndex, setselectedIndex] = useState(null)
+  const pickImage = async (index) => {
+    if (image[index]) {
+      // Eğer resim varsa, resmi kaldır
+      setselectedIndex(index);
+     setremoveImage(true)
+
+    } else {
+      // Eğer resim yoksa, galeri aç ve resim seç
+      if (image.filter(img => img).length >= 3) {
+        Alert.alert('Limit Reached', 'You can only select up to 3 images.');
+        return;
+      }
+
+      let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (permissionResult.granted === false) {
+        Alert.alert("Permission Denied", "You need to allow permission to access the library.");
+        return;
+      }
+
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        const newImages = [...image];
+        console.log(result)
+        newImages[index] =  [result.assets[0]] ;
+        setImage(newImages);
+      }
+    }
+    
+    };
+    console.log(image)
+  const takePhoto= async (index) => {
+    if (image[index]) {
+      // Eğer resim varsa, resmi kaldır
+      setselectedIndex(index);
+      setremoveImage(true)
+    } else {
+      // Eğer resim yoksa, kamera aç ve resim çek
+      if (image.filter(img => img).length >= 3) {
+        Alert.alert('Limit Reached', 'You can only select up to 3 images.');
+        return;
+      }
+
+      let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+      if (permissionResult.granted === false) {
+        Alert.alert("Permission Denied", "You need to allow permission to access the camera.");
+        return;
+      }
+
+      let result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        const newImages = [...image];
+        newImages[index] =  [result.assets[0]];
+        setImage(newImages);
+      }
+    }
+      
+    };
   const shareComment = async () => {
     const formData = new FormData();
     formData.append("rate", rate);
     formData.append("comment", comment);
+    for(var i = 0; i < image.length; i++){
+      console.log(image[i][0].fileName)
+      if(image != null){
+          console.log({
+              name : image[i][0].fileName,
+              type : image[i][0].type,
+              uri : Platform.OS === 'android' ? image[i][0].uri : image[i][0].uri.replace('file://', ''),
+          })
+          formData.append('images['+i+']',{
+              name : image[i][0].fileName,
+              type : image[i][0].type,
+              uri : Platform.OS === 'android' ? image[i][0].uri : image[i][0].uri.replace('file://', ''),
+          })
+      }
+      
+    }
 
     try {
-      if (user?.access_token && rating > 0) {
-        const response = await axios.post(
-          `https://private.emlaksepette.com/api/housing/${HouseID}/send-comment`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
-        setcomment("");
-        setrate(0);
-        setRating(0);
-        nav.navigate("Success", {
-          name: "Yorum başarılı",
-          message: "Değerlendirmeniz İçin Teşekkürler",
-          HouseID: HouseID,
-        });
-      } else {
-        alert("yorum boş");
+      if (rating>0 || comment) {
+        if (user?.access_token ) {
+          const response = await axios.post(
+            `https://private.emlaksepette.com/api/housing/${HouseID}/send-comment`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${user?.access_token}`,
+              },
+            }
+          );
+          setcomment("");
+          setrate(0);
+          setRating(0);
+          setImage([null,null,null])
+          nav.navigate("Success", {
+            name: "Yorum başarılı",
+            message: "Değerlendirmeniz İçin Teşekkürler",
+            HouseID: HouseID,
+            type:'House'
+          });
+        } else {
+          alert("yorum boş");
+        }
+      }else{
+        alert('slgjflskj')
       }
+    
     } catch (error) {
       console.error("post isteği olmadı", error);
     }
@@ -119,6 +216,15 @@ export default function AddComment() {
       // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     }
   };
+  const [removeImage, setremoveImage] = useState(false)
+  const removePhoto = () => {
+    const newImages = [...image];
+    newImages[selectedIndex] = null;
+    setImage(newImages);
+  setremoveImage(false)
+    setselectedIndex(null);
+  };
+
   return (
     <ScrollView
       style={style.container}
@@ -148,7 +254,7 @@ export default function AddComment() {
                 style={{ width: "100%", height: "100%" }}
               />
             </View>
-            <View style={{ flexDirection: "column", gap: 5 }}>
+            <View style={{ flexDirection: "column", gap: 5 ,width:'100%'}}>
               <View style={{ paddingLeft: 5, width: "80%" }}>
                 <Text
                   numberOfLines={2}
@@ -159,12 +265,15 @@ export default function AddComment() {
               </View>
               <View style={{ paddingLeft: 5, gap: 5, width: "70%" }}>
                 <Text
+                onPress={()=>{
+                  nav.navigate('Profile',{id:data?.user?.id})
+                }}
                   style={{ fontSize: 12, color: "grey", fontWeight: "600" }}
                   numberOfLines={2}
                 >
-                  Satıcı:{" "}
-                  <Text style={{ color: "#274ABB" }}>{data?.user?.name}</Text>
+                  Satıcı:{data?.user?.name}
                 </Text>
+
                 <Text
                   style={{ fontSize: 13, color: "green", fontWeight: "600" }}
                 >
@@ -301,57 +410,82 @@ export default function AddComment() {
                 />
               </View>
               <View style={{}}>
-                <View style={{ padding: 6, marginTop: 10 }}>
+                <View style={{ padding: 6, marginTop: 10,gap:5 }}>
                   <Text
                     style={{ fontSize: 13, fontWeight: "600", color: "#333" }}
                   >
                     Konut Fotoğrafı Ekle
                   </Text>
+                  <Text style={{fontSize:13,color:'#333'}}>Basılı Tutarak Resim Çekip Yükleyebilirsiniz!</Text>
                 </View>
                 <View
                   style={{
                     flexDirection: "row",
                     gap: 5,
                     alignItems: "center",
-                    justifyContent: "center",
+                    justifyContent: 'space-around',
                   }}
                 >
-                  <TouchableOpacity
-                    style={[
-                      style.Input,
-                      {
-                        width: "32%",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      },
-                    ]}
-                  >
-                    <Icon2 name="camera" size={25} color={"#babbbc"} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      style.Input,
-                      {
-                        width: "32%",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      },
-                    ]}
-                  >
-                    <Icon2 name="camera" size={25} color={"#babbbc"} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      style.Input,
-                      {
-                        width: "32%",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      },
-                    ]}
-                  >
-                    <Icon2 name="camera" size={25} color={"#babbbc"} />
-                  </TouchableOpacity>
+                    {
+                        image.map((image,index)=>(
+                            <TouchableOpacity
+                            key={index}
+                            onLongPress={()=>{
+                                takePhoto(index)
+                            }}
+                            onPress={()=>{
+                             
+                                pickImage(index)
+                           
+                            }}
+                            style={[
+                              style.Input,
+                              {
+                                width: 90,
+                                height:90,
+                                alignItems: "center",
+                                justifyContent: "center",
+                              },
+                            ]}
+                          >
+                                {
+                                    image ?
+                                    <ImageBackground source={image} style={{width:'100%',height:'100%'}}/>:
+                                    <Icon2 name="camera" size={25} color={"#babbbc"} />
+                                }
+                              
+                            
+                        
+                          </TouchableOpacity>
+                        ))
+                    }
+                         <AwesomeAlert
+            
+            show={removeImage}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={'Seçili resmi kaldırmak istediğinize eminmisiniz'}
+              messageStyle={{textAlign:'center'}}
+           
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Hayır"
+            confirmText="Evet"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+                setremoveImage(false)
+             
+            }}
+            onConfirmPressed={() => {
+             removePhoto()
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          /> 
                 </View>
               </View>
             </View>
@@ -423,7 +557,7 @@ const style = StyleSheet.create({
   },
   Input: {
     backgroundColor: "#f5f5f5",
-    padding: 10,
+   
     height: 80,
     borderWidth: 0.3,
     borderColor: "#dce1ea",

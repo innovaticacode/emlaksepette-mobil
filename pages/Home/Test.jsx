@@ -137,7 +137,12 @@ export default function Test() {
                           : "white",
                     }}
                   >
-                    Koleksiyonlarım
+                    {
+                      user.corporate_type=='Emlak Ofisi'?
+                      'Pörtföylerim':
+                      'Koleksiyonlarım'
+                    }
+                
                   </Text>
                 </TouchableOpacity>
               </View>

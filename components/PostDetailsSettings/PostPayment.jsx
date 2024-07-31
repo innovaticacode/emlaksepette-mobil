@@ -87,11 +87,12 @@ export default function PostPayment({ data, HomeId }) {
       maximumFractionDigits: 0,
     }).format(amount);
   };
+  console.log(data.projectCartOrders[HomeId]?.status)
   return (
     <View style={{ padding: 8 }}>
       <View style={styles.container}>
         <View style={styles.PaymentPlan}>
-          {data?.projectHousingsList[HomeId]["off_sale[]"] != "[]" ? (
+          {data?.projectHousingsList[HomeId]["off_sale[]"] != "[]" || data.projectCartOrders[HomeId]?.status ==1 ? (
             <>
               <Text
                 style={{
@@ -106,7 +107,9 @@ export default function PostPayment({ data, HomeId }) {
             </>
           ) : (
             <>
-              <PaymentItem
+            {
+                    data?.projectHousingsList[HomeId]["price[]"] &&
+                    <PaymentItem
                 header="Peşin Fiyat:"
                 price={addDotEveryThreeDigits(
                   data?.projectHousingsList[HomeId]["price[]"]
@@ -115,30 +118,41 @@ export default function PostPayment({ data, HomeId }) {
                 style={{fontSize: 11}}
                 top="7"
               />
+            }
+              {
+                  data?.projectHousingsList[HomeId]["installments-price[]"] &&
+                  <PaymentItem
+                  header={`${data?.projectHousingsList[HomeId]["installments[]"]} Ay Taksitli Fiyat: `}
+                  price={addDotEveryThreeDigits(
+                    data?.projectHousingsList[HomeId]["installments-price[]"]
+                  )}
+                  align="center"
+                  top="7"
+                />
+              }
+           {
+               data?.projectHousingsList[HomeId]["advance[]"] &&
+               <PaymentItem
+               header="Peşinat:"
+               price={addDotEveryThreeDigits(
+                 data?.projectHousingsList[HomeId]["advance[]"]
+               )}
+               align="center"
+               top="7"
+             />
+           }
+            {
+              data.projectHousingsList[HomeId]['installments-price[]'] &&  data.projectHousingsList[HomeId]['advance[]'] && data.projectHousingsList[HomeId]['installments[]']   &&
               <PaymentItem
-                header={`${data?.projectHousingsList[HomeId]["installments[]"]} Ay Taksitli Fiyat: `}
-                price={addDotEveryThreeDigits(
-                  data?.projectHousingsList[HomeId]["installments-price[]"]
-                )}
-                align="center"
-                top="7"
-              />
-              <PaymentItem
-                header="Peşinat:"
-                price={addDotEveryThreeDigits(
-                  data?.projectHousingsList[HomeId]["advance[]"]
-                )}
-                align="center"
-                top="7"
-              />
-              {/* {data.projectHousingsList[roomOrder]} */}
-              <PaymentItem
-                header="Aylık Ödenecek Miktar: "
-                price={
-                  formatAmount( ( parseInt( data.projectHousingsList[HomeId]['installments-price[]'] ) -  ( parseInt( data.projectHousingsList[HomeId]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[HomeId]['installments[]'] ) ) 
-                }
-              />
-              {paymentItems}
+              header="Aylık Ödenecek Miktar: "
+              price={
+                formatAmount( ( parseInt( data.projectHousingsList[HomeId]['installments-price[]'] ) -  ( parseInt( data.projectHousingsList[HomeId]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[HomeId]['installments[]'] ) ) 
+              }
+            />
+              }
+            
+             
+              {paymentItems && paymentItems}
             </>
           )}
         </View>

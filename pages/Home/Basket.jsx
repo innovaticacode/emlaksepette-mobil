@@ -198,9 +198,8 @@ export default function Basket() {
     return `${month}, ${day} ${year}`;
   };
 
-  // Sepetteki Hisse Sayısını Arttırma Ve Fİyat Güncelleme
   const [shareCounter, setshareCounter] = useState(1);
-  //Arttırma
+
   const [message, setmessage] = useState({});
   const [counter, setcounter] = useState(1);
   const UpdateCart = async () => {
@@ -352,6 +351,7 @@ export default function Basket() {
       <TrashIcon name="trash" size={23} color={"white"} />
     </TouchableOpacity>
   );
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       {loading ? (
@@ -475,81 +475,68 @@ export default function Basket() {
             </View>
           </View> */}
 
-                <Text>
-                  {"https://private.emlaksepette.com/project_housing_images/" +
-                    imageUrl}
-                </Text>
-                <View style={{ flex: 1 }}>
-                  <Image
-                    style={{ width: "100%", height: 80, objectFit: "cover" }}
-                    source={{
-                      uri:
-                        "https://private.emlaksepette.com/project_housing_images/" +
-                        imageUrl,
-                    }}
-                  />
-                </View>
-                {type?.type == "project" && (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      borderWidth: 1,
-                      borderColor: "#E4E4E4",
-                      justifyContent: "center",
-                      marginTop: 10,
-                    }}
-                  >
-                    <TouchableOpacity
+                {Cart?.installmentPrice != 0 &&
+                  Cart?.installmentPrice != null && (
+                    <View
                       style={{
-                        width: "50%",
-                        padding: 9,
-                        backgroundColor:
-                          isInstallament == 1 ? "#5CB85C" : "transparent",
-                        borderTopRightRadius: 15,
-                        borderBottomRightRadius: 15,
-                      }}
-                      onPress={() => {
-                        setisInstallament(1);
-                        setPaymentMethod("credit_card");
+                        flexDirection: "row",
+                        borderWidth: 1,
+                        borderColor: "#E4E4E4",
+                        justifyContent: "center",
+                        marginTop: 10,
                       }}
                     >
-                      <Text
+                      <TouchableOpacity
                         style={{
-                          textAlign: "center",
-                          color: isInstallament == 2 ? "#333" : "#ffffff",
+                          width: "50%",
+                          padding: 9,
+                          backgroundColor:
+                            isInstallament == 1 ? "#5CB85C" : "transparent",
+                          borderTopRightRadius: 15,
+                          borderBottomRightRadius: 15,
+                        }}
+                        onPress={() => {
+                          setisInstallament(1);
+                          setPaymentMethod("credit_card");
                         }}
                       >
-                        Peşin Fiyat İle Ödeme
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        width: "50%",
-                        padding: 9,
-                        backgroundColor:
-                          isInstallament == 2 ? "#5CB85C" : "transparent",
-                        borderTopLeftRadius: 15,
-                        borderBottomLeftRadius: 15,
-                      }}
-                      onPress={() => {
-                        setisInstallament(2);
-                        setPaymentMethod("installment");
-                        UpdateCartForInstallemnt("taksitli");
-                      }}
-                    >
-                      <Text
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            color: isInstallament == 2 ? "#333" : "#ffffff",
+                          }}
+                        >
+                          Peşin Fiyat İle Ödeme
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
                         style={{
-                          textAlign: "center",
-                          color: isInstallament == 1 ? "#333" : "#ffffff",
+                          width: "50%",
+                          padding: 9,
+                          backgroundColor:
+                            isInstallament == 2 ? "#5CB85C" : "transparent",
+                          borderTopLeftRadius: 15,
+                          borderBottomLeftRadius: 15,
+                        }}
+                        onPress={() => {
+                          setisInstallament(2);
+                          setPaymentMethod("installment");
+                          UpdateCartForInstallemnt("taksitli");
                         }}
                       >
-                        Taksitli Fiyat İle Ödeme
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            color: isInstallament == 1 ? "#333" : "#ffffff",
+                          }}
+                        >
+                          Taksitli Fiyat İle Ödeme
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
 
-                {isInstallament == 2 && (
+                {isInstallament == 2 && Cart?.installmentPrice && (
                   <View style={[styles.acceptCart, { gap: 20 }]}>
                     <View
                       style={{
@@ -561,7 +548,7 @@ export default function Basket() {
                         Peşinat:
                       </Text>
                       <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
-                        {addDotEveryThreeDigits(Cart?.pesinat)} ₺
+                        {addDotEveryThreeDigits(Math.round(Cart?.pesinat))} ₺
                       </Text>
                     </View>
                     <View
@@ -577,6 +564,7 @@ export default function Basket() {
                         {Cart?.taksitSayisi}{" "}
                       </Text>
                     </View>
+
                     <View
                       style={{
                         flexDirection: "row",
@@ -586,8 +574,23 @@ export default function Basket() {
                       <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
                         Aylık Ödenecek Tutar:
                       </Text>
+
                       <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
-                        {addDotEveryThreeDigits(Cart.aylik)} ₺
+                        {addDotEveryThreeDigits(Math.round(Cart.aylik))} ₺
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                        Ara Ödeme Sayısı
+                      </Text>
+
+                      <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
+                        {payDec.length}
                       </Text>
                     </View>
                     <View
@@ -600,7 +603,10 @@ export default function Basket() {
                         Toplam Fiyat:
                       </Text>
                       <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
-                        {addDotEveryThreeDigits(Cart.installmentPrice)} ₺
+                        {addDotEveryThreeDigits(
+                          Math.round(Cart.installmentPrice)
+                        )}{" "}
+                        ₺
                       </Text>
                     </View>
                     {payDec.map((item, _index) => (
@@ -787,8 +793,8 @@ export default function Basket() {
                               justifyContent: "space-between",
                             }}
                           >
-                            <Text style={{}}>%2 Kapora:</Text>
-                            <Text style={{}}>
+                            <Text style={{ color: "#333" }}>%2 Kapora:</Text>
+                            <Text style={{ color: "#333" }}>
                               {addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺
                             </Text>
                           </View>
@@ -933,8 +939,8 @@ export default function Basket() {
                           slug: type?.type,
                           id: Cart.id,
                           roomOrder: Cart.housing,
-                          price: Cart.price, // İlan fiyatı
-                          totalPrice: DiscountPrice, // Toplam fiyat
+                          price: Cart.price,
+                          totalPrice: DiscountPrice,
                           deposit: KaporaForDiscountPrice,
                           kapora: offerControl?.project?.deposit_rate,
                           isInstallament: isInstallament,
@@ -985,7 +991,6 @@ export default function Basket() {
                 >
                   Sepetinizde ilan bulunmamaktadır
                 </Text>
-                <Text></Text>
               </View>
               <View style={{ width: "100%", alignItems: "center" }}>
                 <TouchableOpacity

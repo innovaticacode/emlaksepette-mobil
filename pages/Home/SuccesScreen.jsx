@@ -4,7 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/AntDesign'
 export default function SuccesScreen() {
     const route= useRoute()
-    const {message,name,HouseID}=route.params
+    const {message,name,HouseID,type}=route.params
     const nav=useNavigation()
   return (
     <View style={{alignItems:'center', flex:1,padding:30,backgroundColor:'#f7f7f7'}}>
@@ -20,6 +20,7 @@ export default function SuccesScreen() {
         <View style={{paddingTop:50,width:'100%',alignItems:'center',justifyContent:'center',gap:20}}>
             <TouchableOpacity style={{backgroundColor:'#EB2B2E',padding:10,width:'80%',borderRadius:5}}
                     onPress={()=>{
+                        
                         nav.navigate('HomePage')
                     }}
             >
@@ -27,7 +28,12 @@ export default function SuccesScreen() {
             </TouchableOpacity>
             <TouchableOpacity style={{backgroundColor:'#EB2B2E',padding:10,width:'80%',borderRadius:5}}
                         onPress={()=>{
-                            nav.navigate('Realtor details',{houseId:HouseID})
+                            if (type=='Project') {
+                                nav.navigate('Details',{ProjectId:HouseID})
+                            }else{
+                                nav.navigate('Realtor details',{houseId:HouseID})
+                            }
+                            
                         }}
             >
                 <Text style={{textAlign:'center',fontSize:14,color:'#ffff',fontWeight:'700'}}>İlana Git</Text>

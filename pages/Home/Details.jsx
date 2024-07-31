@@ -10,7 +10,7 @@ import {
   Button,
   Platform,
   Linking,
-
+  
   TextInput,
   Pressable,
   Dimensions,
@@ -64,6 +64,7 @@ import { err } from "react-native-svg";
 import DrawerMenu from "../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
+import CommentForProject from "../../components/CommentForProject";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -289,44 +290,10 @@ export default function Details({ navigation }) {
       });
   };
 
-  const shareLinkOnWhatsApp = () => {
-    const url = `https://private.emlaksepette.com/proje/${data.project.slug}/1000${ProjectId}/detay`;
 
-    const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
-    Linking.openURL(whatsappShareURL)
-      .then(() => console.log("WhatsApp açıldı ve link paylaşıldı"))
-      .catch((error) => console.error("WhatsApp açılamadı:", error));
-  };
 
-  const shareLinkOnInstagram = (text) => {
-    const url = `https://private.emlaksepette.com/${slug}/100${ProjectId}/detay`;
-
-    const instagramShareURL = `instagram://story/?text=${encodeURIComponent(
-      url
-    )}`;
-
-    Linking.openURL(instagramShareURL)
-      .then(() => console.log("Instagram açıldı ve link paylaşıldı"))
-      .catch((error) => console.error("Instagram açılamadı:", error));
-  };
-  const copyToClipboard = () => {
-    const url = `https://private.emlaksepette.com/${slug}/1000${ProjectId}/detay`;
-    Clipboard.setStringAsync(url);
-    ShowAlert();
-  };
-  const handleShareViaSMS = (text) => {
-    const url = text;
-    const message = `Bu linki kontrol et: ${url}`;
-
-    Linking.openURL(`sms:?body=${encodeURIComponent(message)}`);
-  };
-  const ShowAlert = () => {
-    setshowAlert(true);
-    setTimeout(() => {
-      setshowAlert(false);
-    }, 2000);
-  };
+ 
 
   const isCloseToBottom = ({
     layoutMeasurement,
@@ -428,7 +395,15 @@ export default function Details({ navigation }) {
   useEffect(() => {
     fetchData();
   }, [user]);
-
+  const filterEmojis = (text) => {
+    // Emoji kod noktalarını içeren regex deseni
+    const emojiRegex = /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu;
+    return text.replace(emojiRegex, '');
+  };
+    const handleChangeText = (input) => {
+      const filteredText = filterEmojis(input);
+      setnewCollectionNameCreate(filteredText);
+    };
   const addCollectionPost = () => {
     const collectionData = {
       collection_name: newCollectionNameCreate,
@@ -920,6 +895,25 @@ export default function Details({ navigation }) {
     }
   };
   const [AlertForSign, setAlertForSign] = useState(false)
+  const [comments, setcomments] = useState([])
+  const fetchCommentTotalRate = async () => {
+    try {
+      if (user?.access_token ) {
+       
+        const response = await axios.get(
+          `https://private.emlaksepette.com/api/project/${ProjectId}/comments`,
+        );
+            setcomments(response.data)
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    
+    }
+  };
+useEffect(() => {
+   fetchCommentTotalRate()
+}, [user])
+const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc, rate) => acc + rate, 0); 
   return (
     <>
      <AlertNotificationRoot>
@@ -1132,13 +1126,20 @@ export default function Details({ navigation }) {
    
           <View
             style={{
-              paddingTop: 8,
+              paddingTop: 13,
               gap: 5,
               borderBottomWidth: 1,
               borderColor: "#e8e8e8",
               paddingBottom: 10,
             }}
           >
+              {
+              totalRate!=0 && 
+              <View style={{position:'absolute',right:10,flexDirection:'row',alignItems:'center',gap:4,top:10}}>
+              <Text style={{color:'#264ABB',fontWeight:'600',fontSize:13}}>{(totalRate /comments.length).toFixed(1)}</Text>
+              <Icon2 name="star" color={'gold'}/>
+            </View>
+            }
             <Text
               style={{
                 textAlign: "center",
@@ -1196,6 +1197,7 @@ export default function Details({ navigation }) {
           <View style={{}}>{tabs === 3 && <Map mapData={data} />}</View>
 
           {tabs == 4 && <FloorPlan data={data} />}
+          {tabs==5 && <CommentForProject projectId={data?.project?.id}/>}
 
           <Modal
             animationType="fade" // veya "fade", "none" gibi
@@ -1875,7 +1877,7 @@ export default function Details({ navigation }) {
                     <TextInput
                       style={styles.Input}
                       value={newCollectionNameCreate}
-                      onChangeText={(value) => setnewCollectionNameCreate(value)}
+                      onChangeText={(value) => handleChangeText(value)}
                     />
                   </View>
                   <View style={{ paddingTop: 10 }}>

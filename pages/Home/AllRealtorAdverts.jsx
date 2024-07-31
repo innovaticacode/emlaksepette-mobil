@@ -569,6 +569,7 @@ export default function AllRealtorAdverts() {
                     ""
                   }`} // Safely access column2_name
                   column2_additional={item.column2_additional}
+                  openSharing={JSON.parse(item.housing_type_data)['open_sharing1']}
                   column3_name={`${
                     JSON.parse(item.housing_type_data)?.[item.column3_name] ??
                     ""

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Platform, PermissionsAndroid, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Platform, PermissionsAndroid, ActivityIndicator,Text } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { WebView } from 'react-native-webview';
 import * as FileSystem from 'expo-file-system';
@@ -44,6 +44,7 @@ export default function DecontPdf() {
 
   return (
     <View style={styles.container}>
+     
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
@@ -57,6 +58,7 @@ export default function DecontPdf() {
           allowUniversalAccessFromFileURLs={true}
         />
       )}
+    
     </View>
   );
 }
