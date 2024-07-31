@@ -503,7 +503,7 @@ export default function PostDetail() {
   };
   const OpenSharing= data && data.housing && data.housing.housing_type_data &&  JSON.parse(data.housing.housing_type_data)["open_sharing1"]
   console.log(OpenSharing + 'dkfsdkfsdkfşlsdfsdfsd')
-  const totalRate =  data?.housingComments.map(item => parseFloat(item?.rate) || 0).reduce((acc, rate) => acc + rate, 0); 
+  const totalRate = data &&  data?.housingComments && data?.housingComments?.map(item => parseFloat(item?.rate) || 0).reduce((acc, rate) => acc + rate, 0); 
   return (
     <>
     <AlertNotificationRoot>

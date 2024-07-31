@@ -280,9 +280,14 @@ const [selectedIndex, setselectedIndex] = useState(null)
                   {data &&
                     data.housing_type_data &&
                     addDotEveryThreeDigits(
-                      JSON.parse(data.housing_type_data)["price"]
+                      JSON.parse(data.housing_type_data)["price"]?
+                      JSON.parse(data.housing_type_data)["price"]:
+                      JSON.parse(data.housing_type_data)["daily_rent"]
                     )}{" "}
-                  TL
+                  TL {
+                    JSON.parse(data.housing_type_data)["daily_rent"] &&
+                    <Text style={{fontSize:12,color:'#EA2A28'}}>/ Gecelik</Text>
+                  }
                 </Text>
               </View>
             </View>
