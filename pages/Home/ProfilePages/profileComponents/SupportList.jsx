@@ -20,7 +20,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import RenderHtml from "react-native-render-html";
 import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
-import * as Sharing from 'expo-sharing';
+import * as Sharing from "expo-sharing";
 
 import { useNavigation } from "@react-navigation/native";
 import { UrlTile } from "react-native-maps";
@@ -75,43 +75,49 @@ export default function SupportList() {
     }
   }, [user]);
 
+  const nav = useNavigation();
+  async function saveFile(uri, filename, mimetype) {
+    if (Platform.OS === "android") {
+      const permissions =
+        await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
-const nav=useNavigation()
-async function saveFile(uri, filename, mimetype) {
-  if (Platform.OS === "android") {
-    const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+      if (permissions.granted) {
+        const base64 = await FileSystem.readAsStringAsync(uri, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
 
-    if (permissions.granted) {
-      const base64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
-
-      await FileSystem.StorageAccessFramework.createFileAsync(permissions.directoryUri, filename, mimetype)
-        .then(async (uri) => {
-          await FileSystem.writeAsStringAsync(uri, base64, { encoding: FileSystem.EncodingType.Base64 });
-        })
-        .catch(e => console.log(e));
+        await FileSystem.StorageAccessFramework.createFileAsync(
+          permissions.directoryUri,
+          filename,
+          mimetype
+        )
+          .then(async (uri) => {
+            await FileSystem.writeAsStringAsync(uri, base64, {
+              encoding: FileSystem.EncodingType.Base64,
+            });
+          })
+          .catch((e) => console.log(e));
+      } else {
+        Sharing.shareAsync(uri);
+      }
     } else {
       Sharing.shareAsync(uri);
     }
-  } else {
-   Sharing.shareAsync(uri);
   }
-}
 
-async function download(URL) {
-  const filename = URL;
-  const result = await FileSystem.downloadAsync(
-  `https://private.emlaksepette.com/support/${URL}`,
-    FileSystem.documentDirectory + filename
-  );
+  async function download(URL) {
+    const filename = URL;
+    const result = await FileSystem.downloadAsync(
+      `https://private.emlaksepette.com/support/${URL}`,
+      FileSystem.documentDirectory + filename
+    );
 
-  // Log the download result
-  console.log(result);
+    // Log the download result
+    console.log(result);
 
-  // Save the downloaded file
-  saveFile(result.uri, filename, result.headers["Content-Type"]);
-}
-
-
+    // Save the downloaded file
+    saveFile(result.uri, filename, result.headers["Content-Type"]);
+  }
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -121,7 +127,7 @@ async function download(URL) {
         <ScrollView>
           <View style={{}}>
             {supportData.map((support, index) => (
-              <View key={index} style={{ padding: 20 }}>
+              <View key={index} style={{ marginTop: 20 }}>
                 <TouchableOpacity
                   style={{
                     backgroundColor: "white",
@@ -217,11 +223,9 @@ async function download(URL) {
                   >
                     <View style={{ width: "45%" }}>
                       <TouchableOpacity
-
-                        onPress={()=>{
-                          download(support.file_path)
+                        onPress={() => {
+                          download(support.file_path);
                         }}
-                    
                         style={{
                           backgroundColor: "rgba(234, 43, 46, 0.2)",
 
@@ -242,7 +246,10 @@ async function download(URL) {
                             name="pdffile1"
                             color={"red"}
                           />
-                          <Text style={{ textAlign: "center", color: "red" }} numberOfLines={1}>
+                          <Text
+                            style={{ textAlign: "center", color: "red" }}
+                            numberOfLines={1}
+                          >
                             {support.file_path}
                           </Text>
                         </View>

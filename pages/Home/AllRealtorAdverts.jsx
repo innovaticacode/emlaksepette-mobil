@@ -31,7 +31,6 @@ import { getValueFor } from "../../components/methods/user";
 
 import SortModal from "../../components/SortModal";
 
-
 export default function AllRealtorAdverts() {
   const [cityItems, setCityItems] = useState();
   const [state, setState] = useState({
@@ -450,16 +449,16 @@ export default function AllRealtorAdverts() {
       isDrawerOpen: !prevState.isDrawerOpen,
     }));
   };
-  const [index, setindex] = useState(0)
-  const [tab, settab] = useState(0)
-  const [user, setuser] = useState({})
+  const [index, setindex] = useState(0);
+  const [tab, settab] = useState(0);
+  const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <Header onPress={toggleDrawer} tab={settab} index={setindex}/>
+      <Header onPress={toggleDrawer} tab={settab} index={setindex} />
 
       <Modal
         swipeDirection="left"
@@ -569,7 +568,9 @@ export default function AllRealtorAdverts() {
                     ""
                   }`} // Safely access column2_name
                   column2_additional={item.column2_additional}
-                  openSharing={JSON.parse(item.housing_type_data)['open_sharing1']}
+                  openSharing={
+                    JSON.parse(item.housing_type_data)["open_sharing1"]
+                  }
                   column3_name={`${
                     JSON.parse(item.housing_type_data)?.[item.column3_name] ??
                     ""
@@ -1100,7 +1101,6 @@ export default function AllRealtorAdverts() {
           </View>
         </View>
       </Modal>
-    
     </SafeAreaView>
   );
 }
@@ -1387,5 +1387,4 @@ const pickerSelectStyles = StyleSheet.create({
     margin: "0 auto",
     marginBottom: 5,
   },
-
 });
