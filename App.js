@@ -96,6 +96,8 @@ import AddCommentForProject from "./pages/Home/AddCommentForProject";
 import MyComments from "./pages/Home/MyComments";
 import EditCommentForProject from "./pages/Home/EditCommentForProject";
 
+import Basket2 from "./pages/Home/Basket2";
+import PaymentScreen2 from "./pages/Home/PaymentScreen2";
 
 const Stack = createNativeStackNavigator();
 
@@ -312,7 +314,6 @@ export default function App({ route }) {
             options={({ route }) => ({
               headerShown: false,
               headerBackTitleVisible: false,
-             
             })}
           />
 
@@ -765,7 +766,7 @@ export default function App({ route }) {
             name="SeeNeigbourHood"
             component={SeeNeigbourhood}
             options={({ route }) => ({
-              headerBackTitleVisible:false,
+              headerBackTitleVisible: false,
               title: "Komşumu Gör",
             })}
           />
@@ -1004,18 +1005,17 @@ export default function App({ route }) {
             })}
           />
 
-              <Stack.Screen
+          <Stack.Screen
             name="SearchPage"
             component={SearchPage}
             options={({ route }) => ({
-              title: 'Ara',
-              headerShown:false,
+              title: "Ara",
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
               },
-            })}/>
-
+            })}
+          />
           <Stack.Screen
             name="Support"
             component={Support}
@@ -1028,7 +1028,7 @@ export default function App({ route }) {
               },
             })}
           />
-            <Stack.Screen
+          <Stack.Screen
             name="AddCommentForProject"
             component={AddCommentForProject}
             options={({ route }) => ({
@@ -1039,7 +1039,7 @@ export default function App({ route }) {
               },
             })}
           />
-              <Stack.Screen
+          <Stack.Screen
             name="MyComments"
             component={MyComments}
             options={({ route }) => ({
@@ -1050,11 +1050,33 @@ export default function App({ route }) {
               },
             })}
           />
-              <Stack.Screen
+          <Stack.Screen
             name="EditProjectComment"
             component={EditCommentForProject}
             options={({ route }) => ({
               title: "Yorumu Düzenle",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="Basket2"
+            component={Basket2}
+            options={({ route }) => ({
+              title: "Komşumu Gör Satın Alma",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="PaymentScreen2"
+            component={PaymentScreen2}
+            options={({ route }) => ({
+              title: "Komşumu Gör Satın Alma",
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",

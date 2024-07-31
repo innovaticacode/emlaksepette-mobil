@@ -12,7 +12,16 @@ import * as Clipboard from "expo-clipboard";
 import { useNavigation } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
-export default function EftPay({ onPress, selectedDocumentName, pdfUri, url }) {
+export default function EftPay({
+  onPress,
+  selectedDocumentName,
+  pdfUri,
+  url,
+  checked,
+  checked2,
+  pickDocument,
+  onHandlePayment,
+}) {
   const navigation = useNavigation();
   const [selectedIban, setselectedIban] = useState(false);
   const [selectedBank, setselectedBank] = useState(0);
@@ -24,6 +33,8 @@ export default function EftPay({ onPress, selectedDocumentName, pdfUri, url }) {
     setshowPaymentAccountName(true);
     Clipboard.setStringAsync(Iban);
   };
+
+  console.log(onPress);
 
   const openPdf = async () => {
     if (url) {
@@ -220,6 +231,8 @@ export default function EftPay({ onPress, selectedDocumentName, pdfUri, url }) {
             gap: 15,
             borderRadius: 5,
           }}
+          onPress={onHandlePayment}
+          disabled={!checked || !checked2} // Checkbox'ların kontrolü
         >
           <Text style={{ color: "white" }}>Ödemeyi Tamamla</Text>
         </TouchableOpacity>

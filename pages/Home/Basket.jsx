@@ -37,6 +37,7 @@ import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { Image } from "react-native-svg";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import DrawerMenu from "../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
@@ -45,6 +46,49 @@ export default function Basket() {
   const route = useRoute();
 
   const navigation = useNavigation();
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [neightboord, setNeightboord] = useState(false);
+
+  useEffect(() => {
+    const fetchDatass = async () => {
+      try {
+        const storedTitle = await SecureStore.getItemAsync("advertise_title");
+        const storedAmount = await SecureStore.getItemAsync("amount");
+        const storedImageUrl = await SecureStore.getItemAsync("imageUrl");
+        const storedNeightboord = await SecureStore.getItemAsync("neightboord");
+
+        if (storedTitle !== null) {
+          setTitle(storedTitle);
+        } else {
+          setTitle("Başlık bulunamadı");
+        }
+
+        if (storedAmount !== null) {
+          setAmount(storedAmount);
+        } else {
+          setAmount("Tutar bulunamadı");
+        }
+        if (storedImageUrl !== null) {
+          setImageUrl(storedImageUrl);
+        } else {
+          setImageUrl("ressm yok");
+        }
+        if (storedNeightboord !== null) {
+          setNeightboord(storedNeightboord);
+        } else {
+          setNeightboord("abooov");
+        }
+      } catch (error) {
+        console.error("Veri alma hatası:", error);
+      }
+    };
+
+    fetchDatass();
+  }, []);
+
+  console.log(imageUrl, "aa");
 
   const [Basket, SetBasket] = useState([
     {
@@ -61,6 +105,7 @@ export default function Basket() {
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
+
   const [user, setuser] = useState({});
   const [Cart, setCart] = useState({});
   const [type, settype] = useState({});
@@ -98,7 +143,7 @@ export default function Basket() {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      setLoading(false)
+      setLoading(false);
     }
   };
 
@@ -152,7 +197,6 @@ export default function Basket() {
 
     return `${month}, ${day} ${year}`;
   };
-
 
   const [shareCounter, setshareCounter] = useState(1);
 
@@ -258,12 +302,12 @@ export default function Basket() {
 
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("tr-TR", {
-      style: "currency",
-      currency: "TRY",
+      currencyDisplay: "code",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
   };
+
   const [messageUpdateCart, setmessageUpdateCart] = useState({});
   const UpdateCartForInstallemnt = async (selectedOption) => {
     let qt = Cart.qt ? Cart.qt : 1;
@@ -431,67 +475,68 @@ export default function Basket() {
             </View>
           </View> */}
 
-                {Cart?.installmentPrice !=0 &&Cart?.installmentPrice != null && (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      borderWidth: 1,
-                      borderColor: "#E4E4E4",
-                      justifyContent: "center",
-                      marginTop: 10,
-                    }}
-                  >
-                    <TouchableOpacity
+                {Cart?.installmentPrice != 0 &&
+                  Cart?.installmentPrice != null && (
+                    <View
                       style={{
-                        width: "50%",
-                        padding: 9,
-                        backgroundColor:
-                          isInstallament == 1 ? "#5CB85C" : "transparent",
-                        borderTopRightRadius: 15,
-                        borderBottomRightRadius: 15,
-                      }}
-                      onPress={() => {
-                        setisInstallament(1);
-                        setPaymentMethod("credit_card");
+                        flexDirection: "row",
+                        borderWidth: 1,
+                        borderColor: "#E4E4E4",
+                        justifyContent: "center",
+                        marginTop: 10,
                       }}
                     >
-                      <Text
+                      <TouchableOpacity
                         style={{
-                          textAlign: "center",
-                          color: isInstallament == 2 ? "#333" : "#ffffff",
+                          width: "50%",
+                          padding: 9,
+                          backgroundColor:
+                            isInstallament == 1 ? "#5CB85C" : "transparent",
+                          borderTopRightRadius: 15,
+                          borderBottomRightRadius: 15,
+                        }}
+                        onPress={() => {
+                          setisInstallament(1);
+                          setPaymentMethod("credit_card");
                         }}
                       >
-                        Peşin Fiyat İle Ödeme
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        width: "50%",
-                        padding: 9,
-                        backgroundColor:
-                          isInstallament == 2 ? "#5CB85C" : "transparent",
-                        borderTopLeftRadius: 15,
-                        borderBottomLeftRadius: 15,
-                      }}
-                      onPress={() => {
-                        setisInstallament(2);
-                        setPaymentMethod("installment");
-                        UpdateCartForInstallemnt("taksitli");
-                      }}
-                    >
-                      <Text
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            color: isInstallament == 2 ? "#333" : "#ffffff",
+                          }}
+                        >
+                          Peşin Fiyat İle Ödeme
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
                         style={{
-                          textAlign: "center",
-                          color: isInstallament == 1 ? "#333" : "#ffffff",
+                          width: "50%",
+                          padding: 9,
+                          backgroundColor:
+                            isInstallament == 2 ? "#5CB85C" : "transparent",
+                          borderTopLeftRadius: 15,
+                          borderBottomLeftRadius: 15,
+                        }}
+                        onPress={() => {
+                          setisInstallament(2);
+                          setPaymentMethod("installment");
+                          UpdateCartForInstallemnt("taksitli");
                         }}
                       >
-                        Taksitli Fiyat İle Ödeme
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            color: isInstallament == 1 ? "#333" : "#ffffff",
+                          }}
+                        >
+                          Taksitli Fiyat İle Ödeme
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
 
-                 {isInstallament == 2 && Cart?.installmentPrice && (
+                {isInstallament == 2 && Cart?.installmentPrice && (
                   <View style={[styles.acceptCart, { gap: 20 }]}>
                     <View
                       style={{
@@ -601,10 +646,8 @@ export default function Basket() {
                       // </View>
                     ))}
                   </View>
-                )} 
-
-                {type.type == "project" ? (
-               
+                )}
+                {type?.type == "project" ? (
                   <View style={[styles.acceptCart, { borderRadius: 3 }]}>
                     <View
                       style={{
@@ -618,7 +661,11 @@ export default function Basket() {
                     >
                       <IconIdCard name="star-o" size={15} />
                       <Text>Sepet Özeti</Text>
+                      <Text>
+                        İlan Başlığı: {amount}, {title}
+                      </Text>
                     </View>
+
                     <View style={{ gap: 20 }}>
                       <View
                         style={{
@@ -628,6 +675,15 @@ export default function Basket() {
                       >
                         <Text>İlan Fiyatı:</Text>
 
+                        {neightboord ? (
+                          <View>
+                            <Text>adsaaddasd</Text>
+                          </View>
+                        ) : (
+                          <View>
+                            <Text>{amount}</Text>
+                          </View>
+                        )}
                         <Text>
                           {formatAmount(
                             isInstallament == 2
@@ -681,7 +737,6 @@ export default function Basket() {
                     </View>
                   </View>
                 ) : (
-               
                   <View style={[styles.acceptCart, { borderRadius: 3 }]}>
                     <View
                       style={{
@@ -697,7 +752,7 @@ export default function Basket() {
                       <Text>Sepet Özeti</Text>
                     </View>
                     <View style={{ gap: 20 }}>
-                      {type.hasCounter == true ? (
+                      {type?.hasCounter == true ? (
                         <>
                           <View
                             style={{
@@ -738,8 +793,8 @@ export default function Basket() {
                               justifyContent: "space-between",
                             }}
                           >
-                            <Text style={{color:'#333'}}>%2 Kapora:</Text>
-                            <Text style={{color:'#333'}}>
+                            <Text style={{ color: "#333" }}>%2 Kapora:</Text>
+                            <Text style={{ color: "#333" }}>
                               {addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺
                             </Text>
                           </View>
@@ -854,23 +909,23 @@ export default function Basket() {
                       </Text>
                       <Text style={{ fontWeight: "500" }}>
                         {isInstallament == 1 &&
-                          type.type == "project" &&
+                          type?.type == "project" &&
                           formatAmount(
                             (Cart?.amount *
                               offerControl?.project?.deposit_rate) /
                               100
                           )}
                         {isInstallament == 2 &&
-                          type.type == "project" &&
+                          type?.type == "project" &&
                           addDotEveryThreeDigits(
                             (Cart?.installmentPrice *
                               offerControl?.project?.deposit_rate) /
                               100
                           )}
-                        {type.type == "housing" &&
+                        {type?.type == "housing" &&
                           saleType == "kiralik" &&
                           addDotEveryThreeDigits(Cart.price)}
-                        {type.type == "housing" &&
+                        {type?.type == "housing" &&
                           saleType == "satilik" &&
                           addDotEveryThreeDigits(
                             Math.round((Cart?.price * 2) / 100)
@@ -884,8 +939,8 @@ export default function Basket() {
                           slug: type?.type,
                           id: Cart.id,
                           roomOrder: Cart.housing,
-                          price: Cart.price, 
-                          totalPrice: DiscountPrice, 
+                          price: Cart.price,
+                          totalPrice: DiscountPrice,
                           deposit: KaporaForDiscountPrice,
                           kapora: offerControl?.project?.deposit_rate,
                           isInstallament: isInstallament,
@@ -925,7 +980,7 @@ export default function Basket() {
               <View
                 style={[
                   styles.card,
-                  { alignItems: "center", justifyContent: "center" }
+                  { alignItems: "center", justifyContent: "center" },
                 ]}
               >
                 <Icon2 name="basket-plus" size={50} color={"#EA2A28"} />
@@ -936,7 +991,6 @@ export default function Basket() {
                 >
                   Sepetinizde ilan bulunmamaktadır
                 </Text>
-         
               </View>
               <View style={{ width: "100%", alignItems: "center" }}>
                 <TouchableOpacity

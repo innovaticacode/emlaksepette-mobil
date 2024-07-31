@@ -7,7 +7,6 @@ import {
   Keyboard,
   Animated,
   TouchableOpacity,
-  
   Linking,
 } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
@@ -31,10 +30,15 @@ import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import RegisterRealtorClub from "./RegisterRealtorClub";
 import AwesomeAlert from "react-native-awesome-alerts";
-import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
 import { useNavigation } from "@react-navigation/native";
 export default function Collections() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const [showAlert, setshowAlert] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
@@ -50,7 +54,7 @@ export default function Collections() {
   const openSheet = () => {
     setIsDisabled(true);
     setdisplay(true);
- setchoose(!choose)
+    setchoose(!choose);
   };
 
   const closeSheet = () => {
@@ -199,14 +203,14 @@ export default function Collections() {
           },
         }
       );
-     
+
       closeSheet();
-      
+
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
-        title: 'Koleksiyon Silindi',
+        title: "Koleksiyon Silindi",
         textBody: `${colectionName} Adlı koleksiyonunuz başarıyla silindi`,
-      })
+      });
       fetchData();
       setModalVisible2(false);
     } catch (error) {
@@ -249,7 +253,8 @@ export default function Collections() {
       console.error("Error removing item from the collection:", error);
     }
   };
-  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] = useState(false)
+  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
+    useState(false);
   const [CollectionsRemoveIds, setCollectionsRemoveIds] = useState([]);
   const [CollectionIDForAllRemove, setCollectionIDForAllRemove] = useState([]);
   const [CollectionIDForRemove, setCollectionIDForRemove] = useState(0);
@@ -283,22 +288,22 @@ export default function Collections() {
           },
         }
       );
-      setRemoveSelectedCollectionsModal(false)
+      setRemoveSelectedCollectionsModal(false);
       fetchData();
       setereror(response.data);
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: `Koleksionlar Silindi`,
         textBody: `${CollectionsRemoveIds.length} Koleksiyon silindi`,
-      })
-    
+      });
+
       setCollectionsRemoveIds([]);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-  const collectionIDS = collections.map(collection=>collection.id)
-const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
+  const collectionIDS = collections.map((collection) => collection.id);
+  const [modalForRemoveAll, setmodalForRemoveAll] = useState(false);
 
   const RemoveAllCollection = async () => {
     const data = {
@@ -316,728 +321,850 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
           },
         }
       );
-      setmodalForRemoveAll(false)
+      setmodalForRemoveAll(false);
       fetchData();
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
-        title: 'Koleksiyonlar Silindi',
+        title: "Koleksiyonlar Silindi",
         textBody: `Tüm Koleksiyonlar Silindi`,
-      })
+      });
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-  console.log(user.has_club )
-  const [choose, setchoose] = useState(false)
-
+  console.log(user.has_club);
+  const [choose, setchoose] = useState(false);
 
   return (
-    <> 
-    {
-      loading ? 
-      <View style={{alignItems:'center',justifyContent:'center',flex:1}}>
-        <ActivityIndicator color="#333" size={'large'}/>
-      </View>:
-      
-<>
-    {collections.length == 0 ?
-          <>
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100%",
-                gap: 10,
-                backgroundColor:'white'
-              }}
-            >
-              <View
-                style={[
-                  styles.card,
-                  { alignItems: "center", justifyContent: "center" },
-                ]}
-              >
-                <Icon3 name="bookmark-add" size={50} color={"#EA2A28"} />
-              </View>
-              <View>
-                <Text
-                  style={{ color: "grey", fontSize: 16, fontWeight: "600" }}
-                >
-                  Koleksiyonunuzda ilan bulunmamaktadır
-                </Text>
-              </View>
-              <View style={{ width: "100%", alignItems: "center" }}>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#EA2A28",
-                    width: "90%",
-                    padding: 8,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    setloading(true);
-                    setTimeout(() => {
-                      navigation.navigate("HomePage");
-                      setloading(false);
-                    }, 700);
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#ffffff",
-                      fontWeight: "600",
-                      textAlign: "center",
-                    }}
-                  >
-                    Ana Sayfa'ya dön
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </>:
-
-<AlertNotificationRoot>
-{user.has_club != 1 ? (
-  <RegisterRealtorClub />
-) : (
-  <View style={styles.container}>
-      <View style={{ flex: 1 }}>
-           <AwesomeAlert
-      
-      show={RemoveSelectedCollectionsModal}
-      showProgress={false}
-        titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
-        title={`${CollectionsRemoveIds.length} Seçili Koleksiyonu silmek istediğinize emin misin`}
-        messageStyle={{textAlign:'center'}}
-      
-      closeOnTouchOutside={true}
-      closeOnHardwareBackPress={false}
-      showCancelButton={true}
-      showConfirmButton={true}
-
-      cancelText="Hayır"
-      confirmText="Evet"
-      cancelButtonColor="#ce4d63"
-      confirmButtonColor="#1d8027"
-      onCancelPressed={() => {
-      setRemoveSelectedCollectionsModal(false)
-      }}
-      onConfirmPressed={() => {
-          RemoveSelectedCollections()
-      }}
-      confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
-      cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
-    />
-            <AwesomeAlert
-      
-      show={modalVisible2}
-      showProgress={false}
-        titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
-        title={ `${colectionName} adlı koleksiyonu silmek istediğinize eminmisiniz?`}
-        messageStyle={{textAlign:'center'}}
-      
-      closeOnTouchOutside={true}
-      closeOnHardwareBackPress={false}
-      showCancelButton={true}
-      showConfirmButton={true}
-
-      cancelText="Hayır"
-      confirmText="Evet"
-      cancelButtonColor="#ce4d63"
-      confirmButtonColor="#1d8027"
-      onCancelPressed={() => {
-       setModalVisible2(false)
-      }}
-      onConfirmPressed={() => {
-          deleteCollection(selectedCollection)
-      }}
-      confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
-      cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
-    />
-       <AwesomeAlert
-      
-      show={modalForRemoveAll}
-      showProgress={false}
-        titleStyle={{color:'#333',fontSize:15,fontWeight:'700',textAlign:'center',margin:5}}
-        title={ 'Tümünü Sil'}
-        message="Tüm koleksiyonları silmek istediğinize emin misiniz?"
-        messageStyle={{textAlign:'center'}}
-      
-      closeOnTouchOutside={true}
-      closeOnHardwareBackPress={false}
-      showCancelButton={true}
-      showConfirmButton={true}
-
-      cancelText="Hayır"
-      confirmText="Evet"
-      cancelButtonColor="#ce4d63"
-      confirmButtonColor="#1d8027"
-      onCancelPressed={() => {
-       setmodalForRemoveAll(false)
-      }}
-      onConfirmPressed={() => {
-          RemoveAllCollection()
-      }}
-      confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
-      cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
-    />
+    <>
+      {loading ? (
         <View
-          style={{
-            alignItems: "center",
-            flex: 1,
-            padding: 10,
-            backgroundColor: "white",
-          }}
-          onTouchStart={() => {
-            Keyboard.dismiss();
-            closeSheet();
-          }}
+          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
         >
-          <View style={styles.container}>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              stickyHeaderIndices={[0]}
-              contentContainerStyle={{paddingBottom:20}}
-            >
-              <View style={styles.SearchArea}>
-                <SearchBar
-                  containerStyle={{
-                    backgroundColor: "transparent",
-                    borderTopWidth: 0,
-                    borderWidth: 0,
-                    borderBottomWidth: 0,
-                    justifyContent: "center",
-                    width: "100%",
-                    paddingBottom: 10,
-                    padding: 8,
-                    height: 50,
-                  }}
-                  inputContainerStyle={{
-                    borderRadius: 5,
-                    backgroundColor: "#bebebe26",
-                    borderWidth: 1,
-                    borderColor: "#bebebe26",
-                    borderBottomWidth: 1,
-                    height: "110%",
-                    borderBottomColor: "#bebebe26",
-                  }}
-                  placeholder="Koleksiyon Ara..."
-                  inputStyle={{ fontSize: 15 }}
-                  showLoading={false}
-                  searchIcon={{ color: "#E54242" }}
-                  onChangeText={handleSearch}
-                  value={searchText}
-                />
-              </View>
+          <ActivityIndicator color="#333" size={"large"} />
+        </View>
+      ) : (
+        <>
+          {collections.length == 0 ? (
+            <>
               <View
                 style={{
-                  flexDirection: "row",
-                  padding: 5,
-                  paddingTop: 9,
                   alignItems: "center",
-                  justifyContent: "space-between",
+                  justifyContent: "center",
+                  height: "100%",
+                  gap: 10,
+                  backgroundColor: "white",
                 }}
               >
                 <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 25,
-                    alignItems: "center",
-                  }}
+                  style={[
+                    styles.card,
+                    { alignItems: "center", justifyContent: "center" },
+                  ]}
                 >
-                  <TouchableOpacity
-                    style={[styles.btnRemove,
-                      {
-                        backgroundColor:"#EEEDEB",
-                        borderWidth:  1, 
-                        borderColor: "#ebebeb",
-                      },
-                    ]}
-                    onPress={()=>{
-                      if (collections.length==0) {
-                        Toast.show({
-                          type: ALERT_TYPE.WARNING,
-                          title: 'Koleksiyon Bulunmamaktadır',
-                          textBody: `Silinecek koleksiyon bulunmuyor`,
-                        })
-                      }else{
-                        setmodalForRemoveAll(true)
-                      }
-                   
-
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        textAlign: "center",
-                        fontWeight: "bold",
-                        color: "#333",
-                      }}
-                    >
-                      Tümünü Sil
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.btnRemove,
-                      {
-                        backgroundColor:"#EEEDEB",
-                        borderWidth:  1, 
-                        borderColor: "#ebebeb",
-                      },
-                    ]}
-                    onPress={() => {
-                      setisChoosed(!isChoosed);
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        textAlign: "center",
-                        fontWeight: "bold",
-                        color: "#333",
-                      }}
-                    >
-                      Toplu Seç
-                    </Text>
-                  </TouchableOpacity>
-                  {isChoosed && (
-                   
-                  
-                    <Text style={{ fontSize: 14 }}>
-                      Seçili ({CollectionsRemoveIds.length})
-                    </Text>
-                  )}
+                  <Icon3 name="bookmark-add" size={50} color={"#EA2A28"} />
                 </View>
-                <View style={{ display: isChoosed ? "flex" : "none" }}>
+                <View>
+                  <Text
+                    style={{ color: "grey", fontSize: 16, fontWeight: "600" }}
+                  >
+                    Koleksiyonunuzda ilan bulunmamaktadır
+                  </Text>
+                </View>
+                <View style={{ width: "100%", alignItems: "center" }}>
                   <TouchableOpacity
-                    style={[
-                      styles.btnRemove,
-                      { paddingLeft: 15, paddingRight: 15 },
-                    ]}
+                    style={{
+                      backgroundColor: "#EA2A28",
+                      width: "90%",
+                      padding: 8,
+                      borderRadius: 5,
+                    }}
                     onPress={() => {
-                      if (CollectionsRemoveIds.length==0) {
-                        Toast.show({
-                          type: ALERT_TYPE.WARNING,
-                          title: 'Lütfen seçiniz',
-                          textBody: `Silmek istediğiniz koleksiyonları seçiniz`,
-                        })
-                      }else{
-                        setRemoveSelectedCollectionsModal(true)
-                      }
-                    
+                      setloading(true);
+                      setTimeout(() => {
+                        navigation.navigate("HomePage");
+                        setloading(false);
+                      }, 700);
                     }}
                   >
-                    <Icon name="trash" size={18} color={"#ffffff"} />
+                    <Text
+                      style={{
+                        color: "#ffffff",
+                        fontWeight: "600",
+                        textAlign: "center",
+                      }}
+                    >
+                      Ana Sayfa'ya dön
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
-          
-           
-              {loading == false ? (
-                collectionsRecods.map((collection, index) => {
-                  return (
-                    <CollectionsItem
-                      isChoosed={isChoosed}
-                      SelectCollection={SelectCollection}
-                      projectItems={projectItems}
-                      item={collection}
-                      getId={getId}
-                      key={index}
-                      openBottom={openSheet}
-                      disabled={isDisabled}
-                      shareWp={shareLinkOnWhatsApp}
-                      copy={copyToClipboard}
-                      onRemove={() => removeFromCollection(collection)} // onRemove işlevini yolla
-                    />
-                  );
-                })
+            </>
+          ) : (
+            <AlertNotificationRoot>
+              {user.has_club != 1 ? (
+                <RegisterRealtorClub />
               ) : (
-                <View style={styles.loadingContainer}>
-                  <ActivityIndicator size="large" color="#333" />
-                </View>
-              )}
-            </ScrollView>
-          </View>
-        </View>
-
-        <View
-          style={{
-            flex: 1,
-            position: "absolute",
-            bottom: 0,
-            width: "100%",
-            display: display == false ? "none" : "flex",
-          }}
-        >
-          <Animated.View
-            style={[styles.animatedView, { transform: [{ translateY }] }]}
-          >
-            <View style={{ width: "100%" }}>
-              <View style={{ alignItems: "center" }}>
-                <TouchableOpacity
-                  style={{
-                    width: 40,
-                    height: 7,
-                    backgroundColor: "#ebebeb",
-                    borderRadius: 5,
-                  }}
-                  onPress={closeSheet}
-                ></TouchableOpacity>
-              </View>
-              <View style={{ paddingBottom: 10 }}>
-                <TouchableOpacity
-                  style={{
-                    padding: 15,
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#ebebeb",
-                  }}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 15,
-                      justifyContent: "flex-start",
-                      padding: 3,
-                    }}
-                  >
-                    <PencilIcon name="pencil-alt" size={17} />
-                    <Text style={{ textAlign: "center" }}>
-                      Koleksiyonun Adını Düzenle
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    padding: 15,
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#ebebeb",
-                  }}
-                  onPress={() => {
-                    setShareModalVisible(!SharemodalVisible);
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 15,
-                      justifyContent: "flex-start",
-                      padding: 3,
-                    }}
-                  >
-                    <ShareIcon name="share-alternative" size={18} />
-                    <Text style={{ textAlign: "center", top: 2 }}>
-                      Paylaş
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={{
-                    padding: 15,
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#ebebeb",
-                  }}
-                  onPress={() => {
-                    setModalVisible2(!modalVisible2);
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 15,
-                      justifyContent: "flex-start",
-                      padding: 3,
-                    }}
-                  >
-                    <DeleteIcon name="delete-outline" size={20} />
-                    <Text style={{ textAlign: "center", top: 2 }}>
-                      Koleksiyonu Sil
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Animated.View>
-        </View>
-        <Modal 
-    isVisible={choose}
-    style={styles.modal2}
-    animationIn={'slideInUp'}
-    animationOut={'slideOutDown'}
-    onBackdropPress={()=>setchoose(false)}
-    swipeDirection={['down']}
-    onSwipeComplete={()=>setchoose(false)}
-  >
-    <View style={styles.modalContent2}>
-      <View style={{alignItems:'center',paddingTop:10}}>
-        <TouchableOpacity style={{width:'15%',backgroundColor:'#c2c4c6',padding:4,borderRadius:50}}>
-
-        </TouchableOpacity>
-      </View>
-      <View style={{gap:30,paddingBottom:20,paddingLeft:20,paddingRight:20,paddingTop:10}}>
-      <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={{}}>
-                <PencilIcon name="link" size={23} color={'#333'}/>
-                <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Linki Kopyala</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} 
-            onPress={()=>{
-          
-             
-            }}
-        >
-                <IconMessenger name="whatsapp" size={22} color={'#333'}/>
-                <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Paylaş</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={()=>{
-          setchoose(false)
-          setloading(true)
-          setTimeout(() => {
-            setModalVisible(true)
-            setloading(false)
-          }, 1000);
-      
-        }}>
-                <PencilIcon name="edit" size={21} color={'#333'}/>
-                <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Koleksiyon Adını Düzenle</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}}
-            onPress={()=>{
-              setchoose(false)
-              setTimeout(() => {
-                setModalVisible2(true)
-              },700);
-            
-            }}
-        >
-                <Icon3 name="restore-from-trash" size={22} color={'#d83131'}/>
-                <Text style={{fontSize:14,color:'#d83131',fontWeight:'700'}}>Koleksiyonu Sil</Text>
-        </TouchableOpacity>
-      </View>
-      
-    </View>
-  </Modal>
-
-        <Modal
-          
-          animationIn={'fadeIn'}
-          animationOut={'fadeOut'} // veya "fade", "none" gibi
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-          style={styles.modal4}
-        >
-        
-            <View style={styles.modalView4}>
-              <View style={styles.closeButtonContainer}>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: "600",
-                    color: "black",
-                  }}
-                >
-                  Koleksiyon Adını Değiştir
-                </Text>
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >
-                  <Icon2
-                    name="x"
-                    size={15}
-                    color={"#525B75"}
-                    style={{ fontWeight: "700" }}
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={{ gap: 5 }}>
-                <TextInput
-                  style={[styles.Input, { width: "100%" }]}
-                  value={newName}
-                  onChangeText={(value) => setnewName(value)}
-                  placeholder={colectionName}
-                  placeholderTextColor={"#333"}
-                />
-                <Text
-                  style={{
-                    fontSize: 10,
-                    marginBottom: 5,
-                    color: "black",
-                    marginTop: 10,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Icon2 name="info" size={15} color={"#525B75"} />
-                  <Text>
-                    {" "}
-                    Oluşturduğun koleksiyonu paylaştığında, Emlak Sepette
-                    uyguluması içerisindeki diğer kullanıcılar da
-                    listendeki ilanları görüntüleyebilir.
-                  </Text>
-                </Text>
-              </View>
-
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "green",
-                    padding: 10,
-                    width: "100%",
-                    borderRadius: 5,
-                    textAlign: "center",
-                  }}
-                  onPress={() => {
-                    editCollectionName(selectedCollection);
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: 15,
-                      textAlign: "center",
-                    }}
-                  >
-                    Düzenle
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          
-        </Modal>
-        <Modal
-          animationType="fade" // veya "fade", "none" gibi
-          transparent={true}
-          visible={SharemodalVisible}
-          onRequestClose={() => {
-            setShareModalVisible(!SharemodalVisible);
-          }}
-        >
-          <View style={styles.centeredView2}>
-            <View style={styles.modalView2}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 17,
-                    justifyContent: "center",
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "#1cea30",
-                      padding: 15,
-                      borderRadius: 30,
-                      justifyContent: "center",
-                    }}
-                    onPress={copyToClipboard}
-                  >
-                    <ShareIcon name="link" size={30} color={"white"} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "#01E676",
-                      padding: 15,
-                      paddingRight: 17,
-                      paddingLeft: 17,
-                      borderRadius: 30,
-                    }}
-                    onPress={shareLinkOnWhatsApp}
-                  >
-                    <Icon name="whatsapp" size={33} color={"white"} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "#0766FF",
-                      paddingLeft: 20,
-                      paddingRight: 20,
-                      borderRadius: 30,
-                      justifyContent: "center",
-                    }}
-                    onPress={shareLinkOnFacebook}
-                  >
-                    <Icon name="facebook" size={30} color={"white"} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "#F04E53",
-                      paddingLeft: 17,
-                      paddingRight: 17,
-                      borderRadius: 30,
-                      justifyContent: "center",
-                    }}
-                    onPress={shareLinkOnInstagram}
-                  >
-                    <Icon name="instagram" size={31} color={"white"} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "#0766FF",
-                      paddingLeft: 15,
-                      paddingRight: 15,
-                      borderRadius: 30,
-                      padding: 13,
-                      justifyContent: "center",
-                    }}
-                    onPress={handleShareViaSMS}
-                  >
-                    <IconSms
-                      name="message-circle"
-                      size={30}
-                      color={"white"}
+                <View style={styles.container}>
+                  <View style={{ flex: 1 }}>
+                    <AwesomeAlert
+                      show={RemoveSelectedCollectionsModal}
+                      showProgress={false}
+                      titleStyle={{
+                        color: "#333",
+                        fontSize: 13,
+                        fontWeight: "700",
+                        textAlign: "center",
+                        margin: 5,
+                      }}
+                      title={`${CollectionsRemoveIds.length} Seçili Koleksiyonu silmek istediğinize emin misin`}
+                      messageStyle={{ textAlign: "center" }}
+                      closeOnTouchOutside={true}
+                      closeOnHardwareBackPress={false}
+                      showCancelButton={true}
+                      showConfirmButton={true}
+                      cancelText="Hayır"
+                      confirmText="Evet"
+                      cancelButtonColor="#ce4d63"
+                      confirmButtonColor="#1d8027"
+                      onCancelPressed={() => {
+                        setRemoveSelectedCollectionsModal(false);
+                      }}
+                      onConfirmPressed={() => {
+                        RemoveSelectedCollections();
+                      }}
+                      confirmButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                      cancelButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
                     />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "#0766FF",
-                      paddingLeft: 15,
-                      paddingRight: 15,
-                      borderRadius: 30,
-                      padding: 13,
-                      justifyContent: "center",
-                    }}
-                    onPress={shareLinkOnMessenger}
-                  >
-                    <IconMessenger
-                      name="messenger"
-                      size={30}
-                      color={"white"}
+                    <AwesomeAlert
+                      show={modalVisible2}
+                      showProgress={false}
+                      titleStyle={{
+                        color: "#333",
+                        fontSize: 13,
+                        fontWeight: "700",
+                        textAlign: "center",
+                        margin: 5,
+                      }}
+                      title={`${colectionName} adlı koleksiyonu silmek istediğinize eminmisiniz?`}
+                      messageStyle={{ textAlign: "center" }}
+                      closeOnTouchOutside={true}
+                      closeOnHardwareBackPress={false}
+                      showCancelButton={true}
+                      showConfirmButton={true}
+                      cancelText="Hayır"
+                      confirmText="Evet"
+                      cancelButtonColor="#ce4d63"
+                      confirmButtonColor="#1d8027"
+                      onCancelPressed={() => {
+                        setModalVisible2(false);
+                      }}
+                      onConfirmPressed={() => {
+                        deleteCollection(selectedCollection);
+                      }}
+                      confirmButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                      cancelButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
                     />
-                  </TouchableOpacity>
-                </View>
-              </ScrollView>
-              <View style={{ alignItems: "center", paddingTop: 10 }}>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "red",
-                    paddingRight: 25,
-                    paddingLeft: 25,
-                    padding: 5,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => setShareModalVisible(!SharemodalVisible)}
-                >
-                  <Text style={{ color: "white" }}>Kapat</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
-        {/* <Modal
+                    <AwesomeAlert
+                      show={modalForRemoveAll}
+                      showProgress={false}
+                      titleStyle={{
+                        color: "#333",
+                        fontSize: 15,
+                        fontWeight: "700",
+                        textAlign: "center",
+                        margin: 5,
+                      }}
+                      title={"Tümünü Sil"}
+                      message="Tüm koleksiyonları silmek istediğinize emin misiniz?"
+                      messageStyle={{ textAlign: "center" }}
+                      closeOnTouchOutside={true}
+                      closeOnHardwareBackPress={false}
+                      showCancelButton={true}
+                      showConfirmButton={true}
+                      cancelText="Hayır"
+                      confirmText="Evet"
+                      cancelButtonColor="#ce4d63"
+                      confirmButtonColor="#1d8027"
+                      onCancelPressed={() => {
+                        setmodalForRemoveAll(false);
+                      }}
+                      onConfirmPressed={() => {
+                        RemoveAllCollection();
+                      }}
+                      confirmButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                      cancelButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                    />
+                    <View
+                      style={{
+                        alignItems: "center",
+                        flex: 1,
+                        padding: 10,
+                        backgroundColor: "white",
+                      }}
+                      onTouchStart={() => {
+                        Keyboard.dismiss();
+                        closeSheet();
+                      }}
+                    >
+                      <View style={styles.container}>
+                        <ScrollView
+                          showsVerticalScrollIndicator={false}
+                          stickyHeaderIndices={[0]}
+                          contentContainerStyle={{ paddingBottom: 20 }}
+                        >
+                          <View style={styles.SearchArea}>
+                            <SearchBar
+                              containerStyle={{
+                                backgroundColor: "transparent",
+                                borderTopWidth: 0,
+                                borderWidth: 0,
+                                borderBottomWidth: 0,
+                                justifyContent: "center",
+                                width: "100%",
+                                paddingBottom: 10,
+                                padding: 8,
+                                height: 50,
+                              }}
+                              inputContainerStyle={{
+                                borderRadius: 5,
+                                backgroundColor: "#bebebe26",
+                                borderWidth: 1,
+                                borderColor: "#bebebe26",
+                                borderBottomWidth: 1,
+                                height: "110%",
+                                borderBottomColor: "#bebebe26",
+                              }}
+                              placeholder="Koleksiyon Ara..."
+                              inputStyle={{ fontSize: 15 }}
+                              showLoading={false}
+                              searchIcon={{ color: "#E54242" }}
+                              onChangeText={handleSearch}
+                              value={searchText}
+                            />
+                          </View>
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              padding: 5,
+                              paddingTop: 9,
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                gap: 25,
+                                alignItems: "center",
+                              }}
+                            >
+                              <TouchableOpacity
+                                style={[
+                                  styles.btnRemove,
+                                  {
+                                    backgroundColor: "#EEEDEB",
+                                    borderWidth: 1,
+                                    borderColor: "#ebebeb",
+                                  },
+                                ]}
+                                onPress={() => {
+                                  if (collections.length == 0) {
+                                    Toast.show({
+                                      type: ALERT_TYPE.WARNING,
+                                      title: "Koleksiyon Bulunmamaktadır",
+                                      textBody: `Silinecek koleksiyon bulunmuyor`,
+                                    });
+                                  } else {
+                                    setmodalForRemoveAll(true);
+                                  }
+                                }}
+                              >
+                                <Text
+                                  style={{
+                                    fontSize: 12,
+                                    textAlign: "center",
+                                    fontWeight: "bold",
+                                    color: "#333",
+                                  }}
+                                >
+                                  Tümünü Sil
+                                </Text>
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                style={[
+                                  styles.btnRemove,
+                                  {
+                                    backgroundColor: "#EEEDEB",
+                                    borderWidth: 1,
+                                    borderColor: "#ebebeb",
+                                  },
+                                ]}
+                                onPress={() => {
+                                  setisChoosed(!isChoosed);
+                                }}
+                              >
+                                <Text
+                                  style={{
+                                    fontSize: 12,
+                                    textAlign: "center",
+                                    fontWeight: "bold",
+                                    color: "#333",
+                                  }}
+                                >
+                                  Toplu Seç
+                                </Text>
+                              </TouchableOpacity>
+                              {isChoosed && (
+                                <Text style={{ fontSize: 14 }}>
+                                  Seçili ({CollectionsRemoveIds.length})
+                                </Text>
+                              )}
+                            </View>
+                            <View
+                              style={{ display: isChoosed ? "flex" : "none" }}
+                            >
+                              <TouchableOpacity
+                                style={[
+                                  styles.btnRemove,
+                                  { paddingLeft: 15, paddingRight: 15 },
+                                ]}
+                                onPress={() => {
+                                  if (CollectionsRemoveIds.length == 0) {
+                                    Toast.show({
+                                      type: ALERT_TYPE.WARNING,
+                                      title: "Lütfen seçiniz",
+                                      textBody: `Silmek istediğiniz koleksiyonları seçiniz`,
+                                    });
+                                  } else {
+                                    setRemoveSelectedCollectionsModal(true);
+                                  }
+                                }}
+                              >
+                                <Icon
+                                  name="trash"
+                                  size={18}
+                                  color={"#ffffff"}
+                                />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+
+                          {loading == false ? (
+                            collectionsRecods.map((collection, index) => {
+                              return (
+                                <CollectionsItem
+                                  isChoosed={isChoosed}
+                                  SelectCollection={SelectCollection}
+                                  projectItems={projectItems}
+                                  item={collection}
+                                  getId={getId}
+                                  key={index}
+                                  openBottom={openSheet}
+                                  disabled={isDisabled}
+                                  shareWp={shareLinkOnWhatsApp}
+                                  copy={copyToClipboard}
+                                  onRemove={() =>
+                                    removeFromCollection(collection)
+                                  } // onRemove işlevini yolla
+                                />
+                              );
+                            })
+                          ) : (
+                            <View style={styles.loadingContainer}>
+                              <ActivityIndicator size="large" color="#333" />
+                            </View>
+                          )}
+                        </ScrollView>
+                      </View>
+                    </View>
+
+                    <View
+                      style={{
+                        flex: 1,
+                        position: "absolute",
+                        bottom: 0,
+                        width: "100%",
+                        display: display == false ? "none" : "flex",
+                      }}
+                    >
+                      <Animated.View
+                        style={[
+                          styles.animatedView,
+                          { transform: [{ translateY }] },
+                        ]}
+                      >
+                        <View style={{ width: "100%" }}>
+                          <View style={{ alignItems: "center" }}>
+                            <TouchableOpacity
+                              style={{
+                                width: 40,
+                                height: 7,
+                                backgroundColor: "#ebebeb",
+                                borderRadius: 5,
+                              }}
+                              onPress={closeSheet}
+                            ></TouchableOpacity>
+                          </View>
+                          <View style={{ paddingBottom: 10 }}>
+                            <TouchableOpacity
+                              style={{
+                                padding: 15,
+                                borderBottomWidth: 1,
+                                borderBottomColor: "#ebebeb",
+                              }}
+                              onPress={() => setModalVisible(!modalVisible)}
+                            >
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  gap: 15,
+                                  justifyContent: "flex-start",
+                                  padding: 3,
+                                }}
+                              >
+                                <PencilIcon name="pencil-alt" size={17} />
+                                <Text style={{ textAlign: "center" }}>
+                                  Koleksiyonun Adını Düzenle
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              style={{
+                                padding: 15,
+                                borderBottomWidth: 1,
+                                borderBottomColor: "#ebebeb",
+                              }}
+                              onPress={() => {
+                                setShareModalVisible(!SharemodalVisible);
+                              }}
+                            >
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  gap: 15,
+                                  justifyContent: "flex-start",
+                                  padding: 3,
+                                }}
+                              >
+                                <ShareIcon name="share-alternative" size={18} />
+                                <Text style={{ textAlign: "center", top: 2 }}>
+                                  Paylaş
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                              style={{
+                                padding: 15,
+                                borderBottomWidth: 1,
+                                borderBottomColor: "#ebebeb",
+                              }}
+                              onPress={() => {
+                                setModalVisible2(!modalVisible2);
+                              }}
+                            >
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  gap: 15,
+                                  justifyContent: "flex-start",
+                                  padding: 3,
+                                }}
+                              >
+                                <DeleteIcon name="delete-outline" size={20} />
+                                <Text style={{ textAlign: "center", top: 2 }}>
+                                  Koleksiyonu Sil
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      </Animated.View>
+                    </View>
+                    <Modal
+                      isVisible={choose}
+                      style={styles.modal2}
+                      animationIn={"slideInUp"}
+                      animationOut={"slideOutDown"}
+                      onBackdropPress={() => setchoose(false)}
+                      swipeDirection={["down"]}
+                      onSwipeComplete={() => setchoose(false)}
+                    >
+                      <View style={styles.modalContent2}>
+                        <View style={{ alignItems: "center", paddingTop: 10 }}>
+                          <TouchableOpacity
+                            style={{
+                              width: "15%",
+                              backgroundColor: "#c2c4c6",
+                              padding: 4,
+                              borderRadius: 50,
+                            }}
+                          ></TouchableOpacity>
+                        </View>
+                        <View
+                          style={{
+                            gap: 30,
+                            paddingBottom: 20,
+                            paddingLeft: 20,
+                            paddingRight: 20,
+                            paddingTop: 10,
+                          }}
+                        >
+                          <TouchableOpacity
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              gap: 10,
+                            }}
+                            onPress={{}}
+                          >
+                            <PencilIcon name="link" size={23} color={"#333"} />
+                            <Text
+                              style={{
+                                fontSize: 14,
+                                color: "#333",
+                                fontWeight: "700",
+                              }}
+                            >
+                              Linki Kopyala
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              gap: 10,
+                            }}
+                            onPress={() => {}}
+                          >
+                            <IconMessenger
+                              name="whatsapp"
+                              size={22}
+                              color={"#333"}
+                            />
+                            <Text
+                              style={{
+                                fontSize: 14,
+                                color: "#333",
+                                fontWeight: "700",
+                              }}
+                            >
+                              Paylaş
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              gap: 10,
+                            }}
+                            onPress={() => {
+                              setchoose(false);
+                              setloading(true);
+                              setTimeout(() => {
+                                setModalVisible(true);
+                                setloading(false);
+                              }, 1000);
+                            }}
+                          >
+                            <PencilIcon name="edit" size={21} color={"#333"} />
+                            <Text
+                              style={{
+                                fontSize: 14,
+                                color: "#333",
+                                fontWeight: "700",
+                              }}
+                            >
+                              Koleksiyon Adını Düzenle
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              gap: 10,
+                            }}
+                            onPress={() => {
+                              setchoose(false);
+                              setTimeout(() => {
+                                setModalVisible2(true);
+                              }, 700);
+                            }}
+                          >
+                            <Icon3
+                              name="restore-from-trash"
+                              size={22}
+                              color={"#d83131"}
+                            />
+                            <Text
+                              style={{
+                                fontSize: 14,
+                                color: "#d83131",
+                                fontWeight: "700",
+                              }}
+                            >
+                              Koleksiyonu Sil
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </Modal>
+
+                    <Modal
+                      animationIn={"fadeIn"}
+                      animationOut={"fadeOut"} // veya "fade", "none" gibi
+                      transparent={true}
+                      visible={modalVisible}
+                      onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                      }}
+                      style={styles.modal4}
+                    >
+                      <View style={styles.modalView4}>
+                        <View style={styles.closeButtonContainer}>
+                          <Text
+                            style={{
+                              fontSize: 12,
+                              fontWeight: "600",
+                              color: "black",
+                            }}
+                          >
+                            Koleksiyon Adını Değiştir
+                          </Text>
+                          <TouchableOpacity
+                            style={styles.closeButton}
+                            onPress={() => setModalVisible(!modalVisible)}
+                          >
+                            <Icon2
+                              name="x"
+                              size={15}
+                              color={"#525B75"}
+                              style={{ fontWeight: "700" }}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                        <View style={{ gap: 5 }}>
+                          <TextInput
+                            style={[styles.Input, { width: "100%" }]}
+                            value={newName}
+                            onChangeText={(value) => setnewName(value)}
+                            placeholder={colectionName}
+                            placeholderTextColor={"#333"}
+                          />
+                          <Text
+                            style={{
+                              fontSize: 10,
+                              marginBottom: 5,
+                              color: "black",
+                              marginTop: 10,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Icon2 name="info" size={15} color={"#525B75"} />
+                            <Text>
+                              {" "}
+                              Oluşturduğun koleksiyonu paylaştığında, Emlak
+                              Sepette uyguluması içerisindeki diğer kullanıcılar
+                              da listendeki ilanları görüntüleyebilir.
+                            </Text>
+                          </Text>
+                        </View>
+
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <TouchableOpacity
+                            style={{
+                              backgroundColor: "green",
+                              padding: 10,
+                              width: "100%",
+                              borderRadius: 5,
+                              textAlign: "center",
+                            }}
+                            onPress={() => {
+                              editCollectionName(selectedCollection);
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: "white",
+                                fontSize: 15,
+                                textAlign: "center",
+                              }}
+                            >
+                              Düzenle
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </Modal>
+                    <Modal
+                      animationType="fade" // veya "fade", "none" gibi
+                      transparent={true}
+                      visible={SharemodalVisible}
+                      onRequestClose={() => {
+                        setShareModalVisible(!SharemodalVisible);
+                      }}
+                    >
+                      <View style={styles.centeredView2}>
+                        <View style={styles.modalView2}>
+                          <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                          >
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                gap: 17,
+                                justifyContent: "center",
+                              }}
+                            >
+                              <TouchableOpacity
+                                style={{
+                                  backgroundColor: "#1cea30",
+                                  padding: 15,
+                                  borderRadius: 30,
+                                  justifyContent: "center",
+                                }}
+                                onPress={copyToClipboard}
+                              >
+                                <ShareIcon
+                                  name="link"
+                                  size={30}
+                                  color={"white"}
+                                />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                style={{
+                                  backgroundColor: "#01E676",
+                                  padding: 15,
+                                  paddingRight: 17,
+                                  paddingLeft: 17,
+                                  borderRadius: 30,
+                                }}
+                                onPress={shareLinkOnWhatsApp}
+                              >
+                                <Icon
+                                  name="whatsapp"
+                                  size={33}
+                                  color={"white"}
+                                />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                style={{
+                                  backgroundColor: "#0766FF",
+                                  paddingLeft: 20,
+                                  paddingRight: 20,
+                                  borderRadius: 30,
+                                  justifyContent: "center",
+                                }}
+                                onPress={shareLinkOnFacebook}
+                              >
+                                <Icon
+                                  name="facebook"
+                                  size={30}
+                                  color={"white"}
+                                />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                style={{
+                                  backgroundColor: "#F04E53",
+                                  paddingLeft: 17,
+                                  paddingRight: 17,
+                                  borderRadius: 30,
+                                  justifyContent: "center",
+                                }}
+                                onPress={shareLinkOnInstagram}
+                              >
+                                <Icon
+                                  name="instagram"
+                                  size={31}
+                                  color={"white"}
+                                />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                style={{
+                                  backgroundColor: "#0766FF",
+                                  paddingLeft: 15,
+                                  paddingRight: 15,
+                                  borderRadius: 30,
+                                  padding: 13,
+                                  justifyContent: "center",
+                                }}
+                                onPress={handleShareViaSMS}
+                              >
+                                <IconSms
+                                  name="message-circle"
+                                  size={30}
+                                  color={"white"}
+                                />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                style={{
+                                  backgroundColor: "#0766FF",
+                                  paddingLeft: 15,
+                                  paddingRight: 15,
+                                  borderRadius: 30,
+                                  padding: 13,
+                                  justifyContent: "center",
+                                }}
+                                onPress={shareLinkOnMessenger}
+                              >
+                                <IconMessenger
+                                  name="messenger"
+                                  size={30}
+                                  color={"white"}
+                                />
+                              </TouchableOpacity>
+                            </View>
+                          </ScrollView>
+                          <View
+                            style={{ alignItems: "center", paddingTop: 10 }}
+                          >
+                            <TouchableOpacity
+                              style={{
+                                backgroundColor: "red",
+                                paddingRight: 25,
+                                paddingLeft: 25,
+                                padding: 5,
+                                borderRadius: 5,
+                              }}
+                              onPress={() =>
+                                setShareModalVisible(!SharemodalVisible)
+                              }
+                            >
+                              <Text style={{ color: "white" }}>Kapat</Text>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      </View>
+                    </Modal>
+                    {/* <Modal
          
           animationIn={'fadeIn'}
           animationOut={'fadeOut'}// veya "fade", "none" gibi
@@ -1088,18 +1215,16 @@ const [modalForRemoveAll, setmodalForRemoveAll] = useState(false)
             </View>
           
         </Modal> */}
-      </View>
-  
-  </View>
-)}
-</AlertNotificationRoot>
-    }
-    </>
-  }
+                  </View>
+                </View>
+              )}
+            </AlertNotificationRoot>
+          )}
+        </>
+      )}
     </>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -1157,16 +1282,15 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   centeredView: {
-  margin:0,
+    margin: 0,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)", // modal dışı koyu arkaplan
   },
   modalView: {
-  
     width: "100%",
-    margin:0,
+    margin: 0,
     backgroundColor: "white",
     borderRadius: 5,
     padding: 20,
@@ -1252,10 +1376,9 @@ const styles = StyleSheet.create({
   },
   modalContent2: {
     gap: 10,
-  
+
     backgroundColor: "#F8F7F4",
     padding: 10,
-  
 
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -1271,9 +1394,9 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  modalView4:{
+  modalView4: {
     width: "100%",
-    
+
     backgroundColor: "white",
     borderRadius: 5,
     padding: 20,
@@ -1287,10 +1410,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  modal4:{
+  modal4: {
     backgroundColor: "rgba(0,0,0,0.5)",
-      margin:0,
-      padding:10,
+    margin: 0,
+    padding: 10,
   },
   card: {
     backgroundColor: "#FFFFFF",

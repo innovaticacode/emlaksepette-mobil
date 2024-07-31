@@ -89,13 +89,14 @@ export default function PostDetail() {
 
   const {
     HomeId,
-  
+
     projectId,
     // price,
     //  discountAmount,
     // offSaleCheck,
     // soldCheck,
   } = route.params;
+  console.log(HomeId);
 
   const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
@@ -126,22 +127,21 @@ export default function PostDetail() {
       location: "0,0",
     },
     projectHousingsList: {},
-    projectCartOrders:{},
-    sumCartOrderQt:{}
+    projectCartOrders: {},
+    sumCartOrderQt: {},
   });
-  const [ShareSaleEmpty, setShareSaleEmpty] = useState(null)
+  const [ShareSaleEmpty, setShareSaleEmpty] = useState(null);
   useEffect(() => {
     apiRequestGet("project/" + projectId).then((res) => {
       setProjectHomeData(res.data);
-     
-   
     });
-  }, []);   
-  const roomData = ProjectHomeData.projectHousingsList[HomeId] || {}
+  }, []);
+  const roomData = ProjectHomeData.projectHousingsList[HomeId] || {};
   useEffect(() => {
-    setShareSaleEmpty(!roomData["share_sale[]"] || roomData["share_sale[]"] === "[]")
-  }, [ProjectHomeData])
-  
+    setShareSaleEmpty(
+      !roomData["share_sale[]"] || roomData["share_sale[]"] === "[]"
+    );
+  }, [ProjectHomeData]);
 
   const [pagination, setPagination] = useState(0);
   const handlePageChange = (pageNumber) => {
@@ -948,13 +948,11 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
                       ProjectHomeData.project.step1_slug.slice(1) // Geri kalanı olduğu gibi bırakma
                     : ""}
                 </Text>
-              
-                {offSaleCheck && !soldCheck && ShareSaleEmpty  ? (
+
+                {offSaleCheck && !soldCheck && ShareSaleEmpty ? (
                   <>
-                  
                     {discountAmount != 0 ? (
                       <View style={styles.discountContainer}>
-                       
                         <Svg
                           viewBox="0 0 24 24"
                           width={18}
@@ -989,19 +987,20 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
                       </View>
                     )}
                   </>
-                ) : (roomData['share_sale[]'] &&
-                  roomData['share_sale[]'] !== "[]" &&
-                   ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total !== roomData['number_of_shares[]'] ) ||
-                  (roomData['share_sale[]'] &&
-                    roomData['share_sale[]'] !== "[]" &&
+                ) : (roomData["share_sale[]"] &&
+                    roomData["share_sale[]"] !== "[]" &&
+                    ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total !==
+                      roomData["number_of_shares[]"]) ||
+                  (roomData["share_sale[]"] &&
+                    roomData["share_sale[]"] !== "[]" &&
                     !ProjectHomeData.sumCartOrderQt[HomeId]) ? (
                   <View>
                     <Text style={[styles.regularPrice]}>
-                      {roomData['share_sale[]'] &&
-                       roomData['share_sale[]']!== "[]" &&
-                        roomData['number_of_shares[]']  !== 0 && (
+                      {roomData["share_sale[]"] &&
+                        roomData["share_sale[]"] !== "[]" &&
+                        roomData["number_of_shares[]"] !== 0 && (
                           <Text style={styles.shareSaleText}>
-                            1/{roomData['number_of_shares[]'] }
+                            1/{roomData["number_of_shares[]"]}
                           </Text>
                         )}
                       {" Pay Fiyatı - "}
@@ -1010,46 +1009,56 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
                   </View>
                 ) : null}
               </View>
-               
+
               <View style={styles.priceAndButtons}>
                 <View style={styles.btns}>
-                  <View style={{ width:ProjectHomeData?.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData?.projectCartOrders && 
-                        !ProjectHomeData?.projectCartOrders[HomeId]?.is_show_user === "on"? "100%" :'50%'}}>
-                    {
-                       ProjectHomeData?.projectCartOrders[HomeId]?.status == 1 &&
-                       <View style={styles.sold}>
-                       <Text style={styles.soldText}>Satıldı</Text>
-                     </View>
-                    }
-                     {
-                       ProjectHomeData?.projectCartOrders[HomeId]?.status == 0 &&
-                       <View style={styles.pending}>
-                       <Text style={styles.pendingText}>Rezerve Edildi</Text>
-                     </View>
-                    }
-                    {
-                       roomData && ["off_sale[]"] &&
-                       roomData["off_sale[]"] !== "[]" && (
-                       <View style={styles.offSale} disabled>
-                         <Text style={styles.offSaleText}>Satışa Kapalı</Text>
-                       </View>
-                       )
-                    }
-                    {
-                      roomData && ["off_sale[]"] &&
-                      roomData["off_sale[]"] === "[]" && ProjectHomeData?.projectCartOrders[HomeId]?.status != 0 &&
-                      ProjectHomeData?.projectCartOrders[HomeId]?.status != 1
-                      && 
-                      <View style={styles.priceContainer}>
-                      <TouchableOpacity
-                        style={styles.addBasket}
-                        onPress={() => GetIdForCart(HomeId)}
-                      >
-                        <Text style={styles.addBasketText}>Sepete Ekle</Text>
-                      </TouchableOpacity>
-                    </View>
-                    }
-                     
+                  <View
+                    style={{
+                      width:
+                        ProjectHomeData?.projectCartOrders[HomeId]?.status ==
+                          1 &&
+                        ProjectHomeData?.projectCartOrders &&
+                        !ProjectHomeData?.projectCartOrders[HomeId]
+                          ?.is_show_user === "on"
+                          ? "100%"
+                          : "50%",
+                    }}
+                  >
+                    {ProjectHomeData?.projectCartOrders[HomeId]?.status ==
+                      1 && (
+                      <View style={styles.sold}>
+                        <Text style={styles.soldText}>Satıldı</Text>
+                      </View>
+                    )}
+                    {ProjectHomeData?.projectCartOrders[HomeId]?.status ==
+                      0 && (
+                      <View style={styles.pending}>
+                        <Text style={styles.pendingText}>Rezerve Edildi</Text>
+                      </View>
+                    )}
+                    {roomData && ["off_sale[]"] &&
+                      roomData["off_sale[]"] !== "[]" && (
+                        <View style={styles.offSale} disabled>
+                          <Text style={styles.offSaleText}>Satışa Kapalı</Text>
+                        </View>
+                      )}
+                    {roomData && ["off_sale[]"] &&
+                      roomData["off_sale[]"] === "[]" &&
+                      ProjectHomeData?.projectCartOrders[HomeId]?.status != 0 &&
+                      ProjectHomeData?.projectCartOrders[HomeId]?.status !=
+                        1 && (
+                        <View style={styles.priceContainer}>
+                          <TouchableOpacity
+                            style={styles.addBasket}
+                            onPress={() => GetIdForCart(HomeId)}
+                          >
+                            <Text style={styles.addBasketText}>
+                              Sepete Ekle
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      )}
+
                     {/* {ProjectHomeData?.projectCartOrders ? (
                       ProjectHomeData?.projectCartOrders[HomeId]?.status == 1 ? (
                         <View style={styles.sold}>
@@ -1076,7 +1085,7 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
                       </View>
                     )} */}
                   </View>
-                      
+
                   <View style={{ width: "50%" }}>
                     {
                       roomData && ["off_sale[]"] &&
@@ -1094,23 +1103,23 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
                       ProjectHomeData?.projectCartOrders && 
                         ProjectHomeData?.projectCartOrders[HomeId]?.is_show_user === "on" &&  ProjectHomeData?.projectCartOrders[HomeId]?.status == 1 &&
                         <TouchableOpacity style={styles.showCustomer}>
-                        <Text style={styles.showCustomerText}>
-                          Komşumu Gör
-                        </Text>
-                      </TouchableOpacity>
-                    }
-                    {
-                        roomData && ["off_sale[]"] &&
-                        roomData["off_sale[]"] === "[]" && ProjectHomeData?.projectCartOrders[HomeId]?.status != 0 &&
-                        ProjectHomeData?.projectCartOrders[HomeId]?.status != 1
-                        && 
+                          <Text style={styles.showCustomerText}>
+                            Komşumu Gör
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                    {roomData && ["off_sale[]"] &&
+                      roomData["off_sale[]"] === "[]" &&
+                      ProjectHomeData?.projectCartOrders[HomeId]?.status != 0 &&
+                      ProjectHomeData?.projectCartOrders[HomeId]?.status !=
+                        1 && (
                         <TouchableOpacity
-                        style={styles.payDetailBtn}
-                        onPress={() => openModal(HomeId)}
-                      >
-                        <Text style={styles.payDetailText}>Ödeme Detayı</Text>
-                      </TouchableOpacity>
-                    }
+                          style={styles.payDetailBtn}
+                          onPress={() => openModal(HomeId)}
+                        >
+                          <Text style={styles.payDetailText}>Ödeme Detayı</Text>
+                        </TouchableOpacity>
+                      )}
 
                     {/* {ProjectHomeData?.projectCartOrders ? (
                        ProjectHomeData?.projectCartOrders[HomeId]?.is_show_user === "on" ? (
@@ -1272,7 +1281,8 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
                         info="Peşin Fiyat"
                         numbers={
                           paymentModalShowOrder != null &&
-                          ProjectHomeData  && roomData&&
+                          ProjectHomeData &&
+                          roomData &&
                           ProjectHomeData?.projectHousingsList
                             ? addDotEveryThreeDigits(
                                 ProjectHomeData?.projectHousingsList[

@@ -51,8 +51,7 @@ export default function BasketItem({
 
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("tr-TR", {
-      style: "currency",
-      currency: "TRY",
+      currencyDisplay: "code",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
@@ -347,7 +346,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)", 
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalView: {
     width: "100%",

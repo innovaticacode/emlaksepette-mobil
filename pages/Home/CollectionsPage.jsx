@@ -191,17 +191,16 @@ export default function CollectionsPage() {
           },
         }
       );
-    
+
       fetchData();
 
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
-        title: 'Koleksiyon silindi',
-      textBody:`${colectionName} Adlı koleksiyon silindi`
-      })
+        title: "Koleksiyon silindi",
+        textBody: `${colectionName} Adlı koleksiyon silindi`,
+      });
       setmessage(true);
-     
-    
+
       setModalVisible2(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -264,9 +263,8 @@ export default function CollectionsPage() {
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: `${CollectionsRemoveIds.length} Koleksiyon silindi`,
-        
-      })
-        setmodalForSelectedCollection(false)
+      });
+      setmodalForSelectedCollection(false);
       setModalVisible(false);
       setCollectionsRemoveIds([]);
     } catch (error) {
@@ -294,8 +292,7 @@ export default function CollectionsPage() {
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: `Tüm koleksiyonlar silindi`,
-        
-      })
+      });
       setmodalForRemoveAll(false);
       fetchData();
     } catch (error) {
@@ -306,9 +303,11 @@ export default function CollectionsPage() {
   const nav = useNavigation();
   const [modalForRemoveAllCollection, setmodalForRemoveAllCollection] =
     useState(false);
-  const [modalForSelectedCollection, setmodalForSelectedCollection] = useState(false);
-  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] = useState(false)
-    
+  const [modalForSelectedCollection, setmodalForSelectedCollection] =
+    useState(false);
+  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
+    useState(false);
+
   return (
     <AlertNotificationRoot>
       {user.has_club == 2 && (
@@ -479,9 +478,7 @@ export default function CollectionsPage() {
               </View>
             </View>
           ) : (
-          
             <View style={{ height: "100%", paddingTop: 5 }}>
-          
               <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 120, padding: 10 }}
@@ -548,7 +545,6 @@ export default function CollectionsPage() {
                       >
                         Toplu Seç
                       </Text>
-      
                     </TouchableOpacity>
                     {isChoosed && (
                       <Text style={{ fontSize: 14 }}>
@@ -556,7 +552,7 @@ export default function CollectionsPage() {
                       </Text>
                     )}
                   </View>
-    
+
                   <View style={{ display: isChoosed ? "flex" : "none" }}>
                     <TouchableOpacity
                       style={[
@@ -568,13 +564,13 @@ export default function CollectionsPage() {
                           Toast.show({
                             type: ALERT_TYPE.WARNING,
                             title: `Seçili koleksiyon bulunmamaktadır`,
-                            titleStyle:{fontSize:14},
-                            textBody:'Lütfen silmek istediğiniz koleksiyonu seçin'
-                          })
-                        }else{
+                            titleStyle: { fontSize: 14 },
+                            textBody:
+                              "Lütfen silmek istediğiniz koleksiyonu seçin",
+                          });
+                        } else {
                           setmodalForSelectedCollection(true);
                         }
-                     
                       }}
                     >
                       <Icon name="trash" size={18} color={"#ffffff"} />
@@ -1018,9 +1014,7 @@ export default function CollectionsPage() {
               </View>
             </View>
           </Modal> */}
-          
             </View>
-          
           )}
         </>
       )}

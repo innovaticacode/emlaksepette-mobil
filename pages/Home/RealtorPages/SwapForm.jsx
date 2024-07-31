@@ -13,6 +13,12 @@ import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
 
 export default function SwapForm({ data, openModal, color }) {
   const [SwapChoose, setSwapChoose] = useState("");
@@ -121,7 +127,14 @@ export default function SwapForm({ data, openModal, color }) {
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
 
-      openModal(JSON.stringify(response.data.message));
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Başarılı",
+        textBody: response.data.message,
+      });
+
+      // openModal(JSON.stringify(response.data.message));
+
       color("#d4edda");
       setname("");
       setsurname("");
@@ -147,9 +160,13 @@ export default function SwapForm({ data, openModal, color }) {
       setfuelType("");
     } catch (error) {
       // Hata durumunda
-      openModal("Tüm Alanları Doldurunuz");
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Hata",
+        textBody: "Tüm Alanları Doldurunuz",
+      });
       color("#F8D7DA");
-      console.error("Hata:", error + "post isteği başarısız ");
+      console.error("Hata:", error + " post isteği başarısız ");
     }
   };
 
@@ -401,7 +418,12 @@ export default function SwapForm({ data, openModal, color }) {
         <TextInput
           style={styles.Input}
           value={phoneNmber}
-          onChangeText={(value) => setphoneNmber(value)}
+          onChangeText={(value) => {
+            const numericValue = value.replace(/[^0-9]/g, ""); // Sadece sayı olan karakterleri alır
+            setphoneNmber(numericValue);
+          }}
+          maxLength={11}
+          keyboardType="number-pad" // Sadece sayısal giriş için klavye türü
         />
       </View>
       <View style={{ gap: 6 }}>

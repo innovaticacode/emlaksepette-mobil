@@ -20,7 +20,12 @@ import ModalEdit from "react-native-modal";
 import DotIcon from "react-native-vector-icons/Entypo";
 import RNPickerSelect from "react-native-picker-select";
 import { getValueFor } from "../../../components/methods/user";
-import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 export default function CreateUser() {
@@ -94,18 +99,24 @@ export default function CreateUser() {
     const errors = {};
     if (!nameAndSurname) errors.nameAndSurname = "Bu alan zorunludur";
     if (!title) errors.title = "Bu alan zorunludur";
-    if (!email) errors.email = "Bu alan zorunludur";
+    if (!email) {
+      errors.email = "Bu alan zorunludur";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errors.email = "Geçerli bir email adresi giriniz";
+    }
     if (!phoneNumber) errors.phoneNumber = "Bu alan zorunludur";
-    if (!password) errors.password = "Bu alan zorunludur";
+    if (!password) {
+      errors.password = "Bu alan zorunludur";
+    } else if (password.length < 5)
+      errors.password = "Şifre en az 5 karakter olmalıdır";
     if (!UserType) errors.UserType = "Bu alan zorunludur";
 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
-  const createUser = async () => {
-
+  const createUser = () => {
     if (!validateForm()) return;
+
     let formdata = new FormData();
     formdata.append("name", nameAndSurname);
     formdata.append("title", title);
@@ -114,9 +125,9 @@ export default function CreateUser() {
     formdata.append("password", password);
     formdata.append("type", UserType);
 
-    try {
-      if (user?.access_token) {
-        const response = await axios.post(
+    if (user?.access_token) {
+      axios
+        .post(
           `https://private.emlaksepette.com/api/institutional/users`,
           formdata,
           {
@@ -124,234 +135,274 @@ export default function CreateUser() {
               Authorization: `Bearer ${user.access_token}`,
             },
           }
-        );
-        setmessage(response.data.message);
-        Toast.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: 'Başarılı',
-          textBody: `${message}`,
-          
-        })
-        
-        setnameAndSurname("");
-        setemail("");
-        setpassword("");
-        settitle("");
-        setphoneNumber("");
-        setUserType("");
-    
+        )
+        .then((response) => {
+          setmessage(response.data.message);
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: response.data.message,
+          });
 
-        // Dönüştürülmüş veriyi state'e atama
-      }
-    } catch (error) {
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        title: 'Başarılı',
-        textBody: `${error}`,
-        
-      })
-      console.error(error);
+          setnameAndSurname("");
+          setemail("");
+          setpassword("");
+          settitle("");
+          setphoneNumber("");
+          setUserType("");
+        })
+        .catch((error) => {
+          Toast.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Hata",
+            textBody: error.response?.data?.message || "Bir hata oluştu",
+          });
+          console.error("API Hatası:", error);
+        });
     }
+  };
+  const formatPhoneNumber = (value) => {
+    // Sadece sayısal karakterleri kabul eder
+    const numericValue = value.replace(/[^0-9]/g, "");
+
+    // Telefon numarası tamamen silindiyse, boş bir dize döndür
+    if (numericValue.length === 0) {
+      return "";
+    }
+
+    // İlk karakteri zorunlu olarak 5 ile sınırla
+    if (numericValue.length > 0 && numericValue[0] !== "5") {
+      return "5";
+    }
+
+    // Telefon numarasını formatla: (5XX) XXX XX XX
+    if (numericValue.length <= 3) {
+      return `(${numericValue}`;
+    } else if (numericValue.length <= 6) {
+      return `(${numericValue.slice(0, 3)}) ${numericValue.slice(3)}`;
+    } else if (numericValue.length <= 8) {
+      return `(${numericValue.slice(0, 3)}) ${numericValue.slice(
+        3,
+        6
+      )} ${numericValue.slice(6)}`;
+    } else {
+      return `(${numericValue.slice(0, 3)}) ${numericValue.slice(
+        3,
+        6
+      )} ${numericValue.slice(6, 8)} ${numericValue.slice(8, 10)}`;
+    }
+  };
+
+  const handlePhoneNumberChange = (value) => {
+    // Formatlama işlemi sırasında sayıların doğru şekilde yerleştirilmesini sağlar
+    const formattedValue = formatPhoneNumber(value);
+    setphoneNumber(formattedValue);
   };
 
   return (
     <AlertNotificationRoot>
-    <KeyboardAwareScrollView
-    contentContainerStyle={{flex:1}}
-   
-      onTouchStart={()=>{
-        Keyboard.dismiss();
-      }}
-    >
-      <View style={style.container}>
-        <View style={[style.Form]}>
-          <View style={style.Inputs}>
-            <View>
-              <Text style={style.Label}>İsim Soyisim</Text>
-              <TextInput
-                style={style.Input}
-                value={nameAndSurname}
-                onChangeText={(value) => setnameAndSurname(value)}
-              />
+      <KeyboardAwareScrollView
+        contentContainerStyle={{ flex: 1 }}
+        onTouchStart={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <View style={style.container}>
+          <View style={[style.Form]}>
+            <View style={style.Inputs}>
+              <View>
+                <Text style={style.Label}>İsim Soyisim</Text>
+                <TextInput
+                  style={style.Input}
+                  value={nameAndSurname}
+                  onChangeText={(value) => setnameAndSurname(value)}
+                />
                 {validationErrors.nameAndSurname && (
-                <Text style={style.errorText}>
-                  {validationErrors.nameAndSurname}
-                </Text>
-              )}
-            </View>
-            <View>
-              <Text style={style.Label}>Unvan</Text>
-              <TextInput
-                style={style.Input}
-                value={title}
-                onChangeText={(value) => settitle(value)}
-              />
-                  {validationErrors.title && (
-                <Text style={style.errorText}> {validationErrors.title} </Text>
-              )}
-            </View>
-            <View>
-              <Text style={style.Label}>Email</Text>
-              <TextInput
-                style={style.Input}
-                value={email}
-                onChangeText={(value) => setemail(value)}
-              />
-                  {validationErrors.email && (
-                <Text style={style.errorText}> {validationErrors.email} </Text>
-              )}
-            </View>
-            <View>
-              <Text style={style.Label}>Cep No</Text>
-              <TextInput
-                style={style.Input}
-                value={phoneNumber}
-                onChangeText={(value) => setphoneNumber(value)}
-                keyboardType='phone-pad'
-              />
-                 {validationErrors.phoneNumber && (
-                <Text style={style.errorText}>
-                  {" "}
-                  {validationErrors.phoneNumber}{" "}
-                </Text>
-              )}
-            </View>
-            <View>
-              <View style={{ flexDirection: "row", gap: 10 }}>
-                <Text style={style.Label}>Şifre</Text>
+                  <Text style={style.errorText}>
+                    {validationErrors.nameAndSurname}
+                  </Text>
+                )}
               </View>
+              <View>
+                <Text style={style.Label}>Unvan</Text>
+                <TextInput
+                  style={style.Input}
+                  value={title}
+                  onChangeText={(value) => settitle(value)}
+                />
+                {validationErrors.title && (
+                  <Text style={style.errorText}>
+                    {" "}
+                    {validationErrors.title}{" "}
+                  </Text>
+                )}
+              </View>
+              <View>
+                <Text style={style.Label}>Email</Text>
+                <TextInput
+                  style={style.Input}
+                  value={email}
+                  onChangeText={(value) => setemail(value)}
+                />
+                {validationErrors.email && (
+                  <Text style={style.errorText}>
+                    {" "}
+                    {validationErrors.email}{" "}
+                  </Text>
+                )}
+              </View>
+              <View>
+                <Text style={style.Label}>Cep No</Text>
+                <TextInput
+                  style={style.Input}
+                  value={phoneNumber}
+                  onChangeText={handlePhoneNumberChange}
+                  keyboardType="number-pad"
+                />
+                {validationErrors.phoneNumber && (
+                  <Text style={style.errorText}>
+                    {" "}
+                    {validationErrors.phoneNumber}{" "}
+                  </Text>
+                )}
+              </View>
+              <View>
+                <View style={{ flexDirection: "row", gap: 10 }}>
+                  <Text style={style.Label}>Şifre</Text>
+                </View>
 
-              <TextInput
-                style={style.Input}
-                value={password}
-                onChangeText={(value) => setpassword(value)}
-              />
-              {validationErrors.password && (
-                <Text style={style.errorText}>
-                  {" "}
-                  {validationErrors.password}{" "}
-                </Text>
-              )}
-            </View>
-            <View>
-              <Text style={style.Label}>Kullanıcı Tipi</Text>
-              <RNPickerSelect doneText="Tamam"
-             
-                value={UserType}
-                placeholder={{
-                  label: "Seçiniz...",
-                  value: null,
-                }}
-                style={pickerSelectStyles}
-                onValueChange={(value) => setUserType(value)}
-                items={roleItems}
-              />
+                <TextInput
+                  style={style.Input}
+                  value={password}
+                  onChangeText={(value) => setpassword(value)}
+                />
+                {validationErrors.password && (
+                  <Text style={style.errorText}>
+                    {" "}
+                    {validationErrors.password}{" "}
+                  </Text>
+                )}
+              </View>
+              <View>
+                <Text style={style.Label}>Kullanıcı Tipi</Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  value={UserType}
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => setUserType(value)}
+                  items={roleItems}
+                />
                 {validationErrors.UserType && (
-                <Text style={style.errorText}>{validationErrors.UserType}</Text>
-              )}
+                  <Text style={style.errorText}>
+                    {validationErrors.UserType}
+                  </Text>
+                )}
+              </View>
             </View>
-          
-          </View>
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <TouchableOpacity
-              onPress={createUser}
-              style={{
-                backgroundColor: "#EA2A29",
-                padding: 13,
-                width: "50%",
-                borderRadius: 5,
-              }}
-            >
-              <Text
-                style={[
-                  style.label2,
-                  { color: "white", textAlign: "center", fontSize: 16 },
-                ]}
+            <View style={{ width: "100%", alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={createUser}
+                style={{
+                  backgroundColor: "#EA2A29",
+                  padding: 13,
+                  width: "50%",
+                  borderRadius: 5,
+                }}
               >
-                Kaydet
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    style.label2,
+                    { color: "white", textAlign: "center", fontSize: 16 },
+                  ]}
+                >
+                  Kaydet
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
 
-        {/**/}
-        <ModalEdit
-          isVisible={modalVisible}
-          onBackdropPress={() => setModalVisible(false)}
-          swipeDirection={["down"]}
-          onSwipeComplete={() => setModalVisible(false)}
-          backdropColor="transparent"
-          style={style.modal3}
-        >
-          <View style={[style.modalContent3, { gap: 10 }]}>
-            <View style={{ alignItems: "center", paddingTop: 15 }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#eaeff5",
-                  padding: 4,
-                  width: "15%",
-                  borderRadius: 20,
-                }}
-              />
+          {/**/}
+          <ModalEdit
+            isVisible={modalVisible}
+            onBackdropPress={() => setModalVisible(false)}
+            swipeDirection={["down"]}
+            onSwipeComplete={() => setModalVisible(false)}
+            backdropColor="transparent"
+            style={style.modal3}
+          >
+            <View style={[style.modalContent3, { gap: 10 }]}>
+              <View style={{ alignItems: "center", paddingTop: 15 }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#eaeff5",
+                    padding: 4,
+                    width: "15%",
+                    borderRadius: 20,
+                  }}
+                />
+              </View>
+              <View style={{ gap: 10, padding: 10 }}>
+                <TouchableOpacity
+                  style={{
+                    padding: 10,
+                    backgroundColor: "#EA2A28",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 5,
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Kullanıcıyı Sil</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    padding: 10,
+                    backgroundColor: "#79ad69",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 5,
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Kullanıcıyı Düzenle</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={{ gap: 10, padding: 10 }}>
-              <TouchableOpacity
-                style={{
-                  padding: 10,
-                  backgroundColor: "#EA2A28",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 5,
-                }}
-              >
-                <Text style={{ color: "white" }}>Kullanıcıyı Sil</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  padding: 10,
-                  backgroundColor: "#79ad69",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 5,
-                }}
-              >
-                <Text style={{ color: "white" }}>Kullanıcıyı Düzenle</Text>
-              </TouchableOpacity>
+          </ModalEdit>
+          <ModalEdit
+            isVisible={Succesalert}
+            animationIn={"zoomInUp"}
+            animationOut={"zoomOutUp"}
+            onBackdropPress={() => setSuccesalert(false)}
+            swipeDirection={["down"]}
+            onSwipeComplete={() => setSuccesalert(false)}
+            backdropColor="transparent"
+            style={style.modal4}
+          >
+            <View style={[style.modalContent4, { gap: 10 }]}>
+              <View style={{ alignItems: "center", padding: 15 }}>
+                <Icon name="check-circle" size={35} color={"green"} />
+              </View>
+              <View>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontSize: 16,
+                    color: "green",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Kullanıcı oluşturuldu
+                </Text>
+              </View>
             </View>
-          </View>
-        </ModalEdit>
-        <ModalEdit
-          isVisible={Succesalert}
-          animationIn={"zoomInUp"}
-          animationOut={"zoomOutUp"}
-          onBackdropPress={() => setSuccesalert(false)}
-          swipeDirection={["down"]}
-          onSwipeComplete={() => setSuccesalert(false)}
-          backdropColor="transparent"
-          style={style.modal4}
-        >
-          <View style={[style.modalContent4, { gap: 10 }]}>
-            <View style={{ alignItems: "center", padding: 15 }}>
-              <Icon name="check-circle" size={35} color={"green"} />
-            </View>
-            <View>
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 16,
-                  color: "green",
-                  fontWeight: "bold",
-                }}
-              >
-                Kullanıcı oluşturuldu
-              </Text>
-            </View>
-          </View>
-        </ModalEdit>
-      </View>
-    </KeyboardAwareScrollView>
+          </ModalEdit>
+        </View>
+      </KeyboardAwareScrollView>
     </AlertNotificationRoot>
   );
 }
