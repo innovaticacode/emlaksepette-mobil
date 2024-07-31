@@ -67,6 +67,7 @@ import { Polyline } from "react-native-maps";
 import PaymentItem from "../components/PaymentItem";
 import DrawerMenu from "../components/DrawerMenu";
 import AwesomeAlert from "react-native-awesome-alerts";
+import CommentForProject from "../components/CommentForProject";
 
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
@@ -148,8 +149,14 @@ export default function PostDetail() {
     setSelectedImage(pageNumber);
   };
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
+  const [showInstallment,setShowInstallment] = useState(false);
   const openModal = (HomeId) => {
     setPaymentModalShowOrder(HomeId);
+    if(JSON.parse(ProjectHomeData.projectHousingsList[HomeId]['payment-plan[]']).includes("taksitli")){
+      setShowInstallment(true);
+    }else{
+      setShowInstallment(false);
+    }
     setModalVisible(!modalVisible);
   };
   const [FormVisible, setFormVisible] = useState(false);
@@ -210,6 +217,15 @@ export default function PostDetail() {
     }
   }, [user, ıtemOnCollection]);
 
+  const filterEmojis = (text) => {
+    // Emoji kod noktalarını içeren regex deseni
+    const emojiRegex = /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu;
+    return text.replace(emojiRegex, '');
+  };
+    const handleChangeText = (input) => {
+      const filteredText = filterEmojis(input);
+     setnewCollectionNameCreate(filteredText);
+    };
   const addCollectionPost = () => {
     const collectionData = {
       collection_name: newCollectionNameCreate,
@@ -662,7 +678,25 @@ const offSaleCheck=false
   ? formatPrice(discountedPrice)
   : formatPrice(roomData['price[]'])
 console.log()
-
+const [comments, setcomments] = useState([])
+const fetchCommentTotalRate = async () => {
+  try {
+    if (user?.access_token ) {
+     
+      const response = await axios.get(
+        `https://private.emlaksepette.com/api/project/${projectId}/comments`,
+      );
+          setcomments(response.data)
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  
+  }
+};
+useEffect(() => {
+ fetchCommentTotalRate()
+}, [user])
+const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc, rate) => acc + rate, 0); 
   return (
     <>
       <AlertNotificationRoot>
@@ -870,6 +904,15 @@ console.log()
                   paddingBottom: 10,
                 }}
               >
+                
+                     {
+              totalRate !=0 && 
+              <View style={{position:'absolute',right:10,flexDirection:'row',alignItems:'center',gap:4,top:10,zIndex:1}}>
+              <Text style={{color:'#264ABB',fontWeight:'600',fontSize:13}}>{(totalRate /comments.length).toFixed(1)}</Text>
+            
+              <Icon2 name="star" color={'gold'}/>
+            </View>
+            }
                 <Text
                   style={{
                     textAlign: "center",
@@ -1049,7 +1092,7 @@ console.log()
                     }
                     {
                       ProjectHomeData?.projectCartOrders && 
-                        ProjectHomeData?.projectCartOrders[HomeId]?.is_show_user === "on" &&
+                        ProjectHomeData?.projectCartOrders[HomeId]?.is_show_user === "on" &&  ProjectHomeData?.projectCartOrders[HomeId]?.status == 1 &&
                         <TouchableOpacity style={styles.showCustomer}>
                         <Text style={styles.showCustomerText}>
                           Komşumu Gör
@@ -1189,6 +1232,7 @@ console.log()
               )}
               {tabs == 4 && <PostMap data={ProjectHomeData} />}
               {tabs == 5 && <FloorPlan data={ProjectHomeData} />}
+              {tabs == 6 && <CommentForProject projectId={ProjectHomeData?.project?.id} />}
 
               <View style={{ padding: 10 }}></View>
 
@@ -1238,7 +1282,8 @@ console.log()
                             : "0"
                         }
                       />
-                      {paymentModalShowOrder != null ? (
+                    
+                      {paymentModalShowOrder != null ?(
                         JSON.parse(
                           ProjectHomeData?.projectHousingsList[
                             paymentModalShowOrder
@@ -1260,10 +1305,7 @@ console.log()
                             }
                           />
                         ) : (
-                          <SettingsItem
-                            info="Taksitli 12 Ay Fiyat"
-                            numbers="0"
-                          />
+                         ''
                         )
                       ) : (
                         <SettingsItem info="Taksitli 12 Ay Fiyat" numbers="0" />
@@ -1290,7 +1332,7 @@ console.log()
                             }
                           />
                         ) : (
-                          <SettingsItem info="Peşinat" numbers="0" />
+                        ''
                         )
                       ) : (
                         <SettingsItem info="Peşinat" numbers="0" />
@@ -1329,10 +1371,7 @@ console.log()
                             )}
                           />
                         ) : (
-                          <SettingsItem
-                            info="Aylık Ödenecek Tutar"
-                            numbers="0"
-                          />
+                          ''
                         )
                       ) : (
                         <SettingsItem info="Aylık Ödenecek Tutar" numbers="0" />
@@ -2017,7 +2056,7 @@ console.log()
                         }}
                         value={newCollectionNameCreate}
                         onChangeText={(value) =>
-                          setnewCollectionNameCreate(value)
+                         handleChangeText(value)
                         }
                       />
                     </View>

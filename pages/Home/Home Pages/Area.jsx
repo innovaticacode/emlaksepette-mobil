@@ -162,15 +162,17 @@ const Area= ({index}) => {
               housing={item}
               title={item.housing_title}
               loading={loading}
+              
               location={item.city_title + " / " + item.county_title}
+              openSharing={JSON.parse(item.housing_type_data)['open_sharing1']}
               image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image}`}
-              column1_name={JSON.parse(item.housing_type_data)[item.column1_name] ? JSON.parse(item.housing_type_data)[item.column1_name] : ""}
               column1_additional={item.column1_additional}
-              column2_name={`${JSON.parse(item.housing_type_data)[item.column2_name]} `}
+              column1_name={JSON.parse(item.housing_type_data)[item.column1_name] ? JSON.parse(item.housing_type_data)[item.column1_name] : ""}
+              column2_name={JSON.parse(item.housing_type_data)[item.column2_name]? JSON.parse(item.housing_type_data)[item.column2_name]:""} 
               column2_additional={item.column2_additional}
-              column3_name={`${JSON.parse(item.housing_type_data)[item.column3_name]} `}
+              column3_name={JSON.parse(item.housing_type_data)[item.column3_name] ?JSON.parse(item.housing_type_data)[item.column3_name] :"" } 
               column3_additional={item.column3_additional}
-              column4_name={`${JSON.parse(item.housing_type_data)[item.column4_name]} `}
+              column4_name={JSON.parse(item.housing_type_data)[item.column4_name] ?JSON.parse(item.housing_type_data)[item.column4_name]:"" } 
               column4_additional={item.column4_additional}
               bookmarkStatus={true}
               dailyRent={false}

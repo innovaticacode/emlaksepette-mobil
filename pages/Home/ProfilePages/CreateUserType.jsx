@@ -82,37 +82,49 @@ export default function CreateUserType() {
     
   };
   const postData = async () => {
-    try {
-      var formData = new FormData();
-      formData.append("name", TypeName);
-      checkedItems.forEach((item) => {
-        formData.append("permissions[]", item); // [] kullanarak PHP tarafında bir dizi olarak alınmasını sağlar
-      });
-      const response = await axios.post(
-        "https://private.emlaksepette.com/api/institutional/roles",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
-
-      Toast.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: 'Başarılı',
-        textBody: `${TypeName} Adlı kullanıcı Tipi Oluşturuldu`,
-        
+    if (!TypeName) {
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: 'Boş Yer Bırakmayın',
+        textBody: 'Lütfen Kullanıcı Rolü Giriniz',
+        button: 'Tamam',
       })
-      setTimeout(() => {
-        navigation.navigate("UserTypes");
-      }, 2000);
-      // İsteğin başarılı bir şekilde tamamlandığı durum
-    } catch (error) {
-      // Hata durumunda
-
-      console.error("Hata:", error + "post isteği başarısız ");
+    }else{
+      try {
+        var formData = new FormData();
+        formData.append("name", TypeName);
+        checkedItems.forEach((item) => {
+          formData.append("permissions[]", item); // [] kullanarak PHP tarafında bir dizi olarak alınmasını sağlar
+        });
+        const response = await axios.post(
+          "https://private.emlaksepette.com/api/institutional/roles",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+         setTypeName('')
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: 'Başarılı',
+          textBody: 'Kullanıcı Tipi Oluşturma Başarılı',
+          button: 'Tamam',
+          onPressButton:()=>{
+            navigation.navigate('UserTypes')
+            Dialog.hide()
+          }
+        })
+      
+       
+      } catch (error) {
+      
+  
+        console.error("Hata:", error + "post isteği başarısız ");
+      }
     }
+   
   };
 
   return (

@@ -3,9 +3,11 @@ import React, { useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import SupportAdd from "./SupportAdd";
 import SupportList from "./SupportList";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Support() {
   const [tabs, setTabs] = useState(1);
+
   return (
     <View style={{ flex: 1, padding: 5, backgroundColor: "white" }}>
       <View

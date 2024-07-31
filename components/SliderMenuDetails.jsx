@@ -7,7 +7,8 @@ export default function SliderMenuDetails({tab,setTab,changeTab}) {
         {text:'Açıklama'},
         {text:'Özellikler'},
         {text:'Harita'},
-        {text:'Vaziyet & Kat Planı'}
+        {text:'Vaziyet & Kat Planı'},
+        {text:'Yorumlar'}
     ]
   return (
     <ScrollView

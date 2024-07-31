@@ -7,10 +7,13 @@ import {
   TouchableOpacity,
   Platform,
   Alert,
+  Keyboard,
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { getValueFor } from "../../../../components/methods/user";
 import axios from "axios";
+
+import * as IntentLauncher from "expo-intent-launcher";
 import {
   AlertNotificationRoot,
   Toast,
@@ -19,6 +22,7 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
+import { useNavigation } from "@react-navigation/native";
 
 export default function SupportAdd() {
   const [selectedValue, setSelectedValue] = useState("");
@@ -31,8 +35,8 @@ export default function SupportAdd() {
   const [isPicker2Open, setIsPicker2Open] = useState(false);
   const [iconName1, setIconName1] = useState("angle-down");
   const [iconName2, setIconName2] = useState("angle-down");
-  const [pdfFile, setPdfFile] = useState(null);
-
+  const [pdfFile, setPdfFile] = useState('');
+  const navigation=useNavigation ()
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -62,7 +66,9 @@ export default function SupportAdd() {
             title: "PDF Seçildi",
             textBody: `Seçtiğiniz PDF: ${pdfAsset.name}`,
           });
+          Keyboard.dismiss()
         }
+        
       })
       .catch((error) => {
         Toast.show({
@@ -72,37 +78,52 @@ export default function SupportAdd() {
         });
       });
   };
-
-  const downloadPDF = () => {
-    if (pdfFile && pdfFile.uri) {
-      // İndirilmiş dosyanın hedef yolu
-      const downloadUri = FileSystem.documentDirectory + pdfFile.name;
-
-      FileSystem.downloadAsync(pdfFile.uri, downloadUri)
-        .then(() => {
-          console.log("Dosya başarıyla indirildi:", downloadUri);
-          Toast.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "PDF İndirildi",
-            textBody: `PDF başarıyla indirildi: ${pdfFile.name}`,
-          });
-        })
-        .catch((error) => {
-          console.error("PDF İndirme Hatası:", error);
-          Toast.show({
-            type: ALERT_TYPE.DANGER,
-            title: "Hata",
-            textBody: "PDF indirilirken bir hata oluştu",
-          });
+  const openPdf = async () => {
+    if (pdfFile.uri) {
+      try {
+        const contentUri = await FileSystem.getContentUriAsync(pdfFile.uri);
+        IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+          data: contentUri,
+          flags: 1,
+          type: "application/pdf",
         });
+      } catch (error) {
+        console.error("PDF açılırken hata oluştu:", error);
+      }
     } else {
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Uyarı",
-        textBody: "İndirilmek için bir PDF seçilmedi",
-      });
+      Alert.alert("PDF dosyası bulunamadı");
     }
   };
+  // const downloadPDF = () => {
+  //   if (pdfFile && pdfFile.uri) {
+  //     // İndirilmiş dosyanın hedef yolu
+  //     const downloadUri = FileSystem.documentDirectory + pdfFile.name;
+
+  //     FileSystem.downloadAsync(pdfFile.uri, downloadUri)
+  //       .then(() => {
+  //         console.log("Dosya başarıyla indirildi:", downloadUri);
+  //         Toast.show({
+  //           type: ALERT_TYPE.SUCCESS,
+  //           title: "PDF İndirildi",
+  //           textBody: `PDF başarıyla indirildi: ${pdfFile.name}`,
+  //         });
+  //       })
+  //       .catch((error) => {
+  //         console.error("PDF İndirme Hatası:", error);
+  //         Toast.show({
+  //           type: ALERT_TYPE.DANGER,
+  //           title: "Hata",
+  //           textBody: "PDF indirilirken bir hata oluştu",
+  //         });
+  //       });
+  //   } else {
+  //     Toast.show({
+  //       type: ALERT_TYPE.WARNING,
+  //       title: "Uyarı",
+  //       textBody: "İndirilmek için bir PDF seçilmedi",
+  //     });
+  //   }
+  // };
 
   console.log(pdfFile);
   const handlePicker1Close = () => {
@@ -314,7 +335,17 @@ export default function SupportAdd() {
           </TouchableOpacity>
 
           {pdfFile && (
-            <TouchableOpacity style={styles.pdfContainer} onPress={downloadPDF}>
+            <TouchableOpacity style={styles.pdfContainer} onPress={()=>{
+              if (Platform.OS === "android") {
+                openPdf();
+              } else if (Platform.OS === "ios") {
+                navigation.navigate("DecontPdf", {
+                  name:pdfFile.name ,
+                  pdfUri: pdfFile.uri,
+                });
+              }
+            
+            }}>
               <Text style={styles.pdfText}>Seçtiğiniz PDF: {pdfFile.name}</Text>
             </TouchableOpacity>
           )}
