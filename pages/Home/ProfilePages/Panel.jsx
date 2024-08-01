@@ -24,6 +24,10 @@ import Header from "../../../components/Header";
 import { ActivityIndicator } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { Path, Svg } from "react-native-svg";
+import { LinearGradient } from "expo-linear-gradient";
+import Icon3 from "react-native-vector-icons/AntDesign";
+import enler from "../../../components/images/enler.png";
+import cerceve from "../../../components/images/cerceve.png";
 
 export default function Panel({ options, onSelect }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -130,6 +134,15 @@ export default function Panel({ options, onSelect }) {
       fetchNotifications();
     }
   }, [user?.access_token]);
+  const imageUri =
+    "https://i.pinimg.com/236x/e3/85/0b/e3850ba30ff1772b422e2dea18358af4.jpg";
+
+  const data = [
+    { baslik: "Aktif İlanlar", bilgi: "122" },
+    { baslik: "Onay Bekleyen İlanlar", bilgi: "75" },
+    { baslik: "Toplam İlanlar", bilgi: "30" },
+    { baslik: "Rededilen İlanlar", bilgi: "15" },
+  ];
 
   return (
     <>
@@ -144,402 +157,347 @@ export default function Panel({ options, onSelect }) {
             contentContainerStyle={{ paddingBottom: 20 }}
           >
             <View style={style.container}>
-              <View style={style.header}>
-                <View style={style.NameInfo}>
-                  <View style={style.cardContainer}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "start",
-                        textAlign: "start",
-                        width: "100%",
-                      }}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            width: "85%",
-                          }}
-                        >
-                          <View style={style.ProfileImage}>
-                            <Image
-                              source={{
-                                uri: `https://private.emlaksepette.com/storage/profile_images/${user.profile_image}`,
-                              }}
-                              style={{
-                                width: 50,
-                                height: 50,
-                                borderRadius: 25,
-                              }}
-                            />
-                          </View>
-                          <View style={{ marginLeft: 5 }}>
-                            <Text
-                              style={{
-                                fontSize: 16,
-                                fontWeight: "400",
-                              }}
-                            >
-                              {panelInfo?.user?.name}
-                            </Text>
-                            <Text
-                              style={{
-                                color: "black",
-                                fontWeight: "500",
-                                fontSize: 10,
-                              }}
-                            >
-                              {user.email}
-                            </Text>
-                          </View>
-                        </View>
-
-                        <TouchableOpacity
-                          onPress={() =>
-                            navigation.navigate("Notifications", {
-                              notifications,
-                            })
-                          }
-                          style={{
-                            width: 50,
-                            alignItems: "center",
-
-                            borderRadius: 15,
-                          }}
-                        >{
-                          notificationCount >0 &&
-                          <View
-                          style={{
-                            position: "absolute",
-                            backgroundColor: "red",
-                            paddingLeft: 6,
-                            paddingRight: 6,
-
-                            paddingTop: 2,
-                            paddingBottom: 2,
-                            bottom: 15,
-                            left: 23,
-                            zIndex: 1,
-                            borderRadius: 20,
-                          }}
-                        >
-                          <Text style={{ color: "white", fontSize: 11 }}>
-                            {notificationCount}
-                          </Text>
-                        </View>
-                        }
-                         
-                          <Icon name="bell" size={28} />
-                        </TouchableOpacity>
-                      </View>
-                    </View>
+              <View style={{ marginBottom: 20 }}>
+                <View style={{ position: "relative", marginTop: 30 }}>
+                  <LinearGradient
+                    colors={["rgba(234, 43, 46, 1)", "rgba(132, 24, 26, 0.62)"]} // RGBA formatında renkler
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0, y: 1 }}
+                    style={[styles.gradient, {}]}
+                  >
+                    {/* Gradyan içeriği */}
+                  </LinearGradient>
+                </View>
+                <View
+                  style={{
+                    marginTop: 10,
+                    position: "absolute",
+                    top: 14,
+                    left: 20,
+                    flexDirection: "row",
+                  }}
+                >
+                  <ImageBackground
+                    source={{ uri: imageUri }}
+                    style={styles.imageBackground}
+                    resizeMode="cover"
+                    imageStyle={{
+                      borderBottomLeftRadius: 20,
+                      borderBottomRightRadius: 20,
+                    }}
+                  />
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      flexDirection: "column",
+                      position: "absolute",
+                      top: 24,
+                      left: 90,
+                    }}
+                  >
+                    <Text style={{ color: "white", fontWeight: "700" }}>
+                      Bilge Er
+                    </Text>
+                    <Text style={{ color: "white", fontWeight: "400" }}>
+                      bilgeer@gmail.com
+                    </Text>
                   </View>
                 </View>
               </View>
-
-              {user?.has_club == 1 ? (
-                <>
-                  <View style={style.Cards}>
-                    <Text
-                      style={{
-                        fontSize: 13,
-                        letterSpacing: 0.2,
-                        fontWeight: 600,
-                        marginLeft: 5,
-                      }}
-                    >
-                      Emlak Kulüp Kazanç İstatistiği
-                    </Text>
-                    <View style={style.CardsItems}>
-                      <View style={style.Item}>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <View style={{ flex: 1.8 / 2 }}>
-                            <Text
-                              style={{
-                                fontSize: 13,
-                                color: "#FF0000",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              Toplam Kazanç
-                            </Text>
-                            <Text style={{ fontSize: 9, fontWeight: "bold" }}>
-                              (Komisyon Tutarı)
-                            </Text>
-                          </View>
-
-                          <View style={{ flex: 0.2 / 2 }}>
-                            <Coin name="coins" size={18} color={"#9ACA66"} />
-                          </View>
-                        </View>
-                        <View style={{ top: 10, gap: 10 }}>
-                          <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-                            {panelInfo.balanceStatus1}
-                            {" ₺"}
-                          </Text>
-                          <View style={{ flexDirection: "row", gap: 3 }}>
-                            <Coin name="angle-up" color={"#9ACA66"} />
-                            <Text style={{ fontSize: 11, color: "#9ACA66" }}>
-                              2.5%{" "}
-                            </Text>
-                            <Text style={{ fontSize: 11, color: "#ACACAC" }}>
-                              son 7 gün
-                            </Text>
-                          </View>
-                        </View>
+              <View style={{ paddingLeft: 20, paddingRight: 20 }}>
+                <View style={styles.rowContainer}>
+                  {data.map((item, index) => (
+                    <View key={index} style={styles.itemContainer}>
+                      <View style={{ padding: 10, alignItems: "center" }}>
+                        <Text style={styles.title}>{item.baslik}</Text>
                       </View>
-                      <View style={style.Item}>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <View style={{ flex: 1.8 / 2 }}>
-                            <Text
-                              style={{
-                                fontSize: 13,
-                                color: "#FF0000",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              Reddedilen
-                            </Text>
-                            <Text style={{ fontSize: 9, fontWeight: "bold" }}>
-                              (Komisyon Tutarı)
-                            </Text>
-                          </View>
-
-                          <View style={{ flex: 0.2 / 2 }}>
-                            <Coin
-                              name="exclamation"
-                              size={18}
-                              color={"#FF0000"}
-                            />
-                          </View>
-                        </View>
-                        <View style={{ top: 8, gap: 10 }}>
-                          <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-                            {panelInfo.balanceStatus2}
-                            {" ₺"}
-                          </Text>
-                          <View style={{ flexDirection: "row", gap: 3 }}>
-                            <Coin name="angle-down" color={"#FF0000"} />
-                            <Text style={{ fontSize: 10, color: "#FF0000" }}>
-                              2.5%{" "}
-                            </Text>
-                            <Text style={{ fontSize: 10, color: "#ACACAC" }}>
-                              son 7 gün
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-
-                    <View style={style.CardsItems}>
-                      <View style={style.Item}>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <View style={{ flex: 1.8 / 2 }}>
-                            <Text
-                              style={{
-                                fontSize: 13,
-                                color: "#FFA500",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              Onaydaki Kazanç
-                            </Text>
-                            <Text style={{ fontSize: 9, fontWeight: "bold" }}>
-                              (Komisyon Tutarı)
-                            </Text>
-                          </View>
-
-                          <View style={{ flex: 0.2 / 2 }}>
-                            <Loading
-                              name="spinner-3"
-                              size={25}
-                              color={"#FFA500"}
-                            />
-                          </View>
-                        </View>
-                        <View style={{ top: 8, gap: 10 }}>
-                          <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-                            {panelInfo?.balanceStatus0} ₺
-                          </Text>
-                          <View style={{ flexDirection: "row", gap: 3 }}>
-                            <Icon2 name="minus" color={"#FFA500"} />
-                            <Text style={{ fontSize: 10, color: "#FFA500" }}>
-                              2.5%{" "}
-                            </Text>
-                            <Text style={{ fontSize: 10, color: "#ACACAC" }}>
-                              son 7 gün
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                      <View style={style.Item}>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <View style={{ flex: 1.7 / 2 }}>
-                            <Text
-                              style={{
-                                fontSize: 13,
-                                color: "#9ACA66",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              Başarı Yüzdesi(%)
-                            </Text>
-                            <Text style={{ fontSize: 9, fontWeight: "bold" }}>
-                              (Komisyon Tutarı)
-                            </Text>
-                          </View>
-
-                          <View style={{ flex: 0.2 / 2 }}>
-                            <Icon2
-                              name="bar-graph"
-                              size={15}
-                              color={"#9ACA66"}
-                            />
-                          </View>
-                        </View>
-                        <View style={{ top: 8, gap: 10 }}>
-                          <Text style={{ fontSize: 22, fontWeight: "bold" }}>
-                            {panelInfo.successPercentage}
-                            {" %"}
-                          </Text>
-                          <View style={{ flexDirection: "row", gap: 3 }}>
-                            <Coin name="angle-up" color={"#9ACA66"} />
-                            <Text style={{ fontSize: 10, color: "#9ACA66" }}>
-                              2.5%{" "}
-                            </Text>
-                            <Text style={{ fontSize: 10, color: "#ACACAC" }}>
-                              son 7 gün
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                  <View style={{ width: "100%", padding: 10, top: 5 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Text
+                      <View
                         style={{
-                          fontSize: 13,
-                          letterSpacing: 0.2,
-                          fontWeight: 600,
-                          marginLeft: 5,
+                          width: "100%",
                         }}
                       >
-                        Son Eklenen Koleksiyonlarım
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate("Collections")}
-                      >
-                        <Text
-                          style={{
-                            letterSpacing: 0.2,
-                            fontSize: 11,
-                            color: "black",
-                            fontWeight: "500",
-                          }}
+                        <LinearGradient
+                          colors={[
+                            "rgba(234, 43, 46, 1)",
+                            "rgba(132, 24, 26, 0.62)",
+                          ]} // RGBA formatında renkler
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 0, y: 1 }}
+                          style={[
+                            styles.gradient2,
+                            {
+                              width: "100%",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            },
+                          ]}
                         >
-                          Tümünü Gör
-                        </Text>
-                      </TouchableOpacity>
+                          {/* Gradyan içeriği */}
+                          <Text style={styles.info}>{item.bilgi}</Text>
+                        </LinearGradient>
+                      </View>
                     </View>
-                    <View style={{ paddingTop: 10, gap: 10 }}>
-                      {panelInfo.collections?.map((collection) => (
-                        <CollectionItemPanel
-                          panelInfo={collection.links}
-                          collection={collection}
-                        />
-                      ))}
+                  ))}
+                </View>
+              </View>
+              <View style={{ paddingLeft: 20, paddingRight: 20 }}>
+                <View
+                  style={[
+                    styles.card,
+                    {
+                      padding: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 15,
+                    },
+                  ]}
+                >
+                  <View>
+                    <View
+                      style={{
+                        backgroundColor: "#FF9908",
+                        width: 40,
+                        height: 40,
+                        borderRadius: 50,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Icon3 name="eyeo" size={20} color={"#fff"} />
                     </View>
                   </View>
-                </>
-              ) : (
-                <View style={styles.container}>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate("Collections")}
-                    style={styles.image}
-                  >
-                    <Image
-                      source={{
-                        uri: "https://private.emlaksepette.com/images/emlak-kulup-banner.png",
+                  <View style={{ gap: 3 }}>
+                    <Text
+                      style={{
+                        color: "#000000",
+                        fontWeight: "400",
+                        fontSize: 13,
                       }}
-                      style={styles.image}
-                    />
-                  </TouchableOpacity>
+                    >
+                      Genel Görüntülenme Sayısı
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#000000",
+                        fontWeight: "600",
+                        fontSize: 12,
+                      }}
+                    >
+                      5550
+                    </Text>
+                  </View>
                 </View>
-              )}
-            </View>
-
-            <View style={style.container}>
-              <View style={style.header}>
-                <View style={styles.favoritesContainer}>
-                  <Svg
-                    fill="#000000"
-                    version="1.1"
-                    id="Capa_1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                    width="35px"
-                    height="35px"
-                    viewBox="0 0 58.341 58.342"
-                    xmlSpace="preserve"
-                    style={styles.icon}
+                <View
+                  style={[
+                    styles.card,
+                    {
+                      padding: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 15,
+                      marginTop: 10,
+                    },
+                  ]}
+                >
+                  <View>
+                    <View
+                      style={{
+                        backgroundColor: "#FF9908",
+                        width: 40,
+                        height: 40,
+                        borderRadius: 50,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Icon3 name="heart" size={20} color={"#fff"} />
+                    </View>
+                  </View>
+                  <View style={{ gap: 3 }}>
+                    <Text
+                      style={{
+                        color: "#000000",
+                        fontWeight: "400",
+                        fontSize: 13,
+                      }}
+                    >
+                      İlan Favorilere Eklenme Sayısı
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#000000",
+                        fontWeight: "600",
+                        fontSize: 12,
+                      }}
+                    >
+                      5550
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={[
+                    styles.card,
+                    {
+                      padding: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 15,
+                      marginTop: 10,
+                    },
+                  ]}
+                >
+                  <View>
+                    <View
+                      style={{
+                        backgroundColor: "red",
+                        width: 40,
+                        height: 40,
+                        borderRadius: 50,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Icon3 name="wallet" size={20} color={"#fff"} />
+                    </View>
+                  </View>
+                  <View style={{ gap: 3 }}>
+                    <Text
+                      style={{
+                        color: "#000000",
+                        fontWeight: "400",
+                        fontSize: 13,
+                      }}
+                    >
+                      Toplam Satış
+                    </Text>
+                    <Text
+                      style={{
+                        color: "#000000",
+                        fontWeight: "600",
+                        fontSize: 12,
+                      }}
+                    >
+                      5550.000 ₺
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View
+                style={{ paddingLeft: 20, paddingRight: 20, marginTop: 30 }}
+              >
+                <View
+                  style={{
+                    width: "100%",
+                    height: 130,
+                    overflow: "hidden",
+                    borderRadius: 15,
+                  }}
+                >
+                  <ImageBackground
+                    source={enler}
+                    style={styles.backgroundImage}
+                    resizeMode="cover" // Resmi kapsayacak şekilde ayarlar
                   >
-                    <Path
-                      d="M11.073,14.385h27.256l7.069,7.86l2.933-2.639c1.157-1.041,1.253-2.823,0.212-3.979l-7.201-8.005h-4.935V2.361h-6.059 v5.261H8.106l-7.361,7.999c-1.054,1.145-0.98,2.928,0.164,3.983l2.904,2.67L11.073,14.385z"
-                      fill="#000000"
-                    />
-                    <Path
-                      d="M36.76,26.767c2.312,0,4.541,0.763,6.362,2.14c0.122-0.092,0.25-0.176,0.375-0.261v-5.784l-5.54-6.2H11.821l-6.084,6.952 v23.67c0,1.557,1.262,2.817,2.818,2.817h23.692c-5.362-5.629-5.882-10.521-5.928-11.21c-0.083-0.547-0.124-1.06-0.124-1.56 C26.195,31.508,30.935,26.767,36.76,26.767z"
-                      fill="#000000"
-                    />
-                    <Path
-                      d="M49.861,29.198c-2.537,0-4.808,1.119-6.363,2.885c-1.553-1.764-3.824-2.885-6.36-2.885c-4.685,0-8.483,3.798-8.483,8.482 c0,0.479,0.049,0.945,0.125,1.403h-0.007c0,0,0.374,9.058,14.726,16.896c14.126-7.157,14.728-16.896,14.728-16.896h-0.008 c0.075-0.458,0.124-0.925,0.124-1.403C58.341,32.996,54.545,29.198,49.861,29.198z M36.873,33.05 c-2.759,0-5.001,2.244-5.001,5.001c0,0.145-0.117,0.26-0.261,0.26s-0.26-0.115-0.26-0.26c0-3.044,2.477-5.521,5.521-5.521 c0.144,0,0.261,0.116,0.261,0.26C37.133,32.934,37.016,33.05,36.873,33.05z"
-                      fill="#000000"
-                    />
-                  </Svg>
-                  <Text style={styles.favoritesText}>
-                    <Text style={styles.favoritesNumber}>
-                      {totalFavorites} İLAN
+                    <View style={styles.overlay}>
+                      <Text style={styles.text}>
+                        Bu ayın eni sen olabilirsin!
+                      </Text>
+                      <Text style={styles.text}>Enler arasında yerini al!</Text>
+                    </View>
+                    <View style={{}}>
+                      <ImageBackground
+                        source={cerceve}
+                        style={styles.imageBackground2}
+                        resizeMode="cover"
+                      >
+                        <Text style={{ top: 69, left: 27, color: "white" }}>
+                          Bilge Er
+                        </Text>
+                      </ImageBackground>
+                      <ImageBackground
+                        source={{ uri: imageUri }}
+                        style={styles.imageBackground3}
+                        resizeMode="cover"
+                        imageStyle={{
+                          borderBottomLeftRadius: 20,
+                          borderBottomRightRadius: 20,
+                        }}
+                      />
+                    </View>
+                  </ImageBackground>
+                </View>
+              </View>
+              <View style={{ marginTop: 10 }}>
+                <View
+                  style={[
+                    styles.card,
+                    {
+                      padding: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 15,
+                      marginTop: 10,
+                    },
+                  ]}
+                >
+                  <View
+                    style={{
+                      paddingLeft: 20,
+                      paddingRight: 20,
+                      borderLeftWidth: 3,
+                      borderColor: "red",
+                    }}
+                  >
+                    <Text style={{ borderLeftWidth: 3, borderColor: "red" }}>
+                      İlan Yönetimi
                     </Text>
-                    {"\n"}
-                    <Text style={styles.favoritesText}>
-                      Favorilerinizdeki İlan Sayısı
-                    </Text>
-                  </Text>
+                  </View>
+                </View>
+                <View
+                  style={[
+                    styles.card,
+                    {
+                      padding: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 15,
+                      marginTop: 10,
+                    },
+                  ]}
+                >
+                  <View
+                    style={{
+                      paddingLeft: 20,
+                      paddingRight: 20,
+                      borderLeftWidth: 3,
+                      borderColor: "red",
+                    }}
+                  >
+                    <Text>Emlak Kulüp</Text>
+                  </View>
+                </View>
+                <View
+                  style={[
+                    styles.card,
+                    {
+                      padding: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 15,
+                      marginTop: 10,
+                    },
+                  ]}
+                >
+                  <View
+                    style={{
+                      paddingLeft: 20,
+                      paddingRight: 20,
+                      borderLeftWidth: 3,
+                      borderColor: "red",
+                    }}
+                  >
+                    <Text>Koleksiyonlarım</Text>
+                  </View>
                 </View>
               </View>
             </View>
@@ -561,6 +519,94 @@ const styles = StyleSheet.create({
     flexDirection: "row", // ikon ve metni yatayda hizalamak için
     alignItems: "center",
   },
+  card: {
+    backgroundColor: "#FFFFFF",
+
+    width: "100%",
+    borderRadius: 8,
+
+    borderColor: "#e6e6e6",
+  },
+  gradient: {
+    width: "100%",
+    height: 50,
+    marginTop: 10,
+  },
+  gradient2: {
+    width: "100%",
+    height: 30,
+    marginTop: 10,
+  },
+  overlay: {
+    flex: 1, // Gerekirse overlay içeriğinin arka plan görseli üzerinde yer almasını sağlar
+
+    padding: 20,
+  },
+  text: {
+    color: "white",
+    fontSize: 16,
+    textAlign: "left",
+  },
+  imageBackground: {
+    width: 75, // Dairenin genişliği
+    height: 75, // Dairenin yüksekliği
+    borderRadius: 50, // Yarıçap (width / 2)
+    overflow: "hidden", // Görüntünün taşmasını engellemek için,
+    borderWidth: 4, // ��izgi kalınlığı
+    borderColor: "#F7F7F9", // ��izgi rengi
+  },
+  imageBackground3: {
+    width: 75, // Dairenin genişliği
+    height: 75, // Dairenin yüksekliği
+    borderRadius: 50, // Yarıçap (width / 2)
+    overflow: "hidden", // Görüntünün taşmasını engellemek için,
+    position: "absolute", //
+    left: 15,
+    top: 10,
+  },
+  imageBackground2: {
+    width: 100, // Dairenin genişliği
+    height: 100, // Dairenin yüksekliği
+    // Yarıçap (width / 2)
+    overflow: "hidden", // Görüntünün taşmasını engellemek için,
+    zIndex: 11,
+  },
+  backgroundImage: {
+    flex: 1, // Tüm alanı kaplamasını sağlar
+    flexDirection: "row",
+    justifyContent: "space-between", // İçeriği dikeyde ortalar
+    alignItems: "center", //
+    padding: 10, // İçeriğin etrafındaki padding
+  },
+
+  rowContainer: {
+    flexDirection: "row", // Öğeleri yatayda hizalar
+    flexWrap: "wrap", // Taşma durumunda yeni satıra geçmelerini sağlar
+    justifyContent: "space-between", // Öğeler arasında eşit boşluk bırakır
+    alignItems: "center", //
+  },
+  itemContainer: {
+    width: (Dimensions.get("window").width - 60) / 2, // Genişliği ekran genişliğine göre ayarlar ve iki öğe yan yana gelir
+    flexDirection: "column", // Her bir itemContainer içindeki metinleri alt alta hizalar
+
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 5,
+    backgroundColor: "#f9f9f9",
+    alignItems: "center",
+
+    marginBottom: 15, // Alt kenarda boşluk bırakır
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: 12,
+  },
+  info: {
+    fontSize: 12,
+    color: "white",
+    fontWeight: "700",
+  },
+
   icon: {
     marginRight: 10, // ikon ile metin arasına boşluk eklemek için
   },
