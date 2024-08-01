@@ -35,8 +35,8 @@ export default function SupportAdd() {
   const [isPicker2Open, setIsPicker2Open] = useState(false);
   const [iconName1, setIconName1] = useState("angle-down");
   const [iconName2, setIconName2] = useState("angle-down");
-  const [pdfFile, setPdfFile] = useState('');
-  const navigation=useNavigation ()
+  const [pdfFile, setPdfFile] = useState("");
+  const navigation = useNavigation();
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -66,9 +66,8 @@ export default function SupportAdd() {
             title: "PDF Seçildi",
             textBody: `Seçtiğiniz PDF: ${pdfAsset.name}`,
           });
-          Keyboard.dismiss()
+          Keyboard.dismiss();
         }
-        
       })
       .catch((error) => {
         Toast.show({
@@ -335,17 +334,19 @@ export default function SupportAdd() {
           </TouchableOpacity>
 
           {pdfFile && (
-            <TouchableOpacity style={styles.pdfContainer} onPress={()=>{
-              if (Platform.OS === "android") {
-                openPdf();
-              } else if (Platform.OS === "ios") {
-                navigation.navigate("DecontPdf", {
-                  name:pdfFile.name ,
-                  pdfUri: pdfFile.uri,
-                });
-              }
-            
-            }}>
+            <TouchableOpacity
+              style={styles.pdfContainer}
+              onPress={() => {
+                if (Platform.OS === "android") {
+                  openPdf();
+                } else if (Platform.OS === "ios") {
+                  navigation.navigate("DecontPdf", {
+                    name: pdfFile.name,
+                    pdfUri: pdfFile.uri,
+                  });
+                }
+              }}
+            >
               <Text style={styles.pdfText}>Seçtiğiniz PDF: {pdfFile.name}</Text>
             </TouchableOpacity>
           )}
