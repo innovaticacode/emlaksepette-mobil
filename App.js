@@ -98,6 +98,8 @@ import EditCommentForProject from "./pages/Home/EditCommentForProject";
 
 import Basket2 from "./pages/Home/Basket2";
 import PaymentScreen2 from "./pages/Home/PaymentScreen2";
+import AdvertsPanelTab from "./pages/Home/Panel/AdvertsPanelTab";
+import ClubPanel from "./pages/Home/Panel/RealtorClubPanel/ClubPanel";
 
 const Stack = createNativeStackNavigator();
 
@@ -1077,6 +1079,28 @@ export default function App({ route }) {
             component={PaymentScreen2}
             options={({ route }) => ({
               title: "Komşumu Gör Satın Alma",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+             <Stack.Screen
+            name="AdvertPanel"
+            component={AdvertsPanelTab}
+            options={({ route }) => ({
+              title: "İlan Yönetimi",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+              <Stack.Screen
+            name="ClubPanel"
+            component={ClubPanel}
+            options={({ route }) => ({
+              title: "Emlak Kulüp",
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",

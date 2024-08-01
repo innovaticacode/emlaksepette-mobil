@@ -89,7 +89,7 @@ export default function ShoppingProfile() {
 
   const fetchPermissionUser = async () => {
     try {
-      if (user.access_token) {
+      if (user.access_token && user) {
         const response = await axios.get(
           `https://private.emlaksepette.com/api/users/${user?.id}`,
           {
@@ -226,7 +226,7 @@ export default function ShoppingProfile() {
               >
                 <View style={style.profileImage}>
                   <Image
-                    source={{ uri: PhotoUrl + user.profile_image }}
+                    source={{ uri: PhotoUrl +  user.profile_image }}
                     style={{ width: "100%", height: "100%" }}
                     borderRadius={50}
                   />
