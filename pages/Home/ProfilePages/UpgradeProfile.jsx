@@ -60,7 +60,7 @@ export default function UpgradeProfile() {
     console.log(result);
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage(result.assets[0]);
     }
   };
   useEffect(() => {
@@ -158,6 +158,7 @@ const [user, setUser] = useState({});
 useEffect(() => {
   getValueFor("user", setUser);
 }, []);
+const [userImage, setuserImage] = useState(null)
   const GetUserInfo =async ()=>{
     setloading(true)
     try {
@@ -182,6 +183,7 @@ useEffect(() => {
           setData('webSiteLink',userData.website)
           setData('phoneCompany',userData.phone.substring(3))
           setData('cityCode',userData.taxOffice)
+          setuserImage(userData?.profile_image)
           setSelectedLocation({
             latitude: userData.latitude,
             longitude: userData.longitude
@@ -574,7 +576,12 @@ const postData = async () => {
         formData.append("banner_hex_code", FormDatas.backgroundColor);
         formData.append("_method", "PUT");
       }else{
-        formData.append('profile_image',image)
+     
+        formData.append('profile_image', image ? {
+          uri: image.uri,
+          name: image.fileName,
+          type: image.type
+        }:userImage)
         formData.append('city_id', selectedCity)
         formData.append('county_id',selectedCounty)
        formData.append('neighborhood_id',selectedNeighborhood)
@@ -638,9 +645,13 @@ const postData = async () => {
 };
 const [chooseFile, setchooseFile] = useState(false)
 
-console.log(tab)
-
-console.log(FormDatas.userName.length===0)
+// console.log(image.fileName + image.uri.replace('file://', ''))
+// console.log({  
+//   name : image.fileName,
+//   type : image.type,
+//   uri : Platform.OS === 'android' ? image.uri : image.uri.replace('file://', ''),
+// } )
+console.log(userImage)
   return (
     <AlertNotificationRoot>
         {
@@ -692,12 +703,22 @@ console.log(FormDatas.userName.length===0)
                   borderRadius: 50,
                 }}
               >
-    {
-      user?.profile_image && image?
+                <Image
+                  source={{uri:`https://private.emlaksepette.com/storage/profile_images/${userImage}`}}
+                  style={{ width: "100%", height: "100%",borderRadius:50}}
+                  borderRadius={50}
+                />
+    {/* {
+      user?.profile_image ?
     
-    
+        image ?
+        <Image
+        source={{ uri: image}}
+        style={{ width: "100%", height: "100%",borderRadius:50}}
+       borderRadius={50}
+       />:
       <Image
-                    source={{ uri: image ? image : `${PhotoUrl}${user.profile_image}` }}
+                    source={{ uri: PhotoUrl+user.profile_image }}
                     style={{ width: "100%", height: "100%",borderRadius:50}}
                    borderRadius={50}
                    />:
@@ -705,7 +726,7 @@ console.log(FormDatas.userName.length===0)
                        <FontAwesome name="user-circle-o" size={'90'} color={'#ebebeb'}/>
                    </View>
                 
-    }
+    } */}
     
               </View>
               {

@@ -1107,7 +1107,7 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
                             Komşumu Gör
                           </Text>
                         </TouchableOpacity>
-                      )}
+                      }
                     {roomData && ["off_sale[]"] &&
                       roomData["off_sale[]"] === "[]" &&
                       ProjectHomeData?.projectCartOrders[HomeId]?.status != 0 &&
