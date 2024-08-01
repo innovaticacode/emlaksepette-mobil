@@ -162,7 +162,7 @@ export default function PaymentScreen2() {
         }
       );
 
-      if (response.status === 200 || 201) {
+      if (response.status === 200) {
         alert("Ödeme başarıyla tamamlandı.");
         // Ödeme başarıyla tamamlandıysa, gerekli işlemleri yapın
       } else {
