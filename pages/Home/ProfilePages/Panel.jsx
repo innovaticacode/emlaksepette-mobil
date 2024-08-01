@@ -383,16 +383,71 @@ export default function Panel({ options, onSelect }) {
                 </View>
               </View>
               <View
-                style={{ paddingLeft: 20, paddingRight: 20, marginTop: 30 }}
+                style={[
+                  styles.card,
+                  {
+                    paddingRight: 10,
+                    paddingLeft: 20,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 15,
+                    marginTop: 10,
+                    height: "25%",
+                  },
+                ]}
               >
                 <View
                   style={{
                     width: "100%",
-                    height: 130,
+
                     overflow: "hidden",
-                    borderRadius: 15,
                   }}
                 >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginBottom: 10,
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        width: "100%",
+                        justifyContent: "space-between",
+                        marginTop: 10,
+                      }}
+                    >
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Icon3
+                          name="star"
+                          size={20}
+                          color={"orange"}
+                          style={{ marginRight: 10 }}
+                        />
+                        <Text>Emlak Kulubün Enleri</Text>
+                      </View>
+                      <View style={{ flexDirection: "row" }}>
+                        <View
+                          style={{
+                            backgroundColor: "red",
+                            padding: 10,
+                            borderRadius: 10,
+                          }}
+                        >
+                          <Text style={{ fontSize: 10, color: "white" }}>
+                            Tümünü Gör
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
                   <ImageBackground
                     source={enler}
                     style={styles.backgroundImage}
@@ -427,7 +482,8 @@ export default function Panel({ options, onSelect }) {
                   </ImageBackground>
                 </View>
               </View>
-              <View style={{ marginTop: 10 }}>
+
+              <View style={{ marginTop: 10, marginBottom: 100 }}>
                 <View
                   style={[
                     styles.card,
@@ -567,6 +623,7 @@ const styles = StyleSheet.create({
   imageBackground2: {
     width: 100, // Dairenin genişliği
     height: 100, // Dairenin yüksekliği
+
     // Yarıçap (width / 2)
     overflow: "hidden", // Görüntünün taşmasını engellemek için,
     zIndex: 11,
@@ -577,6 +634,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between", // İçeriği dikeyde ortalar
     alignItems: "center", //
     padding: 10, // İçeriğin etrafındaki padding
+    borderRadius: 20,
+    overflow: "hidden",
   },
 
   rowContainer: {
