@@ -137,6 +137,7 @@ export default function Panel({ options, onSelect }) {
       fetchNotifications();
     }
   }, [user?.access_token]);
+ 
 const data = [
   {
     name: "Seoul",
