@@ -428,7 +428,10 @@ export default function Panel({ options, onSelect }) {
                 </View>
               </View>
               <View style={{ marginTop: 10 }}>
-                <View
+                <TouchableOpacity
+                onPress={()=>{
+                  navigation.navigate('AdvertPanel')
+                }}
                   style={[
                     styles.card,
                     {
@@ -452,8 +455,11 @@ export default function Panel({ options, onSelect }) {
                       İlan Yönetimi
                     </Text>
                   </View>
-                </View>
-                <View
+                </TouchableOpacity>
+                <TouchableOpacity
+                onPress={()=>{
+                  navigation.navigate('ClubPanel')
+                }}
                   style={[
                     styles.card,
                     {
@@ -475,8 +481,11 @@ export default function Panel({ options, onSelect }) {
                   >
                     <Text>Emlak Kulüp</Text>
                   </View>
-                </View>
-                <View
+                </TouchableOpacity>
+                <TouchableOpacity
+                onPress={()=>{
+                  navigation.navigate('Collections')
+                }}
                   style={[
                     styles.card,
                     {
@@ -498,7 +507,7 @@ export default function Panel({ options, onSelect }) {
                   >
                     <Text>Koleksiyonlarım</Text>
                   </View>
-                </View>
+                </TouchableOpacity>
               </View>
             </View>
           </ScrollView>

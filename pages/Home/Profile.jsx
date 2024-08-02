@@ -522,7 +522,7 @@ export default function Profile() {
                     ]}
                     onPress={() => settab(0)}
                   >
-                    <Entypo name="home" size={16} />
+                  
                     <Text
                       style={{
                         color: tab === 0 ? "black" : "grey",
@@ -592,7 +592,7 @@ export default function Profile() {
                     ]}
                     onPress={() => settab(3)}
                   >
-                    <Icon name="team" size={16} />
+                    
                     <Text
                       style={{
                         color: tab === 3 ? "black" : "grey",
@@ -606,9 +606,9 @@ export default function Profile() {
                     style={[
                       styles.TabBarBtn,
                       {
-                        borderBottomWidth: tab === 3 ? 3 : 0,
+                        borderBottomWidth: tab === 4 ? 3 : 0,
                         borderBottomColor:
-                          tab === 3 ? "#264ABB" : "transparent",
+                          tab === 4 ? "#264ABB" : "transparent",
                         top: 2,
                       },
                     ]}
@@ -621,6 +621,48 @@ export default function Profile() {
                       }}
                     >
                       Mağaza Profili
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.TabBarBtn,
+                      {
+                        borderBottomWidth: tab === 5 ? 3 : 0,
+                        borderBottomColor:
+                          tab === 5 ? "#264ABB" : "transparent",
+                        top: 2,
+                      },
+                    ]}
+                    onPress={() => settab(5)}
+                  >
+                    <Text
+                      style={{
+                        color: tab === 5 ? "black" : "grey",
+                        fontWeight: tab === 5 ? "500" : "normal",
+                      }}
+                    >
+                     Koleksiyonlar
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.TabBarBtn,
+                      {
+                        borderBottomWidth: tab === 6 ? 3 : 0,
+                        borderBottomColor:
+                          tab === 6 ? "#264ABB" : "transparent",
+                        top: 2,
+                      },
+                    ]}
+                    onPress={() => settab(6)}
+                  >
+                    <Text
+                      style={{
+                        color: tab === 6 ? "black" : "grey",
+                        fontWeight: tab === 6 ? "500" : "normal",
+                      }}
+                    >
+                     Değerlendirmeler
                     </Text>
                   </TouchableOpacity>
                 </View>

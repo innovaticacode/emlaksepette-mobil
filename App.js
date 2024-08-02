@@ -100,6 +100,7 @@ import Basket2 from "./pages/Home/Basket2";
 import PaymentScreen2 from "./pages/Home/PaymentScreen2";
 import AdvertsPanelTab from "./pages/Home/Panel/AdvertsPanelTab";
 import ClubPanel from "./pages/Home/Panel/RealtorClubPanel/ClubPanel";
+import CollectionsTab from "./pages/Home/Panel/CollectionsTab";
 
 const Stack = createNativeStackNavigator();
 
@@ -1012,6 +1013,7 @@ export default function App({ route }) {
             component={SearchPage}
             options={({ route }) => ({
               title: "Ara",
+              headerShown:false,
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
@@ -1107,6 +1109,7 @@ export default function App({ route }) {
               },
             })}
           />
+         
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>

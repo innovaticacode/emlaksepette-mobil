@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 export default function AdvertComponent() {
   return (
     <View style={styles.card}>
-    <View style={{width:'25%',}}>
+    <View style={{width:'25%'}}>
         <View style={{width:98,height:97,backgroundColor:'blue',borderRadius:8}}>
 
         </View>
