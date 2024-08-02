@@ -484,7 +484,8 @@ export default function Panel({ options, onSelect }) {
               </View>
 
               <View style={{ marginTop: 10, marginBottom: 100 }}>
-                <View
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("AdvertPanel")}
                   style={[
                     styles.card,
                     {
@@ -508,7 +509,7 @@ export default function Panel({ options, onSelect }) {
                       İlan Yönetimi
                     </Text>
                   </View>
-                </View>
+                </TouchableOpacity>
                 <View
                   style={[
                     styles.card,

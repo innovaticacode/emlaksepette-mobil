@@ -100,6 +100,7 @@ import Basket2 from "./pages/Home/Basket2";
 import PaymentScreen2 from "./pages/Home/PaymentScreen2";
 import AdvertsPanelTab from "./pages/Home/Panel/AdvertsPanelTab";
 import ClubPanel from "./pages/Home/Panel/RealtorClubPanel/ClubPanel";
+import SwapScreenNav from "./components/SwapScreenNav";
 
 const Stack = createNativeStackNavigator();
 
@@ -852,6 +853,17 @@ export default function App({ route }) {
             })}
           />
           <Stack.Screen
+            name="SwapScreenNav"
+            component={SwapScreenNav}
+            options={({ route }) => ({
+              title: "Başvuru Yap",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
             name="Forgot"
             component={ForgotPassword}
             options={({ route }) => ({
@@ -1085,7 +1097,7 @@ export default function App({ route }) {
               },
             })}
           />
-             <Stack.Screen
+          <Stack.Screen
             name="AdvertPanel"
             component={AdvertsPanelTab}
             options={({ route }) => ({
@@ -1096,7 +1108,7 @@ export default function App({ route }) {
               },
             })}
           />
-              <Stack.Screen
+          <Stack.Screen
             name="ClubPanel"
             component={ClubPanel}
             options={({ route }) => ({

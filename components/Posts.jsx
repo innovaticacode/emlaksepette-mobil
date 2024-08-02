@@ -280,6 +280,16 @@ export default function Posts({
   const [alertForFavorite, setalertForFavorite] = useState(false);
   const [cartIsNull, setcartIsNull] = useState(false);
   const [AddCartShow, setAddCartShow] = useState(false);
+  const handlePress = () => {
+    // openFormModal(roomOrder);
+    // GetID(roomOrder); //
+    navigation.navigate("SwapScreenNav", {
+      roomOrder: roomOrder,
+      projectId: data.project.id,
+    });
+  };
+
+  console.log(data);
 
   return (
     <View style={styles.container}>
@@ -618,10 +628,7 @@ export default function Posts({
                   )
                 ) : roomData["off_sale[]"] !== "[]" ? (
                   <TouchableOpacity
-                    onPress={() => {
-                      openFormModal(roomOrder);
-                      GetID(roomOrder);
-                    }}
+                    onPress={handlePress}
                     style={styles.payDetailBtn}
                   >
                     <Text style={styles.payDetailText}>Başvuru Yap</Text>
