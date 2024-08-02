@@ -73,7 +73,6 @@ export default function Panel({ options, onSelect }) {
             }
           );
           setPanelInfo(response?.data);
-         
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -136,21 +135,19 @@ export default function Panel({ options, onSelect }) {
     }
   }, [user?.access_token]);
 
-
   const data = [
     { baslik: "Aktif İlanlar", bilgi: "122" },
     { baslik: "Onay Bekleyen İlanlar", bilgi: "75" },
     { baslik: "Toplam İlanlar", bilgi: "30" },
     { baslik: "Rededilen İlanlar", bilgi: "15" },
   ];
-  const formattedSales = new Intl.NumberFormat('tr-TR', {
-    style: 'currency',
-    currency: 'TRY',
+  const formattedSales = new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: "TRY",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(panelInfo.totalSales);
-  
- 
+
   return (
     <>
       <View style={style.container}>
@@ -182,20 +179,18 @@ export default function Panel({ options, onSelect }) {
                     top: 14,
                     left: 20,
                     flexDirection: "row",
-                    borderWidth:4,
-                    borderRadius:50,
-                    borderColor:'#F7F7F9'
-                
-
+                    borderWidth: 4,
+                    borderRadius: 50,
+                    borderColor: "#F7F7F9",
                   }}
                 >
                   <ImageBackground
-                    source={{ uri: `https://private.emlaksepette.com/storage/profile_images/${panelInfo.user.profile_image}`}}
+                    source={{
+                      uri: `https://private.emlaksepette.com/storage/profile_images/${panelInfo.user.profile_image}`,
+                    }}
                     style={styles.imageBackground}
                     resizeMode="cover"
-                    imageStyle={{
-                   
-                    }}
+                    imageStyle={{}}
                   />
                   <View
                     style={{
@@ -210,137 +205,148 @@ export default function Panel({ options, onSelect }) {
                       {panelInfo.user.name}
                     </Text>
                     <Text style={{ color: "white", fontWeight: "400" }}>
-                    {panelInfo.user.email}
+                      {panelInfo.user.email}
                     </Text>
                   </View>
                 </View>
               </View>
               <View style={{ paddingLeft: 20, paddingRight: 20 }}>
                 <View style={styles.rowContainer}>
-                 
-                    <View style={styles.itemContainer}>
-                      <View style={{ padding: 10, alignItems: "center" }}>
-                        <Text style={styles.title}>Aktif İlanlar</Text>
-                      </View>
-                      <View
-                        style={{
-                          width: "100%",
-                        }}
-                      >
-                        <LinearGradient
-                          colors={[
-                            "rgba(234, 43, 46, 1)",
-                            "rgba(132, 24, 26, 0.62)",
-                          ]} // RGBA formatında renkler
-                          start={{ x: 0, y: 0 }}
-                          end={{ x: 0, y: 1 }}
-                          style={[
-                            styles.gradient2,
-                            {
-                              width: "100%",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            },
-                          ]}
-                        >
-                          {/* Gradyan içeriği */}
-                          <Text style={styles.info}>{panelInfo.activeAdvertProjects + panelInfo.activeAdvertHousings}</Text>
-                        </LinearGradient>
-                      </View>
+                  <View style={styles.itemContainer}>
+                    <View style={{ padding: 10, alignItems: "center" }}>
+                      <Text style={styles.title}>Aktif İlanlar</Text>
                     </View>
-                    <View style={styles.itemContainer}>
-                      <View style={{ padding: 10, alignItems: "center" }}>
-                        <Text style={styles.title}>Onay Bekleyen İlanlar</Text>
-                      </View>
-                      <View
-                        style={{
-                          width: "100%",
-                        }}
+                    <View
+                      style={{
+                        width: "100%",
+                      }}
+                    >
+                      <LinearGradient
+                        colors={[
+                          "rgba(234, 43, 46, 1)",
+                          "rgba(132, 24, 26, 0.62)",
+                        ]} // RGBA formatında renkler
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 0, y: 1 }}
+                        style={[
+                          styles.gradient2,
+                          {
+                            width: "100%",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          },
+                        ]}
                       >
-                        <LinearGradient
-                          colors={[
-                            "rgba(234, 43, 46, 1)",
-                            "rgba(132, 24, 26, 0.62)",
-                          ]} // RGBA formatında renkler
-                          start={{ x: 0, y: 0 }}
-                          end={{ x: 0, y: 1 }}
-                          style={[
-                            styles.gradient2,
-                            {
-                              width: "100%",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            },
-                          ]}
-                        >
-                          {/* Gradyan içeriği */}
-                          <Text style={styles.info}>{panelInfo.pendingAdvertProjects + panelInfo.pendingAdvertHousings}</Text>
-                        </LinearGradient>
-                      </View>
+                        {/* Gradyan içeriği */}
+                        <Text style={styles.info}>
+                          {panelInfo.activeAdvertProjects +
+                            panelInfo.activeAdvertHousings}
+                        </Text>
+                      </LinearGradient>
                     </View>
-                    <View style={styles.itemContainer}>
-                      <View style={{ padding: 10, alignItems: "center" }}>
-                        <Text style={styles.title}>Pasif İlanlar</Text>
-                      </View>
-                      <View
-                        style={{
-                          width: "100%",
-                        }}
+                  </View>
+                  <View style={styles.itemContainer}>
+                    <View style={{ padding: 10, alignItems: "center" }}>
+                      <Text style={styles.title}>Onay Bekleyen İlanlar</Text>
+                    </View>
+                    <View
+                      style={{
+                        width: "100%",
+                      }}
+                    >
+                      <LinearGradient
+                        colors={[
+                          "rgba(234, 43, 46, 1)",
+                          "rgba(132, 24, 26, 0.62)",
+                        ]} // RGBA formatında renkler
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 0, y: 1 }}
+                        style={[
+                          styles.gradient2,
+                          {
+                            width: "100%",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          },
+                        ]}
                       >
-                        <LinearGradient
-                          colors={[
-                            "rgba(234, 43, 46, 1)",
-                            "rgba(132, 24, 26, 0.62)",
-                          ]} // RGBA formatında renkler
-                          start={{ x: 0, y: 0 }}
-                          end={{ x: 0, y: 1 }}
-                          style={[
-                            styles.gradient2,
-                            {
-                              width: "100%",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            },
-                          ]}
-                        >
-                          {/* Gradyan içeriği */}
-                          <Text style={styles.info}>{panelInfo.passiveAdvertHousings + panelInfo.passiveAdvertProjects}</Text>
-                        </LinearGradient>
-                      </View>
+                        {/* Gradyan içeriği */}
+                        <Text style={styles.info}>
+                          {panelInfo.pendingAdvertProjects +
+                            panelInfo.pendingAdvertHousings}
+                        </Text>
+                      </LinearGradient>
                     </View>
-                    <View style={styles.itemContainer}>
-                      <View style={{ padding: 10, alignItems: "center" }}>
-                        <Text style={styles.title}>Reddedilen İlanlar</Text>
-                      </View>
-                      <View
-                        style={{
-                          width: "100%",
-                        }}
+                  </View>
+                  <View style={styles.itemContainer}>
+                    <View style={{ padding: 10, alignItems: "center" }}>
+                      <Text style={styles.title}>Pasif İlanlar</Text>
+                    </View>
+                    <View
+                      style={{
+                        width: "100%",
+                      }}
+                    >
+                      <LinearGradient
+                        colors={[
+                          "rgba(234, 43, 46, 1)",
+                          "rgba(132, 24, 26, 0.62)",
+                        ]} // RGBA formatında renkler
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 0, y: 1 }}
+                        style={[
+                          styles.gradient2,
+                          {
+                            width: "100%",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          },
+                        ]}
                       >
-                        <LinearGradient
-                          colors={[
-                            "rgba(234, 43, 46, 1)",
-                            "rgba(132, 24, 26, 0.62)",
-                          ]} // RGBA formatında renkler
-                          start={{ x: 0, y: 0 }}
-                          end={{ x: 0, y: 1 }}
-                          style={[
-                            styles.gradient2,
-                            {
-                              width: "100%",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            },
-                          ]}
-                        >
-                          {/* Gradyan içeriği */}
-                          <Text style={styles.info}>{panelInfo.rejectAdvertProjects + panelInfo.rejectAdvertHousings}</Text>
-                        </LinearGradient>
-                      </View>
+                        {/* Gradyan içeriği */}
+                        <Text style={styles.info}>
+                          {panelInfo.passiveAdvertHousings +
+                            panelInfo.passiveAdvertProjects}
+                        </Text>
+                      </LinearGradient>
                     </View>
+                  </View>
+                  <View style={styles.itemContainer}>
+                    <View style={{ padding: 10, alignItems: "center" }}>
+                      <Text style={styles.title}>Reddedilen İlanlar</Text>
+                    </View>
+                    <View
+                      style={{
+                        width: "100%",
+                      }}
+                    >
+                      <LinearGradient
+                        colors={[
+                          "rgba(234, 43, 46, 1)",
+                          "rgba(132, 24, 26, 0.62)",
+                        ]} // RGBA formatında renkler
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 0, y: 1 }}
+                        style={[
+                          styles.gradient2,
+                          {
+                            width: "100%",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          },
+                        ]}
+                      >
+                        {/* Gradyan içeriği */}
+                        <Text style={styles.info}>
+                          {panelInfo.rejectAdvertProjects +
+                            panelInfo.rejectAdvertHousings}
+                        </Text>
+                      </LinearGradient>
+                    </View>
+                  </View>
                 </View>
               </View>
-              <View style={{ paddingLeft: 20, paddingRight: 20, }}>
+              <View style={{ paddingLeft: 20, paddingRight: 20 }}>
                 <View
                   style={[
                     styles.card,
@@ -383,11 +389,12 @@ export default function Panel({ options, onSelect }) {
                         fontSize: 12,
                       }}
                     >
-                    {panelInfo.viewCountProjects + panelInfo.viewCountHousings }
+                      {panelInfo.viewCountProjects +
+                        panelInfo.viewCountHousings}
                     </Text>
                   </View>
                 </View>
-               
+
                 <View
                   style={[
                     styles.card,
@@ -431,14 +438,12 @@ export default function Panel({ options, onSelect }) {
                         fontSize: 12,
                       }}
                     >
-                   {formattedSales}
+                      {formattedSales}
                     </Text>
                   </View>
                 </View>
               </View>
-              <View
-                style={{ paddingLeft: 20, paddingRight: 20, marginTop:9 }}
-              >
+              <View style={{ paddingLeft: 20, paddingRight: 20, marginTop: 9 }}>
                 <View
                   style={{
                     width: "100%",
@@ -483,9 +488,9 @@ export default function Panel({ options, onSelect }) {
               </View>
               <View style={{ marginTop: 10 }}>
                 <TouchableOpacity
-                onPress={()=>{
-                  navigation.navigate('AdvertPanel')
-                }}
+                  onPress={() => {
+                    navigation.navigate("AdvertPanel");
+                  }}
                   style={[
                     styles.card,
                     {
@@ -511,9 +516,9 @@ export default function Panel({ options, onSelect }) {
                   </View>
                 </TouchableOpacity>
                 <TouchableOpacity
-                onPress={()=>{
-                  navigation.navigate('ClubPanel')
-                }}
+                  onPress={() => {
+                    navigation.navigate("ClubPanel");
+                  }}
                   style={[
                     styles.card,
                     {
@@ -537,9 +542,9 @@ export default function Panel({ options, onSelect }) {
                   </View>
                 </TouchableOpacity>
                 <TouchableOpacity
-                onPress={()=>{
-                  navigation.navigate('Collections')
-                }}
+                  onPress={() => {
+                    navigation.navigate("Collections");
+                  }}
                   style={[
                     styles.card,
                     {
@@ -615,7 +620,7 @@ const styles = StyleSheet.create({
     height: 80, // Dairenin yüksekliği
     borderRadius: 60, // Yarıçap (width / 2)
     overflow: "hidden", // Görüntünün taşmasını engellemek için,
- // ��izgi kalınlığı
+    // ��izgi kalınlığı
     borderColor: "#F7F7F9", // ��izgi rengi
   },
   imageBackground3: {

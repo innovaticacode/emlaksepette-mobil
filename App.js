@@ -101,6 +101,7 @@ import PaymentScreen2 from "./pages/Home/PaymentScreen2";
 import AdvertsPanelTab from "./pages/Home/Panel/AdvertsPanelTab";
 import ClubPanel from "./pages/Home/Panel/RealtorClubPanel/ClubPanel";
 import CollectionsTab from "./pages/Home/Panel/CollectionsTab";
+import SwapScreenNav from "./components/SwapScreenNav";
 
 const Stack = createNativeStackNavigator();
 
@@ -247,7 +248,7 @@ export default function App({ route }) {
             <Stack.Screen
               name="Register"
               component={Register}
-              options={{ title: "Üye Ol", headerBackTitleVisible:false }}
+              options={{ title: "Üye Ol", headerBackTitleVisible: false }}
             />
           </Stack.Group>
 
@@ -635,7 +636,7 @@ export default function App({ route }) {
             component={RealtorClub}
             options={({ route }) => ({
               title: "Emlak Kulübü Keşfet",
-              headerBackTitleVisible:false
+              headerBackTitleVisible: false,
             })}
           />
           <Stack.Screen
@@ -757,7 +758,7 @@ export default function App({ route }) {
             component={SellAndRentFormPage}
             options={({ route }) => ({
               title: "Sat Kirala",
-              headerBackTitleVisible:false
+              headerBackTitleVisible: false,
             })}
           />
           <Stack.Screen
@@ -765,7 +766,7 @@ export default function App({ route }) {
             component={SendSellAndRentForm}
             options={({ route }) => ({
               title: "Sat Kirala Formu",
-              headerBackTitleVisible:false
+              headerBackTitleVisible: false,
             })}
           />
           <Stack.Screen
@@ -849,6 +850,17 @@ export default function App({ route }) {
             component={PaymentScreen}
             options={({ route }) => ({
               title: "Sepet Özeti Ve Onay",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="SwapScreenNav"
+            component={SwapScreenNav}
+            options={({ route }) => ({
+              title: "Başvuru Yap",
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
@@ -1016,7 +1028,7 @@ export default function App({ route }) {
             component={SearchPage}
             options={({ route }) => ({
               title: "Ara",
-              headerShown:false,
+              headerShown: false,
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
@@ -1090,7 +1102,7 @@ export default function App({ route }) {
               },
             })}
           />
-             <Stack.Screen
+          <Stack.Screen
             name="AdvertPanel"
             component={AdvertsPanelTab}
             options={({ route }) => ({
@@ -1101,7 +1113,7 @@ export default function App({ route }) {
               },
             })}
           />
-              <Stack.Screen
+          <Stack.Screen
             name="ClubPanel"
             component={ClubPanel}
             options={({ route }) => ({
@@ -1112,7 +1124,6 @@ export default function App({ route }) {
               },
             })}
           />
-         
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
