@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,18 +5,27 @@ import {
   ActivityIndicator,
   TextInput,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
+import React, { useEffect, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import RNPickerSelect from "react-native-picker-select";
 import { getValueFor } from "./methods/user";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
+const { width, height } = Dimensions.get("window");
 
 const SwapScreenNav = () => {
   const route = useRoute();
   const { roomOrder, projectId } = route.params;
-  const [projectData, setProjectData] = useState(null); // Başlangıç değeri null olarak değiştirildi
+  const [projectData, setProjectData] = useState({}); // Başlangıç değeri null olarak değiştirildi
   const [loading, setLoading] = useState(true);
   const [nameid, setNameId] = useState("");
   const [emailid, setEmailId] = useState("");
@@ -110,6 +118,82 @@ const SwapScreenNav = () => {
         postData();
     }
   };
+  console.log(projectData?.project?.user_id + "sdfmsdn");
+
+  useEffect(() => {
+    const fetchProjectTitle = async () => {
+      try {
+        const response = await axios.get(
+          `https://private.emlaksepette.com/api/project/${projectId}`
+        );
+        setProjectData(response.data); // Başlığı state'e aktarma
+      } catch (error) {
+        console.error("API isteği sırasında bir hata oluştu:", error);
+      } finally {
+        setLoading(false); // Yükleme durumunu güncelle
+      }
+    };
+
+    fetchProjectTitle(); // API isteğini başlat
+  }, [projectId]);
+  const postData = () => {
+    const formData = new FormData();
+    formData.append("userid", user.id);
+    formData.append("projectUserId", projectData.project.user_id);
+    formData.append("projectId", projectData.project.id);
+    formData.append("roomId", roomOrder);
+    formData.append("name", nameid);
+    formData.append("phone", phoneid);
+    formData.append("email", emailid);
+    formData.append("city_id", city);
+    formData.append("county_id", county);
+    formData.append("title", titleid);
+    formData.append("offer_description", offerid);
+
+    axios
+      .post(
+        "https://private.emlaksepette.com/api/institutional/give_offer",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            "Content-Type": "multipart/form-data", // İçerik tipini belirtmek
+          },
+        }
+      )
+      .then((response) => {
+        setFormVisible(false);
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Başvurunuz Gönderildi",
+          textBody: "1-2 İş günü içerisinde haber verilecektir",
+        });
+
+        // color("#d4edda");
+        setNameId("");
+        setPhoneId("");
+        setEmailId("");
+        setcity("");
+        setcounty("");
+        setTitleId("");
+        setOfferId("");
+      })
+      .catch((error) => {
+        if (error.response) {
+          // Sunucudan gelen hata yanıtı
+          console.error("Sunucu Hatası:", error.response.data);
+          console.error("Hata Kodu:", error.response.status);
+        } else if (error.request) {
+          // İstek yapıldı, ancak cevap alınamadı
+          console.error("Sunucudan cevap alınamadı:", error.request);
+        } else {
+          // İstek ayarları sırasında bir hata oluştu
+          console.error("İstek Ayar Hatası:", error.message);
+        }
+        console.error("Post isteği başarısız:", error);
+      });
+  };
+
   const fetchCity = async () => {
     try {
       const response = await axios.get(
@@ -128,62 +212,6 @@ const SwapScreenNav = () => {
         console.error("Veri alınırken bir hata oluştu:", error)
       );
   }, []);
-  const postData = async () => {
-    try {
-      var formData = new FormData();
-
-      formData.append("userid", user.id);
-      formData.append("projectUserId", data.project.user.id);
-      formData.append("projectId", data.project.id);
-      formData.append("roomId", selectedroomId);
-      formData.append("name", nameid);
-      formData.append("phone", phoneid);
-      formData.append("email", emailid);
-      formData.append("city_id", city);
-      formData.append("county_id", county);
-      formData.append("title", titleid);
-      formData.append("offer_description", offerid);
-
-      const response = await axios.post(
-        "https://private.emlaksepette.com/api/institutional/give_offer",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-            "Content-Type": "multipart/form-data", // İçerik tipini belirtmek
-          },
-        }
-      );
-      setFormVisible(false);
-      Toast.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Başvurunuz Gönderildi",
-        textBody: "1-2 İş günü içerisinde haber verilecektir",
-      });
-
-      // color("#d4edda");
-      setNameId("");
-      setPhoneId("");
-      setEmailId("");
-      setcity("");
-      setcounty("");
-      setTitleId("");
-      setOfferId("");
-    } catch (error) {
-      if (error.response) {
-        // Sunucudan gelen hata yanıtı
-        console.error("Sunucu Hatası:", error.response.data);
-        console.error("Hata Kodu:", error.response.status);
-      } else if (error.request) {
-        // İstek yapıldı, ancak cevap alınamadı
-        console.error("Sunucudan cevap alınamadı:", error.request);
-      } else {
-        // İstek ayarları sırasında bir hata oluştu
-        console.error("İstek Ayar Hatası:", error.message);
-      }
-      console.error("Post isteği başarısız:", error);
-    }
-  };
 
   const formatPhoneNumber = (value) => {
     // Sadece rakamları al
@@ -236,23 +264,6 @@ const SwapScreenNav = () => {
 
   const [errorMessage, seterrorMessage] = useState("");
 
-  useEffect(() => {
-    const fetchProjectTitle = async () => {
-      try {
-        const response = await axios.get(
-          `https://private.emlaksepette.com/api/project/${projectId}`
-        );
-        setProjectData(response.data.project); // Başlığı state'e aktarma
-      } catch (error) {
-        console.error("API isteği sırasında bir hata oluştu:", error);
-      } finally {
-        setLoading(false); // Yükleme durumunu güncelle
-      }
-    };
-
-    fetchProjectTitle(); // API isteğini başlat
-  }, [projectId]);
-
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -262,188 +273,190 @@ const SwapScreenNav = () => {
   }
 
   return (
-    <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>
-        <Text style={styles.text}>{projectData?.id}</Text>
-        <View style={[styles.centeredView, { padding: 10 }]}>
-          <View style={[styles.modalView, { height: "90%" }]}>
-            <Text
-              style={{
-                fontWeight: "bold",
-                fontSize: 12,
-                textAlign: "center",
-              }}
-            >
-              {projectData.project_title} projesinde No'lu Konut Başvuru Formu
-            </Text>
-            <View showsVerticalScrollIndicator={false}>
-              <View style={{ gap: 15 }}>
-                <View style={{ gap: 7 }}>
-                  <Text style={styles.label}>Ad Soyad</Text>
-                  <TextInput
-                    style={styles.Input}
-                    value={nameid}
-                    onChangeText={(value) => setNameId(value)}
-                  />
-                  {errorStatu == 1 && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errorMessage}
+    <AlertNotificationRoot>
+      <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          <View style={[styles.centeredView, {}]}>
+            <View style={[styles.modalView, { height: "90%" }]}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 12,
+                  textAlign: "center",
+                }}
+              >
+                {projectData.project.project_title} projesinde {roomOrder} No'lu
+                Konut Başvuru Formu
+              </Text>
+              <View showsVerticalScrollIndicator={false}>
+                <View style={{ gap: 15, marginTop: 20 }}>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styles.label}>Ad Soyad</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={nameid}
+                      onChangeText={(value) => setNameId(value)}
+                    />
+                    {errorStatu == 1 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styles.label}>Telefon Numarası</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={phoneid}
+                      keyboardType="number-pad"
+                      onChangeText={handlePhoneNumberChange}
+                    />
+                    {errorStatu == 2 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styles.label}>E-Posta</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={emailid}
+                      onChangeText={(value) => setEmailId(value)}
+                    />
+                    {errorStatu == 6 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styles.label} value={titleid}>
+                      Meslek
                     </Text>
-                  )}
-                </View>
-                <View style={{ gap: 7 }}>
-                  <Text style={styles.label}>Telefon Numarası</Text>
-                  <TextInput
-                    style={styles.Input}
-                    value={phoneid}
-                    keyboardType="number-pad"
-                    onChangeText={handlePhoneNumberChange}
-                  />
-                  {errorStatu == 2 && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errorMessage}
-                    </Text>
-                  )}
-                </View>
-                <View style={{ gap: 7 }}>
-                  <Text style={styles.label}>E-Posta</Text>
-                  <TextInput
-                    style={styles.Input}
-                    value={emailid}
-                    onChangeText={(value) => setEmailId(value)}
-                  />
-                  {errorStatu == 6 && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errorMessage}
-                    </Text>
-                  )}
-                </View>
-                <View style={{ gap: 7 }}>
-                  <Text style={styles.label} value={titleid}>
-                    Meslek
-                  </Text>
-                  <TextInput
-                    style={styles.Input}
-                    value={titleid}
-                    onChangeText={(value) => setTitleId(value)}
-                  />
-                  {errorStatu == 3 && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errorMessage}
-                    </Text>
-                  )}
-                </View>
-                <View style={{ gap: 7 }}>
-                  <Text style={styles.label}>Açıklama</Text>
-                  <TextInput
-                    style={styles.Input}
-                    value={offerid}
-                    onChangeText={(value) => setOfferId(value)}
-                  />
-                  {errorStatu == 7 && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errorMessage}
-                    </Text>
-                  )}
-                </View>
+                    <TextInput
+                      style={styles.input}
+                      value={titleid}
+                      onChangeText={(value) => setTitleId(value)}
+                    />
+                    {errorStatu == 3 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styles.label}>Açıklama</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={offerid}
+                      onChangeText={(value) => setOfferId(value)}
+                    />
+                    {errorStatu == 7 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
+                  </View>
 
-                <View style={{ gap: 6 }}>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: "grey",
-                      fontWeight: 600,
-                    }}
-                  >
-                    Şehir
-                  </Text>
-                  <RNPickerSelect
-                    doneText="Tamam"
-                    placeholder={{
-                      label: "Şehir Seçiniz...",
-                      value: null,
-                    }}
-                    style={pickerSelectStyles}
-                    value={city}
-                    onValueChange={(value) => {
-                      onChangeCity(value);
-                    }}
-                    items={citites}
-                  />
-                  {errorStatu == 4 && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errorMessage}
+                  <View style={{ gap: 6 }}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: "grey",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Şehir
                     </Text>
-                  )}
-                </View>
-                <View style={{ gap: 6 }}>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: "grey",
-                      fontWeight: 600,
-                    }}
-                  >
-                    İlçe
-                  </Text>
-                  <RNPickerSelect
-                    doneText="Tamam"
-                    placeholder={{
-                      label: "İlçe Seçiniz...",
-                      value: null,
-                    }}
-                    value={county}
-                    style={pickerSelectStyles}
-                    onValueChange={(value) => setcounty(value)}
-                    items={counties}
-                  />
-                  {errorStatu == 5 && (
-                    <Text style={{ color: "red", fontSize: 12 }}>
-                      {errorMessage}
+                    <RNPickerSelect
+                      doneText="Tamam"
+                      placeholder={{
+                        label: "Şehir Seçiniz...",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      value={city}
+                      onValueChange={(value) => {
+                        onChangeCity(value);
+                      }}
+                      items={citites}
+                    />
+                    {errorStatu == 4 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={{ gap: 6 }}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: "grey",
+                        fontWeight: 600,
+                      }}
+                    >
+                      İlçe
                     </Text>
-                  )}
+                    <RNPickerSelect
+                      doneText="Tamam"
+                      placeholder={{
+                        label: "İlçe Seçiniz...",
+                        value: null,
+                      }}
+                      value={county}
+                      style={pickerSelectStyles}
+                      onValueChange={(value) => setcounty(value)}
+                      items={counties}
+                    />
+                    {errorStatu == 5 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
+                  </View>
                 </View>
               </View>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-around",
-              }}
-            >
-              <TouchableOpacity
+              <View
                 style={{
-                  backgroundColor: "#28A745",
-                  width: "40%",
-                  padding: 15,
-                  borderRadius: 5,
-                }}
-                onPress={GiveOffer}
-              >
-                <Text style={{ color: "white", textAlign: "center" }}>
-                  Gönder
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#DC3545",
-                  width: "40%",
-                  padding: 15,
-                  borderRadius: 5,
-                }}
-                onPress={() => {
-                  setFormVisible(false);
+                  flexDirection: "row",
+                  justifyContent: "space-around",
                 }}
               >
-                <Text style={{ color: "white", textAlign: "center" }}>
-                  Kapat
-                </Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#28A745",
+                    width: "40%",
+                    padding: 15,
+                    borderRadius: 5,
+                  }}
+                  onPress={GiveOffer}
+                >
+                  <Text style={{ color: "white", textAlign: "center" }}>
+                    Gönder
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#DC3545",
+                    width: "40%",
+                    padding: 15,
+                    borderRadius: 5,
+                  }}
+                  onPress={() => {
+                    setFormVisible(false);
+                  }}
+                >
+                  <Text style={{ color: "white", textAlign: "center" }}>
+                    Kapat
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+    </AlertNotificationRoot>
   );
 };
 
@@ -452,6 +465,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 100,
   },
   text: {
     fontSize: 18,
@@ -462,21 +476,42 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  input: {
+    height: 40,
+    width: "100%",
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    color: "black",
+    backgroundColor: "white",
+  },
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
+    height: 40,
+    width: "100%",
+    borderColor: "#ccc",
     borderWidth: 1,
-    borderColor: "#eaeff5",
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 14, // to ensure the text is never behind the icon
+    borderRadius: 10,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    color: "black",
+    backgroundColor: "white",
+    fontSize: 16,
   },
   inputAndroid: {
-    borderWidth: 2,
-    borderColor: "black",
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 14, // to ensure the text is never behind the icon
+    height: 40,
+    width: "100%",
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    color: "black",
+    backgroundColor: "white",
+    fontSize: 16,
   },
 });
 
