@@ -77,7 +77,7 @@ export default function Team({ teamm }) {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    padding: 10,
+    padding: 5,
     justifyContent: "center",
   },
 

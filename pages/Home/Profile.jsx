@@ -39,6 +39,8 @@ import { CheckBox } from "@rneui/themed";
 import { Platform } from "react-native";
 import axios from "axios";
 import { getValueFor } from "../../components/methods/user";
+import CollectionsOfBrand from "./ProfilePageItem/CollectionsOfBrand";
+import CommentsOfBrands from "./ProfilePageItem/CommentsOfBrands";
 
 export default function Profile() {
   const route = useRoute();
@@ -532,7 +534,27 @@ export default function Profile() {
                       Ana Sayfa
                     </Text>
                   </TouchableOpacity>
-
+                  <TouchableOpacity
+                    style={[
+                      styles.TabBarBtn,
+                      {
+                        borderBottomWidth: tab === 4 ? 3 : 0,
+                        borderBottomColor:
+                          tab === 4 ? "#264ABB" : "transparent",
+                        top: 2,
+                      },
+                    ]}
+                    onPress={() => settab(4)}
+                  >
+                    <Text
+                      style={{
+                        color: tab === 4 ? "black" : "grey",
+                        fontWeight: tab === 4 ? "500" : "normal",
+                      }}
+                    >
+                      Mağaza Profili
+                    </Text>
+                  </TouchableOpacity>
                   {storeData?.data?.corporate_type !== "Emlak Ofisi" && (
                     <TouchableOpacity
                       style={[
@@ -602,27 +624,7 @@ export default function Profile() {
                       Ekip
                     </Text>
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      styles.TabBarBtn,
-                      {
-                        borderBottomWidth: tab === 4 ? 3 : 0,
-                        borderBottomColor:
-                          tab === 4 ? "#264ABB" : "transparent",
-                        top: 2,
-                      },
-                    ]}
-                    onPress={() => settab(4)}
-                  >
-                    <Text
-                      style={{
-                        color: tab === 4 ? "black" : "grey",
-                        fontWeight: tab === 4 ? "500" : "normal",
-                      }}
-                    >
-                      Mağaza Profili
-                    </Text>
-                  </TouchableOpacity>
+                
                   <TouchableOpacity
                     style={[
                       styles.TabBarBtn,
@@ -707,6 +709,8 @@ export default function Profile() {
         {tab === 2 && <RealtorAdverts housingdata={housingRecords} />}
         {tab === 3 && <Team teamm={teamm} />}
         {tab === 4 && <ShopInfo data={storeData} loading={loading} />}
+        {tab === 5 && <CollectionsOfBrand/>}
+        {tab === 6 && <CommentsOfBrands data={storeData}/>}
       </View>
 
       <View>

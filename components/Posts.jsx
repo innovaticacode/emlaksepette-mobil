@@ -571,7 +571,7 @@ export default function Posts({
                       <Text style={styles.pendingText}>Rezerve Edildi</Text>
                     </TouchableOpacity>
                   )
-                ) : roomData["off_sale[]"] !== "[]" ? (
+                ) : roomData["off_sale[]"] ==1  ? (
                   <TouchableOpacity style={styles.offSale} disabled>
                     <Text style={styles.offSaleText}>Satışa Kapalı</Text>
                   </TouchableOpacity>
@@ -616,7 +616,7 @@ export default function Posts({
                       </TouchableOpacity>
                     )
                   )
-                ) : roomData["off_sale[]"] !== "[]" ? (
+                ) : roomData["off_sale[]"] == 1 ? (
                   <TouchableOpacity
                     onPress={() => {
                       openFormModal(roomOrder);
