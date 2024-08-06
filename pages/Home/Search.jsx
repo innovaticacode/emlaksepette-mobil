@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Keyboard,
   Image,
+  Dimensions,
 } from "react-native";
 import { React, useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/EvilIcons";
@@ -19,6 +20,7 @@ import axios from "axios";
 import slugify from "react-slugify";
 
 import { Platform } from "react-native";
+const { width, height } = Dimensions.get("window");
 
 export default function Search({ onpres }) {
   const navigation = useNavigation();
@@ -63,7 +65,6 @@ export default function Search({ onpres }) {
                     data: item.submenus,
                   });
                 } else {
-                 
                   navigation.navigate(
                     item.text == "Projeler"
                       ? "AllProject"

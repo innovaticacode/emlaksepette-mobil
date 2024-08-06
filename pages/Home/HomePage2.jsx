@@ -9,6 +9,8 @@ import {
   ScrollView,
   ImageBackground,
   TextInput,
+  Dimensions,
+  Platform,
 } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
 import HomePage from "./HomePage";
@@ -29,6 +31,8 @@ import Prefabrik from "./Home Pages/Prefabrik";
 import BookHouse from "./Home Pages/BookHouse";
 import SellAcil from "./Home Pages/SellAcil";
 import DrawerMenu from "../../components/DrawerMenu";
+const { width, height } = Dimensions.get("window");
+
 const FirstRoute = () => (
   <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
 );
@@ -84,7 +88,6 @@ const CustomTabBar = ({
 
   return (
     <View>
-    
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
         <View style={{ padding: 10, flexDirection: "row", gap: 10 }}>
           {menuItems.map((item, index) => (
@@ -159,23 +162,25 @@ export default function HomePage2() {
           <View
             style={{
               backgroundColor: "#EA2C2E",
-              flex: 1 / 3,
+              height: Platform.OS === "android" ? height * 0.32 : height * 0.32,
               borderBottomLeftRadius: 20,
               borderBottomRightRadius: 20,
             }}
           >
             <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
           </View>
-          <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
+          <View style={{ flex: 1.3 / 1 }}>
             <Search onpres={toggleDrawer} />
           </View>
         </View>
       </Modal>
-      <View style={{paddingLeft:10,paddingRight:10}}>
-        <TextInput style={{padding:8,backgroundColor:'#ebebeb',borderRadius:5,}} placeholder="Kelime veya İlan no ile ara.." 
-            onPress={()=>{
-                navigation.navigate('SearchPage')
-            }}
+      <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+        <TextInput
+          style={{ padding: 8, backgroundColor: "#ebebeb", borderRadius: 5 }}
+          placeholder="Kelime veya İlan no ile ara.."
+          onPress={() => {
+            navigation.navigate("SearchPage");
+          }}
         />
       </View>
       <TabView

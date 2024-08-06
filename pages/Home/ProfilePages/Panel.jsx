@@ -118,7 +118,6 @@ export default function Panel({ options, onSelect }) {
         } else {
           setNotifications([]);
         }
-
         const unreadCount = response.data.filter(
           (notification) => notification.readed === 0
         ).length;
