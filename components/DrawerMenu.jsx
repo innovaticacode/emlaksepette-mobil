@@ -30,7 +30,6 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
         style={{
           flex: 1,
           zIndex: 1,
-
           height: height * 1,
         }}
       >

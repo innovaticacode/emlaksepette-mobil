@@ -101,6 +101,7 @@ import PaymentScreen2 from "./pages/Home/PaymentScreen2";
 import AdvertsPanelTab from "./pages/Home/Panel/AdvertsPanelTab";
 import ClubPanel from "./pages/Home/Panel/RealtorClubPanel/ClubPanel";
 import SwapScreenNav from "./components/SwapScreenNav";
+import MapWiew from "./pages/Home/MapWiew";
 
 const Stack = createNativeStackNavigator();
 
@@ -785,6 +786,13 @@ export default function App({ route }) {
             component={ComeSwapScreen}
             options={({ route }) => ({
               title: "Takas Başvurularım",
+            })}
+          />
+          <Stack.Screen
+            name="MapWiew"
+            component={MapWiew}
+            options={({ route }) => ({
+              title: "Mapde Görüntüle",
             })}
           />
           <Stack.Screen
