@@ -528,7 +528,9 @@ export default function AllRealtorAdverts() {
         onSortChange={handleSortChange}
         selectedSortOption={selectedSortOption}
       />
-
+      <TouchableOpacity onPress={() => navigation.navigate("MapWiew")}>
+        <Text>Haritada Gör</Text>
+      </TouchableOpacity>
       <View style={styles.container}>
         {state.loading == true ? (
           <View
