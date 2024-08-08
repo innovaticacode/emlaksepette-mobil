@@ -32,8 +32,8 @@ const MapWiew = () => {
         initialRegion={{
           latitude: 39.9334, // Türkiye'nin yaklaşık merkezi koordinatları
           longitude: 32.8597,
-          latitudeDelta: 10.0, // Zoom seviyesini ayarlayın
-          longitudeDelta: 10.0,
+          latitudeDelta: 5.0, // Zoom seviyesini ayarlayın
+          longitudeDelta: 13.0,
         }}
       >
         {markers.map((marker) => (
