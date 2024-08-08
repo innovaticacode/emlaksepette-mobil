@@ -1134,7 +1134,7 @@ export default function PostDetail() {
                             Komşumu Gör
                           </Text>
                         </TouchableOpacity>
-                      }
+                      )}
                     {roomData && ["off_sale[]"] &&
                       roomData["off_sale[]"] === "[]" &&
                       ProjectHomeData?.projectCartOrders[HomeId]?.status != 0 &&
