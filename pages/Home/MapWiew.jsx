@@ -6,6 +6,8 @@ import {
   Text,
   TouchableOpacity,
   Linking,
+  Image,
+  TouchableWithoutFeedback,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
@@ -15,12 +17,13 @@ const MapWiew = () => {
   const markers = [
     {
       id: 1,
-      title: "Kayseri İlanı",
-      description: "Kayseri'deki ilan açıklaması",
+      title: "Masterköy Doğa Evleri Kandıra",
+      description: "Masterköy Doğa Evleri Kandıra Projesi açıklaması",
       coordinate: {
         latitude: 38.7322,
         longitude: 35.4853,
       },
+      image: "https://emlaksepette.com/storage/sliders/slider_1722933605.png", // Resim URL'si
     },
     {
       id: 2,
@@ -30,6 +33,8 @@ const MapWiew = () => {
         latitude: 38.6749,
         longitude: 39.2219,
       },
+      image:
+        "https://emlaksepette.com/storage/project_images/cover_temp_image_edit17169994531061716999453.jpg", // Resim URL'si
     },
     {
       id: 3,
@@ -39,6 +44,8 @@ const MapWiew = () => {
         latitude: 40.7322,
         longitude: 36.4853,
       },
+      image:
+        "https://emlaksepette.com/storage/project_images/cover_temp_image_edit17106143991061710614399.jpg", // Resim URL'si
     },
   ];
 
@@ -59,6 +66,8 @@ const MapWiew = () => {
           latitudeDelta: 5.0,
           longitudeDelta: 13.0,
         }}
+        showsUserLocation={true}
+        showsMyLocationButton={true}
       >
         {markers.map((marker) => (
           <Marker
@@ -67,40 +76,57 @@ const MapWiew = () => {
             title={marker.title}
             description={marker.description}
             onPress={() => setSelectedMarker(marker)}
+            pinColor="red" // Kırmızı marker rengi
           />
         ))}
       </MapView>
 
       {selectedMarker && (
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           visible={!!selectedMarker}
           onRequestClose={() => setSelectedMarker(null)}
         >
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>{selectedMarker.title}</Text>
-            <Text style={styles.modalDescription}>
-              {selectedMarker.description}
-            </Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                openGoogleMaps(
-                  selectedMarker.coordinate.latitute,
-                  selectedMarker.coordinate.longitude
-                );
-              }}
-            >
-              <Text style={styles.buttonText}>Yol Tarifi Al</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setSelectedMarker(null)}
-            >
-              <Text style={styles.buttonText}>Kapat</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableWithoutFeedback onPress={() => setSelectedMarker(null)}>
+            <View style={styles.modalBackdrop}>
+              <View style={styles.modalView}>
+                <View style={styles.modalContent}>
+                  <Image
+                    source={{ uri: selectedMarker.image }} // Modal'da resmi gösteriyoruz
+                    style={styles.modalImage}
+                  />
+                  <View style={styles.textContainer}>
+                    <Text style={styles.modalTitle}>
+                      {selectedMarker.title}
+                    </Text>
+                    <Text style={styles.modalDescription}>
+                      {selectedMarker.description}
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      openGoogleMaps(
+                        selectedMarker.coordinate.latitude,
+                        selectedMarker.coordinate.longitude
+                      );
+                    }}
+                  >
+                    <Text style={styles.buttonText}>Yol Tarifi Al</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => setSelectedMarker(null)}
+                  >
+                    <Text style={styles.buttonText}>Kapat</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
         </Modal>
       )}
     </View>
@@ -116,6 +142,12 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: "100%",
+  },
+  modalBackdrop: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Modal arka planını karartıyoruz
   },
   modalView: {
     marginTop: "auto",
@@ -133,21 +165,39 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  modalContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  modalImage: {
+    width: 100,
+    height: 100,
+    marginRight: 10,
+    objectFit: "contain",
+  },
+  textContainer: {
+    flex: 1,
+  },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 5,
   },
   modalDescription: {
     fontSize: 14,
-    marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between", // Butonlar arasına boşluk eklemek için
+    width: "100%",
   },
   button: {
     backgroundColor: "#2196F3",
     borderRadius: 10,
     padding: 10,
-    marginTop: 10,
-    width: "100%",
+    marginHorizontal: 5, // Butonlar arasına boşluk eklemek için
+    flex: 1, // Butonların genişliğini eşit yapar
     alignItems: "center",
   },
   buttonClose: {
