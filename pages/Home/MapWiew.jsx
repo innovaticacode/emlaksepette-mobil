@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -13,41 +14,18 @@ import MapView, { Marker } from "react-native-maps";
 
 const MapWiew = () => {
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [markers, setMarkers] = useState([]);
 
-  const markers = [
-    {
-      id: 1,
-      title: "Masterköy Doğa Evleri Kandıra",
-      description: "Masterköy Doğa Evleri Kandıra Projesi açıklaması",
-      coordinate: {
-        latitude: 38.7322,
-        longitude: 35.4853,
-      },
-      image: "https://emlaksepette.com/storage/sliders/slider_1722933605.png", // Resim URL'si
-    },
-    {
-      id: 2,
-      title: "Elazığ İlanı",
-      description: "Elazığ'daki ilan açıklaması",
-      coordinate: {
-        latitude: 38.6749,
-        longitude: 39.2219,
-      },
-      image:
-        "https://emlaksepette.com/storage/project_images/cover_temp_image_edit17169994531061716999453.jpg", // Resim URL'si
-    },
-    {
-      id: 3,
-      title: "Ahmet İlanı",
-      description: "Ahmet'in ilan açıklaması",
-      coordinate: {
-        latitude: 40.7322,
-        longitude: 36.4853,
-      },
-      image:
-        "https://emlaksepette.com/storage/project_images/cover_temp_image_edit17106143991061710614399.jpg", // Resim URL'si
-    },
-  ];
+  useEffect(() => {
+    axios
+      .get("https://private.emlaksepette.com/api/real-estates")
+      .then((res) => {
+        setMarkers(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const openGoogleMaps = (latitude, longitude) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}&travelmode=driving`;
@@ -72,9 +50,12 @@ const MapWiew = () => {
         {markers.map((marker) => (
           <Marker
             key={marker.id}
-            coordinate={marker.coordinate}
-            title={marker.title}
-            description={marker.description}
+            coordinate={{
+              latitude: parseFloat(marker.latitude),
+              longitude: parseFloat(marker.longitude),
+            }}
+            title={marker.housing_title}
+            description={marker.address}
             onPress={() => setSelectedMarker(marker)}
             pinColor="red" // Kırmızı marker rengi
           />
@@ -98,10 +79,10 @@ const MapWiew = () => {
                   />
                   <View style={styles.textContainer}>
                     <Text style={styles.modalTitle}>
-                      {selectedMarker.title}
+                      {selectedMarker.housing_title}
                     </Text>
                     <Text style={styles.modalDescription}>
-                      {selectedMarker.description}
+                      {selectedMarker.address}
                     </Text>
                   </View>
                 </View>
@@ -110,8 +91,8 @@ const MapWiew = () => {
                     style={styles.button}
                     onPress={() => {
                       openGoogleMaps(
-                        selectedMarker.coordinate.latitude,
-                        selectedMarker.coordinate.longitude
+                        selectedMarker.latitude,
+                        selectedMarker.longitude
                       );
                     }}
                   >

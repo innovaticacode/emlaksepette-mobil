@@ -30,6 +30,7 @@ import DrawerMenu from "../../components/DrawerMenu";
 import { getValueFor } from "../../components/methods/user";
 
 import SortModal from "../../components/SortModal";
+import { Image } from "react-native-svg";
 
 export default function AllRealtorAdverts() {
   const [cityItems, setCityItems] = useState();
@@ -528,9 +529,7 @@ export default function AllRealtorAdverts() {
         onSortChange={handleSortChange}
         selectedSortOption={selectedSortOption}
       />
-      <TouchableOpacity onPress={() => navigation.navigate("MapWiew")}>
-        <Text>Haritada Gör</Text>
-      </TouchableOpacity>
+
       <View style={styles.container}>
         {state.loading == true ? (
           <View
@@ -607,6 +606,28 @@ export default function AllRealtorAdverts() {
             />
           </>
         )}
+        <TouchableOpacity onPress={() => navigation.navigate("MapWiew")}>
+          <View style={{ position: "relative", flex: 1 }}>
+            <View style={{ position: "absolute", bottom: 10, right: 10 }}>
+              <View
+                style={{
+                  backgroundColor: "red",
+                  width: 80,
+                  height: 80,
+                  borderRadius: 50,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <ImageBackground
+                  resizeMode="contain"
+                  style={{ width: "100%", height: "100%", borderRadius: 50 }}
+                  source={require("../../images/mapView.png")}
+                />
+              </View>
+            </View>
+          </View>
+        </TouchableOpacity>
       </View>
 
       <Modal
