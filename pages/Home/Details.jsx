@@ -191,7 +191,7 @@ export default function Details({ navigation }) {
             ? parseInt(lastBlockItemCount) + parseInt(data.project.blocks[selectedTab].housing_count)
             : parseInt(lastBlockItemCount) + parseInt((page + 1) * 10))
         ).then((res) => {
-          console.log(res);
+          // console.log(res);
           setData({
             ...data,
             projectHousingsList: {
@@ -920,6 +920,23 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
 // ((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])) / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]']).toFixed(0))
   // console.log(data.projectHousingsList[paymentModalShowOrder]['installments-price[]'] - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]'])+parseInt(totalPrice) /parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])   /data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ))
 console.log((parseInt(totalPrice)));
+// const advance = parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]'], 10);
+// const numberOfShares = parseInt(data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'], 10);
+// const installmentsPrice = parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]'], 10);
+// const totalPrice2 = totalPrice
+// const installments = parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'], 10);
+
+// // İşlemlerin gerçekleştirilmesi
+// const perShareAdvance = advance / numberOfShares;
+// const subtotal = perShareAdvance + totalPrice2;
+// const remaining = installmentsPrice - subtotal;
+// const finalInstallment = remaining / installments;
+
+// // Sonucu formatlama ve yazdırma
+// const formattedFinalInstallment = Math.round(finalInstallment); // Yuvarlama işlemi
+// console.log( parseInt(data?.projectHousingsList[1]['installments-price[]']) - (parseInt(data?.projectHousingsList[1]['advance[]'] )  / parseInt(data?.projectHousingsList[1]['number_of_shares[]']) + parseInt(totalPrice)) + 'fsdfdsf')
+// console.log(parseInt(data?.projectHousingsList[1]['installments-price[]']) -  (parseInt(data?.projectHousingsList[1]['advance[]'] )  / parseInt(data?.projectHousingsList[1]['number_of_shares[]']) + parseInt(totalPrice)) / parseInt(data.projectHousingsList[1]['installments[]']) + 'Takstili Fiyat')
+// console.log( ((data.projectHousingsList[1]['installments-price[]'] / data?.projectHousingsList[1]['number_of_shares[]']) - ((parseInt(data?.projectHousingsList[1]['advance[]'] )/parseInt(data?.projectHousingsList[1]['number_of_shares[]'])) + parseInt(totalPrice) ) ) / parseInt(data.projectHousingsList[1]['installments[]']) )
   return (
     <>
      <AlertNotificationRoot>
@@ -1286,7 +1303,7 @@ console.log((parseInt(totalPrice)));
                                     "Ay Taksitli Fiyat"
                                   }
                                   numbers={
-                                    data.projectHousingsList[paymentModalShowOrder]['share_sale[]'] != "[]" && data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
+                                    data.projectHousingsList[paymentModalShowOrder]['share_sale[]'] !== "[]" && data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
                                       addDotEveryThreeDigits(Math.round(data.projectHousingsList[paymentModalShowOrder]["installments-price[]"] / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'])) + "₺"
                                     : addDotEveryThreeDigits(
                                       Math.round(
@@ -1348,9 +1365,9 @@ console.log((parseInt(totalPrice)));
                                   info="Aylık Ödenecek Tutar"
                                   numbers={
                                     data.projectHousingsList[paymentModalShowOrder]['share_sale[]'] != "[]" && data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ?
-                                      addDotEveryThreeDigits((((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']).toFixed(0)) + parseInt(totalPrice))  ) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])) / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]']  )  + "₺"
+                                      addDotEveryThreeDigits(((data.projectHousingsList[paymentModalShowOrder]['installments-price[]'] / data?.projectHousingsList[paymentModalShowOrder]['number_of_shares[]']) - ((parseInt(data?.projectHousingsList[paymentModalShowOrder]['advance[]'] )/parseInt(data?.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'])) + parseInt(totalPrice) ) ) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]']) )    + "₺"
                                     : 
-                                      addDotEveryThreeDigits( ((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])).toFixed(0)) + "₺"
+                                      addDotEveryThreeDigits(((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])).toFixed(0)) + "₺"
                                   }
                                 />
                               ) : (

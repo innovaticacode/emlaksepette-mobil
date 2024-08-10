@@ -25,7 +25,7 @@ console.log(user)
   return (
     <>
       <SafeAreaView style={{ flex: 1, zIndex: 1 }}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <View showsVerticalScrollIndicator={false}>
           <TouchableOpacity onPress={() => navigateToScreen("HomePage")}>
             <Categories
               category="Ana Sayfa"
@@ -60,10 +60,9 @@ console.log(user)
             </TouchableOpacity>
           }
       
-          {
-            user.role =='Bireysel Hesap' &&
+       
             <TouchableOpacity onPress={()=> {
-              navigation.navigate('Emlak',{name:'İlan Ver'})
+              navigation.navigate('SellAndRent',{name:'İlan Ver'})
               setIsDrawerOpen(false)
             }}>
               <Categories
@@ -72,10 +71,10 @@ console.log(user)
                 iconName="search-plus"
               />
             </TouchableOpacity>
-          }
+          
           
       
-        </ScrollView>
+        </View>
       </SafeAreaView>
       <ImageBackground
         source={require("../pages/Home/MenuBg.jpg")}

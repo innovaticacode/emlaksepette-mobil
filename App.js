@@ -756,6 +756,7 @@ export default function App({ route }) {
             component={SellAndRentFormPage}
             options={({ route }) => ({
               title: "Sat Kirala",
+              headerBackTitleVisible:false
             })}
           />
           <Stack.Screen
@@ -763,6 +764,7 @@ export default function App({ route }) {
             component={SendSellAndRentForm}
             options={({ route }) => ({
               title: "Sat Kirala Formu",
+              headerBackTitleVisible:false
             })}
           />
           <Stack.Screen

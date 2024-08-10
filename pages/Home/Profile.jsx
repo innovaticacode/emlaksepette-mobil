@@ -509,8 +509,7 @@ export default function Profile() {
             showsHorizontalScrollIndicator={false}
             nestedScrollEnabled={true}
           >
-            {loading ? (
-              <>
+       
                 <View style={styles.tabBar}>
                   <TouchableOpacity
                     style={[
@@ -668,33 +667,7 @@ export default function Profile() {
                     </Text>
                   </TouchableOpacity>
                 </View>
-              </>
-            ) : (
-              <>
-                <View style={styles.tabBar}>
-                  <Skeleton
-                    width={150}
-                    height={14}
-                    skeletonStyle={{ backgroundColor: "#ced4da" }}
-                  />
-                  <Skeleton
-                    width={150}
-                    height={14}
-                    skeletonStyle={{ backgroundColor: "#ced4da" }}
-                  />
-                  <Skeleton
-                    width={150}
-                    height={14}
-                    skeletonStyle={{ backgroundColor: "#ced4da" }}
-                  />
-                  <Skeleton
-                    width={150}
-                    height={14}
-                    skeletonStyle={{ backgroundColor: "#ced4da" }}
-                  />
-                </View>
-              </>
-            )}
+        
           </ScrollView>
         </View>
         {tab === 0 && (
