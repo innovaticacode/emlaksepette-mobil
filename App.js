@@ -1032,6 +1032,7 @@ export default function App({ route }) {
             component={SearchPage}
             options={({ route }) => ({
               title: "Ara",
+              headerShown: false,
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",

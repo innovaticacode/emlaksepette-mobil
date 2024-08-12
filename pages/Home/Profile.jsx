@@ -342,7 +342,7 @@ export default function Profile() {
                       </View>
                     </View>
                   </View>
-                  <View style={{ width: "60%", paddingTop: 10 }}>
+                  <View style={{ width: "100%", paddingTop: 10 }}>
                     <TextInput
                       style={{
                         padding: 9,
@@ -353,7 +353,7 @@ export default function Profile() {
                       }}
                       value={searchText}
                       onChangeText={handleSearch}
-                      placeholder="Ara..."
+                      placeholder="Kelime veya İlan no ile ara.."
                       placeholderTextColor={"#333"}
                     />
                   </View>
@@ -606,9 +606,9 @@ export default function Profile() {
                     style={[
                       styles.TabBarBtn,
                       {
-                        borderBottomWidth: tab === 3 ? 3 : 0,
+                        borderBottomWidth: tab === 4 ? 3 : 0,
                         borderBottomColor:
-                          tab === 3 ? "#264ABB" : "transparent",
+                          tab === 4 ? "#264ABB" : "transparent",
                         top: 2,
                       },
                     ]}

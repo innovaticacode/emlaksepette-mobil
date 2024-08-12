@@ -11,7 +11,6 @@ import {
   FlatList,
   Dimensions,
   ImageBackground,
-
 } from "react-native";
 import axios from "axios";
 import PagerView from "react-native-pager-view";
@@ -113,7 +112,11 @@ const HomePage = ({ index }) => {
             {/* Featured Sliders */}
             <View style={styles.sliderContainer}>
               {loadingSliders ? (
-                <ActivityIndicator style={styles.loadingIndicator} size={'small'} color="#333"/>
+                <ActivityIndicator
+                  style={styles.loadingIndicator}
+                  size={"small"}
+                  color="#333"
+                />
               ) : (
                 <PagerView
                   style={styles.pagerView}
@@ -258,7 +261,7 @@ const styles = StyleSheet.create({
   featuredProjectsContainer: {
     paddingBottom: 3,
     backgroundColor: "white",
-    marginTop: 7
+    marginTop: 7,
   },
   featuredProjectsHeader: {
     flexDirection: "row",
@@ -277,7 +280,7 @@ const styles = StyleSheet.create({
   allProjectsButtonText: {
     color: "white",
     fontSize: 11,
-    paddingHorizontal:10
+    paddingHorizontal: 10,
   },
   projectPostContainer: {
     marginTop: 7,
