@@ -59,6 +59,7 @@ export default function Favorites() {
       setLoading(false);
     }
   };
+  console.log(favorites);
 
   useEffect(() => {
     if (user.access_token) {
@@ -148,13 +149,15 @@ export default function Favorites() {
     formData.append("id", selectedCartItem);
     formData.append(
       "isShare",
-
-      data.projectHousingsList[selectedCartItem]["share_sale[]"]
+      data?.projectHousingsList[selectedCartItem]["share_sale[]"]
     );
     formData.append(
       "numbershare",
-      data.projectHousingsList[selectedCartItem]["number_of_shares[]"]
+      data?.projectHousingsList[selectedCartItem]
+        ? ["number_of_shares[]"]
+        : "[]"
     );
+
     formData.append("qt", 1);
     formData.append("type", "project");
     formData.append("clear_cart", "no");
@@ -177,6 +180,7 @@ export default function Favorites() {
       console.error("post isteği olmadı", error);
     }
   };
+
   const deleteRequestWithToken = async () => {
     try {
       const response = await axios.delete(
