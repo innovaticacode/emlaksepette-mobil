@@ -12,7 +12,7 @@ import { useState } from "react";
 
 // import { FlatList, GestureHandlerRootView,ScrollView} from 'react-native-gesture-handler';
 export default function Caption({ data }) {
-  const caption = data?.project?.description.replace(
+  const caption = data?.project?.description?.replace(
     /<[^>]+>|&[a-zA-Z]+;|[%&]|&gt;/g,
     ""
   );
@@ -30,18 +30,22 @@ export default function Caption({ data }) {
 
   return (
     <View style={[styles.card, { paddingLeft: 20, paddingRight: 20, flex: 1 }]}>
-      <View style={{}}>
-        <Text>{showFullText ? fullText : previewText}</Text>
-        <TouchableOpacity onPress={toggleText}>
-          <View>
-            <Text>{showFullText ? "Daha Az Göster" : " Devamını Gör"}</Text>
-          </View>
+      <View>
+        <Text style={styles.text}>{showFullText ? fullText : previewText}</Text>
+        <TouchableOpacity
+          onPress={toggleText}
+          style={styles.toggleButtonContainer}
+        >
+          <Text style={styles.toggleButtonText}>
+            {showFullText ? "Daha Az Göster" : "Devamını Gör"}
+          </Text>
         </TouchableOpacity>
       </View>
       <HTML source={{ html: data?.project?.description }} contentWidth={10} />
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#FFFFFF",
@@ -49,12 +53,11 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 15,
     width: "100%",
-
     borderWidth: 0.7,
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
-        shadowColor: " #e6e6e6",
+        shadowColor: "#e6e6e6",
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 5,
@@ -64,17 +67,21 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  Info: {
-    width: "100%",
-  },
   text: {
     fontSize: 14,
     color: "#333",
   },
-  toggleButton: {
-    color: "#0066cc",
-    marginTop: 5,
-    fontSize: 14,
+  toggleButtonContainer: {
+    borderBottomWidth: 2,
+    borderBottomColor: "red",
+    borderBottomStyle: "solid",
+    marginTop: 10,
+    paddingVertical: 5,
+  },
+  toggleButtonText: {
+    color: "#d9534f", // Uyarı rengi
     fontWeight: "bold",
+    fontSize: 16,
+    textAlign: "center",
   },
 });
