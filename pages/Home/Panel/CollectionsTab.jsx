@@ -189,9 +189,11 @@ import { getValueFor } from "../../../components/methods/user";
   
     const [selectedCollection, setselectedCollection] = useState(0);
     const [colectionName, setcolectionName] = useState("");
-    const getId = (id, name) => {
+    const [item, setitem] = useState(null)
+    const getId = (id, name ,item) => {
       setselectedCollection(id);
       setcolectionName(name);
+      setitem(item)
     };
   
     const [message, setmessage] = useState(false);
@@ -338,7 +340,37 @@ import { getValueFor } from "../../../components/methods/user";
     };
     console.log(user.has_club);
     const [choose, setchoose] = useState(false);
-  
+    const [namFromGetUser, setnamFromGetUser] = useState([])
+    const GetUserInfo =async ()=>{
+       setloading(true)
+       try {
+         if (user?.access_token && user) {
+           const userInfo = await axios.get(
+             "https://private.emlaksepette.com/api/users/" + user?.id,
+             {
+               headers: {
+                 Authorization: `Bearer ${user.access_token}`,
+               },
+             }
+           );
+           const userData = userInfo?.data?.user
+           setnamFromGetUser(userData)
+         
+         }
+       
+     
+       
+     
+       } catch (error) {
+         console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+       }finally{
+       
+       }
+     }
+     useEffect(() => {
+      GetUserInfo()
+        }, [user])
+console.log(namFromGetUser.has_club + 'dfkjsdkf')
     return (
       <>
         {loading ? (
@@ -406,7 +438,7 @@ import { getValueFor } from "../../../components/methods/user";
               </>
             ) : (
               <AlertNotificationRoot>
-                {user.has_club != 1 ? (
+                {(namFromGetUser.has_club == 0 || namFromGetUser.has_club == 2 ||namFromGetUser.has_club == 3) ? (
                   <RegisterRealtorClub />
                 ) : (
                   <View style={styles.container}>
@@ -671,7 +703,7 @@ import { getValueFor } from "../../../components/methods/user";
                                 </TouchableOpacity>
                               </View>
                             </View>
-  
+                                  
                             {loading == false ? (
                               collectionsRecods.map((collection, index) => {
                                 return (
@@ -824,6 +856,7 @@ import { getValueFor } from "../../../components/methods/user";
                               }}
                             ></TouchableOpacity>
                           </View>
+              
                           <View
                             style={{
                               gap: 30,
@@ -833,6 +866,31 @@ import { getValueFor } from "../../../components/methods/user";
                               paddingTop: 10,
                             }}
                           >
+                              <TouchableOpacity
+                              style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 10,
+                              }}
+                              onPress={() => {
+                                navigation.navigate("SeeColleciton", {
+                                  item: item,
+                                  collectionUser: user,
+                                });
+                                setchoose(false)
+                              }}
+                            >
+                              <PencilIcon name="eye" size={23} color={"#333"} />
+                              <Text
+                                style={{
+                                  fontSize: 14,
+                                  color: "#333",
+                                  fontWeight: "700",
+                                }}
+                              >
+                                Önizle
+                              </Text>
+                            </TouchableOpacity>
                             <TouchableOpacity
                               style={{
                                 flexDirection: "row",

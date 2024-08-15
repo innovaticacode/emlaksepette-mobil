@@ -170,17 +170,18 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
         }
       );
 
-      updateUserData();
+    
 
       setTcNo("");
       setIban("");
       setFullName("");
       setStatusMessage(true);
+      GetUserInfo()
     } catch (error) {
       console.error("Hata:", error);
       setErrorMEssage(error);
     } finally {
-      setloading(false);
+    
       setsuccesRegister(false);
     }
   };
@@ -230,11 +231,43 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
         sendPutRequest();
     }
   };
+  const [namFromGetUser, setnamFromGetUser] = useState({})
+  const GetUserInfo =async ()=>{
+     setloading(true)
+     try {
+       if (user?.access_token && user) {
+         const userInfo = await axios.get(
+           "https://private.emlaksepette.com/api/users/" + user?.id,
+           {
+             headers: {
+               Authorization: `Bearer ${user.access_token}`,
+             },
+           }
+         );
+       
+         setnamFromGetUser(userInfo.data.user)
+       
+       }
+     
+   
+     
+   
+     } catch (error) {
+       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+     }finally{
+     setloading(false)
+     }
+   }
+   useEffect(() => {
+GetUserInfo()
+   }, [user])
+   
+console.log(namFromGetUser.status)
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <View style={styles.header}>
-          {user.has_club == 0 && (
+          {namFromGetUser?.has_club == 0 && (
             <>
               <Text style={styles.headerText}>
                 Emlak Sepette | Emlak Kulüp Başvurusu
@@ -245,7 +278,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
               </Text>
             </>
           )}
-          {user.has_club == 3 && (
+          {namFromGetUser.has_club == 3 && (
             <>
               <Text style={styles.headerText}>
                 Emlak Sepette | Emlak Kulüp Başvurusu
@@ -256,7 +289,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
               </Text>
             </>
           )}
-          {user.has_club == 2 && (
+          {namFromGetUser.has_club == 2 && (
             <View style={{ gap: 10 }}>
               <Text style={styles.headerText}>
                 Emlak Sepette | Emlak Kulüp Başvurunuz Alındı
@@ -283,7 +316,8 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
             </View>
           )}
         </View>
-        {user.has_club == 3 && (
+        {namFromGetUser.has_club == 3 && (
+          <View>
           <View
             style={{
               backgroundColor: "#EA2A28",
@@ -299,9 +333,10 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
               günncelleyerek tekrar deneyeniz
             </Text>
           </View>
+          </View>
         )}
 
-        {user.has_club == "0" || user.has_club == "3" ? (
+        {(namFromGetUser.has_club == 0 || namFromGetUser.has_club == 3) ? (
           <>
             <View style={{ alignItems: "center", height: "100%" }}>
               <View style={styles.FormContainer}>

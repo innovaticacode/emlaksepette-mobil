@@ -141,7 +141,7 @@ const HomePage = ({ index }) => {
             {/* Popular Construction Brands */}
             <View style={styles.sliderBarContainer}>
               <Text style={styles.sliderBarTitle}>
-                POPÜLER İNŞAAT MARKALARI
+                POPÜLER İNŞAAT MARKALARI (A-Z)
               </Text>
               <SliderBar loading={loadingProjects} />
             </View>

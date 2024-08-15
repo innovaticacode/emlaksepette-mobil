@@ -18,7 +18,7 @@ import SliderEstateBar from "../../../components/SliderEstateBar";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 const PAGE_SIZE = 10;
 
-const Estates = ({ index }) => {
+const Shared = ({ index }) => {
   const navigation = useNavigation();
   const apiUrl = "https://private.emlaksepette.com/";
   const [featuredEstates, setFeaturedEstates] = useState([]);
@@ -73,7 +73,7 @@ const Estates = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 1) {
+    if (index == 7) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);
@@ -85,7 +85,7 @@ const Estates = ({ index }) => {
   },[])
 
   const filteredHomes = featuredEstates.filter(
-    (estate) => estate.step1_slug === "konut"
+    (estate) =>  estate && JSON.parse(estate.housing_type_data)['open_sharing1']
   );
 
   const onRefresh = () => {
@@ -109,22 +109,7 @@ const Estates = ({ index }) => {
       </View>:
   
        <View style={styles.container}>
-      <View
-        style={{
-          paddingBottom: 3,
-          paddingLeft: 10,
-          paddingRight: 10,
-          marginTop: 10,
-          backgroundColor: "white",
-          height: 130,
-        }}
-      >
-        <Text style={{ fontSize: 12, fontWeight: 700, marginBottom: 7 }}>
-          POPÜLER GAYRİMENKUL MARKALARI (A-Z)
-        </Text>
-
-        <SliderEstateBar />
-      </View>
+   
       <View
         style={{
           paddingBottom: 3,
@@ -137,7 +122,7 @@ const Estates = ({ index }) => {
         }}
       >
         <Text style={{ fontSize: 12, fontWeight: 700 }}>
-          ÖNE ÇIKAN KONUTLAR
+          ÖNE ÇIKAN PAYLAŞIMLI İLANLAR
         </Text>
 
         <TouchableOpacity
@@ -259,4 +244,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Estates;
+export default Shared;

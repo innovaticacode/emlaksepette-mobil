@@ -247,7 +247,7 @@ export default function App({ route }) {
             <Stack.Screen
               name="Register"
               component={Register}
-              options={{ title: "Üye Ol", headerBackTitle: "." }}
+              options={{ title: "Üye Ol", headerBackTitleVisible:false }}
             />
           </Stack.Group>
 
@@ -635,6 +635,7 @@ export default function App({ route }) {
             component={RealtorClub}
             options={({ route }) => ({
               title: "Emlak Kulübü Keşfet",
+              headerBackTitleVisible:false
             })}
           />
           <Stack.Screen

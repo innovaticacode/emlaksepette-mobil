@@ -332,9 +332,8 @@ export default function Personal({ type }) {
                 <TouchableOpacity
                   style={{
                     position: "absolute",
-                    right: 10,
-                    bottom: 9,
-                    top: 15,
+                    right:9,
+                    top:'21%',
                   }}
                   onPress={show}
                 >
@@ -761,14 +760,17 @@ export default function Personal({ type }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#ffff",
   },
   Input: {
     padding: 9,
     borderWidth: 1,
     borderColor: "#ebebeb",
     borderRadius: 5,
+    fontSize:13,
     backgroundColor: "#FAFAFA",
+       color:'#717171',
+    fontWeight:'600'
   },
   modal2: {
     justifyContent: "flex-end",

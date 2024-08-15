@@ -81,7 +81,7 @@ export default function CollectionsItem({
             
                  onPress={() => {
                   openBottom();
-                  getId(item.id, item.name);
+                  getId(item.id, item.name,item);
                 }}
               >
                 <Dot name="dots-three-vertical" size={22} color={'#333'}/>

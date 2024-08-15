@@ -133,6 +133,33 @@ export default function Details({ navigation }) {
   
 
   const [loadingDetails, setloadingDetails] = useState(false)
+  const [namFromGetUser, setnamFromGetUser] = useState([])
+  const GetUserInfo =async ()=>{
+     
+     try {
+       if (user?.access_token && user) {
+         const userInfo = await axios.get(
+           "https://private.emlaksepette.com/api/users/" + user?.id,
+           {
+             headers: {
+               Authorization: `Bearer ${user.access_token}`,
+             },
+           }
+         );
+         const userData = userInfo?.data?.user
+         setnamFromGetUser(userData)
+       
+       }
+     
+   
+     
+   
+     } catch (error) {
+       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+     }finally{
+      
+     }
+   }
   useEffect(() => {
     const config = {
       headers: { Authorization: `Bearer ${user?.access_token}` }
@@ -140,6 +167,7 @@ export default function Details({ navigation }) {
     axios.get('https://private.emlaksepette.com/api/project/' + ProjectId, config).then((res) => {
       setData(res?.data)
       setloadingDetails(true)
+      GetUserInfo()
     })
 
   }, [ProjectId, user])
@@ -1612,7 +1640,7 @@ console.log((parseInt(totalPrice)));
             {
               user.access_token?
               <>
-               {user.has_club == 2 && (
+               {namFromGetUser.has_club == 2 && (
         <>
           <View style={{ paddingTop: 10,gap:10,gap:10}}>
             <View>
@@ -1639,7 +1667,7 @@ console.log((parseInt(totalPrice)));
           </View>
         </>
       )}
-      {user.has_club == 3 && (
+      {namFromGetUser.has_club == 3 && (
         <>
           <View style={{ paddingTop: 10 }}>
             <Text
@@ -1677,7 +1705,7 @@ console.log((parseInt(totalPrice)));
           </TouchableOpacity>
         </>
       )}
-      {user.has_club == 0 && (
+      {namFromGetUser.has_club == 0 && (
         <>
           <View style={{ paddingTop: 10,gap:10 }}>
             <View>
@@ -1720,7 +1748,7 @@ console.log((parseInt(totalPrice)));
       )}
 
         {
-          user.has_club == 1  &&
+          namFromGetUser.has_club == 1  &&
           <>
            <TouchableOpacity
                             style={{ flexDirection: "row", alignItems: "center" }}

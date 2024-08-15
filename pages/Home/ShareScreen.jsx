@@ -88,11 +88,10 @@ export default function ShareScreen() {
           }}
         >
           {/* Project Card */}
-          {user.role == "Kurumsal Hesap" &&
-          user.corporate_type == "Emlak Ofisi" ? (
-            <></>
-          ) : (
-            <View style={styles.card}>
+          {
+          (user.role == "Kurumsal Hesap" && user.corporate_type=='İnşaat Ofisi') && (
+              <>
+                <View style={styles.card}>
               <View
                 style={{
                   width: "100%",
@@ -149,10 +148,68 @@ export default function ShareScreen() {
                 </TouchableOpacity>
               </View>
             </View>
+            <View style={styles.card}>
+              <View
+                style={{
+                  width: "100%",
+                  height: 13,
+                  backgroundColor: "#274ABB",
+                  borderTopLeftRadius: 15,
+                  borderTopRightRadius: 15,
+                }}
+              />
+              <View style={{ alignItems: "center" }}>
+                <View style={{ width: 80, height: 80 }}>
+                  <Image
+                    source={require("./emlak.png")}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      tintColor: "#274ABB",
+                    }}
+                  />
+                </View>
+              </View>
+              <View style={{ padding: 10 }}>
+                <Text
+                  style={{
+                    fontWeight: "400",
+                    textAlign: "center",
+                    fontSize: 12,
+                  }}
+                >
+                  Kendi emlak ilanınızı ekleyin ve ev, daire veya arsa
+                  satışınızı hızlandırın. Hemen ilan verin!
+                </Text>
+              </View>
+              <View style={{ alignItems: "center" }}>
+                <TouchableOpacity
+                  style={[styles.addBtn, { backgroundColor: "#274ABB" }]}
+                  onPress={() => {
+                    navigation.navigate("Emlak", {
+                      name: "İlan Ver",
+                    });
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "white",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Emlak İlanı Ekle
+                  </Text>
+                  <Icon name="pluscircle" color={"white"} size={15} />
+                </TouchableOpacity>
+              </View>
+            </View>
+              </>
+          
           )}
 
           {/* Estate Card */}
-          {user.role == "Kurumsal Hesap" ? (
+          {(user.role == "Kurumsal Hesap" && user.corporate_type!='İnşaat Ofisi') ? (
             <View style={styles.card}>
               <View
                 style={{

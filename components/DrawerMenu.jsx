@@ -51,17 +51,14 @@ console.log(user)
             />
           </TouchableOpacity>
           {
-            user.role =='Kurumsal Hesap' &&
+            user.role =='Kurumsal Hesap' ?
             <TouchableOpacity onPress={()=>{
               navigation.navigate('ShareAdvert')
               setIsDrawerOpen(false)
             }}>
               <Categories category="İlan Ver" bordernone="none" iconName="plus" />
-            </TouchableOpacity>
-          }
-      
-       
-            <TouchableOpacity onPress={()=> {
+            </TouchableOpacity>:
+             <TouchableOpacity onPress={()=> {
               navigation.navigate('SellAndRent',{name:'İlan Ver'})
               setIsDrawerOpen(false)
             }}>
@@ -71,6 +68,10 @@ console.log(user)
                 iconName="search-plus"
               />
             </TouchableOpacity>
+          }
+      
+       
+           
           
           
       

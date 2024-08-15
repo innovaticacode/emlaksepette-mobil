@@ -57,16 +57,13 @@ export default function RealtorClub() {
                 <View style={styles.page} key="1">
                   <ImageBackground source={require('./emlakkulupslider.png')} resizeMode='contain' style={{ width: '100%', height: '100%' }} />
                 </View>
-                <View style={styles.page} key="2">
-                  <Text>afddlsfşsdf</Text>
-                </View>
-                <View style={styles.page} key="3">
-                  <Text>afddlsfşsdf</Text>
-                </View>
-                <View style={styles.page} key="4">
-                  <Text>afddlsfşsdf</Text>
-                </View>
+              
               </PagerView>
+            </View>
+            <View style={{padding:5}}>
+              <TouchableOpacity style={{backgroundColor:'#EC302E',padding:8,borderRadius:5}}>
+                <Text style={{textAlign:'center',color:'#fff',fontWeight:'600'}}>Üye Olmak İçin Tıkla</Text>
+              </TouchableOpacity>
             </View>
             <View style={{ gap: 20, marginTop: 0 }}>
               <RealtorClubItem description='Emlak Kulüp’e ÜYE OL Hemen Paylaştıkça Kazan (ilk 5000 üyelik ücretsiz)' ımage={image} colorcss={true} />
