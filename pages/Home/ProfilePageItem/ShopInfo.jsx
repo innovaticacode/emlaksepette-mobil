@@ -150,6 +150,7 @@ export default function ShopInfo({ data, loading }) {
                 >
                   <Icon name="phone" size={20} color={"white"} />
                 </View>
+                <Text></Text>
                 <View style={{ gap: 5, left: 20 }}>
                   <Text>İletişim</Text>
                   <Text style={{ fontWeight: "600" }}>

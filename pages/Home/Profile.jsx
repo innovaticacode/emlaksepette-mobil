@@ -157,6 +157,7 @@ export default function Profile() {
   };
   const [loading, setloading] = useState(false);
   const [storeData, setstoreData] = useState([]);
+
   useEffect(() => {
     // Örnek API isteği
     apiRequestGet("brand/" + id)
