@@ -652,11 +652,16 @@ console.log(user)
 
                  {
                   sold  &&
-                  
-                 sold?.status == 1 && (roomData['share_sale[]'] && roomData['number_of_shares[]'] == sumCartOrderQt[roomOrder].qt_total)? 
+                  roomData['share_sale[]'] !=='[]'?
+                 sold?.status == 1 && (roomData['share_sale[]'] && roomData['number_of_shares[]'] == sumCartOrderQt[roomOrder].qt_total)?
                   <View style={styles.sold}>
                   <Text style={styles.soldText}>Satıldı</Text>
                 </View>:
+                   <View style={styles.sold}>
+                   <Text style={styles.soldText}>Satıldı</Text>
+                 </View>:
+                
+                
            
                   
               <>
