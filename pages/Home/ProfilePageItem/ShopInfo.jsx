@@ -214,155 +214,306 @@ export default function ShopInfo({ data, loading }) {
             gap: 8,
           }}
         >
-          <View
-            style={[
-              styles.ınformation,
-              { borderRadius: 5 },
-              styles.commentArea,
-            ]}
-          >
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "#E92C2A",
-                width: width > 400 ? "10%" : "11%",
-                left: 10,
-                alignItems: "center",
-                borderRadius: 100,
-              }}
-            >
-              <Icon name="calendar" size={20} color={"white"} />
-            </View>
-            <View style={{ gap: 5, left: 20 }}>
-              <Text>Katılma Tarihi</Text>
-              <Text style={{ fontWeight: "600" }}>{formattedDate}</Text>
-            </View>
-          </View>
+          {loading ? (
+            <>
+              <View
+                style={[
+                  styles.ınformation,
+                  { borderRadius: 10 },
+                  styles.commentArea,
+                ]}
+              >
+                <View
+                  style={{
+                    padding: 10,
+                    backgroundColor: "#E92C2A",
+                    width: width > 400 ? "10%" : "11%",
+                    left: 10,
+                    alignItems: "center",
+                    borderRadius: 100,
+                  }}
+                >
+                  <Icon name="calendar" size={20} color={"white"} />
+                </View>
+                <View style={{ gap: 5, left: 20 }}>
+                  <Text>Katılma Tarihi</Text>
+                  <Text style={{ fontWeight: "600" }}>{formattedDate}</Text>
+                </View>
+              </View>
+            </>
+          ) : (
+            <>
+              <View
+                style={[
+                  styles.ınformation,
+                  {
+                    top: 10,
+                    backgroundColor: "#e7ebee",
+                    padding: 10,
+                    borderWidth: 0,
+                    borderRadius: 5,
+                  },
+                ]}
+              >
+                <Skeleton
+                  width={"10%"}
+                  skeletonStyle={{
+                    backgroundColor: "#ced4da",
+                    borderRadius: 5,
+                  }}
+                  height={40}
+                  children={
+                    <View
+                      style={{
+                        padding: 10,
+                        backgroundColor: "#E92C2A",
+                        width: width > 400 ? "10%" : "11%",
+                        left: 10,
+                        alignItems: "center",
+                      }}
+                    >
+                      <Icon name="calendar" size={20} color={"white"} />
+                    </View>
+                  }
+                />
 
-          <View
-            style={[
-              styles.ınformation,
-              { borderRadius: 5 },
-              styles.commentArea,
-            ]}
-          >
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "#E92C2A",
-                width: width > 400 ? "10%" : "12%",
-                height: "70%",
-                left: 10,
-                alignItems: "center",
-                borderRadius: 100,
-              }}
-            >
-              <Icon name="phone" size={20} color={"white"} />
-            </View>
-            <View style={{ gap: 5, left: 20 }}>
-              <Text>İletişim</Text>
-              <Text style={{ fontWeight: "600" }}>
-                Telefon : {data?.data?.phone} {data?.data?.mobile_phone}
-              </Text>
-              <Text style={{ fontWeight: "600" }}>
-                E-Mail : {data?.data?.email}{" "}
-              </Text>
-            </View>
-          </View>
+                <View style={{ gap: 10 }}>
+                  <Skeleton
+                    width={60}
+                    height={10}
+                    skeletonStyle={{
+                      backgroundColor: "#ced4da",
+                      borderRadius: 5,
+                    }}
+                  />
+                  <Skeleton
+                    width={70}
+                    height={10}
+                    skeletonStyle={{
+                      backgroundColor: "#ced4da",
+                      borderRadius: 5,
+                    }}
+                  />
+                </View>
+              </View>
+            </>
+          )}
 
-          <View
-            style={[
-              styles.ınformation,
-              { borderRadius: 5 },
-              styles.commentArea,
-            ]}
-          >
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "#E92C2A",
-                width: width > 400 ? "10%" : "12%",
-                height: "100%",
-                left: 10,
-                alignItems: "center",
-                borderRadius: 100,
-              }}
-            >
-              <Icon name="map-pin" size={20} color={"white"} />
-            </View>
-            <View style={{ gap: 5, left: 20 }}>
-              <Text>Konum</Text>
-              <Text style={{ fontWeight: "600" }}>
-                {data?.data?.town?.sehir_title}/{" "}
-                {data?.data?.district?.ilce_title}/{" "}
-                {data?.data?.neighborhood?.mahalle_title}
-              </Text>
-            </View>
-          </View>
-          <View style={{padding:5,flexDirection:'row',alignItems:'center',justifyContent:'center',gap:30}}>
-          <TouchableOpacity style={{backgroundColor:'#027BFF',padding:10,borderRadius:5,width:'45%'}} 
-            onPress={()=>{
-              handleGetDirections()
-            }}
-          >
-            <Text style={{textAlign:'center',color:'#fff',fontWeight:'600'}}>Yol Tarifi Al</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{backgroundColor:'#027BFF',padding:10,borderRadius:5,width:'45%'}}
-            onPress={openWebsite}
-          >
-            <Text style={{textAlign:'center',color:'#fff',fontWeight:'600'}}>Web Siteye Git</Text>
-          </TouchableOpacity>
-          </View>
-         
+          {loading ? (
+            <>
+              <View
+                style={[
+                  styles.ınformation,
+                  { borderRadius: 10 },
+                  styles.commentArea,
+                ]}
+              >
+                <View
+                  style={{
+                    padding: 10,
+                    backgroundColor: "#E92C2A",
+                    width: width > 400 ? "10%" : "12%",
+                    height: "70%",
+                    left: 10,
+                    alignItems: "center",
+                    borderRadius: 100,
+                  }}
+                >
+                  <Icon name="phone" size={20} color={"white"} />
+                </View>
+                <View style={{ gap: 5, left: 20 }}>
+                  <Text>İletişim</Text>
+                  <Text style={{ fontWeight: "600" }}>
+                    Telefon : {data?.data?.phone} {data?.data?.mobile_phone}
+                  </Text>
+                  <Text style={{ fontWeight: "600" }}>
+                    E-Mail : {data?.data?.email}{" "}
+                  </Text>
+                </View>
+              </View>
+            </>
+          ) : (
+            <>
+              <View
+                style={[
+                  styles.ınformation,
+                  styles.commentArea,
+                  { backgroundColor: "#e7ebee" },
+                ]}
+              >
+                <Skeleton
+                  width={"10%"}
+                  style={{ left: 5 }}
+                  height={40}
+                  skeletonStyle={{
+                    backgroundColor: "#ced4da",
+                    borderRadius: 5,
+                  }}
+                />
 
-          <View
-          style={[
-            { width: "100%", height: 250, borderRadius: 10 },
-            styles.shadow,
-          ]}
-        >
-          <MapView
-            initialRegion={{
-              latitude:
-                parseFloat(
-                  data?.data?.latitude == null ? 38.9637 : data?.data?.latitude
-                ) || 0,
-              longitude:
-                parseFloat(
-                  data?.data?.longitude == null
-                    ? 35.2433
-                    : data?.data?.longitude
-                ) || 0,
-              latitudeDelta: data?.data?.latitude == null ? 8.0 : 0.0922,
-              longitudeDelta: data?.data?.lingitude == null ? 8.0 : 0.0421,
-              altidute: 50.03281021118164,
-            }}
-            style={{ flex: 1 }}
-          >
-            <Marker
-              coordinate={{
-                latitude:
-                  parseFloat(
-                    data?.data?.latitude == null || undefined
-                      ? ""
-                      : data?.data?.latitude
-                  ) || 0,
-                longitude:
-                  parseFloat(
-                    data?.data?.longitude == null || undefined
-                      ? ""
-                      : data?.data?.longitude
-                  ) || 0,
-              }}
-              title={data?.name}
-              description="Proje Konumu"
-            />
-          </MapView>
-       
+                <View style={{ gap: 5 }}>
+                  <Skeleton
+                    width={60}
+                    height={10}
+                    skeletonStyle={{
+                      backgroundColor: "#ced4da",
+                      borderRadius: 5,
+                    }}
+                  />
+                  <Skeleton
+                    width={80}
+                    height={10}
+                    skeletonStyle={{
+                      backgroundColor: "#ced4da",
+                      borderRadius: 5,
+                    }}
+                  />
+                  <Skeleton
+                    width={100}
+                    height={10}
+                    skeletonStyle={{
+                      backgroundColor: "#ced4da",
+                      borderRadius: 5,
+                    }}
+                  />
+                </View>
+              </View>
+            </>
+          )}
+
+          {loading ? (
+            <>
+              <View
+                style={[
+                  styles.ınformation,
+                  { borderRadius: 10 },
+                  styles.commentArea,
+                ]}
+              >
+                <View
+                  style={{
+                    padding: 10,
+                    backgroundColor: "#E92C2A",
+                    width: width > 400 ? "10%" : "12%",
+                    height: "100%",
+                    left: 10,
+                    alignItems: "center",
+                    borderRadius: 100,
+                  }}
+                >
+                  <Icon name="map-pin" size={20} color={"white"} />
+                </View>
+                <View style={{ gap: 5, left: 20 }}>
+                  <Text>Konum</Text>
+                  <Text style={{ fontWeight: "600" }}>
+                    {data?.data?.town?.sehir_title}/{" "}
+                    {data?.data?.district?.ilce_title}/{" "}
+                    {data?.data?.neighborhood?.mahalle_title}
+                  </Text>
+                </View>
+              </View>
+            </>
+          ) : (
+            <>
+              <View
+                style={[
+                  styles.ınformation,
+                  { top: 50 },
+                  styles.commentArea,
+                  { backgroundColor: "#e7ebee" },
+                ]}
+              >
+                <Skeleton
+                  animation="pulse"
+                  width={40}
+                  height={40}
+                  style={{ left: 6 }}
+                  rounded
+                  skeletonStyle={{
+                    backgroundColor: "#ced4da",
+                    borderRadius: 5,
+                  }}
+                />
+                <View style={{ gap: 5 }}>
+                  <Skeleton
+                    width={40}
+                    height={12}
+                    skeletonStyle={{
+                      backgroundColor: "#ced4da",
+                      borderRadius: 5,
+                    }}
+                  />
+                  <Skeleton
+                    width={195}
+                    height={12}
+                    skeletonStyle={{
+                      backgroundColor: "#ced4da",
+                      borderRadius: 5,
+                    }}
+                  />
+                </View>
+              </View>
+            </>
+          )}
         </View>
-        </View> */}
-
-       
+        {loading ? (
+          <>
+            <View
+              style={[
+                { width: "100%", height: 150, borderRadius: 10 },
+                styles.shadow,
+              ]}
+            >
+              <MapView
+                initialRegion={{
+                  latitude:
+                    parseFloat(
+                      data?.data?.latitude == null
+                        ? 38.9637
+                        : data?.data?.latitude
+                    ) || 0,
+                  longitude:
+                    parseFloat(
+                      data?.data?.longitude == null
+                        ? 35.2433
+                        : data?.data?.longitude
+                    ) || 0,
+                  latitudeDelta: data?.data?.latitude == null ? 8.0 : 0.0922,
+                  longitudeDelta: data?.data?.lingitude == null ? 8.0 : 0.0421,
+                  altidute: 50.03281021118164,
+                }}
+                style={{ flex: 1 }}
+              >
+                <Marker
+                  coordinate={{
+                    latitude:
+                      parseFloat(
+                        data?.data?.latitude == null || undefined
+                          ? ""
+                          : data?.data?.latitude
+                      ) || 0,
+                    longitude:
+                      parseFloat(
+                        data?.data?.longitude == null || undefined
+                          ? ""
+                          : data?.data?.longitude
+                      ) || 0,
+                  }}
+                  title={data?.name}
+                  description="Proje Konumu"
+                />
+              </MapView>
+              {/* <ProfileMap mapData={data}/>   */}
+            </View>
+          </>
+        ) : (
+          <Skeleton
+            width={"100%"}
+            height={150}
+            style={{ top: 60, backgroundColor: "#e0e2e5" }}
+            skeletonStyle={{ backgroundColor: "#F0EFF1", borderRadius: 5 }}
+          />
+        )}
       </View>
 
      
