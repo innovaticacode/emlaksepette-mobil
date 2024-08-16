@@ -667,7 +667,7 @@ console.log(user)
               </TouchableOpacity>
             }
             {
-              offSaleStatus==2 && (user.role=='Bireysel Hesap'|| user.role=='Kurumsal Hesap' ||!user.access_token || user.access_token) &&user.corporate_type !== 'Emlak Ofisi'&&project.user.id!==user.id &&project.user.id!==user.parent_id && 
+              offSaleStatus==2 &&  (user.role=='Bireysel Hesap'|| user.role=='Kurumsal Hesap' ||!user.access_token ||user.access_token) &&user.corporate_type !== 'Emlak Ofisi'&&project.user.id!==user.id &&project.user.id!==user.parent_id && 
               <TouchableOpacity
               style={styles.addBasket}
              
@@ -718,6 +718,27 @@ console.log(user)
                 </View>
                 }
                   
+                {
+                    offSaleStatus==5  && (project.user.id!=user.id && project.user.id!=user.parent_id ) &&
+                    <View style={styles.priceContainer}>
+                    <TouchableOpacity
+                      style={styles.addBasket}
+                      onPress={() => {
+                        if (user.access_token) {
+                          if (user.cartItem !== null) {
+                            setcartIsNull(true);
+                          } else {
+                            setaddShowCart(true);
+                          }
+                        } else {
+                          setalertForSign(true);
+                        }
+                      }}
+                    >
+                      <Text style={styles.addBasketText}>Sepete Ekle</Text>
+                    </TouchableOpacity>
+                  </View>
+                }
                     {   
 
                   offSaleStatus==3  &&  (project.user.id!=user.id && project.user.id!=user.parent_id ) &&
@@ -906,7 +927,7 @@ console.log(user)
               </View>
 
               <View style={{ width: "50%" }}>
-              {
+               {
               sold &&
               sold?.status == 1 && (roomData['share_sale[]'] && roomData['number_of_shares[]'] == sumCartOrderQt[roomOrder].qt_total)? 
                   <>
@@ -932,8 +953,10 @@ console.log(user)
                   
            :
              <>
-              {
-                   (offSaleStatus==2 || offSaleStatus==5) &&  user.role=='Kurumsal Hesap'&&user.corporate_type == 'Emlak Ofisi'&&project.user.id!==user.id &&project.user.id!==user.parent_id &&user.role!=='Bireysel Hesap'&&
+                 
+             
+                {
+                   offSaleStatus==2  &&  (user.role=='Kurumsal Hesap' && user.corporate_type == 'Emlak Ofisi')&&project.user.id!==user.id &&project.user.id!==user.parent_id &&user.role!=='Bireysel Hesap'&&
                    <TouchableOpacity
                    style={styles.payDetailBtn}
                    onPress={() => openModal(roomOrder)}
@@ -941,8 +964,9 @@ console.log(user)
                    <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                  </TouchableOpacity>
                 }
+
                    {
-                   offSaleStatus==2 &&  user.role=='Bireysel Hesap'&&project.user.id!==user.id &&project.user.id!==user.parent_id && user.access_token&&
+                   offSaleStatus==2 && ( user.role=='Bireysel Hesap' && user.access_token || !user.access_token)&&project.user.id!==user.id &&project.user.id!==user.parent_id && 
                    <TouchableOpacity
                    style={styles.payDetailBtn}
                    onPress={() => openModal(roomOrder)}
@@ -950,6 +974,7 @@ console.log(user)
                    <Text style={styles.payDetailText}>Bilgi Al</Text>
                  </TouchableOpacity>
                 }
+                
                   {
                         (   offSaleStatus!=2 && offSaleStatus!=1&& offSaleStatus!=3 && offSaleStatus!=5 &&offSaleStatus!=4  )&&  project.user.id !=user.id && project.user.id!=user.parent_id&&
                    <TouchableOpacity
@@ -959,17 +984,29 @@ console.log(user)
                    <Text style={styles.payDetailText}>Bilgi Al</Text>
                  </TouchableOpacity>
                 }
-                
+             
+                {
+                  offSaleStatus==5 &&  project.user.id !=user.id && project.user.id!=user.parent_id&&
+                  <TouchableOpacity
+                  style={styles.payDetailBtn}
+                  onPress={() => openModal(roomOrder)}
+                >
+                  <Text style={styles.payDetailText}>Ödeme Detayı</Text>
+                </TouchableOpacity>
+                }
                {
                     
-                    offSaleStatus==3 && project.user.id !=user.id && project.user.id!=user.parent_id&&
+                    (offSaleStatus==3 ) && project.user.id !=user.id && project.user.id!=user.parent_id&&
                    <TouchableOpacity
                    style={styles.payDetailBtn}
                    onPress={() => openModal(roomOrder)}
                  >
                    <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                  </TouchableOpacity>
-                }</>
+
+                }
+                
+                </>
               }
               {
                     offSaleStatus==1
@@ -994,7 +1031,7 @@ console.log(user)
                     <Text style={styles.addBasketText}>Teklif Ver</Text>
                   </TouchableOpacity>
                 
-                }
+                } 
               {/* 
                 {
                    offSaleStatus==2 &&  user.role=='Kurumsal Hesap'&&user.corporate_type == 'Emlak Ofisi'&&project.user.id!==user.id &&project.user.id!==user.parent_id &&user.role!=='Bireysel Hesap'&&
