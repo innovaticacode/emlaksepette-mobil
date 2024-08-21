@@ -100,7 +100,12 @@ import Basket2 from "./pages/Home/Basket2";
 import PaymentScreen2 from "./pages/Home/PaymentScreen2";
 import AdvertsPanelTab from "./pages/Home/Panel/AdvertsPanelTab";
 import ClubPanel from "./pages/Home/Panel/RealtorClubPanel/ClubPanel";
+
+import SwapScreenNav from "./components/SwapScreenNav";
+import MapWiew from "./pages/Home/MapWiew";
+
 import CollectionsTab from "./pages/Home/Panel/CollectionsTab";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -791,6 +796,13 @@ export default function App({ route }) {
             })}
           />
           <Stack.Screen
+            name="MapWiew"
+            component={MapWiew}
+            options={({ route }) => ({
+              title: "Mapde Görüntüle",
+            })}
+          />
+          <Stack.Screen
             name="AllRealtorAdverts"
             component={AllRealtorAdverts}
             options={({ route }) => ({
@@ -849,6 +861,17 @@ export default function App({ route }) {
             component={PaymentScreen}
             options={({ route }) => ({
               title: "Sepet Özeti Ve Onay",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="SwapScreenNav"
+            component={SwapScreenNav}
+            options={({ route }) => ({
+              title: "Başvuru Yap",
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
@@ -1016,7 +1039,9 @@ export default function App({ route }) {
             component={SearchPage}
             options={({ route }) => ({
               title: "Ara",
+
               headerShown:false,
+
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
@@ -1090,7 +1115,7 @@ export default function App({ route }) {
               },
             })}
           />
-             <Stack.Screen
+          <Stack.Screen
             name="AdvertPanel"
             component={AdvertsPanelTab}
             options={({ route }) => ({
@@ -1101,7 +1126,7 @@ export default function App({ route }) {
               },
             })}
           />
-              <Stack.Screen
+          <Stack.Screen
             name="ClubPanel"
             component={ClubPanel}
             options={({ route }) => ({

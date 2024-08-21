@@ -280,6 +280,18 @@ export default function Posts({
   const [alertForFavorite, setalertForFavorite] = useState(false);
   const [cartIsNull, setcartIsNull] = useState(false);
   const [AddCartShow, setAddCartShow] = useState(false);
+
+  const handlePress = () => {
+    // openFormModal(roomOrder);
+    // GetID(roomOrder); //
+    navigation.navigate("SwapScreenNav", {
+      roomOrder: roomOrder,
+      projectId: data.project.id,
+    });
+  };
+
+  console.log(data);
+
   const [offSaleStatus, setoffSaleStatus] = useState(null)
   useEffect(() => {
     if (  project && data && roomData &&roomData['off_sale[]']) {
@@ -288,6 +300,7 @@ export default function Posts({
       setoffSaleStatus(parsedOffsale)
     }
    
+
 
 
   }, [roomData])
@@ -1191,10 +1204,7 @@ console.log(user)
                   )
                 ) : roomData["off_sale[]"] == 1 ? (
                   <TouchableOpacity
-                    onPress={() => {
-                      openFormModal(roomOrder);
-                      GetID(roomOrder);
-                    }}
+                    onPress={handlePress}
                     style={styles.payDetailBtn}
                   >
                     <Text style={styles.payDetailText}>Başvuru Yap</Text>

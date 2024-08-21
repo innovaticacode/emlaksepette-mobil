@@ -5,12 +5,11 @@ import {
   ImageBackground,
   TouchableOpacity,
   Dimensions,
- 
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "./methods/user";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 
 export default function ProjectPost({
   project,
@@ -40,7 +39,6 @@ export default function ProjectPost({
   }, []);
   return (
     <TouchableOpacity
-      
       onPress={() =>
         navigation.navigate("Details", {
           ProjectId: ProjectNo,
@@ -51,7 +49,6 @@ export default function ProjectPost({
         <Image
           source={{ uri: ımage }}
           style={{ width: "100%", height: "100%" }}
-     
           contentFit="cover"
           transition={300}
         />
@@ -60,7 +57,6 @@ export default function ProjectPost({
             <Image
               source={{ uri: ProfilImage }}
               style={{ width: "50%", height: "90%" }}
-
               contentFit="cover"
               transition={200}
             />
@@ -98,11 +94,15 @@ export default function ProjectPost({
           >
             {project.project_title}
           </Text>
-          {userLogin && userLogin.corporate_type == "Emlak Ofisi" && project.club_rate && (
-            <View style={styles.commissionBadge}>
-              <Text style={styles.commissionText}>%{project.club_rate} KOMİSYON!</Text>
-            </View>
-          )}
+          {userLogin &&
+            userLogin.corporate_type == "Emlak Ofisi" &&
+            project.club_rate && (
+              <View style={styles.commissionBadge}>
+                <Text style={styles.commissionText}>
+                  %{project.club_rate} KOMİSYON!
+                </Text>
+              </View>
+            )}
         </View>
       </View>
     </TouchableOpacity>

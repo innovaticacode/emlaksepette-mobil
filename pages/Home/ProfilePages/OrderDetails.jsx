@@ -43,6 +43,7 @@ export default function OrderDetails() {
   const [housingDetail, sethousingDetail] = useState({});
   const [housing, setHousing] = useState({});
   const [loading, setLoading] = useState(true);
+  console.log(OrderId + "asda wawa2");
 
   useEffect(() => {
     const fetchData = async () => {
