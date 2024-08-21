@@ -239,7 +239,7 @@ export default function PostDetail() {
   const [selectedHouse, setselectedHouse] = useState(0);
   const openCollection = (id) => {
     setselectedHouse(id);
-    changeBookmark();
+  
     setColectionSheet(true);
   };
 
@@ -726,7 +726,7 @@ export default function PostDetail() {
                     <Text
                       style={{ fontSize: 11, color: "white", fontWeight: "bold" }}
                     >
-                      İlan No:#1000{data?.housing?.id}{" "}
+                      İlan No:#2000{data?.housing?.id}{" "}
                     </Text>
                   </View>
                 </View>
@@ -781,7 +781,7 @@ export default function PostDetail() {
                     <Bookmark
                       name={bookmark}
                       size={18}
-                      color={bookmark == "bookmark-o" ? "black" : "red"}
+                      
                     />
                   </View>
                 </TouchableOpacity>

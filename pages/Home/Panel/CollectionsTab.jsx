@@ -9,6 +9,7 @@ import {
     Animated,
     TouchableOpacity,
     Linking,
+    Share,
   } from "react-native";
   import { ActivityIndicator } from "react-native-paper";
   import Modal from "react-native-modal";
@@ -93,7 +94,15 @@ import { getValueFor } from "../../../components/methods/user";
     const copyToClipboard = () => {
       const url = `https://7f24-78-178-52-190.ngrok-free.app/proje/1000381/detay`;
       Clipboard.setStringAsync(url);
-      ShowAlert();
+      setchoose(false)
+      setTimeout(() => {
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Koleksiyon Silindi",
+          textBody: `Link Kopyalandı`,
+        });
+      }, 200);
+      
     };
     const handleShareViaSMS = (text) => {
       const url = text;
@@ -192,7 +201,8 @@ import { getValueFor } from "../../../components/methods/user";
     const [item, setitem] = useState(null)
     const getId = (id, name ,item) => {
       setselectedCollection(id);
-      setcolectionName(name);
+    
+      setnewName(name)
       setitem(item)
     };
   
@@ -244,6 +254,7 @@ import { getValueFor } from "../../../components/methods/user";
         fetchData();
         closeSheet();
         setModalVisible(false);
+        setselectedCollection(0)
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -371,6 +382,26 @@ import { getValueFor } from "../../../components/methods/user";
       GetUserInfo()
         }, [user])
 console.log(namFromGetUser.has_club + 'dfkjsdkf')
+const onShare = async () => {
+  try {
+    const result = await Share.share({
+      message: `https://private.emlaksepette.com/`,
+    });
+
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        console.log("Link belirli bir aktivitede paylaşıldı");
+      } else {
+        console.log("Link paylaşıldı");
+      }
+    } else if (result.action === Share.dismissedAction) {
+      console.log("Paylaşım iptal edildi");
+    }
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
     return (
       <>
         {loading ? (
@@ -789,9 +820,7 @@ console.log(namFromGetUser.has_club + 'dfkjsdkf')
                                   borderBottomWidth: 1,
                                   borderBottomColor: "#ebebeb",
                                 }}
-                                onPress={() => {
-                                  setShareModalVisible(!SharemodalVisible);
-                                }}
+                              
                               >
                                 <View
                                   style={{
@@ -897,7 +926,7 @@ console.log(namFromGetUser.has_club + 'dfkjsdkf')
                                 alignItems: "center",
                                 gap: 10,
                               }}
-                              onPress={{}}
+                              onPress={copyToClipboard}
                             >
                               <PencilIcon name="link" size={23} color={"#333"} />
                               <Text
@@ -916,7 +945,9 @@ console.log(namFromGetUser.has_club + 'dfkjsdkf')
                                 alignItems: "center",
                                 gap: 10,
                               }}
-                              onPress={() => {}}
+                              onPress={() => {
+                                onShare()
+                               }}
                             >
                               <IconMessenger
                                 name="whatsapp"
@@ -1029,7 +1060,7 @@ console.log(namFromGetUser.has_club + 'dfkjsdkf')
                               style={[styles.Input, { width: "100%" }]}
                               value={newName}
                               onChangeText={(value) => setnewName(value)}
-                              placeholder={colectionName}
+                             
                               placeholderTextColor={"#333"}
                             />
                             <Text

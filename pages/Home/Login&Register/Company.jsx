@@ -194,6 +194,7 @@ export default function Company() {
       formData.append("check-b", checked1);
       formData.append("check-c", checked2);
       formData.append("account_type");
+      formData.append('authority_licence',licence)
       formData.append("activity", null);
       formData.append("iban", null);
       const response = await axios.post(

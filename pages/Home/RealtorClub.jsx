@@ -1,6 +1,6 @@
-import { View, Text, StyleSheet, ImageBackground, LayoutAnimation, UIManager, TouchableOpacity, Image } from 'react-native'
+import { View, Text, StyleSheet, ImageBackground, LayoutAnimation, UIManager, TouchableOpacity, Image,ScrollView } from 'react-native'
 import React, { useState } from 'react'
-import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler'
+
 import PagerView from 'react-native-pager-view'
 import DetailsPicture from '../../components/DetailsPicture'
 import RealtorClubItem from '../../components/RealtorClubItem'
@@ -46,10 +46,10 @@ export default function RealtorClub() {
     setSelectedIndex(!selectedIndex);
   };
   return (
-
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
     <View style={styles.container}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+    
+      
           <View style={styles.body}>
             <View style={styles.headerImage}>
               <PagerView style={styles.viewPager} >
@@ -289,11 +289,12 @@ export default function RealtorClub() {
 
           </View>
 
-        </ScrollView>
+     
 
-      </GestureHandlerRootView>
+ 
 
     </View>
+    </ScrollView>
 
   )
 }

@@ -12,7 +12,7 @@ export default function AddCollection({removeItemOnCollection,checkFunc,item,get
                 setPopUpForRemoveItem(true)
             }, 500);
             // setPopUpForRemoveItem(true)
-            removeItemOnCollection(item.id)
+            removeItemOnCollection(item.id,item?.name)
           }else{
             addLink(item.id,item.name)
           }
