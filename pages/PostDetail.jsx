@@ -211,7 +211,7 @@ export default function PostDetail() {
   };
   const [selectedHouse, setselectedHouse] = useState(0);
   const openCollection = (id) => {
-    changeBookmark();
+   
     setselectedHouse(id);
     setColectionSheet(true);
   };
@@ -1167,8 +1167,8 @@ export default function PostDetail() {
                             Komşumu Gör
                           </Text>
                         </TouchableOpacity>
-                      )}
 
+                      }
 
                     {roomData && ["off_sale[]"] &&
                       roomData["off_sale[]"] === "[]" &&

@@ -126,9 +126,18 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
       console.error("Error removing item from collection:", error);
     }
   };
-
+  console.log(item?.room_order)
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container}
+          onPress={()=>{
+            if (item?.item_type === 2 ) {
+              navigation.navigate('Realtor details',{ houseId:itemData.id})
+            }else{
+              navigation.navigate('PostDetails',{ projectId:item?.project?.id, HomeId:item?.room_order })
+            }
+          
+          }}
+    >
       <View
         style={{
           display: "flex",
@@ -280,7 +289,7 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
