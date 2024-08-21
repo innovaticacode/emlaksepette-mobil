@@ -25,7 +25,8 @@ import RealtorAdverts from "./ProfilePageItem/RealtorAdverts";
 import LinkIcon3 from "react-native-vector-icons/Feather";
 import LinkIcon4 from "react-native-vector-icons/Fontisto";
 import LinkIcon2 from "react-native-vector-icons/FontAwesome";
-import LinkIcon from "react-native-vector-icons/Entypo";
+import LinkIcon from "react-native-vector-icons/SimpleLineIcons";
+import Star from "react-native-vector-icons/MaterialIcons";
 import Arrow from "react-native-vector-icons/MaterialIcons";
 import { Skeleton } from "@rneui/themed";
 import Team from "./ProfilePageItem/Team";
@@ -260,9 +261,8 @@ export default function Profile() {
           closeSheet();
         }}
       >
-        {loading ? (
-          <>
-            <View
+     
+            {/* <View
               style={{
                 width: "100%",
                 height:
@@ -271,8 +271,8 @@ export default function Profile() {
                       ? 220
                       : 240
                     : width < 400
-                    ? 200
-                    : 220,
+                    ? 180
+                    : 180,
               }}
             >
               <View
@@ -344,21 +344,7 @@ export default function Profile() {
                       </View>
                     </View>
                   </View>
-                  <View style={{ width: "60%", paddingTop: 10 }}>
-                    <TextInput
-                      style={{
-                        padding: 9,
-                        backgroundColor: "#f5f5f53d",
-                        borderWidth: 0,
-                        borderColor: "#ebebeb",
-                        borderRadius: 5,
-                      }}
-                      value={searchText}
-                      onChangeText={handleSearch}
-                      placeholder="Ara..."
-                      placeholderTextColor={"#333"}
-                    />
-                  </View>
+             
                 </View>
               </View>
 
@@ -371,153 +357,67 @@ export default function Profile() {
                 }}
               />
             </View>
-          </>
-        ) : (
-          <>
-            <View style={{ width: "100%", height: 220 }}>
-              <View
-                style={{
-                  position: "absolute",
-                  zIndex: 1,
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: "#e7ebee",
-                  borderBottomLeftRadius: 30,
-                  borderBottomRightRadius: 30,
-                }}
-              >
-                <View style={styles.InfoContainer}>
-                  <Skeleton
-                    width={45}
-                    height={30}
-                    style={{ borderRadius: 5 }}
-                    skeletonStyle={{
-                      backgroundColor: "#ced4da",
-                      borderRadius: 5,
-                    }}
-                    children={
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: "#ebebeb94",
-                          paddingLeft: 10,
-                          paddingRight: 10,
-                          borderRadius: 5,
-                          justifyContent: "center",
-                          width: 45,
-                          height: 30,
-                          alignItems: "center",
-                        }}
-                        onPress={() => navigation.goBack()}
-                      >
-                        <Arrow
-                          name="arrow-back-ios"
-                          size={20}
-                          style={{ left: 3 }}
-                          color={"white"}
-                        />
-                      </TouchableOpacity>
-                    }
-                  />
-
-                  <Skeleton
-                    style={styles.shareIcons}
-                    skeletonStyle={{ backgroundColor: "#ced4da" }}
-                  />
-                  {/* <TouchableOpacity style={styles.shareIcons} onPress={openSheet}>
-                <Icon name="sharealt" size={18} />
-              </TouchableOpacity> */}
-                </View>
-
-                <View style={{ paddingLeft: 15, paddingRight: 15 }}>
-                  <View style={{ paddingTop: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-
-                        gap: 10,
-                      }}
-                    >
-                      <Skeleton
-                        width={40}
-                        height={40}
-                        circle={true}
-                        skeletonStyle={{ backgroundColor: "#ced4da" }}
-                      />
-                      <View>
-                        <Skeleton
-                          width={100}
-                          skeletonStyle={{ backgroundColor: "#ced4da" }}
-                          children={
-                            <Text
-                              style={{ fontSize: 19, color: "white" }}
-                              numberOfLines={1}
-                            >
-                              {storeData?.data?.name}
-                            </Text>
-                          }
-                        />
-                        <Skeleton
-                          width={45}
-                          style={{ top: 5 }}
-                          skeletonStyle={{ backgroundColor: "#ced4da" }}
-                          children={
-                            <Text style={{ color: "white", fontSize: 11 }}>
-                              {storeData?.data?.activity} Şirketi
-                            </Text>
-                          }
-                        />
-                      </View>
-                      <Skeleton
-                        width={22}
-                        height={22}
-                        style={{ bottom: 7 }}
-                        circle
-                        skeletonStyle={{ backgroundColor: "#ced4da" }}
-                      />
-                    </View>
-                  </View>
-                  <Skeleton
-                    width={"60%"}
-                    height={30}
-                    style={{ top: 20 }}
-                    skeletonStyle={{ backgroundColor: "#ced4da" }}
-                  />
-                  {/* <View style={{ width: "60%", paddingTop: 10 }}>
-                <TextInput
-                  style={{
-                    padding: 9,
-                    backgroundColor: "#f5f5f53d",
-                    borderWidth: 0,
-                    borderColor:'#ebebeb',
-                    borderRadius: 5,
-                  }}
-                  placeholder="Ara..."
-                  placeholderTextColor={"#333"}
-                />
-              </View> */}
-                </View>
+      */}
+        <View style={{height:height* 0.2,backgroundColor:storeData?.data?.banner_hex_code,borderBottomLeftRadius:30,borderBottomRightRadius:30}}>
+          <SafeAreaView>
+          <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between',paddingLeft:20,paddingRight:20,alignItems:'center'}}>
+                  <TouchableOpacity onPress={()=>{
+                    navigation.goBack()
+                  }}  style={{backgroundColor:'#FFFFFF',padding:5,alignItems:'center',justifyContent:'center',borderRadius:50}}>
+                  <LinkIcon name="arrow-left" size={20} color={'#000000'}/>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={onShare} style={{backgroundColor:'#FFFFFF',padding:5,alignItems:'center',justifyContent:'center',borderRadius:50}}>
+                  <LinkIcon3 name="share-2" size={20} color={'#000000'}/>
+                  </TouchableOpacity>
               </View>
-            </View>
-          </>
-        )}
+              <View style={{alignItems:'center',paddingTop:15}}>
+                  <View style={{flexDirection:'row',alignItems:'center',gap:10,width:'80%'}}>
+                    <View style={{backgroundColor:'#fff',borderRadius:50,width:50,height:50}}>
+                      <Image source={{uri:`https://private.emlaksepette.com/storage/profile_images/${storeData?.data?.profile_image}`}}/>
+                    </View>
+                    <View>
+                      <View>
+                        <View style={{flexDirection:'row',alignItems:'center',gap:5}}>
+                        <Text style={{fontSize:14,color:'#000000',fontWeight:'700'}}>{storeData?.data?.name}</Text>
+                        <Star name="verified" size={19} color={'#0275FF'}/>
+                        </View>
+                      
+                        <Text style={{fontSize:12,color:'#000000'}}>{storeData?.data?.corporate_type}</Text>
+                        </View>
+                    </View>
+
+                  </View>
+              </View>
+          </SafeAreaView>
+           
+        </View>
+          
+   
 
         <View>
           <ScrollView
             horizontal
-            style={{ padding: 10 }}
+            style={{ paddingTop:10,marginBottom:10 }}
             showsHorizontalScrollIndicator={false}
             nestedScrollEnabled={true}
           >
        
-                <View style={styles.tabBar}>
+                <View style={{
+                  flexDirection:'row',
+                  gap:10,
+                  borderBottomWidth:1,
+                  borderBottomColor:'#D7D7D7',
+                  paddingLeft:15,
+                  paddingRight:15
+                  
+                }}>
                   <TouchableOpacity
                     style={[
                       styles.TabBarBtn,
                       {
                         borderBottomWidth: tab === 0 ? 3 : 0,
                         borderBottomColor:
-                          tab === 0 ? "#264ABB" : "transparent",
+                          tab === 0 ? "#EA2C2E" : "transparent",
                         top: 2,
                       },
                     ]}
@@ -526,7 +426,7 @@ export default function Profile() {
                   
                     <Text
                       style={{
-                        color: tab === 0 ? "black" : "grey",
+                        color: tab === 0 ? "#EA2C2E" : "grey",
                         fontWeight: tab === 0 ? "500" : "normal",
                       }}
                     >
@@ -539,7 +439,7 @@ export default function Profile() {
                       {
                         borderBottomWidth: tab === 4 ? 3 : 0,
                         borderBottomColor:
-                          tab === 4 ? "#264ABB" : "transparent",
+                          tab === 4 ? "#EA2C2E" : "transparent",
                         top: 2,
                       },
                     ]}
@@ -547,7 +447,7 @@ export default function Profile() {
                   >
                     <Text
                       style={{
-                        color: tab === 4 ? "black" : "grey",
+                        color: tab === 4 ? "#EA2C2E" : "grey",
                         fontWeight: tab === 4 ? "500" : "normal",
                       }}
                     >
@@ -561,7 +461,7 @@ export default function Profile() {
                         {
                           borderBottomWidth: tab === 1 ? 3 : 0,
                           borderBottomColor:
-                            tab === 1 ? "#264ABB" : "transparent",
+                            tab === 1 ? "#EA2C2E" : "transparent",
                           top: 2,
                         },
                       ]}
@@ -569,7 +469,7 @@ export default function Profile() {
                     >
                       <Text
                         style={{
-                          color: tab === 1 ? "black" : "grey",
+                          color: tab === 1 ? "#EA2C2E" : "grey",
                           fontWeight: tab === 1 ? "500" : "normal",
                           bottom: width > 400 ? 0 : 1,
                         }}
@@ -585,7 +485,7 @@ export default function Profile() {
                       {
                         borderBottomWidth: tab === 2 ? 3 : 0,
                         borderBottomColor:
-                          tab === 2 ? "#264ABB" : "transparent",
+                          tab === 2 ? "#EA2C2E" : "transparent",
                         top: 2,
                       },
                     ]}
@@ -593,7 +493,7 @@ export default function Profile() {
                   >
                     <Text
                       style={{
-                        color: tab === 2 ? "black" : "grey",
+                        color: tab === 2 ? "#EA2C2E" : "grey",
                         fontWeight: tab === 2 ? "500" : "normal",
                       }}
                     >
@@ -607,7 +507,7 @@ export default function Profile() {
                       {
                         borderBottomWidth: tab === 3 ? 3 : 0,
                         borderBottomColor:
-                          tab === 3 ? "#264ABB" : "transparent",
+                          tab === 3 ? "#EA2C2E" : "transparent",
                         top: 2,
                       },
                     ]}
@@ -616,7 +516,7 @@ export default function Profile() {
                     
                     <Text
                       style={{
-                        color: tab === 3 ? "black" : "grey",
+                        color: tab === 3 ? "#EA2C2E" : "grey",
                         fontWeight: tab === 3 ? "500" : "normal",
                       }}
                     >
@@ -630,7 +530,7 @@ export default function Profile() {
                       {
                         borderBottomWidth: tab === 5 ? 3 : 0,
                         borderBottomColor:
-                          tab === 5 ? "#264ABB" : "transparent",
+                          tab === 5 ? "#EA2C2E" : "transparent",
                         top: 2,
                       },
                     ]}
@@ -638,7 +538,7 @@ export default function Profile() {
                   >
                     <Text
                       style={{
-                        color: tab === 5 ? "black" : "grey",
+                        color: tab === 5 ? "#EA2C2E" : "grey",
                         fontWeight: tab === 5 ? "500" : "normal",
                       }}
                     >
@@ -651,7 +551,7 @@ export default function Profile() {
                       {
                         borderBottomWidth: tab === 6 ? 3 : 0,
                         borderBottomColor:
-                          tab === 6 ? "#264ABB" : "transparent",
+                          tab === 6 ? "#EA2C2E" : "transparent",
                         top: 2,
                       },
                     ]}
@@ -659,7 +559,7 @@ export default function Profile() {
                   >
                     <Text
                       style={{
-                        color: tab === 6 ? "black" : "grey",
+                        color: tab === 6 ? "#EA2C2E" : "grey",
                         fontWeight: tab === 6 ? "500" : "normal",
                       }}
                     >
@@ -689,45 +589,20 @@ export default function Profile() {
       <View>
         <View
           style={{
-            padding: 20,
-            display: "flex",
-            justifyContent: "space-between",
-            flexDirection: "row",
+            paddingBottom:20,
+            paddingTop:5,
+            paddingRight:15,
+            alignItems:'flex-end',
 
             zIndex: 1,
           }}
         >
-          {loading ? (
-            <>
+        
+           
               <TouchableOpacity
                 style={{
                   width: "40%",
-                  backgroundColor: "red",
-                  borderRadius: 5,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                onPress={() => {
-                  setloading(true);
-                  handleOpenPhone();
-                }} // Burada yükleme durumunu göstermek için geçici bir işlem
-              >
-                <Text
-                  style={{
-                    padding: 10,
-                    color: "white",
-                    fontWeight: "500",
-                    fontSize: 16,
-                    textAlign: "center",
-                  }}
-                >
-                  Ara
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  width: "40%",
-                  backgroundColor: "red",
+                  backgroundColor: "#EA2C2E",
                   borderRadius: 5,
                   justifyContent: "center",
                   alignItems: "center",
@@ -742,20 +617,15 @@ export default function Profile() {
                     padding: 10,
                     color: "white",
                     fontWeight: "500",
-                    fontSize: 16,
+                    fontSize: 13,
                     textAlign: "center",
                   }}
                 >
                   Form Doldur
                 </Text>
               </TouchableOpacity>
-            </>
-          ) : (
-            <>
-              <SkeletonBox />
-              <SkeletonBox />
-            </>
-          )}
+         
+       
         </View>
       </View>
       <Modal
@@ -890,21 +760,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 50,
   },
 
-  tabBar: {
-    padding: 3,
-    // height:width>400? '90%':'60%',
-    // height:height>300?'90%':'70%',
 
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    gap: 30,
-    borderBottomWidth: 1,
-    borderColor: "#ebebeb",
-    top: 5,
-
-    paddingRight: 25,
-  },
 
   TabBarBtn: {
     justifyContent: "center",

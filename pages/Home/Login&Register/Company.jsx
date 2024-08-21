@@ -1189,7 +1189,7 @@ export default function Company() {
           backdropColor="transparent"
           style={styles.modal2}
         >
-          <View style={styles.modalContent2}>
+          <SafeAreaView style={styles.modalContent2}>
             <ScrollView>
               <HTML source={{ html: Deals }} contentWidth={100} />
 
@@ -1207,7 +1207,7 @@ export default function Company() {
                 </TouchableOpacity>
               </View>
             </ScrollView>
-          </View>
+          </SafeAreaView>
         </Modal>
         <Modal
           isVisible={modalVisible2}

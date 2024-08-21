@@ -11,8 +11,10 @@ import {
   Linking,
 } from "react-native";
 import { React, useState, useEffect } from "react";
-import Icon from "react-native-vector-icons/Feather";
-import Star from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/AntDesign";
+import Star from "react-native-vector-icons/MaterialIcons";
+import Icon2 from 'react-native-vector-icons/Entypo'
+import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons'
 import Map from "../../../components/Map";
 import ShopComment from "./ShopComment";
 import ProfileMap from "./ProfileMap";
@@ -55,7 +57,159 @@ export default function ShopInfo({ data, loading }) {
       scrollEnabled={loading ? true : false}
     >
       <View style={styles.container}>
-        <View
+        <View style={{padding:10,borderWidth:1,borderColor:'#D7D7D7',borderRadius:12,gap:7}}>
+       
+          
+            <View style={{flexDirection:'row',alignItems:'center',}}>
+                <View style={{flex:0.2/2,alignItems:'center'}}>
+                  <Icon name="infocirlce" size={16}/>
+                </View>
+                <View style={{flex:1.6/2}}>
+                  <Text style={{fontSize:13,fontWeight:'600'}}>Mağaza Bilgisi</Text>
+                </View>
+            </View>
+            <View style={{flexDirection:'row',alignItems:'center'}}>
+                <View style={{flex:0.2/2,alignItems:'center'}} >
+                <Star name="verified" size={19} color={'#0275FF'}/>
+                </View>
+                <View style={{flex:1.6/2}}>
+                  <Text style={{fontSize:13,fontWeight:'600',color:'#0275FF'}}>Onaylanmış Kurumsal Mağaza</Text>
+                </View>
+              </View> 
+            <View style={{flexDirection:'row',alignItems:'center'}}>
+                <View style={{flex:0.2/2,alignItems:'center'}}>
+             
+                </View>
+                <View style={{flex:1.6/2}}>
+                  <Text style={{fontSize:13,fontWeight:'600'}}>Hesap Oluşturma Tarihi: {formattedDate}</Text>
+                </View>
+              </View> 
+        </View>
+        <View style={{padding:10,borderWidth:1,borderColor:'#D7D7D7',borderRadius:12,gap:7}}>
+         
+            <View style={{flexDirection:'row'}}>
+            <View style={{flex:0.2/2,alignItems:'center'}} >
+              <Icon2 name="mail" size={17}/>
+                </View>
+              <View style={{flex:1.7/2}}>
+                  <Text style={{fontSize:13,fontWeight:'600'}}>E-posta Adresi</Text>
+              </View>
+             
+            </View>
+            <View style={{width:'100%'}}>
+              <View style={{paddingLeft:9}}>
+              <Text style={{fontSize:13,fontWeight:'400'}}>{data?.data?.email}</Text>
+              </View>
+           
+            </View>
+          
+   </View>
+   <View style={{flexDirection:'row',alignItems:'center'}}>
+    <View style={{flex:1.5/2,padding:9,borderWidth:1,borderColor:'#D7D7D7',borderTopLeftRadius:12,borderBottomLeftRadius:12,paddingLeft:17,gap:7}}>
+    <Text style={{fontSize:13,fontWeight:'600'}}>Telefon Numarası</Text>
+    <Text style={{fontSize:13,fontWeight:'400'}}>{data?.data?.phone ? data?.data?.phone :'Telefon Numarası Bulunmuyor'}</Text>
+    </View>
+    <TouchableOpacity onPress={{}} style={{flex:0.5/2,backgroundColor:'#EA2C2E',padding:11,borderTopLeftRadius:2,borderBottomLeftRadius:2,alignItems:'center',borderBottomRightRadius:10,borderTopRightRadius:10}}>
+      <View style={{alignItems:'center',gap:5}}>
+        <Icon name="phone" color={'#fff'} size={15}/>
+        <Text style={{color:'#fff' , fontSize:13,fontWeight:'600'}}>Ara</Text>
+      </View>
+    </TouchableOpacity>
+   </View>
+   <View style={{flexDirection:'row',alignItems:'center'}}>
+    <View style={{flex:1.5/2,padding:9,borderWidth:1,borderColor:'#D7D7D7',borderTopLeftRadius:12,borderBottomLeftRadius:12,paddingLeft:17,gap:7}}>
+    <Text style={{fontSize:13,fontWeight:'600'}}>Konum</Text>
+    <Text style={{fontSize:13,fontWeight:'400'}}>{data?.data?.town?.sehir_title + '/' + data?.data?.district?.ilce_title + '/'+ data?.data?.neighborhood?.mahalle_title ? data?.data?.town?.sehir_title + '/' + data?.data?.district?.ilce_title + '/'+ data?.data?.neighborhood?.mahalle_title:'Konum Bilgisi Bulunmuyor'}</Text>
+    </View>
+    <TouchableOpacity onPress={handleGetDirections} style={{flex:0.5/2,backgroundColor:'#EA2C2E',padding:11,borderTopLeftRadius:2,borderBottomLeftRadius:2,alignItems:'center',borderBottomRightRadius:10,borderTopRightRadius:10}}>
+      <View style={{alignItems:'center',gap:5}}>
+        <Icon3 name="map-marker-multiple" color={'#fff'} size={15}/>
+        <Text style={{color:'#fff' , fontSize:13,fontWeight:'600'}}>Yol Tarifi Al</Text>
+      </View>
+    </TouchableOpacity>
+   </View>
+   <View style={{flexDirection:'row',alignItems:'center'}}>
+    <View style={{flex:1.5/2,padding:10,borderWidth:1,borderColor:'#D7D7D7',borderTopLeftRadius:12,borderBottomLeftRadius:12,paddingLeft:17,gap:7}}>
+    <Text style={{fontSize:13,fontWeight:'600'}}>Web Sitesi</Text>
+    <Text style={{fontSize:10,fontWeight:'400'}}>{data?.data.website}</Text>
+    </View>
+    <TouchableOpacity onPress={openWebsite} style={{flex:0.5/2,backgroundColor:'#EA2C2E',padding:11,borderTopLeftRadius:2,borderBottomLeftRadius:2,alignItems:'center',borderBottomRightRadius:10,borderTopRightRadius:10}}>
+      <View style={{alignItems:'center',gap:5}}>
+        <Icon3 name="web" color={'#fff'} size={15}/>
+        <Text style={{color:'#fff' , fontSize:11,fontWeight:'600',textAlign:'center'}}>Web'e git</Text>
+      </View>
+    </TouchableOpacity>
+   </View>
+   <View
+          style={[
+            { width: "100%", height: 250, borderRadius: 10 },
+            
+          ]}
+        >
+          <MapView
+            initialRegion={{
+              latitude:
+                parseFloat(
+                  data?.data?.latitude == null ? 38.9637 : data?.data?.latitude
+                ) || 0,
+              longitude:
+                parseFloat(
+                  data?.data?.longitude == null
+                    ? 35.2433
+                    : data?.data?.longitude
+                ) || 0,
+              latitudeDelta: data?.data?.latitude == null ? 8.0 : 0.0922,
+              longitudeDelta: data?.data?.lingitude == null ? 8.0 : 0.0421,
+              altidute: 50.03281021118164,
+            }}
+            style={{ flex: 1,borderRadius:12 }}
+          >
+            <Marker
+              coordinate={{
+                latitude:
+                  parseFloat(
+                    data?.data?.latitude == null || undefined
+                      ? ""
+                      : data?.data?.latitude
+                  ) || 0,
+                longitude:
+                  parseFloat(
+                    data?.data?.longitude == null || undefined
+                      ? ""
+                      : data?.data?.longitude
+                  ) || 0,
+              }}
+              title={data?.name}
+              description="Proje Konumu"
+            />
+          </MapView>
+       
+        </View>
+   {/* <View style={{flexDirection:'row',width:'100%'}}>
+   <View style={{borderWidth:1,borderColor:'#D7D7D7',borderRadius:12,gap:7,flexDirection:'row'}}>
+         
+         <View style={{flexDirection:'row'}}>
+         
+           <View style={{flex:1.4/2,gap:7,paddingLeft:17,paddingTop:10,paddingBottom:10}}>
+               <Text style={{fontSize:13,fontWeight:'600'}}>Telefon Numarası</Text>
+               <Text style={{fontSize:13,fontWeight:'600'}}>444 3 278</Text>
+           </View>
+         
+         </View>
+        
+       
+</View>
+<View style={{flex:0.6/2}}>
+                <TouchableOpacity style={{backgroundColor:'red',height:60,borderTopRightRadius:12,borderBottomRightRadius:12,alignItems:'center',justifyContent:'center'}}>
+                  <View>
+                    <Icon name="phone" color={'#fff'} size={17}/>
+                  </View>
+                   <Text style={{color:'#fff'}}>Ara</Text> 
+                </TouchableOpacity>
+            </View>
+   </View> */}
+  
+        {/* <View
           style={{
             gap: 8,
           }}
@@ -204,329 +358,14 @@ export default function ShopInfo({ data, loading }) {
               description="Proje Konumu"
             />
           </MapView>
-          {/* <ProfileMap mapData={data}/>   */}
+       
         </View>
-        </View>
+        </View> */}
 
        
       </View>
 
-      {/* {loading ? (
-        <>
-          <View style={[styles.comment, { borderRadius: 10 }]}>
-            <View style={styles.commentArea}>
-              <Text
-                style={{ color: "#666666", fontWeight: "600", display: "none" }}
-              >
-                Bu mağaza için henüz yorum yapılmadı
-              </Text>
-              <View style={{ padding: 10 }}>
-                <View>
-                  <Text
-                    style={{ fontSize: 14, fontWeight: "bold", bottom: 10 }}
-                  >
-                    Tüm yorumlar
-                  </Text>
-                </View>
-                <View style={styles.commentPoint}>
-                  <View style={styles.point}>
-                    <View
-                      style={{
-                        alignItems: "center",
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Text style={{ fontSize: 25, fontWeight: "bold" }}>
-                        4.6
-                      </Text>
-                      <Text
-                        style={{ top: 5, color: "grey", fontWeight: "400" }}
-                      >
-                        /5
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Star name="star-o" size={18} />
-                      <Star name="star-o" size={18} />
-                      <Star name="star-o" size={18} />
-                      <Star name="star-o" size={18} />
-                      <Star name="star-o" size={18} />
-                    </View>
-                    <Text style={{ fontSize: 12, textAlign: "center" }}>
-                      Ortalama
-                    </Text>
-                    <Text style={{ fontSize: 12, textAlign: "center" }}>
-                      ( {data?.data?.owners.length} Yorum)
-                    </Text>
-                  </View>
-                  <View style={styles.stars}>
-                    <View
-                      style={{ flex: 1.9 / 2, justifyContent: "space-around" }}
-                    >
-                      <View>
-                        <View
-                          style={{
-                            width: "100%",
-                            height: 4,
-                            backgroundColor: "blue",
-                            borderRadius: 20,
-                          }}
-                        />
-                      </View>
-                      <View>
-                        <View
-                          style={{
-                            width: "90%",
-                            height: 4,
-                            backgroundColor: "blue",
-                            borderRadius: 20,
-                          }}
-                        />
-                      </View>
-                      <View>
-                        <View
-                          style={{
-                            width: "70%",
-                            height: 4,
-                            backgroundColor: "blue",
-                            borderRadius: 20,
-                          }}
-                        />
-                      </View>
-                      <View>
-                        <View
-                          style={{
-                            width: "60%",
-                            height: 4,
-                            backgroundColor: "blue",
-                            borderRadius: 20,
-                          }}
-                        />
-                      </View>
-                      <View>
-                        <View
-                          style={{
-                            width: "50%",
-                            height: 4,
-                            backgroundColor: "blue",
-                            borderRadius: 20,
-                          }}
-                        />
-                      </View>
-                    </View>
-                    <View style={{ display: "flex", gap: 3 }}>
-                      <View>
-                        <View
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: 3,
-                          }}
-                        >
-                          <Text>5</Text>
-                          <Star name="star-o" size={10} style={styles.star} />
-                        </View>
-                      </View>
-                      <View>
-                        <View
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: 3,
-                          }}
-                        >
-                          <Text>4</Text>
-                          <Star name="star-o" size={10} style={styles.star} />
-                        </View>
-                      </View>
-                      <View>
-                        <View
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: 3,
-                          }}
-                        >
-                          <Text>3</Text>
-                          <Star name="star-o" size={10} style={styles.star} />
-                        </View>
-                      </View>
-                      <View>
-                        <View
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: 3,
-                          }}
-                        >
-                          <Text>2</Text>
-                          <Star name="star-o" size={10} style={styles.star} />
-                        </View>
-                      </View>
-                      <View>
-                        <View
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: 3,
-                          }}
-                        >
-                          <Text>1</Text>
-                          <Star name="star-o" size={10} style={styles.star} />
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </View>
-            <View
-              style={{
-                width: "100%",
-                height: 2,
-                backgroundColor: "grey",
-                top: 3,
-              }}
-            ></View>
-            <View style={[{ top: 5 }, styles.shadow]}>
-              <ScrollView
-                horizontal
-                contentContainerStyle={{ padding: 10, gap: 10 }}
-                showsHorizontalScrollIndicator={false}
-              >
-                {data?.data?.owners.length < 1 ? (
-                  <View style={{ width: "100%" }}>
-                    <Text style={{ textAlign: "center", color: "red" }}>
-                      Bu Mağaza için yorum yapılmadı
-                    </Text>
-                  </View>
-                ) : (
-                  data?.data?.owners?.map((itemComment, _index) => (
-                    <CommentItem
-                      username=""
-                      key={_index}
-                      comment={itemComment.comment}
-                      date={itemComment.created_at}
-                      rate={itemComment.rate}
-                    />
-                  ))
-                )}
-              </ScrollView>
-            </View>
-          </View>
-        </>
-      ) : (
-        <>
-          <View style={[styles.comment, { borderRadius: 10 }]}>
-            <View style={styles.commentArea}>
-              <Text
-                style={{ color: "#666666", fontWeight: "600", display: "none" }}
-              >
-                Bu mağaza için henüz yorum yapılmadı
-              </Text>
-              <View style={{ padding: 10 }}>
-                <View>
-                  <Skeleton width={70} height={10} style={{ bottom: 10 }} />
-                </View>
-                <View style={styles.commentPoint}>
-                  <View
-                    style={[styles.point, { alignItems: "center", gap: 5 }]}
-                  >
-                    <Skeleton
-                      width={80}
-                      height={30}
-                      children={
-                        <View
-                          style={{
-                            alignItems: "center",
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Text style={{ fontSize: 25, fontWeight: "bold" }}>
-                            4.6
-                          </Text>
-                          <Text
-                            style={{ top: 5, color: "grey", fontWeight: "400" }}
-                          >
-                            /5
-                          </Text>
-                        </View>
-                      }
-                    />
-                    <Skeleton width={100} height={15} />
-                    <Skeleton width={60} height={10} />
-                    <Skeleton width={40} height={10} />
-                  </View>
-                  <View style={styles.stars}>
-                    <View
-                      style={{ flex: 1.9 / 2, justifyContent: "space-around" }}
-                    >
-                      <View>
-                        <Skeleton width={"100%"} height={5} />
-                      </View>
-                      <View>
-                        <Skeleton width={"100%"} height={5} />
-                      </View>
-                      <View>
-                        <Skeleton width={"100%"} height={5} />
-                      </View>
-                      <View>
-                        <Skeleton width={"100%"} height={5} />
-                      </View>
-                      <View>
-                        <Skeleton width={"100%"} height={5} />
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </View>
-            <View
-              style={{
-                width: "100%",
-                height: 2,
-                backgroundColor: "grey",
-                top: 3,
-              }}
-            ></View>
-            <View style={[{ top: 5 }, styles.shadow]}>
-              <ScrollView
-                horizontal
-                contentContainerStyle={{ padding: 10, gap: 10 }}
-                showsHorizontalScrollIndicator={false}
-              >
-                {data?.data?.owners.length < 1 ? (
-                  <View style={{ width: "100%" }}>
-                    <Text style={{ textAlign: "center", color: "red" }}>
-                      Bu Mağaza için yorum yapılmadı
-                    </Text>
-                  </View>
-                ) : (
-                  data?.data?.owners?.map((itemComment, _index) => (
-                    <CommentItem
-                      username=""
-                      key={_index}
-                      comment={itemComment.comment}
-                      date={itemComment.created_at}
-                      rate={itemComment.rate}
-                    />
-                  ))
-                )}
-              </ScrollView>
-            </View>
-          </View>
-        </>
-      )} */}
+     
     </ScrollView>
   );
 }
@@ -535,6 +374,7 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 10,
     height: "auto",
+    gap:10
   },
   ınformation: {
     backgroundColor: "#FFFFFF",

@@ -529,6 +529,7 @@ export default function PostDetail() {
     }
 
   };
+  const [AlertForAddToCard, setAlertForAddToCard] = useState(false)
   const OpenSharing= data && data.housing && data.housing.housing_type_data &&  JSON.parse(data.housing.housing_type_data)["open_sharing1"]
   console.log(OpenSharing + 'dkfsdkfsdkfşlsdfsdfsd')
   const totalRate = data &&  data?.housingComments && data?.housingComments?.map(item => parseFloat(item?.rate) || 0).reduce((acc, rate) => acc + rate, 0); 
@@ -621,7 +622,12 @@ export default function PostDetail() {
                         </TouchableOpacity>:
                            <TouchableOpacity 
                            onPress={()=>{
-                           setModalForAddToCart(true)
+                            if (user.access_token) {
+                              setModalForAddToCart(true)
+                            }else{
+                              setAlertForAddToCard(true)
+                            }
+                          
                            }}
                            style={{
                              backgroundColor:'#EB2B2E',
@@ -1824,9 +1830,9 @@ export default function PostDetail() {
             show={AlertForFavorite}
             showProgress={false}
               titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
-              title={'Favorilerinize İlan Ekleyebilmek İçin Giriş Yapmanız Gerekir'}
+              title={'Giriş Yap'}
               messageStyle={{textAlign:'center'}}
-           
+            message="Favorilerinize İlan Ekleyebilmek İçin Giriş Yapmanız Gerekir"
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
             showCancelButton={true}
@@ -1843,6 +1849,35 @@ export default function PostDetail() {
             onConfirmPressed={() => {
               navigation.navigate('Login')
                 setAlertForFavorite(false)
+               
+            }}
+            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
+            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
+          />
+               <AwesomeAlert
+            
+            show={AlertForAddToCard}
+            showProgress={false}
+              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
+              title={`Giriş Yap`}
+              messageStyle={{textAlign:'center'}}
+            message="Sepetinize konut ekleyebilmek için Giriş Yapmanız gerekmektedir"
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+
+            cancelText="Vazgeç"
+            confirmText="Giriş Yap"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+               setAlertForAddToCard(false)
+             
+            }}
+            onConfirmPressed={() => {
+              navigation.navigate('Login')
+             setAlertForAddToCard(false)
                
             }}
             confirmButtonTextStyle={{marginLeft:20,marginRight:20}}

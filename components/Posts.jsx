@@ -293,9 +293,49 @@ export default function Posts({
   }, [roomData])
   
   console.log(offSaleStatus + 'jdflsdjfl')
+
+const [PaymaentAlert, setPaymaentAlert] = useState(false)
+  const HandleModal=()=>{
+    if (offSaleStatus!=5 &&!user.access_token) {
+        setPaymaentAlert(true)
+    }else{
+      openModal(roomOrder)
+    }
+ 
+  }
 console.log(user)
   return (
     <View style={styles.container}>
+        <AwesomeAlert
+        show={PaymaentAlert}
+        showProgress={false}
+        titleStyle={{
+          color: "#333",
+          fontSize: 13,
+          fontWeight: "700",
+          textAlign: "center",
+          margin: 5,
+        }}
+        title={'Giriş Yap'}
+        messageStyle={{ textAlign: "center" }}
+        message={`Ödeme Detayını Görmek için lütfen Giriş Yapınız`}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="Vazgeç"
+        confirmText="Giriş Yap"
+        cancelButtonColor="#ce4d63"
+        confirmButtonColor="#1d8027"
+        onCancelPressed={() => {
+        setPaymaentAlert(false)
+        }}
+        onConfirmPressed={() => {
+          navigation.navigate("Login");
+        }}
+        confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+      />
       <AwesomeAlert
         show={cartIsNull}
         showProgress={false}
@@ -635,7 +675,9 @@ console.log(user)
                 ₺
               </Text>
             </View>
-          ) : null}
+          ) : <View style={{paddingTop:5,alignItems:'flex-end'}}>
+            <Text style={{fontSize:12,color:'#264ABB',fontWeight:'800'}}>{formatPrice(roomData['price[]'])}₺</Text>
+            </View>}
 
           <View style={styles.priceAndButtons}>
             <View style={styles.btns}>
@@ -647,8 +689,10 @@ console.log(user)
                       : "50%",
                 }}
               >
-                
-             
+
+                 
+
+
 
                  {
                   sold  &&
@@ -682,7 +726,7 @@ console.log(user)
             }
          
                   {
-                 (offSaleStatus==2 ||offSaleStatus==5) &&  user.role=='Kurumsal Hesap'&&user.corporate_type == 'Emlak Ofisi'&&project.user.id!==user.id &&project.user.id!==user.parent_id &&user.role!=='Bireysel Hesap'&&
+                 (offSaleStatus==2 ) &&  user.role=='Kurumsal Hesap'&&user.corporate_type == 'Emlak Ofisi'&&project.user.id!==user.id &&project.user.id!==user.parent_id &&user.role!=='Bireysel Hesap'&&
                    <View style={styles.priceContainer}>
                    <TouchableOpacity
                      style={styles.addBasket}
@@ -769,7 +813,7 @@ console.log(user)
                 } 
                 </>
                 }
-                
+                 
           {/* {
                   offSaleStatus==1 &&
                   <TouchableOpacity style={styles.offSale} disabled>
@@ -932,7 +976,7 @@ console.log(user)
               </View>
 
               <View style={{ width: "50%" }}>
-               {
+              {
               sold &&
               sold?.status == 1 && (roomData['share_sale[]'] && roomData['number_of_shares[]'] == sumCartOrderQt[roomOrder].qt_total)? 
                   <>
@@ -964,7 +1008,7 @@ console.log(user)
                    offSaleStatus==2  &&  (user.role=='Kurumsal Hesap' && user.corporate_type == 'Emlak Ofisi')&&project.user.id!==user.id &&project.user.id!==user.parent_id &&user.role!=='Bireysel Hesap'&&
                    <TouchableOpacity
                    style={styles.payDetailBtn}
-                   onPress={() => openModal(roomOrder)}
+                   onPress={() => HandleModal()}
                  >
                    <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                  </TouchableOpacity>
@@ -974,7 +1018,7 @@ console.log(user)
                    offSaleStatus==2 && ( user.role=='Bireysel Hesap' && user.access_token || !user.access_token)&&project.user.id!==user.id &&project.user.id!==user.parent_id && 
                    <TouchableOpacity
                    style={styles.payDetailBtn}
-                   onPress={() => openModal(roomOrder)}
+                   onPress={() => alert('Bilgi ')}
                  >
                    <Text style={styles.payDetailText}>Bilgi Al</Text>
                  </TouchableOpacity>
@@ -984,7 +1028,7 @@ console.log(user)
                         (   offSaleStatus!=2 && offSaleStatus!=1&& offSaleStatus!=3 && offSaleStatus!=5 &&offSaleStatus!=4  )&&  project.user.id !=user.id && project.user.id!=user.parent_id&&
                    <TouchableOpacity
                    style={styles.payDetailBtn}
-                   onPress={() => openModal(roomOrder)}
+                   onPress={() =>alert('Bilgi')}
                  >
                    <Text style={styles.payDetailText}>Bilgi Al</Text>
                  </TouchableOpacity>
@@ -994,7 +1038,7 @@ console.log(user)
                   offSaleStatus==5 &&  project.user.id !=user.id && project.user.id!=user.parent_id&&
                   <TouchableOpacity
                   style={styles.payDetailBtn}
-                  onPress={() => openModal(roomOrder)}
+                  onPress={() => HandleModal()}
                 >
                   <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                 </TouchableOpacity>
@@ -1004,7 +1048,7 @@ console.log(user)
                     (offSaleStatus==3 ) && project.user.id !=user.id && project.user.id!=user.parent_id&&
                    <TouchableOpacity
                    style={styles.payDetailBtn}
-                   onPress={() => openModal(roomOrder)}
+                   onPress={() => HandleModal()}
                  >
                    <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                  </TouchableOpacity>
@@ -1037,6 +1081,7 @@ console.log(user)
                   </TouchableOpacity>
                 
                 } 
+              
               {/* 
                 {
                    offSaleStatus==2 &&  user.role=='Kurumsal Hesap'&&user.corporate_type == 'Emlak Ofisi'&&project.user.id!==user.id &&project.user.id!==user.parent_id &&user.role!=='Bireysel Hesap'&&

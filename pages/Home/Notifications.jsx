@@ -259,7 +259,7 @@ console.log(selectedNotificateId)
        <Icon name="bell" size={50} color={'#EA2A28'}/>
    </View>
    <View>
-   <Text style={{color:'grey',fontSize:16,fontWeight:'600'}}>Bildirimlerinizi görmek için giriş yapmanız gerekmektedir</Text>
+   <Text style={{color:'grey',fontSize:16,fontWeight:'600',textAlign:'center'}}>Bildirimlerinizi görmek için giriş yapmanız gerekmektedir</Text>
      <Text></Text>
    </View>
    <View style={{width:'100%',alignItems:'center'}}>

@@ -434,7 +434,7 @@ const [cartIsNull, setcartIsNull] = useState(false)
                   )}
                 </View>
                     {
-                      housing?.user?.id == user.id ?
+                      housing?.user?.id == user.id && user.access_token ?
                       <TouchableOpacity
                   style={[styles.addBasket,{backgroundColor:'#008001'}]}
               

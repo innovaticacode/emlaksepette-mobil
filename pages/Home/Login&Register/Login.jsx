@@ -28,7 +28,6 @@ import { ActivityIndicator } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
-import { AlertNotificationRoot,Dialog,ALERT_TYPE} from "react-native-alert-notification";
 
 export default function Login({ navigation }) {
   const route = useRoute();
@@ -105,7 +104,6 @@ export default function Login({ navigation }) {
         setshowMailSendAlert(true);
         setStatus(false);
         setStatusMessage(res.data.message);
-     
       }
     });
   };
@@ -181,7 +179,6 @@ export default function Login({ navigation }) {
   };
   const [modalVisible, setModalVisible] = useState(false);
   return (
-    <AlertNotificationRoot>
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         {loading ? (
@@ -190,33 +187,34 @@ export default function Login({ navigation }) {
           </View>
         ) : (
           <>
-            {!IsShowAlert && <View style={[styles.header, {}]}></View>}
-
-            <View style={!IsShowAlert ? { padding: 10 } : null}>
-              <View
-                style={{
-                  backgroundColor: "#E7FCEB",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  padding: 10,
-                  gap: 15,
-                  display: IsShowAlert ? "flex" : "none",
-                }}
-              >
-                <View>
-                  <BackIcon name="checkcircle" color={"#1D8027"} size={30} />
-                </View>
-                <View style={{ flex: 1.9 / 2 }}>
-                  <Text style={{ color: "#1D8027", fontSize: 12 }}>
-                    Hesabınız oluşturuldu. Hesabınızı etkinleştirmek için lütfen
-                    e-posta adresinize gönderilen doğrulama bağlantısını
-                    tıklayarak e-postanızı onaylayın
-                  </Text>
-                </View>
-              </View>
-            </View>
+         
             <View style={styles.logIn}>
               <View style={styles.form}>
+                {
+                  IsShowAlert == true &&
+                  <View
+                  style={{
+                    backgroundColor: "#E7FCEB",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    padding: 10,
+                    gap: 15,
+                    display: IsShowAlert ? "flex" : "none",
+                  }}
+                >
+                  <View>
+                    <BackIcon name="checkcircle" color={"#1D8027"} size={30} />
+                  </View>
+                  <View style={{ flex: 1.9 / 2 }}>
+                    <Text style={{ color: "#1D8027", fontSize: 12 }}>
+                      Hesabınız oluşturuldu. Hesabınızı etkinleştirmek için lütfen
+                      e-posta adresinize gönderilen doğrulama bağlantısını
+                      tıklayarak e-postanızı onaylayın
+                    </Text>
+                  </View>
+                </View>
+  
+                }
                 <View style={{ gap: 20 }}>
                   <View>
                     <Text
@@ -272,7 +270,7 @@ export default function Login({ navigation }) {
                          right:9,
                           justifyContent:'center',
                           top:'21%',
-                      
+                       // Bu değeri TextInput'un yüksekliğine göre ayarlayın
                           zIndex: 1,
                         }}
                         onPress={show}
@@ -601,7 +599,6 @@ export default function Login({ navigation }) {
         )}
       </View>
     </TouchableWithoutFeedback>
-    </AlertNotificationRoot>
   );
 }
 

@@ -52,7 +52,7 @@ GetUserInfo()
 
     {
         (namFromGetUser?.has_club==0 ||  namFromGetUser?.has_club==2 || namFromGetUser?.has_club==3 ) ?
-        <Text>sdfsd</Text>:
+      <RegisterRealtorClub/>:
   
    
     <View style={{flex:1}}>
