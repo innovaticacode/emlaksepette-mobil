@@ -1128,7 +1128,7 @@ export default function PostDetail() {
                       ProjectHomeData?.projectCartOrders[HomeId]
                         ?.is_show_user === "on" &&
                       ProjectHomeData?.projectCartOrders[HomeId]?.status ==
-                        1 && (
+                        1 && 
                         <TouchableOpacity style={styles.showCustomer}>
                           <Text style={styles.showCustomerText}>
                             Komşumu Gör
