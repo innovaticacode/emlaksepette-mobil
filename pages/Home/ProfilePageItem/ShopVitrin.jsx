@@ -136,7 +136,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
         </View>
       )}
 
-      {owners.length > 0 && (
+      {/* {owners.length > 0 && (
         <View style={[{ top: 5 }, styles.shadow]}>
           <ScrollView
             horizontal
@@ -155,9 +155,9 @@ export default function ShopVitrin({ data, housingdata, settab }) {
             ))}
           </ScrollView>
         </View>
-      )}
+      )} */}
 
-      <View style={{ marginTop: 50 }}>
+      <View style={{ marginTop: 10 }}>
         {objectKeys.length > 0 &&
           objectKeys.slice(0, 1).map((key, index) => (
             <View key={index}>

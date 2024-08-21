@@ -82,7 +82,7 @@ export default function OtherHomeInProject({
           shareSale={data.projectHousingsList[index + 1]["share_sale[]"] ?? null}
           numberOfShare={data.projectHousingsList[index + 1]["number_of_shares[]"] ?? null}
           shareSaleEmpty={!data.projectHousingsList[index + 1]["share_sale[]"] || data.projectHousingsList[index + 1]["share_sale[]"] === "[]"}
-         
+          
           sumCartOrderQt={data.sumCartOrderQt}
           openModal={openModal}
           bookmarkStatus={true}

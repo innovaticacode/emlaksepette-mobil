@@ -19,7 +19,7 @@ import HTML from "react-native-render-html";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
-
+import { AlertNotificationRoot,Dialog,ALERT_TYPE,Toast} from "react-native-alert-notification";
 export default function Personal({ type }) {
   const navigation = useNavigation();
   const [eye, seteye] = useState("eye-off-sharp");
@@ -56,8 +56,9 @@ export default function Personal({ type }) {
 
   const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] =
     useState(false);
+    const [SuccessModal, setSuccessModal] = useState(false)
   const postData = async () => {
-    setIsloading(true);
+   setIsloading(true)
     try {
       var formData = new FormData();
       formData.append("type", 1);
@@ -77,7 +78,9 @@ export default function Personal({ type }) {
       // İsteğin başarılı bir şekilde tamamlandığı durum
 
       setmessage(response.data.message);
-      navigation.navigate("Login", { showAlert: true, message: message });
+      navigation.navigate("Login", { showAlert: true,});
+   
+      
       setname("");
       setePosta("");
       setpassword("");
@@ -88,6 +91,7 @@ export default function Personal({ type }) {
       setChecked3(false);
       seterrorStatu(0);
       seterrorMessage("");
+   
     } catch (error) {
       // Hata durumunda
 
@@ -107,7 +111,9 @@ export default function Personal({ type }) {
 
       console.error("Beklenmeyen bir hata oluştu:", error);
     } finally {
-      setIsloading(false);
+     setIsloading(false)
+   
+    
     }
   };
   const [errorStatu, seterrorStatu] = useState(0);
@@ -242,6 +248,7 @@ export default function Personal({ type }) {
   };
 
   return (
+  
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <ScrollView
@@ -332,9 +339,8 @@ export default function Personal({ type }) {
                 <TouchableOpacity
                   style={{
                     position: "absolute",
-                    right: 10,
-                    bottom: 9,
-                    top: 15,
+                    right:9,
+                    top:'21%',
                   }}
                   onPress={show}
                 >
@@ -749,26 +755,43 @@ export default function Personal({ type }) {
             <View style={styles.modalContent}>
               <ActivityIndicator size="large" color="#333" />
               <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-                Giriş Sayfasına Yönlendiriliyorsunuz
+               Üyeliğiniz Oluşturuluyor
               </Text>
+            </View>
+          </Modal>
+          <Modal
+            isVisible={SuccessModal}
+            animationIn={'fadeIn'}
+            animationOut={'fadeOut'}
+            style={styles.modal}
+          >
+            <View style={styles.modalContent}>
+              
+                  <View>
+                    <Text>Üyeliğiniz Başarı İle Oluşturuldu</Text>
+                  </View>
             </View>
           </Modal>
         </ScrollView>
       </View>
     </TouchableWithoutFeedback>
+ 
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#ffff",
   },
   Input: {
     padding: 9,
     borderWidth: 1,
     borderColor: "#ebebeb",
     borderRadius: 5,
+    fontSize:13,
     backgroundColor: "#FAFAFA",
+       color:'#717171',
+    fontWeight:'600'
   },
   modal2: {
     justifyContent: "flex-end",

@@ -18,7 +18,7 @@ import {
 } from "accordion-collapse-react-native";
 import Modal from "react-native-modal";
 import ProfileSettingsItem from "../../components/ProfileSettingsItem";
-import { useRoute, useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useRoute, useNavigation, useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
@@ -110,7 +110,7 @@ export default function ShoppingProfile() {
     fetchPermissionUser();
   }, [user]);
 
-  
+  const isfocused=useIsFocused()
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true); // Yükleme başladı
@@ -144,7 +144,7 @@ export default function ShoppingProfile() {
     };
   
     fetchData();
-  }, [permissionsUser]);
+  }, [permissionsUser,isfocused]);
   
 
   const groupedData = data.reduce((acc, item) => {
@@ -183,6 +183,36 @@ export default function ShoppingProfile() {
   //     return () => clearTimeout(timer);
   //   }, [])
   // );
+  const [namFromGetUser, setnamFromGetUser] = useState([])
+  const [loadingCollection, setloadingCollection] = useState(false)
+  const GetUserInfo =async ()=>{
+     setloadingCollection(true)
+     try {
+       if (user?.access_token && user) {
+         const userInfo = await axios.get(
+           "https://private.emlaksepette.com/api/users/" + user?.id,
+           {
+             headers: {
+               Authorization: `Bearer ${user.access_token}`,
+             },
+           }
+         );
+         const userData = userInfo?.data?.user
+         setnamFromGetUser(userData)
+       
+       }
+     
+  
+     } catch (error) {
+       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+     }finally{
+      setloadingCollection(false)
+     }
+   }
+   useEffect(() => {
+  GetUserInfo()
+   }, [user])
+   
   return (
 <>
       {
@@ -196,7 +226,7 @@ export default function ShoppingProfile() {
           <View
             style={[
               style.opacity,
-              { backgroundColor: user.banner_hex_code + 97 },
+              { backgroundColor: namFromGetUser.banner_hex_code + 97 },
             ]}
           ></View>
   
@@ -226,7 +256,7 @@ export default function ShoppingProfile() {
               >
                 <View style={style.profileImage}>
                   <Image
-                    source={{ uri: PhotoUrl +  user.profile_image }}
+                    source={{ uri: PhotoUrl +  namFromGetUser.profile_image }}
                     style={{ width: "100%", height: "100%" }}
                     borderRadius={50}
                   />
@@ -244,7 +274,7 @@ export default function ShoppingProfile() {
                     <Text
                       style={{ color: "white", fontSize: 15, fontWeight: "bold" }}
                     >
-                      {user.name}
+                      {namFromGetUser.name}
                     </Text>
                     <View style={{ width: 20, height: 20, left: 10 }}>
                       <ImageBackground

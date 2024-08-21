@@ -346,7 +346,7 @@ const [cartIsNull, setcartIsNull] = useState(false)
             >
               {
                 openSharing === 'Evet' && 
-                <View style={{backgroundColor:'#208011',position:'absolute',zIndex:1,padding:5,bottom:3,left:3}}>
+                <View style={{backgroundColor:'#EA2C2E',position:'absolute',zIndex:1,padding:5,bottom:3,left:3,width:'30%',alignItems:'center',borderRadius:10}}>
                 <Icon name="handshake-simple" color={'#fff'} size={13}/>
               </View>
               }
@@ -381,7 +381,7 @@ const [cartIsNull, setcartIsNull] = useState(false)
                         : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
                   }}
                 >
-                  {bookmarkStatus && bookmarkStatus == true &&  openSharing === 'Evet'&& 
+                  {bookmarkStatus && bookmarkStatus == true &&  openSharing === 'Evet'&& (user.role=='Bireysel Hesap' ||  (user.role=='Kurumsal Hesap' && user.corporate_type=='Emlak Ofisi'))&&
                     <TouchableOpacity
                       onPress={() => {
                         CreateCollection(HouseId);
@@ -433,30 +433,49 @@ const [cartIsNull, setcartIsNull] = useState(false)
                     : <Text style={styles.priceText}>{formattedPrice} </Text>
                   )}
                 </View>
-                
-                <TouchableOpacity
-                  style={styles.addBasket}
-                  onPress={handlePress}
+                    {
+                      housing?.user?.id == user.id && user.access_token ?
+                      <TouchableOpacity
+                  style={[styles.addBasket,{backgroundColor:'#008001'}]}
+              
                 >
-                  {step2_slug &&
-                  step2_slug == "gunluk-kiralik" &&
-                  step1_slug == "mustakil-tatil" ? (
                     <Text
                       style={{
                         color: "white",
-                        fontWeight: "500",
-                        fontSize: 12,
+                        fontWeight: "600",
+                        fontSize: 10,
                       }}
                     >
-                      Rezervasyon
+                      İlanı Düzenle
+                    </Text>
+              
+                </TouchableOpacity>:
+                  <TouchableOpacity
+                  style={styles.addBasket}
+                  onPress={handlePress}
+                >
+                  {
+                  
+                  
+                  housing?.step2_slug&&
+                  housing?.step2_slug == "gunluk-kiralik" ||
+                  housing?.step1_slug== "mustakil-tatil" ? (
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "600",
+                        fontSize: 9,
+                      }}
+                    >
+                      Rezervasyon Yap
                     </Text>
                   ) : (
                    
                     <Text
                       style={{
                         color: "white",
-                        fontWeight: "500",
-                        fontSize: 12,
+                        fontWeight: "600",
+                        fontSize: 10,
                       }}
                     >
                       Sepete Ekle
@@ -464,6 +483,43 @@ const [cartIsNull, setcartIsNull] = useState(false)
                     </Text>
                   )}
                 </TouchableOpacity>
+                    }
+
+
+{/*                
+                <TouchableOpacity
+                  style={styles.addBasket}
+                  onPress={handlePress}
+                >
+                  {
+                  
+                  
+                  housing?.step2_slug&&
+                  housing?.step2_slug == "gunluk-kiralik" ||
+                  housing?.step1_slug== "mustakil-tatil" ? (
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "600",
+                        fontSize: 10,
+                      }}
+                    >
+                      Rezervasyon Yap
+                    </Text>
+                  ) : (
+                   
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "600",
+                        fontSize: 10,
+                      }}
+                    >
+                      Sepete Ekle
+                     
+                    </Text>
+                  )}
+                </TouchableOpacity> */}
               </View>
             </View>
           </View>

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Keyboard,
   Image,
+  Dimensions,
 } from "react-native";
 import { React, useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/EvilIcons";
@@ -45,9 +46,10 @@ export default function Search({ onpres }) {
   useEffect(() => {
     fetchmenuItems();
   }, []);
+  const { width, height } = Dimensions.get("window");
 
   return (
-    <SafeAreaView onTouchStart={() => Keyboard.dismiss()} style={{ top: 10 }}>
+    <SafeAreaView onTouchStart={() => Keyboard.dismiss()} style={{ top: 10,height:height * 0.5,}}>
       <ScrollView>
         <View style={{ flex: 1 }}></View>
 

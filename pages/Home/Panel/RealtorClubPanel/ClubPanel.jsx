@@ -1,5 +1,8 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React,{useState} from 'react'
+import ClupTabPanel from './Tabs/ClupTabPanel'
+import ClupPanelForProject from './Tabs/ClupPanelForProject'
+import ClupPanelForDailyRent from './Tabs/ClupPanelForDailyRent'
 
 
 export default function ClubPanel() {
@@ -45,8 +48,9 @@ export default function ClubPanel() {
             </TouchableOpacity>
     </View>
    
-
-    
+     {tab ==0&&<ClupTabPanel/> }
+    {tab==1 && <ClupPanelForProject/>}
+    {tab==2 && <ClupPanelForDailyRent/>}
  
     </View>
   )
