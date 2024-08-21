@@ -242,12 +242,16 @@ export default function SupportList() {
                           }}
                         >
                           <AntDesign
-                            style={{ marginRight: 10 }}
+                            style={{ marginRight: 0 }}
                             name="pdffile1"
                             color={"red"}
                           />
                           <Text
-                            style={{ textAlign: "center", color: "red" }}
+                            style={{
+                              textAlign: "center",
+                              color: "red",
+                              marginLeft: 10,
+                            }}
                             numberOfLines={1}
                           >
                             {support.file_path}

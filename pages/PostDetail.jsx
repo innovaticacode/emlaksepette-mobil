@@ -1168,6 +1168,8 @@ export default function PostDetail() {
                           </Text>
                         </TouchableOpacity>
                       )}
+
+
                     {roomData && ["off_sale[]"] &&
                       roomData["off_sale[]"] === "[]" &&
                       ProjectHomeData?.projectCartOrders[HomeId]?.status != 0 &&
