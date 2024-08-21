@@ -160,6 +160,7 @@ export default function Profile() {
   };
   const [loading, setloading] = useState(false);
   const [storeData, setstoreData] = useState([]);
+
   useEffect(() => {
     // Örnek API isteği
     apiRequestGet("brand/" + id)
@@ -344,7 +345,23 @@ export default function Profile() {
                       </View>
                     </View>
                   </View>
-             
+
+                  <View style={{ width: "100%", paddingTop: 10 }}>
+                    <TextInput
+                      style={{
+                        padding: 9,
+                        backgroundColor: "#f5f5f53d",
+                        borderWidth: 0,
+                        borderColor: "#ebebeb",
+                        borderRadius: 5,
+                      }}
+                      value={searchText}
+                      onChangeText={handleSearch}
+                      placeholder="Kelime veya İlan no ile ara.."
+                      placeholderTextColor={"#333"}
+                    />
+                  </View>
+
                 </View>
               </View>
 
@@ -528,9 +545,11 @@ export default function Profile() {
                     style={[
                       styles.TabBarBtn,
                       {
+
                         borderBottomWidth: tab === 5 ? 3 : 0,
                         borderBottomColor:
                           tab === 5 ? "#EA2C2E" : "transparent",
+
                         top: 2,
                       },
                     ]}

@@ -211,7 +211,7 @@ export default function PostDetail() {
   };
   const [selectedHouse, setselectedHouse] = useState(0);
   const openCollection = (id) => {
-    changeBookmark();
+   
     setselectedHouse(id);
     setColectionSheet(true);
   };
@@ -1161,13 +1161,15 @@ export default function PostDetail() {
                       ProjectHomeData?.projectCartOrders[HomeId]
                         ?.is_show_user === "on" &&
                       ProjectHomeData?.projectCartOrders[HomeId]?.status ==
-                        1 && 
+                        1 && (
                         <TouchableOpacity style={styles.showCustomer}>
                           <Text style={styles.showCustomerText}>
                             Komşumu Gör
                           </Text>
                         </TouchableOpacity>
-                      )}
+
+                      }
+
                     {roomData && ["off_sale[]"] &&
                       roomData["off_sale[]"] === "[]" &&
                       ProjectHomeData?.projectCartOrders[HomeId]?.status != 0 &&

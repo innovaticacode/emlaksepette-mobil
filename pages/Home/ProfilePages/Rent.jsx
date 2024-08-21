@@ -96,7 +96,7 @@ export default function Rent({ display }) {
                     style={[
                       styles.tabBtn,
                       {
-                        backgroundColor: Tabs== index ? "#EEEDEB" : "white",
+                        backgroundColor: Tabs == index ? "#EEEDEB" : "white",
                         borderWidth: Tabs == index ? 0 : 1,
                       },
                     ]}
@@ -106,11 +106,11 @@ export default function Rent({ display }) {
                     }}
                   >
                     <Text
-                       style={{
+                      style={{
                         textAlign: "center",
                         color: Tabs == index ? "#333" : "#333",
                         fontSize: 12,
-                        fontWeight:'600'
+                        fontWeight: "600",
                       }}
                     >
                       {item.label}

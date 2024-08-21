@@ -151,7 +151,7 @@ const [disabledTrue, setdisabledTrue] = useState(false)
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: 'Koleksiyona Eklendi',
-        textBody:`Konut ${selectedCollectionName2} Adlı koleksiyona eklendi`
+        textBody:`${name} Adlı koleksiyona eklendi`
         })
      
         var newCollections = collections.map((collection) => {
@@ -201,7 +201,7 @@ const ıtemOnCollection = (collectionId) => {
 
   return check;
 };
-const removeItemOnCollection = (collectionId) => {
+const removeItemOnCollection = (collectionId,name) => {
   const collectionData = {
     item_type: 2,
    
@@ -224,7 +224,7 @@ const removeItemOnCollection = (collectionId) => {
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: 'Koleksiyon silindi',
-      textBody:`${selectedCollectionName2} Adlı koleksiyon silindi`
+      textBody:`${name} Adlı koleksiyon silindi`
       })
    
       var newCollections = collections.map((collection) => {
