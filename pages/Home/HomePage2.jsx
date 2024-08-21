@@ -31,8 +31,10 @@ import Prefabrik from "./Home Pages/Prefabrik";
 import BookHouse from "./Home Pages/BookHouse";
 import SellAcil from "./Home Pages/SellAcil";
 import DrawerMenu from "../../components/DrawerMenu";
-import Shared from "./Home Pages/Shared";
+
 const { width, height } = Dimensions.get("window");
+
+import Shared from "./Home Pages/Shared";
 
 const FirstRoute = () => (
   <View style={{ flex: 1, backgroundColor: "#ff4081" }} />

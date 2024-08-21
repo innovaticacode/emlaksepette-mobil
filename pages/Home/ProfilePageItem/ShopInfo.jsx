@@ -72,8 +72,10 @@ export default function ShopInfo({ data, loading }) {
                 <View style={{flex:0.2/2,alignItems:'center'}} >
                 <Star name="verified" size={19} color={'#0275FF'}/>
                 </View>
+
                 <View style={{flex:1.6/2}}>
                   <Text style={{fontSize:13,fontWeight:'600',color:'#0275FF'}}>Onaylanmış Kurumsal Mağaza</Text>
+
                 </View>
               </View> 
             <View style={{flexDirection:'row',alignItems:'center'}}>
