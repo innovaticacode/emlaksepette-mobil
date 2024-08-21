@@ -30,7 +30,9 @@ export default function Caption({ data }) {
 
   return (
     <View style={[styles.card, { paddingLeft: 20, paddingRight: 20, flex: 1 }]}>
-      <View>
+  
+      <HTML source={{ html: data?.project?.description }} contentWidth={10} />
+      <View style={{padding:10,borderTopWidth:1,borderTopColor:'grey'}}>
         <Text style={styles.text}>{showFullText ? fullText : previewText}</Text>
         <TouchableOpacity
           onPress={toggleText}
@@ -41,7 +43,6 @@ export default function Caption({ data }) {
           </Text>
         </TouchableOpacity>
       </View>
-      <HTML source={{ html: data?.project?.description }} contentWidth={10} />
     </View>
   );
 }
@@ -70,6 +71,8 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     color: "#333",
+    textAlign:'center',
+    fontWeight:'600'
   },
   toggleButtonContainer: {
     borderBottomWidth: 2,

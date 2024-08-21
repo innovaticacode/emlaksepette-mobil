@@ -1167,7 +1167,7 @@ export default function PostDetail() {
                             Komşumu Gör
                           </Text>
                         </TouchableOpacity>
-
+                        )
                       }
 
                     {roomData && ["off_sale[]"] &&
