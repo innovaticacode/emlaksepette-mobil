@@ -448,7 +448,26 @@ export default function Company() {
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
   const [Deals, setDeals] = useState("");
+  const formatPhoneNumber = (value) => {
+    // Sadece rakamları al
+    const cleaned = ("" + value).replace(/\D/g, "");
 
+    // 0 ile başlıyorsa, ilk karakteri çıkar
+    const cleanedWithoutLeadingZero = cleaned.startsWith("0")
+      ? cleaned.substring(1)
+      : cleaned;
+
+    let formattedNumber = "";
+
+    for (let i = 0; i < cleanedWithoutLeadingZero.length; i++) {
+      if (i === 0) formattedNumber += "(";
+      if (i === 3) formattedNumber += ") ";
+      if (i === 6 || i === 8) formattedNumber += " ";
+      formattedNumber += cleanedWithoutLeadingZero[i];
+    }
+
+    return formattedNumber;
+  };
   const handlePhoneNumberChange = (value) => {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setphoneNumber(formattedPhoneNumber);
@@ -542,49 +561,6 @@ export default function Company() {
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Şifre
-                </Text>
-              </View>
-              <View>
-                <TextInput
-                  value={password}
-                  onChangeText={(value) => setpassword(value)}
-                  style={[
-                    styles.Input,
-                    {
-                      borderColor: errorStatu === 3 ? "red" : "#ebebeb",
-                    },
-                  ]}
-                  placeholder="Şifre"
-                  secureTextEntry={Show ? false : true}
-                />
-                <TouchableOpacity
-                  style={{
-                    position: "absolute",
-                    right: 10,
-                    bottom: 9,
-                    top: 15,
-                  }}
-                  onPress={show}
-                >
-                  <EyeIcon
-                    name={Show ? "eye" : "eye-off-sharp"}
-                    size={20}
-                    color={"#333"}
-                  />
-                </TouchableOpacity>
-              </View>
-              {errorStatu == 3 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
-            </View>
-            <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Cep Telefonu
                 </Text>
               </View>
@@ -609,6 +585,49 @@ export default function Company() {
                 ""
               )}
             </View>
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Şifre
+                </Text>
+              </View>
+              <View>
+                <TextInput
+                  value={password}
+                  onChangeText={(value) => setpassword(value)}
+                  style={[
+                    styles.Input,
+                    {
+                      borderColor: errorStatu === 3 ? "red" : "#ebebeb",
+                    },
+                  ]}
+                  placeholder="Şifre"
+                  secureTextEntry={Show ? false : true}
+                />
+                <TouchableOpacity
+                  style={{
+                    position: "absolute",
+                    top:'21%',
+                    right:9
+                  }}
+                  onPress={show}
+                >
+                  <EyeIcon
+                    name={Show ? "eye" : "eye-off-sharp"}
+                    size={23}
+                    color={"#333"}
+                  />
+                </TouchableOpacity>
+              </View>
+              {errorStatu == 3 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
+            </View>
+         
 
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
@@ -1170,7 +1189,7 @@ export default function Company() {
           backdropColor="transparent"
           style={styles.modal2}
         >
-          <View style={styles.modalContent2}>
+          <SafeAreaView style={styles.modalContent2}>
             <ScrollView>
               <HTML source={{ html: Deals }} contentWidth={100} />
 
@@ -1188,7 +1207,7 @@ export default function Company() {
                 </TouchableOpacity>
               </View>
             </ScrollView>
-          </View>
+          </SafeAreaView>
         </Modal>
         <Modal
           isVisible={modalVisible2}
@@ -1274,7 +1293,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ebebeb",
     borderRadius: 5,
+    fontSize:13,
     backgroundColor: "#FAFAFA",
+       color:'#717171',
+    fontWeight:'600'
   },
   btnRegister: {
     backgroundColor: "#E54242",

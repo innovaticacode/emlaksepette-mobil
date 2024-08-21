@@ -44,7 +44,36 @@ const [loading, setloading] = useState(false)
     useEffect(() => {
       fetchData();
     }, [user]);
-
+    const [namFromGetUser, setnamFromGetUser] = useState([])
+    const GetUserInfo =async ()=>{
+       setloading(true)
+       try {
+         if (user?.access_token && user) {
+           const userInfo = await axios.get(
+             "https://private.emlaksepette.com/api/users/" + user?.id,
+             {
+               headers: {
+                 Authorization: `Bearer ${user.access_token}`,
+               },
+             }
+           );
+           const userData = userInfo?.data?.user
+           setnamFromGetUser(userData)
+         
+         }
+       
+     
+       
+     
+       } catch (error) {
+         console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+       }finally{
+       
+       }
+     }
+     useEffect(() => {
+   GetUserInfo()
+     }, [user])
 
     const [selectedCollectionId, setselectedCollectionId] = useState(0)
 const [selectedCollectionName2, setselectedCollectionName2] = useState('')
@@ -242,8 +271,16 @@ const filterEmojis = (text) => {
   return (
     
    <AlertNotificationRoot>
+    <>
           {
-            user.access_token  && user.has_club == 1
+            loading? 
+            <View style={{alignItems:'center',justifyContent:'center',flex:1}}>
+              <ActivityIndicator color='#333' size={'large'}/>
+            </View>:
+          <>
+  
+          {
+            user.access_token  && namFromGetUser.has_club == 1
             ?
                 <>
                 
@@ -303,31 +340,7 @@ const filterEmojis = (text) => {
                 </Text>
               </View>
               <View style={{ width: "100%", alignItems: "center" }}>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#EA2A28",
-                    width: "90%",
-                    padding: 8,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    setloading(true);
-                    setTimeout(() => {
-                      nav.navigate("HomePage");
-                      setloading(false);
-                    }, 700);
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#ffffff",
-                      fontWeight: "600",
-                      textAlign: "center",
-                    }}
-                  >
-                    Ana Sayfa'ya dön
-                  </Text>
-                </TouchableOpacity>
+           
               </View>
             </View>
 
@@ -364,7 +377,7 @@ const filterEmojis = (text) => {
                     </View>
                       }
                   {
-                    user.access_token && user.has_club == 0  && 
+                    user.access_token && namFromGetUser.has_club == 0  && 
                     <View style={styles.card}>
                  
                     <View style={{paddingTop:10}}>
@@ -383,7 +396,7 @@ const filterEmojis = (text) => {
                 </View>
                   }
                         {
-                    user.access_token && user.has_club == 2  && 
+                    user.access_token && namFromGetUser.has_club == 2  && 
                     <View style={styles.card}>
                  
                     <View style={{paddingTop:10}}>
@@ -396,7 +409,7 @@ const filterEmojis = (text) => {
                 </View>
                   } 
                     {
-                    user.access_token && user.has_club == 3  && 
+                    user.access_token && namFromGetUser.has_club == 3  && 
                     <View style={styles.card}>
                  
                     <View style={{paddingTop:10}}>
@@ -437,7 +450,9 @@ const filterEmojis = (text) => {
                    
                       </View>
                 </>
+                
           }
+          
           <View style={{position:'absolute',bottom:50,width:'100%',padding:10,display:showAlert==true? 'flex':'none'}} >
           <View style={{backgroundColor:'#1a842f',padding:15,borderRadius:10}}>
         <View>
@@ -452,7 +467,9 @@ const filterEmojis = (text) => {
         </View>
       </View>
           </View>
- 
+          </>
+            }
+          </>
    </AlertNotificationRoot>
   
    

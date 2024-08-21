@@ -133,6 +133,33 @@ export default function Details({ navigation }) {
   
 
   const [loadingDetails, setloadingDetails] = useState(false)
+  const [namFromGetUser, setnamFromGetUser] = useState([])
+  const GetUserInfo =async ()=>{
+     
+     try {
+       if (user?.access_token && user) {
+         const userInfo = await axios.get(
+           "https://private.emlaksepette.com/api/users/" + user?.id,
+           {
+             headers: {
+               Authorization: `Bearer ${user.access_token}`,
+             },
+           }
+         );
+         const userData = userInfo?.data?.user
+         setnamFromGetUser(userData)
+       
+       }
+     
+   
+     
+   
+     } catch (error) {
+       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+     }finally{
+      
+     }
+   }
   useEffect(() => {
     const config = {
       headers: { Authorization: `Bearer ${user?.access_token}` }
@@ -140,6 +167,7 @@ export default function Details({ navigation }) {
     axios.get('https://private.emlaksepette.com/api/project/' + ProjectId, config).then((res) => {
       setData(res?.data)
       setloadingDetails(true)
+      GetUserInfo()
     })
 
   }, [ProjectId, user])
@@ -191,7 +219,7 @@ export default function Details({ navigation }) {
             ? parseInt(lastBlockItemCount) + parseInt(data.project.blocks[selectedTab].housing_count)
             : parseInt(lastBlockItemCount) + parseInt((page + 1) * 10))
         ).then((res) => {
-          console.log(res);
+          // console.log(res);
           setData({
             ...data,
             projectHousingsList: {
@@ -816,7 +844,7 @@ export default function Details({ navigation }) {
     if (data && data.projectHousingsList && paymentModalShowOrder !== null) {
       let total = 0;
       const items = [];
-
+      
       for (
         let _index = 0;
         _index <
@@ -826,14 +854,16 @@ export default function Details({ navigation }) {
         _index++
       ) {
         const priceString = addDotEveryThreeDigits(
-          data.projectHousingsList[paymentModalShowOrder][
-          `pay_desc_price${paymentModalShowOrder}` + _index
-          ]
+          data.projectHousingsList[paymentModalShowOrder]['share_sale[]'] !== "[]" ?
+            data.projectHousingsList[paymentModalShowOrder][`pay_desc_price${paymentModalShowOrder}` + _index] /
+            data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] :
+            data.projectHousingsList[paymentModalShowOrder][`pay_desc_price${paymentModalShowOrder}` + _index]
         );
-
+        
         const price = parseInt(priceString.replace(/\./g, ""), 10);
-        total += price;
-
+        const roundedPrice = Math.round(price);
+        total += roundedPrice;
+        
         const date = new Date(
           data.projectHousingsList[paymentModalShowOrder][
           "pay_desc_date" + paymentModalShowOrder + _index
@@ -858,7 +888,7 @@ export default function Details({ navigation }) {
         );
       }
 
-
+console.log(totalPrice);
       setTotalPrice(total);
 
       setPaymentItems(items);
@@ -914,6 +944,27 @@ useEffect(() => {
    fetchCommentTotalRate()
 }, [user])
 const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc, rate) => acc + rate, 0); 
+
+// ((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])) / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]']).toFixed(0))
+  // console.log(data.projectHousingsList[paymentModalShowOrder]['installments-price[]'] - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]'])+parseInt(totalPrice) /parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])   /data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ))
+console.log((parseInt(totalPrice)));
+// const advance = parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]'], 10);
+// const numberOfShares = parseInt(data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'], 10);
+// const installmentsPrice = parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]'], 10);
+// const totalPrice2 = totalPrice
+// const installments = parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'], 10);
+
+// // İşlemlerin gerçekleştirilmesi
+// const perShareAdvance = advance / numberOfShares;
+// const subtotal = perShareAdvance + totalPrice2;
+// const remaining = installmentsPrice - subtotal;
+// const finalInstallment = remaining / installments;
+
+// // Sonucu formatlama ve yazdırma
+// const formattedFinalInstallment = Math.round(finalInstallment); // Yuvarlama işlemi
+// console.log( parseInt(data?.projectHousingsList[1]['installments-price[]']) - (parseInt(data?.projectHousingsList[1]['advance[]'] )  / parseInt(data?.projectHousingsList[1]['number_of_shares[]']) + parseInt(totalPrice)) + 'fsdfdsf')
+// console.log(parseInt(data?.projectHousingsList[1]['installments-price[]']) -  (parseInt(data?.projectHousingsList[1]['advance[]'] )  / parseInt(data?.projectHousingsList[1]['number_of_shares[]']) + parseInt(totalPrice)) / parseInt(data.projectHousingsList[1]['installments[]']) + 'Takstili Fiyat')
+// console.log( ((data.projectHousingsList[1]['installments-price[]'] / data?.projectHousingsList[1]['number_of_shares[]']) - ((parseInt(data?.projectHousingsList[1]['advance[]'] )/parseInt(data?.projectHousingsList[1]['number_of_shares[]'])) + parseInt(totalPrice) ) ) / parseInt(data.projectHousingsList[1]['installments[]']) )
   return (
     <>
      <AlertNotificationRoot>
@@ -1280,13 +1331,14 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
                                     "Ay Taksitli Fiyat"
                                   }
                                   numbers={
-                                    data.projectHousingsList[paymentModalShowOrder]['share_sale[]'] != "[]" && data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
-                                      addDotEveryThreeDigits(data.projectHousingsList[paymentModalShowOrder]["installments-price[]"] / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]']) + "₺"
+                                    data.projectHousingsList[paymentModalShowOrder]['share_sale[]'] !== "[]" && data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
+                                      addDotEveryThreeDigits(Math.round(data.projectHousingsList[paymentModalShowOrder]["installments-price[]"] / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'])) + "₺"
                                     : addDotEveryThreeDigits(
+                                      Math.round(
                                       data.projectHousingsList[paymentModalShowOrder][
                                       "installments-price[]"
                                       ]
-                                    ) + "₺"
+                                    )) + "₺"
                                   }
                                 />
                               ) : (
@@ -1310,13 +1362,13 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
                                   info="Peşinat"
                                   numbers={
                                     data.projectHousingsList[paymentModalShowOrder]['share_sale[]'] != "[]" && data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ? 
-                                      addDotEveryThreeDigits(data.projectHousingsList[paymentModalShowOrder]["advance[]"] / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'])+ "₺"
+                                      addDotEveryThreeDigits(Math.round(data.projectHousingsList[paymentModalShowOrder]["advance[]"] / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]']))+ "₺"
                                     :
                                       addDotEveryThreeDigits(
-                                        data.projectHousingsList[paymentModalShowOrder][
+                                       Math.round(data.projectHousingsList[paymentModalShowOrder][
                                         "advance[]"
                                         ]
-                                      ) + "₺"
+                                      )) + "₺"
                                   }
                                 />
                               ) : (
@@ -1341,7 +1393,7 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
                                   info="Aylık Ödenecek Tutar"
                                   numbers={
                                     data.projectHousingsList[paymentModalShowOrder]['share_sale[]'] != "[]" && data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ?
-                                      addDotEveryThreeDigits((((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])) / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]']).toFixed(0)) + "₺"
+                                      addDotEveryThreeDigits(((data.projectHousingsList[paymentModalShowOrder]['installments-price[]'] / data?.projectHousingsList[paymentModalShowOrder]['number_of_shares[]']) - ((parseInt(data?.projectHousingsList[paymentModalShowOrder]['advance[]'] )/parseInt(data?.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'])) + parseInt(totalPrice) ) ) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]']) )    + "₺"
                                     : 
                                       addDotEveryThreeDigits(((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])).toFixed(0)) + "₺"
                                   }
@@ -1588,7 +1640,7 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
             {
               user.access_token?
               <>
-               {user.has_club == 2 && (
+               {namFromGetUser.has_club == 2 && (
         <>
           <View style={{ paddingTop: 10,gap:10,gap:10}}>
             <View>
@@ -1615,7 +1667,7 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
           </View>
         </>
       )}
-      {user.has_club == 3 && (
+      {namFromGetUser.has_club == 3 && (
         <>
           <View style={{ paddingTop: 10 }}>
             <Text
@@ -1653,7 +1705,7 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
           </TouchableOpacity>
         </>
       )}
-      {user.has_club == 0 && (
+      {namFromGetUser.has_club == 0 && (
         <>
           <View style={{ paddingTop: 10,gap:10 }}>
             <View>
@@ -1696,7 +1748,7 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
       )}
 
         {
-          user.has_club == 1  &&
+          namFromGetUser.has_club == 1  &&
           <>
            <TouchableOpacity
                             style={{ flexDirection: "row", alignItems: "center" }}

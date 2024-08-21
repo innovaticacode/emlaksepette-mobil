@@ -550,7 +550,7 @@ export default function AllRealtorAdverts() {
                 <RealtorPost
                   GetId={GetIdForCart}
                   HouseId={item.id}
-                  price={`${JSON.parse(item.housing_type_data)?.price ?? ""}`} // Safely access price
+                  price={item.step2_slug== 'gunluk-kiralik'?JSON.parse(item.housing_type_data)["daily_rent"]: JSON.parse(item.housing_type_data)["price"]} 
                   housing={item}
                   title={item.housing_title}
                   loading={state.loading}

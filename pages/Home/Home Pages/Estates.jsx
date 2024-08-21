@@ -109,60 +109,7 @@ const Estates = ({ index }) => {
       </View>:
   
        <View style={styles.container}>
-      <View
-        style={{
-          paddingBottom: 3,
-          paddingLeft: 10,
-          paddingRight: 10,
-          marginTop: 10,
-          backgroundColor: "white",
-          height: 130,
-        }}
-      >
-        <Text style={{ fontSize: 12, fontWeight: 700, marginBottom: 7 }}>
-          POPÜLER GAYRİMENKUL MARKALARI
-        </Text>
-
-        <SliderEstateBar />
-      </View>
-      <View
-        style={{
-          paddingBottom: 3,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingLeft: 10,
-          paddingRight: 10,
-          alignItems: "center",
-          backgroundColor: "white",
-        }}
-      >
-        <Text style={{ fontSize: 12, fontWeight: 700 }}>
-          ÖNE ÇIKAN KONUTLAR
-        </Text>
-
-        <TouchableOpacity
-          style={styles.allBtn}
-          onPress={() =>
-            navigation.navigate("AllRealtorAdverts", {
-              name: "Emlak İlanları",
-              slug: "emlak-ilanlari",
-              data: filteredHomes,
-              count: filteredHomes.length,
-              type: "konut",
-              optional: null,
-              title: null,
-              check: null,
-              city: null,
-              county: null,
-              hood: null,
-            })
-          }
-        >
-          <Text style={{ color: "white", fontSize: 11, fontWeight: "bold" }}>
-            Tüm İlanları Gör
-          </Text>
-        </TouchableOpacity>
-      </View>
+    
       {refreshing && (
         <View
           style={{
@@ -216,7 +163,63 @@ const Estates = ({ index }) => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
+          ListHeaderComponent={<>
+            <View
+        style={{
+          paddingBottom: 3,
+          paddingLeft: 10,
+          paddingRight: 10,
+          marginTop: 10,
+          backgroundColor: "white",
+          height: 130,
+        }}
+      >
+        <Text style={{ fontSize: 12, fontWeight: 700, marginBottom: 7 }}>
+        Franchaise Veren Gayrimenkul Markaları
+        </Text>
+
+        <SliderEstateBar />
+      </View>
+      <View
+        style={{
+          paddingBottom: 3,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingLeft: 10,
+          paddingRight: 10,
+          alignItems: "center",
+          backgroundColor: "white",
+        }}
+      >
+        <Text style={{ fontSize: 12, fontWeight: 700 }}>
+        Popüler Emlak İlanları
+        </Text>
+
+        <TouchableOpacity
+          style={styles.allBtn}
+          onPress={() =>
+            navigation.navigate("AllRealtorAdverts", {
+              name: "Emlak İlanları",
+              slug: "emlak-ilanlari",
+              data: filteredHomes,
+              count: filteredHomes.length,
+              type: "konut",
+              optional: null,
+              title: null,
+              check: null,
+              city: null,
+              county: null,
+              hood: null,
+            })
+          }
+        >
+          <Text style={{ color: "white", fontSize: 11, fontWeight: "bold" }}>
+            Tüm İlanları Gör
+          </Text>
+        </TouchableOpacity>
+      </View>
           
+          </>}
           ListFooterComponent={renderFooter}
         />
       }

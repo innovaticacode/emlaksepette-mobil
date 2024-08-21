@@ -8,10 +8,12 @@ import {
 import { React, useState } from "react";
 import Personal from "./Personal";
 import Company from "./Company";
+import { AlertNotificationRoot } from "react-native-alert-notification";
 
 export default function Register() {
   const [tabs, setTabs] = useState(1);
   return (
+    <AlertNotificationRoot>
     <SafeAreaView style={{ backgroundColor: "white" }}>
       <View style={styles.container}>
         <View style={styles.TabBar}>
@@ -81,6 +83,7 @@ export default function Register() {
         {tabs === 2 && <Company />}
       </View>
     </SafeAreaView>
+    </AlertNotificationRoot>
   );
 }
 const styles = StyleSheet.create({

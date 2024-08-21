@@ -106,10 +106,16 @@ const HomePage = ({ index }) => {
   };
 
   return (
-    <AlertNotificationRoot>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <AlertNotificationRoot>  
+      {
+        loadingProjects && loadingSliders ?
+        <View style={{alignItems:'center',justifyContent:'center',flex:1}}>
+          <ActivityIndicator/>
+        </View>
+        :
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <SafeAreaView style={styles.container}>
-          <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <ScrollView contentContainerStyle={styles.scrollViewContent} scrollEventThrottle={16}>
             {/* Featured Sliders */}
             <View style={styles.sliderContainer}>
               {loadingSliders ? (
@@ -148,19 +154,7 @@ const HomePage = ({ index }) => {
 
             {/* Featured Projects */}
             <View style={styles.featuredProjectsContainer}>
-              <View style={styles.featuredProjectsHeader}>
-                <Text style={styles.featuredProjectsTitle}>
-                  ÖNE ÇIKAN PROJELER
-                </Text>
-                <TouchableOpacity
-                  style={styles.allProjectsButton}
-                  onPress={navigateToAllProjects}
-                >
-                  <Text style={styles.allProjectsButtonText}>
-                    Tüm Projeleri Gör
-                  </Text>
-                </TouchableOpacity>
-              </View>
+            
               <View style={styles.slide1}>
                 <View style={{ gap: 0, paddingTop: 0 }}>
                   {loadingProjects == true ? (
@@ -171,6 +165,7 @@ const HomePage = ({ index }) => {
                     <>
                       <FlatList
                         data={featuredProjects}
+                        
                         renderItem={({ item, index }) => (
                           <View
                             style={{
@@ -199,6 +194,22 @@ const HomePage = ({ index }) => {
                             />
                           </View>
                         )}
+                        
+                        ListHeaderComponent={
+                          <View style={styles.featuredProjectsHeader}>
+                          <Text style={styles.featuredProjectsTitle}>
+                           Popüler Projeler
+                          </Text>
+                          <TouchableOpacity
+                            style={styles.allProjectsButton}
+                            onPress={navigateToAllProjects}
+                          >
+                            <Text style={styles.allProjectsButtonText}>
+                              Tüm Projeleri Gör
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                        }
                         scrollEnabled={false}
                       />
                     </>
@@ -209,6 +220,8 @@ const HomePage = ({ index }) => {
           </ScrollView>
         </SafeAreaView>
       </TouchableWithoutFeedback>
+      }
+    
     </AlertNotificationRoot>
   );
 };

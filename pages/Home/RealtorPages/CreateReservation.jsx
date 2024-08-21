@@ -10,13 +10,14 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Icon2 from "react-native-vector-icons/AntDesign";
 import { CheckBox } from '@rneui/themed';
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { AlertNotificationRoot,Dialog,ALERT_TYPE } from "react-native-alert-notification";
 // Türkçe dil desteğini ayarla
 moment.locale("tr");
 
-const App = () => {
+const CreateReservation = () => {
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
-  const [GuestCount, setGuestCount] = useState(0);
+  const [GuestCount, setGuestCount] = useState(1);
   const [totalNights, setTotalNights] = useState(0);
   const [checked, setChecked] =useState(false);
   const route = useRoute();
@@ -131,10 +132,10 @@ const App = () => {
   useEffect(() => {
     const nights = calculateNightsBetweenDates(selectedStartDate, selectedEndDate);
     setTotalNights(nights);
-  }, [selectedStartDate, selectedEndDate]);
+  }, [selectedStartDate, selectedEndDate,onDateChange]);
   const today = new Date();
   const formattedDate = format(today, 'dd MMMM yyyy', { locale: tr });
-  const totalCost = selectedStartDate && selectedEndDate && data.housing_type_data ? JSON.parse(data.housing_type_data).daily_rent * totalNights : 0;
+  const totalCost = selectedStartDate && selectedEndDate && data?.housing?.housing_type_data ? JSON.parse(data?.housing?.housing_type_data)["daily_rent"] * totalNights : 0;
   const formattedTotalCost = formatCurrency(totalCost);
   const halfTotalCost = totalCost / 2;
   const formattedHalfTotalCost = formatCurrency(halfTotalCost);
@@ -154,15 +155,16 @@ const App = () => {
       await saveData('endDate',  moment(selectedEndDate).format("DD MMMM YYYY"));
       
       await saveData('checked',acitveMoneySafe)
-      navigation.navigate('PaymentScreenForReserve',{HouseID:data.id,totalNight:totalNights})
+      navigation.navigate('PaymentScreenForReserve',{HouseID:data?.housing?.id,totalNight:totalNights})
       
     } catch (error) {
       console.log('Error saving states:', error);
     }
   };
   console.log( selectedStartDate , selectedEndDate)
-
+  console.log(data&& data?.housing?.housing_type_data&& JSON.parse(data?.housing?.housing_type_data)["daily_rent"] + 'dfskdf')
   return (
+    <AlertNotificationRoot>
     <ScrollView style={styles.container} contentContainerStyle={{paddingBottom:30}}>
       <View style={styles.card}>
         <CalendarPicker
@@ -245,7 +247,7 @@ const App = () => {
                 borderRadius: 30,
               }}
               onPress={() => {
-                if (GuestCount > 0) {
+                if (GuestCount > 1) {
                   setGuestCount(GuestCount - 1);
                 }
               }}
@@ -321,7 +323,7 @@ const App = () => {
           >
             <Text style={styles.DetailTitle}>İlan No:</Text>
             <View style={{ width: "50%", alignItems: "flex-end" }}>
-              <Text style={styles.DetailTitle}>1000{data?.id}</Text>
+              <Text style={styles.DetailTitle}>2000{data?.housing?.id}</Text>
             </View>
           </View>
           <View
@@ -425,8 +427,17 @@ const App = () => {
       <View style={{padding:5,alignItems:'center'}}>
     <TouchableOpacity style={{backgroundColor:'#EA2B2E',padding:10,borderRadius:7,width:'90%'}}
       onPress={()=>{
-   
-        saveAllStates()
+          if (selectedStartDate && selectedEndDate) {
+            saveAllStates()
+          }else{
+            Dialog.show({
+              type: ALERT_TYPE.WARNING,
+              title: "Lütfen Gün Seçiniz",
+              textBody: 'Giriş Ve Çıkış tarihlerini belirlemeyi unutmayın',
+              button: "Tamam",
+            });
+          }
+    
       }}
     >
       <Text style={{textAlign:'center',color:'#ffffff',fontWeight:'500'}}>
@@ -435,6 +446,7 @@ const App = () => {
     </TouchableOpacity>
    </View>
     </ScrollView>
+    </AlertNotificationRoot>
   );
 };
 
@@ -472,4 +484,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default CreateReservation;

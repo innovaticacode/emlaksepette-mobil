@@ -100,6 +100,7 @@ import Basket2 from "./pages/Home/Basket2";
 import PaymentScreen2 from "./pages/Home/PaymentScreen2";
 import AdvertsPanelTab from "./pages/Home/Panel/AdvertsPanelTab";
 import ClubPanel from "./pages/Home/Panel/RealtorClubPanel/ClubPanel";
+import CollectionsTab from "./pages/Home/Panel/CollectionsTab";
 
 const Stack = createNativeStackNavigator();
 
@@ -246,7 +247,7 @@ export default function App({ route }) {
             <Stack.Screen
               name="Register"
               component={Register}
-              options={{ title: "Üye Ol", headerBackTitle: "." }}
+              options={{ title: "Üye Ol", headerBackTitleVisible:false }}
             />
           </Stack.Group>
 
@@ -634,6 +635,7 @@ export default function App({ route }) {
             component={RealtorClub}
             options={({ route }) => ({
               title: "Emlak Kulübü Keşfet",
+              headerBackTitleVisible:false
             })}
           />
           <Stack.Screen
@@ -755,6 +757,7 @@ export default function App({ route }) {
             component={SellAndRentFormPage}
             options={({ route }) => ({
               title: "Sat Kirala",
+              headerBackTitleVisible:false
             })}
           />
           <Stack.Screen
@@ -762,6 +765,7 @@ export default function App({ route }) {
             component={SendSellAndRentForm}
             options={({ route }) => ({
               title: "Sat Kirala Formu",
+              headerBackTitleVisible:false
             })}
           />
           <Stack.Screen
@@ -1012,6 +1016,7 @@ export default function App({ route }) {
             component={SearchPage}
             options={({ route }) => ({
               title: "Ara",
+              headerShown:false,
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
@@ -1107,6 +1112,7 @@ export default function App({ route }) {
               },
             })}
           />
+         
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  ScrollView
 } from "react-native";
 import { React, useState, useEffect, useCallback } from "react";
 import BackIcon from "react-native-vector-icons/AntDesign";
@@ -22,9 +23,11 @@ import Modal from "react-native-modal";
 import { apiRequestPost } from "../../../components/methods/apiRequest";
 import * as SecureStore from "expo-secure-store";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
+import HTML from "react-native-render-html";
 import { ActivityIndicator } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { getValueFor } from "../../../components/methods/user";
+import axios from "axios";
 
 export default function Login({ navigation }) {
   const route = useRoute();
@@ -150,6 +153,31 @@ export default function Login({ navigation }) {
       return () => clearTimeout(timer);
     }, [])
   );
+  const fetchFromURL = async (url) => {
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+  const [Deals, setDeals] = useState("");
+  const [loadingDeal, setloadingDeal] = useState(false)
+  const fetchData = async () => {
+    setloadingDeal(true)
+    const url = `https://private.emlaksepette.com/api/sayfa/bireysel-uyelik-sozlesmesi`;
+    try {
+      const data = await fetchFromURL(url);
+      setDeals(data.content);
+      // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
+    } catch (error) {
+      console.error("İstek hatası:", error);
+      // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
+    }finally{
+      setloadingDeal(false)
+    }
+  };
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
@@ -159,33 +187,34 @@ export default function Login({ navigation }) {
           </View>
         ) : (
           <>
-            {!IsShowAlert && <View style={[styles.header, {}]}></View>}
-
-            <View style={!IsShowAlert ? { padding: 10 } : null}>
-              <View
-                style={{
-                  backgroundColor: "#E7FCEB",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  padding: 10,
-                  gap: 15,
-                  display: IsShowAlert ? "flex" : "none",
-                }}
-              >
-                <View>
-                  <BackIcon name="checkcircle" color={"#1D8027"} size={30} />
-                </View>
-                <View style={{ flex: 1.9 / 2 }}>
-                  <Text style={{ color: "#1D8027", fontSize: 12 }}>
-                    Hesabınız oluşturuldu. Hesabınızı etkinleştirmek için lütfen
-                    e-posta adresinize gönderilen doğrulama bağlantısını
-                    tıklayarak e-postanızı onaylayın
-                  </Text>
-                </View>
-              </View>
-            </View>
+         
             <View style={styles.logIn}>
               <View style={styles.form}>
+                {
+                  IsShowAlert == true &&
+                  <View
+                  style={{
+                    backgroundColor: "#E7FCEB",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    padding: 10,
+                    gap: 15,
+                    display: IsShowAlert ? "flex" : "none",
+                  }}
+                >
+                  <View>
+                    <BackIcon name="checkcircle" color={"#1D8027"} size={30} />
+                  </View>
+                  <View style={{ flex: 1.9 / 2 }}>
+                    <Text style={{ color: "#1D8027", fontSize: 12 }}>
+                      Hesabınız oluşturuldu. Hesabınızı etkinleştirmek için lütfen
+                      e-posta adresinize gönderilen doğrulama bağlantısını
+                      tıklayarak e-postanızı onaylayın
+                    </Text>
+                  </View>
+                </View>
+  
+                }
                 <View style={{ gap: 20 }}>
                   <View>
                     <Text
@@ -201,11 +230,11 @@ export default function Login({ navigation }) {
                   </View>
 
                   <View style={{ gap: 10 }}>
-                    <View style={{ paddingLeft: 10 }}>
+                    <View style={{  }}>
                       <Text
-                        style={{ fontSize: 15, color: "grey", fontWeight: 600 }}
+                        style={{ fontSize: 13, color: "#000000", fontWeight: '600' }}
                       >
-                        E-Mail
+                        E-Posta
                       </Text>
                     </View>
 
@@ -227,9 +256,9 @@ export default function Login({ navigation }) {
                     </Text>
                   </View>
                   <View style={{ gap: 10 }}>
-                    <View style={{ paddingLeft: 10 }}>
+                    <View style={{}}>
                       <Text
-                        style={{ fontSize: 15, color: "grey", fontWeight: 600 }}
+                        style={{ fontSize: 13, color: "#000000", fontWeight: '600' }}
                       >
                         Şifre
                       </Text>
@@ -238,17 +267,22 @@ export default function Login({ navigation }) {
                       <TouchableOpacity
                         style={{
                           position: "absolute",
-                          right: 10,
-                          top: 15, // Bu değeri TextInput'un yüksekliğine göre ayarlayın
+                         right:9,
+                          justifyContent:'center',
+                          top:'21%',
+                       // Bu değeri TextInput'un yüksekliğine göre ayarlayın
                           zIndex: 1,
                         }}
                         onPress={show}
                       >
+                        <View style={{height:'100%'}}>
                         <EyeIcon
                           name={Show ? "eye" : "eye-off-sharp"}
                           size={23}
                           color={"#333"}
                         />
+                        </View>
+                      
                       </TouchableOpacity>
                       <TextInput
                         style={styles.Input}
@@ -331,9 +365,9 @@ export default function Login({ navigation }) {
                           style={{
                             fontSize: 12,
                             fontWeight: 600,
-                            letterSpacing: 0.5,
-                            color: "#5D96F1",
-                            textDecorationLine: "underline",
+                            letterSpacing: 0.3,
+                            color: "#161616",
+                           
                           }}
                         >
                           Şifremi unuttum
@@ -376,7 +410,22 @@ export default function Login({ navigation }) {
                       Giriş Yap
                     </Text>
                   </TouchableOpacity>
+                  <View>
+                    <Text style={{ textAlign: "center", marginTop: 0 }}>
+                      <Text style={{ fontSize: 13, color: "#000000",fontWeight:'600' }}>
+                        Henüz üye değil misiniz?{" "}
+                      </Text>
 
+                      <Text
+                        style={{ fontWeight: "bold", color: "#1A77F3",fontSize:13 }}
+                        onPress={() => {
+                          navigation.navigate("Register");
+                        }}
+                      >
+                        Üye Ol
+                      </Text>
+                    </Text>
+                  </View>
                   <View
                     style={{
                       flexDirection: "row",
@@ -431,47 +480,81 @@ export default function Login({ navigation }) {
                         Google
                       </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: "#EEF4FE",
-                        padding: 8,
-                        width: "45%",
-                        height: 50,
-                        borderRadius: 5,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 10,
-                      }}
-                    >
-                      <Icon
-                        name="facebook-with-circle"
-                        size={35}
-                        color={"#1A77F3"}
-                      />
-                      <Text style={{ fontWeight: "bold", color: "#333" }}>
-                        Facebook
-                      </Text>
-                    </TouchableOpacity>
+                 
                   </View>
-                  <View>
-                    <Text style={{ textAlign: "center", marginTop: 20 }}>
-                      <Text style={{ fontSize: 13, color: "#333" }}>
-                        Henüz üye değil misiniz?{" "}
-                      </Text>
-
-                      <Text
-                        style={{ fontWeight: "bold", color: "#1A77F3" }}
-                        onPress={() => {
-                          navigation.navigate("Register");
-                        }}
-                      >
-                        Üye Ol
-                      </Text>
-                    </Text>
-                  </View>
+               
                 </View>
+                <View style={{}}>
+                        <View style={{width:'95%',justifyContent:'center'}}>
+                        <Text style={{textAlign:'center',color:'#333',fontSize:13,fontWeight:'600'}}>
+                  Google kimliğinizle bir sonraki adıma geçmeniz halinde
+                 <Text style={{color:'#2F5F9E'}} onPress={()=>{
+                  setModalVisible(true)
+                  setTimeout(() => {
+                    fetchData()
+                  }, 100);
+                 }}> Bireysel Hesap Sözleşmesi ve Ekleri</Text> 'ni kabul etmiş sayılırsınız.
+                  </Text>
+                        </View>
+                
+                 </View>
               </View>
+              
             </View>
+            <Modal
+            isVisible={modalVisible}
+            onBackdropPress={() => setModalVisible(false)}
+            backdropColor="transparent"
+            style={styles.modal2}
+            animationIn={"fadeInRightBig"}
+            animationOut={"fadeOutRightBig"}
+          >
+            <SafeAreaView style={styles.modalContent2}>
+              
+                
+                <>
+                {
+                  loadingDeal ?
+                  <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
+                  <ActivityIndicator color="#333" size={'large'}/>
+                </View>:
+                        <ScrollView
+                        style={{ padding: 10 }}
+                        contentContainerStyle={{ gap: 20 }}
+                      >
+                       
+                        <HTML source={{ html: Deals }} contentWidth={100} />
+        
+                        <View style={{ alignItems: "center", paddingBottom: 25 }}>
+                          <TouchableOpacity
+                            style={styles.Acceptbtn}
+                            onPress={() => {
+                              setChecked(!checked);
+                              setModalVisible(false);
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: "white",
+                                fontWeight: "bold",
+                                width: "100%",
+                                textAlign: "center",
+                              }}
+                            >
+                             Kapat
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </ScrollView>
+                }
+                   
+                    
+            
+                </>
+              
+             
+            </SafeAreaView>
+          </Modal>
             <Modal isVisible={showMailSendAlert} style={styles.modal}>
               <View style={styles.modalContent}>
                 <View
@@ -546,9 +629,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   checkboxLabel: {
-    fontSize: 13,
-    color: "#333",
+    fontSize: 12,
+    color: "#000000",
     marginLeft: 5,
+    fontWeight:'600'
+  },
+  Acceptbtn: {
+    backgroundColor: "#2aaa46",
+    padding: 10,
+    width: "100%",
+    textAlign: "center",
+    borderRadius: 5,
+    alignItems: "center",
   },
   form: {
     padding: 0,
@@ -560,10 +652,13 @@ const styles = StyleSheet.create({
   },
   Input: {
     padding: 10,
-    borderWidth: 1,
-    borderColor: "#ebebeb",
+    borderWidth: 0.9,
+    borderColor: "#DDDDDD",
     borderRadius: 5,
-    fontSize: 14,
+    fontSize: 13,
+    backgroundColor:'#fafafafa',
+    color:'#717171',
+    fontWeight:'600'
   },
   modal: {
     justifyContent: "center",
@@ -579,5 +674,17 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 18,
     marginBottom: 20,
+  },
+  modal2: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContent2: {
+    backgroundColor: "#f4f4f4",
+    padding: 10,
+
+    height: "100%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 });
