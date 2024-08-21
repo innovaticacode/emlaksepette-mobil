@@ -31,7 +31,11 @@ import Prefabrik from "./Home Pages/Prefabrik";
 import BookHouse from "./Home Pages/BookHouse";
 import SellAcil from "./Home Pages/SellAcil";
 import DrawerMenu from "../../components/DrawerMenu";
+
 const { width, height } = Dimensions.get("window");
+
+
+import Shared from "./Home Pages/Shared";
 
 const FirstRoute = () => (
   <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
@@ -57,6 +61,8 @@ const renderScene = ({ route, index }) => {
       return <BookHouse index={index} />;
     case "sellacil":
       return <SellAcil index={index} />;
+      case "shared":
+        return <Shared index={index}/>;
     default:
       return null;
   }
@@ -137,6 +143,7 @@ export default function HomePage2() {
     { key: "prefabrik", title: "Prefabrik" },
     { key: "bookhouse", title: "Bookhouse" },
     { key: "sellacil", title: "Sellacil" },
+    { key: "shared", title: "Shared" },
   ]);
   const indexChange = (index) => {
     setIndex(index);

@@ -62,15 +62,33 @@ export default function MyComments() {
                <Ionicons key={index} name="star" size={12} color="gold" />
             ))}
                                     </View>
-                                    <View>
-                                        <Text style={{fontSize:12,color:'#333'}} numberOfLines={1}>{comment?.comment}</Text>
+                                    <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
+                                      <View style={{width:'80%'}}>
+                                      <Text style={{fontSize:12,color:'#333'}} numberOfLines={1}>{comment?.comment}</Text>
+                                      </View>
+                                     <View>
+                                     {
+                                          comment?.status==0 &&
+                                          <Text style={{fontSize:10,color:'#FF9908'}}>Onay Bekliyor</Text>
+                                        }
+                                          {
+                                          comment?.status==1 &&
+                                          <Text style={{fontSize:10,color:'#00D21A'}}>Onaylandı</Text>
+                                        }
+                                           {
+                                          comment?.status==2 &&
+                                          <Text style={{fontSize:10,color:'red'}}>Reddedildi</Text>
+                                        }
+                                     </View>
+                                      
+                                       
                                     </View>
                                     </View> 
                          </View>    
                          <View style={{}}>
                                 <TouchableOpacity hitSlop={{ top: 20, bottom: 20, left: 40, right: 20 }} style={{}}
                                         onPress={()=>{
-                                                EditComment(comment?.id, ProjectInfo.id,comment)
+                                                EditComment(comment?.id, ProjectInfo.id,comment,comment.status)
                                         }}
                                 >
                                             <Icon name='dots-three-vertical' size={20} color={'#333'}/>
@@ -84,11 +102,13 @@ export default function MyComments() {
     const [selectedCommentID, setselectedCommentID] = useState(0)
     const [selectedProjectID, setselectedProjectID] = useState(0)
     const [selectcommentInfo, setselectcommentInfo] = useState({})
-    const EditComment=(id,ProjecId,comment)=>{
+    const [selectedCommentStatus, setselectedCommentStatus] = useState(null)
+    const EditComment=(id,ProjecId,comment,status)=>{
         setchoose(true)
         setselectedCommentID(id)
         setselectedProjectID(ProjecId)
         setselectcommentInfo(comment)
+        setselectedCommentStatus(status)
         console.log(comment)
     }
     const nav =useNavigation()
@@ -148,11 +168,21 @@ export default function MyComments() {
                 </View>
                
                 <View style={{padding:20,gap:35}}>
-                
-                <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={goToEditComment}>
-                          <Icon3 name="edit-note" size={29} color={'#333'}/>
-                          <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Yorumu Düzenle</Text>
-                  </TouchableOpacity>
+                {
+                  selectedCommentStatus == 1   &&
+                  <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={goToEditComment}>
+                  <Icon3 name="edit-note" size={29} color={'#333'}/>
+                  <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Yorumu Düzenle</Text>
+          </TouchableOpacity>
+                }
+                   {
+                  selectedCommentStatus == 2   &&
+                  <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={goToEditComment}>
+                  <Icon3 name="edit-note" size={29} color={'#333'}/>
+                  <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Yorumu Düzenle</Text>
+          </TouchableOpacity>
+                }
+             
                   <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={DeleteComment}>
                           <Icon3 name="delete" size={21} color={'#EA2A28'}/>
                           <Text style={{fontSize:14,color:'#EA2A28',fontWeight:'700'}}>Yorumu Sil</Text>

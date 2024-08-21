@@ -26,6 +26,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
   console.log(user);
   return (
     <>
+
       <SafeAreaView
         style={{
           flex: 1,
@@ -34,6 +35,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
         }}
       >
         <ScrollView showsVerticalScrollIndicator={false}>
+
           <TouchableOpacity onPress={() => navigateToScreen("HomePage")}>
             <Categories
               category="Ana Sayfa"
@@ -65,6 +67,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
               showImage={true}
             />
           </TouchableOpacity>
+
           {user.role == "Kurumsal Hesap" && (
             <TouchableOpacity
               onPress={() => {
@@ -87,14 +90,17 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
                 setIsDrawerOpen(false);
               }}
             >
+
               <Categories
                 category="Sat Kirala"
                 bordernone="none"
                 iconName="search-plus"
               />
             </TouchableOpacity>
+
           )}
         </ScrollView>
+
       </SafeAreaView>
       <ImageBackground
         source={require("../pages/Home/MenuBg.jpg")}

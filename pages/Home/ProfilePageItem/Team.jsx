@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
 import React from "react";
 import { Platform } from "react-native";
 
@@ -29,11 +29,18 @@ export default function Team({ teamm }) {
                   alignItems: "center",
                 }}
               >
-                <View style={[styles.profileImage, { borderRadius: 50 }]}>
-                  <Text style={{ fontSize: 17, color: "white" }}>
-                    {getInitials(team.name)}
-                  </Text>
-                </View>
+                {
+                  team.profile_image !=='indir.png' ?
+                  <View style={[styles.profileImage, { borderRadius: 50 }]}>
+                    <ImageBackground source={{uri:`https://private.emlaksepette.com/storage/profile_images/${team.profile_image}`}} style={{width:'100%',height:'100%',}} borderRadius={50}/>
+                </View>:
+                 <View style={[styles.profileImage, { borderRadius: 50,backgroundColor:'red' }]}>
+                 <Text style={{ fontSize: 17, color: "white" }}>
+                   {getInitials(team.name)}
+                 </Text>
+               </View>
+                }
+               
                 <View style={styles.profileName}>
                   <Text
                     style={{
@@ -70,7 +77,7 @@ export default function Team({ teamm }) {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    padding: 10,
+    padding: 5,
     justifyContent: "center",
   },
 
@@ -80,7 +87,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     width: "100%",
-    marginVertical: 10,
+  
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -103,7 +110,7 @@ const styles = StyleSheet.create({
   profileImage: {
     width: 60,
     height: 60,
-    backgroundColor: "red",
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },

@@ -146,7 +146,34 @@ export default function CollectionsPage() {
   useEffect(() => {
     fetchData(); // Sayfa ilk yüklendiğinde verileri getir
   }, [user]);
-
+  const [namFromGetUser, setnamFromGetUser] = useState([])
+  const GetUserInfo =async ()=>{
+     
+     try {
+       if (user?.access_token && user) {
+         const userInfo = await axios.get(
+           "https://private.emlaksepette.com/api/users/" + user?.id,
+           {
+             headers: {
+               Authorization: `Bearer ${user.access_token}`,
+             },
+           }
+         );
+         const userData = userInfo?.data?.user
+         setnamFromGetUser(userData)
+       
+       }
+     
+   
+     
+   
+     } catch (error) {
+       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+     }finally{
+      
+     }
+   }
+ 
   const [loading, setloading] = useState(false);
 
   const fetchData = async () => {
@@ -164,6 +191,7 @@ export default function CollectionsPage() {
         );
         setProjectItems(response?.data?.items);
         setcollections(response?.data?.collections);
+        GetUserInfo()
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -310,7 +338,7 @@ export default function CollectionsPage() {
 
   return (
     <AlertNotificationRoot>
-      {user.has_club == 2 && (
+      {namFromGetUser.has_club == 2 && (
         <>
           <View style={{ paddingTop: 10, gap: 10, gap: 10 }}>
             <View>
@@ -336,8 +364,8 @@ export default function CollectionsPage() {
           </View>
         </>
       )}
-      {user.has_club == 3 && (
-        <>
+      {namFromGetUser.has_club == 3 && (
+        <View style={{gap:10}}>
           <View style={{ paddingTop: 10 }}>
             <Text
               style={{
@@ -364,17 +392,17 @@ export default function CollectionsPage() {
               padding: 10,
             }}
             onPress={() => {
-              navigation.navigate("Collections");
-              setColectionSheet(false);
+              nav.navigate("Collections");
+              
             }}
           >
             <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
               Tekrar Başvur
             </Text>
           </TouchableOpacity>
-        </>
+        </View>
       )}
-      {user.has_club == 0 && (
+      {namFromGetUser.has_club == 0 && (
         <>
           <View style={{ paddingTop: 10, gap: 10 }}>
             <View>
@@ -413,7 +441,7 @@ export default function CollectionsPage() {
           </View>
         </>
       )}
-      {user.has_club == 1 && (
+      {namFromGetUser.has_club == 1 && (
         <>
           {loading ? (
             <View

@@ -61,7 +61,7 @@ export default function ProjectPost({
               transition={200}
             />
           </View>
-          <View style={styles.ShopText}>
+          {/* <View style={styles.ShopText}>
             <Text
               style={{
                 color: "white",
@@ -72,7 +72,7 @@ export default function ProjectPost({
             >
               {location} / {city}
             </Text>
-          </View>
+          </View> */}
         </View>
 
         <View
@@ -119,13 +119,14 @@ const styles = StyleSheet.create({
   },
   ShoppingName: {
     position: "absolute",
-    width: 120,
-    backgroundColor: "#FFFFFF",
-    left: "35%",
+    width: 100,
+    backgroundColor: 'red',
+    left: 0,
     height: 70,
     top: 0,
     display: "flex",
     flexDirection: "column",
+    borderBottomRightRadius:20
   },
   ShopImage: {
     height: "75%",
@@ -144,6 +145,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
     alignItems: "center",
+    borderTopRightRadius:20,
     justifyContent: "center",
   },
   commissionBadge: {

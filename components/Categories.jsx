@@ -57,6 +57,7 @@ export default function Categories({
             fontSize: 14,
             color: bordernone ? "white" : "#333",
             fontWeight: "700",
+            
           }}
         >
           {category}
@@ -80,8 +81,8 @@ export default function Categories({
 }
 const styles = StyleSheet.create({
   category: {
-    padding: 5,
-    margin: 8,
+    padding: 8,
+    
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",

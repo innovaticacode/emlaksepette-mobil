@@ -48,7 +48,8 @@ export default function RealtorAdverts({ housingdata, filteredResults }) {
           <RealtorPost
             GetId={GetIdForCart}
             HouseId={item.id}
-            price={`${JSON.parse(item.housing_type_data)["price"]} `}
+            openSharing={JSON.parse(item.housing_type_data)['open_sharing1']}
+            price={item.step2_slug== 'gunluk-kiralik'?JSON.parse(item.housing_type_data)["daily_rent"]: JSON.parse(item.housing_type_data)["price"]} 
             housing={item}
             filteredResults={filteredResults}
             title={item.title}
