@@ -209,7 +209,7 @@ export default function RealtorPostFavorited({
             </View>
 
             <View style={styles.container2}>
-              <View style={styles.captionAndIcons}>
+              <View style={[styles.captionAndIcons, { flex: 1 }]}>
                 <View style={styles.caption}>
                   <Text style={{ fontSize: 9, color: "black" }}>
                     İlan No: {2000000 + (projectId ? projectId : HouseId)}-
@@ -224,8 +224,13 @@ export default function RealtorPostFavorited({
                 </View>
               </View>
 
-              <View style={styles.PriceAndButtons}>
-                <View style={{ flex: 1 / 2, alignItems: "center" }}>
+              <View style={[styles.PriceAndButtons, {}]}>
+                <View
+                  style={{
+                    flex: 1 / 2,
+                    alignItems: "center",
+                  }}
+                >
                   <Text
                     style={{
                       color: "#264ABB",

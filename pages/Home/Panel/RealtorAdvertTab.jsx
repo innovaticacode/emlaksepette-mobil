@@ -51,43 +51,44 @@ const CustomTabBar = ({
   tab,
   indexChange,
 }) => {
-  const menuItems=[
+  const menuItems = [
     {
-        'text':'Genel İstatistikler',
-        'color':'#EEEDEB',
-        'textColor':'#000000',
-         'Inactive':'#FFFFFF',
-         'InactiveTex':'#000000'
+      text: "Genel İstatistikler",
+      color: "#EEEDEB",
+      textColor: "#000000",
+      Inactive: "#FFFFFF",
+      InactiveTex: "#000000",
     },
     {
-        'text':'Kazancım',
-        'color':'#BFFFC5',
-        'textColor':'#00D21A',
-          'Inactive':'#FFFFFF',
-         'InactiveTex':'#000000'
+      text: "Kazancım",
+      color: "#BFFFC5",
+      textColor: "#00D21A",
+      Inactive: "#FFFFFF",
+      InactiveTex: "#000000",
     },
     {
-        'text':'Onay Bekleyen Kazancım',
-        'color':'#FFECB2',
-        'textColor':'#FF9908',
-          'Inactive':'#FFFFFF',
-         'InactiveTex':'#000000'
+      text: "Onay Bekleyen Kazancım",
+      color: "#FFECB2",
+      textColor: "#FF9908",
+      Inactive: "#FFFFFF",
+      InactiveTex: "#000000",
     },
     {
-        'text':'Reddedilen Kazancım',
-        'color':'#FBD5D5',
-        'textColor':'#EA2C2E',
-          'Inactive':'#FFFFFF',
-         'InactiveTex':'#000000'
-    }
-  ]
-
- 
+      text: "Reddedilen Kazancım",
+      color: "#FBD5D5",
+      textColor: "#EA2C2E",
+      Inactive: "#FFFFFF",
+      InactiveTex: "#000000",
+    },
+  ];
 
   return (
     <View>
-    
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{backgroundColor:'#F6F6F6'}}>
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ backgroundColor: "#F6F6F6" }}
+      >
         <View style={{ padding: 10, flexDirection: "row", gap: 10 }}>
           {menuItems.map((item, index) => (
             <TouchableOpacity
@@ -96,8 +97,8 @@ const CustomTabBar = ({
                 styles.tabBtn,
                 {
                   backgroundColor: tab == index ? item.color : item.Inactive,
-                
-                  borderRadius:8
+
+                  borderRadius: 8,
                 },
               ]}
               onPress={() => {
@@ -109,7 +110,7 @@ const CustomTabBar = ({
                   textAlign: "center",
                   color: tab == index ? item.textColor : item.InactiveTex,
                   fontSize: 12,
-                  fontWeight:'400'
+                  fontWeight: "400",
                 }}
               >
                 {item.text}
@@ -135,7 +136,6 @@ export default function RealtorAdvertTab() {
     { key: "second", title: "Second" },
     { key: "shop", title: "Shop" },
     { key: "area", title: "Area" },
-  
   ]);
   const indexChange = (index) => {
     setIndex(index);
@@ -143,15 +143,11 @@ export default function RealtorAdvertTab() {
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1,backgroundColor:'#F6F6F6',  }}
-    >
-     
-      
-     
-      <View style={{paddingLeft:8,paddingRight:8,paddingTop:10}}>
-        <TextInput style={{padding:6,backgroundColor:'#FFFFFF',borderRadius:5,}} placeholder="Kelime veya İlan no ile ara.." 
-          
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#F6F6F6" }}>
+      <View style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 10 }}>
+        <TextInput
+          style={{ padding: 6, backgroundColor: "#FFFFFF", borderRadius: 5 }}
+          placeholder="Kelime veya İlan no ile ara.."
         />
       </View>
       <TabView

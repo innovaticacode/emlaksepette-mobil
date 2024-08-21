@@ -59,6 +59,7 @@ export default function Favorites() {
       setLoading(false);
     }
   };
+  console.log(favorites);
 
   useEffect(() => {
     if (user.access_token) {
@@ -112,7 +113,6 @@ export default function Favorites() {
     setselectedRoomID(roomId);
     settype(type);
   };
-
   const addToCardForHousing = async () => {
     const formData = new FormData();
     formData.append("id", selectedCartItem);
@@ -145,20 +145,23 @@ export default function Favorites() {
 
   const addToCardForProject = async () => {
     const formData = new FormData();
-    formData.append("id", selectedCartItem);
+    formData.append("id", selectedRoomID);
     formData.append(
       "isShare",
-
-      data.projectHousingsList[selectedCartItem]["share_sale[]"]
+      favorites?.project?.listHousing[selectedRoomID]["share_sale[]"]
+        ? favorites?.project?.listHousing[selectedRoomID]["share_sale[]"]
+        : "[]"
     );
     formData.append(
       "numbershare",
-      data.projectHousingsList[selectedCartItem]["number_of_shares[]"]
+      favorites?.project?.listHousing[selectedRoomID]
+        ? ["number_of_shares[]"]
+        : "[]"
     );
     formData.append("qt", 1);
     formData.append("type", "project");
     formData.append("clear_cart", "no");
-    formData.append("project", data.project.id);
+    formData.append("project", selectedCartItem);
     try {
       if (user?.access_token) {
         const response = await axios.post(
@@ -170,13 +173,13 @@ export default function Favorites() {
             },
           }
         );
-
         navigation.navigate("Sepetim");
       }
     } catch (error) {
       console.error("post isteği olmadı", error);
     }
   };
+
   const deleteRequestWithToken = async () => {
     try {
       const response = await axios.delete(
@@ -582,6 +585,11 @@ export default function Favorites() {
                           column1={column1}
                           column2={column2}
                           column3={column3}
+                          location={
+                            favorite?.project?.city?.title +
+                            " / " +
+                            favorite?.project?.county?.ilce_title
+                          }
                           image={
                             "https://private.emlaksepette.com/project_housing_images/" +
                             image
