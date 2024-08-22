@@ -583,10 +583,9 @@ export default function CollectionsPage() {
                           textAlign: "center",
                           fontWeight: "bold",
                           color: "#333",
-                        }}
-                      > {
-                        !isChoosed ?
-                        'Toplu Seç':'Seçimi İptal Et'
+                        }} > 
+                      {
+                        !isChoosed ? 'Toplu Seç':'Seçimi İptal Et'
                       }
                       
                       </Text>
