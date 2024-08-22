@@ -394,7 +394,9 @@ export default function Favorites() {
                           color: "#333",
                         }}
                       >
-                        Toplu Seç
+                        {
+                          !isChoosed ? 'Toplu Seç' : 'Seçimi İptal Et'
+                        }
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -506,9 +508,9 @@ export default function Favorites() {
                           if (
                             projectHousing.room_order == favorite?.housing_id &&
                             projectHousing.name ==
-                              favorite?.project?.list_item_values
-                                ?.column1_name +
-                                "[]" &&
+                            favorite?.project?.list_item_values
+                              ?.column1_name +
+                            "[]" &&
                             projectHousing.project_id == favorite?.project?.id
                           ) {
                             return projectHousing;
@@ -520,9 +522,9 @@ export default function Favorites() {
                           if (
                             projectHousing.room_order == favorite?.housing_id &&
                             projectHousing.name ==
-                              favorite?.project?.list_item_values
-                                ?.column2_name +
-                                "[]" &&
+                            favorite?.project?.list_item_values
+                              ?.column2_name +
+                            "[]" &&
                             projectHousing.project_id == favorite?.project?.id
                           ) {
                             return projectHousing;
@@ -534,9 +536,9 @@ export default function Favorites() {
                           if (
                             projectHousing.room_order == favorite?.housing_id &&
                             projectHousing.name ==
-                              favorite?.project?.list_item_values
-                                ?.column3_name +
-                                "[]" &&
+                            favorite?.project?.list_item_values
+                              ?.column3_name +
+                            "[]" &&
                             projectHousing.project_id == favorite?.project?.id
                           ) {
                             return projectHousing;
@@ -550,7 +552,7 @@ export default function Favorites() {
                           (favorite?.project?.list_item_values
                             ?.column1_additional
                             ? favorite?.project?.list_item_values
-                                ?.column1_additional
+                              ?.column1_additional
                             : "");
                       }
                       if (column2) {
@@ -560,7 +562,7 @@ export default function Favorites() {
                           (favorite?.project?.list_item_values
                             ?.column2_additional
                             ? favorite?.project?.list_item_values
-                                ?.column2_additional
+                              ?.column2_additional
                             : "");
                       }
                       if (column3) {
@@ -570,7 +572,7 @@ export default function Favorites() {
                           (favorite?.project?.list_item_values
                             ?.column3_additional
                             ? favorite?.project?.list_item_values
-                                ?.column3_additional
+                              ?.column3_additional
                             : "");
                       }
                       var no = 1000000 + favorite?.project.id;
@@ -605,7 +607,7 @@ export default function Favorites() {
                               (projectHousing) => {
                                 if (
                                   projectHousing.room_order ==
-                                    favorite?.housing_id &&
+                                  favorite?.housing_id &&
                                   projectHousing.name == "price[]"
                                 ) {
                                   return projectHousing;
@@ -650,14 +652,14 @@ export default function Favorites() {
                               favorite?.housing?.list_items?.column1_name
                             ]
                               ? housingData[
-                                  favorite?.housing?.list_items?.column1_name
-                                ] +
-                                " " +
-                                (favorite?.housing?.list_items
+                              favorite?.housing?.list_items?.column1_name
+                              ] +
+                              " " +
+                              (favorite?.housing?.list_items
+                                ?.column1_additional
+                                ? favorite?.housing?.list_items
                                   ?.column1_additional
-                                  ? favorite?.housing?.list_items
-                                      ?.column1_additional
-                                  : "")
+                                : "")
                               : ""
                           }
                           column2={
@@ -665,14 +667,14 @@ export default function Favorites() {
                               favorite?.housing?.list_items?.column2_name
                             ]
                               ? housingData[
-                                  favorite?.housing?.list_items?.column2_name
-                                ] +
-                                " " +
-                                (favorite?.housing?.list_items
+                              favorite?.housing?.list_items?.column2_name
+                              ] +
+                              " " +
+                              (favorite?.housing?.list_items
+                                ?.column2_additional
+                                ? favorite?.housing?.list_items
                                   ?.column2_additional
-                                  ? favorite?.housing?.list_items
-                                      ?.column2_additional
-                                  : "")
+                                : "")
                               : ""
                           }
                           column3={
@@ -680,14 +682,14 @@ export default function Favorites() {
                               favorite?.housing?.list_items?.column3_name
                             ]
                               ? housingData[
-                                  favorite?.housing?.list_items?.column3_name
-                                ] +
-                                " " +
-                                (favorite?.housing?.list_items
+                              favorite?.housing?.list_items?.column3_name
+                              ] +
+                              " " +
+                              (favorite?.housing?.list_items
+                                ?.column3_additional
+                                ? favorite?.housing?.list_items
                                   ?.column3_additional
-                                  ? favorite?.housing?.list_items
-                                      ?.column3_additional
-                                  : "")
+                                : "")
                               : ""
                           }
                           location={
