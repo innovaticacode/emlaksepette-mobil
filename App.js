@@ -105,6 +105,7 @@ import SwapScreenNav from "./components/SwapScreenNav";
 import MapWiew from "./pages/Home/MapWiew";
 
 import CollectionsTab from "./pages/Home/Panel/CollectionsTab";
+import SwapForm from "./pages/Home/RealtorPages/SwapForm";
 
 
 const Stack = createNativeStackNavigator();
@@ -1134,6 +1135,17 @@ export default function App({ route }) {
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+             <Stack.Screen
+            name="SwapForm"
+            component={SwapForm}
+            options={({ route }) => ({
+              title: "Takas Başvurusu Yap",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#ffffff",
               },
             })}
           />

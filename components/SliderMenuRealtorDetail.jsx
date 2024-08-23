@@ -8,7 +8,7 @@ export default function SliderMenuRealtorDetails({tab,setTab,changeTab}) {
         {text:'Özellikler',Icontype:false},
         {text:'Harita',Icontype:false},
         {text:'Yorumlar',Icontype:false},
-        {text:'Takas Formu' , Icontype:true}
+      
     ]
   return (
     <ScrollView

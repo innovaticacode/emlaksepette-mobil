@@ -10,8 +10,8 @@ export default function Settings({ data }) {
   const route = useRoute();
 
   return (
-    <View style={{  }}>
-    <Shadow style={{width:'100%'}}>
+    <View style={styles.card}>
+    
       <View key={0}>
   <SettingsItem info="İlan No" numbers={parseInt(data.housing.id) + 2000000}/>
 </View>
@@ -77,7 +77,7 @@ export default function Settings({ data }) {
         <SettingsItem info='Eşyalı' numbers='Evet'/>
         <SettingsItem info='Banyo Sayısı' numbers='1'/>
         <SettingsItem info='Kullanım Durumu' numbers='Boş' border='0'/> */}
-    </Shadow>
+    
     </View>
   );
 }
@@ -85,8 +85,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#FFFFFF",
 
-    paddingVertical: 8,
-    paddingHorizontal: 5,
+
     width: "100%",
 
     borderWidth: 0.7,
