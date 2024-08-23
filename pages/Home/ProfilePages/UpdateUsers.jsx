@@ -27,6 +27,7 @@ import {
   AlertNotificationRoot,
   Toast,
 } from "react-native-alert-notification";
+import { ActivityIndicator } from "react-native-paper";
 export default function UpdateUsers() {
   const route = useRoute();
   const navigation = useNavigation();
@@ -90,8 +91,9 @@ export default function UpdateUsers() {
   const [UserType, setUserType] = useState(null);
 
   const [isActive, setisActive] = useState(1);
-
+  const [loadingUpdate, setloadingUpdate] = useState(false)
   const createUser = async () => {
+    setloadingUpdate(true)
     let formdata = new FormData();
     formdata.append("name", nameAndSurname);
     formdata.append("title", title);
@@ -113,6 +115,7 @@ export default function UpdateUsers() {
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
+              
             },
           }
         )
@@ -141,7 +144,13 @@ export default function UpdateUsers() {
             title: "Hata",
             textBody: "Veri gönderimi sırasında bir hata oluştu.",
           });
-        });
+        } )
+        .finally(()=>{
+          setloadingUpdate(false)
+        })
+        
+        
+        
     }
   };
   console.log(UserID);
@@ -154,6 +163,7 @@ export default function UpdateUsers() {
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
+              "Content-Type": "multipart/form-data",
             },
           }
         );
@@ -216,7 +226,7 @@ export default function UpdateUsers() {
     const formattedValue = formatPhoneNumber(value);
     setphoneNumber(formattedValue);
   };
-
+  const [showPassword, setshowPassword] = useState(true)
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -267,12 +277,23 @@ export default function UpdateUsers() {
                   (Değiştirmek İstemiyorsanız Boş bırakın)
                 </Text>
               </View>
-
-              <TextInput
+                <View>
+                <TouchableOpacity 
+                    onPress={()=>{
+                      setshowPassword(!showPassword)
+                    }}
+                      style={{position:'absolute',zIndex:1,right:10,top:6}}
+                    >
+                      <DotIcon name={showPassword? "eye-with-line":'eye'} size={23} color={'#333'}/>
+                    </TouchableOpacity>
+                <TextInput
                 style={style.Input}
                 value={password}
                 onChangeText={(value) => setpassword(value)}
+                secureTextEntry={showPassword}
               />
+                </View>
+           
             </View>
             <View>
               <Text style={style.Label}>Kullanıcı Tipi</Text>
@@ -302,24 +323,34 @@ export default function UpdateUsers() {
             </View>
           </View>
           <View style={{ width: "100%", alignItems: "center" }}>
-            <TouchableOpacity
-              onPress={createUser}
-              style={{
-                backgroundColor: "#EA2A29",
-                padding: 13,
-                width: "50%",
-                borderRadius: 5,
-              }}
-            >
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#EA2A29",
+              padding: 9,
+              width: "90%",
+              borderRadius: 5,
+              opacity:loadingUpdate ? 0.5:1,
+              flexDirection:'row',
+              alignItems:'center',
+              justifyContent:'center'
+            }}
+            onPress={createUser}
+          >
+            {
+              loadingUpdate ?
+              <ActivityIndicator color="white" size={'small'}/>
+              :
               <Text
-                style={[
-                  style.label2,
-                  { color: "white", textAlign: "center", fontSize: 16 },
-                ]}
-              >
-                Kaydet
-              </Text>
-            </TouchableOpacity>
+              style={[
+                style.label2,
+                { color: "white", textAlign: "center", fontSize: 14 ,fontWeight:'700'},
+              ]}
+            >
+              Kaydet
+            </Text>
+            }
+        
+          </TouchableOpacity>
           </View>
         </View>
 
@@ -404,22 +435,26 @@ const style = StyleSheet.create({
   },
   Inputs: {
     gap: 20,
-    padding: 20,
+    padding: 10,
+    
   },
   Input: {
-    padding: 9,
-    backgroundColor: "transparent",
+    padding: 10,
+    borderWidth: 0.9,
+    borderColor: "#DDDDDD",
     borderRadius: 5,
-    fontSize: 15,
-    borderWidth: 1,
-    borderColor: "#ebebeb",
+    fontSize: 13,
+    backgroundColor:'#fafafafa',
+    color:'#717171',
+    fontWeight:'600'
   },
   Label: {
-    fontSize: 14,
+    fontSize: 13,
     bottom: 3,
     left: 6,
-    fontWeight: "300",
+    fontWeight: "600",
     letterSpacing: 0.5,
+    color:'#333'
   },
   bottomSheetItem: {
     width: "100%",

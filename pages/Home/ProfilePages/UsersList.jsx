@@ -11,7 +11,7 @@ import ModalEdit from "react-native-modal";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import Icon2 from 'react-native-vector-icons/FontAwesome6'
 import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
@@ -45,9 +45,10 @@ export default function UsersList() {
       setloading(false)
     }
   };
+ const isfocused=useIsFocused()
   useEffect(() => {
     fetchData();
-  }, [user]);
+  }, [user,isfocused]);
   const [SuccessDelete, setSuccessDelete] = useState(false)
   const DeleteUser = async () => {
     try {
@@ -151,17 +152,21 @@ export default function UsersList() {
         type: ALERT_TYPE.WARNING,
         title: `Silme işlemi başarılı`,
         titleStyle: { fontSize: 14 },
-        textBody: `${userList.length} Kullanıcı Silindi`
+        textBody: `${SelectedUserIDS.length} Kullanıcı Silindi`
       })
       fetchData()
       setSelectedUserIDS([])
       setselectedUserDeleteModa(false)
+      setisChoosed(false)
+      setisShowDeleteButon(!isShowDeleteButon)
+    
 
     } catch (error) {
 
       console.error('Error making DELETE request:', error);
     }
   }
+  const [showText, setshowText] = useState(false)
   return (
 
     <AlertNotificationRoot>
@@ -344,23 +349,33 @@ export default function UsersList() {
                     onPress={() => {
                       setisShowDeleteButon(!isShowDeleteButon)
                       setisChoosed(!isChoosed)
+                      setSelectedUserIDS([])
                     }}
                   >
                     <Text style={{ fontSize: 13, fontWeight: '700', color: '#333' }}>
                       {
-                        !isChoosed ? 'Toplu Seç' : 'Seçimi İptal Et'
+                        isChoosed==true ? 'Seçimi İptal Et' : 'Toplu Seç'
                       }
                     </Text>
                   </TouchableOpacity>
                 </View>
 
                 {
-                  isShowDeleteButon &&
+                  isShowDeleteButon == true &&
                   <View style={{ flexDirection: 'row', gap: 9, alignItems: 'center' }}>
                     <Text>Seçili({SelectedUserIDS.length})</Text>
                     <TouchableOpacity style={{ backgroundColor: 'red', paddingLeft: 8, paddingRight: 8, paddingTop: 5, paddingBottom: 5, borderRadius: 6 }}
                       onPress={() => {
-                        setselectedUserDeleteModa(true)
+                        if (SelectedUserIDS.length==0) {
+                          setshowText(!showText)
+                          setTimeout(() => {
+                            setshowText(false)
+                          }, 2000);
+                     
+                        } else{
+                          setselectedUserDeleteModa(true)
+                        }
+                       
                       }}
                     >
                       <Icon name="trash" size={18} color={"#ffffff"} />
@@ -369,6 +384,13 @@ export default function UsersList() {
                 }
 
               </View>
+              {
+                  showText &&
+                  <View>
+                  <Text style={{textAlign:'center',fontSize:14,fontWeight:'700',color:'#EC302E'}}>Lütfen Silmek İstediğiniz Kullanıcıyı Seçiniz!</Text>
+                </View>
+
+                }
               <View style={{ gap: 10, padding: 5, paddingBottom: 100 }}>
                 {subUsers?.map((item, index) => (
                   <SubUser
