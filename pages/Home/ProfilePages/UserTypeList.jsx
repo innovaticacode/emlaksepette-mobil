@@ -121,6 +121,7 @@ const [deleteAllUserType, setdeleteAllUserType] = useState(false)
           })
           fetchData()
           setSelectedUserIDS([])
+          setisChoosed(false)
         setdeleteUserModal(false)
          
         } catch (error) {
