@@ -81,6 +81,7 @@ export default function CreateUserType() {
     postData();
     
   };
+  const [loadingUpdate, setloadingUpdate] = useState(false)
   const postData = async () => {
     if (!TypeName) {
       Dialog.show({
@@ -90,6 +91,7 @@ export default function CreateUserType() {
         button: 'Tamam',
       })
     }else{
+      setloadingUpdate(true)
       try {
         var formData = new FormData();
         formData.append("name", TypeName);
@@ -106,13 +108,15 @@ export default function CreateUserType() {
           }
         );
          setTypeName('')
+         setCheckedItems([])
+         fetchData()
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title: 'Başarılı',
           textBody: 'Kullanıcı Tipi Oluşturma Başarılı',
           button: 'Tamam',
           onPressButton:()=>{
-            navigation.navigate('UserTypes')
+            navigation.goBack()
             Dialog.hide()
           }
         })
@@ -122,6 +126,8 @@ export default function CreateUserType() {
       
   
         console.error("Hata:", error + "post isteği başarısız ");
+      }finally{
+        setloadingUpdate(false)
       }
     }
    
@@ -171,24 +177,35 @@ export default function CreateUserType() {
             ))}
           </View>
         </View>
-        <View style={{ width: "100%", alignItems: "center" }}>
+        <View style={{ width: "100%", alignItems: "center" ,paddingBottom:15}}>
+        
           <TouchableOpacity
             style={{
               backgroundColor: "#EA2A29",
-              padding: 13,
-              width: "50%",
+              padding: 9,
+              width: "90%",
               borderRadius: 5,
+              opacity:loadingUpdate ? 0.5:1,
+              flexDirection:'row',
+              alignItems:'center',
+              justifyContent:'center'
             }}
             onPress={handleShowCheckedItems}
           >
-            <Text
+            {
+              loadingUpdate ?
+              <ActivityIndicator color="white" size={'small'}/>
+              :
+              <Text
               style={[
                 styles.label2,
-                { color: "white", textAlign: "center", fontSize: 16 },
+                { color: "white", textAlign: "center", fontSize: 14 ,fontWeight:'700'},
               ]}
             >
               Kaydet
             </Text>
+            }
+        
           </TouchableOpacity>
         </View>
       </View>
