@@ -117,7 +117,7 @@ const [deleteAllUserType, setdeleteAllUserType] = useState(false)
             type: ALERT_TYPE.WARNING,
             title: `Silme işlemi başarılı`,
             titleStyle:{fontSize:14},
-            textBody:`${SelectedUserIDS.length} İlan silindi`
+            textBody:`${SelectedUserIDS.length} Kullanıcı Tipi Silindi`
           })
           fetchData()
           setSelectedUserIDS([])
@@ -249,10 +249,14 @@ const [deleteAllUserType, setdeleteAllUserType] = useState(false)
           <TouchableOpacity style={styles.btnRemove} 
               onPress={()=>{
                 setisShowDeleteButon(!isShowDeleteButon)
-                setisChoosed(!isChoosed)
+                  setisChoosed(!isChoosed)
+                  setSelectedUserIDS([])
               }}
           >
-            <Text style={{fontSize:13,fontWeight:'700',color:'#333'}}>Toplu Seç</Text>
+            <Text style={{fontSize:13,fontWeight:'700',color:'#333'}}> {
+              !isChoosed ?
+                        'Toplu Seç':'Seçimi İptal Et'
+              } </Text>
           </TouchableOpacity>
           </View>
       
@@ -260,9 +264,14 @@ const [deleteAllUserType, setdeleteAllUserType] = useState(false)
                   isShowDeleteButon &&
                   <View style={{flexDirection:'row',gap:9,alignItems:'center'}}>
                     <Text>Seçili({SelectedUserIDS.length})</Text>
-                  <TouchableOpacity style={{backgroundColor:'red',paddingLeft:8,paddingRight:8,paddingTop:5,paddingBottom:5,borderRadius:6}}
+                  <TouchableOpacity style={{backgroundColor:'#EC302E',paddingLeft:8,paddingRight:8,paddingTop:5,paddingBottom:5,borderRadius:6}}
                       onPress={()=>{
-                        setdeleteUserModal(true)
+                        if (SelectedUserIDS.length==0) {
+                        alert('dsfds')
+                        } else{
+                          setdeleteUserModal(true)
+                        }
+                        
                       }}
                   >
                   <Icon name="trash" size={18} color={"#ffffff"} />

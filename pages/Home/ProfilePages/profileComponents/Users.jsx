@@ -1,10 +1,14 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Platform } from "react-native";
 export default function Users({name,id,index,item,deleteUser,isChoosed,SelectUserFunc}) {
     const navigation =useNavigation()
     const [ishighlated, setishighlated] = useState(false)
+    useEffect(() => {
+            setishighlated(false)
+    }, [isChoosed])
+    
   return (
     <TouchableOpacity style={[style.container,{borderWidth:ishighlated && isChoosed? 1:0, borderColor:'red'}]}
             disabled={!isChoosed}
