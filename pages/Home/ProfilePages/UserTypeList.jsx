@@ -166,7 +166,7 @@ const [deleteAllUserType, setdeleteAllUserType] = useState(false)
           console.error('Error making DELETE request:', error);
         }
       }
-
+const [showText, setshowText] = useState(false)
   return (
     <AlertNotificationRoot>
       {
@@ -267,7 +267,11 @@ const [deleteAllUserType, setdeleteAllUserType] = useState(false)
                   <TouchableOpacity style={{backgroundColor:'#EC302E',paddingLeft:8,paddingRight:8,paddingTop:5,paddingBottom:5,borderRadius:6}}
                       onPress={()=>{
                         if (SelectedUserIDS.length==0) {
-                        alert('dsfds')
+                          setshowText(!showText)
+                          setTimeout(() => {
+                            setshowText(false)
+                          }, 1500);
+                     
                         } else{
                           setdeleteUserModal(true)
                         }
@@ -280,6 +284,14 @@ const [deleteAllUserType, setdeleteAllUserType] = useState(false)
                 }
         
         </View>
+                {
+                  showText &&
+                  <View>
+                  <Text style={{textAlign:'center',fontSize:14,fontWeight:'700',color:'#EC302E'}}>Lütfen Silmek İstediğiniz Kullanıcı Tiplerini Seçiniz!</Text>
+                </View>
+
+                }
+      
       <View style={{padding:7,gap:10}}>
         {
             transformedRoles.map((item,index)=>(

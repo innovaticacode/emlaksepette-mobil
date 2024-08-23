@@ -177,7 +177,7 @@ export default function CreateUserType() {
             ))}
           </View>
         </View>
-        <View style={{ width: "100%", alignItems: "center" }}>
+        <View style={{ width: "100%", alignItems: "center" ,paddingBottom:15}}>
         
           <TouchableOpacity
             style={{
