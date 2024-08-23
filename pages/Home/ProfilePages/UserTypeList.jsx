@@ -123,6 +123,7 @@ const [deleteAllUserType, setdeleteAllUserType] = useState(false)
           fetchData()
           setSelectedUserIDS([])
           setisChoosed(false)
+      setisShowDeleteButon(!isShowDeleteButon)
         setdeleteUserModal(false)
          
         } catch (error) {
@@ -253,6 +254,7 @@ const [showText, setshowText] = useState(false)
                 setisShowDeleteButon(!isShowDeleteButon)
                   setisChoosed(!isChoosed)
                   setSelectedUserIDS([])
+                  
               }}
           >
             <Text style={{fontSize:13,fontWeight:'700',color:'#333'}}> {
@@ -272,7 +274,7 @@ const [showText, setshowText] = useState(false)
                           setshowText(!showText)
                           setTimeout(() => {
                             setshowText(false)
-                          }, 1500);
+                          }, 2000);
                      
                         } else{
                           setdeleteUserModal(true)

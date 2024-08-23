@@ -9,6 +9,7 @@ import {
   Switch,
   Modal,
   Touchable,
+  ScrollView,
 } from "react-native";
 import { Platform } from "react-native";
 import { useState, useRef, useEffect } from "react";
@@ -28,6 +29,7 @@ import {
 } from "react-native-alert-notification";
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { ActivityIndicator } from "react-native-paper";
 export default function CreateUser() {
   const route = useRoute();
   const navigation = useNavigation();
@@ -114,9 +116,11 @@ export default function CreateUser() {
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
+  const [loadingUpdate, setloadingUpdate] = useState(false)
   const createUser = () => {
+   
     if (!validateForm()) return;
-
+        setloadingUpdate(true)
     let formdata = new FormData();
     formdata.append("name", nameAndSurname);
     formdata.append("title", title);
@@ -138,27 +142,44 @@ export default function CreateUser() {
         )
         .then((response) => {
           setmessage(response.data.message);
-          Toast.show({
+        
+          Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Başarılı",
             textBody: response.data.message,
+            button: "Tamam",
+            onPressButton:()=>{
+              navigation.goBack()
+              Dialog.hide()
+            }
           });
-
           setnameAndSurname("");
           setemail("");
           setpassword("");
           settitle("");
           setphoneNumber("");
           setUserType("");
+        
         })
         .catch((error) => {
-          Toast.show({
-            type: ALERT_TYPE.WARNING,
+          Dialog.show({
+            type: ALERT_TYPE.DANGER,
             title: "Hata",
-            textBody: error.response?.data?.message || "Bir hata oluştu",
+            textBody: error.response?.data?.errors.email[0] ,
+            button: "Tamam",
+            onPressButton:()=>{
+             
+              Dialog.hide()
+            }
           });
+        
+        
           console.error("API Hatası:", error);
-        });
+        } ) 
+        .finally(()=>{
+          setloadingUpdate(false)
+        })
+       
     }
   };
   const formatPhoneNumber = (value) => {
@@ -198,14 +219,13 @@ export default function CreateUser() {
     const formattedValue = formatPhoneNumber(value);
     setphoneNumber(formattedValue);
   };
-
+    const [showPassword, setshowPassword] = useState(true)
   return (
     <AlertNotificationRoot>
-      <KeyboardAwareScrollView
-        contentContainerStyle={{ flex: 1 }}
-        onTouchStart={() => {
-          Keyboard.dismiss();
-        }}
+      <ScrollView
+        contentContainerStyle={{ flex: 1, }}
+        style={{backgroundColor:'white'}}
+      
       >
         <View style={style.container}>
           <View style={[style.Form]}>
@@ -270,9 +290,18 @@ export default function CreateUser() {
                 <View style={{ flexDirection: "row", gap: 10 }}>
                   <Text style={style.Label}>Şifre</Text>
                 </View>
-
-                <TextInput
+                  <View>
+                    <TouchableOpacity 
+                    onPress={()=>{
+                      setshowPassword(!showPassword)
+                    }}
+                      style={{position:'absolute',zIndex:1,right:10,top:6}}
+                    >
+                      <DotIcon name={showPassword? "eye-with-line":'eye'} size={23} color={'#333'}/>
+                    </TouchableOpacity>
+                  <TextInput
                   style={style.Input}
+                  secureTextEntry={showPassword}
                   value={password}
                   onChangeText={(value) => setpassword(value)}
                 />
@@ -282,6 +311,8 @@ export default function CreateUser() {
                     {validationErrors.password}{" "}
                   </Text>
                 )}
+                  </View>
+              
               </View>
               <View>
                 <Text style={style.Label}>Kullanıcı Tipi</Text>
@@ -304,24 +335,34 @@ export default function CreateUser() {
               </View>
             </View>
             <View style={{ width: "100%", alignItems: "center" }}>
-              <TouchableOpacity
-                onPress={createUser}
-                style={{
-                  backgroundColor: "#EA2A29",
-                  padding: 13,
-                  width: "50%",
-                  borderRadius: 5,
-                }}
-              >
-                <Text
-                  style={[
-                    style.label2,
-                    { color: "white", textAlign: "center", fontSize: 16 },
-                  ]}
-                >
-                  Kaydet
-                </Text>
-              </TouchableOpacity>
+            <TouchableOpacity
+            style={{
+              backgroundColor: "#EA2A29",
+              padding: 9,
+              width: "90%",
+              borderRadius: 5,
+              opacity:loadingUpdate ? 0.5:1,
+              flexDirection:'row',
+              alignItems:'center',
+              justifyContent:'center'
+            }}
+            onPress={createUser}
+          >
+            {
+              loadingUpdate ?
+              <ActivityIndicator color="white" size={'small'}/>
+              :
+              <Text
+              style={[
+                style.label2,
+                { color: "white", textAlign: "center", fontSize: 14 ,fontWeight:'700'},
+              ]}
+            >
+              Kaydet
+            </Text>
+            }
+        
+          </TouchableOpacity>
             </View>
           </View>
 
@@ -402,26 +443,30 @@ export default function CreateUser() {
             </View>
           </ModalEdit>
         </View>
-      </KeyboardAwareScrollView>
+      </ScrollView>
     </AlertNotificationRoot>
   );
 }
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: "#ebebeb",
+    padding: 10,
+    borderWidth: 0.9,
+    borderColor: "#DDDDDD",
     borderRadius: 5,
-    padding: 9,
-    fontSize: 14, // to ensure the text is never behind the icon
+    fontSize: 13,
+    backgroundColor:'#fafafafa',
+    color:'#717171',
+    fontWeight:'600' // to ensure the text is never behind the icon
   },
   inputAndroid: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: "#eaeff5",
+    padding: 10,
+    borderWidth: 0.9,
+    borderColor: "#DDDDDD",
     borderRadius: 5,
-    padding: 9,
-    fontSize: 14, // to ensure the text is never behind the icon
+    fontSize: 13,
+    backgroundColor:'#fafafafa',
+    color:'#717171',
+    fontWeight:'600' // to ensure the text is never behind the icon
   },
 });
 const style = StyleSheet.create({
@@ -435,22 +480,26 @@ const style = StyleSheet.create({
   },
   Inputs: {
     gap: 20,
-    padding: 20,
+    padding: 10,
   },
   Input: {
-    padding: 9,
-    backgroundColor: "transparent",
+    padding: 10,
+    borderWidth: 0.9,
+    borderColor: "#DDDDDD",
     borderRadius: 5,
-    fontSize: 15,
-    borderWidth: 1,
-    borderColor: "#ebebeb",
+    fontSize: 13,
+    backgroundColor:'#fafafafa',
+    color:'#717171',
+    fontWeight:'600'
   },
   Label: {
-    fontSize: 14,
+    fontSize: 13,
     bottom: 3,
     left: 6,
-    fontWeight: "300",
+    fontWeight: "600",
     letterSpacing: 0.5,
+    color:'#333'
+
   },
   bottomSheetItem: {
     width: "100%",

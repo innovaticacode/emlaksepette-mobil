@@ -194,7 +194,7 @@ export default function CreateUserType() {
           >
             {
               loadingUpdate ?
-              <ActivityIndicator color="#333" size={'small'}/>
+              <ActivityIndicator color="white" size={'small'}/>
               :
               <Text
               style={[
