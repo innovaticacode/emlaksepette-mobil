@@ -21,7 +21,7 @@ export default function Users({name,id,index,item,deleteUser,isChoosed,SelectUse
     >
      <View style={style.UserContainer}>
         <View style={style.Name}>
-            <Text>{index+1}</Text>
+            <Text>{index+1}.</Text>
                 <Text>{name}</Text>
         </View>
         <View style={style.buttons}>
