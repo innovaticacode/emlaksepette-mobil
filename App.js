@@ -106,6 +106,7 @@ import MapWiew from "./pages/Home/MapWiew";
 
 import CollectionsTab from "./pages/Home/Panel/CollectionsTab";
 import SwapForm from "./pages/Home/RealtorPages/SwapForm";
+import { Button } from "react-native";
 
 
 const Stack = createNativeStackNavigator();
@@ -849,9 +850,10 @@ export default function App({ route }) {
           <Stack.Screen
             name="UserTypes"
             component={UserTypeList}
-            options={({ route }) => ({
+            options={({  }) => ({
               title: "Kullanıcı Tipleri",
               headerBackTitleVisible: false,
+      
               headerStyle: {
                 backgroundColor: "#F5F5F7",
               },

@@ -116,7 +116,7 @@ export default function CreateUserType() {
           textBody: 'Kullanıcı Tipi Oluşturma Başarılı',
           button: 'Tamam',
           onPressButton:()=>{
-            navigation.navigate('UserTypes')
+            navigation.goBack()
             Dialog.hide()
           }
         })

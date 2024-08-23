@@ -79,6 +79,7 @@ const [selectedUserId, setselectedUserId] = useState(0)
   setselectedUserId(UserId)
   setselectedUserName(name)
  }
+
  useEffect(() => {
   navigation.setOptions({
     title:`Kullanıcı Tipleri (${transformedRoles?.length})` ,
