@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, ScrollView} from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, ScrollView, Platform} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { TouchableWithoutFeedback, Keyboard, } from 'react-native'
@@ -34,7 +34,7 @@ export default function Comment({data, handleModal}) {
     getValueFor("user", setuser);
   }, []);
   return (
-    <Shadow startColor='#ebebeb'>
+  
     <View style={styles.container} onTouchMove={()=>Keyboard.dismiss()}>
       <View style={{padding:10,gap:10}}>
             <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
@@ -99,7 +99,7 @@ export default function Comment({data, handleModal}) {
       </View>
     
     </View>
-    </Shadow>
+  
   )
 }
 const styles = StyleSheet.create({
@@ -107,8 +107,25 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     paddingLeft:8,
-    paddingRight:8
+    paddingRight:8,
+    backgroundColor: '#FFFFFF',  
    
+    width: '100%',  
+   
+  
+    borderWidth:0.7,
+    borderColor:'#e6e6e6',
+    ...Platform.select({
+        ios: {
+          shadowColor: ' #e6e6e6',
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
 
   },
  

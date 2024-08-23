@@ -161,7 +161,7 @@ export default function PostDetail() {
       setloadingcollection(false)
      }
    }
-
+   const [IsSwap, setIsSwap] = useState('')
   const fetchDetails = async () => {
     const config = {
       headers: { Authorization: `Bearer ${user?.access_token}` },
@@ -179,6 +179,7 @@ export default function PostDetail() {
         GetUserInfo()
         setData(response.data);
         setImages(JSON.parse(response.data.housing.housing_type_data).images);
+    
       
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -533,6 +534,13 @@ export default function PostDetail() {
   const OpenSharing= data && data.housing && data.housing.housing_type_data &&  JSON.parse(data.housing.housing_type_data)["open_sharing1"]
   console.log(OpenSharing + 'dkfsdkfsdkfşlsdfsdfsd')
   const totalRate = data &&  data?.housingComments && data?.housingComments?.map(item => parseFloat(item?.rate) || 0).reduce((acc, rate) => acc + rate, 0); 
+
+//     useEffect(() => {
+//   
+
+//     }, [fetchDetails])
+    
+// console.log(IsSwap + 'swap')
   return (
     <>
     <AlertNotificationRoot>
@@ -542,7 +550,7 @@ export default function PostDetail() {
             <ActivityIndicator color="#333" size={'large'}/>
           </View>
           :
-          <SafeAreaView style={{ backgroundColor: "white", flex: 1,paddingTop:20 }}>
+          <SafeAreaView style={{ backgroundColor: "#f9f9f9", flex: 1,paddingTop:20 }}>
 
           <Header onPress={toggleDrawer} index={setindex} tab={settab} />
           <Modal
@@ -816,7 +824,27 @@ export default function PostDetail() {
                         /> */}
               </PagerView>
             </View>
-            <Shadow style={{ width: "100%", margin: 7, padding: 10 }}>
+            <View style={{ width: "100%", padding:10 ,
+backgroundColor: '#FFFFFF',  
+   
+width: '100%',  
+
+
+borderWidth:0.7,
+borderColor:'#e6e6e6',
+...Platform.select({
+    ios: {
+      shadowColor: ' #e6e6e6',
+      shadowOffset: { width: 1, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 5,
+    },
+    android: {
+      elevation: 5,
+    },
+  }),
+
+             }}>
            
               <View style={{ paddingTop: 0, gap: 5, }}>
               {
@@ -872,6 +900,33 @@ export default function PostDetail() {
                 </View>
 
               </View>
+              {
+                data.housing && data.housing.housing_type_data &&
+                JSON.parse(data.housing.housing_type_data)['swap']=='Evet' && 
+                <View>
+                <TouchableOpacity style={{backgroundColor:'#FEF4EB',flexDirection:'row',padding:6,alignItems:'center',justifyContent:'space-between',borderRadius:5}}
+                    onPress={()=>{
+                      navigation.navigate('SwapForm',{houseid: data?.housing?.id})
+                    }}
+                >
+                  <View style={{flexDirection:'row',alignItems:'center',gap:10}}>
+                      <View style={{backgroundColor:'#F37919',padding:6,borderRadius:5,}}>
+                          <Icon2 name="plus" size={16} color={'#fff'}/>
+                     
+                      </View>
+                      <View style={{}}>
+                      <Text style={{fontSize:12,color:'#333',fontWeight:'600'}}>Takas Başvurusu Yap</Text>
+                      </View>
+
+
+                  </View>
+                  <View>
+                      <Arrow name="arrow-forward-ios" size={16} color={'#333'}/>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              }
+            
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <SliderMenuRealtorDetails
                   tab={tabs}
@@ -879,19 +934,22 @@ export default function PostDetail() {
                   changeTab={changeTab}
                 />
               </View>
-            </Shadow>
-    
-            {tabs == 0 && <RealtorCaption data={data} />}
+          
+            </View>
+                <View style={{marginTop:7}}>
+                {tabs == 0 && <RealtorCaption data={data} />}
             {tabs == 1 && <Settings data={data} />}
             {tabs == 2 && <RealtorMap mapData={data} />}
             {tabs == 3 && <Comment data={data} handleModal={handleModal} />}
-            {tabs == 4 && (
+                </View>
+      
+            {/* {tabs == 4 && (
               <SwapForm
                 data={data}
                 openModal={openSwapAler}
                 color={setcolorAlert}
               />
-            )}
+            )} */}
     
             {/* 
                   {
