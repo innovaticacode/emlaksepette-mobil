@@ -16,7 +16,7 @@ export default function RealtorCaption({data}) {
   
     const previewText = fullText.substring(0, 57) + "...";
   return (
-    <Shadow  style={{width:'100%',margin:5}} paintInside={false}>
+    <View  style={styles.card}>
     <View style={{padding:10,}} >
 
   
@@ -34,18 +34,16 @@ export default function RealtorCaption({data}) {
       </View>
 
     </View>
-    </Shadow>
+    </View>
    
   )
 }
 const styles=StyleSheet.create({
     card: {  
-        
+      
     
       backgroundColor: '#FFFFFF',  
-      paddingBottom:10,
-       paddingTop:10,
-      paddingHorizontal: 15,  
+   
       width: '100%',  
      
     
@@ -72,7 +70,7 @@ const styles=StyleSheet.create({
     
     },
     text: {
-      fontSize: 14,
+      fontSize: 13,
       color: "#333",
       textAlign:'center',
       fontWeight:'600'
@@ -87,7 +85,7 @@ const styles=StyleSheet.create({
     toggleButtonText: {
       color: "#d9534f", // Uyarı rengi
       fontWeight: "bold",
-      fontSize: 16,
+      fontSize: 13,
       textAlign: "center",
     },
   })

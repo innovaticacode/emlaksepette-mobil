@@ -16,6 +16,8 @@ import Users from "./profileComponents/Users";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import { Platform } from "react-native";
+import { AlertNotificationRoot,Dialog,ALERT_TYPE } from "react-native-alert-notification";
+import { ActivityIndicator } from "react-native-paper";
 export default function CreateUserType() {
   const route = useRoute();
 
@@ -30,8 +32,9 @@ export default function CreateUserType() {
   const [groupNames, setGroupNames] = useState([]);
  
   // fetchData fonksiyonunu düzenle
-
+const [loading, setloading] = useState(false)
   const fetchData = async () => {
+    setloading(true)
     try {
       if (user?.access_token) {
         const response = await axios.get(
@@ -42,7 +45,7 @@ export default function CreateUserType() {
             },
           }
         );
-     
+      
         // Dönüştürülmüş veriyi state'e atama
 
         setPermissions(response.data.groupedPermissionsWithChecks);
@@ -52,13 +55,15 @@ export default function CreateUserType() {
       }
     } catch (error) {
       console.error("Veri getirme hatası:", error);
+    }finally{
+      setloading(false)
     }
   };
 
   useEffect(() => {
     fetchData();
     
-  }, [user]);
+  }, [user,postData]);
 
   const [checkedItems, setCheckedItems] = useState([]);
   const handleCheckboxChange = (description) => {
@@ -70,8 +75,9 @@ export default function CreateUserType() {
       setCheckedItems([...checkedItems, description]);
     }
   };
- 
+ const [loadingUpdate, setloadingUpdate] = useState(false)
   const postData = async () => {
+    setloadingUpdate(true)
     try {
       var formData = new FormData();
       formData.append("name", TypeName);
@@ -93,13 +99,26 @@ export default function CreateUserType() {
           },
         }
       );
-        alert('güncellendi')
+      fetchData()
+      setTimeout(() => {
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Başarılı",
+          textBody: 'Kullanıcı Tipi Güncelleme Başarılı',
+          button: "Tamam",
+          onPressButton:()=>navigation.navigate('UserTypes')
+        });
+      }, 100);
+    
+      
       // İsteğin başarılı bir şekilde tamamlandığı durum
      
     } catch (error) {
       // Hata durumunda
 
       console.error("Hata:", error + "post isteği başarısız ");
+    }finally{
+      setloadingUpdate(false)
     }
   };
   const handleShowCheckedItems = () => {
@@ -126,7 +145,13 @@ export default function CreateUserType() {
   },[permissions])
 
   return (
-    <ScrollView style={{ backgroundColor: "white" }}>
+    <AlertNotificationRoot>
+      {
+        loading ?
+        <View style={{alignItems:'center',justifyContent:'center',height:'100%'}}>
+          <ActivityIndicator color="#333" size={'large'}/>
+        </View>:   
+         <ScrollView style={{ backgroundColor: "white" }}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.container}>
           <View style={[styles.InputArea, { }]}>
@@ -163,29 +188,44 @@ export default function CreateUserType() {
             })}
           </View>
 
-          <View style={{ width: "100%", alignItems: "center" }}>
+          <View style={{ width: "100%", alignItems: "center" ,paddingBottom:15}}>
             <TouchableOpacity
+            disabled={loadingUpdate}
               style={{
                 backgroundColor: "#EA2A29",
-                padding: 13,
-                width: "50%",
+                padding: 9,
+                width: "90%",
                 borderRadius: 5,
+                opacity:loadingUpdate ? 0.5:1,
+                flexDirection:'row',
+                alignItems:'center',
+                justifyContent:'center'
               }}
               onPress={handleShowCheckedItems}
             >
+
+              {
+                loadingUpdate ?
+                <ActivityIndicator color="white" size={'small'}/>:
+
               <Text
-                style={[
-                  styles.label2,
-                  { color: "white", textAlign: "center", fontSize: 16 },
-                ]}
-              >
-                Kaydet
-              </Text>
+              style={[
+                styles.label2,
+                { color: "white", textAlign: "center", fontSize: 14,fontWeight:'700' },
+              ]}
+            >
+              Kaydet
+            </Text>
+              }
+             
             </TouchableOpacity>
           </View>
         </View>
       </TouchableWithoutFeedback>
     </ScrollView>
+      }
+
+    </AlertNotificationRoot>
   );
 }
 const styles = StyleSheet.create({

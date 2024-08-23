@@ -1,4 +1,4 @@
-import { View, Text,Button, TouchableOpacity ,Alert} from 'react-native'
+import { View, Text,Button, TouchableOpacity ,Alert, Platform} from 'react-native'
 import{ React,useEffect,useState} from 'react'
 import MapView ,{ Marker,PROVIDER_GOOGLE }from 'react-native-maps';
 import * as Location from 'expo-location'
@@ -24,7 +24,26 @@ export default function RealtorMap({mapData}) {
 
   return (
 
-    <View style={{height:400,paddingLeft:9,paddingRight:8}}>  
+    <View style={{height:400,padding:10,
+      backgroundColor: '#FFFFFF',  
+   
+      
+     
+    
+      borderWidth:0.7,
+      borderColor:'#e6e6e6',
+      ...Platform.select({
+          ios: {
+            shadowColor: ' #e6e6e6',
+            shadowOffset: { width: 1, height: 1 },
+            shadowOpacity: 0.1,
+            shadowRadius: 5,
+          },
+          android: {
+            elevation: 5,
+          },
+        }),
+    }}>  
      <TouchableOpacity
         onPress={handleGetDirections}
         style={{
