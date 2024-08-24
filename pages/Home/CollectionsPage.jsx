@@ -296,6 +296,7 @@ export default function CollectionsPage() {
       });
       setmodalForSelectedCollection(false);
       setModalVisible(false);
+      setisChoosed(false)
       setCollectionsRemoveIds([]);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -575,6 +576,7 @@ export default function CollectionsPage() {
                       ]}
                       onPress={() => {
                         setisChoosed(!isChoosed);
+                        setCollectionsRemoveIds([])
                       }}
                     >
                       <Text
