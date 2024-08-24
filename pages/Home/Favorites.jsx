@@ -219,7 +219,6 @@ export default function Favorites() {
     }
   };
   const [modalForDeleteFavorites, setmodalForDeleteFavorites] = useState(false);
-  const [FavoriteRemoveIDS, setFavoriteRemoveIDS] = useState([]);
 
   const [setFavoriteRemoveItem, setsetFavoriteRemoveItem] = useState(0);
   const SelectFavorite = (id) => {
@@ -265,10 +264,27 @@ export default function Favorites() {
       console.error("Error making DELETE request:", error);
     }
   };
-  const [isChoosed, setisChoosed] = useState(false);
+
 
   const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
     useState(false);
+
+
+  // Bileşen içindeki state ve fonksiyonlar
+  const [isChoosed, setisChoosed] = useState(false);
+  const [FavoriteRemoveIDS, setFavoriteRemoveIDS] = useState([]);
+
+  const handleToggleSelect = () => {
+    if (isChoosed) {
+      // Seçimi iptal et
+      setFavoriteRemoveIDS([]); // Seçili ilanları temizle
+    }
+    setisChoosed(!isChoosed); // Toplu seçimi aç/kapat
+  };
+
+  
+
+  
 
   return (
     <>
@@ -342,94 +358,81 @@ export default function Favorites() {
           ) : (
             <AlertNotificationRoot>
               <GestureHandlerRootView>
-                <View
-                  style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <View style={{ flexDirection: "row", gap: 10 }}>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: "#EEEDEB",
-                        padding: 7,
-                        borderRadius: 5,
-                        borderWidth: 1,
-                        borderColor: "#ebebeb",
-                      }}
-                      onPress={() => {
-                        setmodalForDeleteFavorites(true);
-                      }}
-                    >
-                      <Text
+                  <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                    <View style={{ flexDirection: "row", gap: 10 }}>
+                      <TouchableOpacity
                         style={{
-                          fontSize: 12,
-                          textAlign: "center",
-                          fontWeight: "bold",
-                          color: "#333",
+                          backgroundColor: "#EEEDEB",
+                          padding: 7,
+                          borderRadius: 5,
+                          borderWidth: 1,
+                          borderColor: "#ebebeb",
                         }}
+                        onPress={() => setmodalForDeleteFavorites(true)}
                       >
-                        Tümünü Sil
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: "#EEEDEB",
-                        padding: 7,
-                        borderRadius: 5,
-                        borderWidth: 1,
-                        borderColor: "#ebebeb",
-                      }}
-                      onPress={() => {
-                        setisChoosed(!isChoosed);
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          textAlign: "center",
-                          fontWeight: "bold",
-                          color: "#333",
-                        }}
-                      >
-                        {
-                          !isChoosed ? 'Toplu Seç' : 'Seçimi İptal Et'
-                        }
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  {isChoosed && (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 10,
-                      }}
-                    >
-                      <Text>
-                        Seçili(
-                        {FavoriteRemoveIDS.length +
-                          FavoriteRemoveIDSForProject.length}
-                        )
-                      </Text>
-                      <View>
-                        <TouchableOpacity
-                          style={[
-                            styles.btnRemove,
-                            { paddingLeft: 10, paddingRight: 10 },
-                          ]}
-                          onPress={() => {
-                            setRemoveSelectedCollectionsModal(true);
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            textAlign: "center",
+                            fontWeight: "bold",
+                            color: "#333",
                           }}
                         >
-                          <Icon2 name="trash" size={18} color={"white"} />
-                        </TouchableOpacity>
-                      </View>
+                          Tümünü Sil
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: "#EEEDEB",
+                          padding: 7,
+                          borderRadius: 5,
+                          borderWidth: 1,
+                          borderColor: "#ebebeb",
+                        }}
+                        onPress={handleToggleSelect} // Burada fonksiyon çağrılıyor
+                      >
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            textAlign: "center",
+                            fontWeight: "bold",
+                            color: "#333",
+                          }}
+                        >
+                          {isChoosed ? 'Seçimi İptal Et' : 'Toplu Seç'}
+                        </Text>
+                      </TouchableOpacity>
                     </View>
-                  )}
-                </View>
+                    {isChoosed && (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 10,
+                        }}
+                      >
+                        <Text>
+                          Seçili(
+                          {FavoriteRemoveIDS.length}
+                          )
+                        </Text>
+                        <View>
+                          <TouchableOpacity
+                            style={[
+                              styles.btnRemove,
+                              { paddingLeft: 10, paddingRight: 10 },
+                            ]}
+                            onPress={() => setRemoveSelectedCollectionsModal(true)}
+                          >
+                            <Icon2 name="trash" size={18} color={"white"} />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    )}
+                  </View>
+                
+
+
                 <AwesomeAlert
                   show={RemoveSelectedCollectionsModal}
                   showProgress={false}
@@ -459,6 +462,8 @@ export default function Favorites() {
                   confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
                   cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
                 />
+
+
                 <AwesomeAlert
                   show={modalForDeleteFavorites}
                   showProgress={false}
@@ -491,6 +496,7 @@ export default function Favorites() {
                   showsVerticalScrollIndicator={false}
                 >
                   {favorites?.map((favorite, i) => {
+                    
                     if (favorite?.project) {
                       var image = favorite?.project_housing?.find(
                         (projectHousing) => {
