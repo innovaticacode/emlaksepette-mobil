@@ -151,9 +151,9 @@ export default function Posts({
   };
 
   function truncateText(text, wordLimit) {
-    const words = text.split(" ");
-    return words.length > wordLimit
-      ? words.slice(0, wordLimit).join(" ") + "..."
+    const words = text?.split(" ");
+    return words?.length > wordLimit
+      ? words?.slice(0, wordLimit).join(" ") + "..."
       : text;
   }
   const formatPrice = (price) => addDotEveryThreeDigits(Math.round(price));
