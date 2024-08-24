@@ -61,7 +61,10 @@ export default function CollectionsItem({
 
   const [isHighlighted, setIsHighlighted] = useState(false);
   
-    console.log(item.links)
+   useEffect(() => {
+      setIsHighlighted(false)
+   }, [isChoosed])
+   
   return (
     <TouchableOpacity style={{ marginTop:10}} 
     disabled={!isChoosed}

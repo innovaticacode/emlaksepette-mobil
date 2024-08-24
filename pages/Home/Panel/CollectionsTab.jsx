@@ -308,6 +308,7 @@ export default function CollectionsTab() {
       setRemoveSelectedCollectionsModal(false);
       fetchData();
       setereror(response.data);
+      setisChoosed(false)
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: `Koleksionlar Silindi`,
@@ -687,6 +688,7 @@ export default function CollectionsTab() {
                                 ]}
                                 onPress={() => {
                                   setisChoosed(!isChoosed);
+                                  setCollectionsRemoveIds([])
                                 }}
                               >
                                 <Text
