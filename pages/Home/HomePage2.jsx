@@ -18,24 +18,22 @@ import Navbar from "../../components/Navbar";
 import SliderMenu from "../../components/SliderMenu";
 import axios from "axios";
 import { useState } from "react";
+import DrawerMenu from "../../components/DrawerMenu";
+import Search from "./Search";
+import Header from "../../components/Header";
 import Estates from "./Home Pages/Estates";
 import Shop from "./Home Pages/Shop";
 import Area from "./Home Pages/Area";
-import Header from "../../components/Header";
-import Modal from "react-native-modal";
-import Search from "./Search";
-import Categories from "../../components/Categories";
-import { StatusBar } from "expo-status-bar";
-import { useNavigation } from "@react-navigation/native";
 import Prefabrik from "./Home Pages/Prefabrik";
 import BookHouse from "./Home Pages/BookHouse";
 import SellAcil from "./Home Pages/SellAcil";
-import DrawerMenu from "../../components/DrawerMenu";
+import Shared from "./Home Pages/Shared";
+import Modal from "react-native-modal";
+import Categories from "../../components/Categories";
+import { StatusBar } from "expo-status-bar";
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
-
-
-import Shared from "./Home Pages/Shared";
 
 const FirstRoute = () => (
   <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
@@ -76,6 +74,8 @@ const CustomTabBar = ({
   indexChange,
 }) => {
   const [menuItems, setMenuItems] = React.useState([]);
+  const scrollViewRef = React.useRef(null); // ScrollView için ref
+  const [tabWidth, setTabWidth] = React.useState(0);
 
   React.useEffect(() => {
     const fetchMenuItems = async () => {
@@ -92,9 +92,41 @@ const CustomTabBar = ({
     fetchMenuItems();
   }, []);
 
+   React.useEffect(() => {
+    if (scrollViewRef.current && tabWidth > 0) {
+      const tabCount = menuItems.length;
+      const viewWidth = width;
+      const tabOffset = tab * tabWidth;
+      const contentWidth = tabWidth * tabCount;
+      const centeredOffset = Math.max(0, Math.min(tabOffset - (viewWidth / 2 - tabWidth / 2), contentWidth - viewWidth));
+
+      scrollViewRef.current.scrollTo({
+        x: centeredOffset,
+        animated: true,
+      });
+    }
+  }, [tab, menuItems, tabWidth]);
+
+  // Calculate the width of each tab after layout
+  const onTabLayout = (event) => {
+    const { width: measuredWidth } = event.nativeEvent.layout;
+    setTabWidth(measuredWidth);
+  };
+
   return (
-    <View>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+    <View style={{ padding: 5, flexDirection: "row", gap: 5 }}>
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        ref={scrollViewRef} // Ref ekleniyor
+        onLayout={() => {
+          // Calculate the width of each tab dynamically
+          if (menuItems.length > 0) {
+            const tabWidth = width / menuItems.length;
+            setTabWidth(tabWidth);
+          }
+        }}
+      >
         <View style={{ padding: 10, flexDirection: "row", gap: 10 }}>
           {menuItems.map((item, index) => (
             <TouchableOpacity
@@ -109,6 +141,7 @@ const CustomTabBar = ({
               onPress={() => {
                 indexChange(index);
               }}
+              onLayout={onTabLayout} // Measure each tab's layout
             >
               <Text
                 style={{
