@@ -159,8 +159,9 @@ export default function SwapForm({ openModal, color }) {
     fetchDetails()
  
   }, [])
- 
+ const [loadingPost, setloadingPost] = useState(false)
   const postData = async () => {
+    setloadingPost(true)
     try {
       var formData = new FormData();
       formData.append("ad", name);
@@ -191,16 +192,22 @@ export default function SwapForm({ openModal, color }) {
       formData.append("vites_tipi", shiftType);
       formData.append("arac_satis_rakami", Price);
       formData.append("barter_detay", Barter);
-      formData.append('ruhsat_belgesi',image?{
-        name : image.fileName,
-        type : image.type,
-        uri : Platform.OS === 'android' ? image.uri : image.uri.replace('file://', ''),
-    }:null)
-    formData.append('tapu_belgesi',image ? {
-      name : image.fileName,
-      type : image.type,
-      uri : Platform.OS === 'android' ? image.uri : image.uri.replace('file://', ''),
-  }:null)
+      if (SwapChoose == "emlak") {
+        formData.append('tapu_belgesi',image ? {
+          name : image.fileName,
+          type : image.type,
+          uri : Platform.OS === 'android' ? image.uri : image.uri.replace('file://', ''),
+      }:null)
+      }
+      if (SwapChoose == "araç") {
+        formData.append('ruhsat_belgesi',image?{
+          name : image.fileName,
+          type : image.type,
+          uri : Platform.OS === 'android' ? image.uri : image.uri.replace('file://', ''),
+      }:null)
+      }
+     
+   
       const response = await axios.post(
         "https://private.emlaksepette.com/api/swap",
         formData
@@ -240,11 +247,17 @@ export default function SwapForm({ openModal, color }) {
       setshiftType("");
       setyourPriceShop("");
       setfuelType("");
+      setImage(null)
+      setPdfFile(null)
+      setselectedPdfUrl(null)
+      setSelectedDocumentName(null)
     } catch (error) {
       // Hata durumunda
     
     
       console.error("Hata:", error + " post isteği başarısız ");
+    }finally{
+      setloadingPost(false)
     }
   };
 
@@ -535,6 +548,9 @@ export default function SwapForm({ openModal, color }) {
       if (!result.canceled) {
         setImage(result.assets[0]);
         setchoose(false)
+        setPdfFile(null)
+        setselectedPdfUrl(null)
+        setSelectedDocumentName(null)
       }
     };
     
@@ -555,8 +571,11 @@ export default function SwapForm({ openModal, color }) {
       console.log(result);
     
       if (!result.canceled) {
-        setImage(result.assets[0].uri);
+        setImage(result.assets[0]);
         setchoose(false)
+        setPdfFile(null)
+        setselectedPdfUrl(null)
+        setSelectedDocumentName(null)
       }
     };
     const [selectedDocumentName, setSelectedDocumentName] = useState(null);
@@ -853,91 +872,11 @@ export default function SwapForm({ openModal, color }) {
                  style={styles.Input}
                  value={YourPrice}
                  onChangeText={(value) => setYourPrice(value)}
+                 keyboardType='number-pad'
                />
              </View>
-             {/* <Text>{addDotEveryThreeDigits(YourPrice) }</Text> */}
-             <View style={{alignItems:'center'}}>
-
-             {
-                image ?
-                <View style={{width:300,height:150}}>
-                <ImageBackground source={image} style={{width:'100%',height:'100%'}} />
-           </View>:<></>
-               }
-             </View>
-           
-              <View style={{gap:10}}>
-                {
-                 ( !image && !selectedDocumentName)&&
-                  <Text style={{ color: "#333", fontSize: 15,fontWeight:'700' }}>
-                  Tapu Belgesi Yükleyiniz
-                </Text>
-
-                }
-                {
-                 ( selectedDocumentName && !image) &&
-                  <Text style={{color:'#333',fontWeight:'700',fontSize:12}}>Seçilen Dosya : {selectedDocumentName}</Text>
-                }
-              <View style={{flexDirection:'row',justifyContent:image || selectedDocumentName? 'center':'flex-start',gap:15}}>
-              <TouchableOpacity
-               onPress={()=>{
-                setchoose(true)
-               }}
-                 style={{
-                   backgroundColor: "#EC302E",
-                   padding: 10,
-                   width: "45%",
-                   borderRadius: 5,
-                 }}
-               >
-                 <Text style={{ textAlign: "center", color: "white",fontWeight:'600' }}>Yükle</Text>
-               </TouchableOpacity>
-               {
-                image &&
-                <TouchableOpacity
-                onPress={()=>{
-                    setImage(null)
-                }}
-                  style={{
-                    backgroundColor: "#EC302E",
-                    padding: 10,
-                    width: "45%",
-                    borderRadius: 5,
-                  }}
-                >
-                  <Text style={{ textAlign: "center", color: "white",fontWeight:'600' }}>Kaldır</Text>
-                </TouchableOpacity>
-               }
-                  {
-               ( selectedDocumentName && !image) &&
-                <TouchableOpacity
-                onPress={()=>{
-                    setImage(null)
-                   
-                      if (Platform.OS === "android") {
-                        openPdf();
-                      } else if (Platform.OS === "ios") {
-                        navigation.navigate("DecontPdf", {
-                          name: selectedDocumentName,
-                          pdfUri: selectedPdfUrl,
-                        });
-                      }
-                  
-                }}
-                  style={{
-                    backgroundColor: "#EC302E",
-                    padding: 10,
-                    width: "45%",
-                    borderRadius: 5,
-                  }}
-                >
-                  <Text style={{ textAlign: "center", color: "white",fontWeight:'600' }}>Pdf Görüntüle</Text>
-                </TouchableOpacity>
-               }
-              </View>
-             
-             
-             </View>
+            
+            
           
             
            
@@ -1045,6 +984,7 @@ export default function SwapForm({ openModal, color }) {
                />
                <Text>{}</Text>
              </View>
+         
            </>
          ) : (
            <></>
@@ -1131,12 +1071,29 @@ export default function SwapForm({ openModal, color }) {
                  onChangeText={(value) => setPrice(value)}
                />
              </View>
+             {
+                image ?
+                <View style={{alignItems:'center'}}>
+                <View style={{width:300,height:150}}>
+                <ImageBackground source={image} style={{width:'100%',height:'100%'}} />
+           </View>
+           </View>:<></>
+               }
              <View style={{ gap: 10 }}>
               <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                 <View style={{gap:10}}>
-                <Text style={{ color: "#333", fontSize: 15 }}>
-                 Ruhsat Belgesi Yükleyiniz
-               </Text>
+                  {
+                    !image &&
+                    <Text style={{ color: "#333", fontSize: 14 , fontWeight:'700'}}>
+                    Ruhsat Belgesi Yükleyiniz
+                  </Text>
+                  }
+              
+               <View style={{width:'100%',flexDirection:'row',
+                    alignItems:'center',
+                   justifyContent:image? 'center':'flex-start',
+                   gap:20
+               }}>
                <TouchableOpacity
                onPress={()=>{
                 setchoose(true)
@@ -1144,20 +1101,35 @@ export default function SwapForm({ openModal, color }) {
                  style={{
                    backgroundColor: "#EC302E",
                    padding: 10,
-                   width: "100%",
+                   width: image ?"45%":'80%',
                    borderRadius: 5,
+               
                  }}
                >
                  <Text style={{ textAlign: "center", color: "white" ,fontWeight:'600'}}>Yükle</Text>
                </TouchableOpacity>
+               {
+                image  &&
+                <TouchableOpacity
+                onPress={()=>{
+                   setImage(null)
+                }}
+                  style={{
+                    backgroundColor: "#EC302E",
+                    padding: 10,
+                    width: "45%",
+                    borderRadius: 5,
+                  }}
+                >
+                  <Text style={{ textAlign: "center", color: "white" ,fontWeight:'600'}}>Kaldır</Text>
+                </TouchableOpacity>
+               }
+             
+               </View>
+            
                 </View>
             
-              {
-                image ?
-                <View style={{width:90,height:90}}>
-                <ImageBackground source={image} style={{width:'100%',height:'100%'}} />
-           </View>:<></>
-               }
+           
               </View>
         
            
@@ -1189,6 +1161,7 @@ export default function SwapForm({ openModal, color }) {
                  onChangeText={(value) => setyourPriceShop(value)}
                />
              </View>
+             
            </>
          ) : (
            <></>
@@ -1225,9 +1198,107 @@ export default function SwapForm({ openModal, color }) {
          ) : (
            <></>
          )}
+         
+
+
+
+          {
+            SwapChoose=='emlak'&&
+            SwapChoose == 'emlak' &&(estateChoose=='konut' || estateChoose=='arsa' || estateChoose=='işyeri') &&
+         
+<>
+
+{
+                image ?
+                <View style={{alignItems:'center',justifyContent:'center'}}>
+                   <View style={{width:300,height:150}}>
+                <ImageBackground source={image} style={{width:'100%',height:'100%'}} />
+           </View>
+                </View>
+               :<></>
+               }
+             <View style={{gap:10}}>
+                {
+                 ( !image && !selectedDocumentName)&&
+                  <Text style={{ color: "#333", fontSize: 15,fontWeight:'700' }}>
+                  Tapu Belgesi Yükleyiniz
+                </Text>
+
+                }
+                {
+                 ( selectedDocumentName && !image) &&
+                  <Text style={{color:'#333',fontWeight:'700',fontSize:12}}>Seçilen Dosya : {selectedDocumentName}</Text>
+                }
+              <View style={{flexDirection:'row',justifyContent:image || selectedDocumentName? 'center':'flex-start',gap:15}}>
+              <TouchableOpacity
+               onPress={()=>{
+                if (selectedDocumentName || image) {
+                    setImage(null)
+                    setSelectedDocumentName(null)
+                    setselectedPdfUrl(null)
+                }else{
+                  setchoose(true)
+                }
+               
+               }}
+                 style={{
+                   backgroundColor: "#EC302E",
+                   padding: 10,
+                   width: "45%",
+                   borderRadius: 5,
+                 }}
+               >
+                {
+                 ( selectedDocumentName || image) ?
+                 <Text style={{ textAlign: "center", color: "white",fontWeight:'600' }}>Kaldır</Text>:
+                  <Text style={{ textAlign: "center", color: "white",fontWeight:'600' }}>Yükle</Text>
+                 
+                }
+               
+               </TouchableOpacity>
+           
+                  {
+               ( selectedDocumentName && !image) &&
+                <TouchableOpacity
+                onPress={()=>{
+                    setImage(null)
+                   
+                      if (Platform.OS === "android") {
+                        openPdf();
+                      } else if (Platform.OS === "ios") {
+                        navigation.navigate("DecontPdf", {
+                          name: selectedDocumentName,
+                          pdfUri: selectedPdfUrl,
+                        });
+                      }
+                  
+                }}
+                  style={{
+                    backgroundColor: "#EC302E",
+                    padding: 10,
+                    width: "45%",
+                    borderRadius: 5,
+                  }}
+                >
+                  <Text style={{ textAlign: "center", color: "white",fontWeight:'600' }}>Pdf Görüntüle</Text>
+                </TouchableOpacity>
+               }
+              </View>
+             
+             
+             </View>
+</>
+ }
+         
            <View>
-           <TouchableOpacity onPress={handleButtonPress} style={styles.button}>
-                 <Text style={styles.buttonText}>Başvuruyu Tamamla</Text>
+           <TouchableOpacity onPress={handleButtonPress} style={styles.button} disabled={loadingPost}>
+            {
+              loadingPost ?
+              <ActivityIndicator color="white"/>
+              :
+              <Text style={styles.buttonText}>Başvuruyu Tamamla</Text>
+            }
+               
                </TouchableOpacity>
            </View>
            
@@ -1235,8 +1306,8 @@ export default function SwapForm({ openModal, color }) {
            <Modal
               isVisible={choose}
               style={styles.modal2}
-              animationIn={"fadeInDown"}
-              animationOut={"fadeOutDown"}
+              animationIn={'slideInUp'}
+              animationOut={"slideOutDown"}
               onBackdropPress={()=>setchoose(false)}
               swipeDirection={['down']}
               onSwipeComplete={()=>setchoose(false)}
