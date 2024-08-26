@@ -102,7 +102,7 @@ const SellAcil = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <ScrollView>
+        
           <View style={styles.container}>
             <View
               style={{
@@ -237,7 +237,7 @@ const SellAcil = ({ index }) => {
               )}
             </AlertNotificationRoot>
           </View>
-        </ScrollView>
+        
       )}
     </>
   );
