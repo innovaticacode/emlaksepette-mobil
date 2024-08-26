@@ -105,7 +105,6 @@ const Shop = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <ScrollView>
           <View style={styles.container}>
             <View
               style={{
@@ -174,7 +173,6 @@ const Shop = ({ index }) => {
                   </Text>
                 </View>
               ) : (
-                <ScrollView>
                   <FlatList
                     data={filteredHomes}
                     renderItem={({ item }) => (
@@ -241,11 +239,9 @@ const Shop = ({ index }) => {
                     }
                     ListFooterComponent={renderFooter}
                   />
-                </ScrollView>
               )}
             </AlertNotificationRoot>
           </View>
-        </ScrollView>
       )}
     </>
   );

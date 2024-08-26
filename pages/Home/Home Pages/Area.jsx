@@ -104,7 +104,6 @@ const Area = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <ScrollView>
           <View style={styles.container}>
             <View
               style={{
@@ -236,7 +235,6 @@ const Area = ({ index }) => {
               )}
             </AlertNotificationRoot>
           </View>
-        </ScrollView>
       )}
     </>
   );
