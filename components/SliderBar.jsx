@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from "react-native-gesture-handler";
 
+
 export default function SliderBar() {
   const apiUrl = "https://private.emlaksepette.com";
   const [loading, setloading] = useState(false);
@@ -33,6 +34,28 @@ export default function SliderBar() {
   const capitalizeFirstLetter = (text) => {
     return text.charAt(0).toUpperCase() + text.slice(1);
   };
+
+  const firstBrands = [
+    {
+      text: 'Al Sat Acil',
+      image: 'https://private.emlaksepette.com/images/al-sat-acil-image.png',
+      color: '#FF0000',
+      url: 'https://private.emlaksepette.com/kategori/al-sat-acil',
+    },
+    {
+      text: 'Emlak Kulüp',
+      image: 'https://private.emlaksepette.com/images/emlak-kulup.png',
+      color: '#F4A226',
+      url: 'RealtorClubExplore',
+    },
+    {
+      text: 'Sat Kirala',
+      image: 'https://private.emlaksepette.com/images/sat-kirala.png',
+      color: '#0000FF',
+      url: 'SellAndRent',
+    },
+
+  ]
   return (
     <GestureHandlerRootView>
       <ScrollView
@@ -42,6 +65,26 @@ export default function SliderBar() {
           top: 0,
         }}
       >
+        {
+          firstBrands.map((item, i) => (
+            <View style={{ width: 80, marginLeft: 3, alignItems: "center" }}>
+              <SliderItem
+              navigationStatus={true}
+                borderColor={item.color}
+                key={i}
+                image={item.image}
+                url={item.url}
+              />
+              <Text
+                numberOfLines={2}
+                style={{ fontSize: 11, textAlign: "center" }}
+              >
+                {capitalizeFirstLetter(item.text)}
+              </Text>
+            </View>
+          ))
+        }
+
         {featuredStores.map((item, index) => (
           <View
             style={{ width: 80, marginLeft: 3, alignItems: "center" }}
@@ -54,6 +97,8 @@ export default function SliderBar() {
             ) : (
               <>
                 <SliderItem
+                   navigationStatus={false}
+                  borderColor={'#ebebeb'}
                   StoreID={item.id}
                   key={index}
                   image={`${apiUrl}/storage/profile_images/${item.profile_image}`}
