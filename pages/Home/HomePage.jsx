@@ -28,6 +28,18 @@ const HomePage = ({ index }) => {
   const navigation = useNavigation();
   const { width: screenWidth } = Dimensions.get("window");
 
+  // Fetch featured sliders
+  const fetchFeaturedSliders = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/api/featured-sliders`);
+      setFeaturedSliders(response.data);
+      setLoadingSliders(false);
+    } catch (error) {
+      console.log("Error fetching featured sliders:", error);
+      setLoadingSliders(false);
+    }
+  };
+
   // State for featured projects
   const [loadingProjects, setLoadingProjects] = useState(false);
   const [featuredProjects, setFeaturedProjects] = useState([]);
@@ -55,17 +67,7 @@ const HomePage = ({ index }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const pagerViewRef = useRef(null);
 
-  // Fetch featured sliders
-  const fetchFeaturedSliders = async () => {
-    try {
-      const response = await axios.get(`${apiUrl}/api/featured-sliders`);
-      setFeaturedSliders(response.data);
-      setLoadingSliders(false);
-    } catch (error) {
-      console.log("Error fetching featured sliders:", error);
-      setLoadingSliders(false);
-    }
-  };
+  
 
   useEffect(() => {
     fetchFeaturedSliders();
@@ -275,6 +277,7 @@ const styles = StyleSheet.create({
     paddingBottom: 3,
     backgroundColor: "white",
     marginTop: 7,
+    
   },
   featuredProjectsHeader: {
     flexDirection: "row",
@@ -298,6 +301,7 @@ const styles = StyleSheet.create({
   projectPostContainer: {
     marginTop: 7,
     width: "100%",
+    
   },
 });
 
