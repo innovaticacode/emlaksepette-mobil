@@ -175,7 +175,7 @@ const Estates = ({ index }) => {
         }}
       >
         <Text style={{ fontSize: 12, fontWeight: 700, marginBottom: 7 }}>
-        Franchaise Veren Gayrimenkul Markaları
+        FRANCHAISE VEREN GAYRIMENKUL MARKALARI
         </Text>
 
         <SliderEstateBar />
@@ -192,7 +192,7 @@ const Estates = ({ index }) => {
         }}
       >
         <Text style={{ fontSize: 12, fontWeight: 700 }}>
-        Popüler Emlak İlanları
+        ÖNE ÇIKAN EMLAK İLANLARI
         </Text>
 
         <TouchableOpacity
