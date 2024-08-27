@@ -18,11 +18,10 @@ export default function ProjectPost({
   city,
   user,
   ProfilImage,
-
   ProjectNo,
   loading,
 }) {
-  const navigation = useNavigation();
+  
   const generateRandomColorCode = () => {
     const letters = "0123456789ABCDEF";
     let color = "#";
@@ -33,10 +32,12 @@ export default function ProjectPost({
   };
 
   const RandomColor = generateRandomColorCode();
+  const navigation = useNavigation();
   const [userLogin, setuserLogin] = useState({});
   useEffect(() => {
     getValueFor("user", setuserLogin);
   }, []);
+
   return (
     <TouchableOpacity
       onPress={() =>
@@ -48,121 +49,91 @@ export default function ProjectPost({
       <View style={styles.container}>
         <Image
           source={{ uri: ımage }}
-          style={{ width: "100%", height: "100%" }}
+          style={styles.image}
           contentFit="cover"
           transition={300}
         />
-        <View style={styles.ShoppingName}>
-          <View style={styles.ShopImage}>
+
+        {/* Logo ve Başlığı içeren alan */}
+        <View style={styles.logoTitleContainer}>
+       
+          <View style={[styles.titleContainer, { backgroundColor: RandomColor + 'CC' }]}>
+            <View style={{height:'40%',alignItems:'center',justifyContent:'center'}}>
+            <View style={styles.logoContainer}>
             <Image
               source={{ uri: ProfilImage }}
-              style={{ width: "50%", height: "90%" }}
+              style={styles.logoImage}
               contentFit="cover"
               transition={200}
             />
           </View>
-          {/* <View style={styles.ShopText}>
-            <Text
-              style={{
-                color: "white",
-                fontSize: 8,
-                textAlign: "center",
-                fontWeight: "500",
-              }}
-            >
-              {location} / {city}
-            </Text>
-          </View> */}
-        </View>
-
-        <View
-          style={[
-            styles.Description,
-            {
-              backgroundColor: user?.banner_hex_code + "CC",
-              padding: 10,
-            },
-          ]}
-        >
-          <Text
-            style={{
-              color: "#FFFFFF",
-              fontWeight: "800",
-              fontSize: 17,
-              textAlign: "center",
-            }}
-          >
-            {project.project_title}
-          </Text>
-          {userLogin &&
-            userLogin.corporate_type == "Emlak Ofisi" &&
-            project.club_rate && (
-              <View style={styles.commissionBadge}>
-                <Text style={styles.commissionText}>
-                  %{project.club_rate} KOMİSYON!
-                </Text>
-              </View>
-            )}
+            </View>
+       
+          <View style={{height:'60%',
+            gap:10
+          }}>
+          <Text style={styles.titleText}>{project?.project_title?.toUpperCase()}</Text>
+          <Text style={[styles.titleText,{fontSize:12}]}>{project.city.title}</Text>
+          </View>
+      
+          </View>
         </View>
       </View>
     </TouchableOpacity>
   );
 }
+
 const { width, height } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
   container: {
     height: width > 400 ? 230 : 180,
     alignItems: "center",
-
-    display: "flex",
-    flexDirection: "row",
-  },
-  ShoppingName: {
-    position: "absolute",
-    width: 100,
-    backgroundColor: 'red',
-    left: 0,
-    height: 70,
-    top: 0,
-    display: "flex",
-    flexDirection: "column",
-    borderBottomRightRadius:20
-  },
-  ShopImage: {
-    height: "75%",
-    alignItems: "center",
     justifyContent: "center",
+    marginVertical: 10,
+    borderRadius: 10,
+    overflow: "hidden",
+    position: "relative",
   },
-  ShopText: {
-    height: "25%",
-    backgroundColor: "black",
-    justifyContent: "center",
-  },
-  Description: {
+  image: {
     width: "100%",
-    height: 40,
+    height: "100%",
+   
+  },
+  
+  logoTitleContainer: {
+    width:'40%',
+    height:'100%',
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
     bottom: 0,
-    position: "absolute",
-    right: 0,
-    alignItems: "center",
-    borderTopRightRadius:20,
-    justifyContent: "center",
+    padding: 0,
   },
-  commissionBadge: {
-    position: "absolute",
-    right: 0,
-    bottom: 60,
-    width: 120,
-    height: 30,
-    borderBottomLeftRadius: 15,
-    borderTopLeftRadius: 15,
-    backgroundColor: "#fff",
+  logoContainer: {
+    width: 50,
+    height: 50,
     justifyContent: "center",
     alignItems: "center",
+    marginRight: 10,
   },
-  commissionText: {
-    color: "green",
-    fontWeight: "700",
-    fontSize: 13,
+  logoImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 25, // İsteğe bağlı: Yuvarlak logo için
+  },
+  titleContainer: {
+    height:'100%',
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    opacity: 0.8,
+  },
+  titleText: {
+    color: "#FFFFFF",
+    fontWeight: "800",
+    fontSize: 17,
+    textAlign: "center",
   },
 });
