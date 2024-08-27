@@ -26,6 +26,7 @@ import {
   import {
     ALERT_TYPE,
     AlertNotificationDialog,
+    AlertNotificationRoot,
     Dialog,
   } from "react-native-alert-notification";
   import { ActivityIndicator } from "react-native-paper";
@@ -143,8 +144,8 @@ import AwesomeAlert from "react-native-awesome-alerts";
       formData.append("project_id", projectId);
       
       try {
-        if (rating>0 || comment) {
-          if (user?.access_token && rating > 0) {
+        if (comment) {
+          if (user?.access_token ) {
             const response = await axios.post(
               `https://private.emlaksepette.com/api/project/${projectId}/add-comment`,
               formData,
@@ -164,11 +165,15 @@ import AwesomeAlert from "react-native-awesome-alerts";
               HouseID: projectId,
               type:'Project'
             });
-          } else {
-            alert("yorum boş");
           }
-        }else{
-          alert('fsdfsdf')
+        } else {
+      
+          Dialog.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Lütfen Yorum Yapınız",
+            textBody:'Lütfen Yorum Yapınız',
+            button: "Tamam",
+          });
         }
       
       } catch (error) {
@@ -206,6 +211,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
       setselectedIndex(null);
     };
     return (
+      <AlertNotificationRoot>
       <ScrollView
         style={style.container}
         contentContainerStyle={{
@@ -508,6 +514,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
           </>
         )}
       </ScrollView>
+      </AlertNotificationRoot>
     );
   }
   const style = StyleSheet.create({

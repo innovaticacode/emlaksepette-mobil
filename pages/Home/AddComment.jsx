@@ -26,6 +26,7 @@ import { getValueFor } from "../../components/methods/user";
 import {
   ALERT_TYPE,
   AlertNotificationDialog,
+  AlertNotificationRoot,
   Dialog,
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
@@ -151,7 +152,7 @@ const pickImage = async () => {
       });
     
       try {
-        if (rate > 0 || comment) {
+        if (comment) {
           if (user?.access_token) {
             const response = await axios.post(
               `https://private.emlaksepette.com/api/housing/${HouseID}/send-comment`,
@@ -175,11 +176,14 @@ const pickImage = async () => {
               HouseID: HouseID,
               type: 'House',
             });
-          } else {
-            alert("Lütfen yorum yapınız.");
-          }
+          } 
         } else {
-          alert("Lütfen yorum veya puan giriniz.");
+          Dialog.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Lütfen Yorum Yapınız",
+            textBody:'Lütfen Yorum Yapınız',
+            button: "Tamam",
+          });
         }
       } catch (error) {
         console.error("Post isteği başarısız oldu:", error);
@@ -218,6 +222,7 @@ const pickImage = async () => {
   };
 
   return (
+    <AlertNotificationRoot>
     <ScrollView
       style={style.container}
       contentContainerStyle={{
@@ -533,6 +538,7 @@ const pickImage = async () => {
         </>
       )}
     </ScrollView>
+    </AlertNotificationRoot>
   );
 }
 const style = StyleSheet.create({
