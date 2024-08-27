@@ -652,6 +652,7 @@ const [chooseFile, setchooseFile] = useState(false)
 //   uri : Platform.OS === 'android' ? image.uri : image.uri.replace('file://', ''),
 // } )
 console.log(userImage)
+
   return (
     <AlertNotificationRoot>
         {
