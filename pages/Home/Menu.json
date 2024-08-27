@@ -2,15 +2,15 @@
   {
     "id": "shopping-bag",
     "label": "Hesabım Emlak Sepette",
-    "icon": "home",
-    "text": "Gösterge Paneli",
+    "icon": "trending-up",
+    "text": "Özet",
     "key": "ViewDashboard",
     "url": "DashBord",
     "activePath": "/hesabim"
   },
   {
     "id": "projects",
-    "label": "İlanlarım",
+    "label": "İlan Yönetimi",
     "icon": "plus",
     "text": "Proje İlanlarım",
     "key": "GetProjects",
@@ -27,6 +27,15 @@
     "activePath": "/hesabim/koleksiyonlarim*"
   },
   {
+    "id": "shopping-bag",
+    "label": "Emlak Kulüp",
+    "icon": "info",
+    "text": "Emlak Kulüp Nedir",
+    "key": "GetMyCollection",
+    "url": "RealtorClubExplore",
+    "activePath": "/hesabim/koleksiyonlarim*"
+  },
+  {
     "id": "neighbors",
     "label": "Komşumu Gör",
     "icon": "eye",
@@ -37,7 +46,7 @@
   },
   {
     "id": "projects",
-    "label": "İlanlarım",
+    "label": "İlan Yönetimi",
     "icon": "plus",
     "text": "Emlak İlanlarım",
     "key": "GetHousings",
@@ -47,7 +56,7 @@
 
   {
     "id": "shopping-bag",
-    "label": "Hesabım Emlak Sepette",
+    "label": "Kaporam Güvende",
     "icon": "activity",
     "text": "Alım Satım Geçmişim",
     "key": "Orders",
@@ -55,7 +64,7 @@
     "activePath": ["/hesabim/sattiklarim*", "/hesabim/aldiklarim"],
     "subMenu": [
       {
-        "text": "Siparişlerim",
+        "text": "Aldıklarım",
         "key": "ShowCartOrders",
         "url": "Taked",
         "activePath": "/hesabim/aldiklarim"
@@ -70,7 +79,7 @@
   },
   {
     "id": "shopping-bag",
-    "label": "Hesabım Emlak Sepette",
+    "label": "Kaporam Güvende",
     "icon": "activity",
     "text": "Rezervasyon Geçimişim",
     "key": "Reservations",
@@ -122,7 +131,7 @@
   {
     "id": "GetGivenOffers",
     "label": "Başvurular",
-    "icon": "users",
+    "icon": "corner-up-right",
     "text": "Projelere Yaptığım Başvurular",
     "key": "GetGivenOffers",
     "url": "Suggest",
@@ -205,29 +214,7 @@
     ]
   },
 
-  {
-    "id": "offers",
-    "label": "Hesabım Emlak Sepette",
-    "icon": "arrow-down",
-    "text": "İlanda Kampanya Yap",
-    "key": "Offers",
-    "url": "#nv-offers",
-    "activePath": "/hesabim/offers*",
-    "subMenu": [
-      {
-        "text": "Oluştur",
-        "key": "CreateOffer",
-        "url": "Offer",
-        "activePath": "/hesabim/kampanya-olustur"
-      },
-      {
-        "text": "Listele",
-        "key": "GetOffers",
-        "url": "OfferList",
-        "activePath": "/hesabim/kampanyalar"
-      }
-    ]
-  },
+
   {
     "id": "brands",
     "label": "Uygulama",
