@@ -136,7 +136,7 @@ const HomePage = ({ index }) => {
                     <View style={styles.sliderItem} key={index}>
                       <ImageBackground
                         source={{
-                          uri: `${apiUrl}/storage/sliders/${item.image}`,
+                          uri: `${apiUrl}/storage/sliders/${item.mobile_image}`,
                         }}
                         style={styles.imageBackground}
                         resizeMode="cover"
@@ -150,7 +150,7 @@ const HomePage = ({ index }) => {
             {/* Popular Construction Brands */}
             <View style={styles.sliderBarContainer}>
               <Text style={styles.sliderBarTitle}>
-                POPÜLER İNŞAAT MARKALARI
+                ÖNE ÇIKAN İNŞAAT MARKALARI
               </Text>
               <SliderBar loading={loadingProjects} />
             </View>
@@ -201,7 +201,7 @@ const HomePage = ({ index }) => {
                         ListHeaderComponent={
                           <View style={styles.featuredProjectsHeader}>
                           <Text style={styles.featuredProjectsTitle}>
-                           Popüler Projeler
+                           ÖNE ÇIKAN PROJELER
                           </Text>
                           <TouchableOpacity
                             style={styles.allProjectsButton}
