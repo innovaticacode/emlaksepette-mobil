@@ -26,6 +26,7 @@ import { getValueFor } from "../../components/methods/user";
 import {
   ALERT_TYPE,
   AlertNotificationDialog,
+  AlertNotificationRoot,
   Dialog,
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
@@ -71,131 +72,126 @@ export default function AddComment() {
     getValueFor("user", setUser);
   }, []);
   const [comment, setcomment] = useState("");
-  const [image, setImage] = useState([null, null, null]);
+  const [image, setImage] = useState([]);
   console.log(image)
 const [selectedIndex, setselectedIndex] = useState(null)
-  const pickImage = async (index) => {
-    if (image[index]) {
-      // Eğer resim varsa, resmi kaldır
-      setselectedIndex(index);
-     setremoveImage(true)
+const pickImage = async () => {
+  // Kullanıcıdan izin isteme
+  const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    } else {
-      // Eğer resim yoksa, galeri aç ve resim seç
-      if (image.filter(img => img).length >= 3) {
-        Alert.alert('Limit Reached', 'You can only select up to 3 images.');
-        return;
-      }
+  if (permissionResult.granted === false) {
+    alert('Resimlere erişim izni verilmedi!');
+    return;
+  }
 
-      let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (permissionResult.granted === false) {
-        Alert.alert("Permission Denied", "You need to allow permission to access the library.");
-        return;
-      }
+  // Resim seçme
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true,
+    aspect: [1, 1],
+    quality: 1,
+  });
 
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
+  // Eğer kullanıcı seçim yapmadıysa geri dön
+  if (result.canceled) {
+    return;
+  }
 
-      if (!result.canceled) {
-        const newImages = [...image];
-        console.log(result)
-        newImages[index] =  [result.assets[0]] ;
-        setImage(newImages);
-      }
-    }
-    
-    };
+  // Seçilen resmi diziye ekleme
+  if (!result.canceled) {
+    setImage([...image, result.assets[0].uri]); // Expo SDK 45 ve sonrası için .assets[0].uri kullanılmalıdır.
+  }
+};
     console.log(image)
-  const takePhoto= async (index) => {
-    if (image[index]) {
-      // Eğer resim varsa, resmi kaldır
-      setselectedIndex(index);
-      setremoveImage(true)
-    } else {
-      // Eğer resim yoksa, kamera aç ve resim çek
-      if (image.filter(img => img).length >= 3) {
-        Alert.alert('Limit Reached', 'You can only select up to 3 images.');
-        return;
-      }
-
-      let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    const takePhoto = async (index) => {
+      // Kamera izni isteme
+      setselectedIndex(index)
+      const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+  
       if (permissionResult.granted === false) {
-        Alert.alert("Permission Denied", "You need to allow permission to access the camera.");
+        alert('Kameraya erişim izni verilmedi!');
         return;
       }
-
+  
+      // Kamera ile resim çekme
       let result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
-        aspect: [4, 3],
+        aspect: [1, 1],
         quality: 1,
       });
-
+  
+      // Eğer kullanıcı bir resim çekmediyse geri dön
+      if (result.canceled) {
+        return;
+      }
+  
+      // Çekilen resmi diziye ekleme
       if (!result.canceled) {
-        const newImages = [...image];
-        newImages[index] =  [result.assets[0]];
-        setImage(newImages);
+        setImage([...image, result.assets[0].uri]); // Expo SDK 45 ve sonrası için .assets[0].uri kullanılmalıdır.
       }
-    }
-      
     };
-  const shareComment = async () => {
-    const formData = new FormData();
-    formData.append("rate", rate);
-    formData.append("comment", comment);
-    for(var i = 0; i < image.length; i++){
-      console.log(image[i][0].fileName)
-      if(image != null){
-          console.log({
-              name : image[i][0].fileName,
-              type : image[i][0].type,
-              uri : Platform.OS === 'android' ? image[i][0].uri : image[i][0].uri.replace('file://', ''),
-          })
-          formData.append('images['+i+']',{
-              name : image[i][0].fileName,
-              type : image[i][0].type,
-              uri : Platform.OS === 'android' ? image[i][0].uri : image[i][0].uri.replace('file://', ''),
-          })
-      }
-      
-    }
-
-    try {
-      if (rating>0 || comment) {
-        if (user?.access_token ) {
-          const response = await axios.post(
-            `https://private.emlaksepette.com/api/housing/${HouseID}/send-comment`,
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${user?.access_token}`,
-              },
-            }
-          );
-          setcomment("");
-          setrate(0);
-          setRating(0);
-          setImage([null,null,null])
-          nav.navigate("Success", {
-            name: "Yorum başarılı",
-            message: "Değerlendirmeniz İçin Teşekkürler",
-            HouseID: HouseID,
-            type:'House'
-          });
-        } else {
-          alert("yorum boş");
-        }
-      }else{
-        alert('slgjflskj')
-      }
+    const deleteImage = (uri) => {
+      setImage(image.filter((image) => image !== uri));
+    };
+    const [loadingShare, setloadingShare] = useState(false)
+    const shareComment = async () => {
+      setloadingShare(true);
+      const formData = new FormData();
+      formData.append("rate", rate);
+      formData.append("comment", comment);
     
-    } catch (error) {
-      console.error("post isteği olmadı", error);
-    }
-  };
+      // Resimlerinizi FormData'ya ekleme
+      image.forEach((image, index) => {
+        if (image) {
+          formData.append(`images[${index}]`, {
+            uri: Platform.OS === 'android' ? image : image.replace('file://', ''), // Android ve iOS için uygun URI
+            type: 'image/jpeg', // Resmin tipi, genellikle image/jpeg veya image/png
+            name: `photo_${index}.jpg`, // Sunucuya gönderilecek dosya adı
+          });
+        }
+      });
+    
+      try {
+        if (comment) {
+          if (user?.access_token) {
+            const response = await axios.post(
+              `https://private.emlaksepette.com/api/housing/${HouseID}/send-comment`,
+              formData,
+              {
+                headers: {
+                  Authorization: `Bearer ${user?.access_token}`,
+                  'Content-Type': 'multipart/form-data', // FormData için doğru Content-Type
+                },
+              }
+            );
+            
+            // Gönderim başarılı olduğunda yapılacak işlemler
+            setcomment("");
+            setrate(0);
+            setRating(0);
+            setImage([null, null, null]); // Resim alanlarını temizleme
+            nav.navigate("Success", {
+              name: "Yorum başarılı",
+              message: "Değerlendirmeniz İçin Teşekkürler",
+              HouseID: HouseID,
+              type: 'House',
+            });
+          } 
+        } else {
+          Dialog.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Lütfen Yorum Yapınız",
+            textBody:'Lütfen Yorum Yapınız',
+            button: "Tamam",
+          });
+        }
+      } catch (error) {
+        console.error("Post isteği başarısız oldu:", error);
+        alert("Yorum gönderme işlemi başarısız oldu. Lütfen tekrar deneyin.");
+      } finally {
+        setloadingShare(false);
+      }
+    };
 
   const [modalVisible2, setModalVisible2] = useState(false);
   const [Deals, setDeals] = useState("");
@@ -226,6 +222,7 @@ const [selectedIndex, setselectedIndex] = useState(null)
   };
 
   return (
+    <AlertNotificationRoot>
     <ScrollView
       style={style.container}
       contentContainerStyle={{
@@ -428,18 +425,35 @@ const [selectedIndex, setselectedIndex] = useState(null)
                     flexDirection: "row",
                     gap: 5,
                     alignItems: "center",
-                    justifyContent: 'space-around',
+                    justifyContent: image ==[] ?'space-around' :'flex-start',
+                    flexWrap:'wrap'
                   }}
                 >
+                 <TouchableOpacity 
+                  style={[
+                    style.Input,
                     {
+                      width: 90,
+                      height:90,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    },
+                  ]}
+                    onPress={pickImage}
+                    onLongPress={takePhoto}
+                 >
+                    <Icon2 name="camera" size={25} color={'grey'}/>
+                 </TouchableOpacity> 
+                     {
                         image.map((image,index)=>(
                             <TouchableOpacity
                             key={index}
                             onLongPress={()=>{
                                 takePhoto(index)
+                                
                             }}
                             onPress={()=>{
-                             
+                              
                                 pickImage(index)
                            
                             }}
@@ -463,7 +477,7 @@ const [selectedIndex, setselectedIndex] = useState(null)
                         
                           </TouchableOpacity>
                         ))
-                    }
+                    } 
                          <AwesomeAlert
             
             show={removeImage}
@@ -494,31 +508,21 @@ const [selectedIndex, setselectedIndex] = useState(null)
                 </View>
               </View>
             </View>
-            <CheckBox
-              checked={checkedForm}
-              onPress={toggleCheckboxForm}
-              // Use ThemeProvider to make change for all checkbox
-              iconType="material-community"
-              checkedIcon="checkbox-marked"
-              uncheckedIcon="checkbox-blank-outline"
-              checkedColor="red"
-              title={<Text style={{ fontSize: 12 }}>Sözleşme</Text>}
-              size={20}
-              containerStyle={{
-                backgroundColor: "white",
-                borderWidth: 0,
-                width: "100%",
-              }}
-            />
+        
             <TouchableOpacity
+            disabled={loadingShare}
               style={{
                 backgroundColor: "#EB2B2E",
                 padding: 10,
                 borderRadius: 5,
+                marginTop:5
               }}
               onPress={shareComment}
             >
-              <Text
+              {
+                loadingShare ?
+                <ActivityIndicator color="white"/>:
+                <Text
                 style={{
                   textAlign: "center",
                   color: "#ffffff",
@@ -527,11 +531,14 @@ const [selectedIndex, setselectedIndex] = useState(null)
               >
                 Paylaş
               </Text>
+              }
+            
             </TouchableOpacity>
           </View>
         </>
       )}
     </ScrollView>
+    </AlertNotificationRoot>
   );
 }
 const style = StyleSheet.create({

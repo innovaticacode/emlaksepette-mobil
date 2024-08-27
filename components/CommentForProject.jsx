@@ -63,8 +63,20 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
             <View>
               <View style={{flexDirection:'row',gap:5}}> 
                 {/* <Text>{data?.housingComments?.rate}</Text> */}
-                <Text>{(totalRate /comments.length).toFixed(1)}</Text>
-                <Text>|</Text>
+                <Text>
+                    {
+                      totalRate ?
+                      (totalRate /comments.length).toFixed(1):
+                      ''
+                    }
+                 
+                  
+                  </Text>
+                  {
+                        totalRate ?
+                        <Text>|</Text>:''
+                  }
+               
                 <Text>{comments.length} Yorum</Text>
               </View>
             </View>
@@ -95,7 +107,7 @@ const totalRate = comments.map(item => parseFloat(item?.rate) || 0).reduce((acc,
               }}
             style={{
               backgroundColor:'#E54242',
-              width:'30%',
+           
               padding:8,
               borderTopRightRadius:10,
               borderBottomRightRadius:10,

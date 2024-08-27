@@ -26,6 +26,7 @@ import {
   import {
     ALERT_TYPE,
     AlertNotificationDialog,
+    AlertNotificationRoot,
     Dialog,
   } from "react-native-alert-notification";
   import { ActivityIndicator } from "react-native-paper";
@@ -34,7 +35,7 @@ import {
   import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
   import HTML from "react-native-render-html";
   import Modal from "react-native-modal";
-import { da } from "date-fns/locale";
+
 import AwesomeAlert from "react-native-awesome-alerts";
   
   export default function AddCommentForProject() {
@@ -71,80 +72,68 @@ import AwesomeAlert from "react-native-awesome-alerts";
     useEffect(() => {
       getValueFor("user", setUser);
     }, []);
-    const [image, setImage] = useState([null, null, null]);
+    const [image, setImage] = useState([]);
 
     const [selectedIndex, setselectedIndex] = useState(null)
     const [removeImage, setremoveImage] = useState(false)
-    const pickImage = async (index) => {
-      if (image[index]) {
-        // Eğer resim varsa, resmi kaldır
-        setselectedIndex(index);
-       setremoveImage(true)
-  
-      } else {
-        // Eğer resim yoksa, galeri aç ve resim seç
-        if (image.filter(img => img).length >= 3) {
-          Alert.alert('Limit Reached', 'You can only select up to 3 images.');
-          return;
-        }
-  
-        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (permissionResult.granted === false) {
-          Alert.alert("Permission Denied", "You need to allow permission to access the library.");
-          return;
-        }
-  
-        let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
-        });
-  
-        if (!result.canceled) {
-          const newImages = [...image];
-          console.log(result)
-          newImages[index] =  [result.assets[0]] ;
-          setImage(newImages);
-        }
+    const pickImage = async () => {
+      // Kullanıcıdan izin isteme
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+      if (permissionResult.granted === false) {
+        alert('Resimlere erişim izni verilmedi!');
+        return;
       }
+    
+      // Resim seçme
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+    
+      // Eğer kullanıcı seçim yapmadıysa geri dön
+      if (result.canceled) {
+        return;
+      }
+    
+      // Seçilen resmi diziye ekleme
+      if (!result.canceled) {
+        setImage([...image, result.assets[0].uri]); // Expo SDK 45 ve sonrası için .assets[0].uri kullanılmalıdır.
+      }
+    };
+        console.log(image)
+        const takePhoto = async (index) => {
+          // Kamera izni isteme
+          setselectedIndex(index)
+          const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
       
-      };
-      console.log(image)
-    const takePhoto= async (index) => {
-      if (image[index]) {
-        // Eğer resim varsa, resmi kaldır
-        setselectedIndex(index);
-        setremoveImage(true)
-      } else {
-        // Eğer resim yoksa, kamera aç ve resim çek
-        if (image.filter(img => img).length >= 3) {
-          Alert.alert('Limit Reached', 'You can only select up to 3 images.');
-          return;
-        }
-  
-        let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-        if (permissionResult.granted === false) {
-          Alert.alert("Permission Denied", "You need to allow permission to access the camera.");
-          return;
-        }
-  
-        let result = await ImagePicker.launchCameraAsync({
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
-        });
-  
-        if (!result.canceled) {
-          const newImages = [...image];
-          newImages[index] =   [result.assets[0]] ;
-          setImage(newImages);
-        }
-      }
-        
-      };
+          if (permissionResult.granted === false) {
+            alert('Kameraya erişim izni verilmedi!');
+            return;
+          }
+      
+          // Kamera ile resim çekme
+          let result = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+          });
+      
+          // Eğer kullanıcı bir resim çekmediyse geri dön
+          if (result.canceled) {
+            return;
+          }
+      
+          // Çekilen resmi diziye ekleme
+          if (!result.canceled) {
+            setImage([...image, result.assets[0].uri]); // Expo SDK 45 ve sonrası için .assets[0].uri kullanılmalıdır.
+          }
+        };
       const [loadingForPost, setloadingForPost] = useState(false)
     const [comment, setcomment] = useState("");
+   
     const shareComment = async () => {
       setloadingForPost(true)
       const formData = new FormData();
@@ -153,26 +142,10 @@ import AwesomeAlert from "react-native-awesome-alerts";
       formData.append("comment", comment);
       formData.append("owner_id", data?.user?.id);
       formData.append("project_id", projectId);
-      console.log(image);
-      for(var i = 0; i < image.length; i++){
-        console.log(image[i][0].fileName)
-        if(image != null){
-            console.log({
-                name : image[i][0].fileName,
-                type : image[i][0].type,
-                uri : Platform.OS === 'android' ? image[i][0].uri : image[i][0].uri.replace('file://', ''),
-            })
-            formData.append('images['+i+']',{
-                name : image[i][0].fileName,
-                type : image[i][0].type,
-                uri : Platform.OS === 'android' ? image[i][0].uri : image[i][0].uri.replace('file://', ''),
-            })
-        }
-        
-      }
+      
       try {
-        if (rating>0 || comment) {
-          if (user?.access_token && rating > 0) {
+        if (comment) {
+          if (user?.access_token ) {
             const response = await axios.post(
               `https://private.emlaksepette.com/api/project/${projectId}/add-comment`,
               formData,
@@ -192,11 +165,15 @@ import AwesomeAlert from "react-native-awesome-alerts";
               HouseID: projectId,
               type:'Project'
             });
-          } else {
-            alert("yorum boş");
           }
-        }else{
-          alert('fsdfsdf')
+        } else {
+      
+          Dialog.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Lütfen Yorum Yapınız",
+            textBody:'Lütfen Yorum Yapınız',
+            button: "Tamam",
+          });
         }
       
       } catch (error) {
@@ -234,6 +211,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
       setselectedIndex(null);
     };
     return (
+      <AlertNotificationRoot>
       <ScrollView
         style={style.container}
         contentContainerStyle={{
@@ -418,22 +396,41 @@ import AwesomeAlert from "react-native-awesome-alerts";
                     <Text style={{fontSize:13,color:'#333'}}>Basılı Tutarak Resim Çekip Yükleyebilirsiniz!</Text>
                   </View>
                   <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 5,
-                      alignItems: "center",
-                      justifyContent: 'space-around',
-                    }}
-                  >
+                  style={{
+                    flexDirection: "row",
+                    gap: 5,
+                    alignItems: "center",
+                    justifyContent: image ==[] ?'space-around' :'flex-start',
+                    flexWrap:'wrap'
+                  }}
+                >
+                 <TouchableOpacity 
+                  style={[
+                    style.Input,
                     {
+                      width: 90,
+                      height:90,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    },
+                  ]}
+                    onPress={pickImage}
+                    onLongPress={takePhoto}
+                 >
+                    <Icon2 name="camera" size={25} color={'grey'}/>
+                 </TouchableOpacity> 
+                     {
                         image.map((image,index)=>(
                             <TouchableOpacity
                             key={index}
                             onLongPress={()=>{
                                 takePhoto(index)
+                                
                             }}
                             onPress={()=>{
+                              
                                 pickImage(index)
+                           
                             }}
                             style={[
                               style.Input,
@@ -455,24 +452,8 @@ import AwesomeAlert from "react-native-awesome-alerts";
                         
                           </TouchableOpacity>
                         ))
-                    }
-                       <Modal
-            animationType="fade" // veya "fade", "none" gibi
-            visible={loadingForPost}
-          
-            style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", margin: 0 }}
-
-          >
-            
-                <View style={style.centeredView}>
-                  <View style={style.modalView}>
-                      <ActivityIndicator color="#fff"/>
-                  </View>
-                </View>
-             
-              
-          </Modal>
-             <AwesomeAlert
+                    } 
+                         <AwesomeAlert
             
             show={removeImage}
             showProgress={false}
@@ -499,52 +480,41 @@ import AwesomeAlert from "react-native-awesome-alerts";
             confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
             cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
           /> 
-                    
-                 
-                  </View>
+                </View>
                 </View>
               </View>
-              <CheckBox
-                checked={checkedForm}
-                onPress={toggleCheckboxForm}
-                // Use ThemeProvider to make change for all checkbox
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="red"
-                title={<Text style={{ fontSize: 12 ,left:5}}>Yorum Kurallarını Okudum Kabul Ediyorum</Text>}
-                size={20}
-                containerStyle={{
-                  backgroundColor: "white",
-                  borderWidth: 0,
-                  width: "100%",
-                  margin:4,
-                  marginLeft:0,
-                  paddingLeft:0
-                }}
-              />
+             
               <TouchableOpacity
+              disabled={loadingForPost}
                 style={{
                   backgroundColor: "#EB2B2E",
                   padding: 10,
                   borderRadius: 5,
+                  top:10
                 }}
                 onPress={shareComment}
               >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "#ffffff",
-                    fontWeight: "700",
-                  }}
-                >
-                  Paylaş
-                </Text>
+                
+                {
+                  loadingForPost ?
+                    <ActivityIndicator color="white"/>:
+                    <Text
+                    style={{
+                      textAlign: "center",
+                      color: "#ffffff",
+                      fontWeight: "700",
+                    }}
+                  >
+                    Paylaş
+                  </Text>
+                }
+              
               </TouchableOpacity>
             </View>
           </>
         )}
       </ScrollView>
+      </AlertNotificationRoot>
     );
   }
   const style = StyleSheet.create({
