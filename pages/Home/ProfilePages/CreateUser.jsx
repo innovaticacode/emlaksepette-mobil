@@ -116,11 +116,10 @@ export default function CreateUser() {
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
-  const [loadingUpdate, setloadingUpdate] = useState(false)
+  const [loadingUpdate, setloadingUpdate] = useState(false);
   const createUser = () => {
-   
     if (!validateForm()) return;
-        setloadingUpdate(true)
+    setloadingUpdate(true);
     let formdata = new FormData();
     formdata.append("name", nameAndSurname);
     formdata.append("title", title);
@@ -142,16 +141,16 @@ export default function CreateUser() {
         )
         .then((response) => {
           setmessage(response.data.message);
-        
+
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Başarılı",
             textBody: response.data.message,
             button: "Tamam",
-            onPressButton:()=>{
-              navigation.goBack()
-              Dialog.hide()
-            }
+            onPressButton: () => {
+              navigation.goBack();
+              Dialog.hide();
+            },
           });
           setnameAndSurname("");
           setemail("");
@@ -159,27 +158,23 @@ export default function CreateUser() {
           settitle("");
           setphoneNumber("");
           setUserType("");
-        
         })
         .catch((error) => {
           Dialog.show({
             type: ALERT_TYPE.DANGER,
             title: "Hata",
-            textBody: error.response?.data?.errors.email[0] ,
+            textBody: error.response?.data?.errors.email[0],
             button: "Tamam",
-            onPressButton:()=>{
-             
-              Dialog.hide()
-            }
+            onPressButton: () => {
+              Dialog.hide();
+            },
           });
-        
-        
+
           console.error("API Hatası:", error);
-        } ) 
-        .finally(()=>{
-          setloadingUpdate(false)
         })
-       
+        .finally(() => {
+          setloadingUpdate(false);
+        });
     }
   };
   const formatPhoneNumber = (value) => {
@@ -219,13 +214,12 @@ export default function CreateUser() {
     const formattedValue = formatPhoneNumber(value);
     setphoneNumber(formattedValue);
   };
-    const [showPassword, setshowPassword] = useState(true)
+  const [showPassword, setshowPassword] = useState(true);
   return (
     <AlertNotificationRoot>
       <ScrollView
-        contentContainerStyle={{ flex: 1, }}
-        style={{backgroundColor:'white'}}
-      
+        contentContainerStyle={{ flex: 1 }}
+        style={{ backgroundColor: "white" }}
       >
         <View style={style.container}>
           <View style={[style.Form]}>
@@ -290,29 +284,37 @@ export default function CreateUser() {
                 <View style={{ flexDirection: "row", gap: 10 }}>
                   <Text style={style.Label}>Şifre</Text>
                 </View>
-                  <View>
-                    <TouchableOpacity 
-                    onPress={()=>{
-                      setshowPassword(!showPassword)
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setshowPassword(!showPassword);
                     }}
-                      style={{position:'absolute',zIndex:1,right:10,top:6}}
-                    >
-                      <DotIcon name={showPassword? "eye-with-line":'eye'} size={23} color={'#333'}/>
-                    </TouchableOpacity>
+                    style={{
+                      position: "absolute",
+                      zIndex: 1,
+                      right: 10,
+                      top: 6,
+                    }}
+                  >
+                    <DotIcon
+                      name={showPassword ? "eye-with-line" : "eye"}
+                      size={23}
+                      color={"#333"}
+                    />
+                  </TouchableOpacity>
                   <TextInput
-                  style={style.Input}
-                  secureTextEntry={showPassword}
-                  value={password}
-                  onChangeText={(value) => setpassword(value)}
-                />
-                {validationErrors.password && (
-                  <Text style={style.errorText}>
-                    {" "}
-                    {validationErrors.password}{" "}
-                  </Text>
-                )}
-                  </View>
-              
+                    style={style.Input}
+                    secureTextEntry={showPassword}
+                    value={password}
+                    onChangeText={(value) => setpassword(value)}
+                  />
+                  {validationErrors.password && (
+                    <Text style={style.errorText}>
+                      {" "}
+                      {validationErrors.password}{" "}
+                    </Text>
+                  )}
+                </View>
               </View>
               <View>
                 <Text style={style.Label}>Kullanıcı Tipi</Text>
@@ -335,34 +337,37 @@ export default function CreateUser() {
               </View>
             </View>
             <View style={{ width: "100%", alignItems: "center" }}>
-            <TouchableOpacity
-            style={{
-              backgroundColor: "#EA2A29",
-              padding: 9,
-              width: "90%",
-              borderRadius: 5,
-              opacity:loadingUpdate ? 0.5:1,
-              flexDirection:'row',
-              alignItems:'center',
-              justifyContent:'center'
-            }}
-            onPress={createUser}
-          >
-            {
-              loadingUpdate ?
-              <ActivityIndicator color="white" size={'small'}/>
-              :
-              <Text
-              style={[
-                style.label2,
-                { color: "white", textAlign: "center", fontSize: 14 ,fontWeight:'700'},
-              ]}
-            >
-              Kaydet
-            </Text>
-            }
-        
-          </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#EA2A29",
+                  padding: 9,
+                  width: "90%",
+                  borderRadius: 5,
+                  opacity: loadingUpdate ? 0.5 : 1,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress={createUser}
+              >
+                {loadingUpdate ? (
+                  <ActivityIndicator color="white" size={"small"} />
+                ) : (
+                  <Text
+                    style={[
+                      style.label2,
+                      {
+                        color: "white",
+                        textAlign: "center",
+                        fontSize: 14,
+                        fontWeight: "700",
+                      },
+                    ]}
+                  >
+                    Kaydet
+                  </Text>
+                )}
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -454,9 +459,9 @@ const pickerSelectStyles = StyleSheet.create({
     borderColor: "#DDDDDD",
     borderRadius: 5,
     fontSize: 13,
-    backgroundColor:'#fafafafa',
-    color:'#717171',
-    fontWeight:'600' // to ensure the text is never behind the icon
+    backgroundColor: "#fafafafa",
+    color: "#717171",
+    fontWeight: "600", // to ensure the text is never behind the icon
   },
   inputAndroid: {
     padding: 10,
@@ -464,9 +469,9 @@ const pickerSelectStyles = StyleSheet.create({
     borderColor: "#DDDDDD",
     borderRadius: 5,
     fontSize: 13,
-    backgroundColor:'#fafafafa',
-    color:'#717171',
-    fontWeight:'600' // to ensure the text is never behind the icon
+    backgroundColor: "#fafafafa",
+    color: "#717171",
+    fontWeight: "600", // to ensure the text is never behind the icon
   },
 });
 const style = StyleSheet.create({
@@ -488,9 +493,9 @@ const style = StyleSheet.create({
     borderColor: "#DDDDDD",
     borderRadius: 5,
     fontSize: 13,
-    backgroundColor:'#fafafafa',
-    color:'#717171',
-    fontWeight:'600'
+    backgroundColor: "#fafafafa",
+    color: "#717171",
+    fontWeight: "600",
   },
   Label: {
     fontSize: 13,
@@ -498,8 +503,7 @@ const style = StyleSheet.create({
     left: 6,
     fontWeight: "600",
     letterSpacing: 0.5,
-    color:'#333'
-
+    color: "#333",
   },
   bottomSheetItem: {
     width: "100%",

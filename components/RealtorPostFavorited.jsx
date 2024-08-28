@@ -151,9 +151,9 @@ export default function RealtorPostFavorited({
     }
   };
   const [isHighlighted, setIsHighlighted] = useState(false);
-  useEffect(()=>{
-    setIsHighlighted(false)
-  },[isChoosed])
+  useEffect(() => {
+    setIsHighlighted(false);
+  }, [isChoosed]);
   return (
     <Swipeable renderRightActions={LeftAction}>
       <TouchableOpacity

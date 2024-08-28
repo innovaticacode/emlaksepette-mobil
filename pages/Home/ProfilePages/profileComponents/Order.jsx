@@ -45,266 +45,271 @@ export default function Order({ item }) {
 
   const navigation = useNavigation();
   const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
-  console.log(JSON.parse(item.cart)['item']['id'] )
-  const HouseId=item && item.cart &&  JSON.parse(item.cart)['item']['id']
-  const Type=item && item.cart &&  JSON.parse(item.cart)['type']
-  const Title=item && item.cart &&  JSON.parse(item.cart)['item']['title']
-  console.log(Type)
+  console.log(JSON.parse(item.cart)["item"]["id"]);
+  const HouseId = item && item.cart && JSON.parse(item.cart)["item"]["id"];
+  const Type = item && item.cart && JSON.parse(item.cart)["type"];
+  const Title = item && item.cart && JSON.parse(item.cart)["item"]["title"];
+  console.log(Type);
   const { width, height } = Dimensions.get("window");
   return (
-    <TouchableOpacity style={style.container}
-    onPress={() => navigation.navigate("OrderDetail", { OrderId: item.id , id:HouseId})}
+    <TouchableOpacity
+      style={style.container}
+      onPress={() =>
+        navigation.navigate("OrderDetail", { OrderId: item.id, id: HouseId })
+      }
     >
-        <View style={{flexDirection:'row'}}>
-          <View style={{width: width > 400?'24%':'28%',padding:2}}>
-          <View style={{width:85,height:85,borderRadius:1}}>
+      <View style={{ flexDirection: "row" }}>
+        <View style={{ width: width > 400 ? "24%" : "28%", padding: 2 }}>
+          <View style={{ width: 85, height: 85, borderRadius: 1 }}>
             <ImageBackground
-                  source={{ uri: imageUrl }}
-                  style={{ width: "100%", height: "100%" }}
-                  resizeMode="cover"
-                  borderRadius={1}
-                />
-</View>
+              source={{ uri: imageUrl }}
+              style={{ width: "100%", height: "100%" }}
+              resizeMode="cover"
+              borderRadius={1}
+            />
           </View>
-          <View style={{width:'40%',padding:2}}>
-          <View style={{gap:4}}>
-
-    <Text style={{fontSize:12,fontWeight:'600',color:'#333'}} numberOfLines={1}>{Title}</Text>
-<Text style={{fontSize:11,fontWeight:'500',color:'#333'}}>Toplam: {item.amount} ₺</Text>
-  <Text style={{fontSize:11,fontWeight:'500',color:'#333'}}>{formattedDate}</Text>
-  <Text style={{fontSize:11,fontWeight:'500',color:'#333'}}>Sipariş No:{item.id}</Text>
-  {
-              Type=='project'?
-              <Text style={{fontSize:11,color:'#333'}}>İlan No: 1000{HouseId}</Text>
-              :
-              <Text style={{fontSize:11,color:'#333'}}>İlan No: 2000{HouseId}</Text>
-            }
-  
-</View>
-          </View>
-          <View style={{width:'35%',padding:2,gap:10}}>
-          {item.status == 0 && item.refund==null&& (
-                  <View
-                    style={{
-                      backgroundColor:'#FFCE86',
-                      borderRadius:20,
-                      padding:7,
-                      flexDirection:'row',
-                      width:'100%',
-                      gap:5,
-                      alignItems:'center',
-                      justifyContent:'center'
-                    }}
-                  >
-                      <FeatherIcon name="clock" color={"#FF9908"} size={13}/>
-                    <Text
-                      style={{
-                        color: "#FF9908",
-                        textAlign: "center",
-                        fontSize: 11,
-                        fontWeight:'600'
-                      }}
-                    >
-                      Onay Bekliyor
-                    </Text>
-                  
-                  </View>
-                )}
-                   {item.status == 1 && item.refund==null&& (
-                  <View
-                    style={{
-                    backgroundColor:'#70D367',
-                    flexDirection:'row',
-                    borderRadius:20,
-                      padding:5,
-                    flexDirection:'row',
-                      justifyContent:'center',
-                    gap:3,
-                    alignItems:'center'
-                    }}
-                  >
-                     <FeatherIcon name="check" color={"#4B8F3C"} size={16} />
-                    <Text
-                      style={{
-                        color: "#4B8F3C",
-                        textAlign: "center",
-                        fontSize: 11,
-                      }}
-                    >
-                      Onaylandı
-                    </Text>
-                   
-                  </View>
-                )}
-                    {item.status == 1 && item?.refund?.status==0&& (
-                  <View
-                    style={{
-                      backgroundColor: "#FFEFCA",
-                      borderWidth: 1,
-                      borderColor: "#BEE8B4",
-                      padding: 2,
-                      borderRadius: 5,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 10,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "#BC3913",
-                        textAlign: "center",
-                        fontSize: 12,
-                      }}
-                    >
-                      İade Onayda
-                    </Text>
-                    <FeatherIcon name="clock" color={"#BC3913"} size={16} />
-                  </View>
-                )}
-                    {item.status == 2 && item?.refund?.status == 1 && (
-                  <View
-                    style={{
-                      backgroundColor: "#D9F9D0",
-                      borderWidth: 1,
-                      borderColor: "#BEE8B4",
-                      padding: 2,
-                      borderRadius: 5,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 10,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "#4B8F3C",
-                        textAlign: "center",
-                        fontSize: 12,
-                      }}
-                    >
-                      İade Edildi
-                    </Text>
-                    <FeatherIcon name="check" color={"#4B8F3C"} size={16} />
-                  </View>
-                )}
-                     {item.status == 1 && item?.refund?.status == 2 && (
-                   <View
-                   style={{
-                     backgroundColor: "#FFE0DB",
-                     borderWidth: 1,
-                     borderColor: "#FABCB3",
-                     paddingLeft: 6,
-                     paddingRight: 6,
-                     padding: 4,
-                     borderRadius: 5,
-                     flexDirection: "row",
-                     alignItems: "center",
-                     justifyContent: "center",
-                     gap: 6,
-                     overflow: "hidden",
-                   }}
-                 >
-                   <Text
-                     style={{
-                       color: "#B81911",
-                       textAlign: "center",
-                       fontSize: 11,
-                     }}
-                   >
-                     İade reddedildi
-                   </Text>
-                   <StarIcon name="close" color={"#B81911"} />
-                 </View>
-                )}
-
-{item.status == 2 && item.refund==null&&(
-                  <View
-                    style={{
-                      backgroundColor: "#FFE0DB",
-                      borderWidth: 1,
-                      borderColor: "#FABCB3",
-                      paddingLeft: 6,
-                      paddingRight: 6,
-                      padding: 4,
-                      borderRadius: 5,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 6,
-                      overflow: "hidden",
-                    }}
-                  >
-                      <StarIcon name="close" color={"#B81911"} />
-                    <Text
-                      style={{
-                        color: "#B81911",
-                        textAlign: "center",
-                        fontSize: 11,
-                      }}
-                    >
-                      Ödeme reddedildi
-                    </Text>
-                  
-                  </View>
-                )}
-            <View>
-            {item.status == 1 && (
-                  <TouchableOpacity
-                    style={{
-                      borderWidth: 1,
-                      borderColor: "#404040",
-                      borderRadius: 12,
-                      padding: 4,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 4,
-                      justifyContent:'center'
-                    }}
-                    onPress={() =>
-                      navigation.navigate("Invoice", { OrderId: item.id })
-                    }
-                  >
-                    <Icon4 name="file-invoice" size={12} color={"#404040"} />
-                    <Text style={{ color: "#404040", fontSize: 11 }}>
-                      Faturanız
-                    </Text>
-                  </TouchableOpacity>
-                )}
-            </View>
-      
-            </View>
-
         </View>
+        <View style={{ width: "40%", padding: 2 }}>
+          <View style={{ gap: 4 }}>
+            <Text
+              style={{ fontSize: 12, fontWeight: "600", color: "#333" }}
+              numberOfLines={1}
+            >
+              {Title}
+            </Text>
+            <Text style={{ fontSize: 11, fontWeight: "500", color: "#333" }}>
+              Toplam: {item.amount} ₺
+            </Text>
+            <Text style={{ fontSize: 11, fontWeight: "500", color: "#333" }}>
+              {formattedDate}
+            </Text>
+            <Text style={{ fontSize: 11, fontWeight: "500", color: "#333" }}>
+              Sipariş No:{item.id}
+            </Text>
+            {Type == "project" ? (
+              <Text style={{ fontSize: 11, color: "#333" }}>
+                İlan No: 1000{HouseId}
+              </Text>
+            ) : (
+              <Text style={{ fontSize: 11, color: "#333" }}>
+                İlan No: 2000{HouseId}
+              </Text>
+            )}
+          </View>
+        </View>
+        <View style={{ width: "35%", padding: 2, gap: 10 }}>
+          {item.status == 0 && item.refund == null && (
+            <View
+              style={{
+                backgroundColor: "#FFCE86",
+                borderRadius: 20,
+                padding: 7,
+                flexDirection: "row",
+                width: "100%",
+                gap: 5,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <FeatherIcon name="clock" color={"#FF9908"} size={13} />
+              <Text
+                style={{
+                  color: "#FF9908",
+                  textAlign: "center",
+                  fontSize: 11,
+                  fontWeight: "600",
+                }}
+              >
+                Onay Bekliyor
+              </Text>
+            </View>
+          )}
+          {item.status == 1 && item.refund == null && (
+            <View
+              style={{
+                backgroundColor: "#70D367",
+                flexDirection: "row",
+                borderRadius: 20,
+                padding: 5,
+                flexDirection: "row",
+                justifyContent: "center",
+                gap: 3,
+                alignItems: "center",
+              }}
+            >
+              <FeatherIcon name="check" color={"#4B8F3C"} size={16} />
+              <Text
+                style={{
+                  color: "#4B8F3C",
+                  textAlign: "center",
+                  fontSize: 11,
+                }}
+              >
+                Onaylandı
+              </Text>
+            </View>
+          )}
+          {item.status == 1 && item?.refund?.status == 0 && (
+            <View
+              style={{
+                backgroundColor: "#FFEFCA",
+                borderWidth: 1,
+                borderColor: "#BEE8B4",
+                padding: 2,
+                borderRadius: 5,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 10,
+              }}
+            >
+              <Text
+                style={{
+                  color: "#BC3913",
+                  textAlign: "center",
+                  fontSize: 12,
+                }}
+              >
+                İade Onayda
+              </Text>
+              <FeatherIcon name="clock" color={"#BC3913"} size={16} />
+            </View>
+          )}
+          {item.status == 2 && item?.refund?.status == 1 && (
+            <View
+              style={{
+                backgroundColor: "#D9F9D0",
+                borderWidth: 1,
+                borderColor: "#BEE8B4",
+                padding: 2,
+                borderRadius: 5,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 10,
+              }}
+            >
+              <Text
+                style={{
+                  color: "#4B8F3C",
+                  textAlign: "center",
+                  fontSize: 12,
+                }}
+              >
+                İade Edildi
+              </Text>
+              <FeatherIcon name="check" color={"#4B8F3C"} size={16} />
+            </View>
+          )}
+          {item.status == 1 && item?.refund?.status == 2 && (
+            <View
+              style={{
+                backgroundColor: "#FFE0DB",
+                borderWidth: 1,
+                borderColor: "#FABCB3",
+                paddingLeft: 6,
+                paddingRight: 6,
+                padding: 4,
+                borderRadius: 5,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                overflow: "hidden",
+              }}
+            >
+              <Text
+                style={{
+                  color: "#B81911",
+                  textAlign: "center",
+                  fontSize: 11,
+                }}
+              >
+                İade reddedildi
+              </Text>
+              <StarIcon name="close" color={"#B81911"} />
+            </View>
+          )}
+
+          {item.status == 2 && item.refund == null && (
+            <View
+              style={{
+                backgroundColor: "#FFE0DB",
+                borderWidth: 1,
+                borderColor: "#FABCB3",
+                paddingLeft: 6,
+                paddingRight: 6,
+                padding: 4,
+                borderRadius: 5,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                overflow: "hidden",
+              }}
+            >
+              <StarIcon name="close" color={"#B81911"} />
+              <Text
+                style={{
+                  color: "#B81911",
+                  textAlign: "center",
+                  fontSize: 11,
+                }}
+              >
+                Ödeme reddedildi
+              </Text>
+            </View>
+          )}
+          <View>
+            {item.status == 1 && (
+              <TouchableOpacity
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#404040",
+                  borderRadius: 12,
+                  padding: 4,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 4,
+                  justifyContent: "center",
+                }}
+                onPress={() =>
+                  navigation.navigate("Invoice", { OrderId: item.id })
+                }
+              >
+                <Icon4 name="file-invoice" size={12} color={"#404040"} />
+                <Text style={{ color: "#404040", fontSize: 11 }}>
+                  Faturanız
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      </View>
     </TouchableOpacity>
-//     <TouchableOpacity style={style.container}
-//     onPress={() => navigation.navigate("OrderDetail", { OrderId: item.id , id:HouseId})}
-//     >
-//         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-//             <View style={{flexDirection:'row',gap:9}}>
+    //     <TouchableOpacity style={style.container}
+    //     onPress={() => navigation.navigate("OrderDetail", { OrderId: item.id , id:HouseId})}
+    //     >
+    //         <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+    //             <View style={{flexDirection:'row',gap:9}}>
 
+    // <View style={{justifyContent:'space-between'}}>
 
-// <View style={{justifyContent:'space-between'}}>
+    // </View>
+    //             </View>
 
-  
-// </View>
-//             </View>
-      
+    //          <View style={{width:width<400?'30%': '32%',gap:10}}>
 
-//          <View style={{width:width<400?'30%': '32%',gap:10}}>
-      
-    
+    //             <View>
 
-//             <View>
-   
-//             </View>
-    
-//          </View>
+    //             </View>
 
-//         </View>
-//     </TouchableOpacity>
+    //          </View>
 
-// eski tasarım
+    //         </View>
+    //     </TouchableOpacity>
+
+    // eski tasarım
     // <TouchableOpacity
     //   onPress={() => navigation.navigate("OrderDetail", { OrderId: item.id , id:HouseId})}
     // >
@@ -315,7 +320,7 @@ export default function Order({ item }) {
     //         <View style={{ flexDirection: "row" }}>
     //           <Text>Toplam: </Text>
     //           <Text style={{ color: "green" }}> {item.amount} ₺ </Text>
-             
+
     //         </View>
     //       </View>
     //       <View style={style.Button}>
@@ -336,30 +341,21 @@ export default function Order({ item }) {
     //         >
     //           <View style={{flexDirection:'row',gap:10}}>
     //           <View style={{ height: 80, width: 80 ,flexDirection:'row'}}>
-              
-           
+
     //           </View>
     //           <View style={{gap:5}}>
     //             <Text style={{fontSize:12,color:'#333'}}>Sipariş No: {item.id}</Text>
-              
-            
-    //           </View>
-    //           </View>
-           
-              // <View
-              //   style={{
-              //     gap: 10,
-              //     width: "35%",
-              //     justifyContent: "space-between",
-              //   }}
-              // >
-              
-             
-              
-              
-             
 
-             
+    //           </View>
+    //           </View>
+
+    // <View
+    //   style={{
+    //     gap: 10,
+    //     width: "35%",
+    //     justifyContent: "space-between",
+    //   }}
+    // >
 
     //             <View
     //               style={{
@@ -395,7 +391,7 @@ export default function Order({ item }) {
     //         }}
     //       >
     //         {/* <View style={{justifyContent:'flex-end'}} >
-           
+
     //         </View> */}
     //       </View>
     //     </View>
@@ -406,7 +402,7 @@ export default function Order({ item }) {
 const style = StyleSheet.create({
   container: {
     width: "100%",
- 
+
     padding: 10,
     borderWidth: 1.5,
     borderRadius: 5,

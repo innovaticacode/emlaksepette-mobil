@@ -18,14 +18,18 @@ import {
 } from "accordion-collapse-react-native";
 import Modal from "react-native-modal";
 import ProfileSettingsItem from "../../components/ProfileSettingsItem";
-import { useRoute, useNavigation, useFocusEffect, useIsFocused } from "@react-navigation/native";
+import {
+  useRoute,
+  useNavigation,
+  useFocusEffect,
+  useIsFocused,
+} from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import Menu from "./Menu.json";
 import { Platform } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
-
 
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
@@ -110,17 +114,17 @@ export default function ShoppingProfile() {
     fetchPermissionUser();
   }, [user]);
 
-  const isfocused=useIsFocused()
+  const isfocused = useIsFocused();
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true); // Yükleme başladı
-      
+
       try {
         const response = require("./Menu.json");
-  
+
         // permissionsUser'ı bir diziye dönüştürme
         const permissionsArray = Object.values(permissionsUser);
-        
+
         const filteredMenu = response.filter((item) => {
           if (item.subMenu) {
             const filteredSubMenu = item.subMenu.filter((subItem) =>
@@ -134,7 +138,7 @@ export default function ShoppingProfile() {
           }
           return permissionsArray.includes(item.key);
         });
-  
+
         setData(filteredMenu);
       } catch (error) {
         console.error(error);
@@ -142,10 +146,9 @@ export default function ShoppingProfile() {
         setLoading(false); // Yükleme bitti
       }
     };
-  
+
     fetchData();
-  }, [permissionsUser,isfocused]);
-  
+  }, [permissionsUser, isfocused]);
 
   const groupedData = data.reduce((acc, item) => {
     const existingGroupIndex = acc.findIndex(
@@ -159,11 +162,10 @@ export default function ShoppingProfile() {
     return acc;
   }, []);
 
-
   const logout = () => {
     setDialogVisible(false);
     SecureStore.setItemAsync("user", "");
-    navigation.push("Home",{status : "logout"});
+    navigation.push("Home", { status: "logout" });
   };
 
   const toggleAccor = (index) => {
@@ -183,151 +185,187 @@ export default function ShoppingProfile() {
   //     return () => clearTimeout(timer);
   //   }, [])
   // );
-  const [namFromGetUser, setnamFromGetUser] = useState([])
-  const [loadingCollection, setloadingCollection] = useState(false)
-  const GetUserInfo =async ()=>{
-     setloadingCollection(true)
-     try {
-       if (user?.access_token && user) {
-         const userInfo = await axios.get(
-           "https://private.emlaksepette.com/api/users/" + user?.id,
-           {
-             headers: {
-               Authorization: `Bearer ${user.access_token}`,
-             },
-           }
-         );
-         const userData = userInfo?.data?.user
-         setnamFromGetUser(userData)
-       
-       }
-     
-  
-     } catch (error) {
-       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
-     }finally{
-      setloadingCollection(false)
-     }
-   }
-   useEffect(() => {
-  GetUserInfo()
-   }, [user])
-   
+  const [namFromGetUser, setnamFromGetUser] = useState([]);
+  const [loadingCollection, setloadingCollection] = useState(false);
+  const GetUserInfo = async () => {
+    setloadingCollection(true);
+    try {
+      if (user?.access_token && user) {
+        const userInfo = await axios.get(
+          "https://private.emlaksepette.com/api/users/" + user?.id,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+        const userData = userInfo?.data?.user;
+        setnamFromGetUser(userData);
+      }
+    } catch (error) {
+      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+    } finally {
+      setloadingCollection(false);
+    }
+  };
+  useEffect(() => {
+    GetUserInfo();
+  }, [user]);
+
   return (
-<>
-      {
-        loading ==true
-        ?
-        <ActivityIndicator color="#333"/>
-        :
+    <>
+      {loading == true ? (
+        <ActivityIndicator color="#333" />
+      ) : (
         <View style={style.container}>
-          
-        <View style={style.header}>
-          <View
-            style={[
-              style.opacity,
-              { backgroundColor: namFromGetUser.banner_hex_code + 97 },
-            ]}
-          ></View>
-  
-          <ImageBackground
-            source={require("./profilePhoto.jpg")}
-            style={{ width: "100%", height: "100%" }}
-            imageStyle={{
-              borderBottomLeftRadius: 30,
-              borderBottomRightRadius: 30,
-            }}
-          />
-          <View style={style.UserInfo}>
+          <View style={style.header}>
             <View
-              style={{
-                flexDirection: "row",
-                width: "90%",
-                alignItems: "center",
-                paddingLeft: 20,
-                gap: 20,
+              style={[
+                style.opacity,
+                { backgroundColor: namFromGetUser.banner_hex_code + 97 },
+              ]}
+            ></View>
+
+            <ImageBackground
+              source={require("./profilePhoto.jpg")}
+              style={{ width: "100%", height: "100%" }}
+              imageStyle={{
+                borderBottomLeftRadius: 30,
+                borderBottomRightRadius: 30,
               }}
-            >
+            />
+            <View style={style.UserInfo}>
               <View
                 style={{
-                  width: 65,
-                  height: 65,
-                }}
-              >
-                <View style={style.profileImage}>
-                  <Image
-                    source={{ uri: PhotoUrl +  namFromGetUser.profile_image }}
-                    style={{ width: "100%", height: "100%" }}
-                    borderRadius={50}
-                  />
-                </View>
-              </View>
-              <View
-                style={{
-                  display: "flex",
                   flexDirection: "row",
+                  width: "90%",
                   alignItems: "center",
+                  paddingLeft: 20,
+                  gap: 20,
                 }}
               >
-                <View style={{ gap: 8 }}>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Text
-                      style={{ color: "white", fontSize: 15, fontWeight: "bold" }}
-                    >
-                      {namFromGetUser.name}
-                    </Text>
-                    <View style={{ width: 20, height: 20, left: 10 }}>
-                      <ImageBackground
-                        source={require("./BadgeYellow.png")}
-                        style={{ flex: 1 }}
-                      />
-  
-                      <Icon
-                        name="check"
-                        style={{ position: "absolute", left: 3.5, top: 3.5 }}
-                        size={13}
-                      />
-                    </View>
+                <View
+                  style={{
+                    width: 65,
+                    height: 65,
+                  }}
+                >
+                  <View style={style.profileImage}>
+                    <Image
+                      source={{ uri: PhotoUrl + namFromGetUser.profile_image }}
+                      style={{ width: "100%", height: "100%" }}
+                      borderRadius={50}
+                    />
                   </View>
-  
-                  <Text
-                    style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
-                  >
-                    {user.corporate_type}
-                  </Text>
+                </View>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <View style={{ gap: 8 }}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: 15,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {namFromGetUser.name}
+                      </Text>
+                      <View style={{ width: 20, height: 20, left: 10 }}>
+                        <ImageBackground
+                          source={require("./BadgeYellow.png")}
+                          style={{ flex: 1 }}
+                        />
+
+                        <Icon
+                          name="check"
+                          style={{ position: "absolute", left: 3.5, top: 3.5 }}
+                          size={13}
+                        />
+                      </View>
+                    </View>
+
+                    <Text
+                      style={{
+                        color: "white",
+                        fontSize: 11,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {user.corporate_type}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
           </View>
-        </View>
-        {loading ? (
-          <ActivityIndicator size="large" color="#333" />
-        ) : (
-          <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
-            <View style={{ gap: 20, padding: 10 }}>
-              {groupedData.map((group, index) => (
-                <View key={index}>
-                  {/* Başlık */}
-                  <Text style={style.headerText}>{group.label}</Text>
-  
-                  {/* Alt menü */}
-                  {group.subMenu.length > 0 &&
-                    group.subMenu.map((item, subIndex) =>
-                      item.subMenu ? (
-                        <Collapse
-                          key={subIndex}
-                          onToggle={() => {
-                            setOpenAccor((prevState) => ({
-                              ...prevState,
-                              [subIndex]: !prevState[subIndex],
-                            }));
-                          }}
-                          isCollapsed={!openAccor[subIndex]}
-                        >
-                          <CollapseHeader>
-                            <View>
+          {loading ? (
+            <ActivityIndicator size="large" color="#333" />
+          ) : (
+            <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
+              <View style={{ gap: 20, padding: 10 }}>
+                {groupedData.map((group, index) => (
+                  <View key={index}>
+                    {/* Başlık */}
+                    <Text style={style.headerText}>{group.label}</Text>
+
+                    {/* Alt menü */}
+                    {group.subMenu.length > 0 &&
+                      group.subMenu.map((item, subIndex) =>
+                        item.subMenu ? (
+                          <Collapse
+                            key={subIndex}
+                            onToggle={() => {
+                              setOpenAccor((prevState) => ({
+                                ...prevState,
+                                [subIndex]: !prevState[subIndex],
+                              }));
+                            }}
+                            isCollapsed={!openAccor[subIndex]}
+                          >
+                            <CollapseHeader>
+                              <View>
+                                <ProfileSettingsItem
+                                  key={subIndex}
+                                  text={item.text}
+                                  ıconName={item.icon}
+                                  arrowControl={
+                                    item.subMenu && item.subMenu.length > 0
+                                  }
+                                  isCollapsed={!openAccor[subIndex]}
+                                />
+                              </View>
+                            </CollapseHeader>
+                            <CollapseBody style={{ margin: 10, gap: 10 }}>
+                              {item.subMenu &&
+                                item.subMenu.map((subItem, subItemIndex) => (
+                                  <TouchableOpacity
+                                    key={subItemIndex}
+                                    onPress={() =>
+                                      navigation.navigate(subItem.url)
+                                    }
+                                  >
+                                    <ProfileSettingsItem
+                                      text={subItem.text}
+                                      arrowNone={true}
+                                    />
+                                  </TouchableOpacity>
+                                ))}
+                            </CollapseBody>
+                          </Collapse>
+                        ) : (
+                          <View>
+                            <TouchableOpacity
+                              onPress={() => navigation.navigate(item.url)}
+                            >
                               <ProfileSettingsItem
-                                key={subIndex}
                                 text={item.text}
                                 ıconName={item.icon}
                                 arrowControl={
@@ -335,150 +373,116 @@ export default function ShoppingProfile() {
                                 }
                                 isCollapsed={!openAccor[subIndex]}
                               />
-                            </View>
-                          </CollapseHeader>
-                          <CollapseBody style={{ margin: 10, gap: 10 }}>
-                            {item.subMenu &&
-                              item.subMenu.map((subItem, subItemIndex) => (
-                                <TouchableOpacity
-                                  key={subItemIndex}
-                                  onPress={() => navigation.navigate(subItem.url)}
-                                >
-                                  <ProfileSettingsItem
-                                    text={subItem.text}
-                                    arrowNone={true}
-                                  />
-                                </TouchableOpacity>
-                              ))}
-                          </CollapseBody>
-                        </Collapse>
-                      ) : (
-                        <View>
-                          <TouchableOpacity
-                            onPress={() => navigation.navigate(item.url)}
-                          >
-                            <ProfileSettingsItem
-                              text={item.text}
-  
-                              ıconName={item.icon}
-                              arrowControl={ 
-                                item.subMenu && item.subMenu.length > 0
-                              }
-                              isCollapsed={!openAccor[subIndex]}
-  
-                            />
-                          </TouchableOpacity>
-                        </View>
-                      )
-                    )}
-                </View>
-              ))}
-            </View>
-            <View
-              style={{ flex: 1 / 2, paddingBottom: 50, alignItems: "center" }}
-            >
-              <TouchableOpacity
-                onPress={() => setDialogVisible(true)}
-                style={{
-                  backgroundColor: "#EA2A28",
-                  padding: 10,
-                  borderRadius: 5,
-                  width: "80%",
-                }}
+                            </TouchableOpacity>
+                          </View>
+                        )
+                      )}
+                  </View>
+                ))}
+              </View>
+              <View
+                style={{ flex: 1 / 2, paddingBottom: 50, alignItems: "center" }}
               >
-                <Text
+                <TouchableOpacity
+                  onPress={() => setDialogVisible(true)}
                   style={{
-                    textAlign: "center",
-                    color: "#ffffff",
-                    fontWeight: "500",
+                    backgroundColor: "#EA2A28",
+                    padding: 10,
+                    borderRadius: 5,
+                    width: "80%",
                   }}
                 >
-                  Çıkış Yap
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Modal
-              animationType="fade"
-              onBackdropPress={() => setDialogVisible(!dialogVisible)}
-              visible={dialogVisible}
-              onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-                setDialogVisible(!dialogVisible);
-              }}
-            >
-              <View style={{}}>
-                <View
-                  style={[
-                    style.modalView,
-                    style.card,
-                    {
-                      padding: 0,
-                      borderRadius: 5,
-                      backgroundColor: "#F8F7F4",
-                      alignItems: "center",
-                      gap: 20,
-                    },
-                  ]}
-                >
-                  <Text style={{ color: "#333" }}>
-                    Çıkış Yapmak İstedğinize Emin misiniz?
-                  </Text>
-                  <View
+                  <Text
                     style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 10,
+                      textAlign: "center",
+                      color: "#ffffff",
+                      fontWeight: "500",
                     }}
                   >
-                    <View style={{ flex: 1 / 2 }}>
-                      <TouchableOpacity
-                        onPress={logout}
-                        style={{
-                          backgroundColor: "#F8D7DA",
-                          padding: 10,
-                          borderRadius: 5,
-                        }}
-                      >
-                        <Text style={{ textAlign: "center", color: "#721C24" }}>
-                          Çıkış Yap
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View style={{ flex: 1 / 2 }}>
-                      <TouchableOpacity
-                        style={[
-                          {
-                            backgroundColor: "#D4EDDA",
+                    Çıkış Yap
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <Modal
+                animationType="fade"
+                onBackdropPress={() => setDialogVisible(!dialogVisible)}
+                visible={dialogVisible}
+                onRequestClose={() => {
+                  Alert.alert("Modal has been closed.");
+                  setDialogVisible(!dialogVisible);
+                }}
+              >
+                <View style={{}}>
+                  <View
+                    style={[
+                      style.modalView,
+                      style.card,
+                      {
+                        padding: 0,
+                        borderRadius: 5,
+                        backgroundColor: "#F8F7F4",
+                        alignItems: "center",
+                        gap: 20,
+                      },
+                    ]}
+                  >
+                    <Text style={{ color: "#333" }}>
+                      Çıkış Yapmak İstedğinize Emin misiniz?
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 10,
+                      }}
+                    >
+                      <View style={{ flex: 1 / 2 }}>
+                        <TouchableOpacity
+                          onPress={logout}
+                          style={{
+                            backgroundColor: "#F8D7DA",
                             padding: 10,
                             borderRadius: 5,
-                          },
-                        ]}
-                        onPress={() => setDialogVisible(!dialogVisible)}
-                      >
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            color: "#165724",
-                            fontWeight: "600",
                           }}
                         >
-                          İptal Et
-                        </Text>
-                      </TouchableOpacity>
+                          <Text
+                            style={{ textAlign: "center", color: "#721C24" }}
+                          >
+                            Çıkış Yap
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                      <View style={{ flex: 1 / 2 }}>
+                        <TouchableOpacity
+                          style={[
+                            {
+                              backgroundColor: "#D4EDDA",
+                              padding: 10,
+                              borderRadius: 5,
+                            },
+                          ]}
+                          onPress={() => setDialogVisible(!dialogVisible)}
+                        >
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              color: "#165724",
+                              fontWeight: "600",
+                            }}
+                          >
+                            İptal Et
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
                 </View>
-              </View>
-            </Modal>
-          </ScrollView>
-        )}
-   
-      </View>
-
-      }
-
-       
-      </>
+              </Modal>
+            </ScrollView>
+          )}
+        </View>
+      )}
+    </>
   );
 }
 const { width, height, fontScale } = Dimensions.get("window");

@@ -48,8 +48,12 @@ export default function RealtorAdverts({ housingdata, filteredResults }) {
           <RealtorPost
             GetId={GetIdForCart}
             HouseId={item.id}
-            openSharing={JSON.parse(item.housing_type_data)['open_sharing1']}
-            price={item.step2_slug== 'gunluk-kiralik'?JSON.parse(item.housing_type_data)["daily_rent"]: JSON.parse(item.housing_type_data)["price"]} 
+            openSharing={JSON.parse(item.housing_type_data)["open_sharing1"]}
+            price={
+              item.step2_slug == "gunluk-kiralik"
+                ? JSON.parse(item.housing_type_data)["daily_rent"]
+                : JSON.parse(item.housing_type_data)["price"]
+            }
             housing={item}
             filteredResults={filteredResults}
             title={item.title}
@@ -58,22 +62,29 @@ export default function RealtorAdverts({ housingdata, filteredResults }) {
             image={`${ApiUrl}/housing_images/${
               JSON.parse(item.housing_type_data).image
             }`}
-            column1_name={JSON.parse(item.housing_type_data)["m2gross"] ?JSON.parse(item.housing_type_data)["m2gross"]:"" }
+            column1_name={
+              JSON.parse(item.housing_type_data)["m2gross"]
+                ? JSON.parse(item.housing_type_data)["m2gross"]
+                : ""
+            }
             column1_additional={item.column1_additional}
             column2_name={
-              JSON.parse(item.housing_type_data)["room_count"] ?
-              JSON.parse(item.housing_type_data)["room_count"] :""
-            } 
+              JSON.parse(item.housing_type_data)["room_count"]
+                ? JSON.parse(item.housing_type_data)["room_count"]
+                : ""
+            }
             column2_additional={item.column2_additional}
             column3_name={
-              JSON.parse(item.housing_type_data)["floorlocation"]?
-              JSON.parse(item.housing_type_data)["floorlocation"]:""
-            } 
+              JSON.parse(item.housing_type_data)["floorlocation"]
+                ? JSON.parse(item.housing_type_data)["floorlocation"]
+                : ""
+            }
             column3_additional={item.column3_additional}
             column4_name={
-              JSON.parse(item.housing_type_data)[item.column4_name] ?
-              JSON.parse(item.housing_type_data)[item.column4_name]:""
-            } 
+              JSON.parse(item.housing_type_data)[item.column4_name]
+                ? JSON.parse(item.housing_type_data)[item.column4_name]
+                : ""
+            }
             column4_additional={item.column4_additional}
             bookmarkStatus={true}
             dailyRent={false}

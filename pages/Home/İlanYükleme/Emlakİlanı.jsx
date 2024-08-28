@@ -74,7 +74,6 @@ export default function Emlak() {
     }
   }
 
-
   const createProject = () => {
     var formDataHousing = JSON.parse(
       selectedHousingType?.housing_type?.form_json
@@ -538,7 +537,7 @@ export default function Emlak() {
   };
   return (
     <View style={styles.container}>
-         <TypeListScreen
+      <TypeListScreen
         setSlug={setSlug}
         step={step}
         setSelectedHousingType={setSelectedHousingType}
@@ -554,6 +553,6 @@ export default function Emlak() {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
 });

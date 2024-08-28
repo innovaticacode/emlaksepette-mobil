@@ -118,15 +118,15 @@ export default function AllProjects() {
       const relativeUrl = params.href.replace(`${baseUrl}/kategori`, ""); // 'kategori' kısmını çıkar
       const urlSegments = relativeUrl.split("/").filter((segment) => segment);
 
-      const slug = urlSegments[0] || ""; 
-      const title = urlSegments[1] || ""; 
-      const optional = urlSegments[2] || ""; 
+      const slug = urlSegments[0] || "";
+      const title = urlSegments[1] || "";
+      const optional = urlSegments[2] || "";
       const type = urlSegments[3] || "";
       const check = urlSegments[4] || "";
       const city = urlSegments[5] || "";
       const county = urlSegments[6] || "";
       const hood = urlSegments[7] || "";
-  
+
       const apiUrlFilter = buildApiUrl({
         slug,
         title,
@@ -137,15 +137,13 @@ export default function AllProjects() {
         county,
         hood,
       });
-  
-      setFilterDataState(apiUrlFilter)
-      fetchFilteredProjects(apiUrlFilter, null);
-    }else{
-      fetchFilteredProjects(buildApiUrl(params), null);
 
+      setFilterDataState(apiUrlFilter);
+      fetchFilteredProjects(apiUrlFilter, null);
+    } else {
+      fetchFilteredProjects(buildApiUrl(params), null);
     }
   }, [params]);
-  
 
   useEffect(() => {
     const newCityItems = state.cities.map((city) => ({
@@ -260,7 +258,7 @@ export default function AllProjects() {
       selectedProjectStatus: state.selectedProjectStatus,
       selectedListingDate: state.selectedListingDate,
     };
-  
+
     setState((prevState) => ({
       ...prevState,
       modalVisible: false,
@@ -269,19 +267,19 @@ export default function AllProjects() {
       openFilterIndex: null,
       secondhandHousings: [],
     }));
-  
-    setFilterData(newFilterData); 
-  
+
+    setFilterData(newFilterData);
+
     fetchFilteredProjects(buildApiUrl(params), newFilterData);
   };
-  
+
   const handleSortChange = (value) => {
     setSelectedSortOption(value);
     setState((prevState) => ({
       ...prevState,
       searchStatus: "Sıralanıyor...",
     }));
-  
+
     fetchFilteredProjects(buildApiUrl(params), {
       ...filterData, // Son filtreleme verilerini kullan
       sortValue: value,
@@ -290,7 +288,10 @@ export default function AllProjects() {
 
   const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
     try {
-      const response = await axios.get(apiUrlFilterState ? apiUrlFilterState : apiUrlFilter, { params: filterData });
+      const response = await axios.get(
+        apiUrlFilterState ? apiUrlFilterState : apiUrlFilter,
+        { params: filterData }
+      );
       const data = response.data;
 
       const newState = {
@@ -346,23 +347,24 @@ export default function AllProjects() {
     setState((prevState) => {
       // Seçilenleri tutacak yeni bir nesne oluşturuyoruz
       const selectedCheckboxes = { ...prevState.selectedCheckboxes };
-  
+
       // İlgili filtrenin değerlerinin bir kopyasını alıyoruz
       const updatedFilterValues = { ...selectedCheckboxes[filterName] };
-  
+
       // Değerleri güncelliyoruz
-      updatedFilterValues[value] = !prevState.selectedCheckboxes[filterName]?.[value];
-  
+      updatedFilterValues[value] =
+        !prevState.selectedCheckboxes[filterName]?.[value];
+
       // Seçilmemiş olanları temizliyoruz
       for (const key in updatedFilterValues) {
         if (!updatedFilterValues[key]) {
           delete updatedFilterValues[key];
         }
       }
-  
+
       // Güncellenmiş filtreyi ana filtre nesnesine ekliyoruz
       selectedCheckboxes[filterName] = updatedFilterValues;
-  
+
       // Yeni state'i döndürüyoruz
       return {
         ...prevState,
@@ -384,7 +386,7 @@ export default function AllProjects() {
       textInputs: {},
       searchStatus: "Filtre Temizleniyor...",
       modalVisible: false,
-      sortModalVisible: false
+      sortModalVisible: false,
     }));
 
     await fetchFilteredProjects(buildApiUrl(params), null);
@@ -434,11 +436,11 @@ export default function AllProjects() {
       isDrawerOpen: !prevState.isDrawerOpen,
     }));
   };
-  const [index, setindex] = useState(0)
-  const [tab, settab] = useState(0)
+  const [index, setindex] = useState(0);
+  const [tab, settab] = useState(0);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <Header onPress={toggleDrawer} index={setindex} tab={settab}/>
+      <Header onPress={toggleDrawer} index={setindex} tab={settab} />
 
       <Modal
         swipeDirection="left"
@@ -457,7 +459,7 @@ export default function AllProjects() {
         style={styles.modal}
       >
         <View style={styles.modalContent}>
-        <View
+          <View
             style={{
               backgroundColor: "#EA2C2E",
               flex: 1 / 3,
@@ -465,7 +467,7 @@ export default function AllProjects() {
               borderBottomRightRadius: 20,
             }}
           >
-          <DrawerMenu setIsDrawerOpen={setState}/>
+            <DrawerMenu setIsDrawerOpen={setState} />
           </View>
           <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
             <Search onpres={toggleDrawer} />
@@ -527,33 +529,33 @@ export default function AllProjects() {
               data={state.projects}
               renderItem={({ item }) => (
                 <View
-                style={{
-                  marginBottom: 7,
-                  width: "100%",
-                }}
-              >
-                <ProjectPost
-                  project={item}
-                  key={item.id}
-                  caption={item.project_title}
-                  ımage={`${apiUrl}/${item.image.replace(
-                    "public/",
-                    "storage/"
-                  )}`}
-                  user={item.user}
-                  location={item.city?.title}
-                  city={item.county?.ilce_title}
-                  ProjectNo={item.id}
-                  slug={item.slug}
-                  acıklama={item.description
-                    .replace(/<\/?[^>]+(>|$)/g, "")
-                    .replace(/&nbsp;/g, " ")}
-                  ShoppingName={item.user?.name}
-                  ShoppingMail={item.user?.email}
-                  Phone={item.user?.phone}
-                  ProfilImage={`${apiUrl}/storage/profile_images/${item.user?.profile_image}`}
-                  ShopingInfo={item.user?.corporate_type}
-                />
+                  style={{
+                    marginBottom: 7,
+                    width: "100%",
+                  }}
+                >
+                  <ProjectPost
+                    project={item}
+                    key={item.id}
+                    caption={item.project_title}
+                    ımage={`${apiUrl}/${item.image.replace(
+                      "public/",
+                      "storage/"
+                    )}`}
+                    user={item.user}
+                    location={item.city?.title}
+                    city={item.county?.ilce_title}
+                    ProjectNo={item.id}
+                    slug={item.slug}
+                    acıklama={item.description
+                      .replace(/<\/?[^>]+(>|$)/g, "")
+                      .replace(/&nbsp;/g, " ")}
+                    ShoppingName={item.user?.name}
+                    ShoppingMail={item.user?.email}
+                    Phone={item.user?.phone}
+                    ProfilImage={`${apiUrl}/storage/profile_images/${item.user?.profile_image}`}
+                    ShopingInfo={item.user?.corporate_type}
+                  />
                 </View>
               )}
               keyExtractor={(item) => item.id.toString()}
@@ -1008,7 +1010,7 @@ export default function AllProjects() {
                             placeholder={`Min`}
                             style={styles.textInput}
                             keyboardType="numeric"
-                          onChangeText={(value) =>
+                            onChangeText={(value) =>
                               handleTextInputChange(
                                 filter.name,
                                 "min",

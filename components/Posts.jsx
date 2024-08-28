@@ -292,34 +292,28 @@ export default function Posts({
 
   console.log(data);
 
-  const [offSaleStatus, setoffSaleStatus] = useState(null)
+  const [offSaleStatus, setoffSaleStatus] = useState(null);
   useEffect(() => {
-    if (  project && data && roomData &&roomData['off_sale[]']) {
-      const parsedOffsale = JSON.parse(roomData['off_sale[]'])
-      project && data && roomData  && 
-      setoffSaleStatus(parsedOffsale)
+    if (project && data && roomData && roomData["off_sale[]"]) {
+      const parsedOffsale = JSON.parse(roomData["off_sale[]"]);
+      project && data && roomData && setoffSaleStatus(parsedOffsale);
     }
-   
+  }, [roomData]);
 
+  console.log(offSaleStatus + "jdflsdjfl");
 
-
-  }, [roomData])
-  
-  console.log(offSaleStatus + 'jdflsdjfl')
-
-const [PaymaentAlert, setPaymaentAlert] = useState(false)
-  const HandleModal=()=>{
-    if (offSaleStatus!=5 &&!user.access_token) {
-        setPaymaentAlert(true)
-    }else{
-      openModal(roomOrder)
+  const [PaymaentAlert, setPaymaentAlert] = useState(false);
+  const HandleModal = () => {
+    if (offSaleStatus != 5 && !user.access_token) {
+      setPaymaentAlert(true);
+    } else {
+      openModal(roomOrder);
     }
- 
-  }
-console.log(user)
+  };
+  console.log(user);
   return (
     <View style={styles.container}>
-        <AwesomeAlert
+      <AwesomeAlert
         show={PaymaentAlert}
         showProgress={false}
         titleStyle={{
@@ -329,7 +323,7 @@ console.log(user)
           textAlign: "center",
           margin: 5,
         }}
-        title={'Giriş Yap'}
+        title={"Giriş Yap"}
         messageStyle={{ textAlign: "center" }}
         message={`Ödeme Detayını Görmek için lütfen Giriş Yapınız`}
         closeOnTouchOutside={true}
@@ -341,7 +335,7 @@ console.log(user)
         cancelButtonColor="#ce4d63"
         confirmButtonColor="#1d8027"
         onCancelPressed={() => {
-        setPaymaentAlert(false)
+          setPaymaentAlert(false);
         }}
         onConfirmPressed={() => {
           navigation.navigate("Login");
@@ -515,42 +509,50 @@ console.log(user)
                 justifyContent: bookmarkStatus ? "space-between" : "flex-end",
               }}
             >
-            { sold?.status==1  ?
-            <></>:
-            user?.has_club==1 && ((user?.role=='Bireysel Hesap' && offSaleStatus!=2 ) || user.role=='Kurumsal Hesap'&& user.corporate_type=='Emlak Ofisi'  ) && (offSaleStatus==2 || offSaleStatus==3) &&
-            <TouchableOpacity
-            onPress={() => {
-              changeBookmark();
-              openCollection(roomOrder);
-              GetID(roomOrder);
-            }}
-          >
-         
-              <View style={styles.ıconContainer}>
-                <Bookmark
-                  name={bookmark}
-                  size={13}
-                  color={bookmark === "bookmark-o" ? "black" : "red"}
-                />
-              </View>
-            
-          </TouchableOpacity>
-            }
-               { sold?.status==1  ?
-            <></>:
-            user.has_club==1 && ((user.role=='Bireysel Hesap' && offSaleStatus!=2 ) || user.role=='Kurumsal Hesap'&& user.corporate_type=='Emlak Ofisi'  ) && (offSaleStatus==2 || offSaleStatus==3) &&
-            <TouchableOpacity onPress={addFavorites}>
-         
-              <View style={styles.ıconContainer}>
-                <Heart
-                  name={heart}
-                  size={13}
-                  color={heart === "hearto" ? "black" : "red"}
-                />
-              </View>
-         
-          </TouchableOpacity>
-            }
+              {sold?.status == 1 ? (
+                <></>
+              ) : (
+                user?.has_club == 1 &&
+                ((user?.role == "Bireysel Hesap" && offSaleStatus != 2) ||
+                  (user.role == "Kurumsal Hesap" &&
+                    user.corporate_type == "Emlak Ofisi")) &&
+                (offSaleStatus == 2 || offSaleStatus == 3) && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      changeBookmark();
+                      openCollection(roomOrder);
+                      GetID(roomOrder);
+                    }}
+                  >
+                    <View style={styles.ıconContainer}>
+                      <Bookmark
+                        name={bookmark}
+                        size={13}
+                        color={bookmark === "bookmark-o" ? "black" : "red"}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                )
+              )}
+              {sold?.status == 1 ? (
+                <></>
+              ) : (
+                user.has_club == 1 &&
+                ((user.role == "Bireysel Hesap" && offSaleStatus != 2) ||
+                  (user.role == "Kurumsal Hesap" &&
+                    user.corporate_type == "Emlak Ofisi")) &&
+                (offSaleStatus == 2 || offSaleStatus == 3) && (
+                  <TouchableOpacity onPress={addFavorites}>
+                    <View style={styles.ıconContainer}>
+                      <Heart
+                        name={heart}
+                        size={13}
+                        color={heart === "hearto" ? "black" : "red"}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                )
+              )}
               {/* {
                (user.role=='Kurumsal Hesap' && user.corporate_type=='Emlak Ofisi' && user.has_club==1 && offSaleStatus==2)&&(user.role=='Bireysel Hesap' && user.has_club==1 ) && 
                <TouchableOpacity
@@ -633,7 +635,7 @@ console.log(user)
               )} */}
             </View>
           </View>
-      
+
           {offSaleCheck && !soldCheck && shareSaleEmpty ? (
             <View>
               {projectDiscountAmount ? (
@@ -672,12 +674,12 @@ console.log(user)
                 </Text>
               )}
             </View>
-          ) : (shareSale && 
+          ) : (shareSale &&
               shareSale !== "[]" &&
               sumCartOrderQt[roomOrder]?.qt_total !== numberOfShare) ||
             (shareSale && shareSale !== "[]" && !sumCartOrderQt[roomOrder]) ? (
             <View>
-              <Text style={[styles.regularPrice,{}]}>
+              <Text style={[styles.regularPrice, {}]}>
                 {shareSale && shareSale !== "[]" && numberOfShare !== 0 && (
                   <Text style={styles.shareSaleText}>1/{numberOfShare}</Text>
                 )}
@@ -688,146 +690,168 @@ console.log(user)
                 ₺
               </Text>
             </View>
-          ) : <View style={{paddingTop:5,alignItems:'flex-end'}}>
-            <Text style={{fontSize:12,color:'#264ABB',fontWeight:'800'}}>{formatPrice(roomData['price[]'])}₺</Text>
-            </View>}
+          ) : (
+            <View style={{ paddingTop: 5, alignItems: "flex-end" }}>
+              <Text
+                style={{ fontSize: 12, color: "#264ABB", fontWeight: "800" }}
+              >
+                {formatPrice(roomData["price[]"])}₺
+              </Text>
+            </View>
+          )}
 
           <View style={styles.priceAndButtons}>
             <View style={styles.btns}>
               <View
                 style={{
                   width:
-                     (sold?.status == 1 &&roomData['share_sale[]'] && roomData['number_of_shares[]'] == sumCartOrderQt[roomOrder].qt_total) && sold?.is_show_user !== "on" ||offSaleStatus!=1 && (project.user.id==user.id ||project.user.id==user.parent_id &&sold?.is_show_user == "on"  )                               
+                    (sold?.status == 1 &&
+                      roomData["share_sale[]"] &&
+                      roomData["number_of_shares[]"] ==
+                        sumCartOrderQt[roomOrder].qt_total &&
+                      sold?.is_show_user !== "on") ||
+                    (offSaleStatus != 1 &&
+                      (project.user.id == user.id ||
+                        (project.user.id == user.parent_id &&
+                          sold?.is_show_user == "on")))
                       ? "100%"
                       : "50%",
                 }}
               >
+                {sold && roomData["share_sale[]"] !== "[]" ? (
+                  sold?.status == 1 &&
+                  roomData["share_sale[]"] &&
+                  roomData["number_of_shares[]"] ==
+                    sumCartOrderQt[roomOrder].qt_total ? (
+                    <View style={styles.sold}>
+                      <Text style={styles.soldText}>Satıldı</Text>
+                    </View>
+                  ) : (
+                    <View style={styles.sold}>
+                      <Text style={styles.soldText}>Satıldı</Text>
+                    </View>
+                  )
+                ) : (
+                  <>
+                    {offSaleStatus == 1 && (
+                      <TouchableOpacity style={styles.offSale} disabled>
+                        <Text style={styles.offSaleText}>Satışa Kapalı</Text>
+                      </TouchableOpacity>
+                    )}
+                    {offSaleStatus == 2 &&
+                      (user.role == "Bireysel Hesap" ||
+                        user.role == "Kurumsal Hesap" ||
+                        !user.access_token ||
+                        user.access_token) &&
+                      user.corporate_type !== "Emlak Ofisi" &&
+                      project.user.id !== user.id &&
+                      project.user.id !== user.parent_id && (
+                        <TouchableOpacity style={styles.addBasket}>
+                          <Text style={styles.addBasketText}>İlanı Gör</Text>
+                        </TouchableOpacity>
+                      )}
 
-                 
+                    {offSaleStatus == 2 &&
+                      user.role == "Kurumsal Hesap" &&
+                      user.corporate_type == "Emlak Ofisi" &&
+                      project.user.id !== user.id &&
+                      project.user.id !== user.parent_id &&
+                      user.role !== "Bireysel Hesap" && (
+                        <View style={styles.priceContainer}>
+                          <TouchableOpacity
+                            style={styles.addBasket}
+                            onPress={() => {
+                              if (user.access_token) {
+                                if (user.cartItem !== null) {
+                                  setcartIsNull(true);
+                                } else {
+                                  setaddShowCart(true);
+                                }
+                              } else {
+                                setalertForSign(true);
+                              }
+                            }}
+                          >
+                            <Text style={styles.addBasketText}>
+                              Sepete Ekle
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      )}
+                    {offSaleStatus != 2 &&
+                      offSaleStatus != 1 &&
+                      offSaleStatus != 3 &&
+                      offSaleStatus != 5 &&
+                      project.user.id != user.id &&
+                      project.user.id != user.parent_id && (
+                        <TouchableOpacity style={styles.addBasket}>
+                          <Text style={styles.addBasketText}>İlanı Gör</Text>
+                        </TouchableOpacity>
+                      )}
+                    {offSaleStatus != 1 &&
+                      (project.user.id == user.id ||
+                        project.user.id == user.parent_id) && (
+                        <View style={styles.priceContainer}>
+                          <TouchableOpacity style={styles.addBasket}>
+                            <Text style={styles.addBasketText}>
+                              İlanı Düzenle
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      )}
 
+                    {offSaleStatus == 5 &&
+                      project.user.id != user.id &&
+                      project.user.id != user.parent_id && (
+                        <View style={styles.priceContainer}>
+                          <TouchableOpacity
+                            style={styles.addBasket}
+                            onPress={() => {
+                              if (user.access_token) {
+                                if (user.cartItem !== null) {
+                                  setcartIsNull(true);
+                                } else {
+                                  setaddShowCart(true);
+                                }
+                              } else {
+                                setalertForSign(true);
+                              }
+                            }}
+                          >
+                            <Text style={styles.addBasketText}>
+                              Sepete Ekle
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      )}
+                    {offSaleStatus == 3 &&
+                      project.user.id != user.id &&
+                      project.user.id != user.parent_id && (
+                        <View style={styles.priceContainer}>
+                          <TouchableOpacity
+                            style={styles.addBasket}
+                            onPress={() => {
+                              if (user.access_token) {
+                                if (user.cartItem !== null) {
+                                  setcartIsNull(true);
+                                } else {
+                                  setaddShowCart(true);
+                                }
+                              } else {
+                                setalertForSign(true);
+                              }
+                            }}
+                          >
+                            <Text style={styles.addBasketText}>
+                              Sepete Ekle
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      )}
+                  </>
+                )}
 
-
-                 {
-                  sold  &&
-                  roomData['share_sale[]'] !=='[]'?
-                 sold?.status == 1 && (roomData['share_sale[]'] && roomData['number_of_shares[]'] == sumCartOrderQt[roomOrder].qt_total)?
-                  <View style={styles.sold}>
-                  <Text style={styles.soldText}>Satıldı</Text>
-                </View>:
-                   <View style={styles.sold}>
-                   <Text style={styles.soldText}>Satıldı</Text>
-                 </View>:
-                
-                
-           
-                  
-              <>
-                {
-                offSaleStatus==1 &&
-                <TouchableOpacity style={styles.offSale} disabled>
-                <Text style={styles.offSaleText}>Satışa Kapalı</Text>
-              </TouchableOpacity>
-            }
-            {
-              offSaleStatus==2 &&  (user.role=='Bireysel Hesap'|| user.role=='Kurumsal Hesap' ||!user.access_token ||user.access_token) &&user.corporate_type !== 'Emlak Ofisi'&&project.user.id!==user.id &&project.user.id!==user.parent_id && 
-              <TouchableOpacity
-              style={styles.addBasket}
-             
-            >
-              <Text style={styles.addBasketText}>İlanı Gör</Text>
-            </TouchableOpacity>
-            }
-         
-                  {
-                 (offSaleStatus==2 ) &&  user.role=='Kurumsal Hesap'&&user.corporate_type == 'Emlak Ofisi'&&project.user.id!==user.id &&project.user.id!==user.parent_id &&user.role!=='Bireysel Hesap'&&
-                   <View style={styles.priceContainer}>
-                   <TouchableOpacity
-                     style={styles.addBasket}
-                     onPress={() => {
-                       if (user.access_token) {
-                         if (user.cartItem !== null) {
-                           setcartIsNull(true);
-                         } else {
-                           setaddShowCart(true);
-                         }
-                       } else {
-                         setalertForSign(true);
-                       }
-                     }}
-                   >
-                     <Text style={styles.addBasketText}>Sepete Ekle</Text>
-                   </TouchableOpacity>
-                 </View>
-              }
-                {
-               (   offSaleStatus!=2 && offSaleStatus!=1&& offSaleStatus!=3 && offSaleStatus!=5)&&  project.user.id !=user.id && project.user.id!=user.parent_id&&
-                  <TouchableOpacity
-                  style={styles.addBasket}
-                 
-                >
-                  <Text style={styles.addBasketText}>İlanı Gör</Text>
-                </TouchableOpacity>
-                }
-                 { 
-                  offSaleStatus!=1 && (project.user.id==user.id ||project.user.id==user.parent_id )&& 
-                  <View style={styles.priceContainer}>
-                  <TouchableOpacity
-                    style={styles.addBasket}
-                   
-                  >
-                    <Text style={styles.addBasketText}>İlanı Düzenle</Text>
-                  </TouchableOpacity>
-                </View>
-                }
-                  
-                {
-                    offSaleStatus==5  && (project.user.id!=user.id && project.user.id!=user.parent_id ) &&
-                    <View style={styles.priceContainer}>
-                    <TouchableOpacity
-                      style={styles.addBasket}
-                      onPress={() => {
-                        if (user.access_token) {
-                          if (user.cartItem !== null) {
-                            setcartIsNull(true);
-                          } else {
-                            setaddShowCart(true);
-                          }
-                        } else {
-                          setalertForSign(true);
-                        }
-                      }}
-                    >
-                      <Text style={styles.addBasketText}>Sepete Ekle</Text>
-                    </TouchableOpacity>
-                  </View>
-                }
-                    {   
-
-                  offSaleStatus==3  &&  (project.user.id!=user.id && project.user.id!=user.parent_id ) &&
-                  <View style={styles.priceContainer}>
-                  <TouchableOpacity
-                    style={styles.addBasket}
-                    onPress={() => {
-                      if (user.access_token) {
-                        if (user.cartItem !== null) {
-                          setcartIsNull(true);
-                        } else {
-                          setaddShowCart(true);
-                        }
-                      } else {
-                        setalertForSign(true);
-                      }
-                    }}
-                  >
-                    <Text style={styles.addBasketText}>Sepete Ekle</Text>
-                  </TouchableOpacity>
-                </View>
-
-                } 
-                </>
-                }
-                 
-          {/* {
+                {/* {
                   offSaleStatus==1 &&
                   <TouchableOpacity style={styles.offSale} disabled>
                   <Text style={styles.offSaleText}>Satışa Kapalı</Text>
@@ -865,7 +889,7 @@ console.log(user)
                   </TouchableOpacity>
                 </View>
                 } */}
-              {/* 
+                {/* 
              
                {
                   offSaleStatus==4  && project.user.id!=user.id&& project.user.id!=user.parent_id&&
@@ -930,7 +954,7 @@ console.log(user)
                 
                 }
                 */}
-{/*                 
+                {/*                 
                  {
                   offSaleStatus==3 &&  user.role=='Bireysel Hesap' || (user.corporate_type== 'Emlak Ofisi' && user.role=='Kurumsal Hesap') && 
                    <View style={styles.priceContainer}>
@@ -984,96 +1008,99 @@ console.log(user)
                     </TouchableOpacity>
                   </View>
                 )} */}
-             
-              
               </View>
 
               <View style={{ width: "50%" }}>
-              {
-              sold &&
-              sold?.status == 1 && (roomData['share_sale[]'] && roomData['number_of_shares[]'] == sumCartOrderQt[roomOrder].qt_total)? 
+                {sold &&
+                sold?.status == 1 &&
+                roomData["share_sale[]"] &&
+                roomData["number_of_shares[]"] ==
+                  sumCartOrderQt[roomOrder].qt_total ? (
                   <>
-                  {
-                    sold.is_show_user=='on' &&   sold.user_id!==user.id &&
-                    <TouchableOpacity
-                    style={styles.showCustomer}
-                    onPress={() => openAlert(roomData)}
-                  >
-                    <Text style={styles.showCustomerText}>Komşumu Gör</Text>
-                  </TouchableOpacity>
-                  }
-                      {
-                    sold.user_id==user.id &&
-                    <TouchableOpacity
-                    style={styles.showCustomer}
-                  
-                  >
-                    <Text style={styles.showCustomerText}>Satın Aldınız</Text>
-                  </TouchableOpacity>
-                  }
+                    {sold.is_show_user == "on" && sold.user_id !== user.id && (
+                      <TouchableOpacity
+                        style={styles.showCustomer}
+                        onPress={() => openAlert(roomData)}
+                      >
+                        <Text style={styles.showCustomerText}>Komşumu Gör</Text>
+                      </TouchableOpacity>
+                    )}
+                    {sold.user_id == user.id && (
+                      <TouchableOpacity style={styles.showCustomer}>
+                        <Text style={styles.showCustomerText}>
+                          Satın Aldınız
+                        </Text>
+                      </TouchableOpacity>
+                    )}
                   </>
-                  
-           :
-             <>
-                 
-             
-                {
-                   offSaleStatus==2  &&  (user.role=='Kurumsal Hesap' && user.corporate_type == 'Emlak Ofisi')&&project.user.id!==user.id &&project.user.id!==user.parent_id &&user.role!=='Bireysel Hesap'&&
-                   <TouchableOpacity
-                   style={styles.payDetailBtn}
-                   onPress={() => HandleModal()}
-                 >
-                   <Text style={styles.payDetailText}>Ödeme Detayı</Text>
-                 </TouchableOpacity>
-                }
+                ) : (
+                  <>
+                    {offSaleStatus == 2 &&
+                      user.role == "Kurumsal Hesap" &&
+                      user.corporate_type == "Emlak Ofisi" &&
+                      project.user.id !== user.id &&
+                      project.user.id !== user.parent_id &&
+                      user.role !== "Bireysel Hesap" && (
+                        <TouchableOpacity
+                          style={styles.payDetailBtn}
+                          onPress={() => HandleModal()}
+                        >
+                          <Text style={styles.payDetailText}>Ödeme Detayı</Text>
+                        </TouchableOpacity>
+                      )}
 
-                   {
-                   offSaleStatus==2 && ( user.role=='Bireysel Hesap' && user.access_token || !user.access_token)&&project.user.id!==user.id &&project.user.id!==user.parent_id && 
-                   <TouchableOpacity
-                   style={styles.payDetailBtn}
-                   onPress={() => alert('Bilgi ')}
-                 >
-                   <Text style={styles.payDetailText}>Bilgi Al</Text>
-                 </TouchableOpacity>
-                }
-                
-                  {
-                        (   offSaleStatus!=2 && offSaleStatus!=1&& offSaleStatus!=3 && offSaleStatus!=5 &&offSaleStatus!=4  )&&  project.user.id !=user.id && project.user.id!=user.parent_id&&
-                   <TouchableOpacity
-                   style={styles.payDetailBtn}
-                   onPress={() =>alert('Bilgi')}
-                 >
-                   <Text style={styles.payDetailText}>Bilgi Al</Text>
-                 </TouchableOpacity>
-                }
-             
-                {
-                  offSaleStatus==5 &&  project.user.id !=user.id && project.user.id!=user.parent_id&&
+                    {offSaleStatus == 2 &&
+                      ((user.role == "Bireysel Hesap" && user.access_token) ||
+                        !user.access_token) &&
+                      project.user.id !== user.id &&
+                      project.user.id !== user.parent_id && (
+                        <TouchableOpacity
+                          style={styles.payDetailBtn}
+                          onPress={() => alert("Bilgi ")}
+                        >
+                          <Text style={styles.payDetailText}>Bilgi Al</Text>
+                        </TouchableOpacity>
+                      )}
+
+                    {offSaleStatus != 2 &&
+                      offSaleStatus != 1 &&
+                      offSaleStatus != 3 &&
+                      offSaleStatus != 5 &&
+                      offSaleStatus != 4 &&
+                      project.user.id != user.id &&
+                      project.user.id != user.parent_id && (
+                        <TouchableOpacity
+                          style={styles.payDetailBtn}
+                          onPress={() => alert("Bilgi")}
+                        >
+                          <Text style={styles.payDetailText}>Bilgi Al</Text>
+                        </TouchableOpacity>
+                      )}
+
+                    {offSaleStatus == 5 &&
+                      project.user.id != user.id &&
+                      project.user.id != user.parent_id && (
+                        <TouchableOpacity
+                          style={styles.payDetailBtn}
+                          onPress={() => HandleModal()}
+                        >
+                          <Text style={styles.payDetailText}>Ödeme Detayı</Text>
+                        </TouchableOpacity>
+                      )}
+                    {offSaleStatus == 3 &&
+                      project.user.id != user.id &&
+                      project.user.id != user.parent_id && (
+                        <TouchableOpacity
+                          style={styles.payDetailBtn}
+                          onPress={() => HandleModal()}
+                        >
+                          <Text style={styles.payDetailText}>Ödeme Detayı</Text>
+                        </TouchableOpacity>
+                      )}
+                  </>
+                )}
+                {offSaleStatus == 1 && (
                   <TouchableOpacity
-                  style={styles.payDetailBtn}
-                  onPress={() => HandleModal()}
-                >
-                  <Text style={styles.payDetailText}>Ödeme Detayı</Text>
-                </TouchableOpacity>
-                }
-               {
-                    
-                    (offSaleStatus==3 ) && project.user.id !=user.id && project.user.id!=user.parent_id&&
-                   <TouchableOpacity
-                   style={styles.payDetailBtn}
-                   onPress={() => HandleModal()}
-                 >
-                   <Text style={styles.payDetailText}>Ödeme Detayı</Text>
-                 </TouchableOpacity>
-
-                }
-                
-                </>
-              }
-              {
-                    offSaleStatus==1
-                    &&
-                    <TouchableOpacity
                     onPress={() => {
                       openFormModal(roomOrder);
                       GetID(roomOrder);
@@ -1082,20 +1109,16 @@ console.log(user)
                   >
                     <Text style={styles.payDetailText}>Başvuru Yap</Text>
                   </TouchableOpacity>
-                }
-                          {
-                  offSaleStatus==4  && project.user.id!=user.id&& project.user.id!=user.parent_id&&
-                
-                  <TouchableOpacity
-                    style={styles.payDetailBtn}
-                   
-                  >
-                    <Text style={styles.addBasketText}>Teklif Ver</Text>
-                  </TouchableOpacity>
-                
-                } 
-              
-              {/* 
+                )}
+                {offSaleStatus == 4 &&
+                  project.user.id != user.id &&
+                  project.user.id != user.parent_id && (
+                    <TouchableOpacity style={styles.payDetailBtn}>
+                      <Text style={styles.addBasketText}>Teklif Ver</Text>
+                    </TouchableOpacity>
+                  )}
+
+                {/* 
                 {
                    offSaleStatus==2 &&  user.role=='Kurumsal Hesap'&&user.corporate_type == 'Emlak Ofisi'&&project.user.id!==user.id &&project.user.id!==user.parent_id &&user.role!=='Bireysel Hesap'&&
                    <TouchableOpacity
@@ -1173,7 +1196,7 @@ console.log(user)
                 
                 }
               */}
-               {/* {
+                {/* {
                   offSaleStatus==4  && project.user.id!=user.id&& project.user.id!=user.parent_id&&
                 
                   <TouchableOpacity
@@ -1217,58 +1240,52 @@ console.log(user)
                     <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                   </TouchableOpacity>
                 )} */}
-
-             
-          
-                  
               </View>
 
               <AwesomeAlert
-              show={showAlert}
-              showProgress={false}
-              title="Komşumu Gör"
-              message={`"${truncateText(
-                selectedRoom
-                  ? selectedRoom["advertise_title[]"]
-                  : "Başlık bulunamadı",
-                20
-              )}"\n\nİlan No: ${
-                1000000 + data.project.id + roomOrder
-              }\nÖdeme Tarihi: ${formattedDate}\nTutar: 250 TL\n\nKomşumu Gör Özelliği: İlgilendiğiniz projeden konut alanları arayıp proje hakkında detaylı referans bilgisi almanıza imkan sağlar.\n\nKomşunuza ait iletişim bilgilerini görmek için aşağıdaki adımları takip edin:\n\n1. Ödeme işlemini tamamlayın ve belirtilen tutarı ödediğiniz takdirde,\n2. Ödemeniz onaylandıktan sonra, "Komşumu Gör" düğmesi aktif olacak ve komşunuzun iletişim bilgilerine ulaşabileceksiniz.`}
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={false}
-              showCancelButton={true}
-              showConfirmButton={true}
-              cancelText="Hayır"
-              confirmText="Evet"
-              confirmButtonColor="#EA2A28"
-              onCancelPressed={closeAlert}
-              onConfirmPressed={handleYes}
-              contentContainerStyle={{
-                borderRadius: 10,
-                padding: 20,
-                width: "100%",
-              }}
-              titleStyle={{
-                fontSize: 18,
-                fontWeight: "bold",
-                color: "#EA2A28",
-                textAlign: "center",
-              }}
-              messageStyle={{
-                fontSize: 14,
-                color: "#333",
-                textAlign: "left",
-              }}
-              cancelButtonTextStyle={{
-                fontSize: 16,
-              }}
-              confirmButtonTextStyle={{
-                fontSize: 16,
-              }}
-            />
-
-
+                show={showAlert}
+                showProgress={false}
+                title="Komşumu Gör"
+                message={`"${truncateText(
+                  selectedRoom
+                    ? selectedRoom["advertise_title[]"]
+                    : "Başlık bulunamadı",
+                  20
+                )}"\n\nİlan No: ${
+                  1000000 + data.project.id + roomOrder
+                }\nÖdeme Tarihi: ${formattedDate}\nTutar: 250 TL\n\nKomşumu Gör Özelliği: İlgilendiğiniz projeden konut alanları arayıp proje hakkında detaylı referans bilgisi almanıza imkan sağlar.\n\nKomşunuza ait iletişim bilgilerini görmek için aşağıdaki adımları takip edin:\n\n1. Ödeme işlemini tamamlayın ve belirtilen tutarı ödediğiniz takdirde,\n2. Ödemeniz onaylandıktan sonra, "Komşumu Gör" düğmesi aktif olacak ve komşunuzun iletişim bilgilerine ulaşabileceksiniz.`}
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showCancelButton={true}
+                showConfirmButton={true}
+                cancelText="Hayır"
+                confirmText="Evet"
+                confirmButtonColor="#EA2A28"
+                onCancelPressed={closeAlert}
+                onConfirmPressed={handleYes}
+                contentContainerStyle={{
+                  borderRadius: 10,
+                  padding: 20,
+                  width: "100%",
+                }}
+                titleStyle={{
+                  fontSize: 18,
+                  fontWeight: "bold",
+                  color: "#EA2A28",
+                  textAlign: "center",
+                }}
+                messageStyle={{
+                  fontSize: 14,
+                  color: "#333",
+                  textAlign: "left",
+                }}
+                cancelButtonTextStyle={{
+                  fontSize: 16,
+                }}
+                confirmButtonTextStyle={{
+                  fontSize: 16,
+                }}
+              />
             </View>
           </View>
         </View>

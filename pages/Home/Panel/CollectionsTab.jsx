@@ -1,4 +1,3 @@
-
 import {
   View,
   Text,
@@ -29,7 +28,6 @@ import Icon2 from "react-native-vector-icons/Feather";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import { SearchBar } from "@rneui/themed";
 import axios from "axios";
-
 
 import AwesomeAlert from "react-native-awesome-alerts";
 import {
@@ -94,7 +92,7 @@ export default function CollectionsTab() {
   const copyToClipboard = () => {
     const url = `https://7f24-78-178-52-190.ngrok-free.app/proje/1000381/detay`;
     Clipboard.setStringAsync(url);
-    setchoose(false)
+    setchoose(false);
     setTimeout(() => {
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
@@ -102,7 +100,6 @@ export default function CollectionsTab() {
         textBody: `Link Kopyalandı`,
       });
     }, 200);
-
   };
   const handleShareViaSMS = (text) => {
     const url = text;
@@ -151,8 +148,8 @@ export default function CollectionsTab() {
     // Aksi takdirde, collections array'ini olduğu gibi bırak
     const filteredData = text
       ? collections.filter((item) =>
-        item.name.toLowerCase().includes(text.toLowerCase())
-      )
+          item.name.toLowerCase().includes(text.toLowerCase())
+        )
       : collections;
     setcollectionsRecods(filteredData);
 
@@ -198,12 +195,12 @@ export default function CollectionsTab() {
 
   const [selectedCollection, setselectedCollection] = useState(0);
   const [colectionName, setcolectionName] = useState("");
-  const [item, setitem] = useState(null)
+  const [item, setitem] = useState(null);
   const getId = (id, name, item) => {
     setselectedCollection(id);
 
-    setnewName(name)
-    setitem(item)
+    setnewName(name);
+    setitem(item);
   };
 
   const [message, setmessage] = useState(false);
@@ -254,7 +251,7 @@ export default function CollectionsTab() {
       fetchData();
       closeSheet();
       setModalVisible(false);
-      setselectedCollection(0)
+      setselectedCollection(0);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -308,7 +305,7 @@ export default function CollectionsTab() {
       setRemoveSelectedCollectionsModal(false);
       fetchData();
       setereror(response.data);
-      setisChoosed(false)
+      setisChoosed(false);
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: `Koleksionlar Silindi`,
@@ -352,9 +349,9 @@ export default function CollectionsTab() {
   };
   console.log(user.has_club);
   const [choose, setchoose] = useState(false);
-  const [namFromGetUser, setnamFromGetUser] = useState([])
+  const [namFromGetUser, setnamFromGetUser] = useState([]);
   const GetUserInfo = async () => {
-    setloading(true)
+    setloading(true);
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
@@ -365,24 +362,18 @@ export default function CollectionsTab() {
             },
           }
         );
-        const userData = userInfo?.data?.user
-        setnamFromGetUser(userData)
-
+        const userData = userInfo?.data?.user;
+        setnamFromGetUser(userData);
       }
-
-
-
-
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     } finally {
-
     }
-  }
+  };
   useEffect(() => {
-    GetUserInfo()
-  }, [user])
-  console.log(namFromGetUser.has_club + 'dfkjsdkf')
+    GetUserInfo();
+  }, [user]);
+  console.log(namFromGetUser.has_club + "dfkjsdkf");
   const onShare = async () => {
     try {
       const result = await Share.share({
@@ -401,7 +392,7 @@ export default function CollectionsTab() {
     } catch (error) {
       alert(error.message);
     }
-  }
+  };
 
   return (
     <>
@@ -470,7 +461,9 @@ export default function CollectionsTab() {
             </>
           ) : (
             <AlertNotificationRoot>
-              {(namFromGetUser.has_club == 0 || namFromGetUser.has_club == 2 || namFromGetUser.has_club == 3) ? (
+              {namFromGetUser.has_club == 0 ||
+              namFromGetUser.has_club == 2 ||
+              namFromGetUser.has_club == 3 ? (
                 <RegisterRealtorClub />
               ) : (
                 <View style={styles.container}>
@@ -597,7 +590,10 @@ export default function CollectionsTab() {
                         <ScrollView
                           showsVerticalScrollIndicator={false}
                           stickyHeaderIndices={[0]}
-                          contentContainerStyle={{ paddingBottom: 20, padding: 10 }}
+                          contentContainerStyle={{
+                            paddingBottom: 20,
+                            padding: 10,
+                          }}
                         >
                           <View style={styles.SearchArea}>
                             <SearchBar
@@ -688,7 +684,7 @@ export default function CollectionsTab() {
                                 ]}
                                 onPress={() => {
                                   setisChoosed(!isChoosed);
-                                  setCollectionsRemoveIds([])
+                                  setCollectionsRemoveIds([]);
                                 }}
                               >
                                 <Text
@@ -697,10 +693,9 @@ export default function CollectionsTab() {
                                     textAlign: "center",
                                     fontWeight: "bold",
                                     color: "#333",
-                                  }} >
-                                  {
-                                    !isChoosed ? 'Toplu Seç' : 'Seçimi İptal Et'
-                                  }
+                                  }}
+                                >
+                                  {!isChoosed ? "Toplu Seç" : "Seçimi İptal Et"}
                                 </Text>
                               </TouchableOpacity>
                               {isChoosed && (
@@ -823,7 +818,6 @@ export default function CollectionsTab() {
                                 borderBottomWidth: 1,
                                 borderBottomColor: "#ebebeb",
                               }}
-
                             >
                               <View
                                 style={{
@@ -909,7 +903,7 @@ export default function CollectionsTab() {
                                 item: item,
                                 collectionUser: user,
                               });
-                              setchoose(false)
+                              setchoose(false);
                             }}
                           >
                             <PencilIcon name="eye" size={23} color={"#333"} />
@@ -949,7 +943,7 @@ export default function CollectionsTab() {
                               gap: 10,
                             }}
                             onPress={() => {
-                              onShare()
+                              onShare();
                             }}
                           >
                             <IconMessenger
@@ -1063,7 +1057,6 @@ export default function CollectionsTab() {
                             style={[styles.Input, { width: "100%" }]}
                             value={newName}
                             onChangeText={(value) => setnewName(value)}
-
                             placeholderTextColor={"#333"}
                           />
                           <Text
@@ -1325,7 +1318,7 @@ export default function CollectionsTab() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F6F6F6',
+    backgroundColor: "#F6F6F6",
     paddingHorizontal: 0,
     width: "100%",
     marginVertical: 0,
@@ -1342,7 +1335,6 @@ const styles = StyleSheet.create({
   },
   SearchArea: {
     width: "100%",
-
   },
 
   Input: {
@@ -1532,9 +1524,3 @@ const styles = StyleSheet.create({
     }),
   },
 });
-
-
-
-
-
-

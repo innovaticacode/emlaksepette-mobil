@@ -188,7 +188,9 @@ export default function ShopVitrin({ data, housingdata, settab }) {
                     HouseId={item.id}
                     price={`${JSON.parse(item.housing_type_data)["price"]} `}
                     housing={item}
-                    openSharing={JSON.parse(item.housing_type_data)['open_sharing1']}
+                    openSharing={
+                      JSON.parse(item.housing_type_data)["open_sharing1"]
+                    }
                     title={item.title}
                     loading={loadingEstates}
                     location={item.city["title"] + " / " + item.county["title"]}
