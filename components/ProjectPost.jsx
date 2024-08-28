@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   titleText: {
     color: "#FFFFFF",
     fontWeight: "800",
-    fontSize: 17,
+    fontSize: 15,
     textAlign: "center",
   },
 });
