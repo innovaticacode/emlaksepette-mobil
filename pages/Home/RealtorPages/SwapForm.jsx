@@ -18,8 +18,8 @@ import Modal from "react-native-modal";
 import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
 import * as DocumentPicker from "expo-document-picker";
-import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
+import * as ImagePicker from "expo-image-picker";
+import * as Permissions from "expo-permissions";
 import {
   ALERT_TYPE,
   Dialog,
@@ -102,14 +102,14 @@ export default function SwapForm({ openModal, color }) {
   const [surname, setsurname] = useState("");
   const [phoneNmber, setphoneNmber] = useState("");
   const [email, setemail] = useState("");
-  const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState(false);
   const route = useRoute();
   const { houseid } = route.params;
-  const [data, setData] = useState({})
-  const [namFromGetUser, setnamFromGetUser] = useState([])
+  const [data, setData] = useState({});
+  const [namFromGetUser, setnamFromGetUser] = useState([]);
 
   // const GetUserInfo =async ()=>{
-     
+
   //    try {
   //      if (user?.access_token && user) {
   //        const userInfo = await axios.get(
@@ -122,33 +122,25 @@ export default function SwapForm({ openModal, color }) {
   //        );
   //        const userData = userInfo?.data?.user
   //        setnamFromGetUser(userData)
-       
+
   //      }
-     
-   
-     
-   
+
   //    } catch (error) {
   //      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
   //    }finally{
-      
+
   //    }
   //  }
-  
+
   const fetchDetails = async () => {
- 
     try {
-    
-      setloading(true)
-        const response = await axios.get(
-          `https://private.emlaksepette.com/api/housing/${houseid}`
-        );
-        setloading(false)
-        // GetUserInfo()
-        setData(response.data);
-     
-    
-      
+      setloading(true);
+      const response = await axios.get(
+        `https://private.emlaksepette.com/api/housing/${houseid}`
+      );
+      setloading(false);
+      // GetUserInfo()
+      setData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -156,12 +148,11 @@ export default function SwapForm({ openModal, color }) {
     }
   };
   useEffect(() => {
-    fetchDetails()
- 
-  }, [])
- const [loadingPost, setloadingPost] = useState(false)
+    fetchDetails();
+  }, []);
+  const [loadingPost, setloadingPost] = useState(false);
   const postData = async () => {
-    setloadingPost(true)
+    setloadingPost(true);
     try {
       var formData = new FormData();
       formData.append("ad", name);
@@ -193,21 +184,36 @@ export default function SwapForm({ openModal, color }) {
       formData.append("arac_satis_rakami", Price);
       formData.append("barter_detay", Barter);
       if (SwapChoose == "emlak") {
-        formData.append('tapu_belgesi',image ? {
-          name : image.fileName,
-          type : image.type,
-          uri : Platform.OS === 'android' ? image.uri : image.uri.replace('file://', ''),
-      }:null)
+        formData.append(
+          "tapu_belgesi",
+          image
+            ? {
+                name: image.fileName,
+                type: image.type,
+                uri:
+                  Platform.OS === "android"
+                    ? image.uri
+                    : image.uri.replace("file://", ""),
+              }
+            : null
+        );
       }
       if (SwapChoose == "araç") {
-        formData.append('ruhsat_belgesi',image?{
-          name : image.fileName,
-          type : image.type,
-          uri : Platform.OS === 'android' ? image.uri : image.uri.replace('file://', ''),
-      }:null)
+        formData.append(
+          "ruhsat_belgesi",
+          image
+            ? {
+                name: image.fileName,
+                type: image.type,
+                uri:
+                  Platform.OS === "android"
+                    ? image.uri
+                    : image.uri.replace("file://", ""),
+              }
+            : null
+        );
       }
-     
-   
+
       const response = await axios.post(
         "https://private.emlaksepette.com/api/swap",
         formData
@@ -218,13 +224,12 @@ export default function SwapForm({ openModal, color }) {
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
-        textBody: 'Takas Başvurunuz Başarıyla Gönderildi',
+        textBody: "Takas Başvurunuz Başarıyla Gönderildi",
         button: "Tamam",
       });
 
       // openModal(JSON.stringify(response.data.message));
 
-   
       setname("");
       setsurname("");
       setphoneNmber("");
@@ -247,23 +252,22 @@ export default function SwapForm({ openModal, color }) {
       setshiftType("");
       setyourPriceShop("");
       setfuelType("");
-      setImage(null)
-      setPdfFile(null)
-      setselectedPdfUrl(null)
-      setSelectedDocumentName(null)
+      setImage(null);
+      setPdfFile(null);
+      setselectedPdfUrl(null);
+      setSelectedDocumentName(null);
     } catch (error) {
       // Hata durumunda
-    
-    
+
       console.error("Hata:", error + " post isteği başarısız ");
-    }finally{
-      setloadingPost(false)
+    } finally {
+      setloadingPost(false);
     }
   };
 
   // Buton tetikleyicisi için bir fonksiyon
   const handleButtonPress = () => {
-   GiveOffer()
+    GiveOffer();
   };
 
   const fetchData = async () => {
@@ -476,896 +480,1004 @@ export default function SwapForm({ openModal, color }) {
     { label: "Voyah", value: "Voyah" },
     { label: "Yudo", value: "Yudo" },
   ];
-    const apiUrl = "https://private.emlaksepette.com/";
-    const [errorMessage, seterrorMessage] = useState('')
+  const apiUrl = "https://private.emlaksepette.com/";
+  const [errorMessage, seterrorMessage] = useState("");
 
-    const AlertFunc=(message)=>{
-      Dialog.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Tüm Alanları Doldurunuz",
-        textBody: message,
-        button: "Tamam",
-      });
+  const AlertFunc = (message) => {
+    Dialog.show({
+      type: ALERT_TYPE.DANGER,
+      title: "Tüm Alanları Doldurunuz",
+      textBody: message,
+      button: "Tamam",
+    });
+  };
+  const GiveOffer = () => {
+    switch (true) {
+      case !name:
+        AlertFunc("İsim Alanı Boş Bırakılmaz");
+
+        break;
+      case !surname:
+        AlertFunc("Soyadı Boş Bırakılamaz");
+        break;
+      case !phoneNmber:
+        AlertFunc("Geçerli bir telefon numarası giriniz");
+        break;
+      case !email:
+        AlertFunc("Mail alanı boş bırakılamaz");
+        break;
+      case !city:
+        AlertFunc("Şehir Seçiniz");
+        break;
+      case !county:
+        AlertFunc("İlçe Seçniz");
+        break;
+      case !SwapChoose:
+        AlertFunc("Takas Tercihi Boş Bırakılamaz");
+        break;
+
+      default:
+        postData();
     }
-    const GiveOffer = () => {
-      switch (true) {
-        case !name:
-          AlertFunc('İsim Alanı Boş Bırakılmaz')
-         
-  
-          break;
-        case !surname:
-          
-          AlertFunc("Soyadı Boş Bırakılamaz")
-          break;
-        case !phoneNmber:
-       
-          
-          AlertFunc("Geçerli bir telefon numarası giriniz")
-          break;
-        case !email:
-         
-          AlertFunc("Mail alanı boş bırakılamaz")
-          break;
-        case !city:
+  };
+  const [choose, setchoose] = useState(false);
+  const [image, setImage] = useState(null);
+  const pickImage = async () => {
+    // Galeriye erişim izni iste
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "İzin Gerekli",
+        "Fotoğraf seçmek için galeri iznine ihtiyacımız var."
+      );
+      return;
+    }
 
-          
-          AlertFunc("Şehir Seçiniz")
-          break;
-        case !county:
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
-          
-          AlertFunc("İlçe Seçniz")
-          break;
-        case !SwapChoose:
-         
-          AlertFunc("Takas Tercihi Boş Bırakılamaz")
-          break;
-       
-        default:
-          postData();
-      }
-    };
-    const [choose, setchoose] = useState(false)
-    const [image, setImage] = useState(null);
-    const pickImage = async () => {
-      // Galeriye erişim izni iste
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('İzin Gerekli', 'Fotoğraf seçmek için galeri iznine ihtiyacımız var.');
-        return;
-      }
-    
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-    
-      console.log(result);
-    
-      if (!result.canceled) {
-        setImage(result.assets[0]);
-        setchoose(false)
-        setPdfFile(null)
-        setselectedPdfUrl(null)
-        setSelectedDocumentName(null)
-      }
-    };
-    
-    const takePhoto = async () => {
-      // Kameraya erişim izni iste
-      const { status } = await ImagePicker.requestCameraPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('İzin Gerekli', 'Fotoğraf çekmek için kamera iznine ihtiyacımız var.');
-        return;
-      }
-    
-      let result = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-    
-      console.log(result);
-    
-      if (!result.canceled) {
-        setImage(result.assets[0]);
-        setchoose(false)
-        setPdfFile(null)
-        setselectedPdfUrl(null)
-        setSelectedDocumentName(null)
-      }
-    };
-    const [selectedDocumentName, setSelectedDocumentName] = useState(null);
+    console.log(result);
 
-    const [pdfFile, setPdfFile] = useState(null);
-    const [selectedPdfUrl, setselectedPdfUrl] = useState(null);
-    const pickDocument = async () => {
-      DocumentPicker.getDocumentAsync({ type: "application/pdf" })
-        .then((result) => {
-          console.log(
-            "Seçilen PDF Dosyasının İçeriği:",
-            JSON.stringify(result, null, 2)
-          );
-  
-          if (!result.canceled && result.assets && result.assets.length > 0) {
-            const pdfAsset = result.assets[0];
-            setPdfFile(pdfAsset);
-            setSelectedDocumentName(pdfAsset.name);
-            console.log(pdfAsset.uri);
-            setselectedPdfUrl(pdfAsset.uri);
-            setImage(null)
-            setchoose(false)
-            // Toast.show({
-            //   type: ALERT_TYPE.SUCCESS,
-            //   title: "PDF Seçildi",
-            //   textBody: `Seçtiğiniz PDF: ${pdfAsset.name}`,
-            // });
-            console.log(selectedDocumentName);
-          }
-        })
-        .catch((error) => {
-          alert("hata");
-        });
-    };
-    const openPdf = async () => {
-      if (selectedPdfUrl) {
-        try {
-          const contentUri = await FileSystem.getContentUriAsync(selectedPdfUrl);
-          IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
-            data: contentUri,
-            flags: 1,
-            type: "application/pdf",
-          });
-        } catch (error) {
-          console.error("PDF açılırken hata oluştu:", error);
+    if (!result.canceled) {
+      setImage(result.assets[0]);
+      setchoose(false);
+      setPdfFile(null);
+      setselectedPdfUrl(null);
+      setSelectedDocumentName(null);
+    }
+  };
+
+  const takePhoto = async () => {
+    // Kameraya erişim izni iste
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "İzin Gerekli",
+        "Fotoğraf çekmek için kamera iznine ihtiyacımız var."
+      );
+      return;
+    }
+
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0]);
+      setchoose(false);
+      setPdfFile(null);
+      setselectedPdfUrl(null);
+      setSelectedDocumentName(null);
+    }
+  };
+  const [selectedDocumentName, setSelectedDocumentName] = useState(null);
+
+  const [pdfFile, setPdfFile] = useState(null);
+  const [selectedPdfUrl, setselectedPdfUrl] = useState(null);
+  const pickDocument = async () => {
+    DocumentPicker.getDocumentAsync({ type: "application/pdf" })
+      .then((result) => {
+        console.log(
+          "Seçilen PDF Dosyasının İçeriği:",
+          JSON.stringify(result, null, 2)
+        );
+
+        if (!result.canceled && result.assets && result.assets.length > 0) {
+          const pdfAsset = result.assets[0];
+          setPdfFile(pdfAsset);
+          setSelectedDocumentName(pdfAsset.name);
+          console.log(pdfAsset.uri);
+          setselectedPdfUrl(pdfAsset.uri);
+          setImage(null);
+          setchoose(false);
+          // Toast.show({
+          //   type: ALERT_TYPE.SUCCESS,
+          //   title: "PDF Seçildi",
+          //   textBody: `Seçtiğiniz PDF: ${pdfAsset.name}`,
+          // });
+          console.log(selectedDocumentName);
         }
-      } else {
-        Alert.alert("PDF dosyası bulunamadı");
+      })
+      .catch((error) => {
+        alert("hata");
+      });
+  };
+  const openPdf = async () => {
+    if (selectedPdfUrl) {
+      try {
+        const contentUri = await FileSystem.getContentUriAsync(selectedPdfUrl);
+        IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+          data: contentUri,
+          flags: 1,
+          type: "application/pdf",
+        });
+      } catch (error) {
+        console.error("PDF açılırken hata oluştu:", error);
       }
-    };
-    const navigation=useNavigation()
+    } else {
+      Alert.alert("PDF dosyası bulunamadı");
+    }
+  };
+  const navigation = useNavigation();
   return (
-
     <AlertNotificationRoot>
-      {
-        loading?
-        <View style={{alignItems:'center',justifyContent:'center',flex:1,backgroundColor:'white'}}>
-          <ActivityIndicator color="#333" size={'large'}/>
-        </View>:
-         <KeyboardAwareScrollView
-         style={{ padding: 10, gap: 10,backgroundColor:'#ffffff' }}
-         contentContainerStyle={{ gap: 10,paddingBottom:50 }}
-       >
-         <View style={{flexDirection:'row',gap:4}}>
-           <View style={{flex:0.5/2}}>
-           <View style={{width:80,height:80,backgroundColor:'red',borderRadius:5}}>
-             {
-               data && data?.housing && data?.housing?.housing_type_data &&
-               <ImageBackground source={{uri:`${apiUrl}housing_images/${JSON.parse(data?.housing?.housing_type_data)["image"]}`}} style={{width:'100%',height:'100%'}} borderRadius={5}/>
-               
-             }
-           
-   </View>
-   </View>
-   <View style={{flex:1.5/2,gap:4}}>
-             <View style={{flex:1/2,paddingTop:2,}}>
-             <Text numberOfLines={2} style={{color:'#333',fontSize:13}}>{data?.pageInfo?.meta_title}</Text>
-             </View>
-             <View style={{flex:1/2,gap:4,paddingTop:2,bottom:0,}}>
-                 <Text style={{fontSize:12,fontWeight:'600',color:'#333'}}>Satıcı: <Text style={{fontWeight:'400'}}>{data?.housing?.user?.name}</Text></Text>
-                 <Text style={{fontSize:12,fontWeight:'600',color:'#333'}}>İlan No: <Text style={{fontWeight:'400'}}>2000{data?.housing?.id}</Text></Text>
-                 <Text style={{fontSize:12,color:'#264ABB',fontWeight:'700'}}>{
-                     data&& data.housing &&
-                    addDotEveryThreeDigits(JSON.parse(data.housing.housing_type_data)["price"])
-                   } ₺</Text>
-             </View>
-   
-               </View>
-          
-      
-       
-             
-        
-         </View>
-         <View style={{ gap: 6 }}>
-           <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-             Ad:
-           </Text>
-           <TextInput
-             style={styles.Input}
-             value={name}
-             onChangeText={(value) => setname(value)}
-           />
-         </View>
-   
-         <View style={{ gap: 6 }}>
-           <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-             Soyad
-           </Text>
-           <TextInput
-             style={styles.Input}
-             value={surname}
-             onChangeText={(value) => setsurname(value)}
-           />
-         </View>
-         <View style={{ gap: 6 }}>
-           <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-             Telefon Numaranız
-           </Text>
-           <TextInput
-             style={styles.Input}
-             value={phoneNmber}
-             onChangeText={(value) => {
-               const numericValue = value.replace(/[^0-9]/g, ""); // Sadece sayı olan karakterleri alır
-               setphoneNmber(numericValue);
-             }}
-             maxLength={11}
-             keyboardType="number-pad" // Sadece sayısal giriş için klavye türü
-           />
-         </View>
-         <View style={{ gap: 6 }}>
-           <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-             E-mail
-           </Text>
-           <TextInput
-             style={styles.Input}
-             value={email}
-             onChangeText={(value) => setemail(value)}
-           />
-         </View>
-         <View style={{ gap: 6 }}>
-           <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-             Şehir
-           </Text>
-           <RNPickerSelect
-             doneText="Tamam"
-             placeholder={{
-               label: "Şehir Seçiniz...",
-               value: null,
-             }}
-             style={pickerSelectStyles}
-             value={city}
-             onValueChange={(value) => {
-               onChangeCity(value);
-             }}
-             items={citites}
-           />
-         </View>
-         <View style={{ gap: 6 }}>
-           <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-             İlçe
-           </Text>
-           <RNPickerSelect
-             doneText="Tamam"
-             placeholder={{
-               label: "İlçe Seçiniz...",
-               value: null,
-             }}
-             value={county}
-             style={pickerSelectStyles}
-             onValueChange={(value) => setcounty(value)}
-             items={counties}
-           />
-         </View>
-         <View style={{ gap: 6 }}>
-           <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-             Takas Tercihiniz
-           </Text>
-           <RNPickerSelect
-             doneText="Tamam"
-             placeholder={{
-               label: "Seçiniz...",
-               value: null,
-             }}
-             value={SwapChoose}
-             style={pickerSelectStyles}
-             onValueChange={(value) => setSwapChoose(value)}
-             items={[
-               { label: "Emlak", value: "emlak" },
-               { label: "Araç", value: "araç" },
-               { label: "Barter", value: "barter" },
-               { label: "Diğer", value: "Diğer" },
-             ]}
-           />
-         </View>
-         <View
-           style={{ gap: 6, display: SwapChoose == "emlak" ? "flex" : "none" }}
-         >
-           <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-             Emlak Tipi
-           </Text>
-           <RNPickerSelect
-             doneText="Tamam"
-             placeholder={{
-               label: "Seçiniz...",
-               value: null,
-             }}
-             style={pickerSelectStyles}
-             onValueChange={(value) => setestateChoose(value)}
-             items={[
-               { label: "Konut", value: "konut" },
-               { label: "Arsa", value: "arsa" },
-               { label: "İş Yeri", value: "işyeri" },
-             ]}
-           />
-         </View>
-         {estateChoose == "konut" && SwapChoose == "emlak" ? (
-           <>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Konut Tipi
-               </Text>
-               <RNPickerSelect
-                 doneText="Tamam"
-                 placeholder={{
-                   label: "Seçiniz...",
-                   value: null,
-                 }}
-                 style={pickerSelectStyles}
-                 onValueChange={(value) => sethouseType(value)}
-                 items={[
-                   { label: "Daire", value: "daire" },
-                   { label: "Villa", value: "villa" },
-                   { label: "Residance", value: "residance" },
-                   { label: "Prefabrik Ev", value: "prefabrik_ev" },
-                   { label: "Çiftlik Evi", value: "çiftlik_evi" },
-                 ]}
-               />
-             </View>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Oda Sayısı
-               </Text>
-               <RNPickerSelect
-                 doneText="Tamam"
-                 placeholder={{
-                   label: "Seçiniz...",
-                   value: null,
-                 }}
-                 style={pickerSelectStyles}
-                 onValueChange={(value) => setroomCount(value)}
-                 items={roomCounts}
-               />
-             </View>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Konut Yaşı
-               </Text>
-               <RNPickerSelect
-                 doneText="Tamam"
-                 placeholder={{
-                   label: "Seçiniz...",
-                   value: null,
-                 }}
-                 style={pickerSelectStyles}
-                 onValueChange={(value) => sethouseAge(value)}
-                 items={pickerData}
-               />
-             </View>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Kullanım Durumu
-               </Text>
-               <RNPickerSelect
-                 doneText="Tamam"
-                 placeholder={{
-                   label: "Seçiniz...",
-                   value: null,
-                 }}
-                 style={pickerSelectStyles}
-                 onValueChange={(value) => setuseStatus(value)}
-                 items={[
-                   { label: "Kiracılı", value: "kiracılı" },
-                   { label: "Boş", value: "boş" },
-                   { label: "Mülk Sahibi", value: "mülk sahibi" },
-                 ]}
-               />
-             </View>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Düşündüğünüz Satış Rakamı
-               </Text>
-               <TextInput
-                 style={styles.Input}
-                 value={YourPrice}
-                 onChangeText={(value) => setYourPrice(value)}
-                 keyboardType='number-pad'
-               />
-             </View>
-            
-            
-          
-            
-           
-          
-           </>
-         ) : (
-           <></>
-         )}
-   
-         {estateChoose == "arsa" && SwapChoose == "emlak" ? (
-           <>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Arsa İli
-               </Text>
-               <RNPickerSelect
-                 doneText="Tamam"
-                 placeholder={{
-                   label: "Seçiniz...",
-                   value: null,
-                 }}
-                 value={AreaCity}
-                 style={pickerSelectStyles}
-                 onValueChange={(value) => {
-                   onChangeAreaCity(value);
-                 }}
-                 items={citites}
-               />
-             </View>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Arsa İlçe
-               </Text>
-               <RNPickerSelect
-                 doneText="Tamam"
-                 placeholder={{
-                   label: "Seçiniz...",
-                   value: null,
-                 }}
-                 value={AreaCounty}
-                 style={pickerSelectStyles}
-                 onValueChange={(value) => {
-                   onChangeCounty(value);
-                 }}
-                 items={areaCounty}
-               />
-             </View>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Arsa Mahalle
-               </Text>
-               <RNPickerSelect
-                 doneText="Tamam"
-                 placeholder={{
-                   label: "Seçiniz...",
-                   value: null,
-                 }}
-                 style={pickerSelectStyles}
-                 onValueChange={(value) => setAreaNeigbour(value)}
-                 items={Neigbour}
-               />
-             </View>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Ada Parsel Bilgisi
-               </Text>
-               <TextInput
-                 style={styles.Input}
-                 value={AreaPlaceInfo}
-                 onChangeText={(value) => setAreaPlaceInfo(value)}
-               />
-             </View>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Arsa İmar Durumu
-               </Text>
-               <RNPickerSelect
-                 doneText="Tamam"
-                 placeholder={{
-                   label: "Seçiniz...",
-                   value: null,
-                 }}
-                 style={pickerSelectStyles}
-                 onValueChange={(value) => setAreaStatu(value)}
-                 items={[
-                   { label: "Diğer", value: "Diğer" },
-                   { label: "Villa", value: "Villa" },
-                   { label: "Konut", value: "Konut" },
-                   { label: "Turizm", value: "Turizm" },
-                   { label: "Tarla", value: "Tarla" },
-                   { label: "Sanayi", value: "Sanayi" },
-                   { label: "Ticari", value: "Ticari" },
-                   { label: "Bağ Bahçe", value: "Bağ Bahçe" },
-                 ]}
-               />
-             </View>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Düşündüğünüz Satış Rakamı
-               </Text>
-               <TextInput
-                 style={styles.Input}
-                 value={YourAreaPrice}
-                 onChangeText={(value) => setYourAreaPrice(value)}
-               />
-               <Text>{}</Text>
-             </View>
-         
-           </>
-         ) : (
-           <></>
-         )}
-         {SwapChoose == "araç" ? (
-           <>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Araç Model Yılı
-               </Text>
-               <RNPickerSelect
-                 doneText="Tamam"
-                 placeholder={{
-                   label: "Seçiniz...",
-                   value: null,
-                 }}
-                 style={pickerSelectStyles}
-                 onValueChange={(value) => setCarYear(value)}
-                 items={years}
-               />
-             </View>
-   
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Araba Markası
-               </Text>
-               <RNPickerSelect
-                 doneText="Tamam"
-                 placeholder={{
-                   label: "Seçiniz...",
-                   value: null,
-                 }}
-                 value={carModal}
-                 style={pickerSelectStyles}
-                 onValueChange={(value) => setcarModal(value)}
-                 items={carBrands}
-               />
-             </View>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Yakıt Tipi
-               </Text>
-               <RNPickerSelect
-                 doneText="Tamam"
-                 placeholder={{
-                   label: "Seçiniz...",
-                   value: null,
-                 }}
-                 style={pickerSelectStyles}
-                 onValueChange={(value) => setfuelType(value)}
-                 items={[
-                   { label: "Benzin", value: "benzin" },
-                   { label: "Dizel", value: "dizel" },
-                   { label: "LPG", value: "LPG" },
-                   { label: "Elektrik", value: "elektrik" },
-                 ]}
-               />
-             </View>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Vites Tipi
-               </Text>
-               <RNPickerSelect
-                 doneText="Tamam"
-                 placeholder={{
-                   label: "Seçiniz...",
-                   value: null,
-                 }}
-                 style={pickerSelectStyles}
-                 onValueChange={(value) => setshiftType(value)}
-                 items={[
-                   { label: "Manuel", value: "manuel" },
-                   { label: "Otomatik", value: "otomatik" },
-                 ]}
-               />
-             </View>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Satış Rakamı
-               </Text>
-               <TextInput
-                 style={styles.Input}
-                 value={Price}
-                 onChangeText={(value) => setPrice(value)}
-               />
-             </View>
-             {
-                image ?
-                <View style={{alignItems:'center'}}>
-                <View style={{width:300,height:150}}>
-                <ImageBackground source={image} style={{width:'100%',height:'100%'}} />
-           </View>
-           </View>:<></>
-               }
-             <View style={{ gap: 10 }}>
-              <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                <View style={{gap:10}}>
-                  {
-                    !image &&
-                    <Text style={{ color: "#333", fontSize: 14 , fontWeight:'700'}}>
-                    Ruhsat Belgesi Yükleyiniz
-                  </Text>
-                  }
-              
-               <View style={{width:'100%',flexDirection:'row',
-                    alignItems:'center',
-                   justifyContent:image? 'center':'flex-start',
-                   gap:20
-               }}>
-               <TouchableOpacity
-               onPress={()=>{
-                setchoose(true)
-               }}
-                 style={{
-                   backgroundColor: "#EC302E",
-                   padding: 10,
-                   width: image ?"45%":'80%',
-                   borderRadius: 5,
-               
-                 }}
-               >
-                 <Text style={{ textAlign: "center", color: "white" ,fontWeight:'600'}}>Yükle</Text>
-               </TouchableOpacity>
-               {
-                image  &&
-                <TouchableOpacity
-                onPress={()=>{
-                   setImage(null)
+      {loading ? (
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            flex: 1,
+            backgroundColor: "white",
+          }}
+        >
+          <ActivityIndicator color="#333" size={"large"} />
+        </View>
+      ) : (
+        <KeyboardAwareScrollView
+          style={{ padding: 10, gap: 10, backgroundColor: "#ffffff" }}
+          contentContainerStyle={{ gap: 10, paddingBottom: 50 }}
+        >
+          <View style={{ flexDirection: "row", gap: 4 }}>
+            <View style={{ flex: 0.5 / 2 }}>
+              <View
+                style={{
+                  width: 80,
+                  height: 80,
+                  backgroundColor: "red",
+                  borderRadius: 5,
                 }}
-                  style={{
-                    backgroundColor: "#EC302E",
-                    padding: 10,
-                    width: "45%",
-                    borderRadius: 5,
-                  }}
-                >
-                  <Text style={{ textAlign: "center", color: "white" ,fontWeight:'600'}}>Kaldır</Text>
-                </TouchableOpacity>
-               }
-             
-               </View>
-            
-                </View>
-            
-           
+              >
+                {data && data?.housing && data?.housing?.housing_type_data && (
+                  <ImageBackground
+                    source={{
+                      uri: `${apiUrl}housing_images/${
+                        JSON.parse(data?.housing?.housing_type_data)["image"]
+                      }`,
+                    }}
+                    style={{ width: "100%", height: "100%" }}
+                    borderRadius={5}
+                  />
+                )}
               </View>
-        
-           
-             
-             </View>
-           </>
-         ) : (
-           <></>
-         )}
-         {estateChoose == "işyeri" && SwapChoose == "emlak" ? (
-           <>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Ticari ile ilgili Bilgileri Giriniz
-               </Text>
-               <TextInput
-                 style={styles.Input}
-                 value={TradeInfo}
-                 onChangeText={(value) => setTradeInfo(value)}
-               />
-             </View>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Düşündüğünüz Satış Rakamı
-               </Text>
-               <TextInput
-                 style={styles.Input}
-                 value={yourPriceShop}
-                 onChangeText={(value) => setyourPriceShop(value)}
-               />
-             </View>
-             
-           </>
-         ) : (
-           <></>
-         )}
-         {SwapChoose == "barter" ? (
-           <>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Lütfen barter durumunuz ile ilgili detaylı bilgileri giriniz
-               </Text>
-               <TextInput
-                 style={styles.Input}
-                 value={Barter}
-                 onChangeText={(value) => setBarter(value)}
-               />
-             </View>
-           </>
-         ) : (
-           <></>
-         )}
-         {SwapChoose == "Diğer" ? (
-           <>
-             <View style={{ gap: 6 }}>
-               <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
-                 Takas ile ilgili ürün/hizmet detayı:
-               </Text>
-               <TextInput
-                 style={styles.Input}
-                 value={OtherInfo}
-                 onChangeText={(value) => setOtherInfo(value)}
-               />
-             </View>
-           </>
-         ) : (
-           <></>
-         )}
-         
-
-
-
-          {
-            SwapChoose=='emlak'&&
-            SwapChoose == 'emlak' &&(estateChoose=='konut' || estateChoose=='arsa' || estateChoose=='işyeri') &&
-         
-<>
-
-{
-                image ?
-                <View style={{alignItems:'center',justifyContent:'center'}}>
-                   <View style={{width:300,height:150}}>
-                <ImageBackground source={image} style={{width:'100%',height:'100%'}} />
-           </View>
-                </View>
-               :<></>
-               }
-             <View style={{gap:10}}>
-                {
-                 ( !image && !selectedDocumentName)&&
-                  <Text style={{ color: "#333", fontSize: 15,fontWeight:'700' }}>
-                  Tapu Belgesi Yükleyiniz
+            </View>
+            <View style={{ flex: 1.5 / 2, gap: 4 }}>
+              <View style={{ flex: 1 / 2, paddingTop: 2 }}>
+                <Text numberOfLines={2} style={{ color: "#333", fontSize: 13 }}>
+                  {data?.pageInfo?.meta_title}
                 </Text>
+              </View>
+              <View style={{ flex: 1 / 2, gap: 4, paddingTop: 2, bottom: 0 }}>
+                <Text
+                  style={{ fontSize: 12, fontWeight: "600", color: "#333" }}
+                >
+                  Satıcı:{" "}
+                  <Text style={{ fontWeight: "400" }}>
+                    {data?.housing?.user?.name}
+                  </Text>
+                </Text>
+                <Text
+                  style={{ fontSize: 12, fontWeight: "600", color: "#333" }}
+                >
+                  İlan No:{" "}
+                  <Text style={{ fontWeight: "400" }}>
+                    2000{data?.housing?.id}
+                  </Text>
+                </Text>
+                <Text
+                  style={{ fontSize: 12, color: "#264ABB", fontWeight: "700" }}
+                >
+                  {data &&
+                    data.housing &&
+                    addDotEveryThreeDigits(
+                      JSON.parse(data.housing.housing_type_data)["price"]
+                    )}{" "}
+                  ₺
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View style={{ gap: 6 }}>
+            <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+              Ad:
+            </Text>
+            <TextInput
+              style={styles.Input}
+              value={name}
+              onChangeText={(value) => setname(value)}
+            />
+          </View>
 
-                }
-                {
-                 ( selectedDocumentName && !image) &&
-                  <Text style={{color:'#333',fontWeight:'700',fontSize:12}}>Seçilen Dosya : {selectedDocumentName}</Text>
-                }
-              <View style={{flexDirection:'row',justifyContent:image || selectedDocumentName? 'center':'flex-start',gap:15}}>
-              <TouchableOpacity
-               onPress={()=>{
-                if (selectedDocumentName || image) {
-                    setImage(null)
-                    setSelectedDocumentName(null)
-                    setselectedPdfUrl(null)
-                }else{
-                  setchoose(true)
-                }
-               
-               }}
-                 style={{
-                   backgroundColor: "#EC302E",
-                   padding: 10,
-                   width: "45%",
-                   borderRadius: 5,
-                 }}
-               >
-                {
-                 ( selectedDocumentName || image) ?
-                 <Text style={{ textAlign: "center", color: "white",fontWeight:'600' }}>Kaldır</Text>:
-                  <Text style={{ textAlign: "center", color: "white",fontWeight:'600' }}>Yükle</Text>
-                 
-                }
-               
-               </TouchableOpacity>
-           
-                  {
-               ( selectedDocumentName && !image) &&
-                <TouchableOpacity
-                onPress={()=>{
-                    setImage(null)
-                   
-                      if (Platform.OS === "android") {
-                        openPdf();
-                      } else if (Platform.OS === "ios") {
-                        navigation.navigate("DecontPdf", {
-                          name: selectedDocumentName,
-                          pdfUri: selectedPdfUrl,
-                        });
-                      }
-                  
-                }}
+          <View style={{ gap: 6 }}>
+            <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+              Soyad
+            </Text>
+            <TextInput
+              style={styles.Input}
+              value={surname}
+              onChangeText={(value) => setsurname(value)}
+            />
+          </View>
+          <View style={{ gap: 6 }}>
+            <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+              Telefon Numaranız
+            </Text>
+            <TextInput
+              style={styles.Input}
+              value={phoneNmber}
+              onChangeText={(value) => {
+                const numericValue = value.replace(/[^0-9]/g, ""); // Sadece sayı olan karakterleri alır
+                setphoneNmber(numericValue);
+              }}
+              maxLength={11}
+              keyboardType="number-pad" // Sadece sayısal giriş için klavye türü
+            />
+          </View>
+          <View style={{ gap: 6 }}>
+            <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+              E-mail
+            </Text>
+            <TextInput
+              style={styles.Input}
+              value={email}
+              onChangeText={(value) => setemail(value)}
+            />
+          </View>
+          <View style={{ gap: 6 }}>
+            <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+              Şehir
+            </Text>
+            <RNPickerSelect
+              doneText="Tamam"
+              placeholder={{
+                label: "Şehir Seçiniz...",
+                value: null,
+              }}
+              style={pickerSelectStyles}
+              value={city}
+              onValueChange={(value) => {
+                onChangeCity(value);
+              }}
+              items={citites}
+            />
+          </View>
+          <View style={{ gap: 6 }}>
+            <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+              İlçe
+            </Text>
+            <RNPickerSelect
+              doneText="Tamam"
+              placeholder={{
+                label: "İlçe Seçiniz...",
+                value: null,
+              }}
+              value={county}
+              style={pickerSelectStyles}
+              onValueChange={(value) => setcounty(value)}
+              items={counties}
+            />
+          </View>
+          <View style={{ gap: 6 }}>
+            <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+              Takas Tercihiniz
+            </Text>
+            <RNPickerSelect
+              doneText="Tamam"
+              placeholder={{
+                label: "Seçiniz...",
+                value: null,
+              }}
+              value={SwapChoose}
+              style={pickerSelectStyles}
+              onValueChange={(value) => setSwapChoose(value)}
+              items={[
+                { label: "Emlak", value: "emlak" },
+                { label: "Araç", value: "araç" },
+                { label: "Barter", value: "barter" },
+                { label: "Diğer", value: "Diğer" },
+              ]}
+            />
+          </View>
+          <View
+            style={{ gap: 6, display: SwapChoose == "emlak" ? "flex" : "none" }}
+          >
+            <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+              Emlak Tipi
+            </Text>
+            <RNPickerSelect
+              doneText="Tamam"
+              placeholder={{
+                label: "Seçiniz...",
+                value: null,
+              }}
+              style={pickerSelectStyles}
+              onValueChange={(value) => setestateChoose(value)}
+              items={[
+                { label: "Konut", value: "konut" },
+                { label: "Arsa", value: "arsa" },
+                { label: "İş Yeri", value: "işyeri" },
+              ]}
+            />
+          </View>
+          {estateChoose == "konut" && SwapChoose == "emlak" ? (
+            <>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Konut Tipi
+                </Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => sethouseType(value)}
+                  items={[
+                    { label: "Daire", value: "daire" },
+                    { label: "Villa", value: "villa" },
+                    { label: "Residance", value: "residance" },
+                    { label: "Prefabrik Ev", value: "prefabrik_ev" },
+                    { label: "Çiftlik Evi", value: "çiftlik_evi" },
+                  ]}
+                />
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Oda Sayısı
+                </Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => setroomCount(value)}
+                  items={roomCounts}
+                />
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Konut Yaşı
+                </Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => sethouseAge(value)}
+                  items={pickerData}
+                />
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Kullanım Durumu
+                </Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => setuseStatus(value)}
+                  items={[
+                    { label: "Kiracılı", value: "kiracılı" },
+                    { label: "Boş", value: "boş" },
+                    { label: "Mülk Sahibi", value: "mülk sahibi" },
+                  ]}
+                />
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Düşündüğünüz Satış Rakamı
+                </Text>
+                <TextInput
+                  style={styles.Input}
+                  value={YourPrice}
+                  onChangeText={(value) => setYourPrice(value)}
+                  keyboardType="number-pad"
+                />
+              </View>
+            </>
+          ) : (
+            <></>
+          )}
+
+          {estateChoose == "arsa" && SwapChoose == "emlak" ? (
+            <>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Arsa İli
+                </Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  value={AreaCity}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => {
+                    onChangeAreaCity(value);
+                  }}
+                  items={citites}
+                />
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Arsa İlçe
+                </Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  value={AreaCounty}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => {
+                    onChangeCounty(value);
+                  }}
+                  items={areaCounty}
+                />
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Arsa Mahalle
+                </Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => setAreaNeigbour(value)}
+                  items={Neigbour}
+                />
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Ada Parsel Bilgisi
+                </Text>
+                <TextInput
+                  style={styles.Input}
+                  value={AreaPlaceInfo}
+                  onChangeText={(value) => setAreaPlaceInfo(value)}
+                />
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Arsa İmar Durumu
+                </Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => setAreaStatu(value)}
+                  items={[
+                    { label: "Diğer", value: "Diğer" },
+                    { label: "Villa", value: "Villa" },
+                    { label: "Konut", value: "Konut" },
+                    { label: "Turizm", value: "Turizm" },
+                    { label: "Tarla", value: "Tarla" },
+                    { label: "Sanayi", value: "Sanayi" },
+                    { label: "Ticari", value: "Ticari" },
+                    { label: "Bağ Bahçe", value: "Bağ Bahçe" },
+                  ]}
+                />
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Düşündüğünüz Satış Rakamı
+                </Text>
+                <TextInput
+                  style={styles.Input}
+                  value={YourAreaPrice}
+                  onChangeText={(value) => setYourAreaPrice(value)}
+                />
+                <Text>{}</Text>
+              </View>
+            </>
+          ) : (
+            <></>
+          )}
+          {SwapChoose == "araç" ? (
+            <>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Araç Model Yılı
+                </Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => setCarYear(value)}
+                  items={years}
+                />
+              </View>
+
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Araba Markası
+                </Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  value={carModal}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => setcarModal(value)}
+                  items={carBrands}
+                />
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Yakıt Tipi
+                </Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => setfuelType(value)}
+                  items={[
+                    { label: "Benzin", value: "benzin" },
+                    { label: "Dizel", value: "dizel" },
+                    { label: "LPG", value: "LPG" },
+                    { label: "Elektrik", value: "elektrik" },
+                  ]}
+                />
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Vites Tipi
+                </Text>
+                <RNPickerSelect
+                  doneText="Tamam"
+                  placeholder={{
+                    label: "Seçiniz...",
+                    value: null,
+                  }}
+                  style={pickerSelectStyles}
+                  onValueChange={(value) => setshiftType(value)}
+                  items={[
+                    { label: "Manuel", value: "manuel" },
+                    { label: "Otomatik", value: "otomatik" },
+                  ]}
+                />
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Satış Rakamı
+                </Text>
+                <TextInput
+                  style={styles.Input}
+                  value={Price}
+                  onChangeText={(value) => setPrice(value)}
+                />
+              </View>
+              {image ? (
+                <View style={{ alignItems: "center" }}>
+                  <View style={{ width: 300, height: 150 }}>
+                    <ImageBackground
+                      source={image}
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  </View>
+                </View>
+              ) : (
+                <></>
+              )}
+              <View style={{ gap: 10 }}>
+                <View
                   style={{
-                    backgroundColor: "#EC302E",
-                    padding: 10,
-                    width: "45%",
-                    borderRadius: 5,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
                   }}
                 >
-                  <Text style={{ textAlign: "center", color: "white",fontWeight:'600' }}>Pdf Görüntüle</Text>
-                </TouchableOpacity>
-               }
+                  <View style={{ gap: 10 }}>
+                    {!image && (
+                      <Text
+                        style={{
+                          color: "#333",
+                          fontSize: 14,
+                          fontWeight: "700",
+                        }}
+                      >
+                        Ruhsat Belgesi Yükleyiniz
+                      </Text>
+                    )}
+
+                    <View
+                      style={{
+                        width: "100%",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: image ? "center" : "flex-start",
+                        gap: 20,
+                      }}
+                    >
+                      <TouchableOpacity
+                        onPress={() => {
+                          setchoose(true);
+                        }}
+                        style={{
+                          backgroundColor: "#EC302E",
+                          padding: 10,
+                          width: image ? "45%" : "80%",
+                          borderRadius: 5,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            color: "white",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Yükle
+                        </Text>
+                      </TouchableOpacity>
+                      {image && (
+                        <TouchableOpacity
+                          onPress={() => {
+                            setImage(null);
+                          }}
+                          style={{
+                            backgroundColor: "#EC302E",
+                            padding: 10,
+                            width: "45%",
+                            borderRadius: 5,
+                          }}
+                        >
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              color: "white",
+                              fontWeight: "600",
+                            }}
+                          >
+                            Kaldır
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  </View>
+                </View>
               </View>
-             
-             
-             </View>
-</>
- }
-         
-           <View>
-           <TouchableOpacity onPress={handleButtonPress} style={styles.button} disabled={loadingPost}>
-            {
-              loadingPost ?
-              <ActivityIndicator color="white"/>
-              :
-              <Text style={styles.buttonText}>Başvuruyu Tamamla</Text>
-            }
-               
-               </TouchableOpacity>
-           </View>
-           
-           
-           <Modal
-              isVisible={choose}
-              style={styles.modal2}
-              animationIn={'slideInUp'}
-              animationOut={"slideOutDown"}
-              onBackdropPress={()=>setchoose(false)}
-              swipeDirection={['down']}
-              onSwipeComplete={()=>setchoose(false)}
+            </>
+          ) : (
+            <></>
+          )}
+          {estateChoose == "işyeri" && SwapChoose == "emlak" ? (
+            <>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Ticari ile ilgili Bilgileri Giriniz
+                </Text>
+                <TextInput
+                  style={styles.Input}
+                  value={TradeInfo}
+                  onChangeText={(value) => setTradeInfo(value)}
+                />
+              </View>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Düşündüğünüz Satış Rakamı
+                </Text>
+                <TextInput
+                  style={styles.Input}
+                  value={yourPriceShop}
+                  onChangeText={(value) => setyourPriceShop(value)}
+                />
+              </View>
+            </>
+          ) : (
+            <></>
+          )}
+          {SwapChoose == "barter" ? (
+            <>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Lütfen barter durumunuz ile ilgili detaylı bilgileri giriniz
+                </Text>
+                <TextInput
+                  style={styles.Input}
+                  value={Barter}
+                  onChangeText={(value) => setBarter(value)}
+                />
+              </View>
+            </>
+          ) : (
+            <></>
+          )}
+          {SwapChoose == "Diğer" ? (
+            <>
+              <View style={{ gap: 6 }}>
+                <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
+                  Takas ile ilgili ürün/hizmet detayı:
+                </Text>
+                <TextInput
+                  style={styles.Input}
+                  value={OtherInfo}
+                  onChangeText={(value) => setOtherInfo(value)}
+                />
+              </View>
+            </>
+          ) : (
+            <></>
+          )}
+
+          {SwapChoose == "emlak" &&
+            SwapChoose == "emlak" &&
+            (estateChoose == "konut" ||
+              estateChoose == "arsa" ||
+              estateChoose == "işyeri") && (
+              <>
+                {image ? (
+                  <View
+                    style={{ alignItems: "center", justifyContent: "center" }}
+                  >
+                    <View style={{ width: 300, height: 150 }}>
+                      <ImageBackground
+                        source={image}
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    </View>
+                  </View>
+                ) : (
+                  <></>
+                )}
+                <View style={{ gap: 10 }}>
+                  {!image && !selectedDocumentName && (
+                    <Text
+                      style={{ color: "#333", fontSize: 15, fontWeight: "700" }}
+                    >
+                      Tapu Belgesi Yükleyiniz
+                    </Text>
+                  )}
+                  {selectedDocumentName && !image && (
+                    <Text
+                      style={{ color: "#333", fontWeight: "700", fontSize: 12 }}
+                    >
+                      Seçilen Dosya : {selectedDocumentName}
+                    </Text>
+                  )}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent:
+                        image || selectedDocumentName ? "center" : "flex-start",
+                      gap: 15,
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (selectedDocumentName || image) {
+                          setImage(null);
+                          setSelectedDocumentName(null);
+                          setselectedPdfUrl(null);
+                        } else {
+                          setchoose(true);
+                        }
+                      }}
+                      style={{
+                        backgroundColor: "#EC302E",
+                        padding: 10,
+                        width: "45%",
+                        borderRadius: 5,
+                      }}
+                    >
+                      {selectedDocumentName || image ? (
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            color: "white",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Kaldır
+                        </Text>
+                      ) : (
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            color: "white",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Yükle
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+
+                    {selectedDocumentName && !image && (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setImage(null);
+
+                          if (Platform.OS === "android") {
+                            openPdf();
+                          } else if (Platform.OS === "ios") {
+                            navigation.navigate("DecontPdf", {
+                              name: selectedDocumentName,
+                              pdfUri: selectedPdfUrl,
+                            });
+                          }
+                        }}
+                        style={{
+                          backgroundColor: "#EC302E",
+                          padding: 10,
+                          width: "45%",
+                          borderRadius: 5,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            color: "white",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Pdf Görüntüle
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                </View>
+              </>
+            )}
+
+          <View>
+            <TouchableOpacity
+              onPress={handleButtonPress}
+              style={styles.button}
+              disabled={loadingPost}
             >
-              <View style={[styles.modalContent2,{paddingBottom:10}]}>
-                <View style={{paddingTop:10,alignItems:'center'}}>
-                  <TouchableOpacity style={{width:'15%',backgroundColor:'#c2c4c6',padding:4,borderRadius:50}}>
-    
-                  </TouchableOpacity>
-                </View>
-                <View style={{padding:20,gap:35,marginBottom:10}}>
-                <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={pickImage}>
-                          <Icon3 name="photo" size={23} color={'#333'}/>
-                          <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Kütüphaneden Seç</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={takePhoto}>
-                          <Icon3 name="add-a-photo" size={21} color={'#333'}/>
-                          <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Fotoğraf Çek</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:10}} onPress={pickDocument}>
-                          <Icon3 name="file-open" size={21} color={'#333'}/>
-                          <Text style={{fontSize:14,color:'#333',fontWeight:'700'}}>Pdf Yükle</Text>
-                  </TouchableOpacity>
-                 
-                </View>
-                
+              {loadingPost ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text style={styles.buttonText}>Başvuruyu Tamamla</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          <Modal
+            isVisible={choose}
+            style={styles.modal2}
+            animationIn={"slideInUp"}
+            animationOut={"slideOutDown"}
+            onBackdropPress={() => setchoose(false)}
+            swipeDirection={["down"]}
+            onSwipeComplete={() => setchoose(false)}
+          >
+            <View style={[styles.modalContent2, { paddingBottom: 10 }]}>
+              <View style={{ paddingTop: 10, alignItems: "center" }}>
+                <TouchableOpacity
+                  style={{
+                    width: "15%",
+                    backgroundColor: "#c2c4c6",
+                    padding: 4,
+                    borderRadius: 50,
+                  }}
+                ></TouchableOpacity>
               </View>
-            </Modal>
-       </KeyboardAwareScrollView>
-      }
-   
+              <View style={{ padding: 20, gap: 35, marginBottom: 10 }}>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                  onPress={pickImage}
+                >
+                  <Icon3 name="photo" size={23} color={"#333"} />
+                  <Text
+                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                  >
+                    Kütüphaneden Seç
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                  onPress={takePhoto}
+                >
+                  <Icon3 name="add-a-photo" size={21} color={"#333"} />
+                  <Text
+                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                  >
+                    Fotoğraf Çek
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                  onPress={pickDocument}
+                >
+                  <Icon3 name="file-open" size={21} color={"#333"} />
+                  <Text
+                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                  >
+                    Pdf Yükle
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </KeyboardAwareScrollView>
+      )}
     </AlertNotificationRoot>
   );
 }
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
- 
-   
-      padding: 10,
-      borderWidth: 0.9,
-      borderColor: "#DDDDDD",
-      borderRadius: 5,
-      fontSize: 13,
-      backgroundColor:'#fafafafa',
-      color:'#333',
-      fontWeight:'600'
-   
-  },
-  inputAndroid: {
-   
     padding: 10,
     borderWidth: 0.9,
     borderColor: "#DDDDDD",
     borderRadius: 5,
     fontSize: 13,
-    backgroundColor:'#fafafafa',
-    color:'#333',
-    fontWeight:'600'// to ensure the text is never behind the icon
+    backgroundColor: "#fafafafa",
+    color: "#333",
+    fontWeight: "600",
+  },
+  inputAndroid: {
+    padding: 10,
+    borderWidth: 0.9,
+    borderColor: "#DDDDDD",
+    borderRadius: 5,
+    fontSize: 13,
+    backgroundColor: "#fafafafa",
+    color: "#333",
+    fontWeight: "600", // to ensure the text is never behind the icon
   },
 });
 const styles = StyleSheet.create({
@@ -1375,9 +1487,9 @@ const styles = StyleSheet.create({
     borderColor: "#DDDDDD",
     borderRadius: 5,
     fontSize: 13,
-    backgroundColor:'#fafafafa',
-    color:'#717171',
-    fontWeight:'600'
+    backgroundColor: "#fafafafa",
+    color: "#717171",
+    fontWeight: "600",
   },
   safeArea: {
     flex: 1,
@@ -1401,7 +1513,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     textAlign: "center",
-    fontWeight:'700'
+    fontWeight: "700",
   },
   modal2: {
     justifyContent: "flex-end",
@@ -1409,10 +1521,9 @@ const styles = StyleSheet.create({
   },
   modalContent2: {
     gap: 10,
-    paddingBottom:20,
+    paddingBottom: 20,
     backgroundColor: "#F8F7F4",
     padding: 10,
-
 
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,

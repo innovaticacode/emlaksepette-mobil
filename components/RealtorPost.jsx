@@ -11,7 +11,7 @@ import { React, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 import Bookmark from "react-native-vector-icons/FontAwesome";
-import Icon from 'react-native-vector-icons/FontAwesome6'
+import Icon from "react-native-vector-icons/FontAwesome6";
 import Info from "./Info";
 import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -52,7 +52,7 @@ export default function RealtorPost({
   step2_slug,
   step1_slug,
   sold,
-  openSharing
+  openSharing,
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -106,20 +106,15 @@ export default function RealtorPost({
     : 0;
 
   const handlePress = () => {
-   
     if (user.access_token) {
-      if (user.cartItem !== null ) {
-        setcartIsNull(true)
-    }else{
-      setAddCartShow(true)
+      if (user.cartItem !== null) {
+        setcartIsNull(true);
+      } else {
+        setAddCartShow(true);
+      }
+    } else {
+      setalertForSign(true);
     }
-      
-    }else{
-      setalertForSign(true) 
-    }
-   
-  
-   
   };
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
@@ -139,7 +134,7 @@ export default function RealtorPost({
         )
         .then((res) => {
           changeHeart();
-      
+
           if (res.data.status == "removed") {
             setInFavorite(false);
           } else {
@@ -147,14 +142,13 @@ export default function RealtorPost({
           }
         });
       setShowAlert(false);
-    }else{
-      setalertForFavorite(true)
+    } else {
+      setalertForFavorite(true);
     }
-
   };
 
   const [AddCartShow, setAddCartShow] = useState(false);
-  
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -169,17 +163,17 @@ export default function RealtorPost({
           },
         }
       );
-  
+
       // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
       const updatedUser = {
         ...user,
         ...updateResponse.data.user,
         access_token: user.access_token, // access token'ı koruma
       };
-  
+
       // Kullanıcı durumunu güncelleme
       setUser(updatedUser);
-  
+
       // SecureStore ile güncellenmiş kullanıcı verilerini kaydetme
       await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
     } catch (error) {
@@ -207,150 +201,176 @@ export default function RealtorPost({
             },
           }
         );
-        updateUserData()
-        setAddCartShow(false)
+        updateUserData();
+        setAddCartShow(false);
         navigation.navigate("Sepetim");
-        console.log(user + 'Güncel Kullanıcı')
+        console.log(user + "Güncel Kullanıcı");
       }
     } catch (error) {
       console.error("post isteği olmadı", error);
     }
   };
-const [alertForSign, setalertForSign] = useState(false)
-const [alertForFavorite, setalertForFavorite] = useState(false)
-const [cartIsNull, setcartIsNull] = useState(false)
+  const [alertForSign, setalertForSign] = useState(false);
+  const [alertForFavorite, setalertForFavorite] = useState(false);
+  const [cartIsNull, setcartIsNull] = useState(false);
   return (
     <AlertNotificationRoot>
       <View>
-      <AwesomeAlert
-              // contentContainerStyle={{
-              //   transform: [{ scale: 1 }], // Uyarıyı animasyonsuz hale getirmek için
-              //   opacity: 2, // Uyarıyı animasyonsuz hale getirmek için
-              // }}
-            show={cartIsNull}
-            showProgress={false}
-              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
-              title={'Sepetinize sadece 1 Ürün Ekleyebilirsiniz '}
-              messageStyle={{textAlign:'center'}}
-              message={`Mevcut sepeti silmek istermisiniz`}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={true}
-            showConfirmButton={true}
+        <AwesomeAlert
+          // contentContainerStyle={{
+          //   transform: [{ scale: 1 }], // Uyarıyı animasyonsuz hale getirmek için
+          //   opacity: 2, // Uyarıyı animasyonsuz hale getirmek için
+          // }}
+          show={cartIsNull}
+          showProgress={false}
+          titleStyle={{
+            color: "#333",
+            fontSize: 13,
+            fontWeight: "700",
+            textAlign: "center",
+            margin: 5,
+          }}
+          title={"Sepetinize sadece 1 Ürün Ekleyebilirsiniz "}
+          messageStyle={{ textAlign: "center" }}
+          message={`Mevcut sepeti silmek istermisiniz`}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Hayır"
+          confirmText="Evet"
+          cancelButtonColor="#ce4d63"
+          confirmButtonColor="#1d8027"
+          onCancelPressed={() => {
+            setcartIsNull(false);
+          }}
+          onConfirmPressed={() => {
+            addToCard();
+            setcartIsNull(false);
+          }}
+          confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        />
+        <AwesomeAlert
+          show={alertForFavorite}
+          showProgress={false}
+          titleStyle={{
+            color: "#333",
+            fontSize: 13,
+            fontWeight: "700",
+            textAlign: "center",
+            margin: 5,
+          }}
+          title={"Giriş Yap"}
+          messageStyle={{ textAlign: "center" }}
+          message={`Favorilerinize Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Vazgeç"
+          confirmText="Giriş Yap"
+          cancelButtonColor="#ce4d63"
+          confirmButtonColor="#1d8027"
+          onCancelPressed={() => {
+            setalertForFavorite(false);
+          }}
+          onConfirmPressed={() => {
+            navigation.navigate("Login");
+            setalertForFavorite(false);
+          }}
+          confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        />
+        <AwesomeAlert
+          show={alertForSign}
+          showProgress={false}
+          titleStyle={{
+            color: "#333",
+            fontSize: 13,
+            fontWeight: "700",
+            textAlign: "center",
+            margin: 5,
+          }}
+          title={"Giriş Yap"}
+          messageStyle={{ textAlign: "center" }}
+          message={`Sepetine Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          confirmText="Giriş Yap"
+          cancelText="Vazgeç"
+          cancelButtonColor="#E54564"
+          confirmButtonColor="#1d8027"
+          onCancelPressed={() => {
+            setalertForSign(false);
+          }}
+          onConfirmPressed={() => {
+            navigation.navigate("Login");
+            setalertForSign(false);
+          }}
+          confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        />
 
-            cancelText="Hayır"
-            confirmText="Evet"
-            cancelButtonColor="#ce4d63"
-            confirmButtonColor="#1d8027"
-            onCancelPressed={() => {
-              setcartIsNull(false)
-            }}
-            onConfirmPressed={() => {
-             addToCard()
-              setcartIsNull(false)
-            }}
-            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
-            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
-          />
-      <AwesomeAlert
-            
-            show={alertForFavorite}
-            showProgress={false}
-              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
-              title={'Giriş Yap'}
-              messageStyle={{textAlign:'center'}}
-              message={`Favorilerinize Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={true}
-            showConfirmButton={true}
+        <AwesomeAlert
+          show={AddCartShow}
+          showProgress={false}
+          titleStyle={{
+            color: "#333",
+            fontSize: 13,
+            fontWeight: "700",
+            textAlign: "center",
+            margin: 5,
+          }}
+          title={title}
+          messageStyle={{ textAlign: "center" }}
+          message={`#2000${HouseId} No' lu Konutu Sepete Eklemek İstiyor Musunuz?`}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Hayır"
+          confirmText="Evet"
+          cancelButtonColor="#ce4d63"
+          confirmButtonColor="#1d8027"
+          onCancelPressed={() => {
+            setAddCartShow(false);
+          }}
+          onConfirmPressed={() => {
+            addToCard();
+          }}
+          confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        />
 
-            cancelText="Vazgeç"
-            confirmText="Giriş Yap"
-            cancelButtonColor="#ce4d63"
-            confirmButtonColor="#1d8027"
-            onCancelPressed={() => {
-              setalertForFavorite(false)
-            }}
-            onConfirmPressed={() => {
-              navigation.navigate('Login')
-              setalertForFavorite(false)
-            }}
-            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
-            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
-          />
-      <AwesomeAlert
-            
-            show={alertForSign}
-            showProgress={false}
-              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
-            title={'Giriş Yap'}
-            messageStyle={{textAlign:'center'}}
-            message={`Sepetine Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={true}
-            showConfirmButton={true}
-
-           
-            confirmText="Giriş Yap"
-            cancelText="Vazgeç"
-            cancelButtonColor="#E54564"
-            confirmButtonColor="#1d8027"
-            onCancelPressed={() => {
-              setalertForSign(false)
-            }}
-            onConfirmPressed={() => {
-              navigation.navigate('Login')
-              setalertForSign(false)
-            }}
-            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
-            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
-          />
-     
-          <AwesomeAlert
-            
-            show={AddCartShow}
-            showProgress={false}
-              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
-            title={title}
-            messageStyle={{textAlign:'center'}}
-            message={`#2000${HouseId} No' lu Konutu Sepete Eklemek İstiyor Musunuz?`}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={true}
-            showConfirmButton={true}
-
-            cancelText="Hayır"
-            confirmText="Evet"
-            cancelButtonColor="#ce4d63"
-            confirmButtonColor="#1d8027"
-            onCancelPressed={() => {
-              setAddCartShow(false);
-            }}
-            onConfirmPressed={() => {
-              addToCard()
-            }}
-            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
-            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
-          />
-   
         <View style={styles.container}>
           <View style={styles.İlan}>
-          
             <TouchableOpacity
               style={{ width: "30%", height: 80 }}
               onPress={() =>
                 navigation.navigate("Realtor details", { houseId: HouseId })
               }
             >
-              {
-                openSharing === 'Evet' && 
-                <View style={{backgroundColor:'#EA2C2E',position:'absolute',zIndex:1,padding:5,bottom:3,left:3,width:'30%',alignItems:'center',borderRadius:10}}>
-                <Icon name="handshake-simple" color={'#fff'} size={13}/>
-              </View>
-              }
-               
+              {openSharing === "Evet" && (
+                <View
+                  style={{
+                    backgroundColor: "#EA2C2E",
+                    position: "absolute",
+                    zIndex: 1,
+                    padding: 5,
+                    bottom: 3,
+                    left: 3,
+                    width: "30%",
+                    alignItems: "center",
+                    borderRadius: 10,
+                  }}
+                >
+                  <Icon name="handshake-simple" color={"#fff"} size={13} />
+                </View>
+              )}
+
               <ImageBackground
                 source={{ uri: image }}
                 style={{ width: "100%", height: "100%" }}
@@ -369,7 +389,6 @@ const [cartIsNull, setcartIsNull] = useState(false)
                     numberOfLines={3}
                   >
                     {title}
-                 
                   </Text>
                 </View>
                 <View
@@ -381,26 +400,30 @@ const [cartIsNull, setcartIsNull] = useState(false)
                         : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
                   }}
                 >
-                  {bookmarkStatus && bookmarkStatus == true &&  openSharing === 'Evet'&& (user.role=='Bireysel Hesap' ||  (user.role=='Kurumsal Hesap' && user.corporate_type=='Emlak Ofisi'))&&
-                    <TouchableOpacity
-                      onPress={() => {
-                        CreateCollection(HouseId);
-                      }}
-                    >
-                      <View style={styles.ıconContainer}>
-                        <Bookmark
-                          name={bookmark}
-                          size={13}
-                          color={bookmark == "bookmark-o" ? "black" : "red"}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  }
+                  {bookmarkStatus &&
+                    bookmarkStatus == true &&
+                    openSharing === "Evet" &&
+                    (user.role == "Bireysel Hesap" ||
+                      (user.role == "Kurumsal Hesap" &&
+                        user.corporate_type == "Emlak Ofisi")) && (
+                      <TouchableOpacity
+                        onPress={() => {
+                          CreateCollection(HouseId);
+                        }}
+                      >
+                        <View style={styles.ıconContainer}>
+                          <Bookmark
+                            name={bookmark}
+                            size={13}
+                            color={bookmark == "bookmark-o" ? "black" : "red"}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    )}
 
                   <TouchableOpacity
                     onPress={() => {
-                     
-                      addFavorites()
+                      addFavorites();
                     }}
                   >
                     <View style={styles.ıconContainer}>
@@ -427,18 +450,21 @@ const [cartIsNull, setcartIsNull] = useState(false)
                         {formattedDiscountedPrice}₺
                       </Text>
                     </>
+                  ) : housing.step2_slug == "gunluk-kiralik" ? (
+                    <Text style={styles.priceText}>
+                      {formattedPrice} ₺{" "}
+                      <Text style={{ fontSize: 11, color: "#D32729" }}>
+                        / Gecelik
+                      </Text>{" "}
+                    </Text>
                   ) : (
-                    housing.step2_slug =='gunluk-kiralik'?
-                    <Text style={styles.priceText}>{formattedPrice} ₺ <Text style={{fontSize:11,color:'#D32729'}}>/ Gecelik</Text> </Text>
-                    : <Text style={styles.priceText}>{formattedPrice} </Text>
+                    <Text style={styles.priceText}>{formattedPrice} </Text>
                   )}
                 </View>
-                    {
-                      housing?.user?.id == user.id && user.access_token ?
-                      <TouchableOpacity
-                  style={[styles.addBasket,{backgroundColor:'#008001'}]}
-              
-                >
+                {housing?.user?.id == user.id && user.access_token ? (
+                  <TouchableOpacity
+                    style={[styles.addBasket, { backgroundColor: "#008001" }]}
+                  >
                     <Text
                       style={{
                         color: "white",
@@ -448,45 +474,39 @@ const [cartIsNull, setcartIsNull] = useState(false)
                     >
                       İlanı Düzenle
                     </Text>
-              
-                </TouchableOpacity>:
+                  </TouchableOpacity>
+                ) : (
                   <TouchableOpacity
-                  style={styles.addBasket}
-                  onPress={handlePress}
-                >
-                  {
-                  
-                  
-                  housing?.step2_slug&&
-                  housing?.step2_slug == "gunluk-kiralik" ||
-                  housing?.step1_slug== "mustakil-tatil" ? (
-                    <Text
-                      style={{
-                        color: "white",
-                        fontWeight: "600",
-                        fontSize: 9,
-                      }}
-                    >
-                      Rezervasyon Yap
-                    </Text>
-                  ) : (
-                   
-                    <Text
-                      style={{
-                        color: "white",
-                        fontWeight: "600",
-                        fontSize: 10,
-                      }}
-                    >
-                      Sepete Ekle
-                     
-                    </Text>
-                  )}
-                </TouchableOpacity>
-                    }
+                    style={styles.addBasket}
+                    onPress={handlePress}
+                  >
+                    {(housing?.step2_slug &&
+                      housing?.step2_slug == "gunluk-kiralik") ||
+                    housing?.step1_slug == "mustakil-tatil" ? (
+                      <Text
+                        style={{
+                          color: "white",
+                          fontWeight: "600",
+                          fontSize: 9,
+                        }}
+                      >
+                        Rezervasyon Yap
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          color: "white",
+                          fontWeight: "600",
+                          fontSize: 10,
+                        }}
+                      >
+                        Sepete Ekle
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+                )}
 
-
-{/*                
+                {/*                
                 <TouchableOpacity
                   style={styles.addBasket}
                   onPress={handlePress}
@@ -523,7 +543,7 @@ const [cartIsNull, setcartIsNull] = useState(false)
               </View>
             </View>
           </View>
-       
+
           <View
             style={{
               backgroundColor: "#E8E8E8",
@@ -534,22 +554,25 @@ const [cartIsNull, setcartIsNull] = useState(false)
             }}
           >
             <View style={{ flexDirection: "row" }}>
-            
-              {column1_name  && (
+              {column1_name && (
                 <Info
-                  text={ column1_name != null && column1_name && column1_name != "" ? `${ column1_name } ${ column1_additional ? column1_additional : "" }` 
-                  : false}
+                  text={
+                    column1_name != null && column1_name && column1_name != ""
+                      ? `${column1_name} ${
+                          column1_additional ? column1_additional : ""
+                        }`
+                      : false
+                  }
                 />
-                
               )}
-              {column2_name  && (
+              {column2_name && (
                 <Info
                   text={`${column2_name} ${
                     column2_additional ? column2_additional : ""
                   }`}
                 />
               )}
-              {column3_name  && (
+              {column3_name && (
                 <Info
                   text={`${column3_name} ${
                     column3_additional ? column3_additional : ".Kat"
@@ -684,7 +707,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     padding: 5,
   },
-  text:{
-    textAlign:'center'
-  }
+  text: {
+    textAlign: "center",
+  },
 });

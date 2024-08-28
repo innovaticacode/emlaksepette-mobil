@@ -21,7 +21,6 @@ export default function ProjectPost({
   ProjectNo,
   loading,
 }) {
-  
   const generateRandomColorCode = () => {
     const letters = "0123456789ABCDEF";
     let color = "#";
@@ -56,26 +55,37 @@ export default function ProjectPost({
 
         {/* Logo ve Başlığı içeren alan */}
         <View style={styles.logoTitleContainer}>
-       
-          <View style={[styles.titleContainer, { backgroundColor: RandomColor + 'CC' }]}>
-            <View style={{height:'40%',alignItems:'center',justifyContent:'center'}}>
-            <View style={styles.logoContainer}>
-            <Image
-              source={{ uri: ProfilImage }}
-              style={styles.logoImage}
-              contentFit="cover"
-              transition={200}
-            />
-          </View>
+          <View
+            style={[
+              styles.titleContainer,
+              { backgroundColor: RandomColor + "CC" },
+            ]}
+          >
+            <View
+              style={{
+                height: "40%",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <View style={styles.logoContainer}>
+                <Image
+                  source={{ uri: ProfilImage }}
+                  style={styles.logoImage}
+                  contentFit="cover"
+                  transition={200}
+                />
+              </View>
             </View>
-       
-          <View style={{height:'60%',
-            gap:10
-          }}>
-          <Text style={styles.titleText}>{project?.project_title?.toUpperCase()}</Text>
-          <Text style={[styles.titleText,{fontSize:12}]}>{project.city.title}</Text>
-          </View>
-      
+
+            <View style={{ height: "60%", gap: 10 }}>
+              <Text style={styles.titleText}>
+                {project?.project_title?.toUpperCase()}
+              </Text>
+              <Text style={[styles.titleText, { fontSize: 12 }]}>
+                {project.city.title}
+              </Text>
+            </View>
           </View>
         </View>
       </View>
@@ -98,12 +108,11 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: "100%",
-   
   },
-  
+
   logoTitleContainer: {
-    width:'40%',
-    height:'100%',
+    width: "40%",
+    height: "100%",
     position: "absolute",
     top: 0,
     left: 0,
@@ -124,7 +133,7 @@ const styles = StyleSheet.create({
     borderRadius: 25, // İsteğe bağlı: Yuvarlak logo için
   },
   titleContainer: {
-    height:'100%',
+    height: "100%",
     paddingVertical: 5,
     paddingHorizontal: 15,
     borderRadius: 5,

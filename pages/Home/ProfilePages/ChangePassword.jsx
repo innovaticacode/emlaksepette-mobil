@@ -6,14 +6,18 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-
 } from "react-native";
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Eye from "react-native-vector-icons/Ionicons";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
-import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
 import Modal from "react-native-modal";
 import { Platform } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
@@ -43,7 +47,7 @@ export default function ChangePassword() {
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-const [message, setmessage] = useState({})
+  const [message, setmessage] = useState({});
   const postData = async () => {
     setchangeLoading(true);
 
@@ -62,9 +66,7 @@ const [message, setmessage] = useState({})
           },
         }
       );
-    
 
-      
       setcurrentPasword("");
       setnewPassword("");
       setnewPasswordconfirmation("");
@@ -72,13 +74,13 @@ const [message, setmessage] = useState({})
       setTimeout(() => {
         setchangeSuccess(false);
       }, 5000);
-    } catch (error) {   
+    } catch (error) {
       Toast.show({
         type: ALERT_TYPE.DANGER,
-        title: 'Hata',
+        title: "Hata",
         textBody: error.response.data.message,
-      })
-    
+      });
+
       console.error("Hata:", error + "post isteği başarısız ");
     } finally {
       setchangeLoading(false);
@@ -89,105 +91,109 @@ const [message, setmessage] = useState({})
       postData();
     }
   };
-  console.log(message + 'dsfsdfjsd')
+  console.log(message + "dsfsdfjsd");
   return (
     <AlertNotificationRoot>
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
-        <Text
-          style={{
-            textAlign: "center",
-            color: "green",
-            display: changeSuccess ? "flex" : "none",
-          }}
-        >
-          Şifreniz Başarıyla Güncellendi
-        </Text>
-        <View style={styles.Form}>
-          <View>
-            <Text style={styles.label}>Mevcut Şifre</Text>
-            <TextInput
-              style={styles.Input}
-              value={currentPasword}
-              onChangeText={(value) => setcurrentPasword(value)}
-              secureTextEntry={SecureTextForPass1}
-            />
-            <TouchableOpacity
-              style={{ position: "absolute", right: 15, top: 25 }}
-              onPress={ToggleForPass1}
-            >
-              <Eye
-                name={SecureTextForPass1 ? "eye-off-outline" : "eye-outline"}
-                size={22}
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={styles.container}>
+          <Text
+            style={{
+              textAlign: "center",
+              color: "green",
+              display: changeSuccess ? "flex" : "none",
+            }}
+          >
+            Şifreniz Başarıyla Güncellendi
+          </Text>
+          <View style={styles.Form}>
+            <View>
+              <Text style={styles.label}>Mevcut Şifre</Text>
+              <TextInput
+                style={styles.Input}
+                value={currentPasword}
+                onChangeText={(value) => setcurrentPasword(value)}
+                secureTextEntry={SecureTextForPass1}
               />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <Text style={styles.label}>Yeni Şifre</Text>
-            <TextInput
-              style={styles.Input}
-              value={newPassword}
-              onChangeText={(value) => setnewPassword(value)}
-              secureTextEntry={SecuretextForNewPass}
-            />
-            <TouchableOpacity
-              style={{ position: "absolute", right: 15, top: 25 }}
-              onPress={ToggleForPass2}
-            >
-              <Eye
-                name={SecuretextForNewPass ? "eye-off-outline" : "eye-outline"}
-                size={22}
+              <TouchableOpacity
+                style={{ position: "absolute", right: 15, top: 25 }}
+                onPress={ToggleForPass1}
+              >
+                <Eye
+                  name={SecureTextForPass1 ? "eye-off-outline" : "eye-outline"}
+                  size={22}
+                />
+              </TouchableOpacity>
+            </View>
+            <View>
+              <Text style={styles.label}>Yeni Şifre</Text>
+              <TextInput
+                style={styles.Input}
+                value={newPassword}
+                onChangeText={(value) => setnewPassword(value)}
+                secureTextEntry={SecuretextForNewPass}
               />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <Text style={styles.label}>Yeni Şifre (Tekrar)</Text>
-            <TextInput
-              style={styles.Input}
-              value={newPasswordconfirmation}
-              onChangeText={(value) => setnewPasswordconfirmation(value)}
-              secureTextEntry={SecureTextForNewPassAgain}
-            />
-            <TouchableOpacity
-              style={{ position: "absolute", right: 15, top: 25 }}
-              onPress={ToggleForPass3}
-            >
-              <Eye
-                name={
-                  SecureTextForNewPassAgain ? "eye-off-outline" : "eye-outline"
-                }
-                size={22}
+              <TouchableOpacity
+                style={{ position: "absolute", right: 15, top: 25 }}
+                onPress={ToggleForPass2}
+              >
+                <Eye
+                  name={
+                    SecuretextForNewPass ? "eye-off-outline" : "eye-outline"
+                  }
+                  size={22}
+                />
+              </TouchableOpacity>
+            </View>
+            <View>
+              <Text style={styles.label}>Yeni Şifre (Tekrar)</Text>
+              <TextInput
+                style={styles.Input}
+                value={newPasswordconfirmation}
+                onChangeText={(value) => setnewPasswordconfirmation(value)}
+                secureTextEntry={SecureTextForNewPassAgain}
               />
-            </TouchableOpacity>
-          </View>
-          <View style={{ alignItems: "center" }}>
-            <TouchableOpacity style={styles.updatebtn} onPress={HandleSunmit}>
-              <Text style={styles.btnText}>Şifre Yenile</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <Modal
-          isVisible={changeLoading}
-          style={styles.modal}
-          animationIn={"fadeInRight"}
-          animationOut={"fadeOutLeft"}
-        >
-          <View style={styles.modalContent}>
-            <View
-              style={{
-                backgroundColor: "white",
-                padding: 20,
-                borderRadius: 5,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <ActivityIndicator size="large" color="#333" />
+              <TouchableOpacity
+                style={{ position: "absolute", right: 15, top: 25 }}
+                onPress={ToggleForPass3}
+              >
+                <Eye
+                  name={
+                    SecureTextForNewPassAgain
+                      ? "eye-off-outline"
+                      : "eye-outline"
+                  }
+                  size={22}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <TouchableOpacity style={styles.updatebtn} onPress={HandleSunmit}>
+                <Text style={styles.btnText}>Şifre Yenile</Text>
+              </TouchableOpacity>
             </View>
           </View>
-        </Modal>
-      </View>
-    </TouchableWithoutFeedback>
+          <Modal
+            isVisible={changeLoading}
+            style={styles.modal}
+            animationIn={"fadeInRight"}
+            animationOut={"fadeOutLeft"}
+          >
+            <View style={styles.modalContent}>
+              <View
+                style={{
+                  backgroundColor: "white",
+                  padding: 20,
+                  borderRadius: 5,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <ActivityIndicator size="large" color="#333" />
+              </View>
+            </View>
+          </Modal>
+        </View>
+      </TouchableWithoutFeedback>
     </AlertNotificationRoot>
   );
 }

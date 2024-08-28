@@ -102,142 +102,132 @@ const SellAcil = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        
-          <View style={styles.container}>
+        <View style={styles.container}>
+          <View
+            style={{
+              paddingBottom: 3,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingLeft: 10,
+              paddingRight: 10,
+              alignItems: "center",
+              backgroundColor: "white",
+            }}
+          >
+            <Text style={{ fontSize: 12, fontWeight: 700 }}>
+              ÖNE ÇIKAN ACİL İLANLAR
+            </Text>
+
+            <TouchableOpacity
+              style={styles.allBtn}
+              onPress={() =>
+                navigation.navigate("AllRealtorAdverts", {
+                  name: "Al Sat Acil",
+                  slug: "al-sat-acil",
+                  data: filteredHomes,
+                  count: filteredHomes.length,
+                  type: null,
+                  optional: null,
+                  title: null,
+                  check: null,
+                  city: null,
+                  county: null,
+                  hood: null,
+                })
+              }
+            >
+              <Text
+                style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
+              >
+                Tüm İlanları Gör
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {refreshing && (
             <View
               style={{
-                paddingBottom: 3,
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingLeft: 10,
-                paddingRight: 10,
-                alignItems: "center",
+                padding: 10,
                 backgroundColor: "white",
+                alignItems: "center",
               }}
             >
-              <Text style={{ fontSize: 12, fontWeight: 700 }}>
-                ÖNE ÇIKAN ACİL İLANLAR
-              </Text>
-
-              <TouchableOpacity
-                style={styles.allBtn}
-                onPress={() =>
-                  navigation.navigate("AllRealtorAdverts", {
-                    name: "Al Sat Acil",
-                    slug: "al-sat-acil",
-                    data: filteredHomes,
-                    count: filteredHomes.length,
-                    type: null,
-                    optional: null,
-                    title: null,
-                    check: null,
-                    city: null,
-                    county: null,
-                    hood: null,
-                  })
-                }
-              >
-                <Text
-                  style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
-                >
-                  Tüm İlanları Gör
-                </Text>
-              </TouchableOpacity>
+              <ActivityIndicator animating={true} size="small" color="#333" />
             </View>
-            {refreshing && (
-              <View
-                style={{
-                  padding: 10,
-                  backgroundColor: "white",
-                  alignItems: "center",
-                }}
-              >
-                <ActivityIndicator animating={true} size="small" color="#333" />
-              </View>
-            )}
+          )}
 
-            <AlertNotificationRoot>
-              {filteredHomes.length == 0 ? (
-                <View style={{ width: "100%", paddingTop: 10 }}>
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "grey",
-                      fontWeight: "700",
-                    }}
-                  >
-                    Konut İlanı Bulunamadı
-                  </Text>
-                </View>
-              ) : (
-                <FlatList
-                  data={filteredHomes}
-                  renderItem={({ item }) => (
-                    <RealtorPost
-                      openSharing={
-                        JSON.parse(item.housing_type_data)["open_sharing1"]
-                      }
-                      HouseId={item.id}
-                      price={`${JSON.parse(item.housing_type_data)["price"]} `}
-                      housing={item}
-                      title={item.housing_title}
-                      loading={loading}
-                      location={item.city_title + " / " + item.county_title}
-                      image={`${apiUrl}/housing_images/${
-                        JSON.parse(item.housing_type_data).image
-                      }`}
-                      column1_additional={item.column1_additional}
-                      column1_name={
-                        JSON.parse(item.housing_type_data)[item.column1_name]
-                          ? JSON.parse(item.housing_type_data)[
-                              item.column1_name
-                            ]
-                          : ""
-                      }
-                      column2_name={
-                        JSON.parse(item.housing_type_data)[item.column2_name]
-                          ? JSON.parse(item.housing_type_data)[
-                              item.column2_name
-                            ]
-                          : ""
-                      }
-                      column2_additional={item.column2_additional}
-                      column3_name={
-                        JSON.parse(item.housing_type_data)[item.column3_name]
-                          ? JSON.parse(item.housing_type_data)[
-                              item.column3_name
-                            ]
-                          : ""
-                      }
-                      column3_additional={item.column3_additional}
-                      column4_name={
-                        JSON.parse(item.housing_type_data)[item.column4_name]
-                          ? JSON.parse(item.housing_type_data)[
-                              item.column4_name
-                            ]
-                          : ""
-                      }
-                      column4_additional={item.column4_additional}
-                      bookmarkStatus={true}
-                      dailyRent={false}
-                    />
-                  )}
-                  keyExtractor={(item, index) =>
-                    item.id ? item.id.toString() : index.toString()
-                  }
-                  onEndReachedThreshold={0.1}
-                  refreshControl={
-                    <RefreshControl
-                      refreshing={refreshing}
-                      onRefresh={onRefresh}
-                    />
-                  }
-                  ListFooterComponent={renderFooter}
-                />
-              )}
-            </AlertNotificationRoot>
-          </View>
-        
+          <AlertNotificationRoot>
+            {filteredHomes.length == 0 ? (
+              <View style={{ width: "100%", paddingTop: 10 }}>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: "grey",
+                    fontWeight: "700",
+                  }}
+                >
+                  Konut İlanı Bulunamadı
+                </Text>
+              </View>
+            ) : (
+              <FlatList
+                data={filteredHomes}
+                renderItem={({ item }) => (
+                  <RealtorPost
+                    openSharing={
+                      JSON.parse(item.housing_type_data)["open_sharing1"]
+                    }
+                    HouseId={item.id}
+                    price={`${JSON.parse(item.housing_type_data)["price"]} `}
+                    housing={item}
+                    title={item.housing_title}
+                    loading={loading}
+                    location={item.city_title + " / " + item.county_title}
+                    image={`${apiUrl}/housing_images/${
+                      JSON.parse(item.housing_type_data).image
+                    }`}
+                    column1_additional={item.column1_additional}
+                    column1_name={
+                      JSON.parse(item.housing_type_data)[item.column1_name]
+                        ? JSON.parse(item.housing_type_data)[item.column1_name]
+                        : ""
+                    }
+                    column2_name={
+                      JSON.parse(item.housing_type_data)[item.column2_name]
+                        ? JSON.parse(item.housing_type_data)[item.column2_name]
+                        : ""
+                    }
+                    column2_additional={item.column2_additional}
+                    column3_name={
+                      JSON.parse(item.housing_type_data)[item.column3_name]
+                        ? JSON.parse(item.housing_type_data)[item.column3_name]
+                        : ""
+                    }
+                    column3_additional={item.column3_additional}
+                    column4_name={
+                      JSON.parse(item.housing_type_data)[item.column4_name]
+                        ? JSON.parse(item.housing_type_data)[item.column4_name]
+                        : ""
+                    }
+                    column4_additional={item.column4_additional}
+                    bookmarkStatus={true}
+                    dailyRent={false}
+                  />
+                )}
+                keyExtractor={(item, index) =>
+                  item.id ? item.id.toString() : index.toString()
+                }
+                onEndReachedThreshold={0.1}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+                ListFooterComponent={renderFooter}
+              />
+            )}
+          </AlertNotificationRoot>
+        </View>
       )}
     </>
   );

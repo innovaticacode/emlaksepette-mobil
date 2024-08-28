@@ -35,7 +35,7 @@ export default function SwapScreen() {
           },
         }
       );
-      
+
       setSwapSuggest(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -61,7 +61,6 @@ export default function SwapScreen() {
         openModal();
         setswapSuggestdetails(response?.data?.form);
         setselectedModalIndex(index);
-       
       }
     } catch (error) {
       console.error("Error fetching data:", error);

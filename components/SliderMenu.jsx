@@ -42,9 +42,7 @@ export default function SliderMenu({ goToSlide, tab, settab }) {
                 borderWidth: tab == index ? 0 : 1,
               },
             ]}
-            onPress={() => {
-             
-            }}
+            onPress={() => {}}
           >
             <Text
               style={{
