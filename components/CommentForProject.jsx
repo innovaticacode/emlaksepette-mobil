@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
+  Platform,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -64,7 +65,7 @@ export default function CommentForProject({ projectId }) {
     .map((item) => parseFloat(item?.rate) || 0)
     .reduce((acc, rate) => acc + rate, 0);
   return (
-    <Shadow startColor="#ebebeb">
+    <View>
       <View style={styles.container} onTouchMove={() => Keyboard.dismiss()}>
         <View style={{ padding: 10, gap: 10 }}>
           <View
@@ -136,13 +137,25 @@ export default function CommentForProject({ projectId }) {
           )}
         </View>
       </View>
-    </Shadow>
+    </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#FFFFFF",
     width: "100%",
-    paddingLeft: 8,
-    paddingRight: 8,
+    borderWidth: 0.7,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: "#e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
 });

@@ -1,40 +1,60 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Image } from "react-native";
-import Lightbox from "react-native-lightbox";
+import { View, StyleSheet, Image, TouchableOpacity, Text } from "react-native";
+import ImageView from "react-native-image-viewing";
 import { Platform } from "react-native";
 import { getValueFor } from "./methods/user";
 
 export default function FloorPlan({ data }) {
   const [user, setUser] = useState({});
+  const [isVisible, setIsVisible] = useState(false); // Görüntüleme modalı için
+  const [currentIndex, setCurrentIndex] = useState(0); // Hangi resimde olduğumuzu takip etmek için
 
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
 
-  const apiUrl = "https://private.emlaksepette.comsituation_images/";
+  const apiUrl = "https://private.emlaksepette.com/situation_images/";
 
   const getFullImageURL = (partialURL) => {
-    return `https://private.emlaksepette.com${partialURL}`;
+    return `https://private.emlaksepette.com/${partialURL}`;
   };
+
+  // Resimleri, react-native-image-viewing için uygun formata getirme
+  const images = data?.project?.situations?.map((situation) => ({
+    uri: getFullImageURL(situation.situation),
+  }));
 
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         {data?.project?.situations?.length > 0 ? (
           data.project.situations.map((situation, i) => (
-            <View key={i} style={styles.imageWrapper}>
-              <Lightbox>
-                <Image
-                  style={styles.image}
-                  source={{ uri: getFullImageURL(situation.situation) }}
-                />
-              </Lightbox>
-            </View>
+            <TouchableOpacity
+              key={i}
+              style={styles.imageWrapper}
+              onPress={() => {
+                setCurrentIndex(i); // Tıklanan resmin indeksini ayarla
+                setIsVisible(true); // Modalı aç
+              }}
+            >
+              <Image
+                style={styles.image}
+                source={{ uri: getFullImageURL(situation.situation) }}
+              />
+            </TouchableOpacity>
           ))
         ) : (
           <Text>Vaziyet & Kat Planı bilgisi bulunamadı.</Text>
         )}
       </View>
+
+      {/* Resimleri tam ekran ve kaydırılabilir şekilde gösteren modal */}
+      <ImageView
+        images={images}
+        imageIndex={currentIndex}
+        visible={isVisible}
+        onRequestClose={() => setIsVisible(false)}
+      />
     </View>
   );
 }
