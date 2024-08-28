@@ -242,6 +242,7 @@ export default function Login({ navigation }) {
                       placeholder="E-Posta Adresi"
                       value={email}
                       onChangeText={handleTextInputChange}
+                      autoCapitalize="none" // İlk harfin büyük olmasını engeller
                     />
                     <Text
                       style={{
