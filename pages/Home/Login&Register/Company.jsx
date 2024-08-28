@@ -194,7 +194,7 @@ export default function Company() {
       formData.append("check-b", checked1);
       formData.append("check-c", checked2);
       formData.append("account_type");
-      formData.append('authority_licence',licence)
+      formData.append("authority_licence", licence);
       formData.append("activity", null);
       formData.append("iban", null);
       const response = await axios.post(
@@ -608,8 +608,8 @@ export default function Company() {
                 <TouchableOpacity
                   style={{
                     position: "absolute",
-                    top:'21%',
-                    right:9
+                    top: "21%",
+                    right: 9,
                   }}
                   onPress={show}
                 >
@@ -628,7 +628,6 @@ export default function Company() {
                 ""
               )}
             </View>
-         
 
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
@@ -1294,10 +1293,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ebebeb",
     borderRadius: 5,
-    fontSize:13,
+    fontSize: 13,
     backgroundColor: "#FAFAFA",
-       color:'#717171',
-    fontWeight:'600'
+    color: "#717171",
+    fontWeight: "600",
   },
   btnRegister: {
     backgroundColor: "#E54242",

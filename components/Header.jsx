@@ -24,50 +24,46 @@ export default function Header({ loading, onPress, index, tab }) {
     getValueFor("user", setuser);
   }, []);
 
- 
-    const fetchNotifications = async () => {
-      try {
-        if (!user?.access_token) {
-          setNotifications([]);
-          setNotificationCount(0);
-          return;
-        }
-
-        const response = await axios.get(
-          "https://private.emlaksepette.com/api/user/notification",
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
-
-        if (response.data) {
-          setNotifications(response.data);
-        } else {
-          setNotifications([]);
-        }
-
-        const unreadCount = response.data.filter(
-          (notification) => notification.readed === 0
-        ).length;
-        setNotificationCount(unreadCount);
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
+  const fetchNotifications = async () => {
+    try {
+      if (!user?.access_token) {
         setNotifications([]);
-        setNotificationCount(0); // Set unreadCount to 0 in case of an error
+        setNotificationCount(0);
+        return;
       }
-    };
 
- 
+      const response = await axios.get(
+        "https://private.emlaksepette.com/api/user/notification",
+        {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        }
+      );
 
+      if (response.data) {
+        setNotifications(response.data);
+      } else {
+        setNotifications([]);
+      }
+
+      const unreadCount = response.data.filter(
+        (notification) => notification.readed === 0
+      ).length;
+      setNotificationCount(unreadCount);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      setNotifications([]);
+      setNotificationCount(0); // Set unreadCount to 0 in case of an error
+    }
+  };
 
   useEffect(() => {
     if (user?.access_token) {
       fetchNotifications();
     }
-  }, [user.access_token])
-  
+  }, [user.access_token]);
+
   return (
     <View style={styles.header}>
       <TouchableOpacity
@@ -90,7 +86,7 @@ export default function Header({ loading, onPress, index, tab }) {
       >
         <ImageBackground
           source={{
-            uri:"https://private.emlaksepette.com/images/emlaksepettelogo.png",
+            uri: "https://private.emlaksepette.com/images/emlaksepettelogo.png",
           }}
           resizeMode="contain"
           style={{
@@ -103,9 +99,7 @@ export default function Header({ loading, onPress, index, tab }) {
 
       <View style={{ display: "flex", flexDirection: "row-reverse" }}>
         <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("Notifications", )
-          }
+          onPress={() => navigation.navigate("Notifications")}
           style={{
             width: 50,
             alignItems: "center",

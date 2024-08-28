@@ -7,7 +7,6 @@ import {
   Keyboard,
   Alert,
   TouchableWithoutFeedback,
-
 } from "react-native";
 import { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
@@ -126,24 +125,23 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
           },
         }
       );
-  
+
       // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
       const updatedUser = {
         ...user,
         ...updateResponse.data.user,
         access_token: user.access_token, // access token'ı koruma
       };
-  
+
       // Kullanıcı durumunu güncelleme
       setUser(updatedUser);
-  
+
       // SecureStore ile güncellenmiş kullanıcı verilerini kaydetme
       await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     }
   };
-  
 
   const [StatusMessage, setStatusMessage] = useState(false);
   const [succesRegister, setsuccesRegister] = useState(false);
@@ -170,18 +168,15 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
         }
       );
 
-    
-
       setTcNo("");
       setIban("");
       setFullName("");
       setStatusMessage(true);
-      GetUserInfo()
+      GetUserInfo();
     } catch (error) {
       console.error("Hata:", error);
       setErrorMEssage(error);
     } finally {
-    
       setsuccesRegister(false);
     }
   };
@@ -231,38 +226,33 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
         sendPutRequest();
     }
   };
-  const [namFromGetUser, setnamFromGetUser] = useState({})
-  const GetUserInfo =async ()=>{
-     setloading(true)
-     try {
-       if (user?.access_token && user) {
-         const userInfo = await axios.get(
-           "https://private.emlaksepette.com/api/users/" + user?.id,
-           {
-             headers: {
-               Authorization: `Bearer ${user.access_token}`,
-             },
-           }
-         );
-       
-         setnamFromGetUser(userInfo.data.user)
-       
-       }
-     
-   
-     
-   
-     } catch (error) {
-       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
-     }finally{
-     setloading(false)
-     }
-   }
-   useEffect(() => {
-GetUserInfo()
-   }, [user])
-   
-console.log(namFromGetUser.status)
+  const [namFromGetUser, setnamFromGetUser] = useState({});
+  const GetUserInfo = async () => {
+    setloading(true);
+    try {
+      if (user?.access_token && user) {
+        const userInfo = await axios.get(
+          "https://private.emlaksepette.com/api/users/" + user?.id,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+
+        setnamFromGetUser(userInfo.data.user);
+      }
+    } catch (error) {
+      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+    } finally {
+      setloading(false);
+    }
+  };
+  useEffect(() => {
+    GetUserInfo();
+  }, [user]);
+
+  console.log(namFromGetUser.status);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
@@ -318,25 +308,29 @@ console.log(namFromGetUser.status)
         </View>
         {namFromGetUser.has_club == 3 && (
           <View>
-          <View
-            style={{
-              backgroundColor: "#EA2A28",
-              padding: 10,
-              margin: 10,
-              borderRadius: 7,
-            }}
-          >
-            <Text
-              style={{ textAlign: "center", color: "white", fontWeight: "600" }}
+            <View
+              style={{
+                backgroundColor: "#EA2A28",
+                padding: 10,
+                margin: 10,
+                borderRadius: 7,
+              }}
             >
-              Emlak Kulüp Üyeliğiniz reddedilmiştir lütfen bilgileri
-              günncelleyerek tekrar deneyeniz
-            </Text>
-          </View>
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "white",
+                  fontWeight: "600",
+                }}
+              >
+                Emlak Kulüp Üyeliğiniz reddedilmiştir lütfen bilgileri
+                günncelleyerek tekrar deneyeniz
+              </Text>
+            </View>
           </View>
         )}
 
-        {(namFromGetUser.has_club == 0 || namFromGetUser.has_club == 3) ? (
+        {namFromGetUser.has_club == 0 || namFromGetUser.has_club == 3 ? (
           <>
             <View style={{ alignItems: "center", height: "100%" }}>
               <View style={styles.FormContainer}>
@@ -450,7 +444,7 @@ console.log(namFromGetUser.status)
                     Emlak Kulüp Başvurunuz Alınmıştır!
                   </Text>
                 ) : (
-                  <ActivityIndicator color="#333"/>
+                  <ActivityIndicator color="#333" />
                 )}
               </View>
             </View>

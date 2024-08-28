@@ -262,8 +262,7 @@ export default function Profile() {
           closeSheet();
         }}
       >
-     
-            {/* <View
+        {/* <View
               style={{
                 width: "100%",
                 height:
@@ -375,218 +374,271 @@ export default function Profile() {
               />
             </View>
       */}
-        <View style={{height:height* 0.2,backgroundColor:storeData?.data?.banner_hex_code,borderBottomLeftRadius:30,borderBottomRightRadius:30}}>
+        <View
+          style={{
+            height: height * 0.2,
+            backgroundColor: storeData?.data?.banner_hex_code,
+            borderBottomLeftRadius: 30,
+            borderBottomRightRadius: 30,
+          }}
+        >
           <SafeAreaView>
-          <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between',paddingLeft:20,paddingRight:20,alignItems:'center'}}>
-                  <TouchableOpacity onPress={()=>{
-                    navigation.goBack()
-                  }}  style={{backgroundColor:'#FFFFFF',padding:5,alignItems:'center',justifyContent:'center',borderRadius:50}}>
-                  <LinkIcon name="arrow-left" size={20} color={'#000000'}/>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={onShare} style={{backgroundColor:'#FFFFFF',padding:5,alignItems:'center',justifyContent:'center',borderRadius:50}}>
-                  <LinkIcon3 name="share-2" size={20} color={'#000000'}/>
-                  </TouchableOpacity>
-              </View>
-              <View style={{alignItems:'center',paddingTop:15}}>
-                  <View style={{flexDirection:'row',alignItems:'center',gap:10,width:'80%'}}>
-                    <View style={{backgroundColor:'#fff',borderRadius:50,width:50,height:50}}>
-                      <Image source={{uri:`https://private.emlaksepette.com/storage/profile_images/${storeData?.data?.profile_image}`}}/>
-                    </View>
-                    <View>
-                      <View>
-                        <View style={{flexDirection:'row',alignItems:'center',gap:5}}>
-                        <Text style={{fontSize:14,color:'#000000',fontWeight:'700'}}>{storeData?.data?.name}</Text>
-                        <Star name="verified" size={19} color={'#0275FF'}/>
-                        </View>
-                      
-                        <Text style={{fontSize:12,color:'#000000'}}>{storeData?.data?.corporate_type}</Text>
-                        </View>
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingLeft: 20,
+                paddingRight: 20,
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  padding: 5,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 50,
+                }}
+              >
+                <LinkIcon name="arrow-left" size={20} color={"#000000"} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={onShare}
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  padding: 5,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 50,
+                }}
+              >
+                <LinkIcon3 name="share-2" size={20} color={"#000000"} />
+              </TouchableOpacity>
+            </View>
+            <View style={{ alignItems: "center", paddingTop: 15 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 10,
+                  width: "80%",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "#fff",
+                    borderRadius: 50,
+                    width: 50,
+                    height: 50,
+                  }}
+                >
+                  <Image
+                    source={{
+                      uri: `https://private.emlaksepette.com/storage/profile_images/${storeData?.data?.profile_image}`,
+                    }}
+                  />
+                </View>
+                <View>
+                  <View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 5,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: "#000000",
+                          fontWeight: "700",
+                        }}
+                      >
+                        {storeData?.data?.name}
+                      </Text>
+                      <Star name="verified" size={19} color={"#0275FF"} />
                     </View>
 
+                    <Text style={{ fontSize: 12, color: "#000000" }}>
+                      {storeData?.data?.corporate_type}
+                    </Text>
                   </View>
+                </View>
               </View>
+            </View>
           </SafeAreaView>
-           
         </View>
-          
-   
 
         <View>
           <ScrollView
             horizontal
-            style={{ paddingTop:10,marginBottom:10 }}
+            style={{ paddingTop: 10, marginBottom: 10 }}
             showsHorizontalScrollIndicator={false}
             nestedScrollEnabled={true}
           >
-       
-                <View style={{
-                  flexDirection:'row',
-                  gap:10,
-                  borderBottomWidth:1,
-                  borderBottomColor:'#D7D7D7',
-                  paddingLeft:15,
-                  paddingRight:15
-                  
-                }}>
-                  <TouchableOpacity
-                    style={[
-                      styles.TabBarBtn,
-                      {
-                        borderBottomWidth: tab === 0 ? 3 : 0,
-                        borderBottomColor:
-                          tab === 0 ? "#EA2C2E" : "transparent",
-                        top: 2,
-                      },
-                    ]}
-                    onPress={() => settab(0)}
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: "#D7D7D7",
+                paddingLeft: 15,
+                paddingRight: 15,
+              }}
+            >
+              <TouchableOpacity
+                style={[
+                  styles.TabBarBtn,
+                  {
+                    borderBottomWidth: tab === 0 ? 3 : 0,
+                    borderBottomColor: tab === 0 ? "#EA2C2E" : "transparent",
+                    top: 2,
+                  },
+                ]}
+                onPress={() => settab(0)}
+              >
+                <Text
+                  style={{
+                    color: tab === 0 ? "#EA2C2E" : "grey",
+                    fontWeight: tab === 0 ? "500" : "normal",
+                  }}
+                >
+                  Ana Sayfa
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.TabBarBtn,
+                  {
+                    borderBottomWidth: tab === 4 ? 3 : 0,
+                    borderBottomColor: tab === 4 ? "#EA2C2E" : "transparent",
+                    top: 2,
+                  },
+                ]}
+                onPress={() => settab(4)}
+              >
+                <Text
+                  style={{
+                    color: tab === 4 ? "#EA2C2E" : "grey",
+                    fontWeight: tab === 4 ? "500" : "normal",
+                  }}
+                >
+                  Mağaza Profili
+                </Text>
+              </TouchableOpacity>
+              {storeData?.data?.corporate_type !== "Emlak Ofisi" && (
+                <TouchableOpacity
+                  style={[
+                    styles.TabBarBtn,
+                    {
+                      borderBottomWidth: tab === 1 ? 3 : 0,
+                      borderBottomColor: tab === 1 ? "#EA2C2E" : "transparent",
+                      top: 2,
+                    },
+                  ]}
+                  onPress={() => settab(1)}
+                >
+                  <Text
+                    style={{
+                      color: tab === 1 ? "#EA2C2E" : "grey",
+                      fontWeight: tab === 1 ? "500" : "normal",
+                      bottom: width > 400 ? 0 : 1,
+                    }}
                   >
-                  
-                    <Text
-                      style={{
-                        color: tab === 0 ? "#EA2C2E" : "grey",
-                        fontWeight: tab === 0 ? "500" : "normal",
-                      }}
-                    >
-                      Ana Sayfa
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      styles.TabBarBtn,
-                      {
-                        borderBottomWidth: tab === 4 ? 3 : 0,
-                        borderBottomColor:
-                          tab === 4 ? "#EA2C2E" : "transparent",
-                        top: 2,
-                      },
-                    ]}
-                    onPress={() => settab(4)}
-                  >
-                    <Text
-                      style={{
-                        color: tab === 4 ? "#EA2C2E" : "grey",
-                        fontWeight: tab === 4 ? "500" : "normal",
-                      }}
-                    >
-                      Mağaza Profili
-                    </Text>
-                  </TouchableOpacity>
-                  {storeData?.data?.corporate_type !== "Emlak Ofisi" && (
-                    <TouchableOpacity
-                      style={[
-                        styles.TabBarBtn,
-                        {
-                          borderBottomWidth: tab === 1 ? 3 : 0,
-                          borderBottomColor:
-                            tab === 1 ? "#EA2C2E" : "transparent",
-                          top: 2,
-                        },
-                      ]}
-                      onPress={() => settab(1)}
-                    >
-                      <Text
-                        style={{
-                          color: tab === 1 ? "#EA2C2E" : "grey",
-                          fontWeight: tab === 1 ? "500" : "normal",
-                          bottom: width > 400 ? 0 : 1,
-                        }}
-                      >
-                        Proje İlanları({storeData?.data?.projects?.length})
-                      </Text>
-                    </TouchableOpacity>
-                  )}
+                    Proje İlanları({storeData?.data?.projects?.length})
+                  </Text>
+                </TouchableOpacity>
+              )}
 
-                  <TouchableOpacity
-                    style={[
-                      styles.TabBarBtn,
-                      {
-                        borderBottomWidth: tab === 2 ? 3 : 0,
-                        borderBottomColor:
-                          tab === 2 ? "#EA2C2E" : "transparent",
-                        top: 2,
-                      },
-                    ]}
-                    onPress={() => settab(2)}
-                  >
-                    <Text
-                      style={{
-                        color: tab === 2 ? "#EA2C2E" : "grey",
-                        fontWeight: tab === 2 ? "500" : "normal",
-                      }}
-                    >
-                      Emlak İlanları({storeData?.data?.housings?.length})
-                    </Text>
-                  </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.TabBarBtn,
+                  {
+                    borderBottomWidth: tab === 2 ? 3 : 0,
+                    borderBottomColor: tab === 2 ? "#EA2C2E" : "transparent",
+                    top: 2,
+                  },
+                ]}
+                onPress={() => settab(2)}
+              >
+                <Text
+                  style={{
+                    color: tab === 2 ? "#EA2C2E" : "grey",
+                    fontWeight: tab === 2 ? "500" : "normal",
+                  }}
+                >
+                  Emlak İlanları({storeData?.data?.housings?.length})
+                </Text>
+              </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={[
-                      styles.TabBarBtn,
-                      {
-                        borderBottomWidth: tab === 3 ? 3 : 0,
-                        borderBottomColor:
-                          tab === 3 ? "#EA2C2E" : "transparent",
-                        top: 2,
-                      },
-                    ]}
-                    onPress={() => settab(3)}
-                  >
-                    
-                    <Text
-                      style={{
-                        color: tab === 3 ? "#EA2C2E" : "grey",
-                        fontWeight: tab === 3 ? "500" : "normal",
-                      }}
-                    >
-                      Ekip
-                    </Text>
-                  </TouchableOpacity>
-                
-                  <TouchableOpacity
-                    style={[
-                      styles.TabBarBtn,
-                      {
+              <TouchableOpacity
+                style={[
+                  styles.TabBarBtn,
+                  {
+                    borderBottomWidth: tab === 3 ? 3 : 0,
+                    borderBottomColor: tab === 3 ? "#EA2C2E" : "transparent",
+                    top: 2,
+                  },
+                ]}
+                onPress={() => settab(3)}
+              >
+                <Text
+                  style={{
+                    color: tab === 3 ? "#EA2C2E" : "grey",
+                    fontWeight: tab === 3 ? "500" : "normal",
+                  }}
+                >
+                  Ekip
+                </Text>
+              </TouchableOpacity>
 
-                        borderBottomWidth: tab === 5 ? 3 : 0,
-                        borderBottomColor:
-                          tab === 5 ? "#EA2C2E" : "transparent",
+              <TouchableOpacity
+                style={[
+                  styles.TabBarBtn,
+                  {
+                    borderBottomWidth: tab === 5 ? 3 : 0,
+                    borderBottomColor: tab === 5 ? "#EA2C2E" : "transparent",
 
-                        top: 2,
-                      },
-                    ]}
-                    onPress={() => settab(5)}
-                  >
-                    <Text
-                      style={{
-                        color: tab === 5 ? "#EA2C2E" : "grey",
-                        fontWeight: tab === 5 ? "500" : "normal",
-                      }}
-                    >
-                     Koleksiyonlar
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      styles.TabBarBtn,
-                      {
-                        borderBottomWidth: tab === 6 ? 3 : 0,
-                        borderBottomColor:
-                          tab === 6 ? "#EA2C2E" : "transparent",
-                        top: 2,
-                      },
-                    ]}
-                    onPress={() => settab(6)}
-                  >
-                    <Text
-                      style={{
-                        color: tab === 6 ? "#EA2C2E" : "grey",
-                        fontWeight: tab === 6 ? "500" : "normal",
-                      }}
-                    >
-                     Değerlendirmeler
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-        
+                    top: 2,
+                  },
+                ]}
+                onPress={() => settab(5)}
+              >
+                <Text
+                  style={{
+                    color: tab === 5 ? "#EA2C2E" : "grey",
+                    fontWeight: tab === 5 ? "500" : "normal",
+                  }}
+                >
+                  Koleksiyonlar
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.TabBarBtn,
+                  {
+                    borderBottomWidth: tab === 6 ? 3 : 0,
+                    borderBottomColor: tab === 6 ? "#EA2C2E" : "transparent",
+                    top: 2,
+                  },
+                ]}
+                onPress={() => settab(6)}
+              >
+                <Text
+                  style={{
+                    color: tab === 6 ? "#EA2C2E" : "grey",
+                    fontWeight: tab === 6 ? "500" : "normal",
+                  }}
+                >
+                  Değerlendirmeler
+                </Text>
+              </TouchableOpacity>
+            </View>
           </ScrollView>
         </View>
         {tab === 0 && (
@@ -601,50 +653,46 @@ export default function Profile() {
         {tab === 2 && <RealtorAdverts housingdata={housingRecords} />}
         {tab === 3 && <Team teamm={teamm} />}
         {tab === 4 && <ShopInfo data={storeData} loading={loading} />}
-        {tab === 5 && <CollectionsOfBrand/>}
-        {tab === 6 && <CommentsOfBrands data={storeData}/>}
+        {tab === 5 && <CollectionsOfBrand />}
+        {tab === 6 && <CommentsOfBrands data={storeData} />}
       </View>
 
       <View>
         <View
           style={{
-            paddingBottom:20,
-            paddingTop:5,
-            paddingRight:15,
-            alignItems:'flex-end',
+            paddingBottom: 20,
+            paddingTop: 5,
+            paddingRight: 15,
+            alignItems: "flex-end",
 
             zIndex: 1,
           }}
         >
-        
-           
-              <TouchableOpacity
-                style={{
-                  width: "40%",
-                  backgroundColor: "#EA2C2E",
-                  borderRadius: 5,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                onPress={() => {
-                  setloading(true);
-                  setFormVisible(true); // veya hangi işlevi çağırmak istiyorsanız
-                }} // Burada yükleme durumunu göstermek için geçici bir işlem
-              >
-                <Text
-                  style={{
-                    padding: 10,
-                    color: "white",
-                    fontWeight: "500",
-                    fontSize: 13,
-                    textAlign: "center",
-                  }}
-                >
-                  Form Doldur
-                </Text>
-              </TouchableOpacity>
-         
-       
+          <TouchableOpacity
+            style={{
+              width: "40%",
+              backgroundColor: "#EA2C2E",
+              borderRadius: 5,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => {
+              setloading(true);
+              setFormVisible(true); // veya hangi işlevi çağırmak istiyorsanız
+            }} // Burada yükleme durumunu göstermek için geçici bir işlem
+          >
+            <Text
+              style={{
+                padding: 10,
+                color: "white",
+                fontWeight: "500",
+                fontSize: 13,
+                textAlign: "center",
+              }}
+            >
+              Form Doldur
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
       <Modal
@@ -778,8 +826,6 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
   },
-
-
 
   TabBarBtn: {
     justifyContent: "center",

@@ -14,7 +14,12 @@ import Checkbox from "./profileComponents/Checkbox";
 import { Platform } from "react-native";
 import Users from "./profileComponents/Users";
 import axios from "axios";
-import { ALERT_TYPE, Dialog, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
 import { getValueFor } from "../../../components/methods/user";
 import { ActivityIndicator } from "react-native-paper";
 export default function CreateUserType() {
@@ -31,9 +36,9 @@ export default function CreateUserType() {
   const [groupNames, setGroupNames] = useState([]);
 
   // fetchData fonksiyonunu tanımlayın
-  const [loadig, setloadig] = useState(false)
+  const [loadig, setloadig] = useState(false);
   const fetchData = async () => {
-    setloadig(true)
+    setloadig(true);
     try {
       if (user.access_token) {
         const response = await axios.get(
@@ -49,8 +54,8 @@ export default function CreateUserType() {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-    }finally{
-      setloadig(false)
+    } finally {
+      setloadig(false);
     }
   };
   useEffect(() => {
@@ -79,19 +84,18 @@ export default function CreateUserType() {
   };
   const handleShowCheckedItems = () => {
     postData();
-    
   };
-  const [loadingUpdate, setloadingUpdate] = useState(false)
+  const [loadingUpdate, setloadingUpdate] = useState(false);
   const postData = async () => {
     if (!TypeName) {
       Dialog.show({
         type: ALERT_TYPE.DANGER,
-        title: 'Boş Yer Bırakmayın',
-        textBody: 'Lütfen Kullanıcı Rolü Giriniz',
-        button: 'Tamam',
-      })
-    }else{
-      setloadingUpdate(true)
+        title: "Boş Yer Bırakmayın",
+        textBody: "Lütfen Kullanıcı Rolü Giriniz",
+        button: "Tamam",
+      });
+    } else {
+      setloadingUpdate(true);
       try {
         var formData = new FormData();
         formData.append("name", TypeName);
@@ -107,113 +111,120 @@ export default function CreateUserType() {
             },
           }
         );
-         setTypeName('')
-         setCheckedItems([])
-         fetchData()
+        setTypeName("");
+        setCheckedItems([]);
+        fetchData();
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
-          title: 'Başarılı',
-          textBody: 'Kullanıcı Tipi Oluşturma Başarılı',
-          button: 'Tamam',
-          onPressButton:()=>{
-            navigation.goBack()
-            Dialog.hide()
-          }
-        })
-      
-       
+          title: "Başarılı",
+          textBody: "Kullanıcı Tipi Oluşturma Başarılı",
+          button: "Tamam",
+          onPressButton: () => {
+            navigation.goBack();
+            Dialog.hide();
+          },
+        });
       } catch (error) {
-      
-  
         console.error("Hata:", error + "post isteği başarısız ");
-      }finally{
-        setloadingUpdate(false)
+      } finally {
+        setloadingUpdate(false);
       }
     }
-   
   };
 
   return (
     <AlertNotificationRoot>
-    {
-      loadig ?
-      <View style={{alignItems:'center',justifyContent:'center',flex:1}}>
-      <ActivityIndicator color='#333' size={'large'}/>
-    </View>:
-    <ScrollView style={{ backgroundColor: "white" }}>
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
-        <View style={[styles.InputArea, {}]}>
-          <Text style={[styles.label]}>Kullanıcı Rolü Belirle</Text>
-          <TextInput
-            style={styles.Input}
-            value={TypeName}
-            placeholder="Rol"
-            onChangeText={(value) => setTypeName(value)}
-          />
+      {loadig ? (
+        <View
+          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
+        >
+          <ActivityIndicator color="#333" size={"large"} />
         </View>
-        <View style={{}}>
-          <View>
-            {Object.values(Permissions).map((array, index) => (
-              <View
-                key={index}
-                style={{ gap: 10, marginTop: 10, marginBottom: 10 }}
-              >
-                <Text
-                  style={{ fontSize: 15, color: "#333", fontWeight: "500" }}
-                >
-                  {groupNames[index]}
-                </Text>
-
-                {array.map((item, subIndex) => (
-                  <Checkbox
-                    title={item.description}
-                    key={subIndex}
-                    id={item.id}
-                    chechked={handleCheckboxChange}
-                  />
-                ))}
+      ) : (
+        <ScrollView style={{ backgroundColor: "white" }}>
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <View style={styles.container}>
+              <View style={[styles.InputArea, {}]}>
+                <Text style={[styles.label]}>Kullanıcı Rolü Belirle</Text>
+                <TextInput
+                  style={styles.Input}
+                  value={TypeName}
+                  placeholder="Rol"
+                  onChangeText={(value) => setTypeName(value)}
+                />
               </View>
-            ))}
-          </View>
-        </View>
-        <View style={{ width: "100%", alignItems: "center" ,paddingBottom:15}}>
-        
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#EA2A29",
-              padding: 9,
-              width: "90%",
-              borderRadius: 5,
-              opacity:loadingUpdate ? 0.5:1,
-              flexDirection:'row',
-              alignItems:'center',
-              justifyContent:'center'
-            }}
-            onPress={handleShowCheckedItems}
-          >
-            {
-              loadingUpdate ?
-              <ActivityIndicator color="white" size={'small'}/>
-              :
-              <Text
-              style={[
-                styles.label2,
-                { color: "white", textAlign: "center", fontSize: 14 ,fontWeight:'700'},
-              ]}
-            >
-              Kaydet
-            </Text>
-            }
-        
-          </TouchableOpacity>
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
-  </ScrollView>
-    }
-   
-    
+              <View style={{}}>
+                <View>
+                  {Object.values(Permissions).map((array, index) => (
+                    <View
+                      key={index}
+                      style={{ gap: 10, marginTop: 10, marginBottom: 10 }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          color: "#333",
+                          fontWeight: "500",
+                        }}
+                      >
+                        {groupNames[index]}
+                      </Text>
+
+                      {array.map((item, subIndex) => (
+                        <Checkbox
+                          title={item.description}
+                          key={subIndex}
+                          id={item.id}
+                          chechked={handleCheckboxChange}
+                        />
+                      ))}
+                    </View>
+                  ))}
+                </View>
+              </View>
+              <View
+                style={{
+                  width: "100%",
+                  alignItems: "center",
+                  paddingBottom: 15,
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#EA2A29",
+                    padding: 9,
+                    width: "90%",
+                    borderRadius: 5,
+                    opacity: loadingUpdate ? 0.5 : 1,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  onPress={handleShowCheckedItems}
+                >
+                  {loadingUpdate ? (
+                    <ActivityIndicator color="white" size={"small"} />
+                  ) : (
+                    <Text
+                      style={[
+                        styles.label2,
+                        {
+                          color: "white",
+                          textAlign: "center",
+                          fontSize: 14,
+                          fontWeight: "700",
+                        },
+                      ]}
+                    >
+                      Kaydet
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </ScrollView>
+      )}
     </AlertNotificationRoot>
   );
 }

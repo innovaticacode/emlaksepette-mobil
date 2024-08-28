@@ -10,11 +10,10 @@ import {
   SafeAreaView,
   TouchableOpacity,
   FlatList,
-
   Keyboard,
   Platform,
   TextInput,
-  Share
+  Share,
 } from "react-native";
 import Posts from "../../../components/Posts";
 import LinkIcon3 from "react-native-vector-icons/Feather";
@@ -50,7 +49,7 @@ export default function SeeCollection() {
   const navigation = useNavigation();
   const [collectionData, setCollectionData] = useState();
   const [mergedItems, setMergedItems] = useState([]);
-  const { collectionUser, item ,id} = route.params;
+  const { collectionUser, item, id } = route.params;
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [IsOpenSheet, setIsOpenSheet] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
@@ -186,7 +185,6 @@ export default function SeeCollection() {
         });
 
         setcollections(newCollections);
-    
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -291,7 +289,6 @@ export default function SeeCollection() {
         }, 3000);
         // Başarılı yanıtı işleyin
         setselectedCollectionName(response.data.collection.name);
-      
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -351,7 +348,7 @@ export default function SeeCollection() {
             return collection;
           }
         });
-    
+
         setcollections(newCollections);
       })
       .catch((error) => {
@@ -589,7 +586,6 @@ export default function SeeCollection() {
     if (errorMessage) {
       // ShowAlert(ErrorMessage);
     }
-    
   };
   const OpenFormModal = (no) => {
     setPaymentModalShowOrder(no);
@@ -614,8 +610,8 @@ export default function SeeCollection() {
       alert(error.message);
     }
   };
- 
-    const ApiUrl = "https://private.emlaksepette.com/"
+
+  const ApiUrl = "https://private.emlaksepette.com/";
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -625,117 +621,114 @@ export default function SeeCollection() {
           Keyboard.dismiss();
         }}
       >
+        <View
+          style={{
+            width: "100%",
+
+            height:
+              collectionUser?.name > 30
+                ? width < 400
+                  ? ""
+                  : 240
+                : width < 400
+                ? 200
+                : 220,
+          }}
+        >
           <View
-              style={{
-                width: "100%",
-                
-                 height:
-                 collectionUser?.name > 30
-                    ? width < 400
-                      ? ""
-                       : 240
-                     : width < 400
-                    ? 200
-                   : 220,
-              }}
-            >
-              <View
+            style={{
+              position: "absolute",
+              zIndex: 1,
+              width: "100%",
+              height: "100%",
+              backgroundColor: collectionUser?.banner_hex_code + 94,
+              borderBottomLeftRadius: 30,
+              borderBottomRightRadius: 30,
+            }}
+          >
+            <View style={style.InfoContainer}>
+              <TouchableOpacity
                 style={{
-                  position: "absolute",
-                  zIndex: 1,
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor:collectionUser?.banner_hex_code + 94,
-                  borderBottomLeftRadius: 30,
-                  borderBottomRightRadius: 30,
+                  backgroundColor: "#ebebeb94",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  borderRadius: 5,
+                  justifyContent: "center",
+                  width: 45,
+                  height: 30,
+                  alignItems: "center",
                 }}
+                onPress={() => navigation.goBack()}
               >
-                <View style={style.InfoContainer}>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "#ebebeb94",
-                      paddingLeft: 10,
-                      paddingRight: 10,
-                      borderRadius: 5,
-                      justifyContent: "center",
-                      width: 45,
-                      height: 30,
-                      alignItems: "center",
-                    }}
-                    onPress={() => navigation.goBack()}
-                  >
-                    <Arrow
-                      name="arrow-back-ios"
-                      size={20}
-                      style={{ left: 3 }}
-                      color={"white"}
-                    />
-                  </TouchableOpacity>
+                <Arrow
+                  name="arrow-back-ios"
+                  size={20}
+                  style={{ left: 3 }}
+                  color={"white"}
+                />
+              </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={style.shareIcons}
-                     onPress={onShare}
-                  >
-                    <Icon name="sharealt" size={18} />
-                  </TouchableOpacity>
-                </View>
-                <View style={{ paddingLeft: 15, paddingRight: 15 }}>
-                  <View style={{ paddingTop: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
+              <TouchableOpacity style={style.shareIcons} onPress={onShare}>
+                <Icon name="sharealt" size={18} />
+              </TouchableOpacity>
+            </View>
+            <View style={{ paddingLeft: 15, paddingRight: 15 }}>
+              <View style={{ paddingTop: 10 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
 
-                        gap: 10,
+                    gap: 10,
+                  }}
+                >
+                  <View style={{ width: 40, height: 40, borderRadius: 20 }}>
+                    <ImageBackground
+                      source={{
+                        uri: `${ApiUrl}storage/profile_images/${collectionUser?.profile_image}`,
                       }}
-                    >
-                      <View style={{ width: 40, height: 40, borderRadius: 20 }}>
-                         <ImageBackground
-                          source={{
-                            uri: `${ApiUrl}storage/profile_images/${collectionUser?.profile_image}`,
-                          }}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            borderRadius: 20,
-                          }}
-                        /> 
-                      </View>
-                      <View style={{ width: "90%" }}>
-                        <Text style={{ fontSize: 12, color: "white" }}>
-                        Koleksiyon Adı: {item?.name}
-                        </Text>
-                        <Text style={{ color: "white", fontSize: 15 }}>
-                        {collectionUser?.name}
-                        </Text>
-                      </View>
-                    </View>
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: 20,
+                      }}
+                    />
                   </View>
-                  <View style={{ width: "60%", paddingTop: 10 }}>
-                    <TextInput
-                      style={{
-                        padding: 9,
-                        backgroundColor: "#f5f5f53d",
-                        borderWidth: 0,
-                        borderColor: "#ebebeb",
-                        borderRadius: 5,
-                      }}
-                      placeholder="Ara..."
-                      placeholderTextColor={"#333"}
-                    />
+                  <View style={{ width: "90%" }}>
+                    <Text style={{ fontSize: 12, color: "white" }}>
+                      Koleksiyon Adı: {item?.name}
+                    </Text>
+                    <Text style={{ color: "white", fontSize: 15 }}>
+                      {collectionUser?.name}
+                    </Text>
                   </View>
                 </View>
               </View>
-
-               <ImageBackground
-                source={require('../profilePhoto.jpg')}
-                style={{ width: "100%", height: "100%" }}
-                imageStyle={{
-                  borderBottomLeftRadius: 30,
-                  borderBottomRightRadius: 30,
-                }}
-              /> 
+              <View style={{ width: "60%", paddingTop: 10 }}>
+                <TextInput
+                  style={{
+                    padding: 9,
+                    backgroundColor: "#f5f5f53d",
+                    borderWidth: 0,
+                    borderColor: "#ebebeb",
+                    borderRadius: 5,
+                  }}
+                  placeholder="Ara..."
+                  placeholderTextColor={"#333"}
+                />
+              </View>
             </View>
+          </View>
+
+          <ImageBackground
+            source={require("../profilePhoto.jpg")}
+            style={{ width: "100%", height: "100%" }}
+            imageStyle={{
+              borderBottomLeftRadius: 30,
+              borderBottomRightRadius: 30,
+            }}
+          />
+        </View>
         {/* <View style={style.header}>
           <View
             style={{
@@ -825,274 +818,274 @@ export default function SeeCollection() {
           />
         </View> */}
         {mergedItems?.length > 0 ? (
-       
-            <View style={style.PostContainer}>
-              <FlatList
-              
-                data={mergedItems}
-                renderItem={({ item, index }) => (
-                  <View
-                    style={{ paddingLeft: 10, paddingRight: 10, width: "100%" }}
-                  >
-                    {item.item_type == 2 ? (
-                      <RealtorPost
-                        key={item?.housing.id}
-                        HouseId={item?.housing.id}
-                        bookmarkStatus={false}
-                        price={`${
-                          JSON.parse(item?.housing.housing_type_data)["price"] ??
-                          JSON.parse(item?.housing.housing_type_data)[
-                            "daily_rent"
-                          ]
-                        } `}
-                        openSharing={item&& item.housing_type_data&& JSON.parse(item.housing_type_data)['open_sharing1']}
-                        discount_amount={item.discount_amount}
-                        discountRate={`${
-                          JSON.parse(item.housing.housing_type_data)[
-                            "discount_rate"
-                          ]
-                        } `}
-                        housing={item.housing}
-                        title={item.housing.title}
-                        location={" "}
-                        image={`${apiUrl}/housing_images/${
-                          JSON.parse(item.housing.housing_type_data).image
-                        }`}
-                      />
-                    ) : (
-                      <></>
-                      // <>
-                      //   <Posts
-                      //     key={item?.room_order}
-                      //     data={item}
-                      //     bookmarkStatus={false}
-                      //     openModal={openModal}
-                      //     openFormModal={OpenFormModal}
-                      //     roomOrder={item?.room_order}
-                      //     GetIdForCart={GetIdForCart}
-                          
-                      //   />
-                      //   <Modal
-                      //     animationType="fade" // veya "fade", "none" gibi
-                      //     transparent={true}
-                      //     visible={modalVisible}
-                      //     onRequestClose={() => {
-                      //       setModalVisible(!modalVisible);
-                      //     }}
-                      //   >
-                      //     <View style={style.centeredView}>
-                      //       <View style={style.modalView}>
-                      //         <TouchableOpacity
-                      //           style={{
-                      //             position: "absolute",
-                      //             right: -5,
-                      //             backgroundColor: "#333",
-                      //             padding: 6,
-                      //             zIndex: 1,
-                      //             borderRadius: 30,
-                      //             top: -15,
-                      //           }}
-                      //           onPress={() => setModalVisible(!modalVisible)}
-                      //         >
-                      //           <Heart name="close" size={20} color={"white"} />
-                      //         </TouchableOpacity>
-                      //         <View
-                      //           style={{
-                      //             backgroundColor: "#EEEEEE",
-                      //             padding: 10,
-                      //           }}
-                      //         >
-                      //           <Text
-                      //             style={{ fontWeight: "bold", fontSize: 12 }}
-                      //           >
-                      //             {item?.project?.project_title} projesinde{" "}
-                      //             {paymentModalShowOrder} No'lu ilan Ödeme Planı
-                      //           </Text>
-                      //         </View>
-                      //         <View>
-                      //           <SettingsItem
-                      //             info="Peşin Fiyat"
-                      //             numbers={
-                      //               paymentModalShowOrder != null
-                      //                 ? addDotEveryThreeDigits(
-                      //                     item.projectHousingsList[
-                      //                       paymentModalShowOrder
-                      //                     ]["price[]"]
-                      //                   ) + " ₺"
-                      //                 : "0"
-                      //             }
-                      //           />
-                      //           {paymentModalShowOrder != null ? (
-                      //             JSON.parse(
-                      //               item.projectHousingsList[
-                      //                 paymentModalShowOrder
-                      //               ]["payment-plan[]"]
-                      //             ) &&
-                      //             JSON.parse(
-                      //               item.projectHousingsList[
-                      //                 paymentModalShowOrder
-                      //               ]["payment-plan[]"]
-                      //             ).includes("taksitli") ? (
-                      //               <SettingsItem
-                      //                 info="Ay Taksitli Fiyat"
-                      //                 number={
-                      //                   item.projectHousingsList[
-                      //                     paymentModalShowOrder
-                      //                   ]["installments[]"]
-                      //                 }
-                      //                 numbers={
-                      //                   addDotEveryThreeDigits(
-                      //                     item.projectHousingsList[
-                      //                       paymentModalShowOrder
-                      //                     ]["installments-price[]"]
-                      //                   ) + "₺"
-                      //                 }
-                      //               />
-                      //             ) : (
-                      //               <SettingsItem
-                      //                 info="Ay Taksitli Fiyat"
-                      //                 numbers="0"
-                      //               />
-                      //             )
-                      //           ) : (
-                      //             <SettingsItem
-                      //               info="Ay Taksitli Fiyat"
-                      //               numbers="0"
-                      //             />
-                      //           )}
-                      //           {paymentModalShowOrder != null ? (
-                      //             JSON.parse(
-                      //               item.projectHousingsList[
-                      //                 paymentModalShowOrder
-                      //               ]["payment-plan[]"]
-                      //             ) &&
-                      //             JSON.parse(
-                      //               item.projectHousingsList[
-                      //                 paymentModalShowOrder
-                      //               ]["payment-plan[]"]
-                      //             ).includes("taksitli") ? (
-                      //               <SettingsItem
-                      //                 info="Peşinat"
-                      //                 numbers={
-                      //                   addDotEveryThreeDigits(
-                      //                     item.projectHousingsList[
-                      //                       paymentModalShowOrder
-                      //                     ]["advance[]"]
-                      //                   ) + "₺"
-                      //                 }
-                      //               />
-                      //             ) : (
-                      //               <SettingsItem info="Peşinat" numbers="0" />
-                      //             )
-                      //           ) : (
-                      //             <SettingsItem info="Peşinat" numbers="0" />
-                      //           )}
+          <View style={style.PostContainer}>
+            <FlatList
+              data={mergedItems}
+              renderItem={({ item, index }) => (
+                <View
+                  style={{ paddingLeft: 10, paddingRight: 10, width: "100%" }}
+                >
+                  {item.item_type == 2 ? (
+                    <RealtorPost
+                      key={item?.housing.id}
+                      HouseId={item?.housing.id}
+                      bookmarkStatus={false}
+                      price={`${
+                        JSON.parse(item?.housing.housing_type_data)["price"] ??
+                        JSON.parse(item?.housing.housing_type_data)[
+                          "daily_rent"
+                        ]
+                      } `}
+                      openSharing={
+                        item &&
+                        item.housing_type_data &&
+                        JSON.parse(item.housing_type_data)["open_sharing1"]
+                      }
+                      discount_amount={item.discount_amount}
+                      discountRate={`${
+                        JSON.parse(item.housing.housing_type_data)[
+                          "discount_rate"
+                        ]
+                      } `}
+                      housing={item.housing}
+                      title={item.housing.title}
+                      location={" "}
+                      image={`${apiUrl}/housing_images/${
+                        JSON.parse(item.housing.housing_type_data).image
+                      }`}
+                    />
+                  ) : (
+                    <></>
+                    // <>
+                    //   <Posts
+                    //     key={item?.room_order}
+                    //     data={item}
+                    //     bookmarkStatus={false}
+                    //     openModal={openModal}
+                    //     openFormModal={OpenFormModal}
+                    //     roomOrder={item?.room_order}
+                    //     GetIdForCart={GetIdForCart}
 
-                      //           {paymentModalShowOrder != null ? (
-                      //             JSON.parse(
-                      //               item.projectHousingsList[
-                      //                 paymentModalShowOrder
-                      //               ]["payment-plan[]"]
-                      //             ) &&
-                      //             JSON.parse(
-                      //               item.projectHousingsList[
-                      //                 paymentModalShowOrder
-                      //               ]["payment-plan[]"]
-                      //             ).includes("taksitli") ? (
-                      //               <SettingsItem
-                      //                 info="Aylık Ödenecek Tutar"
-                      //                 numbers={
-                      //                   addDotEveryThreeDigits(
-                      //                     (
-                      //                       (item.projectHousingsList[
-                      //                         paymentModalShowOrder
-                      //                       ]["installments-price[]"] -
-                      //                         item.projectHousingsList[
-                      //                           paymentModalShowOrder
-                      //                         ]["advance[]"]) /
-                      //                       item.projectHousingsList[
-                      //                         paymentModalShowOrder
-                      //                       ]["installments[]"]
-                      //                     ).toFixed(0)
-                      //                   ) + "₺"
-                      //                 }
-                      //               />
-                      //             ) : (
-                      //               <SettingsItem
-                      //                 info="Aylık Ödenecek Tutar"
-                      //                 numbers="0"
-                      //               />
-                      //             )
-                      //           ) : (
-                      //             <SettingsItem
-                      //               info="Aylık Ödenecek Tutar"
-                      //               numbers="0"
-                      //             />
-                      //           )}
+                    //   />
+                    //   <Modal
+                    //     animationType="fade" // veya "fade", "none" gibi
+                    //     transparent={true}
+                    //     visible={modalVisible}
+                    //     onRequestClose={() => {
+                    //       setModalVisible(!modalVisible);
+                    //     }}
+                    //   >
+                    //     <View style={style.centeredView}>
+                    //       <View style={style.modalView}>
+                    //         <TouchableOpacity
+                    //           style={{
+                    //             position: "absolute",
+                    //             right: -5,
+                    //             backgroundColor: "#333",
+                    //             padding: 6,
+                    //             zIndex: 1,
+                    //             borderRadius: 30,
+                    //             top: -15,
+                    //           }}
+                    //           onPress={() => setModalVisible(!modalVisible)}
+                    //         >
+                    //           <Heart name="close" size={20} color={"white"} />
+                    //         </TouchableOpacity>
+                    //         <View
+                    //           style={{
+                    //             backgroundColor: "#EEEEEE",
+                    //             padding: 10,
+                    //           }}
+                    //         >
+                    //           <Text
+                    //             style={{ fontWeight: "bold", fontSize: 12 }}
+                    //           >
+                    //             {item?.project?.project_title} projesinde{" "}
+                    //             {paymentModalShowOrder} No'lu ilan Ödeme Planı
+                    //           </Text>
+                    //         </View>
+                    //         <View>
+                    //           <SettingsItem
+                    //             info="Peşin Fiyat"
+                    //             numbers={
+                    //               paymentModalShowOrder != null
+                    //                 ? addDotEveryThreeDigits(
+                    //                     item.projectHousingsList[
+                    //                       paymentModalShowOrder
+                    //                     ]["price[]"]
+                    //                   ) + " ₺"
+                    //                 : "0"
+                    //             }
+                    //           />
+                    //           {paymentModalShowOrder != null ? (
+                    //             JSON.parse(
+                    //               item.projectHousingsList[
+                    //                 paymentModalShowOrder
+                    //               ]["payment-plan[]"]
+                    //             ) &&
+                    //             JSON.parse(
+                    //               item.projectHousingsList[
+                    //                 paymentModalShowOrder
+                    //               ]["payment-plan[]"]
+                    //             ).includes("taksitli") ? (
+                    //               <SettingsItem
+                    //                 info="Ay Taksitli Fiyat"
+                    //                 number={
+                    //                   item.projectHousingsList[
+                    //                     paymentModalShowOrder
+                    //                   ]["installments[]"]
+                    //                 }
+                    //                 numbers={
+                    //                   addDotEveryThreeDigits(
+                    //                     item.projectHousingsList[
+                    //                       paymentModalShowOrder
+                    //                     ]["installments-price[]"]
+                    //                   ) + "₺"
+                    //                 }
+                    //               />
+                    //             ) : (
+                    //               <SettingsItem
+                    //                 info="Ay Taksitli Fiyat"
+                    //                 numbers="0"
+                    //               />
+                    //             )
+                    //           ) : (
+                    //             <SettingsItem
+                    //               info="Ay Taksitli Fiyat"
+                    //               numbers="0"
+                    //             />
+                    //           )}
+                    //           {paymentModalShowOrder != null ? (
+                    //             JSON.parse(
+                    //               item.projectHousingsList[
+                    //                 paymentModalShowOrder
+                    //               ]["payment-plan[]"]
+                    //             ) &&
+                    //             JSON.parse(
+                    //               item.projectHousingsList[
+                    //                 paymentModalShowOrder
+                    //               ]["payment-plan[]"]
+                    //             ).includes("taksitli") ? (
+                    //               <SettingsItem
+                    //                 info="Peşinat"
+                    //                 numbers={
+                    //                   addDotEveryThreeDigits(
+                    //                     item.projectHousingsList[
+                    //                       paymentModalShowOrder
+                    //                     ]["advance[]"]
+                    //                   ) + "₺"
+                    //                 }
+                    //               />
+                    //             ) : (
+                    //               <SettingsItem info="Peşinat" numbers="0" />
+                    //             )
+                    //           ) : (
+                    //             <SettingsItem info="Peşinat" numbers="0" />
+                    //           )}
 
-                      //           <Text>
-                      //             {item.projectHousingsList[
-                      //               paymentModalShowOrder
-                      //             ] &&
-                      //             item.projectHousingsList[
-                      //               paymentModalShowOrder
-                      //             ]["projected_earnings[]"] &&
-                      //             item.projectHousingsList[
-                      //               paymentModalShowOrder
-                      //             ]["projected_earnings[]"] ? (
-                      //               <SettingsItem
-                      //                 info="Öngörülen Yıllık Kazanç"
-                      //                 color={"green"}
-                      //                 fontWeight={"700"}
-                      //                 icon={
-                      //                   <LinkIcon3
-                      //                     name="arrow-up-circle"
-                      //                     size={15}
-                      //                     color={"green"}
-                      //                   />
-                      //                 }
-                      //                 numbers={
-                      //                   "%" +
-                      //                   item.projectHousingsList[
-                      //                     paymentModalShowOrder
-                      //                   ]["projected_earnings[]"]
-                      //                 }
-                      //               />
-                      //             ) : (
-                      //               ""
-                      //             )}
-                      //           </Text>
-                      //         </View>
+                    //           {paymentModalShowOrder != null ? (
+                    //             JSON.parse(
+                    //               item.projectHousingsList[
+                    //                 paymentModalShowOrder
+                    //               ]["payment-plan[]"]
+                    //             ) &&
+                    //             JSON.parse(
+                    //               item.projectHousingsList[
+                    //                 paymentModalShowOrder
+                    //               ]["payment-plan[]"]
+                    //             ).includes("taksitli") ? (
+                    //               <SettingsItem
+                    //                 info="Aylık Ödenecek Tutar"
+                    //                 numbers={
+                    //                   addDotEveryThreeDigits(
+                    //                     (
+                    //                       (item.projectHousingsList[
+                    //                         paymentModalShowOrder
+                    //                       ]["installments-price[]"] -
+                    //                         item.projectHousingsList[
+                    //                           paymentModalShowOrder
+                    //                         ]["advance[]"]) /
+                    //                       item.projectHousingsList[
+                    //                         paymentModalShowOrder
+                    //                       ]["installments[]"]
+                    //                     ).toFixed(0)
+                    //                   ) + "₺"
+                    //                 }
+                    //               />
+                    //             ) : (
+                    //               <SettingsItem
+                    //                 info="Aylık Ödenecek Tutar"
+                    //                 numbers="0"
+                    //               />
+                    //             )
+                    //           ) : (
+                    //             <SettingsItem
+                    //               info="Aylık Ödenecek Tutar"
+                    //               numbers="0"
+                    //             />
+                    //           )}
 
-                      //         <TouchableOpacity
-                      //           style={{
-                      //             backgroundColor: "#274abb",
-                      //             padding: 10,
-                      //             borderRadius: 5,
-                      //           }}
-                      //         >
-                      //           <Text
-                      //             style={{
-                      //               textAlign: "center",
-                      //               color: "white",
-                      //               fontSize: 15,
-                      //               fontWeight: "bold",
-                      //             }}
-                      //           >
-                      //             Sepete Ekle
-                      //           </Text>
-                      //         </TouchableOpacity>
-                      //       </View>
-                      //     </View>
-                      //   </Modal>
-                      // </>
-                    )}
-                  </View>
-                )}
-               
-              />
-            </View>
-       
+                    //           <Text>
+                    //             {item.projectHousingsList[
+                    //               paymentModalShowOrder
+                    //             ] &&
+                    //             item.projectHousingsList[
+                    //               paymentModalShowOrder
+                    //             ]["projected_earnings[]"] &&
+                    //             item.projectHousingsList[
+                    //               paymentModalShowOrder
+                    //             ]["projected_earnings[]"] ? (
+                    //               <SettingsItem
+                    //                 info="Öngörülen Yıllık Kazanç"
+                    //                 color={"green"}
+                    //                 fontWeight={"700"}
+                    //                 icon={
+                    //                   <LinkIcon3
+                    //                     name="arrow-up-circle"
+                    //                     size={15}
+                    //                     color={"green"}
+                    //                   />
+                    //                 }
+                    //                 numbers={
+                    //                   "%" +
+                    //                   item.projectHousingsList[
+                    //                     paymentModalShowOrder
+                    //                   ]["projected_earnings[]"]
+                    //                 }
+                    //               />
+                    //             ) : (
+                    //               ""
+                    //             )}
+                    //           </Text>
+                    //         </View>
+
+                    //         <TouchableOpacity
+                    //           style={{
+                    //             backgroundColor: "#274abb",
+                    //             padding: 10,
+                    //             borderRadius: 5,
+                    //           }}
+                    //         >
+                    //           <Text
+                    //             style={{
+                    //               textAlign: "center",
+                    //               color: "white",
+                    //               fontSize: 15,
+                    //               fontWeight: "bold",
+                    //             }}
+                    //           >
+                    //             Sepete Ekle
+                    //           </Text>
+                    //         </TouchableOpacity>
+                    //       </View>
+                    //     </View>
+                    //   </Modal>
+                    // </>
+                  )}
+                </View>
+              )}
+            />
+          </View>
         ) : (
           <View style={style.loadingContainer}>
             <ActivityIndicator size="large" color="#333" />
@@ -1634,7 +1627,8 @@ export default function SeeCollection() {
                   >
                     Şehir
                   </Text>
-                  <RNPickerSelect doneText="Tamam"
+                  <RNPickerSelect
+                    doneText="Tamam"
                     placeholder={{
                       label: "Şehir Seçiniz...",
                       value: null,
@@ -1658,7 +1652,8 @@ export default function SeeCollection() {
                   >
                     İlçe
                   </Text>
-                  <RNPickerSelect doneText="Tamam"
+                  <RNPickerSelect
+                    doneText="Tamam"
                     placeholder={{
                       label: "İlçe Seçiniz...",
                       value: null,
@@ -1728,7 +1723,6 @@ export default function SeeCollection() {
               <CloseIcon name="close" color={"white"} size={30} />
             </TouchableOpacity>
           </View>
-
         </View>
       </Modal>
 
@@ -1841,8 +1835,8 @@ const style = StyleSheet.create({
     color: "grey",
   },
   PostContainer: {
-    paddingBottom:160,
-    flex:1,
+    paddingBottom: 160,
+    flex: 1,
     backgroundColor: "#FFFFFF",
     width: "100%",
   },
@@ -2005,5 +1999,4 @@ const pickerSelectStyles = StyleSheet.create({
     padding: 10,
     fontSize: 14, // to ensure the text is never behind the icon
   },
-
 });
