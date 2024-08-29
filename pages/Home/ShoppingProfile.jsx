@@ -25,6 +25,7 @@ import axios from "axios";
 import Menu from "./Menu.json";
 import { Platform } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 
 export default function ShoppingProfile() {
@@ -161,9 +162,13 @@ export default function ShoppingProfile() {
 
 
   const logout = () => {
-    setDialogVisible(false);
-    SecureStore.setItemAsync("user", "");
-    navigation.push("Home",{status : "logout"});
+    setDialogVisible(false);  
+    setTimeout(() => {
+      SecureStore.setItemAsync("user", "");
+      navigation.push("Home",{status : "logout"});
+    }, 200);
+   
+   
   };
 
   const toggleAccor = (index) => {
@@ -374,6 +379,36 @@ export default function ShoppingProfile() {
                 </View>
               ))}
             </View>
+            <AwesomeAlert
+        show={dialogVisible}
+        showProgress={false}
+        titleStyle={{
+          color: "#333",
+          fontSize: 13,
+          fontWeight: "700",
+          textAlign: "center",
+          margin: 5,
+        }}
+        title={'Çıkış Yap'}
+        messageStyle={{ textAlign: "center" }}
+        message={`Çıkış Yapmak istediğinize emin misiniz?`}
+        closeOnTouchOutside={false}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="Hayır"
+        confirmText="Evet"
+        cancelButtonColor="#1d8027"
+        confirmButtonColor="#ce4d63"
+        onCancelPressed={() => {
+        setDialogVisible(false)
+        }}
+        onConfirmPressed={() => {
+          logout()
+        }}
+        confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+      />
             <View
               style={{ flex: 1 / 2, paddingBottom: 50, alignItems: "center" }}
             >
@@ -397,7 +432,7 @@ export default function ShoppingProfile() {
                 </Text>
               </TouchableOpacity>
             </View>
-            <Modal
+            {/* <Modal
               animationType="fade"
               onBackdropPress={() => setDialogVisible(!dialogVisible)}
               visible={dialogVisible}
@@ -469,7 +504,7 @@ export default function ShoppingProfile() {
                   </View>
                 </View>
               </View>
-            </Modal>
+            </Modal> */}
           </ScrollView>
         )}
    

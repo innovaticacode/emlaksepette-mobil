@@ -380,7 +380,7 @@ const fetchDataCounty = async (value) => {
               İl
             </Text>
             <RNPickerSelect doneText="Tamam"
-              doneText="Tamam"
+             
               value={city}
               placeholder={{
                 label: "Seçiniz...",

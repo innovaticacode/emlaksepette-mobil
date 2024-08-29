@@ -84,6 +84,7 @@
     "react-native-screens": "3.31.1",
     "react-native-shadow-2": "^7.0.8",
     "react-native-share": "^10.2.1",
+    "react-native-step-indicator": "^1.0.3",
     "react-native-svg": "15.2.0",
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^3.5.2",

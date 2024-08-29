@@ -107,6 +107,7 @@ import MapWiew from "./pages/Home/MapWiew";
 import CollectionsTab from "./pages/Home/Panel/CollectionsTab";
 import SwapForm from "./pages/Home/RealtorPages/SwapForm";
 import { Button } from "react-native";
+import VerifyScreen from "./pages/Home/VerifyScreen";
 
 
 const Stack = createNativeStackNavigator();
@@ -1013,12 +1014,12 @@ export default function App({ route }) {
             })}
           />
           <Stack.Screen
-            name="VerifyPhone"
-            component={Verification}
+            name="VerifyScreen"
+            component={VerifyScreen}
             options={({ route }) => ({
               headerShown: false,
               gestureEnabled: false,
-              title: "Konutu Değerlendir",
+             
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#f7f7f7",
