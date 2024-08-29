@@ -246,6 +246,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     overflow: "hidden",
+    marginBottom: 5
   },
   pagerView: {
     flex: 1,
@@ -266,6 +267,7 @@ const styles = StyleSheet.create({
   },
   sliderBarContainer: {
     paddingBottom: 3,
+    paddingTop:5,
     backgroundColor: "white",
   },
   sliderBarTitle: {
@@ -281,8 +283,8 @@ const styles = StyleSheet.create({
   featuredProjectsHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-  },
+    alignItems: "center"
+    },
   featuredProjectsTitle: {
     fontSize: 12,
     fontWeight: "700",
