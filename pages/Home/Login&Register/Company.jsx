@@ -550,6 +550,7 @@ export default function Company() {
                 value={eposta}
                 onChangeText={(value) => seteposta(value)}
                 placeholder="E-Posta Adresi"
+                autoCapitalize="none" // İlk harfin büyük olmasını engeller
               />
               {errorStatu == 2 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
