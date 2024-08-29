@@ -44,7 +44,7 @@ export default function Notifications() {
         setNotificationCount(0);
         return;
       }
-
+  
       const response = await axios.get(
         "https://private.emlaksepette.com/api/user/notification",
         {
@@ -53,13 +53,17 @@ export default function Notifications() {
           },
         }
       );
-
+  
       if (response.data) {
-        setNotifications(response.data);
+        // Bildirimleri tarihe göre sıralama (en yeni tarihler en üstte)
+        const sortedNotifications = response.data.sort((a, b) => 
+          new Date(b.created_at) - new Date(a.created_at)
+        );
+        setNotifications(sortedNotifications);
       } else {
         setNotifications([]);
       }
-
+  
       const unreadCount = response.data.filter(
         (notification) => notification.readed === 0
       ).length;
@@ -70,6 +74,7 @@ export default function Notifications() {
       setNotificationCount(0); // Set unreadCount to 0 in case of an error
     }
   };
+  
 
   useEffect(() => {
     if (user?.access_token) {
