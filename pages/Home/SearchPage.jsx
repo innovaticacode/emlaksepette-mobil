@@ -148,7 +148,7 @@ export default function SearchPage({ navigation }) {
   
               const params = {
                 "Emlak İlanları": { houseId: item.id },
-                "Proje İlanları": { projectId: item.id },
+                "Proje İlanları": { ProjectId: item.id },
                 "Üyeler": { id: item.id },
               };
   
