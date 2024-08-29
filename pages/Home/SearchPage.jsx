@@ -145,7 +145,14 @@ export default function SearchPage({ navigation }) {
                 "Proje İlanları": "Details",
                 "Üyeler": "Profile",
               };
-              navigation.navigate(routes[type], { id: item.id });
+  
+              const params = {
+                "Emlak İlanları": { houseId: item.id },
+                "Proje İlanları": { projectId: item.id },
+                "Üyeler": { id: item.id },
+              };
+  
+              navigation.navigate(routes[type], params[type]);
             }}
           />
         ))}
