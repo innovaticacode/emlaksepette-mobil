@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import React from 'react';
 
 export default function SearchItem({ name = "Item Name", photo, onPress }) {
+  console.log(photo);
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.innerContainer}>

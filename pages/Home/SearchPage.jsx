@@ -47,7 +47,7 @@ export default function SearchPage({ navigation }) {
     merchants: false,
   });
   const [searchHistory, setSearchHistory] = useState([]);
-  const [loading, setLoading] = useState(false); // New loading state
+  const [loading, setLoading] = useState(false);
 
   // Fetch initial search history from local storage
   useEffect(() => {
@@ -61,21 +61,20 @@ export default function SearchPage({ navigation }) {
   // Handle search functionality
   const handleSearch = useCallback(
     async (term) => {
-      if (term.trim() === "") return; // Skip if term is empty
+      if (!term.trim()) return;
 
-      setLoading(true); // Set loading to true when starting the search
+      setLoading(true);
 
       try {
-        const response = await axios.get(
+        const { data } = await axios.get(
           "https://private.emlaksepette.com/api/get-search-list",
           {
             params: { searchTerm: term },
             headers: { "Content-Type": "application/json" },
           }
         );
-        setResults(response.data);
+        setResults(data);
 
-        // Update search history if it's a new term
         if (term && !searchHistory.includes(term)) {
           const updatedHistory = [term, ...searchHistory];
           setSearchHistory(updatedHistory);
@@ -84,7 +83,7 @@ export default function SearchPage({ navigation }) {
       } catch (error) {
         console.error("Error fetching search results:", error);
       } finally {
-        setLoading(false); // Set loading to false after fetching results
+        setLoading(false);
       }
     },
     [searchHistory]
@@ -108,27 +107,27 @@ export default function SearchPage({ navigation }) {
   };
 
   const renderItems = (items, type) => {
-    if (items.length === 0) return null;
+    if (!items.length) return null;
 
-    let photoBaseUrl = "";
-    let modifyPhotoUrl = (photo) => photo;
+    const photoBaseUrl = {
+      "Emlak İlanları": "https://private.emlaksepette.com/housing_images/",
+      "Proje İlanları": "https://private.emlaksepette.com",
+      "Üyeler": "https://private.emlaksepette.com/storage/profile_images",
+    }[type];
 
-    if (type === "Emlak İlanları") {
-      photoBaseUrl = "https://private.emlaksepette.com/housing_images/";
-      modifyPhotoUrl = (photo) => `${photoBaseUrl}${photo ?? ""}`;
-    } else if (type === "Proje İlanları") {
-      photoBaseUrl = "https://private.emlaksepette.com";
-      modifyPhotoUrl = (photo) =>
-        `${photoBaseUrl}/${photo.replace("public/", "storage/")}`;
-    } else if (type === "Mağazalar") {
-      photoBaseUrl = "https://private.emlaksepette.com/storage/profile_images";
-      modifyPhotoUrl = (photo) => `${photoBaseUrl}/${photo}`;
-    }
+    const modifyPhotoUrl = (photo) => {
+      if (!photo) return photoBaseUrl + "/indir.png";
+      return type === "Proje İlanları" || type === "Üyeler"
+        ? `${photoBaseUrl}/${photo.replace("public/", "storage/")}`
+        : `${photoBaseUrl}${photo}`;
+
+    };
 
     const displayedItems = showMore[type] ? items : items.slice(0, 5);
     const showMoreText = showMore[type]
       ? "Daha Az Göster"
       : "Daha Fazla Göster";
+
 
     return (
       <View style={styles.resultSection}>
@@ -141,13 +140,12 @@ export default function SearchPage({ navigation }) {
             photo={modifyPhotoUrl(item.photo)}
             name={item.name}
             onPress={() => {
-              if (type === "Emlak İlanları") {
-                navigation.navigate("Realtor details", { houseId: item.id });
-              } else if (type === "Proje İlanları") {
-                navigation.navigate("Details", { ProjectId: item.id });
-              } else if (type === "Mağazalar") {
-                navigation.navigate("Profile", { id: item.id });
-              }
+              const routes = {
+                "Emlak İlanları": "Realtor details",
+                "Proje İlanları": "Details",
+                "Üyeler": "Profile",
+              };
+              navigation.navigate(routes[type], { id: item.id });
             }}
           />
         ))}
@@ -174,7 +172,7 @@ export default function SearchPage({ navigation }) {
         />
       </View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {searchTerm === "" && searchHistory.length > 0 && (
+        {!searchTerm && searchHistory.length > 0 && (
           <View style={styles.historySection}>
             <View style={styles.historyFlex}>
               <Text style={styles.historyTitle}>Geçmiş Aramalar</Text>
@@ -194,16 +192,16 @@ export default function SearchPage({ navigation }) {
         )}
         {loading ? (
           <Text style={styles.loadingText}>Aranıyor...</Text>
-        ) : results.housings.length === 0 &&
-          results.projects.length === 0 &&
-          results.merchants.length === 0 &&
+        ) : !results.housings.length &&
+          !results.projects.length &&
+          !results.merchants.length &&
           searchTerm ? (
           <Text style={styles.noResultsText}>Sonuç bulunamadı</Text>
         ) : (
           <>
             {renderItems(results.housings, "Emlak İlanları")}
             {renderItems(results.projects, "Proje İlanları")}
-            {renderItems(results.merchants, "Mağazalar")}
+            {renderItems(results.merchants, "Üyeler")}
           </>
         )}
       </ScrollView>
@@ -279,7 +277,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     marginBottom: 15,
-
   },
   historyFlex: {
     flexDirection: "row",
