@@ -610,9 +610,7 @@ export default function PostDetail() {
                   <></>
                 ) : (
                   <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("CreateReservation", { data: data });
-                    }}
+                    onPress={handleOpenPhone}
                     style={{
                       backgroundColor: "#ffffff",
                       width: "45%",

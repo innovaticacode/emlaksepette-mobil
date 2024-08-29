@@ -30,19 +30,24 @@ export default function Caption({ data }) {
 
   return (
     <View style={[styles.card, { paddingLeft: 20, paddingRight: 20, flex: 1 }]}>
-  
-      <HTML source={{ html: data?.project?.description }} contentWidth={10} />
-      <View style={{padding:10,borderTopWidth:1,borderTopColor:'grey'}}>
-        <Text style={styles.text}>{showFullText ? fullText : previewText}</Text>
-        <TouchableOpacity
-          onPress={toggleText}
-          style={styles.toggleButtonContainer}
+      <ScrollView>
+        <HTML source={{ html: data?.project?.description }} contentWidth={10} />
+        <View
+          style={{ padding: 10, borderTopWidth: 1, borderTopColor: "grey" }}
         >
-          <Text style={styles.toggleButtonText}>
-            {showFullText ? "Daha Az Göster" : "Devamını Gör"}
+          <Text style={styles.text}>
+            {showFullText ? fullText : previewText}
           </Text>
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity
+            onPress={toggleText}
+            style={styles.toggleButtonContainer}
+          >
+            <Text style={styles.toggleButtonText}>
+              {showFullText ? "Daha Az Göster" : "Devamını Gör"}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -71,8 +76,8 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     color: "#333",
-    textAlign:'center',
-    fontWeight:'600'
+    textAlign: "center",
+    fontWeight: "600",
   },
   toggleButtonContainer: {
     borderBottomWidth: 2,
