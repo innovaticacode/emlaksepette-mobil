@@ -293,6 +293,7 @@ export default function Personal({ type }) {
                 value={ePosta}
                 onChangeText={(value) => setePosta(value)}
                 placeholder="E-Posta Adresi"
+                autoCapitalize="none" // İlk harfin büyük olmasını engeller
               />
             </View>
 
@@ -334,6 +335,7 @@ export default function Personal({ type }) {
                   onChangeText={(value) => setpassword(value)}
                   placeholder="Şifre"
                   secureTextEntry={Show ? false : true}
+                  autoCapitalize="none" // İlk harfin büyük olmasını engeller
                 />
                 <TouchableOpacity
                   style={{
