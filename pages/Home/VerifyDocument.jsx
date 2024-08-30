@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity,Image, StyleSheet } from 'react-native'
+mport { View, Text, TouchableOpacity,Image, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 import Feather from 'react-native-vector-icons/Ionicons'
