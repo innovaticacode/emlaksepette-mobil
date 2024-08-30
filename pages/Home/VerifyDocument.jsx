@@ -20,6 +20,8 @@ export default function VerifyDocument({nextStep,prevStep}) {
       Signature:null,
       authorizationCertificate:null,
       ConfirmDocumentWithSignature:null,
+      documentForBuilder:null,
+      documentForAcent:null,
       PdfName:null,
       pdfUrl:null
         // Diğer form alanları buraya eklenebilir
@@ -174,7 +176,7 @@ export default function VerifyDocument({nextStep,prevStep}) {
             useEffect(() => {
                 getValueFor('user',setuser)
             }, [])
-            console.log(user.role)
+            console.log(user.corporate_type)
   return (
 
     <>
@@ -195,7 +197,10 @@ style={{
     
     {
         documentView.map((item,_i)=>(
-            <TouchableOpacity key={_i} style={{gap:7,width:'100%'}} onPress={()=>{
+            <TouchableOpacity key={_i} style={{gap:7,width:'100%',
+                display:item.isShow=='All'?'flex':'none' && item.isShow==user.corporate_type? 'flex':'none'
+
+            }} onPress={()=>{
                 if (FormDatas[item.state]) {
                        setselectedPick(item.state)
                        setdeleteModal(true)

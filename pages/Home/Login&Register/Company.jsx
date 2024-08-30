@@ -711,13 +711,9 @@ export default function Company() {
                 items={[
                   { label: "Emlak Ofisi", value: "Emlak Ofisi" },
                   { label: "İnşaat Ofisi", value: "İnşaat Ofisi" },
-                  { label: "Prefabrik Yapı", value: "Prefabrik Yapı" },
                   { label: "Banka", value: "Banka" },
                   { label: "Turizm", value: "Turizm" },
-                  {
-                    label: "Ustalar & Hizmetler",
-                    value: "Ustalar & Hizmetler",
-                  },
+                 
                 ]}
               />
               {errorStatu == 7 ? (
