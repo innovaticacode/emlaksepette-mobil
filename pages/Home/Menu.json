@@ -118,27 +118,36 @@
 
   {
     "id": "GetSwapApplications",
-    "label": "Başvurular",
+    "label": "Takaslar",
     "icon": "users",
-    "text": "Takas Başvurularım",
+    "text": "Takas Taleplerim",
+    "key": "GetSwapApplications",
+    "url": "SwapScreen",
+    "activePath": "/hesabim/takas-basvurularim"
+  },
+  {
+    "id": "GetSwapApplications",
+    "label": "Takaslar",
+    "icon": "users",
+    "text": "Gelen Takas Talepleri",
     "key": "GetSwapApplications",
     "url": "SwapScreen",
     "activePath": "/hesabim/takas-basvurularim"
   },
   {
     "id": "GetReceivedOffers",
-    "label": "Başvurular",
+    "label": "Projeler",
     "icon": "users",
-    "text": "Gelen Konut Başvuruları",
+    "text":"Gelen Proje Başvuruları",
     "key": "GetReceivedOffers",
     "url": "Suggest",
     "activePath": "/hesabim/gelen-konut-basvurulari"
   },
   {
     "id": "GetGivenOffers",
-    "label": "Başvurular",
+    "label": "Projeler",
     "icon": "corner-up-right",
-    "text": "Projelere Yaptığım Başvurular",
+    "text": "Başvurduğum Projeler",
     "key": "GetGivenOffers",
     "url": "Suggest",
     "activePath": "/hesabim/basvurularim"

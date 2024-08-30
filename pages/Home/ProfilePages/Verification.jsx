@@ -15,11 +15,12 @@ import { ActivityIndicator } from "react-native-paper";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
-export default function Verification() {
+export default function Verification({nextStep,prevStep}) {
   const [codes, setCodes] = useState("");
   const inputs = useRef([]);
   const [Isucces, setIsucces] = useState(false);
   const navigation = useNavigation();
+
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("beforeRemove", (e) => {
@@ -66,13 +67,23 @@ export default function Verification() {
 
       // Kullanıcı durumunu güncelleme
       setuser(updatedUser);
-
+      
       // SecureStore ile güncellenmiş kullanıcı verilerini kaydetme
       await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     }
   };
+  const isfocused = useIsFocused();
+ 
+ 
+  
+  const [user, setuser] = useState({});
+  useEffect(() => {
+    getValueFor("user", setuser);
+  }, []);
+
+
   const handleSubmit = async () => {
     try {
       // POST isteği yap
@@ -89,7 +100,8 @@ export default function Verification() {
       updateUserData();
       setCodes("");
       setsucces(true);
-      navigation.navigate("HomePage");
+       nextStep()
+       SecureStore.setItemAsync("PhoneVerify", '1');
       setIsucces(true);
       setTimeout(() => {
         setIsucces(false);
@@ -100,10 +112,9 @@ export default function Verification() {
       setsucces(false);
     }
   };
-  const [user, setuser] = useState({});
-  useEffect(() => {
-    getValueFor("user", setuser);
-  }, []);
+
+  const [verifyStatu, setverifyStatu] = useState(null)
+
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -131,12 +142,18 @@ export default function Verification() {
     } finally {
     }
   };
-  const isfocused = useIsFocused();
+
+useEffect(() => {
+    getValueFor('PhoneVerify',setverifyStatu)
+}, [])
 
   useEffect(() => {
-    sendPostRequest();
-    setIsActive(true);
-  }, [user]);
+      if (verifyStatu==0) {
+        sendPostRequest();
+        setIsActive(true);
+      }
+  
+  }, []);
 
   const [succes, setsucces] = useState(true);
 
@@ -169,6 +186,9 @@ export default function Verification() {
     const seconds = timeInSeconds % 60;
     return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
   };
+
+
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ padding: 10, paddingTop: 50 }}>
@@ -216,7 +236,7 @@ export default function Verification() {
         <View style={{ padding: 10, paddingTop: 50, gap: 20 }}>
           <TouchableOpacity
             disabled={codes.length == 6 ? false : true}
-            onPress={handleSubmit}
+            onPress={()=>{ handleSubmit()}}
             style={{
               backgroundColor: "#EA2A28",
               padding: 9,

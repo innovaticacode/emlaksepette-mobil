@@ -30,6 +30,8 @@ export default function Notifications() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
+  console.log(user);
+  const [loading, setloading] = useState(false);
 
   const navigation = useNavigation();
 
@@ -44,7 +46,7 @@ export default function Notifications() {
         setNotificationCount(0);
         return;
       }
-  
+      setloading(true);
       const response = await axios.get(
         "https://private.emlaksepette.com/api/user/notification",
         {
@@ -53,17 +55,17 @@ export default function Notifications() {
           },
         }
       );
-  
+
       if (response.data) {
         // Bildirimleri tarihe göre sıralama (en yeni tarihler en üstte)
-        const sortedNotifications = response.data.sort((a, b) => 
-          new Date(b.created_at) - new Date(a.created_at)
+        const sortedNotifications = response.data.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
         );
         setNotifications(sortedNotifications);
       } else {
         setNotifications([]);
       }
-  
+
       const unreadCount = response.data.filter(
         (notification) => notification.readed === 0
       ).length;
@@ -72,16 +74,17 @@ export default function Notifications() {
       console.error("Error fetching notifications:", error);
       setNotifications([]);
       setNotificationCount(0); // Set unreadCount to 0 in case of an error
+    } finally {
+      setloading(false);
     }
   };
-  
 
   useEffect(() => {
     if (user?.access_token) {
       fetchNotifications();
     }
   }, [user.access_token]);
-  const [loading, setloading] = useState(false);
+
   const deleteRequestWithToken = async () => {
     setloading(true);
     try {
@@ -105,9 +108,7 @@ export default function Notifications() {
   };
   const deleteNotifacte = async () => {
     setloading(true);
-    let formData = new FormData();
-    formData.append("id", selectedNotificateId);
-    formData.append("userId", user?.id);
+
     try {
       const response = await axios.delete(
         "https://private.emlaksepette.com/api/institutional/notification/delete",
@@ -115,13 +116,21 @@ export default function Notifications() {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
           },
-          data: formData,
+          data: {
+            id: selectedNotificateId,
+            userId: user?.id,
+          },
         }
       );
-      fetchNotifications();
-      Alert.alert("Başarılı", "Silme işlemi başarılı!");
 
-      console.log("Delete request successful:", response.data);
+      if (response.data.success) {
+        // Başarı kontrolü yapın
+        fetchNotifications();
+        Alert.alert("Başarılı", "Silme işlemi başarılı!");
+      } else {
+        Alert.alert("Hata", "Silme işlemi başarısız oldu!");
+      }
+
       setalertFordeleteNotificate(false);
     } catch (error) {
       Alert.alert("Hata", "Silme işlemi başarısız oldu!");
@@ -130,6 +139,7 @@ export default function Notifications() {
       setloading(false);
     }
   };
+
   const [deleteAlertForNotification, setdeleteAlertForNotification] =
     useState(false);
   const [selectedNotificateId, setselectedNotificateId] = useState(0);

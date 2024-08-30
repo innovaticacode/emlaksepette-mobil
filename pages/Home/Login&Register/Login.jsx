@@ -28,6 +28,7 @@ import { ActivityIndicator } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
+import { ALERT_TYPE, AlertNotificationRoot, Dialog } from "react-native-alert-notification";
 
 export default function Login({ navigation }) {
   const route = useRoute();
@@ -64,6 +65,43 @@ export default function Login({ navigation }) {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
+  const [loadingForLogin, setloadingForLogin] = useState(false)
+  const Login =()=>{
+    setloadingForLogin(true)
+    apiRequestPost("login", {
+      email: email,
+      password: password,
+    }).then((res) => {
+      if (res.data.status) {
+        SecureStore.setItemAsync("user", JSON.stringify(res.data));
+        SecureStore.setItemAsync("PhoneVerify", JSON.stringify(res.data.phone_verification_status));
+      navigation.push("Home", {
+            status: "login"
+
+          })
+        // if(res.data.phone_verification_status==1){
+    
+        // }else{
+        //   alert(res.data.phone_verification_status)
+        //   // navigation.push("VerifyScreen", {
+        //   //   status: "login"
+        //   // });
+        // }
+      } else {
+        // setshowMailSendAlert(true);
+        setStatus(false);
+        Dialog.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Hata",
+          textBody: res.data.message,
+          button: "Tamam",
+        });
+        // setStatusMessage(res.data.message);
+      }
+    }).finally(() => {
+      setloadingForLogin(false)
+    });
+  }
   const Submit = () => {
     if (!(email.trim() !== "" && email.includes("@"))) {
       setemailControl(true);
@@ -75,31 +113,12 @@ export default function Login({ navigation }) {
       setTimeout(() => {
         setpassControl(false);
       }, 2000);
-    } else {
-      setTimeout(() => {}, 9000);
-    }
+    }else{
+     Login()
+    } 
 
-    apiRequestPost("login", {
-      email: email,
-      password: password,
-    }).then((res) => {
-      if (res.data.status) {
-        SecureStore.setItemAsync("user", JSON.stringify(res.data));
-        if (res.data.phone_verification_status) {
-          navigation.push("Home", {
-            status: "login",
-          });
-        } else {
-          navigation.push("VerifyPhone", {
-            status: "login",
-          });
-        }
-      } else {
-        setshowMailSendAlert(true);
-        setStatus(false);
-        setStatusMessage(res.data.message);
-      }
-    });
+ 
+
   };
 
   const [status, setStatus] = useState(false);
@@ -156,9 +175,9 @@ export default function Login({ navigation }) {
     }
   };
   const [Deals, setDeals] = useState("");
-  const [loadingDeal, setloadingDeal] = useState(false);
+  const [loadingDeal, setloadingDeal] = useState(false)
   const fetchData = async () => {
-    setloadingDeal(true);
+    setloadingDeal(true)
     const url = `https://private.emlaksepette.com/api/sayfa/bireysel-uyelik-sozlesmesi`;
     try {
       const data = await fetchFromURL(url);
@@ -167,13 +186,14 @@ export default function Login({ navigation }) {
     } catch (error) {
       console.error("İstek hatası:", error);
       // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
-    } finally {
-      setloadingDeal(false);
+    }finally{
+      setloadingDeal(false)
     }
   };
   const [modalVisible, setModalVisible] = useState(false);
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <AlertNotificationRoot>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         {loading ? (
           <View style={{ alignItems: "center", justifyContent: "center" }}>
@@ -402,7 +422,10 @@ export default function Login({ navigation }) {
                         : false
                     }
                   >
-                    <Text
+                    {
+                      loadingForLogin ?
+                      <ActivityIndicator color="white" size={'small'}/>:
+                      <Text
                       style={{
                         textAlign: "center",
                         color: "white",
@@ -411,6 +434,8 @@ export default function Login({ navigation }) {
                     >
                       Giriş Yap
                     </Text>
+                    }
+                 
                   </TouchableOpacity>
                   <View>
                     <Text style={{ textAlign: "center", marginTop: 0 }}>
@@ -619,6 +644,8 @@ export default function Login({ navigation }) {
         )}
       </View>
     </TouchableWithoutFeedback>
+    </AlertNotificationRoot>
+  
   );
 }
 
