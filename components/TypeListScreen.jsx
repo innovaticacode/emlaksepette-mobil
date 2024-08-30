@@ -1,5 +1,5 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   Button,
-} from 'react-native';
+} from "react-native";
 
 function TypeListScreen({
   step,
@@ -19,15 +19,15 @@ function TypeListScreen({
   selectedTypes,
   nextStep,
 }) {
-  const baseUrl = 'https://private.emlaksepette.com/react/';
+  const baseUrl = "https://private.emlaksepette.com/react/";
 
   const [loadingOrder, setLoadingOrder] = useState(null);
   const [loadingOrderStatusId, setLoadingOrderStatusId] = useState(null);
 
   useEffect(() => {
     if (step === 1) {
-      axios.get(baseUrl + 'housing_types').then((res) => {
-        console.log('Fetched housing types for step 1:', res.data.data);
+      axios.get(baseUrl + "housing_types").then((res) => {
+        console.log("Fetched housing types for step 1:", res.data.data);
         setHousingTypes([res.data.data]);
       });
     }
@@ -46,9 +46,14 @@ function TypeListScreen({
     setLoadingOrder(order);
     setLoadingOrderStatusId(housingTypeId);
     setSelectedTypes(tempHousingTypeParents);
-    
+
     axios
-      .get(baseUrl + (order === 1 ? 'housing_types_end' : 'housing_types') + '?parent_id=' + housingTypeId)
+      .get(
+        baseUrl +
+          (order === 1 ? "housing_types_end" : "housing_types") +
+          "?parent_id=" +
+          housingTypeId
+      )
       .then((res) => {
         const tempHousingTypes = [];
         for (let i = 0; i <= order + 1; i++) {
@@ -61,16 +66,16 @@ function TypeListScreen({
         setLoadingOrder(null);
         setLoadingOrderStatusId(null);
         setHousingTypes(tempHousingTypes);
-        
+
         // Navigate to the next step if applicable
         if (nextStep) {
           nextStep(order + 2);
         } else {
-          navigation.navigate('Step' + (order + 2));
+          navigation.navigate("Step" + (order + 2));
         }
       })
       .catch((error) => {
-        console.error('Error fetching housing types:', error);
+        console.error("Error fetching housing types:", error);
         setLoadingOrder(null);
         setLoadingOrderStatusId(null);
       });
@@ -86,7 +91,7 @@ function TypeListScreen({
     >
       <Text>{item.title}</Text>
       {loadingOrder === order && loadingOrderStatusId === item.id && (
-        <ActivityIndicator  color={'#333'} style={styles.loadingIcon} />
+        <ActivityIndicator color={"#333"} style={styles.loadingIcon} />
       )}
     </TouchableOpacity>
   );
@@ -111,7 +116,7 @@ function TypeListScreen({
           </View>
           <View style={styles.finishButtonFirst}>
             <Button
-              onPress={() => navigation.navigate('Step1')}
+              onPress={() => navigation.navigate("Step1")}
               title="Başka Kategori Seç"
               color="#1E90FF"
             />
@@ -126,8 +131,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: 'white',
-    width: '100%',
+    backgroundColor: "white",
+    width: "100%",
   },
   areaList: {
     flex: 1,
@@ -135,27 +140,27 @@ const styles = StyleSheet.create({
   listItem: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
   },
   selected: {
-    backgroundColor: '#d0e0f0',
+    backgroundColor: "#d0e0f0",
   },
   loadingIcon: {
     marginLeft: 10,
   },
   finishCategorySelect: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
-    backgroundColor: '#e0f7fa',
+    backgroundColor: "#e0f7fa",
   },
   finishIconArea: {
     marginBottom: 10,
   },
   finishIcon: {
     fontSize: 24,
-    color: 'green',
+    color: "green",
   },
   finishText: {
     marginBottom: 20,

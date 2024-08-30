@@ -19,7 +19,12 @@ import HTML from "react-native-render-html";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
-import { AlertNotificationRoot,Dialog,ALERT_TYPE,Toast} from "react-native-alert-notification";
+import {
+  AlertNotificationRoot,
+  Dialog,
+  ALERT_TYPE,
+  Toast,
+} from "react-native-alert-notification";
 export default function Personal({ type }) {
   const navigation = useNavigation();
   const [eye, seteye] = useState("eye-off-sharp");
@@ -56,9 +61,9 @@ export default function Personal({ type }) {
 
   const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] =
     useState(false);
-    const [SuccessModal, setSuccessModal] = useState(false)
+  const [SuccessModal, setSuccessModal] = useState(false);
   const postData = async () => {
-   setIsloading(true)
+    setIsloading(true);
     try {
       var formData = new FormData();
       formData.append("type", 1);
@@ -78,9 +83,8 @@ export default function Personal({ type }) {
       // İsteğin başarılı bir şekilde tamamlandığı durum
 
       setmessage(response.data.message);
-      navigation.navigate("Login", { showAlert: true,});
-   
-      
+      navigation.navigate("Login", { showAlert: true });
+
       setname("");
       setePosta("");
       setpassword("");
@@ -91,7 +95,6 @@ export default function Personal({ type }) {
       setChecked3(false);
       seterrorStatu(0);
       seterrorMessage("");
-   
     } catch (error) {
       // Hata durumunda
 
@@ -111,9 +114,7 @@ export default function Personal({ type }) {
 
       console.error("Beklenmeyen bir hata oluştu:", error);
     } finally {
-     setIsloading(false)
-   
-    
+      setIsloading(false);
     }
   };
   const [errorStatu, seterrorStatu] = useState(0);
@@ -248,7 +249,6 @@ export default function Personal({ type }) {
   };
 
   return (
-  
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <ScrollView
@@ -293,6 +293,7 @@ export default function Personal({ type }) {
                 value={ePosta}
                 onChangeText={(value) => setePosta(value)}
                 placeholder="E-Posta Adresi"
+                autoCapitalize="none" // İlk harfin büyük olmasını engeller
               />
             </View>
 
@@ -309,7 +310,6 @@ export default function Personal({ type }) {
                     borderColor: errorStatu === 3 ? "#E54242" : "#ebebeb",
                   },
                 ]}
-                
                 value={phoneNumber}
                 onChangeText={handlePhoneNumberChange}
                 placeholder="5*********"
@@ -335,12 +335,13 @@ export default function Personal({ type }) {
                   onChangeText={(value) => setpassword(value)}
                   placeholder="Şifre"
                   secureTextEntry={Show ? false : true}
+                  autoCapitalize="none" // İlk harfin büyük olmasını engeller
                 />
                 <TouchableOpacity
                   style={{
                     position: "absolute",
-                    right:9,
-                    top:'21%',
+                    right: 9,
+                    top: "21%",
                   }}
                   onPress={show}
                 >
@@ -755,27 +756,25 @@ export default function Personal({ type }) {
             <View style={styles.modalContent}>
               <ActivityIndicator size="large" color="#333" />
               <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-               Üyeliğiniz Oluşturuluyor
+                Üyeliğiniz Oluşturuluyor
               </Text>
             </View>
           </Modal>
           <Modal
             isVisible={SuccessModal}
-            animationIn={'fadeIn'}
-            animationOut={'fadeOut'}
+            animationIn={"fadeIn"}
+            animationOut={"fadeOut"}
             style={styles.modal}
           >
             <View style={styles.modalContent}>
-              
-                  <View>
-                    <Text>Üyeliğiniz Başarı İle Oluşturuldu</Text>
-                  </View>
+              <View>
+                <Text>Üyeliğiniz Başarı İle Oluşturuldu</Text>
+              </View>
             </View>
           </Modal>
         </ScrollView>
       </View>
     </TouchableWithoutFeedback>
- 
   );
 }
 const styles = StyleSheet.create({
@@ -788,10 +787,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ebebeb",
     borderRadius: 5,
-    fontSize:13,
+    fontSize: 13,
     backgroundColor: "#FAFAFA",
-       color:'#717171',
-    fontWeight:'600'
+    color: "#717171",
+    fontWeight: "600",
   },
   modal2: {
     justifyContent: "flex-end",

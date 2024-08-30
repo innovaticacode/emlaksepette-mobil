@@ -1,9 +1,14 @@
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  ImageBackground,
+} from "react-native";
 import React from "react";
 import { Platform } from "react-native";
 
 export default function Team({ teamm }) {
-
   const getInitials = (name) => {
     const nameParts = name.split(" ");
     if (nameParts.length >= 2) {
@@ -29,18 +34,29 @@ export default function Team({ teamm }) {
                   alignItems: "center",
                 }}
               >
-                {
-                  team.profile_image !=='indir.png' ?
+                {team.profile_image !== "indir.png" ? (
                   <View style={[styles.profileImage, { borderRadius: 50 }]}>
-                    <ImageBackground source={{uri:`https://private.emlaksepette.com/storage/profile_images/${team.profile_image}`}} style={{width:'100%',height:'100%',}} borderRadius={50}/>
-                </View>:
-                 <View style={[styles.profileImage, { borderRadius: 50,backgroundColor:'red' }]}>
-                 <Text style={{ fontSize: 17, color: "white" }}>
-                   {getInitials(team.name)}
-                 </Text>
-               </View>
-                }
-               
+                    <ImageBackground
+                      source={{
+                        uri: `https://private.emlaksepette.com/storage/profile_images/${team.profile_image}`,
+                      }}
+                      style={{ width: "100%", height: "100%" }}
+                      borderRadius={50}
+                    />
+                  </View>
+                ) : (
+                  <View
+                    style={[
+                      styles.profileImage,
+                      { borderRadius: 50, backgroundColor: "red" },
+                    ]}
+                  >
+                    <Text style={{ fontSize: 17, color: "white" }}>
+                      {getInitials(team.name)}
+                    </Text>
+                  </View>
+                )}
+
                 <View style={styles.profileName}>
                   <Text
                     style={{
@@ -87,7 +103,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     width: "100%",
-  
+
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

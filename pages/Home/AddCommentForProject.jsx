@@ -1,217 +1,216 @@
 import {
-    View,
-    Text,
-    StyleSheet,
-    ScrollView,
-    Platform,
-    TouchableOpacity,
-    TextInput,
-    Dimensions,
-    Alert
-  } from "react-native";
-  import React, { useState, useEffect } from "react";
-  import {
-    apiRequestGet,
-    frontEndUri,
-  } from "../../components/methods/apiRequest";
-  import { useNavigation, useRoute } from "@react-navigation/native";
-  import Icon from "react-native-vector-icons/AntDesign";
-  import Icon2 from "react-native-vector-icons/Entypo";
-  import { CheckBox } from "react-native-elements";
-  import { addDotEveryThreeDigits } from "../../components/methods/merhod";
-  import { ImageBackground } from "expo-image";
-  import axios from "axios";
-  import * as ImagePicker from 'expo-image-picker';
-  import { getValueFor } from "../../components/methods/user";
-  import {
-    ALERT_TYPE,
-    AlertNotificationDialog,
-    AlertNotificationRoot,
-    Dialog,
-  } from "react-native-alert-notification";
-  import { ActivityIndicator } from "react-native-paper";
-  import { SafeAreaView } from "react-native-safe-area-context";
-  
-  import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
-  import HTML from "react-native-render-html";
-  import Modal from "react-native-modal";
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Platform,
+  TouchableOpacity,
+  TextInput,
+  Dimensions,
+  Alert,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  apiRequestGet,
+  frontEndUri,
+} from "../../components/methods/apiRequest";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/AntDesign";
+import Icon2 from "react-native-vector-icons/Entypo";
+import { CheckBox } from "react-native-elements";
+import { addDotEveryThreeDigits } from "../../components/methods/merhod";
+import { ImageBackground } from "expo-image";
+import axios from "axios";
+import * as ImagePicker from "expo-image-picker";
+import { getValueFor } from "../../components/methods/user";
+import {
+  ALERT_TYPE,
+  AlertNotificationDialog,
+  AlertNotificationRoot,
+  Dialog,
+} from "react-native-alert-notification";
+import { ActivityIndicator } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
+import HTML from "react-native-render-html";
+import Modal from "react-native-modal";
 
 import AwesomeAlert from "react-native-awesome-alerts";
-  
-  export default function AddCommentForProject() {
-    const [data, setData] = useState({});
-    const route = useRoute();
-    const nav = useNavigation();
-    const { projectId } = route.params;
-    const [loading, setloading] = useState(true);
-    useEffect(() => {
-      apiRequestGet("project/" + projectId).then((res) => {
-        setData(res.data.project);
-        setloading(false);
-      });
-    }, []);
-  
-    const [rating, setRating] = useState(0); // Başlangıçta hiçbir yıldız dolu değil
-    const [rate, setrate] = useState(0);
-    const handleStarPress = (index) => {
-      // Tıklanan yıldıza kadar olan tüm yıldızları dolu yap
-      setRating(index + 1);
-  
-      // Sarı yıldızların sayısını hesapla ve konsola yazdır
-      const yellowStars = index + 1;
-      setrate(yellowStars);
-    };
-    console.log(rate);
-    const [checkedForm, setCheckedForm] = React.useState(false);
-    const toggleCheckboxForm = () => {
-      setCheckedForm(!checkedForm);
-    };
-    const apiUrl = "https://private.emlaksepette.com/";
-    const [user, setUser] = useState({});
-  
-    useEffect(() => {
-      getValueFor("user", setUser);
-    }, []);
-    const [image, setImage] = useState([]);
 
-    const [selectedIndex, setselectedIndex] = useState(null)
-    const [removeImage, setremoveImage] = useState(false)
-    const pickImage = async () => {
-      // Kullanıcıdan izin isteme
-      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
-      if (permissionResult.granted === false) {
-        alert('Resimlere erişim izni verilmedi!');
-        return;
-      }
-    
-      // Resim seçme
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
-      });
-    
-      // Eğer kullanıcı seçim yapmadıysa geri dön
-      if (result.canceled) {
-        return;
-      }
-    
-      // Seçilen resmi diziye ekleme
-      if (!result.canceled) {
-        setImage([...image, result.assets[0].uri]); // Expo SDK 45 ve sonrası için .assets[0].uri kullanılmalıdır.
-      }
-    };
-        console.log(image)
-        const takePhoto = async (index) => {
-          // Kamera izni isteme
-          setselectedIndex(index)
-          const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-      
-          if (permissionResult.granted === false) {
-            alert('Kameraya erişim izni verilmedi!');
-            return;
-          }
-      
-          // Kamera ile resim çekme
-          let result = await ImagePicker.launchCameraAsync({
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
-          });
-      
-          // Eğer kullanıcı bir resim çekmediyse geri dön
-          if (result.canceled) {
-            return;
-          }
-      
-          // Çekilen resmi diziye ekleme
-          if (!result.canceled) {
-            setImage([...image, result.assets[0].uri]); // Expo SDK 45 ve sonrası için .assets[0].uri kullanılmalıdır.
-          }
-        };
-      const [loadingForPost, setloadingForPost] = useState(false)
-    const [comment, setcomment] = useState("");
-   
-    const shareComment = async () => {
-      setloadingForPost(true)
-      const formData = new FormData();
-      formData.append("rate", rate);
-      formData.append("user_id", user?.id);
-      formData.append("comment", comment);
-      formData.append("owner_id", data?.user?.id);
-      formData.append("project_id", projectId);
-      
-      try {
-        if (comment) {
-          if (user?.access_token ) {
-            const response = await axios.post(
-              `https://private.emlaksepette.com/api/project/${projectId}/add-comment`,
-              formData,
-              {
-                headers: {
-                  Authorization: `Bearer ${user?.access_token}`,
-                  "Content-Type": "multipart/form-data", 
-                },
-              }
-            );
-            setcomment("");
-            setrate(0);
-            setRating(0);
-            nav.navigate("Success", {
-              name: "Yorum başarılı",
-              message: "Değerlendirmeniz İçin Teşekkürler",
-              HouseID: projectId,
-              type:'Project'
-            });
-          }
-        } else {
-      
-          Dialog.show({
-            type: ALERT_TYPE.DANGER,
-            title: "Lütfen Yorum Yapınız",
-            textBody:'Lütfen Yorum Yapınız',
-            button: "Tamam",
+export default function AddCommentForProject() {
+  const [data, setData] = useState({});
+  const route = useRoute();
+  const nav = useNavigation();
+  const { projectId } = route.params;
+  const [loading, setloading] = useState(true);
+  useEffect(() => {
+    apiRequestGet("project/" + projectId).then((res) => {
+      setData(res.data.project);
+      setloading(false);
+    });
+  }, []);
+
+  const [rating, setRating] = useState(0); // Başlangıçta hiçbir yıldız dolu değil
+  const [rate, setrate] = useState(0);
+  const handleStarPress = (index) => {
+    // Tıklanan yıldıza kadar olan tüm yıldızları dolu yap
+    setRating(index + 1);
+
+    // Sarı yıldızların sayısını hesapla ve konsola yazdır
+    const yellowStars = index + 1;
+    setrate(yellowStars);
+  };
+  console.log(rate);
+  const [checkedForm, setCheckedForm] = React.useState(false);
+  const toggleCheckboxForm = () => {
+    setCheckedForm(!checkedForm);
+  };
+  const apiUrl = "https://private.emlaksepette.com/";
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
+  const [image, setImage] = useState([]);
+
+  const [selectedIndex, setselectedIndex] = useState(null);
+  const [removeImage, setremoveImage] = useState(false);
+  const pickImage = async () => {
+    // Kullanıcıdan izin isteme
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Resimlere erişim izni verilmedi!");
+      return;
+    }
+
+    // Resim seçme
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    // Eğer kullanıcı seçim yapmadıysa geri dön
+    if (result.canceled) {
+      return;
+    }
+
+    // Seçilen resmi diziye ekleme
+    if (!result.canceled) {
+      setImage([...image, result.assets[0].uri]); // Expo SDK 45 ve sonrası için .assets[0].uri kullanılmalıdır.
+    }
+  };
+  console.log(image);
+  const takePhoto = async (index) => {
+    // Kamera izni isteme
+    setselectedIndex(index);
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Kameraya erişim izni verilmedi!");
+      return;
+    }
+
+    // Kamera ile resim çekme
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    // Eğer kullanıcı bir resim çekmediyse geri dön
+    if (result.canceled) {
+      return;
+    }
+
+    // Çekilen resmi diziye ekleme
+    if (!result.canceled) {
+      setImage([...image, result.assets[0].uri]); // Expo SDK 45 ve sonrası için .assets[0].uri kullanılmalıdır.
+    }
+  };
+  const [loadingForPost, setloadingForPost] = useState(false);
+  const [comment, setcomment] = useState("");
+
+  const shareComment = async () => {
+    setloadingForPost(true);
+    const formData = new FormData();
+    formData.append("rate", rate);
+    formData.append("user_id", user?.id);
+    formData.append("comment", comment);
+    formData.append("owner_id", data?.user?.id);
+    formData.append("project_id", projectId);
+
+    try {
+      if (comment) {
+        if (user?.access_token) {
+          const response = await axios.post(
+            `https://private.emlaksepette.com/api/project/${projectId}/add-comment`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${user?.access_token}`,
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          setcomment("");
+          setrate(0);
+          setRating(0);
+          nav.navigate("Success", {
+            name: "Yorum başarılı",
+            message: "Değerlendirmeniz İçin Teşekkürler",
+            HouseID: projectId,
+            type: "Project",
           });
         }
-      
-      } catch (error) {
-        console.error("post isteği olmadı", error);
-      }finally{
-        setloadingForPost(false)
+      } else {
+        Dialog.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Lütfen Yorum Yapınız",
+          textBody: "Lütfen Yorum Yapınız",
+          button: "Tamam",
+        });
       }
-    };
-  
-    const [modalVisible2, setModalVisible2] = useState(false);
-    const [Deals, setDeals] = useState("");
-    useEffect(() => {
-      fetchDataDeal();
-    }, []);
-    const fetchDataDeal = async () => {
-      const url = `https://private.emlaksepette.com/api/sayfa/yorum-yazma-kurallari`;
-      try {
-        const response = await fetch(url);
-        // const data = await fetchFromURL(url);
-        const data = await response.json();
-        console.log(data);
-        setDeals(data.content);
-        // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
-      } catch (error) {
-        console.error("İstek hatası:", error);
-        // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
-      }
-    };
-   
-    const removePhoto = () => {
-      const newImages = [...image];
-      newImages[selectedIndex] = null;
-      setImage(newImages);
-    setremoveImage(false)
-      setselectedIndex(null);
-    };
-    return (
-      <AlertNotificationRoot>
+    } catch (error) {
+      console.error("post isteği olmadı", error);
+    } finally {
+      setloadingForPost(false);
+    }
+  };
+
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [Deals, setDeals] = useState("");
+  useEffect(() => {
+    fetchDataDeal();
+  }, []);
+  const fetchDataDeal = async () => {
+    const url = `https://private.emlaksepette.com/api/sayfa/yorum-yazma-kurallari`;
+    try {
+      const response = await fetch(url);
+      // const data = await fetchFromURL(url);
+      const data = await response.json();
+      console.log(data);
+      setDeals(data.content);
+      // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
+    } catch (error) {
+      console.error("İstek hatası:", error);
+      // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
+    }
+  };
+
+  const removePhoto = () => {
+    const newImages = [...image];
+    newImages[selectedIndex] = null;
+    setImage(newImages);
+    setremoveImage(false);
+    setselectedIndex(null);
+  };
+  return (
+    <AlertNotificationRoot>
       <ScrollView
         style={style.container}
         contentContainerStyle={{
@@ -227,15 +226,13 @@ import AwesomeAlert from "react-native-awesome-alerts";
         ) : (
           <>
             <View style={[style.card, { flexDirection: "row" }]}>
-              
               <View style={style.Image}>
                 <ImageBackground
                   source={{
-                    uri:
-                   `${apiUrl}/${data.image.replace(
-                                "public/",
-                                "storage/"
-                              )}`
+                    uri: `${apiUrl}/${data.image.replace(
+                      "public/",
+                      "storage/"
+                    )}`,
                   }}
                   style={{ width: "100%", height: "100%" }}
                 />
@@ -251,20 +248,19 @@ import AwesomeAlert from "react-native-awesome-alerts";
                 </View>
                 <View style={{ paddingLeft: 5, gap: 5, width: "70%" }}>
                   <Text
-                  onPress={()=>{
-                        nav.navigate('Profile',{id:data?.user?.id})
-                  }}
+                    onPress={() => {
+                      nav.navigate("Profile", { id: data?.user?.id });
+                    }}
                     style={{ fontSize: 12, color: "grey", fontWeight: "600" }}
                     numberOfLines={2}
                   >
                     Satıcı:{" "}
                     <Text style={{ color: "#274ABB" }}>{data?.user?.name}</Text>
                   </Text>
-               
                 </View>
               </View>
             </View>
-  
+
             <View style={[style.card, {}]}>
               <View style={{ padding: 10, paddingBottom: 15 }}>
                 <Text
@@ -323,7 +319,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
                       Yorum Kuralları
                     </Text>
                   </TouchableOpacity>
-  
+
                   <Modal
                     isVisible={modalVisible2}
                     onBackdropPress={() => setModalVisible2(false)}
@@ -351,7 +347,9 @@ import AwesomeAlert from "react-native-awesome-alerts";
                           zIndex: 1,
                         }}
                       >
-                        <TouchableOpacity onPress={() => setModalVisible2(false)}>
+                        <TouchableOpacity
+                          onPress={() => setModalVisible2(false)}
+                        >
                           <Icon3 name="close-circle" size={31} color={"red"} />
                         </TouchableOpacity>
                       </View>
@@ -378,7 +376,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
                 </View>
                 <View>
                   <TextInput
-                    style={[style.Input,{padding:10}]}
+                    style={[style.Input, { padding: 10 }]}
                     multiline
                     placeholder="İlanı değerlendirin..."
                     placeholderTextColor={"grey"}
@@ -387,118 +385,123 @@ import AwesomeAlert from "react-native-awesome-alerts";
                   />
                 </View>
                 <View style={{}}>
-                  <View style={{ padding: 6, marginTop: 10 ,gap:5}}>
+                  <View style={{ padding: 6, marginTop: 10, gap: 5 }}>
                     <Text
                       style={{ fontSize: 13, fontWeight: "600", color: "#333" }}
                     >
                       Konut Fotoğrafı Ekle
                     </Text>
-                    <Text style={{fontSize:13,color:'#333'}}>Basılı Tutarak Resim Çekip Yükleyebilirsiniz!</Text>
+                    <Text style={{ fontSize: 13, color: "#333" }}>
+                      Basılı Tutarak Resim Çekip Yükleyebilirsiniz!
+                    </Text>
                   </View>
                   <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 5,
-                    alignItems: "center",
-                    justifyContent: image ==[] ?'space-around' :'flex-start',
-                    flexWrap:'wrap'
-                  }}
-                >
-                 <TouchableOpacity 
-                  style={[
-                    style.Input,
-                    {
-                      width: 90,
-                      height:90,
+                    style={{
+                      flexDirection: "row",
+                      gap: 5,
                       alignItems: "center",
-                      justifyContent: "center",
-                    },
-                  ]}
-                    onPress={pickImage}
-                    onLongPress={takePhoto}
-                 >
-                    <Icon2 name="camera" size={25} color={'grey'}/>
-                 </TouchableOpacity> 
-                     {
-                        image.map((image,index)=>(
-                            <TouchableOpacity
-                            key={index}
-                            onLongPress={()=>{
-                                takePhoto(index)
-                                
-                            }}
-                            onPress={()=>{
-                              
-                                pickImage(index)
-                           
-                            }}
-                            style={[
-                              style.Input,
-                              {
-                                width: 90,
-                                height:90,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              },
-                            ]}
-                          >
-                                {
-                                    image ?
-                                    <ImageBackground source={image} style={{width:'100%',height:'100%'}}/>:
-                                    <Icon2 name="camera" size={25} color={"#babbbc"} />
-                                }
-                              
-                            
-                        
-                          </TouchableOpacity>
-                        ))
-                    } 
-                         <AwesomeAlert
-            
-            show={removeImage}
-            showProgress={false}
-              titleStyle={{color:'#333',fontSize:13,fontWeight:'700',textAlign:'center',margin:5}}
-              title={'Seçili resmi kaldırmak istediğinize eminmisiniz'}
-              messageStyle={{textAlign:'center'}}
-           
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={true}
-            showConfirmButton={true}
-
-            cancelText="Hayır"
-            confirmText="Evet"
-            cancelButtonColor="#ce4d63"
-            confirmButtonColor="#1d8027"
-            onCancelPressed={() => {
-                setremoveImage(false)
-             
-            }}
-            onConfirmPressed={() => {
-             removePhoto()
-            }}
-            confirmButtonTextStyle={{marginLeft:20,marginRight:20}}
-            cancelButtonTextStyle={{marginLeft:20,marginRight:20}}
-          /> 
-                </View>
+                      justifyContent:
+                        image == [] ? "space-around" : "flex-start",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={[
+                        style.Input,
+                        {
+                          width: 90,
+                          height: 90,
+                          alignItems: "center",
+                          justifyContent: "center",
+                        },
+                      ]}
+                      onPress={pickImage}
+                      onLongPress={takePhoto}
+                    >
+                      <Icon2 name="camera" size={25} color={"grey"} />
+                    </TouchableOpacity>
+                    {image.map((image, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onLongPress={() => {
+                          takePhoto(index);
+                        }}
+                        onPress={() => {
+                          pickImage(index);
+                        }}
+                        style={[
+                          style.Input,
+                          {
+                            width: 90,
+                            height: 90,
+                            alignItems: "center",
+                            justifyContent: "center",
+                          },
+                        ]}
+                      >
+                        {image ? (
+                          <ImageBackground
+                            source={image}
+                            style={{ width: "100%", height: "100%" }}
+                          />
+                        ) : (
+                          <Icon2 name="camera" size={25} color={"#babbbc"} />
+                        )}
+                      </TouchableOpacity>
+                    ))}
+                    <AwesomeAlert
+                      show={removeImage}
+                      showProgress={false}
+                      titleStyle={{
+                        color: "#333",
+                        fontSize: 13,
+                        fontWeight: "700",
+                        textAlign: "center",
+                        margin: 5,
+                      }}
+                      title={"Seçili resmi kaldırmak istediğinize eminmisiniz"}
+                      messageStyle={{ textAlign: "center" }}
+                      closeOnTouchOutside={true}
+                      closeOnHardwareBackPress={false}
+                      showCancelButton={true}
+                      showConfirmButton={true}
+                      cancelText="Hayır"
+                      confirmText="Evet"
+                      cancelButtonColor="#ce4d63"
+                      confirmButtonColor="#1d8027"
+                      onCancelPressed={() => {
+                        setremoveImage(false);
+                      }}
+                      onConfirmPressed={() => {
+                        removePhoto();
+                      }}
+                      confirmButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                      cancelButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                    />
+                  </View>
                 </View>
               </View>
-             
+
               <TouchableOpacity
-              disabled={loadingForPost}
+                disabled={loadingForPost}
                 style={{
                   backgroundColor: "#EB2B2E",
                   padding: 10,
                   borderRadius: 5,
-                  top:10
+                  top: 10,
                 }}
                 onPress={shareComment}
               >
-                
-                {
-                  loadingForPost ?
-                    <ActivityIndicator color="white"/>:
-                    <Text
+                {loadingForPost ? (
+                  <ActivityIndicator color="white" />
+                ) : (
+                  <Text
                     style={{
                       textAlign: "center",
                       color: "#ffffff",
@@ -507,76 +510,71 @@ import AwesomeAlert from "react-native-awesome-alerts";
                   >
                     Paylaş
                   </Text>
-                }
-              
+                )}
               </TouchableOpacity>
             </View>
           </>
         )}
       </ScrollView>
-      </AlertNotificationRoot>
-    );
-  }
-  const style = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "#f7f7f7",
-    },
-    card: {
-      backgroundColor: "#FFFFFF",
-      paddingBottom: 10,
-      paddingTop: 10,
-      paddingHorizontal: 15,
-      width: "100%",
-  
-      ...Platform.select({
-        ios: {
-          shadowColor: " #e6e6e6",
-        },
-        android: {
-          elevation: 5,
-        },
-      }),
-    },
-    Image: {
-      backgroundColor: "red",
-      width: 80,
-      height: 70,
-    },
-    Input: {
-      backgroundColor: "#f5f5f5",
+    </AlertNotificationRoot>
+  );
+}
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f7f7f7",
+  },
+  card: {
+    backgroundColor: "#FFFFFF",
+    paddingBottom: 10,
+    paddingTop: 10,
+    paddingHorizontal: 15,
+    width: "100%",
 
-      height: 80,
-      borderWidth: 0.3,
-      borderColor: "#dce1ea",
-      borderRadius: 4,
-    },
-    centeredView: {
-      padding: 10,
-      margin: 0,
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
-  
-      // modal dışı koyu arkaplan
-    },
-    modalView: {
-      
-  
-      backgroundColor: '#333',
-      borderRadius: 6,
-      padding: 20,
-    
-  
-      shadowColor: "#000",
-      shadowOffset: {
-        width: 0,
-        height: 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
       },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  Image: {
+    backgroundColor: "red",
+    width: 80,
+    height: 70,
+  },
+  Input: {
+    backgroundColor: "#f5f5f5",
+
+    height: 80,
+    borderWidth: 0.3,
+    borderColor: "#dce1ea",
+    borderRadius: 4,
+  },
+  centeredView: {
+    padding: 10,
+    margin: 0,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+
+    // modal dışı koyu arkaplan
+  },
+  modalView: {
+    backgroundColor: "#333",
+    borderRadius: 6,
+    padding: 20,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
     },
-  });
-  
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+});

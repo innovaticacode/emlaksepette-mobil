@@ -35,14 +35,13 @@ const Estates = ({ index }) => {
       headers: { Authorization: `Bearer ${user?.access_token}` },
     };
 
-    console.log(config)
+    console.log(config);
     try {
-      
       const response = await axios.get(
         `https://private.emlaksepette.com/api/real-estates?page=${
           reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
-       config
+        config
       );
       const newEstates = response.data;
 
@@ -81,8 +80,8 @@ const Estates = ({ index }) => {
   }, [index, user]);
 
   useEffect(() => {
-    getValueFor("user",setuser)
-  },[])
+    getValueFor("user", setuser);
+  }, []);
 
   const filteredHomes = featuredEstates.filter(
     (estate) => estate.step1_slug === "konut"
@@ -102,134 +101,176 @@ const Estates = ({ index }) => {
 
   return (
     <>
-    {
-      loading ?
-      <View style={{alignItems:'center',justifyContent:'center',flex:1}}>
-        <ActivityIndicator size={'large'} color="#333"/>
-      </View>:
-  
-       <View style={styles.container}>
-    
-      {refreshing && (
+      {loading ? (
         <View
-          style={{
-            padding: 10,
-            backgroundColor: "white",
-            alignItems: "center",
-          }}
+          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
         >
-          <ActivityIndicator animating={true} size="small" color="#000000" />
+          <ActivityIndicator size={"large"} color="#333" />
+        </View>
+      ) : (
+        <View style={styles.container}>
+          {refreshing && (
+            <View
+              style={{
+                padding: 10,
+                backgroundColor: "white",
+                alignItems: "center",
+              }}
+            >
+              <ActivityIndicator
+                animating={true}
+                size="small"
+                color="#000000"
+              />
+            </View>
+          )}
+
+          <AlertNotificationRoot>
+            {filteredHomes.length == 0 ? (
+              <View style={{ width: "100%", paddingTop: 10 }}>
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: "grey",
+                    fontWeight: "700",
+                  }}
+                >
+                  Konut İlanı Bulunamadı
+                </Text>
+              </View>
+            ) : (
+              <FlatList
+                data={filteredHomes}
+                renderItem={({ item }) => (
+                  <RealtorPost
+                    sold={item.sold}
+                    HouseId={item.id}
+                    price={`${JSON.parse(item.housing_type_data)["price"]} `}
+                    housing={item}
+                    title={item.housing_title}
+                    loading={loading}
+                    location={item.city_title + " / " + item.county_title}
+                    image={`${apiUrl}/housing_images/${
+                      JSON.parse(item.housing_type_data).image
+                    }`}
+                    openSharing={
+                      JSON.parse(item.housing_type_data)["open_sharing1"]
+                    }
+                    column1_additional={item.column1_additional}
+                    column1_name={
+                      JSON.parse(item.housing_type_data)[item.column1_name]
+                        ? JSON.parse(item.housing_type_data)[item.column1_name]
+                        : ""
+                    }
+                    column2_name={
+                      JSON.parse(item.housing_type_data)[item.column2_name]
+                        ? JSON.parse(item.housing_type_data)[item.column2_name]
+                        : ""
+                    }
+                    column2_additional={item.column2_additional}
+                    column3_name={
+                      JSON.parse(item.housing_type_data)[item.column3_name]
+                        ? JSON.parse(item.housing_type_data)[item.column3_name]
+                        : ""
+                    }
+                    column3_additional={item.column3_additional}
+                    column4_name={
+                      JSON.parse(item.housing_type_data)[item.column4_name]
+                        ? JSON.parse(item.housing_type_data)[item.column4_name]
+                        : ""
+                    }
+                    column4_additional={item.column4_additional}
+                    bookmarkStatus={true}
+                    dailyRent={false}
+                  />
+                )}
+                keyExtractor={(item, index) =>
+                  item.id ? item.id.toString() : index.toString()
+                }
+                onEndReachedThreshold={0.1}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+                ListHeaderComponent={
+                  <>
+                    <View
+                      style={{
+                        paddingBottom: 3,
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        marginTop: 10,
+                        backgroundColor: "white",
+                        height: 130,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 700,
+                          marginBottom: 7,
+                        }}
+                      >
+                        FRANCHAISE VEREN GAYRIMENKUL MARKALARI
+                      </Text>
+
+                      <SliderEstateBar />
+                    </View>
+                    <View
+                      style={{
+                        paddingBottom: 3,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        alignItems: "center",
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Text style={{ fontSize: 12, fontWeight: 700 }}>
+                        ÖNE ÇIKAN EMLAK İLANLARI
+                      </Text>
+
+                      <TouchableOpacity
+                        style={styles.allBtn}
+                        onPress={() =>
+                          navigation.navigate("AllRealtorAdverts", {
+                            name: "Emlak İlanları",
+                            slug: "emlak-ilanlari",
+                            data: filteredHomes,
+                            count: filteredHomes.length,
+                            type: "konut",
+                            optional: null,
+                            title: null,
+                            check: null,
+                            city: null,
+                            county: null,
+                            hood: null,
+                          })
+                        }
+                      >
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: 11,
+                            fontWeight: "bold",
+                          }}
+                        >
+                          Tüm İlanları Gör
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </>
+                }
+                ListFooterComponent={renderFooter}
+              />
+            )}
+          </AlertNotificationRoot>
         </View>
       )}
-
-<AlertNotificationRoot>
-        {
-          filteredHomes.length==0?
-           <View style={{width:'100%',paddingTop:10}}>
-            <Text style={{textAlign:'center',color:'grey',fontWeight:'700'}}>Konut İlanı Bulunamadı</Text>
-           </View>:
-     
-     
-        <FlatList
-        
-          data={filteredHomes}
-       
-          renderItem={({ item }) => (
-            <RealtorPost
-            sold={item.sold}
-              HouseId={item.id}
-              price={`${JSON.parse(item.housing_type_data)["price"]} `}
-              housing={item}
-              title={item.housing_title}
-              loading={loading}
-              location={item.city_title + " / " + item.county_title}
-              image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image}`}
-              openSharing={JSON.parse(item.housing_type_data)['open_sharing1']}
-              column1_additional={item.column1_additional}
-              column1_name={JSON.parse(item.housing_type_data)[item.column1_name] ? JSON.parse(item.housing_type_data)[item.column1_name] : ""}
-              column2_name={JSON.parse(item.housing_type_data)[item.column2_name]? JSON.parse(item.housing_type_data)[item.column2_name]:""} 
-              column2_additional={item.column2_additional}
-              column3_name={JSON.parse(item.housing_type_data)[item.column3_name] ?JSON.parse(item.housing_type_data)[item.column3_name] :"" } 
-              column3_additional={item.column3_additional}
-              column4_name={JSON.parse(item.housing_type_data)[item.column4_name] ?JSON.parse(item.housing_type_data)[item.column4_name]:"" } 
-              column4_additional={item.column4_additional}
-              bookmarkStatus={true}
-              dailyRent={false}
-            />
-          )}
-          keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
-        
-          onEndReachedThreshold={0.1}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-          ListHeaderComponent={<>
-            <View
-        style={{
-          paddingBottom: 3,
-          paddingLeft: 10,
-          paddingRight: 10,
-          marginTop: 10,
-          backgroundColor: "white",
-          height: 130,
-        }}
-      >
-        <Text style={{ fontSize: 12, fontWeight: 700, marginBottom: 7 }}>
-        Franchaise Veren Gayrimenkul Markaları
-        </Text>
-
-        <SliderEstateBar />
-      </View>
-      <View
-        style={{
-          paddingBottom: 3,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingLeft: 10,
-          paddingRight: 10,
-          alignItems: "center",
-          backgroundColor: "white",
-        }}
-      >
-        <Text style={{ fontSize: 12, fontWeight: 700 }}>
-        Popüler Emlak İlanları
-        </Text>
-
-        <TouchableOpacity
-          style={styles.allBtn}
-          onPress={() =>
-            navigation.navigate("AllRealtorAdverts", {
-              name: "Emlak İlanları",
-              slug: "emlak-ilanlari",
-              data: filteredHomes,
-              count: filteredHomes.length,
-              type: "konut",
-              optional: null,
-              title: null,
-              check: null,
-              city: null,
-              county: null,
-              hood: null,
-            })
-          }
-        >
-          <Text style={{ color: "white", fontSize: 11, fontWeight: "bold" }}>
-            Tüm İlanları Gör
-          </Text>
-        </TouchableOpacity>
-      </View>
-          
-          </>}
-          ListFooterComponent={renderFooter}
-        />
-      }
-      </AlertNotificationRoot>
-
-    
-    </View>
-      }
     </>
- 
   );
 };
 

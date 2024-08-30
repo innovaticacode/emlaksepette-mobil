@@ -91,9 +91,9 @@ export default function UpdateUsers() {
   const [UserType, setUserType] = useState(null);
 
   const [isActive, setisActive] = useState(1);
-  const [loadingUpdate, setloadingUpdate] = useState(false)
+  const [loadingUpdate, setloadingUpdate] = useState(false);
   const createUser = async () => {
-    setloadingUpdate(true)
+    setloadingUpdate(true);
     let formdata = new FormData();
     formdata.append("name", nameAndSurname);
     formdata.append("title", title);
@@ -115,7 +115,6 @@ export default function UpdateUsers() {
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
-              
             },
           }
         )
@@ -144,13 +143,10 @@ export default function UpdateUsers() {
             title: "Hata",
             textBody: "Veri gönderimi sırasında bir hata oluştu.",
           });
-        } )
-        .finally(()=>{
-          setloadingUpdate(false)
         })
-        
-        
-        
+        .finally(() => {
+          setloadingUpdate(false);
+        });
     }
   };
   console.log(UserID);
@@ -226,7 +222,7 @@ export default function UpdateUsers() {
     const formattedValue = formatPhoneNumber(value);
     setphoneNumber(formattedValue);
   };
-  const [showPassword, setshowPassword] = useState(true)
+  const [showPassword, setshowPassword] = useState(true);
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -277,23 +273,26 @@ export default function UpdateUsers() {
                   (Değiştirmek İstemiyorsanız Boş bırakın)
                 </Text>
               </View>
-                <View>
-                <TouchableOpacity 
-                    onPress={()=>{
-                      setshowPassword(!showPassword)
-                    }}
-                      style={{position:'absolute',zIndex:1,right:10,top:6}}
-                    >
-                      <DotIcon name={showPassword? "eye-with-line":'eye'} size={23} color={'#333'}/>
-                    </TouchableOpacity>
+              <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    setshowPassword(!showPassword);
+                  }}
+                  style={{ position: "absolute", zIndex: 1, right: 10, top: 6 }}
+                >
+                  <DotIcon
+                    name={showPassword ? "eye-with-line" : "eye"}
+                    size={23}
+                    color={"#333"}
+                  />
+                </TouchableOpacity>
                 <TextInput
-                style={style.Input}
-                value={password}
-                onChangeText={(value) => setpassword(value)}
-                secureTextEntry={showPassword}
-              />
-                </View>
-           
+                  style={style.Input}
+                  value={password}
+                  onChangeText={(value) => setpassword(value)}
+                  secureTextEntry={showPassword}
+                />
+              </View>
             </View>
             <View>
               <Text style={style.Label}>Kullanıcı Tipi</Text>
@@ -323,34 +322,37 @@ export default function UpdateUsers() {
             </View>
           </View>
           <View style={{ width: "100%", alignItems: "center" }}>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#EA2A29",
-              padding: 9,
-              width: "90%",
-              borderRadius: 5,
-              opacity:loadingUpdate ? 0.5:1,
-              flexDirection:'row',
-              alignItems:'center',
-              justifyContent:'center'
-            }}
-            onPress={createUser}
-          >
-            {
-              loadingUpdate ?
-              <ActivityIndicator color="white" size={'small'}/>
-              :
-              <Text
-              style={[
-                style.label2,
-                { color: "white", textAlign: "center", fontSize: 14 ,fontWeight:'700'},
-              ]}
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#EA2A29",
+                padding: 9,
+                width: "90%",
+                borderRadius: 5,
+                opacity: loadingUpdate ? 0.5 : 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={createUser}
             >
-              Kaydet
-            </Text>
-            }
-        
-          </TouchableOpacity>
+              {loadingUpdate ? (
+                <ActivityIndicator color="white" size={"small"} />
+              ) : (
+                <Text
+                  style={[
+                    style.label2,
+                    {
+                      color: "white",
+                      textAlign: "center",
+                      fontSize: 14,
+                      fontWeight: "700",
+                    },
+                  ]}
+                >
+                  Kaydet
+                </Text>
+              )}
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -436,7 +438,6 @@ const style = StyleSheet.create({
   Inputs: {
     gap: 20,
     padding: 10,
-    
   },
   Input: {
     padding: 10,
@@ -444,9 +445,9 @@ const style = StyleSheet.create({
     borderColor: "#DDDDDD",
     borderRadius: 5,
     fontSize: 13,
-    backgroundColor:'#fafafafa',
-    color:'#717171',
-    fontWeight:'600'
+    backgroundColor: "#fafafafa",
+    color: "#717171",
+    fontWeight: "600",
   },
   Label: {
     fontSize: 13,
@@ -454,7 +455,7 @@ const style = StyleSheet.create({
     left: 6,
     fontWeight: "600",
     letterSpacing: 0.5,
-    color:'#333'
+    color: "#333",
   },
   bottomSheetItem: {
     width: "100%",

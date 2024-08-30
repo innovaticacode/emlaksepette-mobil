@@ -59,8 +59,8 @@ const renderScene = ({ route, index }) => {
       return <BookHouse index={index} />;
     case "sellacil":
       return <SellAcil index={index} />;
-      case "shared":
-        return <Shared index={index}/>;
+    case "shared":
+      return <Shared index={index} />;
     default:
       return null;
   }
@@ -92,13 +92,19 @@ const CustomTabBar = ({
     fetchMenuItems();
   }, []);
 
-   React.useEffect(() => {
+  React.useEffect(() => {
     if (scrollViewRef.current && tabWidth > 0) {
       const tabCount = menuItems.length;
       const viewWidth = width;
       const tabOffset = tab * tabWidth;
       const contentWidth = tabWidth * tabCount;
-      const centeredOffset = Math.max(0, Math.min(tabOffset - (viewWidth / 2 - tabWidth / 2), contentWidth - viewWidth));
+      const centeredOffset = Math.max(
+        0,
+        Math.min(
+          tabOffset - (viewWidth / 2 - tabWidth / 2),
+          contentWidth - viewWidth
+        )
+      );
 
       scrollViewRef.current.scrollTo({
         x: centeredOffset,
