@@ -153,7 +153,7 @@ useEffect(() => {
         setIsActive(true);
       }
   
-  }, [user]);
+  }, []);
 
   const [succes, setsucces] = useState(true);
 
