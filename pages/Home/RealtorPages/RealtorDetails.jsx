@@ -96,10 +96,6 @@ export default function PostDetail() {
   const { houseId } = route.params;
   const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
-  const handleOpenPhone = () => {
-    // Telefon uygulamasını açmak için
-    Linking.openURL(`tel:+90${data?.housing?.user?.phone}`);
-  };
 
   const changeTab = (tabs) => {
     setTabs(tabs);
@@ -133,6 +129,7 @@ export default function PostDetail() {
     setFormVisible(!FormVisible);
   };
   const [data, setData] = useState({});
+
   const [loading, setloading] = useState(false);
 
   // USEEFFECT BAĞIMLILIĞINI START //
@@ -213,7 +210,7 @@ export default function PostDetail() {
       setloading(false); // İstek tamamlandığında loading durumunu false yap
     }
   };
-
+  console.log(houseId);
   useEffect(() => {
     fetchDetails();
   }, [user]);
@@ -581,6 +578,32 @@ export default function PostDetail() {
       };
     }
   });
+
+  const handleOpenPhone = () => {
+    let phoneNumber;
+
+    // Eğer data?.housing?.user?.phone varsa ve area_code mevcutsa
+    if (data?.housing?.user?.phone && data?.housing?.user?.area_code) {
+      phoneNumber = `${0 + data.housing.user.area_code}${
+        data.housing.user.phone
+      }`;
+    }
+    // Eğer data?.housing?.mobile_phone varsa
+    else if (data?.housing?.mobile_phone) {
+      phoneNumber = data.housing.mobile_phone.startsWith("0")
+        ? `90${data.housing.mobile_phone.slice(1)}`
+        : `90${data.housing.mobile_phone}`;
+    }
+
+    // Telefon numarasını kontrol et ve URL'yi oluştur
+    if (phoneNumber) {
+      Linking.openURL(`tel:+${phoneNumber}`);
+    } else {
+      console.error("Telefon numarası bulunamadı.");
+    }
+  };
+
+  console.log(data?.housing?.user?.mobile_phone + "qeqw eqw eqw ewq");
 
   // Handle page change in PagerView
 
