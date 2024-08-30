@@ -75,7 +75,7 @@ const [userdata, setuserdata] = useState({})
 
   if (userdata && user.access_token ) {
     if (user.type==1) {
-      if (verifyStatus==1) {
+      if (verifyStatus==0) {
         return <VerifyScreen/>
       }
     
