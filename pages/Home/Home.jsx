@@ -80,7 +80,7 @@ const [userdata, setuserdata] = useState({})
       }
     
     }else{
-      if (  verifyStatus==0|| userdata.corporate_account_status==0 ) {
+      if (  verifyStatus==0|| userdata.corporate_account_status==1 ) {
         return <VerifyScreen/>
     
       
