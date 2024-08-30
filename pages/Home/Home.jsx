@@ -18,16 +18,18 @@ import { Platform } from "react-native";
 import HomePage2 from "./HomePage2";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
+import VerifyScreen from "./VerifyScreen";
 
 const Tab = createBottomTabNavigator();
 
 const Home = ({ route }) => {
   const isFocused = useIsFocused();
   const [user, setUser] = useState({});
-
+  const [verifyStatus, setverifyStatus] = useState(null)
   useEffect(() => {
     if (route?.params?.status == "login") {
       getValueFor("user", setUser);
+   
     } else if (route?.params?.status == "logout") {
       setUser({});
     }
@@ -35,11 +37,15 @@ const Home = ({ route }) => {
   useEffect(() => {
     if (isFocused) {
       getValueFor("user", setUser);
+      getValueFor('PhoneVerify',setverifyStatus)
     }
   }, [isFocused]);
 
-  const [userdata, setuserdata] = useState({});
-  const GetUserInfo = async () => {
+
+  
+const [userdata, setuserdata] = useState({})
+  const GetUserInfo =async ()=>{
+   
     try {
       if (user.access_token) {
         const userInfo = await axios.get(
@@ -51,17 +57,41 @@ const Home = ({ route }) => {
           }
         );
 
-        setuserdata(userInfo?.data?.user);
+          setuserdata(userInfo?.data?.user)
       }
+    
+  
+    
+  
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     }
-  };
+  }
   useEffect(() => {
-    GetUserInfo();
-  }, [user]);
+    GetUserInfo()
+  }, [user])
+
   const { width, height } = Dimensions.get("window");
+
+  if (userdata && user.access_token ) {
+    if (user.type==1) {
+      if (verifyStatus==1) {
+        return <VerifyScreen/>
+      }
+    
+    }else{
+      if (  verifyStatus==0|| userdata.corporate_account_status==0 ) {
+        return <VerifyScreen/>
+    
+      
+      }}
+    }
+ 
+  console.log(userdata.corporate_account_status + 'dosya')
+  console.log(verifyStatus + 'telfon')
+  console.log(userdata)
   return (
+    
     <Tab.Navigator
       screenOptions={{
         tabBarLabelStyle: {
@@ -115,7 +145,7 @@ const Home = ({ route }) => {
         options={{
           headerShown: false,
           tabBarLabel: "İlan Ver",
-
+        
           tabBarIcon: ({ color, focused }) => (
             <View style={styles.ilanVerIconContainer}>
               <Ionicons
@@ -144,7 +174,8 @@ const Home = ({ route }) => {
           tabBarBadge: 1,
 
           tabBarBadgeStyle: {
-            display: userdata.cartItem == null ? "none" : "flex",
+
+              display:userdata.cartItem ==null ?'none':'flex',
 
             fontSize: 10,
             height: 17,
