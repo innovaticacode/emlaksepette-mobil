@@ -25,11 +25,10 @@ const Tab = createBottomTabNavigator();
 const Home = ({ route }) => {
   const isFocused = useIsFocused();
   const [user, setUser] = useState({});
-  const [verifyStatus, setverifyStatus] = useState(null)
+  const [verifyStatus, setverifyStatus] = useState(null);
   useEffect(() => {
     if (route?.params?.status == "login") {
       getValueFor("user", setUser);
-   
     } else if (route?.params?.status == "logout") {
       setUser({});
     }
@@ -37,15 +36,12 @@ const Home = ({ route }) => {
   useEffect(() => {
     if (isFocused) {
       getValueFor("user", setUser);
-      getValueFor('PhoneVerify',setverifyStatus)
+      getValueFor("PhoneVerify", setverifyStatus);
     }
   }, [isFocused]);
 
-
-  
-const [userdata, setuserdata] = useState({})
-  const GetUserInfo =async ()=>{
-   
+  const [userdata, setuserdata] = useState({});
+  const GetUserInfo = async () => {
     try {
       if (user.access_token) {
         const userInfo = await axios.get(
@@ -57,41 +53,34 @@ const [userdata, setuserdata] = useState({})
           }
         );
 
-          setuserdata(userInfo?.data?.user)
+        setuserdata(userInfo?.data?.user);
       }
-    
-  
-    
-  
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     }
-  }
+  };
   useEffect(() => {
-    GetUserInfo()
-  }, [user])
+    GetUserInfo();
+  }, [user]);
 
   const { width, height } = Dimensions.get("window");
 
-  if (userdata && user.access_token ) {
-    if (user.type==1) {
-      if (verifyStatus==0) {
-        return <VerifyScreen/>
+  if (userdata && user.access_token) {
+    if (user.type == 1) {
+      if (verifyStatus == 0) {
+        return <VerifyScreen />;
       }
-    
-    }else{
-      if (  verifyStatus==0|| userdata.corporate_account_status==0 ) {
-        return <VerifyScreen/>
-    
-      
-      }}
+    } else {
+      if (verifyStatus == 0 || userdata.corporate_account_status == 0) {
+        return <VerifyScreen />;
+      }
     }
- 
-  console.log(userdata.corporate_account_status + 'dosya')
-  console.log(verifyStatus + 'telfon')
-  console.log(userdata)
+  }
+
+  console.log(userdata.corporate_account_status + "dosya");
+  console.log(verifyStatus + "telfon");
+  console.log(userdata);
   return (
-    
     <Tab.Navigator
       screenOptions={{
         tabBarLabelStyle: {
@@ -145,7 +134,7 @@ const [userdata, setuserdata] = useState({})
         options={{
           headerShown: false,
           tabBarLabel: "İlan Ver",
-        
+
           tabBarIcon: ({ color, focused }) => (
             <View style={styles.ilanVerIconContainer}>
               <Ionicons
@@ -174,8 +163,7 @@ const [userdata, setuserdata] = useState({})
           tabBarBadge: 1,
 
           tabBarBadgeStyle: {
-
-              display:userdata.cartItem ==null ?'none':'flex',
+            display: userdata.cartItem == null ? "none" : "flex",
 
             fontSize: 10,
             height: 17,
