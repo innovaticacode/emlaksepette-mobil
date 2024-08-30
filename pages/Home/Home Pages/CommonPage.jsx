@@ -6,14 +6,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   RefreshControl,
+  ScrollView,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import { getValueFor } from "../../../components/methods/user";
+import Modal from "react-native-modal";
+import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-
 const PAGE_SIZE = 10;
 
 const CommonPages = ({ index, text }) => {
@@ -26,6 +28,7 @@ const CommonPages = ({ index, text }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [user, setuser] = useState({});
 
+  // Function to replace Turkish characters with their English equivalents
   const replaceTurkishChars = (input) => {
     const charMap = {
       ç: "c",
@@ -45,16 +48,14 @@ const CommonPages = ({ index, text }) => {
   };
 
   const transformText = (input) => {
-    const transformed = replaceTurkishChars(input)
-      .toLowerCase()
-      .replace(/ /g, "-")
-      .replace(/[^a-z0-9-]/g, "");
-
-    return `"${transformed}"`;
+    return replaceTurkishChars(input)
+      .toLowerCase() 
+      .replace(/ /g, "-") 
+      .replace(/[^a-z0-9-]/g, ""); 
   };
 
   useEffect(() => {
-    console.log(`"${transformText(text)}"`, '1');
+    console.log(transformText(text), '1');
     getValueFor("user", setuser);
   }, []);
 
@@ -66,7 +67,8 @@ const CommonPages = ({ index, text }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${reset ? 1 : page
+        `https://private.emlaksepette.com/api/real-estates?page=${
+          reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
       );
@@ -107,7 +109,7 @@ const CommonPages = ({ index, text }) => {
   }, [index, user]);
 
   const filteredHomes = featuredEstates.filter(
-    (estate) => estate.step1_slug === `"${transformText(text)}"`
+    (estate) => estate.step1_slug === transformText(text)
   );
 
   const onRefresh = () => {
@@ -208,8 +210,9 @@ const CommonPages = ({ index, text }) => {
                     openSharing={
                       JSON.parse(item.housing_type_data)["open_sharing1"]
                     }
-                    image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image
-                      }`}
+                    image={`${apiUrl}/housing_images/${
+                      JSON.parse(item.housing_type_data).image
+                    }`}
                     column1_additional={item.column1_additional}
                     column1_name={
                       JSON.parse(item.housing_type_data)[item.column1_name]
@@ -260,30 +263,30 @@ const CommonPages = ({ index, text }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   item: {
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomColor: "#ccc"
   },
   allBtn: {
     backgroundColor: "#EA2C2E",
     paddingLeft: 15,
     paddingRight: 15,
     padding: 5,
-    borderRadius: 4,
+    borderRadius: 4
   },
   modal4: {
     justifyContent: "center",
     margin: 0,
     padding: 20,
-    backgroundColor: "#22283100",
+    backgroundColor: "#22283100"
   },
   modalContent4: {
     backgroundColor: "#fefefe",
     padding: 5,
-    borderRadius: 5,
-  },
+    borderRadius: 5
+  }
 });
 export default CommonPages;

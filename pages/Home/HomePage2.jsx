@@ -1,88 +1,41 @@
 import * as React from "react";
 import {
   View,
-  useWindowDimensions,
   Text,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  ImageBackground,
   TextInput,
   Dimensions,
   Platform,
 } from "react-native";
-import { TabView, SceneMap } from "react-native-tab-view";
-import HomePage from "./HomePage";
-import Navbar from "../../components/Navbar";
-import SliderMenu from "../../components/SliderMenu";
+import { TabView } from "react-native-tab-view";
 import axios from "axios";
-import { useState } from "react";
+import Modal from "react-native-modal";
+import Header from "../../components/Header";
 import DrawerMenu from "../../components/DrawerMenu";
 import Search from "./Search";
-import Header from "../../components/Header";
-import Estates from "./Home Pages/Estates";
-import Shop from "./Home Pages/Shop";
-import Area from "./Home Pages/Area";
-import Prefabrik from "./Home Pages/Prefabrik";
-import BookHouse from "./Home Pages/BookHouse";
-import SellAcil from "./Home Pages/SellAcil";
-import Shared from "./Home Pages/Shared";
-import Modal from "react-native-modal";
-import Categories from "../../components/Categories";
-import { StatusBar } from "expo-status-bar";
+import HomePage from "../Home/HomePage"
+import CommonPage from "./Home Pages/CommonPage";
 import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 
-const FirstRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
-);
-
-const SecondRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-);
-
-const renderScene = ({ route, index }) => {
-  switch (route.key) {
-    case "first":
-      return <HomePage index={index} />;
-    case "second":
-      return <Estates index={index} />;
-    case "shop":
-      return <Shop index={index} />;
-    case "area":
-      return <Area index={index} />;
-    case "prefabrik":
-      return <Prefabrik index={index} />;
-    case "bookhouse":
-      return <BookHouse index={index} />;
-    case "sellacil":
-      return <SellAcil index={index} />;
-    case "shared":
-      return <Shared index={index} />;
-    default:
-      return null;
-  }
-};
-
 const CustomTabBar = ({
   navigationState,
   position,
-  setIndex,
-  tab,
   indexChange,
+  tab,
 }) => {
   const [menuItems, setMenuItems] = React.useState([]);
-  const scrollViewRef = React.useRef(null); // ScrollView için ref
+  const scrollViewRef = React.useRef(null);
   const [tabWidth, setTabWidth] = React.useState(0);
 
   React.useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await axios.get(
-          "https://private.emlaksepette.com/api/menu-list"
-        );
+        const response = await axios.get("https://private.emlaksepette.com/api/menu-list");
         setMenuItems(response.data);
       } catch (error) {
         console.error("Error fetching menu items:", error);
@@ -113,7 +66,6 @@ const CustomTabBar = ({
     }
   }, [tab, menuItems, tabWidth]);
 
-  // Calculate the width of each tab after layout
   const onTabLayout = (event) => {
     const { width: measuredWidth } = event.nativeEvent.layout;
     setTabWidth(measuredWidth);
@@ -124,9 +76,8 @@ const CustomTabBar = ({
       <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        ref={scrollViewRef} // Ref ekleniyor
+        ref={scrollViewRef}
         onLayout={() => {
-          // Calculate the width of each tab dynamically
           if (menuItems.length > 0) {
             const tabWidth = width / menuItems.length;
             setTabWidth(tabWidth);
@@ -140,19 +91,17 @@ const CustomTabBar = ({
               style={[
                 styles.tabBtn,
                 {
-                  backgroundColor: tab == index ? "#EA2C2E" : "white",
-                  borderWidth: tab == index ? 0 : 1,
+                  backgroundColor: tab === index ? "#EA2C2E" : "white",
+                  borderWidth: tab === index ? 0 : 1,
                 },
               ]}
-              onPress={() => {
-                indexChange(index);
-              }}
-              onLayout={onTabLayout} // Measure each tab's layout
+              onPress={() => indexChange(index)}
+              onLayout={onTabLayout}
             >
               <Text
                 style={{
                   textAlign: "center",
-                  color: tab == index ? "white" : "#333",
+                  color: tab === index ? "white" : "#333",
                   fontSize: 12,
                 }}
               >
@@ -165,35 +114,44 @@ const CustomTabBar = ({
     </View>
   );
 };
+
 export default function HomePage2() {
   const navigation = useNavigation();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
-  const layout = useWindowDimensions();
-  const [tab, settab] = React.useState(0);
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [tab, setTab] = React.useState(0);
   const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    { key: "first", title: "First" },
-    { key: "second", title: "Second" },
-    { key: "shop", title: "Shop" },
-    { key: "area", title: "Area" },
-    { key: "prefabrik", title: "Prefabrik" },
-    { key: "bookhouse", title: "Bookhouse" },
-    { key: "sellacil", title: "Sellacil" },
-    { key: "shared", title: "Shared" },
-  ]);
+  const [routes, setRoutes] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchMenuItems = async () => {
+      try {
+        const response = await axios.get("https://private.emlaksepette.com/api/menu-list");
+        const menuItems = response.data;
+        setRoutes(menuItems.map((item) => ({ key: item.key, title: item.text })));
+      } catch (error) {
+        console.error("Error fetching menu items:", error);
+      }
+    };
+
+    fetchMenuItems();
+  }, []);
+
   const indexChange = (index) => {
     setIndex(index);
-    settab(index);
+    setTab(index);
+  };
+
+  const renderScene = ({ route }) => {
+    return route.title === "Projeler" ? (
+      <HomePage />
+    ) : (
+      <CommonPage text={route.title} />
+    );
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}
-    >
-      <Header onPress={toggleDrawer} index={setIndex} tab={settab} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}>
+      <Header onPress={() => setIsDrawerOpen(!isDrawerOpen)} index={setIndex} tab={setTab} />
 
       <Modal
         isVisible={isDrawerOpen}
@@ -216,26 +174,24 @@ export default function HomePage2() {
             <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
           </View>
           <View style={{ flex: 1.3 / 1 }}>
-            <Search onpres={toggleDrawer} />
+            <Search onpres={() => setIsDrawerOpen(false)} />
           </View>
         </View>
       </Modal>
+
       <View style={{ paddingLeft: 10, paddingRight: 10 }}>
         <TextInput
           style={{ padding: 8, backgroundColor: "#ebebeb", borderRadius: 5 }}
           placeholder="Kelime veya İlan no ile ara.."
-          onPress={() => {
-            navigation.navigate("SearchPage");
-          }}
+          onPress={() => navigation.navigate("SearchPage")}
         />
       </View>
+
       <TabView
         navigationState={{ index, routes }}
-        renderScene={({ route, jumpTo }) =>
-          renderScene({ route, jumpTo, index })
-        }
+        renderScene={renderScene}
         onIndexChange={indexChange}
-        initialLayout={{ width: layout.width }}
+        initialLayout={{ width: Dimensions.get("window").width }}
         renderTabBar={(props) => (
           <CustomTabBar {...props} indexChange={indexChange} tab={tab} />
         )}
@@ -243,28 +199,10 @@ export default function HomePage2() {
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   scene: {
     flex: 1,
-  },
-  tabBar: {
-    flexDirection: "row",
-    paddingTop: 20,
-  },
-  tabItem: {
-    flex: 1,
-    alignItems: "center",
-    padding: 16,
-  },
-  activeTabItem: {
-    borderBottomWidth: 2,
-    borderBottomColor: "blue",
-  },
-  tabTitle: {
-    color: "black",
-  },
-  activeTabTitle: {
-    color: "blue",
   },
   tabBtn: {
     backgroundColor: "white",
@@ -277,18 +215,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ebebeb",
   },
-  text: {
-    fontSize: 12,
-  },
   modal: {
     margin: 0,
   },
   modalContent: {
     backgroundColor: "white",
-
     flex: 1,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    width: 320,
-  },
+    width: 320
+  }
 });
