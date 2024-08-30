@@ -478,7 +478,11 @@ export default function RealtorPost({
                 ) : (
                   <TouchableOpacity
                     style={styles.addBasket}
-                    onPress={handlePress}
+                    onPress={() =>
+                      navigation.navigate("Realtor details", {
+                        houseId: HouseId,
+                      })
+                    }
                   >
                     {(housing?.step2_slug &&
                       housing?.step2_slug == "gunluk-kiralik") ||

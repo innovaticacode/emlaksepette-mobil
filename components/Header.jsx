@@ -24,45 +24,86 @@ export default function Header({ loading, onPress, index, tab }) {
     getValueFor("user", setuser);
   }, []);
 
-  const fetchNotifications = async () => {
-    try {
-      if (!user?.access_token) {
-        setNotifications([]);
-        setNotificationCount(0);
-        return;
-      }
+  // const fetchNotifications = async () => {
+  //   try {
+  //     if (!user?.access_token) {
+  //       setNotifications([]);
+  //       setNotificationCount(0);
+  //       return;
+  //     }
 
-      const response = await axios.get(
-        "https://private.emlaksepette.com/api/user/notification",
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
+  //     const response = await axios.get(
+  //       "https://private.emlaksepette.com/api/user/notification",
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${user.access_token}`,
+  //         },
+  //       }
+  //     );
 
-      if (response.data) {
-        setNotifications(response.data);
-      } else {
-        setNotifications([]);
-      }
+  //     if (response.data) {
+  //       setNotifications(response.data);
+  //     } else {
+  //       setNotifications([]);
+  //     }
 
-      const unreadCount = response.data.filter(
-        (notification) => notification.readed === 0
-      ).length;
-      setNotificationCount(unreadCount);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-      setNotifications([]);
-      setNotificationCount(0); // Set unreadCount to 0 in case of an error
-    }
-  };
+  //     const unreadCount = response.data.filter(
+  //       (notification) => notification.readed === 0
+  //     ).length;
+  //     setNotificationCount(unreadCount);
+  //   } catch (error) {
+  //     console.error("Error fetching notifications:", error);
+  //     setNotifications([]);
+  //     setNotificationCount(0); // Set unreadCount to 0 in case of an error
+  //   }
+  // };
 
-  useEffect(() => {
-    if (user?.access_token) {
-      fetchNotifications();
-    }
-  }, [user.access_token]);
+  // useEffect(() => {
+  //   if (user?.access_token) {
+  //     fetchNotifications();
+  //   }
+  // }, [user.access_token, notifications]);
+
+  //   10 DAKİKA ARALIKLARLA İSTEK AT
+
+  // const [loading, setLoading] = useState(false);
+
+  //   useEffect(() => {
+  //     const intervalId = setInterval(() => {
+  //       fetchNotifications();
+  //     }, 60 * 1000); // 1 dakika aralıklarla kontrol et
+
+  //     return () => clearInterval(intervalId); // Cleanup
+  //   }, []);
+
+  //   const fetchNotifications = async () => {
+  //     try {
+  //       if (!user?.access_token) return;
+  //       setLoading(true);
+  //       const response = await axios.get(
+  //         'https://private.emlaksepette.com/api/user/notification',
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${user.access_token}`,
+  //           },
+  //         }
+  //       );
+
+  //       if (response.data) {
+  //         setNotifications(response.data);
+  //         setNotificationCount(
+  //           response.data.filter(notification => notification.readed === 0).length
+  //         );
+  //       } else {
+  //         setNotifications([]);
+  //         setNotificationCount(0);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching notifications:', error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
   return (
     <View style={styles.header}>
@@ -122,7 +163,7 @@ export default function Header({ loading, onPress, index, tab }) {
               }}
             >
               <Text style={{ color: "white", fontSize: 11 }}>
-                {notificationCount}
+                {notifications.length}
               </Text>
             </View>
           )}
