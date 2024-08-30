@@ -138,7 +138,7 @@
     "id": "GetReceivedOffers",
     "label": "Projeler",
     "icon": "users",
-    "text": "Başvurduğum Projeler",
+    "text":"Gelen Proje Başvuruları",
     "key": "GetReceivedOffers",
     "url": "Suggest",
     "activePath": "/hesabim/gelen-konut-basvurulari"
@@ -147,7 +147,7 @@
     "id": "GetGivenOffers",
     "label": "Projeler",
     "icon": "corner-up-right",
-    "text": "Gelen Proje Başvuruları",
+    "text": "Başvurduğum Projeler",
     "key": "GetGivenOffers",
     "url": "Suggest",
     "activePath": "/hesabim/basvurularim"
