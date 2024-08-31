@@ -5,9 +5,9 @@ import Verification from './ProfilePages/Verification';
 import VerifyDocument from './VerifyDocument';
 import { getValueFor } from '../../components/methods/user';
 import axios from 'axios';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { ActivityIndicator } from 'react-native-paper';
-
+import * as SecureStore from "expo-secure-store";
 const labels = ["Adım 1", "Adım 2","Adım 3"];
 const labels2 = ["Adım 1", "Adım 2"];
 const customStyles = {
@@ -74,6 +74,7 @@ const [loading, setloading] = useState(false)
         GetUserInfo()
      
     }, [user])
+
     useEffect(() => {
       if (namFromGetUser.phone_verification_status==1) {
         setCurrentPosition(1)
@@ -81,7 +82,7 @@ const [loading, setloading] = useState(false)
         setCurrentPosition(0)
       }
     }, [namFromGetUser])
-    
+   
 
         // useEffect(() => {
         //   if (namFromGetUser.phone_verification_status==1) {
@@ -126,7 +127,9 @@ const [loading, setloading] = useState(false)
       setCurrentPosition(currentPosition - 1);
     }
   };
-
+  const navigation = useNavigation();
+  console.log(verifyStatu)
+  
   return (
     <>
         {
@@ -154,6 +157,16 @@ const [loading, setloading] = useState(false)
                <Button title="Sonraki" onPress={nextStep} />
              )}
            </View>  */}
+           <View style={{alignItems:'center'}}>
+            <TouchableOpacity style={{backgroundColor:'#EC302E',padding:8,borderRadius:8,width:'80%'}}
+              onPress={()=>{
+                SecureStore.setItemAsync("user", "");
+                navigation.push("Home",{status : "logout"});
+              }}
+            >
+              <Text style={{textAlign:'center',color:'white',fontWeight:'600'}}>Kapat</Text>
+            </TouchableOpacity>
+           </View>
          </SafeAreaView>
         }
     </>

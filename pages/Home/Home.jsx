@@ -65,21 +65,24 @@ const Home = ({ route }) => {
 
   const { width, height } = Dimensions.get("window");
 
-  if (userdata && user.access_token) {
-    if (user.type == 1) {
-      if (verifyStatus == 0) {
-        return <VerifyScreen />;
+ if (userdata && user.access_token ) {
+    if (user.type==1) {
+      if (verifyStatus==0) {
+        return <VerifyScreen/>
       }
-    } else {
-      if (verifyStatus == 0 || userdata.corporate_account_status == 0) {
-        return <VerifyScreen />;
-      }
+    
+    }else{
+      if (  verifyStatus==0|| userdata.corporate_account_status==0 ) {
+        return <VerifyScreen/>
+    
+      
+      }}
     }
-  }
 
   console.log(userdata.corporate_account_status + "dosya");
   console.log(verifyStatus + "telfon");
   console.log(userdata);
+
   return (
     <Tab.Navigator
       screenOptions={{
