@@ -48,6 +48,7 @@ export default function ChangePassword() {
     getValueFor("user", setuser);
   }, []);
   const [message, setmessage] = useState({});
+
   const postData = async () => {
     setchangeLoading(true);
 
@@ -70,19 +71,47 @@ export default function ChangePassword() {
       setcurrentPasword("");
       setnewPassword("");
       setnewPasswordconfirmation("");
+
+      // Başarılı şifre değişikliği mesajı
+    Toast.show({
+      type: ALERT_TYPE.SUCCESS,
+      title: "Başarılı",
+      textBody: "Şifreniz başarıyla güncellendi.",
+    });
+
       setchangeSuccess(true);
       setTimeout(() => {
         setchangeSuccess(false);
       }, 5000);
     } catch (error) {
-      Toast.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Hata",
-        textBody: error.response.data.message,
-      });
-
-      console.error("Hata:", error + "post isteği başarısız ");
-    } finally {
+      // Hata nesnesini konsola yazdır
+      console.error("Hata:", error);
+      console.error("Hata yanıtı verisi:", error.response?.data);
+    
+      const errorMessage =
+        error.response?.data?.errors?.current_password ||
+        error.response?.data?.message ||
+        "Bilinmeyen bir hata oluştu.";
+    
+      // Mevcut şifre hatalıysa gösterilecek özel mesaj
+      if (errorMessage === "Mevcut şifre hatalı.") {
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Hata",
+          textBody: "Mevcut şifreniz hatalı. Lütfen doğru şifreyi giriniz.",
+        });
+      } else {
+        // Genel hata mesajı
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Hata",
+          textBody: errorMessage,
+        });
+      }
+    
+      console.error("Hata:", error + " post isteği başarısız ");
+    }
+     finally {
       setchangeLoading(false);
     }
   };
@@ -91,20 +120,12 @@ export default function ChangePassword() {
       postData();
     }
   };
-  console.log(message + "dsfsdfjsd");
+
   return (
     <AlertNotificationRoot>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.container}>
-          <Text
-            style={{
-              textAlign: "center",
-              color: "green",
-              display: changeSuccess ? "flex" : "none",
-            }}
-          >
-            Şifreniz Başarıyla Güncellendi
-          </Text>
+         
           <View style={styles.Form}>
             <View>
               <Text style={styles.label}>Mevcut Şifre</Text>
