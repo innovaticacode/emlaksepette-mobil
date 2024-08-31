@@ -13,6 +13,7 @@ import {
   Pressable,
   Share,
 } from "react-native";
+import ImageViewing from "react-native-image-viewing";
 import { React, useRef, useState, useEffect } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
 import * as Clipboard from "expo-clipboard";
@@ -95,10 +96,6 @@ export default function PostDetail() {
   const { houseId } = route.params;
   const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
-  const handleOpenPhone = () => {
-    // Telefon uygulamasını açmak için
-    Linking.openURL(`tel:+90${data?.housing?.user?.phone}`);
-  };
 
   const changeTab = (tabs) => {
     setTabs(tabs);
@@ -120,6 +117,7 @@ export default function PostDetail() {
     setpagination(pageNumber);
     setSelectedImage(pageNumber);
   };
+
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const openModal = (roomOrder) => {
     setPaymentModalShowOrder(roomOrder);
@@ -131,6 +129,7 @@ export default function PostDetail() {
     setFormVisible(!FormVisible);
   };
   const [data, setData] = useState({});
+
   const [loading, setloading] = useState(false);
 
   // USEEFFECT BAĞIMLILIĞINI START //
@@ -176,6 +175,7 @@ export default function PostDetail() {
     }
   };
   const [IsSwap, setIsSwap] = useState("");
+
   const fetchDetails = async () => {
     const config = {
       headers: { Authorization: `Bearer ${user?.access_token}` },
@@ -189,14 +189,28 @@ export default function PostDetail() {
       setloading(false);
       GetUserInfo();
       setData(response.data);
-      setImages(JSON.parse(response.data.housing.housing_type_data).images);
+
+      // images dizisini ve kapak resmini alın
+      const housingData = JSON.parse(response.data.housing.housing_type_data);
+      const fetchedImages = housingData.images || [];
+
+      // Kapak resmini al ve kontrol et
+      const coverImage = response.data.labels["Kapak Resmi"];
+      if (coverImage) {
+        const coverImageUri = `${apiUrl}/housing_images/${coverImage}`;
+        console.log("Kapak Resmi URI:", coverImageUri); // URI'yi kontrol et
+
+        setImages([coverImageUri, ...fetchedImages]);
+      } else {
+        setImages(fetchedImages);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
       setloading(false); // İstek tamamlandığında loading durumunu false yap
     }
   };
-
+  console.log(houseId);
   useEffect(() => {
     fetchDetails();
   }, [user]);
@@ -259,7 +273,6 @@ export default function PostDetail() {
             },
           }
         );
-
         setcollections(response?.data.collections);
       }
     } catch (error) {
@@ -549,6 +562,50 @@ export default function PostDetail() {
   //     }, [fetchDetails])
 
   // console.log(IsSwap + 'swap')
+
+  const [isVisible, setIsVisible] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Create an array of images for ImageViewing
+  const imageURIs = images.map((item, _) => {
+    if (_ == 0) {
+      return {
+        uri: `${item}`,
+      };
+    } else {
+      return {
+        uri: `${apiUrl}/housing_images/${item}`,
+      };
+    }
+  });
+
+  const handleOpenPhone = () => {
+    let phoneNumber;
+
+    // Eğer data?.housing?.user?.phone varsa ve area_code mevcutsa
+    if (data?.housing?.user?.phone && data?.housing?.user?.area_code) {
+      phoneNumber = `${0 + data.housing.user.area_code}${
+        data.housing.user.phone
+      }`;
+    }
+    // Eğer data?.housing?.mobile_phone varsa
+    else if (data?.housing?.mobile_phone) {
+      phoneNumber = data.housing.mobile_phone.startsWith("0")
+        ? `90${data.housing.mobile_phone.slice(1)}`
+        : `90${data.housing.mobile_phone}`;
+    }
+
+    // Telefon numarasını kontrol et ve URL'yi oluştur
+    if (phoneNumber) {
+      Linking.openURL(`tel:+${phoneNumber}`);
+    } else {
+      console.error("Telefon numarası bulunamadı.");
+    }
+  };
+
+  console.log(data?.housing?.user?.mobile_phone + "qeqw eqw eqw ewq");
+
+  // Handle page change in PagerView
 
   return (
     <>
@@ -862,26 +919,33 @@ export default function PostDetail() {
                     handlePageChange(event.nativeEvent.position)
                   }
                 >
-                  {images.map((item, _index) => [
+                  {images.map((item, index) => (
                     <Pressable
-                      key={_index + 1}
-                      onPress={() => setCoverImageModal(true)}
+                      key={index}
+                      onPress={() => {
+                        setIsVisible(true);
+                        setCurrentIndex(index);
+                      }}
                     >
                       <ImageBackground
-                        source={{ uri: `${apiUrl}/housing_images/${item}` }}
+                        source={{
+                          uri: `${apiUrl}/housing_images/${
+                            item.split("/")[item.split("/").length - 1]
+                          }`,
+                        }}
                         style={{ width: "100%", height: "100%" }}
                       />
-                    </Pressable>,
-                  ])}
-                  {/*        
-                        <ImageBackground
-                          source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
-                          style={{ width: "100%", height: "100%", }}
-                         
-                          resizeMode='cover'
-                        
-                        /> */}
+                    </Pressable>
+                  ))}
                 </PagerView>
+
+                {/* Full-screen image viewing */}
+                <ImageViewing
+                  images={imageURIs}
+                  imageIndex={currentIndex}
+                  visible={isVisible}
+                  onRequestClose={() => setIsVisible(false)}
+                />
               </View>
               <View
                 style={{

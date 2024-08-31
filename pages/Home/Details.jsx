@@ -69,6 +69,7 @@ import DrawerMenu from "../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../../components/CommentForProject";
+import ImageViewing from "react-native-image-viewing";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -820,6 +821,13 @@ export default function Details({ navigation }) {
     }
   }, [data]);
 
+  const images = galleries.map((image) => ({
+    uri: `${apiUrl}${image.image.replace("public", "storage")}`,
+  }));
+
+  const [isVisible, setIsVisible] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   var months = [
     "Ocak",
     "Şubat",
@@ -1178,21 +1186,33 @@ export default function Details({ navigation }) {
                       setPagination(e.nativeEvent.position)
                     }
                   >
-                    {galleries.map((image, index) => {
-                      const uri = `${apiUrl}${image.image.replace(
-                        "public",
-                        "storage"
-                      )}`;
-                      return (
-                        <Pressable key={index}>
-                          <ImageBackground
-                            source={{ uri: uri }}
-                            style={{ width: "100%", height: "100%" }}
-                          />
-                        </Pressable>
-                      );
-                    })}
+                    {galleries.map((image, index) => (
+                      <Pressable
+                        key={index}
+                        onPress={() => {
+                          setCurrentIndex(index);
+                          setIsVisible(true);
+                        }}
+                      >
+                        <ImageBackground
+                          source={{
+                            uri: `${apiUrl}${image.image.replace(
+                              "public",
+                              "storage"
+                            )}`,
+                          }}
+                          style={{ width: "100%", height: "100%" }}
+                        />
+                      </Pressable>
+                    ))}
                   </PagerView>
+
+                  <ImageViewing
+                    images={images}
+                    imageIndex={currentIndex}
+                    visible={isVisible}
+                    onRequestClose={() => setIsVisible(false)}
+                  />
                 </View>
 
                 <View
