@@ -87,9 +87,9 @@ const [userdata, setuserdata] = useState({})
       }}
     }
  
-  console.log(userdata.corporate_account_status + 'dosya')
-  console.log(verifyStatus + 'telfon')
-  console.log(userdata)
+
+  
+
   return (
     
     <Tab.Navigator

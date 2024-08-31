@@ -145,7 +145,7 @@ export default function Verification({nextStep,prevStep}) {
 
 useEffect(() => {
     getValueFor('PhoneVerify',setverifyStatu)
-}, [])
+}, [user])
 
   useEffect(() => {
       if (verifyStatu==0) {
@@ -153,13 +153,14 @@ useEffect(() => {
         setIsActive(true);
       }
   
-  }, [user]);
+  }, [verifyStatu]);
 
   const [succes, setsucces] = useState(true);
 
   const [seconds, setSeconds] = useState(180); // 3 dakika = 180 saniye
   const [isActive, setIsActive] = useState(false);
   const [showSendAgain, setshowSendAgain] = useState(false);
+
   useEffect(() => {
     let interval = null;
 
@@ -186,14 +187,14 @@ useEffect(() => {
     const seconds = timeInSeconds % 60;
     return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
   };
-
+console.log(verifyStatu)
 
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ padding: 10, paddingTop: 50 }}>
-        <View>
-          <Text style={{ fontSize: 30, color: "#333", fontWeight: "800" }}>
+      <View style={{ padding: 10, }}>
+        <View style={{}}>
+          <Text style={{ fontSize: 30, color: "#333", fontWeight: "800" ,textAlign:'center'}}>
             Hoş Geldiniz!
           </Text>
           <View style={{ paddingTop: 30 }}>
@@ -203,6 +204,7 @@ useEffect(() => {
                 color: "#262020",
                 fontWeight: "400",
                 letterSpacing: 0.8,
+                textAlign:'center'
               }}
             >
               Lütfen hesabınızı doğrulamak için{" "}
@@ -217,7 +219,7 @@ useEffect(() => {
           {formatTime(seconds)}
         </Text>
       </View>
-      <View style={{ paddingTop: 30 }}>
+      <View style={{ paddingTop: 30,}}>
         <View
           style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}
         >
@@ -444,6 +446,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FCFCFC",
+    margin:33
+    
   },
   Input: {
     backgroundColor: "#ebebeb",
