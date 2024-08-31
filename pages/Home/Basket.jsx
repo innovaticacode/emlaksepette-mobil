@@ -371,6 +371,7 @@ export default function Basket() {
             <Header onPress={toggleDrawer} index={setindex} tab={settab} />
           </View>
 
+        
           <Modal
             isVisible={isDrawerOpen}
             onBackdropPress={() => setIsDrawerOpen(false)}
@@ -381,44 +382,10 @@ export default function Basket() {
             style={styles.modal}
           >
             <View style={styles.modalContent}>
-              <View
-                style={{
-                  backgroundColor: "#EA2C2E",
-                  flex: 1 / 3,
-                  borderBottomLeftRadius: 20,
-                  borderBottomRightRadius: 20,
-                }}
-              >
+           
                 <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-              </View>
-              <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
-                <Search onpres={toggleDrawer} />
-              </View>
-            </View>
-          </Modal>
-          <Modal
-            isVisible={isDrawerOpen}
-            onBackdropPress={() => setIsDrawerOpen(false)}
-            animationIn="bounceInLeft"
-            animationOut="bounceOutLeft"
-            swipeDirection={["left"]}
-            onSwipeComplete={() => setIsDrawerOpen(false)}
-            style={styles.modal}
-          >
-            <View style={styles.modalContent}>
-              <View
-                style={{
-                  backgroundColor: "#EA2C2E",
-                  flex: 1 / 3,
-                  borderBottomLeftRadius: 20,
-                  borderBottomRightRadius: 20,
-                }}
-              >
-                <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-              </View>
-              <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
-                <Search onpres={toggleDrawer} />
-              </View>
+             
+             
             </View>
           </Modal>
 

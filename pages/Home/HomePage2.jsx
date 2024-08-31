@@ -205,19 +205,10 @@ export default function HomePage2() {
         onSwipeComplete={() => setIsDrawerOpen(false)}
       >
         <View style={styles.modalContent}>
-          <View
-            style={{
-              backgroundColor: "#EA2C2E",
-              height: Platform.OS === "android" ? height * 0.32 : height * 0.32,
-              borderBottomLeftRadius: 20,
-              borderBottomRightRadius: 20,
-            }}
-          >
+        
             <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-          </View>
-          <View style={{ flex: 1.3 / 1 }}>
-            <Search onpres={toggleDrawer} />
-          </View>
+         
+        
         </View>
       </Modal>
       <View style={{ paddingLeft: 10, paddingRight: 10 }}>

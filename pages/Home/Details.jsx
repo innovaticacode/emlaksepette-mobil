@@ -1001,19 +1001,10 @@ export default function Details({ navigation }) {
                 style={styles.modal}
               >
                 <View style={styles.modalContent}>
-                  <View
-                    style={{
-                      backgroundColor: "#EA2C2E",
-                      flex: 1 / 3,
-                      borderBottomLeftRadius: 20,
-                      borderBottomRightRadius: 20,
-                    }}
-                  >
+               
                     <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-                  </View>
-                  <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
-                    <Search onpres={toggleDrawer} />
-                  </View>
+                
+                 
                 </View>
               </Modal>
 
