@@ -584,12 +584,12 @@ export default function PostDetail() {
 
     // Eğer data?.housing?.user?.phone varsa ve area_code mevcutsa
     if (data?.housing?.user?.phone && data?.housing?.user?.area_code) {
-      phoneNumber = `${0 + data.housing.user.area_code}${
-        data.housing.user.phone
-      }`;
+      // Alan kodu ve telefon numarasını birleştir
+      phoneNumber = `90${data.housing.user.area_code}${data.housing.user.phone}`;
     }
     // Eğer data?.housing?.mobile_phone varsa
     else if (data?.housing?.mobile_phone) {
+      // Telefon numarası başında 0 ile başlıyorsa 0'ı kaldır ve +90 ekle
       phoneNumber = data.housing.mobile_phone.startsWith("0")
         ? `90${data.housing.mobile_phone.slice(1)}`
         : `90${data.housing.mobile_phone}`;
@@ -597,6 +597,7 @@ export default function PostDetail() {
 
     // Telefon numarasını kontrol et ve URL'yi oluştur
     if (phoneNumber) {
+      // Numara başında + ekle
       Linking.openURL(`tel:+${phoneNumber}`);
     } else {
       console.error("Telefon numarası bulunamadı.");
@@ -778,7 +779,7 @@ export default function PostDetail() {
                   padding: 5,
                   flexDirection: "row",
                   alignItems: "center",
-                  gap: 8,
+                  justifyContent: "space-between", // İlan No'nun sağda olması için
                 }}
               >
                 <View
@@ -841,18 +842,20 @@ export default function PostDetail() {
                         style={{ width: "100%", height: "100%" }}
                       />
                     </View>
-                    <View style={{ alignItems: "flex-end" }}>
-                      <Text
-                        style={{
-                          fontSize: 11,
-                          color: "white",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        İlan No:#2000{data?.housing?.id}{" "}
-                      </Text>
-                    </View>
                   </View>
+                </View>
+
+                {/* İlan No kısmı en sağda hizalanıyor */}
+                <View style={{ alignItems: "flex-end" }}>
+                  <Text
+                    style={{
+                      fontSize: 11,
+                      color: "white",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    İlan No:#2000{data?.housing?.id}
+                  </Text>
                 </View>
               </TouchableOpacity>
             </View>

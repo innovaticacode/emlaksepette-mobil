@@ -478,11 +478,20 @@ export default function RealtorPost({
                 ) : (
                   <TouchableOpacity
                     style={styles.addBasket}
-                    onPress={() =>
-                      navigation.navigate("Realtor details", {
-                        houseId: HouseId,
-                      })
-                    }
+                    onPress={() => {
+                      // Metin kontrolü yapılıyor
+                      if (
+                        (housing?.step2_slug &&
+                          housing?.step2_slug === "gunluk-kiralik") ||
+                        housing?.step1_slug === "mustakil-tatil"
+                      ) {
+                        navigation.navigate("Realtor details", {
+                          houseId: HouseId,
+                        });
+                      } else {
+                        handlePress();
+                      }
+                    }}
                   >
                     {(housing?.step2_slug &&
                       housing?.step2_slug == "gunluk-kiralik") ||
