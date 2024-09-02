@@ -266,27 +266,27 @@ export default function Favorites() {
           Authorization: `Bearer ${user.access_token}`,
         },
       });
-      Toast.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: `Silme işlemi başarılı.`,
-        titleStyle: { fontSize: 14 },
-        textBody: `${FavoriteRemoveIDS.length} İlan silindi.`,
-      });
-      // if (response.status === 200) {
       
+      if (response.status === 200) {
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: `Silme işlemi başarılı.`,
+          titleStyle: { fontSize: 14 },
+          textBody: `${FavoriteRemoveIDS.length} İlan silindi.`,
+        });
     
         fetchFavorites(); // Favori ilanları yeniden yükle
         setFavoriteRemoveIDS([]); // Seçili ilanları temizle
         setRemoveSelectedCollectionsModal(false); // Modal'ı kapat
         setIsChoosed(false); // Toplu seçim modunu kapat
-      // } else {
-      //   Toast.show({
-      //     type: ALERT_TYPE.WARNING,
-      //     title: `Silme işlemi başarısız oldu!`,
-      //     titleStyle: { fontSize: 14 },
-      //     textBody: `${FavoriteRemoveIDS.length} Hata!`,
-      //   });
-      // }
+       } else {
+         Toast.show({
+           type: ALERT_TYPE.WARNING,
+           title: `Silme işlemi başarısız oldu!`,
+           titleStyle: { fontSize: 14 },
+           textBody: `${FavoriteRemoveIDS.length} Hata!`,
+         });
+       }
 
     } catch (error) {
       // Hata durumunda kullanıcıya geri bildirim sağla
