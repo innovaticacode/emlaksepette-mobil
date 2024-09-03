@@ -513,14 +513,14 @@ export default function Posts({
                 justifyContent: bookmarkStatus ? "space-between" : "flex-end",
               }}
             >
-              {sold?.status == 1 ? (
+              {/* {sold?.status == 1 ? (
                 <></>
               ) : (
                 user?.has_club == 1 &&
                 ((user?.role == "Bireysel Hesap" && offSaleStatus != 2) ||
                   (user.role == "Kurumsal Hesap" &&
                     user.corporate_type == "Emlak Ofisi")) &&
-                (offSaleStatus == 2 || offSaleStatus == 3) && (
+                (offSaleStatus == 2 || offSaleStatus == 3) && ( */}
                   <TouchableOpacity
                     onPress={() => {
                       changeBookmark();
@@ -536,8 +536,8 @@ export default function Posts({
                       />
                     </View>
                   </TouchableOpacity>
-                )
-              )}
+                {/* )
+              )} */}
               {sold?.status == 1 ? (
                 <></>
               ) : (

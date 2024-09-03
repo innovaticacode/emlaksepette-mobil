@@ -284,8 +284,8 @@ export default function PostDetail() {
         setTimeout(() => {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
-            title: `${newCollectionNameCreate} Adlı koleksiyonunuz oluşturuldu `,
-            textBody: `${selectedroomId} No'lu Konut ${newCollectionNameCreate} Adlı Koleksiyonuza Eklendi`,
+            title:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${newCollectionNameCreate} Adlı portföyünüz oluşturuldu ` : `${newCollectionNameCreate} Adlı koleksiyonunuz oluşturuldu `,
+            textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${selectedroomId} No'lu Konut ${newCollectionNameCreate} Adlı Portföyünüze Eklendi` : `${selectedroomId} No'lu Konut ${newCollectionNameCreate} Adlı Koleksiyonuza Eklendi`,
             button: "Tamam",
           });
           
@@ -328,10 +328,9 @@ export default function PostDetail() {
         setTimeout(() => {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
-            title: "Başarılı",
-            textBody: `${selectedroomId} No'lu Konut ${name} Adlı Koleksiyonunuza Eklendi.`,
+            title:(user.type==2 && user.corporate_type=='Emlak Ofisi')? 'Portföye ekleme başarılı': "Koleksiyona ekleme başarılı",
+            textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${selectedroomId} No'lu Konut ${name} Adlı Portföyünüze Eklendi` : `${selectedroomId} No'lu Konut ${name} Adlı Koleksiyonunuza Eklendi`,
             button: "Tamam",
-
           });
         }, 700);
         // setselectedCollectionName(response.data.collection.name)
@@ -1250,7 +1249,7 @@ export default function PostDetail() {
               >
                 {roomData && roomData["off_sale[]"] && (
                   <SettingsItem
-                    info="Koleksiyona Ekle"
+                    info={(user.type==2 && user.corporate_type=='Emlak Ofisi')?'Portföye Ekle':"Koleksiyona Ekle" } 
                     color={"red"}
                     fontWeight={"700"}
                     icon={<LinkIcon3 name="bookmark" size={15} color={"red"} />}
@@ -1640,7 +1639,12 @@ export default function PostDetail() {
                             fontWeight: "400",
                           }}
                         >
-                          Koleksiyona Ekle
+                          {
+                            (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                            'Portföye Ekle'
+                            :'Koleksiyona Ekle'
+                          }
+                          
                         </Text>
                         <Text
                           style={{
@@ -1649,8 +1653,13 @@ export default function PostDetail() {
                             fontSize: 14,
                           }}
                         >
-                          Konutu koleksiyonlarından birine ekleyebilir veya yeni
-                          bir koleksiyon oluşturabilirsin
+                            {
+                            (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                            ' Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin'
+                            :'Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin'
+                          }
+                          
+                        
                         </Text>
                       </View>
 
@@ -1692,8 +1701,12 @@ export default function PostDetail() {
                                         color: "#7A8A95",
                                       }}
                                     >
-                                      Koleksiyonunuza konut ekleyebilmeniz emlak
-                                      kulüp üyesi olmaız gerekmektedir
+                                      {
+                                        (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                                        'Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir':
+                                        'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir'
+                                      }
+                                      
                                     </Text>
                                   </View>
                                 </View>
@@ -1721,8 +1734,11 @@ export default function PostDetail() {
                                       color: "#7A8A95",
                                     }}
                                   >
-                                    Koleksiyonunuza konut ekleyebilmeniz emlak
-                                    kulüp üyesi olmaız gerekmektedir
+                                     {
+                                        (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                                        'Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir':
+                                        'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir'
+                                      }
                                   </Text>
                                 </View>
                                 <TouchableOpacity
@@ -1770,8 +1786,11 @@ export default function PostDetail() {
                                         color: "#7A8A95",
                                       }}
                                     >
-                                      Koleksiyonunuza konut ekleyebilmeniz emlak
-                                      kulüp üyesi olmaız gerekmektedir
+                                      {
+                                        (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                                        'Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir':
+                                        'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir'
+                                      }
                                     </Text>
                                   </View>
                                   <TouchableOpacity
@@ -1883,8 +1902,12 @@ export default function PostDetail() {
                                     color: "#7A8A95",
                                   }}
                                 >
-                                  Koleksiyonunuza konut ekleyebilmeniz için
-                                  giriş yapmanız gerekmektedir
+                                   {
+                                        (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                                        'Portföyünüze konut ekleyebilmeniz giriş yapmanız gerekmektedir':
+                                        'Koleksiyonunuza konut ekleyebilmeniz giriş yapmanız gerekmektedir'
+                                      }
+                              
                                 </Text>
                               </View>
                               <TouchableOpacity
@@ -2111,7 +2134,12 @@ export default function PostDetail() {
                             fontWeight: "400",
                           }}
                         >
-                          Koleksiyon Oluştur
+                          {
+                            (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                            'Portföy Oluştur':
+                            'Koleksiyon Oluştur'
+                          }
+                          
                         </Text>
                       </View>
                     </View>
@@ -2129,7 +2157,12 @@ export default function PostDetail() {
                           fontWeight: "500",
                         }}
                       >
-                        Koleksiyon İsmi
+                        {
+                          (user.type==2  && user.corporate_type=='Emlak Ofisi') ?
+                          'Portföy İsmi':
+                          'Koleksiyon İsmi'
+                        }
+                        
                       </Text>
                       <TextInput
                         style={{
@@ -2162,7 +2195,12 @@ export default function PostDetail() {
                             fontWeight: "500",
                           }}
                         >
-                          Koleksiyon Oluştur
+                          {
+                            (user.type==2 && user.corporate_type=='Emlak Ofisi')?
+                            'Portföy Oluştur':
+                            'Koleksiyon Oluştur'
+                          }
+                          
                         </Text>
                       </TouchableOpacity>
                     </View>
