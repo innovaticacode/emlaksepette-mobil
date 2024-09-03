@@ -109,7 +109,7 @@ import SwapForm from "./pages/Home/RealtorPages/SwapForm";
 import { Button } from "react-native";
 import VerifyScreen from "./pages/Home/VerifyScreen";
 import Toast from 'react-native-toast-message';
-
+import { AlertNotificationRoot } from 'react-native-alert-notification';
 
 const Stack = createNativeStackNavigator();
 
@@ -229,6 +229,7 @@ export default function App({ route }) {
   }
 
   return (
+    <AlertNotificationRoot>
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator
@@ -1186,5 +1187,6 @@ export default function App({ route }) {
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
+    </AlertNotificationRoot>
   );
 }
