@@ -181,7 +181,7 @@ export default function SendSellAndRentForm() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/cities"
+        "https://emlaksepette.com/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -203,7 +203,7 @@ export default function SendSellAndRentForm() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
+        `https://emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -233,7 +233,7 @@ export default function SendSellAndRentForm() {
   const fetchDataNeigbour = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/neighborhoods/${value}`
+        `https://emlaksepette.com/api/neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {

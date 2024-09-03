@@ -35,7 +35,7 @@ export default function Sell() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/institutional/get_solds",
+          "https://emlaksepette.com/api/institutional/get_solds",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

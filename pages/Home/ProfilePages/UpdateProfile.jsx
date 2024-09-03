@@ -182,7 +182,7 @@ export default function UpdateProfile() {
     setiban(user.iban);
     setmobilPhone(user.mobile_phone);
   }, [user]);
-  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
+  const PhotoUrl = "https://emlaksepette.com/storage/profile_images/";
   const [ChoosePhotoModal, setChoosePhotoModal] = useState(false);
 
   const [errorMsg, setErrorMsg] = useState(null);
@@ -194,7 +194,7 @@ export default function UpdateProfile() {
     setloadingModal(true);
     try {
       const updateResponse = await axios.get(
-        "https://private.emlaksepette.com/api/users/" + user?.id,
+        "https://emlaksepette.com/api/users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -248,7 +248,7 @@ export default function UpdateProfile() {
 
         // Perform the profile update
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/client/profile/update",
+          "https://emlaksepette.com/api/client/profile/update",
           formData,
           {
             headers: {
@@ -288,7 +288,7 @@ export default function UpdateProfile() {
     const fetchCities = async () => {
       try {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/cities"
+          "https://emlaksepette.com/api/cities"
         );
         setCities(response.data.data);
       } catch (error) {
@@ -303,7 +303,7 @@ export default function UpdateProfile() {
   const fetchCounties = async (cityId) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${cityId}`
+        `https://emlaksepette.com/api/counties/${cityId}`
       );
       setCounties(response.data.data);
     } catch (error) {
@@ -315,7 +315,7 @@ export default function UpdateProfile() {
   const fetchNeighborhoods = async (countyId) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/neighborhoods/${countyId}`
+        `https://emlaksepette.com/api/neighborhoods/${countyId}`
       );
       setNeighborhoods(response.data.data);
     } catch (error) {

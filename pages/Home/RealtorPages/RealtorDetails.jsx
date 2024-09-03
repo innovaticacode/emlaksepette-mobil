@@ -55,7 +55,7 @@ import {
   Toast,
 } from "react-native-alert-notification";
 export default function PostDetail() {
-  const apiUrl = "https://private.emlaksepette.com/";
+  const apiUrl = "https://emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [images, setImages] = useState([]);
@@ -76,12 +76,12 @@ export default function PostDetail() {
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(
-      `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`
+      `https://emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`
     );
     alert("Metin kopyalandı!");
   };
   const shareLinkOnWhatsApp = () => {
-    const url = `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`;
+    const url = `https://emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -158,7 +158,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          "https://emlaksepette.com/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -183,7 +183,7 @@ export default function PostDetail() {
     try {
       setloading(true);
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/housing/${houseId}`,
+        `https://emlaksepette.com/api/housing/${houseId}`,
         config
       );
       setloading(false);
@@ -266,7 +266,7 @@ export default function PostDetail() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/client/collections",
+          "https://emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -308,7 +308,7 @@ export default function PostDetail() {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/add/collection",
+        "https://emlaksepette.com/api/add/collection",
         collectionData,
         {
           headers: {
@@ -320,6 +320,13 @@ export default function PostDetail() {
       .then((response) => {
         setaddCollection(false);
         setnewCollectionNameCreate("");
+        setTimeout(() => {
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${newCollectionNameCreate} Adlı portföyünüz oluşturuldu ` : `${newCollectionNameCreate} Adlı koleksiyonunuz oluşturuldu `,
+            textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${houseId} No'lu Konut ${newCollectionNameCreate} Adlı Portföyünüze Eklendi` : `${houseId} No'lu Konut ${newCollectionNameCreate} Adlı Koleksiyonuza Eklendi`,
+          });
+        }, 700);
         // Başarılı yanıtı işleyin
         // setselectedCollectionName(response.data.collection.name)
       })
@@ -345,7 +352,7 @@ export default function PostDetail() {
     };
 
     axios
-      .post("https://private.emlaksepette.com/api/addLink", collectionData, {
+      .post("https://emlaksepette.com/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -359,8 +366,8 @@ export default function PostDetail() {
         setTimeout(() => {
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
-            title: "Koleksiyona ekleme başarılı",
-            textBody: `${id} No'lu Konut ${name} Adlı Koleksiyonunuza Eklendi`,
+            title:(user.type==2 && user.corporate_type=='Emlak Ofisi')?'Portföye Ekleme Başarılı': "Koleksiyona ekleme başarılı",
+            textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi') ? `${id} No'lu Konut ${name} Adlı Portföyünüze Eklendi`: `${id} No'lu Konut ${name} Adlı Koleksiyonunuza Eklendi`,
           });
         }, 700);
         var newCollections = collections.map((collection) => {
@@ -403,7 +410,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          "https://emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -435,7 +442,7 @@ export default function PostDetail() {
 
     return check;
   };
-  const removeItemOnCollection = (collectionId) => {
+  const removeItemOnCollection = (collectionId,name) => {
     const collectionData = {
       item_type: 2,
 
@@ -445,7 +452,7 @@ export default function PostDetail() {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/remove_item_on_collection",
+        "https://emlaksepette.com/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -455,7 +462,12 @@ export default function PostDetail() {
         }
       )
       .then((response) => {
-        alert("sdfsdfsadas");
+        setColectionSheet(false)
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title:(user.type==2 && user.corporate_type=='Emlak Ofisi') ? 'Portföyden Silindi': "Koleksiyondan Silindi",
+          textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi') ? `${houseId} No'lu Konut ${name} Adlı Portföyünüzden Silindi` : `${houseId} No'lu Konut ${name} Adlı Koleksiyonunuzdan Silindi`,
+        });
         var newCollections = collections.map((collection) => {
           if (collection.id == collectionId) {
             var newLinks = collection.links.filter((link) => {
@@ -490,7 +502,7 @@ export default function PostDetail() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
+        message: `https://emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
       });
 
       if (result.action === Share.sharedAction) {
@@ -519,7 +531,7 @@ export default function PostDetail() {
       };
       axios
         .post(
-          `https://private.emlaksepette.com/api/add_housing_to_favorites/${data?.housing?.id}`,
+          `https://emlaksepette.com/api/add_housing_to_favorites/${data?.housing?.id}`,
           {},
           config
         )
@@ -1330,7 +1342,12 @@ export default function PostDetail() {
                               fontWeight: "400",
                             }}
                           >
-                            Koleksiyona Ekle
+                            {
+                              (user.type==2 && user.corporate_type=='Emlak Ofisi') ? 'Portföye Ekle'
+                              :
+                              'Koleksiyona Ekle'
+                            }
+                            
                           </Text>
                           <Text
                             style={{
@@ -1339,8 +1356,12 @@ export default function PostDetail() {
                               fontSize: 14,
                             }}
                           >
-                            Konutu koleksiyonlarından birine ekleyebilir veya
-                            yeni bir koleksiyon oluşturabilirsin
+                            {
+                               (user.type==2 && user.corporate_type=='Emlak Ofisi') ? 
+                               'Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin':
+                               'Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin'
+                            }
+                            
                           </Text>
                         </View>
 
@@ -1439,8 +1460,13 @@ export default function PostDetail() {
                                       color: "#7A8A95",
                                     }}
                                   >
-                                    Koleksiyonunuza konut ekleyebilmeniz için
-                                    giriş yapmanız gerekmektedir
+                                    {
+                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                                      'Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir':
+                                      'Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir'
+
+                                    }
+                                   
                                   </Text>
                                 </View>
                                 <TouchableOpacity
@@ -1489,8 +1515,13 @@ export default function PostDetail() {
                                       color: "#7A8A95",
                                     }}
                                   >
-                                    Koleksiyonunuza konut ekleyebilmeniz emlak
-                                    kulüp üyesi olmaız gerekmektedir
+                                    {
+                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                                      'Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir':
+                                      'Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir'
+
+                                    }
+                                    
                                   </Text>
                                 </View>
                                 <TouchableOpacity
@@ -1538,8 +1569,12 @@ export default function PostDetail() {
                                       color: "#7A8A95",
                                     }}
                                   >
-                                    Koleksiyonunuza konut ekleyebilmeniz emlak
-                                    kulüp üyesi olmaız gerekmektedir
+                                   {
+                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                                      'Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir':
+                                      'Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir'
+
+                                    }
                                   </Text>
                                 </View>
                               </>
@@ -1567,8 +1602,12 @@ export default function PostDetail() {
                                       color: "#7A8A95",
                                     }}
                                   >
-                                    Koleksiyonunuza konut ekleyebilmeniz emlak
-                                    kulüp üyesi olmaız gerekmektedir
+                                    {
+                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                                      'Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir':
+                                      'Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir'
+
+                                    }
                                   </Text>
                                 </View>
                                 <TouchableOpacity
@@ -1787,7 +1826,13 @@ export default function PostDetail() {
                               fontWeight: "400",
                             }}
                           >
-                            Koleksiyon Oluştur
+                            {
+                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                                      'Portföy Oluştur':
+                                      'Koleksiyon Oluştur'
+
+                                    }
+                            
                           </Text>
                         </View>
                       </View>
@@ -1805,7 +1850,13 @@ export default function PostDetail() {
                             fontWeight: "500",
                           }}
                         >
-                          Koleksiyon İsmi
+                            {
+                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                                      'Portföy İsmi':
+                                      'Koleksiyon İsmi'
+
+                                    }
+                          
                         </Text>
                         <TextInput
                           style={styles.Input}
@@ -1833,7 +1884,13 @@ export default function PostDetail() {
                               fontWeight: "500",
                             }}
                           >
-                            Koleksiyon Oluştur
+                              {
+                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                                      'Portföy Oluştur':
+                                      'Koleksiyon Oluştur'
+
+                                    }
+                          
                           </Text>
                         </TouchableOpacity>
                       </View>

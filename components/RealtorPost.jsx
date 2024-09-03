@@ -127,7 +127,7 @@ export default function RealtorPost({
       };
       axios
         .post(
-          "https://private.emlaksepette.com/api/add_housing_to_favorites/" +
+          "https://emlaksepette.com/api/add_housing_to_favorites/" +
             HouseId,
           {},
           config
@@ -156,7 +156,7 @@ export default function RealtorPost({
   const updateUserData = async () => {
     try {
       const updateResponse = await axios.get(
-        "https://private.emlaksepette.com/api/users/" + user?.id,
+        "https://emlaksepette.com/api/users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -193,7 +193,7 @@ export default function RealtorPost({
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          "https://emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {

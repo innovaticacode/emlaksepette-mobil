@@ -18,7 +18,7 @@ import { getValueFor } from "../../../../components/methods/user";
 export default function EditCollectionPost({ item, collection, onRemove }) {
   const parseHousingData = (data) => JSON.parse(data);
   const navigation = useNavigation();
-  const apiUrl = "https://private.emlaksepette.com/api/";
+  const apiUrl = "https://emlaksepette.com/api/";
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -155,8 +155,8 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
             source={{
               uri:
                 item?.item_type === 2 && item?.housing?.housing_type_data
-                  ? `https://private.emlaksepette.com/housing_images/${itemData.image}`
-                  : `https://private.emlaksepette.com/project_housing_images/${itemData.image.replace(
+                  ? `https://emlaksepette.com/housing_images/${itemData.image}`
+                  : `https://emlaksepette.com/project_housing_images/${itemData.image.replace(
                       "public",
                       "storage"
                     )}`,

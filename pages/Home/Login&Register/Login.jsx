@@ -178,7 +178,7 @@ export default function Login({ navigation }) {
   const [loadingDeal, setloadingDeal] = useState(false)
   const fetchData = async () => {
     setloadingDeal(true)
-    const url = `https://private.emlaksepette.com/api/sayfa/bireysel-uyelik-sozlesmesi`;
+    const url = `https://emlaksepette.com/api/sayfa/bireysel-uyelik-sozlesmesi`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);

@@ -110,7 +110,7 @@ export default function Posts({
       : "Başlık bulunamadı";
     const amount = 250; // Fiyatı burada belirliyoruz
     const imageUrl = selectedRoom
-      ? "https://private.emlaksepette.com/project_housing_images/" +
+      ? "https://emlaksepette.com/project_housing_images/" +
         selectedRoom["image[]"]
       : ""; // Resim URL'sini burada belirleyin
     const neightboord = false;
@@ -208,7 +208,7 @@ export default function Posts({
       };
       axios
         .post(
-          "https://private.emlaksepette.com/api/add_project_to_favorites/" +
+          "https://emlaksepette.com/api/add_project_to_favorites/" +
             roomOrder,
           {
             project_id: project?.id,
@@ -261,7 +261,7 @@ export default function Posts({
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          "https://emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -486,7 +486,7 @@ export default function Posts({
             <Image
               source={{
                 uri:
-                  "https://private.emlaksepette.com/project_housing_images/" +
+                  "https://emlaksepette.com/project_housing_images/" +
                   roomData["image[]"],
               }}
               style={styles.image}
@@ -509,14 +509,14 @@ export default function Posts({
                 justifyContent: bookmarkStatus ? "space-between" : "flex-end",
               }}
             >
-              {sold?.status == 1 ? (
+              {/* {sold?.status == 1 ? (
                 <></>
               ) : (
                 user?.has_club == 1 &&
                 ((user?.role == "Bireysel Hesap" && offSaleStatus != 2) ||
                   (user.role == "Kurumsal Hesap" &&
                     user.corporate_type == "Emlak Ofisi")) &&
-                (offSaleStatus == 2 || offSaleStatus == 3) && (
+                (offSaleStatus == 2 || offSaleStatus == 3) && ( */}
                   <TouchableOpacity
                     onPress={() => {
                       changeBookmark();
@@ -532,8 +532,8 @@ export default function Posts({
                       />
                     </View>
                   </TouchableOpacity>
-                )
-              )}
+                {/* )
+              )} */}
               {sold?.status == 1 ? (
                 <></>
               ) : (

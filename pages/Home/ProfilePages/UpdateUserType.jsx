@@ -42,7 +42,7 @@ export default function CreateUserType() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/institutional/roles/${UserID}/edit`,
+          `https://emlaksepette.com/api/institutional/roles/${UserID}/edit`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -87,7 +87,7 @@ export default function CreateUserType() {
       });
 
       const response = await axios.post(
-        `https://private.emlaksepette.com/api/institutional/roles/${UserID}`,
+        `https://emlaksepette.com/api/institutional/roles/${UserID}`,
         {
           permissions: checkedItems,
           _method: "PUT",

@@ -113,7 +113,7 @@ export default function SwapForm({ openModal, color }) {
   //    try {
   //      if (user?.access_token && user) {
   //        const userInfo = await axios.get(
-  //          "https://private.emlaksepette.com/api/users/" + user?.id,
+  //          "https://emlaksepette.com/api/users/" + user?.id,
   //          {
   //            headers: {
   //              Authorization: `Bearer ${user?.access_token}`,
@@ -136,7 +136,7 @@ export default function SwapForm({ openModal, color }) {
     try {
       setloading(true);
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/housing/${houseid}`
+        `https://emlaksepette.com/api/housing/${houseid}`
       );
       setloading(false);
       // GetUserInfo()
@@ -215,7 +215,7 @@ export default function SwapForm({ openModal, color }) {
       }
 
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/swap",
+        "https://emlaksepette.com/api/swap",
         formData
       );
 
@@ -273,7 +273,7 @@ export default function SwapForm({ openModal, color }) {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/cities"
+        "https://emlaksepette.com/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -295,7 +295,7 @@ export default function SwapForm({ openModal, color }) {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
+        `https://emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -333,7 +333,7 @@ export default function SwapForm({ openModal, color }) {
   const fetchDataNeigbour = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/neighborhoods/${value}`
+        `https://emlaksepette.com/api/neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {
@@ -480,7 +480,7 @@ export default function SwapForm({ openModal, color }) {
     { label: "Voyah", value: "Voyah" },
     { label: "Yudo", value: "Yudo" },
   ];
-  const apiUrl = "https://private.emlaksepette.com/";
+  const apiUrl = "https://emlaksepette.com/";
   const [errorMessage, seterrorMessage] = useState("");
 
   const AlertFunc = (message) => {

@@ -56,7 +56,7 @@ export default function UpdateUsers() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/institutional/roles`,
+          `https://emlaksepette.com/api/institutional/roles`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -110,7 +110,7 @@ export default function UpdateUsers() {
     if (user?.access_token) {
       axios
         .post(
-          `https://private.emlaksepette.com/api/institutional/users/${UserID}`,
+          `https://emlaksepette.com/api/institutional/users/${UserID}`,
           formdata,
           {
             headers: {
@@ -155,7 +155,7 @@ export default function UpdateUsers() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/users/${UserID}`,
+          `https://emlaksepette.com/api/users/${UserID}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

@@ -25,7 +25,7 @@ export default function ForgotPassword() {
       var formData = new FormData();
       formData.append("email", email);
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/password/email",
+        "https://emlaksepette.com/api/password/email",
         formData
       );
 

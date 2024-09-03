@@ -48,7 +48,7 @@ export default function Favorites() {
         headers: { Authorization: `Bearer ${user?.access_token}` },
       };
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/favorites",
+        "https://emlaksepette.com/api/favorites",
         config
       );
       setFavorites(Object.values(response.data.mergedFavorites));
@@ -126,7 +126,7 @@ export default function Favorites() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          "https://emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -165,7 +165,7 @@ export default function Favorites() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          "https://emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -183,7 +183,7 @@ export default function Favorites() {
   const deleteRequestWithToken = async () => {
     try {
       const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/housing-favorite",
+        "https://emlaksepette.com/api/institutional/housing-favorite",
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -202,7 +202,7 @@ export default function Favorites() {
   const deleteRequestWithTokenProject = async () => {
     try {
       const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/project-favorite",
+        "https://emlaksepette.com/api/institutional/project-favorite",
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -240,7 +240,7 @@ export default function Favorites() {
     };
     try {
       const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/favorites/delete",
+        "https://emlaksepette.com/api/institutional/favorites/delete",
         {
           data: data,
           headers: {
@@ -599,7 +599,7 @@ export default function Favorites() {
                             favorite?.project?.county?.ilce_title
                           }
                           image={
-                            "https://private.emlaksepette.com/project_housing_images/" +
+                            "https://emlaksepette.com/project_housing_images/" +
                             image
                           }
                           title={
@@ -644,7 +644,7 @@ export default function Favorites() {
                           HouseId={favorite?.housing?.id}
                           no={favorite?.housing?.id + 2000000}
                           image={
-                            "https://private.emlaksepette.com/housing_images/" +
+                            "https://emlaksepette.com/housing_images/" +
                             housingData?.image
                           }
                           title={favorite?.housing?.title}

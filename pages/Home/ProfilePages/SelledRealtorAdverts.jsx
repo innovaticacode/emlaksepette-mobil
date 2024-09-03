@@ -35,7 +35,7 @@ export default function SelledRealtorAdverts() {
     setloading(true);
     try {
       const res = await axios.get(
-        "https://private.emlaksepette.com/api/get_my_housings",
+        "https://emlaksepette.com/api/get_my_housings",
         {
           headers: { Authorization: "Bearer " + user.access_token },
         }

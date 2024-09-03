@@ -50,7 +50,7 @@ export default function Verification({nextStep,prevStep}) {
   const updateUserData = async () => {
     try {
       const updateResponse = await axios.get(
-        "https://private.emlaksepette.com/api/users/" + user?.id,
+        "https://emlaksepette.com/api/users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -88,7 +88,7 @@ export default function Verification({nextStep,prevStep}) {
     try {
       // POST isteği yap
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/phone-verification/verify",
+        "https://emlaksepette.com/api/phone-verification/verify",
         { code: codes },
         {
           headers: {
@@ -128,7 +128,7 @@ export default function Verification({nextStep,prevStep}) {
       };
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/phone-verification/generate",
+          "https://emlaksepette.com/api/phone-verification/generate",
           {}, // Veri gövdesi boş olabilir veya isteğe özel verileri ekleyebilirsiniz
           config
         );

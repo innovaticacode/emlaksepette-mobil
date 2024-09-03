@@ -272,7 +272,7 @@ export default function PaymentScreenForReserve() {
                 {data && data.housing && data.housing.housing_type_data && (
                   <ImageBackground
                     source={{
-                      uri: `https://private.emlaksepette.com/housing_images/${
+                      uri: `https://emlaksepette.com/housing_images/${
                         JSON.parse(data?.housing?.housing_type_data).image
                       }`,
                     }}

@@ -32,7 +32,7 @@ export default function EditAdvert() {
   useEffect(() => {
     axios
       .get(
-        `https://private.emlaksepette.com/api/project_housings/${Project_Id}?start=${start}&end=${end}` +
+        `https://emlaksepette.com/api/project_housings/${Project_Id}?start=${start}&end=${end}` +
           start +
           "&take=" +
           take,

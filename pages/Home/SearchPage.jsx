@@ -67,7 +67,7 @@ export default function SearchPage({ navigation }) {
 
       try {
         const { data } = await axios.get(
-          "https://private.emlaksepette.com/api/get-search-list",
+          "https://emlaksepette.com/api/get-search-list",
           {
             params: { searchTerm: term },
             headers: { "Content-Type": "application/json" },
@@ -110,9 +110,9 @@ export default function SearchPage({ navigation }) {
     if (!items.length) return null;
 
     const photoBaseUrl = {
-      "Emlak İlanları": "https://private.emlaksepette.com/housing_images/",
-      "Proje İlanları": "https://private.emlaksepette.com",
-      "Üyeler": "https://private.emlaksepette.com/storage/profile_images",
+      "Emlak İlanları": "https://emlaksepette.com/housing_images/",
+      "Proje İlanları": "https://emlaksepette.com",
+      "Üyeler": "https://emlaksepette.com/storage/profile_images",
     }[type];
 
     const modifyPhotoUrl = (photo) => {

@@ -18,7 +18,7 @@ const MapWiew = () => {
 
   useEffect(() => {
     axios
-      .get("https://private.emlaksepette.com/api/real-estates")
+      .get("https://emlaksepette.com/api/real-estates")
       .then((res) => {
         setMarkers(res.data);
       })

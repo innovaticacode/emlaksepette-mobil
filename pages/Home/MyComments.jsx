@@ -26,7 +26,7 @@ export default function MyComments() {
     try {
       if (user?.access_token && user) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/user/${user?.id}/comments`
+          `https://emlaksepette.com/api/user/${user?.id}/comments`
         );
         setcomments(response.data);
       }
@@ -38,7 +38,7 @@ export default function MyComments() {
     fetchData();
   }, [user]);
   const MycommentItem = ({ ProjectInfo, comment, EditComment }) => {
-    const API_URL = "https://private.emlaksepette.com/";
+    const API_URL = "https://emlaksepette.com/";
     const numStars = Math.round(comment?.rate);
     return (
       <TouchableOpacity
@@ -159,7 +159,7 @@ export default function MyComments() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          `https://private.emlaksepette.com/api/delete/comment/${selectedCommentID}`,
+          `https://emlaksepette.com/api/delete/comment/${selectedCommentID}`,
 
           {
             headers: {

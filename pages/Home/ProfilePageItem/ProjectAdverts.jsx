@@ -30,7 +30,7 @@ export default function ProjectAdverts({ data }) {
   }, []);
 
   const { width, height } = Dimensions.get("window");
-  const ApiUrl = "https://private.emlaksepette.com";
+  const ApiUrl = "https://emlaksepette.com";
   return (
     <View style={{ padding: 5 }}>
       {featuredProjects && featuredProjects.length > 0 ? (

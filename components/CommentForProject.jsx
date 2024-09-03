@@ -48,7 +48,7 @@ export default function CommentForProject({ projectId }) {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/project/${projectId}/comments`
+          `https://emlaksepette.com/api/project/${projectId}/comments`
         );
         setcomments(response.data);
       }
