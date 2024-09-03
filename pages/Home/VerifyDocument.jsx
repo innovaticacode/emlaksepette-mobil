@@ -198,7 +198,7 @@ style={{
     {
         documentView.map((item,_i)=>(
             <TouchableOpacity key={_i} style={{gap:7,width:'100%',
-                display:item.isShow=='All'?'flex':'none' && item.isShow==user.corporate_type? 'flex':'none'
+                display:item.isShow=='All'?'flex':'none' && item.isShow==user.corporate_type ? 'flex':'none'
 
             }} onPress={()=>{
                 if (FormDatas[item.state]) {
