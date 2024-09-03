@@ -52,7 +52,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
@@ -364,10 +363,11 @@ export default function PostDetail() {
         }, 500);
 
         setTimeout(() => {
-          Toast.show({
+          Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title:(user.type==2 && user.corporate_type=='Emlak Ofisi')?'Portföye Ekleme Başarılı': "Koleksiyona ekleme başarılı",
             textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi') ? `${id} No'lu Konut ${name} Adlı Portföyünüze Eklendi`: `${id} No'lu Konut ${name} Adlı Koleksiyonunuza Eklendi`,
+            button: "Tamam",
           });
         }, 700);
         var newCollections = collections.map((collection) => {

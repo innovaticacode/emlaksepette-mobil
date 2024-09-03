@@ -35,7 +35,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import { useNavigation } from "@react-navigation/native";
 import CollectionsItem from "../ProfilePages/profileComponents/CollectionsItem";
@@ -95,10 +94,11 @@ export default function CollectionsTab() {
     Clipboard.setStringAsync(url);
     setchoose(false);
     setTimeout(() => {
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Link Kopyalama Başarılı",
         textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi') ?  `${colectionName} Adlı Portföyünüzün Linki Kopyalandı`:`${colectionName} Adlı Koleksiyonunuzun Linki Kopyalandı`,
+        button: "Tamam",
       });
     }, 200);
   };
@@ -220,10 +220,11 @@ setcolectionName(name)
 
       closeSheet();
 
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Koleksiyon Silindi",
         textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${colectionName} Adlı Portföy başarıyla silindi` : `${colectionName} Adlı koleksiyonunuz başarıyla silindi`,
+        button: "Tamam",
       });
       fetchData();
       setModalVisible2(false);
@@ -307,10 +308,11 @@ setcolectionName(name)
       fetchData();
       setereror(response.data);
       setisChoosed(false);
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title: `Koleksionlar Silindi`,
-        textBody: `${CollectionsRemoveIds.length} Koleksiyon silindi`,
+        title: `Başarılı`,
+        textBody: `${CollectionsRemoveIds.length} Koleksiyon silindi.`,
+        button: "Tamam",
       });
 
       setCollectionsRemoveIds([]);
@@ -339,10 +341,11 @@ setcolectionName(name)
       );
       setmodalForRemoveAll(false);
       fetchData();
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title: "Koleksiyonlar Silindi",
-        textBody: `Tüm Koleksiyonlar Silindi`,
+        title: "Başarılı",
+        textBody: "Tüm koleksiyonlar silindi.",
+        button: "Tamam",
       });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -664,10 +667,11 @@ setcolectionName(name)
                                 ]}
                                 onPress={() => {
                                   if (collections.length == 0) {
-                                    Toast.show({
+                                    Dialog.show({
                                       type: ALERT_TYPE.WARNING,
-                                      title: "Koleksiyon Bulunmamaktadır",
-                                      textBody: `Silinecek koleksiyon bulunmuyor`,
+                                      title: "Hata!",
+                                      textBody: "Silinecek koleksiyon bulunmuyor.",
+                                      button: "Tamam",
                                     });
                                   } else {
                                     setmodalForRemoveAll(true);
@@ -726,10 +730,11 @@ setcolectionName(name)
                                 ]}
                                 onPress={() => {
                                   if (CollectionsRemoveIds.length == 0) {
-                                    Toast.show({
+                                    Dialog.show({
                                       type: ALERT_TYPE.WARNING,
                                       title: "Lütfen seçiniz",
                                       textBody: (user.type==2 && user.corporate_type=='Emlak Ofisi' )?'Silmek istediğiniz Portföyleri seçiniz' :`Silmek istediğiniz koleksiyonları seçiniz`,
+                                      button: "Tamam",
                                     });
                                   } else {
                                     setRemoveSelectedCollectionsModal(true);

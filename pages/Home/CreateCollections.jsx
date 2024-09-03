@@ -18,7 +18,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 export default function CreateCollections() {
   const route = useRoute();
@@ -90,10 +89,11 @@ export default function CreateCollections() {
   const addCollectionPost = () => {
     // Koleksiyon adının boş olup olmadığını kontrol edin
     if (!CollectionName.trim()) {
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.WARNING,
         title: "Hata",
         textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? 'Lütfen Portföy Adı Girin': "Lütfen Koleksiyon Adı Girin.",
+        button: "Tamam",
       });
       return;
     }
@@ -121,10 +121,11 @@ export default function CreateCollections() {
         }
       )
       .then((response) => {
-        Toast.show({
+        Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title: (user.type==2 && user.corporate_type=='Emlak Ofisi') ? 'Portföy Oluşturuldu': "Koleksiyon Oluşturuldu.",
           textBody: (user.type==2 && user.corporate_type=='Emlak Ofisi')?`${CollectionName} Adlı Portföy Oluşturuldu.` : `${CollectionName} Adlı Koleksiyon Oluşturuldu.`,
+          button: "Tamam",
         });
         fetchData();
         // setselectedCollectionName(response.data.collection.name)
@@ -158,10 +159,11 @@ export default function CreateCollections() {
         },
       })
       .then((response) => {
-        Toast.show({
+        Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title: (user.type==2 && user.corporate_type=='Emlak Ofisi')?'Portföye Eklendi': "Koleksiyona Eklendi",
           textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${name} Adlı Portföye eklendi` : `${name} Adlı koleksiyona eklendi`,
+          button: "Tamam",
         });
 
         var newCollections = collections.map((collection) => {
@@ -228,7 +230,7 @@ export default function CreateCollections() {
         }
       )
       .then((response) => {
-        Toast.show({
+        Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title:"1 Konut silindi",
           textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${name} Adlı portföyden 1 konut silindi`: `${name} Adlı koleksiyondan 1 konut silindi`,

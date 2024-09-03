@@ -15,7 +15,11 @@ import Trash from "react-native-vector-icons/Entypo";
 import Info from "./Info";
 import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
-import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+} from "react-native-alert-notification";
 import { getValueFor } from "./methods/user";
 import axios from "axios";
 import { Swipeable } from "react-native-gesture-handler";
@@ -77,7 +81,7 @@ export default function RealtorPostFavorited({
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Başarılı",
-            textBody: res.data.message,
+            textBody: `${res.data.message}`,
             button: "Tamam",
           });
           changeFavorites(1, housingId, projectId);
@@ -101,7 +105,7 @@ export default function RealtorPostFavorited({
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Başarılı",
-            textBody: res.data.message,
+            textBody: `${res.data.message}`,
             button: "Tamam",
           });
           changeFavorites(1, housingId);
@@ -164,20 +168,6 @@ export default function RealtorPostFavorited({
           } else {
             goToRealtorDetails();
           }
-
-          //  if (isChoosed==true) {
-          //   setIsHighlighted(!isHighlighted)
-          //   if (type==1) {
-
-          //     alert('dsff')
-          //     selectFavorite(housingId)
-          //   }else{
-
-          //     selectFavorite(HouseId)
-          //   }
-          //  }
-
-          // navigation.navigate("Realtor details", { houseId: HouseId })
         }}
       >
         <View style={styles.container}>

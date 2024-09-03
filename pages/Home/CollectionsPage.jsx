@@ -35,7 +35,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 export default function CollectionsPage() {
   const [showAlert, setshowAlert] = useState(false);
@@ -216,14 +215,15 @@ export default function CollectionsPage() {
 
       fetchData();
 
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title:  
-          (user.type==2 && user.corporate_type=='Emlak Ofisi' )?
-          'Portföy Silindi':
-          'Koleksiyon silindi'
-       ,
+       title:  
+                (user.type==2 && user.corporate_type=='Emlak Ofisi' )?
+                'Portföy Silindi':
+                'Koleksiyon silindi'
+             ,
         textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi' )?`${colectionName} Adlı Portföy silindi`: `${colectionName} Adlı koleksiyon silindi`,
+        button: "Tamam",
       });
       setmessage(true);
 
@@ -286,9 +286,11 @@ export default function CollectionsPage() {
         }
       );
       fetchData();
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${CollectionsRemoveIds.length} Portföy Silindi`: `${CollectionsRemoveIds.length} Koleksiyon silindi`,
+        textBody: `${CollectionsRemoveIds.length} Koleksiyon silindi.`,
+        button: "Tamam",
       });
       setmodalForSelectedCollection(false);
       setModalVisible(false);
@@ -316,9 +318,11 @@ export default function CollectionsPage() {
           },
         }
       );
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: (user.type==2 && user.corporate_type=='Emlak Ofisi') ? 'Tüm Portföyler Silindi': `Tüm koleksiyonlar silindi`,
+        textBody: "Tüm koleksiyonlar silindi.",
+        button: "Tamam",
       });
       setmodalForRemoveAll(false);
       fetchData();
@@ -615,14 +619,15 @@ export default function CollectionsPage() {
                       ]}
                       onPress={() => {
                         if (CollectionsRemoveIds.length == 0) {
-                          Toast.show({
-                            type: ALERT_TYPE.WARNING,
+                          Dialog.show({
                             title:(user.type==2 && user.corporate_type=='Emlak Ofisi')? 'Seçili Portföy Bulunmamaktadır' :`Seçili koleksiyon bulunmamaktadır`,
-                            titleStyle: { fontSize: 14 },
+                            type: ALERT_TYPE.WARNING,
                             textBody:
                             (user.type==2 && user.corporate_type=='Emlak Ofisi')?
                             'Lütfen silmek istediğiniz Portföyü seçin':
                               "Lütfen silmek istediğiniz Koleksiyonu seçin",
+                            button: "Tamam",
+                            titleStyle: { fontSize: 14 },
                           });
                         } else {
                           setmodalForSelectedCollection(true);

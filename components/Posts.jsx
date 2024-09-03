@@ -25,7 +25,11 @@ import { Polyline } from "react-native-maps";
 import AwesomeAlert from "react-native-awesome-alerts";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
-import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+} from "react-native-alert-notification";
 import * as SecureStore from "expo-secure-store";
 
 export default function Posts({

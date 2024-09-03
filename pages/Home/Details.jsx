@@ -19,7 +19,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import { React, useEffect, useRef, useState } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
@@ -467,10 +466,11 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
         setaddCollection(false);
         setnewCollectionNameCreate("");
         setTimeout(() => {
-          Toast.show({
+          Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${newCollectionNameCreate} Adlı portföyünüz oluşturuldu ` : `${newCollectionNameCreate} Adlı koleksiyonunuz oluşturuldu `,
             textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi') ? `${selectedHouse} No'lu Konut ${newCollectionNameCreate} Adlı Portföyünüze Eklendi` : `${selectedHouse} No'lu Konut ${newCollectionNameCreate} Adlı Koleksiyonuza Eklendi`,
+            button: "Tamam",
           });
         }, 700);
         // Başarılı yanıtı işleyin
@@ -511,10 +511,12 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
         }, 500);
 
         setTimeout(() => {
-          Toast.show({
+          Dialog.show({
             type: ALERT_TYPE.SUCCESS,
+            
             title:(user.type==2 && user.corporate_type=='Emlak Ofisi')?'Portföye ekleme başarılı': "Koleksiyona ekleme başarılı",
             textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${selectedHouse} No'lu Konut ${name} Adlı Portöyünüze Eklendi` : `${selectedHouse} No'lu Konut ${name} Adlı Koleksiyonuza Eklendi`,
+            button: "Tamam",
           });
         }, 700);
 
@@ -637,10 +639,11 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
         }
       );
       setFormVisible(false);
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title: "Başvurunuz Gönderildi",
-        textBody: "1-2 İş günü içerisinde haber verilecektir",
+        title: "Başarılı",
+        textBody: "Başvurunuz gönderildi. 1-2 iş günü içerisinde haber verilecektir.",
+        button: "Tamam",
       });
 
       // color("#d4edda");

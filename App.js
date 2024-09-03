@@ -108,6 +108,7 @@ import CollectionsTab from "./pages/Home/Panel/CollectionsTab";
 import SwapForm from "./pages/Home/RealtorPages/SwapForm";
 import { Button } from "react-native";
 import VerifyScreen from "./pages/Home/VerifyScreen";
+import Toast from 'react-native-toast-message';
 
 
 const Stack = createNativeStackNavigator();
@@ -174,6 +175,37 @@ export default function App({ route }) {
     SecureStore.setItemAsync("welcome_screen_show", "ff");
     setShowSplash(false);
   };
+
+  const App = () => {
+    return (
+      <View style={{ flex: 1 }}>
+        {/* Uygulamanın diğer bileşenleri buraya gelecek */}
+        
+        {/* Toast bileşeni */}
+        <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} position="top" />
+      </View>
+    );
+  };
+
+  const toastConfig = {
+    success: (internalState) => (
+      <BaseToast
+        {...internalState}
+        style={{ borderLeftColor: 'green' }}
+        contentContainerStyle={{ paddingHorizontal: 15 }}
+        text1Style={{
+          fontSize: 15,
+          fontWeight: 'bold',
+        }}
+        text2Style={{
+          fontSize: 13,
+        }}
+      />
+    ),
+  };
+  
+
+  
   function StepScreen({
     step,
     navigation,

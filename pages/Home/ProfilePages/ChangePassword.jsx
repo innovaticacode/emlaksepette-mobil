@@ -16,7 +16,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import Modal from "react-native-modal";
 import { Platform } from "react-native";
@@ -73,10 +72,11 @@ export default function ChangePassword() {
       setnewPasswordconfirmation("");
 
       // Başarılı şifre değişikliği mesajı
-    Toast.show({
+    Dialog.show({
       type: ALERT_TYPE.SUCCESS,
       title: "Başarılı",
       textBody: "Şifreniz başarıyla güncellendi.",
+      button: "Tamam",
     });
 
       setchangeSuccess(true);
@@ -95,21 +95,22 @@ export default function ChangePassword() {
     
       // Mevcut şifre hatalıysa gösterilecek özel mesaj
       if (errorMessage === "Mevcut şifre hatalı.") {
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Hata",
+        Dialog.show({
+          type: ALERT_TYPE.WARNING,
+          title: "Hata!",
           textBody: "Mevcut şifreniz hatalı. Lütfen doğru şifreyi giriniz.",
+          button: "Tamam",
         });
       } else {
         // Genel hata mesajı
-        Toast.show({
+        Dialog.show({
           type: ALERT_TYPE.DANGER,
           title: "Hata",
           textBody: errorMessage,
+          button: "Tamam",
         });
       }
     
-      console.error("Hata:", error + " post isteği başarısız ");
     }
      finally {
       setchangeLoading(false);
