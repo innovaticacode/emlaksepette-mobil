@@ -25,7 +25,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 export default function UpdateUsers() {
@@ -120,10 +119,11 @@ export default function UpdateUsers() {
         )
         .then((response) => {
           setmessage(response.data.success);
-          Toast.show({
+          Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Başarılı",
-            textBody: response.data.success,
+            textBody: `${response.data.success}`,
+            button: "Tamam",
           });
           // Durumları sıfırlayın
           setnameAndSurname("");
@@ -138,10 +138,11 @@ export default function UpdateUsers() {
         })
         .catch((error) => {
           console.error("Veri getirme hatası:", error);
-          Toast.show({
+          Dialog.show({
             type: ALERT_TYPE.WARNING,
-            title: "Hata",
+            title: "Hata!",
             textBody: "Veri gönderimi sırasında bir hata oluştu.",
+            button: "Tamam",
           });
         })
         .finally(() => {

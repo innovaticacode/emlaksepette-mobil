@@ -104,7 +104,7 @@ export default function CreateUserType() {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Başarılı",
-          textBody: "Kullanıcı Tipi Güncelleme Başarılı",
+          textBody: "Kullanıcı tipi güncellendi.",
           button: "Tamam",
           onPressButton: () => navigation.navigate("UserTypes"),
         });
@@ -112,9 +112,12 @@ export default function CreateUserType() {
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
     } catch (error) {
-      // Hata durumunda
-
-      console.error("Hata:", error + "post isteği başarısız ");
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Hata",
+        textBody: "Bilinmeyen bir hata oluştu.",
+        button: "Tamam",
+      });
     } finally {
       setloadingUpdate(false);
     }

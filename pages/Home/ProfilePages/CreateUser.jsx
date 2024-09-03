@@ -25,7 +25,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -65,9 +64,7 @@ export default function CreateUser() {
             },
           }
         );
-
-        // Dönüştürülmüş veriyi state'e atama
-        setroles(response.data.roles);
+        setroles(response.data.roles); // Dönüştürülmüş veriyi state'e atama
       }
     } catch (error) {
       console.error("Veri getirme hatası:", error);
@@ -82,8 +79,8 @@ export default function CreateUser() {
     label: role.name,
     value: role.id.toString(), // ID'yi string olarak belirtmek önemlidir.
   }));
-  // roles state'i güncellendikten sonra yazdırılmalı
 
+  // roles state'i güncellendikten sonra yazdırılmalı
   const [message, setmessage] = useState({});
   const [nameAndSurname, setnameAndSurname] = useState("");
   const [title, settitle] = useState("");
@@ -145,7 +142,7 @@ export default function CreateUser() {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Başarılı",
-            textBody: response.data.message,
+            textBody: `${response.data.message}`,
             button: "Tamam",
             onPressButton: () => {
               navigation.goBack();
@@ -163,7 +160,7 @@ export default function CreateUser() {
           Dialog.show({
             type: ALERT_TYPE.DANGER,
             title: "Hata",
-            textBody: error.response?.data?.errors.email[0],
+            textBody: `${ error.response?.data?.errors.email[0] }`,
             button: "Tamam",
             onPressButton: () => {
               Dialog.hide();
@@ -474,6 +471,8 @@ const pickerSelectStyles = StyleSheet.create({
     fontWeight: "600", // to ensure the text is never behind the icon
   },
 });
+
+
 const style = StyleSheet.create({
   container: {
     flex: 1,

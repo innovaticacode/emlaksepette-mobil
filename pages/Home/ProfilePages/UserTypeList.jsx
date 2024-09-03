@@ -19,7 +19,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
@@ -79,10 +78,11 @@ export default function UserTypeList() {
       fetchData();
       setDeletedData(response.data);
       setdeletedSuccessMessage(false);
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title: "Silme Başarılı",
-        textBody: `${selectedUserName} Adlı kullanıcı silindi`,
+        title: "Başarılı",
+        textBody: `${selectedUserName} adlı kullanıcı silindi.`,
+        button: "Tamam",
       });
     } catch (error) {
       console.error("Delete request error:", error);
@@ -132,11 +132,11 @@ export default function UserTypeList() {
           },
         }
       );
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.WARNING,
-        title: `Silme işlemi başarılı`,
-        titleStyle: { fontSize: 14 },
-        textBody: `${SelectedUserIDS.length} Kullanıcı Tipi Silindi`,
+        title: `Başarılı`,
+        textBody: `${SelectedUserIDS.length} Kullanıcı Tipi Silindi.`,
+        button: "Tamam",
       });
       fetchData();
       setSelectedUserIDS([]);
@@ -167,11 +167,11 @@ export default function UserTypeList() {
           },
         }
       );
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        title: `Silme işlemi başarılı`,
-        titleStyle: { fontSize: 14 },
-        textBody: `${userList.length} İlan silindi`,
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: `Başarılı`,
+        textBody: `${userList.length} İlan silindi.`,
+        button: "Tamam",
       });
       fetchData();
       setUsersId([]);

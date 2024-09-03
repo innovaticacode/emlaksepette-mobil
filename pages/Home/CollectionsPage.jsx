@@ -35,7 +35,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 export default function CollectionsPage() {
   const [showAlert, setshowAlert] = useState(false);
@@ -216,10 +215,11 @@ export default function CollectionsPage() {
 
       fetchData();
 
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title: "Koleksiyon silindi",
-        textBody: `${colectionName} Adlı koleksiyon silindi`,
+        title: "Başarılı",
+        textBody: `${colectionName} adlı koleksiyon silindi.`,
+        button: "Tamam",
       });
       setmessage(true);
 
@@ -282,9 +282,11 @@ export default function CollectionsPage() {
         }
       );
       fetchData();
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title: `${CollectionsRemoveIds.length} Koleksiyon silindi`,
+        title: "Başarılı",
+        textBody: `${CollectionsRemoveIds.length} Koleksiyon silindi.`,
+        button: "Tamam",
       });
       setmodalForSelectedCollection(false);
       setModalVisible(false);
@@ -312,9 +314,11 @@ export default function CollectionsPage() {
           },
         }
       );
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title: `Tüm koleksiyonlar silindi`,
+        title: "Başarılı",
+        textBody: "Tüm koleksiyonlar silindi.",
+        button: "Tamam",
       });
       setmodalForRemoveAll(false);
       fetchData();
@@ -596,12 +600,11 @@ export default function CollectionsPage() {
                       ]}
                       onPress={() => {
                         if (CollectionsRemoveIds.length == 0) {
-                          Toast.show({
+                          Dialog.show({
                             type: ALERT_TYPE.WARNING,
-                            title: `Seçili koleksiyon bulunmamaktadır`,
-                            titleStyle: { fontSize: 14 },
-                            textBody:
-                              "Lütfen silmek istediğiniz koleksiyonu seçin",
+                            title: "Hata!",
+                            textBody: "Seçili koleksiyon bulunmamaktadır.",
+                            button: "Tamam",
                           });
                         } else {
                           setmodalForSelectedCollection(true);

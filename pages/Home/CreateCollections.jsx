@@ -18,7 +18,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 export default function CreateCollections() {
   const route = useRoute();
@@ -90,10 +89,11 @@ export default function CreateCollections() {
   const addCollectionPost = () => {
     // Koleksiyon adının boş olup olmadığını kontrol edin
     if (!CollectionName.trim()) {
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.WARNING,
         title: "Hata",
-        textBody: "Lütfen koleksiyon adı girin.",
+        textBody: "Lütfen koleksiyon adı giriniz.",
+        button: "Tamam",
       });
       return;
     }
@@ -121,10 +121,11 @@ export default function CreateCollections() {
         }
       )
       .then((response) => {
-        Toast.show({
+        Dialog.show({
           type: ALERT_TYPE.SUCCESS,
-          title: "Koleksiyon Oluşturuldu.",
+          title: "Başarılı",
           textBody: `${CollectionName} Adlı Koleksiyon Oluşturuldu.`,
+          button: "Tamam",
         });
         fetchData();
         // setselectedCollectionName(response.data.collection.name)
@@ -158,10 +159,11 @@ export default function CreateCollections() {
         },
       })
       .then((response) => {
-        Toast.show({
+        Dialog.show({
           type: ALERT_TYPE.SUCCESS,
-          title: "Koleksiyona Eklendi",
-          textBody: `${name} Adlı koleksiyona eklendi`,
+          title: "Başarılı",
+          textBody: `${name} Adlı koleksiyona eklendi.`,
+          button: "Tamam",
         });
 
         var newCollections = collections.map((collection) => {
@@ -228,10 +230,11 @@ export default function CreateCollections() {
         }
       )
       .then((response) => {
-        Toast.show({
+        Dialog.show({
           type: ALERT_TYPE.SUCCESS,
-          title: "Koleksiyon silindi",
-          textBody: `${name} Adlı koleksiyon silindi`,
+          title: "Başarılı",
+          textBody: `${name} Adlı koleksiyon silindi.`,
+          button: "Tamam",
         });
 
         var newCollections = collections.map((collection) => {

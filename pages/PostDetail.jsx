@@ -36,7 +36,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import PostMap from "../components/PostDetailsSettings/Postmap";
 import PostPayment from "../components/PostDetailsSettings/PostPayment";
@@ -283,11 +282,13 @@ export default function PostDetail() {
         setaddCollection(false);
         setnewCollectionNameCreate("");
         setTimeout(() => {
-          Toast.show({
+          Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: `${newCollectionNameCreate} Adlı koleksiyonunuz oluşturuldu `,
             textBody: `${selectedroomId} No'lu Konut ${newCollectionNameCreate} Adlı Koleksiyonuza Eklendi`,
+            button: "Tamam",
           });
+          
         }, 700);
       })
       .catch((error) => {
@@ -325,10 +326,12 @@ export default function PostDetail() {
         }, 500);
 
         setTimeout(() => {
-          Toast.show({
+          Dialog.show({
             type: ALERT_TYPE.SUCCESS,
-            title: "Koleksiyona ekleme başarılı",
-            textBody: `${selectedroomId} No'lu Konut ${name} Adlı Koleksiyonunuza Eklendi`,
+            title: "Başarılı",
+            textBody: `${selectedroomId} No'lu Konut ${name} Adlı Koleksiyonunuza Eklendi.`,
+            button: "Tamam",
+
           });
         }, 700);
         // setselectedCollectionName(response.data.collection.name)

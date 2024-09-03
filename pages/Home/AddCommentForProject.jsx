@@ -25,7 +25,6 @@ import * as ImagePicker from "expo-image-picker";
 import { getValueFor } from "../../components/methods/user";
 import {
   ALERT_TYPE,
-  AlertNotificationDialog,
   AlertNotificationRoot,
   Dialog,
 } from "react-native-alert-notification";
@@ -170,8 +169,8 @@ export default function AddCommentForProject() {
       } else {
         Dialog.show({
           type: ALERT_TYPE.DANGER,
-          title: "Lütfen Yorum Yapınız",
-          textBody: "Lütfen Yorum Yapınız",
+          title: "Hata!",
+          textBody: "Lütfen Yorum Yapınız.",
           button: "Tamam",
         });
       }

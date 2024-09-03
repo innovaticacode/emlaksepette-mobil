@@ -37,7 +37,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import * as Progress from "react-native-progress";
 import {
   AlertNotificationRoot,
-  Toast,
   ALERT_TYPE,
   Dialog,
 } from "react-native-alert-notification";
@@ -511,7 +510,8 @@ export default function UpgradeProfile() {
       if (FormDatas.userName.length === 0 || FormDatas.Iban.length < 29) {
         Dialog.show({
           type: ALERT_TYPE.WARNING,
-          textBody: "Lütfen Boş Bırakmayın",
+          title: "Hata",
+          textBody: "Lütfen boş alan bırakmayın.",
           button: "Tamam",
         });
       } else {
@@ -526,7 +526,8 @@ export default function UpgradeProfile() {
       ) {
         Dialog.show({
           type: ALERT_TYPE.WARNING,
-          textBody: "Lütfen Girdiğiniz Numaraları Kontrol Ediniz",
+          title: "Hata",
+          textBody: "Lütfen girdiğiniz numaraları kontrol ediniz.",
           button: "Tamam",
         });
       } else {
@@ -541,7 +542,8 @@ export default function UpgradeProfile() {
       ) {
         Dialog.show({
           type: ALERT_TYPE.WARNING,
-          textBody: "Lütfen Boş Bırakmayınız",
+          title: "Hata",
+          textBody: "Lütfen boş alan bırakmayınız.",
           button: "Tamam",
         });
       } else {
@@ -556,7 +558,8 @@ export default function UpgradeProfile() {
       ) {
         Dialog.show({
           type: ALERT_TYPE.WARNING,
-          textBody: "Lütfen İl İlçe Bilgileri Giriniz",
+          title: "Hata!",
+          textBody: "Lütfen il ilçe bilgileri giriniz.",
           button: "Tamam",
         });
       } else {
@@ -622,7 +625,8 @@ export default function UpgradeProfile() {
       );
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        textBody: "Profiliniz başarıyla güncellendi",
+        title: "Başarılı",
+        textBody: "Profiliniz başarıyla güncellendi.",
         button: "Tamam",
       });
       // Clear the form field after successful update
@@ -865,11 +869,11 @@ export default function UpgradeProfile() {
                         placeholder="5**********"
                         onPress={() => {
                           if (file == null) {
-                            Toast.show({
+                            Dialog.show({
                               type: ALERT_TYPE.WARNING,
                               title: "Dosya Yükleyiniz",
-                              textBody:
-                                "Aşşağıda örnek belge formatı bulunmaktadır",
+                              textBody: "Aşağıda örnek belge formatı bulunmaktadır.",
+                              button: "Tamam",
                             });
                           }
                         }}

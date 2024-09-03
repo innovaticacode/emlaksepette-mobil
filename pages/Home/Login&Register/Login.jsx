@@ -28,7 +28,11 @@ import { ActivityIndicator } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
-import { ALERT_TYPE, AlertNotificationRoot, Dialog } from "react-native-alert-notification";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+} from "react-native-alert-notification";
 
 export default function Login({ navigation }) {
   const route = useRoute();
@@ -93,7 +97,7 @@ export default function Login({ navigation }) {
         Dialog.show({
           type: ALERT_TYPE.DANGER,
           title: "Hata",
-          textBody: res.data.message,
+          textBody: `${res.data.message}`,
           button: "Tamam",
         });
         // setStatusMessage(res.data.message);

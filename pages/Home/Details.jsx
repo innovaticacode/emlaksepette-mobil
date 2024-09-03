@@ -19,7 +19,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import { React, useEffect, useRef, useState } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
@@ -461,10 +460,11 @@ export default function Details({ navigation }) {
         setaddCollection(false);
         setnewCollectionNameCreate("");
         setTimeout(() => {
-          Toast.show({
+          Dialog.show({
             type: ALERT_TYPE.SUCCESS,
-            title: `${newCollectionNameCreate} Adlı koleksiyonunuz oluşturuldu `,
-            textBody: `${selectedHouse} No'lu Konut ${newCollectionNameCreate} Adlı Koleksiyonuza Eklendi`,
+            title: `${newCollectionNameCreate} Adlı koleksiyonunuz oluşturuldu.`,
+            textBody: `${selectedHouse} No'lu Konut ${newCollectionNameCreate} adlı koleksiyonuza eklendi.`,
+            button: "Tamam",
           });
         }, 700);
         // Başarılı yanıtı işleyin
@@ -505,10 +505,11 @@ export default function Details({ navigation }) {
         }, 500);
 
         setTimeout(() => {
-          Toast.show({
+          Dialog.show({
             type: ALERT_TYPE.SUCCESS,
-            title: "Koleksiyona ekleme başarılı",
-            textBody: `${selectedHouse} No'lu Konut ${name} Adlı Koleksiyonuza Eklendi`,
+            title: "Başarılı",
+            textBody: `${selectedHouse} No'lu Konut ${name} adlı koleksiyonuza eklendi.`,
+            button: "Tamam",
           });
         }, 700);
 
@@ -631,10 +632,11 @@ export default function Details({ navigation }) {
         }
       );
       setFormVisible(false);
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title: "Başvurunuz Gönderildi",
-        textBody: "1-2 İş günü içerisinde haber verilecektir",
+        title: "Başarılı",
+        textBody: "Başvurunuz gönderildi. 1-2 iş günü içerisinde haber verilecektir.",
+        button: "Tamam",
       });
 
       // color("#d4edda");
