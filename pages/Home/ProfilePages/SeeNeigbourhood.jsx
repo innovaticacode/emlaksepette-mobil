@@ -30,7 +30,7 @@ export default function SeeNeigbourhood() {
 
     if (user.access_token) {
       axios
-        .get("https://emlaksepette.com/api/neighbor-view", {
+        .get("https://private.emlaksepette.com/api/neighbor-view", {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },

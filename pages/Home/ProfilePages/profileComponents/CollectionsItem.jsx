@@ -138,10 +138,10 @@ export default function CollectionsItem({
                       uri:
                         image.item_type == 2 &&
                         image.housing?.housing_type_data
-                          ? `https://emlaksepette.com/housing_images/${
+                          ? `https://private.emlaksepette.com/housing_images/${
                               JSON.parse(image.housing.housing_type_data).image
                             }`
-                          : `https://emlaksepette.com/${image.project.image.replace(
+                          : `https://private.emlaksepette.com/${image.project.image.replace(
                               "public",
                               "storage"
                             )}`,

@@ -49,7 +49,7 @@ export default function ActiveAdverts({}) {
     setloading(true);
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/get_my_projects?status=1&start=" +
+        "https://private.emlaksepette.com/api/get_my_projects?status=1&start=" +
           start +
           "&take=" +
           take,

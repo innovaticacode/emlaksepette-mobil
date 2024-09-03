@@ -50,7 +50,7 @@ export default function OrderDetails() {
       try {
         if (user?.access_token) {
           const response = await axios.get(
-            `https://emlaksepette.com/api/institutional/order_detail/${OrderId}`,
+            `https://private.emlaksepette.com/api/institutional/order_detail/${OrderId}`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -151,7 +151,7 @@ export default function OrderDetails() {
   const [Deals, setDeals] = useState("");
 
   const fetchDataDeal = async () => {
-    const url = `https://emlaksepette.com/api/sayfa/mesafeli-kapora-emanet-sozlesmesi`;
+    const url = `https://private.emlaksepette.com/api/sayfa/mesafeli-kapora-emanet-sozlesmesi`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);

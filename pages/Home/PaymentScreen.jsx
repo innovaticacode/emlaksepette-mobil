@@ -166,7 +166,7 @@ export default function PaymentScreen() {
   const [Deals, setDeals] = useState("");
 
   const fetchDataDeal = async () => {
-    const url = `https://emlaksepette.com/api/sayfa/mesafeli-kiralama-sozlesmesi`;
+    const url = `https://private.emlaksepette.com/api/sayfa/mesafeli-kiralama-sozlesmesi`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);
@@ -204,7 +204,7 @@ export default function PaymentScreen() {
           <View style={styles.image}>
             <ImageBackground
               source={{
-                uri: `https://emlaksepette.com/project_housing_images/${project["image[]"]}`,
+                uri: `https://private.emlaksepette.com/project_housing_images/${project["image[]"]}`,
               }}
               style={{ width: "100%", height: "100%" }}
             />

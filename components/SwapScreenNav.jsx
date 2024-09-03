@@ -124,7 +124,7 @@ const SwapScreenNav = () => {
     const fetchProjectTitle = async () => {
       try {
         const response = await axios.get(
-          `https://emlaksepette.com/api/project/${projectId}`
+          `https://private.emlaksepette.com/api/project/${projectId}`
         );
         setProjectData(response.data); // Başlığı state'e aktarma
       } catch (error) {
@@ -152,7 +152,7 @@ const SwapScreenNav = () => {
 
     axios
       .post(
-        "https://emlaksepette.com/api/institutional/give_offer",
+        "https://private.emlaksepette.com/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -197,7 +197,7 @@ const SwapScreenNav = () => {
   const fetchCity = async () => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/cities"
+        "https://private.emlaksepette.com/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -253,7 +253,7 @@ const SwapScreenNav = () => {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://emlaksepette.com/api/counties/${value}`
+        `https://private.emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {

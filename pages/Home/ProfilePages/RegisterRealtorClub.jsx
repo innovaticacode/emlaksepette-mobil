@@ -118,7 +118,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
   const updateUserData = async () => {
     try {
       const updateResponse = await axios.get(
-        "https://emlaksepette.com/api/users/" + user?.id,
+        "https://private.emlaksepette.com/api/users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -158,7 +158,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
 
     try {
       const response = await axios.put(
-        "https://emlaksepette.com/api/institutional/club/update",
+        "https://private.emlaksepette.com/api/institutional/club/update",
         data,
         {
           headers: {
@@ -232,7 +232,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://emlaksepette.com/api/users/" + user?.id,
+          "https://private.emlaksepette.com/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

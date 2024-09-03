@@ -43,7 +43,7 @@ export default function ActiveRealtorAdverts({ index }) {
     };
     try {
       const res = await axios.get(
-        "https://emlaksepette.com/api/get_my_housings?orderByHousings=" +
+        "https://private.emlaksepette.com/api/get_my_housings?orderByHousings=" +
           sort,
         {
           headers: {

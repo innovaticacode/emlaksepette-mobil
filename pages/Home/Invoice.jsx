@@ -25,7 +25,7 @@ export default function Invoice() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://emlaksepette.com/api/institutional/invoice/${OrderId}`,
+          `https://private.emlaksepette.com/api/institutional/invoice/${OrderId}`,
 
           {
             headers: {

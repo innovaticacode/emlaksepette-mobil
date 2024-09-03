@@ -173,7 +173,7 @@ export default function SupportAdd() {
       });
 
       const response = await axios.post(
-        "https://emlaksepette.com/api/support",
+        "https://private.emlaksepette.com/api/support",
         formData,
         {
           headers: {

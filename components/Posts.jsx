@@ -110,7 +110,7 @@ export default function Posts({
       : "Başlık bulunamadı";
     const amount = 250; // Fiyatı burada belirliyoruz
     const imageUrl = selectedRoom
-      ? "https://emlaksepette.com/project_housing_images/" +
+      ? "https://private.emlaksepette.com/project_housing_images/" +
         selectedRoom["image[]"]
       : ""; // Resim URL'sini burada belirleyin
     const neightboord = false;
@@ -208,7 +208,7 @@ export default function Posts({
       };
       axios
         .post(
-          "https://emlaksepette.com/api/add_project_to_favorites/" +
+          "https://private.emlaksepette.com/api/add_project_to_favorites/" +
             roomOrder,
           {
             project_id: project?.id,
@@ -261,7 +261,7 @@ export default function Posts({
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -486,7 +486,7 @@ export default function Posts({
             <Image
               source={{
                 uri:
-                  "https://emlaksepette.com/project_housing_images/" +
+                  "https://private.emlaksepette.com/project_housing_images/" +
                   roomData["image[]"],
               }}
               style={styles.image}

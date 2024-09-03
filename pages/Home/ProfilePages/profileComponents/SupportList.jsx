@@ -52,7 +52,7 @@ export default function SupportList() {
       const fetchData = async () => {
         try {
           const response = await axios.get(
-            "https://emlaksepette.com/api/support",
+            "https://private.emlaksepette.com/api/support",
             {
               headers: {
                 Authorization: `Bearer ${user.access_token}`,
@@ -108,7 +108,7 @@ export default function SupportList() {
   async function download(URL) {
     const filename = URL;
     const result = await FileSystem.downloadAsync(
-      `https://emlaksepette.com/support/${URL}`,
+      `https://private.emlaksepette.com/support/${URL}`,
       FileSystem.documentDirectory + filename
     );
 

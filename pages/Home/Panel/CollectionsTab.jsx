@@ -172,7 +172,7 @@ export default function CollectionsTab() {
 
       if (user.access_token) {
         const response = await axios.get(
-          "https://emlaksepette.com/api/client/collections",
+          "https://private.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -210,7 +210,7 @@ setcolectionName(name)
       let formData = new FormData();
       formData.append();
       const response = await axios.delete(
-        `https://emlaksepette.com/api/collection/${id}/delete`,
+        `https://private.emlaksepette.com/api/collection/${id}/delete`,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -240,7 +240,7 @@ setcolectionName(name)
       formData.append("collectionName", newName);
 
       const response = await axios.post(
-        `https://emlaksepette.com/api/collection/${id}/edit`,
+        `https://private.emlaksepette.com/api/collection/${id}/edit`,
         formData,
         {
           headers: {
@@ -293,7 +293,7 @@ setcolectionName(name)
     };
     try {
       const response = await axios.delete(
-        `https://emlaksepette.com/api/collections`,
+        `https://private.emlaksepette.com/api/collections`,
 
         {
           data: data,
@@ -327,7 +327,7 @@ setcolectionName(name)
     };
     try {
       const response = await axios.delete(
-        `https://emlaksepette.com/api/collections`,
+        `https://private.emlaksepette.com/api/collections`,
 
         {
           data: data,
@@ -356,7 +356,7 @@ setcolectionName(name)
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://emlaksepette.com/api/users/" + user?.id,
+          "https://private.emlaksepette.com/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -378,7 +378,7 @@ setcolectionName(name)
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://emlaksepette.com/`,
+        message: `https://private.emlaksepette.com/`,
       });
 
       if (result.action === Share.sharedAction) {

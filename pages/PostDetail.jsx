@@ -70,7 +70,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../components/CommentForProject";
 
 export default function PostDetail() {
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://private.emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState("hearto");
@@ -140,7 +140,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://emlaksepette.com/api/users/" + user?.id,
+          "https://private.emlaksepette.com/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -219,7 +219,7 @@ export default function PostDetail() {
   const fetchData = async (token, setCollections) => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/client/collections",
+        "https://private.emlaksepette.com/api/client/collections",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -270,7 +270,7 @@ export default function PostDetail() {
 
     axios
       .post(
-        "https://emlaksepette.com/api/add/collection",
+        "https://private.emlaksepette.com/api/add/collection",
         collectionData,
         {
           headers: {
@@ -313,7 +313,7 @@ export default function PostDetail() {
     };
 
     axios
-      .post("https://emlaksepette.com/api/addLink", collectionData, {
+      .post("https://private.emlaksepette.com/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -451,7 +451,7 @@ export default function PostDetail() {
 
     axios
       .post(
-        "https://emlaksepette.com/api/remove_item_on_collection",
+        "https://private.emlaksepette.com/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -582,7 +582,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -617,7 +617,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -643,7 +643,7 @@ export default function PostDetail() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://emlaksepette.com/`,
+        message: `https://private.emlaksepette.com/`,
       });
 
       if (result.action === Share.sharedAction) {
@@ -669,7 +669,7 @@ export default function PostDetail() {
       };
       axios
         .post(
-          "https://emlaksepette.com/api/add_project_to_favorites/" +
+          "https://private.emlaksepette.com/api/add_project_to_favorites/" +
             HomeId,
           {
             project_id: projectId,
@@ -718,7 +718,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://emlaksepette.com/api/project/${projectId}/comments`
+          `https://private.emlaksepette.com/api/project/${projectId}/comments`
         );
         setcomments(response.data);
       }

@@ -90,7 +90,7 @@ export default function Details({ navigation }) {
   const [lastBlockItemCount, setLastBlockItemCount] = useState(0);
   const [showInstallment, setShowInstallment] = useState(false);
   const scrollViewRef = useRef();
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://private.emlaksepette.com/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -146,7 +146,7 @@ export default function Details({ navigation }) {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://emlaksepette.com/api/users/" + user?.id,
+          "https://private.emlaksepette.com/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -166,7 +166,7 @@ export default function Details({ navigation }) {
       headers: { Authorization: `Bearer ${user?.access_token}` },
     };
     axios
-      .get("https://emlaksepette.com/api/project/" + ProjectId, config)
+      .get("https://private.emlaksepette.com/api/project/" + ProjectId, config)
       .then((res) => {
         setData(res?.data);
         setloadingDetails(true);
@@ -277,7 +277,7 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
 
     axios
       .post(
-        "https://emlaksepette.com/api/remove_item_on_collection",
+        "https://private.emlaksepette.com/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -391,7 +391,7 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://emlaksepette.com/api/client/collections",
+          "https://private.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -453,7 +453,7 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
 
     axios
       .post(
-        "https://emlaksepette.com/api/add/collection",
+        "https://private.emlaksepette.com/api/add/collection",
         collectionData,
         {
           headers: {
@@ -499,7 +499,7 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
     };
 
     axios
-      .post("https://emlaksepette.com/api/addLink", collectionData, {
+      .post("https://private.emlaksepette.com/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -573,7 +573,7 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://emlaksepette.com/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -627,7 +627,7 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        "https://emlaksepette.com/api/institutional/give_offer",
+        "https://private.emlaksepette.com/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -671,7 +671,7 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
   const fetchCity = async () => {
     try {
       const response = await axios.get(
-        "https://emlaksepette.com/api/cities"
+        "https://private.emlaksepette.com/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -693,7 +693,7 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://emlaksepette.com/api/counties/${value}`
+        `https://private.emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -931,7 +931,7 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
+        message: `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
       });
 
       if (result.action === Share.sharedAction) {
@@ -953,7 +953,7 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://emlaksepette.com/api/project/${ProjectId}/comments`
+          `https://private.emlaksepette.com/api/project/${ProjectId}/comments`
         );
         setcomments(response.data);
       }

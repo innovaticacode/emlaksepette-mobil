@@ -45,7 +45,7 @@ export default function UpgradeProfile() {
   const route = useRoute();
   const { name, tab } = route.params;
   const [choose, setchoose] = useState(false);
-  const PhotoUrl = "https://emlaksepette.com/storage/profile_images/";
+  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
   const [image, setImage] = useState(null);
 
   useEffect(() => {
@@ -174,7 +174,7 @@ export default function UpgradeProfile() {
     try {
       if (user.access_token && user) {
         const userInfo = await axios.get(
-          "https://emlaksepette.com/api/users/" + user?.id,
+          "https://private.emlaksepette.com/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -274,7 +274,7 @@ export default function UpgradeProfile() {
     const fetchCities = async () => {
       try {
         const response = await axios.get(
-          "https://emlaksepette.com/api/cities"
+          "https://private.emlaksepette.com/api/cities"
         );
         setCities(response.data.data);
       } catch (error) {
@@ -289,7 +289,7 @@ export default function UpgradeProfile() {
   const fetchCounties = async (cityId) => {
     try {
       const response = await axios.get(
-        `https://emlaksepette.com/api/counties/${cityId}`
+        `https://private.emlaksepette.com/api/counties/${cityId}`
       );
       setCounties(response.data.data);
     } catch (error) {
@@ -301,7 +301,7 @@ export default function UpgradeProfile() {
   const fetchNeighborhoods = async (countyId) => {
     try {
       const response = await axios.get(
-        `https://emlaksepette.com/api/neighborhoods/${countyId}`
+        `https://private.emlaksepette.com/api/neighborhoods/${countyId}`
       );
       setNeighborhoods(response.data.data);
     } catch (error) {
@@ -465,7 +465,7 @@ export default function UpgradeProfile() {
   const updateUserData = async () => {
     try {
       const updateResponse = await axios.get(
-        "https://emlaksepette.com/api/users/" + user?.id,
+        "https://private.emlaksepette.com/api/users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -612,7 +612,7 @@ export default function UpgradeProfile() {
 
       // Perform the profile update
       const response = await axios.post(
-        "https://emlaksepette.com/api/client/profile/update",
+        "https://private.emlaksepette.com/api/client/profile/update",
         formData,
         {
           headers: {
@@ -719,7 +719,7 @@ export default function UpgradeProfile() {
               >
                 <Image
                   source={{
-                    uri: `https://emlaksepette.com/storage/profile_images/${userImage}`,
+                    uri: `https://private.emlaksepette.com/storage/profile_images/${userImage}`,
                   }}
                   style={{ width: "100%", height: "100%", borderRadius: 50 }}
                   borderRadius={50}
@@ -1046,7 +1046,7 @@ export default function UpgradeProfile() {
                         <View style={{ width: 250, height: 200 }}>
                           <Image
                             source={{
-                              uri: "https://emlaksepette.com/images/phone-update-image/phonefile.jpg",
+                              uri: "https://private.emlaksepette.com/images/phone-update-image/phonefile.jpg",
                             }}
                             style={{ width: "100%", height: "100%" }}
                           />

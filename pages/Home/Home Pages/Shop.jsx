@@ -20,7 +20,7 @@ const PAGE_SIZE = 10;
 
 const Shop = ({ index }) => {
   const navigation = useNavigation();
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://private.emlaksepette.com/";
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -39,7 +39,7 @@ const Shop = ({ index }) => {
     };
     try {
       const response = await axios.get(
-        `https://emlaksepette.com/api/real-estates?page=${
+        `https://private.emlaksepette.com/api/real-estates?page=${
           reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config

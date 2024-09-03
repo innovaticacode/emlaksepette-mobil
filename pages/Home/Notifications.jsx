@@ -48,7 +48,7 @@ export default function Notifications() {
       }
       setloading(true);
       const response = await axios.get(
-        "https://emlaksepette.com/api/user/notification",
+        "https://private.emlaksepette.com/api/user/notification",
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -89,7 +89,7 @@ export default function Notifications() {
     setloading(true);
     try {
       const response = await axios.delete(
-        "https://emlaksepette.com/api/institutional/notifications",
+        "https://private.emlaksepette.com/api/institutional/notifications",
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -111,7 +111,7 @@ export default function Notifications() {
 
     try {
       const response = await axios.delete(
-        "https://emlaksepette.com/api/institutional/notification/delete",
+        "https://private.emlaksepette.com/api/institutional/notification/delete",
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,

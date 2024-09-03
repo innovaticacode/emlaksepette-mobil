@@ -201,7 +201,7 @@ export default function PaymentScreen2() {
   const [Deals, setDeals] = useState("");
 
   const fetchDataDeal = async () => {
-    const url = `https://emlaksepette.com/api/sayfa/mesafeli-kiralama-sozlesmesi`;
+    const url = `https://private.emlaksepette.com/api/sayfa/mesafeli-kiralama-sozlesmesi`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);

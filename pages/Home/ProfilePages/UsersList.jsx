@@ -35,7 +35,7 @@ export default function UsersList() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://emlaksepette.com/api/institutional/users",
+          "https://private.emlaksepette.com/api/institutional/users",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -59,7 +59,7 @@ export default function UsersList() {
     try {
       if (user.access_token) {
         const response = await axios.delete(
-          `https://emlaksepette.com/api/institutional/users/${selectedUser}`,
+          `https://private.emlaksepette.com/api/institutional/users/${selectedUser}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -118,7 +118,7 @@ export default function UsersList() {
     };
     try {
       const response = await axios.delete(
-        "https://emlaksepette.com/api/institutional/sub-users",
+        "https://private.emlaksepette.com/api/institutional/sub-users",
         {
           data: data,
           headers: {
@@ -145,7 +145,7 @@ export default function UsersList() {
     };
     try {
       const response = await axios.delete(
-        "https://emlaksepette.com/api/institutional/sub-users",
+        "https://private.emlaksepette.com/api/institutional/sub-users",
         {
           data: data,
           headers: {

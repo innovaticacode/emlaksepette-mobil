@@ -125,7 +125,7 @@ export default function Basket() {
       if (user?.access_token && isFocused) {
         setLoading(true);
         const response = await axios.get(
-          "https://emlaksepette.com/api/institutional/my-cart",
+          "https://private.emlaksepette.com/api/institutional/my-cart",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -208,7 +208,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://emlaksepette.com/api/update-cart-qt",
+          "https://private.emlaksepette.com/api/update-cart-qt",
           formData,
           {
             headers: {
@@ -233,7 +233,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://emlaksepette.com/api/update-cart-qt",
+          "https://private.emlaksepette.com/api/update-cart-qt",
           formData,
           {
             headers: {
@@ -253,7 +253,7 @@ export default function Basket() {
   const updateUserData = async () => {
     try {
       const updateResponse = await axios.get(
-        "https://emlaksepette.com/api/users/" + user?.id,
+        "https://private.emlaksepette.com/api/users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -282,7 +282,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://emlaksepette.com/api/remove-from-cart",
+          "https://private.emlaksepette.com/api/remove-from-cart",
           {},
           {
             headers: {
@@ -322,7 +322,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://emlaksepette.com/api/update-cart",
+          "https://private.emlaksepette.com/api/update-cart",
           formData,
           {
             headers: {

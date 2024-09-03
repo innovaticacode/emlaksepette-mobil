@@ -58,7 +58,7 @@ export default function CreateUser() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://emlaksepette.com/api/institutional/roles`,
+          `https://private.emlaksepette.com/api/institutional/roles`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -131,7 +131,7 @@ export default function CreateUser() {
     if (user?.access_token) {
       axios
         .post(
-          `https://emlaksepette.com/api/institutional/users`,
+          `https://private.emlaksepette.com/api/institutional/users`,
           formdata,
           {
             headers: {

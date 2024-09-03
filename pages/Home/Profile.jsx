@@ -82,7 +82,7 @@ export default function Profile() {
       formData.append("email", emailId);
 
       const response = await axios.post(
-        "https://emlaksepette.com/api/institutional/give_offer",
+        "https://private.emlaksepette.com/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -197,7 +197,7 @@ export default function Profile() {
 
     sethousingRecords(filteredData);
   };
-  const ApiUrl = "https://emlaksepette.com/";
+  const ApiUrl = "https://private.emlaksepette.com/";
   const handleOpenPhone = () => {
     // Telefon uygulamasını açmak için
     Linking.openURL(`tel:+${storeData.data.phone}`);
@@ -237,7 +237,7 @@ export default function Profile() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://emlaksepette.com/`,
+        message: `https://private.emlaksepette.com/`,
       });
 
       if (result.action === Share.sharedAction) {
@@ -440,7 +440,7 @@ export default function Profile() {
                 >
                   <Image
                     source={{
-                      uri: `https://emlaksepette.com/storage/profile_images/${storeData?.data?.profile_image}`,
+                      uri: `https://private.emlaksepette.com/storage/profile_images/${storeData?.data?.profile_image}`,
                     }}
                   />
                 </View>

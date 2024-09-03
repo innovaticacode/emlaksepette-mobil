@@ -16,7 +16,7 @@ export default function CommentItem({ username, comment, date, rate, image }) {
   const [commentImages, setCommentImages] = useState([]);
 
   // API URL'nizi burada tanımlayın
-  const apiUrl = "https://emlaksepette.com/";
+  const apiUrl = "https://private.emlaksepette.com/";
 
   useEffect(() => {
     // Eğer image varsa ve bir string ise, JSON.parse ile diziyi oluştur

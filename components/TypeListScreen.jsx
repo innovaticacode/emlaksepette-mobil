@@ -19,7 +19,7 @@ function TypeListScreen({
   selectedTypes,
   nextStep,
 }) {
-  const baseUrl = "https://emlaksepette.com/react/";
+  const baseUrl = "https://private.emlaksepette.com/react/";
 
   const [loadingOrder, setLoadingOrder] = useState(null);
   const [loadingOrderStatusId, setLoadingOrderStatusId] = useState(null);

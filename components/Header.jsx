@@ -33,7 +33,7 @@ export default function Header({ loading, onPress, index, tab }) {
   //     }
 
   //     const response = await axios.get(
-  //       "https://emlaksepette.com/api/user/notification",
+  //       "https://private.emlaksepette.com/api/user/notification",
   //       {
   //         headers: {
   //           Authorization: `Bearer ${user.access_token}`,
@@ -81,7 +81,7 @@ export default function Header({ loading, onPress, index, tab }) {
   //       if (!user?.access_token) return;
   //       setLoading(true);
   //       const response = await axios.get(
-  //         'https://emlaksepette.com/api/user/notification',
+  //         'https://private.emlaksepette.com/api/user/notification',
   //         {
   //           headers: {
   //             Authorization: `Bearer ${user.access_token}`,
@@ -127,7 +127,7 @@ export default function Header({ loading, onPress, index, tab }) {
       >
         <ImageBackground
           source={{
-            uri: "https://emlaksepette.com/images/emlaksepettelogo.png",
+            uri: "https://private.emlaksepette.com/images/emlaksepettelogo.png",
           }}
           resizeMode="contain"
           style={{
