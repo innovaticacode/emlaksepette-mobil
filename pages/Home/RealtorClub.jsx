@@ -1,353 +1,253 @@
-import { View, Text, StyleSheet, ImageBackground, LayoutAnimation, UIManager, TouchableOpacity, Image,ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react';
+import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { Dimensions } from 'react-native';
 
-import PagerView from 'react-native-pager-view'
-import DetailsPicture from '../../components/DetailsPicture'
-import RealtorClubItem from '../../components/RealtorClubItem'
-import ıcon from "react-native-vector-icons/SimpleLineIcons"
-import ıcon2 from "react-native-vector-icons/AntDesign"
-UIManager.setLayoutAnimationEnabledExperimental &&
-  UIManager.setLayoutAnimationEnabledExperimental(true);
+const { width, height } = Dimensions.get('window');
 
-const Accordion = ({ title, children, index, selectedIndex, setSelectedIndex }) => {
-  const [expanded, setExpanded] = useState(false);
-
-  const toggleExpand = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setExpanded(!expanded);
-    setSelectedIndex(index);
-
-  };
-
+const RealtorClub = () => {
   return (
-    <View style={[styles.container2, { backgroundColor: expanded ? '#EA2A29' : '#F5F5F5' }]}>
-      <TouchableOpacity style={styles.row} onPress={toggleExpand}>
-        <View style={{ flex: 1.8 / 2 }}>
-          <Text style={[styles.title, { color: expanded ? 'white' : '#666666' }]}>{title}</Text>
-        </View>
-        <View style={{ flex: 0.1 / 2 }}>
-          <ıcon name={expanded ? 'arrow-down' : 'arrow-right'} color={expanded ? 'white' : 'grey'} />
-        </View>
+    <ScrollView style={styles.container}>
 
+      {/* Kırmızı Yuvarlak İçindeki Fotoğraf */}
+      <View style={styles.redCircle}>
+        <View style={styles.imageContainer}>
+          <Image 
+            source={require('../../images/emlak_kulup.png')} 
+            style={styles.circleImage} 
+          />
+        </View>
+      </View>
 
-      </TouchableOpacity>
-      {expanded && <View style={styles.child}>{children}</View>}
-    </View>
+      {/* Başlık ve Açıklama */}
+      <View style={styles.mainContent}>
+        <Text style={styles.title}>Emlak Kulüp ile Sende Kazan!</Text>
+        <Text style={styles.subtitle}>
+          Emlak kulüp üyesi ol ve koleksiyonunu oluştur. 
+          Koleksiyonunu paylaşarak kazanma şansı yakala!
+        </Text>
+      </View>
+
+      {/* Bilgilendirici Kartlar */}
+      <View style={styles.cardsSection}>
+        <View style={styles.card}>
+          <Icon name="person-add-outline" size={40} color="#EC302E" style={styles.icon} />
+          <View style={styles.cardTextContainer}>
+            <Text style={styles.cardTitle}>Emlak Kulübe Üye Ol</Text>
+            <Text style={styles.cardText}>
+              Emlak Kulüp üyesi olarak kazanmaya hemen başla!
+            </Text>
+          </View>
+        </View>
+        <View style={styles.card}>
+          <Icon name="albums-outline" size={40} color="#EC302E" style={styles.icon} />
+          <View style={styles.cardTextContainer}>
+            <Text style={styles.cardTitle}>Koleksiyonunu oluştur</Text>
+            <Text style={styles.cardText}>
+              Kendi koleksiyonunu oluştur ve kazançlarını artır.
+            </Text>
+          </View>
+        </View>
+        <View style={styles.card}>
+          <Icon name="share-social-outline" size={40} color="#EC302E" style={styles.icon} />
+          <View style={styles.cardTextContainer}>
+            <Text style={styles.cardTitle}>Koleksiyonunu Paylaş</Text>
+            <Text style={styles.cardText}>
+              Koleksiyonunu paylaş ve ödüller kazan.
+            </Text>
+          </View>
+        </View>
+        <View style={styles.card}>
+          <Icon name="gift-outline" size={40} color="#EC302E" style={styles.icon}/>
+          <View style={styles.cardTextContainer}>
+            <Text style={styles.cardTitle}>Sende Kazan</Text>
+            <Text style={styles.cardText}>
+              Sen de kazançlarını artırmaya başla.
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Telefon Görseli ve CTA Butonu */}
+      <View style={styles.mainSection}>
+        <Image 
+          source={require('../../images/emlak_kulup_2.png')}
+          style={styles.mainImage} 
+        />
+        <Text style={styles.mainSubtitle}>
+          Paylaştıkça Kazandıran Sistem: Emlak Kulüp!
+        </Text>
+        <TouchableOpacity style={styles.ctaButton}>
+          <Text style={styles.ctaButtonText}>Hemen Üye Ol</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Alt Bilgi ve SSS */}
+      <View style={styles.footer}>
+        <Text style={styles.footerTitle}>Emlak Kulüp Nedir?</Text>
+        <Text style={styles.footerText}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </Text>
+        <View style={styles.faqSection}>
+          <TouchableOpacity style={styles.faqItem}>
+            <Text style={styles.faqText}>Emlak Kulübe nasıl üye olurum?</Text>
+            <Icon name="chevron-down-outline" size={20} color="#EC302E" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.faqItem}>
+            <Text style={styles.faqText}>Emlak Kulüp ile kazan nedir?</Text>
+            <Icon name="chevron-down-outline" size={20} color="#EC302E" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.faqItem}>
+            <Text style={styles.faqText}>Koleksiyonuma nasıl eklerim?</Text>
+            <Icon name="chevron-down-outline" size={20} color="#EC302E" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.faqItem}>
+            <Text style={styles.faqText}>Hangi ilanlarda komisyon kazanırım?</Text>
+            <Icon name="chevron-down-outline" size={20} color="#EC302E" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.faqItem}>
+            <Text style={styles.faqText}>Komisyonumu ne zaman alabilirim?</Text>
+            <Icon name="chevron-down-outline" size={20} color="#EC302E" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+    </ScrollView>
   );
 };
 
-
-export default function RealtorClub() {
-  const image = require('./contact.png')
-  const image2 = require('./contact2.png')
-  const image3 = require('./contact3.png')
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  const closeOthers = (index) => {
-    setSelectedIndex(!selectedIndex);
-  };
-  return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-    <View style={styles.container}>
-    
-      
-          <View style={styles.body}>
-            <View style={styles.headerImage}>
-              <PagerView style={styles.viewPager} >
-
-                <View style={styles.page} key="1">
-                  <ImageBackground source={require('./emlakkulupslider.png')} resizeMode='contain' style={{ width: '100%', height: '100%' }} />
-                </View>
-              
-              </PagerView>
-            </View>
-            <View style={{padding:5}}>
-              <TouchableOpacity style={{backgroundColor:'#EC302E',padding:8,borderRadius:5}}>
-                <Text style={{textAlign:'center',color:'#fff',fontWeight:'600'}}>Üye Olmak İçin Tıkla</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{ gap: 20, marginTop: 0 }}>
-              <RealtorClubItem description='Emlak Kulüp’e ÜYE OL Hemen Paylaştıkça Kazan (ilk 5000 üyelik ücretsiz)' ımage={image} colorcss={true} />
-              <RealtorClubItem description='test.emlaksepette.com da bulunan bütün ilanları Koleksiyonuna ekleyerek kendi mağazada sosyal medya hesabında sana özel link ile paylaş' ımage={image2} colorcss={true} />
-              <RealtorClubItem description='Paylaştığın link üzerinden satışa dönen her ilandan sınırsız para kazan' ımage={image3} />
-            </View>
-            <View style={{ gap: 10, marginTop: 20, padding: 6 }}>
-              <Text style={{ fontWeight: 'bold', color: '#333' }}>Sıkça Sorulan Sorular</Text>
-              <Accordion
-                title="test.emlaksepette.com Paylaş Kazan Nedir?"
-                index={0}
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
-
-              >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>
-                  test.emlaksepette.com Paylaştıkça Kazan kampanyası, istediğin ilanları koleksiyonuna ekleyerek sana özel link ile farklı pek çok mecrada paylaşmanı ve bu yolla kazanç elde etmeni sağlayan Türkiye’nin en büyük ve en çok kazandıran paylaş kazan uygulamasıdır.
-                </Text>
-              </Accordion>
-              <Accordion
-                title="En fazla ne kadar kazanç elde edebilirim?"
-                index={1}
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
-
-              >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>
-                  test.emlaksepette.com Paylaştıkça Kazan kampanyası ile koleksiyonuna eklemiş olduğun ilanların sana özel linkleri paylaşarak satışına aracılık yapman durumunda aylık 500 bin tl kazanç elde edebilirsin.
-                </Text>
-              </Accordion>
-              <Accordion
-                title="Kazanç komisyonu neye göre belirlenir"
-                index={2}
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
-
-              >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>test.emlaksepette.com’ da bulunan proje ilanlarını koleksiyonuna ekleyerek paylaşım yaptığın ilanların satılması durumunda toplam fiyat üzerinden %1 komisyon kazanırsınız. (Örneğin X İnşaat firmasının projesindeki bir dairenin fiyatı 10 milyon TL paylaşmış olduğun link üzerinde satılması karşılığında emlak sepette.com emlak kulübü üyesine vergiler düşülerek net 78 bin tl nakit ödeme yapar) test.emlaksepette.com’ da bulunan emlak ilanlarını koleksiyonuna ekleyerek paylaşım yaptığın ilanların satılması durumunda toplam fiyat üzerinden %0.5 komisyon kazanırsınız</Text>
-              </Accordion>
-              <Accordion
-                title="Koleksiyona ilan eklemede ve paylaşmada sınır var mı?"
-                index={3}
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
-
-              >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>test.emlaksepette.com Paylaştıkça Kazan'da ilan paylaşımında sınır yok istediğin kadar ilanı koleksiyonuna ekleyerek paylaş. Paylaşılan ilan sayısı arttıkça kazanma şansın da artar.</Text>
-              </Accordion>
-              <Accordion
-                title="Hangi ilanlarda komisyon kazanbilirim?"
-                index={4}
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
-
-              >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>Emlak kulüp üyeleri Paylaştıkça Kazan kampanyasına göre emlaksepete.com üzerindeki tüm kategorilerdeki emlak ilanlarını paylaşabilir, linkinden satın alım yapıldığı zaman komisyon kazanabilirsin.</Text>
-              </Accordion>
-              <Accordion
-                title="Paylaştığım linkten gelen kişiler kaç gün içinde satın alma yaparsa benim kazancıma yansır?"
-                index={5}
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
-
-              >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>Oluşturulan paylaştıkça kazan linki üzerinden test.emlaksepette.com ‘a gelen kullanıcının 24 gün boyunca sistem de link üzerinden geldiği tanınır. 24 gün içinde link paylaşımınızdan satış olması durumunda kazancınıza yansır</Text>
-              </Accordion>
-              <Accordion
-                title="Koleksiyonuma eklediğim ilanların linkini paylaştıktan sonra fiyat değişikliği olursa ne olur?"
-                index={6}
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
-
-              >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>test.emlaksepette.com üzerinde bulunan kurumsal mağazalar fiyatı artırması veya düşürmesi durumunda en son güncel fiyat üzerinden komisyon kazanırsınız.</Text>
-              </Accordion>
-              <Accordion
-                title="Komisyonumu ne zaman alabilirim?"
-                index={7}
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
-
-              >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>Onaylanan komisyonunuzu, bize belirttiğin hesap bilgilerine ya da kestiğin faturaya istinaden her ayın 15 ile 20’si aralığında yatırıyoruz. Ör. Kasım ayı kazancını (yasal) iptal iade süreci sebebiyle Aralık ayı sonunda tamamlıyoruz, bu doğrultuda Kasım ayı ödemeni en geç Ocak ayının 20‘sine kadar alıyorsunuz.</Text>
-              </Accordion>
-              <Accordion
-                title="Komisyon kazancımı ne şekilde alırım?"
-                index={8}
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
-              >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>test.emlaksepette.com Paylaştıkça Kazan kampanyasından elde ettiğin kazancını alabilmen için ödeme bilgilerini eksiksiz ve doğrubir şekilde girmiş olman gerekiyor. Ödeme bilgilerin tamamlanmışsa üyelikte bizlere ilettiğin IBAN- hesap numarasına kazancın nakit olarak iletilecektir. test.emlaksepette.com şahıs ödemeleri kapsamında ilgili kullanıcıların adına gider pusulası düzenleyip, oluşan stopaj maliyetinin ödemesini de kendi tarafında üstlenecektir fakat gelir beyanının yapılması, ödemeyi alan kullanıcının kendi sorumluluğunda olup oluşabilecek her türlü vergi ve yükümlülükler sizlerin sorumluluğundadır</Text>
-              </Accordion>
-              <Accordion
-                title="Paylaştığım ilan iptal ya da iade edildi ise kazancım iptal olur mu?"
-                index={9}
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
-              >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>Evet, iptal veya iade edilen ilanlarda kazanç sağlayamazsın. Bir ay içerisinde paylaştığın ürünlerden gelen siparişler iptal ve iade süresi dolduktan sonra kontrol edilip kesinleşmiş satışlar üzerinden kazancın hesaplanır.</Text>
-              </Accordion>
-              <Accordion
-                title="Kendi linkim üzerinden satın alım yaparak kazanç elde edebilirmiyim?"
-                index={10}
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
-              >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>Paylaştıkça kazan kampanyasında emlak kulüp üyeleri kendilerine ait linki paylaşarak kendi linklerinden komisyon kazanırlar.</Text>
-              </Accordion>
-              <Accordion
-                title="Aydınlatma metnini onaylamadan katılabilirmiyim"
-                index={11}
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
-              >
-                <Text style={{ color: 'grey', lineHeight: 22 }}>test.emlaksepette.com Paylaştıkça Kazan'da gelir elde edebilmek için aydınlatma metnine ve taahütnameye onay vermelisin. Aydınlatma metninin onaylanmadığı durumlarda paylaşım yapılsa da kazanç elde edilemez.</Text>
-              </Accordion>
-            </View>
-            <View style={styles.footerAndAdvice}>
-              <View style={{ flexDirection: 'row' }}>
-
-                <View style={{ backgroundColor: '#EA2A29', flex: 0.2 / 2, alignItems: 'center', justifyContent: 'center' }}>
-                  <ıcon2 name='home' size={30} color={'white'} />
-                </View>
-
-                <View style={{ backgroundColor: '#333', flex: 1.8 / 2, padding: 5 }}>
-                  <Text style={{ color: 'white', lineHeight: 20, fontSize: 12 }}>
-                    <Text style={{ fontWeight: 'bold' }}> Emlak Kulüp Nedir? </Text>
-
-                    Emlak Kulüp, en sevdiğin Emlak Sepette ürünlerini, arkadaşlarınla, ailenle veya takipçilerinle paylaştığın, paylaştıkça kazandığın bir Affiliate / Satış Ortaklığı Platformu’dur.
-                  </Text>
-                </View>
-              </View>
-
-            </View>
-            <View style={styles.footerAndAdvice}>
-              <View style={{ flexDirection: 'row' }}>
-
-                <View style={{ backgroundColor: '#EA2A29', flex: 0.2 / 2, alignItems: 'center', justifyContent: 'center' }}>
-                  <ıcon2 name='sharealt' size={30} color={'white'} />
-                </View>
-
-                <View style={{ backgroundColor: '#333', flex: 1.8 / 2, padding: 5 }}>
-                  <Text style={{ color: 'white', lineHeight: 20, fontSize: 12 }}>
-                    <Text style={{ fontWeight: 'bold', }}> Peki, Paylaşmak nasıl mı kazandırıyor? </Text>
-                    Emlak Sepette'den seçtiğin, beğendiğin emlak veya proje konutlarını, kendi sosyal medya hesaplarında sana özel oluşturduğumuz linki ekleyerek paylaşıyorsun. Paylaştığın link üzerinden Emlak Sepette'den yapılan her alışveriş ise sana nakit kazanç sağlıyor
-                  </Text>
-                </View>
-              </View>
-
-            </View>
-         
-            <View style={{paddingTop:10}}>
-            
-              <View style={styles.footerAndAdvice}>
-              <View style={{ flexDirection: 'row' }}>
-
-                <View style={{ backgroundColor: '#EA2A29', flex: 0.2 / 2, alignItems: 'center', justifyContent: 'center' }}>
-                  <ıcon2 name='sharealt' size={30} color={'white'} />
-                </View>
-
-                <View style={{ backgroundColor: '#333', flex: 1.8 / 2, padding: 5 }}>
-                  <Text style={{ color: 'white', lineHeight: 20, fontSize: 12 }}>
-                  Paylaşımlarını yaptığın sosyal medya hesaplarını herkese görünür yaparsan daha fazla kişiye ulaşırsın
-                  
-                  </Text>
-                </View>
-              </View>
-
-            </View>
-            <View style={styles.footerAndAdvice}>
-              <View style={{ flexDirection: 'row' }}>
-
-                <View style={{ backgroundColor: '#EA2A29', flex: 0.2 / 2, alignItems: 'center', justifyContent: 'center' }}>
-                  <ıcon2 name='tag' size={30} color={'white'} />
-                </View>
-
-                <View style={{ backgroundColor: '#333', flex: 1.8 / 2, padding: 5 }}>
-                  <Text style={{ color: 'white', lineHeight:20, fontSize: 12 }}>
-                  #işbirliği #affiliate #işortaklığı #affiliatelink hashtag 'lerini kullanmayı unutma!
-                  
-                  </Text>
-                </View>
-              </View>
-
-            </View>
-            <View style={styles.footerAndAdvice}>
-              <View style={{ flexDirection: 'row' }}>
-
-                <View style={{ backgroundColor: '#EA2A29', flex: 0.2 / 2, alignItems: 'center', justifyContent: 'center' }}>
-                  <ıcon2 name='home' size={30} color={'white'} />
-                </View>
-
-                <View style={{ backgroundColor: '#333', flex: 1.8 / 2, padding: 10 }}>
-                  <Text style={{ color: 'white', lineHeight: 20, fontSize: 12 }}>
-                   
-                  Takipçilerine ilham ver! Doğru evi bulmalarına
-                  
-                  <Text style={{fontWeight:'bold'}}> Aracı Ol</Text> 
-
-                  </Text>
-                </View>
-              </View>
-
-            </View>
-            <View style={{ marginTop: 10 }}>
-              <View style={{ height: 120 }}>
-                <View style={{ backgroundColor: '#DF4342d1', position: 'absolute', zIndex: 1, width: '100%', height: '100%', padding:10}}>
-                  <Text style={{fontSize:12,color:'white',fontWeight:'bold',lineHeight:15}}>
-                    test.emlaksepette.com ‘DA YER ALAN YÜZBİNLERCE PROJE İLANINI VE EMLAK İLANLARINI SEÇ VE BÜTÜN DÜNYA İLE PAYLAŞ.
-
-                    AYLIK 50.000 TL İLE 500.000 TL ARASINDA LİNKLERİNDEN NAKİT GELİR ELDE ETME HAKKI KAZAN!
-
-                    EMLAK KULÜP ÜYELERİ ARASINDAN EN BAŞARILI İLK YÜZ KİŞİYE SÜPRİZ HEDİYELER!
-                  </Text>
-
-
-                </View>
-                <Image source={require('./profilePhoto.jpg')} style={{ width: '100%', height: '100%' }} />
-              </View>
-
-            </View>
-            </View>
-
-          </View>
-
-     
-
- 
-
-    </View>
-    </ScrollView>
-
-  )
-}
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-    flex: 1
-  },
-  headerImage: {
-    width: '100%',
-
-    height: '12%',
-
-  },
-  body: {
     flex: 1,
-    padding: 5,
-    minHeight: 2000,
-
+    backgroundColor: '#fff',
   },
-  viewPager: {
-    height: '100%'
-  },
-  page: {
-    width: '100%',
-    height: '100%'
-  },
-  container2: {
-
-
-    borderRadius: 5,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 5,
-    paddingRight: 5,
+  redCircle: {
+    width: 250,
+    height: 250,
+    borderRadius: 125,
+    backgroundColor: '#EA2B2E',
     alignItems: 'center',
-    padding: 13,
-
-
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 152,
+    marginBottom: 20,
+  },
+  imageContainer: {
+    width: width * 0.8,  // ekran genişliğinin %80'i
+    height: height * 0.35, // ekran yüksekliğinin %35'i
+    position: 'absolute',
+    bottom: 40,
+    left: -20,
+  },
+  circleImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain', // Resmi kapsayıcıya göre uyumlu hale getirir
+  },
+  mainContent: {
+    padding: 20,
+    alignItems: 'center',
   },
   title: {
-    fontSize: 12,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#666666'
+    color: '#0C0C0C',
+    marginBottom: 8,
+    textAlign: 'center',
   },
-  child: {
+  subtitle: {
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+  },
+  cardsSection: {
+    paddingHorizontal: 20,
+    marginVertical: 20,
+  },
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
     padding: 10,
-    backgroundColor: '#eaeaea',
+    backgroundColor: '#f9f9f9',
+    borderRadius: 10,
+    height:200,
   },
-  footerAndAdvice: {
-    paddingTop: 15
-  }
+  cardTextContainer: {
+    marginLeft: 10,
+    flex: 1,
+  },
+  icon: {
+    marginRight: 40, // İkon ile metin arasındaki boşluk
+    marginLeft: 40,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  cardText: {
+    fontSize: 14,
+    color: '#555',
+  },
+  mainSection: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  mainImage: {
+    width: width * 0.8,  // ekran genişliğinin %80'i
+    height: height * 0.45, // ekran yüksekliğinin %35'i
+  },
+  mainSubtitle: {
+    fontSize: 20,
+    color: '#555',
+    textAlign: 'center',
+    marginVertical: 20,
+  },
+  ctaButton: {
+    backgroundColor: '#EC302E',
+    paddingVertical: 14,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+  },
+  ctaButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  footer: {
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    backgroundColor: '#f7f7f7',
+  },
+  footerTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#EC302E',
+    marginBottom: 10,
+  },
+  footerText: {
+    fontSize: 16,
+    color: '#555',
+    marginBottom: 20,
+  },
+  faqSection: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 10,
+  },
+  faqItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  faqText: {
+    fontSize: 16,
+    color: '#333',
+  },
+});
 
-})
+export default RealtorClub;
