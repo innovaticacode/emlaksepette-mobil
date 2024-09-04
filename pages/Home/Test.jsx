@@ -24,7 +24,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 export default function Test() {
   const navigation = useNavigation();

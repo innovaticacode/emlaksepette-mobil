@@ -18,7 +18,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 const { width, height } = Dimensions.get("window");
 
@@ -163,10 +162,12 @@ const SwapScreenNav = () => {
       )
       .then((response) => {
         setFormVisible(false);
-        Toast.show({
+        
+        Dialog.show({
           type: ALERT_TYPE.SUCCESS,
-          title: "Başvurunuz Gönderildi",
+          title: "Başvurunuz Gönderildi.",
           textBody: "1-2 İş günü içerisinde haber verilecektir",
+          button: "Tamam",
         });
 
         // color("#d4edda");

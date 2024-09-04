@@ -24,7 +24,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
@@ -487,7 +486,7 @@ export default function SwapForm({ openModal, color }) {
     Dialog.show({
       type: ALERT_TYPE.DANGER,
       title: "Tüm Alanları Doldurunuz",
-      textBody: message,
+      textBody: `${message}`,
       button: "Tamam",
     });
   };
@@ -598,11 +597,6 @@ export default function SwapForm({ openModal, color }) {
           setselectedPdfUrl(pdfAsset.uri);
           setImage(null);
           setchoose(false);
-          // Toast.show({
-          //   type: ALERT_TYPE.SUCCESS,
-          //   title: "PDF Seçildi",
-          //   textBody: `Seçtiğiniz PDF: ${pdfAsset.name}`,
-          // });
           console.log(selectedDocumentName);
         }
       })

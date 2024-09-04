@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Linking,
   Share,
+  RefreshControl,
 } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import Modal from "react-native-modal";
@@ -34,7 +35,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import { useNavigation } from "@react-navigation/native";
 import CollectionsItem from "../ProfilePages/profileComponents/CollectionsItem";
@@ -94,10 +94,11 @@ export default function CollectionsTab() {
     Clipboard.setStringAsync(url);
     setchoose(false);
     setTimeout(() => {
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title: "Koleksiyon Silindi",
-        textBody: `Link Kopyalandı`,
+        title: "Link Kopyalama Başarılı",
+        textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi') ?  `${colectionName} Adlı Portföyünüzün Linki Kopyalandı`:`${colectionName} Adlı Koleksiyonunuzun Linki Kopyalandı`,
+        button: "Tamam",
       });
     }, 200);
   };
@@ -192,13 +193,13 @@ export default function CollectionsTab() {
   useEffect(() => {
     fetchData();
   }, [user]);
-
+console.log(user.access_token)
   const [selectedCollection, setselectedCollection] = useState(0);
   const [colectionName, setcolectionName] = useState("");
   const [item, setitem] = useState(null);
   const getId = (id, name, item) => {
     setselectedCollection(id);
-
+setcolectionName(name)
     setnewName(name);
     setitem(item);
   };
@@ -219,10 +220,11 @@ export default function CollectionsTab() {
 
       closeSheet();
 
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Koleksiyon Silindi",
-        textBody: `${colectionName} Adlı koleksiyonunuz başarıyla silindi`,
+        textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${colectionName} Adlı Portföy başarıyla silindi` : `${colectionName} Adlı koleksiyonunuz başarıyla silindi`,
+        button: "Tamam",
       });
       fetchData();
       setModalVisible2(false);
@@ -306,10 +308,11 @@ export default function CollectionsTab() {
       fetchData();
       setereror(response.data);
       setisChoosed(false);
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title: `Koleksionlar Silindi`,
-        textBody: `${CollectionsRemoveIds.length} Koleksiyon silindi`,
+        title: `Başarılı`,
+        textBody: `${CollectionsRemoveIds.length} Koleksiyon silindi.`,
+        button: "Tamam",
       });
 
       setCollectionsRemoveIds([]);
@@ -338,10 +341,11 @@ export default function CollectionsTab() {
       );
       setmodalForRemoveAll(false);
       fetchData();
-      Toast.show({
+      Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title: "Koleksiyonlar Silindi",
-        textBody: `Tüm Koleksiyonlar Silindi`,
+        title: "Başarılı",
+        textBody: "Tüm koleksiyonlar silindi.",
+        button: "Tamam",
       });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -393,7 +397,12 @@ export default function CollectionsTab() {
       alert(error.message);
     }
   };
-
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchData(); // Sayfayı yenilemek için API isteğini tekrar yapar
+    setRefreshing(false);
+  };
   return (
     <>
       {loading ? (
@@ -478,7 +487,7 @@ export default function CollectionsTab() {
                         textAlign: "center",
                         margin: 5,
                       }}
-                      title={`${CollectionsRemoveIds.length} Seçili Koleksiyonu silmek istediğinize emin misin`}
+                      title={(user.type==2 && user.corporate_type=='Emlak Ofisi' ? `${CollectionsRemoveIds.length} Seçili Portföyü silmek istediğinize emin misin`:`${CollectionsRemoveIds.length} Seçili Koleksiyonu silmek istediğinize emin misin`)  }
                       messageStyle={{ textAlign: "center" }}
                       closeOnTouchOutside={true}
                       closeOnHardwareBackPress={false}
@@ -513,7 +522,7 @@ export default function CollectionsTab() {
                         textAlign: "center",
                         margin: 5,
                       }}
-                      title={`${colectionName} adlı koleksiyonu silmek istediğinize eminmisiniz?`}
+                      title={(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${colectionName} adlı Portföyünüzü silmek istediğinize eminmisiniz?`  :  `${colectionName} adlı koleksiyonu silmek istediğinize eminmisiniz?`}
                       messageStyle={{ textAlign: "center" }}
                       closeOnTouchOutside={true}
                       closeOnHardwareBackPress={false}
@@ -549,7 +558,7 @@ export default function CollectionsTab() {
                         margin: 5,
                       }}
                       title={"Tümünü Sil"}
-                      message="Tüm koleksiyonları silmek istediğinize emin misiniz?"
+                      message={user.type==2 && user.corporate_type=='Emlak Ofisi' ? 'Tüm Portföyleri silmek istediğinize emin misiniz': "Tüm koleksiyonları silmek istediğinize emin misiniz?"} 
                       messageStyle={{ textAlign: "center" }}
                       closeOnTouchOutside={true}
                       closeOnHardwareBackPress={false}
@@ -594,6 +603,12 @@ export default function CollectionsTab() {
                             paddingBottom: 20,
                             padding: 10,
                           }}
+                          refreshControl={
+                            <RefreshControl
+                              refreshing={refreshing}
+                              onRefresh={onRefresh} // Sayfa yenileme fonksiyonu
+                            />
+                          }
                         >
                           <View style={styles.SearchArea}>
                             <SearchBar
@@ -617,7 +632,7 @@ export default function CollectionsTab() {
                                 height: "110%",
                                 borderBottomColor: "#bebebe26",
                               }}
-                              placeholder="Koleksiyon Ara..."
+                              placeholder= {user.type==2 && user.corporate_type=='Emlak Ofisi'? 'Portföy Ara': "Koleksiyon Ara..." } 
                               inputStyle={{ fontSize: 15 }}
                               showLoading={false}
                               searchIcon={{ color: "#CCCCCC" }}
@@ -652,10 +667,11 @@ export default function CollectionsTab() {
                                 ]}
                                 onPress={() => {
                                   if (collections.length == 0) {
-                                    Toast.show({
+                                    Dialog.show({
                                       type: ALERT_TYPE.WARNING,
-                                      title: "Koleksiyon Bulunmamaktadır",
-                                      textBody: `Silinecek koleksiyon bulunmuyor`,
+                                      title: "Hata!",
+                                      textBody: "Silinecek koleksiyon bulunmuyor.",
+                                      button: "Tamam",
                                     });
                                   } else {
                                     setmodalForRemoveAll(true);
@@ -714,10 +730,11 @@ export default function CollectionsTab() {
                                 ]}
                                 onPress={() => {
                                   if (CollectionsRemoveIds.length == 0) {
-                                    Toast.show({
+                                    Dialog.show({
                                       type: ALERT_TYPE.WARNING,
                                       title: "Lütfen seçiniz",
-                                      textBody: `Silmek istediğiniz koleksiyonları seçiniz`,
+                                      textBody: (user.type==2 && user.corporate_type=='Emlak Ofisi' )?'Silmek istediğiniz Portföyleri seçiniz' :`Silmek istediğiniz koleksiyonları seçiniz`,
+                                      button: "Tamam",
                                     });
                                   } else {
                                     setRemoveSelectedCollectionsModal(true);
@@ -984,7 +1001,12 @@ export default function CollectionsTab() {
                                 fontWeight: "700",
                               }}
                             >
-                              Koleksiyon Adını Düzenle
+                              {
+                                (user.type==2 && user.corporate_type=='Emlak Ofisi')?
+                                'Portföy Adını Düzenle':
+                                'Koleksiyon Adını Düzenle'
+                              }
+                            
                             </Text>
                           </TouchableOpacity>
                           <TouchableOpacity
@@ -1012,7 +1034,12 @@ export default function CollectionsTab() {
                                 fontWeight: "700",
                               }}
                             >
-                              Koleksiyonu Sil
+                               {
+                                (user.type==2 && user.corporate_type=='Emlak Ofisi')?
+                                'Portföyü Sil':
+                                'Koleksiyonu Sil'
+                              }
+                         
                             </Text>
                           </TouchableOpacity>
                         </View>
@@ -1038,7 +1065,12 @@ export default function CollectionsTab() {
                               color: "black",
                             }}
                           >
-                            Koleksiyon Adını Değiştir
+                            {
+                              (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                              'Portföy Adını Değiştir':
+                              'Koleksiyon Adını Değiştir'
+                            }
+                            
                           </Text>
                           <TouchableOpacity
                             style={styles.closeButton}
@@ -1073,9 +1105,12 @@ export default function CollectionsTab() {
                             <Icon2 name="info" size={15} color={"#525B75"} />
                             <Text>
                               {" "}
-                              Oluşturduğun koleksiyonu paylaştığında, Emlak
-                              Sepette uyguluması içerisindeki diğer kullanıcılar
-                              da listendeki ilanları görüntüleyebilir.
+                              {
+                                (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
+                                'Oluşturduğun Portföyü paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir.':
+                                'Oluşturduğun Koleksiyonu paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir.'
+                              }
+                            
                             </Text>
                           </Text>
                         </View>

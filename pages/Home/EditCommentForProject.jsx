@@ -24,8 +24,8 @@ import * as ImagePicker from "expo-image-picker";
 import { getValueFor } from "../../components/methods/user";
 import {
   ALERT_TYPE,
-  AlertNotificationDialog,
   Dialog,
+  AlertNotificationRoot,
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";

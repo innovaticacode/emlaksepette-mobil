@@ -23,7 +23,6 @@ import {
   AlertNotificationRoot,
   Dialog,
   ALERT_TYPE,
-  Toast,
 } from "react-native-alert-notification";
 export default function Personal({ type }) {
   const navigation = useNavigation();

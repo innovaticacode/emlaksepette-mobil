@@ -105,10 +105,15 @@ import CollectionsTab from "./pages/Home/Panel/CollectionsTab";
 import SwapForm from "./pages/Home/RealtorPages/SwapForm";
 import { Button } from "react-native";
 import VerifyScreen from "./pages/Home/VerifyScreen";
+
 import TypeListScreen from "./components/TypeListScreen";
 import Onboard from "./pages/Home/Onboarding/Onboard";
 import { View } from "moti";
 import SplasScreen from "./pages/Home/Onboarding/SplasScreen";
+
+
+import Toast from 'react-native-toast-message';
+import { AlertNotificationRoot } from 'react-native-alert-notification';
 
 
 const Stack = createNativeStackNavigator();
@@ -123,7 +128,16 @@ export default function App({ route }) {
   const [selectedTypes, setSelectedTypes] = useState([]);
  
 
+
+
+  const App = () => {
+
+
  
+  
+
+  
+
   function StepScreen({
     step,
     navigation,
@@ -173,6 +187,7 @@ export default function App({ route }) {
     return <SplasScreen />;
   }
   return (
+    <AlertNotificationRoot>
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator
@@ -1133,5 +1148,6 @@ export default function App({ route }) {
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
+    </AlertNotificationRoot>
   );
 }
