@@ -39,7 +39,7 @@ export default function SliderBar() {
       text: "Al Sat Acil",
       image: "https://private.emlaksepette.com/images/al-sat-acil-image.png",
       color: "#FF0000",
-      url: "https://private.emlaksepette.com/kategori/al-sat-acil",
+      url: "",
     },
     {
       text: "Emlak Kulüp",
@@ -64,11 +64,11 @@ export default function SliderBar() {
         }}
       >
         {firstBrands.map((item, i) => (
-          <View style={{ width: 80, marginLeft: 3, alignItems: "center" }}>
+          <View style={{ width: 80, marginLeft: 3, alignItems: "center" }} key={i}>
             <SliderItem
               navigationStatus={true}
               borderColor={item.color}
-              key={i}
+            
               image={item.image}
               url={item.url}
             />

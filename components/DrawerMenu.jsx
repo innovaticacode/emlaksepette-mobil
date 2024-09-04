@@ -15,6 +15,7 @@ import IconAntDesign from 'react-native-vector-icons/AntDesign'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { color } from "@rneui/base";
 import Search from "../pages/Home/Search";
+import axios from "axios";
 const { width, height } = Dimensions.get("window");
 
 const DrawerMenu = ({ setIsDrawerOpen }) => {
