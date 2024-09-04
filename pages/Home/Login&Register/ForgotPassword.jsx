@@ -50,7 +50,7 @@ export default function ForgotPassword() {
   const postData = async () => {
     if (isCooldown) {
       Dialog.show({
-        type: ALERT_TYPE.DANGER,
+        type: ALERT_TYPE.WARNING,
         title: "Lütfen Bekleyin...",
         textBody: `E-posta gönderimi için ${Math.ceil(cooldownTime / 1000)} saniye kaldı.`,
         button: "Tamam",
