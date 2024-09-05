@@ -210,6 +210,7 @@ export default function PostDetail() {
       setloading(false); // İstek tamamlandığında loading durumunu false yap
     }
   };
+
   console.log(houseId);
   useEffect(() => {
     fetchDetails();
@@ -585,14 +586,14 @@ export default function PostDetail() {
     // Eğer data?.housing?.user?.phone varsa ve area_code mevcutsa
     if (data?.housing?.user?.phone && data?.housing?.user?.area_code) {
       // Alan kodu ve telefon numarasını birleştir
-      phoneNumber = `90${data.housing.user.area_code}${data.housing.user.phone}`;
+      phoneNumber = `90${data.housing?.user.area_code}${data?.housing?.user?.phone}`;
     }
     // Eğer data?.housing?.mobile_phone varsa
-    else if (data?.housing?.mobile_phone) {
+    else if (data?.housing?.user.mobile_phone) {
       // Telefon numarası başında 0 ile başlıyorsa 0'ı kaldır ve +90 ekle
-      phoneNumber = data.housing.mobile_phone.startsWith("0")
-        ? `90${data.housing.mobile_phone.slice(1)}`
-        : `90${data.housing.mobile_phone}`;
+      phoneNumber = data.housing?.user?.mobile_phone.startsWith("0")
+        ? `90${data.housing?.user?.mobile_phone.slice(1)}`
+        : `90${data.housing?.user?.mobile_phone}`;
     }
 
     // Telefon numarasını kontrol et ve URL'yi oluştur
