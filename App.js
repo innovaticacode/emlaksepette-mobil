@@ -126,17 +126,6 @@ export default function App({ route }) {
 
   const [housingTypes, setHousingTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
- 
-
-
-
-  const App = () => {
-
-
- 
-  
-
-  
 
   function StepScreen({
     step,
