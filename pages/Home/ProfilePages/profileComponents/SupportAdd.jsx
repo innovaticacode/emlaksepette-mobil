@@ -174,7 +174,9 @@ export default function SupportAdd() {
         Dialog.show({
           type: ALERT_TYPE.DANGER,
           title: "Hata!",
-          textBody: `Bir hata oluştu: ${ response.data.message || "Bilinmeyen hata"}`,
+          textBody: `Bir hata oluştu: ${
+            response.data.message || "Bilinmeyen hata"
+          }`,
           button: "Tamam",
         });
       }
@@ -185,7 +187,9 @@ export default function SupportAdd() {
         Dialog.show({
           type: ALERT_TYPE.DANGER,
           title: "Hata",
-          textBody: `Talebiniz oluşturulamadı: ${error.response.data.message || error.message}`,
+          textBody: `Talebiniz oluşturulamadı: ${
+            error.response.data.message || error.message
+          }`,
           button: "Tamam",
         });
       } else {
@@ -386,6 +390,7 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: "#f0f0f0",
     borderRadius: 8,
+    marginBottom: 10,
   },
   pdfText: {
     fontSize: 16,
