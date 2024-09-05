@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet, FlatList } from 'react-native';
+import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet, FlatList, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon3 from 'react-native-vector-icons/FontAwesome';
@@ -102,7 +102,9 @@ const RealtorClub = () => {
       <View style={styles.cardsSection}>
         <Text style={styles.title}>Emlak Kulüp ile Sende Kazan!</Text>
         <View style={styles.card}>
-          <Icon2 name="home-account" size={30} color="#EC302E" style={styles.icon} />
+          <View style={styles.iconContainer}>
+            <Icon2 name="home-account" size={30} color="#EC302E" style={styles.icon} />
+          </View>
           <View style={styles.cardTextContainer}>
             <Text style={styles.cardTitle}>Emlak Kulübe Üye Ol!</Text>
             <Text style={styles.cardText}>
@@ -113,7 +115,9 @@ const RealtorClub = () => {
         <View style={styles.divider} />
 
         <View style={styles.card}>
-          <Icon2 name="image-multiple" size={30} color="#EC302E" style={styles.icon} />
+          <View style={styles.iconContainer}>
+            <Icon2 name="image-multiple" size={30} color="#EC302E" style={styles.icon} />
+          </View>
           <View style={styles.cardTextContainer}>
             <Text style={styles.cardTitle}>Koleksiyon Oluştur.</Text>
             <Text style={styles.cardText}>
@@ -124,7 +128,9 @@ const RealtorClub = () => {
         <View style={styles.divider} />
 
         <View style={styles.card}>
-          <Icon3 name="share-square-o" size={30} color="#EC302E" style={styles.icon} />
+          <View style={styles.iconContainer}>
+            <Icon3 name="share-square-o" size={30} color="#EC302E" style={styles.icon} />
+          </View>
           <View style={styles.cardTextContainer}>
             <Text style={styles.cardTitle}>Koleksiyonunu Paylaş!</Text>
             <Text style={styles.cardText}>
@@ -135,7 +141,10 @@ const RealtorClub = () => {
         <View style={styles.divider} />
 
         <View style={styles.card}>
-          <Icon4 name="hand-holding-dollar" size={30} color="#EC302E" style={styles.icon} />
+
+          <View style={styles.iconContainer}>
+            <Icon4 name="handshake-simple" size={30} color="#EC302E" style={styles.icon} />
+          </View>
           <View style={styles.cardTextContainer}>
             <Text style={styles.cardTitle}>Sende Kazan!</Text>
             <Text style={styles.cardText}>
@@ -168,7 +177,7 @@ const RealtorClub = () => {
 
 
       <View style={styles.infoSection}>
-        <View style={styles.iconContainer}>
+        <View style={styles.iconContainer2}>
           <Icon2 name="home-account" size={120} color="#EC302E" style={styles.iconBase} />
           <Icon2 name="home-account" size={80} color="#EC302E" style={styles.iconMiddle} />
           <Icon2 name="home-account" size={80} color="#EC302E" style={styles.iconTop} />
@@ -220,10 +229,10 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: width * 0.8,  // ekran genişliğinin %80'i
-    height: height * 0.35, // ekran yüksekliğinin %35'i
+    height: height * 0.5, // ekran yüksekliğinin %35'i
     position: 'absolute',
-    bottom: 40,
-    left: -20,
+    paddingBottom: 150,
+    paddingLeft: 40,
   },
   circleImage: {
     width: '100%',
@@ -235,7 +244,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#0C0C0C',
     marginBottom: 8,
@@ -261,20 +270,39 @@ const styles = StyleSheet.create({
     height: 112,
   },
   cardTextContainer: {
-    marginLeft: 10,
+    marginTop: 10,
+    marginLeft: 40,
+    paddingRight: 40,
     flex: 1,
   },
-  icon: {
-    marginRight: 40,
-    marginLeft: 40,
-  },
-  icon2: {
-
-  },
+  
   iconContainer: {
+    width: 70,
+    height: 70,
+    borderRadius: 40,
+    backgroundColor: 'rgba(255, 0, 0, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconContainer2: {
     position: 'relative',
     width: 100,
     height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    // iOS için siyah gölge
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',           // Siyah gölge
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.6,            // Gölgede opaklık yüksek
+        shadowRadius: 3.84,
+      },
+      android: {
+        elevation: 10,                 // Android'de daha yoğun gölge efekti
+      },
+    }),
   },
   iconBase: {
     position: 'absolute',
@@ -312,19 +340,24 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   mainSubtitle: {
-    fontSize: 24,
+    fontSize: 22,
     color: '#0C0C0C',
     textAlign: 'center',
     marginTop: 30,
-    padding: 10,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    paddingLeft: 30,
+    paddingRight: 30,
 
   },
   mainText: {
-    fontSize: 14,
-    lineHeight: 20,
-    marginTop: -10,
-    padding: 20,
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+    lineHeight: 22, // Satır arası boşluk
+    paddingTop: 20,
+    paddingLeft: 25,
+    paddingRight: 25,
+    paddingBottom: 25,
   },
   ctaButton: {
     backgroundColor: '#EC302E',
@@ -356,14 +389,15 @@ const styles = StyleSheet.create({
   },
   infoSection: {
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 60,
     padding: 20,
     borderRadius: 10,
-    backgroundColor: '#f7f7f7', // Arka plan rengi
-    top: 50,
+    
   },
   infoSection2: {
-    top: 25,
+    marginTop: 25,
+    paddingLeft: 20,
+    paddingRight:20,
   },
   description: {
     fontSize: 16,
@@ -376,8 +410,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginTop: 30,
-    top: 20,
-
   },
   faqTitle: {
     fontSize: 25,
@@ -439,8 +471,9 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   SSS:{
-    top: 100,
-  }
+    marginTop: 50,
+    padding: 20,
+  },
 
 });
 
