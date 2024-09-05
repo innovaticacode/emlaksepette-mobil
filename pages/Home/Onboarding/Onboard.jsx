@@ -68,7 +68,7 @@ export default function Onboard() {
         <FirstPage content={
             <View style={{gap:10}}>
             <Text style={{fontSize:22,color:'white',fontWeight:'600',textAlign:'center'}}>Tek Tıkla Al, Sat, Kirala!</Text>
-            <Text style={{fontSize:15,color:'white',fontWeight:'400',textAlign:'center'}}>Tek tıkla aradığınız evi bulabilir ya da satıp kiralayabileceğniz yep yeni bir platform, Emlak Sepette.</Text>
+            <Text style={{fontSize:15,color:'white',fontWeight:'400',textAlign:'center'}}>Tek tıkla aradığınız evi bulabileceğiniz veya satıp, kiralayabileceğniz yepyeni bir platform, Emlak Sepette.</Text>
             </View>
         } ımage={<ImageBackground source={require('./onboarding2.png')} style={{width:'100%',height:'100%'}} resizeMode='contain'/>}/>
     </View>
@@ -76,8 +76,8 @@ export default function Onboard() {
     <FirstPage 
      content={
         <View style={{gap:10}}>
-        <Text style={{fontSize:22,color:'white',fontWeight:'600',textAlign:'center'}}>Emlak Sepette, en uygun alıcıları size getirir!</Text>
-        <Text style={{fontSize:15,color:'white',fontWeight:'400',textAlign:'center'}}>Hızlı Sat ile Emlak Sepette sizin için alıcıları çok daha hızlı bir şekilde bulur.</Text>
+        <Text style={{fontSize:22,color:'white',fontWeight:'600',textAlign:'center'}}>Emlak Sepette, en uygun alıcıları en hızlı şekilde sizlerle buluşturur.</Text>
+        <Text style={{fontSize:15,color:'white',fontWeight:'400',textAlign:'center'}}>Hızlı Sat seçeneği ile Emlak Sepette sizin için alıcıları çok daha hızlı bir şekilde bulur.</Text>
         </View>
     }
     ımage={<ImageBackground source={require('./onboarding3.png')} style={{width:'100%',height:'100%'}} resizeMode='contain'/>}
