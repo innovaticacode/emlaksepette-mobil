@@ -36,12 +36,7 @@ export default function MyComments() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/user/${user?.id}/comments`,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
+          `https://private.emlaksepette.com/api/user/${user?.id}/comments`
         );
         const sortedComments = response.data.allComments.sort((a, b) => {
           const dateA = new Date(a.comment.created_at);
@@ -49,7 +44,6 @@ export default function MyComments() {
           return dateB - dateA; // Descending order
         });
         setcomments(sortedComments);
-
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -88,27 +82,26 @@ export default function MyComments() {
     return (
       <View style={styles.card}>
         <View style={styles.cardContent}>
-        <TouchableOpacity style={{padding: 12}} onPress={handleNavigate}>
-          <View style={styles.imageTitleContainer}>
-            <View style={styles.imageContainer}>
-              <ImageBackground
-                source={{ uri: imageSource }}
-                style={styles.image}
-              />
+          <TouchableOpacity style={{ padding: 12 }} onPress={handleNavigate}>
+            <View style={styles.imageTitleContainer}>
+              <View style={styles.imageContainer}>
+                <ImageBackground
+                  source={{ uri: imageSource }}
+                  style={styles.image}
+                />
+              </View>
+              <View style={styles.textContainer}>
+                <Text style={styles.title} numberOfLines={2}>
+                  {info?.project_title || info?.title}
+                </Text>
+                <Text style={styles.listingIdText}>
+                  {type === "project"
+                    ? `İlan No: ${info.id + 1000000}`
+                    : `İlan No: ${info.id + 2000000}`}
+                </Text>
+              </View>
             </View>
-            <View style={styles.textContainer}>
-              <Text style={styles.title} numberOfLines={2}>
-                {info?.project_title ||
-                  info?.description.replace(/<\/?[^>]+(>|$)/g, "")}
-              </Text>
-              <Text style={styles.listingIdText}>
-                {type === "project"
-                  ? `İlan No: ${info.id + 1000000}`
-                  : `İlan No: ${info.id + 2000000}`}
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
         </View>
         <TouchableOpacity
           style={styles.editButton}
@@ -196,7 +189,6 @@ export default function MyComments() {
           goToEditComment={goToEditComment}
         />
       ))}
-
 
       <Modal
         isVisible={choose}
