@@ -26,14 +26,23 @@ export default function MyComments() {
     try {
       if (user?.access_token && user) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/user/${user?.id}/comments`
+          `https://private.emlaksepette.com/api/user/${user?.id}/comments`,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
         );
-        setcomments(response.data);
+
+        // Yanıtı kontrol edin ve state'e aktarın
+        setcomments(response.data?.allComments || []); // Yanıtı comments state'ine aktar
+        console.log(response.data?.allComments); // Konsola dönen veriyi yazdır
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, [user]);
@@ -181,15 +190,19 @@ export default function MyComments() {
       contentContainerStyle={{ gap: 10, padding: 10 }}
       style={{ flex: 1, backgroundColor: "#fff" }}
     >
-      {comments?.map((item, index) => (
-        <MycommentItem
-          key={index}
-          ProjectInfo={item?.project}
-          comment={item?.comment}
-          EditComment={EditComment}
-          goToEditComment={goToEditComment}
-        />
-      ))}
+      {comments?.length > 0 ? (
+        comments.map((item, index) => (
+          <MycommentItem
+            key={index}
+            ProjectInfo={item?.project}
+            comment={item?.comment}
+            EditComment={EditComment}
+            goToEditComment={goToEditComment}
+          />
+        ))
+      ) : (
+        <Text>Henüz değerlendirmeniz yok.</Text>
+      )}
 
       <Modal
         isVisible={choose}
