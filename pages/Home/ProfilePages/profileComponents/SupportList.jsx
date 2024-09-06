@@ -46,6 +46,9 @@ export default function SupportList() {
     getValueFor("user", setUser);
   }, []);
 
+  const [pdfFile, setPdfFile] = useState([]);
+  const [selectedPdf, setSelectedPdf] = useState(null);
+
   useEffect(() => {
     if (user.access_token) {
       // API'den veriyi çekme
@@ -54,9 +57,15 @@ export default function SupportList() {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
-        }) // API URL'ini buraya girin
+        })
         .then((response) => {
-          setSupportData(response.data.data); // Gelen veriyi state'e kaydedin
+          const data = response.data.data;
+          setSupportData(data); // Gelen veriyi state'e kaydedin
+
+          // file_path'leri çıkarıp pdfFile state'ine aktarın
+          const paths = data.map((item) => item.file_path);
+          setPdfFile(paths);
+          console.log("PDF File Paths:", paths); // PDF dosya yollarını konsola yazdırın
         })
         .catch((error) => {
           console.error("API Hatası:", error); // Hata detaylarını konsola yazdır
@@ -219,41 +228,47 @@ export default function SupportList() {
                       }}
                     >
                       <View style={{ width: "45%" }}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            download(support.file_path);
-                          }}
-                          style={{
-                            backgroundColor: "rgba(234, 43, 46, 0.2)",
-                            borderRadius: 5,
-                            padding: 10,
-                            flex: 1 / 2,
-                          }}
-                        >
-                          <View
+                        {support.file_path && (
+                          <TouchableOpacity
+                            onPress={() => {
+                              download(support.file_path);
+                            }}
                             style={{
-                              flexDirection: "row",
-                              alignItems: "center",
-                              justifyContent: "center",
+                              backgroundColor: "rgba(234, 43, 46, 0.2)",
+                              borderRadius: 5,
+                              padding: 10,
+                              flex: 1 / 2,
                             }}
                           >
-                            <AntDesign
-                              style={{ marginRight: 0 }}
-                              name="pdffile1"
-                              color={"red"}
-                            />
-                            <Text
+                            <View
                               style={{
-                                textAlign: "center",
-                                color: "red",
-                                marginLeft: 10,
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "center",
                               }}
-                              numberOfLines={1}
                             >
-                              {support.file_path}
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
+                              <AntDesign
+                                style={{ marginRight: 0 }}
+                                name="pdffile1"
+                                color={"red"}
+                              />
+                              <Text
+                                style={{
+                                  textAlign: "center",
+                                  color: "red",
+                                  marginLeft: 10,
+                                }}
+                                numberOfLines={1}
+                              >
+                                {pdfFile}
+                                {/* {support.file_path} */}
+                                {/* {pdfFile.map((file, i) => (
+                        <Text>{file}</Text>
+                      ))} */}
+                              </Text>
+                            </View>
+                          </TouchableOpacity>
+                        )}
                       </View>
                       {support.return_support ? (
                         <View style={{ width: "45%" }}>
@@ -310,6 +325,7 @@ export default function SupportList() {
                         </View>
                       )}
                     </View>
+                    <View></View>
                   </TouchableOpacity>
                 </View>
               ))
