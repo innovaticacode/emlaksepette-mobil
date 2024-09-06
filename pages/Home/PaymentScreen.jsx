@@ -126,11 +126,6 @@ export default function PaymentScreen() {
           setSelectedDocumentName(pdfAsset.name);
           console.log(pdfAsset.uri);
           setselectedPdfUrl(pdfAsset.uri);
-          // Toast.show({
-          //   type: ALERT_TYPE.SUCCESS,
-          //   title: "PDF Seçildi",
-          //   textBody: `Seçtiğiniz PDF: ${pdfAsset.name}`,
-          // });
           console.log(selectedDocumentName);
         }
       })

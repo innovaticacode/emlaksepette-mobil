@@ -18,7 +18,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 export default function UsersList() {
@@ -66,10 +65,11 @@ export default function UsersList() {
             },
           }
         );
-        Toast.show({
+        Dialog.show({
           type: ALERT_TYPE.SUCCESS,
-          title: "Silme Başarılı",
-          textBody: `${selectedUserName} Adlı kullanıcı silindi`,
+          title: "Başarılı",
+          textBody: `${selectedUserName} Adlı kullanıcı silindi.`,
+          button: "Tamam",
         });
         setopenDeleteModal(false);
         fetchData();
@@ -126,11 +126,11 @@ export default function UsersList() {
           },
         }
       );
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        title: `Silme işlemi başarılı`,
-        titleStyle: { fontSize: 14 },
-        textBody: `${userList.length} Kullanıcı Silindi`,
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: `Başarılı`,
+        textBody: `${userList.length} Kullanıcı Silindi.`,
+        button: "Tamam",
       });
       fetchData();
       setuserList([]);
@@ -153,11 +153,11 @@ export default function UsersList() {
           },
         }
       );
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        title: `Silme işlemi başarılı`,
-        titleStyle: { fontSize: 14 },
-        textBody: `${SelectedUserIDS.length} Kullanıcı Silindi`,
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: `Başarılı.`,
+        textBody: `${SelectedUserIDS.length} Kullanıcı Silindi.`,
+        button: "Tamam",
       });
       fetchData();
       setSelectedUserIDS([]);

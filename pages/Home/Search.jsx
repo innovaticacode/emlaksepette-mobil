@@ -22,7 +22,7 @@ import slugify from "react-slugify";
 import { Platform } from "react-native";
 const { width, height } = Dimensions.get("window");
 
-export default function Search({ onpres }) {
+export default function Search({ onpres ,setIsDrawerOpen}) {
   const navigation = useNavigation();
   const [search, setSearch] = useState("");
 
@@ -52,16 +52,22 @@ export default function Search({ onpres }) {
   return (
     <SafeAreaView
       onTouchStart={() => Keyboard.dismiss()}
-      style={{ top: 10, height: height * 0.5 }}
+      style={{ }}
     >
       <ScrollView>
-        <View style={{ flex: 1 }}></View>
+        <View style={{ flex: 1}}></View>
 
-        <View style={{ gap: 10 }}>
+        <View style={{ gap: 3 }}>
+          <TouchableOpacity onPress={()=>{
+            
+          }}>
+          <Categories category={'Ana Sayfa'} ıconName={'home'}/>
+          </TouchableOpacity>
+
           {menuItems.map((item, index) => (
             <TouchableOpacity
               onPress={() => {
-                onpres();
+                setIsDrawerOpen(false)
 
                 if (item.submenus && item.submenus.length > 0) {
                   navigation.navigate("Public", {

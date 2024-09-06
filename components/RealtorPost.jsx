@@ -22,7 +22,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import { color } from "@rneui/base";
 
@@ -478,7 +477,20 @@ export default function RealtorPost({
                 ) : (
                   <TouchableOpacity
                     style={styles.addBasket}
-                    onPress={handlePress}
+                    onPress={() => {
+                      // Metin kontrolü yapılıyor
+                      if (
+                        (housing?.step2_slug &&
+                          housing?.step2_slug === "gunluk-kiralik") ||
+                        housing?.step1_slug === "mustakil-tatil"
+                      ) {
+                        navigation.navigate("Realtor details", {
+                          houseId: HouseId,
+                        });
+                      } else {
+                        handlePress();
+                      }
+                    }}
                   >
                     {(housing?.step2_slug &&
                       housing?.step2_slug == "gunluk-kiralik") ||

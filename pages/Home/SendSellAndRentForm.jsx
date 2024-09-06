@@ -382,9 +382,8 @@ export default function SendSellAndRentForm() {
             <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
               İl
             </Text>
-            <RNPickerSelect
-              doneText="Tamam"
-              doneText="Tamam"
+            <RNPickerSelect doneText="Tamam"
+             
               value={city}
               placeholder={{
                 label: "Seçiniz...",

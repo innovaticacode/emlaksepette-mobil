@@ -18,7 +18,6 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import { getValueFor } from "../../../components/methods/user";
 import { ActivityIndicator } from "react-native-paper";
@@ -89,9 +88,9 @@ export default function CreateUserType() {
   const postData = async () => {
     if (!TypeName) {
       Dialog.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Boş Yer Bırakmayın",
-        textBody: "Lütfen Kullanıcı Rolü Giriniz",
+        type: ALERT_TYPE.WARNING,
+        title: "Hata!",
+        textBody: "Lütfen kullanıcı rolü giriniz.",
         button: "Tamam",
       });
     } else {
@@ -117,7 +116,7 @@ export default function CreateUserType() {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Başarılı",
-          textBody: "Kullanıcı Tipi Oluşturma Başarılı",
+          textBody: "Kullanıcı tipi oluşturuldu.",
           button: "Tamam",
           onPressButton: () => {
             navigation.goBack();

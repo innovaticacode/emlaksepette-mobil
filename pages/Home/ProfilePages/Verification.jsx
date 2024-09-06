@@ -15,11 +15,12 @@ import { ActivityIndicator } from "react-native-paper";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
-export default function Verification() {
+export default function Verification({nextStep,prevStep}) {
   const [codes, setCodes] = useState("");
   const inputs = useRef([]);
   const [Isucces, setIsucces] = useState(false);
   const navigation = useNavigation();
+
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("beforeRemove", (e) => {
@@ -66,13 +67,23 @@ export default function Verification() {
 
       // Kullanıcı durumunu güncelleme
       setuser(updatedUser);
-
+      
       // SecureStore ile güncellenmiş kullanıcı verilerini kaydetme
       await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     }
   };
+  const isfocused = useIsFocused();
+ 
+ 
+  
+  const [user, setuser] = useState({});
+  useEffect(() => {
+    getValueFor("user", setuser);
+  }, []);
+
+
   const handleSubmit = async () => {
     try {
       // POST isteği yap
@@ -89,7 +100,8 @@ export default function Verification() {
       updateUserData();
       setCodes("");
       setsucces(true);
-      navigation.navigate("HomePage");
+       nextStep()
+       SecureStore.setItemAsync("PhoneVerify", '1');
       setIsucces(true);
       setTimeout(() => {
         setIsucces(false);
@@ -100,10 +112,9 @@ export default function Verification() {
       setsucces(false);
     }
   };
-  const [user, setuser] = useState({});
-  useEffect(() => {
-    getValueFor("user", setuser);
-  }, []);
+
+  const [verifyStatu, setverifyStatu] = useState(null)
+
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -131,18 +142,27 @@ export default function Verification() {
     } finally {
     }
   };
-  const isfocused = useIsFocused();
+
+useEffect(() => {
+    getValueFor('PhoneVerify',setverifyStatu)
+}, [user])
 
   useEffect(() => {
-    sendPostRequest();
-    setIsActive(true);
-  }, [user]);
+      if (verifyStatu==0) {
+        sendPostRequest();
+        setIsActive(true);
+      }
+  
+
+  }, [verifyStatu]);
+
 
   const [succes, setsucces] = useState(true);
 
   const [seconds, setSeconds] = useState(180); // 3 dakika = 180 saniye
   const [isActive, setIsActive] = useState(false);
   const [showSendAgain, setshowSendAgain] = useState(false);
+
   useEffect(() => {
     let interval = null;
 
@@ -169,11 +189,14 @@ export default function Verification() {
     const seconds = timeInSeconds % 60;
     return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
   };
+console.log(verifyStatu)
+
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ padding: 10, paddingTop: 50 }}>
-        <View>
-          <Text style={{ fontSize: 30, color: "#333", fontWeight: "800" }}>
+      <View style={{ padding: 10, }}>
+        <View style={{}}>
+          <Text style={{ fontSize: 30, color: "#333", fontWeight: "800" ,textAlign:'center'}}>
             Hoş Geldiniz!
           </Text>
           <View style={{ paddingTop: 30 }}>
@@ -183,6 +206,7 @@ export default function Verification() {
                 color: "#262020",
                 fontWeight: "400",
                 letterSpacing: 0.8,
+                textAlign:'center'
               }}
             >
               Lütfen hesabınızı doğrulamak için{" "}
@@ -197,7 +221,7 @@ export default function Verification() {
           {formatTime(seconds)}
         </Text>
       </View>
-      <View style={{ paddingTop: 30 }}>
+      <View style={{ paddingTop: 30,}}>
         <View
           style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}
         >
@@ -216,7 +240,7 @@ export default function Verification() {
         <View style={{ padding: 10, paddingTop: 50, gap: 20 }}>
           <TouchableOpacity
             disabled={codes.length == 6 ? false : true}
-            onPress={handleSubmit}
+            onPress={()=>{ handleSubmit()}}
             style={{
               backgroundColor: "#EA2A28",
               padding: 9,
@@ -424,6 +448,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FCFCFC",
+    margin:33
+    
   },
   Input: {
     backgroundColor: "#ebebeb",

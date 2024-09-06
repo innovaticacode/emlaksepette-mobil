@@ -16,47 +16,48 @@ import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
-  Toast,
 } from "react-native-alert-notification";
 import Modal from "react-native-modal";
-import { Platform } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
+
 export default function ChangePassword() {
   const navigation = useNavigation();
 
   const [SecureTextForPass1, setSecureTextForPass1] = useState(true);
   const [SecuretextForNewPass, setSecuretextForNewPass] = useState(true);
-  const [SecureTextForNewPassAgain, setSecureTextForNewPassAgain] =
-    useState(true);
-  const ToggleForPass1 = () => {
-    setSecureTextForPass1(!SecureTextForPass1);
-  };
-  const ToggleForPass2 = () => {
-    setSecuretextForNewPass(!SecuretextForNewPass);
-  };
-  const ToggleForPass3 = () => {
-    setSecureTextForNewPassAgain(!SecureTextForNewPassAgain);
-  };
+  const [SecureTextForNewPassAgain, setSecureTextForNewPassAgain] = useState(true);
+
+  const ToggleForPass1 = () => setSecureTextForPass1(!SecureTextForPass1);
+  const ToggleForPass2 = () => setSecuretextForNewPass(!SecuretextForNewPass);
+  const ToggleForPass3 = () => setSecureTextForNewPassAgain(!SecureTextForNewPassAgain);
+
   const [currentPasword, setcurrentPasword] = useState("");
   const [newPassword, setnewPassword] = useState("");
   const [newPasswordconfirmation, setnewPasswordconfirmation] = useState("");
   const [changeLoading, setchangeLoading] = useState(false);
-  const [changeSuccess, setchangeSuccess] = useState(false);
   const [user, setuser] = useState({});
 
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-  const [message, setmessage] = useState({});
+
   const postData = async () => {
     setchangeLoading(true);
-
+    
+    // İşlem başladığında kullanıcıya bilgi verme
+    Dialog.show({
+      type: ALERT_TYPE.INFO,
+      title: "İşlem Devam Ediyor",
+      textBody: "Şifreniz güncelleniyor, lütfen bekleyin...",
+      button: "Tamam",
+    });
+  
     try {
       var formData = new FormData();
       formData.append("current_password", currentPasword);
       formData.append("new_password", newPassword);
       formData.append("new_password_confirmation", newPasswordconfirmation);
-
+  
       const response = await axios.post(
         "https://private.emlaksepette.com/api/client/password/update",
         formData,
@@ -67,44 +68,74 @@ export default function ChangePassword() {
         }
       );
 
-      setcurrentPasword("");
-      setnewPassword("");
-      setnewPasswordconfirmation("");
-      setchangeSuccess(true);
+      // Başarılı işlem durumunda dialog gösterimi
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Başarılı",
+        textBody: "Şifreniz başarıyla güncellendi.",
+        button: "Tamam",
+      });
+  
+      // Success durumunda Dialog'u belli bir süre sonra otomatik kapatma
       setTimeout(() => {
-        setchangeSuccess(false);
-      }, 5000);
+        Dialog.hide();
+      }, 5000); // 5 saniye sonra otomatik kapanma
+  
     } catch (error) {
-      Toast.show({
+      console.log("Error Response:", error.response); // Hata objesini konsola yazdır
+  
+      let errorMessage = "Bilinmeyen bir hata oluştu.";
+      
+      // Error mesajını daha kapsamlı kontrol et
+      if (error.response?.data?.errors) {
+        errorMessage = Object.values(error.response.data.errors)
+          .flat()
+          .join(', ');
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+  
+      // Hata durumunda özel mesaj gösterimi
+      Dialog.show({
         type: ALERT_TYPE.DANGER,
         title: "Hata",
-        textBody: error.response.data.message,
+        textBody: `${errorMessage}`,
+        button: "Tamam",
       });
-
-      console.error("Hata:", error + "post isteği başarısız ");
+      console.log("Dialog gösterildi"); // Ekrana çıktı alır
     } finally {
       setchangeLoading(false);
     }
   };
-  const HandleSunmit = () => {
-    if (currentPasword && newPassword && newPasswordconfirmation) {
-      postData();
+  
+  const HandleSubmit = () => {
+    if (!currentPasword || !newPassword || !newPasswordconfirmation) {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Eksik Bilgi",
+        textBody: "Lütfen tüm alanları doldurduğunuzdan emin olun.",
+        button: "Tamam",
+      });
+      return;
     }
+
+    if (newPassword !== newPasswordconfirmation) {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Şifreler Uyuşmuyor",
+        textBody: "Yeni şifreleriniz eşleşmiyor. Lütfen tekrar deneyin.",
+        button: "Tamam",
+      });
+      return;
+    }
+
+    postData();
   };
-  console.log(message + "dsfsdfjsd");
+
   return (
     <AlertNotificationRoot>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.container}>
-          <Text
-            style={{
-              textAlign: "center",
-              color: "green",
-              display: changeSuccess ? "flex" : "none",
-            }}
-          >
-            Şifreniz Başarıyla Güncellendi
-          </Text>
           <View style={styles.Form}>
             <View>
               <Text style={styles.label}>Mevcut Şifre</Text>
@@ -167,7 +198,7 @@ export default function ChangePassword() {
               </TouchableOpacity>
             </View>
             <View style={{ alignItems: "center" }}>
-              <TouchableOpacity style={styles.updatebtn} onPress={HandleSunmit}>
+              <TouchableOpacity style={styles.updatebtn} onPress={HandleSubmit}>
                 <Text style={styles.btnText}>Şifre Yenile</Text>
               </TouchableOpacity>
             </View>
@@ -197,6 +228,7 @@ export default function ChangePassword() {
     </AlertNotificationRoot>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -207,11 +239,9 @@ const styles = StyleSheet.create({
     gap: 30,
     width: "100%",
     paddingTop: 14,
-
     borderRadius: 5,
     paddingVertical: 22,
     paddingHorizontal: 10,
-    width: "100%",
     marginVertical: 10,
   },
   Input: {
@@ -238,34 +268,18 @@ const styles = StyleSheet.create({
   btnText: {
     textAlign: "center",
     color: "white",
-
-    fontSize: 12,
-    fontWeight: "500",
+    fontSize: 15,
+    fontWeight: "600",
   },
   modal: {
     justifyContent: "center",
-    margin: 0,
-    padding: 30,
+    alignItems: "center",
   },
   modalContent: {
-    flexDirection: "row",
+    backgroundColor: "#333",
+    borderRadius: 10,
+    padding: 20,
     justifyContent: "center",
-    backgroundColor: "transparent",
-    padding: 25,
-
-    borderRadius: 5,
     alignItems: "center",
-    gap: 20,
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
   },
 });

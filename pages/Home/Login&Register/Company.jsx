@@ -550,6 +550,7 @@ export default function Company() {
                 value={eposta}
                 onChangeText={(value) => seteposta(value)}
                 placeholder="E-Posta Adresi"
+                autoCapitalize="none" // İlk harfin büyük olmasını engeller
               />
               {errorStatu == 2 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
@@ -710,13 +711,9 @@ export default function Company() {
                 items={[
                   { label: "Emlak Ofisi", value: "Emlak Ofisi" },
                   { label: "İnşaat Ofisi", value: "İnşaat Ofisi" },
-                  { label: "Prefabrik Yapı", value: "Prefabrik Yapı" },
                   { label: "Banka", value: "Banka" },
                   { label: "Turizm", value: "Turizm" },
-                  {
-                    label: "Ustalar & Hizmetler",
-                    value: "Ustalar & Hizmetler",
-                  },
+                 
                 ]}
               />
               {errorStatu == 7 ? (

@@ -25,7 +25,11 @@ import { Polyline } from "react-native-maps";
 import AwesomeAlert from "react-native-awesome-alerts";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
-import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+} from "react-native-alert-notification";
 import * as SecureStore from "expo-secure-store";
 
 export default function Posts({
@@ -509,14 +513,14 @@ export default function Posts({
                 justifyContent: bookmarkStatus ? "space-between" : "flex-end",
               }}
             >
-              {sold?.status == 1 ? (
+              {/* {sold?.status == 1 ? (
                 <></>
               ) : (
                 user?.has_club == 1 &&
                 ((user?.role == "Bireysel Hesap" && offSaleStatus != 2) ||
                   (user.role == "Kurumsal Hesap" &&
                     user.corporate_type == "Emlak Ofisi")) &&
-                (offSaleStatus == 2 || offSaleStatus == 3) && (
+                (offSaleStatus == 2 || offSaleStatus == 3) && ( */}
                   <TouchableOpacity
                     onPress={() => {
                       changeBookmark();
@@ -532,8 +536,8 @@ export default function Posts({
                       />
                     </View>
                   </TouchableOpacity>
-                )
-              )}
+                {/* )
+              )} */}
               {sold?.status == 1 ? (
                 <></>
               ) : (

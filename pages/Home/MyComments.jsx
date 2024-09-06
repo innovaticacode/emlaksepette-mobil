@@ -36,7 +36,12 @@ export default function MyComments() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/user/${user?.id}/comments`
+          `https://private.emlaksepette.com/api/user/${user?.id}/comments`,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
         );
         const sortedComments = response.data.allComments.sort((a, b) => {
           const dateA = new Date(a.comment.created_at);
@@ -44,6 +49,7 @@ export default function MyComments() {
           return dateB - dateA; // Descending order
         });
         setcomments(sortedComments);
+
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -190,6 +196,7 @@ export default function MyComments() {
           goToEditComment={goToEditComment}
         />
       ))}
+
 
       <Modal
         isVisible={choose}

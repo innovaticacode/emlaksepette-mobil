@@ -25,21 +25,23 @@ import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import {
   ALERT_TYPE,
-  Dialog,
   AlertNotificationRoot,
-  Toast,
+  Dialog,
 } from "react-native-alert-notification";
 export default function Favorites() {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
   const [favorites, setFavorites] = useState([]);
   const focused = useIsFocused();
-  const [loading, setLoading] = useState(false);
+
 
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
+
+  const [hasHousingFavorites, setHasHousingFavorites] = useState(false);
+  const [hasProjectFavorites, setHasProjectFavorites] = useState(false);
 
   const fetchFavorites = async () => {
     try {
@@ -54,12 +56,11 @@ export default function Favorites() {
       setFavorites(Object.values(response.data.mergedFavorites));
     } catch (error) {
       console.error("Error fetching favorites:", error);
-      // Hata durumunda kullanıcıya bir mesaj gösterilebilir
     } finally {
       setLoading(false);
     }
   };
-  console.log(favorites);
+
 
   useEffect(() => {
     if (user.access_token) {
@@ -95,12 +96,11 @@ export default function Favorites() {
   const onRefresh = async () => {
     setRefreshing(true);
     try {
-      await fetchFavorites(); // Verileri yeniden yükleyin
+      await fetchFavorites();
     } finally {
       setRefreshing(false);
     }
   };
-  // İlk renderda verileri yükleyin
 
   const [ModalForAddToCart, setModalForAddToCart] = useState(false);
   const [selectedCartItem, setselectedCartItem] = useState(0);
@@ -180,6 +180,7 @@ export default function Favorites() {
     }
   };
 
+  // DELETE ALL FUNCTION START
   const deleteRequestWithToken = async () => {
     try {
       const response = await axios.delete(
@@ -190,15 +191,24 @@ export default function Favorites() {
           },
         }
       );
-      Alert.alert("Başarılı", "Silme işlemi başarılı!");
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Başarılı",
+        textBody: `${FavoriteRemoveIDS.length} Tüm ilanlar favorilerden kaldırıldı.`,
+        button: "Tamam",
+      });
       fetchFavorites();
       setmodalForDeleteFavorites(false);
-      console.log("Delete request successful:", response.data);
     } catch (error) {
-      Alert.alert("Hata", "Silme işlemi başarısız oldu!");
-      console.error("Error making DELETE request:", error);
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Hata",
+        textBody: "Tümünü Silme işlemi başarısız oldu!",
+        button: "Tamam",
+      });
     }
   };
+
   const deleteRequestWithTokenProject = async () => {
     try {
       const response = await axios.delete(
@@ -209,17 +219,26 @@ export default function Favorites() {
           },
         }
       );
-      Alert.alert("Başarılı", "Silme işlemi başarılı!");
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Başarılı",
+        textBody: `${FavoriteRemoveIDS.length} Tüm ilanlar favorilerden kaldırıldı.`,
+        button: "Tamam",
+      });
       fetchFavorites();
       setmodalForDeleteFavorites(false);
-      console.log("Delete request successful:", response.data);
     } catch (error) {
-      Alert.alert("Hata", "Silme işlemi başarısız oldu!");
-      console.error("Error making DELETE request:", error);
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Hata!",
+        textBody: "Tümünü Silme işlemi başarısız oldu.",
+        button: "Tamam",
+      });
     }
   };
-  const [modalForDeleteFavorites, setmodalForDeleteFavorites] = useState(false);
+  // DELETE ALL FUNCTION END
 
+  const [modalForDeleteFavorites, setmodalForDeleteFavorites] = useState(false);
   const [setFavoriteRemoveItem, setsetFavoriteRemoveItem] = useState(0);
   const SelectFavorite = (id) => {
     setFavoriteRemoveIDS((prevIds) => {
@@ -230,55 +249,73 @@ export default function Favorites() {
       }
     });
   };
-  const [FavoriteRemoveIDSForProject, setFavoriteRemoveIDSForProject] =
-    useState([]);
+  const [FavoriteRemoveIDSForProject, setFavoriteRemoveIDSForProject] = useState([]);
 
-  console.log(FavoriteRemoveIDS);
+
+  // BATCH SELECTION - DELETE FUNCTION STAT
+  const [isChoosed, setIsChoosed] = useState(false); // Toplu seçim modu
+  const [FavoriteRemoveIDS, setFavoriteRemoveIDS] = useState([]); // Silinecek ilanların ID'leri
+  const [loading, setLoading] = useState(false); // Yüklenme durumu
+  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] = useState(false); // Modal durumu
+
+  const handleToggleSelect = () => {
+    setIsChoosed(!isChoosed); // Toplu seçim modunu değiştir
+    if (!isChoosed) {
+      setFavoriteRemoveIDS([]); // Toplu seçim modundan çıkıldığında seçili ID'leri temizle
+    }
+  };
+
   const deleteSelectedFavorite = async () => {
+    setLoading(true); // İşlem başladığında yüklenme durumu aktif edilir
     const data = {
       housing_ids: FavoriteRemoveIDS,
     };
+
     try {
-      const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/favorites/delete",
-        {
-          data: data,
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
-      Toast.show({
-        type: ALERT_TYPE.WARNING,
-        title: `Silme işlemi başarılı`,
-        titleStyle: { fontSize: 14 },
-        textBody: `${FavoriteRemoveIDS.length} İlan silindi`,
+      // Axios DELETE isteği
+      const response = await axios({
+        method: 'delete',
+        url: 'https://private.emlaksepette.com/api/institutional/favorites/delete',
+        data: data,
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
       });
-      fetchFavorites();
-      setFavoriteRemoveIDS([]);
-      setFavoriteRemoveIDSForProject([]);
-      setRemoveSelectedCollectionsModal(false);
-      console.log("Delete request successful:", response.data);
-      setisChoosed(false);
+
+      if (response.status === 200) {
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Başarılı",
+          textBody: `${FavoriteRemoveIDS.length} İlan favorilerden kaldırıldı.`,
+          button: "Tamam",
+        });
+
+        fetchFavorites(); // Favori ilanları yeniden yükle
+        setFavoriteRemoveIDS([]); // Seçili ilanları temizle
+        setRemoveSelectedCollectionsModal(false); // Modal'ı kapat
+        setIsChoosed(false); // Toplu seçim modunu kapat
+      } else {
+        Dialog.show({
+          type: ALERT_TYPE.WARNING,
+          title: "Hata!",
+          textBody: "Silme işlemi başarısız oldu.",
+          button: "Tamam",
+        });
+      }
+
     } catch (error) {
-      Alert.alert("Hata", "Silme işlemi başarısız oldu!");
-      console.error("Error making DELETE request:", error);
+      // Hata durumunda kullanıcıya geri bildirim sağla
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Hata!",
+        textBody: "Silme işlemi başarısız oldu.",
+        button: "Tamam",
+      });
+    } finally {
+      setLoading(false); // İşlem tamamlandıktan sonra yüklenme durumunu kapat
     }
   };
-
-  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
-    useState(false);
-
-  const [isChoosed, setisChoosed] = useState(false);
-  const [FavoriteRemoveIDS, setFavoriteRemoveIDS] = useState([]);
-
-  const handleToggleSelect = () => {
-    if (isChoosed) {
-      // Seçimi iptal et
-      setFavoriteRemoveIDS([]); // Seçili ilanları temizle
-    }
-    setisChoosed(!isChoosed); // Toplu seçimi aç/kapat
-  };
+  // BATCH SELECTION - DELETE FUNCTION END
 
   return (
     <>
@@ -350,368 +387,381 @@ export default function Favorites() {
               </View>
             </>
           ) : (
-            <AlertNotificationRoot>
-              <GestureHandlerRootView>
-                <View
-                  style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <View style={{ flexDirection: "row", gap: 10 }}>
-                    <TouchableOpacity
+
+            <>
+              <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <View style={{ flexDirection: "row", gap: 10 }}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#EEEDEB",
+                      padding: 7,
+                      borderRadius: 5,
+                      borderWidth: 1,
+                      borderColor: "#ebebeb",
+                    }}
+                    onPress={() => {
+                      setmodalForDeleteFavorites(true);
+                    }}
+                  >
+                    <Text
                       style={{
-                        backgroundColor: "#EEEDEB",
-                        padding: 7,
-                        borderRadius: 5,
-                        borderWidth: 1,
-                        borderColor: "#ebebeb",
-                      }}
-                      onPress={() => setmodalForDeleteFavorites(true)}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          textAlign: "center",
-                          fontWeight: "bold",
-                          color: "#333",
-                        }}
-                      >
-                        Tümünü Sil
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: "#EEEDEB",
-                        padding: 7,
-                        borderRadius: 5,
-                        borderWidth: 1,
-                        borderColor: "#ebebeb",
-                      }}
-                      onPress={handleToggleSelect} // Burada fonksiyon çağrılıyor
-                    >
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          textAlign: "center",
-                          fontWeight: "bold",
-                          color: "#333",
-                        }}
-                      >
-                        {isChoosed ? "Seçimi İptal Et" : "Toplu Seç"}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  {isChoosed && (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 10,
+                        fontSize: 12,
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        color: "#333",
                       }}
                     >
-                      <Text>
-                        Seçili(
-                        {FavoriteRemoveIDS.length})
-                      </Text>
-                      <View>
-                        <TouchableOpacity
-                          style={[
-                            styles.btnRemove,
-                            { paddingLeft: 10, paddingRight: 10 },
-                          ]}
-                          onPress={() =>
+                      Tümünü Sil
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#EEEDEB",
+                      padding: 7,
+                      borderRadius: 5,
+                      borderWidth: 1,
+                      borderColor: "#ebebeb",
+                    }}
+
+                    onPress={() => {
+                      handleToggleSelect(); // Toplu seçim modunu aç/kapat
+                    }}
+
+                  >
+                    <Text
+                      style={{
+                        fontSize: 12,
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        color: "#333",
+                      }}
+                    >
+                      {isChoosed ? 'Seçimi İptal Et' : 'Toplu Seç'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {isChoosed && (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                  >
+                    <Text>
+                      Seçili(
+                      {FavoriteRemoveIDS.length}
+                      )
+                    </Text>
+                    <View>
+                      <TouchableOpacity
+                        style={[
+                          styles.btnRemove,
+                          { paddingLeft: 10, paddingRight: 10 },
+                        ]}
+                        onPress={() => {
+                          if (FavoriteRemoveIDS.length === 0) {
+                            Dialog.show({
+                              type: ALERT_TYPE.WARNING,
+                              title: "Hata!",
+                              textBody: "Silmek için seçim yapmadınız.",
+                              button: "Tamam",
+                            });
+                          } else {
                             setRemoveSelectedCollectionsModal(true)
                           }
-                        >
-                          <Icon2 name="trash" size={18} color={"white"} />
-                        </TouchableOpacity>
-                      </View>
+                        }}
+
+
+                      >
+                        <Icon2 name="trash" size={18} color={"white"} />
+                      </TouchableOpacity>
                     </View>
-                  )}
-                </View>
+                  </View>
+                )}
+              </View>
 
-                <AwesomeAlert
-                  show={RemoveSelectedCollectionsModal}
-                  showProgress={false}
-                  titleStyle={{
-                    color: "#333",
-                    fontSize: 13,
-                    fontWeight: "700",
-                    textAlign: "center",
-                    margin: 5,
-                  }}
-                  title={`${FavoriteRemoveIDS.length} Seçili Koleksiyonu silmek istediğinize emin misin`}
-                  messageStyle={{ textAlign: "center" }}
-                  closeOnTouchOutside={true}
-                  closeOnHardwareBackPress={false}
-                  showCancelButton={true}
-                  showConfirmButton={true}
-                  cancelText="Hayır"
-                  confirmText="Evet"
-                  cancelButtonColor="#ce4d63"
-                  confirmButtonColor="#1d8027"
-                  onCancelPressed={() => {
-                    setRemoveSelectedCollectionsModal(false);
-                  }}
-                  onConfirmPressed={() => {
-                    deleteSelectedFavorite();
-                  }}
-                  confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-                  cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-                />
+              <AwesomeAlert
+                show={RemoveSelectedCollectionsModal}
+                showProgress={false}
+                titleStyle={{
+                  color: "#333",
+                  fontSize: 13,
+                  fontWeight: "700",
+                  textAlign: "center",
+                  margin: 5,
+                }}
+                title={`${FavoriteRemoveIDS.length} Seçili Koleksiyonu silmek istediğinize emin misin`}
+                messageStyle={{ textAlign: "center" }}
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showCancelButton={true}
+                showConfirmButton={true}
+                cancelText="Hayır"
+                confirmText="Evet"
+                cancelButtonColor="#ce4d63"
+                confirmButtonColor="#1d8027"
+                onCancelPressed={() => {
+                  setRemoveSelectedCollectionsModal(false);
+                }}
+                onConfirmPressed={() => {
+                  deleteSelectedFavorite(true);
+                }}
+                confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+                cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+              />
 
-                <AwesomeAlert
-                  show={modalForDeleteFavorites}
-                  showProgress={false}
-                  title={"Tümünü Sil"}
-                  message={"Tüm Favorileri Silmek İstediğinize Emin misiniz?"}
-                  closeOnTouchOutside={true}
-                  closeOnHardwareBackPress={false}
-                  showCancelButton={true}
-                  showConfirmButton={true}
-                  cancelText="Hayır"
-                  confirmText="Evet"
-                  cancelButtonColor="#1d8027"
-                  confirmButtonColor="#ce4d63"
-                  onCancelPressed={() => {
-                    setmodalForDeleteFavorites(false);
-                  }}
-                  onConfirmPressed={() => {
-                    deleteRequestWithToken();
-                    deleteRequestWithTokenProject();
-                  }}
-                />
-                <ScrollView
-                  refreshControl={
-                    <RefreshControl
-                      refreshing={refreshing}
-                      onRefresh={onRefresh}
-                    />
-                  }
-                  contentContainerStyle={{}}
-                  showsVerticalScrollIndicator={false}
-                >
-                  {favorites?.map((favorite, i) => {
-                    if (favorite?.project) {
-                      var image = favorite?.project_housing?.find(
-                        (projectHousing) => {
-                          if (
-                            projectHousing.room_order == favorite?.housing_id &&
-                            projectHousing.name == "image[]" &&
-                            projectHousing.project_id == favorite?.project?.id
-                          ) {
-                            return projectHousing;
-                          }
+              <AwesomeAlert
+                show={modalForDeleteFavorites}
+                showProgress={false}
+                title={"Tümünü Sil"}
+                message={"Tüm Favorileri Silmek İstediğinize Emin misiniz?"}
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showCancelButton={true}
+                showConfirmButton={true}
+                cancelText="Hayır"
+                confirmText="Evet"
+                cancelButtonColor="#1d8027"
+                confirmButtonColor="#ce4d63"
+                onCancelPressed={() => {
+                  setmodalForDeleteFavorites(false);
+                }}
+                onConfirmPressed={() => {
+                  deleteRequestWithToken();
+                  deleteRequestWithTokenProject();
+                }}
+              />
+              <ScrollView
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+                contentContainerStyle={{}}
+                showsVerticalScrollIndicator={false}
+              >
+                {favorites?.map((favorite, i) => {
+
+                  if (favorite?.project) {
+                    var image = favorite?.project_housing?.find(
+                      (projectHousing) => {
+                        if (
+                          projectHousing.room_order == favorite?.housing_id &&
+                          projectHousing.name == "image[]" &&
+                          projectHousing.project_id == favorite?.project?.id
+                        ) {
+                          return projectHousing;
                         }
-                      )?.value;
-                      var column1 = favorite?.project_housing?.find(
-                        (projectHousing) => {
-                          if (
-                            projectHousing.room_order == favorite?.housing_id &&
-                            projectHousing.name ==
-                              favorite?.project?.list_item_values
-                                ?.column1_name +
-                                "[]" &&
-                            projectHousing.project_id == favorite?.project?.id
-                          ) {
-                            return projectHousing;
-                          }
+                      }
+                    )?.value;
+                    var column1 = favorite?.project_housing?.find(
+                      (projectHousing) => {
+                        if (
+                          projectHousing.room_order == favorite?.housing_id &&
+                          projectHousing.name ==
+                          favorite?.project?.list_item_values
+                            ?.column1_name +
+                          "[]" &&
+                          projectHousing.project_id == favorite?.project?.id
+                        ) {
+                          return projectHousing;
                         }
-                      )?.value;
-                      var column2 = favorite?.project_housing?.find(
-                        (projectHousing) => {
-                          if (
-                            projectHousing.room_order == favorite?.housing_id &&
-                            projectHousing.name ==
-                              favorite?.project?.list_item_values
-                                ?.column2_name +
-                                "[]" &&
-                            projectHousing.project_id == favorite?.project?.id
-                          ) {
-                            return projectHousing;
-                          }
+                      }
+                    )?.value;
+                    var column2 = favorite?.project_housing?.find(
+                      (projectHousing) => {
+                        if (
+                          projectHousing.room_order == favorite?.housing_id &&
+                          projectHousing.name ==
+                          favorite?.project?.list_item_values
+                            ?.column2_name +
+                          "[]" &&
+                          projectHousing.project_id == favorite?.project?.id
+                        ) {
+                          return projectHousing;
                         }
-                      )?.value;
-                      var column3 = favorite?.project_housing?.find(
-                        (projectHousing) => {
-                          if (
-                            projectHousing.room_order == favorite?.housing_id &&
-                            projectHousing.name ==
-                              favorite?.project?.list_item_values
-                                ?.column3_name +
-                                "[]" &&
-                            projectHousing.project_id == favorite?.project?.id
-                          ) {
-                            return projectHousing;
-                          }
+                      }
+                    )?.value;
+                    var column3 = favorite?.project_housing?.find(
+                      (projectHousing) => {
+                        if (
+                          projectHousing.room_order == favorite?.housing_id &&
+                          projectHousing.name ==
+                          favorite?.project?.list_item_values
+                            ?.column3_name +
+                          "[]" &&
+                          projectHousing.project_id == favorite?.project?.id
+                        ) {
+                          return projectHousing;
                         }
-                      )?.value;
-                      if (column1) {
-                        column1 =
-                          column1 +
-                          " " +
-                          (favorite?.project?.list_item_values
+                      }
+                    )?.value;
+                    if (column1) {
+                      column1 =
+                        column1 +
+                        " " +
+                        (favorite?.project?.list_item_values
+                          ?.column1_additional
+                          ? favorite?.project?.list_item_values
                             ?.column1_additional
-                            ? favorite?.project?.list_item_values
-                                ?.column1_additional
-                            : "");
-                      }
-                      if (column2) {
-                        column2 =
-                          column2 +
-                          " " +
-                          (favorite?.project?.list_item_values
+                          : "");
+                    }
+                    if (column2) {
+                      column2 =
+                        column2 +
+                        " " +
+                        (favorite?.project?.list_item_values
+                          ?.column2_additional
+                          ? favorite?.project?.list_item_values
                             ?.column2_additional
-                            ? favorite?.project?.list_item_values
-                                ?.column2_additional
-                            : "");
-                      }
-                      if (column3) {
-                        column3 =
-                          column3 +
-                          " " +
-                          (favorite?.project?.list_item_values
+                          : "");
+                    }
+                    if (column3) {
+                      column3 =
+                        column3 +
+                        " " +
+                        (favorite?.project?.list_item_values
+                          ?.column3_additional
+                          ? favorite?.project?.list_item_values
                             ?.column3_additional
-                            ? favorite?.project?.list_item_values
-                                ?.column3_additional
-                            : "");
-                      }
-                      var no = 1000000 + favorite?.project.id;
-                      return (
-                        <RealtorPostFavorited
-                          key={i}
-                          changeFavorites={changeFavorites}
-                          type={1}
-                          projectId={favorite?.project?.id}
-                          housingId={favorite?.housing_id}
-                          no={no}
-                          column1={column1}
-                          column2={column2}
-                          column3={column3}
-                          location={
-                            favorite?.project?.city?.title +
-                            " / " +
-                            favorite?.project?.county?.ilce_title
-                          }
-                          image={
-                            "https://private.emlaksepette.com/project_housing_images/" +
-                            image
-                          }
-                          title={
-                            favorite?.project?.project_title +
-                            " adlı projede " +
-                            favorite?.housing_id +
-                            " No'lu konut"
-                          }
-                          price={
-                            favorite?.project_housing?.find(
-                              (projectHousing) => {
-                                if (
-                                  projectHousing.room_order ==
-                                    favorite?.housing_id &&
-                                  projectHousing.name == "price[]"
-                                ) {
-                                  return projectHousing;
-                                }
+                          : "");
+                    }
+                    var no = 1000000 + favorite?.project.id;
+                    return (
+                      <RealtorPostFavorited
+                        key={i}
+                        changeFavorites={changeFavorites}
+                        type={1}
+                        projectId={favorite?.project?.id}
+                        housingId={favorite?.housing_id}
+                        no={no}
+                        column1={column1}
+                        column2={column2}
+                        column3={column3}
+                        location={
+                          favorite?.project?.city?.title +
+                          " / " +
+                          favorite?.project?.county?.ilce_title
+                        }
+                        image={
+                          "https://private.emlaksepette.com/project_housing_images/" +
+                          image
+                        }
+                        title={
+                          favorite?.project?.project_title +
+                          " adlı projede " +
+                          favorite?.housing_id +
+                          " No'lu konut"
+                        }
+                        price={
+                          favorite?.project_housing?.find(
+                            (projectHousing) => {
+                              if (
+                                projectHousing.room_order ==
+                                favorite?.housing_id &&
+                                projectHousing.name == "price[]"
+                              ) {
+                                return projectHousing;
                               }
-                            )?.value
-                          }
-                          m2="20"
-                          GetId={GetIdForCart}
-                          fetchData={fetchFavorites}
-                          selectFavorite={SelectFavorite}
-                          isChoosed={isChoosed}
-                        />
+                            }
+                          )?.value
+                        }
+                        m2="20"
+                        GetId={GetIdForCart}
+                        fetchData={fetchFavorites}
+                        selectFavorite={SelectFavorite}
+                        isChoosed={isChoosed}
+                      />
+                    );
+                  } else {
+                    if (favorite?.housing) {
+                      var housingData = JSON.parse(
+                        favorite?.housing?.housing_type_data
                       );
                     } else {
-                      if (favorite?.housing) {
-                        var housingData = JSON.parse(
-                          favorite?.housing?.housing_type_data
-                        );
-                      } else {
-                        housingData = {};
-                      }
-                      return (
-                        <RealtorPostFavorited
-                          key={i}
-                          changeFavorites={changeFavorites}
-                          type={2}
-                          HouseId={favorite?.housing?.id}
-                          no={favorite?.housing?.id + 2000000}
-                          image={
-                            "https://private.emlaksepette.com/housing_images/" +
-                            housingData?.image
-                          }
-                          title={favorite?.housing?.title}
-                          price={
-                            housingData && housingData.price
-                              ? housingData.price
-                              : "0"
-                          }
-                          column1={
-                            housingData[
-                              favorite?.housing?.list_items?.column1_name
-                            ]
-                              ? housingData[
-                                  favorite?.housing?.list_items?.column1_name
-                                ] +
-                                " " +
-                                (favorite?.housing?.list_items
-                                  ?.column1_additional
-                                  ? favorite?.housing?.list_items
-                                      ?.column1_additional
-                                  : "")
-                              : ""
-                          }
-                          column2={
-                            housingData[
-                              favorite?.housing?.list_items?.column2_name
-                            ]
-                              ? housingData[
-                                  favorite?.housing?.list_items?.column2_name
-                                ] +
-                                " " +
-                                (favorite?.housing?.list_items
-                                  ?.column2_additional
-                                  ? favorite?.housing?.list_items
-                                      ?.column2_additional
-                                  : "")
-                              : ""
-                          }
-                          column3={
-                            housingData[
-                              favorite?.housing?.list_items?.column3_name
-                            ]
-                              ? housingData[
-                                  favorite?.housing?.list_items?.column3_name
-                                ] +
-                                " " +
-                                (favorite?.housing?.list_items
-                                  ?.column3_additional
-                                  ? favorite?.housing?.list_items
-                                      ?.column3_additional
-                                  : "")
-                              : ""
-                          }
-                          location={
-                            favorite?.housing?.city?.title +
-                            " / " +
-                            favorite?.housing?.county?.title
-                          }
-                          GetId={GetIdForCart}
-                          fetchData={fetchFavorites}
-                          selectFavorite={SelectFavorite}
-                          isChoosed={isChoosed}
-                        />
-                      );
+                      housingData = {};
                     }
-                  })}
-                </ScrollView>
-              </GestureHandlerRootView>
-            </AlertNotificationRoot>
+                    return (
+                      <RealtorPostFavorited
+                        key={i}
+                        changeFavorites={changeFavorites}
+                        type={2}
+                        HouseId={favorite?.housing?.id}
+                        no={favorite?.housing?.id + 2000000}
+                        image={
+                          "https://private.emlaksepette.com/housing_images/" +
+                          housingData?.image
+                        }
+                        title={favorite?.housing?.title}
+                        price={
+                          housingData && housingData.price
+                            ? housingData.price
+                            : "0"
+                        }
+                        column1={
+                          housingData[
+                            favorite?.housing?.list_items?.column1_name
+                          ]
+                            ? housingData[
+                            favorite?.housing?.list_items?.column1_name
+                            ] +
+                            " " +
+                            (favorite?.housing?.list_items
+                              ?.column1_additional
+                              ? favorite?.housing?.list_items
+                                ?.column1_additional
+                              : "")
+                            : ""
+                        }
+                        column2={
+                          housingData[
+                            favorite?.housing?.list_items?.column2_name
+                          ]
+                            ? housingData[
+                            favorite?.housing?.list_items?.column2_name
+                            ] +
+                            " " +
+                            (favorite?.housing?.list_items
+                              ?.column2_additional
+                              ? favorite?.housing?.list_items
+                                ?.column2_additional
+                              : "")
+                            : ""
+                        }
+                        column3={
+                          housingData[
+                            favorite?.housing?.list_items?.column3_name
+                          ]
+                            ? housingData[
+                            favorite?.housing?.list_items?.column3_name
+                            ] +
+                            " " +
+                            (favorite?.housing?.list_items
+                              ?.column3_additional
+                              ? favorite?.housing?.list_items
+                                ?.column3_additional
+                              : "")
+                            : ""
+                        }
+                        location={
+                          favorite?.housing?.city?.title +
+                          " / " +
+                          favorite?.housing?.county?.title
+                        }
+                        GetId={GetIdForCart}
+                        fetchData={fetchFavorites}
+                        selectFavorite={SelectFavorite}
+                        isChoosed={isChoosed}
+                      />
+                    );
+                  }
+                })}
+              </ScrollView>
+            </>
+
           )}
           <Modal
             isVisible={ModalForAddToCart}
@@ -822,62 +872,6 @@ export default function Favorites() {
               )}
             </View>
           </Modal>
-          {/* <Modal
-    isVisible={modalForDeleteFavorites}
-    onBackdropPress={() => setmodalForDeleteFavorites(false)}
-      animationIn={'fadeIn'}
-      animationOut={'fadeOut'}
-    transparent={true}
-    useNativeDriver={true}
-    style={styles.modal4}
-  >
-   
-    <View style={[styles.modalContent4,{gap:10}]}>
-          <View>
-            <Text style={{color:'#333',fontWeight:'700',textAlign:'center'}}>
-              Tüm ilanları silmek istediğinize eminmisiniz?
-            </Text>
-          </View>
-          <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            gap: 20,
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              backgroundColor: "green",
-              padding: 10,
-              paddingLeft: 20,
-              paddingRight: 20,
-              borderRadius: 5,
-            }}
-            onPress={() => {
-                  deleteRequestWithTokenProject()
-                  deleteRequestWithToken()
-            }}
-          >
-            <Text style={{ color: "white" }}>Evet</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#e44242",
-              padding: 10,
-              paddingLeft: 20,
-              paddingRight: 20,
-              borderRadius: 5,
-            }}
-            onPress={() => {
-              setmodalForDeleteFavorites(false);
-            }}
-          >
-            <Text style={{ color: "white" }}>Hayır</Text>
-          </TouchableOpacity>
-        </View>
-    </View>
-  </Modal> */}
         </View>
       )}
     </>

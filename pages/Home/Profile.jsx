@@ -181,6 +181,7 @@ export default function Profile() {
         console.error("Error fetching data:", error);
       });
   }, []);
+  console.log(id);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -531,29 +532,32 @@ export default function Profile() {
                   Mağaza Profili
                 </Text>
               </TouchableOpacity>
-              {storeData?.data?.corporate_type !== "Emlak Ofisi" && (
-                <TouchableOpacity
-                  style={[
-                    styles.TabBarBtn,
-                    {
-                      borderBottomWidth: tab === 1 ? 3 : 0,
-                      borderBottomColor: tab === 1 ? "#EA2C2E" : "transparent",
-                      top: 2,
-                    },
-                  ]}
-                  onPress={() => settab(1)}
-                >
-                  <Text
-                    style={{
-                      color: tab === 1 ? "#EA2C2E" : "grey",
-                      fontWeight: tab === 1 ? "500" : "normal",
-                      bottom: width > 400 ? 0 : 1,
-                    }}
+
+              {storeData?.data?.corporate_type == "İnşaat Ofisi" &&
+                storeData?.data?.type !== 1 && (
+                  <TouchableOpacity
+                    style={[
+                      styles.TabBarBtn,
+                      {
+                        borderBottomWidth: tab === 1 ? 3 : 0,
+                        borderBottomColor:
+                          tab === 1 ? "#EA2C2E" : "transparent",
+                        top: 2,
+                      },
+                    ]}
+                    onPress={() => settab(1)}
                   >
-                    Proje İlanları({storeData?.data?.projects?.length})
-                  </Text>
-                </TouchableOpacity>
-              )}
+                    <Text
+                      style={{
+                        color: tab === 1 ? "#EA2C2E" : "grey",
+                        fontWeight: tab === 1 ? "500" : "normal",
+                        bottom: width > 400 ? 0 : 1,
+                      }}
+                    >
+                      Proje İlanları({storeData?.data?.projects?.length})
+                    </Text>
+                  </TouchableOpacity>
+                )}
 
               <TouchableOpacity
                 style={[
@@ -576,26 +580,28 @@ export default function Profile() {
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity
-                style={[
-                  styles.TabBarBtn,
-                  {
-                    borderBottomWidth: tab === 3 ? 3 : 0,
-                    borderBottomColor: tab === 3 ? "#EA2C2E" : "transparent",
-                    top: 2,
-                  },
-                ]}
-                onPress={() => settab(3)}
-              >
-                <Text
-                  style={{
-                    color: tab === 3 ? "#EA2C2E" : "grey",
-                    fontWeight: tab === 3 ? "500" : "normal",
-                  }}
+              {storeData?.data?.type != 1 && (
+                <TouchableOpacity
+                  style={[
+                    styles.TabBarBtn,
+                    {
+                      borderBottomWidth: tab === 3 ? 3 : 0,
+                      borderBottomColor: tab === 3 ? "#EA2C2E" : "transparent",
+                      top: 2,
+                    },
+                  ]}
+                  onPress={() => settab(3)}
                 >
-                  Ekip
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{
+                      color: tab === 3 ? "#EA2C2E" : "grey",
+                      fontWeight: tab === 3 ? "500" : "normal",
+                    }}
+                  >
+                    Ekip
+                  </Text>
+                </TouchableOpacity>
+              )}
 
               <TouchableOpacity
                 style={[

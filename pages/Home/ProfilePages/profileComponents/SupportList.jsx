@@ -46,32 +46,33 @@ export default function SupportList() {
     getValueFor("user", setUser);
   }, []);
 
+  const [pdfFile, setPdfFile] = useState([]);
+  const [selectedPdf, setSelectedPdf] = useState(null);
+
   useEffect(() => {
     if (user.access_token) {
       // API'den veriyi çekme
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(
-            "https://private.emlaksepette.com/api/support",
-            {
-              headers: {
-                Authorization: `Bearer ${user.access_token}`,
-              },
-            }
-          ); // API URL'ini buraya girin
+      axios
+        .get("https://private.emlaksepette.com/api/support", {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        })
+        .then((response) => {
+          const data = response.data.data;
+          setSupportData(data); // Gelen veriyi state'e kaydedin
 
-          setSupportData(response.data.data); // Gelen veriyi state'e kaydedin
-        } catch (error) {
+          // file_path'leri çıkarıp pdfFile state'ine aktarın
+          const paths = data.map((item) => item.file_path);
+          setPdfFile(paths);
+          console.log("PDF File Paths:", paths); // PDF dosya yollarını konsola yazdırın
+        })
+        .catch((error) => {
           console.error("API Hatası:", error); // Hata detaylarını konsola yazdır
-          Alert.alert(
-            "Veri çekme sırasında bir hata oluştu.",
-            error.message || "Bilinmeyen bir hata oluştu."
-          ); // Hata mesajını göster
-        } finally {
+        })
+        .finally(() => {
           setLoading(false); // Loading state'ini kapat
-        }
-      };
-      fetchData();
+        });
     }
   }, [user]);
 
@@ -126,35 +127,79 @@ export default function SupportList() {
       ) : (
         <ScrollView>
           <View style={{}}>
-            {supportData.map((support, index) => (
-              <View key={index} style={{ marginTop: 20 }}>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: 8,
-                    padding: 15,
-                    borderWidth: 1,
-                    borderColor: "#e6e6e6",
-                    ...Platform.select({
-                      ios: {
-                        shadowColor: "gray",
-                        shadowOffset: { width: 1, height: 1 },
-                        shadowOpacity: 0.1,
-                        shadowRadius: 5,
-                      },
-                      android: {
-                        elevation: 5,
-                      },
-                    }),
-                  }}
-                >
-                  <View
+            {supportData.length > 0 ? (
+              supportData.map((support, index) => (
+                <View key={index} style={{ marginTop: 20 }}>
+                  <TouchableOpacity
                     style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
+                      backgroundColor: "white",
+                      borderRadius: 8,
+                      padding: 15,
+                      borderWidth: 1,
+                      borderColor: "#e6e6e6",
+                      ...Platform.select({
+                        ios: {
+                          shadowColor: "gray",
+                          shadowOffset: { width: 1, height: 1 },
+                          shadowOpacity: 0.1,
+                          shadowRadius: 5,
+                        },
+                        android: {
+                          elevation: 5,
+                        },
+                      }),
                     }}
                   >
-                    <View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <View>
+                        <Text
+                          style={{
+                            fontWeight: "700",
+                            marginBottom: 10,
+                            fontSize: 13,
+                          }}
+                        >
+                          Kategori
+                        </Text>
+                        <Text style={{ fontSize: 13 }}>{support.category}</Text>
+                        {support?.send_reason && (
+                          <View style={{ marginTop: 10 }}>
+                            <Text
+                              style={{
+                                fontWeight: "700",
+                                marginBottom: 10,
+                                fontSize: 13,
+                              }}
+                            >
+                              Evrak Gönderme Nedeni
+                            </Text>
+                            <Text style={{ fontSize: 13 }}>
+                              {support?.send_reason}
+                            </Text>
+                          </View>
+                        )}
+                      </View>
+                      <View>
+                        <Text
+                          style={{
+                            fontWeight: "700",
+                            marginBottom: 10,
+                            fontSize: 13,
+                          }}
+                        >
+                          Oluşturulma Tarihi
+                        </Text>
+                        <Text style={{ textAlign: "right", fontSize: 13 }}>
+                          {moment(support.created_at).format("DD/MM/YYYY")}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={{ marginTop: 10 }}>
                       <Text
                         style={{
                           fontWeight: "700",
@@ -162,161 +207,135 @@ export default function SupportList() {
                           fontSize: 13,
                         }}
                       >
-                        Kategori
+                        Açıklama
                       </Text>
-                      <Text style={{ fontSize: 13 }}>{support.category}</Text>
-                      {support?.send_reason && (
-                        <View style={{ marginTop: 10 }}>
-                          <Text
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          flexShrink: 1,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {support.description}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        marginTop: 10,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        flex: 1,
+                      }}
+                    >
+                      <View style={{ width: "45%" }}>
+                        {support.file_path && (
+                          <TouchableOpacity
+                            onPress={() => {
+                              download(support.file_path);
+                            }}
                             style={{
-                              fontWeight: "700",
-                              marginBottom: 10,
-                              fontSize: 13,
+                              backgroundColor: "rgba(234, 43, 46, 0.2)",
+                              borderRadius: 5,
+                              padding: 10,
+                              flex: 1 / 2,
                             }}
                           >
-                            Evrak Gönderme Nedeni
-                          </Text>
-                          <Text style={{ fontSize: 13 }}>
-                            {support?.send_reason}
-                          </Text>
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <AntDesign
+                                style={{ marginRight: 0 }}
+                                name="pdffile1"
+                                color={"red"}
+                              />
+                              <Text
+                                style={{
+                                  textAlign: "center",
+                                  color: "red",
+                                  marginLeft: 10,
+                                }}
+                                numberOfLines={1}
+                              >
+                                {pdfFile}
+                                {/* {support.file_path} */}
+                                {/* {pdfFile.map((file, i) => (
+                        <Text>{file}</Text>
+                      ))} */}
+                              </Text>
+                            </View>
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                      {support.return_support ? (
+                        <View style={{ width: "45%" }}>
+                          <TouchableOpacity
+                            style={{
+                              backgroundColor: "rgba(234, 43, 46, 0.2)",
+                              justifyContent: "center",
+                              borderRadius: 5,
+                              padding: 10,
+                              flex: 1 / 2,
+                              backgroundColor: "#0FA958",
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                            onPress={() => openModal(support)}
+                          >
+                            <FeatherIcon
+                              style={{ marginRight: 10 }}
+                              name="check-circle"
+                              color={"#fff"}
+                            />
+                            <Text
+                              style={{ textAlign: "center", color: "#fff" }}
+                            >
+                              Yanıtı Gör
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      ) : (
+                        <View style={{ width: "45%" }}>
+                          <TouchableOpacity
+                            style={{
+                              backgroundColor: "rgba(234, 43, 46, 0.2)",
+                              justifyContent: "center",
+                              borderRadius: 5,
+                              padding: 10,
+                              flex: 1 / 2,
+                              backgroundColor: "#FFCE86",
+                              flexDirection: "row",
+                              alignItems: "center",
+                            }}
+                          >
+                            <FeatherIcon
+                              style={{ marginRight: 10 }}
+                              name="clock"
+                              color={"#FF9907"}
+                            />
+                            <Text
+                              style={{ textAlign: "center", color: "#FF9907" }}
+                            >
+                              Yanıt Bekleniyor
+                            </Text>
+                          </TouchableOpacity>
                         </View>
                       )}
                     </View>
-                    <View>
-                      <Text
-                        style={{
-                          fontWeight: "700",
-                          marginBottom: 10,
-                          fontSize: 13,
-                        }}
-                      >
-                        Oluşturulma Tarihi
-                      </Text>
-                      <Text style={{ textAlign: "right", fontSize: 13 }}>
-                        {moment(support.created_at).format("DD/MM/YYYY")}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={{ marginTop: 10 }}>
-                    <Text
-                      style={{
-                        fontWeight: "700",
-                        marginBottom: 10,
-                        fontSize: 13,
-                      }}
-                    >
-                      Açıklama
-                    </Text>
-                    <Text
-                      style={{ fontSize: 13, flexShrink: 1, flexWrap: "wrap" }}
-                    >
-                      {support.description}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      marginTop: 10,
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      flex: 1,
-                    }}
-                  >
-                    <View style={{ width: "45%" }}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          download(support.file_path);
-                        }}
-                        style={{
-                          backgroundColor: "rgba(234, 43, 46, 0.2)",
-
-                          borderRadius: 5,
-                          padding: 10,
-                          flex: 1 / 2,
-                        }}
-                      >
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <AntDesign
-                            style={{ marginRight: 0 }}
-                            name="pdffile1"
-                            color={"red"}
-                          />
-                          <Text
-                            style={{
-                              textAlign: "center",
-                              color: "red",
-                              marginLeft: 10,
-                            }}
-                            numberOfLines={1}
-                          >
-                            {support.file_path}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                    {support.return_support ? (
-                      <View style={{ width: "45%" }}>
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "rgba(234, 43, 46, 0.2)",
-                            justifyContent: "center",
-                            borderRadius: 5,
-                            padding: 10,
-                            flex: 1 / 2,
-                            backgroundColor: "#0FA958",
-                            flexDirection: "row",
-                            alignItems: "center",
-                          }}
-                          onPress={() => openModal(support)}
-                        >
-                          <FeatherIcon
-                            style={{ marginRight: 10 }}
-                            name="check-circle"
-                            color={"#107641"}
-                          />
-                          <Text
-                            style={{ textAlign: "center", color: "#107641" }}
-                          >
-                            Yanıtı Gör
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    ) : (
-                      <View style={{ width: "45%" }}>
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "rgba(234, 43, 46, 0.2)",
-                            justifyContent: "center",
-                            borderRadius: 5,
-                            padding: 10,
-                            flex: 1 / 2,
-                            backgroundColor: "#FFCE86",
-                            flexDirection: "row",
-                            alignItems: "center",
-                          }}
-                        >
-                          <FeatherIcon
-                            style={{ marginRight: 10 }}
-                            name="clock"
-                            color={"#FF9907"}
-                          />
-                          <Text
-                            style={{ textAlign: "center", color: "#FF9907" }}
-                          >
-                            Yanıt Bekleniyor
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                  </View>
-                </TouchableOpacity>
-              </View>
-            ))}
+                    <View></View>
+                  </TouchableOpacity>
+                </View>
+              ))
+            ) : (
+              <Text
+                style={{ marginTop: 20, textAlign: "center", fontSize: 16 }}
+              >
+                Henüz talep oluşturmadınız
+              </Text>
+            )}
           </View>
         </ScrollView>
       )}

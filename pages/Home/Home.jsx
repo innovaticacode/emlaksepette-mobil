@@ -18,13 +18,14 @@ import { Platform } from "react-native";
 import HomePage2 from "./HomePage2";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
+import VerifyScreen from "./VerifyScreen";
 
 const Tab = createBottomTabNavigator();
 
 const Home = ({ route }) => {
   const isFocused = useIsFocused();
   const [user, setUser] = useState({});
-
+  const [verifyStatus, setverifyStatus] = useState(null);
   useEffect(() => {
     if (route?.params?.status == "login") {
       getValueFor("user", setUser);
@@ -35,6 +36,7 @@ const Home = ({ route }) => {
   useEffect(() => {
     if (isFocused) {
       getValueFor("user", setUser);
+      getValueFor("PhoneVerify", setverifyStatus);
     }
   }, [isFocused]);
 
@@ -60,7 +62,27 @@ const Home = ({ route }) => {
   useEffect(() => {
     GetUserInfo();
   }, [user]);
+
   const { width, height } = Dimensions.get("window");
+
+ if (userdata && user.access_token ) {
+    if (user.type==1) {
+      if (verifyStatus==0) {
+        return <VerifyScreen/>
+      }
+    
+    }else{
+      if (  verifyStatus==0|| userdata.corporate_account_status==0 ) {
+        return <VerifyScreen/>
+    
+      
+      }}
+    }
+
+  console.log(userdata.corporate_account_status + "dosya");
+  console.log(verifyStatus + "telfon");
+  console.log(userdata);
+
   return (
     <Tab.Navigator
       screenOptions={{

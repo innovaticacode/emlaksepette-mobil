@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import React from "react";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import UserIcon from "react-native-vector-icons/FontAwesome5";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 export default function Categories({
   category,
   ıconDisplay,
@@ -17,46 +17,21 @@ export default function Categories({
           borderBottomWidth: 0
         },
       ]}
-    >
+    > 
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
+          gap:8
         }}
       >
-        <UserIcon
-          name={ıconName}
-          size={23}
-          color={bordernone ? "white" : "#bebebe"}
-          style={{ display: ıconDisplay === "none" ? "none" : "flex" }}
-        />
-        {showImage ? (
-          <>
-            <View
-              style={{
-                width: 40,
-                height: 40,
-                position: "absolute",
-                zIndex: 1,
-                bottom: -7,
-                left: -5,
-              }}
-            >
-              <Image
-                source={require("../pages/Home/emlakkulüplogo.png")}
-                style={{ tintColor: "white", width: "100%", height: "100%" }}
-                resizeMode="cover"
-              />
-            </View>
-          </>
-        ) : (
-          ""
-        )}
+        
+        <Icon name={ıconName} size={18}/>
         <Text
           style={{
             fontSize: 14,
-            color: bordernone ? "white" : "#333",
-            fontWeight: "700",
+            color: "#333",
+            fontWeight: "500",
             
           }}
         >
@@ -69,12 +44,7 @@ export default function Categories({
           justifyContent: "center",
         }}
       >
-        <Icon
-          name="arrow-forward-ios"
-          size={18}
-          color={bordernone ? "white" : "#bebebe"}
-          style={{ display: ıconDisplay === "none" ? "none" : "flex" }}
-        />
+     
       </View>
     </View>
   );

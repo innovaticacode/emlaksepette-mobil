@@ -136,10 +136,10 @@ export default function CollectionsItem({
                     key={i}
                     source={{
                       uri:
-                        image.item_type === 2 &&
+                        image.item_type == 2 &&
                         image.housing?.housing_type_data
                           ? `https://private.emlaksepette.com/housing_images/${
-                              JSON.parse(image.housing.housing_type_data).images
+                              JSON.parse(image.housing.housing_type_data).image
                             }`
                           : `https://private.emlaksepette.com/${image.project.image.replace(
                               "public",
