@@ -2,34 +2,34 @@
 export const documentView=[
     {
         text:'Vergi Levhası',
-        state:'TaxDocument',
+        state:'sicil_belgesi',
         isShow:'All'
     },
     {
         text:'İmza Sirküsü',
-        state:'Signature',
+        state:'vergi_levhası',
          isShow:'All'
     },
     {
         text:'Taşınmaz Yetki Belgesi',
-        state:'authorizationCertificate',
+        state:'kimlik_belgesi',
          isShow:'Emlak Ofisi'
     },
  
     {
         text:'Müteahhitlik Belgesi (opsiyonel)',
-        state:'documentForBuilder',
+        state:'insaat_belgesi',
         isShow:'İnşaat Ofisi'
     },
     {
         text:'Acenta Belgesi',
-        state:'documentForAcent',
+        state:'kimlik_belgesi',
         isShow:'Turizm Amaçlı Kiralama'
     },
     {
         text:'İmzalı Onay Belgesi',
-        state:'ConfirmDocumentWithSignature',
-         isShow:'All'
+        state:'apporove_website',
+        isShow:'All'
     },
 
 ]

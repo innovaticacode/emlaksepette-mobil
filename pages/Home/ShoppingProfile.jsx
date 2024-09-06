@@ -166,7 +166,7 @@ export default function ShoppingProfile() {
     setTimeout(() => {
       SecureStore.setItemAsync("user", "");
       navigation.push("Home",{status : "logout"});
-    }, 200);
+    }, 500);
    
    
   };

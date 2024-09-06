@@ -14,16 +14,16 @@ import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import { documentView } from '../helper';
 import { getValueFor } from '../../components/methods/user';
+import axios from 'axios';
+import { ActivityIndicator } from 'react-native-paper';
 export default function VerifyDocument({nextStep,prevStep}) {
     const [FormDatas, setFormDatas] = useState({
-      TaxDocument:null,
-      Signature:null,
-      authorizationCertificate:null,
-      ConfirmDocumentWithSignature:null,
-      documentForBuilder:null,
-      documentForAcent:null,
-      PdfName:null,
-      pdfUrl:null
+      sicil_belgesi:null,
+      vergi_levhası:null,
+      kimlik_belgesi:null,
+      apporove_website:null,
+      insaat_belgesi:null,
+   
         // Diğer form alanları buraya eklenebilir
       });
     
@@ -53,7 +53,7 @@ export default function VerifyDocument({nextStep,prevStep}) {
     
         if (!result.canceled) {
           // Seçilen resmin uri'si ile ilgili form verisini güncelleme
-          setData(key, result.assets[0].uri);
+          setData(key, result.assets[0]);
           setchoose(false)
         }
       };
@@ -74,7 +74,7 @@ export default function VerifyDocument({nextStep,prevStep}) {
         console.log(result);
       
         if (!result.canceled) {
-            setData(key, result.assets[0].uri);
+            setData(key, result.assets[0]);
             setchoose(false)
         }
       };
@@ -103,7 +103,7 @@ export default function VerifyDocument({nextStep,prevStep}) {
                   const pdfAsset = result.assets[0];
                   setPdfFile(pdfAsset);
                
-                  setData(key,pdfAsset.uri);
+                  setData(key,pdfAsset);
                 
                   setchoose(false)
               
@@ -163,9 +163,60 @@ export default function VerifyDocument({nextStep,prevStep}) {
                   sendDocument()
                   
             }
+            const [loading, setloading] = useState(false)
             const sendDocument=()=>{
-                alert('Başarılı')
+              setloading(true)
+              const formData = new FormData();
+              
+              formData.append(`sicil_belgesi`, {
+                uri: Platform.OS === "android" ? FormDatas.sicil_belgesi : FormDatas?.sicil_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                type: FormDatas?.sicil_belgesi?.mimeType, 
+                name: FormDatas.sicil_belgesi?.name?.slice(-3) =='pdf' ? FormDatas.sicil_belgesi?.name:FormDatas.sicil_belgesi?.fileName, // Sunucuya gönderilecek dosya adı
+              });
+              formData.append(`approve_website`, {
+                uri: Platform.OS === "android" ? FormDatas.apporove_website.uri : FormDatas?.apporove_website?.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                type: FormDatas?.apporove_website?.mimeType, 
+                name: FormDatas.apporove_website?.name?.slice(-3) == 'pdf' ? FormDatas.apporove_website?.name:FormDatas.apporove_website?.fileName , // Sunucuya gönderilecek dosya adı
+              });
+              formData.append(`vergi_levhasi`, {
+                uri: Platform.OS === "android" ? FormDatas.vergi_levhası.uri : FormDatas?.vergi_levhası?.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                type: FormDatas?.vergi_levhası?.mimeType, 
+                name: FormDatas.vergi_levhası?.name?.slice(-3) == 'pdf' ? FormDatas.vergi_levhası?.name:FormDatas.vergi_levhası?.fileName , // Sunucuya gönderilecek dosya adı
+              });
+              formData.append(`kimlik_belgesi`, {
+                uri: Platform.OS === "android" ? FormDatas.kimlik_belgesi.uri : FormDatas?.kimlik_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                type: FormDatas?.kimlik_belgesi?.mimeType, 
+                name: FormDatas.kimlik_belgesi?.name?.slice(-3) == 'pdf' ? FormDatas.kimlik_belgesi?.name:FormDatas.kimlik_belgesi?.fileName , // Sunucuya gönderilecek dosya adı
+              });
+              formData.append(`insaat_belgesi`, {
+                uri: Platform.OS === "android" ? FormDatas.insaat_belgesi.uri : FormDatas?.insaat_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                type: FormDatas?.insaat_belgesi?.mimeType, 
+                name: FormDatas.insaat_belgesi?.name?.slice(-3) == 'pdf' ? FormDatas.insaat_belgesi?.name:FormDatas.insaat_belgesi?.fileName , // Sunucuya gönderilecek dosya adı
+              });
+              axios
+                .post("https://private.emlaksepette.com/api/verify-account", formData, {
+                  headers: {
+                    Authorization: `Bearer ${user?.access_token}`,
+                    "Content-Type": "multipart/form-data",
+                  },
+                })
+                .then((res) => {
+                  alert('başarılı')
+                  setData(FormDatas.apporove_website, null)
+                  setData(FormDatas.insaat_belgesi, null)
+                  setData(FormDatas.kimlik_belgesi, null)
+                  setData(FormDatas.sicil_belgesi, null)
+                  setData(FormDatas.vergi_levhası, null)
+               
+                })
+                .catch((err) => {
+                  console.error(err);
+                  alert("Hata oluştu");
+                }).finally(()=>{
+                  setloading(false)
+                })
             }
+         
             const [verifyStatus, setverifyStatus] = useState(null)
             useEffect(() => {
               getValueFor('PhoneVerify',setverifyStatus)
@@ -176,7 +227,11 @@ export default function VerifyDocument({nextStep,prevStep}) {
             useEffect(() => {
                 getValueFor('user',setuser)
             }, [])
-            console.log(user.corporate_type)
+            
+            console.log(FormDatas[selectedPick]?.name + 'dosya tipi')
+            console.log(selectedPick + ' state')
+            console.log(user.corporate_type + 'sfsdf')
+           
   return (
 
     <>
@@ -197,7 +252,7 @@ style={{
     
     {
         documentView.map((item,_i)=>(
-            <TouchableOpacity key={_i} style={{gap:7,width:'100%',
+            <TouchableOpacity  style={{gap:7,width:'100%',
                 display:item.isShow=='All'?'flex':'none' && item.isShow==user.corporate_type ? 'flex':'none'
 
             }} onPress={()=>{
@@ -221,7 +276,7 @@ style={{
                         {   
 
                             FormDatas[item.state] ? 
-                            FormDatas[item.state]?.slice(-3) == 'pdf'?
+                            FormDatas[item.state].uri?.slice(-3) == 'pdf'?
                            <TouchableOpacity style={{
                             backgroundColor:'#208011',
                             padding:9,                            
@@ -233,14 +288,14 @@ style={{
                             } else if (Platform.OS === "ios") {
                               navigation.navigate("DecontPdf", {
                                 name: 'pdf',
-                                pdfUri: FormDatas[item.state],
+                                pdfUri: FormDatas[item.state].uri,
                               });
                             }
                           }}
                            >
                             <Text style={{fontSize:13,color:'white',fontWeight:'700'}}>Pdf Görüntüle</Text>
                            </TouchableOpacity>:
-                            <Image source={{uri:FormDatas[item.state]}} style={{width:'100%',height:'100%',borderRadius:20}}/>
+                            <Image source={{uri:FormDatas[item.state]?.uri}} style={{width:'100%',height:'100%',borderRadius:20}}/>
                             :
                             <>
                              <Feather name="cloud-upload-outline" size={60} color={'#EA2B2E'}/>
@@ -254,12 +309,18 @@ style={{
     }
    
   
-    <TouchableOpacity style={{backgroundColor:'#EA2A29',padding:8,borderRadius:8}} 
+    <TouchableOpacity style={{backgroundColor:'#EA2A29',padding:8,borderRadius:8,alignItems:'center',justifyContent:'center'}} 
             onPress={()=>{
-             checkDocument()
+             sendDocument()
             }}
     >
+      {
+        loading ?
+        <ActivityIndicator color='white'/>
+        :
         <Text style={{textAlign:'center',fontSize:13,color:'white',fontWeight:'600'}}>Onaya Gönder</Text>
+      }
+       
     </TouchableOpacity>
     <AwesomeAlert
     show={deleteModal}

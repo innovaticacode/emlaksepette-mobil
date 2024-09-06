@@ -83,8 +83,9 @@ export default function Verification({nextStep,prevStep}) {
     getValueFor("user", setuser);
   }, []);
 
-
+const [loading, setloading] = useState(false)
   const handleSubmit = async () => {
+    setloading(true)
     try {
       // POST isteği yap
       const response = await axios.post(
@@ -110,6 +111,8 @@ export default function Verification({nextStep,prevStep}) {
       console.error("Doğrulama isteği başarısız:", error);
       setfalseCodeAlert(true);
       setsucces(false);
+    }finally{
+      setloading(false)
     }
   };
 
@@ -246,13 +249,20 @@ console.log(verifyStatu)
               padding: 9,
               borderRadius: 5,
               opacity: codes.length == 6 ? 1 : 0.5,
+              alignItems:'center',justifyContent:'center'
             }}
           >
-            <Text
+            {
+              loading ?
+              <ActivityIndicator color="white"/>
+              :
+              <Text
               style={{ color: "white", textAlign: "center", fontWeight: "600" }}
             >
               Onayla
             </Text>
+            }
+           
           </TouchableOpacity>
           {showSendAgain == true && (
             <TouchableOpacity onPress={sendPostRequest}>
