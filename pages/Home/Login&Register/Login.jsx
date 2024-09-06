@@ -9,8 +9,9 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  ScrollView,
 } from "react-native";
-import { React, useState } from "react";
+import { React, useState, useEffect, useCallback } from "react";
 import BackIcon from "react-native-vector-icons/AntDesign";
 import EyeIcon from "react-native-vector-icons/Ionicons";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -21,7 +22,17 @@ import { CheckBox } from "react-native-elements";
 import Modal from "react-native-modal";
 import { apiRequestPost } from "../../../components/methods/apiRequest";
 import * as SecureStore from "expo-secure-store";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
+import HTML from "react-native-render-html";
+import { ActivityIndicator } from "react-native-paper";
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import { getValueFor } from "../../../components/methods/user";
+import axios from "axios";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+} from "react-native-alert-notification";
 
 export default function Login({ navigation }) {
   const route = useRoute();
@@ -53,7 +64,48 @@ export default function Login({ navigation }) {
   const handleTextInputChange = (text) => {
     setEmail(text);
   };
+  const [user, setUser] = useState({});
 
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
+  const [loadingForLogin, setloadingForLogin] = useState(false)
+  const Login =()=>{
+    setloadingForLogin(true)
+    apiRequestPost("login", {
+      email: email,
+      password: password,
+    }).then((res) => {
+      if (res.data.status) {
+        SecureStore.setItemAsync("user", JSON.stringify(res.data));
+        SecureStore.setItemAsync("PhoneVerify", JSON.stringify(res.data.phone_verification_status));
+      navigation.push("Home", {
+            status: "login"
+
+          })
+        // if(res.data.phone_verification_status==1){
+    
+        // }else{
+        //   alert(res.data.phone_verification_status)
+        //   // navigation.push("VerifyScreen", {
+        //   //   status: "login"
+        //   // });
+        // }
+      } else {
+        // setshowMailSendAlert(true);
+        setStatus(false);
+        Dialog.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Hata",
+          textBody: `${res.data.message}`,
+          button: "Tamam",
+        });
+        // setStatusMessage(res.data.message);
+      }
+    }).finally(() => {
+      setloadingForLogin(false)
+    });
+  }
   const Submit = () => {
     if (!(email.trim() !== "" && email.includes("@"))) {
       setemailControl(true);
@@ -65,23 +117,12 @@ export default function Login({ navigation }) {
       setTimeout(() => {
         setpassControl(false);
       }, 2000);
-    } else {
-      setTimeout(() => {}, 9000);
-    }
+    }else{
+     Login()
+    } 
 
-    apiRequestPost("login", {
-      email: email,
-      password: password,
-    }).then((res) => {
-      if (res.data.status) {
-        SecureStore.setItemAsync("user", JSON.stringify(res.data));
-        navigation.navigate("HomePage");
-      } else {
-        setshowMailSendAlert(true);
-        setStatus(false);
-        setStatusMessage(res.data.message);
-      }
-    });
+ 
+
   };
 
   const [status, setStatus] = useState(false);
@@ -115,350 +156,500 @@ export default function Login({ navigation }) {
   Login.navigationOptions = {
     headerShown: false, // Başlık gizleme
   };
+
+  const [loading, setLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+
+      return () => clearTimeout(timer);
+    }, [])
+  );
+  const fetchFromURL = async (url) => {
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+  const [Deals, setDeals] = useState("");
+  const [loadingDeal, setloadingDeal] = useState(false)
+  const fetchData = async () => {
+    setloadingDeal(true)
+    const url = `https://private.emlaksepette.com/api/sayfa/bireysel-uyelik-sozlesmesi`;
+    try {
+      const data = await fetchFromURL(url);
+      setDeals(data.content);
+      // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
+    } catch (error) {
+      console.error("İstek hatası:", error);
+      // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
+    }finally{
+      setloadingDeal(false)
+    }
+  };
+  const [modalVisible, setModalVisible] = useState(false);
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    <AlertNotificationRoot>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <View style={[styles.header, {}]}></View>
-        <View style={{ padding: 10 }}>
-          <View
-            style={{
-              backgroundColor: "#E7FCEB",
-              flexDirection: "row",
-              alignItems: "center",
-              padding: 10,
-              gap: 15,
-              display: IsShowAlert ? "flex" : "none",
-            }}
-          >
-            <View>
-              <BackIcon name="checkcircle" color={"#1D8027"} size={30} />
-            </View>
-            <View style={{ flex: 1.9 / 2 }}>
-              <Text style={{ color: "#1D8027", fontSize: 12 }}>
-                Hesabınız oluşturuldu. Hesabınızı etkinleştirmek için lütfen
-                e-posta adresinize gönderilen doğrulama bağlantısını tıklayarak
-                e-postanızı onaylayın
-              </Text>
-            </View>
+        {loading ? (
+          <View style={{ alignItems: "center", justifyContent: "center" }}>
+            <ActivityIndicator size={"large"} color="#333" />
           </View>
-        </View>
-        <View style={styles.logIn}>
-          <KeyboardAwareScrollView>
-            <View style={styles.form}>
-              <View>
-                <Text
-                  style={{
-                    color: "#17243e",
-                    fontSize: 24,
-                    fontWeight: "bold",
-                    textAlign: "center",
-                  }}
-                >
-                  Giriş Yap
-                </Text>
-              </View>
-
-              <View style={{ gap: 10 }}>
-                <View style={{ paddingLeft: 10 }}>
-                  <Text
-                    style={{ fontSize: 15, color: "grey", fontWeight: 600 }}
+        ) : (
+          <>
+            <View style={styles.logIn}>
+              <View style={styles.form}>
+                {IsShowAlert == true && (
+                  <View
+                    style={{
+                      backgroundColor: "#E7FCEB",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      padding: 10,
+                      gap: 15,
+                      display: IsShowAlert ? "flex" : "none",
+                    }}
                   >
-                    E-Mail
-                  </Text>
-                </View>
+                    <View>
+                      <BackIcon
+                        name="checkcircle"
+                        color={"#1D8027"}
+                        size={30}
+                      />
+                    </View>
+                    <View style={{ flex: 1.9 / 2 }}>
+                      <Text style={{ color: "#1D8027", fontSize: 12 }}>
+                        Hesabınız oluşturuldu. Hesabınızı etkinleştirmek için
+                        lütfen e-posta adresinize gönderilen doğrulama
+                        bağlantısını tıklayarak e-postanızı onaylayın
+                      </Text>
+                    </View>
+                  </View>
+                )}
+                <View style={{ gap: 20 }}>
+                  <View>
+                    <Text
+                      style={{
+                        color: "#17243e",
+                        fontSize: 24,
+                        fontWeight: "bold",
+                        textAlign: "center",
+                      }}
+                    >
+                      Giriş Yap
+                    </Text>
+                  </View>
 
-                <TextInput
-                  style={styles.Input}
-                  placeholder="example@gmail.com"
-                  value={email}
-                  onChangeText={handleTextInputChange}
-                />
-                <Text
-                  style={{
-                    color: "red",
-                    fontWeight: "500",
-                    fontSize: 12,
-                    display: emailControl ? "flex" : "none",
-                  }}
-                >
-                  Lütfen Geçerli Bir E-Posta Adresi Giriniz!
-                </Text>
-              </View>
-              <View style={{ gap: 10 }}>
-                <View style={{ paddingLeft: 10 }}>
-                  <Text
-                    style={{ fontSize: 15, color: "grey", fontWeight: 600 }}
-                  >
-                    Şifre
-                  </Text>
-                </View>
-                <View>
+                  <View style={{ gap: 10 }}>
+                    <View style={{}}>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          color: "#000000",
+                          fontWeight: "600",
+                        }}
+                      >
+                        E-Posta
+                      </Text>
+                    </View>
+
+                    <TextInput
+                      style={styles.Input}
+                      placeholder="E-Posta Adresi"
+                      value={email}
+                      onChangeText={handleTextInputChange}
+                      autoCapitalize="none" // İlk harfin büyük olmasını engeller
+                    />
+                    <Text
+                      style={{
+                        color: "red",
+                        fontWeight: "500",
+                        fontSize: 12,
+                        display: emailControl ? "flex" : "none",
+                      }}
+                    >
+                      Lütfen Geçerli Bir E-Posta Adresi Giriniz!
+                    </Text>
+                  </View>
+                  <View style={{ gap: 10 }}>
+                    <View style={{}}>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          color: "#000000",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Şifre
+                      </Text>
+                    </View>
+                    <View>
+                      <TouchableOpacity
+                        style={{
+                          position: "absolute",
+                          right: 9,
+                          justifyContent: "center",
+                          top: "21%",
+                          // Bu değeri TextInput'un yüksekliğine göre ayarlayın
+                          zIndex: 1,
+                        }}
+                        onPress={show}
+                      >
+                        <View style={{ height: "100%" }}>
+                          <EyeIcon
+                            name={Show ? "eye" : "eye-off-sharp"}
+                            size={23}
+                            color={"#333"}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                      <TextInput
+                        style={styles.Input}
+                        placeholder="Şifre"
+                        secureTextEntry={Show ? false : true}
+                        value={password}
+                        onChangeText={handlePasswordChange}
+                      />
+
+                      {passControl && (
+                        <Text
+                          style={{
+                            color: "red",
+                            fontWeight: "500",
+                            fontSize: 12,
+                          }}
+                        >
+                          Lütfen Şifrenizi girin!
+                        </Text>
+                      )}
+                      {showLengthAlert && (
+                        <Text style={{ color: "red" }}>
+                          Şifreniz en az 5 karakter olmalıdır!
+                        </Text>
+                      )}
+                      {showNumberAlert && (
+                        <Text style={{ color: "red" }}>
+                          Şifrenizde en az bir rakam olmalıdır.
+                        </Text>
+                      )}
+                      {showUpperAlert && (
+                        <Text style={{ color: "red" }}>
+                          Şifrenizde en az bir büyük harf olmalıdır!
+                        </Text>
+                      )}
+                      {showSymbolAlert && (
+                        <Text style={{ color: "red" }}>
+                          Şifrenizde en az bir sembol olmalıdır!
+                        </Text>
+                      )}
+                    </View>
+
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        gap: 15,
+                      }}
+                    >
+                      <TouchableOpacity
+                        onPress={toggleCheckbox}
+                        style={[
+                          styles.checkbox,
+                          checked ? styles.checked : null,
+                        ]}
+                      >
+                        {checked ? (
+                          <FontAwesome5Icon
+                            name="check-square"
+                            size={18}
+                            color="black"
+                          />
+                        ) : (
+                          <FontAwesome5Icon
+                            name="square"
+                            size={18}
+                            color="black"
+                          />
+                        )}
+                        <Text style={styles.checkboxLabel}>Beni Hatırla</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={{}}
+                        onPress={() => {
+                          navigation.navigate("Forgot");
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            fontWeight: 600,
+                            letterSpacing: 0.3,
+                            color: "#161616",
+                          }}
+                        >
+                          Şifremi unuttum
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                   <TouchableOpacity
                     style={{
-                      position: "absolute",
-                      right: 10,
-                      top: 7,
-                      zIndex: 1,
+                      opacity:
+                        showLengthAlert == true ||
+                        showNumberAlert == true ||
+                        showSymbolAlert == true ||
+                        showUpperAlert == true ||
+                        textfull == true ||
+                        submitDisabled == true
+                          ? 0.3
+                          : 1,
+                      backgroundColor: "#EA2C2E",
+                      padding: 8,
+                      borderRadius: 5,
                     }}
-                    onPress={show}
+                    onPress={Submit}
+                    disabled={
+                      showLengthAlert == true ||
+                      showNumberAlert == true ||
+                      showSymbolAlert == true ||
+                      showUpperAlert == true
+                        ? true
+                        : false
+                    }
                   >
-                    <EyeIcon
-                      name={Show ? "eye" : "eye-off-sharp"}
-                      size={20}
-                      color={"#333"}
-                    />
-                  </TouchableOpacity>
-                  <TextInput
-                    style={styles.Input}
-                    placeholder="Şifrenizi Girin"
-                    secureTextEntry={Show ? false : true}
-                    value={password}
-                    onChangeText={handlePasswordChange}
-                  />
-
-                  {passControl && (
-                    <Text
-                      style={{ color: "red", fontWeight: "500", fontSize: 12 }}
+                    {
+                      loadingForLogin ?
+                      <ActivityIndicator color="white" size={'small'}/>:
+                      <Text
+                      style={{
+                        textAlign: "center",
+                        color: "white",
+                        fontWeight: "600",
+                      }}
                     >
-                      Lütfen Şifrenizi girin!
+                      Giriş Yap
                     </Text>
-                  )}
-                  {showLengthAlert && (
-                    <Text style={{ color: "red" }}>
-                      Şifreniz en az 6 karakter olmalıdır!
-                    </Text>
-                  )}
-                  {showNumberAlert && (
-                    <Text style={{ color: "red" }}>
-                      Şifrenizde en az bir rakam olmalıdır.
-                    </Text>
-                  )}
-                  {showUpperAlert && (
-                    <Text style={{ color: "red" }}>
-                      Şifrenizde en az bir büyük harf olmalıdır!
-                    </Text>
-                  )}
-                  {showSymbolAlert && (
-                    <Text style={{ color: "red" }}>
-                      Şifrenizde en az bir sembol olmalıdır!
-                    </Text>
-                  )}
-                </View>
-
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: 15,
-                  }}
-                >
+                    }
+                 
+                  </TouchableOpacity>
                   <View>
-                    <CheckBox
-                      checked={checked}
-                      onPress={toggleCheckbox}
-                      // Use ThemeProvider to make change for all checkbox
-                      iconType="material-community"
-                      checkedIcon="checkbox-marked"
-                      uncheckedIcon="checkbox-blank-outline"
-                      checkedColor="#EA2C2E"
-                      title={"Beni Hatırla"}
-                      textStyle={{ fontSize: 13, fontWeight: 400 }}
-                      size={22}
-                      containerStyle={{
-                        padding: 0,
-                        backgroundColor: "transparent",
-                        borderWidth: 0,
+                    <Text style={{ textAlign: "center", marginTop: 0 }}>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          color: "#000000",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Henüz üye değil misiniz?{" "}
+                      </Text>
+
+                      <Text
+                        style={{
+                          fontWeight: "bold",
+                          color: "#1A77F3",
+                          fontSize: 13,
+                        }}
+                        onPress={() => {
+                          navigation.navigate("Register");
+                        }}
+                      >
+                        Üye Ol
+                      </Text>
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-evenly",
+                      alignItems: "center",
+                      gap: 5,
+                    }}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: "#E7EBEE",
+                        height: 1,
+                        padding: 1,
+                        width: "40%",
+                      }}
+                    />
+                    <Text style={{ color: "#666666" }}>veya</Text>
+                    <View
+                      style={{
+                        backgroundColor: "#E7EBEE",
+                        height: 1,
+                        padding: 1,
+                        width: "40%",
                       }}
                     />
                   </View>
-                  <TouchableOpacity
-                    style={{}}
-                    onPress={() => {
-                      navigation.navigate("Forgot");
+
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-around",
                     }}
                   >
-                    <Text
+                    <TouchableOpacity
                       style={{
-                        fontSize: 13,
-                        letterSpacing: 0.5,
-                        color: "#5D96F1",
-                        textDecorationLine: "underline",
+                        backgroundColor: "#EEF4FE",
+                        padding: 10,
+                        width: "45%",
+                        height: 50,
+                        borderRadius: 5,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 10,
                       }}
                     >
-                      Şifremi Unuttum?
+                      <Image
+                        source={require("../../../assets/gogle.png")}
+                        style={{ width: "25%", height: "100%" }}
+                        resizeMode="contain"
+                      />
+                      <Text style={{ fontWeight: "bold", color: "#333" }}>
+                        Google
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View style={{}}>
+                  <View style={{ width: "95%", justifyContent: "center" }}>
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        color: "#333",
+                        fontSize: 13,
+                        fontWeight: "600",
+                      }}
+                    >
+                      Google kimliğinizle bir sonraki adıma geçmeniz halinde
+                      <Text
+                        style={{ color: "#2F5F9E" }}
+                        onPress={() => {
+                          setModalVisible(true);
+                          setTimeout(() => {
+                            fetchData();
+                          }, 100);
+                        }}
+                      >
+                        {" "}
+                        Bireysel Hesap Sözleşmesi ve Ekleri
+                      </Text>{" "}
+                      'ni kabul etmiş sayılırsınız.
                     </Text>
-                  </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-              <TouchableOpacity
-                style={{
-                  opacity:
-                    showLengthAlert == true ||
-                    showNumberAlert == true ||
-                    showSymbolAlert == true ||
-                    showUpperAlert == true ||
-                    textfull == true ||
-                    submitDisabled == true
-                      ? 0.3
-                      : 1,
-                  backgroundColor: "#EA2C2E",
-                  padding: 8,
-                  borderRadius: 10,
-                }}
-                onPress={Submit}
-                disabled={
-                  showLengthAlert == true ||
-                  showNumberAlert == true ||
-                  showSymbolAlert == true ||
-                  showUpperAlert == true
-                    ? true
-                    : false
-                }
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "white",
-                    fontWeight: "600",
-                  }}
-                >
-                  Giriş Yap
-                </Text>
-              </TouchableOpacity>
+            </View>
+            <Modal
+              isVisible={modalVisible}
+              onBackdropPress={() => setModalVisible(false)}
+              backdropColor="transparent"
+              style={styles.modal2}
+              animationIn={"fadeInRightBig"}
+              animationOut={"fadeOutRightBig"}
+            >
+              <SafeAreaView style={styles.modalContent2}>
+                <>
+                  {loadingDeal ? (
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <ActivityIndicator color="#333" size={"large"} />
+                    </View>
+                  ) : (
+                    <ScrollView
+                      style={{ padding: 10 }}
+                      contentContainerStyle={{ gap: 20 }}
+                    >
+                      <HTML source={{ html: Deals }} contentWidth={100} />
 
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                  alignItems: "center",
-                  gap: 5,
-                }}
-              >
+                      <View style={{ alignItems: "center", paddingBottom: 25 }}>
+                        <TouchableOpacity
+                          style={styles.Acceptbtn}
+                          onPress={() => {
+                            setChecked(!checked);
+                            setModalVisible(false);
+                          }}
+                        >
+                          <Text
+                            style={{
+                              color: "white",
+                              fontWeight: "bold",
+                              width: "100%",
+                              textAlign: "center",
+                            }}
+                          >
+                            Kapat
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </ScrollView>
+                  )}
+                </>
+              </SafeAreaView>
+            </Modal>
+            <Modal isVisible={showMailSendAlert} style={styles.modal}>
+              <View style={styles.modalContent}>
                 <View
-                  style={{
-                    backgroundColor: "#E7EBEE",
-                    height: 1,
-                    padding: 1,
-                    width: "40%",
-                  }}
-                />
-                <Text style={{ color: "#666666" }}>veya</Text>
-                <View
-                  style={{
-                    backgroundColor: "#E7EBEE",
-                    height: 1,
-                    padding: 1,
-                    width: "40%",
-                  }}
-                />
-              </View>
+                  style={{ flexDirection: "row", justifyContent: "flex-end" }}
+                >
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#333",
+                      padding: 5,
+                      borderRadius: 20,
+                    }}
+                    onPress={() => setshowMailSendAlert(false)}
+                  >
+                    <IconSocialMedia name="close" size={20} color={"white"} />
+                  </TouchableOpacity>
+                </View>
 
-              <View
-                style={{ flexDirection: "row", justifyContent: "space-around" }}
-              >
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#EEF4FE",
-                    padding: 10,
-                    width: "45%",
-                    height: 50,
-                    borderRadius: 10,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <Image
-                    source={require("../../../assets/gogle.png")}
-                    style={{ width: "25%", height: "100%" }}
-                    resizeMode="contain"
-                  />
-                  <Text style={{ fontWeight: "bold", color: "#333" }}>
-                    Google
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#EEF4FE",
-                    padding: 8,
-                    width: "45%",
-                    height: 50,
-                    borderRadius: 10,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <Icon
-                    name="facebook-with-circle"
-                    size={35}
-                    color={"#1A77F3"}
-                  />
-                  <Text style={{ fontWeight: "bold", color: "#333" }}>
-                    Facebook
-                  </Text>
-                </TouchableOpacity>
+                <View style={{ gap: 10 }}>
+                  <View style={{ alignItems: "center" }}>
+                    <MailCheck
+                      name="close"
+                      size={55}
+                      color={status ? "green" : "red"}
+                    />
+                  </View>
+                  <View>
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        fontSize: 14,
+                        color: "#333",
+                        letterSpacing: 0.5,
+                      }}
+                    >
+                      {statusMessage}
+                    </Text>
+                  </View>
+                </View>
               </View>
-            </View>
-            <View>
-              <Text style={{ textAlign: "center" }}>
-                <Text style={{ fontSize: 13, color: "#333" }}>
-                  Henüz üye değil misiniz?{" "}
-                </Text>
-
-                <Text
-                  style={{ fontWeight: "bold", color: "#1A77F3" }}
-                  onPress={() => {
-                    navigation.navigate("Register");
-                  }}
-                >
-                  Üye Ol
-                </Text>
-              </Text>
-            </View>
-          </KeyboardAwareScrollView>
-        </View>
-        <Modal isVisible={showMailSendAlert} style={styles.modal}>
-          <View style={styles.modalContent}>
-            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#333",
-                  padding: 5,
-                  borderRadius: 20,
-                }}
-                onPress={() => setshowMailSendAlert(false)}
-              >
-                <IconSocialMedia name="close" size={20} color={"white"} />
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ gap: 10 }}>
-              <View style={{ alignItems: "center" }}>
-                <MailCheck
-                  name="close"
-                  size={55}
-                  color={status ? "green" : "red"}
-                />
-              </View>
-              <View>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    fontSize: 14,
-                    color: "#333",
-                    letterSpacing: 0.5,
-                  }}
-                >
-                  {statusMessage}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </Modal>
+            </Modal>
+          </>
+        )}
       </View>
     </TouchableWithoutFeedback>
+    </AlertNotificationRoot>
+  
   );
 }
 
@@ -467,29 +658,58 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 0,
+    margin: 0,
   },
   header: {
     flex: 0.2,
     justifyContent: "center",
-    paddingLeft: 35,
-    paddingRight: 35,
   },
   logIn: {
-    backgroundColor: "#FFFFFF",
-    flex: 1.8,
     borderTopLeftRadius: 20,
+    display: "flex",
     borderTopRightRadius: 20,
+    alignItems: "center",
+    height: "100%",
+    justifyContent: "center",
+  },
+  checkbox: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  checkboxLabel: {
+    fontSize: 12,
+    color: "#000000",
+    marginLeft: 5,
+    fontWeight: "600",
+  },
+  Acceptbtn: {
+    backgroundColor: "#2aaa46",
+    padding: 10,
+    width: "100%",
+    textAlign: "center",
+    borderRadius: 5,
+    alignItems: "center",
   },
   form: {
-    padding: 40,
-    gap: 10,
+    padding: 0,
+    gap: 20,
+    height: "100%",
+    justifyContent: "center",
+    display: "flex",
+    alignItems: "center",
   },
   Input: {
     padding: 10,
-    borderWidth: 1,
-    borderColor: "#ebebeb",
-    borderRadius: 10,
-    fontSize: 14,
+    borderWidth: 0.9,
+    borderColor: "#DDDDDD",
+    borderRadius: 5,
+    fontSize: 13,
+    backgroundColor: "#fafafafa",
+    color: "#717171",
+    fontWeight: "600",
   },
   modal: {
     justifyContent: "center",
@@ -505,5 +725,17 @@ const styles = StyleSheet.create({
   modalText: {
     fontSize: 18,
     marginBottom: 20,
+  },
+  modal2: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContent2: {
+    backgroundColor: "#f4f4f4",
+    padding: 10,
+
+    height: "100%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 });

@@ -1,14 +1,27 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { Platform } from "react-native";
-export default function Users({name,id,index,item,deleteUser}) {
+export default function Users({name,id,index,item,deleteUser,isChoosed,SelectUserFunc}) {
     const navigation =useNavigation()
+    const [ishighlated, setishighlated] = useState(false)
+    useEffect(() => {
+            setishighlated(false)
+    }, [isChoosed])
+    
   return (
-    <View style={style.container}>
+    <TouchableOpacity style={[style.container,{borderWidth:ishighlated && isChoosed? 1:0, borderColor:'red'}]}
+            disabled={!isChoosed}
+            onPress={()=>{
+                SelectUserFunc(item.id)
+                    setishighlated(!ishighlated)
+                
+               
+            }}
+    >
      <View style={style.UserContainer}>
         <View style={style.Name}>
-            <Text>{index+1}</Text>
+            <Text>{index+1}.</Text>
                 <Text>{name}</Text>
         </View>
         <View style={style.buttons}>
@@ -24,7 +37,7 @@ export default function Users({name,id,index,item,deleteUser}) {
                 </TouchableOpacity>
         </View>
      </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 const style=StyleSheet.create({

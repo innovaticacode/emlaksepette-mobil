@@ -1,97 +1,216 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ImageBackground,
+  Modal,
+} from "react-native";
+import React, { useState } from "react";
 import { Platform } from "react-native";
-export default function SuggestItem({openModal,name,color,title,username,mail,location,status,job}) {
+import Icon from "react-native-vector-icons/SimpleLineIcons";
+import Icon2 from "react-native-vector-icons/Feather";
+import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
+
+export default function SuggestItem({ item }) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const apiUrl = "https://private.emlaksepette.com";
+  const stripHtmlTags = (str) => {
+    if (str) {
+      return str.replace(/<\/?[^>]+(>|$)/g, "");
+    }
+    return "";
+  };
   return (
     <View style={style.container}>
-    <View>
-        <View style={{borderBottomWidth:1,paddingBottom:15,borderBottomColor:'#ebebeb'}}>
-
-        <View style={{flexDirection:'row',alignItems:'center',}}>
-        <View style={{flexDirection:'row',alignItems:'center',gap:8,}}>
-                <View style={style.profileImage}>
-                    <Image source={require('./home.jpg')} style={{width:'100%',height:'100%'}} />
-                </View>
-                <View style={style.ProfileName}>
-                    <Text>{username}</Text>
-                    <Text style={{fontSize:11,color:'grey'}}>{mail}</Text>
-                </View>
-                </View>
-                <View style={{}}>
-               
-                  <TouchableOpacity style={{flexDirection:'row',backgroundColor: color?'#E54242':'green',padding:9,paddingLeft:12,paddingRight:12,borderRadius:5}}
-                  onPress={()=>{
-                    openModal()
-                  }}
-                 >
-                 
-                  <Text style={{textAlign:'center',fontSize:13,color:'white',fontWeight:'bold'}}>{name=='Başvurularım'?'Yanıtı Gör':'Yanıtla'}</Text>
-                 </TouchableOpacity>
-                
-         </View>
-             
-         
-        </View>
-        <View style={{paddingTop:15}}>
-        <Text>{title}</Text>
-        </View>
-      
-        </View>
-        <View  style={{paddingTop:10,borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:10}}>
-            <Text style={{fontSize:12}}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam, praesentium. Laboriosam fugiat reprehenderit tenetur, iure consectetur esse eius mollitia exercitationem accusa
-            </Text>
-        </View>
-
-        <View style={{flexDirection:'row',justifyContent:'space-between',paddingTop:10}}>
-            <View style={{gap:6}}>
-           <Text>{location}</Text>
-           <Text>
-            <Text>Telefon : </Text>
-            <Text>05537064474</Text>
-           </Text>
-           <Text>
-            <Text>Meslek : </Text>
-            <Text>{job}</Text>
-           </Text>
-
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View style={{ flexDirection: "row", gap: 7 }}>
+          <View
+            style={{
+              width: 90,
+              height: 90,
+              backgroundColor: "red",
+              borderRadius: 4,
+            }}
+          >
+            <ImageBackground
+              source={{
+                uri: `${apiUrl}/${item?.project?.image.replace(
+                  "public/",
+                  "storage/"
+                )}`,
+              }}
+              style={{ width: "100%", height: "100%", borderRadius: 4 }}
+            />
+          </View>
+          <View style={{ gap: 7 }}>
+            <View style={{ gap: 2 }}>
+              <Text style={{ fontSize: 13, fontWeight: "600" }}>
+                Teklif Edilen Fiyat
+              </Text>
+              <Text style={{ fontSize: 12 }}>
+                {addDotEveryThreeDigits(item.price)} ₺
+              </Text>
             </View>
-        
+            <View>
+              <Text style={{ fontSize: 13, fontWeight: "600" }}>
+                Teklif Verilen Mağaza
+              </Text>
+              <Text style={{ fontSize: 12 }}>{item?.store?.name}</Text>
+            </View>
+            <View>
+              <Text style={{ fontSize: 12 }}>
+                {" "}
+                <Text style={{ fontWeight: "600" }}>İlan No: </Text>#1000
+                {item?.project_id}
+              </Text>
+            </View>
+          </View>
         </View>
-     
+
+        <View style={{ justifyContent: "space-between" }}>
+          {item.offer_response == 0 && (
+            <View
+              style={{
+                backgroundColor: "#FFEFCA",
+                padding: 6,
+                borderRadius: 4,
+                flexDirection: "row",
+                gap: 6,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Icon name="clock" color={"#FF9908"} />
+              <Text
+                style={{ fontSize: 10, color: "#FF9908", fontWeight: "600" }}
+              >
+                Yanıt Bekliyor
+              </Text>
+            </View>
+          )}
+          {item.offer_response == 1 && (
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#E1F2E6",
+                padding: 6,
+                borderRadius: 4,
+                flexDirection: "row",
+                gap: 6,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() => setModalVisible(true)}
+            >
+              <Icon2 name="check-circle" color={"#10A958"} />
+              <Text
+                style={{ fontSize: 10, color: "#10A958", fontWeight: "600" }}
+              >
+                Yanıtı Gör
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity
+            style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+          >
+            <Text style={{ fontSize: 12, color: "#EA2C2E", fontWeight: "600" }}>
+              İlanı İncele
+            </Text>
+            <Icon name="arrow-right" size={10} color={"#EA2C2E"} />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Mağaza Yanıtı</Text>
+            <Text style={styles.modalText}>
+              {stripHtmlTags(item.response_description)}
+            </Text>
+
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.closeButtonText}>Kapat</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
-    </View>
-  )
+  );
 }
-const style =StyleSheet.create({
-    container:{
-        backgroundColor:'#FFF',
-        borderRadius: 10,  
-        paddingVertical: 20,  
-        paddingHorizontal: 10,  
-        width: '100%',  
-        marginVertical: 10,  
-    
-        borderWidth:0.7,
-        borderColor:'#e6e6e6',
-        ...Platform.select({
-            ios: {
-              shadowColor: ' #e6e6e6',
-              shadowOffset: { width: 1, height: 1 },
-              shadowOpacity: 0.1,
-              shadowRadius: 5,
-            },
-            android: {
-              elevation: 5,
-            },
-          }),
-    },
-    profileImage:{
-           width:55,
-            height:50
-    },
-    ProfileName:{
-        flex:1.3/2,
-      
-    }
-})
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: 300,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+  },
+  modalTitle: {
+    fontSize: 15,
+    fontWeight: "500",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  modalText: {
+    fontSize: 14,
+    marginBottom: 10,
+    textAlign: "center",
+    fontWeight: "600",
+  },
+  closeButton: {
+    backgroundColor: "#EA2C2E",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  closeButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+});
+const style = StyleSheet.create({
+  container: {
+    backgroundColor: "#FAFAFA",
+    borderRadius: 12,
+    padding: 12,
+    width: "100%",
+    marginVertical: 10,
+
+    borderWidth: 0.7,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  profileImage: {
+    width: 55,
+    height: 50,
+  },
+  ProfileName: {
+    flex: 1.3 / 2,
+  },
+});

@@ -15,7 +15,7 @@ export default function SliderMenu({ goToSlide, tab, settab }) {
     const fetchMenuItems = async () => {
       try {
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/menu-list"
+          "https://private.emlaksepette.com/api/menu-list"
         );
         setMenuItems(response.data);
       } catch (error) {
@@ -42,9 +42,7 @@ export default function SliderMenu({ goToSlide, tab, settab }) {
                 borderWidth: tab == index ? 0 : 1,
               },
             ]}
-            onPress={() => {
-              goToSlide(index);
-            }}
+            onPress={() => {}}
           >
             <Text
               style={{

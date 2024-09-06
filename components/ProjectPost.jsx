@@ -5,23 +5,22 @@ import {
   ImageBackground,
   TouchableOpacity,
   Dimensions,
-  Image,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { getValueFor } from "./methods/user";
+import { Image } from "expo-image";
+
 export default function ProjectPost({
   project,
-user,
   ımage,
   location,
   city,
-
+  user,
   ProfilImage,
-
   ProjectNo,
   loading,
 }) {
-  const navigation = useNavigation();
   const generateRandomColorCode = () => {
     const letters = "0123456789ABCDEF";
     let color = "#";
@@ -32,102 +31,118 @@ user,
   };
 
   const RandomColor = generateRandomColorCode();
+  const navigation = useNavigation();
+  const [userLogin, setuserLogin] = useState({});
+  useEffect(() => {
+    getValueFor("user", setuserLogin);
+  }, []);
+
   return (
     <TouchableOpacity
-      style={{ marginTop: 10 }}
       onPress={() =>
         navigation.navigate("Details", {
-          
           ProjectId: ProjectNo,
-      
         })
       }
     >
       <View style={styles.container}>
-        <ImageBackground
+        <Image
           source={{ uri: ımage }}
-          style={{ width: "100%", height: "100%" }}
+          style={styles.image}
+          contentFit="cover"
+          transition={300}
         />
-        <View style={styles.ShoppingName}>
-          <View style={styles.ShopImage}>
-            <Image
-              source={{ uri: ProfilImage }}
-              style={{ width: "50%", height: "90%" }}
-              resizeMode="cover"
-            />
-          </View>
-          <View style={styles.ShopText}>
-            <Text
+
+        {/* Logo ve Başlığı içeren alan */}
+        <View style={styles.logoTitleContainer}>
+          <View
+            style={[
+              styles.titleContainer,
+              { backgroundColor: RandomColor + "CC" },
+            ]}
+          >
+            <View
               style={{
-                color: "white",
-                fontSize: 8,
-                textAlign: "center",
-                fontWeight: "500",
+                height: "40%",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              {location} / {city}
-            </Text>
-          </View>
-        </View>
+              <View style={styles.logoContainer}>
+                <Image
+                  source={{ uri: ProfilImage }}
+                  style={styles.logoImage}
+                  contentFit="cover"
+                  transition={200}
+                />
+              </View>
+            </View>
 
-        <View
-          style={[
-            styles.Description,
-            {
-              backgroundColor: user?.banner_hex_code + "CC",
-              padding: 10,
-            },
-          ]}
-        >
-          <Text
-            style={{
-              color: "#FFFFFF",
-              fontWeight: "800",
-              fontSize: 17,
-              textAlign: "center",
-            }}
-          >
-            {project.project_title}
-          </Text>
+            <View style={{ height: "60%", gap: 10 }}>
+              <Text style={styles.titleText}>
+                {project?.project_title?.toUpperCase()}
+              </Text>
+              <Text style={[styles.titleText, { fontSize: 12 }]}>
+                {project.city.title}
+              </Text>
+            </View>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
   );
 }
+
 const { width, height } = Dimensions.get("window");
+
 const styles = StyleSheet.create({
   container: {
     height: width > 400 ? 230 : 180,
     alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 10,
+    borderRadius: 10,
+    overflow: "hidden",
+    position: "relative",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+  },
 
-    display: "flex",
-    flexDirection: "row",
-  },
-  ShoppingName: {
-    position: "absolute",
-    width: "30%",
-    backgroundColor: "#FFFFFF",
-    left: 0,
-    height: "40%",
-    display: "flex",
-    flexDirection: "column",
-  },
-  ShopImage: {
-    height: "75%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  ShopText: {
-    height: "25%",
-    backgroundColor: "black",
-    justifyContent: "center",
-  },
-  Description: {
+  logoTitleContainer: {
     width: "40%",
     height: "100%",
     position: "absolute",
+    top: 0,
+    left: 0,
     right: 0,
-    alignItems: "center",
+    bottom: 0,
+    padding: 0,
+  },
+  logoContainer: {
+    width: 50,
+    height: 50,
     justifyContent: "center",
+    alignItems: "center",
+    marginRight: 10,
+  },
+  logoImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 25, // İsteğe bağlı: Yuvarlak logo için
+  },
+  titleContainer: {
+    height: "100%",
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    opacity: 0.8,
+  },
+  titleText: {
+    color: "#FFFFFF",
+    fontWeight: "800",
+    fontSize: 15,
+    textAlign: "center",
   },
 });

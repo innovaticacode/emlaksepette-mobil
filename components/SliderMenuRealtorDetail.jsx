@@ -8,7 +8,7 @@ export default function SliderMenuRealtorDetails({tab,setTab,changeTab}) {
         {text:'Özellikler',Icontype:false},
         {text:'Harita',Icontype:false},
         {text:'Yorumlar',Icontype:false},
-        {text:'Takas Formu' , Icontype:true}
+      
     ]
   return (
     <ScrollView
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
       justifyContent: "center",
       alignItems: "center",
       padding: 7,
-      borderRadius: 6,
+      borderRadius: 5,
       borderWidth: 1,
       borderColor: "#ebebeb",
     },

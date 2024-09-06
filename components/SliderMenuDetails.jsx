@@ -7,7 +7,8 @@ export default function SliderMenuDetails({tab,setTab,changeTab}) {
         {text:'Açıklama'},
         {text:'Özellikler'},
         {text:'Harita'},
-        {text:'Vaziyet & Kat Planı'}
+        {text:'Vaziyet & Kat Planı'},
+        {text:'Yorumlar'}
     ]
   return (
     <ScrollView
@@ -16,15 +17,14 @@ export default function SliderMenuDetails({tab,setTab,changeTab}) {
       style={{}}
       bounces={false}
     >
-      <View style={{ padding: 10, flexDirection: "row", gap: 10 }}>
+      <View style={{ flexDirection: "row"}}>
         {menuItems.map((item, index) => (
           <TouchableOpacity
             key={index}
             style={[
               styles.tabBtn,
               {
-                backgroundColor: tab == index ? "#EA2C2E" : "white",
-                borderWidth: tab == index ? 0 : 1,
+                backgroundColor: tab == index ? "#EA2C2E" : "white"
               },
             ]}
             onPress={()=>{
@@ -53,9 +53,7 @@ const styles = StyleSheet.create({
       paddingRight: 15,
       justifyContent: "center",
       alignItems: "center",
-      padding: 7,
-      borderRadius: 6,
-      borderWidth: 1,
+      padding: 10,
       borderColor: "#ebebeb",
     },
     text: {

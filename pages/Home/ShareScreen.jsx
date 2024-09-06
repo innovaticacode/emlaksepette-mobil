@@ -6,18 +6,19 @@ import {
   ScrollView,
   SafeAreaView,
   StyleSheet,
-  ImageBackground
+  ImageBackground,
 } from "react-native";
 import { Platform } from "react-native";
 
 import Icon from "react-native-vector-icons/AntDesign";
 import Header from "../../components/Header";
-import { useState,useEffect} from "react";
+import { useState, useEffect } from "react";
 import Modal from "react-native-modal";
 import Categories from "../../components/Categories";
 import Search from "./Search";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
+import DrawerMenu from "../../components/DrawerMenu";
 export default function ShareScreen() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -26,12 +27,14 @@ export default function ShareScreen() {
   };
 
   const navigation = useNavigation();
-  const [user, setuser] = useState({})
+  const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
+  const [index, setindex] = useState(0)
+  const [tab, settab] = useState(0)
   return (
-    <SafeAreaView style={{ backgroundColor: "white", flex: 1}}>
+    <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
       <View
         style={{
           ...Platform.select({
@@ -42,7 +45,7 @@ export default function ShareScreen() {
           }),
         }}
       >
-        <Header onPress={toggleDrawer} />
+        <Header onPress={toggleDrawer} index={setindex}  tab={settab}/>
       </View>
       <Modal
         isVisible={isDrawerOpen}
@@ -50,89 +53,15 @@ export default function ShareScreen() {
         animationIn="bounceInLeft"
         animationOut="bounceOutLeft"
         style={styles.modal}
-        swipeDirection={['left']}
-        onSwipeComplete={()=>setIsDrawerOpen(false)}
+        swipeDirection={["left"]}
+        onSwipeComplete={() => setIsDrawerOpen(false)}
       >
         <View style={styles.modalContent}>
-          <View
-            style={{
-              backgroundColor: "#EA2C2E",
-              flex: 0.7 / 2,
-              borderBottomLeftRadius: 30,
-              borderBottomRightRadius: 30,
-            }}
-          >
-            <SafeAreaView style={{ zIndex: 1 }}>
-              <ScrollView showsVerticalScrollIndicator={false}>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("HomePage");
-                    setIsDrawerOpen(false);
-                  }}
-                >
-                  <Categories
-                    category="Ana Sayfa"
-                    bordernone="none"
-                    ıconName="home"
-                  />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("Hesabım");
-                    setIsDrawerOpen(false);
-                  }}
-                >
-                  <Categories
-                    category="Hesabım"
-                    bordernone="none"
-                    ıconName="user"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("RealtorClubExplore");
-                    setIsDrawerOpen(false);
-                  }}
-                >
-                  <Categories
-                    category="Emlak Kulüp"
-                    bordernone="none"
-                    showImage={true}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Categories
-                    category="İlan Ver"
-                    bordernone="none"
-                    ıconName="plus"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Categories
-                    category="Sat Kirala"
-                    bordernone="none"
-                    ıconName="search-plus"
-                  />
-                </TouchableOpacity>
-              </ScrollView>
-            </SafeAreaView>
-            <ImageBackground
-              source={require("./MenuBg.jpg")}
-              style={{
-                width: "100%",
-                height: "100%",
-                position: "absolute",
-                opacity: 0.2,
-              }}
-              resizeMode="cover"
-              borderBottomLeftRadius={30}
-              borderBottomRightRadius={30}
-            />
-          </View>
-          <View style={{ backgroundColor: "white", flex: 1.3 / 2 }}>
-            <Search onpres={toggleDrawer} />
-          </View>
+      
+          <DrawerMenu setIsDrawerOpen={setIsDrawerOpen}/>
+           
+         
+        
         </View>
       </Modal>
       <ScrollView
@@ -140,100 +69,255 @@ export default function ShareScreen() {
         style={{ padding: 10 }}
         nestedScrollEnabled={true}
       >
-          <View style={{gap:15,height:'100%',paddingBottom:25,paddingTop:5,alignItems:'center'}}> 
-             {/* Project Card */}
-              {
-             user.role=='Kurumsal Hesap' &&   user.corporate_type=='Emlak Ofisi' ?
-                <>
-                </>:
-                      <View style={styles.card}>
-                      <View style={{width:'100%',height:13,backgroundColor:'#EA2A28',borderTopLeftRadius:15,borderTopRightRadius:15}}/>
-                      <View style={{alignItems:'center'}}>
-                          <View style={{width:80,height:80}}>
-                            <Image source={require('./proje.png')} style={{width:'100%',height:'100%',tintColor:'#EA2A28'}}/>
-                          </View>
-          
-                      </View>
-                      <View style={{padding:10}}>
-                        <Text style={{fontWeight:'400',textAlign:'center',fontSize:12}}>
-                        Kendi proje ilanınızı ekleyin ve hayalinzdeki projenizi paylaşın. Binlerce kişiye ulaşın
-                        </Text>
-                      </View>
-                      <View style={{alignItems:'center'}}>
-                        <TouchableOpacity style={styles.addBtn}
-                             onPress={()=>{
-                              navigation.navigate('CategorieChoose',{name:'Proje İLanı',previousName:'Proje İlanı'})
-                            }}
-                        >
-                          <Text style={{textAlign:'center',color:'white',fontWeight:'600'}}>Proje İlanı Ekle</Text>
-                          <Icon name="pluscircle" color={'white'} size={15}/>
-                        </TouchableOpacity>
-                       
-                      </View>
-                    </View>
-              }
-    
-          {/* Estate Card */}
+        <View
+          style={{
+            gap: 15,
+            height: "100%",
+            paddingBottom: 25,
+            paddingTop: 5,
+            alignItems: "center",
+          }}
+        >
+          {/* Project Card */}
           {
-            user.role=='Kurumsal Hesap'?
+          (user.role == "Kurumsal Hesap" && user.corporate_type=='İnşaat Ofisi') && (
+              <>
+                <View style={styles.card}>
+              <View
+                style={{
+                  width: "100%",
+                  height: 13,
+                  backgroundColor: "#EA2A28",
+                  borderTopLeftRadius: 15,
+                  borderTopRightRadius: 15,
+                }}
+              />
+              <View style={{ alignItems: "center" }}>
+                <View style={{ width: 80, height: 80 }}>
+                  <Image
+                    source={require("./proje.png")}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      tintColor: "#EA2A28",
+                    }}
+                  />
+                </View>
+              </View>
+              <View style={{ padding: 10 }}>
+                <Text
+                  style={{
+                    fontWeight: "400",
+                    textAlign: "center",
+                    fontSize: 12,
+                  }}
+                >
+                  Kendi proje ilanınızı ekleyin ve hayalinzdeki projenizi
+                  paylaşın. Binlerce kişiye ulaşın
+                </Text>
+              </View>
+              <View style={{ alignItems: "center" }}>
+                <TouchableOpacity
+                  style={styles.addBtn}
+                  onPress={() => {
+                    navigation.navigate("CategorieChoose", {
+                      name: "Proje İLanı",
+                      previousName: "Proje İlanı",
+                    });
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "white",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Proje İlanı Ekle
+                  </Text>
+                  <Icon name="pluscircle" color={"white"} size={15} />
+                </TouchableOpacity>
+              </View>
+            </View>
             <View style={styles.card}>
-            <View style={{width:'100%',height:13,backgroundColor:'#274ABB',borderTopLeftRadius:15,borderTopRightRadius:15}}/>
-            <View style={{alignItems:'center'}}>
-                <View style={{width:80,height:80}}>
-                  <Image source={require('./emlak.png')} style={{width:'100%',height:'100%',tintColor:'#274ABB'}}/>
+              <View
+                style={{
+                  width: "100%",
+                  height: 13,
+                  backgroundColor: "#274ABB",
+                  borderTopLeftRadius: 15,
+                  borderTopRightRadius: 15,
+                }}
+              />
+              <View style={{ alignItems: "center" }}>
+                <View style={{ width: 80, height: 80 }}>
+                  <Image
+                    source={require("./emlak.png")}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      tintColor: "#274ABB",
+                    }}
+                  />
                 </View>
-
+              </View>
+              <View style={{ padding: 10 }}>
+                <Text
+                  style={{
+                    fontWeight: "400",
+                    textAlign: "center",
+                    fontSize: 12,
+                  }}
+                >
+                  Kendi emlak ilanınızı ekleyin ve ev, daire veya arsa
+                  satışınızı hızlandırın. Hemen ilan verin!
+                </Text>
+              </View>
+              <View style={{ alignItems: "center" }}>
+                <TouchableOpacity
+                  style={[styles.addBtn, { backgroundColor: "#274ABB" }]}
+                  onPress={() => {
+                    navigation.navigate("Emlak", {
+                      name: "İlan Ver",
+                    });
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "white",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Emlak İlanı Ekle
+                  </Text>
+                  <Icon name="pluscircle" color={"white"} size={15} />
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={{padding:10}}>
-              <Text style={{fontWeight:'400',textAlign:'center',fontSize:12}}>
-              Kendi emlak ilanınızı ekleyin ve ev, daire veya arsa satışınızı hızlandırın. Hemen ilan verin!
-              </Text>
-            </View>
-            <View style={{alignItems:'center'}}>
-              <TouchableOpacity style={[styles.addBtn,{backgroundColor:'#274ABB'}]}
-              onPress={()=>{
-                navigation.navigate('RealtorAdd',{name:'Emlak İlanı Yayınla'})
-              }}
-              >
-                <Text style={{textAlign:'center',color:'white',fontWeight:'600'}}>Emlak İlanı Ekle</Text>
-                <Icon name="pluscircle" color={'white'} size={15}/>
-              </TouchableOpacity>
-             
-            </View>
-          </View>:''
-          }
-         
-                {/* Sat Kirala */}
-          <View style={[styles.card,{display:user.role=='Bireysel Hesap' ? 'flex':'none'}]}>
-            <View style={{width:'100%',height:13,backgroundColor:'#333333',borderTopLeftRadius:15,borderTopRightRadius:15}}/>
-            <View style={{alignItems:'center'}}>
-                <View style={{width:80,height:80}}>
-                  <Image source={require('./emlak.png')} style={{width:'100%',height:'100%',tintColor:'#274ABB'}}/>
-                </View>
-
-            </View>
-            <View style={{padding:10}}>
-              <Text style={{fontWeight:'400',textAlign:'center',fontSize:12}}>
-              Kendi emlak ilanınızı ekleyin ve ev, daire veya arsa satışınızı hızlandırın. Hemen ilan verin!
-              </Text>
-            </View>
-            <View style={{alignItems:'center'}}>
-              <TouchableOpacity style={[styles.addBtn,{backgroundColor:'#333333'}]}
-              onPress={()=>{
-                navigation.navigate('SellAndRent')
-              }}
-              >
-                <Text style={{textAlign:'center',color:'white',fontWeight:'600'}}>Sat Kirala</Text>
-                <Icon name="pluscircle" color={'white'} size={15}/>
-              </TouchableOpacity>
-             
-            </View>
-          </View>
-
+              </>
           
+          )}
 
+          {/* Estate Card */}
+          {(user.role == "Kurumsal Hesap" && user.corporate_type!='İnşaat Ofisi') ? (
+            <View style={styles.card}>
+              <View
+                style={{
+                  width: "100%",
+                  height: 13,
+                  backgroundColor: "#274ABB",
+                  borderTopLeftRadius: 15,
+                  borderTopRightRadius: 15,
+                }}
+              />
+              <View style={{ alignItems: "center" }}>
+                <View style={{ width: 80, height: 80 }}>
+                  <Image
+                    source={require("./emlak.png")}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      tintColor: "#274ABB",
+                    }}
+                  />
+                </View>
+              </View>
+              <View style={{ padding: 10 }}>
+                <Text
+                  style={{
+                    fontWeight: "400",
+                    textAlign: "center",
+                    fontSize: 12,
+                  }}
+                >
+                  Kendi emlak ilanınızı ekleyin ve ev, daire veya arsa
+                  satışınızı hızlandırın. Hemen ilan verin!
+                </Text>
+              </View>
+              <View style={{ alignItems: "center" }}>
+                <TouchableOpacity
+                  style={[styles.addBtn, { backgroundColor: "#274ABB" }]}
+                  onPress={() => {
+                    navigation.navigate("Emlak", {
+                      name: "İlan Ver",
+                    });
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "white",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Emlak İlanı Ekle
+                  </Text>
+                  <Icon name="pluscircle" color={"white"} size={15} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : (
+            ""
+          )}
+
+          {/* Sat Kirala */}
+          <View
+            style={[
+              styles.card,
+              { display: user.role == "Bireysel Hesap" ? "flex" : "none" },
+            ]}
+          >
+            <View
+              style={{
+                width: "100%",
+                height: 13,
+                backgroundColor: "#333333",
+                borderTopLeftRadius: 15,
+                borderTopRightRadius: 15,
+              }}
+            />
+            <View style={{ alignItems: "center" }}>
+              <View style={{ width: 80, height: 80 }}>
+                <Image
+                  source={require("./emlak.png")}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    tintColor: "#274ABB",
+                  }}
+                />
+              </View>
+            </View>
+            <View style={{ padding: 10 }}>
+              <Text
+                style={{ fontWeight: "400", textAlign: "center", fontSize: 12 }}
+              >
+                Kendi emlak ilanınızı ekleyin ve ev, daire veya arsa satışınızı
+                hızlandırın. Hemen ilan verin!
+              </Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <TouchableOpacity
+                style={[styles.addBtn, { backgroundColor: "#333333" }]}
+                onPress={() => {
+                  navigation.navigate("SellAndRent");
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: "white",
+                    fontWeight: "600",
+                  }}
+                >
+                  Sat Kirala
+                </Text>
+                <Icon name="pluscircle" color={"white"} size={15} />
+              </TouchableOpacity>
+            </View>
           </View>
-       
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -265,11 +349,11 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: "#FFFFFF",
-    borderTopLeftRadius:15,
-    borderTopRightRadius:15,
-    gap:8,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    gap: 8,
     width: "90%",
- 
+
     height: 210,
     borderWidth: 0.7,
     borderColor: "#e6e6e6",
@@ -282,19 +366,18 @@ const styles = StyleSheet.create({
       },
       android: {
         elevation: 5,
-        
       },
     }),
   },
-  addBtn:{
-    backgroundColor:'#EA2A28',
-    padding:8,
-    width:'60%',
-    borderTopLeftRadius:10,
-    borderTopRightRadius:10,
-    flexDirection:'row',
-    alignItems:'center',
-    justifyContent:'center',
-    gap:10
-  }
+  addBtn: {
+    backgroundColor: "#EA2A28",
+    padding: 8,
+    width: "60%",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
 });

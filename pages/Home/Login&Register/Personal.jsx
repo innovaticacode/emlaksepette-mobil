@@ -8,7 +8,6 @@ import {
   Keyboard,
   ScrollView,
   SafeAreaView,
-  ActivityIndicator,
 } from "react-native";
 import { React, useState, useRef } from "react";
 import EyeIcon from "react-native-vector-icons/Ionicons";
@@ -18,6 +17,13 @@ import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
 import HTML from "react-native-render-html";
 import { useNavigation } from "@react-navigation/native";
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import { ActivityIndicator } from "react-native-paper";
+import {
+  AlertNotificationRoot,
+  Dialog,
+  ALERT_TYPE,
+} from "react-native-alert-notification";
 export default function Personal({ type }) {
   const navigation = useNavigation();
   const [eye, seteye] = useState("eye-off-sharp");
@@ -51,8 +57,10 @@ export default function Personal({ type }) {
   const [phoneNumber, setphoneNumber] = useState("");
   const [message, setmessage] = useState("");
   const [Isloading, setIsloading] = useState(false);
-  
-const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
+
+  const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] =
+    useState(false);
+  const [SuccessModal, setSuccessModal] = useState(false);
   const postData = async () => {
     setIsloading(true);
     try {
@@ -67,14 +75,15 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
       formData.append("check-c", checked2);
       formData.append("check-e", checked3);
       const response = await axios.post(
-        "https://test.emlaksepette.com/api/register",
+        "https://private.emlaksepette.com/api/register",
         formData
       );
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
-      console.log("İstek başarıyla tamamlandı:", response.data);
+
       setmessage(response.data.message);
-      navigation.navigate("Login",{showAlert:true ,message:message});
+      navigation.navigate("Login", { showAlert: true });
+
       setname("");
       setePosta("");
       setpassword("");
@@ -105,7 +114,6 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
       console.error("Beklenmeyen bir hata oluştu:", error);
     } finally {
       setIsloading(false);
-     
     }
   };
   const [errorStatu, seterrorStatu] = useState(0);
@@ -153,7 +161,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
         break;
       case password.length < 6:
         seterrorStatu(6);
-        seterrorMessage("Şifreniz En Az 6 Karakter Olmalıdır");
+        seterrorMessage("Şifreniz En Az 5 Karakter Olmalıdır");
         setTimeout(() => {
           seterrorStatu(0);
         }, 1000);
@@ -185,7 +193,7 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
   // Örnek kullanım
 
   const fetchData = async (deal) => {
-    const url = `https://test.emlaksepette.com/api/sayfa/${deal}`;
+    const url = `https://private.emlaksepette.com/api/sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
@@ -196,16 +204,61 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
     }
   };
 
-  // Fonksiyonu çağırarak isteği gerçekleştirin
+  const formatPhoneNumber = (value) => {
+    // Sadece rakamları al
+    const cleaned = ("" + value).replace(/\D/g, "");
+
+    // 0 ile başlıyorsa, ilk karakteri çıkar
+    const cleanedWithoutLeadingZero = cleaned.startsWith("0")
+      ? cleaned.substring(1)
+      : cleaned;
+
+    let formattedNumber = "";
+
+    for (let i = 0; i < cleanedWithoutLeadingZero.length; i++) {
+      if (i === 0) formattedNumber += "(";
+      if (i === 3) formattedNumber += ") ";
+      if (i === 6 || i === 8) formattedNumber += " ";
+      formattedNumber += cleanedWithoutLeadingZero[i];
+    }
+
+    return formattedNumber;
+  };
+  const handlePhoneNumberChange = (value) => {
+    const formattedPhoneNumber = formatPhoneNumber(value);
+    setphoneNumber(formattedPhoneNumber);
+  };
+
+  const handleCheckboxChange = (
+    checked,
+    setChecked,
+    modalVisible,
+    setModalVisible,
+    deal
+  ) => {
+    if (checked) {
+      setModalVisible(false);
+      setChecked(false);
+    } else {
+      setModalVisible(true);
+      if (deal) {
+        GetDeal(deal);
+      }
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false} onScroll={()=>Keyboard.dismiss()} scrollEventThrottle={16}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          onScroll={() => Keyboard.dismiss()}
+          scrollEventThrottle={16}
+        >
           <View style={{ padding: 15, gap: 20 }}>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   İsim
                 </Text>
               </View>
@@ -219,20 +272,13 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                 ]}
                 value={name}
                 onChangeText={(value) => setname(value)}
-                placeholder="Adınızı Giriniz..."
+                placeholder="İsim Soyisim"
               />
-              {errorStatu == 1 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
             </View>
 
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   E-Posta
                 </Text>
               </View>
@@ -245,20 +291,14 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                 ]}
                 value={ePosta}
                 onChangeText={(value) => setePosta(value)}
-                placeholder="example@gmail.com"
+                placeholder="E-Posta Adresi"
+                autoCapitalize="none" // İlk harfin büyük olmasını engeller
               />
-              {errorStatu == 2 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
             </View>
 
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Cep Telefonu
                 </Text>
               </View>
@@ -270,21 +310,15 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                   },
                 ]}
                 value={phoneNumber}
-                onChangeText={(value) => setphoneNumber(value)}
-                placeholder="5555555555"
+                onChangeText={handlePhoneNumberChange}
+                placeholder="5*********"
                 keyboardType="number-pad"
+                maxLength={15}
               />
-              {errorStatu == 3 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: 600 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Şifre
                 </Text>
               </View>
@@ -298,156 +332,173 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                   ]}
                   value={password}
                   onChangeText={(value) => setpassword(value)}
-                  placeholder="*********"
+                  placeholder="Şifre"
                   secureTextEntry={Show ? false : true}
+                  autoCapitalize="none" // İlk harfin büyük olmasını engeller
                 />
                 <TouchableOpacity
-                  style={{ position: "absolute", right: 10, bottom: 9 }}
+                  style={{
+                    position: "absolute",
+                    right: 9,
+                    top: "21%",
+                  }}
                   onPress={show}
                 >
                   <EyeIcon
                     name={Show ? "eye" : "eye-off-sharp"}
-                    size={20}
+                    size={23}
                     color={"#333"}
                   />
                 </TouchableOpacity>
               </View>
-              {errorStatu == 4 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
-              {errorStatu == 6 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
             </View>
+            <View style={styles.container}>
+              <TouchableOpacity
+                onPress={() =>
+                  handleCheckboxChange(
+                    checked,
+                    setChecked,
+                    modalVisible,
+                    setModalVisible,
+                    "bireysel-uyelik-sozlesmesi"
+                  )
+                }
+                style={styles.checkboxContainer}
+              >
+                {checked ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
+                <Text
+                  style={[
+                    styles.checkboxLabel,
+                    { color: errorStatu === 5 ? "red" : "black" },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      fontSize: 13,
+                    }}
+                  >
+                    Bireysel üyelik sözleşmesini
+                  </Text>{" "}
+                  okudum onaylıyorum
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  handleCheckboxChange(
+                    checked1,
+                    setChecked1,
+                    modalVisible2,
+                    setModalVisible2,
+                    "kvkk-politikasi"
+                  )
+                }
+                style={styles.checkboxContainer}
+              >
+                {checked1 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
+                <Text
+                  style={[
+                    styles.checkboxLabel,
+                    { color: errorStatu === 5 ? "red" : "black" },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      fontSize: 13,
+                    }}
+                  >
+                    KVKK metnini
+                  </Text>{" "}
+                  okudum onaylıyorum
+                </Text>
+              </TouchableOpacity>
 
-            <View>
-              <CheckBox
-                checked={checked}
-                onPress={() => {
-                  GetDeal("bireysel-uyelik-sozlesmesi");
+              <TouchableOpacity
+                onPress={() =>
+                  handleCheckboxChange(
+                    checked2,
+                    setChecked2,
+                    modalVisible3,
+                    setModalVisible3,
+                    "gizlilik-sozlesmesi-ve-aydinlatma-metni"
+                  )
+                }
+                style={styles.checkboxContainer}
+              >
+                {checked2 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
+                <Text
+                  style={[
+                    styles.checkboxLabel,
+                    { color: errorStatu === 5 ? "red" : "black" },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      fontSize: 13,
+                    }}
+                  >
+                    Gizlilik sözleşmesi ve aydınlatma metnini
+                  </Text>{" "}
+                  okudum onaylıyorum
+                </Text>
+              </TouchableOpacity>
 
-                  checked ? setModalVisible(false) : setModalVisible(true);
-                  setChecked(false);
-                }}
-                // Use ThemeProvider to make change for all checkbox
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="#E54242"
-                title={
-                  <Text style={{ color: errorStatu === 5 ? "red" : "black" }}>
-                    <Text
-                      style={{
-                        color: errorStatu === 5 ? "red" : "#027BFF",
-                        fontSize: 13,
-                      }}
-                    >
-                      {" "}
-                      Bireysel üyelik sözleşmesini
-                    </Text>
-                    <Text style={{ fontSize: 13 }}> okudum onaylıyorum</Text>
-                  </Text>
-                }
-                textStyle={{ fontSize: 13, fontWeight: 400 }}
-                size={22}
-                containerStyle={{ padding: 0, width: "100%" }}
-              />
-              <CheckBox
-                checked={checked1}
-                onPress={() => {
-                  GetDeal("kvkk-politikasi");
-                  checked1 ? setModalVisible2(false) : setModalVisible2(true);
-                  setChecked1(false);
-                }}
-                // Use ThemeProvider to make change for all checkbox
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="#E54242"
-                title={
-                  <Text style={{ color: errorStatu === 5 ? "red" : "black" }}>
-                    <Text
-                      style={{
-                        color: errorStatu === 5 ? "red" : "#027BFF",
-                        fontSize: 13,
-                      }}
-                    >
-                      {" "}
-                      Kvkk metnini
-                    </Text>
-                    <Text style={{ fontSize: 13 }}> okudum onaylıyorum</Text>
-                  </Text>
-                }
-                textStyle={{ fontSize: 13, fontWeight: 400 }}
-                size={22}
-                containerStyle={{ padding: 1 }}
-              />
-              <CheckBox
-                checked={checked2}
-                onPress={() => {
-                  GetDeal("gizlilik-sozlesmesi-ve-aydinlatma-metni");
-                  checked2 ? setModalVisible3(false) : setModalVisible3(true);
-                  setChecked2(false);
-                }}
-                // Use ThemeProvider to make change for all checkbox
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="#E54242"
-                title={
-                  <View style={{ paddingLeft: 5 }}>
-                    <Text style={{ color: errorStatu === 5 ? "red" : "black" }}>
-                      <Text
-                        style={{
-                          color: errorStatu === 5 ? "red" : "#027BFF",
-                          fontSize: 13,
-                        }}
-                      >
-                        Gizlilik sözleşmesi ve aydınlatma metnini
-                      </Text>
-                      <Text style={{ fontSize: 13 }}> okudum onaylıyorum</Text>
-                    </Text>
-                  </View>
-                }
-                textStyle={{ fontSize: 13, fontWeight: 400 }}
-                size={22}
-                containerStyle={{ padding: 1 }}
-              />
-              <CheckBox
-                checked={checked3}
+              <TouchableOpacity
                 onPress={toggleCheked3}
-                // Use ThemeProvider to make change for all checkbox
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="#E54242"
-                title={
-                  <View style={{ paddingLeft: 5 }}>
-                    <Text>
-                      Tarafıma elektronik ileti gönderilmesini kabul ediyorum.
-                    </Text>
-                  </View>
-                }
-                textStyle={{ fontSize: 13, fontWeight: 400 }}
-                size={22}
-                containerStyle={{ padding: 1 }}
-              />
+                style={styles.checkboxContainer}
+              >
+                {checked3 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
+                <Text style={styles.checkboxLabel}>
+                  İletişim bilgilerime kampanya, tanıtım ve reklam içerikli
+                  ticari elektronik ileti gönderilmesine, bu amaçla kişisel
+                  verilerimin “Emlaksepette” tarafından işlenmesine ve
+                  tedarikçileri ve işbirlikçileri ile paylaşılmasına, bu
+                  amaçlarla verilerimin yurt dışına aktarılmasına izin
+                  veriyorum.
+                </Text>
+              </TouchableOpacity>
             </View>
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity
                 style={{
                   backgroundColor: "#E54242",
                   padding: 9,
-                  borderRadius: 10,
-                  width: "90%",
+                  borderRadius: 5,
+                  width: "100%",
                 }}
                 onPress={registerPersonal}
               >
@@ -490,8 +541,15 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                       setModalVisible(false);
                     }}
                   >
-                    <Text style={{ color: "white", fontWeight: "bold" }}>
-                      Okudum Kabul ediyorum
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "bold",
+                        width: "100%",
+                        textAlign: "center",
+                      }}
+                    >
+                      Okudum kabul ediyorum
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -521,8 +579,15 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                       setModalVisible2(false);
                     }}
                   >
-                    <Text style={{ color: "white", fontWeight: "bold" }}>
-                      Okudum Kabul ediyorum
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "bold",
+                        width: "100%",
+                        textAlign: "center",
+                      }}
+                    >
+                      Okudum kabul ediyorum
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -552,8 +617,15 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
                       setModalVisible3(false);
                     }}
                   >
-                    <Text style={{ color: "white", fontWeight: "bold" }}>
-                      Okudum Kabul ediyorum
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "bold",
+                        textAlign: "center",
+                        width: "100%",
+                      }}
+                    >
+                      Okudum kabul ediyorum
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -681,10 +753,22 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
             style={styles.modal}
           >
             <View style={styles.modalContent}>
-              <ActivityIndicator size="large" />
+              <ActivityIndicator size="large" color="#333" />
               <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-                Giriş Sayfasına Yönlendiriliyorsunuz
+                Üyeliğiniz Oluşturuluyor
               </Text>
+            </View>
+          </Modal>
+          <Modal
+            isVisible={SuccessModal}
+            animationIn={"fadeIn"}
+            animationOut={"fadeOut"}
+            style={styles.modal}
+          >
+            <View style={styles.modalContent}>
+              <View>
+                <Text>Üyeliğiniz Başarı İle Oluşturuldu</Text>
+              </View>
             </View>
           </Modal>
         </ScrollView>
@@ -695,14 +779,17 @@ const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] = useState(false)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#ffff",
   },
   Input: {
     padding: 9,
     borderWidth: 1,
     borderColor: "#ebebeb",
     borderRadius: 5,
+    fontSize: 13,
     backgroundColor: "#FAFAFA",
+    color: "#717171",
+    fontWeight: "600",
   },
   modal2: {
     justifyContent: "flex-end",
@@ -725,11 +812,37 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
 
-    borderRadius: 10,
+    borderRadius: 5,
   },
   Acceptbtn: {
     backgroundColor: "#2aaa46",
     padding: 10,
+    width: "100%",
+    textAlign: "center",
     borderRadius: 5,
+    alignItems: "center",
+  },
+
+  checkboxContainer: {
+    flexDirection: "row",
+    marginBottom: 10,
+  },
+  checkboxLabel: {
+    fontSize: 13,
+    flex: 1,
+    marginLeft: 5,
+  },
+  checkbox: {
+    width: 22,
+    height: 22,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  checkboxInner: {
+    width: 18,
+    height: 18,
+    backgroundColor: "#E54242",
   },
 });

@@ -30,19 +30,13 @@ export default function ProjectAdverts({ data }) {
   }, []);
 
   const { width, height } = Dimensions.get("window");
-  const ApiUrl = "https://test.emlaksepette.com";
+  const ApiUrl = "https://private.emlaksepette.com";
   return (
-    <ScrollView>
-      <FlatList
-        data={featuredProjects}
-        renderItem={({ item, index }) => (
-          <View
-            style={{
-              paddingLeft: 10,
-              paddingRight: 10,
-              width: "100%",
-            }}
-          >
+    <View style={{ padding: 5 }}>
+      {featuredProjects && featuredProjects.length > 0 ? (
+        <FlatList
+          data={featuredProjects}
+          renderItem={({ item, index }) => (
             <ProjectPost
               key={index}
               project={item}
@@ -59,10 +53,13 @@ export default function ProjectAdverts({ data }) {
               ProfilImage={`${ApiUrl}/storage/profile_images/${data.data.profile_image}`}
               loading={loadingPrjoects}
             />
-          </View>
-        )}
-        scrollEnabled={false}
-      />
-    </ScrollView>
+          )}
+        />
+      ) : (
+        <View style={{ padding: 10 }}>
+          <Text>Proje bulunamadı.</Text>
+        </View>
+      )}
+    </View>
   );
 }

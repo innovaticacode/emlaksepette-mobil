@@ -18,7 +18,7 @@ import { getValueFor } from "../../../../components/methods/user";
 export default function EditCollectionPost({ item, collection, onRemove }) {
   const parseHousingData = (data) => JSON.parse(data);
   const navigation = useNavigation();
-  const apiUrl = "https://test.emlaksepette.com/api/";
+  const apiUrl = "https://private.emlaksepette.com/api/";
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -36,17 +36,17 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
     defaultPrice: 0,
   };
 
-  if (item.item_type === 1) {
-    const discountRate = item.project_values["discount_rate[]"] || 0;
-    const price = item.project_values["price[]"]
-      ? parseInt(item.project_values["price[]"])
+  if (item && item?.item_type === 1) {
+    const discountRate = item?.project_values["discount_rate[]"] || 0;
+    const price = item?.project_values["price[]"]
+      ? parseInt(item?.project_values["price[]"])
       : 0;
     const discountedPrice = price - (price * discountRate) / 100;
 
     itemData = {
-      id: item.project.id,
+      id: item?.project.id,
       idOran: 1000000,
-      roomOrder: item.project_values["daily_rent[]"]
+      roomOrder: item?.project_values["daily_rent[]"]
         ? addDotEveryThreeDigits(item.project_values["daily_rent[]"])
         : 0,
       price: price ? addDotEveryThreeDigits(price) : addDotEveryThreeDigits(0),
@@ -119,20 +119,28 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
       );
       if (response.data.success) {
         onRemove(item.id);
-        console.log(response.data);
       } else {
-        console.error(
-          "Failed to remove item from collection:",
-          response.data
-        );
+        console.error("Failed to remove item from collection:", response.data);
       }
     } catch (error) {
       console.error("Error removing item from collection:", error);
     }
   };
-
+  console.log(item?.room_order);
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => {
+        if (item?.item_type === 2) {
+          navigation.navigate("Realtor details", { houseId: itemData.id });
+        } else {
+          navigation.navigate("PostDetails", {
+            projectId: item?.project?.id,
+            HomeId: item?.room_order,
+          });
+        }
+      }}
+    >
       <View
         style={{
           display: "flex",
@@ -147,8 +155,8 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
             source={{
               uri:
                 item?.item_type === 2 && item?.housing?.housing_type_data
-                  ? `https://test.emlaksepette.com/housing_images/${itemData.image}`
-                  : `https://test.emlaksepette.com/project_housing_images/${itemData.image.replace(
+                  ? `https://private.emlaksepette.com/housing_images/${itemData.image}`
+                  : `https://private.emlaksepette.com/project_housing_images/${itemData.image.replace(
                       "public",
                       "storage"
                     )}`,
@@ -162,7 +170,9 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
               İlan No: {parseInt(itemData.id) + parseInt(itemData.idOran)}{" "}
               {"\n"}
             </Text>
-            <Text style={{ fontWeight: 700,fontSize: 11 }}>{itemData.advertise_title}</Text>
+            <Text style={{ fontWeight: 700, fontSize: 11 }}>
+              {itemData.advertise_title}
+            </Text>
           </Text>
 
           <View style={styles.priceAndEarningContainer}>
@@ -179,7 +189,7 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
                   <Text
                     style={{
                       fontWeight: "700",
-                      fontSize: "13px",
+                      fontSize: 13,
                       marginRight: 10,
                     }}
                   >
@@ -191,7 +201,7 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
               <View style={styles.earningContainer}>
                 <Text style={styles.earning}>
                   <Text style={styles.label}>Kazanç: </Text>
-                  <Text style={{ fontWeight: "700", fontSize: "13px" }}>
+                  <Text style={{ fontWeight: "700", fontSize: 13 }}>
                     {item.action &&
                     (item.action === "tryBuy" || item.action === "noCart") ? (
                       <Text>
@@ -203,10 +213,10 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
                     ) : (
                       <>
                         <Text>
-                          {item.sharePrice.balance &&
-                          item.sharePrice.status === "0" ? (
+                          {item?.sharePrice?.balance &&
+                          item?.sharePrice?.status === "0" ? (
                             <Text style={styles.orange}>
-                              {item.sharePrice.balance % 1 === 0
+                              {item?.sharePrice?.balance % 1 === 0
                                 ? addDotEveryThreeDigits(
                                     item.sharePrice.balance
                                   )
@@ -214,23 +224,23 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
                               ₺ {"\n"}
                               <Text>Onay Bekleniyor</Text>
                             </Text>
-                          ) : item.sharePrice.balance &&
-                            item.sharePrice.status === "1" ? (
+                          ) : item?.sharePrice?.balance &&
+                            item?.sharePrice?.status === "1" ? (
                             <Text style={styles.green}>
-                              {item.sharePrice.balance % 1 === 0
+                              {item?.sharePrice?.balance % 1 === 0
                                 ? addDotEveryThreeDigits(
-                                    item.sharePrice.balance
+                                    item?.sharePrice?.balance
                                   )
-                                : item.sharePrice.balance.toFixed(2)}{" "}
+                                : item?.sharePrice?.balance.toFixed(2)}{" "}
                               ₺ {"\n"}
                               <Text>Komisyon Kazandınız</Text>
                             </Text>
-                          ) : item.sharePrice.balance &&
-                            item.sharePrice.status === "2" ? (
+                          ) : item?.sharePrice?.balance &&
+                            item?.sharePrice?.status === "2" ? (
                             <Text style={styles.red}>
-                              {item.sharePrice.balance % 1 === 0
+                              {item?.sharePrice?.balance % 1 === 0
                                 ? addDotEveryThreeDigits(
-                                    item.sharePrice.balance
+                                    item?.sharePrice?.balance
                                   )
                                 : item.sharePrice.balance.toFixed(2)}{" "}
                               ₺ {"\n"}
@@ -282,7 +292,7 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

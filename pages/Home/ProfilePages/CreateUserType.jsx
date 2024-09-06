@@ -14,7 +14,13 @@ import Checkbox from "./profileComponents/Checkbox";
 import { Platform } from "react-native";
 import Users from "./profileComponents/Users";
 import axios from "axios";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+} from "react-native-alert-notification";
 import { getValueFor } from "../../../components/methods/user";
+import { ActivityIndicator } from "react-native-paper";
 export default function CreateUserType() {
   const route = useRoute();
 
@@ -29,11 +35,13 @@ export default function CreateUserType() {
   const [groupNames, setGroupNames] = useState([]);
 
   // fetchData fonksiyonunu tanımlayın
+  const [loadig, setloadig] = useState(false);
   const fetchData = async () => {
+    setloadig(true);
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/institutional/roles/create",
+          "https://private.emlaksepette.com/api/institutional/roles/create",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -45,6 +53,8 @@ export default function CreateUserType() {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setloadig(false);
     }
   };
   useEffect(() => {
@@ -73,95 +83,148 @@ export default function CreateUserType() {
   };
   const handleShowCheckedItems = () => {
     postData();
-    navigation.navigate("UserTypes");
   };
+  const [loadingUpdate, setloadingUpdate] = useState(false);
   const postData = async () => {
-    try {
-      var formData = new FormData();
-      formData.append("name", TypeName);
-      checkedItems.forEach((item) => {
-        formData.append("permissions[]", item); // [] kullanarak PHP tarafında bir dizi olarak alınmasını sağlar
+    if (!TypeName) {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Hata!",
+        textBody: "Lütfen kullanıcı rolü giriniz.",
+        button: "Tamam",
       });
-      const response = await axios.post(
-        "https://test.emlaksepette.com/api/institutional/roles",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
+    } else {
+      setloadingUpdate(true);
+      try {
+        var formData = new FormData();
+        formData.append("name", TypeName);
+        checkedItems.forEach((item) => {
+          formData.append("permissions[]", item); // [] kullanarak PHP tarafında bir dizi olarak alınmasını sağlar
+        });
+        const response = await axios.post(
+          "https://private.emlaksepette.com/api/institutional/roles",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+        setTypeName("");
+        setCheckedItems([]);
+        fetchData();
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Başarılı",
+          textBody: "Kullanıcı tipi oluşturuldu.",
+          button: "Tamam",
+          onPressButton: () => {
+            navigation.goBack();
+            Dialog.hide();
           },
-        }
-      );
-
-      // İsteğin başarılı bir şekilde tamamlandığı durum
-      console.log("İstek başarıyla tamamlandı:", response.data);
-    } catch (error) {
-      // Hata durumunda
-
-      console.error("Hata:", error + "post isteği başarısız ");
+        });
+      } catch (error) {
+        console.error("Hata:", error + "post isteği başarısız ");
+      } finally {
+        setloadingUpdate(false);
+      }
     }
   };
 
   return (
-    <ScrollView style={{ backgroundColor: "white" }}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <View style={styles.container}>
-          <View style={[styles.InputArea, {}]}>
-            <Text style={[styles.label]}>Kullanıcı Rolü Belirle</Text>
-            <TextInput
-              style={styles.Input}
-              value={TypeName}
-              placeholder="Rol"
-              onChangeText={(value) => setTypeName(value)}
-            />
-          </View>
-          <View style={{}}>
-            <View>
-              {Object.values(Permissions).map((array, index) => (
-                <View
-                  key={index}
-                  style={{ gap: 10, marginTop: 10, marginBottom: 10 }}
-                >
-                  <Text
-                    style={{ fontSize: 15, color: "#333", fontWeight: "500" }}
-                  >
-                    {groupNames[index]}
-                  </Text>
+    <AlertNotificationRoot>
+      {loadig ? (
+        <View
+          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
+        >
+          <ActivityIndicator color="#333" size={"large"} />
+        </View>
+      ) : (
+        <ScrollView style={{ backgroundColor: "white" }}>
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <View style={styles.container}>
+              <View style={[styles.InputArea, {}]}>
+                <Text style={[styles.label]}>Kullanıcı Rolü Belirle</Text>
+                <TextInput
+                  style={styles.Input}
+                  value={TypeName}
+                  placeholder="Rol"
+                  onChangeText={(value) => setTypeName(value)}
+                />
+              </View>
+              <View style={{}}>
+                <View>
+                  {Object.values(Permissions).map((array, index) => (
+                    <View
+                      key={index}
+                      style={{ gap: 10, marginTop: 10, marginBottom: 10 }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          color: "#333",
+                          fontWeight: "500",
+                        }}
+                      >
+                        {groupNames[index]}
+                      </Text>
 
-                  {array.map((item, subIndex) => (
-                    <Checkbox
-                      title={item.description}
-                      key={subIndex}
-                      id={item.id}
-                      chechked={handleCheckboxChange}
-                    />
+                      {array.map((item, subIndex) => (
+                        <Checkbox
+                          title={item.description}
+                          key={subIndex}
+                          id={item.id}
+                          chechked={handleCheckboxChange}
+                        />
+                      ))}
+                    </View>
                   ))}
                 </View>
-              ))}
-            </View>
-          </View>
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#EA2A29",
-                padding: 13,
-                width: "50%",
-                borderRadius: 10,
-              }}
-              onPress={handleShowCheckedItems}
-            >
-              <Text
-                style={[
-                  styles.label2,
-                  { color: "white", textAlign: "center", fontSize: 16 },
-                ]}
+              </View>
+              <View
+                style={{
+                  width: "100%",
+                  alignItems: "center",
+                  paddingBottom: 15,
+                }}
               >
-                Kaydet
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </ScrollView>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#EA2A29",
+                    padding: 9,
+                    width: "90%",
+                    borderRadius: 5,
+                    opacity: loadingUpdate ? 0.5 : 1,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                  onPress={handleShowCheckedItems}
+                >
+                  {loadingUpdate ? (
+                    <ActivityIndicator color="white" size={"small"} />
+                  ) : (
+                    <Text
+                      style={[
+                        styles.label2,
+                        {
+                          color: "white",
+                          textAlign: "center",
+                          fontSize: 14,
+                          fontWeight: "700",
+                        },
+                      ]}
+                    >
+                      Kaydet
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </ScrollView>
+      )}
+    </AlertNotificationRoot>
   );
 }
 const styles = StyleSheet.create({
@@ -199,7 +262,7 @@ const styles = StyleSheet.create({
   },
   userContainer: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 10,
+    borderRadius: 5,
     paddingVertical: 22,
     paddingHorizontal: 10,
     width: "100%",

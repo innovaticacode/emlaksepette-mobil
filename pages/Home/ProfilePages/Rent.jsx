@@ -1,4 +1,3 @@
-
 import {
   View,
   Text,
@@ -12,7 +11,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import RentOrder from "./profileComponents/RentOrder";
 import Icon from "react-native-vector-icons/Entypo";
 import axios from "axios";
-  import { Platform } from "react-native";
+import { Platform } from "react-native";
 import { getValueFor } from "../../../components/methods/user";
 export default function Rent({ display }) {
   const [Tabs, setTabs] = useState(0);
@@ -53,14 +52,14 @@ export default function Rent({ display }) {
     getValueFor("user", setUser);
   }, []);
   const [RentItems, setRentItems] = useState({});
-  const [reservations, setreservations] = useState({});
+  const [reservations, setreservations] = useState([]);
   const [cancel, setcancel] = useState([]);
 
   const getRentCategoriesAnItem = async () => {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          "https://test.emlaksepette.com/api/institutional/kiraladiklarim",
+          "https://private.emlaksepette.com/api/institutional/kiraladiklarim",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -69,7 +68,6 @@ export default function Rent({ display }) {
         );
 
         setRentItems(response.data);
-        setreservations(RentItems.housingReservations);
       }
     } catch (error) {
       console.error("Hata:", error);
@@ -80,6 +78,10 @@ export default function Rent({ display }) {
   useEffect(() => {
     getRentCategoriesAnItem();
   }, [user]);
+
+  useEffect(() => {
+    setreservations(RentItems.confirmReservations);
+  }, [RentItems]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -92,27 +94,24 @@ export default function Rent({ display }) {
                   <TouchableOpacity
                     key={index}
                     style={[
-                      styles.TabBarBtn,
+                      styles.tabBtn,
                       {
-                        backgroundColor: Tabs == index ? "#ebebeb" : "#E54242",
-                        borderWidth: Tabs == index ? 1 : 0,
-                        borderColor: "#E54242",
+                        backgroundColor: Tabs == index ? "#EEEDEB" : "white",
+                        borderWidth: Tabs == index ? 0 : 1,
                       },
                     ]}
                     onPress={() => {
                       setTabs(index);
                       setreservations(RentItems[item.value] || []);
-
                     }}
                   >
                     <Text
-                      style={[
-                        styles.tabBarText,
-                        {
-                          color: Tabs === index ? "#E54242" : "white",
-                          fontWeight: Tabs === index ? "600" : "normal",
-                        },
-                      ]}
+                      style={{
+                        textAlign: "center",
+                        color: Tabs == index ? "#333" : "#333",
+                        fontSize: 12,
+                        fontWeight: "600",
+                      }}
                     >
                       {item.label}
                     </Text>
@@ -203,5 +202,16 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingLeft: 10,
     paddingRight: 20,
+  },
+  tabBtn: {
+    backgroundColor: "white",
+    paddingLeft: 15,
+    paddingRight: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 6,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ebebeb",
   },
 });

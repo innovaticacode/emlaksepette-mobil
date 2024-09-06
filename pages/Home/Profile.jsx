@@ -14,6 +14,7 @@ import {
   Animated,
   ActivityIndicator,
   Linking,
+  Share,
 } from "react-native";
 import { React, useState, useRef, useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -24,7 +25,8 @@ import RealtorAdverts from "./ProfilePageItem/RealtorAdverts";
 import LinkIcon3 from "react-native-vector-icons/Feather";
 import LinkIcon4 from "react-native-vector-icons/Fontisto";
 import LinkIcon2 from "react-native-vector-icons/FontAwesome";
-import LinkIcon from "react-native-vector-icons/Entypo";
+import LinkIcon from "react-native-vector-icons/SimpleLineIcons";
+import Star from "react-native-vector-icons/MaterialIcons";
 import Arrow from "react-native-vector-icons/MaterialIcons";
 import { Skeleton } from "@rneui/themed";
 import Team from "./ProfilePageItem/Team";
@@ -38,6 +40,8 @@ import { CheckBox } from "@rneui/themed";
 import { Platform } from "react-native";
 import axios from "axios";
 import { getValueFor } from "../../components/methods/user";
+import CollectionsOfBrand from "./ProfilePageItem/CollectionsOfBrand";
+import CommentsOfBrands from "./ProfilePageItem/CommentsOfBrands";
 
 export default function Profile() {
   const route = useRoute();
@@ -60,11 +64,15 @@ export default function Profile() {
   const [errorStatu, seterrorStatu] = useState(0);
   const [errorMessage, seterrorMessage] = useState("");
   const [user, setUser] = useState({});
+  const [teamm, setTeamm] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [housingRecords, sethousingRecords] = useState([]);
 
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
+
   const postData = async () => {
     try {
       var formData = new FormData();
@@ -74,7 +82,7 @@ export default function Profile() {
       formData.append("email", emailId);
 
       const response = await axios.post(
-        "https://test.emlaksepette.com/api/institutional/give_offer",
+        "https://private.emlaksepette.com/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -141,11 +149,6 @@ export default function Profile() {
       default:
         postData();
     }
-
-    if (errorMessage) {
-      // ShowAlert(ErrorMessage);
-    }
-    console.log(errorStatu + "error statu");
   };
 
   const closeSheet = () => {
@@ -156,20 +159,48 @@ export default function Profile() {
     }).start();
   };
   const [loading, setloading] = useState(false);
-  const [storeData, setstoreSata] = useState([]);
+  const [storeData, setstoreData] = useState([]);
+
   useEffect(() => {
-    apiRequestGet("brand/" + id).then((res) => {
-      setloading(true + "true oldu");
-      setstoreSata(res.data);
-      setHousings(res.data.data.housings);
-    });
+    // Örnek API isteği
+    apiRequestGet("brand/" + id)
+      .then((res) => {
+        setloading(true);
+        const housingsWithPrefixedID = res.data.data.housings.map(
+          (housing) => ({
+            ...housing,
+            prefixedID: `20000${housing.id}`,
+          })
+        );
+        setstoreData(res.data);
+        setHousings(housingsWithPrefixedID);
+        setTeamm(res.data.data.child);
+        sethousingRecords(housingsWithPrefixedID); // Housings dizisini başlangıçta kopyala
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }, []);
-  console.log(Housings[0]?.title + "sdfsdf");
-  const ApiUrl = "https://test.emlaksepette.com/";
-  console.log(storeData?.data?.name);
+  console.log(id);
+
+  const handleSearch = (text) => {
+    setSearchText(text);
+    ("");
+    const filteredData = text
+      ? Housings.filter(
+          (item) =>
+            item.title.toLowerCase().includes(text.toLowerCase()) ||
+            item.prefixedID.includes(text) || // prefixedID'yi kontrol et
+            item.id.toString().includes(text) // id'yi kontrol et
+        )
+      : Housings;
+
+    sethousingRecords(filteredData);
+  };
+  const ApiUrl = "https://private.emlaksepette.com/";
   const handleOpenPhone = () => {
     // Telefon uygulamasını açmak için
-    Linking.openURL("tel:+905537064474");
+    Linking.openURL(`tel:+${storeData.data.phone}`);
   };
   const [formVisible, setFormVisible] = useState("false");
 
@@ -191,8 +222,40 @@ export default function Profile() {
   const [checked, setChecked] = useState(false);
   const toggleCheckbox = () => setChecked(!checked);
 
+  const SkeletonBox = () => (
+    <Animated.View
+      style={{
+        width: "40%",
+        height: 40,
+        backgroundColor: "#e0e0e0",
+        borderRadius: 5,
+        margin: 5,
+        opacity: 0.5, // Skeleton efektini verecek opaklık değeri
+      }}
+    />
+  );
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `https://private.emlaksepette.com/`,
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log("Link belirli bir aktivitede paylaşıldı");
+        } else {
+          console.log("Link paylaşıldı");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Paylaşım iptal edildi");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
       <View
         style={styles.container}
         onTouchStart={() => {
@@ -200,19 +263,17 @@ export default function Profile() {
           closeSheet();
         }}
       >
-        {loading ? (
-          <>
-            <View
+        {/* <View
               style={{
                 width: "100%",
                 height:
                   storeData?.data?.name?.length > 30
                     ? width < 400
-                      ? ""
+                      ? 220
                       : 240
                     : width < 400
-                    ? 200
-                    : 220,
+                    ? 180
+                    : 180,
               }}
             >
               <View
@@ -248,10 +309,7 @@ export default function Profile() {
                     />
                   </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={styles.shareIcons}
-                    onPress={openSheet}
-                  >
+                  <TouchableOpacity style={styles.shareIcons} onPress={onShare}>
                     <Icon name="sharealt" size={18} />
                   </TouchableOpacity>
                 </View>
@@ -287,19 +345,23 @@ export default function Profile() {
                       </View>
                     </View>
                   </View>
-                  <View style={{ width: "60%", paddingTop: 10 }}>
+
+                  <View style={{ width: "100%", paddingTop: 10 }}>
                     <TextInput
                       style={{
                         padding: 9,
                         backgroundColor: "#f5f5f53d",
                         borderWidth: 0,
                         borderColor: "#ebebeb",
-                        borderRadius: 10,
+                        borderRadius: 5,
                       }}
-                      placeholder="Ara..."
+                      value={searchText}
+                      onChangeText={handleSearch}
+                      placeholder="Kelime veya İlan no ile ara.."
                       placeholderTextColor={"#333"}
                     />
                   </View>
+
                 </View>
               </View>
 
@@ -312,177 +374,174 @@ export default function Profile() {
                 }}
               />
             </View>
-          </>
-        ) : (
-          <>
-            <View style={{ width: "100%", height: 220 }}>
-              <View
+      */}
+        <View
+          style={{
+            height: height * 0.2,
+            backgroundColor: storeData?.data?.banner_hex_code,
+            borderBottomLeftRadius: 30,
+            borderBottomRightRadius: 30,
+          }}
+        >
+          <SafeAreaView>
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                paddingLeft: 20,
+                paddingRight: 20,
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.goBack();
+                }}
                 style={{
-                  position: "absolute",
-                  zIndex: 1,
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: "#e7ebee",
-                  borderBottomLeftRadius: 30,
-                  borderBottomRightRadius: 30,
+                  backgroundColor: "#FFFFFF",
+                  padding: 5,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 50,
                 }}
               >
-                <View style={styles.InfoContainer}>
-                  <Skeleton
-                    width={45}
-                    height={30}
-                    style={{ borderRadius: 5 }}
-                    skeletonStyle={{
-                      backgroundColor: "#ced4da",
-                      borderRadius: 5,
+                <LinkIcon name="arrow-left" size={20} color={"#000000"} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={onShare}
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  padding: 5,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 50,
+                }}
+              >
+                <LinkIcon3 name="share-2" size={20} color={"#000000"} />
+              </TouchableOpacity>
+            </View>
+            <View style={{ alignItems: "center", paddingTop: 15 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 10,
+                  width: "80%",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "#fff",
+                    borderRadius: 50,
+                    width: 50,
+                    height: 50,
+                  }}
+                >
+                  <Image
+                    source={{
+                      uri: `https://private.emlaksepette.com/storage/profile_images/${storeData?.data?.profile_image}`,
                     }}
-                    children={
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: "#ebebeb94",
-                          paddingLeft: 10,
-                          paddingRight: 10,
-                          borderRadius: 5,
-                          justifyContent: "center",
-                          width: 45,
-                          height: 30,
-                          alignItems: "center",
-                        }}
-                        onPress={() => navigation.goBack()}
-                      >
-                        <Arrow
-                          name="arrow-back-ios"
-                          size={20}
-                          style={{ left: 3 }}
-                          color={"white"}
-                        />
-                      </TouchableOpacity>
-                    }
                   />
-
-                  <Skeleton
-                    style={styles.shareIcons}
-                    skeletonStyle={{ backgroundColor: "#ced4da" }}
-                  />
-                  {/* <TouchableOpacity style={styles.shareIcons} onPress={openSheet}>
-                <Icon name="sharealt" size={18} />
-              </TouchableOpacity> */}
                 </View>
-
-                <View style={{ paddingLeft: 15, paddingRight: 15 }}>
-                  <View style={{ paddingTop: 10 }}>
+                <View>
+                  <View>
                     <View
                       style={{
                         flexDirection: "row",
                         alignItems: "center",
-
-                        gap: 10,
+                        gap: 5,
                       }}
                     >
-                      <Skeleton
-                        width={40}
-                        height={40}
-                        circle={true}
-                        skeletonStyle={{ backgroundColor: "#ced4da" }}
-                      />
-                      <View>
-                        <Skeleton
-                          width={100}
-                          skeletonStyle={{ backgroundColor: "#ced4da" }}
-                          children={
-                            <Text
-                              style={{ fontSize: 19, color: "white" }}
-                              numberOfLines={1}
-                            >
-                              {storeData?.data?.name}
-                            </Text>
-                          }
-                        />
-                        <Skeleton
-                          width={45}
-                          style={{ top: 5 }}
-                          skeletonStyle={{ backgroundColor: "#ced4da" }}
-                          children={
-                            <Text style={{ color: "white", fontSize: 11 }}>
-                              {storeData?.data?.activity} Şirketi
-                            </Text>
-                          }
-                        />
-                      </View>
-                      <Skeleton
-                        width={22}
-                        height={22}
-                        style={{ bottom: 7 }}
-                        circle
-                        skeletonStyle={{ backgroundColor: "#ced4da" }}
-                      />
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: "#000000",
+                          fontWeight: "700",
+                        }}
+                      >
+                        {storeData?.data?.name}
+                      </Text>
+                      <Star name="verified" size={19} color={"#0275FF"} />
                     </View>
+
+                    <Text style={{ fontSize: 12, color: "#000000" }}>
+                      {storeData?.data?.corporate_type}
+                    </Text>
                   </View>
-                  <Skeleton
-                    width={"60%"}
-                    height={30}
-                    style={{ top: 20 }}
-                    skeletonStyle={{ backgroundColor: "#ced4da" }}
-                  />
-                  {/* <View style={{ width: "60%", paddingTop: 10 }}>
-                <TextInput
-                  style={{
-                    padding: 9,
-                    backgroundColor: "#f5f5f53d",
-                    borderWidth: 0,
-                    borderColor:'#ebebeb',
-                    borderRadius: 10,
-                  }}
-                  placeholder="Ara..."
-                  placeholderTextColor={"#333"}
-                />
-              </View> */}
                 </View>
               </View>
             </View>
-          </>
-        )}
+          </SafeAreaView>
+        </View>
 
         <View>
           <ScrollView
             horizontal
-            style={{ padding: 10 }}
+            style={{ paddingTop: 10, marginBottom: 10 }}
             showsHorizontalScrollIndicator={false}
             nestedScrollEnabled={true}
           >
-            {loading ? (
-              <>
-                <View style={styles.tabBar}>
-                  <TouchableOpacity
-                    style={[
-                      styles.TabBarBtn,
-                      {
-                        borderBottomWidth: tab === 0 ? 3 : 0,
-                        borderBottomColor:
-                          tab === 0 ? "#264ABB" : "transparent",
-                        top: 2,
-                      },
-                    ]}
-                    onPress={() => settab(0)}
-                  >
-                    <Entypo name="home" size={16} />
-                    <Text
-                      style={{
-                        color: tab === 0 ? "black" : "grey",
-                        fontWeight: tab === 0 ? "500" : "normal",
-                      }}
-                    >
-                      Ana Sayfa
-                    </Text>
-                  </TouchableOpacity>
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: "#D7D7D7",
+                paddingLeft: 15,
+                paddingRight: 15,
+              }}
+            >
+              <TouchableOpacity
+                style={[
+                  styles.TabBarBtn,
+                  {
+                    borderBottomWidth: tab === 0 ? 3 : 0,
+                    borderBottomColor: tab === 0 ? "#EA2C2E" : "transparent",
+                    top: 2,
+                  },
+                ]}
+                onPress={() => settab(0)}
+              >
+                <Text
+                  style={{
+                    color: tab === 0 ? "#EA2C2E" : "grey",
+                    fontWeight: tab === 0 ? "500" : "normal",
+                  }}
+                >
+                  Ana Sayfa
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.TabBarBtn,
+                  {
+                    borderBottomWidth: tab === 4 ? 3 : 0,
+                    borderBottomColor: tab === 4 ? "#EA2C2E" : "transparent",
+                    top: 2,
+                  },
+                ]}
+                onPress={() => settab(4)}
+              >
+                <Text
+                  style={{
+                    color: tab === 4 ? "#EA2C2E" : "grey",
+                    fontWeight: tab === 4 ? "500" : "normal",
+                  }}
+                >
+                  Mağaza Profili
+                </Text>
+              </TouchableOpacity>
 
+              {storeData?.data?.corporate_type == "İnşaat Ofisi" &&
+                storeData?.data?.type !== 1 && (
                   <TouchableOpacity
                     style={[
                       styles.TabBarBtn,
                       {
                         borderBottomWidth: tab === 1 ? 3 : 0,
                         borderBottomColor:
-                          tab === 1 ? "#264ABB" : "transparent",
+                          tab === 1 ? "#EA2C2E" : "transparent",
                         top: 2,
                       },
                     ]}
@@ -490,7 +549,7 @@ export default function Profile() {
                   >
                     <Text
                       style={{
-                        color: tab === 1 ? "black" : "grey",
+                        color: tab === 1 ? "#EA2C2E" : "grey",
                         fontWeight: tab === 1 ? "500" : "normal",
                         bottom: width > 400 ? 0 : 1,
                       }}
@@ -498,100 +557,94 @@ export default function Profile() {
                       Proje İlanları({storeData?.data?.projects?.length})
                     </Text>
                   </TouchableOpacity>
+                )}
 
-                  <TouchableOpacity
-                    style={[
-                      styles.TabBarBtn,
-                      {
-                        borderBottomWidth: tab === 2 ? 3 : 0,
-                        borderBottomColor:
-                          tab === 2 ? "#264ABB" : "transparent",
-                        top: 2,
-                      },
-                    ]}
-                    onPress={() => settab(2)}
-                  >
-                    <Text
-                      style={{
-                        color: tab === 2 ? "black" : "grey",
-                        fontWeight: tab === 2 ? "500" : "normal",
-                      }}
-                    >
-                      Emlak İlanları({storeData?.data?.housings?.length})
-                    </Text>
-                  </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.TabBarBtn,
+                  {
+                    borderBottomWidth: tab === 2 ? 3 : 0,
+                    borderBottomColor: tab === 2 ? "#EA2C2E" : "transparent",
+                    top: 2,
+                  },
+                ]}
+                onPress={() => settab(2)}
+              >
+                <Text
+                  style={{
+                    color: tab === 2 ? "#EA2C2E" : "grey",
+                    fontWeight: tab === 2 ? "500" : "normal",
+                  }}
+                >
+                  Emlak İlanları({storeData?.data?.housings?.length})
+                </Text>
+              </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={[
-                      styles.TabBarBtn,
-                      {
-                        borderBottomWidth: tab === 3 ? 3 : 0,
-                        borderBottomColor:
-                          tab === 3 ? "#264ABB" : "transparent",
-                        top: 2,
-                      },
-                    ]}
-                    onPress={() => settab(3)}
+              {storeData?.data?.type != 1 && (
+                <TouchableOpacity
+                  style={[
+                    styles.TabBarBtn,
+                    {
+                      borderBottomWidth: tab === 3 ? 3 : 0,
+                      borderBottomColor: tab === 3 ? "#EA2C2E" : "transparent",
+                      top: 2,
+                    },
+                  ]}
+                  onPress={() => settab(3)}
+                >
+                  <Text
+                    style={{
+                      color: tab === 3 ? "#EA2C2E" : "grey",
+                      fontWeight: tab === 3 ? "500" : "normal",
+                    }}
                   >
-                    <Icon name="team" size={16} />
-                    <Text
-                      style={{
-                        color: tab === 3 ? "black" : "grey",
-                        fontWeight: tab === 3 ? "500" : "normal",
-                      }}
-                    >
-                      Ekip
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      styles.TabBarBtn,
-                      {
-                        borderBottomWidth: tab === 3 ? 3 : 0,
-                        borderBottomColor:
-                          tab === 3 ? "#264ABB" : "transparent",
-                        top: 2,
-                      },
-                    ]}
-                    onPress={() => settab(4)}
-                  >
-                    <Text
-                      style={{
-                        color: tab === 4 ? "black" : "grey",
-                        fontWeight: tab === 4 ? "500" : "normal",
-                      }}
-                    >
-                      Mağaza Profili
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            ) : (
-              <>
-                <View style={styles.tabBar}>
-                  <Skeleton
-                    width={150}
-                    height={14}
-                    skeletonStyle={{ backgroundColor: "#ced4da" }}
-                  />
-                  <Skeleton
-                    width={150}
-                    height={14}
-                    skeletonStyle={{ backgroundColor: "#ced4da" }}
-                  />
-                  <Skeleton
-                    width={150}
-                    height={14}
-                    skeletonStyle={{ backgroundColor: "#ced4da" }}
-                  />
-                  <Skeleton
-                    width={150}
-                    height={14}
-                    skeletonStyle={{ backgroundColor: "#ced4da" }}
-                  />
-                </View>
-              </>
-            )}
+                    Ekip
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              <TouchableOpacity
+                style={[
+                  styles.TabBarBtn,
+                  {
+                    borderBottomWidth: tab === 5 ? 3 : 0,
+                    borderBottomColor: tab === 5 ? "#EA2C2E" : "transparent",
+
+                    top: 2,
+                  },
+                ]}
+                onPress={() => settab(5)}
+              >
+                <Text
+                  style={{
+                    color: tab === 5 ? "#EA2C2E" : "grey",
+                    fontWeight: tab === 5 ? "500" : "normal",
+                  }}
+                >
+                  Koleksiyonlar
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.TabBarBtn,
+                  {
+                    borderBottomWidth: tab === 6 ? 3 : 0,
+                    borderBottomColor: tab === 6 ? "#EA2C2E" : "transparent",
+                    top: 2,
+                  },
+                ]}
+                onPress={() => settab(6)}
+              >
+                <Text
+                  style={{
+                    color: tab === 6 ? "#EA2C2E" : "grey",
+                    fontWeight: tab === 6 ? "500" : "normal",
+                  }}
+                >
+                  Değerlendirmeler
+                </Text>
+              </TouchableOpacity>
+            </View>
           </ScrollView>
         </View>
         {tab === 0 && (
@@ -599,123 +652,54 @@ export default function Profile() {
             housingdata={Housings}
             data={storeData}
             loading={loading}
+            settab={settab}
           />
         )}
         {tab === 1 && <ProjectAdverts data={storeData} />}
-        {tab === 2 && <RealtorAdverts housingdata={Housings} />}
-        {tab === 3 && <Team />}
+        {tab === 2 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 3 && <Team teamm={teamm} />}
         {tab === 4 && <ShopInfo data={storeData} loading={loading} />}
+        {tab === 5 && <CollectionsOfBrand />}
+        {tab === 6 && <CommentsOfBrands data={storeData} />}
       </View>
-      <View style={{ flex: 1, position: "absolute", bottom: 0 }}>
-        <Animated.View
-          style={{
-            zIndex: 1,
-            backgroundColor: "#eeeeee",
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            paddingTop: 20,
-            paddingBottom: 30,
-            paddingLeft: 10,
-            paddingRight: 10,
 
-            transform: [{ translateY }],
+      <View>
+        <View
+          style={{
+            paddingBottom: 20,
+            paddingTop: 5,
+            paddingRight: 15,
+            alignItems: "flex-end",
+
+            zIndex: 1,
           }}
         >
-          <ScrollView
-            horizontal
-            style={{ padding: 5 }}
-            showsHorizontalScrollIndicator={false}
+          <TouchableOpacity
+            style={{
+              width: "40%",
+              backgroundColor: "#EA2C2E",
+              borderRadius: 5,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => {
+              setloading(true);
+              setFormVisible(true); // veya hangi işlevi çağırmak istiyorsanız
+            }} // Burada yükleme durumunu göstermek için geçici bir işlem
           >
-            <View
+            <Text
               style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-around",
-                gap: 27,
+                padding: 10,
+                color: "white",
+                fontWeight: "500",
+                fontSize: 13,
+                textAlign: "center",
               }}
             >
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={styles.shareIcons}>
-                  <LinkIcon name="link" size={23} />
-                </View>
-                <Text>Kopyala</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={styles.shareIcons}>
-                  <LinkIcon2 name="whatsapp" size={23} />
-                </View>
-                <Text>Whatsapp</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={styles.shareIcons}>
-                  <LinkIcon name="instagram" size={23} />
-                </View>
-                <Text>İnstagram</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={styles.shareIcons}>
-                  <LinkIcon2 name="facebook" size={23} />
-                </View>
-                <Text>Facebook</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={styles.shareIcons}>
-                  <LinkIcon3 name="message-circle" size={23} />
-                </View>
-                <Text>Mesajlar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={{ alignItems: "center" }}>
-                <View style={styles.shareIcons}>
-                  <LinkIcon4 name="messenger" size={23} />
-                </View>
-                <Text>Messenger</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </Animated.View>
-      </View>
-      <View
-        style={{
-          padding: 20,
-          display: "flex",
-          justifyContent: "space-between",
-          flexDirection: "row",
-          backgroundColor: "transparent ",
-          zIndex: -2,
-        }}
-      >
-        <TouchableOpacity
-          style={{ width: "40%", backgroundColor: "red", borderRadius: 5 }}
-          onPress={handleOpenPhone}
-        >
-          <Text
-            style={{
-              padding: 10,
-              color: "white",
-              fontWeight: "500",
-              fontSize: 16,
-              textAlign: "center",
-            }}
-          >
-            Ara
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ width: "40%", backgroundColor: "red", borderRadius: 5 }}
-          onPress={() => setFormVisible((prev) => !prev)}
-        >
-          <Text
-            style={{
-              padding: 10,
-              color: "white",
-              fontWeight: "500",
-              fontSize: 16,
-              textAlign: "center",
-            }}
-          >
-            Başvur
-          </Text>
-        </TouchableOpacity>
+              Form Doldur
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <Modal
         animationType="fade"
@@ -757,7 +741,7 @@ export default function Profile() {
               )}
             </View>
             <View style={{ gap: 7 }}>
-              <Text style={styles.label}>E-Posta</Text>
+              <Text style={styless.label}>E-Posta</Text>
               <TextInput
                 style={styless.Input}
                 value={emailId}
@@ -777,7 +761,7 @@ export default function Profile() {
                   backgroundColor: "#28A745",
                   width: "40%",
                   padding: 15,
-                  borderRadius: 10,
+                  borderRadius: 5,
                   backgroundColor: checked ? "#28A745" : "#D3D3D3",
                 }}
                 disabled={!checked}
@@ -792,7 +776,7 @@ export default function Profile() {
                   backgroundColor: "#DC3545",
                   width: "40%",
                   padding: 15,
-                  borderRadius: 10,
+                  borderRadius: 5,
                 }}
                 onPress={() => {
                   setFormVisible(false);
@@ -849,22 +833,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 50,
   },
 
-  tabBar: {
-    padding: 3,
-    // height:width>400? '90%':'60%',
-    // height:height>300?'90%':'70%',
-
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    gap: 30,
-    borderBottomWidth: 1,
-    borderColor: "#ebebeb",
-    top: 5,
-
-    paddingRight: 25,
-  },
-
   TabBarBtn: {
     justifyContent: "center",
     display: "flex",
@@ -889,7 +857,6 @@ const styles = StyleSheet.create({
   InfoContainer: {
     paddingTop: width < 400 ? 30 : 50,
     padding: 15,
-
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -924,7 +891,7 @@ const styless = StyleSheet.create({
     padding: 3,
     paddingLeft: 8,
     paddingRight: 8,
-    borderRadius: 10,
+    borderRadius: 5,
     bottom: 0,
     alignItems: "center",
 
@@ -1001,7 +968,7 @@ const styless = StyleSheet.create({
   Input: {
     borderWidth: 1,
     padding: 10,
-    borderRadius: 6,
+    borderRadius: 5,
     borderColor: "#ebebeb",
   },
   label: {
@@ -1039,7 +1006,7 @@ const styless = StyleSheet.create({
     padding: 10,
     borderWidth: 1,
     borderColor: "#ebebeb",
-    borderRadius: 6,
+    borderRadius: 5,
     fontSize: 14,
   },
   modal4: {
@@ -1051,6 +1018,6 @@ const styless = StyleSheet.create({
   modalContent4: {
     backgroundColor: "#fefefe",
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 5,
   },
 });
