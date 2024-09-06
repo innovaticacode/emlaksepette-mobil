@@ -1026,13 +1026,19 @@ export default function App({ route }) {
               component={Support}
               options={({ route }) => ({
                 title: "Destek",
-
                 headerBackTitleVisible: false,
                 headerStyle: {
                   backgroundColor: "#f7f7f7",
                 },
+                headerTitleAlign: "center", // Başlığı ortalar
+                headerTitleStyle: {
+                  fontSize: 18, // Yazı boyutu
+
+                  color: "#000", // Yazı rengi
+                },
               })}
             />
+
             <Stack.Screen
               name="AddCommentForProject"
               component={AddCommentForProject}

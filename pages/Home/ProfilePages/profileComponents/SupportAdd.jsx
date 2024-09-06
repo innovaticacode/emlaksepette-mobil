@@ -43,10 +43,35 @@ export default function SupportAdd() {
 
   const handlePicker1Open = () => {
     setIsPicker1Open(true);
-    setIconName1("angle-up");
+    setIconName1("angle-up"); // Ok yukarı yönlü
     if (isPicker2Open) {
       setIsPicker2Open(false);
       setIconName2("angle-down");
+    }
+  };
+
+  const handlePicker1Close = () => {
+    setIsPicker1Open(false);
+    setIconName1("angle-down"); // Ok aşağı yönlü
+  };
+
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+
+  const handlePickerOpen = () => {
+    setIsPickerOpen(true);
+  };
+
+  const handlePickerClose = () => {
+    setIsPickerOpen(false);
+  };
+
+  const getIconName = () => {
+    if (isPickerOpen) {
+      return "angle-up"; // Açık olduğunda yukarı ok
+    } else if (selectedValue) {
+      return "angle-down"; // Seçim yapıldıysa onay işareti
+    } else {
+      return "angle-down"; // Kapalı olduğunda aşağı ok
     }
   };
 
@@ -97,11 +122,6 @@ export default function SupportAdd() {
   };
 
   console.log(pdfFile);
-  const handlePicker1Close = () => {
-    setIsPicker1Open(false);
-    setIconName1("angle-down");
-  };
-
   const handlePicker2Open = () => {
     setIsPicker2Open(true);
     setIconName2("angle-up");
@@ -206,10 +226,12 @@ export default function SupportAdd() {
         <View style={{ paddingRight: 20, paddingLeft: 20 }}>
           <Text style={styles.label}>Kategori Seç</Text>
           <RNPickerSelect
-            onValueChange={(value) => setSelectedValue(value)}
-            key={pickerKey}
-            onOpen={handlePicker1Open}
-            onClose={handlePicker1Close}
+            onValueChange={(value) => {
+              setSelectedValue(value);
+              handlePickerClose(); // Seçim yapıldığında picker'ı kapat
+            }}
+            onOpen={handlePickerOpen}
+            onClose={handlePickerClose}
             items={[
               { label: "Bilgi", value: "Bilgi" },
               { label: "Evrak Gönderimi", value: "Evrak Gönderimi" },
@@ -223,16 +245,15 @@ export default function SupportAdd() {
               color: "#333",
             }}
             style={pickerSelectStyles}
-            Icon={() => {
-              return (
-                <Icon
-                  style={{ marginRight: 20, marginTop: 10 }}
-                  name={iconName1}
-                  size={20}
-                  color="gray"
-                />
-              );
-            }}
+            useNativeAndroidPickerStyle={false}
+            Icon={() => (
+              <Icon
+                style={{ marginRight: 20, marginTop: 10 }}
+                name={getIconName()}
+                size={20}
+                color="gray"
+              />
+            )}
           />
         </View>
         <View style={{ marginTop: 10 }}>
@@ -264,6 +285,7 @@ export default function SupportAdd() {
                   color: "#333",
                 }}
                 style={pickerSelectStyles}
+                useNativeAndroidPickerStyle={false}
                 Icon={() => {
                   return (
                     <Icon
