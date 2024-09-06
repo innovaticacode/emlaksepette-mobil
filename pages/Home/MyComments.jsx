@@ -15,16 +15,26 @@ import axios from "axios";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
+
 export default function MyComments() {
   const [user, setuser] = useState({});
+  const [comments, setcomments] = useState([]);
+  const [choose, setchoose] = useState(false);
+  const [selectedCommentID, setselectedCommentID] = useState(0);
+  const [selectedProjectID, setselectedProjectID] = useState(0);
+  const [selectcommentInfo, setselectcommentInfo] = useState({});
+  const [selectedCommentStatus, setselectedCommentStatus] = useState(null);
+  const nav = useNavigation();
 
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-  const [comments, setcomments] = useState([]);
+
   const fetchData = async () => {
     try {
-      if (user?.access_token && user) {
+      if (user?.access_token) {
         const response = await axios.get(
           `https://private.emlaksepette.com/api/user/${user?.id}/comments`,
           {
@@ -33,10 +43,13 @@ export default function MyComments() {
             },
           }
         );
+        const sortedComments = response.data.allComments.sort((a, b) => {
+          const dateA = new Date(a.comment.created_at);
+          const dateB = new Date(b.comment.created_at);
+          return dateB - dateA; // Descending order
+        });
+        setcomments(sortedComments);
 
-        // Yanıtı kontrol edin ve state'e aktarın
-        setcomments(response.data?.allComments || []); // Yanıtı comments state'ine aktar
-        console.log(response.data?.allComments); // Konsola dönen veriyi yazdır
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -46,116 +59,99 @@ export default function MyComments() {
   useEffect(() => {
     fetchData();
   }, [user]);
-  const MycommentItem = ({ ProjectInfo, comment, EditComment }) => {
-    const API_URL = "https://private.emlaksepette.com/";
-    const numStars = Math.round(comment?.rate);
-    return (
-      <TouchableOpacity
-        style={[
-          styles.card,
-          {
-            width: "100%",
 
-            padding: 10,
-            borderRadius: 5,
-          },
-        ]}
-      >
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ width: 70, height: 70, backgroundColor: "blue" }}>
-            <ImageBackground
-              source={{
-                uri: `${API_URL}${ProjectInfo?.image.replace(
-                  "public/",
-                  "storage/"
-                )}`,
-              }}
-              style={{ width: "100%", height: "100%" }}
-            />
-          </View>
-          <View
-            style={{ width: "76%", paddingLeft: 7, paddingRight: 7, gap: 7 }}
-          >
-            <View>
-              <Text style={{ color: "#333", fontSize: 12 }} numberOfLines={2}>
-                {ProjectInfo?.project_title}
+  const MycommentItem = ({ item, EditComment }) => {
+    const API_URL = "https://private.emlaksepette.com/";
+    const { type, comment } = item;
+    const info = type === "project" ? item.project : item.housing;
+    const numStars = Math.round(comment?.rate);
+
+    const imageSource =
+      type === "project"
+        ? `${API_URL}${info?.image.replace("public/", "storage/")}`
+        : `${API_URL}housing_images/${
+            JSON.parse(info.housing_type_data)?.image ?? ""
+          }`;
+
+    const handleNavigate = () => {
+      if (type === "project") {
+        nav.navigate("Details", {
+          ProjectId: info.id,
+        });
+      } else if (type === "housing") {
+        nav.navigate("Realtor details", {
+          houseId: info.id,
+        });
+      }
+    };
+
+    return (
+      <View style={styles.card}>
+        <View style={styles.cardContent}>
+        <TouchableOpacity style={{padding: 12}} onPress={handleNavigate}>
+          <View style={styles.imageTitleContainer}>
+            <View style={styles.imageContainer}>
+              <ImageBackground
+                source={{ uri: imageSource }}
+                style={styles.image}
+              />
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.title} numberOfLines={2}>
+                {info?.project_title ||
+                  info?.description.replace(/<\/?[^>]+(>|$)/g, "")}
+              </Text>
+              <Text style={styles.listingIdText}>
+                {type === "project"
+                  ? `İlan No: ${info.id + 1000000}`
+                  : `İlan No: ${info.id + 2000000}`}
               </Text>
             </View>
-            <View style={{ gap: 5 }}>
-              <View style={{ flexDirection: "row" }}>
-                {[...Array(numStars)].map((_, index) => (
-                  <Ionicons key={index} name="star" size={12} color="gold" />
-                ))}
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                <View style={{ width: "80%" }}>
-                  <Text
-                    style={{ fontSize: 12, color: "#333" }}
-                    numberOfLines={1}
-                  >
-                    {comment?.comment}
-                  </Text>
-                </View>
-                <View>
-                  {comment?.status == 0 && (
-                    <Text style={{ fontSize: 10, color: "#FF9908" }}>
-                      Onay Bekliyor
-                    </Text>
-                  )}
-                  {comment?.status == 1 && (
-                    <Text style={{ fontSize: 10, color: "#00D21A" }}>
-                      Onaylandı
-                    </Text>
-                  )}
-                  {comment?.status == 2 && (
-                    <Text style={{ fontSize: 10, color: "red" }}>
-                      Reddedildi
-                    </Text>
-                  )}
-                </View>
-              </View>
+          </View>
+        </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => {
+            EditComment(comment?.id, info.id, comment, comment.status);
+          }}
+        >
+          <Icon name="dots-three-vertical" size={22} color={"#333"} />
+        </TouchableOpacity>
+
+        <View style={{ paddingHorizontal: 12, paddingBottom: 12 }}>
+          <View style={styles.commentStarsContainer}>
+            <View style={styles.stars}>
+              {[...Array(numStars)].map((_, index) => (
+                <Ionicons key={index} name="star" size={14} color="gold" />
+              ))}
+            </View>
+            <View style={styles.commentTextContainer}>
+              <Text style={styles.commentText}>{comment?.comment}</Text>
             </View>
           </View>
-          <View style={{}}>
-            <TouchableOpacity
-              hitSlop={{ top: 20, bottom: 20, left: 40, right: 20 }}
-              style={{}}
-              onPress={() => {
-                EditComment(
-                  comment?.id,
-                  ProjectInfo.id,
-                  comment,
-                  comment.status
-                );
-              }}
-            >
-              <Icon name="dots-three-vertical" size={20} color={"#333"} />
-            </TouchableOpacity>
+          <View style={styles.statusContainer}>
+            <Text style={styles.statusText(comment?.status)}>
+              {comment?.status === 0
+                ? "Onay Bekliyor"
+                : comment?.status === 1
+                ? "Onaylandı"
+                : "Reddedildi"}
+            </Text>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
-  const [choose, setchoose] = useState(false);
-  const [selectedCommentID, setselectedCommentID] = useState(0);
-  const [selectedProjectID, setselectedProjectID] = useState(0);
-  const [selectcommentInfo, setselectcommentInfo] = useState({});
-  const [selectedCommentStatus, setselectedCommentStatus] = useState(null);
-  const EditComment = (id, ProjecId, comment, status) => {
+
+  const EditComment = (id, projectId, comment, status) => {
     setchoose(true);
     setselectedCommentID(id);
-    setselectedProjectID(ProjecId);
+    setselectedProjectID(projectId);
     setselectcommentInfo(comment);
     setselectedCommentStatus(status);
-    console.log(comment);
   };
-  const nav = useNavigation();
+
   const goToEditComment = () => {
     nav.navigate("EditProjectComment", {
       projectId: selectedProjectID,
@@ -164,12 +160,13 @@ export default function MyComments() {
     });
     setchoose(false);
   };
+
   const DeleteComment = async () => {
     try {
       if (user?.access_token) {
         const response = await axios.post(
           `https://private.emlaksepette.com/api/delete/comment/${selectedCommentID}`,
-
+          {},
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -179,90 +176,55 @@ export default function MyComments() {
         fetchData();
         setchoose(false);
       } else {
-        alert("yorum boş");
+        alert("Yorum boş");
       }
     } catch (error) {
-      console.error("post isteği olmadı", error);
+      console.error("Post isteği olmadı", error);
     }
   };
+
   return (
     <ScrollView
       contentContainerStyle={{ gap: 10, padding: 10 }}
-      style={{ flex: 1, backgroundColor: "#fff" }}
+      style={styles.scrollView}
     >
-      {comments?.length > 0 ? (
-        comments.map((item, index) => (
-          <MycommentItem
-            key={index}
-            ProjectInfo={item?.project}
-            comment={item?.comment}
-            EditComment={EditComment}
-            goToEditComment={goToEditComment}
-          />
-        ))
-      ) : (
-        <Text>Henüz değerlendirmeniz yok.</Text>
-      )}
+      {comments?.map((item, index) => (
+        <MycommentItem
+          key={index}
+          item={item}
+          EditComment={EditComment}
+          goToEditComment={goToEditComment}
+        />
+      ))}
+
 
       <Modal
         isVisible={choose}
-        style={styles.modal2}
+        style={styles.modal}
         animationIn={"fadeInDown"}
         animationOut={"fadeOutDown"}
         onBackdropPress={() => setchoose(false)}
         swipeDirection={["down"]}
         onSwipeComplete={() => setchoose(false)}
       >
-        <View style={styles.modalContent2}>
-          <View style={{ padding: 10, alignItems: "center" }}>
-            <TouchableOpacity
-              style={{
-                width: "15%",
-                backgroundColor: "#c2c4c6",
-                padding: 4,
-                borderRadius: 50,
-              }}
-            ></TouchableOpacity>
-          </View>
-
-          <View style={{ padding: 20, gap: 35 }}>
-            {selectedCommentStatus == 1 && (
+        <View style={styles.modalContent}>
+          <View style={styles.modalOptions}>
+            {(selectedCommentStatus === 1 || selectedCommentStatus === 2) && (
               <TouchableOpacity
-                style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+                style={styles.modalOption}
                 onPress={goToEditComment}
               >
                 <Icon3 name="edit-note" size={29} color={"#333"} />
-                <Text
-                  style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
-                >
-                  Yorumu Düzenle
-                </Text>
-              </TouchableOpacity>
-            )}
-            {selectedCommentStatus == 2 && (
-              <TouchableOpacity
-                style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
-                onPress={goToEditComment}
-              >
-                <Icon3 name="edit-note" size={29} color={"#333"} />
-                <Text
-                  style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
-                >
-                  Yorumu Düzenle
-                </Text>
+                <Text style={styles.modalOptionText}>Yorumu Düzenle</Text>
               </TouchableOpacity>
             )}
 
             <TouchableOpacity
-              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+              style={styles.modalOption}
               onPress={DeleteComment}
             >
               <Icon3 name="delete" size={21} color={"#EA2A28"} />
-              <Text
-                style={{ fontSize: 14, color: "#EA2A28", fontWeight: "700" }}
-              >
-                Yorumu Sil
-              </Text>
+              <Text style={styles.modalOptionText}>Yorumu Sil</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -270,49 +232,114 @@ export default function MyComments() {
     </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+    backgroundColor: "#F5F5F5",
+  },
   card: {
     backgroundColor: "#FFFFFF",
-
-    width: "100%",
-
     borderWidth: 0.7,
     borderColor: "#e6e6e6",
+    borderRadius: 10,
     ...Platform.select({
       ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
+        shadowColor: "#e6e6e6",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
       },
       android: {
-        elevation: 5,
+        elevation: 3,
       },
     }),
   },
-  modal2: {
+  cardContent: {
+    padding: 12,
+    paddingBottom: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ebebeb",
+  },
+  imageTitleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  imageContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 10,
+    overflow: "hidden",
+    marginRight: 10,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+  textContainer: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#333",
+  },
+  listingIdText: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "#333",
+    marginTop: 4,
+  },
+  commentStarsContainer: {
+    flexDirection: "column",
+    marginBottom: 6,
+  },
+  stars: {
+    flexDirection: "row",
+    marginRight: 10,
+    marginBottom: 8,
+    paddingTop: 10,
+  },
+  commentTextContainer: {
+    flex: 1,
+  },
+  commentText: {
+    fontSize: 12,
+    color: "#333",
+  },
+  statusContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  statusText: (status) => ({
+    fontSize: 12,
+    color: status === 1 ? "#28A745" : status === 2 ? "#DC3545" : "#FFC107",
+    marginTop: 8,
+  }),
+  editButton: {
+    zIndex: 1,
+  },
+  modal: {
     justifyContent: "flex-end",
-    margin: 0,
   },
-  modalContent2: {
-    gap: 10,
-
-    backgroundColor: "#F8F7F4",
-    padding: 10,
-    height: "30%",
-
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    ...Platform.select({
-      ios: {
-        shadowColor: "white",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
+  modalContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+  modalOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+  },
+  modalOptionText: {
+    marginLeft: 10,
+    fontSize: 16,
   },
 });
