@@ -10,7 +10,7 @@ import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
 import * as DocumentPicker from "expo-document-picker";
 import AwesomeAlert from 'react-native-awesome-alerts';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import { documentView } from '../helper';
 import { getValueFor } from '../../components/methods/user';
@@ -34,6 +34,10 @@ export default function VerifyDocument({nextStep,prevStep}) {
         }));
      
       };
+      const [user, setuser] = useState({})
+      useEffect(() => {
+          getValueFor('user',setuser)
+      }, [])
       const pickImage = async (key) => {
         // Kamera veya galeriden izin isteği
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -138,61 +142,37 @@ export default function VerifyDocument({nextStep,prevStep}) {
           };
           const navigation = useNavigation()
           console.log(FormDatas.pdfUrl + 'sfgdgdf')
-            const checkDocument=()=>{
-                if (!FormDatas.TaxDocument) {
-                    Alert.alert('Uyarı', 'Vergi levhası yükle');
-                    return;
-                  }
-              
-                  if (!FormDatas.Signature) {
-                    Alert.alert('Uyarı', 'İmza Sirküsü yükle');
-                    return;
-                  }
-              
-                  if (!FormDatas.authorizationCertificate) {
-                    Alert.alert('Uyarı', 'Taşınmaz Yetki Belgesi yükle');
-                    return;
-                  }
-              
-                  if (!FormDatas.ConfirmDocumentWithSignature) {
-                    Alert.alert('Uyarı', 'İmzalı Onay Belgesi yükle');
-                    return;
-                  }
-              
-                  // E ğer tüm alanlar dolu ise, başarılı mesajı göster
-                  sendDocument()
-                  
-            }
+          
             const [loading, setloading] = useState(false)
             const sendDocument=()=>{
               setloading(true)
               const formData = new FormData();
               
-              formData.append(`sicil_belgesi`, {
+              formData.append(`sicil_belgesi`,FormDatas.sicil_belgesi? {
                 uri: Platform.OS === "android" ? FormDatas.sicil_belgesi : FormDatas?.sicil_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
                 type: FormDatas?.sicil_belgesi?.mimeType, 
-                name: FormDatas.sicil_belgesi?.name?.slice(-3) =='pdf' ? FormDatas.sicil_belgesi?.name:FormDatas.sicil_belgesi?.fileName, // Sunucuya gönderilecek dosya adı
-              });
-              formData.append(`approve_website`, {
+                name:FormDatas.sicil_belgesi.name==null?'İmage.jpeg': FormDatas.sicil_belgesi?.name?.slice(-3) =='pdf' ? FormDatas.sicil_belgesi?.name:FormDatas.sicil_belgesi?.fileName, // Sunucuya gönderilecek dosya adı
+              }:null);
+              formData.append(`approve_website`, FormDatas.apporove_website?{
                 uri: Platform.OS === "android" ? FormDatas.apporove_website.uri : FormDatas?.apporove_website?.uri.replace("file://", ""), // Android ve iOS için uygun URI
                 type: FormDatas?.apporove_website?.mimeType, 
-                name: FormDatas.apporove_website?.name?.slice(-3) == 'pdf' ? FormDatas.apporove_website?.name:FormDatas.apporove_website?.fileName , // Sunucuya gönderilecek dosya adı
-              });
-              formData.append(`vergi_levhasi`, {
+                name:FormDatas.apporove_website.name==null ? 'İmage.jpeg': FormDatas.apporove_website?.name?.slice(-3) == 'pdf' ? FormDatas.apporove_website?.name:FormDatas.apporove_website?.fileName , // Sunucuya gönderilecek dosya adı
+              }:null);
+              formData.append(`vergi_levhasi`,FormDatas.vergi_levhası? {
                 uri: Platform.OS === "android" ? FormDatas.vergi_levhası.uri : FormDatas?.vergi_levhası?.uri.replace("file://", ""), // Android ve iOS için uygun URI
                 type: FormDatas?.vergi_levhası?.mimeType, 
-                name: FormDatas.vergi_levhası?.name?.slice(-3) == 'pdf' ? FormDatas.vergi_levhası?.name:FormDatas.vergi_levhası?.fileName , // Sunucuya gönderilecek dosya adı
-              });
-              formData.append(`kimlik_belgesi`, {
+                name:FormDatas.vergi_levhası.name==null ? 'İmage.jpeg': FormDatas.vergi_levhası?.name?.slice(-3) == 'pdf' ? FormDatas.vergi_levhası?.name:FormDatas.vergi_levhası?.fileName , // Sunucuya gönderilecek dosya adı
+              }:null);
+              formData.append(`kimlik_belgesi`,FormDatas.kimlik_belgesi ? {
                 uri: Platform.OS === "android" ? FormDatas.kimlik_belgesi.uri : FormDatas?.kimlik_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
                 type: FormDatas?.kimlik_belgesi?.mimeType, 
-                name: FormDatas.kimlik_belgesi?.name?.slice(-3) == 'pdf' ? FormDatas.kimlik_belgesi?.name:FormDatas.kimlik_belgesi?.fileName , // Sunucuya gönderilecek dosya adı
-              });
-              formData.append(`insaat_belgesi`, {
+                name:FormDatas.kimlik_belgesi.name==null ?'İmage.jpeg': FormDatas.kimlik_belgesi?.name?.slice(-3) == 'pdf' ? FormDatas.kimlik_belgesi?.name:FormDatas.kimlik_belgesi?.fileName  , // Sunucuya gönderilecek dosya adı
+              }:null);
+              formData.append(`insaat_belgesi`, FormDatas.insaat_belgesi? {
                 uri: Platform.OS === "android" ? FormDatas.insaat_belgesi.uri : FormDatas?.insaat_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
                 type: FormDatas?.insaat_belgesi?.mimeType, 
-                name: FormDatas.insaat_belgesi?.name?.slice(-3) == 'pdf' ? FormDatas.insaat_belgesi?.name:FormDatas.insaat_belgesi?.fileName , // Sunucuya gönderilecek dosya adı
-              });
+                name:FormDatas.insaat_belgesi.name ==null ? 'İmage.jpeg':  FormDatas.insaat_belgesi?.name?.slice(-3) == 'pdf' ? FormDatas.insaat_belgesi?.name:FormDatas.insaat_belgesi?.fileName , // Sunucuya gönderilecek dosya adı
+              }:null);
               axios
                 .post("https://private.emlaksepette.com/api/verify-account", formData, {
                   headers: {
@@ -202,11 +182,14 @@ export default function VerifyDocument({nextStep,prevStep}) {
                 })
                 .then((res) => {
                   alert('başarılı')
-                  setData(FormDatas.apporove_website, null)
-                  setData(FormDatas.insaat_belgesi, null)
-                  setData(FormDatas.kimlik_belgesi, null)
-                  setData(FormDatas.sicil_belgesi, null)
-                  setData(FormDatas.vergi_levhası, null)
+                  setFormDatas({
+                    sicil_belgesi: null,
+                    vergi_levhası: null,
+                    kimlik_belgesi: null,
+                    apporove_website: null,
+                    insaat_belgesi: null,
+                    // Diğer form alanları buraya eklenebilir
+                  });
                
                 })
                 .catch((err) => {
@@ -220,27 +203,27 @@ export default function VerifyDocument({nextStep,prevStep}) {
             const [verifyStatus, setverifyStatus] = useState(null)
             useEffect(() => {
               getValueFor('PhoneVerify',setverifyStatus)
-            }, [])
+            }, [user])
 
             console.log(verifyStatus + 'Document')
-            const [user, setuser] = useState({})
-            useEffect(() => {
-                getValueFor('user',setuser)
-            }, [])
+           
             
             console.log(FormDatas[selectedPick]?.name + 'dosya tipi')
             console.log(selectedPick + ' state')
-            console.log(user.corporate_type + 'sfsdf')
-           
+            console.log(user.corporate_type + 'sfsd')
+            const [filteredDocuments, setfilteredDocuments] = useState([])
+            const isFocused=useIsFocused()
+           useEffect(() => {
+              setfilteredDocuments(documentView)
+           }, [])
+           console.log(FormDatas[selectedPick]?.name + 'dosya ismi')
+
+            const checkDocuments=()=>{
+                
+            }
   return (
 
-    <>
-    {
-      user.type==1?
-      <View>
-        <Text>Burası Kurumsal hesapların dosya doğrulama ekranı göremiyoruz diye üzülmeyin hesabım bölümünden istediğiniz zaman kurumsal hesap başvurusu yapabilirsiniz</Text>
-      </View>
- :
+ 
 <ScrollView
 showsVerticalScrollIndicator={false}
     contentContainerStyle={{gap:15}}
@@ -251,7 +234,7 @@ style={{
 }}>
     
     {
-        documentView.map((item,_i)=>(
+        filteredDocuments.map((item,_i)=>(
             <TouchableOpacity  style={{gap:7,width:'100%',
                 display:item.isShow=='All'?'flex':'none' && item.isShow==user.corporate_type ? 'flex':'none'
 
@@ -388,9 +371,7 @@ style={{
           </View>
         </Modal>
 </ScrollView> 
-    }
   
-    </>
   
   )
 }
