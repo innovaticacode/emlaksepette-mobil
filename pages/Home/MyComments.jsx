@@ -27,6 +27,8 @@ export default function MyComments() {
   const [selectcommentInfo, setselectcommentInfo] = useState({});
   const [selectedCommentStatus, setselectedCommentStatus] = useState(null);
   const nav = useNavigation();
+  const [selectedInfo, setSelectedInfo] = useState(null);
+  const [selectedComment, setSelectedComment] = useState(null);
 
   useEffect(() => {
     getValueFor("user", setuser);
@@ -54,7 +56,7 @@ export default function MyComments() {
     fetchData();
   }, [user]);
 
-  const MycommentItem = ({ item, EditComment }) => {
+  const MycommentItem = ({ item, EditComment, goToEditComment }) => {
     const API_URL = "https://private.emlaksepette.com/";
     const { type, comment } = item;
     const info = type === "project" ? item.project : item.housing;
@@ -82,35 +84,50 @@ export default function MyComments() {
     return (
       <View style={styles.card}>
         <View style={styles.cardContent}>
-          <TouchableOpacity style={{ padding: 12 }} onPress={handleNavigate}>
+          <TouchableOpacity style={{ padding: 12 }}>
             <View style={styles.imageTitleContainer}>
-              <View style={styles.imageContainer}>
-                <ImageBackground
-                  source={{ uri: imageSource }}
-                  style={styles.image}
-                />
-              </View>
-              <View style={styles.textContainer}>
-                <Text style={styles.title} numberOfLines={2}>
-                  {info?.project_title || info?.title}
-                </Text>
-                <Text style={styles.listingIdText}>
-                  {type === "project"
-                    ? `İlan No: ${info.id + 1000000}`
-                    : `İlan No: ${info.id + 2000000}`}
-                </Text>
+              <TouchableOpacity
+                style={{ flexDirection: "row" }}
+                onPress={handleNavigate}
+              >
+                <View style={styles.imageContainer}>
+                  <ImageBackground
+                    source={{ uri: imageSource }}
+                    style={styles.image}
+                  />
+                </View>
+
+                <View style={styles.textContainer}>
+                  <Text style={styles.title} numberOfLines={2}>
+                    {info?.project_title || info?.title}
+                    <Text>{comment.id}</Text>
+                  </Text>
+                  <Text style={styles.listingIdText}>
+                    {type === "project"
+                      ? `İlan No: ${info.id + 1000000}`
+                      : `İlan No: ${info.id + 2000000}`}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+              <View>
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() => {
+                    EditComment(
+                      comment?.id,
+                      info,
+                      comment,
+                      comment.status,
+                      imageSource
+                    );
+                  }}
+                >
+                  <Icon name="dots-three-vertical" size={22} color={"#333"} />
+                </TouchableOpacity>
               </View>
             </View>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.editButton}
-          onPress={() => {
-            EditComment(comment?.id, info.id, comment, comment.status);
-          }}
-        >
-          <Icon name="dots-three-vertical" size={22} color={"#333"} />
-        </TouchableOpacity>
 
         <View style={{ paddingHorizontal: 12, paddingBottom: 12 }}>
           <View style={styles.commentStarsContainer}>
@@ -136,20 +153,26 @@ export default function MyComments() {
       </View>
     );
   };
-
-  const EditComment = (id, projectId, comment, status) => {
+  const EditComment = (id, info, comment, status, imageSource) => {
     setchoose(true);
     setselectedCommentID(id);
-    setselectedProjectID(projectId);
+    setselectedProjectID(info.id);
     setselectcommentInfo(comment);
     setselectedCommentStatus(status);
+    setSelectedInfo(info); // info'yu da state'e ekliyoruz
   };
 
-  const goToEditComment = () => {
+  const goToEditComment = (item) => {
+    const { type, comment } = item;
+    const info = type === "project" ? item.project : item.housing;
+
     nav.navigate("EditProjectComment", {
       projectId: selectedProjectID,
       commentInfo: selectcommentInfo,
       commentID: selectedCommentID,
+      type: type, // info'yu da gönderiyoruz
+      comments: comment, // info'yu da gönderiyoruz
+      info: selectedInfo,
     });
     setchoose(false);
   };
@@ -159,7 +182,7 @@ export default function MyComments() {
       if (user?.access_token) {
         const response = await axios.post(
           `https://private.emlaksepette.com/api/delete/comment/${selectedCommentID}`,
-          {},
+
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -175,6 +198,7 @@ export default function MyComments() {
       console.error("Post isteği olmadı", error);
     }
   };
+  console.log(selectedCommentID);
 
   return (
     <ScrollView
@@ -186,10 +210,9 @@ export default function MyComments() {
           key={index}
           item={item}
           EditComment={EditComment}
-          goToEditComment={goToEditComment}
+          goToEditComment={() => goToEditComment(item)} // info'yu prop olarak gönderiyoruz
         />
       ))}
-
       <Modal
         isVisible={choose}
         style={styles.modal}
@@ -257,6 +280,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 10,
+    justifyContent: "space-between",
   },
   imageContainer: {
     width: 50,
