@@ -8,8 +8,8 @@ import axios from 'axios';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { ActivityIndicator } from 'react-native-paper';
 import * as SecureStore from "expo-secure-store";
-const labels = ["Adım 1", "Adım 2","Adım 3"];
-const labels2 = ["Adım 1", "Adım 2"];
+const labels = ["Adım 1", "Adım 2",];
+const labels2 = ["Adım 1", ];
 const customStyles = {
   stepIndicatorSize: 30,
   currentStepIndicatorSize: 40,
@@ -96,8 +96,7 @@ const [loading, setloading] = useState(false)
       switch (currentPosition) {
         case 0:
           return <Verification nextStep={nextStep} prevStep={prevStep}/>;
-        case 1:
-          return <VerifyDocument nextStep={nextStep} prevStep={prevStep}/>;
+        
         default:
           return null;
       }
@@ -107,8 +106,7 @@ const [loading, setloading] = useState(false)
           return <Verification nextStep={nextStep} prevStep={prevStep}/>;
         case 1:
           return <VerifyDocument nextStep={nextStep} prevStep={prevStep}/>;
-          case 2:
-              return <Text>Bu Sayfa 3'nin içeriği</Text>;
+         
         default:
           return null;
       }
@@ -157,7 +155,7 @@ const [loading, setloading] = useState(false)
                <Button title="Sonraki" onPress={nextStep} />
              )}
            </View>  */}
-           <View style={{alignItems:'center'}}>
+           <View style={{alignItems:'center',paddingBottom:20}}>
             <TouchableOpacity style={{backgroundColor:'#EC302E',padding:8,borderRadius:8,width:'80%'}}
               onPress={()=>{
                 SecureStore.setItemAsync("user", "");

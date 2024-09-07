@@ -64,7 +64,10 @@ import UploadAdsPicture from "./pages/Home/ProfilePages/UploadAdsPicture";
 import AdsPictureList from "./pages/Home/ProfilePages/AdsPictureList";
 import UserTypeList from "./pages/Home/ProfilePages/UserTypeList";
 import PaymentScreen from "./pages/Home/PaymentScreen";
-
+import Onboard from "./pages/Home/Onboarding/Onboard";
+import SplashScreen from "./pages/Home/Onboarding/SplashScreen";
+import { getValueFor, getValueFor2 } from "./components/methods/user";
+import Verification from "./pages/Home/ProfilePages/Verification";
 import ForgotPassword from "./pages/Home/Login&Register/ForgotPassword";
 import UpdateUserType from "./pages/Home/ProfilePages/UpdateUserType";
 import UpdateUsers from "./pages/Home/ProfilePages/UpdateUsers";
@@ -75,6 +78,8 @@ import CreateReservation from "./pages/Home/RealtorPages/CreateReservation";
 import PaymentScreenForReserve from "./pages/Home/PaymentScreenForReserve";
 import CreateCollections from "./pages/Home/CreateCollections";
 
+import WelcomePage from "./pages/Home/Onboarding/WelcomePage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 
 import DecontPdf from "./pages/Home/DecontPdf";
@@ -103,13 +108,8 @@ import CollectionsTab from "./pages/Home/Panel/CollectionsTab";
 import SwapForm from "./pages/Home/RealtorPages/SwapForm";
 import { Button } from "react-native";
 import VerifyScreen from "./pages/Home/VerifyScreen";
-
-import TypeListScreen from "./components/TypeListScreen";
-import Onboard from "./pages/Home/Onboarding/Onboard";
-import { View } from "moti";
-import SplasScreen from "./pages/Home/Onboarding/SplasScreen";
-
-import { AlertNotificationRoot } from "react-native-alert-notification";
+import Toast from 'react-native-toast-message';
+import { AlertNotificationRoot } from 'react-native-alert-notification';
 
 const Stack = createNativeStackNavigator();
 
@@ -121,7 +121,91 @@ export default function App({ route }) {
 
   const [housingTypes, setHousingTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
+  const [showSplash, setShowSplash] = useState(true);
+  const [showSplashTemp, setShowSplashTemp] = useState(null);
 
+  useEffect(() => {
+    // AsyncStorage'de saklanan bilgiyi kontrol et
+    const checkWelcomeStatus = async () => {
+      try {
+        const value = await AsyncStorage.getItem("@welcome_screen_shown");
+        if (value === "true") {
+          // Welcome screen daha önce gösterilmiş, gösterme
+          setShowWelcome(false);
+        }
+      } catch (error) {
+        console.error("AsyncStorage hatası:", error);
+      }
+    };
+
+    checkWelcomeStatus();
+  }, []);
+
+  const handleWelcomeScreenDone = async () => {
+    // Welcome screen gösterildi olarak işaretlenir
+    try {
+      await AsyncStorage.setItem("@welcome_screen_shown", "true");
+    } catch (error) {
+      console.error("AsyncStorage hatası:", error);
+    }
+    setShowWelcome(false);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowSplash(false);
+    }, 1000); // 3 saniye sonra splash ekranını kaldır
+  }, []);
+
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    getValueFor("user", setUser);
+
+    getValueFor2("welcome_screen_show", setShowSplashTemp);
+  }, []);
+
+  useEffect(() => {
+    if (showSplashTemp == "ff") {
+      setShowSplash(false);
+    }
+  }, [showSplashTemp]);
+
+  const hideSplash = () => {
+    SecureStore.setItemAsync("welcome_screen_show", "ff");
+    setShowSplash(false);
+  };
+
+  const App = () => {
+    return (
+      <View style={{ flex: 1 }}>
+        {/* Uygulamanın diğer bileşenleri buraya gelecek */}
+        
+        {/* Toast bileşeni */}
+        <Toast config={toastConfig} ref={(ref) => Toast.setRef(ref)} position="top" />
+      </View>
+    );
+  };
+
+  const toastConfig = {
+    success: (internalState) => (
+      <BaseToast
+        {...internalState}
+        style={{ borderLeftColor: 'green' }}
+        contentContainerStyle={{ paddingHorizontal: 15 }}
+        text1Style={{
+          fontSize: 15,
+          fontWeight: 'bold',
+        }}
+        text2Style={{
+          fontSize: 13,
+        }}
+      />
+    ),
+  };
+  
+
+  
   function StepScreen({
     step,
     navigation,
@@ -143,53 +227,37 @@ export default function App({ route }) {
       </View>
     );
   }
-  const [isLoading, setIsLoading] = useState(true);
-  const [isFirstLaunch, setIsFirstLaunch] = useState(null);
 
-  useEffect(() => {
-    const loadApp = async () => {
-      // Splash screen'in görünme süresini ayarlamak için yapay bir gecikme ekle
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // İlk açılış kontrolünü yap
-      const hasLaunched = await SecureStore.getItemAsync("hasLaunched");
-      if (hasLaunched === null) {
-        setIsFirstLaunch(true);
-        await SecureStore.setItemAsync("hasLaunched", "true");
-      } else {
-        setIsFirstLaunch(false);
-      }
-
-      // Yükleme bitti, splash screen'i kaldır
-      setIsLoading(false);
-    };
-
-    loadApp();
-  }, []);
-
-  if (isLoading) {
-    return <SplasScreen />;
-  }
   return (
     <AlertNotificationRoot>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-              gestureEnabled: true,
-              ...TransitionPresets.SlideFromRightIOS,
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            gestureEnabled: true,
+            ...TransitionPresets.SlideFromRightIOS,
 
-              headerTintColor: "#333",
-            }}
-          >
-            {isFirstLaunch && (
-              <Stack.Screen
-                name="Welcome"
-                component={Onboard}
-                options={{ headerShown: false }}
-              />
-            )}
+            headerTintColor: "#333",
+          
+          }}
+        >
+          {showSplash ? (
+            <Stack.Screen
+              name="SplashScreen"
+              component={() => (
+                <WelcomePage
+                  hideSplash={hideSplash}
+                  onFinish={handleWelcomeScreenDone}
+                />
+              )}
+              options={{ headerShown: false }}
+            />
+          ) : (
+            //   ShowOnBoard?
+            //   <Stack.Screen name='OnBoard'>
 
+            //   {(props)=><Onboard {...props} setShowOnBoard={setShowOnBoard}/>}
+            //  </Stack.Screen>:
             <Stack.Screen
               name="Home"
               options={{
@@ -205,474 +273,442 @@ export default function App({ route }) {
                 />
               )}
             </Stack.Screen>
+          )}
 
-            <Stack.Group>
-              <Stack.Screen
-                name="Login"
-                options={{
-                  title: "Giriş Yap",
-                  headerBackTitleVisible: false,
-                  headerShown: false,
-                }}
-              >
-                {(props) => <Login {...props} />}
-              </Stack.Screen>
-              <Stack.Screen
-                name="Register"
-                component={Register}
-                options={{ title: "Üye Ol", headerBackTitleVisible: false }}
+          <Stack.Group>
+            <Stack.Screen
+              name="Login"
+              options={{
+                title: "Giriş Yap",
+                headerBackTitleVisible: false,
+                headerShown: false,
+              }}
+            >
+              {(props) => <Login {...props} />}
+            </Stack.Screen>
+            <Stack.Screen
+              name="Register"
+              component={Register}
+              options={{ title: "Üye Ol", headerBackTitleVisible:false }}
+            />
+          </Stack.Group>
+
+          <Stack.Screen name="Step1">
+            {(props) => (
+              <StepScreen
+                {...props}
+                step={1}
+                setHousingTypes={setHousingTypes}
+                setSelectedTypes={setSelectedTypes}
+                housingTypes={housingTypes}
+                selectedTypes={selectedTypes}
               />
-            </Stack.Group>
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="Step2">
+            {(props) => (
+              <StepScreen
+                {...props}
+                step={2}
+                setHousingTypes={setHousingTypes}
+                setSelectedTypes={setSelectedTypes}
+                housingTypes={housingTypes}
+                selectedTypes={selectedTypes}
+              />
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="Step3">
+            {(props) => (
+              <StepScreen
+                {...props}
+                step={3}
+                setHousingTypes={setHousingTypes}
+                setSelectedTypes={setSelectedTypes}
+                housingTypes={housingTypes}
+                selectedTypes={selectedTypes}
+              />
+            )}
+          </Stack.Screen>
 
-            <Stack.Screen name="Step1">
-              {(props) => (
-                <StepScreen
-                  {...props}
-                  step={1}
-                  setHousingTypes={setHousingTypes}
-                  setSelectedTypes={setSelectedTypes}
-                  housingTypes={housingTypes}
-                  selectedTypes={selectedTypes}
-                />
-              )}
-            </Stack.Screen>
-            <Stack.Screen name="Step2">
-              {(props) => (
-                <StepScreen
-                  {...props}
-                  step={2}
-                  setHousingTypes={setHousingTypes}
-                  setSelectedTypes={setSelectedTypes}
-                  housingTypes={housingTypes}
-                  selectedTypes={selectedTypes}
-                />
-              )}
-            </Stack.Screen>
-            <Stack.Screen name="Step3">
-              {(props) => (
-                <StepScreen
-                  {...props}
-                  step={3}
-                  setHousingTypes={setHousingTypes}
-                  setSelectedTypes={setSelectedTypes}
-                  housingTypes={housingTypes}
-                  selectedTypes={selectedTypes}
-                />
-              )}
-            </Stack.Screen>
+          <Stack.Screen
+            name="Emlak"
+            component={Emlakİlanı}
+            options={({ route }) => ({
+              title: route.params.name,
+              headerBackTitleVisible: false,
+            })}
+          />
+          <Stack.Screen
+            name="Proje"
+            component={Projeİlanı}
+            options={({ route }) => ({
+              title: route.params.name,
+            })}
+          />
+          <Stack.Screen
+            name="Details"
+            component={Details}
+            options={({ route }) => ({
+              headerShown: false,
+              title: route.params.name,
+            })}
+          />
+          <Stack.Screen
+            name="PostDetails"
+            component={PostDetail}
+            options={({ route }) => ({
+              headerShown: false,
+              headerBackTitleVisible: false,
+            })}
+          />
 
+          <Stack.Screen
+            name="Profile"
+            component={Profile}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen name="ShopProfile" options={{ headerShown: false }}>
+            {(props) => <ShoppingProfile {...props} İsLoggedIn={İsLoggedIn} />}
+          </Stack.Screen>
+          <Stack.Screen
+            name="Realtor details"
+            component={RealtorDetails}
+            options={{
+              headerShown: false,
+            }}
+          />
+
+          <Stack.Group>
             <Stack.Screen
-              name="Emlak"
-              component={Emlakİlanı}
-              options={({ route }) => ({
-                title: route.params.name,
+              name="Collections"
+              component={Collections}
+              options={{
+                title: "Koleksiyonlarım",
+                headerBackTitle: "",
                 headerBackTitleVisible: false,
-              })}
+                headerTintColor: "black",
+              }}
             />
             <Stack.Screen
-              name="Proje"
-              component={Projeİlanı}
-              options={({ route }) => ({
-                title: route.params.name,
-              })}
-            />
-            <Stack.Screen
-              name="Details"
-              component={Details}
-              options={({ route }) => ({
-                headerShown: false,
-                title: route.params.name,
-              })}
-            />
-            <Stack.Screen
-              name="PostDetails"
-              component={PostDetail}
-              options={({ route }) => ({
-                headerShown: false,
+              name="DashBord"
+              component={Panel}
+              options={{
+                title: "Sana Özel",
+                headerBackTitle: "",
                 headerBackTitleVisible: false,
+                headerTintColor: "black",
+              }}
+            />
+            <Stack.Screen
+              name="Forms"
+              component={SellAndRentForms}
+              options={{
+                title: "Sat Kirala Formlarım",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              }}
+            />
+            <Stack.Screen
+              name="Sell"
+              component={Sell}
+              options={{
+                title: "Sattıklarım",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              }}
+            />
+            <Stack.Screen
+              name="Rent"
+              component={Rent}
+              options={({ route }) => ({
+                animationTypeForReplace: "pop",
+                title: "Kiraladıklarım",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               })}
             />
-
             <Stack.Screen
-              name="Profile"
-              component={Profile}
+              name="UpdateProfile"
+              component={UpdateProfile}
+              options={{
+                title: "Profili Güncelle",
+                headerStyle: {
+                  backgroundColor: "white",
+                },
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              }}
+            />
+            <Stack.Screen
+              name="ChangePas"
+              component={ChangePassword}
+              options={{
+                title: "Şifreyi Değiştir",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              }}
+            />
+            <Stack.Screen
+              name="RealtorClub"
+              options={{
+                title: "Emlak Kulüp Üyesi Ol",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              }}
+            >
+              {(props) => (
+                <RegisterRealtorClub {...props} setİsLoggedIn={setİsLoggedIn} />
+              )}
+            </Stack.Screen>
+            <Stack.Screen
+              name="MyProject"
+              component={MyProjectAdverts}
+              options={{
+                title: "Proje İlanlarım",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              }}
+            />
+            <Stack.Screen
+              name="MyRealtor"
+              component={MyRealtorAdverts}
+              options={{
+                title: "Emlak ilanlarım",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              }}
+            />
+            <Stack.Screen
+              name="Offer"
+              component={Offer}
+              options={({ route }) => ({
+                headerBackTitleVisible: false,
+                title: "Kampanya Oluştur",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              })}
+            />
+            <Stack.Screen
+              name="CreateUserType"
+              component={CreateUserType}
+              options={({ route }) => ({
+                title: "Kullanıcı Tipi Oluştur",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              })}
+            />
+            <Stack.Screen
+              name="CreateUser"
+              component={CreateUser}
+              options={({ route }) => ({
+                animationTypeForReplace: "pop",
+                title: "Alt Kullanıcı Oluştur",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              })}
+            />
+            <Stack.Screen
+              name="AdsPicture"
+              component={AdsPictures}
+              options={{
+                title: "Reklam Görselleri",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              }}
+            />
+            <Stack.Screen
+              name="SeeColleciton"
+              component={SeeCollection}
               options={{
                 headerShown: false,
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
-            <Stack.Screen name="ShopProfile" options={{ headerShown: false }}>
-              {(props) => (
-                <ShoppingProfile {...props} İsLoggedIn={İsLoggedIn} />
-              )}
-            </Stack.Screen>
             <Stack.Screen
-              name="Realtor details"
-              component={RealtorDetails}
+              name="EditColection"
+              component={EditCollection}
+              initialParams={{ item: { name: "Koleksiyon Düzenle" } }}
               options={{
-                headerShown: false,
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               }}
             />
-
-            <Stack.Group>
-              <Stack.Screen
-                name="Collections"
-                component={Collections}
-                options={{
-                  title: "Koleksiyonlarım",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="DashBord"
-                component={Panel}
-                options={{
-                  title: "Sana Özel",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="Forms"
-                component={SellAndRentForms}
-                options={{
-                  title: "Sat Kirala Formlarım",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="Sell"
-                component={Sell}
-                options={{
-                  title: "Sattıklarım",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="Rent"
-                component={Rent}
-                options={({ route }) => ({
-                  animationTypeForReplace: "pop",
-                  title: "Kiraladıklarım",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                })}
-              />
-              <Stack.Screen
-                name="UpdateProfile"
-                component={UpdateProfile}
-                options={{
-                  title: "Profili Güncelle",
-                  headerStyle: {
-                    backgroundColor: "white",
-                  },
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="ChangePas"
-                component={ChangePassword}
-                options={{
-                  title: "Şifreyi Değiştir",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="RealtorClub"
-                options={{
-                  title: "Emlak Kulüp Üyesi Ol",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              >
-                {(props) => (
-                  <RegisterRealtorClub
-                    {...props}
-                    setİsLoggedIn={setİsLoggedIn}
-                  />
-                )}
-              </Stack.Screen>
-              <Stack.Screen
-                name="MyProject"
-                component={MyProjectAdverts}
-                options={{
-                  title: "Proje İlanlarım",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="MyRealtor"
-                component={MyRealtorAdverts}
-                options={{
-                  title: "Emlak ilanlarım",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="Offer"
-                component={Offer}
-                options={({ route }) => ({
-                  headerBackTitleVisible: false,
-                  title: "Kampanya Oluştur",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                })}
-              />
-              <Stack.Screen
-                name="CreateUserType"
-                component={CreateUserType}
-                options={({ route }) => ({
-                  title: "Kullanıcı Tipi Oluştur",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                })}
-              />
-              <Stack.Screen
-                name="CreateUser"
-                component={CreateUser}
-                options={({ route }) => ({
-                  animationTypeForReplace: "pop",
-                  title: "Alt Kullanıcı Oluştur",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                })}
-              />
-              <Stack.Screen
-                name="AdsPicture"
-                component={AdsPictures}
-                options={{
-                  title: "Reklam Görselleri",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="SeeColleciton"
-                component={SeeCollection}
-                options={{
-                  headerShown: false,
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="EditColection"
-                component={EditCollection}
-                initialParams={{ item: { name: "Koleksiyon Düzenle" } }}
-                options={{
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="PassVerify"
-                component={PasswordVerify}
-                options={{
-                  title: "Şifre Doğrulama",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="OrderDetail"
-                component={OrderDetails}
-                options={{
-                  title: "Sipariş Detayı",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="RentOrderDetail"
-                component={RentOrderDetails}
-                options={{
-                  title: "Rezervasyon Detayı",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                }}
-              />
-              <Stack.Screen
-                name="Suggest"
-                component={Suggests}
-                options={({ route }) => ({
-                  animationTypeForReplace: "pop",
-                  title: "Başvurularım",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                })}
-              />
-              <Stack.Screen
-                name="OfferList"
-                component={OfferList}
-                options={({ route }) => ({
-                  animationTypeForReplace: "pop",
-                  title: "Kampanya Listele",
-                  headerBackTitle: "",
-                  headerBackTitleVisible: false,
-                  headerTintColor: "black",
-                })}
-              />
-            </Stack.Group>
-
             <Stack.Screen
-              name="CategorieChoose"
-              component={CategoryChoose}
-              options={({ route }) => ({
-                animationTypeForReplace: "pop",
-                title: route.params.name,
+              name="PassVerify"
+              component={PasswordVerify}
+              options={{
+                title: "Şifre Doğrulama",
                 headerBackTitle: "",
                 headerBackTitleVisible: false,
                 headerTintColor: "black",
-              })}
-            />
-            <Stack.Screen
-              name="CategorieStatu"
-              component={CategorieStatus}
-              options={({ route }) => ({
-                animationTypeForReplace: "pop",
-                title: route.params.name,
-                headerBackTitle: "",
-                headerBackTitleVisible: false,
-                headerTintColor: "black",
-              })}
-            />
-            <Stack.Screen
-              name="AdvertPlace"
-              component={AdvertsPlace}
-              options={({ route }) => ({
-                animationTypeForReplace: "pop",
-                title: route.params.name,
-                headerBackTitle: "",
-                headerBackTitleVisible: false,
-                headerTintColor: "black",
-              })}
-            />
-            <Stack.Screen
-              name="AdvertForm"
-              options={({ route }) => ({
-                animationTypeForReplace: "pop",
-                headerBackTitle: "",
-                headerBackTitleVisible: false,
-                headerTintColor: "black",
-              })}
-            >
-              {(props) => <AdvertForm />}
-            </Stack.Screen>
-
-            <Stack.Screen
-              name="ShareAdvert"
-              options={({ route }) => ({
-                animationTypeForReplace: "pop",
-                title: "",
-                headerBackTitle: "",
-                headerBackTitleVisible: false,
-                headerTintColor: "black",
-              })}
-            >
-              {(props) => <ShareScreenProject {...props} />}
-            </Stack.Screen>
-
-            <Stack.Screen
-              name="Notifications"
-              component={Notifications}
-              options={({ route }) => ({
-                title: "Bildirimler",
-                headerBackTitle: "",
-                headerBackTitleVisible: false,
-                headerTintColor: "black",
-              })}
-            />
-            <Stack.Screen
-              name="RealtorClubExplore"
-              component={RealtorClub}
-              options={({ route }) => ({
-                title: "Emlak Kulübü Keşfet",
-                headerBackTitleVisible: false,
-              })}
-            />
-            <Stack.Screen
-              name="Public"
-              component={PublicPage}
-              options={({ route }) => ({
-                headerShown: true,
-                title: route.params.title,
-                headerBackTitle: "",
-                headerBackTitleVisible: false,
-                headerTitleStyle: {
-                  fontSize: 14,
-                },
-                headerBackTitleStyle: {
-                  fontSize: 14,
-                },
-              })}
-            />
-            <Stack.Screen
-              name="SubCategory"
-              component={SubCategory}
-              options={({ route }) => {
-                const title =
-                  route.params.title === "Projeler"
-                    ? route.params.name + route.params.title
-                    : route.params.name;
-
-                return {
-                  headerShown: true,
-                  title: title,
-                  headerBackTitle: route.params.title,
-                  headerBackTitleVisible: true,
-                  headerTitleStyle: {
-                    fontSize: 14,
-                  },
-                  headerBackTitleStyle: {
-                    fontSize: 14,
-                  },
-                };
               }}
             />
-
             <Stack.Screen
-              name="HomeList"
-              component={HomeList}
+              name="OrderDetail"
+              component={OrderDetails}
+              options={{
+                title: "Sipariş Detayı",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              }}
+            />
+            <Stack.Screen
+              name="RentOrderDetail"
+              component={RentOrderDetails}
+              options={{
+                title: "Rezervasyon Detayı",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              }}
+            />
+            <Stack.Screen
+              name="Suggest"
+              component={Suggests}
               options={({ route }) => ({
-                headerShown: false,
+                animationTypeForReplace: "pop",
+                title: "Başvurularım",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
               })}
             />
             <Stack.Screen
-              name="SubCategoryChild"
-              component={SubCategoryChild}
+              name="OfferList"
+              component={OfferList}
               options={({ route }) => ({
+                animationTypeForReplace: "pop",
+                title: "Kampanya Listele",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              })}
+            />
+          </Stack.Group>
+
+          <Stack.Screen
+            name="CategorieChoose"
+            component={CategoryChoose}
+            options={({ route }) => ({
+              animationTypeForReplace: "pop",
+              title: route.params.name,
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
+            })}
+          />
+          <Stack.Screen
+            name="CategorieStatu"
+            component={CategorieStatus}
+            options={({ route }) => ({
+              animationTypeForReplace: "pop",
+              title: route.params.name,
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
+            })}
+          />
+          <Stack.Screen
+            name="AdvertPlace"
+            component={AdvertsPlace}
+            options={({ route }) => ({
+              animationTypeForReplace: "pop",
+              title: route.params.name,
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
+            })}
+          />
+          <Stack.Screen
+            name="AdvertForm"
+            options={({ route }) => ({
+              animationTypeForReplace: "pop",
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
+            })}
+          >
+            {(props) => <AdvertForm />}
+          </Stack.Screen>
+
+          <Stack.Screen
+            name="ShareAdvert"
+            options={({ route }) => ({
+              animationTypeForReplace: "pop",
+              title: "",
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
+            })}
+          >
+            {(props) => <ShareScreenProject {...props} />}
+          </Stack.Screen>
+
+          <Stack.Screen
+            name="Notifications"
+            component={Notifications}
+            options={({ route }) => ({
+              title: "Bildirimler",
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "black",
+            })}
+          />
+          <Stack.Screen
+            name="RealtorClubExplore"
+            component={RealtorClub}
+            options={({ route }) => ({
+              title: "Emlak Kulübü Keşfet",
+              headerBackTitleVisible:false
+            })}
+          />
+          <Stack.Screen
+            name="Public"
+            component={PublicPage}
+            options={({ route }) => ({
+              headerShown: true,
+              title: route.params.title,
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTitleStyle: {
+                fontSize: 14,
+              },
+              headerBackTitleStyle: {
+                fontSize: 14,
+              },
+            })}
+          />
+          <Stack.Screen
+            name="SubCategory"
+            component={SubCategory}
+            options={({ route }) => {
+              const title =
+                route.params.title === "Projeler"
+                  ? route.params.name + route.params.title
+                  : route.params.name;
+
+              return {
                 headerShown: true,
-                title: route.params.text,
-                headerBackTitle:
-                  route.params.title === "Projeler"
-                    ? route.params.name + route.params.title
-                    : route.params.name,
+                title: title,
+                headerBackTitle: route.params.title,
                 headerBackTitleVisible: true,
                 headerTitleStyle: {
                   fontSize: 14,
@@ -680,468 +716,478 @@ export default function App({ route }) {
                 headerBackTitleStyle: {
                   fontSize: 14,
                 },
-              })}
-            />
-            <Stack.Screen
-              name="Search"
-              component={Search}
-              options={({ route }) => ({
-                headerShown: false,
-              })}
-            />
-            <Stack.Screen
-              name="AllProject"
-              component={AllProjects}
-              options={({ route }) => ({
-                headerShown: false,
-                headerStyle: {
-                  backgroundColor: "#EA2B2E",
-                },
-                title:
-                  route.params.name + " - " + route.params.count + " Proje",
-                headerBackTitle: "",
-                headerBackTitleVisible: false,
-                headerTintColor: "white",
-                headerTitleStyle: {
-                  fontSize: 14,
-                },
-              })}
-            />
-            <Stack.Screen
-              name="FilterScrenn"
-              component={FilterScreen}
-              options={({ route }) => ({
-                title: route.params.name,
-              })}
-            />
-            <Stack.Screen
-              name="EditAdvert"
-              component={EditAdvert}
-              options={() => ({
-                title: "İlanları Düzenle",
-                headerBackTitle: ".",
-              })}
-            />
-            <Stack.Screen name="Archieve" component={Archieve} />
-            <Stack.Screen
-              name="EditProject"
-              component={EditProject}
-              options={({ route }) => ({
-                title: route.params.name,
-                headerBackTitleVisible: false,
-              })}
-            />
-            <Stack.Screen
-              name="SellAndRent"
-              component={SellAndRentFormPage}
-              options={({ route }) => ({
-                title: "Sat Kirala",
-                headerBackTitleVisible: false,
-              })}
-            />
-            <Stack.Screen
-              name="SendSellAndRentForm"
-              component={SendSellAndRentForm}
-              options={({ route }) => ({
-                title: "Sat Kirala Formu",
-                headerBackTitleVisible: false,
-              })}
-            />
-            <Stack.Screen
-              name="SeeNeigbourHood"
-              component={SeeNeigbourhood}
-              options={({ route }) => ({
-                headerBackTitleVisible: false,
-                title: "Komşumu Gör",
-              })}
-            />
-            <Stack.Screen
-              name="SwapScreen"
-              component={SwapScreen}
-              options={({ route }) => ({
-                title: "Gelen Takas Başvurularım",
-              })}
-            />
-            <Stack.Screen
-              name="ComeSwapScreen"
-              component={ComeSwapScreen}
-              options={({ route }) => ({
-                title: "Takas Başvurularım",
-              })}
-            />
-            <Stack.Screen
-              name="MapWiew"
-              component={MapWiew}
-              options={({ route }) => ({
-                title: "Mapde Görüntüle",
-              })}
-            />
-            <Stack.Screen
-              name="AllRealtorAdverts"
-              component={AllRealtorAdverts}
-              options={({ route }) => ({
-                headerShown: false,
-                headerStyle: {
-                  backgroundColor: "#EA2B2E",
-                },
-                title:
-                  route.params.name +
-                  " - " +
-                  route.params.count +
-                  " Emlak İlanları",
-                headerBackTitle: "",
-                headerBackTitleVisible: false,
-                headerTintColor: "white",
-                headerTitleStyle: {
-                  fontSize: 14,
-                },
-              })}
-            />
-            <Stack.Screen
-              name="UploadAdsPicture"
-              component={UploadAdsPicture}
-              options={({ route }) => ({
-                // Geri düğmesini kaldırır
-                headerBackTitleVisible: false,
-                title: "Reklam Görseli Oluştur",
-                headerStyle: {
-                  backgroundColor: "#F5F5F7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="AdsPictureList"
-              component={AdsPictureList}
-              options={({ route }) => ({
-                title: "Reklam Görselleri",
-                headerStyle: {
-                  backgroundColor: "#F5F5F7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="UserTypes"
-              component={UserTypeList}
-              options={({}) => ({
-                title: "Kullanıcı Tipleri",
-                headerBackTitleVisible: false,
+              };
+            }}
+          />
 
-                headerStyle: {
-                  backgroundColor: "#F5F5F7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="PaymentScreen"
-              component={PaymentScreen}
-              options={({ route }) => ({
-                title: "Sepet Özeti Ve Onay",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="SwapScreenNav"
-              component={SwapScreenNav}
-              options={({ route }) => ({
-                title: "Başvuru Yap",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="Forgot"
-              component={ForgotPassword}
-              options={({ route }) => ({
-                title: "Şifremi Unuttum",
-                headerShown: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="UpdateUserType"
-              component={UpdateUserType}
-              options={({ route }) => ({
-                headerBackTitleVisible: false,
-                headerShown: true,
-                title: "Kullanıcı Güncelle",
-              })}
-            />
-            <Stack.Screen
-              name="UpdateUsers"
-              component={UpdateUsers}
-              options={({ route }) => ({
-                headerBackTitleVisible: false,
-                headerShown: true,
-                title: "Alt Kullanıcı Güncelle",
-              })}
-            />
-            <Stack.Screen
-              name="UsersList"
-              component={UsersList}
-              options={({ route }) => ({
-                headerBackTitleVisible: false,
-                headerShown: true,
-                title: "Alt Kullanıcılar",
-              })}
-            />
-            <Stack.Screen
-              name="Taked"
-              component={Takeds}
-              options={({ route }) => ({
-                headerBackTitleVisible: false,
-                headerShown: true,
-                title: "Siparişlerim",
-              })}
-            />
-            <Stack.Screen
-              name="Invoice"
-              component={Invoice}
-              options={({ route }) => ({
-                headerBackTitleVisible: false,
-                headerShown: true,
-                title: "Fatura",
-              })}
-            />
-            <Stack.Screen
-              name="CreateReservation"
-              component={CreateReservation}
-              options={({ route }) => ({
-                headerBackTitleVisible: false,
-                headerShown: true,
-                title: "Rezervasyon Oluştur",
-              })}
-            />
-            <Stack.Screen
-              name="PaymentScreenForReserve"
-              component={PaymentScreenForReserve}
-              options={({ route }) => ({
-                title: "Sepet Özeti Ve Onay",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="CreateCollections"
-              component={CreateCollections}
-              options={({ route }) => ({
-                title: "Koleksiyon Oluştur Ve Ekle",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="DecontPdf"
-              component={DecontPdf}
-              options={({ route }) => ({
-                title: route.params.name,
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="AddComment"
-              component={AddComment}
-              options={({ route }) => ({
-                title: "Konutu Değerlendir",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="ExtraditionRequest"
-              component={ExtradionRequest}
-              options={({ route }) => ({
-                title: "İade İşlemleri",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="Success"
-              component={SuccesScreen}
-              options={({ route }) => ({
-                title: route.params.name,
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="VerifyScreen"
-              component={VerifyScreen}
-              options={({ route }) => ({
-                headerShown: false,
-                gestureEnabled: false,
+          <Stack.Screen
+            name="HomeList"
+            component={HomeList}
+            options={({ route }) => ({
+              headerShown: false,
+            })}
+          />
+          <Stack.Screen
+            name="SubCategoryChild"
+            component={SubCategoryChild}
+            options={({ route }) => ({
+              headerShown: true,
+              title: route.params.text,
+              headerBackTitle:
+                route.params.title === "Projeler"
+                  ? route.params.name + route.params.title
+                  : route.params.name,
+              headerBackTitleVisible: true,
+              headerTitleStyle: {
+                fontSize: 14,
+              },
+              headerBackTitleStyle: {
+                fontSize: 14,
+              },
+            })}
+          />
+          <Stack.Screen
+            name="Search"
+            component={Search}
+            options={({ route }) => ({
+              headerShown: false,
+            })}
+          />
+          <Stack.Screen
+            name="AllProject"
+            component={AllProjects}
+            options={({ route }) => ({
+              headerShown: false,
+              headerStyle: {
+                backgroundColor: "#EA2B2E",
+              },
+              title: route.params.name + " - " + route.params.count + " Proje",
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "white",
+              headerTitleStyle: {
+                fontSize: 14,
+              },
+            })}
+          />
+          <Stack.Screen
+            name="FilterScrenn"
+            component={FilterScreen}
+            options={({ route }) => ({
+              title: route.params.name,
+            })}
+          />
+          <Stack.Screen
+            name="EditAdvert"
+            component={EditAdvert}
+            options={() => ({
+              title: "İlanları Düzenle",
+              headerBackTitle: ".",
+            })}
+          />
+          <Stack.Screen name="Archieve" component={Archieve} />
+          <Stack.Screen
+            name="EditProject"
+            component={EditProject}
+            options={({ route }) => ({
+              title: route.params.name,
+              headerBackTitleVisible: false,
+            })}
+          />
+          <Stack.Screen
+            name="SellAndRent"
+            component={SellAndRentFormPage}
+            options={({ route }) => ({
+              title: "Sat Kirala",
+              headerBackTitleVisible:false
+            })}
+          />
+          <Stack.Screen
+            name="SendSellAndRentForm"
+            component={SendSellAndRentForm}
+            options={({ route }) => ({
+              title: "Sat Kirala Formu",
+              headerBackTitleVisible:false
+            })}
+          />
+          <Stack.Screen
+            name="SeeNeigbourHood"
+            component={SeeNeigbourhood}
+            options={({ route }) => ({
+              headerBackTitleVisible: false,
+              title: "Komşumu Gör",
+            })}
+          />
+          <Stack.Screen
+            name="SwapScreen"
+            component={SwapScreen}
+            options={({ route }) => ({
+              title: "Gelen Takas Başvurularım",
+            })}
+          />
+          <Stack.Screen
+            name="ComeSwapScreen"
+            component={ComeSwapScreen}
+            options={({ route }) => ({
+              title: "Takas Başvurularım",
+            })}
+          />
+          <Stack.Screen
+            name="MapWiew"
+            component={MapWiew}
+            options={({ route }) => ({
+              title: "Mapde Görüntüle",
+            })}
+          />
+          <Stack.Screen
+            name="AllRealtorAdverts"
+            component={AllRealtorAdverts}
+            options={({ route }) => ({
+              headerShown: false,
+              headerStyle: {
+                backgroundColor: "#EA2B2E",
+              },
+              title:
+                route.params.name +
+                " - " +
+                route.params.count +
+                " Emlak İlanları",
+              headerBackTitle: "",
+              headerBackTitleVisible: false,
+              headerTintColor: "white",
+              headerTitleStyle: {
+                fontSize: 14,
+              },
+            })}
+          />
+          <Stack.Screen
+            name="UploadAdsPicture"
+            component={UploadAdsPicture}
+            options={({ route }) => ({
+              // Geri düğmesini kaldırır
+              headerBackTitleVisible: false,
+              title: "Reklam Görseli Oluştur",
+              headerStyle: {
+                backgroundColor: "#F5F5F7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="AdsPictureList"
+            component={AdsPictureList}
+            options={({ route }) => ({
+              title: "Reklam Görselleri",
+              headerStyle: {
+                backgroundColor: "#F5F5F7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="UserTypes"
+            component={UserTypeList}
+            options={({  }) => ({
+              title: "Kullanıcı Tipleri",
+              headerBackTitleVisible: false,
+      
+              headerStyle: {
+                backgroundColor: "#F5F5F7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="PaymentScreen"
+            component={PaymentScreen}
+            options={({ route }) => ({
+              title: "Sepet Özeti Ve Onay",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="SwapScreenNav"
+            component={SwapScreenNav}
+            options={({ route }) => ({
+              title: "Başvuru Yap",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="Forgot"
+            component={ForgotPassword}
+            options={({ route }) => ({
+              title: "Şifremi Unuttum",
+              headerShown: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="UpdateUserType"
+            component={UpdateUserType}
+            options={({ route }) => ({
+              headerBackTitleVisible: false,
+              headerShown: true,
+              title: "Kullanıcı Güncelle",
+            })}
+          />
+          <Stack.Screen
+            name="UpdateUsers"
+            component={UpdateUsers}
+            options={({ route }) => ({
+              headerBackTitleVisible: false,
+              headerShown: true,
+              title: "Alt Kullanıcı Güncelle",
+            })}
+          />
+          <Stack.Screen
+            name="UsersList"
+            component={UsersList}
+            options={({ route }) => ({
+              headerBackTitleVisible: false,
+              headerShown: true,
+              title: "Alt Kullanıcılar",
+            })}
+          />
+          <Stack.Screen
+            name="Taked"
+            component={Takeds}
+            options={({ route }) => ({
+              headerBackTitleVisible: false,
+              headerShown: true,
+              title: "Siparişlerim",
+            })}
+          />
+          <Stack.Screen
+            name="Invoice"
+            component={Invoice}
+            options={({ route }) => ({
+              headerBackTitleVisible: false,
+              headerShown: true,
+              title: "Fatura",
+            })}
+          />
+          <Stack.Screen
+            name="CreateReservation"
+            component={CreateReservation}
+            options={({ route }) => ({
+              headerBackTitleVisible: false,
+              headerShown: true,
+              title: "Rezervasyon Oluştur",
+            })}
+          />
+          <Stack.Screen
+            name="PaymentScreenForReserve"
+            component={PaymentScreenForReserve}
+            options={({ route }) => ({
+              title: "Sepet Özeti Ve Onay",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="CreateCollections"
+            component={CreateCollections}
+            options={({ route }) => ({
+              title: "Koleksiyon Oluştur Ve Ekle",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="DecontPdf"
+            component={DecontPdf}
+            options={({ route }) => ({
+              title: route.params.name,
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="AddComment"
+            component={AddComment}
+            options={({ route }) => ({
+              title: "Konutu Değerlendir",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="ExtraditionRequest"
+            component={ExtradionRequest}
+            options={({ route }) => ({
+              title: "İade İşlemleri",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="Success"
+            component={SuccesScreen}
+            options={({ route }) => ({
+              title: route.params.name,
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="VerifyScreen"
+            component={VerifyScreen}
+            options={({ route }) => ({
+              headerShown: false,
+              gestureEnabled: false,
+             
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="Upgrade"
+            component={UpgradeProfile}
+            options={({ route }) => ({
+              title: route.params.name,
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
 
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="Upgrade"
-              component={UpgradeProfile}
-              options={({ route }) => ({
-                title: route.params.name,
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
+          <Stack.Screen
+            name="SearchPage"
+            component={SearchPage}
+            options={({ route }) => ({
+              title: "Ara",
+              headerShown:true,
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="Support"
+            component={Support}
+            options={({ route }) => ({
+              title: "Destek",
 
-            <Stack.Screen
-              name="SearchPage"
-              component={SearchPage}
-              options={({ route }) => ({
-                title: "Ara",
-                headerShown: true,
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="Support"
-              component={Support}
-              options={({ route }) => ({
-                title: "Destek",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-                headerTitleAlign: "center", // Başlığı ortalar
-                headerTitleStyle: {
-                  fontSize: 18, // Yazı boyutu
-
-                  color: "#000", // Yazı rengi
-                },
-              })}
-            />
-
-            <Stack.Screen
-              name="AddCommentForProject"
-              component={AddCommentForProject}
-              options={({ route }) => ({
-                title: "Konutu Değerlendir",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="MyComments"
-              component={MyComments}
-              options={({ route }) => ({
-                title: "Değerlendirmelerim",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="EditProjectComment"
-              component={EditCommentForProject}
-              options={({ route }) => ({
-                title: "Yorumu Düzenle",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="Basket2"
-              component={Basket2}
-              options={({ route }) => ({
-                title: "Komşumu Gör Satın Alma",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="PaymentScreen2"
-              component={PaymentScreen2}
-              options={({ route }) => ({
-                title: "Komşumu Gör Satın Alma",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="AdvertPanel"
-              component={AdvertsPanelTab}
-              options={({ route }) => ({
-                title: "İlan Yönetimi",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="ClubPanel"
-              component={ClubPanel}
-              options={({ route }) => ({
-                title: "Emlak Kulüp",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#f7f7f7",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="SwapForm"
-              component={SwapForm}
-              options={({ route }) => ({
-                title: "Takas Başvurusu Yap",
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#ffffff",
-                },
-              })}
-            />
-            <Stack.Screen
-              name="OnBoard"
-              component={Onboard}
-              options={({ route }) => ({
-                headerShown: false,
-                gestureEnabled: false,
-                headerBackTitleVisible: false,
-                headerStyle: {
-                  backgroundColor: "#ffffff",
-                },
-              })}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </GestureHandlerRootView>
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="AddCommentForProject"
+            component={AddCommentForProject}
+            options={({ route }) => ({
+              title: "Konutu Değerlendir",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="MyComments"
+            component={MyComments}
+            options={({ route }) => ({
+              title: "Değerlendirmelerim",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="EditProjectComment"
+            component={EditCommentForProject}
+            options={({ route }) => ({
+              title: "Yorumu Düzenle",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="Basket2"
+            component={Basket2}
+            options={({ route }) => ({
+              title: "Komşumu Gör Satın Alma",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="PaymentScreen2"
+            component={PaymentScreen2}
+            options={({ route }) => ({
+              title: "Komşumu Gör Satın Alma",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="AdvertPanel"
+            component={AdvertsPanelTab}
+            options={({ route }) => ({
+              title: "İlan Yönetimi",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="ClubPanel"
+            component={ClubPanel}
+            options={({ route }) => ({
+              title: "Emlak Kulüp",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+             <Stack.Screen
+            name="SwapForm"
+            component={SwapForm}
+            options={({ route }) => ({
+              title: "Takas Başvurusu Yap",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+            })}
+          />
+         
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
     </AlertNotificationRoot>
   );
 }

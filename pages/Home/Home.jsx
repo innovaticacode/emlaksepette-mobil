@@ -19,6 +19,7 @@ import HomePage2 from "./HomePage2";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
 import VerifyScreen from "./VerifyScreen";
+import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 
 const Tab = createBottomTabNavigator();
 
@@ -64,16 +65,21 @@ const Home = ({ route }) => {
   }, [user]);
 
   const { width, height } = Dimensions.get("window");
-
+const nav =useNavigation()
  if (userdata && user.access_token ) {
     if (user.type==1) {
       if (verifyStatus==0) {
-        return <VerifyScreen/>
+        setTimeout(() => {
+          nav.navigate('VerifyScreen')
+        }, 100);
+         
       }
     
     }else{
       if (  verifyStatus==0|| userdata.corporate_account_status==0 ) {
-        return <VerifyScreen/>
+        setTimeout(() => {
+          nav.navigate('VerifyScreen')
+        }, 100);
     
       
       }}
@@ -86,6 +92,7 @@ const Home = ({ route }) => {
   return (
     <Tab.Navigator
       screenOptions={{
+        tabBarHideOnKeyboard:Platform.OS === "ios" ? false:true,
         tabBarLabelStyle: {
           fontWeight: "500", // Kalın font
           color: "black",
@@ -198,11 +205,9 @@ const Home = ({ route }) => {
                 color={focused ? "#333" : "grey"}
               />
             ) : (
-              <Feather
-                name="user"
-                color={focused ? "black" : "grey"}
-                size={23}
-              />
+              
+              <FontAwesomeIcon name= {focused ? 'user':'user-o'} size={focused?28: 23}/>
+            
             ),
         }}
       />

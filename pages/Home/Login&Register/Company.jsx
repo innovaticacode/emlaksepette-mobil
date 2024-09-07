@@ -49,6 +49,7 @@ export default function Company() {
   const [ShoppingName, setShoppingName] = useState("");
   const [licence, setlicence] = useState("");
   const [acccountType, setacccountType] = useState("");
+  const [cityCode, setcityCode] = useState("")
   {
     /* cheked documents */
   }
@@ -172,6 +173,7 @@ export default function Company() {
   const [IsSucces, setIsSucces] = useState(null);
   const postData = async () => {
     setsuccesRegister(true);
+    let fullNumber = `${cityCode}${companyPhone}`;
     try {
       var formData = new FormData();
       formData.append("type", 2);
@@ -181,7 +183,7 @@ export default function Company() {
       formData.append("password", password);
       formData.append("store_name", companyName);
       formData.append("name", ShoppingName);
-      formData.append("phone", companyPhone);
+      formData.append("phone", fullNumber);
       formData.append("corporate-account-type", focusArea);
       formData.append("city_id", city);
       formData.append("county_id", county);
@@ -227,6 +229,7 @@ export default function Company() {
       setChecked1(false);
       setChecked2(false);
       setChecked3(false);
+      setcityCode("")
       Navigation.navigate("Login", { showAlert: true });
     } catch (error) {
       // Hata durumunda
@@ -472,6 +475,7 @@ export default function Company() {
   const handlePhoneNumberChange = (value) => {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setphoneNumber(formattedPhoneNumber);
+    setcompanyPhone(value)
   };
 
   const GetDeal = (deal) => {
@@ -501,6 +505,111 @@ export default function Company() {
   };
   const chooseType = (title) => {
     setacccountType(title);
+  };
+  const cityData = [
+    { label: "İstanbul Avrupa Yakası (212)", value: 212 },
+    { label: "İstanbul Anadolu Yakası (216)", value: 216 },
+    { label: "Adana (322)", value: 322 },
+    { label: "Adıyaman (416)", value: 416 },
+    { label: "Afyon (272)", value: 272 },
+    { label: "Ağrı (472)", value: 472 },
+    { label: "Aksaray (382)", value: 382 },
+    { label: "Amasya (358)", value: 358 },
+    { label: "Ankara (312)", value: 312 },
+    { label: "Antalya (242)", value: 242 },
+    { label: "Ardahan (478)", value: 478 },
+    { label: "Artvin (466)", value: 466 },
+    { label: "Aydın (256)", value: 256 },
+    { label: "Balıkesir (266)", value: 266 },
+    { label: "Bartın (378)", value: 378 },
+    { label: "Batman (488)", value: 488 },
+    { label: "Bayburt (458)", value: 458 },
+    { label: "Bilecik (228)", value: 228 },
+    { label: "Bingöl (426)", value: 426 },
+    { label: "Bitlis (434)", value: 434 },
+    { label: "Bolu (374)", value: 374 },
+    { label: "Burdur (248)", value: 248 },
+    { label: "Bursa (224)", value: 224 },
+    { label: "Çanakkale (286)", value: 286 },
+    { label: "Çankırı (376)", value: 376 },
+    { label: "Çorum (364)", value: 364 },
+    { label: "Denizli (258)", value: 258 },
+    { label: "Diyarbakır (412)", value: 412 },
+    { label: "Düzce (380)", value: 380 },
+    { label: "Edirne (284)", value: 284 },
+    { label: "Elazığ (424)", value: 424 },
+    { label: "Erzincan (446)", value: 446 },
+    { label: "Erzurum (442)", value: 442 },
+    { label: "Eskişehir (222)", value: 222 },
+    { label: "Gaziantep (342)", value: 342 },
+    { label: "Giresun (454)", value: 454 },
+    { label: "Gümüşhane (456)", value: 456 },
+    { label: "Hakkari (438)", value: 438 },
+    { label: "Hatay (326)", value: 326 },
+    { label: "Iğdır (476)", value: 476 },
+    { label: "Isparta (246)", value: 246 },
+    { label: "İçel (Mersin) (324)", value: 324 },
+
+    { label: "İzmir (232)", value: 232 },
+    { label: "Kahramanmaraş (344)", value: 344 },
+    { label: "Karabük (370)", value: 370 },
+    { label: "Karaman (338)", value: 338 },
+    { label: "Kars (474)", value: 474 },
+    { label: "Kastamonu (366)", value: 366 },
+    { label: "Kayseri (352)", value: 352 },
+    { label: "Kırıkkale (318)", value: 318 },
+    { label: "Kırklareli (288)", value: 288 },
+    { label: "Kırşehir (386)", value: 386 },
+    { label: "Kilis (348)", value: 348 },
+    { label: "Kocaeli (262)", value: 262 },
+    { label: "Konya (332)", value: 332 },
+    { label: "Kütahya (274)", value: 274 },
+    { label: "Malatya (422)", value: 422 },
+    { label: "Manisa (236)", value: 236 },
+    { label: "Mardin (482)", value: 482 },
+    { label: "Muğla (252)", value: 252 },
+    { label: "Muş (436)", value: 436 },
+    { label: "Nevşehir (384)", value: 384 },
+    { label: "Niğde (388)", value: 388 },
+    { label: "Ordu (452)", value: 452 },
+    { label: "Osmaniye (328)", value: 328 },
+    { label: "Rize (464)", value: 464 },
+    { label: "Sakarya (264)", value: 264 },
+    { label: "Samsun (362)", value: 362 },
+    { label: "Siirt (484)", value: 484 },
+    { label: "Sinop (368)", value: 368 },
+    { label: "Sivas (346)", value: 346 },
+    { label: "Şanlıurfa (414)", value: 414 },
+    { label: "Şırnak (486)", value: 486 },
+    { label: "Tekirdağ (282)", value: 282 },
+    { label: "Tokat (356)", value: 356 },
+    { label: "Trabzon (462)", value: 462 },
+    { label: "Tunceli (428)", value: 428 },
+    { label: "Uşak (276)", value: 276 },
+    { label: "Van (432)", value: 432 },
+    { label: "Yalova (226)", value: 226 },
+    { label: "Yozgat (354)", value: 354 },
+    { label: "Zonguldak (372)", value: 372 },
+  ];
+  const formatNumber = (text) => {
+    // Sadece rakamları filtrele
+    let cleaned = text.replace(/[^0-9]/g, '');
+
+    // 7 karakterden fazla olmamalı
+    if (cleaned.length > 7) {
+      cleaned = cleaned.slice(0, 7);
+    }
+
+    // 3-2-2 formatında düzenle
+    let formatted = cleaned;
+    if (cleaned.length > 3) {
+      formatted = cleaned.slice(0, 3) + '-' + cleaned.slice(3, 5);
+    }
+    if (cleaned.length > 5) {
+      formatted += '-' + cleaned.slice(5, 7);
+    }
+
+    setcompanyPhone(formatted)
   };
 
   return (
@@ -680,7 +789,42 @@ export default function Company() {
                 ""
               )}
             </View>
-            <View style={{ gap: 5 }}>
+            <View style={{gap:5}}>
+              <View style={{paddingLeft:5}}>
+              <Text style={{fontSize: 14, color: "black", fontWeight: 600}}>Sabit Telefon (Opsiyonel)</Text>
+              </View>
+                   
+
+                    <View style={{ flexDirection: "row" }}>
+                      <View style={{ width: "32%" }}>
+                        <RNPickerSelect
+                          doneText="Tamam"
+                          value={cityCode}
+                          placeholder={{
+                            label: "Alan Kodu",
+                            value: null,
+                          }}
+                          style={pickerSelectStyles}
+                          onValueChange={(value) => {
+                            setcityCode(value);
+                          }}
+                          items={cityData}
+                        />
+                      </View>
+                      <View style={{ width: "70%" }}>
+                      <TextInput
+                value={companyPhone}
+                onChangeText={(value) => formatNumber(value)}
+                style={styles.Input}
+                placeholder="Sabit Telefon"
+                keyboardType="number-pad"
+                maxLength={9}
+                
+              />
+                      </View>
+                    </View>
+                  </View>
+            {/* <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Sabit Telefon (Opsiyonel)
@@ -693,7 +837,7 @@ export default function Company() {
                 placeholder="Sabit Telefon"
                 keyboardType="number-pad"
               />
-            </View>
+            </View> */}
 
             <View style={{ gap: 5 }}>
               <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
@@ -713,6 +857,7 @@ export default function Company() {
                   { label: "İnşaat Ofisi", value: "İnşaat Ofisi" },
                   { label: "Banka", value: "Banka" },
                   { label: "Turizm", value: "Turizm" },
+                  { label: "Üretici", value: "Üretici" }
                  
                 ]}
               />
@@ -1187,10 +1332,10 @@ export default function Company() {
           style={styles.modal2}
         >
           <SafeAreaView style={styles.modalContent2}>
-            <ScrollView>
+            <ScrollView style={{padding:10,}}> 
               <HTML source={{ html: Deals }} contentWidth={100} />
 
-              <View style={{ alignItems: "center" }}>
+              <View style={{ alignItems: "center",paddingBottom:20 }}>
                 <TouchableOpacity
                   style={styles.Acceptbtn}
                   onPress={() => {
@@ -1268,7 +1413,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ebebeb",
     borderRadius: 5,
-    padding: 10,
+    padding: 8,
     fontSize: 14, // to ensure the text is never behind the icon
   },
   inputAndroid: {
@@ -1286,7 +1431,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   Input: {
-    padding: 9,
+    padding: 8,
     borderWidth: 1,
     borderColor: "#ebebeb",
     borderRadius: 5,

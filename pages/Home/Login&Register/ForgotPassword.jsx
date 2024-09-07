@@ -8,7 +8,7 @@ import {
   SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard,
-  ActivityIndicator, // Loading indicator
+  // Loading indicator
 } from "react-native";
 import axios from "axios";
 import Modal from "react-native-modal";
@@ -19,6 +19,7 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function ForgotPassword() {
   const nav = useNavigation();
@@ -46,21 +47,12 @@ export default function ForgotPassword() {
     }
     return () => clearInterval(timer);
   }, [isCooldown]);
-
+const [buttonDisabled, setbuttonDisabled] = useState(false)
   const postData = async () => {
-    if (isCooldown) {
-      Dialog.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Lütfen Bekleyin...",
-        textBody: `E-posta gönderimi için ${Math.ceil(cooldownTime / 1000)} saniye kaldı.`,
-        button: "Tamam",
-      });
-      return;
-    }
-
+  
     setLoading(true); // Butonu loading durumuna al
-    setShowAlert(true); // Modal açılır
-    console.log("Modal açıldı.");
+    
+
 
     try {
       if (!validateEmail(email)) {
@@ -87,11 +79,12 @@ export default function ForgotPassword() {
         formData
       );
       console.log("API çağrısı başarılı. Yanıt:", response.data);
-
-      setShowAlert(false); // Modal kapanır
+        
+    // Modal kapanır
 
       setTimeout(() => {
         if (response.data.success) {
+          setbuttonDisabled(true)
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Başarılı",
@@ -114,31 +107,25 @@ export default function ForgotPassword() {
             button: "Tamam",
           });
         }
-        setLoading(false); // Loading durumu kapat
+        // Loading durumu kapat
       }, 500); // Modal kapanırken zamanlama ekleyin
 
-    } catch (error) {
+    } catch (error) { // "errors" yerine "error"
       console.log("Hata oluştu:", error);
       setShowAlert(false); // Modal kapanır
-
+    
       setTimeout(() => {
-        if (error.response && error.response.status === 422) {
+        if (error) {
           Dialog.show({
             type: ALERT_TYPE.WARNING,
             title: "Hata",
-            textBody: "Böyle bir mail adresi sisteme kayıtlı değildir.",
-            button: "Tamam",
-          });
-        } else {
-          Dialog.show({
-            type: ALERT_TYPE.WARNING,
-            title: "Hata",
-            textBody: "Bir hata oluştu. Lütfen tekrar deneyin.",
+            textBody: error?.response?.data?.message, // "error" ile değiştirildi
             button: "Tamam",
           });
         }
-        setLoading(false); // Loading durumu kapat
       }, 500); // Modal kapanırken zamanlama ekleyin
+    }finally{
+      setLoading(false); 
     }
   };
 
@@ -201,12 +188,12 @@ export default function ForgotPassword() {
           </View>
           <View style={{ padding: 10 }}>
             <TouchableOpacity
-              style={[styles.btn, loading && styles.btnDisabled]}
+              style={[styles.btn, loading && styles.btnDisabled,{opacity:buttonDisabled? 0.5:1}]}
               onPress={postData}
-              disabled={loading} // Butonu disable et
+              disabled={buttonDisabled} // Butonu disable et
             >
               {loading ? (
-                <ActivityIndicator size="small" color="#FAFAFA" /> // Loading göstergesi
+                <ActivityIndicator size="small" color="white" /> // Loading göstergesi
               ) : (
                 <Text style={{ color: "#FAFAFA", textAlign: "center" }}>
                   Gönder
@@ -263,7 +250,7 @@ const styles = StyleSheet.create({
     justifyContent: "center", // İçeriği ortalar
   },
   btnDisabled: {
-    backgroundColor: "#d6d6d6", // Disable durumunda buton rengi
+    opacity:0.5// Disable durumunda buton rengi
   },
   modal: {
     justifyContent: "center",
