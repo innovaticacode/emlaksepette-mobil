@@ -18,25 +18,26 @@ import { SearchBar } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import slugify from "react-slugify";
-
 import { Platform } from "react-native";
+
 const { width, height } = Dimensions.get("window");
 
-export default function Search({ onpres ,setIsDrawerOpen}) {
+export default function Search({ onpres, setIsDrawerOpen }) {
   const navigation = useNavigation();
   const [search, setSearch] = useState("");
+  const [menuItems, setMenuItems] = useState([]);
 
   const updateSearch = (search) => {
     setSearch(search);
   };
 
-  const [menuItems, setMenuItems] = useState([]);
 
   const fetchmenuItems = async () => {
     try {
       const response = await axios.get(
         "https://private.emlaksepette.com/api/menu-list"
       );
+      
       setMenuItems(response.data);
       const submenus = response.data[0].submenus;
     } catch (error) {
@@ -47,21 +48,32 @@ export default function Search({ onpres ,setIsDrawerOpen}) {
   useEffect(() => {
     fetchmenuItems();
   }, []);
-  const { width, height } = Dimensions.get("window");
+
+  // const iconMapping = {
+  //   'Projeler': 'folder-home',
+  //   'Konut': 'home-group',
+  //   'İş Yeri': 'storefront',
+  //   'Arsa': 'terrain',
+  //   'Tiny House': 'hoop-house',
+  //   'Bungalov': 'tent',
+  //   'Prefabrik Yapılar': 'greenhouse',
+  //   'Tatil Sepette': 'island',
+  //   'Gayrimenkul Ligi': 'trophy-variant',
+  // };
 
   return (
     <SafeAreaView
       onTouchStart={() => Keyboard.dismiss()}
-      style={{ }}
+      style={{}}
     >
       <ScrollView>
-        <View style={{ flex: 1}}></View>
+        <View style={{ flex: 1 }}></View>
 
         <View style={{ gap: 3 }}>
-          <TouchableOpacity onPress={()=>{
-            
+          <TouchableOpacity onPress={() => {
+
           }}>
-          <Categories category={'Ana Sayfa'} ıconName={'home'}/>
+            <Categories category={'Ana Sayfa'} iconName={'home'} />
           </TouchableOpacity>
 
           {menuItems.map((item, index) => (
@@ -114,6 +126,14 @@ export default function Search({ onpres ,setIsDrawerOpen}) {
               <Categories category={item.text} />
             </TouchableOpacity>
           ))}
+
+          {/* {Object.keys(iconMapping).map((category,index) => (
+            <Categories
+              key={category}
+              category={category}
+              iconName={iconMapping[category]}
+            />
+          ))} */}
         </View>
       </ScrollView>
     </SafeAreaView>
