@@ -238,6 +238,7 @@ export default function App({ route }) {
             ...TransitionPresets.SlideFromRightIOS,
 
             headerTintColor: "#333",
+          
           }}
         >
           {showSplash ? (

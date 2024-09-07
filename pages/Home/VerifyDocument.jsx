@@ -13,6 +13,7 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import { documentView } from '../helper';
+import ImageViewing from 'react-native-image-viewing';
 import { getValueFor } from '../../components/methods/user';
 import axios from 'axios';
 import { ActivityIndicator } from 'react-native-paper';
@@ -86,10 +87,19 @@ export default function VerifyDocument({nextStep,prevStep}) {
       
         const [selectedPick, setselectedPick] = useState(null)
         const [choose, setchoose] = useState(false)
-
-        const openModalAndChooseDoc=(key)=>{
+        const [isVisible, setIsVisible] = useState(false);
+        const [selectedUrl, setselectedUrl] = useState('')
+        const [selectedDocument, setselectedDocument] = useState('')
+        const openModalAndChooseDoc=(key,url,document)=>{
             setselectedPick(key)
             setchoose(true)
+           
+
+        }
+        const showDocument=(url,document)=>{
+          setselectedUrl(url)
+          setselectedDocument(document)
+          setIsVisible(true)
         }
         const [selectedDocumentName, setSelectedDocumentName] = useState(null);
 
@@ -203,7 +213,7 @@ export default function VerifyDocument({nextStep,prevStep}) {
             const [verifyStatus, setverifyStatus] = useState(null)
             useEffect(() => {
               getValueFor('PhoneVerify',setverifyStatus)
-            }, [user])
+            }, [])
 
             console.log(verifyStatus + 'Document')
            
@@ -213,14 +223,46 @@ export default function VerifyDocument({nextStep,prevStep}) {
             console.log(user.corporate_type + 'sfsd')
             const [filteredDocuments, setfilteredDocuments] = useState([])
             const isFocused=useIsFocused()
-           useEffect(() => {
-              setfilteredDocuments(documentView)
-           }, [])
+          
            console.log(FormDatas[selectedPick]?.name + 'dosya ismi')
 
             const checkDocuments=()=>{
-                
+
             }
+            // console.log(user)
+            // console.log(user.corporate_account_status + 'dfs')
+            const [namFromGetUser, setnamFromGetUser] = useState([]);
+            const [loadingForUserInfo, setloadingForUserInfo] = useState(false)
+            const GetUserInfo = async () => {
+              setloadingForUserInfo(true)
+              try {
+                if (user?.access_token && user) {
+                  const userInfo = await axios.get(
+                    "https://private.emlaksepette.com/api/users/" + user?.id,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${user.access_token}`,
+                      },
+                    }
+                  );
+                  const userData = userInfo?.data?.user;
+                  setnamFromGetUser(userData);
+                  setData('vergi_levhası',namFromGetUser.tax_document)
+                  setData('sicil_belgesi',namFromGetUser.record_document)
+                
+                }
+              } catch (error) {
+                console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+              } finally {
+                  setloadingForUserInfo(false)
+              }
+            };
+           
+            useEffect(() => {
+              setfilteredDocuments(documentView)
+              GetUserInfo()
+           }, [user])
+           console.log(namFromGetUser)
   return (
 
  
@@ -245,18 +287,105 @@ style={{
                 }else{
                     openModalAndChooseDoc(item.state)
                 }
-             
-                
+
             }}>
             <View style={{paddingLeft:10,flexDirection:'row',gap:5,alignItems:'center'}}>
                         <Text style={{fontSize:14,color:'#333',fontWeight:'600'}}>{item.text}</Text>
-                        { FormDatas[item.state] &&  <Text style={{color:'#008001',fontSize:12}}>Seçildi</Text> }     
+                        {(FormDatas[item.state] &&  namFromGetUser[item.approve] !== 1 )&& <Text style={{color:'#008001',fontSize:12}}>Seçildi</Text> }   
+                        {(namFromGetUser[item.approve] == 1 && !FormDatas[item.state])&&
+                        <Text style={{color:'#008001',fontSize:12,fontWeight:'600'}}>Onaylandı</Text> 
+                        
+                        } 
                     </View> 
                   
                     <View style={{width:'100%',height:150,borderWidth:1.5,borderStyle:'dashed',borderRadius:20,borderColor:FormDatas[item.state]?'#2080113d': '#FDEAEA'}}>
                     <View style={{alignItems:'center',backgroundColor:FormDatas[item.state]?'#2080113d': '#FDEAEA',width:'100%',height:'100%',justifyContent:'center',borderRadius:20}}>
+                          {
+                            FormDatas[item.state] ?
+                            <View style={{width:'100%',height:'100%',backgroundColor:'#E0F2E3',borderRadius:20,justifyContent:'center'}}>
+                            <View style={{gap:10,alignItems:'center',justifyContent:'center'}}>
+                            <TouchableOpacity
+                            onPress={()=>{
+                                showDocument(item.url , item.document)
+                            }}
+                            style={{
+                              backgroundColor:'#0FA958',
+                              padding:9,                            
+                              borderRadius:9,
+                              width:'60%'
+                            }}
+                            >
+                                <Text style={{
+                                  fontSize:13,color:'white',fontWeight:'700',
+                                  textAlign:'center'
+                                }}>
+                                  Belgeyi Gör
+                                </Text>
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                              onPress={()=>{
+                                setselectedPick(item.state)
+                                setdeleteModal(true)
+                              }}
+                              style={{
+                                backgroundColor:'#EA2A29',
+                                padding:9,                            
+                                borderRadius:9,
+                                 width:'60%'
+                              }}
+                              >
+                                <Text style={{color:'white',fontSize:13,fontWeight:'700',textAlign:'center'}}>
+                                  Belgeyi Sil
+                                </Text>
+                              </TouchableOpacity>
+                             
+                              </View>
 
-                        {   
+                        </View>:
+                         <>
+                         <Feather name="cloud-upload-outline" size={60} color={'#EA2B2E'}/>
+                         <Text style={{color:'#EA2B2E',fontSize:13}}>Dosyanızı buraya yükleyiniz</Text>
+                        </>
+                          }
+                        {/* {   
+                         namFromGetUser[item.approve] == 1 && FormDatas[item.state]==null?
+                        <View style={{width:'100%',height:'100%',backgroundColor:'#E0F2E3',borderRadius:20,justifyContent:'center'}}>
+                            <View style={{gap:10,alignItems:'center',justifyContent:'center'}}>
+                            <TouchableOpacity
+                            style={{
+                              backgroundColor:'#0FA958',
+                              padding:9,                            
+                              borderRadius:9,
+                              width:'60%'
+                            }}
+                            >
+                                <Text style={{
+                                  fontSize:13,color:'white',fontWeight:'700',
+                                  textAlign:'center'
+                                }}>
+                                  Belgeyi Gör
+                                </Text>
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                              onPress={()=>{
+                                setselectedPick(item.state)
+                                setdeleteModal(true)
+                              }}
+                              style={{
+                                backgroundColor:'#EA2A29',
+                                padding:9,                            
+                                borderRadius:9,
+                                 width:'60%'
+                              }}
+                              >
+                                <Text style={{color:'white',fontSize:13,fontWeight:'700',textAlign:'center'}}>
+                                  Belgeyi Sil
+                                </Text>
+                              </TouchableOpacity>
+                             
+                              </View>
+
+                        </View>:
 
                             FormDatas[item.state] ? 
                             FormDatas[item.state].uri?.slice(-3) == 'pdf'?
@@ -284,8 +413,14 @@ style={{
                              <Feather name="cloud-upload-outline" size={60} color={'#EA2B2E'}/>
                              <Text style={{color:'#EA2B2E',fontSize:13}}>Dosyanızı buraya yükleyiniz</Text>
                             </>
-                        }
+                        } */}
                     </View>
+                    <ImageViewing
+        images={[{ uri:`https://private.emlaksepette.com/${selectedUrl}/${namFromGetUser[selectedDocument]}`}]}
+        imageIndex={0}
+        visible={isVisible}
+        onRequestClose={() => setIsVisible(false)}
+      />
                     </View> 
             </TouchableOpacity>
         ))
@@ -402,4 +537,7 @@ const styles=StyleSheet.create({
           },
         }),
       },
+      approveTrue:{
+        backgroundColor:'green'
+      }
 })
