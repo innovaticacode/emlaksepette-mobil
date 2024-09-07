@@ -40,24 +40,33 @@ export default function EditCommentForProject() {
   const [data, setData] = useState({});
   const route = useRoute();
   const nav = useNavigation();
-  const { projectId, commentInfo, commentID } = route.params;
-  const [loading, setloading] = useState(true);
+  const { projectId, commentInfo, commentID, info, comments } = route.params;
+  const [loading, setloading] = useState(false);
   const [UserImages, setUserImages] = useState([]);
   const [image, setImage] = useState([null, null, null]);
-  useEffect(() => {
-    apiRequestGet("project/" + projectId).then((res) => {
-      setData(res.data.project);
-      setloading(false);
-      setRating(commentInfo.rate);
-      setcomment(commentInfo?.comment);
-      const Images =
-        projectId &&
-        commentInfo &&
-        commentInfo?.images &&
-        JSON.parse(commentInfo.images);
-      setImage(Images);
-    });
-  }, []);
+  console.log(comments + " asdasd");
+  // useEffect(() => {
+  //   apiRequestGet("project/" + projectId).then((res) => {
+  //     setData(res.data.project);
+  //     setloading(false);
+  //     setRating(commentInfo.rate);
+  //     setcomment(commentInfo?.comment);
+  //     const Images =
+  //       projectId &&
+  //       commentInfo &&
+  //       commentInfo?.images &&
+  //       JSON.parse(commentInfo.images);
+  //     setImage(Images);
+  //   });
+  // }, []);
+  const API_URL = "https://private.emlaksepette.com/";
+  // const imageSource =
+  //   info === "project"
+  //     ? `${API_URL}${info?.images.replace("public/", "storage/")}`
+  //     : `${API_URL}housing_images/${
+  //         JSON.parse(info.housing_type_data)?.image ?? ""
+  //       }`;
+
   console.log(UserImages);
   const [rating, setRating] = useState(0); // Başlangıçta hiçbir yıldız dolu değil
   const [rate, setrate] = useState(0);
@@ -255,12 +264,7 @@ export default function EditCommentForProject() {
         <>
           <View style={[style.card, { flexDirection: "row" }]}>
             <View style={style.Image}>
-              <ImageBackground
-                source={{
-                  uri: `${apiUrl}/${data.image.replace("public/", "storage/")}`,
-                }}
-                style={{ width: "100%", height: "100%" }}
-              />
+              {/* <ImageBackground source={{ uri: imageSource }} /> */}
             </View>
             <View style={{ flexDirection: "column", gap: 5 }}>
               <View style={{ paddingLeft: 5, width: "80%" }}>
@@ -268,7 +272,14 @@ export default function EditCommentForProject() {
                   numberOfLines={2}
                   style={{ fontSize: 13, fontWeight: "600" }}
                 >
-                  {data?.project_title}
+                  {info.title || info.project_title}
+                  {/* {data?.project_title} */}
+                </Text>
+                <Text
+                  numberOfLines={2}
+                  style={{ fontSize: 13, fontWeight: "600" }}
+                >
+                  {/* {data?.project_title} */}
                 </Text>
               </View>
               <View style={{ paddingLeft: 5, gap: 5, width: "70%" }}>
@@ -276,7 +287,7 @@ export default function EditCommentForProject() {
                   style={{ fontSize: 12, color: "grey", fontWeight: "600" }}
                   numberOfLines={2}
                 >
-                  Satıcı:{" "}
+                  Satıcı:
                   <Text style={{ color: "#274ABB" }}>{data?.user?.name}</Text>
                 </Text>
               </View>
