@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { Image } from 'react-native'
 
-export default function SplasScreen() {
+export default function SplashScreen() {
   return (
     <View style={{flex:1,backgroundColor:'white',alignItems:'center',justifyContent:'center'}}>
       <View style={{width:300,height:150}}>
