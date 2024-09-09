@@ -24,6 +24,7 @@ export default function VerifyDocument({nextStep,prevStep}) {
       kimlik_belgesi:null,
       apporove_website:null,
       insaat_belgesi:null,
+     
    
         // Diğer form alanları buraya eklenebilir
       });
@@ -39,6 +40,8 @@ export default function VerifyDocument({nextStep,prevStep}) {
       useEffect(() => {
           getValueFor('user',setuser)
       }, [])
+      const [change, setchange] = useState(false)
+      const [keyFormData, setkeyFormData] = useState(null)
       const pickImage = async (key) => {
         // Kamera veya galeriden izin isteği
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -60,6 +63,11 @@ export default function VerifyDocument({nextStep,prevStep}) {
           // Seçilen resmin uri'si ile ilgili form verisini güncelleme
           setData(key, result.assets[0]);
           setchoose(false)
+          
+         
+          setkeyFormData(selectedPick)
+        send(keyFormData)
+
         }
       };
       const takePhoto = async (key) => {
@@ -76,11 +84,12 @@ export default function VerifyDocument({nextStep,prevStep}) {
           quality: 1,
         });
       
-        console.log(result);
+      
       
         if (!result.canceled) {
             setData(key, result.assets[0]);
             setchoose(false)
+            
         }
       };
         
@@ -120,6 +129,7 @@ export default function VerifyDocument({nextStep,prevStep}) {
                   setData(key,pdfAsset);
                 
                   setchoose(false)
+                  setchange(true)
               
                 
                 }
@@ -128,7 +138,7 @@ export default function VerifyDocument({nextStep,prevStep}) {
                 alert("hata");
               });
           };
-          console.log(FormDatas.pdfUrl)
+         
           const [deleteModal, setdeleteModal] = useState(false)
           const deleteDocument=(key)=>{
             setData(key, null);
@@ -151,38 +161,41 @@ export default function VerifyDocument({nextStep,prevStep}) {
             }
           };
           const navigation = useNavigation()
-          console.log(FormDatas.pdfUrl + 'sfgdgdf')
+         
           
             const [loading, setloading] = useState(false)
+            const send=(document)=>{
+             console.log(document , 'state deneme')
+            }
             const sendDocument=()=>{
               setloading(true)
               const formData = new FormData();
-              
+            
               formData.append(`sicil_belgesi`,FormDatas.sicil_belgesi? {
-                uri: Platform.OS === "android" ? FormDatas.sicil_belgesi : FormDatas?.sicil_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                uri: Platform.OS === "android" ? FormDatas.sicil_belgesi : FormDatas?.sicil_belgesi?.uri?.replace("file://", ""), // Android ve iOS için uygun URI
                 type: FormDatas?.sicil_belgesi?.mimeType, 
                 name:FormDatas.sicil_belgesi.name==null?'İmage.jpeg': FormDatas.sicil_belgesi?.name?.slice(-3) =='pdf' ? FormDatas.sicil_belgesi?.name:FormDatas.sicil_belgesi?.fileName, // Sunucuya gönderilecek dosya adı
               }:null);
-              formData.append(`approve_website`, FormDatas.apporove_website?{
-                uri: Platform.OS === "android" ? FormDatas.apporove_website.uri : FormDatas?.apporove_website?.uri.replace("file://", ""), // Android ve iOS için uygun URI
-                type: FormDatas?.apporove_website?.mimeType, 
-                name:FormDatas.apporove_website.name==null ? 'İmage.jpeg': FormDatas.apporove_website?.name?.slice(-3) == 'pdf' ? FormDatas.apporove_website?.name:FormDatas.apporove_website?.fileName , // Sunucuya gönderilecek dosya adı
-              }:null);
-              formData.append(`vergi_levhasi`,FormDatas.vergi_levhası? {
-                uri: Platform.OS === "android" ? FormDatas.vergi_levhası.uri : FormDatas?.vergi_levhası?.uri.replace("file://", ""), // Android ve iOS için uygun URI
-                type: FormDatas?.vergi_levhası?.mimeType, 
-                name:FormDatas.vergi_levhası.name==null ? 'İmage.jpeg': FormDatas.vergi_levhası?.name?.slice(-3) == 'pdf' ? FormDatas.vergi_levhası?.name:FormDatas.vergi_levhası?.fileName , // Sunucuya gönderilecek dosya adı
-              }:null);
-              formData.append(`kimlik_belgesi`,FormDatas.kimlik_belgesi ? {
-                uri: Platform.OS === "android" ? FormDatas.kimlik_belgesi.uri : FormDatas?.kimlik_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
-                type: FormDatas?.kimlik_belgesi?.mimeType, 
-                name:FormDatas.kimlik_belgesi.name==null ?'İmage.jpeg': FormDatas.kimlik_belgesi?.name?.slice(-3) == 'pdf' ? FormDatas.kimlik_belgesi?.name:FormDatas.kimlik_belgesi?.fileName  , // Sunucuya gönderilecek dosya adı
-              }:null);
-              formData.append(`insaat_belgesi`, FormDatas.insaat_belgesi? {
-                uri: Platform.OS === "android" ? FormDatas.insaat_belgesi.uri : FormDatas?.insaat_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
-                type: FormDatas?.insaat_belgesi?.mimeType, 
-                name:FormDatas.insaat_belgesi.name ==null ? 'İmage.jpeg':  FormDatas.insaat_belgesi?.name?.slice(-3) == 'pdf' ? FormDatas.insaat_belgesi?.name:FormDatas.insaat_belgesi?.fileName , // Sunucuya gönderilecek dosya adı
-              }:null);
+              // formData.append(`approve_website`, FormDatas.apporove_website?{
+              //   uri: Platform.OS === "android" ? FormDatas.apporove_website.uri : FormDatas?.apporove_website?.uri?.replace("file://", ""), // Android ve iOS için uygun URI
+              //   type: FormDatas?.apporove_website?.mimeType, 
+              //   name:FormDatas.apporove_website.name==null ? 'İmage.jpeg': FormDatas.apporove_website?.name?.slice(-3) == 'pdf' ? FormDatas.apporove_website?.name:FormDatas.apporove_website?.fileName , // Sunucuya gönderilecek dosya adı
+              // }:null);
+              // formData.append(`vergi_levhasi`,FormDatas.vergi_levhası? {
+              //   uri: Platform.OS === "android" ? FormDatas.vergi_levhası.uri : FormDatas?.vergi_levhası?.uri?.replace("file://", ""), // Android ve iOS için uygun URI
+              //   type: FormDatas?.vergi_levhası?.mimeType, 
+              //   name:FormDatas.vergi_levhası.name==null ? 'İmage.jpeg': FormDatas.vergi_levhası?.name?.slice(-3) == 'pdf' ? FormDatas.vergi_levhası?.name:FormDatas.vergi_levhası?.fileName , // Sunucuya gönderilecek dosya adı
+              // }:null);
+              // formData.append(`kimlik_belgesi`,FormDatas.kimlik_belgesi ? {
+              //   uri: Platform.OS === "android" ? FormDatas.kimlik_belgesi.uri : FormDatas?.kimlik_belgesi?.uri?.replace("file://", ""), // Android ve iOS için uygun URI
+              //   type: FormDatas?.kimlik_belgesi?.mimeType, 
+              //   name:FormDatas.kimlik_belgesi.name==null ?'İmage.jpeg': FormDatas.kimlik_belgesi?.name?.slice(-3) == 'pdf' ? FormDatas.kimlik_belgesi?.name:FormDatas.kimlik_belgesi?.fileName  , // Sunucuya gönderilecek dosya adı
+              // }:null);
+              // formData.append(`insaat_belgesi`, FormDatas.insaat_belgesi? {
+              //   uri: Platform.OS === "android" ? FormDatas.insaat_belgesi.uri : FormDatas?.insaat_belgesi?.uri?.replace("file://", ""), // Android ve iOS için uygun URI
+              //   type: FormDatas?.insaat_belgesi?.mimeType, 
+              //   name:FormDatas.insaat_belgesi.name ==null ? 'İmage.jpeg':  FormDatas.insaat_belgesi?.name?.slice(-3) == 'pdf' ? FormDatas.insaat_belgesi?.name:FormDatas.insaat_belgesi?.fileName , // Sunucuya gönderilecek dosya adı
+              // }:null);
               axios
                 .post("https://private.emlaksepette.com/api/verify-account", formData, {
                   headers: {
@@ -200,7 +213,7 @@ export default function VerifyDocument({nextStep,prevStep}) {
                     insaat_belgesi: null,
                     // Diğer form alanları buraya eklenebilir
                   });
-               
+                 
                 })
                 .catch((err) => {
                   console.error(err);
@@ -215,16 +228,14 @@ export default function VerifyDocument({nextStep,prevStep}) {
               getValueFor('PhoneVerify',setverifyStatus)
             }, [])
 
-            console.log(verifyStatus + 'Document')
+           
            
             
-            console.log(FormDatas[selectedPick]?.name + 'dosya tipi')
-            console.log(selectedPick + ' state')
-            console.log(user.corporate_type + 'sfsd')
+          
             const [filteredDocuments, setfilteredDocuments] = useState([])
             const isFocused=useIsFocused()
           
-           console.log(FormDatas[selectedPick]?.name + 'dosya ismi')
+          
 
             const checkDocuments=()=>{
 
@@ -247,8 +258,9 @@ export default function VerifyDocument({nextStep,prevStep}) {
                   );
                   const userData = userInfo?.data?.user;
                   setnamFromGetUser(userData);
-                  setData('vergi_levhası',namFromGetUser.tax_document)
-                  setData('sicil_belgesi',namFromGetUser.record_document)
+                  setData('vergi_levhası',namFromGetUser.tax_document ?namFromGetUser.tax_document:null )
+                  setData('sicil_belgesi',namFromGetUser.record_document ? namFromGetUser.record_document:null)
+                  
                 
                 }
               } catch (error) {
@@ -261,8 +273,8 @@ export default function VerifyDocument({nextStep,prevStep}) {
             useEffect(() => {
               setfilteredDocuments(documentView)
               GetUserInfo()
-           }, [user])
-           console.log(namFromGetUser)
+           }, [])
+        
   return (
 
  
@@ -284,6 +296,7 @@ style={{
                 if (FormDatas[item.state]) {
                        setselectedPick(item.state)
                        setdeleteModal(true)
+                       setselectedUrl(null)
                 }else{
                     openModalAndChooseDoc(item.state)
                 }
