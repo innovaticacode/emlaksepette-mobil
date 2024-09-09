@@ -110,26 +110,24 @@ const RealtorClub = () => {
   return (
     <ScrollView style={styles.container}>
 
-      {/* Kırmızı Yuvarlak İçindeki Fotoğraf */}
+      {/* HEADER START */}
       <View style={{ backgroundColor: '#FEF7F7', width: '100%', alignItems: 'center' }}>
-        <View style={styles.redCircle}>
           <View style={styles.imageContainer}>
             <Image
               source={require('../../images/emlak_kulup.png')}
               style={styles.circleImage}
             />
           </View>
-        </View>
-
-        {/* Başlık ve Açıklama */}
         <View style={styles.mainContent}>
           <Text style={styles.title}>Mesleğin Ne Olursa Olsun!</Text>
-            <Text style={styles.titleSmall}>Emlak Kulüp İle Sen de Kazan!</Text>
+          <Text style={styles.titleSmall}>Emlak Kulüp İle Sen de Kazan!</Text>
           <Text style={styles.subtitle}>
             Emlak Kulüp ile koleksiyonunu oluştur, paylaş ve kazancını katla!
           </Text>
         </View>
       </View>
+       {/*  HEADER END */}
+
       {/* Bilgilendirici Kartlar */}
       <View style={styles.cardsSection}>
         <Text style={styles.title}>Emlak Kulüp ile Sende Kazan!</Text>
@@ -250,24 +248,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
 
   },
-  redCircle: {
-    width: 250,
-    height: 250,
-    borderRadius: 125,
-    backgroundColor: '#EA2B2E',
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    marginTop: 152,
-    marginBottom: 20,
-  },
+
   imageContainer: {
-    width: width * 0.8,  // ekran genişliğinin %80'i
-    height: height * 0.5, // ekran yüksekliğinin %35'i
-    position: 'absolute',
-    paddingBottom: 150,
-    paddingLeft: 40,
+    width: width * 0.75,  // ekran genişliğinin %80'i
+    height: height * 0.45, // ekran yüksekliğinin %35'i
     backgroundColor: '#FEF7F7',
+    paddingTop: 40,
   },
   circleImage: {
     width: '100%',
