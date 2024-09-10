@@ -148,6 +148,8 @@ export default function AllRealtorAdverts() {
         hood,
       });
 
+      console.log(apiUrlFilter);
+
       fetchFilteredProjects(apiUrlFilter, null);
     } else {
       fetchFilteredProjects(buildApiUrl(params), null);
@@ -155,7 +157,7 @@ export default function AllRealtorAdverts() {
   }, [params]);
 
   useEffect(() => {
-    const newCityItems = state.cities.map((city) => ({
+    const newCityItems = state.cities?.map((city) => ({
       label: city.title,
       value: city.id,
     }));
@@ -248,7 +250,7 @@ export default function AllRealtorAdverts() {
         )
         .catch((error) =>
           console.error("Veri alınırken bir hata oluştu:", error)
-        );
+        );s
     } else {
       setState((prevState) => ({ ...prevState, neighborhoods: [] }));
     }
@@ -305,6 +307,7 @@ export default function AllRealtorAdverts() {
 
   const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
     try {
+      console.log(filterData);
       const response = await axios.get(apiUrlFilter, { params: filterData });
       const data = response.data;
 
@@ -344,7 +347,7 @@ export default function AllRealtorAdverts() {
         projects: data.projects,
       };
 
-      if (data.secondhandHousings.length == 0) {
+      if (data.secondhandHousings?.length == 0) {
         newState.searchStatus = "Sonuç bulunamadı";
       }
 
@@ -666,12 +669,12 @@ export default function AllRealtorAdverts() {
                   <View style={styles.filterLabel}>
                     <Text style={{ fontWeight: "bold" }}>Kategori</Text>
                     <View style={styles.brandsSquare}>
-                      {state.slugName.length > 0 && (
+                      {state && state.slugName && state.slugName?.length > 0 && (
                         <Text style={[styles.brandName, { color: "black" }]}>
                           {state.slugName}
                         </Text>
                       )}
-                      {state.housingTypeSlugName.length > 0 && (
+                      {state.housingTypeSlugName && state.housingTypeSlugName?.length > 0 && (
                         <>
                           {state.slugName != null && (
                             <Text style={styles.brandName}>
@@ -686,7 +689,7 @@ export default function AllRealtorAdverts() {
                           </Text>
                         </>
                       )}
-                      {state.optName.length > 0 && (
+                      {state.optName && state.optName?.length > 0 && (
                         <>
                           <Text style={styles.brandName}>
                             <FontAwesome5Icon
@@ -699,7 +702,7 @@ export default function AllRealtorAdverts() {
                           </Text>
                         </>
                       )}
-                      {state.housingTypeName.length > 0 && (
+                      {state.housingTypeName && state.housingTypeName?.length > 0 && (
                         <>
                           <Text style={styles.brandName}>
                             <FontAwesome5Icon
@@ -918,7 +921,7 @@ export default function AllRealtorAdverts() {
                 </TouchableOpacity>
                 {state.openFilterIndex === "listingDate" && (
                   <View style={styles.optionsContainer}>
-                    {state.listingDates.map((date) => (
+                    {state.listingDates?.map((date) => (
                       <View style={styles.option} key={date.value}>
                         <TouchableOpacity
                           style={styles.radioContainer}
@@ -965,7 +968,7 @@ export default function AllRealtorAdverts() {
                 )}
               </View> */}
 
-              {state.filters.map((filter, index) => (
+              {state.filters?.map((filter, index) => (
                 <View key={index} style={styles.filterContainer}>
                   <TouchableOpacity onPress={() => toggleFilter(index)}>
                     <Text style={styles.filterLabel}>
@@ -975,7 +978,7 @@ export default function AllRealtorAdverts() {
                   {state.openFilterIndex === index && (
                     <View style={styles.optionsContainer}>
                       {filter.values &&
-                        filter.values.map((value, idx) => (
+                        filter.values?.map((value, idx) => (
                           <View key={idx} style={styles.option}>
                             {filter.toggle ? (
                               // Switch-slider öğesi
@@ -1112,7 +1115,7 @@ export default function AllRealtorAdverts() {
               <Text style={styles.filterButtonText}>
                 İlanları Listele
                 {" ("}
-                {state.secondhandHousings && state.secondhandHousings.length}
+                {state.secondhandHousings && state.secondhandHousings?.length}
                 {")"}
               </Text>
             </TouchableOpacity>
