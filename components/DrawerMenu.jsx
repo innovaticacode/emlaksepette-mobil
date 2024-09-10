@@ -14,19 +14,17 @@ import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "./methods/user";
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import Icon2 from "react-native-vector-icons/FontAwesome6";
+import Icon2 from "react-native-vector-icons/EvilIcons";
 import axios from "axios";
 
 
 const DrawerMenu = ({ setIsDrawerOpen }) => {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
-  const [menuItems, setMenuItems] = useState([]);  // Menü verilerini burada yöneteceğiz
   const [namFromGetUser, setnamFromGetUser] = useState([]);
   const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
-  const { width, height } = Dimensions.get("window");
 
-  
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -56,7 +54,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
     setIsDrawerOpen(false);
   };
 
-  
+
 
   return (
     <SafeAreaView>
@@ -80,11 +78,15 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
               }}
             >
               <View style={{ borderRadius: 50 }}>
-                <Image
-                  source={{ uri: PhotoUrl + namFromGetUser.profile_image }}
-                  style={{ width: "100%", height: "100%" }}
-                  borderRadius={50}
-                />
+                {user.access_token ? (
+                  <Image
+                    source={{ uri: PhotoUrl + namFromGetUser.profile_image }}
+                    style={{ width: "100%", height: "100%" }}
+                    borderRadius={50}
+                  />
+                ) : (
+                  <Icon2 name="user" size={65} color="#333" padding={10}/>
+                )}
               </View>
             </View>
             {/* PROFİL FOTO START */}
@@ -123,7 +125,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
           <View style={{ width: '85%', backgroundColor: '#C4C4C4', padding: 0.5 }} />
         </View>
         {/* ÇİZGİ ÖGESİ END */}
-        
+
 
         {/* MENÜ ÖGELERİ START */}
         <View style={{ width: '100%', alignItems: 'center' }}>
