@@ -8,22 +8,25 @@ import {
   Text,
   Image,
 } from "react-native";
+import Search from "../pages/Home/Search";
 import Categories from "./Categories";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "./methods/user";
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Search from "../pages/Home/Search";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon2 from "react-native-vector-icons/FontAwesome6";
 import axios from "axios";
 
 
 const DrawerMenu = ({ setIsDrawerOpen }) => {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
+  const [menuItems, setMenuItems] = useState([]);  // Menü verilerini burada yöneteceğiz
   const [namFromGetUser, setnamFromGetUser] = useState([]);
   const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
   const { width, height } = Dimensions.get("window");
 
+  
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -43,12 +46,17 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    console.log("User object:", user); // user objesini kontrol et
+    console.log("User type:", user.type); // user.type değerini kontrol et
+  }, [user]);
+
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
     setIsDrawerOpen(false);
   };
 
-
+  
 
   return (
     <SafeAreaView>
@@ -81,7 +89,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
             </View>
             {/* PROFİL FOTO START */}
 
-
+            {/* GİRİŞ YAP-HESABIM BÖLÜMÜ START */}
             <View style={{ gap: 6 }}>
               <TouchableOpacity disabled={user.access_token ? true : false} onPress={() => {
                 navigation.navigate('Login');
@@ -90,31 +98,51 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
                 <Text style={{ color: '#333', fontWeight: '600', fontSize: 13 }}>{user.access_token ? namFromGetUser.name : 'Giriş Yap'}</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity>
-                <Text style={{ fontSize: 12 }}>Hesabım</Text>
+              <TouchableOpacity
+                disabled={user.access_token ? false : true}
+                onPress={() => {
+                  navigation.navigate('ShopProfile');
+                  setIsDrawerOpen(false);
+                }}
+
+              >
+                <Text style={{ fontSize: 12 }}>
+                  {user.access_token ?
+                    user.type == 1 ? 'Hesabım' : 'Mağazam' : 'Hesabım'}
+                </Text>
               </TouchableOpacity>
+
             </View>
           </View>
         </View>
+        {/* GİRİŞ YAP-HESABIM BÖLÜMÜ END */}
+
+
+        {/* ÇİZGİ ÖGESİ START */}
         <View style={{ width: '100%', alignItems: 'center' }}>
           <View style={{ width: '85%', backgroundColor: '#C4C4C4', padding: 0.5 }} />
         </View>
+        {/* ÇİZGİ ÖGESİ END */}
+        
+
+        {/* MENÜ ÖGELERİ START */}
         <View style={{ width: '100%', alignItems: 'center' }}>
           <View style={{ width: '80%' }}>
             <Search setIsDrawerOpen={setIsDrawerOpen} />
           </View>
         </View>
+        {/* MENÜ ÖGELERİ END */}
 
-        {/* ARA ÇİZGİ ÖGESİ START */}
+
+        {/* ÇİZGİ ÖGESİ START */}
         <View style={{ width: '100%', alignItems: 'center' }}>
           <View style={{ width: '85%', backgroundColor: '#C4C4C4', padding: 0.5 }} />
         </View>
-        {/* ARA ÇİZGİ ÖGESİ END */}
+        {/* ÇİZGİ ÖGESİ END */}
 
 
+        {/* GRİ ALAN START */}
         <View style={{ width: '100%', alignItems: 'center', gap: 10 }}>
-
-          {/* GRİ ALAN START */}
           <View style={{ backgroundColor: '#F7F7F7', padding: 10, width: '85%', borderRadius: 8 }}>
             <TouchableOpacity onPress={() => navigateToScreen('RealtorClubExplore')}>
               <Categories category={'Emlak Kulüp'} iconName={'hand-coin'} />
@@ -129,8 +157,8 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
           {/* GRİ ALAN END */}
 
 
+          {/* İLAN VER BUTONU START */}
           <View style={{ width: '100%', alignItems: 'center' }}>
-            {/* İLAN VER BUTONU START */}
             <TouchableOpacity style={{ backgroundColor: '#EA2C2E', width: '85%', padding: 10, borderRadius: 10, flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center' }}
               onPress={() => {
                 setIsDrawerOpen(false);
@@ -139,9 +167,10 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
               <IconAntDesign name="plus" color={'white'} size={18} />
               <Text style={{ color: 'white', fontWeight: '600' }}>İlan Ver</Text>
             </TouchableOpacity>
-            {/* İLAN VER BUTONU END */}
           </View>
         </View>
+        {/* İLAN VER BUTONU END */}
+
 
         {/* MÜŞTERİ HİZMETLERİ ALANI START */}
         <View style={{ alignItems: 'center' }}>
@@ -155,8 +184,8 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
             </View>
           </TouchableOpacity>
         </View>
-        {/* MÜŞTERİ HİZMETLERİ ALANI END */}
       </ScrollView>
+      {/* MÜŞTERİ HİZMETLERİ ALANI END */}
     </SafeAreaView>
   );
 };

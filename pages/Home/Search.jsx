@@ -37,9 +37,10 @@ export default function Search({ onpres, setIsDrawerOpen }) {
       const response = await axios.get(
         "https://private.emlaksepette.com/api/menu-list"
       );
-      
-      setMenuItems(response.data);
-      const submenus = response.data[0].submenus;
+
+      const filteredMenuItems = response.data.slice(0,-1); // Menünün sondaki ögesini çıkarıyor.
+
+      setMenuItems(filteredMenuItems);  // Filtrelenmiş menü öğelerini set ediyoruz
     } catch (error) {
       console.log(error);
     }
@@ -48,6 +49,17 @@ export default function Search({ onpres, setIsDrawerOpen }) {
   useEffect(() => {
     fetchmenuItems();
   }, []);
+
+  useEffect(() => {
+    // Güncellenen menuItems state'ini kontrol etmek için burayı kullanıyoruz
+    console.log("Render Edilen Menü Öğeleri:", menuItems);
+  }, [menuItems]); // menuItems her değiştiğinde bu çalışacak
+
+  const navigateToScreen = (screenName) => {
+    navigation.navigate(screenName);
+    setIsDrawerOpen(false);
+  };
+
 
   // const iconMapping = {
   //   'Projeler': 'folder-home',
@@ -70,62 +82,74 @@ export default function Search({ onpres, setIsDrawerOpen }) {
         <View style={{ flex: 1 }}></View>
 
         <View style={{ gap: 3 }}>
-          <TouchableOpacity onPress={() => {
-
-          }}>
+          <TouchableOpacity onPress={() => navigateToScreen('Home')}>
             <Categories category={'Ana Sayfa'} iconName={'home'} />
           </TouchableOpacity>
 
-          {menuItems.map((item, index) => (
-            <TouchableOpacity
-              onPress={() => {
-                setIsDrawerOpen(false)
+          {menuItems.map((item, index) => {
+            const text = item.text || '';
 
-                if (item.submenus && item.submenus.length > 0) {
-                  navigation.navigate("Public", {
-                    title: item.text,
-                    data: item.submenus,
-                  });
-                } else {
-                  navigation.navigate(
-                    item.text == "Projeler"
-                      ? "AllProject"
-                      : "AllRealtorAdverts",
-                    {
-                      name:
-                        item.text == "Al Sat Acil" ||
-                        item.text == "Paylaşımlı İlanlar"
-                          ? item.text
-                          : "Emlak İlanları",
-                      slug: slugify(
-                        item.text == "Al Sat Acil" ||
-                          item.text == "Paylaşımlı İlanlar"
-                          ? item.text
-                          : "emlak-ilanlari"
-                      ),
-                      data: null,
-                      count: 0,
-                      type: null,
-                      optional: null,
-                      title:
-                        item.text == "Al Sat Acil" ||
-                        item.text == "Paylaşımlı İlanlar"
-                          ? item.text
-                          : null,
-                      check: null,
-                      city: null,
-                      county: null,
-                      hood: null,
-                      href: item.href,
-                    }
-                  );
-                }
-              }}
-              key={index}
-            >
-              <Categories category={item.text} />
-            </TouchableOpacity>
-          ))}
+
+            const slug = text == "Prefabrik Yapılar"
+              ? text
+              : slugify(
+                text == "Al Sat Acil" || text == "Paylaşımlı İlanlar"
+                  ? text
+                  : "emlak-ilanlari"
+              );
+
+              
+            const name = text == "Prefabrik Yapılar"
+            ? null
+            : slugify(
+              text == "Al Sat Acil" || text == "Paylaşımlı İlanlar"
+                ? text
+                : "Emlak İlanları"
+            );
+              
+
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  setIsDrawerOpen(false)
+
+                  if (item.submenus && item.submenus?.length > 0) {
+                    navigation.navigate("Public", {
+                      title: item.text,
+                      data: item.submenus,
+                    });
+                  } else {
+                    navigation.navigate(
+                      item.text == "Projeler"
+                        ? "AllProject"
+                        : "AllRealtorAdverts",
+                      {
+                        name: name,
+                        slug: slug,
+                        data: null,
+                        count: 0,
+                        type: null,
+                        optional: null,
+                        title:
+                          item.text == "Al Sat Acil" ||
+                            item.text == "Paylaşımlı İlanlar"
+                            ? item.text
+                            : null,
+                        check: null,
+                        city: null,
+                        county: null,
+                        hood: null,
+                        href: item.href,
+                      }
+                    );
+                  }
+                }}
+                key={index}
+              >
+                <Categories category={item.text} />
+              </TouchableOpacity>
+            )
+          })}
 
           {/* {Object.keys(iconMapping).map((category,index) => (
             <Categories
