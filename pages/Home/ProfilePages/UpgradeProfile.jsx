@@ -194,21 +194,24 @@ export default function UpgradeProfile() {
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userInfo?.data?.user);
         console.log(userData);
+        setData("backgroundColor", userData?.banner_hex_code);
         setData("storeName", userData.name);
-        setData('tradeName',userData.store_name);
+        setData('tradeName', userData.store_name);
         setData("userName", userData.username);
         setData("authorityLicence", userData.authority_licence);
-        
         setData("Iban", userData?.iban);
-        setData("backgroundColor", userData?.banner_hex_code);
         setData("webSiteLink", userData.website);
-        
-        
+        setData("areaCode", userData.area_code);
+        setData("companyPhone", userData.phone);
         setData("SectorYear", userData.year);
-        setData("webSiteLink", userData.website);
-        setData("phoneCompany", userData.phone.substring(3));
-        setData("cityCode", userData.taxOffice);
         
+        setData("taxOfficeCity", userData.taxOfficeCity);
+        setData("taxOffice", userData.taxOffice);
+        setData("taxNumber", userData.taxNumber);
+
+        
+
+
         setuserImage(userData?.profile_image);
         setSelectedLocation({
           latitude: userData.latitude,
@@ -296,6 +299,7 @@ export default function UpgradeProfile() {
   const [selectedCounty, setSelectedCounty] = useState(null);
   const [neighborhoods, setNeighborhoods] = useState([]);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
+
   useEffect(() => {
     const fetchCities = async () => {
       try {
@@ -308,7 +312,6 @@ export default function UpgradeProfile() {
         Alert.alert("Error", "Could not load cities");
       }
     };
-
     fetchCities();
   }, []);
 
@@ -324,7 +327,6 @@ export default function UpgradeProfile() {
       Alert.alert("Error", "Could not load counties");
     }
   };
-
 
   const fetchNeighborhoods = async (countyId) => {
     try {
@@ -342,7 +344,6 @@ export default function UpgradeProfile() {
     setSelectedCity(value);
     setSelectedCounty(null);
     setSelectedNeighborhood(null);
-
     setCounties([]);
     setNeighborhoods([]);
     if (value) {
@@ -364,6 +365,7 @@ export default function UpgradeProfile() {
     if (value) {
     }
   };
+
   const cityData = [
     { label: "İstanbul Avrupa (212)", value: 212 },
     { label: "İstanbul Anadolu (216)", value: 216 },
@@ -450,7 +452,7 @@ export default function UpgradeProfile() {
     { label: "Zonguldak (372)", value: 372 },
   ];
 
-  const [cityCode, setcityCode] = useState("");
+ 
   const [openColorPicker, setopenColorPicker] = useState(false);
   const [currentColor, setCurrentColor] = useState(user.banner_hex_code);
   const [swatchesOnly, setSwatchesOnly] = useState(false);
@@ -469,20 +471,26 @@ export default function UpgradeProfile() {
   }, [user]);
 
   const [FormDatas, setFormDatas] = useState({
+    backgroundColor: null,
     storeName: "",
-    userName: "",
     tradeName: null,
+    userName: "",
     authorityLicence: null,
     Iban: null,
+    webSiteLink: null,
+    areaCode: null,
+    companyPhone: null,
+    SectorYear: null,
+    
+
+    taxOfficeCity: null,
+    taxOffice: null,
+    taxNumber: null,
+
     oldPhone: null,
     newPhone: null,
     fileForPhone: null,
-    phoneCompany: null,
-    cityCode: null,
-    webSiteLink: null,
-    SectorYear: null,
-    backgroundColor: null,
-    
+
     // Diğer form alanları buraya eklenebilir
   });
 
@@ -1077,6 +1085,7 @@ export default function UpgradeProfile() {
                     </View>
                   </View>
 
+
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
                       <FontAwesome2
@@ -1095,6 +1104,7 @@ export default function UpgradeProfile() {
                     </View>
                   </View>
 
+
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
                       <FontAwesome2
@@ -1112,6 +1122,7 @@ export default function UpgradeProfile() {
                       />
                     </View>
                   </View>
+
 
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
@@ -1135,50 +1146,11 @@ export default function UpgradeProfile() {
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
                       <FontAwesome
-                        name="phone"
-                        color={"#777777"}
-                        size={17}
-                      />
-                      <Text style={styles.label}>Sabit Telefon (Opsiyonel)</Text>
-                    </View>
-
-                    <View style={{ flexDirection: "row" }}>
-                      <View style={{ width: "45%" }}>
-                        <RNPickerSelect
-                          doneText="Tamam"
-                          value={FormDatas.cityCode}
-                          placeholder={{
-                            label: "Alan Kodu",
-                            value: null,
-                          }}
-                          style={pickerSelectStyles}
-                          onValueChange={(value) => {
-                            setData("cityCode", value);
-                          }}
-                          items={cityData}
-                        />
-                      </View>
-                      <View style={{ width: "55%" }}>
-                        <TextInput
-                          style={styles.input}
-                          value={FormDatas.phoneCompany}
-                          onChangeText={(value) => handlePhoneChange(value)}
-                          keyboardType="number-pad"
-                          maxLength={12}
-                        />
-                      </View>
-                    </View>
-                  </View>
-
-
-                  <View style={{ width: "100%", gap: 10 }}>
-                  <View style={styles.titles}>
-                      <FontAwesome
                         name="credit-card-alt"
                         color={"#777777"}
                         size={13}
                       />
-                      <Text style={styles.label}>Iban Numarası</Text>
+                      <Text style={styles.label}>İban Numarası</Text>
                     </View>
                     <View>
                       <TextInput
@@ -1190,8 +1162,10 @@ export default function UpgradeProfile() {
                       />
                     </View>
                   </View>
+
+
                   <View style={{ width: "100%", gap: 10 }}>
-                  <View style={styles.titles}>
+                    <View style={styles.titles}>
                       <View
                         style={{
                           backgroundColor: "#777777",
@@ -1211,20 +1185,173 @@ export default function UpgradeProfile() {
                       />
                     </View>
                   </View>
+
+
                   <View style={{ width: "100%", gap: 10 }}>
-                  <View style={styles.titles}>
+                    <View style={styles.titles}>
+                      <FontAwesome
+                        name="phone"
+                        color={"#777777"}
+                        size={17}
+                      />
+                      <Text style={styles.label}>Sabit Telefon (Opsiyonel)</Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <View style={{ width: "45%" }}>
+                        <RNPickerSelect
+                          doneText="Tamam"
+                          value={FormDatas.areaCode}
+                          placeholder={{
+                            label: "Alan Kodu",
+                            value: null,
+                          }}
+                          style={pickerSelectStyles}
+                          onValueChange={(value) => {
+                            setData("areaCode", value);
+                          }}
+                          items={cityData}
+                        />
+                      </View>
+                      <View style={{ width: "55%" }}>
+                        <TextInput
+                          style={styles.input}
+                          value={FormDatas.companyPhone}
+                          onChangeText={(value) => handlePhoneChange(value)}
+                          keyboardType="number-pad"
+                          maxLength={7}
+                        />
+                      </View>
+                    </View>
+                  </View>
+
+
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View style={styles.titles}>
                       <FontAwesome2
                         name="user-tie"
                         size={17}
                         color={"#777777"}
                       />
-                      <Text style={styles.label}>Kaç yıldır sektördesiniz</Text>
+                      <Text style={styles.label}>Kaç Yıldır Sektördesiniz?</Text>
                     </View>
                     <View>
                       <TextInput
                         style={styles.input}
                         value={FormDatas.SectorYear}
                         onChangeText={(value) => setData("SectorYear", value)}
+                      />
+                    </View>
+                  </View>
+
+
+                  <View style={{ gap: 15 }}>
+                    <View style={{ gap: 10 }}>
+                      <View style={{ paddingLeft: 10 }}>
+                        <Text style={styles.label}>İl</Text>
+                      </View>
+                      <RNPickerSelect
+                        doneText="Tamam"
+                        value={selectedCity}
+                        placeholder={{
+                          label: "Seçiniz...",
+                          value: null,
+                        }}
+                        style={pickerSelectStyles}
+                        onValueChange={(value) => { onChangeCity(value) }}
+                        items={cities}
+                      />
+                    </View>
+
+                    <View style={{ gap: 10 }}>
+                      <View style={{ paddingLeft: 10 }}>
+                        <Text style={styles.label}>İlçe</Text>
+                      </View>
+                      <RNPickerSelect
+                        doneText="Tamam"
+                        value={selectedCounty}
+                        placeholder={{
+                          label: "Seçiniz...",
+                          value: null,
+                        }}
+                        style={pickerSelectStyles}
+                        onValueChange={(value) => { onChangeCounty(value) }}
+                        items={counties}
+                      />
+                    </View>
+
+                    <View style={{ gap: 10 }}>
+                      <View style={{ paddingLeft: 10 }}>
+                        <Text style={styles.label}>Mahalle</Text>
+                      </View>
+                      <RNPickerSelect
+                        doneText="Tamam"
+                        value={selectedNeighborhood}
+                        placeholder={{
+                          label: "Seçiniz...",
+                          value: null,
+                        }}
+                        style={pickerSelectStyles}
+                        onValueChange={(value) => { onChangeNeighborhood(value) }}
+                        items={neighborhoods}
+                      />
+                    </View>
+                  </View>
+
+
+                  <View style={{ gap: 10 }}>
+                    <View style={{ paddingLeft: 10 }}>
+                      <Text style={styles.label}>Vergi Dairesi İli </Text>
+                    </View>
+                    <RNPickerSelect
+                      doneText="Tamam"
+                      value={FormDatas.taxOfficeCity}
+                      placeholder={{
+                        label: "Seçiniz...",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      onValueChange={(value) => {
+                        setData("taxOfficeCity", value);
+                      }}
+                      items={cities}
+                    />
+                  </View>
+
+
+                  <View style={{ gap: 10 }}>
+                    <View style={{ paddingLeft: 10 }}>
+                      <Text style={styles.label}>Vergi Dairesi</Text>
+                    </View>
+                    <RNPickerSelect
+                      doneText="Tamam"
+                      value={FormDatas.taxOffice}
+                      placeholder={{
+                        label: "Seçiniz...",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      onValueChange={(value) => {
+                        setData("taxOffice", value);
+                      }}
+                      items={cities}
+                    />
+                  </View>
+
+
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View style={styles.titles}>
+                      <FontAwesome2
+                        name="user-tie"
+                        size={17}
+                        color={"#777777"}
+                      />
+                      <Text style={styles.label}>Vergi No</Text>
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        value={FormDatas.taxNumber}
+                        onChangeText={(value) => setData("taxNumber", value)}
                       />
                     </View>
                   </View>
@@ -1291,7 +1418,6 @@ export default function UpgradeProfile() {
                       <View style={{ paddingLeft: 10 }}>
                         <Text style={styles.label}>İl</Text>
                       </View>
-
                       <RNPickerSelect
                         doneText="Tamam"
                         value={selectedCity}
