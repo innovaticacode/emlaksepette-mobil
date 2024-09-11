@@ -5,10 +5,13 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Image,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon2 from "react-native-vector-icons/EvilIcons";
+import Icon3 from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import FontAwesome2 from "react-native-vector-icons/FontAwesome6";
@@ -20,7 +23,7 @@ import {
   CollapseBody,
   AccordionList,
 } from "accordion-collapse-react-native";
-import Icon3 from "react-native-vector-icons/MaterialIcons";
+
 import RNPickerSelect from "react-native-picker-select";
 import { Platform } from "react-native";
 import Arrow from "react-native-vector-icons/SimpleLineIcons";
@@ -29,7 +32,6 @@ import * as SecureStore from "expo-secure-store";
 import * as ImagePicker from "expo-image-picker";
 import ColorPicker from "react-native-wheel-color-picker";
 import { getValueFor } from "../../../components/methods/user";
-import { Image } from "react-native-elements";
 import MapView, { Marker } from "react-native-maps";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
@@ -69,7 +71,8 @@ export default function UpgradeProfile() {
     console.log(result);
 
     if (!result.canceled) {
-      setImage(result.assets[0]);
+      setImage(result.assets[0]);  // Seçilen fotoğrafı state'e kaydediyoruz
+      setchoose(false);            // Modal'ı kapatıyoruz
     }
   };
   useEffect(() => {
@@ -95,9 +98,17 @@ export default function UpgradeProfile() {
     console.log(result);
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage(result.assets[0]); // Çekilen fotoğrafı state'e kaydediyoruz
+      setchoose(false);            // Modal'ı kapatıyoruz
     }
   };
+
+  const removeProfileImage = () => {
+    setImage(null);  // Fotoğrafı null yaparak yerelde kaldırıyoruz
+    setchoose(false);  // Modal'ı kapatıyoruz
+  };
+
+
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -187,7 +198,7 @@ export default function UpgradeProfile() {
         setData("backgroundColor", userData?.banner_hex_code);
         setData("webSiteLink", userData.website);
         setData("userName", userData.name);
-        setData("shoopingName", userData.username);
+        setData("companyName", userData.username);
         setData("SectorYear", userData.year);
         setData("webSiteLink", userData.website);
         setData("phoneCompany", userData.phone.substring(3));
@@ -213,22 +224,32 @@ export default function UpgradeProfile() {
     // Sadece rakamları al
     const cleaned = ("" + value).replace(/\D/g, "");
 
+    // Numaranın uzunluğunu kontrol et
+    if (cleaned.length > 7) {
+      // Burada uygun bir hata mesajı gösterebilirsiniz
+      return "Geçersiz numara";
+    }
+
     // 0 ile başlıyorsa, ilk karakteri çıkar
     const cleanedWithoutLeadingZero = cleaned.startsWith("0")
       ? cleaned.substring(1)
       : cleaned;
 
+    // Formatlı numarayı oluştur
     let formattedNumber = "";
 
+    // Numaranın uzunluğuna göre formatı uygula
     for (let i = 0; i < cleanedWithoutLeadingZero.length; i++) {
-      if (i === 0) formattedNumber += "(";
-      if (i === 3) formattedNumber += ") ";
-      if (i === 6 || i === 8) formattedNumber += " ";
+      if (i === 3) formattedNumber += " ";
+      if (i === 5) formattedNumber += " ";
       formattedNumber += cleanedWithoutLeadingZero[i];
     }
 
+    // Formatlı numarayı döndür
     return formattedNumber;
   };
+
+
   const handlePhoneNumberChange = (value) => {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setData("oldPhone", formattedPhoneNumber);
@@ -286,6 +307,7 @@ export default function UpgradeProfile() {
   }, []);
 
   const fetchCounties = async (cityId) => {
+    console.log("City ID:", cityId);
     try {
       const response = await axios.get(
         `https://private.emlaksepette.com/api/counties/${cityId}`
@@ -296,6 +318,7 @@ export default function UpgradeProfile() {
       Alert.alert("Error", "Could not load counties");
     }
   };
+  
 
   const fetchNeighborhoods = async (countyId) => {
     try {
@@ -336,8 +359,8 @@ export default function UpgradeProfile() {
     }
   };
   const cityData = [
-    { label: "İstanbul Avrupa Yakası (212)", value: 212 },
-    { label: "İstanbul Anadolu Yakası (216)", value: 216 },
+    { label: "İstanbul Avrupa (212)", value: 212 },
+    { label: "İstanbul Anadolu (216)", value: 216 },
     { label: "Adana (322)", value: 322 },
     { label: "Adıyaman (416)", value: 416 },
     { label: "Afyon (272)", value: 272 },
@@ -441,7 +464,7 @@ export default function UpgradeProfile() {
 
   const [FormDatas, setFormDatas] = useState({
     userName: "",
-    shoopingName: "",
+    companyName: "",
     Iban: null,
     oldPhone: null,
     newPhone: null,
@@ -506,7 +529,7 @@ export default function UpgradeProfile() {
   };
 
   const checkInput = () => {
-    if (tab == 0) {
+    if (tab === 0) {
       if (FormDatas.userName.length === 0 || FormDatas.Iban.length < 29) {
         Dialog.show({
           type: ALERT_TYPE.WARNING,
@@ -517,8 +540,7 @@ export default function UpgradeProfile() {
       } else {
         postData();
       }
-    }
-    if (tab == 1) {
+    } else if (tab === 1) {
       if (
         FormDatas?.newPhone?.length < 15 ||
         FormDatas.oldPhone.length < 15 ||
@@ -533,37 +555,37 @@ export default function UpgradeProfile() {
       } else {
         postData();
       }
-    }
-    if (user.role == "Kurumsal Hesap" && tab == 2) {
-      if (
-        FormDatas?.shoopingName?.length === 0 ||
-        FormDatas?.Iban?.length < 29 ||
-        FormDatas?.SectorYear?.length === 0
-      ) {
-        Dialog.show({
-          type: ALERT_TYPE.WARNING,
-          title: "Hata",
-          textBody: "Lütfen boş alan bırakmayınız.",
-          button: "Tamam",
-        });
-      } else {
-        postData();
-      }
-    }
-    if (user.role == "Kurumsal Hesap" && tab == 3) {
-      if (
-        selectedCity == null ||
-        selectedCounty == null ||
-        selectedNeighborhood == null
-      ) {
-        Dialog.show({
-          type: ALERT_TYPE.WARNING,
-          title: "Hata!",
-          textBody: "Lütfen il ilçe bilgileri giriniz.",
-          button: "Tamam",
-        });
-      } else {
-        postData();
+    } else if (user.role === "Kurumsal Hesap") {
+      if (tab === 2) {
+        if (
+          FormDatas?.companyName?.length === 0 ||
+          FormDatas?.Iban?.length < 29 ||
+          FormDatas?.SectorYear?.length === 0
+        ) {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Hata",
+            textBody: "Lütfen boş alan bırakmayınız.",
+            button: "Tamam",
+          });
+        } else {
+          postData();
+        }
+      } else if (tab === 3) {
+        if (
+          selectedCity == null ||
+          selectedCounty == null ||
+          selectedNeighborhood == null
+        ) {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Hata!",
+            textBody: "Lütfen il ilçe bilgileri giriniz.",
+            button: "Tamam",
+          });
+        } else {
+          postData();
+        }
       }
     }
   };
@@ -571,33 +593,36 @@ export default function UpgradeProfile() {
   const postData = async () => {
     try {
       let fullNumber = `${FormDatas.cityCode}${FormDatas.phoneCompany}`;
-      var formData = new FormData();
-      if (user.role == "Bireysel Hesap") {
+      let formData = new FormData();
+
+      if (user.role === "Bireysel Hesap") {
         formData.append("name", FormDatas.userName);
         formData.append("iban", FormDatas.Iban);
-        formData.append("profile_image", image);
+        formData.append("profile_image", image ? {
+          uri: image.uri,
+          name: image.fileName,
+          type: image.type,
+        } : null);
         formData.append(
           "mobile_phone",
-          FormDatas.newPhone ? FormDatas.newPhone : FormDatas.newPhone
+          FormDatas.newPhone ? FormDatas.newPhone : FormDatas.oldPhone
         );
         formData.append("banner_hex_code", FormDatas.backgroundColor);
         formData.append("_method", "PUT");
       } else {
         formData.append(
           "profile_image",
-          image
-            ? {
-                uri: image.uri,
-                name: image.fileName,
-                type: image.type,
-              }
-            : userImage
+          image ? {
+            uri: image.uri,
+            name: image.fileName,
+            type: image.type,
+          } : null
         );
         formData.append("city_id", selectedCity);
         formData.append("county_id", selectedCounty);
         formData.append("neighborhood_id", selectedNeighborhood);
         formData.append("name", FormDatas.userName);
-        formData.append("username", FormDatas.shoopingName);
+        formData.append("username", FormDatas.companyName);
         formData.append("banner_hex_code", FormDatas.backgroundColor);
         formData.append("iban", FormDatas.Iban);
         formData.append("website", FormDatas.webSiteLink);
@@ -605,34 +630,36 @@ export default function UpgradeProfile() {
         formData.append("year", FormDatas.SectorYear);
         formData.append(
           "mobile_phone",
-          FormDatas.newPhone ? FormDatas.newPhone : FormDatas.newPhone
+          FormDatas.newPhone ? FormDatas.newPhone : FormDatas.oldPhone
         );
         formData.append("latitude", selectedLocation.latitude);
         formData.append("longitude", selectedLocation.longitude);
-
         formData.append("_method", "PUT");
       }
 
-      // Perform the profile update
       const response = await axios.post(
         "https://private.emlaksepette.com/api/client/profile/update",
         formData,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
+            'Content-Type': 'multipart/form-data',
           },
         }
       );
+
+      console.log("Response:", response.data);
+
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
         textBody: "Profiliniz başarıyla güncellendi.",
         button: "Tamam",
       });
-      // Clear the form field after successful update
+
       setFormDatas({
         userName: "",
-        shoopingName: "",
+        companyName: "",
         Iban: "TR",
         oldPhone: "",
         newPhone: null,
@@ -642,26 +669,28 @@ export default function UpgradeProfile() {
         webSiteLink: "",
         SectorYear: null,
         backgroundColor: null,
-        // Diğer form alanları buraya eklenebilir
       });
+
       GetUserInfo();
       updateUserData();
     } catch (error) {
-      console.error("Error:", error);
-      // Handle error
-    } finally {
+      console.error("Error:", error.response ? error.response.data : error.message);
+      Dialog.show({
+        type: ALERT_TYPE.ERROR,
+        title: "Hata",
+        textBody: "Profil güncelleme sırasında bir hata oluştu.",
+        button: "Tamam",
+      });
     }
   };
+
+
+
+
+
+
   const [chooseFile, setchooseFile] = useState(false);
-
-  // console.log(image.fileName + image.uri.replace('file://', ''))
-  // console.log({
-  //   name : image.fileName,
-  //   type : image.type,
-  //   uri : Platform.OS === 'android' ? image.uri : image.uri.replace('file://', ''),
-  // } )
-  console.log(userImage);
-
+console.log(user.access_token)
   return (
     <AlertNotificationRoot>
       {loading ? (
@@ -713,41 +742,21 @@ export default function UpgradeProfile() {
             )}
 
             <View>
-              <View
-                style={{
-                  width: 96,
-                  height: 96,
+              <View style={{ width: 96, height: 96 }}>
+                <View style={{ borderRadius: 50 }}>
+                  {user.access_token ? (
+                    <Image
+                      source={image ? { uri: image.uri } : { uri: PhotoUrl + namFromGetUser.profile_image }}
+                      style={{ width: "100%", height: "100%" }}
+                      borderRadius={50}
+                    />
 
-                  borderRadius: 50,
-                }}
-              >
-                <Image
-                  source={{
-                    uri: `https://private.emlaksepette.com/storage/profile_images/${userImage}`,
-                  }}
-                  style={{ width: "100%", height: "100%", borderRadius: 50 }}
-                  borderRadius={50}
-                />
-                {/* {
-      user?.profile_image ?
-    
-        image ?
-        <Image
-        source={{ uri: image}}
-        style={{ width: "100%", height: "100%",borderRadius:50}}
-       borderRadius={50}
-       />:
-      <Image
-                    source={{ uri: PhotoUrl+user.profile_image }}
-                    style={{ width: "100%", height: "100%",borderRadius:50}}
-                   borderRadius={50}
-                   />:
-                   <View style={{backgroundColor:'white',borderRadius:50,alignItems:'center',padding:2}}>
-                       <FontAwesome name="user-circle-o" size={'90'} color={'#ebebeb'}/>
-                   </View>
-                
-    } */}
+                  ) : (
+                    <Icon2 name="user" size={65} color="#333" padding={10} />
+                  )}
+                </View>
               </View>
+
               {(tab == 0 || tab == 2) && (
                 <TouchableOpacity
                   onPress={() => {
@@ -836,7 +845,7 @@ export default function UpgradeProfile() {
                     </View>
                     <View>
                       <TextInput
-                        style={styles.ınput}
+                        style={styles.input}
                         value={FormDatas.oldPhone}
                         onChangeText={handlePhoneNumberChange}
                         maxLength={15}
@@ -860,7 +869,7 @@ export default function UpgradeProfile() {
                     </View>
                     <View>
                       <TextInput
-                        style={styles.ınput}
+                        style={styles.input}
                         keyboardType="numeric"
                         value={FormDatas.newPhone}
                         onChangeText={handlePhoneNumberChangeFornewPhone}
@@ -994,23 +1003,6 @@ export default function UpgradeProfile() {
                         </View>
                       </View>
                     )}
-                    {/* <View style={{flexDirection:'row',width:'100%',backgroundColor:'#FDEAEA',padding:10,borderRadius:5,gap:10,alignItems:'center',justifyContent:'space-between'}}>
-                <View style={{flexDirection:'row',alignItems:'center',gap:10}}>
-                <FontAwesome name="file-text-o" color={'#EB373A'} size={15}/>
-                    <Text style={{fontSize:13,color:'grey'}}>Belge Yükleniyor</Text>
-                   
-                </View>
-              
-    
-                    <View style={{flexDirection:'row',gap:10,alignItems:'center'}}>
-                        <Text style={{fontSize:12,color:'#333',fontWeight:'600'}}>70%</Text>
-                        <TouchableOpacity style={{padding:5}}>
-                        <Icon name="close" size={15} color={'#333'}/>
-                        </TouchableOpacity>
-                       
-                    </View>
-    
-            </View>  */}
                   </View>
                   <Collapse onToggle={() => setopenAccor(!openAccor)}>
                     <CollapseHeader>
@@ -1080,17 +1072,32 @@ export default function UpgradeProfile() {
                     </View>
                     <View>
                       <TextInput
-                        style={styles.ınput}
-                        value={FormDatas.shoopingName}
-                        onChangeText={(value) => setData("shoopingName", value)}
+                        style={styles.input}
+                        value={FormDatas.userName}
+                        onChangeText={(value) => setData("userName", value)}
                       />
                     </View>
                   </View>
-                  <View>
-                    <Text style={styles.label}>Sabit Telefon (Opsiyonel)</Text>
+
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 5,
+                        paddingLeft: 10,
+                      }}
+                    >
+                      <FontAwesome
+                        name="phone"
+                        color={"#777777"}
+                        size={13}
+                      />
+                      <Text style={styles.label}>Sabit Telefon (Opsiyonel)</Text>
+                    </View>
 
                     <View style={{ flexDirection: "row" }}>
-                      <View style={{ width: "32%" }}>
+                      <View style={{ width: "45%" }}>
                         <RNPickerSelect
                           doneText="Tamam"
                           value={FormDatas.cityCode}
@@ -1105,9 +1112,9 @@ export default function UpgradeProfile() {
                           items={cityData}
                         />
                       </View>
-                      <View style={{ width: "70%" }}>
+                      <View style={{ width: "55%" }}>
                         <TextInput
-                          style={styles.ınput}
+                          style={styles.input}
                           value={FormDatas.phoneCompany}
                           onChangeText={(value) => handlePhoneChange(value)}
                           keyboardType="number-pad"
@@ -1116,6 +1123,7 @@ export default function UpgradeProfile() {
                       </View>
                     </View>
                   </View>
+
 
                   <View style={{ width: "100%", gap: 10 }}>
                     <View
@@ -1135,7 +1143,7 @@ export default function UpgradeProfile() {
                     </View>
                     <View>
                       <TextInput
-                        style={styles.ınput}
+                        style={styles.input}
                         keyboardType="number-pad"
                         value={FormDatas.Iban}
                         onChangeText={(value) => handleIbanChange(value)}
@@ -1165,7 +1173,7 @@ export default function UpgradeProfile() {
                     </View>
                     <View>
                       <TextInput
-                        style={styles.ınput}
+                        style={styles.input}
                         value={FormDatas.webSiteLink}
                         onChangeText={(value) => setData("webSiteLink", value)}
                       />
@@ -1189,7 +1197,7 @@ export default function UpgradeProfile() {
                     </View>
                     <View>
                       <TextInput
-                        style={styles.ınput}
+                        style={styles.input}
                         value={FormDatas.SectorYear}
                         onChangeText={(value) => setData("SectorYear", value)}
                       />
@@ -1217,7 +1225,7 @@ export default function UpgradeProfile() {
                     </View>
                     <View>
                       <TextInput
-                        style={styles.ınput}
+                        style={styles.input}
                         value={FormDatas.userName}
                         onChangeText={(value) => setData("userName", value)}
                       />
@@ -1241,7 +1249,7 @@ export default function UpgradeProfile() {
                     </View>
                     <View>
                       <TextInput
-                        style={styles.ınput}
+                        style={styles.input}
                         keyboardType="number-pad"
                         value={FormDatas.Iban}
                         onChangeText={(value) => handleIbanChange(value)}
@@ -1415,22 +1423,15 @@ export default function UpgradeProfile() {
                     alignItems: "center",
                     gap: 10,
                   }}
+                  onPress={removeProfileImage} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
+                // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
                 >
-                  <Icon3
-                    name="restore-from-trash"
-                    size={22}
-                    color={"#d83131"}
-                  />
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: "#d83131",
-                      fontWeight: "700",
-                    }}
-                  >
+                  <Icon3 name="restore-from-trash" size={22} color={"#d83131"} />
+                  <Text style={{ fontSize: 14, color: "#d83131", fontWeight: "700" }}>
                     Mevcut Fotoğrafı Kaldır
                   </Text>
                 </TouchableOpacity>
+
               </View>
             </View>
           </Modal>
@@ -1538,7 +1539,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F3F3F3",
   },
-  ınput: {
+  input: {
     padding: 8,
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
