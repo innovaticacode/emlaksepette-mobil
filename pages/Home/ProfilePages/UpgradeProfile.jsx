@@ -318,7 +318,7 @@ export default function UpgradeProfile() {
       Alert.alert("Error", "Could not load counties");
     }
   };
-  
+
 
   const fetchNeighborhoods = async (countyId) => {
     try {
@@ -684,13 +684,9 @@ export default function UpgradeProfile() {
     }
   };
 
-
-
-
-
-
   const [chooseFile, setchooseFile] = useState(false);
-console.log(user.access_token)
+  console.log(user.access_token)
+  
   return (
     <AlertNotificationRoot>
       {loading ? (
