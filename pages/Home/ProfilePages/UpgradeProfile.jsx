@@ -194,15 +194,21 @@ export default function UpgradeProfile() {
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userInfo?.data?.user);
         console.log(userData);
+        setData("storeName", userData.name);
+        setData('tradeName',userData.store_name);
+        setData("userName", userData.username);
+        setData("authorityLicence", userData.authority_licence);
+        
         setData("Iban", userData?.iban);
         setData("backgroundColor", userData?.banner_hex_code);
         setData("webSiteLink", userData.website);
-        setData("userName", userData.name);
-        setData("companyName", userData.username);
+        
+        
         setData("SectorYear", userData.year);
         setData("webSiteLink", userData.website);
         setData("phoneCompany", userData.phone.substring(3));
         setData("cityCode", userData.taxOffice);
+        
         setuserImage(userData?.profile_image);
         setSelectedLocation({
           latitude: userData.latitude,
@@ -463,8 +469,10 @@ export default function UpgradeProfile() {
   }, [user]);
 
   const [FormDatas, setFormDatas] = useState({
+    storeName: "",
     userName: "",
-    companyName: "",
+    tradeName: null,
+    authorityLicence: null,
     Iban: null,
     oldPhone: null,
     newPhone: null,
@@ -474,6 +482,7 @@ export default function UpgradeProfile() {
     webSiteLink: null,
     SectorYear: null,
     backgroundColor: null,
+    
     // Diğer form alanları buraya eklenebilir
   });
 
@@ -686,7 +695,7 @@ export default function UpgradeProfile() {
 
   const [chooseFile, setchooseFile] = useState(false);
   console.log(user.access_token)
-  
+
   return (
     <AlertNotificationRoot>
       {loading ? (
@@ -1051,20 +1060,49 @@ export default function UpgradeProfile() {
               {tab == 2 && (
                 <>
                   <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
+                    <View style={styles.titles}>
                       <FontAwesome2
                         name="user-tie"
                         size={17}
                         color={"#777777"}
                       />
-                      <Text style={styles.label}>Firma Adı</Text>
+                      <Text style={styles.label}>Mağaza Adı</Text>
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        value={FormDatas.storeName}
+                        onChangeText={(value) => setData("storeName", value)}
+                      />
+                    </View>
+                  </View>
+
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View style={styles.titles}>
+                      <FontAwesome2
+                        name="user-tie"
+                        size={17}
+                        color={"#777777"}
+                      />
+                      <Text style={styles.label}>Ticari Unvan</Text>
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        value={FormDatas.tradeName}
+                        onChangeText={(value) => setData("tradeName", value)}
+                      />
+                    </View>
+                  </View>
+
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View style={styles.titles}>
+                      <FontAwesome2
+                        name="user-tie"
+                        size={17}
+                        color={"#777777"}
+                      />
+                      <Text style={styles.label}>Yetkili İsim Soyisim</Text>
                     </View>
                     <View>
                       <TextInput
@@ -1076,18 +1114,30 @@ export default function UpgradeProfile() {
                   </View>
 
                   <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
+                    <View style={styles.titles}>
+                      <FontAwesome2
+                        name="user-tie"
+                        size={17}
+                        color={"#777777"}
+                      />
+                      <Text style={styles.label}>Yetkili Belge No</Text>
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        value={FormDatas.authorityLicence}
+                        onChangeText={(value) => setData("authorityLicence", value)}
+                      />
+                    </View>
+                  </View>
+
+
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View style={styles.titles}>
                       <FontAwesome
                         name="phone"
                         color={"#777777"}
-                        size={13}
+                        size={17}
                       />
                       <Text style={styles.label}>Sabit Telefon (Opsiyonel)</Text>
                     </View>
@@ -1122,14 +1172,7 @@ export default function UpgradeProfile() {
 
 
                   <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
+                  <View style={styles.titles}>
                       <FontAwesome
                         name="credit-card-alt"
                         color={"#777777"}
@@ -1148,14 +1191,7 @@ export default function UpgradeProfile() {
                     </View>
                   </View>
                   <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
+                  <View style={styles.titles}>
                       <View
                         style={{
                           backgroundColor: "#777777",
@@ -1176,14 +1212,7 @@ export default function UpgradeProfile() {
                     </View>
                   </View>
                   <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
+                  <View style={styles.titles}>
                       <FontAwesome2
                         name="user-tie"
                         size={17}
@@ -1534,6 +1563,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F3F3F3",
+  },
+  titles: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    paddingLeft: 10,
   },
   input: {
     padding: 8,
