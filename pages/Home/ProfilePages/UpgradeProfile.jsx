@@ -5,10 +5,13 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Image,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon2 from "react-native-vector-icons/EvilIcons";
+import Icon3 from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import FontAwesome2 from "react-native-vector-icons/FontAwesome6";
@@ -20,7 +23,7 @@ import {
   CollapseBody,
   AccordionList,
 } from "accordion-collapse-react-native";
-import Icon3 from "react-native-vector-icons/MaterialIcons";
+
 import RNPickerSelect from "react-native-picker-select";
 import { Platform } from "react-native";
 import Arrow from "react-native-vector-icons/SimpleLineIcons";
@@ -29,7 +32,6 @@ import * as SecureStore from "expo-secure-store";
 import * as ImagePicker from "expo-image-picker";
 import ColorPicker from "react-native-wheel-color-picker";
 import { getValueFor } from "../../../components/methods/user";
-import { Image } from "react-native-elements";
 import MapView, { Marker } from "react-native-maps";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
@@ -46,6 +48,29 @@ export default function UpgradeProfile() {
   const [choose, setchoose] = useState(false);
   const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
   const [image, setImage] = useState(null);
+
+  const [cities, setCities] = useState([]);
+  const [counties, setCounties] = useState([]);
+  const [neighborhoods, setNeighborhoods] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedCounty, setSelectedCounty] = useState(null);
+  const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  const [openAccor, setopenAccor] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [file, setfile] = useState(null);
+  const [userName, setuserName] = useState("");
+  const [iban, setiban] = useState("");
+  const [link, setlink] = useState("");
+  const [yearsOfSector, setyearsOfSector] = useState("");
+  const [phone, setphone] = useState("");
+  const [mobilPhone, setmobilPhone] = useState("");
+  const [namFromGetUser, setnamFromGetUser] = useState({});
+  const [loading, setloading] = useState(false);
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     (async () => {
@@ -66,10 +91,10 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-    console.log(result);
 
     if (!result.canceled) {
-      setImage(result.assets[0]);
+      setImage(result.assets[0]);  // Seçilen fotoğrafı state'e kaydediyoruz
+      setchoose(false);            // Modal'ı kapatıyoruz
     }
   };
   useEffect(() => {
@@ -83,7 +108,6 @@ export default function UpgradeProfile() {
     })();
   }, []);
 
-  const [file, setfile] = useState(null);
 
   const takePhoto = async () => {
     let result = await ImagePicker.launchCameraAsync({
@@ -92,14 +116,19 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-    console.log(result);
+   
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage(result.assets[0]); // Çekilen fotoğrafı state'e kaydediyoruz
+      setchoose(false);            // Modal'ı kapatıyoruz
     }
   };
-  const [progress, setProgress] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+
+  const removeProfileImage = () => {
+    setImage(null);  // Fotoğrafı null yaparak yerelde kaldırıyoruz
+    setchoose(false);  // Modal'ı kapatıyoruz
+  };
+
 
   const pickImageForfile = async () => {
     setIsLoading(true);
@@ -112,7 +141,6 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-    console.log(result);
 
     if (!result.canceled) {
       setfile(result.assets[0].uri);
@@ -149,21 +177,13 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-    console.log(result);
+    
 
     if (!result.canceled) {
       setfile(result.assets[0].uri);
     }
   };
-  const [userName, setuserName] = useState("");
-  const [iban, setiban] = useState("");
-  const [link, setlink] = useState("");
-  const [yearsOfSector, setyearsOfSector] = useState("");
-  const [phone, setphone] = useState("");
-  const [mobilPhone, setmobilPhone] = useState("");
-  const [namFromGetUser, setnamFromGetUser] = useState({});
-  const [loading, setloading] = useState(false);
-  const [user, setUser] = useState({});
+  
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -182,16 +202,22 @@ export default function UpgradeProfile() {
         );
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userInfo?.data?.user);
-        console.log(userData);
-        setData("Iban", userData?.iban);
         setData("backgroundColor", userData?.banner_hex_code);
+        setData("name", userData?.name);
+        setData("storeName", userData.name);
+        setData('tradeName', userData.store_name);
+        setData("userName", userData.username);
+        setData("authorityLicence", userData.authority_licence);
+        setData("Iban", userData?.iban);
         setData("webSiteLink", userData.website);
-        setData("userName", userData.name);
-        setData("shoopingName", userData.username);
+        setData("areaCode", userData.area_code);
+        setData("companyPhone", userData.phone);
         setData("SectorYear", userData.year);
-        setData("webSiteLink", userData.website);
-        setData("phoneCompany", userData.phone.substring(3));
-        setData("cityCode", userData.taxOffice);
+
+        setData("taxOfficeCity", userData.taxOfficeCity);
+        setData("taxOffice", userData.taxOffice);
+        setData("taxNumber", userData.taxNumber);
+
         setuserImage(userData?.profile_image);
         setSelectedLocation({
           latitude: userData.latitude,
@@ -209,26 +235,37 @@ export default function UpgradeProfile() {
       setloading(false);
     }
   };
+
   const formatPhoneNumber = (value) => {
     // Sadece rakamları al
     const cleaned = ("" + value).replace(/\D/g, "");
+
+    // Numaranın uzunluğunu kontrol et
+    if (cleaned.length > 7) {
+      // Burada uygun bir hata mesajı gösterebilirsiniz
+      return "Geçersiz numara";
+    }
 
     // 0 ile başlıyorsa, ilk karakteri çıkar
     const cleanedWithoutLeadingZero = cleaned.startsWith("0")
       ? cleaned.substring(1)
       : cleaned;
 
+    // Formatlı numarayı oluştur
     let formattedNumber = "";
 
+    // Numaranın uzunluğuna göre formatı uygula
     for (let i = 0; i < cleanedWithoutLeadingZero.length; i++) {
-      if (i === 0) formattedNumber += "(";
-      if (i === 3) formattedNumber += ") ";
-      if (i === 6 || i === 8) formattedNumber += " ";
+      if (i === 3) formattedNumber += " ";
+      if (i === 5) formattedNumber += " ";
       formattedNumber += cleanedWithoutLeadingZero[i];
     }
 
+    // Formatlı numarayı döndür
     return formattedNumber;
   };
+
+
   const handlePhoneNumberChange = (value) => {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setData("oldPhone", formattedPhoneNumber);
@@ -245,8 +282,6 @@ export default function UpgradeProfile() {
     GetUserInfo();
   }, [user, selectedCity, selectedCounty, selectedNeighborhood]);
 
-  const [openAccor, setopenAccor] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState(null);
 
   const handleMapPress = (event) => {
     setSelectedLocation({
@@ -263,12 +298,7 @@ export default function UpgradeProfile() {
         : parseFloat(user.longitude),
   };
 
-  const [cities, setCities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState(null);
-  const [counties, setCounties] = useState([]);
-  const [selectedCounty, setSelectedCounty] = useState(null);
-  const [neighborhoods, setNeighborhoods] = useState([]);
-  const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
+
   useEffect(() => {
     const fetchCities = async () => {
       try {
@@ -281,39 +311,47 @@ export default function UpgradeProfile() {
         Alert.alert("Error", "Could not load cities");
       }
     };
-
     fetchCities();
   }, []);
 
-  const fetchCounties = async (cityId) => {
-    try {
-      const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${cityId}`
-      );
-      setCounties(response.data.data);
-    } catch (error) {
-      console.error("Hata:", error);
-      Alert.alert("Error", "Could not load counties");
+  useEffect(() => {
+    if (selectedCity) {
+      const fetchCounties = async () => {
+        try {
+          const response = await axios.get(`https://private.emlaksepette.com/api/counties/${selectedCity}`);
+          setCounties(response.data.data);
+          setSelectedCounty(null); // Seçili ilçe sıfırla
+          setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
+        } catch (error) {
+          console.error("Hata:", error);
+          Alert.alert("Error", "Could not load counties");
+        }
+      };
+      fetchCounties();
     }
-  };
+  }, [selectedCity]);
 
-  const fetchNeighborhoods = async (countyId) => {
-    try {
-      const response = await axios.get(
-        `https://private.emlaksepette.com/api/neighborhoods/${countyId}`
-      );
-      setNeighborhoods(response.data.data);
-    } catch (error) {
-      console.error("Hata:", error);
-      Alert.alert("Error", "Could not load neighborhoods");
+  useEffect(() => {
+    if (selectedCounty) {
+      const fetchNeighborhoods = async () => {
+        try {
+          const response = await axios.get(`https://private.emlaksepette.com/api/neighborhoods/${selectedCounty}`);
+          console.log("Neighborhoods Response:", response.data); // Yanıtı kontrol et
+          setNeighborhoods(response.data.data);
+          setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
+        } catch (error) {
+          console.error("Hata:", error);
+          Alert.alert("Error", "Could not load neighborhoods");
+        }
+      };
+      fetchNeighborhoods();
     }
-  };
+  }, [selectedCounty]);
 
   const onChangeCity = (value) => {
     setSelectedCity(value);
     setSelectedCounty(null);
     setSelectedNeighborhood(null);
-
     setCounties([]);
     setNeighborhoods([]);
     if (value) {
@@ -335,9 +373,10 @@ export default function UpgradeProfile() {
     if (value) {
     }
   };
-  const cityData = [
-    { label: "İstanbul Avrupa Yakası (212)", value: 212 },
-    { label: "İstanbul Anadolu Yakası (216)", value: 216 },
+
+  const areaData = [
+    { label: "İstanbul Avrupa (212)", value: 212 },
+    { label: "İstanbul Anadolu (216)", value: 216 },
     { label: "Adana (322)", value: 322 },
     { label: "Adıyaman (416)", value: 416 },
     { label: "Afyon (272)", value: 272 },
@@ -421,7 +460,7 @@ export default function UpgradeProfile() {
     { label: "Zonguldak (372)", value: 372 },
   ];
 
-  const [cityCode, setcityCode] = useState("");
+
   const [openColorPicker, setopenColorPicker] = useState(false);
   const [currentColor, setCurrentColor] = useState(user.banner_hex_code);
   const [swatchesOnly, setSwatchesOnly] = useState(false);
@@ -440,17 +479,27 @@ export default function UpgradeProfile() {
   }, [user]);
 
   const [FormDatas, setFormDatas] = useState({
+    backgroundColor: null,
+    storeName: "",
+    tradeName: null,
     userName: "",
-    shoopingName: "",
+    name: "",
+    authorityLicence: null,
     Iban: null,
+    webSiteLink: null,
+    areaCode: null,
+    companyPhone: null,
+    SectorYear: null,
+
+
+    taxOfficeCity: null,
+    taxOffice: null,
+    taxNumber: null,
+
     oldPhone: null,
     newPhone: null,
     fileForPhone: null,
-    phoneCompany: null,
-    cityCode: null,
-    webSiteLink: null,
-    SectorYear: null,
-    backgroundColor: null,
+
     // Diğer form alanları buraya eklenebilir
   });
 
@@ -506,7 +555,7 @@ export default function UpgradeProfile() {
   };
 
   const checkInput = () => {
-    if (tab == 0) {
+    if (tab === 0) {
       if (FormDatas.userName.length === 0 || FormDatas.Iban.length < 29) {
         Dialog.show({
           type: ALERT_TYPE.WARNING,
@@ -517,8 +566,7 @@ export default function UpgradeProfile() {
       } else {
         postData();
       }
-    }
-    if (tab == 1) {
+    } else if (tab === 1) {
       if (
         FormDatas?.newPhone?.length < 15 ||
         FormDatas.oldPhone.length < 15 ||
@@ -533,37 +581,37 @@ export default function UpgradeProfile() {
       } else {
         postData();
       }
-    }
-    if (user.role == "Kurumsal Hesap" && tab == 2) {
-      if (
-        FormDatas?.shoopingName?.length === 0 ||
-        FormDatas?.Iban?.length < 29 ||
-        FormDatas?.SectorYear?.length === 0
-      ) {
-        Dialog.show({
-          type: ALERT_TYPE.WARNING,
-          title: "Hata",
-          textBody: "Lütfen boş alan bırakmayınız.",
-          button: "Tamam",
-        });
-      } else {
-        postData();
-      }
-    }
-    if (user.role == "Kurumsal Hesap" && tab == 3) {
-      if (
-        selectedCity == null ||
-        selectedCounty == null ||
-        selectedNeighborhood == null
-      ) {
-        Dialog.show({
-          type: ALERT_TYPE.WARNING,
-          title: "Hata!",
-          textBody: "Lütfen il ilçe bilgileri giriniz.",
-          button: "Tamam",
-        });
-      } else {
-        postData();
+    } else if (user.role === "Kurumsal Hesap") {
+      if (tab === 2) {
+        if (
+          FormDatas?.companyName?.length === 0 ||
+          FormDatas?.Iban?.length < 29 ||
+          FormDatas?.SectorYear?.length === 0
+        ) {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Hata",
+            textBody: "Lütfen boş alan bırakmayınız.",
+            button: "Tamam",
+          });
+        } else {
+          postData();
+        }
+      } else if (tab === 3) {
+        if (
+          selectedCity == null ||
+          selectedCounty == null ||
+          selectedNeighborhood == null
+        ) {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Hata!",
+            textBody: "Lütfen il ilçe bilgileri giriniz.",
+            button: "Tamam",
+          });
+        } else {
+          postData();
+        }
       }
     }
   };
@@ -571,33 +619,36 @@ export default function UpgradeProfile() {
   const postData = async () => {
     try {
       let fullNumber = `${FormDatas.cityCode}${FormDatas.phoneCompany}`;
-      var formData = new FormData();
-      if (user.role == "Bireysel Hesap") {
+      let formData = new FormData();
+
+      if (user.role === "Bireysel Hesap") {
         formData.append("name", FormDatas.userName);
         formData.append("iban", FormDatas.Iban);
-        formData.append("profile_image", image);
+        formData.append("profile_image", image ? {
+          uri: image.uri,
+          name: image.fileName,
+          type: image.type,
+        } : null);
         formData.append(
           "mobile_phone",
-          FormDatas.newPhone ? FormDatas.newPhone : FormDatas.newPhone
+          FormDatas.newPhone ? FormDatas.newPhone : FormDatas.oldPhone
         );
         formData.append("banner_hex_code", FormDatas.backgroundColor);
         formData.append("_method", "PUT");
       } else {
         formData.append(
           "profile_image",
-          image
-            ? {
-                uri: image.uri,
-                name: image.fileName,
-                type: image.type,
-              }
-            : userImage
+          image ? {
+            uri: image.uri,
+            name: image.fileName,
+            type: image.type,
+          } : null
         );
         formData.append("city_id", selectedCity);
         formData.append("county_id", selectedCounty);
         formData.append("neighborhood_id", selectedNeighborhood);
         formData.append("name", FormDatas.userName);
-        formData.append("username", FormDatas.shoopingName);
+        formData.append("username", FormDatas.companyName);
         formData.append("banner_hex_code", FormDatas.backgroundColor);
         formData.append("iban", FormDatas.Iban);
         formData.append("website", FormDatas.webSiteLink);
@@ -605,34 +656,36 @@ export default function UpgradeProfile() {
         formData.append("year", FormDatas.SectorYear);
         formData.append(
           "mobile_phone",
-          FormDatas.newPhone ? FormDatas.newPhone : FormDatas.newPhone
+          FormDatas.newPhone ? FormDatas.newPhone : FormDatas.oldPhone
         );
         formData.append("latitude", selectedLocation.latitude);
         formData.append("longitude", selectedLocation.longitude);
-
         formData.append("_method", "PUT");
       }
 
-      // Perform the profile update
       const response = await axios.post(
         "https://private.emlaksepette.com/api/client/profile/update",
         formData,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
+            'Content-Type': 'multipart/form-data',
           },
         }
       );
+
+     
+
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
         textBody: "Profiliniz başarıyla güncellendi.",
         button: "Tamam",
       });
-      // Clear the form field after successful update
+
       setFormDatas({
         userName: "",
-        shoopingName: "",
+        companyName: "",
         Iban: "TR",
         oldPhone: "",
         newPhone: null,
@@ -642,25 +695,22 @@ export default function UpgradeProfile() {
         webSiteLink: "",
         SectorYear: null,
         backgroundColor: null,
-        // Diğer form alanları buraya eklenebilir
       });
+
       GetUserInfo();
       updateUserData();
     } catch (error) {
-      console.error("Error:", error);
-      // Handle error
-    } finally {
+      console.error("Error:", error.response ? error.response.data : error.message);
+      Dialog.show({
+        type: ALERT_TYPE.ERROR,
+        title: "Hata",
+        textBody: "Profil güncelleme sırasında bir hata oluştu.",
+        button: "Tamam",
+      });
     }
   };
-  const [chooseFile, setchooseFile] = useState(false);
 
-  // console.log(image.fileName + image.uri.replace('file://', ''))
-  // console.log({
-  //   name : image.fileName,
-  //   type : image.type,
-  //   uri : Platform.OS === 'android' ? image.uri : image.uri.replace('file://', ''),
-  // } )
-  console.log(userImage);
+  const [chooseFile, setchooseFile] = useState(false);
 
   return (
     <AlertNotificationRoot>
@@ -713,41 +763,21 @@ export default function UpgradeProfile() {
             )}
 
             <View>
-              <View
-                style={{
-                  width: 96,
-                  height: 96,
+              <View style={{ width: 96, height: 96 }}>
+                <View style={{ borderRadius: 50 }}>
+                  {user.access_token ? (
+                    <Image
+                      source={image ? { uri: image.uri } : { uri: PhotoUrl + namFromGetUser.profile_image }}
+                      style={{ width: "100%", height: "100%" }}
+                      borderRadius={50}
+                    />
 
-                  borderRadius: 50,
-                }}
-              >
-                <Image
-                  source={{
-                    uri: `https://private.emlaksepette.com/storage/profile_images/${userImage}`,
-                  }}
-                  style={{ width: "100%", height: "100%", borderRadius: 50 }}
-                  borderRadius={50}
-                />
-                {/* {
-      user?.profile_image ?
-    
-        image ?
-        <Image
-        source={{ uri: image}}
-        style={{ width: "100%", height: "100%",borderRadius:50}}
-       borderRadius={50}
-       />:
-      <Image
-                    source={{ uri: PhotoUrl+user.profile_image }}
-                    style={{ width: "100%", height: "100%",borderRadius:50}}
-                   borderRadius={50}
-                   />:
-                   <View style={{backgroundColor:'white',borderRadius:50,alignItems:'center',padding:2}}>
-                       <FontAwesome name="user-circle-o" size={'90'} color={'#ebebeb'}/>
-                   </View>
-                
-    } */}
+                  ) : (
+                    <Icon2 name="user" size={65} color="#333" padding={10} />
+                  )}
+                </View>
               </View>
+
               {(tab == 0 || tab == 2) && (
                 <TouchableOpacity
                   onPress={() => {
@@ -777,20 +807,29 @@ export default function UpgradeProfile() {
                   {namFromGetUser?.name}
                 </Text>
               )}
-
+              {
+                user.type == 1 &&
+                <Text style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}>
+                  {user?.role}
+                </Text>
+              }
               {(tab == 2 || tab == 3 || tab == 4) && (
                 <Text
                   style={{ fontSize: 14, fontWeight: "600", color: "#fff" }}
                 >
-                  {namFromGetUser?.username}
+                  {namFromGetUser?.name}
                 </Text>
               )}
+              {
+                user.type == 2 &&
+                <Text style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}>
+                  {user?.corporate_type}
+                </Text>
+              }
               <Text style={{ fontSize: 11, color: "#fff", fontWeight: "700" }}>
                 {user.email}
               </Text>
-              <Text style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}>
-                {user?.role}
-              </Text>
+
             </View>
           </View>
 
@@ -820,6 +859,60 @@ export default function UpgradeProfile() {
                   useNativeLayout={false}
                 />
               </View>
+              {tab == 0 && (
+                <>
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 5,
+                        paddingLeft: 10,
+                      }}
+                    >
+                      <FontAwesome2
+                        name="user-tie"
+                        size={17}
+                        color={"#777777"}
+                      />
+                      <Text style={styles.label}>Kullanıcı Adı</Text>
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        value={FormDatas.name}
+                        onChangeText={(value) => setData("name", value)}
+                      />
+                    </View>
+                  </View>
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 5,
+                        paddingLeft: 10,
+                      }}
+                    >
+                      <FontAwesome
+                        name="credit-card-alt"
+                        color={"#777777"}
+                        size={13}
+                      />
+                      <Text style={styles.label}>İban Numarası</Text>
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        keyboardType="number-pad"
+                        value={FormDatas.Iban}
+                        onChangeText={(value) => handleIbanChange(value)}
+                        maxLength={29}
+                      />
+                    </View>
+                  </View>
+                </>
+              )}
               {tab == 1 && (
                 <>
                   <View style={{ width: "100%", gap: 10 }}>
@@ -836,7 +929,7 @@ export default function UpgradeProfile() {
                     </View>
                     <View>
                       <TextInput
-                        style={styles.ınput}
+                        style={styles.input}
                         value={FormDatas.oldPhone}
                         onChangeText={handlePhoneNumberChange}
                         maxLength={15}
@@ -860,7 +953,7 @@ export default function UpgradeProfile() {
                     </View>
                     <View>
                       <TextInput
-                        style={styles.ınput}
+                        style={styles.input}
                         keyboardType="numeric"
                         value={FormDatas.newPhone}
                         onChangeText={handlePhoneNumberChangeFornewPhone}
@@ -994,23 +1087,6 @@ export default function UpgradeProfile() {
                         </View>
                       </View>
                     )}
-                    {/* <View style={{flexDirection:'row',width:'100%',backgroundColor:'#FDEAEA',padding:10,borderRadius:5,gap:10,alignItems:'center',justifyContent:'space-between'}}>
-                <View style={{flexDirection:'row',alignItems:'center',gap:10}}>
-                <FontAwesome name="file-text-o" color={'#EB373A'} size={15}/>
-                    <Text style={{fontSize:13,color:'grey'}}>Belge Yükleniyor</Text>
-                   
-                </View>
-              
-    
-                    <View style={{flexDirection:'row',gap:10,alignItems:'center'}}>
-                        <Text style={{fontSize:12,color:'#333',fontWeight:'600'}}>70%</Text>
-                        <TouchableOpacity style={{padding:5}}>
-                        <Icon name="close" size={15} color={'#333'}/>
-                        </TouchableOpacity>
-                       
-                    </View>
-    
-            </View>  */}
                   </View>
                   <Collapse onToggle={() => setopenAccor(!openAccor)}>
                     <CollapseHeader>
@@ -1063,189 +1139,246 @@ export default function UpgradeProfile() {
               {tab == 2 && (
                 <>
                   <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
-                      <FontAwesome2
-                        name="user-tie"
-                        size={17}
-                        color={"#777777"}
-                      />
-                      <Text style={styles.label}>Firma Adı</Text>
+                    <View style={styles.titles}>
+                      <Text style={styles.label}>Mağaza Adı</Text>
                     </View>
                     <View>
                       <TextInput
-                        style={styles.ınput}
-                        value={FormDatas.shoopingName}
-                        onChangeText={(value) => setData("shoopingName", value)}
+                        style={styles.input}
+                        value={FormDatas.storeName}
+                        onChangeText={(value) => setData("storeName", value)}
                       />
                     </View>
                   </View>
-                  <View>
-                    <Text style={styles.label}>Sabit Telefon (Opsiyonel)</Text>
 
+
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View style={styles.titles}>
+                      <Text style={styles.label}>Ticari Unvan</Text>
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        value={FormDatas.tradeName}
+                        onChangeText={(value) => setData("tradeName", value)}
+                      />
+                    </View>
+                  </View>
+
+
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View style={styles.titles}>
+                      <Text style={styles.label}>Yetkili İsim Soyisim</Text>
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        value={FormDatas.userName}
+                        onChangeText={(value) => setData("userName", value)}
+                      />
+                    </View>
+                  </View>
+
+
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View style={styles.titles}>
+                      <Text style={styles.label}>Yetkili Belge No</Text>
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        value={FormDatas.authorityLicence}
+                        onChangeText={(value) => setData("authorityLicence", value)}
+                      />
+                    </View>
+                  </View>
+
+
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View style={styles.titles}>
+                      <Text style={styles.label}>İban Numarası</Text>
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        keyboardType="number-pad"
+                        value={FormDatas.Iban}
+                        onChangeText={(value) => handleIbanChange(value)}
+                        maxLength={29}
+                      />
+                    </View>
+                  </View>
+
+
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View style={styles.titles}>
+                      <Text style={styles.label}>Website Linki</Text>
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        value={FormDatas.webSiteLink}
+                        onChangeText={(value) => setData("webSiteLink", value)}
+                      />
+                    </View>
+                  </View>
+
+
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View style={styles.titles}>
+                      <Text style={styles.label}>Sabit Telefon (Opsiyonel)</Text>
+                    </View>
                     <View style={{ flexDirection: "row" }}>
-                      <View style={{ width: "32%" }}>
+                      <View style={{ width: "45%" }}>
                         <RNPickerSelect
                           doneText="Tamam"
-                          value={FormDatas.cityCode}
+                          value={FormDatas.areaCode}
                           placeholder={{
                             label: "Alan Kodu",
                             value: null,
                           }}
                           style={pickerSelectStyles}
                           onValueChange={(value) => {
-                            setData("cityCode", value);
+                            setData("areaCode", value);
                           }}
-                          items={cityData}
+                          items={areaData}
                         />
                       </View>
-                      <View style={{ width: "70%" }}>
+                      <View style={{ width: "55%" }}>
                         <TextInput
-                          style={styles.ınput}
-                          value={FormDatas.phoneCompany}
+                          style={styles.input}
+                          value={FormDatas.companyPhone}
                           onChangeText={(value) => handlePhoneChange(value)}
                           keyboardType="number-pad"
-                          maxLength={12}
+                          maxLength={7}
                         />
                       </View>
                     </View>
                   </View>
 
+
                   <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
-                      <FontAwesome
-                        name="credit-card-alt"
-                        color={"#777777"}
-                        size={13}
-                      />
-                      <Text style={styles.label}>Iban Numarası</Text>
+                    <View style={styles.titles}>
+                      <Text style={styles.label}>Kaç Yıldır Sektördesiniz?</Text>
                     </View>
                     <View>
                       <TextInput
-                        style={styles.ınput}
-                        keyboardType="number-pad"
-                        value={FormDatas.Iban}
-                        onChangeText={(value) => handleIbanChange(value)}
-                        maxLength={29}
-                      />
-                    </View>
-                  </View>
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
-                      <View
-                        style={{
-                          backgroundColor: "#777777",
-                          padding: 4,
-                          borderRadius: 50,
-                        }}
-                      >
-                        <Entypo name="link" color={"#ffff"} />
-                      </View>
-                      <Text style={styles.label}>Website Linki</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.ınput}
-                        value={FormDatas.webSiteLink}
-                        onChangeText={(value) => setData("webSiteLink", value)}
-                      />
-                    </View>
-                  </View>
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
-                      <FontAwesome2
-                        name="user-tie"
-                        size={17}
-                        color={"#777777"}
-                      />
-                      <Text style={styles.label}>Kaç yıldır sektördesiniz</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.ınput}
+                        style={styles.input}
                         value={FormDatas.SectorYear}
                         onChangeText={(value) => setData("SectorYear", value)}
                       />
                     </View>
                   </View>
-                </>
-              )}
-              {tab == 0 && (
-                <>
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
+
+
+                  <View style={{ gap: 15 }}>
+                    <View style={{ gap: 10 }}>
+                      <View style={{ paddingLeft: 10 }}>
+                        <Text style={styles.label}>İl</Text>
+                      </View>
+                      <RNPickerSelect
+                        doneText="Tamam"
+                        value={selectedCity}
+                        placeholder={{
+                          label: "Seçiniz...",
+                          value: null,
+                        }}
+                        style={pickerSelectStyles}
+                        onValueChange={(value) => { onChangeCity(value) }}
+                        items={cities}
+                      />
+                    </View>
+
+                    <View style={{ gap: 10 }}>
+                      <View style={{ paddingLeft: 10 }}>
+                        <Text style={styles.label}>İlçe</Text>
+                      </View>
+                      <RNPickerSelect
+                        doneText="Tamam"
+                        value={selectedCounty}
+                        placeholder={{
+                          label: "Seçiniz...",
+                          value: null,
+                        }}
+                        style={pickerSelectStyles}
+                        onValueChange={(value) => { onChangeCounty(value) }}
+                        items={counties}
+                      />
+                    </View>
+
+                    <View style={{ gap: 10 }}>
+                      <View style={{ paddingLeft: 10 }}>
+                        <Text style={styles.label}>Mahalle</Text>
+                      </View>
+                      <RNPickerSelect
+                        doneText="Tamam"
+                        value={selectedNeighborhood}
+                        placeholder={{
+                          label: "Seçiniz...",
+                          value: null,
+                        }}
+                        style={pickerSelectStyles}
+                        onValueChange={(value) => { onChangeNeighborhood(value) }}
+                        items={neighborhoods}
+                      />
+                    </View>
+                  </View>
+
+
+                  <View style={{ gap: 10 }}>
+                    <View style={{ paddingLeft: 10 }}>
+                      <Text style={styles.label}>Vergi Dairesi İli</Text>
+                    </View>
+                    <RNPickerSelect
+                      doneText="Tamam"
+                      value={FormDatas.taxOfficeCity}
+                      placeholder={{
+                        label: "Seçiniz...",
+                        value: null,
                       }}
-                    >
+                      style={pickerSelectStyles}
+                      onValueChange={(value) => {
+                        setData("taxOfficeCity", value);
+                      }}
+                      items={cities}
+                    />
+                  </View>
+
+
+                  <View style={{ gap: 10 }}>
+                    <View style={{ paddingLeft: 10 }}>
+                      <Text style={styles.label}>Vergi Dairesi</Text>
+                    </View>
+                    <RNPickerSelect
+                      doneText="Tamam"
+                      value={FormDatas.taxOffice}
+                      placeholder={{
+                        label: "Seçiniz...",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      onValueChange={(value) => {
+                        setData("taxOffice", value);
+                      }}
+                      items={cities}
+                    />
+                  </View>
+
+
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View style={styles.titles}>
                       <FontAwesome2
                         name="user-tie"
                         size={17}
                         color={"#777777"}
                       />
-                      <Text style={styles.label}>Kullanıcı Adı</Text>
+                      <Text style={styles.label}>Vergi No</Text>
                     </View>
                     <View>
                       <TextInput
-                        style={styles.ınput}
-                        value={FormDatas.userName}
-                        onChangeText={(value) => setData("userName", value)}
-                      />
-                    </View>
-                  </View>
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
-                      <FontAwesome
-                        name="credit-card-alt"
-                        color={"#777777"}
-                        size={13}
-                      />
-                      <Text style={styles.label}>Iban Numarası</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.ınput}
-                        keyboardType="number-pad"
-                        value={FormDatas.Iban}
-                        onChangeText={(value) => handleIbanChange(value)}
-                        maxLength={29}
+                        style={styles.input}
+                        value={FormDatas.taxNumber}
+                        onChangeText={(value) => setData("taxNumber", value)}
                       />
                     </View>
                   </View>
@@ -1258,7 +1391,6 @@ export default function UpgradeProfile() {
                       <View style={{ paddingLeft: 10 }}>
                         <Text style={styles.label}>İl</Text>
                       </View>
-
                       <RNPickerSelect
                         doneText="Tamam"
                         value={selectedCity}
@@ -1415,22 +1547,15 @@ export default function UpgradeProfile() {
                     alignItems: "center",
                     gap: 10,
                   }}
+                  onPress={removeProfileImage} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
+                // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
                 >
-                  <Icon3
-                    name="restore-from-trash"
-                    size={22}
-                    color={"#d83131"}
-                  />
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: "#d83131",
-                      fontWeight: "700",
-                    }}
-                  >
+                  <Icon3 name="restore-from-trash" size={22} color={"#d83131"} />
+                  <Text style={{ fontSize: 14, color: "#d83131", fontWeight: "700" }}>
                     Mevcut Fotoğrafı Kaldır
                   </Text>
                 </TouchableOpacity>
+
               </View>
             </View>
           </Modal>
@@ -1538,8 +1663,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F3F3F3",
   },
-  ınput: {
-    padding: 8,
+  titles: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    paddingLeft: 10,
+  },
+  input: {
+    padding: 10,
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
   },
