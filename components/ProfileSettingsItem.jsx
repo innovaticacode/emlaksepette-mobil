@@ -30,7 +30,7 @@ export default function ProfileSettingsItem({
           }}
         >
           <Icon2 name={ıconName} size={18} color={"#525B75"} />
-
+          
           <Text style={{ fontSize: 13, color: "#000000" }}>{text=='Koleksiyonlarım'?(user.corporate_type=='Emlak Ofisi' ? 'Portföylerim':'Koleksiyonlarım'):text}</Text>
         </View>
         <View style={{ flex: 0.7 / 2, alignItems: "flex-end" }}>

@@ -403,6 +403,7 @@ setcolectionName(name)
     await fetchData(); // Sayfayı yenilemek için API isteğini tekrar yapar
     setRefreshing(false);
   };
+  console.log(user?.access_token + 'sdfsdfsd')
   return (
     <>
       {loading ? (
