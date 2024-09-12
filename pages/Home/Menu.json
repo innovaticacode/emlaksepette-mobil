@@ -19,6 +19,15 @@
   },
   {
     "id": "projects",
+    "label": "Satış Noktalarımız",
+    "icon": "map-pin",
+    "text": "Satış Noktalarımız",
+    "key": "GetProjects",
+    "url": "SellPlace",
+    "activePath": "/hesabim/projects"
+  },
+  {
+    "id": "projects",
     "label": "İlan Yönetimi",
     "icon": "plus",
     "text": "Emlak İlanlarım",
@@ -115,7 +124,6 @@
     "url": "institutional.estate.club.users",
     "activePath": "/hesabim/estate_club_users"
   },
-
   {
     "id": "GetSwapApplications",
     "label": "Takaslar",
@@ -134,24 +142,7 @@
     "url": "SwapScreen",
     "activePath": "/hesabim/takas-basvurularim"
   },
-  {
-    "id": "GetReceivedOffers",
-    "label": "Projeler",
-    "icon": "users",
-    "text":"Gelen Proje Başvuruları",
-    "key": "GetReceivedOffers",
-    "url": "Suggest",
-    "activePath": "/hesabim/gelen-konut-basvurulari"
-  },
-  {
-    "id": "GetGivenOffers",
-    "label": "Projeler",
-    "icon": "corner-up-right",
-    "text": "Başvurduğum Projeler",
-    "key": "GetGivenOffers",
-    "url": "Suggest",
-    "activePath": "/hesabim/basvurularim"
-  },
+
   {
     "id": "EmlakClubGift",
     "label": "Emlak Kulüp",
@@ -300,7 +291,7 @@
     "icon": "eye",
     "text": "Kurumsal Hesap Başvurusu",
     "key": "membershipType",
-    "url": "membershipType.index",
+    "url": "ApplyCompany",
     "activePath": "/hesabim/membershipType"
   }
 ]

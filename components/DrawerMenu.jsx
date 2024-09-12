@@ -116,9 +116,13 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
 
           {/* GRİ ALAN START */}
           <View style={{ backgroundColor: '#F7F7F7', padding: 10, width: '85%', borderRadius: 8 }}>
-            <TouchableOpacity onPress={() => navigateToScreen('RealtorClubExplore')}>
+            {
+            ((!user.access_token || user.type==1 ) || user.corporate_type=='Emlak Ofisi' )  && 
+              <TouchableOpacity onPress={() => navigateToScreen('RealtorClubExplore')}>
               <Categories category={'Emlak Kulüp'} iconName={'hand-coin'} />
             </TouchableOpacity>
+            }
+           
             <TouchableOpacity onPress={() => navigateToScreen('')}>
               <Categories category={'Gayrimenkul Ligi'} iconName={'trophy-variant'} />
             </TouchableOpacity>

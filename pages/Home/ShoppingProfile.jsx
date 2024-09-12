@@ -311,9 +311,11 @@ export default function ShoppingProfile() {
           <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
             <View style={{ gap: 20, padding: 10 }}>
               {groupedData.map((group, index) => (
-                <View key={index}>
+                <View key={index} style={{
+                  display:(user.corporate_type=='Emlak Ofisi' && group.label=='Satış Noktalarımız' ? 'none':'flex') && (user.corporate_type!=='Emlak Ofisi' && user.type==2 && group.label=='Emlak Kulüp'?'none':'flex')
+                }}>
                   {/* Başlık */}
-                  <Text style={style.headerText}>{group.label}</Text>
+                  <Text style={[style.headerText,]}>{group.label}</Text>
   
                   {/* Alt menü */}
                   {group.subMenu.length > 0 &&
@@ -363,7 +365,7 @@ export default function ShoppingProfile() {
                             onPress={() => navigation.navigate(item.url)}
                           >
                             <ProfileSettingsItem
-                              text={item.text}
+                              text={item.text }
   
                               ıconName={item.icon}
                               arrowControl={ 

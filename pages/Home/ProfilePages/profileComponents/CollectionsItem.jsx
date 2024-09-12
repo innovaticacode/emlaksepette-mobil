@@ -29,14 +29,15 @@ export default function CollectionsItem({
   onRemove,
   SelectCollection,
   isChoosed,
+  showDots
 }) {
   const navigation = useNavigation();
   const [collectionItems, setCollectionItems] = useState([]);
   const getCollectionItems = () => {
     var collectionItemsTemp = [];
-    for (var i = 0; i < projectItems.length; i++) {
+    for (var i = 0; i < projectItems?.length; i++) {
       if (projectItems[i].collection_id == item.id) {
-        collectionItemsTemp.push(projectItems[i]);
+        collectionItemsTemp?.push(projectItems[i]);
       }
     }
     setCollectionItems(collectionItemsTemp);
@@ -102,7 +103,11 @@ export default function CollectionsItem({
               {item.name}
             </Text>
           </View>
-          <TouchableOpacity
+          {
+            showDots &&
+            showDots  ?
+            <></>:
+            <TouchableOpacity
             hitSlop={{ top: 20, bottom: 20, left: 40, right: 20 }}
             onPress={() => {
               openBottom();
@@ -111,6 +116,8 @@ export default function CollectionsItem({
           >
             <Dot name="dots-three-vertical" size={22} color={"#333"} />
           </TouchableOpacity>
+          }
+      
         </View>
         <View style={{ flexDirection: "row" }}>
           <View style={{ width: "50%", height: 180, padding: 10 }}>
@@ -122,7 +129,7 @@ export default function CollectionsItem({
                 gap: 10,
               }}
             >
-              {item?.links.slice(0, 4).map((image, i) => (
+              {item?.links?.slice(0, 4).map((image, i) => (
                 <View
                   style={{
                     width: 70,
@@ -136,8 +143,8 @@ export default function CollectionsItem({
                     key={i}
                     source={{
                       uri:
-                        image.item_type == 2 &&
-                        image.housing?.housing_type_data
+                        image?.item_type == 2 &&
+                        image?.housing?.housing_type_data
                           ? `https://private.emlaksepette.com/housing_images/${
                               JSON.parse(image.housing.housing_type_data).image
                             }`
@@ -169,7 +176,7 @@ export default function CollectionsItem({
               >
                 <Icon4 name="notebook-outline" size={17} color={"#333"} />
                 <Text style={{ fontSize: 14, color: "#333" }}>
-                  İlan Sayısı: {collectionItems.length}
+                  İlan Sayısı: {item.links.length}
                 </Text>
               </View>
             </View>

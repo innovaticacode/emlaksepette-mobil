@@ -513,15 +513,9 @@ export default function Posts({
                 justifyContent: bookmarkStatus ? "space-between" : "flex-end",
               }}
             >
-              {/* {sold?.status == 1 ? (
-                <></>
-              ) : (
-                user?.has_club == 1 &&
-                ((user?.role == "Bireysel Hesap" && offSaleStatus != 2) ||
-                  (user.role == "Kurumsal Hesap" &&
-                    user.corporate_type == "Emlak Ofisi")) &&
-                (offSaleStatus == 2 || offSaleStatus == 3) && ( */}
-                  <TouchableOpacity
+              {
+                (user.corporate_type=='Emlak Ofisi' ||user.type==1)&&
+                <TouchableOpacity
                     onPress={() => {
                       changeBookmark();
                       openCollection(roomOrder);
@@ -536,8 +530,9 @@ export default function Posts({
                       />
                     </View>
                   </TouchableOpacity>
-                {/* )
-              )} */}
+              }
+                  
+              
               {sold?.status == 1 ? (
                 <></>
               ) : (

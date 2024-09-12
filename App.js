@@ -114,6 +114,8 @@ import SplashScreen from "./pages/Home/Onboarding/SplashScreen";
 
 import Toast from 'react-native-toast-message';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
+import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
+import ApplyForBeCompany from "./pages/Home/ProfilePages/ApplyForBeCompany";
 
 
 const Stack = createNativeStackNavigator();
@@ -1127,6 +1129,28 @@ export default function App({ route }) {
             options={({ route }) => ({
               headerShown:false,
               gestureEnabled:false,
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+            })}
+          />
+              <Stack.Screen
+            name="SellPlace"
+            component={SellPlaces}
+            options={({ route }) => ({
+              title: "Satış Noktalarım",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+            })}
+          />
+               <Stack.Screen
+            name="ApplyCompany"
+            component={ApplyForBeCompany}
+            options={({ route }) => ({
+              title: "Kurumsal Hesap Başvurusu",
               headerBackTitleVisible: false,
               headerStyle: {
                 backgroundColor: "#ffffff",
