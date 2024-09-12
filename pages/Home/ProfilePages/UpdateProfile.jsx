@@ -62,11 +62,11 @@ export default function UpdateProfile() {
             }}
           >
             <Text style={{ color: "#333", fontSize: 16, fontWeight: "700" }}>
-              Profil
+              Hesabım
             </Text>
           </View>
           <View style={{ gap: 10, paddingBottom: 5 }}>
-            <SettingItem text={"Genel Bilgiler"} tab={0} />
+            <SettingItem text={"Kişisel Bilgilerim"} tab={0} />
             <SettingItem text={"Cep Telefonu"} tab={1} />
           </View>
         </View>
@@ -87,7 +87,7 @@ export default function UpdateProfile() {
             </Text>
           </View>
           <View style={{ gap: 10, paddingBottom: 5 }}>
-            <SettingItem text={"Genel Bilgiler"} tab={2} />
+            <SettingItem text={"Kişisel Bilgilerim"} tab={2} />
             <SettingItem text={"Cep Telefonu Güncelle"} tab={1} />
             <SettingItem text={"Firma Konumu Güncelle"} tab={3} />
             

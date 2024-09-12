@@ -195,6 +195,7 @@ export default function UpgradeProfile() {
         setnamFromGetUser(userInfo?.data?.user);
         console.log(userData);
         setData("backgroundColor", userData?.banner_hex_code);
+        setData("name", userData?.name);
         setData("storeName", userData.name);
         setData('tradeName', userData.store_name);
         setData("userName", userData.username);
@@ -204,12 +205,12 @@ export default function UpgradeProfile() {
         setData("areaCode", userData.area_code);
         setData("companyPhone", userData.phone);
         setData("SectorYear", userData.year);
-        
+
         setData("taxOfficeCity", userData.taxOfficeCity);
         setData("taxOffice", userData.taxOffice);
         setData("taxNumber", userData.taxNumber);
 
-        
+
 
 
         setuserImage(userData?.profile_image);
@@ -452,7 +453,7 @@ export default function UpgradeProfile() {
     { label: "Zonguldak (372)", value: 372 },
   ];
 
- 
+
   const [openColorPicker, setopenColorPicker] = useState(false);
   const [currentColor, setCurrentColor] = useState(user.banner_hex_code);
   const [swatchesOnly, setSwatchesOnly] = useState(false);
@@ -475,13 +476,14 @@ export default function UpgradeProfile() {
     storeName: "",
     tradeName: null,
     userName: "",
+    name: "",
     authorityLicence: null,
     Iban: null,
     webSiteLink: null,
     areaCode: null,
     companyPhone: null,
     SectorYear: null,
-    
+
 
     taxOfficeCity: null,
     taxOffice: null,
@@ -799,20 +801,29 @@ export default function UpgradeProfile() {
                   {namFromGetUser?.name}
                 </Text>
               )}
-
+              {
+                user.type == 1 &&
+                <Text style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}>
+                  {user?.role}
+                </Text>
+              }
               {(tab == 2 || tab == 3 || tab == 4) && (
                 <Text
                   style={{ fontSize: 14, fontWeight: "600", color: "#fff" }}
                 >
-                  {namFromGetUser?.username}
+                  {namFromGetUser?.name}
                 </Text>
               )}
+              {
+                user.type == 2 &&
+                <Text style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}>
+                  {user?.corporate_type}
+                </Text>
+              }
               <Text style={{ fontSize: 11, color: "#fff", fontWeight: "700" }}>
                 {user.email}
               </Text>
-              <Text style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}>
-                {user?.role}
-              </Text>
+
             </View>
           </View>
 
@@ -842,6 +853,60 @@ export default function UpgradeProfile() {
                   useNativeLayout={false}
                 />
               </View>
+              {tab == 0 && (
+                <>
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 5,
+                        paddingLeft: 10,
+                      }}
+                    >
+                      <FontAwesome2
+                        name="user-tie"
+                        size={17}
+                        color={"#777777"}
+                      />
+                      <Text style={styles.label}>Kullanıcı Adı</Text>
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        value={FormDatas.name}
+                        onChangeText={(value) => setData("name", value)}
+                      />
+                    </View>
+                  </View>
+                  <View style={{ width: "100%", gap: 10 }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 5,
+                        paddingLeft: 10,
+                      }}
+                    >
+                      <FontAwesome
+                        name="credit-card-alt"
+                        color={"#777777"}
+                        size={13}
+                      />
+                      <Text style={styles.label}>İban Numarası</Text>
+                    </View>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        keyboardType="number-pad"
+                        value={FormDatas.Iban}
+                        onChangeText={(value) => handleIbanChange(value)}
+                        maxLength={29}
+                      />
+                    </View>
+                  </View>
+                </>
+              )}
               {tab == 1 && (
                 <>
                   <View style={{ width: "100%", gap: 10 }}>
@@ -1256,7 +1321,7 @@ export default function UpgradeProfile() {
 
                   <View style={{ gap: 10 }}>
                     <View style={{ paddingLeft: 10 }}>
-                      <Text style={styles.label}>Vergi Dairesi İli </Text>
+                      <Text style={styles.label}>Vergi Dairesi İli</Text>
                     </View>
                     <RNPickerSelect
                       doneText="Tamam"
@@ -1308,60 +1373,6 @@ export default function UpgradeProfile() {
                         style={styles.input}
                         value={FormDatas.taxNumber}
                         onChangeText={(value) => setData("taxNumber", value)}
-                      />
-                    </View>
-                  </View>
-                </>
-              )}
-              {tab == 0 && (
-                <>
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
-                      <FontAwesome2
-                        name="user-tie"
-                        size={17}
-                        color={"#777777"}
-                      />
-                      <Text style={styles.label}>Kullanıcı Adı</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.input}
-                        value={FormDatas.userName}
-                        onChangeText={(value) => setData("userName", value)}
-                      />
-                    </View>
-                  </View>
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
-                      <FontAwesome
-                        name="credit-card-alt"
-                        color={"#777777"}
-                        size={13}
-                      />
-                      <Text style={styles.label}>Iban Numarası</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.input}
-                        keyboardType="number-pad"
-                        value={FormDatas.Iban}
-                        onChangeText={(value) => handleIbanChange(value)}
-                        maxLength={29}
                       />
                     </View>
                   </View>
