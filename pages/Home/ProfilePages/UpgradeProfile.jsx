@@ -49,6 +49,29 @@ export default function UpgradeProfile() {
   const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
   const [image, setImage] = useState(null);
 
+  const [cities, setCities] = useState([]);
+  const [counties, setCounties] = useState([]);
+  const [neighborhoods, setNeighborhoods] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedCounty, setSelectedCounty] = useState(null);
+  const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+  const [openAccor, setopenAccor] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [file, setfile] = useState(null);
+  const [userName, setuserName] = useState("");
+  const [iban, setiban] = useState("");
+  const [link, setlink] = useState("");
+  const [yearsOfSector, setyearsOfSector] = useState("");
+  const [phone, setphone] = useState("");
+  const [mobilPhone, setmobilPhone] = useState("");
+  const [namFromGetUser, setnamFromGetUser] = useState({});
+  const [loading, setloading] = useState(false);
+  const [user, setUser] = useState({});
+
   useEffect(() => {
     (async () => {
       if (Platform.OS !== "web") {
@@ -68,7 +91,6 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-    console.log(result);
 
     if (!result.canceled) {
       setImage(result.assets[0]);  // Seçilen fotoğrafı state'e kaydediyoruz
@@ -86,7 +108,6 @@ export default function UpgradeProfile() {
     })();
   }, []);
 
-  const [file, setfile] = useState(null);
 
   const takePhoto = async () => {
     let result = await ImagePicker.launchCameraAsync({
@@ -95,7 +116,7 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-    console.log(result);
+   
 
     if (!result.canceled) {
       setImage(result.assets[0]); // Çekilen fotoğrafı state'e kaydediyoruz
@@ -109,9 +130,6 @@ export default function UpgradeProfile() {
   };
 
 
-  const [progress, setProgress] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-
   const pickImageForfile = async () => {
     setIsLoading(true);
     setProgress(0);
@@ -123,7 +141,6 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-    console.log(result);
 
     if (!result.canceled) {
       setfile(result.assets[0].uri);
@@ -160,21 +177,13 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-    console.log(result);
+    
 
     if (!result.canceled) {
       setfile(result.assets[0].uri);
     }
   };
-  const [userName, setuserName] = useState("");
-  const [iban, setiban] = useState("");
-  const [link, setlink] = useState("");
-  const [yearsOfSector, setyearsOfSector] = useState("");
-  const [phone, setphone] = useState("");
-  const [mobilPhone, setmobilPhone] = useState("");
-  const [namFromGetUser, setnamFromGetUser] = useState({});
-  const [loading, setloading] = useState(false);
-  const [user, setUser] = useState({});
+  
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -193,7 +202,6 @@ export default function UpgradeProfile() {
         );
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userInfo?.data?.user);
-        console.log(userData);
         setData("backgroundColor", userData?.banner_hex_code);
         setData("name", userData?.name);
         setData("storeName", userData.name);
@@ -209,9 +217,6 @@ export default function UpgradeProfile() {
         setData("taxOfficeCity", userData.taxOfficeCity);
         setData("taxOffice", userData.taxOffice);
         setData("taxNumber", userData.taxNumber);
-
-
-
 
         setuserImage(userData?.profile_image);
         setSelectedLocation({
@@ -230,6 +235,7 @@ export default function UpgradeProfile() {
       setloading(false);
     }
   };
+
   const formatPhoneNumber = (value) => {
     // Sadece rakamları al
     const cleaned = ("" + value).replace(/\D/g, "");
@@ -276,8 +282,6 @@ export default function UpgradeProfile() {
     GetUserInfo();
   }, [user, selectedCity, selectedCounty, selectedNeighborhood]);
 
-  const [openAccor, setopenAccor] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState(null);
 
   const handleMapPress = (event) => {
     setSelectedLocation({
@@ -294,12 +298,6 @@ export default function UpgradeProfile() {
         : parseFloat(user.longitude),
   };
 
-  const [cities, setCities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState(null);
-  const [counties, setCounties] = useState([]);
-  const [selectedCounty, setSelectedCounty] = useState(null);
-  const [neighborhoods, setNeighborhoods] = useState([]);
-  const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -316,30 +314,39 @@ export default function UpgradeProfile() {
     fetchCities();
   }, []);
 
-  const fetchCounties = async (cityId) => {
-    console.log("City ID:", cityId);
-    try {
-      const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${cityId}`
-      );
-      setCounties(response.data.data);
-    } catch (error) {
-      console.error("Hata:", error);
-      Alert.alert("Error", "Could not load counties");
+  useEffect(() => {
+    if (selectedCity) {
+      const fetchCounties = async () => {
+        try {
+          const response = await axios.get(`https://private.emlaksepette.com/api/counties/${selectedCity}`);
+          setCounties(response.data.data);
+          setSelectedCounty(null); // Seçili ilçe sıfırla
+          setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
+        } catch (error) {
+          console.error("Hata:", error);
+          Alert.alert("Error", "Could not load counties");
+        }
+      };
+      fetchCounties();
     }
-  };
+  }, [selectedCity]);
 
-  const fetchNeighborhoods = async (countyId) => {
-    try {
-      const response = await axios.get(
-        `https://private.emlaksepette.com/api/neighborhoods/${countyId}`
-      );
-      setNeighborhoods(response.data.data);
-    } catch (error) {
-      console.error("Hata:", error);
-      Alert.alert("Error", "Could not load neighborhoods");
+  useEffect(() => {
+    if (selectedCounty) {
+      const fetchNeighborhoods = async () => {
+        try {
+          const response = await axios.get(`https://private.emlaksepette.com/api/neighborhoods/${selectedCounty}`);
+          console.log("Neighborhoods Response:", response.data); // Yanıtı kontrol et
+          setNeighborhoods(response.data.data);
+          setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
+        } catch (error) {
+          console.error("Hata:", error);
+          Alert.alert("Error", "Could not load neighborhoods");
+        }
+      };
+      fetchNeighborhoods();
     }
-  };
+  }, [selectedCounty]);
 
   const onChangeCity = (value) => {
     setSelectedCity(value);
@@ -367,7 +374,7 @@ export default function UpgradeProfile() {
     }
   };
 
-  const cityData = [
+  const areaData = [
     { label: "İstanbul Avrupa (212)", value: 212 },
     { label: "İstanbul Anadolu (216)", value: 216 },
     { label: "Adana (322)", value: 322 },
@@ -667,7 +674,7 @@ export default function UpgradeProfile() {
         }
       );
 
-      console.log("Response:", response.data);
+     
 
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
@@ -704,7 +711,6 @@ export default function UpgradeProfile() {
   };
 
   const [chooseFile, setchooseFile] = useState(false);
-  console.log(user.access_token)
 
   return (
     <AlertNotificationRoot>
@@ -1235,7 +1241,7 @@ export default function UpgradeProfile() {
                           onValueChange={(value) => {
                             setData("areaCode", value);
                           }}
-                          items={cityData}
+                          items={areaData}
                         />
                       </View>
                       <View style={{ width: "55%" }}>
