@@ -1069,11 +1069,6 @@ export default function UpgradeProfile() {
                 <>
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
-                      <FontAwesome2
-                        name="user-tie"
-                        size={17}
-                        color={"#777777"}
-                      />
                       <Text style={styles.label}>Mağaza Adı</Text>
                     </View>
                     <View>
@@ -1088,11 +1083,6 @@ export default function UpgradeProfile() {
 
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
-                      <FontAwesome2
-                        name="user-tie"
-                        size={17}
-                        color={"#777777"}
-                      />
                       <Text style={styles.label}>Ticari Unvan</Text>
                     </View>
                     <View>
@@ -1107,11 +1097,6 @@ export default function UpgradeProfile() {
 
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
-                      <FontAwesome2
-                        name="user-tie"
-                        size={17}
-                        color={"#777777"}
-                      />
                       <Text style={styles.label}>Yetkili İsim Soyisim</Text>
                     </View>
                     <View>
@@ -1126,11 +1111,6 @@ export default function UpgradeProfile() {
 
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
-                      <FontAwesome2
-                        name="user-tie"
-                        size={17}
-                        color={"#777777"}
-                      />
                       <Text style={styles.label}>Yetkili Belge No</Text>
                     </View>
                     <View>
@@ -1145,11 +1125,6 @@ export default function UpgradeProfile() {
 
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
-                      <FontAwesome
-                        name="credit-card-alt"
-                        color={"#777777"}
-                        size={13}
-                      />
                       <Text style={styles.label}>İban Numarası</Text>
                     </View>
                     <View>
@@ -1166,15 +1141,6 @@ export default function UpgradeProfile() {
 
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
-                      <View
-                        style={{
-                          backgroundColor: "#777777",
-                          padding: 4,
-                          borderRadius: 50,
-                        }}
-                      >
-                        <Entypo name="link" color={"#ffff"} />
-                      </View>
                       <Text style={styles.label}>Website Linki</Text>
                     </View>
                     <View>
@@ -1189,11 +1155,6 @@ export default function UpgradeProfile() {
 
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
-                      <FontAwesome
-                        name="phone"
-                        color={"#777777"}
-                        size={17}
-                      />
                       <Text style={styles.label}>Sabit Telefon (Opsiyonel)</Text>
                     </View>
                     <View style={{ flexDirection: "row" }}>
@@ -1227,11 +1188,6 @@ export default function UpgradeProfile() {
 
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
-                      <FontAwesome2
-                        name="user-tie"
-                        size={17}
-                        color={"#777777"}
-                      />
                       <Text style={styles.label}>Kaç Yıldır Sektördesiniz?</Text>
                     </View>
                     <View>
@@ -1697,7 +1653,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   input: {
-    padding: 8,
+    padding: 10,
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
   },
