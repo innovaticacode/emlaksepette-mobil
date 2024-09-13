@@ -24,7 +24,7 @@ export default function Support() {
           <TouchableOpacity
             style={{
               padding: 10,
-              backgroundColor: tabs == 1 ? "red" : "#F2F2F2",
+              backgroundColor: tabs == 1 ? "#EA2C2E" : "#F2F2F2",
               borderRadius: 50,
               alignItems: "center",
             }}
@@ -46,7 +46,7 @@ export default function Support() {
             style={{
               width: "100%",
               padding: 10,
-              backgroundColor: tabs == 2 ? "red" : "#F2F2F2",
+              backgroundColor: tabs == 2 ? "#EA2C2E" : "#F2F2F2",
               borderRadius: 50,
               alignItems: "center",
             }}
