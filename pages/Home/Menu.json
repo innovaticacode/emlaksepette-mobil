@@ -88,7 +88,7 @@
     "id": "shopping-bag",
     "label": "Emlak Kulüp",
     "icon": "info",
-    "text": "Emlak Kulüp Nedir",
+    "text": "Emlak Kulüp Nedir?",
     "key": "GetMyCollection",
     "url": "RealtorClubExplore",
     "activePath": "/hesabim/koleksiyonlarim*"
