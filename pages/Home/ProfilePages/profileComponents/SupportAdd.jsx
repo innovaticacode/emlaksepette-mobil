@@ -8,7 +8,8 @@ import {
   Platform,
   Alert,
   Keyboard,
-  Image
+  Image,
+  TouchableWithoutFeedback
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { getValueFor } from "../../../../components/methods/user";
@@ -99,6 +100,7 @@ export default function SupportAdd() {
           });
           Keyboard.dismiss();
           setchoose(false)
+
         }
       })
       .catch((error) => {
@@ -166,6 +168,7 @@ export default function SupportAdd() {
       // Seçilen resmin uri'si ile ilgili form verisini güncelleme
       setimage([...image, result.assets[0]]); 
       setchoose(false)
+      Keyboard.dismiss()
     }
   };
   const takePhoto = async (key) => {
@@ -187,6 +190,7 @@ export default function SupportAdd() {
     if (!result.canceled) {
       setimage([...image, result.assets[0]]); 
         setchoose(false)
+
     }
   };
   const [choose, setchoose] = useState(false)
@@ -226,7 +230,7 @@ export default function SupportAdd() {
       
       formData.append("file", {
         uri: Platform.OS === "android" ? image[0]: image[0]?.uri?.replace("file://", ""),
-        type: image[0].mimeType,
+        type: image[0]?.mimeType,
         name:image[0]?.name==null?'İmage.jpg': image[0]?.name?.slice(-3) =='pdf' ? image[0]?.name:image?.fileName,
       });
      }
@@ -246,14 +250,14 @@ export default function SupportAdd() {
 
       console.log("API Yanıtı:", response);
 
-      if (response.status === 200 || response.status === 201) {
+      if (response.status) {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Başarılı",
           textBody: "Talebiniz oluşturuldu.",
           button: "Tamam",
         });
-        setSelectedValue("");
+        setSelectedValue(null);
         setTextAreaValue("");
         setAdditionalOption("");
         setimage([])// PDF dosyasını sıfırla
@@ -300,11 +304,16 @@ const deleteFile=()=>{
   setModalForDeleteFile(false)
 }
   return (
+  
     <AlertNotificationRoot>
+      <TouchableWithoutFeedback onPress={()=>{
+        Keyboard.dismiss()
+      }}>
       <View style={{ marginTop: 20 }}>
         <View style={{ paddingRight: 20, paddingLeft: 20 }}>
           <Text style={styles.label}>Kategori Seç</Text>
           <RNPickerSelect
+          value={selectedValue}
             onValueChange={(value) => {
               setSelectedValue(value);
               handlePickerClose(); // Seçim yapıldığında picker'ı kapat
@@ -488,6 +497,7 @@ const deleteFile=()=>{
         cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
       />
           <TouchableOpacity
+          
             style={{
               backgroundColor: "#FFCE86",
               justifyContent: "center",
@@ -496,7 +506,12 @@ const deleteFile=()=>{
               marginBottom: 10,
             }}
             onPress={()=>{
-              setchoose(true)
+              if (image.length==0) {
+                setchoose(true)
+              }else{
+               Alert.alert('Sadece 1 adet Dosya yükleyebilirsiniz')
+              }
+            
             }}
             // PDF seçmek için tıklanabilir
           >
@@ -556,7 +571,10 @@ const deleteFile=()=>{
           </View>
         </Modal>
       </View>
+      </TouchableWithoutFeedback>
+     
     </AlertNotificationRoot>
+   
   );
 }
 
