@@ -143,7 +143,7 @@ export default function SupportList() {
       Alert.alert("PDF dosyası bulunamadı");
     }
   };
- 
+
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center",paddingBottom:35 }}>
       {loading ? (
@@ -252,7 +252,7 @@ export default function SupportList() {
                       }}
                     >
                       <View style={{ width: "45%" }}>
-                        {support.file_path && (
+                        {support.file_path !==null ? (
                           <TouchableOpacity
                             onPress={() => {
                               if (support?.file_path?.slice(-3) =='pdf') {
@@ -291,14 +291,11 @@ export default function SupportList() {
                                 numberOfLines={1}
                               >
                                 {pdfFile}
-                                {/* {support.file_path} */}
-                                {/* {pdfFile.map((file, i) => (
-                        <Text>{file}</Text>
-                      ))} */}
+                           
                               </Text>
                             </View>
                           </TouchableOpacity>
-                        )}
+                        ):<></>}
                       </View>
                       {support.return_support ? (
                         <View style={{ width: "45%" }}>

@@ -228,11 +228,11 @@ export default function SupportAdd() {
      
      if (image) {
       
-      formData.append("file", {
+      formData.append("file", image ? {
         uri: Platform.OS === "android" ? image[0]: image[0]?.uri?.replace("file://", ""),
         type: image[0]?.mimeType,
         name:image[0]?.name==null?'İmage.jpg': image[0]?.name?.slice(-3) =='pdf' ? image[0]?.name:image?.fileName,
-      });
+      }:null);
      }
         
      
@@ -453,7 +453,7 @@ const deleteFile=()=>{
                   <View style={{width:'100%',height:'100%',alignItems:'center',justifyContent:'center',backgroundColor:'#EA2C2E',borderRadius:8}}>
                         <Text style={{color:'white',fontSize:18,fontWeight:'700'}}>PDF</Text>
                   </View>:
-                   <Image  style={{width:'100%',height:'100%'}} source={{uri:image.uri}}  borderRadius={8}/>
+                   <Image  style={{width:'100%',height:'100%'}} source={{uri:image?.uri}}  borderRadius={8}/>
                 }
                
               </TouchableOpacity>
