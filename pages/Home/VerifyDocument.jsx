@@ -134,22 +134,7 @@ export default function VerifyDocument({nextStep,prevStep}) {
             setData(key, null);
             setdeleteModal(false)
           }
-          const openPdf = async (url) => {
-            if (url) {
-              try {
-                const contentUri = await FileSystem.getContentUriAsync(url);
-                IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
-                  data: contentUri,
-                  flags: 1,
-                  type: "application/pdf",
-                });
-              } catch (error) {
-                console.error("PDF açılırken hata oluştu:", error);
-              }
-            } else {
-              Alert.alert("PDF dosyası bulunamadı");
-            }
-          };
+        
           const navigation = useNavigation()
           console.log(FormDatas.pdfUrl + 'sfgdgdf')
           
