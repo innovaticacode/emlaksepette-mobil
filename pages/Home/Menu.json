@@ -22,7 +22,7 @@
     "label": "Satış Noktalarımız",
     "icon": "map-pin",
     "text": "Satış Noktalarımız",
-    "key": "GetProjects",
+    "key": "ViewDashboard",
     "url": "SellPlace",
     "activePath": "/hesabim/projects"
   },

@@ -522,7 +522,7 @@ const onTabLayout = (event) => {
               {tab === 1 && <ShopInfo data={storeData} loading={loading} />}
               {tab === 4 &&
                 (() => {
-                  if (storeData?.data?.corporate_type === "İnşaat Ofisi") {
+                  if (storeData?.data?.corporate_type !== "Emlak Ofisi" && storeData.data.type==2) {
                     return <SellPlacesForBrands data={storeData} />;
                   } else {
                     return <CollectionsOfBrand data={storeData} />;
