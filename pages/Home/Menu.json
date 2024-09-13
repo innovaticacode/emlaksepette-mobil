@@ -22,7 +22,7 @@
     "label": "Satış Noktalarımız",
     "icon": "map-pin",
     "text": "Satış Noktalarımız",
-    "key": "GetProjects",
+    "key": "ViewDashboard",
     "url": "SellPlace",
     "activePath": "/hesabim/projects"
   },
@@ -88,7 +88,7 @@
     "id": "shopping-bag",
     "label": "Emlak Kulüp",
     "icon": "info",
-    "text": "Emlak Kulüp Nedir",
+    "text": "Emlak Kulüp Nedir?",
     "key": "GetMyCollection",
     "url": "RealtorClubExplore",
     "activePath": "/hesabim/koleksiyonlarim*"
