@@ -6,6 +6,7 @@ import {
   TextInput,
   ScrollView,
   Image,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
@@ -42,6 +43,7 @@ import {
   ALERT_TYPE,
   Dialog,
 } from "react-native-alert-notification";
+import { Forms } from "../../../components/ProfileUpgradeComponents/formshelper";
 export default function UpgradeProfile() {
   const route = useRoute();
   const { name, tab } = route.params;
@@ -62,12 +64,7 @@ export default function UpgradeProfile() {
   const [isLoading, setIsLoading] = useState(false);
 
   const [file, setfile] = useState(null);
-  const [userName, setuserName] = useState("");
-  const [iban, setiban] = useState("");
-  const [link, setlink] = useState("");
-  const [yearsOfSector, setyearsOfSector] = useState("");
-  const [phone, setphone] = useState("");
-  const [mobilPhone, setmobilPhone] = useState("");
+
   const [namFromGetUser, setnamFromGetUser] = useState({});
   const [loading, setloading] = useState(false);
   const [user, setUser] = useState({});
@@ -82,7 +79,7 @@ export default function UpgradeProfile() {
       }
     })();
   }, []);
-
+  //Profil Resmi İçin
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -91,10 +88,9 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-
     if (!result.canceled) {
-      setImage(result.assets[0]);  // Seçilen fotoğrafı state'e kaydediyoruz
-      setchoose(false);            // Modal'ı kapatıyoruz
+      setImage(result.assets[0]); // Seçilen fotoğrafı state'e kaydediyoruz
+      setchoose(false); // Modal'ı kapatıyoruz
     }
   };
   useEffect(() => {
@@ -108,7 +104,6 @@ export default function UpgradeProfile() {
     })();
   }, []);
 
-
   const takePhoto = async () => {
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -116,20 +111,18 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-   
-
     if (!result.canceled) {
       setImage(result.assets[0]); // Çekilen fotoğrafı state'e kaydediyoruz
-      setchoose(false);            // Modal'ı kapatıyoruz
+      setchoose(false); // Modal'ı kapatıyoruz
     }
   };
 
   const removeProfileImage = () => {
-    setImage(null);  // Fotoğrafı null yaparak yerelde kaldırıyoruz
-    setchoose(false);  // Modal'ı kapatıyoruz
+    setImage(null); // Fotoğrafı null yaparak yerelde kaldırıyoruz
+    setchoose(false); // Modal'ı kapatıyoruz
   };
 
-
+  //Cep Telefonu Numarası İçin
   const pickImageForfile = async () => {
     setIsLoading(true);
     setProgress(0);
@@ -140,7 +133,6 @@ export default function UpgradeProfile() {
       aspect: [4, 3],
       quality: 1,
     });
-
 
     if (!result.canceled) {
       setfile(result.assets[0].uri);
@@ -177,71 +169,22 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-    
-
     if (!result.canceled) {
       setfile(result.assets[0].uri);
     }
   };
-  
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
   const [userImage, setuserImage] = useState(null);
-  const GetUserInfo = async () => {
-    setloading(true);
-    try {
-      if (user.access_token && user) {
-        const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
-        const userData = userInfo?.data?.user;
-        setnamFromGetUser(userInfo?.data?.user);
-        setData("backgroundColor", userData?.banner_hex_code);
-        setData("name", userData?.name);
-        setData("storeName", userData.name);
-        setData('tradeName', userData.store_name);
-        setData("userName", userData.username);
-        setData("authorityLicence", userData.authority_licence);
-        setData("Iban", userData?.iban);
-        setData("webSiteLink", userData.website);
-        setData("areaCode", userData.area_code);
-        setData("companyPhone", userData.phone);
-        setData("SectorYear", userData.year);
-
-        setData("taxOfficeCity", userData.taxOfficeCity);
-        setData("taxOffice", userData.taxOffice);
-        setData("taxNumber", userData.taxNumber);
-
-        setuserImage(userData?.profile_image);
-        setSelectedLocation({
-          latitude: userData.latitude,
-          longitude: userData.longitude,
-        });
-        handlePhoneNumberChange(userData?.mobile_phone);
-
-        setSelectedCity(userData.city_id);
-        setSelectedCounty(userData.county_id);
-        setSelectedNeighborhood(userData.neighborhood_id);
-      }
-    } catch (error) {
-      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
-    } finally {
-      setloading(false);
-    }
-  };
 
   const formatPhoneNumber = (value) => {
     // Sadece rakamları al
     const cleaned = ("" + value).replace(/\D/g, "");
 
     // Numaranın uzunluğunu kontrol et
-    if (cleaned.length > 7) {
+    if (cleaned.length > 10) {
       // Burada uygun bir hata mesajı gösterebilirsiniz
       return "Geçersiz numara";
     }
@@ -265,39 +208,9 @@ export default function UpgradeProfile() {
     return formattedNumber;
   };
 
-
-  const handlePhoneNumberChange = (value) => {
-    const formattedPhoneNumber = formatPhoneNumber(value);
-    setData("oldPhone", formattedPhoneNumber);
-  };
-  const handlePhoneNumberChangeFornewPhone = (value) => {
-    const formattedPhoneNumber = formatPhoneNumber(value);
-    setData("newPhone", formattedPhoneNumber);
-  };
-  const handlePhoneChange = (value) => {
-    const formattedPhoneNumber = formatPhoneNumber(value);
-    setData("phoneCompany", formattedPhoneNumber);
-  };
   useEffect(() => {
     GetUserInfo();
-  }, [user, selectedCity, selectedCounty, selectedNeighborhood]);
-
-
-  const handleMapPress = (event) => {
-    setSelectedLocation({
-      latitude: event.nativeEvent.coordinate.latitude,
-      longitude: event.nativeEvent.coordinate.longitude,
-    });
-  };
-  const userLocation = user && {
-    latitude:
-      parseFloat(user?.latitude) == null ? latitude : parseFloat(user.latitude),
-    longitude:
-      parseFloat(user?.longitude) == null
-        ? longitude
-        : parseFloat(user.longitude),
-  };
-
+  }, [user]);
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -314,38 +227,37 @@ export default function UpgradeProfile() {
     fetchCities();
   }, []);
 
-  useEffect(() => {
-    if (selectedCity) {
-      const fetchCounties = async () => {
-        try {
-          const response = await axios.get(`https://private.emlaksepette.com/api/counties/${selectedCity}`);
-          setCounties(response.data.data);
-          setSelectedCounty(null); // Seçili ilçe sıfırla
-          setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
-        } catch (error) {
-          console.error("Hata:", error);
-          Alert.alert("Error", "Could not load counties");
-        }
-      };
-      fetchCounties();
+  const fetchCounties = async () => {
+    try {
+      const response = await axios.get(
+        `https://private.emlaksepette.com/api/counties/${selectedCity}`
+      );
+      setCounties(response.data.data);
+      setSelectedCounty(null); // Seçili ilçe sıfırla
+      setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
+    } catch (error) {
+      console.error("Hata:", error);
+      Alert.alert("Error", "Could not load counties");
     }
+  };
+  useEffect(() => {
+    fetchCounties();
   }, [selectedCity]);
-
-  useEffect(() => {
-    if (selectedCounty) {
-      const fetchNeighborhoods = async () => {
-        try {
-          const response = await axios.get(`https://private.emlaksepette.com/api/neighborhoods/${selectedCounty}`);
-          console.log("Neighborhoods Response:", response.data); // Yanıtı kontrol et
-          setNeighborhoods(response.data.data);
-          setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
-        } catch (error) {
-          console.error("Hata:", error);
-          Alert.alert("Error", "Could not load neighborhoods");
-        }
-      };
-      fetchNeighborhoods();
+  const fetchNeighborhoods = async () => {
+    try {
+      const response = await axios.get(
+        `https://private.emlaksepette.com/api/neighborhoods/${selectedCounty}`
+      );
+      console.log("Neighborhoods Response:", response.data); // Yanıtı kontrol et
+      setNeighborhoods(response.data.data);
+      setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
+    } catch (error) {
+      console.error("Hata:", error);
+      Alert.alert("Error", "Could not load neighborhoods");
     }
+  };
+  useEffect(() => {
+    fetchNeighborhoods();
   }, [selectedCounty]);
 
   const onChangeCity = (value) => {
@@ -460,7 +372,6 @@ export default function UpgradeProfile() {
     { label: "Zonguldak (372)", value: 372 },
   ];
 
-
   const [openColorPicker, setopenColorPicker] = useState(false);
   const [currentColor, setCurrentColor] = useState(user.banner_hex_code);
   const [swatchesOnly, setSwatchesOnly] = useState(false);
@@ -490,7 +401,6 @@ export default function UpgradeProfile() {
     areaCode: null,
     companyPhone: null,
     SectorYear: null,
-
 
     taxOfficeCity: null,
     taxOffice: null,
@@ -624,11 +534,16 @@ export default function UpgradeProfile() {
       if (user.role === "Bireysel Hesap") {
         formData.append("name", FormDatas.userName);
         formData.append("iban", FormDatas.Iban);
-        formData.append("profile_image", image ? {
-          uri: image.uri,
-          name: image.fileName,
-          type: image.type,
-        } : null);
+        formData.append(
+          "profile_image",
+          image
+            ? {
+                uri: image.uri,
+                name: image.fileName,
+                type: image.type,
+              }
+            : null
+        );
         formData.append(
           "mobile_phone",
           FormDatas.newPhone ? FormDatas.newPhone : FormDatas.oldPhone
@@ -638,11 +553,13 @@ export default function UpgradeProfile() {
       } else {
         formData.append(
           "profile_image",
-          image ? {
-            uri: image.uri,
-            name: image.fileName,
-            type: image.type,
-          } : null
+          image
+            ? {
+                uri: image.uri,
+                name: image.fileName,
+                type: image.type,
+              }
+            : null
         );
         formData.append("city_id", selectedCity);
         formData.append("county_id", selectedCounty);
@@ -669,12 +586,10 @@ export default function UpgradeProfile() {
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-
-     
 
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
@@ -683,24 +598,12 @@ export default function UpgradeProfile() {
         button: "Tamam",
       });
 
-      setFormDatas({
-        userName: "",
-        companyName: "",
-        Iban: "TR",
-        oldPhone: "",
-        newPhone: null,
-        fileForPhone: "",
-        phoneCompany: "",
-        cityCode: null,
-        webSiteLink: "",
-        SectorYear: null,
-        backgroundColor: null,
-      });
-
       GetUserInfo();
-      updateUserData();
     } catch (error) {
-      console.error("Error:", error.response ? error.response.data : error.message);
+      console.error(
+        "Error:",
+        error.response ? error.response.data : error.message
+      );
       Dialog.show({
         type: ALERT_TYPE.ERROR,
         title: "Hata",
@@ -711,7 +614,58 @@ export default function UpgradeProfile() {
   };
 
   const [chooseFile, setchooseFile] = useState(false);
+  const GetUserInfo = async () => {
+    setloading(true);
+    try {
+      if (user.access_token && user.id) {
+        const userInfo = await axios.get(
+          "https://private.emlaksepette.com/api/users/" + user?.id,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+        const userData = userInfo?.data?.user;
+        setnamFromGetUser(userInfo?.data?.user);
+      }
+    } catch (error) {
+      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+    } finally {
+      setloading(false);
+    }
+  };
+  useEffect(() => {
+    const formattedPhoneNumber = formatPhoneNumber(namFromGetUser.phone);
+    setData("storeName", namFromGetUser?.name);
+    setData("tradeName", namFromGetUser?.store_name);
+    setData("userName", namFromGetUser?.username);
+    setData("authorityLicence", namFromGetUser?.authority_licence);
+    setData("Iban", namFromGetUser?.iban);
+    setData("webSiteLink", namFromGetUser?.website);
+    setData("companyPhone", namFromGetUser?.phone);
+    setData("areaCode", namFromGetUser?.area_code);
+    setData("SectorYear", namFromGetUser?.year);
+    setData("backgroundColor", namFromGetUser.banner_hex_code);
+    setSelectedCity(namFromGetUser.city_id);
+    setSelectedCounty(namFromGetUser.county_id);
+    setSelectedNeighborhood(namFromGetUser.neighborhood_id);
+  }, [namFromGetUser]);
+  const initialFormData = Forms.reduce((acc, field) => {
+    acc[field.key] = '';
+    return acc;
+  }, {});
 
+  const [formData, setFormData] = useState(initialFormData);
+
+  const handleInputChange = (key, value) => {
+    setFormData({ ...formData, [key]: value });
+  };
+
+  const handleSubmit = () => {
+    // Form gönderme işlemi
+    console.log('Form Data:', formData);
+  };
   return (
     <AlertNotificationRoot>
       {loading ? (
@@ -767,11 +721,14 @@ export default function UpgradeProfile() {
                 <View style={{ borderRadius: 50 }}>
                   {user.access_token ? (
                     <Image
-                      source={image ? { uri: image.uri } : { uri: PhotoUrl + namFromGetUser.profile_image }}
+                      source={
+                        image
+                          ? { uri: image.uri }
+                          : { uri: PhotoUrl + namFromGetUser.profile_image }
+                      }
                       style={{ width: "100%", height: "100%" }}
                       borderRadius={50}
                     />
-
                   ) : (
                     <Icon2 name="user" size={65} color="#333" padding={10} />
                   )}
@@ -807,12 +764,13 @@ export default function UpgradeProfile() {
                   {namFromGetUser?.name}
                 </Text>
               )}
-              {
-                user.type == 1 &&
-                <Text style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}>
+              {user.type == 1 && (
+                <Text
+                  style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}
+                >
                   {user?.role}
                 </Text>
-              }
+              )}
               {(tab == 2 || tab == 3 || tab == 4) && (
                 <Text
                   style={{ fontSize: 14, fontWeight: "600", color: "#fff" }}
@@ -820,654 +778,88 @@ export default function UpgradeProfile() {
                   {namFromGetUser?.name}
                 </Text>
               )}
-              {
-                user.type == 2 &&
-                <Text style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}>
+              {user.type == 2 && (
+                <Text
+                  style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}
+                >
                   {user?.corporate_type}
                 </Text>
-              }
+              )}
               <Text style={{ fontSize: 11, color: "#fff", fontWeight: "700" }}>
                 {user.email}
               </Text>
-
             </View>
+          </View>
+          <View
+            style={[
+              styles.card,
+              { display: openColorPicker ? "flex" : "none" },
+            ]}
+          >
+            <ColorPicker
+              color={currentColor}
+              swatchesOnly={false}
+              onColorChange={onColorChange}
+              onColorChangeComplete={onColorChangeComplete}
+              thumbSize={50}
+              sliderSize={20}
+              noSnap={true}
+              gapSize={0}
+              sliderHidden={true}
+              row={false}
+              swatchesLast={swatchesLast}
+              swatches={swatchesEnabled}
+              discrete={false}
+              useNativeDriver={true}
+              useNativeLayout={false}
+            />
           </View>
 
           <View style={{ width: "100%", alignItems: "center" }}>
+           
             <View style={{ padding: 5, width: "90%", gap: 25 }}>
-              <View
-                style={[
-                  styles.card,
-                  { display: openColorPicker ? "flex" : "none" },
-                ]}
-              >
-                <ColorPicker
-                  color={currentColor}
-                  swatchesOnly={false}
-                  onColorChange={onColorChange}
-                  onColorChangeComplete={onColorChangeComplete}
-                  thumbSize={50}
-                  sliderSize={20}
-                  noSnap={true}
-                  gapSize={0}
-                  sliderHidden={true}
-                  row={false}
-                  swatchesLast={swatchesLast}
-                  swatches={swatchesEnabled}
-                  discrete={false}
-                  useNativeDriver={true}
-                  useNativeLayout={false}
-                />
-              </View>
-              {tab == 0 && (
-                <>
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
-                      <FontAwesome2
-                        name="user-tie"
-                        size={17}
-                        color={"#777777"}
-                      />
-                      <Text style={styles.label}>Kullanıcı Adı</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.input}
-                        value={FormDatas.name}
-                        onChangeText={(value) => setData("name", value)}
-                      />
-                    </View>
+              {Forms.map((item, i) => (
+                <View
+                  style={{
+                    gap: 7,
+                    display:
+                      Array.isArray(item?.tab) && item.tab.includes(tab)
+                        ? "flex"
+                        : "none",
+                  }}
+                >
+           
+                  <View style={{ paddingLeft: 5 }}>
+                    <Text style={styles.label}>{item.label}</Text>
                   </View>
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
-                      <FontAwesome
-                        name="credit-card-alt"
-                        color={"#777777"}
-                        size={13}
-                      />
-                      <Text style={styles.label}>İban Numarası</Text>
-                    </View>
-                    <View>
+                  <View>
+                    {item.type == "input" ? (
                       <TextInput
                         style={styles.input}
-                        keyboardType="number-pad"
-                        value={FormDatas.Iban}
-                        onChangeText={(value) => handleIbanChange(value)}
-                        maxLength={29}
+                        value={formData[item.key]}
+                        onChangeText={(value) => handleInputChange(item.key, value)}
                       />
-                    </View>
-                  </View>
-                </>
-              )}
-              {tab == 1 && (
-                <>
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
-                      <Entypo name="old-phone" size={15} color={"#777777"} />
-                      <Text style={styles.label}>Mevcut Telefon Numarası</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.input}
-                        value={FormDatas.oldPhone}
-                        onChangeText={handlePhoneNumberChange}
-                        maxLength={15}
-                        placeholder="5**********"
-                        keyboardType="numeric"
-                      />
-                    </View>
-                  </View>
-
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                        paddingLeft: 10,
-                      }}
-                    >
-                      <Entypo name="old-phone" size={15} color={"#777777"} />
-                      <Text style={styles.label}>Yeni Telefon Numarası</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.input}
-                        keyboardType="numeric"
-                        value={FormDatas.newPhone}
-                        onChangeText={handlePhoneNumberChangeFornewPhone}
-                        editable={file == null ? false : true}
-                        maxLength={15}
-                        placeholder="5**********"
-                        onPress={() => {
-                          if (file == null) {
-                            Dialog.show({
-                              type: ALERT_TYPE.WARNING,
-                              title: "Dosya Yükleyiniz",
-                              textBody: "Aşağıda örnek belge formatı bulunmaktadır.",
-                              button: "Tamam",
-                            });
-                          }
+                    ) : (
+                      <RNPickerSelect
+                        doneText="Tamam"
+                        value={formData[item.key]}
+                        placeholder={{
+                          label: "Seçiniz...",
+                          value: null,
                         }}
-                      />
-                    </View>
-                  </View>
-                  <View style={[styles.card, { gap: 10 }]}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setchooseFile(true);
-                      }}
-                    >
-                      <View
-                        style={{
-                          width: "100%",
-                          height: 150,
-                          borderWidth: 1,
-                          borderStyle: "dashed",
-                          borderColor: "#F27B7D",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          borderRadius: 9,
+                        style={pickerSelectStyles}
+                        onValueChange={(value) => {
+                          handleInputChange(item.key, value)
                         }}
-                      >
-                        {file && !isLoading ? (
-                          <View style={{ width: "100%", height: "100%" }}>
-                            <Image
-                              source={{ uri: file }}
-                              style={{ width: "100%", height: "100%" }}
-                              borderRadius={9}
-                            />
-                          </View>
-                        ) : (
-                          <View
-                            style={{
-                              alignItems: "center",
-                              backgroundColor: "#FDEAEA",
-                              width: "100%",
-                              height: "100%",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Feather
-                              name="cloud-upload-outline"
-                              size={60}
-                              color={"#EA2B2E"}
-                            />
-                            <Text style={{ color: "#EA2B2E", fontSize: 13 }}>
-                              Dosyanızı buraya yükleyiniz
-                            </Text>
-                          </View>
-                        )}
-                      </View>
-                    </TouchableOpacity>
-                    {isLoading && (
-                      <View style={{ width: "100%" }}>
-                        <Progress.Bar
-                          color="#FDEAEA"
-                          height={20}
-                          progress={progress}
-                          width={null}
-                          style={{ flex: 1 }}
-                          animated={true}
-                          indeterminate={false}
-                          indeterminateAnimationDuration={1000}
-                        />
-                        <View
-                          style={{
-                            position: "absolute",
-                            right: 10,
-                            justifyContent: "center",
-                            top: 3,
-                          }}
-                        >
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              gap: 10,
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              width: "100%",
-                            }}
-                          >
-                            <View style={{ paddingLeft: 30 }}>
-                              <Text style={{ color: "#333", fontSize: 10 }}>
-                                Belge Yükleniyor...
-                              </Text>
-                            </View>
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                gap: 5,
-                                alignItems: "center",
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontSize: 11,
-                                  color: "#333",
-                                  textAlign: "center",
-                                }}
-                              >
-                                {Math.round(progress * 100)}%
-                              </Text>
-                              <TouchableOpacity
-                                style={{}}
-                                hitSlop={{
-                                  top: 10,
-                                  bottom: 10,
-                                  left: 10,
-                                  right: 10,
-                                }}
-                              >
-                                <Icon name="close" size={17} color={"#333"} />
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </View>
-                      </View>
+                        items={cities}
+                      />
                     )}
                   </View>
-                  <Collapse onToggle={() => setopenAccor(!openAccor)}>
-                    <CollapseHeader>
-                      <View
-                        style={[
-                          styles.card,
-                          {
-                            padding: 0,
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            paddingVertical: 10,
-                          },
-                        ]}
-                      >
-                        <Text style={{ color: "#333" }}>
-                          Yüklemeniz Gereken Belge Örneği
-                        </Text>
-                        <Arrow
-                          name={openAccor ? "arrow-down" : "arrow-right"}
-                          size={15}
-                          color={"grey"}
-                        />
-                      </View>
-                    </CollapseHeader>
-                    <CollapseBody style={{}}>
-                      <View
-                        style={[
-                          styles.card,
-                          {
-                            gap: 15,
-                            paddingHorizontal: 4,
-                            paddingVertical: 8,
-                            alignItems: "center",
-                          },
-                        ]}
-                      >
-                        <View style={{ width: 250, height: 200 }}>
-                          <Image
-                            source={{
-                              uri: "https://private.emlaksepette.com/images/phone-update-image/phonefile.jpg",
-                            }}
-                            style={{ width: "100%", height: "100%" }}
-                          />
-                        </View>
-                      </View>
-                    </CollapseBody>
-                  </Collapse>
-                </>
-              )}
-              {tab == 2 && (
-                <>
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View style={styles.titles}>
-                      <Text style={styles.label}>Mağaza Adı</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.input}
-                        value={FormDatas.storeName}
-                        onChangeText={(value) => setData("storeName", value)}
-                      />
-                    </View>
-                  </View>
-
-
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View style={styles.titles}>
-                      <Text style={styles.label}>Ticari Unvan</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.input}
-                        value={FormDatas.tradeName}
-                        onChangeText={(value) => setData("tradeName", value)}
-                      />
-                    </View>
-                  </View>
-
-
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View style={styles.titles}>
-                      <Text style={styles.label}>Yetkili İsim Soyisim</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.input}
-                        value={FormDatas.userName}
-                        onChangeText={(value) => setData("userName", value)}
-                      />
-                    </View>
-                  </View>
-
-
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View style={styles.titles}>
-                      <Text style={styles.label}>Yetkili Belge No</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.input}
-                        value={FormDatas.authorityLicence}
-                        onChangeText={(value) => setData("authorityLicence", value)}
-                      />
-                    </View>
-                  </View>
-
-
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View style={styles.titles}>
-                      <Text style={styles.label}>İban Numarası</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.input}
-                        keyboardType="number-pad"
-                        value={FormDatas.Iban}
-                        onChangeText={(value) => handleIbanChange(value)}
-                        maxLength={29}
-                      />
-                    </View>
-                  </View>
-
-
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View style={styles.titles}>
-                      <Text style={styles.label}>Website Linki</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.input}
-                        value={FormDatas.webSiteLink}
-                        onChangeText={(value) => setData("webSiteLink", value)}
-                      />
-                    </View>
-                  </View>
-
-
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View style={styles.titles}>
-                      <Text style={styles.label}>Sabit Telefon (Opsiyonel)</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <View style={{ width: "45%" }}>
-                        <RNPickerSelect
-                          doneText="Tamam"
-                          value={FormDatas.areaCode}
-                          placeholder={{
-                            label: "Alan Kodu",
-                            value: null,
-                          }}
-                          style={pickerSelectStyles}
-                          onValueChange={(value) => {
-                            setData("areaCode", value);
-                          }}
-                          items={areaData}
-                        />
-                      </View>
-                      <View style={{ width: "55%" }}>
-                        <TextInput
-                          style={styles.input}
-                          value={FormDatas.companyPhone}
-                          onChangeText={(value) => handlePhoneChange(value)}
-                          keyboardType="number-pad"
-                          maxLength={7}
-                        />
-                      </View>
-                    </View>
-                  </View>
-
-
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View style={styles.titles}>
-                      <Text style={styles.label}>Kaç Yıldır Sektördesiniz?</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.input}
-                        value={FormDatas.SectorYear}
-                        onChangeText={(value) => setData("SectorYear", value)}
-                      />
-                    </View>
-                  </View>
-
-
-                  <View style={{ gap: 15 }}>
-                    <View style={{ gap: 10 }}>
-                      <View style={{ paddingLeft: 10 }}>
-                        <Text style={styles.label}>İl</Text>
-                      </View>
-                      <RNPickerSelect
-                        doneText="Tamam"
-                        value={selectedCity}
-                        placeholder={{
-                          label: "Seçiniz...",
-                          value: null,
-                        }}
-                        style={pickerSelectStyles}
-                        onValueChange={(value) => { onChangeCity(value) }}
-                        items={cities}
-                      />
-                    </View>
-
-                    <View style={{ gap: 10 }}>
-                      <View style={{ paddingLeft: 10 }}>
-                        <Text style={styles.label}>İlçe</Text>
-                      </View>
-                      <RNPickerSelect
-                        doneText="Tamam"
-                        value={selectedCounty}
-                        placeholder={{
-                          label: "Seçiniz...",
-                          value: null,
-                        }}
-                        style={pickerSelectStyles}
-                        onValueChange={(value) => { onChangeCounty(value) }}
-                        items={counties}
-                      />
-                    </View>
-
-                    <View style={{ gap: 10 }}>
-                      <View style={{ paddingLeft: 10 }}>
-                        <Text style={styles.label}>Mahalle</Text>
-                      </View>
-                      <RNPickerSelect
-                        doneText="Tamam"
-                        value={selectedNeighborhood}
-                        placeholder={{
-                          label: "Seçiniz...",
-                          value: null,
-                        }}
-                        style={pickerSelectStyles}
-                        onValueChange={(value) => { onChangeNeighborhood(value) }}
-                        items={neighborhoods}
-                      />
-                    </View>
-                  </View>
-
-
-                  <View style={{ gap: 10 }}>
-                    <View style={{ paddingLeft: 10 }}>
-                      <Text style={styles.label}>Vergi Dairesi İli</Text>
-                    </View>
-                    <RNPickerSelect
-                      doneText="Tamam"
-                      value={FormDatas.taxOfficeCity}
-                      placeholder={{
-                        label: "Seçiniz...",
-                        value: null,
-                      }}
-                      style={pickerSelectStyles}
-                      onValueChange={(value) => {
-                        setData("taxOfficeCity", value);
-                      }}
-                      items={cities}
-                    />
-                  </View>
-
-
-                  <View style={{ gap: 10 }}>
-                    <View style={{ paddingLeft: 10 }}>
-                      <Text style={styles.label}>Vergi Dairesi</Text>
-                    </View>
-                    <RNPickerSelect
-                      doneText="Tamam"
-                      value={FormDatas.taxOffice}
-                      placeholder={{
-                        label: "Seçiniz...",
-                        value: null,
-                      }}
-                      style={pickerSelectStyles}
-                      onValueChange={(value) => {
-                        setData("taxOffice", value);
-                      }}
-                      items={cities}
-                    />
-                  </View>
-
-
-                  <View style={{ width: "100%", gap: 10 }}>
-                    <View style={styles.titles}>
-                      <FontAwesome2
-                        name="user-tie"
-                        size={17}
-                        color={"#777777"}
-                      />
-                      <Text style={styles.label}>Vergi No</Text>
-                    </View>
-                    <View>
-                      <TextInput
-                        style={styles.input}
-                        value={FormDatas.taxNumber}
-                        onChangeText={(value) => setData("taxNumber", value)}
-                      />
-                    </View>
-                  </View>
-                </>
-              )}
-              {tab == 3 && (
-                <>
-                  <View style={{ gap: 15 }}>
-                    <View style={{ gap: 10 }}>
-                      <View style={{ paddingLeft: 10 }}>
-                        <Text style={styles.label}>İl</Text>
-                      </View>
-                      <RNPickerSelect
-                        doneText="Tamam"
-                        value={selectedCity}
-                        placeholder={{
-                          label: "Seçiniz...",
-                          value: null,
-                        }}
-                        style={pickerSelectStyles}
-                        onValueChange={(value) => {
-                          onChangeCity(value);
-                        }}
-                        items={cities}
-                      />
-                    </View>
-                    <View style={{ gap: 10 }}>
-                      <View style={{ paddingLeft: 10 }}>
-                        <Text style={styles.label}>İlçe</Text>
-                      </View>
-
-                      <RNPickerSelect
-                        doneText="Tamam"
-                        value={selectedCounty}
-                        placeholder={{
-                          label: "Seçiniz...",
-                          value: null,
-                        }}
-                        style={pickerSelectStyles}
-                        onValueChange={(value) => {
-                          onChangeCounty(value);
-                        }}
-                        items={counties}
-                      />
-                    </View>
-                    <View style={{ gap: 10 }}>
-                      <View style={{ paddingLeft: 10 }}>
-                        <Text style={styles.label}>Mahalle</Text>
-                      </View>
-
-                      <RNPickerSelect
-                        doneText="Tamam"
-                        value={selectedNeighborhood}
-                        placeholder={{
-                          label: "Seçiniz...",
-                          value: null,
-                        }}
-                        style={pickerSelectStyles}
-                        onValueChange={(value) => {
-                          onChangeNeighborhood(value);
-                        }}
-                        items={neighborhoods}
-                      />
-                    </View>
-                  </View>
-                  <View style={{ height: 300 }}>
-                    <MapView
-                      style={{ flex: 1 }}
-                      initialRegion={{
-                        latitude: parseFloat(user.latitude)
-                          ? parseFloat(user.latitude)
-                          : 39.9334, // Türkiye'nin merkezi
-                        longitude: parseFloat(user.longitude)
-                          ? parseFloat(user.longitude)
-                          : 32.8597, // Türkiye'nin merkezi
-                        latitudeDelta: selectedLocation ? 0.05 : 8.5,
-                        longitudeDelta: selectedLocation ? 0.05 : 8.5,
-                      }}
-                      onPress={handleMapPress}
-                    >
-                      {selectedLocation && (
-                        <Marker coordinate={selectedLocation} />
-                      )}
-                    </MapView>
-                  </View>
-                </>
-              )}
+                </View>
+              ))}
             </View>
           </View>
+
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
               style={{
@@ -1548,14 +940,23 @@ export default function UpgradeProfile() {
                     gap: 10,
                   }}
                   onPress={removeProfileImage} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
-                // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
+                  // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
                 >
-                  <Icon3 name="restore-from-trash" size={22} color={"#d83131"} />
-                  <Text style={{ fontSize: 14, color: "#d83131", fontWeight: "700" }}>
+                  <Icon3
+                    name="restore-from-trash"
+                    size={22}
+                    color={"#d83131"}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: "#d83131",
+                      fontWeight: "700",
+                    }}
+                  >
                     Mevcut Fotoğrafı Kaldır
                   </Text>
                 </TouchableOpacity>
-
               </View>
             </View>
           </Modal>
