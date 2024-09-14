@@ -34,7 +34,6 @@ export default function Favorites() {
   const [favorites, setFavorites] = useState([]);
   const focused = useIsFocused();
 
-
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     getValueFor("user", setUser);
@@ -60,7 +59,6 @@ export default function Favorites() {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     if (user.access_token) {
@@ -249,14 +247,15 @@ export default function Favorites() {
       }
     });
   };
-  const [FavoriteRemoveIDSForProject, setFavoriteRemoveIDSForProject] = useState([]);
-
+  const [FavoriteRemoveIDSForProject, setFavoriteRemoveIDSForProject] =
+    useState([]);
 
   // BATCH SELECTION - DELETE FUNCTION STAT
   const [isChoosed, setIsChoosed] = useState(false); // Toplu seçim modu
   const [FavoriteRemoveIDS, setFavoriteRemoveIDS] = useState([]); // Silinecek ilanların ID'leri
   const [loading, setLoading] = useState(false); // Yüklenme durumu
-  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] = useState(false); // Modal durumu
+  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
+    useState(false); // Modal durumu
 
   const handleToggleSelect = () => {
     setIsChoosed(!isChoosed); // Toplu seçim modunu değiştir
@@ -274,8 +273,8 @@ export default function Favorites() {
     try {
       // Axios DELETE isteği
       const response = await axios({
-        method: 'delete',
-        url: 'https://private.emlaksepette.com/api/institutional/favorites/delete',
+        method: "delete",
+        url: "https://private.emlaksepette.com/api/institutional/favorites/delete",
         data: data,
         headers: {
           Authorization: `Bearer ${user.access_token}`,
@@ -302,7 +301,6 @@ export default function Favorites() {
           button: "Tamam",
         });
       }
-
     } catch (error) {
       // Hata durumunda kullanıcıya geri bildirim sağla
       Dialog.show({
@@ -387,9 +385,15 @@ export default function Favorites() {
               </View>
             </>
           ) : (
-
             <>
-              <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
                 <View style={{ flexDirection: "row", gap: 10 }}>
                   <TouchableOpacity
                     style={{
@@ -423,11 +427,9 @@ export default function Favorites() {
                       borderWidth: 1,
                       borderColor: "#ebebeb",
                     }}
-
                     onPress={() => {
                       handleToggleSelect(); // Toplu seçim modunu aç/kapat
                     }}
-
                   >
                     <Text
                       style={{
@@ -437,7 +439,7 @@ export default function Favorites() {
                         color: "#333",
                       }}
                     >
-                      {isChoosed ? 'Seçimi İptal Et' : 'Toplu Seç'}
+                      {isChoosed ? "Seçimi İptal Et" : "Toplu Seç"}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -451,8 +453,7 @@ export default function Favorites() {
                   >
                     <Text>
                       Seçili(
-                      {FavoriteRemoveIDS.length}
-                      )
+                      {FavoriteRemoveIDS.length})
                     </Text>
                     <View>
                       <TouchableOpacity
@@ -469,11 +470,9 @@ export default function Favorites() {
                               button: "Tamam",
                             });
                           } else {
-                            setRemoveSelectedCollectionsModal(true)
+                            setRemoveSelectedCollectionsModal(true);
                           }
                         }}
-
-
                       >
                         <Icon2 name="trash" size={18} color={"white"} />
                       </TouchableOpacity>
@@ -544,7 +543,6 @@ export default function Favorites() {
                 showsVerticalScrollIndicator={false}
               >
                 {favorites?.map((favorite, i) => {
-
                   if (favorite?.project) {
                     var image = favorite?.project_housing?.find(
                       (projectHousing) => {
@@ -562,9 +560,8 @@ export default function Favorites() {
                         if (
                           projectHousing.room_order == favorite?.housing_id &&
                           projectHousing.name ==
-                          favorite?.project?.list_item_values
-                            ?.column1_name +
-                          "[]" &&
+                            favorite?.project?.list_item_values?.column1_name +
+                              "[]" &&
                           projectHousing.project_id == favorite?.project?.id
                         ) {
                           return projectHousing;
@@ -576,9 +573,8 @@ export default function Favorites() {
                         if (
                           projectHousing.room_order == favorite?.housing_id &&
                           projectHousing.name ==
-                          favorite?.project?.list_item_values
-                            ?.column2_name +
-                          "[]" &&
+                            favorite?.project?.list_item_values?.column2_name +
+                              "[]" &&
                           projectHousing.project_id == favorite?.project?.id
                         ) {
                           return projectHousing;
@@ -590,9 +586,8 @@ export default function Favorites() {
                         if (
                           projectHousing.room_order == favorite?.housing_id &&
                           projectHousing.name ==
-                          favorite?.project?.list_item_values
-                            ?.column3_name +
-                          "[]" &&
+                            favorite?.project?.list_item_values?.column3_name +
+                              "[]" &&
                           projectHousing.project_id == favorite?.project?.id
                         ) {
                           return projectHousing;
@@ -603,30 +598,27 @@ export default function Favorites() {
                       column1 =
                         column1 +
                         " " +
-                        (favorite?.project?.list_item_values
-                          ?.column1_additional
+                        (favorite?.project?.list_item_values?.column1_additional
                           ? favorite?.project?.list_item_values
-                            ?.column1_additional
+                              ?.column1_additional
                           : "");
                     }
                     if (column2) {
                       column2 =
                         column2 +
                         " " +
-                        (favorite?.project?.list_item_values
-                          ?.column2_additional
+                        (favorite?.project?.list_item_values?.column2_additional
                           ? favorite?.project?.list_item_values
-                            ?.column2_additional
+                              ?.column2_additional
                           : "");
                     }
                     if (column3) {
                       column3 =
                         column3 +
                         " " +
-                        (favorite?.project?.list_item_values
-                          ?.column3_additional
+                        (favorite?.project?.list_item_values?.column3_additional
                           ? favorite?.project?.list_item_values
-                            ?.column3_additional
+                              ?.column3_additional
                           : "");
                     }
                     var no = 1000000 + favorite?.project.id;
@@ -657,17 +649,15 @@ export default function Favorites() {
                           " No'lu konut"
                         }
                         price={
-                          favorite?.project_housing?.find(
-                            (projectHousing) => {
-                              if (
-                                projectHousing.room_order ==
+                          favorite?.project_housing?.find((projectHousing) => {
+                            if (
+                              projectHousing.room_order ==
                                 favorite?.housing_id &&
-                                projectHousing.name == "price[]"
-                              ) {
-                                return projectHousing;
-                              }
+                              projectHousing.name == "price[]"
+                            ) {
+                              return projectHousing;
                             }
-                          )?.value
+                          })?.value
                         }
                         m2="20"
                         GetId={GetIdForCart}
@@ -706,14 +696,13 @@ export default function Favorites() {
                             favorite?.housing?.list_items?.column1_name
                           ]
                             ? housingData[
-                            favorite?.housing?.list_items?.column1_name
-                            ] +
-                            " " +
-                            (favorite?.housing?.list_items
-                              ?.column1_additional
-                              ? favorite?.housing?.list_items
-                                ?.column1_additional
-                              : "")
+                                favorite?.housing?.list_items?.column1_name
+                              ] +
+                              " " +
+                              (favorite?.housing?.list_items?.column1_additional
+                                ? favorite?.housing?.list_items
+                                    ?.column1_additional
+                                : "")
                             : ""
                         }
                         column2={
@@ -721,14 +710,13 @@ export default function Favorites() {
                             favorite?.housing?.list_items?.column2_name
                           ]
                             ? housingData[
-                            favorite?.housing?.list_items?.column2_name
-                            ] +
-                            " " +
-                            (favorite?.housing?.list_items
-                              ?.column2_additional
-                              ? favorite?.housing?.list_items
-                                ?.column2_additional
-                              : "")
+                                favorite?.housing?.list_items?.column2_name
+                              ] +
+                              " " +
+                              (favorite?.housing?.list_items?.column2_additional
+                                ? favorite?.housing?.list_items
+                                    ?.column2_additional
+                                : "")
                             : ""
                         }
                         column3={
@@ -736,14 +724,13 @@ export default function Favorites() {
                             favorite?.housing?.list_items?.column3_name
                           ]
                             ? housingData[
-                            favorite?.housing?.list_items?.column3_name
-                            ] +
-                            " " +
-                            (favorite?.housing?.list_items
-                              ?.column3_additional
-                              ? favorite?.housing?.list_items
-                                ?.column3_additional
-                              : "")
+                                favorite?.housing?.list_items?.column3_name
+                              ] +
+                              " " +
+                              (favorite?.housing?.list_items?.column3_additional
+                                ? favorite?.housing?.list_items
+                                    ?.column3_additional
+                                : "")
                             : ""
                         }
                         location={
@@ -761,7 +748,6 @@ export default function Favorites() {
                 })}
               </ScrollView>
             </>
-
           )}
           <Modal
             isVisible={ModalForAddToCart}

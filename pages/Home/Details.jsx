@@ -265,7 +265,7 @@ export default function Details({ navigation }) {
       }
     }
   };
-const [DeleteAlert, setDeleteAlert] = useState(false)
+  const [DeleteAlert, setDeleteAlert] = useState(false);
   const removeItemOnCollection = (collectionId) => {
     const collectionData = {
       item_type: 1,
@@ -286,11 +286,11 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
         }
       )
       .then((response) => {
-        setColectionSheet(false)
+        setColectionSheet(false);
         setTimeout(() => {
-          setDeleteAlert(true)
+          setDeleteAlert(true);
         }, 700);
-       
+
         var newCollections = collections.map((collection) => {
           if (collection.id == collectionId) {
             var newLinks = collection.links.filter((link) => {
@@ -315,8 +315,6 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
 
         setcollections(newCollections);
         setaddCollection(false);
-     
-       
       })
       .catch((error) => {
         // Hata durumunu işleyin
@@ -468,8 +466,14 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
         setTimeout(() => {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
-            title:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${newCollectionNameCreate} Adlı portföyünüz oluşturuldu ` : `${newCollectionNameCreate} Adlı koleksiyonunuz oluşturuldu `,
-            textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi') ? `${selectedHouse} No'lu Konut ${newCollectionNameCreate} Adlı Portföyünüze Eklendi` : `${selectedHouse} No'lu Konut ${newCollectionNameCreate} Adlı Koleksiyonuza Eklendi`,
+            title:
+              user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                ? `${newCollectionNameCreate} Adlı portföyünüz oluşturuldu `
+                : `${newCollectionNameCreate} Adlı koleksiyonunuz oluşturuldu `,
+            textBody:
+              user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                ? `${selectedHouse} No'lu Konut ${newCollectionNameCreate} Adlı Portföyünüze Eklendi`
+                : `${selectedHouse} No'lu Konut ${newCollectionNameCreate} Adlı Koleksiyonuza Eklendi`,
             button: "Tamam",
           });
         }, 700);
@@ -513,9 +517,15 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
         setTimeout(() => {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
-            
-            title:(user.type==2 && user.corporate_type=='Emlak Ofisi')?'Portföye ekleme başarılı': "Koleksiyona ekleme başarılı",
-            textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${selectedHouse} No'lu Konut ${name} Adlı Portöyünüze Eklendi` : `${selectedHouse} No'lu Konut ${name} Adlı Koleksiyonuza Eklendi`,
+
+            title:
+              user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                ? "Portföye ekleme başarılı"
+                : "Koleksiyona ekleme başarılı",
+            textBody:
+              user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                ? `${selectedHouse} No'lu Konut ${name} Adlı Portöyünüze Eklendi`
+                : `${selectedHouse} No'lu Konut ${name} Adlı Koleksiyonuza Eklendi`,
             button: "Tamam",
           });
         }, 700);
@@ -642,7 +652,8 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
-        textBody: "Başvurunuz gönderildi. 1-2 iş günü içerisinde haber verilecektir.",
+        textBody:
+          "Başvurunuz gönderildi. 1-2 iş günü içerisinde haber verilecektir.",
         button: "Tamam",
       });
 
@@ -818,7 +829,7 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
   const [galleries, setGalleries] = useState([]);
 
   useEffect(() => {
-    if (data.project.image && data.project.images) {
+    if (data.project?.image && data.project?.images) {
       // data.project.image'i uygun formata dönüştürün
       const imageObject = { image: data.project.image };
 
@@ -1010,10 +1021,7 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
                 style={styles.modal}
               >
                 <View style={styles.modalContent}>
-               
-                    <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-                
-                 
+                  <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
                 </View>
               </Modal>
 
@@ -1778,12 +1786,10 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
                             fontWeight: "400",
                           }}
                         >
-                          {
-                            (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                            'Portföye Ekle':
-                            'Koleksiyona Ekle'
-                          }
-                          
+                          {user.type == 2 &&
+                          user.corporate_type == "Emlak Ofisi"
+                            ? "Portföye Ekle"
+                            : "Koleksiyona Ekle"}
                         </Text>
                         <Text
                           style={{
@@ -1792,13 +1798,10 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
                             fontSize: 14,
                           }}
                         >
-                          {
-                             (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
-                             'Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin':
-                              "Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin"
-                             
-                          }
-                         
+                          {user.type == 2 &&
+                          user.corporate_type == "Emlak Ofisi"
+                            ? "Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin"
+                            : "Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin"}
                         </Text>
                       </View>
 
@@ -1839,12 +1842,10 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
                                         color: "#7A8A95",
                                       }}
                                     >
-                                      {
-                                        (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                                        'Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir':
-                                        'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir'
-                                      }
-                                      
+                                      {user.type == 2 &&
+                                      user.corporate_type == "Emlak Ofisi"
+                                        ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
+                                        : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                     </Text>
                                   </View>
                                 </View>
@@ -1872,11 +1873,10 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
                                       color: "#7A8A95",
                                     }}
                                   >
-                                   {
-                                        (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                                        'Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir':
-                                        'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir'
-                                      }
+                                    {user.type == 2 &&
+                                    user.corporate_type == "Emlak Ofisi"
+                                      ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
+                                      : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                   </Text>
                                 </View>
                                 <TouchableOpacity
@@ -1924,11 +1924,10 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
                                         color: "#7A8A95",
                                       }}
                                     >
-                                      {
-                                        (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                                        'Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir':
-                                        'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir'
-                                      }
+                                      {user.type == 2 &&
+                                      user.corporate_type == "Emlak Ofisi"
+                                        ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
+                                        : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                     </Text>
                                   </View>
                                   <TouchableOpacity
@@ -2040,11 +2039,10 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
                                     color: "#7A8A95",
                                   }}
                                 >
-                                   {
-                                        (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                                        'Portföyünüze konut ekleyebilmeniz Giriş Yapmanız gerekmektedir':
-                                        'Koleksiyonunuza konut ekleyebilmeniz Giril Yapmanız gerekmektedir'
-                                      }
+                                  {user.type == 2 &&
+                                  user.corporate_type == "Emlak Ofisi"
+                                    ? "Portföyünüze konut ekleyebilmeniz Giriş Yapmanız gerekmektedir"
+                                    : "Koleksiyonunuza konut ekleyebilmeniz Giril Yapmanız gerekmektedir"}
                                 </Text>
                               </View>
                               <TouchableOpacity
@@ -2161,12 +2159,10 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
                                 fontWeight: "400",
                               }}
                             >
-                               {
-                                        (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                                        'Portföy Oluştur':
-                                        'Koleksiyon Oluştur'
-                                      }
-                              
+                              {user.type == 2 &&
+                              user.corporate_type == "Emlak Ofisi"
+                                ? "Portföy Oluştur"
+                                : "Koleksiyon Oluştur"}
                             </Text>
                           </View>
                         </View>
@@ -2184,12 +2180,10 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
                               fontWeight: "500",
                             }}
                           >
-                             {
-                                        (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                                        'Portföy İsmi':
-                                        'Koleksiyon İsmi'
-                                      }
-                            
+                            {user.type == 2 &&
+                            user.corporate_type == "Emlak Ofisi"
+                              ? "Portföy İsmi"
+                              : "Koleksiyon İsmi"}
                           </Text>
                           <TextInput
                             style={styles.Input}
@@ -2215,12 +2209,10 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
                                 fontWeight: "500",
                               }}
                             >
-                               {
-                                        (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                                        'Portföy Oluştur':
-                                        'Koleksiyon Oluştur'
-                               }
-                            
+                              {user.type == 2 &&
+                              user.corporate_type == "Emlak Ofisi"
+                                ? "Portföy Oluştur"
+                                : "Koleksiyon Oluştur"}
                             </Text>
                           </TouchableOpacity>
                         </View>
@@ -2549,7 +2541,7 @@ const [DeleteAlert, setDeleteAlert] = useState(false)
               </ScrollView>
             </>
           )}
-           {/* <AwesomeAlert
+          {/* <AwesomeAlert
             show={DeleteAlert}
             showProgress={false}
             titleStyle={{

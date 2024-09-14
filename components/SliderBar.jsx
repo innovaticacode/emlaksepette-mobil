@@ -64,11 +64,13 @@ export default function SliderBar() {
         }}
       >
         {firstBrands.map((item, i) => (
-          <View style={{ width: 80, marginLeft: 3, alignItems: "center" }} key={i}>
+          <View
+            style={{ width: 80, marginLeft: 3, alignItems: "center" }}
+            key={i}
+          >
             <SliderItem
               navigationStatus={true}
               borderColor={item.color}
-            
               image={item.image}
               url={item.url}
             />

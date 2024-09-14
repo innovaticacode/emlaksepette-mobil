@@ -478,10 +478,7 @@ export default function AllRealtorAdverts() {
         style={styles.modal}
       >
         <View style={styles.modalContent}>
-       
-            <DrawerMenu setIsDrawerOpen={setState} />
-         
-       
+          <DrawerMenu setIsDrawerOpen={setState} />
         </View>
       </Modal>
 

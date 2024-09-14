@@ -29,10 +29,13 @@ export default function MyComments() {
   const nav = useNavigation();
   const [selectedInfo, setSelectedInfo] = useState(null);
   const [selectedComment, setSelectedComment] = useState(null);
+  const [selectedType, setSelectedType] = useState(null);
+  const [selectedSource, setSelectedSource] = useState(null);
 
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
+  console.log(user.id);
 
   const fetchData = async () => {
     try {
@@ -100,7 +103,6 @@ export default function MyComments() {
                 <View style={styles.textContainer}>
                   <Text style={styles.title} numberOfLines={2}>
                     {info?.project_title || info?.title}
-                    <Text>{comment.id}</Text>
                   </Text>
                   <Text style={styles.listingIdText}>
                     {type === "project"
@@ -111,6 +113,7 @@ export default function MyComments() {
               </TouchableOpacity>
               <View>
                 <TouchableOpacity
+                  hitSlop={{ top: 20, bottom: 20, left: 40, right: 20 }}
                   style={styles.editButton}
                   onPress={() => {
                     EditComment(
@@ -118,7 +121,8 @@ export default function MyComments() {
                       info,
                       comment,
                       comment.status,
-                      imageSource
+                      imageSource,
+                      type
                     );
                   }}
                 >
@@ -153,26 +157,30 @@ export default function MyComments() {
       </View>
     );
   };
-  const EditComment = (id, info, comment, status, imageSource) => {
+  const EditComment = (id, info, comment, status, imageSource, type) => {
     setchoose(true);
     setselectedCommentID(id);
     setselectedProjectID(info.id);
     setselectcommentInfo(comment);
     setselectedCommentStatus(status);
     setSelectedInfo(info); // info'yu da state'e ekliyoruz
+    setSelectedType(type);
+    setSelectedSource(imageSource); //
   };
 
   const goToEditComment = (item) => {
     const { type, comment } = item;
     const info = type === "project" ? item.project : item.housing;
+    console.log(info);
 
     nav.navigate("EditProjectComment", {
       projectId: selectedProjectID,
       commentInfo: selectcommentInfo,
       commentID: selectedCommentID,
-      type: type, // info'yu da gönderiyoruz
-      comments: comment, // info'yu da gönderiyoruz
+      type: selectedType,
+      commentss: comment, // info'yu da gönderiyoruz
       info: selectedInfo,
+      imageSource: selectedSource,
     });
     setchoose(false);
   };
@@ -198,7 +206,9 @@ export default function MyComments() {
       console.error("Post isteği olmadı", error);
     }
   };
-  console.log(selectedCommentID);
+
+  console.log(user?.access_token);
+  console.log(selectedCommentID + "selectedddd iddddddd ");
 
   return (
     <ScrollView

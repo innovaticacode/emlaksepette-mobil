@@ -371,7 +371,6 @@ export default function Basket() {
             <Header onPress={toggleDrawer} index={setindex} tab={settab} />
           </View>
 
-        
           <Modal
             isVisible={isDrawerOpen}
             onBackdropPress={() => setIsDrawerOpen(false)}
@@ -382,10 +381,7 @@ export default function Basket() {
             style={styles.modal}
           >
             <View style={styles.modalContent}>
-           
-                <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-             
-             
+              <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
             </View>
           </Modal>
 

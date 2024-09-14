@@ -521,22 +521,22 @@ export default function Posts({
                   (user.role == "Kurumsal Hesap" &&
                     user.corporate_type == "Emlak Ofisi")) &&
                 (offSaleStatus == 2 || offSaleStatus == 3) && ( */}
-                  <TouchableOpacity
-                    onPress={() => {
-                      changeBookmark();
-                      openCollection(roomOrder);
-                      GetID(roomOrder);
-                    }}
-                  >
-                    <View style={styles.ıconContainer}>
-                      <Bookmark
-                        name={bookmark}
-                        size={13}
-                        color={bookmark === "bookmark-o" ? "black" : "red"}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                {/* )
+              <TouchableOpacity
+                onPress={() => {
+                  changeBookmark();
+                  openCollection(roomOrder);
+                  GetID(roomOrder);
+                }}
+              >
+                <View style={styles.ıconContainer}>
+                  <Bookmark
+                    name={bookmark}
+                    size={13}
+                    color={bookmark === "bookmark-o" ? "black" : "red"}
+                  />
+                </View>
+              </TouchableOpacity>
+              {/* )
               )} */}
               {sold?.status == 1 ? (
                 <></>

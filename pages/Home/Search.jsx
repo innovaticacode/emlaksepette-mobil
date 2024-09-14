@@ -31,13 +31,12 @@ export default function Search({ onpres, setIsDrawerOpen }) {
     setSearch(search);
   };
 
-
   const fetchmenuItems = async () => {
     try {
       const response = await axios.get(
         "https://private.emlaksepette.com/api/menu-list"
       );
-      
+
       setMenuItems(response.data);
       const submenus = response.data[0].submenus;
     } catch (error) {
@@ -62,24 +61,19 @@ export default function Search({ onpres, setIsDrawerOpen }) {
   // };
 
   return (
-    <SafeAreaView
-      onTouchStart={() => Keyboard.dismiss()}
-      style={{}}
-    >
+    <SafeAreaView onTouchStart={() => Keyboard.dismiss()} style={{}}>
       <ScrollView>
         <View style={{ flex: 1 }}></View>
 
         <View style={{ gap: 3 }}>
-          <TouchableOpacity onPress={() => {
-
-          }}>
-            <Categories category={'Ana Sayfa'} iconName={'home'} />
+          <TouchableOpacity onPress={() => {}}>
+            <Categories category={"Ana Sayfa"} iconName={"home"} />
           </TouchableOpacity>
 
           {menuItems.map((item, index) => (
             <TouchableOpacity
               onPress={() => {
-                setIsDrawerOpen(false)
+                setIsDrawerOpen(false);
 
                 if (item.submenus && item.submenus.length > 0) {
                   navigation.navigate("Public", {

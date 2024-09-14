@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -113,7 +112,7 @@ export default function SearchPage({ navigation }) {
     const photoBaseUrl = {
       "Emlak İlanları": "https://private.emlaksepette.com/housing_images/",
       "Proje İlanları": "https://private.emlaksepette.com",
-      "Üyeler": "https://private.emlaksepette.com/storage/profile_images",
+      Üyeler: "https://private.emlaksepette.com/storage/profile_images",
     }[type];
 
     const modifyPhotoUrl = (photo) => {
@@ -121,14 +120,12 @@ export default function SearchPage({ navigation }) {
       return type === "Proje İlanları" || type === "Üyeler"
         ? `${photoBaseUrl}/${photo.replace("public/", "storage/")}`
         : `${photoBaseUrl}${photo}`;
-
     };
 
     const displayedItems = showMore[type] ? items : items.slice(0, 5);
     const showMoreText = showMore[type]
       ? "Daha Az Göster"
       : "Daha Fazla Göster";
-
 
     return (
       <View style={styles.resultSection}>
@@ -144,15 +141,15 @@ export default function SearchPage({ navigation }) {
               const routes = {
                 "Emlak İlanları": "Realtor details",
                 "Proje İlanları": "Details",
-                "Üyeler": "Profile",
+                Üyeler: "Profile",
               };
-  
+
               const params = {
                 "Emlak İlanları": { houseId: item.id },
                 "Proje İlanları": { ProjectId: item.id },
-                "Üyeler": { id: item.id },
+                Üyeler: { id: item.id },
               };
-  
+
               navigation.navigate(routes[type], params[type]);
             }}
           />
@@ -189,7 +186,10 @@ export default function SearchPage({ navigation }) {
               </TouchableOpacity>
             </View>
             {searchHistory.map((term, index) => (
-              <TouchableOpacity key={index} onPress={() => handleSearchTerm(term)}>
+              <TouchableOpacity
+                key={index}
+                onPress={() => handleSearchTerm(term)}
+              >
                 <View style={styles.historyItem}>
                   <Text style={styles.historyText}>{term}</Text>
                   <Icon name="right" size={16} color="#E70A12" />

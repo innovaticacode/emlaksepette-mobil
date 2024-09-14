@@ -16,7 +16,7 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import Icon2 from "react-native-vector-icons/Entypo";
-import { CheckBox } from "react-native-elements";
+import { CheckBox, Image } from "react-native-elements";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { ImageBackground } from "expo-image";
 import axios from "axios";
@@ -29,6 +29,8 @@ import {
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ActionSheet from "react-native-actionsheet";
+import ImageViewing from "react-native-image-viewing";
 
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import HTML from "react-native-render-html";
@@ -40,82 +42,63 @@ export default function EditCommentForProject() {
   const [data, setData] = useState({});
   const route = useRoute();
   const nav = useNavigation();
-  const { projectId, commentInfo, commentID, info, comments } = route.params;
+  const {
+    projectId,
+    commentInfo,
+    commentID,
+    info,
+    commentss,
+    type,
+    imageSource,
+  } = route.params;
   const [loading, setloading] = useState(false);
   const [UserImages, setUserImages] = useState([]);
   const [image, setImage] = useState([null, null, null]);
-  console.log(comments + " asdasd");
-  // useEffect(() => {
-  //   apiRequestGet("project/" + projectId).then((res) => {
-  //     setData(res.data.project);
-  //     setloading(false);
-  //     setRating(commentInfo.rate);
-  //     setcomment(commentInfo?.comment);
-  //     const Images =
-  //       projectId &&
-  //       commentInfo &&
-  //       commentInfo?.images &&
-  //       JSON.parse(commentInfo.images);
-  //     setImage(Images);
-  //   });
-  // }, []);
+  const [imagesComment, setImagesComment] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedIndexx, setSelectedIndexx] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [selectedIndex, setselectedIndex] = useState(null);
+  const [removeImage, setremoveImage] = useState(false);
+  const [comment, setcomment] = useState(commentInfo.comment || "");
   const API_URL = "https://private.emlaksepette.com/";
+
   // const imageSource =
-  //   info === "project"
-  //     ? `${API_URL}${info?.images.replace("public/", "storage/")}`
+  //   type === "project"
+  //     ? `${API_URL}${info?.image.replace("public/", "storage/")}`
   //     : `${API_URL}housing_images/${
   //         JSON.parse(info.housing_type_data)?.image ?? ""
   //       }`;
 
-  console.log(UserImages);
-  const [rating, setRating] = useState(0); // Başlangıçta hiçbir yıldız dolu değil
-  const [rate, setrate] = useState(0);
-
-  const handleStarPress = (index) => {
-    // Tıklanan yıldıza kadar olan tüm yıldızları dolu yap
-    setRating(index + 1);
-
-    // Sarı yıldızların sayısını hesapla ve konsola yazdır
-    const yellowStars = index + 1;
-    setrate(yellowStars);
-  };
-  console.log(rate);
-  const [checkedForm, setCheckedForm] = React.useState(false);
-  const toggleCheckboxForm = () => {
-    setCheckedForm(!checkedForm);
-  };
-  const apiUrl = "https://private.emlaksepette.com/";
-  const [user, setUser] = useState({});
-
+  console.log(commentInfo.id + " iddddd dddd");
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
 
-  const [selectedIndex, setselectedIndex] = useState(null);
-  const [removeImage, setremoveImage] = useState(false);
-  const pickImage = async (index) => {
-    if (image[index]) {
-      // Eğer resim varsa, resmi kaldır
-      setselectedIndex(index);
-      setremoveImage(true);
+  const showActionSheet = (index) => {
+    setSelectedIndexx(index);
+    this.ActionSheet.show();
+  };
+
+  const handleImagePress = (index) => {
+    // Eğer resim varsa, ImageViewing'i aç
+    if (imagesComment[index]) {
+      const filteredImages = imagesComment.filter((img) => img !== null);
+      const filteredIndex = filteredImages.indexOf(imagesComment[index]);
+
+      if (filteredIndex !== -1) {
+        setCurrentImageIndex(filteredIndex);
+        setVisible(true);
+      }
     } else {
-      // Eğer resim yoksa, galeri aç ve resim seç
-      if (image.filter((img) => img).length >= 3) {
-        Alert.alert("Limit Reached", "You can only select up to 3 images.");
-        return;
-      }
-
-      let permissionResult =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (permissionResult.granted === false) {
-        Alert.alert(
-          "Permission Denied",
-          "You need to allow permission to access the library."
-        );
-        return;
-      }
-
-      let result = await ImagePicker.launchImageLibraryAsync({
+      // Eğer resim yoksa, eylem sayfasını göster
+      showActionSheet(index);
+    }
+  };
+  const handleActionSheet = async (buttonIndex) => {
+    if (buttonIndex === 0) {
+      // Kamera
+      const result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
@@ -123,14 +106,57 @@ export default function EditCommentForProject() {
       });
 
       if (!result.canceled) {
-        const newImages = [...image];
-        console.log(result);
-        newImages[index] = [result.assets[0]];
-        setImage(newImages);
+        const newImages = [...imagesComment];
+        newImages[selectedIndexx] = result.assets[0].uri; // Seçilen resmi dizideki uygun indise ekle
+        setImagesComment(newImages);
       }
+    } else if (buttonIndex === 1) {
+      // Galeri
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        const newImages = [...imagesComment];
+        newImages[selectedIndexx] = result.assets[0].uri; // Seçilen resmi dizideki uygun indise ekle
+        setImagesComment(newImages);
+      }
+    } else if (buttonIndex === 2) {
+      // Resmi kaldır
+      const newImages = [...imagesComment];
+      newImages[selectedIndexx] = null; // Resmi kaldır
+      setImagesComment(newImages);
     }
   };
-  console.log(image);
+
+  useEffect(() => {
+    if (commentInfo?.images && typeof commentInfo.images === "string") {
+      try {
+        const parsedImages = JSON.parse(commentInfo.images);
+        if (Array.isArray(parsedImages)) {
+          const updatedImages = parsedImages.map((img) => {
+            const fixedUrl = img.replace("public/", "storage/");
+            const fullUrl = `${API_URL}${fixedUrl}`;
+            console.log("Image URL:", fullUrl);
+            return fullUrl;
+          });
+          setImagesComment(updatedImages); // Resimleri state'e güncelleyin
+        } else {
+          console.error("Parsed images is not an array.");
+          setImagesComment([]);
+        }
+      } catch (error) {
+        console.error("Invalid image format:", error);
+        setImagesComment([]);
+      }
+    } else {
+      setImagesComment([]);
+    }
+  }, [commentInfo?.images]);
+
   const takePhoto = async (index) => {
     if (image[index]) {
       // Eğer resim varsa, resmi kaldır
@@ -165,36 +191,81 @@ export default function EditCommentForProject() {
       }
     }
   };
-  const [comment, setcomment] = useState("");
+
+  const removePhoto = () => {
+    const newImages = [...image];
+    newImages[selectedIndex] = null;
+    setImage(newImages);
+    setremoveImage(false);
+    setselectedIndex(null);
+  };
+
+  const pickImage = async (index) => {
+    // Eğer resim varsa, resmi kaldır
+    if (imagesComment[index]) {
+      const newImages = [...imagesComment];
+      newImages[index] = null; // Resmi kaldır
+      setImagesComment(newImages);
+    } else {
+      // Eğer resim yoksa, galeri aç ve resim seç
+      if (imagesComment.filter((img) => img).length >= 3) {
+        Alert.alert("Limit Reached", "You can only select up to 3 images.");
+        return;
+      }
+
+      let permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (permissionResult.granted === false) {
+        Alert.alert(
+          "Permission Denied",
+          "You need to allow permission to access the library."
+        );
+        return;
+      }
+
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        const newImages = [...imagesComment];
+        newImages[index] = result.assets[0].uri; // URI ile güncelle
+        setImagesComment(newImages);
+      }
+    }
+  };
+
   const shareComment = async () => {
     const formData = new FormData();
-    formData.append("rate", rate);
-    formData.append("user_id", user?.id);
+    formData.append("rate", rating.toString());
+    formData.append("user_id", user?.id.toString());
     formData.append("comment", comment);
-    formData.append("owner_id", data?.user?.id);
-    formData.append("project_id", projectId);
-    formData.append("comment_id", commentID);
-    // console.log(image);
-    // for(var i = 0; i < image.length; i++){
-    //   console.log(image[i][0].fileName)
-    //   if(image != null){
-    //       console.log({
-    //           name : image[i][0].fileName,
-    //           type : image[i][0].type,
-    //           uri : Platform.OS === 'android' ? image[i][0].uri : image[i][0].uri.replace('file://', ''),
-    //       })
-    //       formData.append('images['+i+']',{
-    //           name : image[i][0].fileName,
-    //           type : image[i][0].type,
-    //           uri : Platform.OS === 'android' ? image[i][0].uri : image[i][0].uri.replace('file://', ''),
-    //       })
-    //   }
+    formData.append("owner_id", data?.user?.id.toString());
+    formData.append("project_id", projectId.toString());
+    formData.append("comment_id", commentID.toString());
+    formData.append("type", type);
 
-    // }
+    // Resimleri ekleyin
+    const validImages = image.filter((img) => img); // Boş resimleri filtrele
+    if (validImages.length > 0) {
+      validImages.forEach((img, index) => {
+        formData.append(`images[${index}]`, {
+          name: `image${index}.jpg`,
+          type: "image/jpeg",
+          uri: Platform.OS === "android" ? img : img.replace("file://", ""),
+        });
+      });
+    } else {
+      formData.append("images", "[]"); // Eğer hiç resim yoksa boş array gönder
+    }
+
     try {
       if (user?.access_token && rating > 0) {
         const response = await axios.post(
-          `https://private.emlaksepette.com/api/user/${user.id}/${projectId}/comments/${commentID}/update`,
+          `https://private.emlaksepette.com/api/user/${user.id}/${info.id}/comments/${commentID}/update`,
           formData,
           {
             headers: {
@@ -203,9 +274,12 @@ export default function EditCommentForProject() {
             },
           }
         );
+
         setcomment("");
         setrate(0);
         setRating(0);
+
+        // Başarılı olduğunda yönlendirme yap
         nav.navigate("Success", {
           name: "Yorum Güncelleme başarılı",
           message: "Değerlendirmeniz İçin Teşekkürler",
@@ -213,12 +287,83 @@ export default function EditCommentForProject() {
           type: "Project",
         });
       } else {
-        alert("yorum boş");
+        alert("Yorum boş");
       }
     } catch (error) {
-      console.error("post isteği olmadı", error);
+      console.error("Post isteği olmadı", error.response?.data || error);
     }
   };
+
+  console.log(comment + "asdsd");
+  console.log(commentID + "qweqeqwe");
+  console.log(imagesComment); // undefined olup olmadığını kontrol edin
+  console.log(type + " type budursdssssssd");
+  // useEffect(() => {
+  //   apiRequestGet("project/" + projectId).then((res) => {
+  //     setData(res.data.project);
+  //     setloading(false);
+  //     setRating(commentInfo.rate);
+  //     setcomment(commentInfo?.comment);
+  //     const Images =
+  //       projectId &&
+  //       commentInfo &&
+  //       commentInfo?.images &&
+  //       JSON.parse(commentInfo.images);
+  //     setImage(Images);
+  //   });
+  // }, []);
+  // const imageSource =
+  //   info === "project"
+  //     ? `${API_URL}${info?.images.replace("public/", "storage/")}`
+  //     : `${API_URL}housing_images/${
+  //         JSON.parse(info.housing_type_data)?.image ?? ""
+  //       }`;
+
+  console.log(UserImages);
+  const [rating, setRating] = useState(commentInfo.rate); // Başlangıçta hiçbir yıldız dolu değil
+  const [rate, setrate] = useState(0);
+
+  const handleStarPress = (index) => {
+    // Tıklanan yıldıza kadar olan tüm yıldızları dolu yap
+    setRating(index + 1);
+
+    // Sarı yıldızların sayısını hesapla ve konsola yazdır
+    const yellowStars = index + 1;
+    setrate(yellowStars);
+  };
+  console.log(rate);
+  const [checkedForm, setCheckedForm] = React.useState(false);
+  const toggleCheckboxForm = () => {
+    setCheckedForm(!checkedForm);
+  };
+  const apiUrl = "https://private.emlaksepette.com/";
+  const [user, setUser] = useState({});
+
+  console.log(user?.id + " asd22222");
+
+  // const imageSource =
+  //   type === "project"
+  //     ? `${API_URL}${commentInfo.comment.image.replace("public/", "storage/")}`
+  //     : (() => {
+  //         try {
+  //           const imageData = commentInfo.comment.image;
+  //           if (
+  //             imageData &&
+  //             typeof imageData === "string" &&
+  //             imageData.startsWith("{")
+  //           ) {
+  //             const parsedImage = JSON.parse(imageData);
+  //             return `${API_URL}housing_images/${parsedImage?.image ?? ""}`;
+  //           } else {
+  //             return `${API_URL}housing_images/${imageData}`;
+  //           }
+  //         } catch (error) {
+  //           console.error("JSON Parse Error:", error);
+  //           return "";
+  //         }
+  //       })();
+
+  console.log(image);
 
   const [modalVisible2, setModalVisible2] = useState(false);
   const [Deals, setDeals] = useState("");
@@ -240,13 +385,6 @@ export default function EditCommentForProject() {
     }
   };
 
-  const removePhoto = () => {
-    const newImages = [...image];
-    newImages[selectedIndex] = null;
-    setImage(newImages);
-    setremoveImage(false);
-    setselectedIndex(null);
-  };
   return (
     <ScrollView
       style={style.container}
@@ -264,17 +402,22 @@ export default function EditCommentForProject() {
         <>
           <View style={[style.card, { flexDirection: "row" }]}>
             <View style={style.Image}>
-              {/* <ImageBackground source={{ uri: imageSource }} /> */}
+              <ImageBackground
+                source={{ uri: imageSource }}
+                style={style.image}
+              />
             </View>
             <View style={{ flexDirection: "column", gap: 5 }}>
-              <View style={{ paddingLeft: 5, width: "80%" }}>
+              <View style={{ paddingLeft: 5, width: "100%" }}>
                 <Text
                   numberOfLines={2}
                   style={{ fontSize: 13, fontWeight: "600" }}
                 >
                   {info.title || info.project_title}
+
                   {/* {data?.project_title} */}
                 </Text>
+
                 <Text
                   numberOfLines={2}
                   style={{ fontSize: 13, fontWeight: "600" }}
@@ -423,7 +566,7 @@ export default function EditCommentForProject() {
                     Konut Fotoğrafı Ekle
                   </Text>
                   <Text style={{ fontSize: 13, color: "#333" }}>
-                    Basılı Tutarak Resim Çekip Yükleyebilirsiniz!
+                    Basılı tutarak resim ekleyip silebilirsiniz.
                   </Text>
                 </View>
                 <View
@@ -434,35 +577,92 @@ export default function EditCommentForProject() {
                     justifyContent: "space-around",
                   }}
                 >
-                  {image.map((image, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      onLongPress={() => {
-                        takePhoto(index);
-                      }}
-                      onPress={() => {
-                        pickImage(index);
-                      }}
-                      style={[
-                        style.Input,
-                        {
-                          width: 90,
-                          height: 90,
-                          alignItems: "center",
-                          justifyContent: "center",
-                        },
-                      ]}
-                    >
-                      {image ? (
-                        <ImageBackground
-                          source={image}
-                          style={{ width: "100%", height: "100%" }}
-                        />
-                      ) : (
-                        <Icon2 name="camera" size={25} color={"#babbbc"} />
-                      )}
-                    </TouchableOpacity>
-                  ))}
+                  {imagesComment.slice(0, 3).map((image, index) => {
+                    console.log(`Image ${index}: `, image); // Resimleri konsola yazdır
+
+                    return (
+                      <View style={style.imageContainer} key={index}>
+                        <TouchableOpacity
+                          onLongPress={() => showActionSheet(index)}
+                          onPress={() => handleImagePress(index)}
+                          style={[
+                            style.input,
+                            {
+                              width: 90,
+                              height: 90,
+                              alignItems: "center",
+                              justifyContent: "center",
+                              margin: 5,
+                            },
+                          ]}
+                        >
+                          {image ? (
+                            <View style={{ width: "100%", height: "100%" }}>
+                              <Image
+                                source={{ uri: image }}
+                                style={{ width: "100%", height: "100%" }}
+                                resizeMode="cover"
+                              />
+                              <TouchableOpacity
+                                onPress={() => showActionSheet(index)}
+                                style={style.editIcon}
+                              >
+                                <Icon2 name="pencil" size={20} color={"#fff"} />
+                              </TouchableOpacity>
+                            </View>
+                          ) : (
+                            <Icon2 name="camera" size={25} color={"#babbbc"} />
+                          )}
+                        </TouchableOpacity>
+                      </View>
+                    );
+                  })}
+
+                  {imagesComment.length < 3 &&
+                    Array.from({ length: 3 - imagesComment.length }).map(
+                      (_, index) => (
+                        <TouchableOpacity
+                          key={index + imagesComment.length}
+                          onPress={() =>
+                            showActionSheet(imagesComment.length + index)
+                          }
+                          style={[
+                            style.input,
+                            {
+                              width: 90,
+                              height: 90,
+                              alignItems: "center",
+                              justifyContent: "center",
+                              margin: 5,
+                            },
+                          ]}
+                        >
+                          <Icon2 name="camera" size={25} color={"#babbbc"} />
+                        </TouchableOpacity>
+                      )
+                    )}
+
+                  <ImageViewing
+                    images={imagesComment
+                      .filter((img) => img)
+                      .map((image) => ({ uri: image }))}
+                    imageIndex={currentImageIndex}
+                    visible={visible}
+                    onRequestClose={() => setVisible(false)}
+                  />
+
+                  <ActionSheet
+                    ref={(o) => (this.ActionSheet = o)}
+                    options={[
+                      "Fotoğraf çek",
+                      "Kütüphaneden seç",
+                      "Fotoğrafı kaldır",
+                      "İptal",
+                    ]}
+                    cancelButtonIndex={3}
+                    destructiveButtonIndex={2}
+                    onPress={handleActionSheet}
+                  />
                   <AwesomeAlert
                     show={removeImage}
                     showProgress={false}
@@ -523,7 +723,9 @@ export default function EditCommentForProject() {
                 backgroundColor: "#EB2B2E",
                 padding: 10,
                 borderRadius: 5,
+                opacity: checkedForm ? 1 : 0.5,
               }}
+              disabled={!checkedForm}
               onPress={shareComment}
             >
               <Text
@@ -575,5 +777,9 @@ const style = StyleSheet.create({
     borderWidth: 0.3,
     borderColor: "#dce1ea",
     borderRadius: 4,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
   },
 });

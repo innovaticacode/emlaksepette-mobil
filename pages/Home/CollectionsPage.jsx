@@ -217,12 +217,14 @@ export default function CollectionsPage() {
 
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-       title:  
-                (user.type==2 && user.corporate_type=='Emlak Ofisi' )?
-                'Portföy Silindi':
-                'Koleksiyon silindi'
-             ,
-        textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi' )?`${colectionName} Adlı Portföy silindi`: `${colectionName} Adlı koleksiyon silindi`,
+        title:
+          user.type == 2 && user.corporate_type == "Emlak Ofisi"
+            ? "Portföy Silindi"
+            : "Koleksiyon silindi",
+        textBody:
+          user.type == 2 && user.corporate_type == "Emlak Ofisi"
+            ? `${colectionName} Adlı Portföy silindi`
+            : `${colectionName} Adlı koleksiyon silindi`,
         button: "Tamam",
       });
       setmessage(true);
@@ -288,7 +290,10 @@ export default function CollectionsPage() {
       fetchData();
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${CollectionsRemoveIds.length} Portföy Silindi`: `${CollectionsRemoveIds.length} Koleksiyon silindi`,
+        title:
+          user.type == 2 && user.corporate_type == "Emlak Ofisi"
+            ? `${CollectionsRemoveIds.length} Portföy Silindi`
+            : `${CollectionsRemoveIds.length} Koleksiyon silindi`,
         textBody: `${CollectionsRemoveIds.length} Koleksiyon silindi.`,
         button: "Tamam",
       });
@@ -320,7 +325,10 @@ export default function CollectionsPage() {
       );
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
-        title: (user.type==2 && user.corporate_type=='Emlak Ofisi') ? 'Tüm Portföyler Silindi': `Tüm koleksiyonlar silindi`,
+        title:
+          user.type == 2 && user.corporate_type == "Emlak Ofisi"
+            ? "Tüm Portföyler Silindi"
+            : `Tüm koleksiyonlar silindi`,
         textBody: "Tüm koleksiyonlar silindi.",
         button: "Tamam",
       });
@@ -366,12 +374,9 @@ export default function CollectionsPage() {
 
             <View style={{ width: "100%" }}>
               <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                {
-                  (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                  'Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir':
-                  'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir' 
-                }
-              
+                {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                  ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"
+                  : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"}
               </Text>
             </View>
           </View>
@@ -394,11 +399,9 @@ export default function CollectionsPage() {
           </View>
           <View style={{ width: "100%" }}>
             <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-            {
-                  (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                  'Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir':
-                  'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir' 
-                }
+              {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"
+                : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"}
             </Text>
           </View>
           <TouchableOpacity
@@ -435,11 +438,9 @@ export default function CollectionsPage() {
 
             <View style={{ width: "100%" }}>
               <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-              {
-                  (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                  'Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir':
-                  'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir' 
-                }
+                {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                  ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"
+                  : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"}
               </Text>
             </View>
             <TouchableOpacity
@@ -492,12 +493,9 @@ export default function CollectionsPage() {
                 <Text
                   style={{ color: "grey", fontSize: 16, fontWeight: "600" }}
                 >
-                    {
-                  (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                  'Portföyünüzde İlan bulunmamaktadır':
-                  'Koleksiyonunuzda ilan bulunmamaktadır' 
-                }
-                
+                  {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                    ? "Portföyünüzde İlan bulunmamaktadır"
+                    : "Koleksiyonunuzda ilan bulunmamaktadır"}
                 </Text>
               </View>
               <View style={{ width: "100%", alignItems: "center" }}>
@@ -620,12 +618,17 @@ export default function CollectionsPage() {
                       onPress={() => {
                         if (CollectionsRemoveIds.length == 0) {
                           Dialog.show({
-                            title:(user.type==2 && user.corporate_type=='Emlak Ofisi')? 'Seçili Portföy Bulunmamaktadır' :`Seçili koleksiyon bulunmamaktadır`,
+                            title:
+                              user.type == 2 &&
+                              user.corporate_type == "Emlak Ofisi"
+                                ? "Seçili Portföy Bulunmamaktadır"
+                                : `Seçili koleksiyon bulunmamaktadır`,
                             type: ALERT_TYPE.WARNING,
                             textBody:
-                            (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                            'Lütfen silmek istediğiniz Portföyü seçin':
-                              "Lütfen silmek istediğiniz Koleksiyonu seçin",
+                              user.type == 2 &&
+                              user.corporate_type == "Emlak Ofisi"
+                                ? "Lütfen silmek istediğiniz Portföyü seçin"
+                                : "Lütfen silmek istediğiniz Koleksiyonu seçin",
                             button: "Tamam",
                             titleStyle: { fontSize: 14 },
                           });
@@ -775,12 +778,9 @@ export default function CollectionsPage() {
                           fontWeight: "700",
                         }}
                       >
-                        {
-                         (user.type==2 && user.corporate_type=='Emlak Ofisi' )?
-                         'Portföy Adını Düzenle':
-                         'Koleksiyon Adını Düzenle'
-                        }
-                       
+                        {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                          ? "Portföy Adını Düzenle"
+                          : "Koleksiyon Adını Düzenle"}
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -808,12 +808,9 @@ export default function CollectionsPage() {
                           fontWeight: "700",
                         }}
                       >
-                          {
-                         (user.type==2 && user.corporate_type=='Emlak Ofisi' )?
-                         'Portföyü Sil':
-                         'Koleksiyonu Sil'
-                        }
-                        
+                        {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                          ? "Portföyü Sil"
+                          : "Koleksiyonu Sil"}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -838,12 +835,9 @@ export default function CollectionsPage() {
                         color: "black",
                       }}
                     >
-                      {
-                        (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                        'Portföt Adını Değiştir':
-                        'Koleksiyon Adını Değiştir'
-                      }
-                     
+                      {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                        ? "Portföt Adını Değiştir"
+                        : "Koleksiyon Adını Değiştir"}
                     </Text>
                     <TouchableOpacity
                       style={styles.closeButton}
@@ -878,12 +872,9 @@ export default function CollectionsPage() {
                       <IconSms name="info" size={15} color={"#525B75"} />
                       <Text>
                         {" "}
-                        {
-                          (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                          'Oluşturduğun Portföyü paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir.'
-                          : 'Oluşturduğun Koleksiyonu paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir.'
-                        }
-                   
+                        {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                          ? "Oluşturduğun Portföyü paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir."
+                          : "Oluşturduğun Koleksiyonu paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir."}
                       </Text>
                     </Text>
                   </View>
@@ -1051,7 +1042,11 @@ export default function CollectionsPage() {
                   textAlign: "center",
                   margin: 5,
                 }}
-                title={(user.type==2 && user.corporate_type=='Emlak Ofisi')? 'Seçili Portföyleri silmek istediğinize emin misiniz?':  `Seçili koleksiyonları silmek istediğinize emin misiniz?`}
+                title={
+                  user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                    ? "Seçili Portföyleri silmek istediğinize emin misiniz?"
+                    : `Seçili koleksiyonları silmek istediğinize emin misiniz?`
+                }
                 messageStyle={{ textAlign: "center" }}
                 closeOnTouchOutside={true}
                 closeOnHardwareBackPress={false}
@@ -1080,7 +1075,11 @@ export default function CollectionsPage() {
                   textAlign: "center",
                   margin: 5,
                 }}
-                title={ (user.type==2 && user.corporate_type=='Emlak Ofisi') ? 'Tüm Portföyleri silmek istediğinize emin misiniz?':`Tüm Koleksiyonları silmek istediğinize emin misiniz?`}
+                title={
+                  user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                    ? "Tüm Portföyleri silmek istediğinize emin misiniz?"
+                    : `Tüm Koleksiyonları silmek istediğinize emin misiniz?`
+                }
                 messageStyle={{ textAlign: "center" }}
                 closeOnTouchOutside={true}
                 closeOnHardwareBackPress={false}
@@ -1109,7 +1108,11 @@ export default function CollectionsPage() {
                   textAlign: "center",
                   margin: 5,
                 }}
-                title={(user.type==2 && user.corporate_type=='Emlak Ofisi')? 'Portföyü silmek istediğinize emin misiniz?': `Koleksiyonu silmek istediğinize emin misiniz?`}
+                title={
+                  user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                    ? "Portföyü silmek istediğinize emin misiniz?"
+                    : `Koleksiyonu silmek istediğinize emin misiniz?`
+                }
                 messageStyle={{ textAlign: "center" }}
                 closeOnTouchOutside={true}
                 closeOnHardwareBackPress={false}

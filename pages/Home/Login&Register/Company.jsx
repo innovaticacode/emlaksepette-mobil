@@ -49,7 +49,7 @@ export default function Company() {
   const [ShoppingName, setShoppingName] = useState("");
   const [licence, setlicence] = useState("");
   const [acccountType, setacccountType] = useState("");
-  const [cityCode, setcityCode] = useState("")
+  const [cityCode, setcityCode] = useState("");
   {
     /* cheked documents */
   }
@@ -229,7 +229,7 @@ export default function Company() {
       setChecked1(false);
       setChecked2(false);
       setChecked3(false);
-      setcityCode("")
+      setcityCode("");
       Navigation.navigate("Login", { showAlert: true });
     } catch (error) {
       // Hata durumunda
@@ -475,7 +475,7 @@ export default function Company() {
   const handlePhoneNumberChange = (value) => {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setphoneNumber(formattedPhoneNumber);
-    setcompanyPhone(value)
+    setcompanyPhone(value);
   };
 
   const GetDeal = (deal) => {
@@ -593,7 +593,7 @@ export default function Company() {
   ];
   const formatNumber = (text) => {
     // Sadece rakamları filtrele
-    let cleaned = text.replace(/[^0-9]/g, '');
+    let cleaned = text.replace(/[^0-9]/g, "");
 
     // 7 karakterden fazla olmamalı
     if (cleaned.length > 7) {
@@ -603,13 +603,13 @@ export default function Company() {
     // 3-2-2 formatında düzenle
     let formatted = cleaned;
     if (cleaned.length > 3) {
-      formatted = cleaned.slice(0, 3) + '-' + cleaned.slice(3, 5);
+      formatted = cleaned.slice(0, 3) + "-" + cleaned.slice(3, 5);
     }
     if (cleaned.length > 5) {
-      formatted += '-' + cleaned.slice(5, 7);
+      formatted += "-" + cleaned.slice(5, 7);
     }
 
-    setcompanyPhone(formatted)
+    setcompanyPhone(formatted);
   };
 
   return (
@@ -789,41 +789,41 @@ export default function Company() {
                 ""
               )}
             </View>
-            <View style={{gap:5}}>
-              <View style={{paddingLeft:5}}>
-              <Text style={{fontSize: 14, color: "black", fontWeight: 600}}>Sabit Telefon (Opsiyonel)</Text>
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Sabit Telefon (Opsiyonel)
+                </Text>
               </View>
-                   
 
-                    <View style={{ flexDirection: "row" }}>
-                      <View style={{ width: "32%" }}>
-                        <RNPickerSelect
-                          doneText="Tamam"
-                          value={cityCode}
-                          placeholder={{
-                            label: "Alan Kodu",
-                            value: null,
-                          }}
-                          style={pickerSelectStyles}
-                          onValueChange={(value) => {
-                            setcityCode(value);
-                          }}
-                          items={cityData}
-                        />
-                      </View>
-                      <View style={{ width: "70%" }}>
-                      <TextInput
-                value={companyPhone}
-                onChangeText={(value) => formatNumber(value)}
-                style={styles.Input}
-                placeholder="Sabit Telefon"
-                keyboardType="number-pad"
-                maxLength={9}
-                
-              />
-                      </View>
-                    </View>
-                  </View>
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ width: "32%" }}>
+                  <RNPickerSelect
+                    doneText="Tamam"
+                    value={cityCode}
+                    placeholder={{
+                      label: "Alan Kodu",
+                      value: null,
+                    }}
+                    style={pickerSelectStyles}
+                    onValueChange={(value) => {
+                      setcityCode(value);
+                    }}
+                    items={cityData}
+                  />
+                </View>
+                <View style={{ width: "70%" }}>
+                  <TextInput
+                    value={companyPhone}
+                    onChangeText={(value) => formatNumber(value)}
+                    style={styles.Input}
+                    placeholder="Sabit Telefon"
+                    keyboardType="number-pad"
+                    maxLength={9}
+                  />
+                </View>
+              </View>
+            </View>
             {/* <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
@@ -857,8 +857,7 @@ export default function Company() {
                   { label: "İnşaat Ofisi", value: "İnşaat Ofisi" },
                   { label: "Banka", value: "Banka" },
                   { label: "Turizm", value: "Turizm" },
-                  { label: "Üretici", value: "Üretici" }
-                 
+                  { label: "Üretici", value: "Üretici" },
                 ]}
               />
               {errorStatu == 7 ? (
@@ -1332,10 +1331,10 @@ export default function Company() {
           style={styles.modal2}
         >
           <SafeAreaView style={styles.modalContent2}>
-            <ScrollView style={{padding:10,}}> 
+            <ScrollView style={{ padding: 10 }}>
               <HTML source={{ html: Deals }} contentWidth={100} />
 
-              <View style={{ alignItems: "center",paddingBottom:20 }}>
+              <View style={{ alignItems: "center", paddingBottom: 20 }}>
                 <TouchableOpacity
                   style={styles.Acceptbtn}
                   onPress={() => {

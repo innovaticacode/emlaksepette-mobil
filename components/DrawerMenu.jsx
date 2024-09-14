@@ -11,11 +11,10 @@ import {
 import Categories from "./Categories";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "./methods/user";
-import IconAntDesign from 'react-native-vector-icons/AntDesign';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import IconAntDesign from "react-native-vector-icons/AntDesign";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import Search from "../pages/Home/Search";
 import axios from "axios";
-
 
 const DrawerMenu = ({ setIsDrawerOpen }) => {
   const navigation = useNavigation();
@@ -30,16 +29,16 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
 
   useEffect(() => {
     if (user?.access_token && user?.id) {
-      axios.get(
-        `https://private.emlaksepette.com/api/users/${user.id}`,
-        {
+      axios
+        .get(`https://private.emlaksepette.com/api/users/${user.id}`, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
-        }
-      )
-        .then(response => setnamFromGetUser(response.data.user))
-        .catch(error => console.error("Kullanıcı verileri güncellenirken hata oluştu:", error));
+        })
+        .then((response) => setnamFromGetUser(response.data.user))
+        .catch((error) =>
+          console.error("Kullanıcı verileri güncellenirken hata oluştu:", error)
+        );
     }
   }, [user]);
 
@@ -48,22 +47,23 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
     setIsDrawerOpen(false);
   };
 
-
-
   return (
     <SafeAreaView>
       <ScrollView contentContainerStyle={{ gap: 15 }}>
-        <View style={{ alignItems: 'flex-end', paddingRight: 15 }}>
-
+        <View style={{ alignItems: "flex-end", paddingRight: 15 }}>
           <TouchableOpacity onPress={() => setIsDrawerOpen(false)}>
-            <IconAntDesign name="close" size={22} color={'#333'} />
+            <IconAntDesign name="close" size={22} color={"#333"} />
           </TouchableOpacity>
-
         </View>
-        <View style={{ width: '100%', alignItems: 'center' }}>
-          <View style={{ width: '90%', flexDirection: 'row', alignItems: 'center', gap: 7 }}>
-
-
+        <View style={{ width: "100%", alignItems: "center" }}>
+          <View
+            style={{
+              width: "90%",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 7,
+            }}
+          >
             {/* PROFİL FOTO START */}
             <View
               style={{
@@ -81,13 +81,19 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
             </View>
             {/* PROFİL FOTO START */}
 
-
             <View style={{ gap: 6 }}>
-              <TouchableOpacity disabled={user.access_token ? true : false} onPress={() => {
-                navigation.navigate('Login');
-                setIsDrawerOpen(false);
-              }}>
-                <Text style={{ color: '#333', fontWeight: '600', fontSize: 13 }}>{user.access_token ? namFromGetUser.name : 'Giriş Yap'}</Text>
+              <TouchableOpacity
+                disabled={user.access_token ? true : false}
+                onPress={() => {
+                  navigation.navigate("Login");
+                  setIsDrawerOpen(false);
+                }}
+              >
+                <Text
+                  style={{ color: "#333", fontWeight: "600", fontSize: 13 }}
+                >
+                  {user.access_token ? namFromGetUser.name : "Giriş Yap"}
+                </Text>
               </TouchableOpacity>
 
               <TouchableOpacity>
@@ -96,62 +102,118 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
             </View>
           </View>
         </View>
-        <View style={{ width: '100%', alignItems: 'center' }}>
-          <View style={{ width: '85%', backgroundColor: '#C4C4C4', padding: 0.5 }} />
+        <View style={{ width: "100%", alignItems: "center" }}>
+          <View
+            style={{ width: "85%", backgroundColor: "#C4C4C4", padding: 0.5 }}
+          />
         </View>
-        <View style={{ width: '100%', alignItems: 'center' }}>
-          <View style={{ width: '80%' }}>
+        <View style={{ width: "100%", alignItems: "center" }}>
+          <View style={{ width: "80%" }}>
             <Search setIsDrawerOpen={setIsDrawerOpen} />
           </View>
         </View>
 
         {/* ARA ÇİZGİ ÖGESİ START */}
-        <View style={{ width: '100%', alignItems: 'center' }}>
-          <View style={{ width: '85%', backgroundColor: '#C4C4C4', padding: 0.5 }} />
+        <View style={{ width: "100%", alignItems: "center" }}>
+          <View
+            style={{ width: "85%", backgroundColor: "#C4C4C4", padding: 0.5 }}
+          />
         </View>
         {/* ARA ÇİZGİ ÖGESİ END */}
 
-
-        <View style={{ width: '100%', alignItems: 'center', gap: 10 }}>
-
+        <View style={{ width: "100%", alignItems: "center", gap: 10 }}>
           {/* GRİ ALAN START */}
-          <View style={{ backgroundColor: '#F7F7F7', padding: 10, width: '85%', borderRadius: 8 }}>
-            <TouchableOpacity onPress={() => navigateToScreen('RealtorClubExplore')}>
-              <Categories category={'Emlak Kulüp'} iconName={'hand-coin'} />
+          <View
+            style={{
+              backgroundColor: "#F7F7F7",
+              padding: 10,
+              width: "85%",
+              borderRadius: 8,
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => navigateToScreen("RealtorClubExplore")}
+            >
+              <Categories category={"Emlak Kulüp"} iconName={"hand-coin"} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigateToScreen('')}>
-              <Categories category={'Gayrimenkul Ligi'} iconName={'trophy-variant'} />
+            <TouchableOpacity onPress={() => navigateToScreen("")}>
+              <Categories
+                category={"Gayrimenkul Ligi"}
+                iconName={"trophy-variant"}
+              />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigateToScreen('')}>
-              <Categories category={'Paylaşımlı İlanlar'} iconName={'handshake'} />
+            <TouchableOpacity onPress={() => navigateToScreen("")}>
+              <Categories
+                category={"Paylaşımlı İlanlar"}
+                iconName={"handshake"}
+              />
             </TouchableOpacity>
           </View>
           {/* GRİ ALAN END */}
 
-
-          <View style={{ width: '100%', alignItems: 'center' }}>
+          <View style={{ width: "100%", alignItems: "center" }}>
             {/* İLAN VER BUTONU START */}
-            <TouchableOpacity style={{ backgroundColor: '#EA2C2E', width: '85%', padding: 10, borderRadius: 10, flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center' }}
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#EA2C2E",
+                width: "85%",
+                padding: 10,
+                borderRadius: 10,
+                flexDirection: "row",
+                gap: 8,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
               onPress={() => {
                 setIsDrawerOpen(false);
-                navigation.navigate('ShareAdvert');
-              }}>
-              <IconAntDesign name="plus" color={'white'} size={18} />
-              <Text style={{ color: 'white', fontWeight: '600' }}>İlan Ver</Text>
+                navigation.navigate("ShareAdvert");
+              }}
+            >
+              <IconAntDesign name="plus" color={"white"} size={18} />
+              <Text style={{ color: "white", fontWeight: "600" }}>
+                İlan Ver
+              </Text>
             </TouchableOpacity>
             {/* İLAN VER BUTONU END */}
           </View>
         </View>
 
         {/* MÜŞTERİ HİZMETLERİ ALANI START */}
-        <View style={{ alignItems: 'center' }}>
-          <TouchableOpacity style={{ backgroundColor: '#FFF3F2', flexDirection: 'row', alignItems: 'center', width: '85%', justifyContent: 'center', gap: 10, padding: 8, borderRadius: 8 }}>
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#FFF3F2",
+              flexDirection: "row",
+              alignItems: "center",
+              width: "85%",
+              justifyContent: "center",
+              gap: 10,
+              padding: 8,
+              borderRadius: 8,
+            }}
+          >
             <View>
-              <Icon name="headset" size={30} color={'#EA2C2E'} />
+              <Icon name="headset" size={30} color={"#EA2C2E"} />
             </View>
             <View style={{ gap: 5 }}>
-              <Text style={{ color: '#EA2C2E', fontWeight: '400', letterSpacing: 1 }}>Müşteri Hizmetleri</Text>
-              <Text style={{ color: '#EA2C2E', fontWeight: '400', letterSpacing: 1 }}>444 3 284 </Text>
+              <Text
+                style={{
+                  color: "#EA2C2E",
+                  fontWeight: "400",
+                  letterSpacing: 1,
+                }}
+              >
+                Müşteri Hizmetleri
+              </Text>
+              <Text
+                style={{
+                  color: "#EA2C2E",
+                  fontWeight: "400",
+                  letterSpacing: 1,
+                }}
+              >
+                444 3 284{" "}
+              </Text>
             </View>
           </TouchableOpacity>
         </View>

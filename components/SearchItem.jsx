@@ -1,18 +1,14 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import React from "react";
 
 export default function SearchItem({ name = "Item Name", photo, onPress }) {
   console.log(photo);
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <View style={styles.innerContainer}>
-        {photo && (
-          <Image source={{ uri: photo }} style={styles.photo} />
-        )}
+        {photo && <Image source={{ uri: photo }} style={styles.photo} />}
         <View style={styles.textWrapper}>
-          <Text style={styles.itemText}>
-            {name}
-          </Text>
+          <Text style={styles.itemText}>{name}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -22,12 +18,12 @@ export default function SearchItem({ name = "Item Name", photo, onPress }) {
 const styles = StyleSheet.create({
   container: {
     borderBottomWidth: 1,
-    borderBottomColor: '#ebebeb',
+    borderBottomColor: "#ebebeb",
     paddingVertical: 10,
   },
   innerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   photo: {
     width: 30,
@@ -41,8 +37,8 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 12,
-    fontWeight: '500',
-    color: '#333',
-    flexWrap: 'wrap',
+    fontWeight: "500",
+    color: "#333",
+    flexWrap: "wrap",
   },
 });

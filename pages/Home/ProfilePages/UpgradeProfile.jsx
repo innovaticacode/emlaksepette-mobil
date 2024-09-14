@@ -872,7 +872,8 @@ export default function UpgradeProfile() {
                             Dialog.show({
                               type: ALERT_TYPE.WARNING,
                               title: "Dosya Yükleyiniz",
-                              textBody: "Aşağıda örnek belge formatı bulunmaktadır.",
+                              textBody:
+                                "Aşağıda örnek belge formatı bulunmaktadır.",
                               button: "Tamam",
                             });
                           }
