@@ -78,20 +78,13 @@ export default function SeeNeigbourhood() {
                 />
               ))
             ) : (
-              <View style={styles.noDataContainer}>
-                <View style={styles.iconContainer}>
-                  <Icon name="users-slash" size={35} color={"#EA2A28"} />
-                </View>
-                <Text style={styles.noDataText}>
+              <View style={styles.noCommentsContainer}>
+                  <Icon name="users-slash" size={62} color="#333" style={{ marginBottom: 20 }} />
+                <Text style={styles.noCommentsText}>
                   Henüz Komşumu Gör Bilgisi Satın Almadınız.
                 </Text>
-                <Text style={styles.adviceText}>
-                  Komşularınızı eklemek için ilanlarda ki komşumu gör özelliğini
-                  kullanabilirsiniz. Ayrıca, etrafınızdaki komşuları görmek için
-                  "Keşfet" sayfasını ziyaret edin!
-                </Text>
                 <TouchableOpacity
-                  style={styles.button}
+                  style={styles.returnButton}
                   onPress={() => {
                     setLoading(true);
                     setTimeout(() => {
@@ -100,7 +93,7 @@ export default function SeeNeigbourhood() {
                     }, 700);
                   }}
                 >
-                  <Text style={styles.buttonText}>Anasayfaya Dön</Text>
+                  <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -117,6 +110,29 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F5F5F7",
     padding: 8,
+  },
+  noCommentsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: -62,
+  },
+  noCommentsText: {
+    fontSize: 18,
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  returnButton: {
+    backgroundColor: '#EA2B2E',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  returnButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   scrollViewContainer: {
     flexGrow: 1,
@@ -154,32 +170,5 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  noDataText: {
-    color: "grey",
-    fontSize: 18,
-    fontWeight: "600",
-    textAlign: "center",
-    marginVertical: 10,
-  },
-  button: {
-    backgroundColor: "#EA2A28",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  adviceText: {
-    color: "grey",
-    fontSize: 14,
-    textAlign: "center",
-    marginVertical: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingBottom:10,
-  },
+
 });
