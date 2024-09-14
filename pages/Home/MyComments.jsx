@@ -86,13 +86,13 @@ export default function MyComments() {
       contentContainerStyle={{ gap: 10, padding: 10, flexGrow: 1 }}
       style={styles.scrollView}
     >
-      {comments.length === 0 ? (
+      {comments.length == 0 ? (
         <View style={styles.noCommentsContainer}>
           <FontAwesome5Icon name="comments" size={64} color="#333" style={{ marginBottom: 20 }} />
           <Text style={styles.noCommentsText}>Henüz bir değerlendirme yapmadınız.</Text>
           <TouchableOpacity
             style={styles.returnButton}
-            onPress={() => nav.navigate('Home')} // Ana sayfaya yönlendirme
+            onPress={() => nav.navigate('HomePage')} // Ana sayfaya yönlendirme
           >
             <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
           </TouchableOpacity>

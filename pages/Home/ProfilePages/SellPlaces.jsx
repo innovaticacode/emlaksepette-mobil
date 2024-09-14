@@ -49,7 +49,7 @@ export default function SellPlaces({ data }) {
           :
           <ScrollView style={{ backgroundColor: '#fff' }} contentContainerStyle={{ padding: 10, flexGrow: 1 }}>
             {
-              Places.length === 0 ? (
+              Places.length == 0 ? (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
                   {/* İkon */}
                   <Icon name="store-off-outline" size={64} color="#333" style={{ marginBottom: 20 }} />
@@ -67,7 +67,7 @@ export default function SellPlaces({ data }) {
                       paddingHorizontal: 20,
                       borderRadius: 8
                     }}
-                    onPress={() => navigation.navigate('Home')}  // 'Home' rotasına yönlendirme
+                    onPress={() => navigation.navigate('HomePage')}  // 'Home' rotasına yönlendirme
                   >
                     <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>Anasayfaya Dön</Text>
                   </TouchableOpacity>
