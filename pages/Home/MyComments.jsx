@@ -88,7 +88,7 @@ export default function MyComments() {
     >
       {comments.length == 0 ? (
         <View style={styles.noCommentsContainer}>
-          <FontAwesome5Icon name="comments" size={64} color="#333" style={{ marginBottom: 20 }} />
+          <FontAwesome5Icon name="comments" size={62} color="#333" style={{ marginBottom: 20 }} />
           <Text style={styles.noCommentsText}>Henüz bir değerlendirme yapmadınız.</Text>
           <TouchableOpacity
             style={styles.returnButton}
@@ -148,8 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    
+    marginTop: -62,
   },
   noCommentsText: {
     fontSize: 18,
@@ -158,7 +157,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   returnButton: {
-    backgroundColor: '#EA2A28',
+    backgroundColor: '#EA2B2E',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,

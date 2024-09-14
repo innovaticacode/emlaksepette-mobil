@@ -371,7 +371,7 @@ export default function Basket() {
             <Header onPress={toggleDrawer} index={setindex} tab={settab} />
           </View>
 
-        
+
           <Modal
             isVisible={isDrawerOpen}
             onBackdropPress={() => setIsDrawerOpen(false)}
@@ -382,10 +382,10 @@ export default function Basket() {
             style={styles.modal}
           >
             <View style={styles.modalContent}>
-           
-                <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-             
-             
+
+              <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
+
+
             </View>
           </Modal>
 
@@ -689,15 +689,15 @@ export default function Basket() {
                           {" "}
                           {isInstallament == 2
                             ? formatAmount(
-                                (Cart?.installmentPrice *
-                                  offerControl?.project?.deposit_rate) /
-                                  100
-                              )
+                              (Cart?.installmentPrice *
+                                offerControl?.project?.deposit_rate) /
+                              100
+                            )
                             : formatAmount(
-                                (Cart?.amount *
-                                  offerControl?.project?.deposit_rate) /
-                                  100
-                              )}{" "}
+                              (Cart?.amount *
+                                offerControl?.project?.deposit_rate) /
+                              100
+                            )}{" "}
                           ₺
                         </Text>
                       </View>
@@ -880,14 +880,14 @@ export default function Basket() {
                           formatAmount(
                             (Cart?.amount *
                               offerControl?.project?.deposit_rate) /
-                              100
+                            100
                           )}
                         {isInstallament == 2 &&
                           type?.type == "project" &&
                           addDotEveryThreeDigits(
                             (Cart?.installmentPrice *
                               offerControl?.project?.deposit_rate) /
-                              100
+                            100
                           )}
                         {type?.type == "housing" &&
                           saleType == "kiralik" &&
@@ -936,56 +936,23 @@ export default function Basket() {
               </ScrollView>
             </TouchableWithoutFeedback>
           ) : (
-            <View
-              style={{
-                height: "90%",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 10,
-              }}
-            >
-              <View
-                style={[
-                  styles.card,
-                  { alignItems: "center", justifyContent: "center" },
-                ]}
+            <View style={styles.noCommentsContainer}>
+              <Icon2 name="basket-plus" size={62} color="#333" />
+              <Text style={styles.noCommentsText}>
+                Sepetinizde ilan bulunmamaktadır.
+              </Text>
+              <TouchableOpacity
+                style={styles.returnButton}
+                onPress={() => {
+                  setLoading(true);
+                  setTimeout(() => {
+                    nav.navigate("HomePage");
+                    setLoading(false);
+                  }, 700);
+                }}
               >
-                <Icon2 name="basket-plus" size={50} color={"#EA2A28"} />
-              </View>
-              <View>
-                <Text
-                  style={{ color: "grey", fontSize: 16, fontWeight: "600" }}
-                >
-                  Sepetinizde ilan bulunmamaktadır
-                </Text>
-              </View>
-              <View style={{ width: "100%", alignItems: "center" }}>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#EA2A28",
-                    width: "90%",
-                    padding: 8,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    setLoading(true);
-                    setTimeout(() => {
-                      nav.navigate("HomePage");
-                      setLoading(false);
-                    }, 700);
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#ffffff",
-                      fontWeight: "600",
-                      textAlign: "center",
-                    }}
-                  >
-                    Ana Sayfa'ya dön
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
+              </TouchableOpacity>
             </View>
           )}
         </SafeAreaView>
@@ -1002,6 +969,31 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     gap: 10,
   },
+  noCommentsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: -62,
+  },
+  noCommentsText: {
+    fontSize: 18,
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  returnButton: {
+    backgroundColor: '#EA2B2E',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 18,
+  },
+  returnButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+ 
   acceptCart: {
     width: "100%",
     marginTop: 10,
