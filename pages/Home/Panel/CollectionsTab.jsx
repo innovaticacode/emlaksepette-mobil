@@ -97,7 +97,7 @@ export default function CollectionsTab() {
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Link Kopyalama Başarılı",
-        textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi') ?  `${colectionName} Adlı Portföyünüzün Linki Kopyalandı`:`${colectionName} Adlı Koleksiyonunuzun Linki Kopyalandı`,
+        textBody: (user.type == 2 && user.corporate_type == 'Emlak Ofisi') ? `${colectionName} Adlı Portföyünüzün Linki Kopyalandı` : `${colectionName} Adlı Koleksiyonunuzun Linki Kopyalandı`,
         button: "Tamam",
       });
     }, 200);
@@ -149,8 +149,8 @@ export default function CollectionsTab() {
     // Aksi takdirde, collections array'ini olduğu gibi bırak
     const filteredData = text
       ? collections.filter((item) =>
-          item.name.toLowerCase().includes(text.toLowerCase())
-        )
+        item.name.toLowerCase().includes(text.toLowerCase())
+      )
       : collections;
     setcollectionsRecods(filteredData);
 
@@ -193,13 +193,13 @@ export default function CollectionsTab() {
   useEffect(() => {
     fetchData();
   }, [user]);
-console.log(user.access_token)
+  console.log(user.access_token)
   const [selectedCollection, setselectedCollection] = useState(0);
   const [colectionName, setcolectionName] = useState("");
   const [item, setitem] = useState(null);
   const getId = (id, name, item) => {
     setselectedCollection(id);
-setcolectionName(name)
+    setcolectionName(name)
     setnewName(name);
     setitem(item);
   };
@@ -223,7 +223,7 @@ setcolectionName(name)
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Koleksiyon Silindi",
-        textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${colectionName} Adlı Portföy başarıyla silindi` : `${colectionName} Adlı koleksiyonunuz başarıyla silindi`,
+        textBody: (user.type == 2 && user.corporate_type == 'Emlak Ofisi') ? `${colectionName} Adlı Portföy başarıyla silindi` : `${colectionName} Adlı koleksiyonunuz başarıyla silindi`,
         button: "Tamam",
       });
       fetchData();
@@ -423,6 +423,7 @@ setcolectionName(name)
                   height: "100%",
                   gap: 10,
                   backgroundColor: "white",
+                  marginTop: -82,
                 }}
               >
                 <View
@@ -434,20 +435,14 @@ setcolectionName(name)
                   <Icon3 name="bookmark-add" size={50} color={"#EA2A28"} />
                 </View>
                 <View>
-                  <Text
-                    style={{ color: "grey", fontSize: 16, fontWeight: "600" }}
-                  >
-                    Koleksiyonunuzda ilan bulunmamaktadır
+                  <Text style={styles.noCommentsText}>
+                    Koleksiyonunuzda ilan bulunmamaktadır.
                   </Text>
+                  <Text></Text>
                 </View>
                 <View style={{ width: "100%", alignItems: "center" }}>
                   <TouchableOpacity
-                    style={{
-                      backgroundColor: "#EA2A28",
-                      width: "90%",
-                      padding: 8,
-                      borderRadius: 5,
-                    }}
+                    style={styles.returnButton}
                     onPress={() => {
                       setloading(true);
                       setTimeout(() => {
@@ -456,14 +451,8 @@ setcolectionName(name)
                       }, 700);
                     }}
                   >
-                    <Text
-                      style={{
-                        color: "#ffffff",
-                        fontWeight: "600",
-                        textAlign: "center",
-                      }}
-                    >
-                      Ana Sayfa'ya dön
+                    <Text style={styles.returnButtonText}>
+                      Anasayfaya Dön
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -472,8 +461,8 @@ setcolectionName(name)
           ) : (
             <AlertNotificationRoot>
               {namFromGetUser.has_club == 0 ||
-              namFromGetUser.has_club == 2 ||
-              namFromGetUser.has_club == 3 ? (
+                namFromGetUser.has_club == 2 ||
+                namFromGetUser.has_club == 3 ? (
                 <RegisterRealtorClub />
               ) : (
                 <View style={styles.container}>
@@ -488,7 +477,7 @@ setcolectionName(name)
                         textAlign: "center",
                         margin: 5,
                       }}
-                      title={(user.type==2 && user.corporate_type=='Emlak Ofisi' ? `${CollectionsRemoveIds.length} Seçili Portföyü silmek istediğinize emin misin`:`${CollectionsRemoveIds.length} Seçili Koleksiyonu silmek istediğinize emin misin`)  }
+                      title={(user.type == 2 && user.corporate_type == 'Emlak Ofisi' ? `${CollectionsRemoveIds.length} Seçili Portföyü silmek istediğinize emin misin` : `${CollectionsRemoveIds.length} Seçili Koleksiyonu silmek istediğinize emin misin`)}
                       messageStyle={{ textAlign: "center" }}
                       closeOnTouchOutside={true}
                       closeOnHardwareBackPress={false}
@@ -523,7 +512,7 @@ setcolectionName(name)
                         textAlign: "center",
                         margin: 5,
                       }}
-                      title={(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${colectionName} adlı Portföyünüzü silmek istediğinize eminmisiniz?`  :  `${colectionName} adlı koleksiyonu silmek istediğinize eminmisiniz?`}
+                      title={(user.type == 2 && user.corporate_type == 'Emlak Ofisi') ? `${colectionName} adlı Portföyünüzü silmek istediğinize eminmisiniz?` : `${colectionName} adlı koleksiyonu silmek istediğinize eminmisiniz?`}
                       messageStyle={{ textAlign: "center" }}
                       closeOnTouchOutside={true}
                       closeOnHardwareBackPress={false}
@@ -559,7 +548,7 @@ setcolectionName(name)
                         margin: 5,
                       }}
                       title={"Tümünü Sil"}
-                      message={user.type==2 && user.corporate_type=='Emlak Ofisi' ? 'Tüm Portföyleri silmek istediğinize emin misiniz': "Tüm koleksiyonları silmek istediğinize emin misiniz?"} 
+                      message={user.type == 2 && user.corporate_type == 'Emlak Ofisi' ? 'Tüm Portföyleri silmek istediğinize emin misiniz' : "Tüm koleksiyonları silmek istediğinize emin misiniz?"}
                       messageStyle={{ textAlign: "center" }}
                       closeOnTouchOutside={true}
                       closeOnHardwareBackPress={false}
@@ -633,7 +622,7 @@ setcolectionName(name)
                                 height: "110%",
                                 borderBottomColor: "#bebebe26",
                               }}
-                              placeholder= {user.type==2 && user.corporate_type=='Emlak Ofisi'? 'Portföy Ara': "Koleksiyon Ara..." } 
+                              placeholder={user.type == 2 && user.corporate_type == 'Emlak Ofisi' ? 'Portföy Ara' : "Koleksiyon Ara..."}
                               inputStyle={{ fontSize: 15 }}
                               showLoading={false}
                               searchIcon={{ color: "#CCCCCC" }}
@@ -734,7 +723,7 @@ setcolectionName(name)
                                     Dialog.show({
                                       type: ALERT_TYPE.WARNING,
                                       title: "Lütfen seçiniz",
-                                      textBody: (user.type==2 && user.corporate_type=='Emlak Ofisi' )?'Silmek istediğiniz Portföyleri seçiniz' :`Silmek istediğiniz koleksiyonları seçiniz`,
+                                      textBody: (user.type == 2 && user.corporate_type == 'Emlak Ofisi') ? 'Silmek istediğiniz Portföyleri seçiniz' : `Silmek istediğiniz koleksiyonları seçiniz`,
                                       button: "Tamam",
                                     });
                                   } else {
@@ -1003,11 +992,11 @@ setcolectionName(name)
                               }}
                             >
                               {
-                                (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                                'Portföy Adını Düzenle':
-                                'Koleksiyon Adını Düzenle'
+                                (user.type == 2 && user.corporate_type == 'Emlak Ofisi') ?
+                                  'Portföy Adını Düzenle' :
+                                  'Koleksiyon Adını Düzenle'
                               }
-                            
+
                             </Text>
                           </TouchableOpacity>
                           <TouchableOpacity
@@ -1035,12 +1024,12 @@ setcolectionName(name)
                                 fontWeight: "700",
                               }}
                             >
-                               {
-                                (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                                'Portföyü Sil':
-                                'Koleksiyonu Sil'
+                              {
+                                (user.type == 2 && user.corporate_type == 'Emlak Ofisi') ?
+                                  'Portföyü Sil' :
+                                  'Koleksiyonu Sil'
                               }
-                         
+
                             </Text>
                           </TouchableOpacity>
                         </View>
@@ -1067,11 +1056,11 @@ setcolectionName(name)
                             }}
                           >
                             {
-                              (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
-                              'Portföy Adını Değiştir':
-                              'Koleksiyon Adını Değiştir'
+                              (user.type == 2 && user.corporate_type == 'Emlak Ofisi') ?
+                                'Portföy Adını Değiştir' :
+                                'Koleksiyon Adını Değiştir'
                             }
-                            
+
                           </Text>
                           <TouchableOpacity
                             style={styles.closeButton}
@@ -1107,11 +1096,11 @@ setcolectionName(name)
                             <Text>
                               {" "}
                               {
-                                (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
-                                'Oluşturduğun Portföyü paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir.':
-                                'Oluşturduğun Koleksiyonu paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir.'
+                                (user.type == 2 && user.corporate_type == 'Emlak Ofisi') ?
+                                  'Oluşturduğun Portföyü paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir.' :
+                                  'Oluşturduğun Koleksiyonu paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir.'
                               }
-                            
+
                             </Text>
                           </Text>
                         </View>
@@ -1358,6 +1347,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     width: "100%",
     marginVertical: 0,
+  },
+  noCommentsText: {
+    fontSize: 18,
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  returnButton: {
+    backgroundColor: '#EA2A28',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  returnButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   closeButtonContainer: {
     flexDirection: "row",

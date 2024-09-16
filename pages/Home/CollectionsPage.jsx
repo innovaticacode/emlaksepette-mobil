@@ -486,7 +486,7 @@ export default function CollectionsPage() {
                   { alignItems: "center", justifyContent: "center" },
                 ]}
               >
-                <Icon3 name="bookmark-add" size={50} color={"#333"} />
+                <Icon3 name="bookmark-add" size={50} color={"#EA2A28"} />
               </View>
               <View>
               <Text style={styles.noCommentsText}>

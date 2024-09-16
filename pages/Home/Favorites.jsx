@@ -347,7 +347,7 @@ export default function Favorites() {
                     { alignItems: "center", justifyContent: "center" },
                   ]}
                 >
-                  <Icon name="heart-plus" size={50} color={"#333"} />
+                  <Icon name="heart-plus" size={50} color={"#EA2A28"} />
                 </View>
                 <View>
                 <Text style={styles.noCommentsText}>
