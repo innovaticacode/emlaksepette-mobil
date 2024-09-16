@@ -18,7 +18,7 @@ export default function SellPlaceItem({item}) {
     }}>
         <View style={{flex:0.5/2,alignItems:'center',justifyContent:'center'}}>
                 <View style={{width:90,height:90,}}>
-                        <Image source={{uri:`https://emlaksepette.com/storage/profile_images/${item.profile_image}`}} style={{width:'100%',height:'100%',borderRadius:8}}/>
+                        <Image source={{uri:`https://private.emlaksepette.com/storage/profile_images/${item.profile_image}`}} style={{width:'100%',height:'100%',borderRadius:8}}/>
                 </View>
         </View>
         <View style={{flex:1.5/2,padding:1,justifyContent:'center',paddingLeft:15}}>
