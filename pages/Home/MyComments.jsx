@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Entypo";
@@ -32,6 +33,11 @@ export default function MyComments() {
   const [selectedType, setSelectedType] = useState(null);
   const [selectedSource, setSelectedSource] = useState(null);
 
+  const [loading, setLoading] = useState(true); // Yüklenme animasyonu için
+  const [modalVisible, setModalVisible] = useState(false); // Modal görünürlüğü için
+  const [modalMessage, setModalMessage] = useState(""); // Başarı veya hata mesajı
+  const [deleteSuccess, setDeleteSuccess] = useState(null);
+
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
@@ -39,6 +45,7 @@ export default function MyComments() {
 
   const fetchData = async () => {
     try {
+      setLoading(true);
       if (user?.access_token) {
         const response = await axios.get(
           `https://private.emlaksepette.com/api/user/${user?.id}/comments`
@@ -52,6 +59,8 @@ export default function MyComments() {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -188,22 +197,30 @@ export default function MyComments() {
   const DeleteComment = async () => {
     try {
       if (user?.access_token) {
-        const response = await axios.post(
-          `https://private.emlaksepette.com/api/delete/comment/${selectedCommentID}`,
-
+        const response = await axios.delete(
+          `https://private.emlaksepette.com/api/delete/comment/${selectedCommentID}/${selectedType}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
             },
           }
         );
-        fetchData();
+        setDeleteSuccess(true); // İşlemin başarılı olduğunu kaydet
+        setModalMessage("Yorum başarıyla silindi!"); // Başarı mesajı
         setchoose(false);
+        fetchData();
       } else {
-        alert("Yorum boş");
+        setLoading(false);
+        setDeleteSuccess(false);
+        setModalMessage("Yorum bulunamadı.");
       }
     } catch (error) {
-      console.error("Post isteği olmadı", error);
+      setLoading(false); // Hata durumunda loading'i kapat
+      setDeleteSuccess(false); // İşlemin başarısız olduğunu kaydet
+      setModalMessage("Yorum silme işlemi başarısız oldu.");
+      console.error("Silme işlemi başarısız oldu", error);
+    } finally {
+      setModalVisible(true); // İşlem bittikten sonra modal açılır
     }
   };
 
@@ -215,14 +232,23 @@ export default function MyComments() {
       contentContainerStyle={{ gap: 10, padding: 10 }}
       style={styles.scrollView}
     >
-      {comments?.map((item, index) => (
-        <MycommentItem
-          key={index}
-          item={item}
-          EditComment={EditComment}
-          goToEditComment={() => goToEditComment(item)} // info'yu prop olarak gönderiyoruz
-        />
-      ))}
+      {loading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      ) : (
+        comments?.map((item, index) => (
+          <MycommentItem
+            key={index}
+            item={item}
+            EditComment={EditComment}
+            goToEditComment={() => goToEditComment(item)} // info'yu prop olarak gönderiyoruz
+          />
+        ))
+      )}
+
       <Modal
         isVisible={choose}
         style={styles.modal}
@@ -250,6 +276,56 @@ export default function MyComments() {
             >
               <Icon3 name="delete" size={21} color={"#EA2A28"} />
               <Text style={styles.modalOptionText}>Yorumu Sil</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      {/* Silme işlemi sonuçlandıktan sonra gösterilecek modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false); // Modal kapatılır
+        }}
+        style={{ margin: 0, padding: 0 }}
+      >
+        {/* Modalın tam ekranı kaplamasını sağlayan dış View */}
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          }}
+        >
+          {/* İçerik kutusu */}
+          <View
+            style={{
+              width: "80%", // Genişliği ekranın %80'i
+              padding: 20,
+              backgroundColor: "white",
+              borderRadius: 10,
+              alignItems: "center", // İçeriği merkezle
+            }}
+          >
+            <Text style={{ fontSize: 18, textAlign: "center" }}>
+              {modalMessage}
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)} // Modalı kapat
+              style={{
+                marginTop: 20,
+                padding: 10,
+                backgroundColor: deleteSuccess ? "green" : "red", // Başarı için yeşil, hata için kırmızı
+                borderRadius: 5,
+                width: "100%", // Buton genişliği %100
+                alignItems: "center", // Buton içeriğini ortala
+              }}
+            >
+              <Text style={{ color: "#fff", textAlign: "center" }}>Tamam</Text>
             </TouchableOpacity>
           </View>
         </View>

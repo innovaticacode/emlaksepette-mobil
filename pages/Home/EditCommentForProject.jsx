@@ -52,6 +52,7 @@ export default function EditCommentForProject() {
     imageSource,
   } = route.params;
   const [loading, setloading] = useState(false);
+  const [loading2, setloading2] = useState(false);
   const [UserImages, setUserImages] = useState([]);
   const [image, setImage] = useState([null, null, null]);
   const [imagesComment, setImagesComment] = useState([]);
@@ -136,11 +137,12 @@ export default function EditCommentForProject() {
     if (commentInfo?.images && typeof commentInfo.images === "string") {
       try {
         const parsedImages = JSON.parse(commentInfo.images);
+        console.log("Parsed Images:", parsedImages); // Ham veriyi kontrol edin
         if (Array.isArray(parsedImages)) {
           const updatedImages = parsedImages.map((img) => {
             const fixedUrl = img.replace("public/", "storage/");
             const fullUrl = `${API_URL}${fixedUrl}`;
-            console.log("Image URL:", fullUrl);
+            console.log("Image URL:", fullUrl); // URL'yi kontrol edin
             return fullUrl;
           });
           setImagesComment(updatedImages); // Resimleri state'e güncelleyin
@@ -249,21 +251,19 @@ export default function EditCommentForProject() {
     formData.append("type", type);
 
     // Resimleri ekleyin
-    const validImages = image.filter((img) => img); // Boş resimleri filtrele
-    if (validImages.length > 0) {
-      validImages.forEach((img, index) => {
+    imagesComment.forEach((img, index) => {
+      if (img) {
         formData.append(`images[${index}]`, {
           name: `image${index}.jpg`,
           type: "image/jpeg",
           uri: Platform.OS === "android" ? img : img.replace("file://", ""),
         });
-      });
-    } else {
-      formData.append("images", "[]"); // Eğer hiç resim yoksa boş array gönder
-    }
+      }
+    });
 
     try {
       if (user?.access_token && rating > 0) {
+        setloading2(true);
         const response = await axios.post(
           `https://private.emlaksepette.com/api/user/${user.id}/${info.id}/comments/${commentID}/update`,
           formData,
@@ -291,6 +291,8 @@ export default function EditCommentForProject() {
       }
     } catch (error) {
       console.error("Post isteği olmadı", error.response?.data || error);
+    } finally {
+      setloading2(false);
     }
   };
 
@@ -400,6 +402,19 @@ export default function EditCommentForProject() {
         </View>
       ) : (
         <>
+          {loading2 && (
+            <View
+              style={{
+                flex: 1, // Bu satırla alt kısımdaki boşluk giderilir
+                backgroundColor: "rgba(0, 0, 0, 0.5)", // Arka plan yarı saydam siyah
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 1000,
+              }}
+            >
+              <ActivityIndicator size="large" color="#fff" />
+            </View>
+          )}
           <View style={[style.card, { flexDirection: "row" }]}>
             <View style={style.Image}>
               <ImageBackground
