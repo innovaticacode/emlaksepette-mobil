@@ -79,9 +79,9 @@ export default function SeeNeigbourhood() {
               ))
             ) : (
               <View style={styles.noCommentsContainer}>
-                  <Icon name="users-slash" size={62} color="#333" style={{ marginBottom: 20 }} />
+                  <Icon name="users-slash" size={50} color="#333" style={{ marginBottom: 20 }} />
                 <Text style={styles.noCommentsText}>
-                  Henüz Komşumu Gör Bilgisi Satın Almadınız.
+                  Henüz Komşumu Gör bilgisi satın almadınız.
                 </Text>
                 <TouchableOpacity
                   style={styles.returnButton}

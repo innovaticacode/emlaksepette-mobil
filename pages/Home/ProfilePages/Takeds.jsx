@@ -89,19 +89,14 @@ export default function Takeds() {
               <Icon2 name="basket-plus" size={50} color={"#EA2A28"} />
             </View>
             <View>
-              <Text style={{ color: "grey", fontSize: 16, fontWeight: "600" }}>
-                Siparişiniz bulunmamaktadır
+              <Text style={style.noCommentsText}>
+                Siparişiniz bulunmamaktadır.
               </Text>
               <Text></Text>
             </View>
             <View style={{ width: "100%", alignItems: "center" }}>
               <TouchableOpacity
-                style={{
-                  backgroundColor: "#EA2A28",
-                  width: "90%",
-                  padding: 8,
-                  borderRadius: 5,
-                }}
+                style={style.returnButton}
                 onPress={() => {
                   setloading(true);
                   setTimeout(() => {
@@ -110,13 +105,7 @@ export default function Takeds() {
                   }, 700);
                 }}
               >
-                <Text
-                  style={{
-                    color: "#ffffff",
-                    fontWeight: "600",
-                    textAlign: "center",
-                  }}
-                >
+                <Text style={style.returnButtonText}>
                   İlanlara Göz At
                 </Text>
               </TouchableOpacity>
@@ -182,6 +171,23 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+  },
+  noCommentsText: {
+    fontSize: 18,
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  returnButton: {
+    backgroundColor: '#EA2B2E',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  returnButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   Navbar: {
     width: "100%",
