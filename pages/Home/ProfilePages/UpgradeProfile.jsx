@@ -7,9 +7,10 @@ import {
   ScrollView,
   Image,
   Alert,
+  Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { useRoute } from "@react-navigation/native";
+import { useIsFocused, useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/EvilIcons";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
@@ -33,7 +34,7 @@ import * as SecureStore from "expo-secure-store";
 import * as ImagePicker from "expo-image-picker";
 import ColorPicker from "react-native-wheel-color-picker";
 import { getValueFor } from "../../../components/methods/user";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker,PROVIDER_GOOGLE  } from "react-native-maps";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -57,17 +58,16 @@ export default function UpgradeProfile() {
   const [selectedCity, setSelectedCity] = useState(null);
   const [selectedCounty, setSelectedCounty] = useState(null);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
-  const [selectedLocation, setSelectedLocation] = useState(null);
+  
 
   const [openAccor, setopenAccor] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   const [file, setfile] = useState(null);
+ 
 
-  const [namFromGetUser, setnamFromGetUser] = useState({});
-  const [loading, setloading] = useState(false);
-  const [user, setUser] = useState({});
+ 
 
   useEffect(() => {
     (async () => {
@@ -174,10 +174,7 @@ export default function UpgradeProfile() {
     }
   };
 
-  useEffect(() => {
-    getValueFor("user", setUser);
-  }, []);
-  const [userImage, setuserImage] = useState(null);
+
 
   const formatPhoneNumber = (value) => {
     // Sadece rakamları al
@@ -208,10 +205,44 @@ export default function UpgradeProfile() {
     return formattedNumber;
   };
 
-  useEffect(() => {
-    GetUserInfo();
-  }, [user]);
 
+  const [TaxOfficesCities, setTaxOfficesCities] = useState([])
+  const [TaxOffice, setTaxOffice] = useState([])
+  useEffect(() => {
+    const fetchTaxOfficeCity = async () => {
+      try {
+        const response = await axios.get(
+          "https://private.emlaksepette.com/api/get-tax-offices"
+        );
+        setTaxOfficesCities(response.data)
+      } catch (error) {
+        console.error("Hata:", error);
+        throw error;
+      }
+    };
+    fetchTaxOfficeCity()
+  }, [])
+ 
+  const uniqueCities = TaxOfficesCities
+  .map(city => ({ label: city.il, value: city.plaka })) // Şehir isimlerini ve plakalarını map'le
+  .filter((city, index, self) => 
+    index === self.findIndex((c) => c.label === city.label && c.value === city.value) // Benzersiz olmasını kontrol et
+  );
+  const fetchTaxOffice = async (value) => {
+    try {
+      const response = await axios.get(
+        `https://private.emlaksepette.com/api/get-tax-office/${value}`
+      );
+      setTaxOffice(response.data)
+    
+    } catch (error) {
+      console.error("Hata:", error);
+      throw error;
+    }
+  }; 
+  const onchangeTaxOffice=(value)=>{
+    fetchTaxOffice(value)
+  }
   useEffect(() => {
     const fetchCities = async () => {
       try {
@@ -227,10 +258,11 @@ export default function UpgradeProfile() {
     fetchCities();
   }, []);
 
-  const fetchCounties = async () => {
+    
+  const fetchCounties = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${selectedCity}`
+        `https://private.emlaksepette.com/api/counties/${value}`
       );
       setCounties(response.data.data);
       setSelectedCounty(null); // Seçili ilçe sıfırla
@@ -242,13 +274,13 @@ export default function UpgradeProfile() {
   };
   useEffect(() => {
     fetchCounties();
-  }, [selectedCity]);
-  const fetchNeighborhoods = async () => {
+  }, []);
+  const fetchNeighborhoods = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/neighborhoods/${selectedCounty}`
+        `https://private.emlaksepette.com/api/neighborhoods/${value}`
       );
-      console.log("Neighborhoods Response:", response.data); // Yanıtı kontrol et
+   // Yanıtı kontrol et
       setNeighborhoods(response.data.data);
       setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
     } catch (error) {
@@ -256,35 +288,38 @@ export default function UpgradeProfile() {
       Alert.alert("Error", "Could not load neighborhoods");
     }
   };
-  useEffect(() => {
-    fetchNeighborhoods();
-  }, [selectedCounty]);
+ 
 
   const onChangeCity = (value) => {
     setSelectedCity(value);
-    setSelectedCounty(null);
-    setSelectedNeighborhood(null);
-    setCounties([]);
-    setNeighborhoods([]);
-    if (value) {
-      fetchCounties(value);
-    }
+ setTimeout(() => {
+  if (value) {
+    fetchCounties(value);
+  }
+ }, 600);
+   
   };
 
   const onChangeCounty = (value) => {
-    setSelectedCounty(value);
-    setSelectedNeighborhood(null);
-    setNeighborhoods([]);
-    if (value) {
-      fetchNeighborhoods(value);
-    }
+
+    setTimeout(() => {
+      if (value) {
+        fetchNeighborhoods(value);
+      }
+    }, 900);
+  
   };
 
   const onChangeNeighborhood = (value) => {
-    setSelectedNeighborhood(value);
-    if (value) {
-    }
+  
+    setTimeout(() => {
+      if (value) {
+      
+      }
+    }, 800);
+   
   };
+
 
   const areaData = [
     { label: "İstanbul Avrupa (212)", value: 212 },
@@ -373,80 +408,21 @@ export default function UpgradeProfile() {
   ];
 
   const [openColorPicker, setopenColorPicker] = useState(false);
-  const [currentColor, setCurrentColor] = useState(user.banner_hex_code);
+
   const [swatchesOnly, setSwatchesOnly] = useState(false);
   const [swatchesLast, setSwatchesLast] = useState(false);
   const [swatchesEnabled, setSwatchesEnabled] = useState(true);
   const [disc, setDisc] = useState(false);
 
-  const onColorChange = (color) => {
-    setData("backgroundColor", color);
-  };
+
   const onColorChangeComplete = (color) => {
     // Renk değişimi tamamlandığında burada istediğiniz işlemleri yapabilirsiniz
   };
-  useEffect(() => {
-    setCurrentColor(user?.banner_hex_code);
-  }, [user]);
+  
 
-  const [FormDatas, setFormDatas] = useState({
-    backgroundColor: null,
-    storeName: "",
-    tradeName: null,
-    userName: "",
-    name: "",
-    authorityLicence: null,
-    Iban: null,
-    webSiteLink: null,
-    areaCode: null,
-    companyPhone: null,
-    SectorYear: null,
 
-    taxOfficeCity: null,
-    taxOffice: null,
-    taxNumber: null,
 
-    oldPhone: null,
-    newPhone: null,
-    fileForPhone: null,
 
-    // Diğer form alanları buraya eklenebilir
-  });
-
-  const setData = (key, value) => {
-    setFormDatas((prevState) => ({
-      ...prevState,
-      [key]: value,
-    }));
-  };
-
-  const updateUserData = async () => {
-    try {
-      const updateResponse = await axios.get(
-        "https://private.emlaksepette.com/api/users/" + user?.id,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
-
-      // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
-      const updatedUser = {
-        ...user,
-        ...updateResponse.data.user,
-        access_token: user.access_token, // access token'ı koruma
-      };
-
-      // Kullanıcı durumunu güncelleme
-      setUser(updatedUser);
-
-      // SecureStore ile güncellenmiş kullanıcı verilerini kaydetme
-      await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
-    } catch (error) {
-      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
-    }
-  };
   const handleIbanChange = (text) => {
     // Harf ve rakamlardan başka karakterlerin girişini engelle
     text = text.replace(/[^A-Za-z0-9]/g, "");
@@ -464,67 +440,7 @@ export default function UpgradeProfile() {
     setData("Iban", formattedText);
   };
 
-  const checkInput = () => {
-    if (tab === 0) {
-      if (FormDatas.userName.length === 0 || FormDatas.Iban.length < 29) {
-        Dialog.show({
-          type: ALERT_TYPE.WARNING,
-          title: "Hata",
-          textBody: "Lütfen boş alan bırakmayın.",
-          button: "Tamam",
-        });
-      } else {
-        postData();
-      }
-    } else if (tab === 1) {
-      if (
-        FormDatas?.newPhone?.length < 15 ||
-        FormDatas.oldPhone.length < 15 ||
-        file == null
-      ) {
-        Dialog.show({
-          type: ALERT_TYPE.WARNING,
-          title: "Hata",
-          textBody: "Lütfen girdiğiniz numaraları kontrol ediniz.",
-          button: "Tamam",
-        });
-      } else {
-        postData();
-      }
-    } else if (user.role === "Kurumsal Hesap") {
-      if (tab === 2) {
-        if (
-          FormDatas?.companyName?.length === 0 ||
-          FormDatas?.Iban?.length < 29 ||
-          FormDatas?.SectorYear?.length === 0
-        ) {
-          Dialog.show({
-            type: ALERT_TYPE.WARNING,
-            title: "Hata",
-            textBody: "Lütfen boş alan bırakmayınız.",
-            button: "Tamam",
-          });
-        } else {
-          postData();
-        }
-      } else if (tab === 3) {
-        if (
-          selectedCity == null ||
-          selectedCounty == null ||
-          selectedNeighborhood == null
-        ) {
-          Dialog.show({
-            type: ALERT_TYPE.WARNING,
-            title: "Hata!",
-            textBody: "Lütfen il ilçe bilgileri giriniz.",
-            button: "Tamam",
-          });
-        } else {
-          postData();
-        }
-      }
-    }
-  };
+
 
   const postData = async () => {
     try {
@@ -614,58 +530,190 @@ export default function UpgradeProfile() {
   };
 
   const [chooseFile, setchooseFile] = useState(false);
-  const GetUserInfo = async () => {
-    setloading(true);
-    try {
-      if (user.access_token && user.id) {
-        const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
-        const userData = userInfo?.data?.user;
-        setnamFromGetUser(userInfo?.data?.user);
-      }
-    } catch (error) {
-      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
-    } finally {
-      setloading(false);
-    }
+
+
+  const initialFormData = {
+    name: '',
+    mobile_phone: '',
+    new_phone_number: '',
+    store_name: '',
+    username: '',
+    authority_licence: '',
+    iban: '',
+    website: '',
+    phone: '',
+    year: '',
+    city_id: '',
+    county_id: '',
+    neighborhood_id: '',
+    taxOfficeCity: '',
+    taxOffice: '',
+    taxNumber: '',
   };
-  useEffect(() => {
-    const formattedPhoneNumber = formatPhoneNumber(namFromGetUser.phone);
-    setData("storeName", namFromGetUser?.name);
-    setData("tradeName", namFromGetUser?.store_name);
-    setData("userName", namFromGetUser?.username);
-    setData("authorityLicence", namFromGetUser?.authority_licence);
-    setData("Iban", namFromGetUser?.iban);
-    setData("webSiteLink", namFromGetUser?.website);
-    setData("companyPhone", namFromGetUser?.phone);
-    setData("areaCode", namFromGetUser?.area_code);
-    setData("SectorYear", namFromGetUser?.year);
-    setData("backgroundColor", namFromGetUser.banner_hex_code);
-    setSelectedCity(namFromGetUser.city_id);
-    setSelectedCounty(namFromGetUser.county_id);
-    setSelectedNeighborhood(namFromGetUser.neighborhood_id);
-  }, [namFromGetUser]);
-  const initialFormData = Forms.reduce((acc, field) => {
-    acc[field.key] = '';
-    return acc;
-  }, {});
 
   const [formData, setFormData] = useState(initialFormData);
+  const [loading, setLoading] = useState(false); // Yüklenme durumu
+  const formatIban = (text) => {
+    // Sadece harfleri ve rakamları içeren bir metin oluştur
+    const cleanedText = text.replace(/[^a-zA-Z0-9]/g, '');
+
+    // Eğer metin TR ile başlamıyorsa başa ekle
+    let formattedText = cleanedText.startsWith('TR') ? cleanedText : 'TR' + cleanedText;
+
+    // TR sonrası sadece rakamlar olmalı
+    formattedText = formattedText.replace(/[^0-9]/g, '');
+
+    // İlk iki rakam TR'den sonra gelecek
+    const firstTwo = formattedText.slice(0, 2);
+    // Sonraki rakamlar dörderli gruplara ayrılacak
+    const rest = formattedText.slice(2);
+
+    // IBAN'ı 4 haneli bloklar halinde gruplandır
+    let groups = [];
+    for (let i = 0; i < rest.length; i += 4) {
+      groups.push(rest.substring(i, i + 4));
+    }
+
+    // Gruplandırılmış metni birleştir ve başına 'TR' ve ilk iki rakamı ekle
+    let finalIban = `TR${firstTwo} ${groups.join(' ')}`.trim();
+
+    // IBAN maksimum 32 karakter uzunluğunda olmalı (TR dahil)
+    return finalIban.substring(0, 32);
+  };
+
+
+ 
 
   const handleInputChange = (key, value) => {
     setFormData({ ...formData, [key]: value });
+    if (key=='city_id') {
+      onChangeCity(key)
+    }
+   
+   
   };
+  const [user, setUser] = useState({});
+const [namFromGetUser, setnamFromGetUser] = useState({});
+const [currentColor, setCurrentColor] = useState('');
 
-  const handleSubmit = () => {
-    // Form gönderme işlemi
-    console.log('Form Data:', formData);
-  };
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
+  
+ 
+ 
+  useEffect(() => {
+    const GetUserInfo = async () => {
+      setLoading(true);
+      try {
+        if (user.access_token) {
+          const userInfo = await axios.get(
+            `https://private.emlaksepette.com/api/users/${user.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${user.access_token}`,
+              },
+            }
+          );
+          
+          setnamFromGetUser(userInfo?.data?.user);
+        }
+      } catch (error) {
+        console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    if (user.access_token) {
+      // Eğer user bilgileri geldiyse, GetUserInfo fonksiyonunu çalıştır
+      GetUserInfo();
+    }
+  }, [user]);
+  
+  // namFromGetUser güncellendiğinde form verilerini ve rengi güncelle
+
+  useEffect(() => {
+    
+    if (Object.keys(namFromGetUser).length > 0) {
+      setFormData({
+        name: namFromGetUser.name || '',
+        mobile_phone: namFromGetUser.mobile_phone || '',
+        new_phone_number: namFromGetUser.new_phone_number || '',
+        store_name: namFromGetUser.store_name || '',
+        username: namFromGetUser.username || '',
+        authority_licence: namFromGetUser.authority_licence || '',
+        iban: namFromGetUser.iban || '',
+        website: namFromGetUser.website || '',
+        phone: namFromGetUser.phone || '',
+        year: namFromGetUser.year || '',
+        city_id: namFromGetUser.city_id || '',
+        county_id: namFromGetUser.county_id || '',
+        neighborhood_id: namFromGetUser.neighborhood_id || '',
+        taxOfficeCity: namFromGetUser.taxOfficeCity || '',
+        taxOffice: namFromGetUser.taxOffice || '',
+        taxNumber: namFromGetUser.taxNumber || '',
+      });
+      setCurrentColor(namFromGetUser.banner_hex_code);
+  
+      setTimeout(() => {
+       
+        onChangeCity(namFromGetUser.city_id)
+        onChangeCounty(namFromGetUser.county_id )
+        onChangeNeighborhood(namFromGetUser.neighborhood_id)
+        onchangeTaxOffice(namFromGetUser.taxOfficeCity)
+        setlatitude(namFromGetUser.latitude)
+        setlongitude(namFromGetUser.longitude)
+      }, 500);
+    
+      
+    }
+  }, [namFromGetUser]);
+ 
+  
+  const onColorChange = (color) => {
+    setCurrentColor(color)
+   };
+  
+
+   const formattedTaxOfficePlace = TaxOffice.map((item) => ({
+    label: item.daire,
+    value: item.id.toString(), // id değerini string olarak çevirme
+  }));
+ 
+  const getItemsForKey = (key) => {
+    switch (key) {
+      case 'city_id':
+        return cities;
+      case 'county_id':
+        return counties;
+      case 'neighborhood_id':
+        return neighborhoods;
+        case 'taxOfficeCity':
+          return uniqueCities;
+          case 'taxOffice':
+            return formattedTaxOfficePlace;
+      default:
+        return [];
+    }
+  }
+  const [region, setRegion] = useState(null);
+  const [marker, setMarker] = useState(null);
+
+  
+  const [selectedLocation, setSelectedLocation] = useState(null);
+const [address, setAddress] = useState('');
+
+const handleSelectLocation = (event) => {
+  const { latitude, longitude } = event.nativeEvent.coordinate;
+  console.log('Selected coordinates:', latitude, longitude); // Koordinatları konsola yazdırın
+  setSelectedLocation({ latitude, longitude });
+ 
+};
+  const userLocation = user && { latitude: parseFloat(namFromGetUser?.latitude) == null ? latitude : parseFloat(namFromGetUser.latitude), longitude: parseFloat(namFromGetUser?.longitude) == null ? longitude:parseFloat(namFromGetUser.longitude) };
+  const [latitude, setLatitude] = useState(39.1667);
+  const [longitude, setLongitude] = useState(35.6667);
+  console.log(latitude)
   return (
     <AlertNotificationRoot>
       {loading ? (
@@ -675,14 +723,15 @@ export default function UpgradeProfile() {
           <ActivityIndicator size={"large"} color={user.banner_hex_code} />
         </View>
       ) : (
-        <KeyboardAwareScrollView
-          style={styles.container}
-          contentContainerStyle={{ gap: 20, paddingBottom: 40 }}
-        >
+     <ScrollView style={styles.container}
+     showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingBottom:40,gap:20}}
+     >
+    
           <View
             style={{
               width: "100%",
-              backgroundColor: FormDatas.backgroundColor,
+              backgroundColor: currentColor,
               padding: 15,
               alignItems: "center",
             }}
@@ -828,7 +877,7 @@ export default function UpgradeProfile() {
                         : "none",
                   }}
                 >
-           
+               
                   <View style={{ paddingLeft: 5 }}>
                     <Text style={styles.label}>{item.label}</Text>
                   </View>
@@ -837,7 +886,15 @@ export default function UpgradeProfile() {
                       <TextInput
                         style={styles.input}
                         value={formData[item.key]}
-                        onChangeText={(value) => handleInputChange(item.key, value)}
+                        onChangeText={(value) => {
+                          if (item.key === "iban") {
+                            // Eğer IBAN alanıysa formatlamayı uygula
+                            handleInputChange(item.key, formatIban(value));
+                          } else {
+                            // Diğer alanlar için normal input değişikliği
+                            handleInputChange(item.key, value);
+                          }
+                        }}
                       />
                     ) : (
                       <RNPickerSelect
@@ -849,17 +906,213 @@ export default function UpgradeProfile() {
                         }}
                         style={pickerSelectStyles}
                         onValueChange={(value) => {
-                          handleInputChange(item.key, value)
+                          handleInputChange(item.key, value);
+                          if (item.key === 'city_id') {
+                            onChangeCity(value); // Şehir seçilince ilçe verilerini almak için
+                          } else if (item.key === 'county_id') {
+                            onChangeCounty(value); // İlçe seçilince mahalle verilerini almak için
+                          } else if (item.key === 'neighborhood_id') {
+                            onChangeNeighborhood(value); // Mahalle seçimi
+                          }else if (item.key==='taxOfficeCity'){
+                            onchangeTaxOffice(value)
+                          }
                         }}
-                        items={cities}
+                        items={getItemsForKey(item.key)}
                       />
                     )}
                   </View>
                 </View>
               ))}
+                 { //Harita
+                    tab==3 &&
+                    <View style={{alignItems:'center',height:300,width:'100%'}}>
+                <MapView
+         style={{ width:'100%',height:'100%' }}
+         onPress={handleSelectLocation}
+         region={{
+           latitude: parseFloat(namFromGetUser?.latitude) == null ? parseFloat(latitude) : parseFloat(namFromGetUser.latitude) , // Türkiye'nin merkezi Ankara'nın enlemi
+           longitude:parseFloat(namFromGetUser?.longitude) == null ? parseFloat(longitude) : parseFloat(namFromGetUser.longitude), // Türkiye'nin merkezi Ankara'nın boylamı
+           latitudeDelta: 9, // Harita yakınlığı
+           longitudeDelta: 9,
+         }}
+       >
+                   {selectedLocation ? (
+               <Marker coordinate={selectedLocation} />
+             ) : (
+               <Marker coordinate={userLocation} />
+             )}
+       </MapView>
+                    </View>
+                  }
+                  {
+                    tab==1&&
+                    <>
+                       <View style={[styles.card, { gap: 10 }]}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setchooseFile(true);
+                      }}
+                    >
+                      <View
+                        style={{
+                          width: "100%",
+                          height: 150,
+                          borderWidth: 1,
+                          borderStyle: "dashed",
+                          borderColor: "#F27B7D",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          borderRadius: 9,
+                        }}
+                      >
+                        {file && !isLoading ? (
+                          <View style={{ width: "100%", height: "100%" }}>
+                            <Image
+                              source={{ uri: file }}
+                              style={{ width: "100%", height: "100%" }}
+                              borderRadius={9}
+                            />
+                          </View>
+                        ) : (
+                          <View
+                            style={{
+                              alignItems: "center",
+                              backgroundColor: "#FDEAEA",
+                              width: "100%",
+                              height: "100%",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Feather
+                              name="cloud-upload-outline"
+                              size={60}
+                              color={"#EA2B2E"}
+                            />
+                            <Text style={{ color: "#EA2B2E", fontSize: 13 }}>
+                              Dosyanızı buraya yükleyiniz
+                            </Text>
+                          </View>
+                        )}
+                      </View>
+                    </TouchableOpacity>
+                    {isLoading && (
+                      <View style={{ width: "100%" }}>
+                        <Progress.Bar
+                          color="#FDEAEA"
+                          height={20}
+                          progress={progress}
+                          width={null}
+                          style={{ flex: 1 }}
+                          animated={true}
+                          indeterminate={false}
+                          indeterminateAnimationDuration={1000}
+                        />
+                        <View
+                          style={{
+                            position: "absolute",
+                            right: 10,
+                            justifyContent: "center",
+                            top: 3,
+                          }}
+                        >
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              gap: 10,
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                              width: "100%",
+                            }}
+                          >
+                            <View style={{ paddingLeft: 30 }}>
+                              <Text style={{ color: "#333", fontSize: 10 }}>
+                                Belge Yükleniyor...
+                              </Text>
+                            </View>
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                gap: 5,
+                                alignItems: "center",
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  fontSize: 11,
+                                  color: "#333",
+                                  textAlign: "center",
+                                }}
+                              >
+                                {Math.round(progress * 100)}%
+                              </Text>
+                              <TouchableOpacity
+                                style={{}}
+                                hitSlop={{
+                                  top: 10,
+                                  bottom: 10,
+                                  left: 10,
+                                  right: 10,
+                                }}
+                              >
+                                <Icon name="close" size={17} color={"#333"} />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                    )}
+                    </View>
+                    <Collapse onToggle={() => setopenAccor(!openAccor)}>
+                    <CollapseHeader>
+                      <View
+                        style={[
+                          styles.card,
+                          {
+                            padding: 0,
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            paddingVertical: 10,
+                          },
+                        ]}
+                      >
+                        <Text style={{ color: "#333" }}>
+                          Yüklemeniz Gereken Belge Örneği
+                        </Text>
+                        <Arrow
+                          name={openAccor ? "arrow-down" : "arrow-right"}
+                          size={15}
+                          color={"grey"}
+                        />
+                      </View>
+                    </CollapseHeader>
+                    <CollapseBody style={{}}>
+                      <View
+                        style={[
+                          styles.card,
+                          {
+                            gap: 15,
+                            paddingHorizontal: 4,
+                            paddingVertical: 8,
+                            alignItems: "center",
+                          },
+                        ]}
+                      >
+                        <View style={{ width: 250, height: 200 }}>
+                          <Image
+                            source={{
+                              uri: "https://private.emlaksepette.com/images/phone-update-image/phonefile.jpg",
+                            }}
+                            style={{ width: "100%", height: "100%" }}
+                          />
+                        </View>
+                      </View>
+                    </CollapseBody>
+                  </Collapse>
+                    </>
+                  }
             </View>
           </View>
-
+       
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
               style={{
@@ -869,7 +1122,7 @@ export default function UpgradeProfile() {
                 padding: 10,
                 borderRadius: 10,
               }}
-              onPress={checkInput}
+            
             >
               <Text
                 style={{
@@ -1036,7 +1289,7 @@ export default function UpgradeProfile() {
               </View>
             </View>
           </Modal>
-        </KeyboardAwareScrollView>
+          </ScrollView>
       )}
     </AlertNotificationRoot>
   );
