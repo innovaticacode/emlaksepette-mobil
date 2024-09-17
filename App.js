@@ -109,8 +109,17 @@ import Onboard from "./pages/Home/Onboarding/Onboard";
 import { View } from "moti";
 import SplashScreen from "./pages/Home/Onboarding/SplashScreen";
 
+<<<<<<< HEAD
 import Toast from "react-native-toast-message";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+=======
+
+import Toast from 'react-native-toast-message';
+import { AlertNotificationRoot } from 'react-native-alert-notification';
+import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
+import ApplyForBeCompany from "./pages/Home/ProfilePages/ApplyForBeCompany";
+
+>>>>>>> 2b675788f1cc1127218f4ac29b46bb0bab11314f
 
 const Stack = createNativeStackNavigator();
 
@@ -996,6 +1005,7 @@ export default function App({ route }) {
                 headerShown: false,
                 gestureEnabled: false,
 
+<<<<<<< HEAD
                 headerBackTitleVisible: false,
                 headerStyle: {
                   backgroundColor: "#f7f7f7",
@@ -1141,6 +1151,140 @@ export default function App({ route }) {
           </Stack.Navigator>
         </NavigationContainer>
       </GestureHandlerRootView>
+=======
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="AddCommentForProject"
+            component={AddCommentForProject}
+            options={({ route }) => ({
+              title: "Konutu Değerlendir",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="MyComments"
+            component={MyComments}
+            options={({ route }) => ({
+              title: "Değerlendirmelerim",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="EditProjectComment"
+            component={EditCommentForProject}
+            options={({ route }) => ({
+              title: "Yorumu Düzenle",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="Basket2"
+            component={Basket2}
+            options={({ route }) => ({
+              title: "Komşumu Gör Satın Alma",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="PaymentScreen2"
+            component={PaymentScreen2}
+            options={({ route }) => ({
+              title: "Komşumu Gör Satın Alma",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="AdvertPanel"
+            component={AdvertsPanelTab}
+            options={({ route }) => ({
+              title: "İlan Yönetimi",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+          <Stack.Screen
+            name="ClubPanel"
+            component={ClubPanel}
+            options={({ route }) => ({
+              title: "Emlak Kulüp",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#f7f7f7",
+              },
+            })}
+          />
+             <Stack.Screen
+            name="SwapForm"
+            component={SwapForm}
+            options={({ route }) => ({
+              title: "Takas Başvurusu Yap",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+            })}
+          />
+           <Stack.Screen
+            name="OnBoard"
+            component={Onboard}
+            options={({ route }) => ({
+              headerShown:false,
+              gestureEnabled:false,
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+            })}
+          />
+              <Stack.Screen
+            name="SellPlace"
+            component={SellPlaces}
+            options={({ route }) => ({
+              title: "Satış Noktalarım",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+            })}
+          />
+               <Stack.Screen
+            name="ApplyCompany"
+            component={ApplyForBeCompany}
+            options={({ route }) => ({
+              title: "Kurumsal Hesap Başvurusu",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+            })}
+          />
+         
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
+>>>>>>> 2b675788f1cc1127218f4ac29b46bb0bab11314f
     </AlertNotificationRoot>
   );
 }

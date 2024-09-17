@@ -172,6 +172,7 @@ export default function VerifyDocument({ nextStep, prevStep }) {
                 ? FormDatas.sicil_belgesi?.name
                 : FormDatas.sicil_belgesi?.fileName, // Sunucuya gönderilecek dosya adı
           }
+<<<<<<< HEAD
         : null
     );
     formData.append(
@@ -272,6 +273,73 @@ export default function VerifyDocument({ nextStep, prevStep }) {
         setloading(false);
       });
   };
+=======
+        
+          const navigation = useNavigation()
+          console.log(FormDatas.pdfUrl + 'sfgdgdf')
+          
+            const [loading, setloading] = useState(false)
+            const sendDocument=()=>{
+              setloading(true)
+              const formData = new FormData();
+              
+              formData.append(`sicil_belgesi`,FormDatas.sicil_belgesi? {
+                uri: Platform.OS === "android" ? FormDatas.sicil_belgesi : FormDatas?.sicil_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                type: FormDatas?.sicil_belgesi?.mimeType, 
+                name:FormDatas.sicil_belgesi.name==null?'İmage.jpeg': FormDatas.sicil_belgesi?.name?.slice(-3) =='pdf' ? FormDatas.sicil_belgesi?.name:FormDatas.sicil_belgesi?.fileName, // Sunucuya gönderilecek dosya adı
+              }:null);
+              formData.append(`approve_website`, FormDatas.apporove_website?{
+                uri: Platform.OS === "android" ? FormDatas.apporove_website.uri : FormDatas?.apporove_website?.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                type: FormDatas?.apporove_website?.mimeType, 
+                name:FormDatas.apporove_website.name==null ? 'İmage.jpeg': FormDatas.apporove_website?.name?.slice(-3) == 'pdf' ? FormDatas.apporove_website?.name:FormDatas.apporove_website?.fileName , // Sunucuya gönderilecek dosya adı
+              }:null);
+              formData.append(`vergi_levhasi`,FormDatas.vergi_levhası? {
+                uri: Platform.OS === "android" ? FormDatas.vergi_levhası.uri : FormDatas?.vergi_levhası?.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                type: FormDatas?.vergi_levhası?.mimeType, 
+                name:FormDatas.vergi_levhası.name==null ? 'İmage.jpeg': FormDatas.vergi_levhası?.name?.slice(-3) == 'pdf' ? FormDatas.vergi_levhası?.name:FormDatas.vergi_levhası?.fileName , // Sunucuya gönderilecek dosya adı
+              }:null);
+              formData.append(`kimlik_belgesi`,FormDatas.kimlik_belgesi ? {
+                uri: Platform.OS === "android" ? FormDatas.kimlik_belgesi.uri : FormDatas?.kimlik_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                type: FormDatas?.kimlik_belgesi?.mimeType, 
+                name:FormDatas.kimlik_belgesi.name==null ?'İmage.jpeg': FormDatas.kimlik_belgesi?.name?.slice(-3) == 'pdf' ? FormDatas.kimlik_belgesi?.name:FormDatas.kimlik_belgesi?.fileName  , // Sunucuya gönderilecek dosya adı
+              }:null);
+              formData.append(`insaat_belgesi`, FormDatas.insaat_belgesi? {
+                uri: Platform.OS === "android" ? FormDatas.insaat_belgesi.uri : FormDatas?.insaat_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                type: FormDatas?.insaat_belgesi?.mimeType, 
+                name:FormDatas.insaat_belgesi.name ==null ? 'İmage.jpeg':  FormDatas.insaat_belgesi?.name?.slice(-3) == 'pdf' ? FormDatas.insaat_belgesi?.name:FormDatas.insaat_belgesi?.fileName , // Sunucuya gönderilecek dosya adı
+              }:null);
+              axios
+                .post("https://private.emlaksepette.com/api/verify-account", formData, {
+                  headers: {
+                    Authorization: `Bearer ${user?.access_token}`,
+                    "Content-Type": "multipart/form-data",
+                  },
+                })
+                .then((res) => {
+                  alert('başarılı')
+                  setFormDatas({
+                    sicil_belgesi: null,
+                    vergi_levhası: null,
+                    kimlik_belgesi: null,
+                    apporove_website: null,
+                    insaat_belgesi: null,
+                    // Diğer form alanları buraya eklenebilir
+                  });
+               
+                })
+                .catch((err) => {
+                  console.error(err);
+                  alert("Hata oluştu");
+                }).finally(()=>{
+                  setloading(false)
+                })
+            }
+         
+            const [verifyStatus, setverifyStatus] = useState(null)
+            useEffect(() => {
+              getValueFor('PhoneVerify',setverifyStatus)
+            }, [])
+>>>>>>> 2b675788f1cc1127218f4ac29b46bb0bab11314f
 
   const [verifyStatus, setverifyStatus] = useState(null);
   useEffect(() => {

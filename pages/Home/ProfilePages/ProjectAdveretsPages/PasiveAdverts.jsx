@@ -328,10 +328,12 @@ const styles = StyleSheet.create({
   modal: {
     justifyContent: "flex-end",
     margin: 0,
+    backgroundColor: "#0c03033d",
   },
   modal: {
     justifyContent: "flex-end",
     margin: 0,
+    backgroundColor: "#0c03033d",
   },
   modalContent: {
     gap: 5,

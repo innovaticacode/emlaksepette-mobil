@@ -513,6 +513,7 @@ export default function Posts({
                 justifyContent: bookmarkStatus ? "space-between" : "flex-end",
               }}
             >
+<<<<<<< HEAD
               {/* {sold?.status == 1 ? (
                 <></>
               ) : (
@@ -538,6 +539,28 @@ export default function Posts({
               </TouchableOpacity>
               {/* )
               )} */}
+=======
+              {
+                (user.corporate_type=='Emlak Ofisi' ||user.type==1)&&
+                <TouchableOpacity
+                    onPress={() => {
+                      changeBookmark();
+                      openCollection(roomOrder);
+                      GetID(roomOrder);
+                    }}
+                  >
+                    <View style={styles.ıconContainer}>
+                      <Bookmark
+                        name={bookmark}
+                        size={13}
+                        color={bookmark === "bookmark-o" ? "black" : "red"}
+                      />
+                    </View>
+                  </TouchableOpacity>
+              }
+                  
+              
+>>>>>>> 2b675788f1cc1127218f4ac29b46bb0bab11314f
               {sold?.status == 1 ? (
                 <></>
               ) : (

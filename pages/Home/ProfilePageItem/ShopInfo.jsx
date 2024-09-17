@@ -55,10 +55,11 @@ export default function ShopInfo({ data, loading }) {
       console.error("Couldn't load page", err)
     );
   };
+  
   return (
     <ScrollView
       contentContainerStyle={{}}
-      scrollEnabled={loading ? true : false}
+      showsVerticalScrollIndicator={false}
     >
       <View style={styles.container}>
         <View

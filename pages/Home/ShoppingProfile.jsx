@@ -315,9 +315,26 @@ export default function ShoppingProfile() {
             <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
               <View style={{ gap: 20, padding: 10 }}>
                 {groupedData.map((group, index) => (
+<<<<<<< HEAD
                   <View key={index}>
                     {/* Başlık */}
                     <Text style={style.headerText}>{group.label}</Text>
+=======
+                  <View
+                    key={index}
+                    style={{
+                      display:
+                        (user.type == 2 && user.corporate_type == "Emlak Ofisi" && group.label == "Satış Noktalarımız") ||
+                        (user.corporate_type !== "Emlak Ofisi" && user.type == 2 && group.label == "Emlak Kulüp") ||
+                        (user.type == 1 && group.label == "Satış Noktalarımız")
+                          ? "none"
+                          : "flex"
+                    }}
+                    
+                  >
+                    {/* Başlık */}
+                    <Text style={[style.headerText]}>{group.label}</Text>
+>>>>>>> 2b675788f1cc1127218f4ac29b46bb0bab11314f
 
                     {/* Alt menü */}
                     {group.subMenu.length > 0 &&

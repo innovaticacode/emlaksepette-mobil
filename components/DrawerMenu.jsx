@@ -8,12 +8,19 @@ import {
   Text,
   Image,
 } from "react-native";
+import Search from "../pages/Home/Search";
 import Categories from "./Categories";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "./methods/user";
+<<<<<<< HEAD
 import IconAntDesign from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Search from "../pages/Home/Search";
+=======
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon2 from "react-native-vector-icons/EvilIcons";
+>>>>>>> 2b675788f1cc1127218f4ac29b46bb0bab11314f
 import axios from "axios";
 
 const DrawerMenu = ({ setIsDrawerOpen }) => {
@@ -21,7 +28,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
   const [user, setUser] = useState({});
   const [namFromGetUser, setnamFromGetUser] = useState([]);
   const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
-  const { width, height } = Dimensions.get("window");
+
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -40,6 +47,11 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
           console.error("Kullanıcı verileri güncellenirken hata oluştu:", error)
         );
     }
+  }, [user]);
+
+  useEffect(() => {
+    console.log("User object:", user); // user objesini kontrol et
+    console.log("User type:", user.type); // user.type değerini kontrol et
   }, [user]);
 
   const navigateToScreen = (screenName) => {
@@ -72,15 +84,23 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
               }}
             >
               <View style={{ borderRadius: 50 }}>
-                <Image
-                  source={{ uri: PhotoUrl + namFromGetUser.profile_image }}
-                  style={{ width: "100%", height: "100%" }}
-                  borderRadius={50}
-                />
+                {user.access_token ? (
+                  <Image
+                    source={{ uri: PhotoUrl + namFromGetUser.profile_image }}
+                    style={{ width: "100%", height: "100%" }}
+                    borderRadius={50}
+                  />
+                ) : (
+                  <Icon2 name="user" size={65} color="#333" padding={10}/>
+                )}
               </View>
             </View>
             {/* PROFİL FOTO START */}
 
+<<<<<<< HEAD
+=======
+            {/* GİRİŞ YAP-HESABIM BÖLÜMÜ START */}
+>>>>>>> 2b675788f1cc1127218f4ac29b46bb0bab11314f
             <View style={{ gap: 6 }}>
               <TouchableOpacity
                 disabled={user.access_token ? true : false}
@@ -96,12 +116,24 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity>
-                <Text style={{ fontSize: 12 }}>Hesabım</Text>
+              <TouchableOpacity
+                disabled={user.access_token ? false : true}
+                onPress={() => {
+                  navigation.navigate('ShopProfile');
+                  setIsDrawerOpen(false);
+                }}
+
+              >
+                <Text style={{ fontSize: 12 }}>
+                  {user.access_token ?
+                    user.type == 1 ? 'Hesabım' : 'Mağazam' : 'Hesabım'}
+                </Text>
               </TouchableOpacity>
+
             </View>
           </View>
         </View>
+<<<<<<< HEAD
         <View style={{ width: "100%", alignItems: "center" }}>
           <View
             style={{ width: "85%", backgroundColor: "#C4C4C4", padding: 0.5 }}
@@ -109,18 +141,42 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
         </View>
         <View style={{ width: "100%", alignItems: "center" }}>
           <View style={{ width: "80%" }}>
+=======
+        {/* GİRİŞ YAP-HESABIM BÖLÜMÜ END */}
+
+
+        {/* ÇİZGİ ÖGESİ START */}
+        <View style={{ width: '100%', alignItems: 'center' }}>
+          <View style={{ width: '85%', backgroundColor: '#C4C4C4', padding: 0.5 }} />
+        </View>
+        {/* ÇİZGİ ÖGESİ END */}
+
+
+        {/* MENÜ ÖGELERİ START */}
+        <View style={{ width: '100%', alignItems: 'center' }}>
+          <View style={{ width: '80%' }}>
+>>>>>>> 2b675788f1cc1127218f4ac29b46bb0bab11314f
             <Search setIsDrawerOpen={setIsDrawerOpen} />
           </View>
         </View>
+        {/* MENÜ ÖGELERİ END */}
 
+<<<<<<< HEAD
         {/* ARA ÇİZGİ ÖGESİ START */}
         <View style={{ width: "100%", alignItems: "center" }}>
           <View
             style={{ width: "85%", backgroundColor: "#C4C4C4", padding: 0.5 }}
           />
-        </View>
-        {/* ARA ÇİZGİ ÖGESİ END */}
+=======
 
+        {/* ÇİZGİ ÖGESİ START */}
+        <View style={{ width: '100%', alignItems: 'center' }}>
+          <View style={{ width: '85%', backgroundColor: '#C4C4C4', padding: 0.5 }} />
+>>>>>>> 2b675788f1cc1127218f4ac29b46bb0bab11314f
+        </View>
+        {/* ÇİZGİ ÖGESİ END */}
+
+<<<<<<< HEAD
         <View style={{ width: "100%", alignItems: "center", gap: 10 }}>
           {/* GRİ ALAN START */}
           <View
@@ -141,6 +197,21 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
                 category={"Gayrimenkul Ligi"}
                 iconName={"trophy-variant"}
               />
+=======
+
+        {/* GRİ ALAN START */}
+        <View style={{ width: '100%', alignItems: 'center', gap: 10 }}>
+          <View style={{ backgroundColor: '#F7F7F7', padding: 10, width: '85%', borderRadius: 8 }}>
+            {
+            ((!user.access_token || user.type==1 ) || user.corporate_type=='Emlak Ofisi' )  && 
+              <TouchableOpacity onPress={() => navigateToScreen('RealtorClubExplore')}>
+              <Categories category={'Emlak Kulüp'} iconName={'hand-coin'} />
+            </TouchableOpacity>
+            }
+           
+            <TouchableOpacity onPress={() => navigateToScreen('')}>
+              <Categories category={'Gayrimenkul Ligi'} iconName={'trophy-variant'} />
+>>>>>>> 2b675788f1cc1127218f4ac29b46bb0bab11314f
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigateToScreen("")}>
               <Categories
@@ -151,6 +222,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
           </View>
           {/* GRİ ALAN END */}
 
+<<<<<<< HEAD
           <View style={{ width: "100%", alignItems: "center" }}>
             {/* İLAN VER BUTONU START */}
             <TouchableOpacity
@@ -164,6 +236,12 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
                 alignItems: "center",
                 justifyContent: "center",
               }}
+=======
+
+          {/* İLAN VER BUTONU START */}
+          <View style={{ width: '100%', alignItems: 'center' }}>
+            <TouchableOpacity style={{ backgroundColor: '#EA2C2E', width: '85%', padding: 10, borderRadius: 10, flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center' }}
+>>>>>>> 2b675788f1cc1127218f4ac29b46bb0bab11314f
               onPress={() => {
                 setIsDrawerOpen(false);
                 navigation.navigate("ShareAdvert");
@@ -174,9 +252,10 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
                 İlan Ver
               </Text>
             </TouchableOpacity>
-            {/* İLAN VER BUTONU END */}
           </View>
         </View>
+        {/* İLAN VER BUTONU END */}
+
 
         {/* MÜŞTERİ HİZMETLERİ ALANI START */}
         <View style={{ alignItems: "center" }}>
@@ -217,8 +296,8 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
             </View>
           </TouchableOpacity>
         </View>
-        {/* MÜŞTERİ HİZMETLERİ ALANI END */}
       </ScrollView>
+      {/* MÜŞTERİ HİZMETLERİ ALANI END */}
     </SafeAreaView>
   );
 };
