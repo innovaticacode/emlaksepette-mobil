@@ -371,7 +371,6 @@ export default function Basket() {
             <Header onPress={toggleDrawer} index={setindex} tab={settab} />
           </View>
 
-
           <Modal
             isVisible={isDrawerOpen}
             onBackdropPress={() => setIsDrawerOpen(false)}
@@ -382,10 +381,7 @@ export default function Basket() {
             style={styles.modal}
           >
             <View style={styles.modalContent}>
-
               <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-
-
             </View>
           </Modal>
 
@@ -689,15 +685,15 @@ export default function Basket() {
                           {" "}
                           {isInstallament == 2
                             ? formatAmount(
-                              (Cart?.installmentPrice *
-                                offerControl?.project?.deposit_rate) /
-                              100
-                            )
+                                (Cart?.installmentPrice *
+                                  offerControl?.project?.deposit_rate) /
+                                  100
+                              )
                             : formatAmount(
-                              (Cart?.amount *
-                                offerControl?.project?.deposit_rate) /
-                              100
-                            )}{" "}
+                                (Cart?.amount *
+                                  offerControl?.project?.deposit_rate) /
+                                  100
+                              )}{" "}
                           ₺
                         </Text>
                       </View>
@@ -880,14 +876,14 @@ export default function Basket() {
                           formatAmount(
                             (Cart?.amount *
                               offerControl?.project?.deposit_rate) /
-                            100
+                              100
                           )}
                         {isInstallament == 2 &&
                           type?.type == "project" &&
                           addDotEveryThreeDigits(
                             (Cart?.installmentPrice *
                               offerControl?.project?.deposit_rate) /
-                            100
+                              100
                           )}
                         {type?.type == "housing" &&
                           saleType == "kiralik" &&
@@ -971,29 +967,29 @@ const styles = StyleSheet.create({
   },
   noCommentsContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: -62,
   },
   noCommentsText: {
     fontSize: 18,
-    color: '#333',
-    textAlign: 'center',
+    color: "#333",
+    textAlign: "center",
     marginTop: 8,
   },
   returnButton: {
-    backgroundColor: '#EA2B2E',
+    backgroundColor: "#EA2B2E",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
     marginTop: 18,
   },
   returnButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
- 
+
   acceptCart: {
     width: "100%",
     marginTop: 10,

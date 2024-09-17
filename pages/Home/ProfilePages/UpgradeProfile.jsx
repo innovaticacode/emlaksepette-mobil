@@ -91,10 +91,9 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-
     if (!result.canceled) {
-      setImage(result.assets[0]);  // Seçilen fotoğrafı state'e kaydediyoruz
-      setchoose(false);            // Modal'ı kapatıyoruz
+      setImage(result.assets[0]); // Seçilen fotoğrafı state'e kaydediyoruz
+      setchoose(false); // Modal'ı kapatıyoruz
     }
   };
   useEffect(() => {
@@ -108,7 +107,6 @@ export default function UpgradeProfile() {
     })();
   }, []);
 
-
   const takePhoto = async () => {
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -116,19 +114,16 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-   
-
     if (!result.canceled) {
       setImage(result.assets[0]); // Çekilen fotoğrafı state'e kaydediyoruz
-      setchoose(false);            // Modal'ı kapatıyoruz
+      setchoose(false); // Modal'ı kapatıyoruz
     }
   };
 
   const removeProfileImage = () => {
-    setImage(null);  // Fotoğrafı null yaparak yerelde kaldırıyoruz
-    setchoose(false);  // Modal'ı kapatıyoruz
+    setImage(null); // Fotoğrafı null yaparak yerelde kaldırıyoruz
+    setchoose(false); // Modal'ı kapatıyoruz
   };
-
 
   const pickImageForfile = async () => {
     setIsLoading(true);
@@ -140,7 +135,6 @@ export default function UpgradeProfile() {
       aspect: [4, 3],
       quality: 1,
     });
-
 
     if (!result.canceled) {
       setfile(result.assets[0].uri);
@@ -177,13 +171,11 @@ export default function UpgradeProfile() {
       quality: 1,
     });
 
-    
-
     if (!result.canceled) {
       setfile(result.assets[0].uri);
     }
   };
-  
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -205,7 +197,7 @@ export default function UpgradeProfile() {
         setData("backgroundColor", userData?.banner_hex_code);
         setData("name", userData?.name);
         setData("storeName", userData.name);
-        setData('tradeName', userData.store_name);
+        setData("tradeName", userData.store_name);
         setData("userName", userData.username);
         setData("authorityLicence", userData.authority_licence);
         setData("Iban", userData?.iban);
@@ -265,7 +257,6 @@ export default function UpgradeProfile() {
     return formattedNumber;
   };
 
-
   const handlePhoneNumberChange = (value) => {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setData("oldPhone", formattedPhoneNumber);
@@ -282,7 +273,6 @@ export default function UpgradeProfile() {
     GetUserInfo();
   }, [user, selectedCity, selectedCounty, selectedNeighborhood]);
 
-
   const handleMapPress = (event) => {
     setSelectedLocation({
       latitude: event.nativeEvent.coordinate.latitude,
@@ -297,7 +287,6 @@ export default function UpgradeProfile() {
         ? longitude
         : parseFloat(user.longitude),
   };
-
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -318,7 +307,9 @@ export default function UpgradeProfile() {
     if (selectedCity) {
       const fetchCounties = async () => {
         try {
-          const response = await axios.get(`https://private.emlaksepette.com/api/counties/${selectedCity}`);
+          const response = await axios.get(
+            `https://private.emlaksepette.com/api/counties/${selectedCity}`
+          );
           setCounties(response.data.data);
           setSelectedCounty(null); // Seçili ilçe sıfırla
           setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
@@ -335,7 +326,9 @@ export default function UpgradeProfile() {
     if (selectedCounty) {
       const fetchNeighborhoods = async () => {
         try {
-          const response = await axios.get(`https://private.emlaksepette.com/api/neighborhoods/${selectedCounty}`);
+          const response = await axios.get(
+            `https://private.emlaksepette.com/api/neighborhoods/${selectedCounty}`
+          );
           console.log("Neighborhoods Response:", response.data); // Yanıtı kontrol et
           setNeighborhoods(response.data.data);
           setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
@@ -460,7 +453,6 @@ export default function UpgradeProfile() {
     { label: "Zonguldak (372)", value: 372 },
   ];
 
-
   const [openColorPicker, setopenColorPicker] = useState(false);
   const [currentColor, setCurrentColor] = useState(user.banner_hex_code);
   const [swatchesOnly, setSwatchesOnly] = useState(false);
@@ -490,7 +482,6 @@ export default function UpgradeProfile() {
     areaCode: null,
     companyPhone: null,
     SectorYear: null,
-
 
     taxOfficeCity: null,
     taxOffice: null,
@@ -624,11 +615,16 @@ export default function UpgradeProfile() {
       if (user.role === "Bireysel Hesap") {
         formData.append("name", FormDatas.userName);
         formData.append("iban", FormDatas.Iban);
-        formData.append("profile_image", image ? {
-          uri: image.uri,
-          name: image.fileName,
-          type: image.type,
-        } : null);
+        formData.append(
+          "profile_image",
+          image
+            ? {
+                uri: image.uri,
+                name: image.fileName,
+                type: image.type,
+              }
+            : null
+        );
         formData.append(
           "mobile_phone",
           FormDatas.newPhone ? FormDatas.newPhone : FormDatas.oldPhone
@@ -638,11 +634,13 @@ export default function UpgradeProfile() {
       } else {
         formData.append(
           "profile_image",
-          image ? {
-            uri: image.uri,
-            name: image.fileName,
-            type: image.type,
-          } : null
+          image
+            ? {
+                uri: image.uri,
+                name: image.fileName,
+                type: image.type,
+              }
+            : null
         );
         formData.append("city_id", selectedCity);
         formData.append("county_id", selectedCounty);
@@ -669,12 +667,10 @@ export default function UpgradeProfile() {
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         }
       );
-
-     
 
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
@@ -700,7 +696,10 @@ export default function UpgradeProfile() {
       GetUserInfo();
       updateUserData();
     } catch (error) {
-      console.error("Error:", error.response ? error.response.data : error.message);
+      console.error(
+        "Error:",
+        error.response ? error.response.data : error.message
+      );
       Dialog.show({
         type: ALERT_TYPE.ERROR,
         title: "Hata",
@@ -767,11 +766,14 @@ export default function UpgradeProfile() {
                 <View style={{ borderRadius: 50 }}>
                   {user.access_token ? (
                     <Image
-                      source={image ? { uri: image.uri } : { uri: PhotoUrl + namFromGetUser.profile_image }}
+                      source={
+                        image
+                          ? { uri: image.uri }
+                          : { uri: PhotoUrl + namFromGetUser.profile_image }
+                      }
                       style={{ width: "100%", height: "100%" }}
                       borderRadius={50}
                     />
-
                   ) : (
                     <Icon2 name="user" size={65} color="#333" padding={10} />
                   )}
@@ -807,12 +809,13 @@ export default function UpgradeProfile() {
                   {namFromGetUser?.name}
                 </Text>
               )}
-              {
-                user.type == 1 &&
-                <Text style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}>
+              {user.type == 1 && (
+                <Text
+                  style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}
+                >
                   {user?.role}
                 </Text>
-              }
+              )}
               {(tab == 2 || tab == 3 || tab == 4) && (
                 <Text
                   style={{ fontSize: 14, fontWeight: "600", color: "#fff" }}
@@ -820,16 +823,16 @@ export default function UpgradeProfile() {
                   {namFromGetUser?.name}
                 </Text>
               )}
-              {
-                user.type == 2 &&
-                <Text style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}>
+              {user.type == 2 && (
+                <Text
+                  style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}
+                >
                   {user?.corporate_type}
                 </Text>
-              }
+              )}
               <Text style={{ fontSize: 11, color: "#fff", fontWeight: "700" }}>
                 {user.email}
               </Text>
-
             </View>
           </View>
 
@@ -965,7 +968,8 @@ export default function UpgradeProfile() {
                             Dialog.show({
                               type: ALERT_TYPE.WARNING,
                               title: "Dosya Yükleyiniz",
-                              textBody: "Aşağıda örnek belge formatı bulunmaktadır.",
+                              textBody:
+                                "Aşağıda örnek belge formatı bulunmaktadır.",
                               button: "Tamam",
                             });
                           }
@@ -1151,7 +1155,6 @@ export default function UpgradeProfile() {
                     </View>
                   </View>
 
-
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
                       <Text style={styles.label}>Ticari Unvan</Text>
@@ -1164,7 +1167,6 @@ export default function UpgradeProfile() {
                       />
                     </View>
                   </View>
-
 
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
@@ -1179,7 +1181,6 @@ export default function UpgradeProfile() {
                     </View>
                   </View>
 
-
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
                       <Text style={styles.label}>Yetkili Belge No</Text>
@@ -1188,11 +1189,12 @@ export default function UpgradeProfile() {
                       <TextInput
                         style={styles.input}
                         value={FormDatas.authorityLicence}
-                        onChangeText={(value) => setData("authorityLicence", value)}
+                        onChangeText={(value) =>
+                          setData("authorityLicence", value)
+                        }
                       />
                     </View>
                   </View>
-
 
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
@@ -1209,7 +1211,6 @@ export default function UpgradeProfile() {
                     </View>
                   </View>
 
-
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
                       <Text style={styles.label}>Website Linki</Text>
@@ -1223,10 +1224,11 @@ export default function UpgradeProfile() {
                     </View>
                   </View>
 
-
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
-                      <Text style={styles.label}>Sabit Telefon (Opsiyonel)</Text>
+                      <Text style={styles.label}>
+                        Sabit Telefon (Opsiyonel)
+                      </Text>
                     </View>
                     <View style={{ flexDirection: "row" }}>
                       <View style={{ width: "45%" }}>
@@ -1256,10 +1258,11 @@ export default function UpgradeProfile() {
                     </View>
                   </View>
 
-
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
-                      <Text style={styles.label}>Kaç Yıldır Sektördesiniz?</Text>
+                      <Text style={styles.label}>
+                        Kaç Yıldır Sektördesiniz?
+                      </Text>
                     </View>
                     <View>
                       <TextInput
@@ -1269,7 +1272,6 @@ export default function UpgradeProfile() {
                       />
                     </View>
                   </View>
-
 
                   <View style={{ gap: 15 }}>
                     <View style={{ gap: 10 }}>
@@ -1284,7 +1286,9 @@ export default function UpgradeProfile() {
                           value: null,
                         }}
                         style={pickerSelectStyles}
-                        onValueChange={(value) => { onChangeCity(value) }}
+                        onValueChange={(value) => {
+                          onChangeCity(value);
+                        }}
                         items={cities}
                       />
                     </View>
@@ -1301,7 +1305,9 @@ export default function UpgradeProfile() {
                           value: null,
                         }}
                         style={pickerSelectStyles}
-                        onValueChange={(value) => { onChangeCounty(value) }}
+                        onValueChange={(value) => {
+                          onChangeCounty(value);
+                        }}
                         items={counties}
                       />
                     </View>
@@ -1318,12 +1324,13 @@ export default function UpgradeProfile() {
                           value: null,
                         }}
                         style={pickerSelectStyles}
-                        onValueChange={(value) => { onChangeNeighborhood(value) }}
+                        onValueChange={(value) => {
+                          onChangeNeighborhood(value);
+                        }}
                         items={neighborhoods}
                       />
                     </View>
                   </View>
-
 
                   <View style={{ gap: 10 }}>
                     <View style={{ paddingLeft: 10 }}>
@@ -1344,7 +1351,6 @@ export default function UpgradeProfile() {
                     />
                   </View>
 
-
                   <View style={{ gap: 10 }}>
                     <View style={{ paddingLeft: 10 }}>
                       <Text style={styles.label}>Vergi Dairesi</Text>
@@ -1363,7 +1369,6 @@ export default function UpgradeProfile() {
                       items={cities}
                     />
                   </View>
-
 
                   <View style={{ width: "100%", gap: 10 }}>
                     <View style={styles.titles}>
@@ -1548,14 +1553,23 @@ export default function UpgradeProfile() {
                     gap: 10,
                   }}
                   onPress={removeProfileImage} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
-                // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
+                  // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
                 >
-                  <Icon3 name="restore-from-trash" size={22} color={"#d83131"} />
-                  <Text style={{ fontSize: 14, color: "#d83131", fontWeight: "700" }}>
+                  <Icon3
+                    name="restore-from-trash"
+                    size={22}
+                    color={"#d83131"}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: "#d83131",
+                      fontWeight: "700",
+                    }}
+                  >
                     Mevcut Fotoğrafı Kaldır
                   </Text>
                 </TouchableOpacity>
-
               </View>
             </View>
           </Modal>

@@ -63,6 +63,7 @@ export default function MyComments() {
       setLoading(false);
     }
   };
+  console.log(user?.id + "userrrrrrİDDDDD");
 
   useEffect(() => {
     fetchData();
@@ -238,8 +239,8 @@ export default function MyComments() {
         >
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
-      ) : (
-        comments?.map((item, index) => (
+      ) : comments?.length > 0 ? (
+        comments.map((item, index) => (
           <MycommentItem
             key={index}
             item={item}
@@ -247,6 +248,12 @@ export default function MyComments() {
             goToEditComment={() => goToEditComment(item)} // info'yu prop olarak gönderiyoruz
           />
         ))
+      ) : (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text style={{ fontSize: 16, color: "#555" }}>Henüz yorum yok.</Text>
+        </View>
       )}
 
       <Modal

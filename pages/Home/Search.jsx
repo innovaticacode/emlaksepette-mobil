@@ -31,16 +31,15 @@ export default function Search({ onpres, setIsDrawerOpen }) {
     setSearch(search);
   };
 
-
   const fetchmenuItems = async () => {
     try {
       const response = await axios.get(
         "https://private.emlaksepette.com/api/menu-list"
       );
 
-      const filteredMenuItems = response.data.slice(0,-1); // Menünün sondaki ögesini çıkarıyor.
+      const filteredMenuItems = response.data.slice(0, -1); // Menünün sondaki ögesini çıkarıyor.
 
-      setMenuItems(filteredMenuItems);  // Filtrelenmiş menü öğelerini set ediyoruz
+      setMenuItems(filteredMenuItems); // Filtrelenmiş menü öğelerini set ediyoruz
     } catch (error) {
       console.log(error);
     }
@@ -60,7 +59,6 @@ export default function Search({ onpres, setIsDrawerOpen }) {
     setIsDrawerOpen(false);
   };
 
-
   // const iconMapping = {
   //   'Projeler': 'folder-home',
   //   'Konut': 'home-group',
@@ -74,44 +72,40 @@ export default function Search({ onpres, setIsDrawerOpen }) {
   // };
 
   return (
-    <SafeAreaView
-      onTouchStart={() => Keyboard.dismiss()}
-      style={{}}
-    >
+    <SafeAreaView onTouchStart={() => Keyboard.dismiss()} style={{}}>
       <ScrollView>
         <View style={{ flex: 1 }}></View>
 
         <View style={{ gap: 3 }}>
-          <TouchableOpacity onPress={() => navigateToScreen('Home')}>
-            <Categories category={'Ana Sayfa'} iconName={'home'} />
+          <TouchableOpacity onPress={() => navigateToScreen("Home")}>
+            <Categories category={"Ana Sayfa"} iconName={"home"} />
           </TouchableOpacity>
 
           {menuItems.map((item, index) => {
-            const text = item.text || '';
+            const text = item.text || "";
 
-
-            const slug = text == "Prefabrik Yapılar"
-              ? text
-              : slugify(
-                text == "Al Sat Acil" || text == "Paylaşımlı İlanlar"
-                  ? text
-                  : "emlak-ilanlari"
-              );
-
-              
-            const name = text == "Prefabrik Yapılar"
-            ? null
-            : slugify(
-              text == "Al Sat Acil" || text == "Paylaşımlı İlanlar"
+            const slug =
+              text == "Prefabrik Yapılar"
                 ? text
-                : "Emlak İlanları"
-            );
-              
+                : slugify(
+                    text == "Al Sat Acil" || text == "Paylaşımlı İlanlar"
+                      ? text
+                      : "emlak-ilanlari"
+                  );
+
+            const name =
+              text == "Prefabrik Yapılar"
+                ? null
+                : slugify(
+                    text == "Al Sat Acil" || text == "Paylaşımlı İlanlar"
+                      ? text
+                      : "Emlak İlanları"
+                  );
 
             return (
               <TouchableOpacity
                 onPress={() => {
-                  setIsDrawerOpen(false)
+                  setIsDrawerOpen(false);
 
                   if (item.submenus && item.submenus?.length > 0) {
                     navigation.navigate("Public", {
@@ -132,7 +126,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
                         optional: null,
                         title:
                           item.text == "Al Sat Acil" ||
-                            item.text == "Paylaşımlı İlanlar"
+                          item.text == "Paylaşımlı İlanlar"
                             ? item.text
                             : null,
                         check: null,
@@ -148,7 +142,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
               >
                 <Categories category={item.text} />
               </TouchableOpacity>
-            )
+            );
           })}
 
           {/* {Object.keys(iconMapping).map((category,index) => (

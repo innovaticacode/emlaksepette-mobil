@@ -162,7 +162,7 @@ const SwapScreenNav = () => {
       )
       .then((response) => {
         setFormVisible(false);
-        
+
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Başvurunuz Gönderildi.",

@@ -49,6 +49,7 @@ export default function AddCommentForProject() {
       setloading(false);
     });
   }, []);
+  console.log(projectId + " added");
 
   const [rating, setRating] = useState(0); // Başlangıçta hiçbir yıldız dolu değil
   const [rate, setrate] = useState(0);

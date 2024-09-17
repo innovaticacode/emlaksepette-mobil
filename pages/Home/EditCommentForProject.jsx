@@ -405,14 +405,18 @@ export default function EditCommentForProject() {
           {loading2 && (
             <View
               style={{
-                flex: 1, // Bu satırla alt kısımdaki boşluk giderilir
-                backgroundColor: "rgba(0, 0, 0, 0.5)", // Arka plan yarı saydam siyah
+                position: "absolute", // Ekranda tam konumlandırmak için
+                top: 0, // Ekranın üst kısmından başlayacak
+                left: 0, // Ekranın solundan başlayacak
+                right: 0, // Ekranın sağını kaplayacak
+                bottom: 0, // Ekranın altını kaplayacak
+                backgroundColor: "#fff", // Yarı saydam siyah arka plan
                 justifyContent: "center",
                 alignItems: "center",
-                zIndex: 1000,
+                zIndex: 1000, // Yüksek zIndex ile diğer içeriklerin üstüne çıkar
               }}
             >
-              <ActivityIndicator size="large" color="#fff" />
+              <ActivityIndicator size="large" color="#333" />
             </View>
           )}
           <View style={[style.card, { flexDirection: "row" }]}>
@@ -781,9 +785,15 @@ const style = StyleSheet.create({
     }),
   },
   Image: {
-    backgroundColor: "red",
     width: 80,
     height: 70,
+    justifyContent: "center", // İçeriği ortalamak için
+    alignItems: "center", // İçeriği ortalamak için
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   Input: {
     backgroundColor: "#f5f5f5",

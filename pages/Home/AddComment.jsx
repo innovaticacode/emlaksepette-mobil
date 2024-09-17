@@ -242,13 +242,14 @@ export default function AddComment() {
                 <ImageBackground
                   source={{
                     uri:
-                      data &&
-                      data.housing_type_data &&
-                      `${apiUrl}/housing_images/${
-                        JSON.parse(data.housing_type_data)["images"]
-                      }`,
+                      data && data.housing_type_data
+                        ? `${apiUrl}/housing_images/${
+                            JSON.parse(data.housing_type_data)["images"][0]
+                          }`
+                        : null,
                   }}
                   style={{ width: "100%", height: "100%" }}
+                  resizeMode="cover"
                 />
               </View>
               <View style={{ flexDirection: "column", gap: 5, width: "100%" }}>
@@ -572,9 +573,15 @@ const style = StyleSheet.create({
     }),
   },
   Image: {
-    backgroundColor: "red",
     width: 80,
     height: 70,
+    justifyContent: "center", // İçeriği ortalamak için
+    alignItems: "center", // İçeriği ortalamak için
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   Input: {
     backgroundColor: "#f5f5f5",
