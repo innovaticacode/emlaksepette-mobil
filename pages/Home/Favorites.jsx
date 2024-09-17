@@ -339,6 +339,7 @@ export default function Favorites() {
                   justifyContent: "center",
                   height: "100%",
                   gap: 10,
+                  marginTop: -40,
                 }}
               >
                 <View
