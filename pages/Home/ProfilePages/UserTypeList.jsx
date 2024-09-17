@@ -197,6 +197,7 @@ export default function UserTypeList() {
             height: "100%",
             gap: 10,
             backgroundColor: "white",
+            marginTop: -62,
           }}
         >
           <View
@@ -205,12 +206,13 @@ export default function UserTypeList() {
               { alignItems: "center", justifyContent: "center" },
             ]}
           >
-            <Icon2 name="user-tie" size={50} color={"#EA2A28"} />
+            <Icon2 name="user-tie" size={35} color={"#EA2A28"} />
           </View>
           <View>
             <Text style={styles.noCommentsText}>
               Daha önce kullanıcı tipi oluşturmadınız.
             </Text>
+            <Text></Text>
           </View>
           <View style={{ width: "100%", alignItems: "center" }}>
             <TouchableOpacity
@@ -467,7 +469,7 @@ const styles = StyleSheet.create({
 
     borderRadius: 50,
 
-    borderWidth: 0.7,
+    borderWidth: 0.6,
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
