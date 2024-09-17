@@ -9,101 +9,98 @@ import {
 import React from "react";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import SellAndRentList from "../../components/SellAndRentList";
-import BGTwo from "../../assets/buyAndRentBgTwo.png";
+import BGTwo from "../../assets/buyAndRentBg.png";
 import FastRent from "../../assets/FastRent.png";
 import IndividualRent from "../../assets/IndividualRent.png";
 
 export default function SellAndRentFormPage(props) {
   const { navigation } = props;
   return (
-    <>
-      <View style={styles.container}>
-        <ScrollView style={{ flexGrow: 1, flex: 1 }}>
-          <Image source={BGTwo} style={styles.bgImage} resizeMode="cover" />
-          <View>
-            <View style={styles.headTextAreae}>
-              <View>
-                <Text style={styles.title}>MÜLKLERİNİZİ</Text>
-                <Text
-                  style={styles.redTitle}
-                >{`HIZLI SATIN, \nHIZLI KİRALAYIN!`}</Text>
-              </View>
-              <Text style={styles.desc}>
-                Sat kirala, emlak satış ve kiralama işlerinizi güvenli ve hızlı
-                bir şekilde hallediyor. Biz mülkünüzü alıcıya veya kiracıya
-                ulaştırıyoruz!
-              </Text>
+    <View style={styles.container}>
+      <ScrollView style={{ flexGrow: 1, flex: 1 }}>
+        <Image source={BGTwo} style={styles.bgImage} resizeMode="cover" />
+        <View style={{ width: "100%", paddingHorizontal: 24 }}>
+          <View style={styles.headTextArea}>
+            <View>
+              <Text style={styles.title}>MÜLKLERİNİZİ</Text>
+              <Text
+                style={styles.redTitle}
+              >{`HIZLI SATIN, \nHIZLI KİRALAYIN!`}</Text>
             </View>
-
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => {}}
-              style={styles.redButton}
-            >
-              <Text style={styles.redButtonText}>Hemen İlan Ver</Text>
-            </TouchableOpacity>
+            <Text style={styles.desc}>
+              Sat kirala, emlak satış ve kiralama işlerinizi güvenli ve hızlı
+              bir şekilde hallediyor. Biz mülkünüzü alıcıya veya kiracıya
+              ulaştırıyoruz!
+            </Text>
           </View>
-          <View style={styles.cardArea}>
-            <TouchableOpacity
-              style={styles.redCard}
-              activeOpacity={0.8}
-              onPress={() => {
-                navigation.navigate("SellAndRentAdvantage", { index: 0 });
-              }}
-            >
-              <View style={styles.inner}>
-                <View style={styles.cardDesc}>
-                  <Text style={styles.redCardText}>
-                    Hızlı satıp kiralama avantajlarını hemen öğren..
-                  </Text>
-                </View>
-                <View style={styles.whiteButton}>
-                  <Icon name="arrow-right" size={18} color="#EA2B2E" />
-                  <Text style={styles.whiteButtonText}>
-                    Hızlı Sat Kirala Avantajları
-                  </Text>
-                </View>
-                <Image
-                  source={FastRent}
-                  style={styles.redCardImage}
-                  resizeMode="contain"
-                />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {}}
+            style={styles.redButton}
+          >
+            <Text style={styles.redButtonText}>Hemen İlan Ver</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.cardArea}>
+          <TouchableOpacity
+            style={styles.redCard}
+            activeOpacity={0.8}
+            onPress={() => {
+              navigation.navigate("SellAndRentAdvantage", { index: 0 });
+            }}
+          >
+            <View style={styles.inner}>
+              <View style={styles.cardDesc}>
+                <Text style={styles.redCardText}>
+                  Hızlı satıp kiralama avantajlarını hemen öğren..
+                </Text>
               </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.whiteCard}
-              onPress={() => {
-                navigation.navigate("SellAndRentAdvantage", { index: 1 });
-              }}
-              activeOpacity={0.8}
-            >
-              <View style={styles.whiteCardInner}>
-                <View style={styles.whiteCardInnerTextArea}>
-                  <Text style={styles.whiteCardText}>
-                    Bireysel satıp kiralama dezavantajlarını hemen öğren..
-                  </Text>
-                </View>
-                <View style={styles.whiteButton}>
-                  <Icon name="arrow-right" size={18} color="#EA2B2E" />
-                  <Text style={styles.whiteButtonText}>
-                    Bireysel Sat Kirala Dezavantajları
-                  </Text>
-                </View>
-                <Image
-                  source={IndividualRent}
-                  style={styles.whiteCardImage}
-                  resizeMode="contain"
-                />
+              <View style={styles.whiteButton}>
+                <Icon name="arrow-right" size={18} color="#EA2B2E" />
+                <Text style={styles.whiteButtonText}>
+                  Hızlı Sat Kirala Avantajları
+                </Text>
               </View>
-            </TouchableOpacity>
-          </View>
-          <View style={{ marginTop: 20 }}>
-            <SellAndRentList />
-          </View>
-        </ScrollView>
-      </View>
-    </>
+              <Image
+                source={FastRent}
+                style={styles.redCardImage}
+                resizeMode="contain"
+              />
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.whiteCard}
+            onPress={() => {
+              navigation.navigate("SellAndRentAdvantage", { index: 1 });
+            }}
+            activeOpacity={0.8}
+          >
+            <View style={styles.whiteCardInner}>
+              <View style={styles.whiteCardInnerTextArea}>
+                <Text style={styles.whiteCardText}>
+                  Bireysel satıp kiralama dezavantajlarını hemen öğren..
+                </Text>
+              </View>
+              <View style={styles.whiteButton}>
+                <Icon name="arrow-right" size={18} color="#EA2B2E" />
+                <Text style={styles.whiteButtonText}>
+                  Bireysel Sat Kirala Dezavantajları
+                </Text>
+              </View>
+              <Image
+                source={IndividualRent}
+                style={styles.whiteCardImage}
+                resizeMode="contain"
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={{ marginTop: 20, paddingBottom: 20 }}>
+          <SellAndRentList />
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -116,10 +113,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 310,
   },
-  headTextAreae: {
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 30,
+  headTextArea: {
     paddingTop: 16,
   },
   title: {
@@ -141,14 +135,12 @@ const styles = StyleSheet.create({
   },
   redButton: {
     backgroundColor: "#EA2B2E",
-    width: "85%",
+    width: "100%",
     height: 38,
-    borderRadius: 24,
+    borderRadius: 15,
     flexDirection: "row",
-    gap: 8,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 30,
     marginTop: 20,
   },
   redButtonText: {
@@ -163,7 +155,10 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
   redCard: {
-    width: 336,
+    width: "90%",
+    minWidth: 336,
+    height: 132,
+    alignSelf: "center",
     height: 132,
     backgroundColor: "#EA2B2E",
     borderRadius: 14,
@@ -208,14 +203,17 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   whiteCard: {
-    width: 336,
+    width: "90%",
+    minWidth: 336,
     height: 132,
+    alignSelf: "center",
     backgroundColor: "#FFE3E3",
     borderRadius: 14,
     borderWidth: 1,
     borderColor: "#EA2b2E",
     marginTop: 20,
   },
+
   whiteCardInner: {
     paddingHorizontal: 10,
     paddingVertical: 20,

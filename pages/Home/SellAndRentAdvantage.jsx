@@ -101,7 +101,7 @@ const SellAndRentAdvantage = (props) => {
             <Icon name="arrow-down" size={16} color={"#EA2B2E"} />
             <Text style={styles.title}>
               {index === 0
-                ? "Emlak Ofisleriyle Sat Kirala Avantajları"
+                ? "Hızlı Sat Kirala Avantajları"
                 : "Bireysel Sat Kirala Dezavantajları"}
             </Text>
           </View>
