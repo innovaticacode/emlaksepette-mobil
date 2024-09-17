@@ -9,11 +9,13 @@ import {
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import Lightbox from "react-native-lightbox";
+import ImageViewing from "react-native-image-viewing";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function CommentItem({ username, comment, date, rate, image }) {
   const [stars, setStars] = useState([false, false, false, false, false]);
   const [commentImages, setCommentImages] = useState([]);
+  const [visible, setVisible] = useState(false);
 
   // API URL'nizi burada tanımlayın
   const apiUrl = "https://private.emlaksepette.com/";
@@ -27,7 +29,7 @@ export default function CommentItem({ username, comment, date, rate, image }) {
         const updatedImages = parsedImages.map((img) => {
           const fixedUrl = img.replace("public/", "storage/");
           console.log("Image URL:", `${apiUrl}${fixedUrl}`);
-          return fixedUrl;
+          return `${apiUrl}${fixedUrl}`;
         });
         setCommentImages(updatedImages);
       } catch (error) {
@@ -94,33 +96,29 @@ export default function CommentItem({ username, comment, date, rate, image }) {
       </View>
 
       <View style={styles.imageContainer}>
-        {commentImages.map((img, i) => {
-          const imageUri = `${apiUrl}${img}`;
-          console.log(imageUri); // Log the full image URI
-
-          return (
-            <View key={i} style={styles.imageWrapper}>
-              <Lightbox>
-                <Animated.View
-                  style={{
-                    transform: [{ translateX: pan.x }, { translateY: pan.y }],
-                  }}
-                  {...panResponder.panHandlers}
-                >
-                  <ImageBackground
-                    style={styles.image}
-                    source={{ uri: imageUri }} // Dynamic URL
-                    onError={(error) =>
-                      console.log("Image Load Error:", error.nativeEvent.error)
-                    }
-                    onLoad={() => console.log("Image Loaded")}
-                  />
-                </Animated.View>
-              </Lightbox>
-            </View>
-          );
-        })}
+        {commentImages.map((img, i) => (
+          <TouchableOpacity
+            key={i}
+            style={styles.imageWrapper}
+            onPress={() => setVisible(true)}
+          >
+            <ImageBackground
+              style={styles.image}
+              source={{ uri: img }} // Dynamic URL
+              onError={(error) =>
+                console.log("Image Load Error:", error.nativeEvent.error)
+              }
+              onLoad={() => console.log("Image Loaded")}
+            />
+          </TouchableOpacity>
+        ))}
       </View>
+      <ImageViewing
+        images={commentImages.map((img) => ({ uri: img }))}
+        imageIndex={0}
+        visible={visible}
+        onRequestClose={() => setVisible(false)}
+      />
     </View>
   );
 }
