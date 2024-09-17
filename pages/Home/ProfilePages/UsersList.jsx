@@ -20,6 +20,7 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
+import { Platform } from "react-native";
 export default function UsersList() {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
@@ -185,29 +186,26 @@ export default function UsersList() {
             height: "100%",
             gap: 10,
             backgroundColor: "white",
+            marginTop: -62,
           }}
         >
           <View
             style={[
               styles.card,
-              { alignItems: "center", justifyContent: "center" },
+              { alignItems: "center", justifyContent: "center"},
             ]}
           >
-            <Icon2 name="user-tie" size={50} color={"#EA2A28"} />
+            <Icon2 name="user-tie" size={35} color={"#EA2A28"} />
           </View>
           <View>
-            <Text style={{ color: "grey", fontSize: 16, fontWeight: "600" }}>
-              Alt Kullanıcı Bulunamadı
+          <Text style={styles.noCommentsText}>
+              Daha önce alt kullanıcı oluşturmadınız.
             </Text>
+            <Text></Text>
           </View>
           <View style={{ width: "100%", alignItems: "center" }}>
             <TouchableOpacity
-              style={{
-                backgroundColor: "#EA2A28",
-                width: "90%",
-                padding: 8,
-                borderRadius: 5,
-              }}
+              style={styles.returnButton}
               onPress={() => {
                 setloading(true);
                 setTimeout(() => {
@@ -216,13 +214,7 @@ export default function UsersList() {
                 }, 700);
               }}
             >
-              <Text
-                style={{
-                  color: "#ffffff",
-                  fontWeight: "600",
-                  textAlign: "center",
-                }}
-              >
+              <Text style={styles.returnButtonText}>
                 Oluştur
               </Text>
             </TouchableOpacity>
@@ -536,6 +528,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     flex: 1,
   },
+  noCommentsText: {
+    fontSize: 18,
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  returnButton: {
+    backgroundColor: '#EA2B2E',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  returnButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   modal3: {
     justifyContent: "flex-end",
     margin: 0,
@@ -566,5 +575,25 @@ const styles = StyleSheet.create({
     borderColor: "#ebebeb",
     padding: 7,
     borderRadius: 5,
+  },
+  card: {
+    backgroundColor: "#FFFFFF",
+    padding: 15,
+
+    borderRadius: 50,
+
+    borderWidth: 0.6,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
 });
