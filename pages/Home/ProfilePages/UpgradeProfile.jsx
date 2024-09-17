@@ -442,92 +442,7 @@ export default function UpgradeProfile() {
 
 
 
-  const postData = async () => {
-    try {
-      let fullNumber = `${FormDatas.cityCode}${FormDatas.phoneCompany}`;
-      let formData = new FormData();
 
-      if (user.role === "Bireysel Hesap") {
-        formData.append("name", FormDatas.userName);
-        formData.append("iban", FormDatas.Iban);
-        formData.append(
-          "profile_image",
-          image
-            ? {
-                uri: image.uri,
-                name: image.fileName,
-                type: image.type,
-              }
-            : null
-        );
-        formData.append(
-          "mobile_phone",
-          FormDatas.newPhone ? FormDatas.newPhone : FormDatas.oldPhone
-        );
-        formData.append("banner_hex_code", FormDatas.backgroundColor);
-        formData.append("_method", "PUT");
-      } else {
-        formData.append(
-          "profile_image",
-          image
-            ? {
-                uri: image.uri,
-                name: image.fileName,
-                type: image.type,
-              }
-            : null
-        );
-        formData.append("city_id", selectedCity);
-        formData.append("county_id", selectedCounty);
-        formData.append("neighborhood_id", selectedNeighborhood);
-        formData.append("name", FormDatas.userName);
-        formData.append("username", FormDatas.companyName);
-        formData.append("banner_hex_code", FormDatas.backgroundColor);
-        formData.append("iban", FormDatas.Iban);
-        formData.append("website", FormDatas.webSiteLink);
-        formData.append("phone", fullNumber);
-        formData.append("year", FormDatas.SectorYear);
-        formData.append(
-          "mobile_phone",
-          FormDatas.newPhone ? FormDatas.newPhone : FormDatas.oldPhone
-        );
-        formData.append("latitude", selectedLocation.latitude);
-        formData.append("longitude", selectedLocation.longitude);
-        formData.append("_method", "PUT");
-      }
-
-      const response = await axios.post(
-        "https://private.emlaksepette.com/api/client/profile/update",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Başarılı",
-        textBody: "Profiliniz başarıyla güncellendi.",
-        button: "Tamam",
-      });
-
-      GetUserInfo();
-    } catch (error) {
-      console.error(
-        "Error:",
-        error.response ? error.response.data : error.message
-      );
-      Dialog.show({
-        type: ALERT_TYPE.ERROR,
-        title: "Hata",
-        textBody: "Profil güncelleme sırasında bir hata oluştu.",
-        button: "Tamam",
-      });
-    }
-  };
 
   const [chooseFile, setchooseFile] = useState(false);
 
@@ -581,7 +496,26 @@ export default function UpgradeProfile() {
     return finalIban.substring(0, 32);
   };
 
+  const formatPhoneNumberNew = (value) => {
+    // Sadece rakamları al
+    const cleaned = ("" + value).replace(/\D/g, "");
 
+    // 0 ile başlıyorsa, ilk karakteri çıkar
+    const cleanedWithoutLeadingZero = cleaned.startsWith("0")
+      ? cleaned.substring(1)
+      : cleaned;
+
+    let formattedNumber = "";
+
+    for (let i = 0; i < cleanedWithoutLeadingZero.length; i++) {
+      if (i === 0) formattedNumber += "(";
+      if (i === 3) formattedNumber += ") ";
+      if (i === 6 || i === 8) formattedNumber += " ";
+      formattedNumber += cleanedWithoutLeadingZero[i];
+    }
+
+    return formattedNumber;
+  };
  
 
   const handleInputChange = (key, value) => {
@@ -645,7 +579,7 @@ const [currentColor, setCurrentColor] = useState('');
         authority_licence: namFromGetUser.authority_licence || '',
         iban: namFromGetUser.iban || '',
         website: namFromGetUser.website || '',
-        phone: namFromGetUser.phone || '',
+        phone: formatPhoneNumber(namFromGetUser.phone)|| '',
         year: namFromGetUser.year || '',
         city_id: namFromGetUser.city_id || '',
         county_id: namFromGetUser.county_id || '',
@@ -655,15 +589,14 @@ const [currentColor, setCurrentColor] = useState('');
         taxNumber: namFromGetUser.taxNumber || '',
       });
       setCurrentColor(namFromGetUser.banner_hex_code);
-  
+      setareaCode(namFromGetUser.area_code)
       setTimeout(() => {
        
         onChangeCity(namFromGetUser.city_id)
         onChangeCounty(namFromGetUser.county_id )
         onChangeNeighborhood(namFromGetUser.neighborhood_id)
         onchangeTaxOffice(namFromGetUser.taxOfficeCity)
-        setlatitude(namFromGetUser.latitude)
-        setlongitude(namFromGetUser.longitude)
+     
       }, 500);
     
       
@@ -697,23 +630,128 @@ const [currentColor, setCurrentColor] = useState('');
         return [];
     }
   }
-  const [region, setRegion] = useState(null);
-  const [marker, setMarker] = useState(null);
+  const [region, setRegion] = useState(null); 
+  const initialRegion = {
+    latitude: 39.9334,
+    longitude: 32.8597,
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05,
+  };
+  useEffect(() => {
+    // API'den gelen koordinatları kontrol et, null ise varsayılanı kullan
+    if (namFromGetUser.latitude != null && namFromGetUser.longitude != null) {
+      setRegion({
+        latitude:namFromGetUser.latitude  ,
+        longitude: namFromGetUser.longitude,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      });
+    } else {
+      // API'den değer gelmezse varsayılan konumu kullan
+      setRegion(initialRegion);
+    }
+  }, [namFromGetUser]);
+  const [selectedLocation, setSelectedLocation] = useState(null); 
+  const handleMapPress = (event) => {
+    const { latitude, longitude } = event.nativeEvent.coordinate;
+    setSelectedLocation({ latitude, longitude });
+  };
+  // Eğer region henüz belirlenmediyse (API'den veri gelmemişse) bir yükleniyor göstergesi göster
+  const [areaCode, setareaCode] = useState(null)
+  if (!region) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="red" />
+      </View>
+    );
+  }
 
-  
-  const [selectedLocation, setSelectedLocation] = useState(null);
-const [address, setAddress] = useState('');
+  const postData = async () => {
+    try {
+      let fullNumber = `${areaCode}${formData.phone}`;
+      let FormData = new FormData();
 
-const handleSelectLocation = (event) => {
-  const { latitude, longitude } = event.nativeEvent.coordinate;
-  console.log('Selected coordinates:', latitude, longitude); // Koordinatları konsola yazdırın
-  setSelectedLocation({ latitude, longitude });
- 
-};
-  const userLocation = user && { latitude: parseFloat(namFromGetUser?.latitude) == null ? latitude : parseFloat(namFromGetUser.latitude), longitude: parseFloat(namFromGetUser?.longitude) == null ? longitude:parseFloat(namFromGetUser.longitude) };
-  const [latitude, setLatitude] = useState(39.1667);
-  const [longitude, setLongitude] = useState(35.6667);
-  console.log(latitude)
+      if (user.role === "Bireysel Hesap") {
+        formData.append("name", formData.name);
+        formData.append("iban",formData.iban);
+        formData.append(
+          "profile_image",
+          image
+            ? {
+                uri: image.uri,
+                name: image.fileName,
+                type: image.type,
+              }
+            : null
+        );
+        formData.append(
+          "mobile_phone",
+          formData.new_phone_number? formData.new_phone_number : formData.mobile_phone
+        );
+        formData.append("banner_hex_code", currentColor);
+        formData.append("_method", "PUT");
+      } else {
+        formData.append(
+          "profile_image",
+          image
+            ? {
+                uri: image.uri,
+                name: image.fileName,
+                type: image.type,
+              }
+            : null
+        );
+        formData.append("city_id", formData.city_id);
+        formData.append("county_id", formData.county_id);
+        formData.append("neighborhood_id", formData.neighborhood_id);
+        formData.append("name", formData.name);
+        formData.append("username", formData.username);
+        formData.append("banner_hex_code", currentColor);
+        formData.append("iban", formData.iban);
+        formData.append("website",formData.website);
+        formData.append("phone", fullNumber);
+        formData.append("year", formData.year);
+        formData.append(
+          "mobile_phone",
+          formData.new_phone_number? formData.new_phone_number : formData.mobile_phone
+        );
+        formData.append("latitude", selectedLocation.latitude);
+        formData.append("longitude", selectedLocation.longitude);
+        formData.append("_method", "PUT");
+      }
+
+      const response = await axios.post(
+        "https://private.emlaksepette.com/api/client/profile/update",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Başarılı",
+        textBody: "Profiliniz başarıyla güncellendi.",
+        button: "Tamam",
+      });
+
+      GetUserInfo();
+    } catch (error) {
+      console.error(
+        "Error:",
+        error.response ? error.response.data : error.message
+      );
+      Dialog.show({
+        type: ALERT_TYPE.ERROR,
+        title: "Hata",
+        textBody: "Profil güncelleme sırasında bir hata oluştu.",
+        button: "Tamam",
+      });
+    }
+  };
   return (
     <AlertNotificationRoot>
       {loading ? (
@@ -869,6 +907,7 @@ const handleSelectLocation = (event) => {
             <View style={{ padding: 5, width: "90%", gap: 25 }}>
               {Forms.map((item, i) => (
                 <View
+                key={i}
                   style={{
                     gap: 7,
                     display:
@@ -881,10 +920,40 @@ const handleSelectLocation = (event) => {
                   <View style={{ paddingLeft: 5 }}>
                     <Text style={styles.label}>{item.label}</Text>
                   </View>
-                  <View>
+                  <View style={{
+                    flexDirection: item.showArea?'row':'',
+                  
+                  }}>
+                {
+                  item.showArea&&
+                  <View style={{width:'30%'}}>
+                        <RNPickerSelect
+                        doneText="Tamam"
+                        value={areaCode}
+                        placeholder={{
+                          label: "Seçiniz...",
+                          value: null,
+                        }}
+                        style={pickerSelectStyles}
+                        onValueChange={(value) => {
+                        setareaCode(value)
+                      
+                        }}
+                        items={areaData}
+                      />
+                  </View>
+              
+                }
+                    
+                   
+                  
                     {item.type == "input" ? (
-                      <TextInput
-                        style={styles.input}
+                      <View style={{width:item.showArea?'68%':'100%'}}>
+                           <TextInput
+                      editable={item.disabled? false:true}
+                      maxLength={item.maxlength ? item.maxlength:90}
+                      placeholder={item.placeholder ? item.placeholder :''}
+                        style={[styles.input,item.disabled?{color:'grey'}:{},]}
                         value={formData[item.key]}
                         onChangeText={(value) => {
                           if (item.key === "iban") {
@@ -893,9 +962,17 @@ const handleSelectLocation = (event) => {
                           } else {
                             // Diğer alanlar için normal input değişikliği
                             handleInputChange(item.key, value);
+                          } 
+                          if (item.key==='new_phone_number') {
+                              handleInputChange(item.key ,formatPhoneNumberNew(value))
+                          }
+                          if (item.key==='phone') {
+                              handleInputChange(item.key,formatPhoneNumber(value))
                           }
                         }}
                       />
+                      </View>
+                   
                     ) : (
                       <RNPickerSelect
                         doneText="Tamam"
@@ -926,22 +1003,27 @@ const handleSelectLocation = (event) => {
                  { //Harita
                     tab==3 &&
                     <View style={{alignItems:'center',height:300,width:'100%'}}>
-                <MapView
-         style={{ width:'100%',height:'100%' }}
-         onPress={handleSelectLocation}
-         region={{
-           latitude: parseFloat(namFromGetUser?.latitude) == null ? parseFloat(latitude) : parseFloat(namFromGetUser.latitude) , // Türkiye'nin merkezi Ankara'nın enlemi
-           longitude:parseFloat(namFromGetUser?.longitude) == null ? parseFloat(longitude) : parseFloat(namFromGetUser.longitude), // Türkiye'nin merkezi Ankara'nın boylamı
-           latitudeDelta: 9, // Harita yakınlığı
-           longitudeDelta: 9,
-         }}
-       >
-                   {selectedLocation ? (
-               <Marker coordinate={selectedLocation} />
-             ) : (
-               <Marker coordinate={userLocation} />
-             )}
-       </MapView>
+             <MapView
+        style={{width:'100%',height:'100%'}}
+        initialRegion={region}
+        onPress={handleMapPress}
+      >
+        {/* Marker örneği */}
+        {selectedLocation ? (
+          <Marker
+            coordinate={selectedLocation}
+            title="Selected Location"
+          />
+        )
+      :
+      <Marker
+      coordinate={{ latitude: region.latitude, longitude: region.longitude }}
+      title="Marker Title"
+      description="Marker description"
+    />
+      }
+      
+      </MapView>
                     </View>
                   }
                   {
@@ -1115,6 +1197,7 @@ const handleSelectLocation = (event) => {
        
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
+            onPress={postData}
               style={{
                 width: "100%",
                 backgroundColor: "#EA2B2E",
@@ -1296,6 +1379,7 @@ const handleSelectLocation = (event) => {
 }
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
+    width:'100%',
     backgroundColor: "#FAFAFA",
     borderWidth: 1,
     borderColor: "#ebebeb",
@@ -1304,6 +1388,7 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 14, // to ensure the text is never behind the icon
   },
   inputAndroid: {
+    width:'100%',
     backgroundColor: "#FAFAFA",
     borderWidth: 1,
     borderColor: "#eaeff5",
