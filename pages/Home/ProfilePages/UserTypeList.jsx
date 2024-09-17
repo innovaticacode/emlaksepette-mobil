@@ -208,18 +208,13 @@ export default function UserTypeList() {
             <Icon2 name="user-tie" size={50} color={"#EA2A28"} />
           </View>
           <View>
-            <Text style={{ color: "grey", fontSize: 16, fontWeight: "600" }}>
-              Kullanıcı Tipi Bulunanmadı
+            <Text style={styles.noCommentsText}>
+              Daha önce kullanıcı tipi oluşturmadınız.
             </Text>
           </View>
           <View style={{ width: "100%", alignItems: "center" }}>
             <TouchableOpacity
-              style={{
-                backgroundColor: "#EA2A28",
-                width: "90%",
-                padding: 8,
-                borderRadius: 5,
-              }}
+              style={styles.returnButton}
               onPress={() => {
                 setloading(true);
                 setTimeout(() => {
@@ -228,13 +223,7 @@ export default function UserTypeList() {
                 }, 700);
               }}
             >
-              <Text
-                style={{
-                  color: "#ffffff",
-                  fontWeight: "600",
-                  textAlign: "center",
-                }}
-              >
+              <Text style={styles.returnButtonText}>
                 Oluştur
               </Text>
             </TouchableOpacity>
@@ -442,6 +431,23 @@ export default function UserTypeList() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#f5f5f7",
+  },
+  noCommentsText: {
+    fontSize: 18,
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  returnButton: {
+    backgroundColor: '#EA2B2E',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  returnButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   modal4: {
     justifyContent: "center",
