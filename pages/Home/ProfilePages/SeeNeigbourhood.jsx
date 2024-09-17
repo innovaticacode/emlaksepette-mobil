@@ -67,36 +67,39 @@ export default function SeeNeigbourhood() {
         </View>
       ) : (
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-          {suggests.length > 0 ? (
-            suggests.map((suggest) => (
-              <NeigbourhoodCard
-                key={suggest.id}
-                NeigBourHoodInfo={suggest.owner}
-                project={suggest?.order?.cart}
-                projectInfo={suggest.project}
-              />
-            ))
-          ) : (
-            <View style={styles.noDataContainer}>
-              <View style={styles.iconContainer}>
-                <Icon name="users-slash" size={40} color={"#EA2A28"} />
+          <View style={styles.noDataOuterContainer}>
+            {suggests.length > 0 ? (
+              suggests.map((suggest) => (
+                <NeigbourhoodCard
+                  key={suggest.id}
+                  NeigBourHoodInfo={suggest.owner}
+                  project={suggest?.order?.cart}
+                  projectInfo={suggest.project}
+                />
+              ))
+            ) : (
+              <View style={styles.noCommentsContainer}>
+                  <Icon name="users-slash" size={62} color="#333" style={{ marginBottom: 20 }} />
+                <Text style={styles.noCommentsText}>
+                  Henüz Komşumu Gör Bilgisi Satın Almadınız.
+                </Text>
+                <TouchableOpacity
+                  style={styles.returnButton}
+                  onPress={() => {
+                    setLoading(true);
+                    setTimeout(() => {
+                      navigation.navigate("HomePage");
+                      setLoading(false);
+                    }, 700);
+                  }}
+                >
+                  <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
+                </TouchableOpacity>
               </View>
-              <Text style={styles.noDataText}>Komşunuz bulunmamaktadır.</Text>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => {
-                  setLoading(true);
-                  setTimeout(() => {
-                    navigation.navigate("HomePage");
-                    setLoading(false);
-                  }, 700);
-                }}
-              >
-                <Text style={styles.buttonText}>Ana Sayfa'ya dön</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+            )}
+          </View>
         </ScrollView>
+
       )}
     </View>
   );
@@ -108,24 +111,49 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F5F7",
     padding: 8,
   },
-  scrollViewContainer: {
-    gap: 9,
-  },
-  loadingContainer: {
+  noCommentsContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: -62,
+  },
+  noCommentsText: {
+    fontSize: 18,
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  returnButton: {
+    backgroundColor: '#EA2B2E',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  returnButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  scrollViewContainer: {
+    flexGrow: 1,
+    justifyContent: 'center', // İçeriği dikey olarak ortala
+  },
+  noDataOuterContainer: {
+    flex: 1,
+    justifyContent: 'center', // İçeriği dikey olarak ortala
+    alignItems: 'center', // İçeriği yatay olarak ortala
+    minHeight: '100%', // Ekranı tam doldurması için
   },
   noDataContainer: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    padding: 15,
   },
   iconContainer: {
     alignItems: "center",
     justifyContent: "center",
-    height: 100,
-    width: 100,
+    height: 85,
+    width: 85,
     borderRadius: 50,
     backgroundColor: "#FFFFFF",
     borderWidth: 0.7,
@@ -142,23 +170,5 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  noDataText: {
-    color: "grey",
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
-    marginVertical: 10,
-  },
-  button: {
-    backgroundColor: "#EA2A28",
-    width: "90%",
-    padding: 8,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#ffffff",
-    fontWeight: "600",
-    textAlign: "center",
-  },
+
 });

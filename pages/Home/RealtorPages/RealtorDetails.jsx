@@ -907,7 +907,7 @@ export default function PostDetail() {
                     </View>
                   </TouchableOpacity>
 
-                  {(OpenSharing == "Evet"   && user.corporate_type=='Emlak Ofisi')&& (
+                  {(OpenSharing == "Evet"   && user.corporate_type=='Emlak Ofisi' || user.type==1)&& (
                     <TouchableOpacity
                       onPress={() => {
                         openCollection();

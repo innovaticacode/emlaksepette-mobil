@@ -486,28 +486,21 @@ export default function CollectionsPage() {
                   { alignItems: "center", justifyContent: "center" },
                 ]}
               >
-                <Icon3 name="bookmark-add" size={50} color={"#EA2A28"} />
+                <Icon3 name="bookmark-add" size={50} color={"#333"} />
               </View>
               <View>
-                <Text
-                  style={{ color: "grey", fontSize: 16, fontWeight: "600" }}
-                >
+              <Text style={styles.noCommentsText}>
                     {
                   (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                  'Portföyünüzde İlan bulunmamaktadır':
-                  'Koleksiyonunuzda ilan bulunmamaktadır' 
+                  'Portföyünüzde İlan bulunmamaktadır.':
+                  'Koleksiyonunuzda ilan bulunmamaktadır.' 
                 }
                 
                 </Text>
               </View>
               <View style={{ width: "100%", alignItems: "center" }}>
                 <TouchableOpacity
-                  style={{
-                    backgroundColor: "#EA2A28",
-                    width: "90%",
-                    padding: 8,
-                    borderRadius: 5,
-                  }}
+                  style={styles.returnButton}
                   onPress={() => {
                     setloading(true);
                     setTimeout(() => {
@@ -516,15 +509,7 @@ export default function CollectionsPage() {
                     }, 700);
                   }}
                 >
-                  <Text
-                    style={{
-                      color: "#ffffff",
-                      fontWeight: "600",
-                      textAlign: "center",
-                    }}
-                  >
-                    Ana Sayfa'ya dön
-                  </Text>
+                  <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -1195,7 +1180,24 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "white",
   },
-
+  noCommentsText: {
+    fontSize: 18,
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  returnButton: {
+    backgroundColor: '#EA2B2E',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  returnButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   Input: {
     backgroundColor: "#ebebebab",
     marginTop: 0,

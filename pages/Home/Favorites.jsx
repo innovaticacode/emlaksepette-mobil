@@ -347,24 +347,17 @@ export default function Favorites() {
                     { alignItems: "center", justifyContent: "center" },
                   ]}
                 >
-                  <Icon name="heart-plus" size={50} color={"#EA2A28"} />
+                  <Icon name="heart-plus" size={50} color={"#333"} />
                 </View>
                 <View>
-                  <Text
-                    style={{ color: "grey", fontSize: 16, fontWeight: "600" }}
-                  >
-                    Favorilerinizde ilan bulunmamaktadır
+                <Text style={styles.noCommentsText}>
+                    Favorilerinizde ilan bulunmamaktadır.
                   </Text>
                   <Text></Text>
                 </View>
                 <View style={{ width: "100%", alignItems: "center" }}>
                   <TouchableOpacity
-                    style={{
-                      backgroundColor: "#EA2A28",
-                      width: "90%",
-                      padding: 8,
-                      borderRadius: 5,
-                    }}
+                    style={styles.returnButton}
                     onPress={() => {
                       setLoading(true);
                       setTimeout(() => {
@@ -373,15 +366,7 @@ export default function Favorites() {
                       }, 700);
                     }}
                   >
-                    <Text
-                      style={{
-                        color: "#ffffff",
-                        fontWeight: "600",
-                        textAlign: "center",
-                      }}
-                    >
-                      Ana Sayfa'ya dön
-                    </Text>
+                    <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -472,7 +457,6 @@ export default function Favorites() {
                             setRemoveSelectedCollectionsModal(true)
                           }
                         }}
-
 
                       >
                         <Icon2 name="trash" size={18} color={"white"} />
@@ -883,6 +867,23 @@ const styles = StyleSheet.create({
     padding: 10,
     height: "100%",
     paddingTop: 10,
+  },
+  noCommentsText: {
+    fontSize: 18,
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  returnButton: {
+    backgroundColor: '#EA2B2E',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  returnButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   leftAction: {
     backgroundColor: "red",

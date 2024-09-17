@@ -116,6 +116,7 @@ import Toast from 'react-native-toast-message';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
 import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
 import ApplyForBeCompany from "./pages/Home/ProfilePages/ApplyForBeCompany";
+import SellAndRentAdvantage from "./pages/Home/SellAndRentAdvantage";
 
 
 const Stack = createNativeStackNavigator();
@@ -1157,7 +1158,17 @@ export default function App({ route }) {
               },
             })}
           />
-         
+          <Stack.Screen
+          name="SellAndRentAdvantage"
+          component={SellAndRentAdvantage}
+          options={({ route }) => ({
+            title: "Sat Kirala",
+            headerBackTitleVisible: false,
+            headerStyle: {
+              backgroundColor: "#ffffff",
+            },
+          })}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
