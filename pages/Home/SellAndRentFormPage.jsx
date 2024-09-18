@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   whiteCard: {
     width: "90%",
     minWidth: 336,
-    height: 132,
+    height:'auto',
     alignSelf: "center",
     backgroundColor: "#FFE3E3",
     borderRadius: 14,
@@ -219,8 +219,8 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   whiteCardInnerTextArea: {
-    width: 142,
-    height: "auto",
+    width: 154,
+    height: 'auto',
     paddingVertical: 6,
   },
   whiteCardText: {
