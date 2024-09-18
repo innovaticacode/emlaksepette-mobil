@@ -22,7 +22,7 @@ export default function SellPlaces({ data }) {
     try {
       if (user?.access_token && user) {
         const placeInfo = await axios.get(
-          `https://emlaksepette.com/api/magaza/${user.id}/satis-noktalari`
+          `https://private.emlaksepette.com/api/magaza/${user.id}/satis-noktalari`
         );
         setPlaces(placeInfo?.data?.usersFromCollections);
       }

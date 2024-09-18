@@ -8,6 +8,7 @@ import {
   Image,
   Alert,
   Dimensions,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useIsFocused, useRoute } from "@react-navigation/native";
@@ -641,10 +642,10 @@ export default function UpgradeProfile() {
           "profile_image",
           image
             ? {
-                uri: image.uri,
-                name: image.fileName,
-                type: image.type,
-              }
+              uri: image.uri,
+              name: image.fileName,
+              type: image.type,
+            }
             : null
         );
         formData.append(
@@ -660,10 +661,10 @@ export default function UpgradeProfile() {
           "profile_image",
           image
             ? {
-                uri: image.uri,
-                name: image.fileName,
-                type: image.type,
-              }
+              uri: image.uri,
+              name: image.fileName,
+              type: image.type,
+            }
             : null
         );
         formData.append("city_id", formData.city_id);
@@ -720,645 +721,657 @@ export default function UpgradeProfile() {
     }
   };
   return (
-    <AlertNotificationRoot>
-      {loading ? (
-        <View
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        >
-          <ActivityIndicator size={"large"} color={user.banner_hex_code} />
-        </View>
-      ) : (
-        <ScrollView
-          style={styles.container}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 40, gap: 20 }}
-        >
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"} // iOS ve Android için farklı davranışlar
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0} // iOS için klavyenin üstünde kalacak şekilde offset ayarı
+    >
+      <AlertNotificationRoot>
+        {loading ? (
           <View
-            style={{
-              width: "100%",
-              backgroundColor: currentColor,
-              padding: 15,
-              alignItems: "center",
-            }}
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
           >
-            {(tab == 0 || tab == 2) && (
-              <View style={{ width: "100%", alignItems: "flex-start" }}>
-                <View
-                  style={{
-                    backgroundColor: "white",
-                    flexDirection: "row",
-                    padding: 4,
-                    borderRadius: 50,
-                    position: "absolute",
-                    right: 0,
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      padding: 4,
-                      backgroundColor: currentColor,
-
-                      borderWidth: 1,
-                      borderColor: "#ebebeb",
-                      borderRadius: 50,
-                    }}
-                    onPress={() => setopenColorPicker(!openColorPicker)}
-                  >
-                    <Feather name="brush" color={"white"} size={25} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-
-            <View>
-              <View style={{ width: 96, height: 96 }}>
-                <View style={{ borderRadius: 50 }}>
-                  {user.access_token ? (
-                    <Image
-                      source={
-                        image
-                          ? { uri: image.uri }
-                          : { uri: PhotoUrl + namFromGetUser.profile_image }
-                      }
-                      style={{ width: "100%", height: "100%" }}
-                      borderRadius={50}
-                    />
-                  ) : (
-                    <Icon2 name="user" size={65} color="#333" padding={10} />
-                  )}
-                </View>
-              </View>
-
+            <ActivityIndicator size={"large"} color={user.banner_hex_code} />
+          </View>
+        ) : (
+          <ScrollView
+            style={styles.container}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 40, gap: 20 }}
+          >
+            <View
+              style={{
+                width: "100%",
+                backgroundColor: currentColor,
+                padding: 15,
+                alignItems: "center",
+              }}
+            >
               {(tab == 0 || tab == 2) && (
-                <TouchableOpacity
-                  onPress={() => {
-                    setchoose(true);
-                  }}
-                  style={{
-                    position: "absolute",
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: "#777777",
-                    borderRadius: 50,
-                    padding: 4,
-                  }}
-                >
-                  <View>
-                    <Icon name="account-edit" size={25} color={"white"} />
-                  </View>
-                </TouchableOpacity>
-              )}
-            </View>
-
-            <View style={{ alignItems: "center", paddingTop: 10, gap: 5 }}>
-              {(tab == 0 || tab == 1) && (
-                <Text
-                  style={{ fontSize: 14, fontWeight: "600", color: "#fff" }}
-                >
-                  {namFromGetUser?.name}
-                </Text>
-              )}
-              {user.type == 1 && (
-                <Text
-                  style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}
-                >
-                  {user?.role}
-                </Text>
-              )}
-              {(tab == 2 || tab == 3 || tab == 4) && (
-                <Text
-                  style={{ fontSize: 14, fontWeight: "600", color: "#fff" }}
-                >
-                  {namFromGetUser?.name}
-                </Text>
-              )}
-              {user.type == 2 && (
-                <Text
-                  style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}
-                >
-                  {user?.corporate_type}
-                </Text>
-              )}
-              <Text style={{ fontSize: 11, color: "#fff", fontWeight: "700" }}>
-                {user.email}
-              </Text>
-            </View>
-          </View>
-          <View
-            style={[
-              styles.card,
-              { display: openColorPicker ? "flex" : "none" },
-            ]}
-          >
-            <ColorPicker
-              color={currentColor}
-              swatchesOnly={false}
-              onColorChange={onColorChange}
-              onColorChangeComplete={onColorChangeComplete}
-              thumbSize={50}
-              sliderSize={20}
-              noSnap={true}
-              gapSize={0}
-              sliderHidden={true}
-              row={false}
-              swatchesLast={swatchesLast}
-              swatches={swatchesEnabled}
-              discrete={false}
-              useNativeDriver={true}
-              useNativeLayout={false}
-            />
-          </View>
-
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <View style={{ padding: 5, width: "90%", gap: 25 }}>
-              {Forms.map((item, i) => {
-                if((item?.key == "authority_licence" && item?.isShow == user?.corporate_type) || !item.isShow){
-                  return(
-                    <View
-                      key={i}
+                <View style={{ width: "100%", alignItems: "flex-start" }}>
+                  <View
+                    style={{
+                      backgroundColor: "white",
+                      flexDirection: "row",
+                      padding: 4,
+                      borderRadius: 50,
+                      position: "absolute",
+                      right: 0,
+                    }}
+                  >
+                    <TouchableOpacity
                       style={{
-                        gap: 7,
-                        display:
-                          Array.isArray(item?.tab) && item.tab.includes(tab)
-                            ? "flex"
-                            : "none",
+                        padding: 4,
+                        backgroundColor: currentColor,
+
+                        borderWidth: 1,
+                        borderColor: "#ebebeb",
+                        borderRadius: 50,
                       }}
+                      onPress={() => setopenColorPicker(!openColorPicker)}
                     >
-                      <View style={{ paddingLeft: 5 }}>
-                        <Text style={styles.label}>{item.label}</Text>
-                      </View>
+                      <Feather name="brush" color={"white"} size={25} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
+
+              <View>
+                <View style={{ width: 96, height: 96 }}>
+                  <View style={{ borderRadius: 50 }}>
+                    {user.access_token ? (
+                      <Image
+                        source={
+                          image
+                            ? { uri: image.uri }
+                            : { uri: PhotoUrl + namFromGetUser.profile_image }
+                        }
+                        style={{ width: "100%", height: "100%" }}
+                        borderRadius={50}
+                      />
+                    ) : (
+                      <Icon2 name="user" size={65} color="#333" padding={10} />
+                    )}
+                  </View>
+                </View>
+
+                {(tab == 0 || tab == 2) && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setchoose(true);
+                    }}
+                    style={{
+                      position: "absolute",
+                      right: 0,
+                      bottom: 0,
+                      backgroundColor: "#777777",
+                      borderRadius: 50,
+                      padding: 4,
+                    }}
+                  >
+                    <View>
+                      <Icon name="account-edit" size={25} color={"white"} />
+                    </View>
+                  </TouchableOpacity>
+                )}
+              </View>
+
+              <View style={{ alignItems: "center", paddingTop: 10, gap: 5 }}>
+                {(tab == 0 || tab == 1) && (
+                  <Text
+                    style={{ fontSize: 14, fontWeight: "600", color: "#fff" }}
+                  >
+                    {namFromGetUser?.name}
+                  </Text>
+                )}
+                {user.type == 1 && (
+                  <Text
+                    style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}
+                  >
+                    {user?.role}
+                  </Text>
+                )}
+                {(tab == 2 || tab == 3 || tab == 4) && (
+                  <Text
+                    style={{ fontSize: 14, fontWeight: "600", color: "#fff" }}
+                  >
+                    {namFromGetUser?.name}
+                  </Text>
+                )}
+                {user.type == 2 && (
+                  <Text
+                    style={{ fontSize: 12, fontWeight: "500", color: "#fff" }}
+                  >
+                    {user?.corporate_type}
+                  </Text>
+                )}
+                <Text style={{ fontSize: 11, color: "#fff", fontWeight: "700" }}>
+                  {user.email}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={[
+                styles.card,
+                { display: openColorPicker ? "flex" : "none" },
+              ]}
+            >
+              <ColorPicker
+                color={currentColor}
+                swatchesOnly={false}
+                onColorChange={onColorChange}
+                onColorChangeComplete={onColorChangeComplete}
+                thumbSize={50}
+                sliderSize={20}
+                noSnap={true}
+                gapSize={0}
+                sliderHidden={true}
+                row={false}
+                swatchesLast={swatchesLast}
+                swatches={swatchesEnabled}
+                discrete={false}
+                useNativeDriver={true}
+                useNativeLayout={false}
+              />
+            </View>
+
+            <View style={{ width: "100%", alignItems: "center" }}>
+              <View style={{ padding: 5, width: "90%", gap: 25 }}>
+                {Forms.map((item, i) => {
+                  if ((item?.key == "authority_licence" && item?.isShow == user?.corporate_type) || !item.isShow) {
+                    return (
                       <View
+                        key={i}
                         style={{
-                          flexDirection: item.showArea ? "row" : "",
+                          gap: 7,
+                          display:
+                            Array.isArray(item?.tab) && item.tab.includes(tab)
+                              ? "flex"
+                              : "none",
                         }}
                       >
-                        {item.showArea && (
-                          <View style={{ width: "30%" }}>
+                        <View style={{ paddingLeft: 5 }}>
+                          <Text style={styles.label}>{item.label}</Text>
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: item.showArea ? "row" : "",
+                          }}
+                        >
+                          {item.showArea && (
+                            <View style={{ width: "45%" }}>
+                              <RNPickerSelect
+                                doneText="Tamam"
+                                value={areaCode}
+                                placeholder={{
+                                  label: "Seçiniz...",
+                                  value: null,
+                                }}
+                                style={pickerSelectStyles}
+                                onValueChange={(value) => {
+                                  setareaCode(value);
+                                }}
+                                items={areaData}
+                              />
+                            </View>
+                          )}
+
+                          {item.type == "input" ? (
+                            <View style={{ width: item.showArea ? "55%" : "100%" }}>
+                              <TextInput
+                                editable={item.disabled ? false : true}
+                                maxLength={item.maxlength ? item.maxlength : 90}
+                                placeholder={item.placeholder ? item.placeholder : ""}
+                                style={[
+                                  styles.input,
+                                  item.disabled ? { color: "grey" } : {},
+                                ]}
+                                value={formData[item.key]}
+                                keyboardType={
+                                  item.key === "iban" || item.key === "phone" || item.key === "taxNumber"
+                                    ? "number-pad"
+                                    : "default"
+                                }
+                                autoCapitalize={item.key === "website" ? "none" : "sentences"}
+                                onChangeText={(value) => {
+                                  if (item.key === "iban") {
+                                    // Eğer IBAN alanıysa formatlamayı uygula
+                                    handleInputChange(item.key, formatIban(value));
+                                  } else {
+                                    // Diğer alanlar için normal input değişikliği
+                                    handleInputChange(item.key, value);
+                                  }
+                                  if (item.key === "new_phone_number") {
+                                    handleInputChange(
+                                      item.key,
+                                      formatPhoneNumberNew(value)
+                                    );
+                                  }
+                                  if (item.key === "phone") {
+                                    handleInputChange(
+                                      item.key,
+                                      formatPhoneNumber(value)
+                                    );
+                                  }
+                                }}
+                              />
+                            </View>
+                          ) : (
                             <RNPickerSelect
                               doneText="Tamam"
-                              value={areaCode}
+                              value={formData[item.key]}
                               placeholder={{
                                 label: "Seçiniz...",
                                 value: null,
                               }}
                               style={pickerSelectStyles}
                               onValueChange={(value) => {
-                                setareaCode(value);
-                              }}
-                              items={areaData}
-                            />
-                          </View>
-                        )}
-    
-                        {item.type == "input" ? (
-                          <View style={{ width: item.showArea ? "68%" : "100%" }}>
-                            <TextInput
-                              editable={item.disabled ? false : true}
-                              maxLength={item.maxlength ? item.maxlength : 90}
-                              placeholder={item.placeholder ? item.placeholder : ""}
-                              style={[
-                                styles.input,
-                                item.disabled ? { color: "grey" } : {},
-                              ]}
-                              value={formData[item.key]}
-                              onChangeText={(value) => {
-                                if (item.key === "iban") {
-                                  // Eğer IBAN alanıysa formatlamayı uygula
-                                  handleInputChange(item.key, formatIban(value));
-                                } else {
-                                  // Diğer alanlar için normal input değişikliği
-                                  handleInputChange(item.key, value);
-                                }
-                                if (item.key === "new_phone_number") {
-                                  handleInputChange(
-                                    item.key,
-                                    formatPhoneNumberNew(value)
-                                  );
-                                }
-                                if (item.key === "phone") {
-                                  handleInputChange(
-                                    item.key,
-                                    formatPhoneNumber(value)
-                                  );
+                                handleInputChange(item.key, value);
+                                if (item.key === "city_id") {
+                                  onChangeCity(value); // Şehir seçilince ilçe verilerini almak için
+                                } else if (item.key === "county_id") {
+                                  onChangeCounty(value); // İlçe seçilince mahalle verilerini almak için
+                                } else if (item.key === "neighborhood_id") {
+                                  onChangeNeighborhood(value); // Mahalle seçimi
+                                } else if (item.key === "taxOfficeCity") {
+                                  onchangeTaxOffice(value);
                                 }
                               }}
+                              items={getItemsForKey(item.key)}
                             />
-                          </View>
+                          )}
+                        </View>
+                      </View>
+                    )
+                  }
+
+                }
+
+
+                )}
+                {
+                  //Harita
+                  tab == 3 && (
+                    <View
+                      style={{ alignItems: "center", height: 300, width: "100%" }}
+                    >
+                      <MapView
+                        style={{ width: "100%", height: "100%" }}
+                        initialRegion={region}
+                        onPress={handleMapPress}
+                      >
+                        {/* Marker örneği */}
+                        {selectedLocation ? (
+                          <Marker
+                            coordinate={selectedLocation}
+                            title="Selected Location"
+                          />
                         ) : (
-                          <RNPickerSelect
-                            doneText="Tamam"
-                            value={formData[item.key]}
-                            placeholder={{
-                              label: "Seçiniz...",
-                              value: null,
+                          <Marker
+                            coordinate={{
+                              latitude: region.latitude,
+                              longitude: region.longitude,
                             }}
-                            style={pickerSelectStyles}
-                            onValueChange={(value) => {
-                              handleInputChange(item.key, value);
-                              if (item.key === "city_id") {
-                                onChangeCity(value); // Şehir seçilince ilçe verilerini almak için
-                              } else if (item.key === "county_id") {
-                                onChangeCounty(value); // İlçe seçilince mahalle verilerini almak için
-                              } else if (item.key === "neighborhood_id") {
-                                onChangeNeighborhood(value); // Mahalle seçimi
-                              } else if (item.key === "taxOfficeCity") {
-                                onchangeTaxOffice(value);
-                              }
-                            }}
-                            items={getItemsForKey(item.key)}
+                            title="Marker Title"
+                            description="Marker description"
                           />
                         )}
-                      </View>
+                      </MapView>
                     </View>
                   )
                 }
-                
-              }
-                
-              
-              )}
-              {
-                //Harita
-                tab == 3 && (
-                  <View
-                    style={{ alignItems: "center", height: 300, width: "100%" }}
-                  >
-                    <MapView
-                      style={{ width: "100%", height: "100%" }}
-                      initialRegion={region}
-                      onPress={handleMapPress}
-                    >
-                      {/* Marker örneği */}
-                      {selectedLocation ? (
-                        <Marker
-                          coordinate={selectedLocation}
-                          title="Selected Location"
-                        />
-                      ) : (
-                        <Marker
-                          coordinate={{
-                            latitude: region.latitude,
-                            longitude: region.longitude,
-                          }}
-                          title="Marker Title"
-                          description="Marker description"
-                        />
-                      )}
-                    </MapView>
-                  </View>
-                )
-              }
-              {tab == 1 && (
-                <>
-                  <View style={[styles.card, { gap: 10 }]}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setchooseFile(true);
-                      }}
-                    >
-                      <View
-                        style={{
-                          width: "100%",
-                          height: 150,
-                          borderWidth: 1,
-                          borderStyle: "dashed",
-                          borderColor: "#F27B7D",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          borderRadius: 9,
+                {tab == 1 && (
+                  <>
+                    <View style={[styles.card, { gap: 10 }]}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setchooseFile(true);
                         }}
                       >
-                        {file && !isLoading ? (
-                          <View style={{ width: "100%", height: "100%" }}>
-                            <Image
-                              source={{ uri: file }}
-                              style={{ width: "100%", height: "100%" }}
-                              borderRadius={9}
-                            />
-                          </View>
-                        ) : (
-                          <View
-                            style={{
-                              alignItems: "center",
-                              backgroundColor: "#FDEAEA",
-                              width: "100%",
-                              height: "100%",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Feather
-                              name="cloud-upload-outline"
-                              size={60}
-                              color={"#EA2B2E"}
-                            />
-                            <Text style={{ color: "#EA2B2E", fontSize: 13 }}>
-                              Dosyanızı buraya yükleyiniz
-                            </Text>
-                          </View>
-                        )}
-                      </View>
-                    </TouchableOpacity>
-                    {isLoading && (
-                      <View style={{ width: "100%" }}>
-                        <Progress.Bar
-                          color="#FDEAEA"
-                          height={20}
-                          progress={progress}
-                          width={null}
-                          style={{ flex: 1 }}
-                          animated={true}
-                          indeterminate={false}
-                          indeterminateAnimationDuration={1000}
-                        />
                         <View
                           style={{
-                            position: "absolute",
-                            right: 10,
+                            width: "100%",
+                            height: 150,
+                            borderWidth: 1,
+                            borderStyle: "dashed",
+                            borderColor: "#F27B7D",
+                            alignItems: "center",
                             justifyContent: "center",
-                            top: 3,
+                            borderRadius: 9,
                           }}
                         >
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              gap: 10,
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              width: "100%",
-                            }}
-                          >
-                            <View style={{ paddingLeft: 30 }}>
-                              <Text style={{ color: "#333", fontSize: 10 }}>
-                                Belge Yükleniyor...
+                          {file && !isLoading ? (
+                            <View style={{ width: "100%", height: "100%" }}>
+                              <Image
+                                source={{ uri: file }}
+                                style={{ width: "100%", height: "100%" }}
+                                borderRadius={9}
+                              />
+                            </View>
+                          ) : (
+                            <View
+                              style={{
+                                alignItems: "center",
+                                backgroundColor: "#FDEAEA",
+                                width: "100%",
+                                height: "100%",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Feather
+                                name="cloud-upload-outline"
+                                size={60}
+                                color={"#EA2B2E"}
+                              />
+                              <Text style={{ color: "#EA2B2E", fontSize: 13 }}>
+                                Dosyanızı buraya yükleyiniz
                               </Text>
                             </View>
+                          )}
+                        </View>
+                      </TouchableOpacity>
+                      {isLoading && (
+                        <View style={{ width: "100%" }}>
+                          <Progress.Bar
+                            color="#FDEAEA"
+                            height={20}
+                            progress={progress}
+                            width={null}
+                            style={{ flex: 1 }}
+                            animated={true}
+                            indeterminate={false}
+                            indeterminateAnimationDuration={1000}
+                          />
+                          <View
+                            style={{
+                              position: "absolute",
+                              right: 10,
+                              justifyContent: "center",
+                              top: 3,
+                            }}
+                          >
                             <View
                               style={{
                                 flexDirection: "row",
-                                gap: 5,
+                                gap: 10,
                                 alignItems: "center",
+                                justifyContent: "space-between",
+                                width: "100%",
                               }}
                             >
-                              <Text
+                              <View style={{ paddingLeft: 30 }}>
+                                <Text style={{ color: "#333", fontSize: 10 }}>
+                                  Belge Yükleniyor...
+                                </Text>
+                              </View>
+                              <View
                                 style={{
-                                  fontSize: 11,
-                                  color: "#333",
-                                  textAlign: "center",
+                                  flexDirection: "row",
+                                  gap: 5,
+                                  alignItems: "center",
                                 }}
                               >
-                                {Math.round(progress * 100)}%
-                              </Text>
-                              <TouchableOpacity
-                                style={{}}
-                                hitSlop={{
-                                  top: 10,
-                                  bottom: 10,
-                                  left: 10,
-                                  right: 10,
-                                }}
-                              >
-                                <Icon name="close" size={17} color={"#333"} />
-                              </TouchableOpacity>
+                                <Text
+                                  style={{
+                                    fontSize: 11,
+                                    color: "#333",
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  {Math.round(progress * 100)}%
+                                </Text>
+                                <TouchableOpacity
+                                  style={{}}
+                                  hitSlop={{
+                                    top: 10,
+                                    bottom: 10,
+                                    left: 10,
+                                    right: 10,
+                                  }}
+                                >
+                                  <Icon name="close" size={17} color={"#333"} />
+                                </TouchableOpacity>
+                              </View>
                             </View>
                           </View>
                         </View>
-                      </View>
-                    )}
-                  </View>
-                  <Collapse onToggle={() => setopenAccor(!openAccor)}>
-                    <CollapseHeader>
-                      <View
-                        style={[
-                          styles.card,
-                          {
-                            padding: 0,
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            paddingVertical: 10,
-                          },
-                        ]}
-                      >
-                        <Text style={{ color: "#333" }}>
-                          Yüklemeniz Gereken Belge Örneği
-                        </Text>
-                        <Arrow
-                          name={openAccor ? "arrow-down" : "arrow-right"}
-                          size={15}
-                          color={"grey"}
-                        />
-                      </View>
-                    </CollapseHeader>
-                    <CollapseBody style={{}}>
-                      <View
-                        style={[
-                          styles.card,
-                          {
-                            gap: 15,
-                            paddingHorizontal: 4,
-                            paddingVertical: 8,
-                            alignItems: "center",
-                          },
-                        ]}
-                      >
-                        <View style={{ width: 250, height: 200 }}>
-                          <Image
-                            source={{
-                              uri: "https://private.emlaksepette.com/images/phone-update-image/phonefile.jpg",
-                            }}
-                            style={{ width: "100%", height: "100%" }}
+                      )}
+                    </View>
+                    <Collapse onToggle={() => setopenAccor(!openAccor)}>
+                      <CollapseHeader>
+                        <View
+                          style={[
+                            styles.card,
+                            {
+                              padding: 0,
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                              paddingVertical: 10,
+                            },
+                          ]}
+                        >
+                          <Text style={{ color: "#333" }}>
+                            Yüklemeniz Gereken Belge Örneği
+                          </Text>
+                          <Arrow
+                            name={openAccor ? "arrow-down" : "arrow-right"}
+                            size={15}
+                            color={"grey"}
                           />
                         </View>
-                      </View>
-                    </CollapseBody>
-                  </Collapse>
-                </>
-              )}
+                      </CollapseHeader>
+                      <CollapseBody style={{}}>
+                        <View
+                          style={[
+                            styles.card,
+                            {
+                              gap: 15,
+                              paddingHorizontal: 4,
+                              paddingVertical: 8,
+                              alignItems: "center",
+                            },
+                          ]}
+                        >
+                          <View style={{ width: 250, height: 200 }}>
+                            <Image
+                              source={{
+                                uri: "https://private.emlaksepette.com/images/phone-update-image/phonefile.jpg",
+                              }}
+                              style={{ width: "100%", height: "100%" }}
+                            />
+                          </View>
+                        </View>
+                      </CollapseBody>
+                    </Collapse>
+                  </>
+                )}
+              </View>
             </View>
-          </View>
 
-          <View style={{ alignItems: "center" }}>
-            <TouchableOpacity
-              onPress={postData}
-              style={{
-                width: "100%",
-                backgroundColor: "#EA2B2E",
-                width: "90%",
-                padding: 10,
-                borderRadius: 10,
-              }}
-            >
-              <Text
+            <View style={{ alignItems: "center" }}>
+              <TouchableOpacity
+                onPress={postData}
                 style={{
-                  textAlign: "center",
-                  color: "#fff",
-                  fontWeight: "600",
+                  width: "100%",
+                  backgroundColor: "#EA2B2E",
+                  width: "90%",
+                  padding: 10,
+                  borderRadius: 10,
                 }}
               >
-                Güncelle
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <Modal
-            isVisible={choose}
-            style={styles.modal2}
-            animationIn={"fadeInDown"}
-            animationOut={"fadeOutDown"}
-            onBackdropPress={() => setchoose(false)}
-            swipeDirection={["down"]}
-            onSwipeComplete={() => setchoose(false)}
-          >
-            <View style={[styles.modalContent2, { paddingBottom: 10 }]}>
-              <View style={{ paddingTop: 10, alignItems: "center" }}>
-                <TouchableOpacity
+                <Text
                   style={{
-                    width: "15%",
-                    backgroundColor: "#c2c4c6",
-                    padding: 4,
-                    borderRadius: 50,
+                    textAlign: "center",
+                    color: "#fff",
+                    fontWeight: "600",
                   }}
-                ></TouchableOpacity>
-              </View>
-              <View style={{ padding: 20, gap: 35, marginBottom: 10 }}>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                  onPress={pickImage}
                 >
-                  <Icon3 name="photo" size={23} color={"#333"} />
-                  <Text
-                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                  Güncelle
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Modal
+              isVisible={choose}
+              style={styles.modal2}
+              animationIn={"fadeInDown"}
+              animationOut={"fadeOutDown"}
+              onBackdropPress={() => setchoose(false)}
+              swipeDirection={["down"]}
+              onSwipeComplete={() => setchoose(false)}
+            >
+              <View style={[styles.modalContent2, { paddingBottom: 10 }]}>
+                <View style={{ paddingTop: 10, alignItems: "center" }}>
+                  <TouchableOpacity
+                    style={{
+                      width: "15%",
+                      backgroundColor: "#c2c4c6",
+                      padding: 4,
+                      borderRadius: 50,
+                    }}
+                  ></TouchableOpacity>
+                </View>
+                <View style={{ padding: 20, gap: 35, marginBottom: 10 }}>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                    onPress={pickImage}
                   >
-                    Kütüphaneden Seç
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                  onPress={takePhoto}
-                >
-                  <Icon3 name="add-a-photo" size={21} color={"#333"} />
-                  <Text
-                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                    <Icon3 name="photo" size={23} color={"#333"} />
+                    <Text
+                      style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                    >
+                      Kütüphaneden Seç
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                    onPress={takePhoto}
                   >
-                    Fotoğraf Çek
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                  onPress={removeProfileImage} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
+                    <Icon3 name="add-a-photo" size={21} color={"#333"} />
+                    <Text
+                      style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                    >
+                      Fotoğraf Çek
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                    onPress={removeProfileImage} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
                   // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
-                >
-                  <Icon3
-                    name="restore-from-trash"
-                    size={22}
-                    color={"#d83131"}
-                  />
-                  <Text
+                  >
+                    <Icon3
+                      name="restore-from-trash"
+                      size={22}
+                      color={"#d83131"}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: "#d83131",
+                        fontWeight: "700",
+                      }}
+                    >
+                      Mevcut Fotoğrafı Kaldır
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+            <Modal
+              isVisible={chooseFile}
+              style={styles.modal2}
+              animationIn={"fadeInDown"}
+              animationOut={"fadeOutDown"}
+              onBackdropPress={() => setchooseFile(false)}
+              swipeDirection={["down"]}
+              onSwipeComplete={() => setchooseFile(false)}
+            >
+              <View style={styles.modalContent2}>
+                <View style={{ padding: 10, alignItems: "center" }}>
+                  <TouchableOpacity
                     style={{
-                      fontSize: 14,
-                      color: "#d83131",
-                      fontWeight: "700",
+                      width: "15%",
+                      backgroundColor: "#c2c4c6",
+                      padding: 4,
+                      borderRadius: 50,
+                    }}
+                  ></TouchableOpacity>
+                </View>
+                <View style={{ padding: 20, gap: 35 }}>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                    onPress={pickImageForfile}
+                  >
+                    <Icon3 name="photo" size={23} color={"#333"} />
+                    <Text
+                      style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                    >
+                      Kütüphaneden Seç
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                    onPress={takePhotoforFile}
+                  >
+                    <Icon3 name="add-a-photo" size={21} color={"#333"} />
+                    <Text
+                      style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                    >
+                      Fotoğraf Çek
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setfile(null);
+                      setchooseFile(false);
+                    }}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
                     }}
                   >
-                    Mevcut Fotoğrafı Kaldır
-                  </Text>
-                </TouchableOpacity>
+                    <Icon3
+                      name="restore-from-trash"
+                      size={22}
+                      color={"#d83131"}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: "#d83131",
+                        fontWeight: "700",
+                      }}
+                    >
+                      Mevcut Fotoğrafı Kaldır
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          </Modal>
-          <Modal
-            isVisible={chooseFile}
-            style={styles.modal2}
-            animationIn={"fadeInDown"}
-            animationOut={"fadeOutDown"}
-            onBackdropPress={() => setchooseFile(false)}
-            swipeDirection={["down"]}
-            onSwipeComplete={() => setchooseFile(false)}
-          >
-            <View style={styles.modalContent2}>
-              <View style={{ padding: 10, alignItems: "center" }}>
-                <TouchableOpacity
-                  style={{
-                    width: "15%",
-                    backgroundColor: "#c2c4c6",
-                    padding: 4,
-                    borderRadius: 50,
-                  }}
-                ></TouchableOpacity>
-              </View>
-              <View style={{ padding: 20, gap: 35 }}>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                  onPress={pickImageForfile}
-                >
-                  <Icon3 name="photo" size={23} color={"#333"} />
-                  <Text
-                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
-                  >
-                    Kütüphaneden Seç
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                  onPress={takePhotoforFile}
-                >
-                  <Icon3 name="add-a-photo" size={21} color={"#333"} />
-                  <Text
-                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
-                  >
-                    Fotoğraf Çek
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    setfile(null);
-                    setchooseFile(false);
-                  }}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <Icon3
-                    name="restore-from-trash"
-                    size={22}
-                    color={"#d83131"}
-                  />
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: "#d83131",
-                      fontWeight: "700",
-                    }}
-                  >
-                    Mevcut Fotoğrafı Kaldır
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-        </ScrollView>
-      )}
-    </AlertNotificationRoot>
+            </Modal>
+          </ScrollView>
+        )}
+      </AlertNotificationRoot>
+    </KeyboardAvoidingView>
   );
 }
 const pickerSelectStyles = StyleSheet.create({

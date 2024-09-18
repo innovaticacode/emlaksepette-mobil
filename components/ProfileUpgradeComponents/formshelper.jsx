@@ -27,7 +27,7 @@ export const Forms = [
     type: "input",
     maxlength:7
   },
-  { key: "iban", label: "İban Numarası", tab: [2,0], type: "input" },
+  { key: "iban", label: "Iban Numarası", tab: [2,0], type: "input" },
   { key: "website", label: "Web Sitesi", tab: [2], type: "input" },
   { key: "phone", label: "Sabit Telefon", tab: [2], type: "input" , maxlength:9,showArea:true},
   { key: "year", label: "Kaç Yıldır Sektördesiniz", tab: 2, type: "input" },
