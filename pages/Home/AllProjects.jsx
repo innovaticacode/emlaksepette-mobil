@@ -439,7 +439,7 @@ export default function AllProjects() {
   const [index, setindex] = useState(0);
   const [tab, settab] = useState(0);
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF"}}>
       <Header onPress={toggleDrawer} index={setindex} tab={settab} />
 
       <Modal
@@ -525,28 +525,30 @@ export default function AllProjects() {
                     width: "100%",
                   }}
                 >
-                  <ProjectPost
-                    project={item}
-                    key={item.id}
-                    caption={item.project_title}
-                    ımage={`${apiUrl}/${item.image.replace(
-                      "public/",
-                      "storage/"
-                    )}`}
-                    user={item.user}
-                    location={item.city?.title}
-                    city={item.county?.ilce_title}
-                    ProjectNo={item.id}
-                    slug={item.slug}
-                    acıklama={item.description
-                      .replace(/<\/?[^>]+(>|$)/g, "")
-                      .replace(/&nbsp;/g, " ")}
-                    ShoppingName={item.user?.name}
-                    ShoppingMail={item.user?.email}
-                    Phone={item.user?.phone}
-                    ProfilImage={`${apiUrl}/storage/profile_images/${item.user?.profile_image}`}
-                    ShopingInfo={item.user?.corporate_type}
-                  />
+                  <View style={{paddingHorizontal:8}}>
+                    <ProjectPost
+                      project={item}
+                      key={item.id}
+                      caption={item.project_title}
+                      ımage={`${apiUrl}/${item.image.replace(
+                        "public/",
+                        "storage/"
+                      )}`}
+                      user={item.user}
+                      location={item.city?.title}
+                      city={item.county?.ilce_title}
+                      ProjectNo={item.id}
+                      slug={item.slug}
+                      acıklama={item.description
+                        .replace(/<\/?[^>]+(>|$)/g, "")
+                        .replace(/&nbsp;/g, " ")}
+                      ShoppingName={item.user?.name}
+                      ShoppingMail={item.user?.email}
+                      Phone={item.user?.phone}
+                      ProfilImage={`${apiUrl}/storage/profile_images/${item.user?.profile_image}`}
+                      ShopingInfo={item.user?.corporate_type}
+                    />
+                  </View>
                 </View>
               )}
               keyExtractor={(item) => item.id.toString()}

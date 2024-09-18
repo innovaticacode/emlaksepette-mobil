@@ -22,6 +22,7 @@ import userData, { getValueFor } from "../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
+import ProjectButton from "../../components/ProjectButton";
 
 const apiUrl = "https://private.emlaksepette.com";
 
@@ -170,6 +171,31 @@ const HomePage = ({ index }) => {
                       </View>
                     ) : (
                       <>
+                          <View style={{flexDirection:'row'
+                          ,justifyContent:'space-between'
+                          }}>
+                           <View>
+                            <ProjectButton
+                              color='#0E49B5'
+                              text='Yatırım Projeleri'
+                            />
+                            <ProjectButton
+                              color='#A70107'
+                              text='Konut Projeleri'
+                            />
+                            </View>
+                            <View>
+                            <ProjectButton
+                              color='#A2DAE0'
+                              text='Villa Projeleri'
+                            />
+                            <ProjectButton
+                              color='#06065d'
+                              text='Ticari Projeler'
+                            />
+                            </View>
+                          </View>
+
                         <FlatList
                           data={featuredProjects}
                           renderItem={({ item, index }) => (
