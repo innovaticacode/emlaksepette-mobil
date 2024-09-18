@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    marginVertical: 6,
+    marginVertical: 8,
   },
   image: {
     width: 90,
