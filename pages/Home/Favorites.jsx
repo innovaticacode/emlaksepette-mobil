@@ -23,17 +23,13 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/FontAwesome";
 import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
-import {
-  ALERT_TYPE,
-  AlertNotificationRoot,
-  Dialog,
-} from "react-native-alert-notification";
+import { Dialog, ALERT_TYPE, AlertNotificationRoot } from 'react-native-alert-notification';
+
 export default function Favorites() {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
   const [favorites, setFavorites] = useState([]);
   const focused = useIsFocused();
-
 
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
@@ -318,10 +314,11 @@ export default function Favorites() {
   // BATCH SELECTION - DELETE FUNCTION END
 
   return (
-    <>
+    <AlertNotificationRoot>
       {loading ? (
         <View
           style={{
+            flex: 1,
             alignItems: "center",
             justifyContent: "center",
             height: "100%",
@@ -335,6 +332,7 @@ export default function Favorites() {
             <>
               <View
                 style={{
+                  flex: 1,
                   alignItems: "center",
                   justifyContent: "center",
                   height: "100%",
@@ -351,7 +349,7 @@ export default function Favorites() {
                   <Icon name="heart-plus" size={50} color={"#EA2A28"} />
                 </View>
                 <View>
-                <Text style={styles.noCommentsText}>
+                  <Text style={styles.noCommentsText}>
                     Favorilerinizde ilan bulunmamaktadır.
                   </Text>
                   <Text></Text>
@@ -376,7 +374,7 @@ export default function Favorites() {
 
             <>
               <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                <View style={{ flexDirection: "row", gap: 10 }}>
+                <View style={{ flexDirection: "row", gap: 10, marginLeft: 20, marginTop: 10, paddingBottom: 8 }}>
                   <TouchableOpacity
                     style={{
                       backgroundColor: "#EEEDEB",
@@ -518,6 +516,7 @@ export default function Favorites() {
                   deleteRequestWithTokenProject();
                 }}
               />
+
               <ScrollView
                 refreshControl={
                   <RefreshControl
@@ -525,7 +524,7 @@ export default function Favorites() {
                     onRefresh={onRefresh}
                   />
                 }
-                contentContainerStyle={{}}
+                contentContainerStyle={{flexGrow: 1}}
                 showsVerticalScrollIndicator={false}
               >
                 {favorites?.map((favorite, i) => {
@@ -746,7 +745,6 @@ export default function Favorites() {
                 })}
               </ScrollView>
             </>
-
           )}
           <Modal
             isVisible={ModalForAddToCart}
@@ -859,15 +857,12 @@ export default function Favorites() {
           </Modal>
         </View>
       )}
-    </>
+    </AlertNotificationRoot>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: 100,
-    padding: 10,
     height: "100%",
-    paddingTop: 10,
   },
   noCommentsText: {
     fontSize: 18,
