@@ -43,6 +43,7 @@ export default function AddCommentForProject() {
   const nav = useNavigation();
   const { projectId } = route.params;
   const [loading, setloading] = useState(true);
+
   useEffect(() => {
     apiRequestGet("project/" + projectId).then((res) => {
       setData(res.data.project);
@@ -144,34 +145,49 @@ export default function AddCommentForProject() {
     formData.append("owner_id", data?.user?.id);
     formData.append("project_id", projectId);
 
+    // Resimlerinizi FormData'ya ekleme
+    image.forEach((image, index) => {
+      if (image) {
+        formData.append(`images[${index}]`, {
+          uri: Platform.OS === "android" ? image : image.replace("file://", ""), // Android ve iOS için uygun URI
+          type: "image/jpeg", // Resmin tipi, genellikle image/jpeg veya image/png
+          name: `image${index}.jpg`, // Sunucuya gönderilecek dosya adı
+        });
+      }
+    });
+
     try {
-      if (comment) {
-        if (user?.access_token) {
-          const response = await axios.post(
-            `https://private.emlaksepette.com/api/project/${projectId}/add-comment`,
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${user?.access_token}`,
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
-          setcomment("");
-          setrate(0);
-          setRating(0);
-          nav.navigate("Success", {
-            name: "Yorum başarılı",
-            message: "Değerlendirmeniz İçin Teşekkürler",
-            HouseID: projectId,
-            type: "Project",
-          });
-        }
+      if (
+        user?.access_token &&
+        typeof rating === "number" &&
+        rating > 0 &&
+        typeof comment === "string" &&
+        comment.length > 0
+      ) {
+        const response = await axios.post(
+          `https://private.emlaksepette.com/api/project/${projectId}/add-comment`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setcomment("");
+        setrate(0);
+        setRating(0);
+        nav.navigate("Success", {
+          name: "Yorum başarılı",
+          message: "Değerlendirmeniz İçin Teşekkürler",
+          HouseID: projectId,
+          type: "Project",
+        });
       } else {
         Dialog.show({
           type: ALERT_TYPE.DANGER,
           title: "Hata!",
-          textBody: "Lütfen Yorum Yapınız.",
+          textBody: "Lütfen Gerekli Alanları Doldurunuz.",
           button: "Tamam",
         });
       }
@@ -209,6 +225,7 @@ export default function AddCommentForProject() {
     setremoveImage(false);
     setselectedIndex(null);
   };
+
   return (
     <AlertNotificationRoot>
       <ScrollView
@@ -487,16 +504,42 @@ export default function AddCommentForProject() {
                   </View>
                 </View>
               </View>
+              <View>
+                <CheckBox
+                  checked={checkedForm}
+                  onPress={toggleCheckboxForm}
+                  // Use ThemeProvider to make change for all checkbox
+                  iconType="material-community"
+                  checkedIcon="checkbox-marked"
+                  uncheckedIcon="checkbox-blank-outline"
+                  checkedColor="red"
+                  title={
+                    <Text style={{ fontSize: 12, left: 5 }}>
+                      Yorum Kurallarını Okudum Kabul Ediyorum
+                    </Text>
+                  }
+                  size={20}
+                  containerStyle={{
+                    backgroundColor: "white",
+                    borderWidth: 0,
+                    width: "100%",
+                    margin: 4,
+                    marginLeft: 0,
+                    paddingLeft: 0,
+                  }}
+                />
+              </View>
 
               <TouchableOpacity
-                disabled={loadingForPost}
                 style={{
                   backgroundColor: "#EB2B2E",
                   padding: 10,
                   borderRadius: 5,
                   top: 10,
+                  opacity: checkedForm ? 1 : 0.5,
                 }}
                 onPress={shareComment}
+                disabled={!checkedForm}
               >
                 {loadingForPost ? (
                   <ActivityIndicator color="white" />

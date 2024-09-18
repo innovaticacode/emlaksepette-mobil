@@ -50,6 +50,7 @@ export default function EditCommentForProject() {
     commentss,
     type,
     imageSource,
+    store,
   } = route.params;
   const [loading, setloading] = useState(false);
   const [loading2, setloading2] = useState(false);
@@ -97,39 +98,47 @@ export default function EditCommentForProject() {
     }
   };
   const handleActionSheet = async (buttonIndex) => {
+    console.log("Selected index:", selectedIndexx); // Ekleyin
+    let result;
+
     if (buttonIndex === 0) {
-      // Kamera
-      const result = await ImagePicker.launchCameraAsync({
+      result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
       });
-
-      if (!result.canceled) {
-        const newImages = [...imagesComment];
-        newImages[selectedIndexx] = result.assets[0].uri; // Seçilen resmi dizideki uygun indise ekle
-        setImagesComment(newImages);
-      }
     } else if (buttonIndex === 1) {
-      // Galeri
-      const result = await ImagePicker.launchImageLibraryAsync({
+      result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
       });
-
-      if (!result.canceled) {
-        const newImages = [...imagesComment];
-        newImages[selectedIndexx] = result.assets[0].uri; // Seçilen resmi dizideki uygun indise ekle
-        setImagesComment(newImages);
-      }
     } else if (buttonIndex === 2) {
-      // Resmi kaldır
       const newImages = [...imagesComment];
-      newImages[selectedIndexx] = null; // Resmi kaldır
+      newImages[selectedIndexx] = null;
       setImagesComment(newImages);
+      console.log("Removed image at index:", selectedIndexx);
+      return;
+    }
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const uri = result.assets[0].uri;
+      console.log("Selected image URI:", uri);
+      const newImages = [...imagesComment];
+
+      if (selectedIndexx < 3) {
+        newImages[selectedIndexx] = uri;
+      } else {
+        if (newImages.length >= 3) {
+          newImages.shift();
+        }
+        newImages.push(uri);
+      }
+
+      setImagesComment(newImages);
+      console.log("Updated images:", newImages);
     }
   };
 
@@ -450,7 +459,7 @@ export default function EditCommentForProject() {
                   numberOfLines={2}
                 >
                   Satıcı:
-                  <Text style={{ color: "#274ABB" }}>{data?.user?.name}</Text>
+                  <Text style={{ color: "#274ABB" }}>{store?.name}</Text>
                 </Text>
               </View>
             </View>

@@ -17,6 +17,7 @@ import { CheckBox } from "@rneui/themed";
 import { Shadow } from "react-native-shadow-2";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
+
 export default function Comment({ data, handleModal }) {
   const navigation = useNavigation();
   const [checked, setChecked] = React.useState(false);
@@ -103,7 +104,6 @@ export default function Comment({ data, handleModal }) {
               }}
               style={{
                 backgroundColor: "#E54242",
-
                 padding: 8,
                 borderTopRightRadius: 10,
                 borderBottomRightRadius: 10,
