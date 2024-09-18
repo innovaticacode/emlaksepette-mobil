@@ -318,7 +318,6 @@ export default function Favorites() {
       {loading ? (
         <View
           style={{
-            flex: 1,
             alignItems: "center",
             justifyContent: "center",
             height: "100%",
@@ -332,7 +331,6 @@ export default function Favorites() {
             <>
               <View
                 style={{
-                  flex: 1,
                   alignItems: "center",
                   justifyContent: "center",
                   height: "100%",
@@ -524,7 +522,7 @@ export default function Favorites() {
                     onRefresh={onRefresh}
                   />
                 }
-                contentContainerStyle={{flexGrow: 1}}
+                contentContainerStyle={{}}
                 showsVerticalScrollIndicator={false}
               >
                 {favorites?.map((favorite, i) => {
