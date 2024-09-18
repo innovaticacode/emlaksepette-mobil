@@ -54,6 +54,7 @@ export default function SellAndRentFormPage(props) {
                 <Text style={styles.redCardText}>
                   Hızlı satıp kiralama avantajlarını hemen öğren..
                 </Text>
+                <Text></Text>
               </View>
               <View style={styles.whiteButton}>
                 <Icon name="arrow-right" size={18} color="#EA2B2E" />
@@ -81,6 +82,7 @@ export default function SellAndRentFormPage(props) {
                 <Text style={styles.whiteCardText}>
                   Bireysel satıp kiralama dezavantajlarını hemen öğren..
                 </Text>
+                <Text></Text>
               </View>
               <View style={styles.whiteButton}>
                 <Icon name="arrow-right" size={18} color="#EA2B2E" />
@@ -168,7 +170,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   cardDesc: {
-    width: 142,
+    width: "62%",
     height: "auto",
     paddingVertical: 6,
   },
@@ -219,7 +221,7 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   whiteCardInnerTextArea: {
-    width: 154,
+    width: "62%",
     height: 'auto',
     paddingVertical: 6,
   },
