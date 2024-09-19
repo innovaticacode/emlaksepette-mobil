@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Keyboard,
   ScrollView,
+  Platform,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -12,26 +13,27 @@ import { SearchBar } from "@rneui/base";
 import Icon from "react-native-vector-icons/Ionicons";
 import Order from "./profileComponents/Order";
 import { getValueFor } from "../../../components/methods/user";
-import { Platform } from "react-native";
 import axios from "axios";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import { ActivityIndicator } from "react-native-paper";
+
 export default function Sell() {
   const [search, setSearch] = useState("");
   const [Tabs, setTabs] = useState(0);
   const updateSearch = (search) => {
+    console.log("Search Input: ", search);  // Arama girişini kontrol et
     setSearch(search);
   };
   const route = useRoute();
-  const [user, setuser] = useState({});
+  const [user, setUser] = useState({});
   useEffect(() => {
-    getValueFor("user", setuser);
+    getValueFor("user", setUser);
   }, []);
 
-  const [products, setproducts] = useState([]);
-  const [loading, setloading] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const fetchData = async () => {
-    setloading(true);
+    setLoading(true);
     try {
       if (user?.access_token) {
         const response = await axios.get(
@@ -42,19 +44,34 @@ export default function Sell() {
             },
           }
         );
-        setproducts(response.data.solds);
+        setProducts(response.data.solds);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
   useEffect(() => {
     fetchData();
   }, [user]);
 
+  useEffect(() => {
+    console.log("Products: ", products); // Ürünlerin doğru şekilde geldiğini kontrol et
+  }, [products]);
+
   const nav = useNavigation();
+
+  // Filtrelenmiş ürünleri hesaplamak için bir yardımcı fonksiyon
+  const filteredProducts = products.filter(product => {
+    const title = product.cart ? JSON.parse(product.cart)["item"]["title"] : "";
+    return title.toLowerCase().includes(search.toLowerCase());
+  });
+
+
+
+  console.log("Filtered Products: ", filteredProducts);  // Filtrelenmiş ürünleri kontrol et
+  console.log(user.access_token)
   return (
     <>
       {loading ? (
@@ -63,50 +80,45 @@ export default function Sell() {
         >
           <ActivityIndicator color="#333" />
         </View>
-      ) : products.length == 0 ? (
-        <>
+      ) : products.length === 0 ? (
+        <View
+          style={{
+            height: "90%",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+          }}
+        >
           <View
-            style={{
-              height: "90%",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-            }}
+            style={[
+              style.card,
+              { alignItems: "center", justifyContent: "center" },
+            ]}
           >
-            <View
-              style={[
-                style.card,
-                { alignItems: "center", justifyContent: "center" },
-              ]}
-            >
-              <Icon2 name="basket-plus" size={50} color={"#EA2A28"} />
-            </View>
-            <View>
-              <Text style={style.noCommentsText}>
-                Sattığınız İlan Bulunmamaktadır.
-              </Text>
-              <Text></Text>
-            </View>
-            <View style={{ width: "100%", alignItems: "center" }}>
-              <TouchableOpacity
-                style={style.returnButton}
-                onPress={() => {
-                  setloading(true);
-                  setTimeout(() => {
-                    nav.goBack();
-                    setloading(false);
-                  }, 700);
-                }}
-              >
-                <Text style={style.returnButtonText}>
-                  İlanlara Göz At
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <Icon2 name="basket-plus" size={50} color={"#EA2A28"} />
           </View>
-        </>
+          <View>
+            <Text style={style.noCommentsText}>
+              Sattığınız İlan Bulunmamaktadır.
+            </Text>
+          </View>
+          <View style={{ width: "100%", alignItems: "center" }}>
+            <TouchableOpacity
+              style={style.returnButton}
+              onPress={() => {
+                setLoading(true);
+                setTimeout(() => {
+                  nav.goBack();
+                  setLoading(false);
+                }, 700);
+              }}
+            >
+              <Text style={style.returnButtonText}>İlanlara Göz At</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       ) : (
-        <View style={style.container} onTouchStart={() => Keyboard.dismiss()}>
+        <View style={style.container}>
           <View style={style.Navbar}>
             <View style={style.SearchInput}>
               <SearchBar
@@ -142,7 +154,7 @@ export default function Sell() {
                   borderRadius: 6,
                 }}
               >
-                <View style={{}}>
+                <View>
                   <Icon name="swap-vertical" size={18} color={"#333"} />
                 </View>
               </TouchableOpacity>
@@ -151,8 +163,8 @@ export default function Sell() {
 
           <ScrollView>
             <View style={style.orders}>
-              {products.map((item, index) => (
-                <Order item={item} />
+              {filteredProducts.map((item, index) => (
+                <Order item={item} key={index} />
               ))}
             </View>
           </ScrollView>
@@ -161,6 +173,7 @@ export default function Sell() {
     </>
   );
 }
+
 const style = StyleSheet.create({
   container: {
     flex: 1,
@@ -188,7 +201,6 @@ const style = StyleSheet.create({
     width: "100%",
     borderBottomWidth: 1,
     borderBottomColor: "#ebebeb",
-
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -196,7 +208,7 @@ const style = StyleSheet.create({
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
-        shadowColor: " #e6e6e6",
+        shadowColor: "#e6e6e6",
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 5,
@@ -212,9 +224,7 @@ const style = StyleSheet.create({
   },
   ListIcon: {
     flex: 0.3 / 2,
-
     borderBottomColor: "#e5e5e5",
-
     alignItems: "center",
     justifyContent: "center",
   },
@@ -224,7 +234,6 @@ const style = StyleSheet.create({
   },
   TabBarBtn: {
     backgroundColor: "red",
-
     borderRadius: 4,
   },
   orders: {
