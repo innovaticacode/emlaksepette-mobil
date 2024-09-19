@@ -8,6 +8,8 @@ import {
   SafeAreaView,
   FlatList,
   Image,
+  Text,
+  TouchableOpacity,
 } from "react-native";
 import axios from "axios";
 import ProjectPost from "../../components/ProjectPost";
@@ -15,11 +17,14 @@ import { getValueFor } from "../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import Banner from "../../assets/project-banner.png";
+import { useNavigation } from "@react-navigation/native";
 
 const apiUrl = "https://private.emlaksepette.com";
 
 const HomePage = (props) => {
   const { index } = props;
+
+  const navigation = useNavigation();
   // Fetch featured sliders
   const fetchFeaturedSliders = async () => {
     try {
@@ -97,6 +102,50 @@ const HomePage = (props) => {
                   resizeMode="cover"
                 />
               </View>
+              <View
+                style={{
+                  paddingBottom: 3,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  alignItems: "center",
+                  backgroundColor: "white",
+                  paddingVertical: 10,
+                }}
+              >
+                <Text style={{ fontSize: 12, fontWeight: 700 }}>
+                  ÖNE ÇIKAN EMLAK PROJELER
+                </Text>
+                <TouchableOpacity
+                  style={styles.allBtn}
+                  onPress={() =>
+                    navigation.navigate("AllProject", {
+                      name: "Tüm Projeler",
+                      slug: "tum-projeler",
+                      data: featuredProjects,
+                      count: featuredProjects.length,
+                      type: null,
+                      optional: null,
+                      title: null,
+                      check: null,
+                      city: null,
+                      county: null,
+                      hood: null,
+                    })
+                  }
+                >
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 11,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Tüm İlanları Gör
+                  </Text>
+                </TouchableOpacity>
+              </View>
               {/* Featured Projects */}
               <View style={styles.featuredProjectsContainer}>
                 {loadingProjects ? (
@@ -151,7 +200,6 @@ const styles = StyleSheet.create({
   featuredProjectsContainer: {
     paddingBottom: 3,
     backgroundColor: "white",
-    marginTop: 7,
   },
   projectPostContainer: {
     marginTop: 7,
@@ -161,6 +209,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
+  },
+  allBtn: {
+    backgroundColor: "#EA2C2E",
+    paddingLeft: 15,
+    paddingRight: 15,
+    padding: 5,
+    borderRadius: 4,
   },
 });
 
