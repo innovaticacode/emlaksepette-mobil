@@ -51,3 +51,93 @@ export const documentView=[
     },
 
 ]
+
+
+
+export const leftButtonsForPost=[
+    {
+        title:'İlanı Gör',
+        offsale:4,
+        OnlySee:['Emlak Ofisi','İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
+        type:[1,2],
+        isShowClient : 1,
+        BackgroundColor:'#264ABB'
+    },
+    {
+        title:'İlanı Gör',
+        offsale:2,
+        OnlySee:['İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
+        type:[1,2],
+        isShowClient : 1,
+          BackgroundColor:'#264ABB'
+    },
+    {
+        title:'Sepete Ekle',
+        offsale:2,
+        OnlySee:['Emlak Ofisi'],
+        type:[1,2],
+        isShowClient : 0,
+
+          BackgroundColor:'#264ABB'
+    },
+    {
+        title:'Sepete Ekle',
+        offsale:5,
+        OnlySee:['Emlak Ofisi','İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
+        type:[1,2],
+        isShowClient : 1,
+         BackgroundColor:'#264ABB'
+    },
+    {
+        title:'Satışa Kapalı',
+        offsale:1,
+        OnlySee:['Emlak Ofisi','İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
+        type:[1,2],
+        isShowClient : 1,
+        BackgroundColor:'#EA2C2E'
+    }
+    
+]
+
+export const rightButtonsForPost = [
+    {
+        title:'Teklif Ver',
+        offsale:4,
+        OnlySee:['Emlak Ofisi','İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
+        type:[1,2],
+        isShowClient : 1,
+        BackgroundColor:'#000000'
+    },
+    {
+        title:'Bilgi Al',
+        offsale:2,
+        OnlySee:['İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
+        isShowClient : 1,
+        type:[1,2],
+        BackgroundColor:'#000000'
+    },
+    {
+        title:'Ödeme Detayı',
+        offsale:2,
+        OnlySee:['Emlak Ofisi'],
+        type:[1,2],
+        isShowClient : 0,
+        BackgroundColor:'#000000'
+    },
+    {
+        title:'Ödeme Detayı',
+        offsale:5,
+        OnlySee:['Emlak Ofisi','İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
+        type:[1,2],
+        isShowClient : 1,
+        BackgroundColor:'#000000'
+    },
+    {
+        title:'Başvur',
+        offsale:1,
+        OnlySee:['Emlak Ofisi','İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
+        type:[1,2],
+        isShowClient : 1,
+        BackgroundColor:'#000000'
+    }
+]
