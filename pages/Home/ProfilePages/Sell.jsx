@@ -20,12 +20,15 @@ import { ActivityIndicator } from "react-native-paper";
 export default function Sell() {
   const [search, setSearch] = useState("");
   const [Tabs, setTabs] = useState(0);
+  const nav = useNavigation();
+  const route = useRoute();
+  const [user, setUser] = useState({});
+
   const updateSearch = (search) => {
     console.log("Search Input: ", search);  // Arama girişini kontrol et
     setSearch(search);
   };
-  const route = useRoute();
-  const [user, setUser] = useState({});
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -60,14 +63,17 @@ export default function Sell() {
     console.log("Products: ", products); // Ürünlerin doğru şekilde geldiğini kontrol et
   }, [products]);
 
-  const nav = useNavigation();
+// Filtrelenmiş ürünleri hesaplamak için bir yardımcı fonksiyon
+const filteredProducts = products.filter(product => {
+  const parsedCart = product.cart ? JSON.parse(product.cart) : {};
+  const title = parsedCart["item"]["title"] ? parsedCart["item"]["title"].toLowerCase() : "";
+  const houseId = parsedCart["item"]["id"] ? parsedCart["item"]["id"].toString().toLowerCase() : "";
 
-  // Filtrelenmiş ürünleri hesaplamak için bir yardımcı fonksiyon
-  const filteredProducts = products.filter(product => {
-    const title = product.cart ? JSON.parse(product.cart)["item"]["title"] : "";
-    return title.toLowerCase().includes(search.toLowerCase());
-  });
-
+  return (
+    title.includes(search.toLowerCase()) ||
+    houseId.includes(search.toLowerCase())
+  );
+});
 
 
   console.log("Filtered Products: ", filteredProducts);  // Filtrelenmiş ürünleri kontrol et
@@ -80,7 +86,7 @@ export default function Sell() {
         >
           <ActivityIndicator color="#333" />
         </View>
-      ) : products.length === 0 ? (
+      ) : products.length == 0 ? (
         <View
           style={{
             height: "90%",
@@ -160,12 +166,19 @@ export default function Sell() {
               </TouchableOpacity>
             </View>
           </View>
-
-          <ScrollView>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={style.container}>
             <View style={style.orders}>
-              {filteredProducts.map((item, index) => (
-                <Order item={item} key={index} />
-              ))}
+              {filteredProducts.length === 0 ? (
+                <View style={style.noResultsContainer}>
+                  <Icon2 name="emoticon-sad-outline" size={50} color="#EA2B2E" />
+                  <Text style={style.noResultsText}>Arama sonucu bulunamadı.</Text>
+                  <Text style={style.noResultsSubText}>Lütfen başka bir terim deneyin.</Text>
+                </View>
+              ) : (
+                filteredProducts.map((item, index) => (
+                  <Order item={item} key={index} />
+                ))
+              )}
             </View>
           </ScrollView>
         </View>
@@ -178,6 +191,26 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+  },
+  noResultsContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+    backgroundColor: "#f8f8f8",
+  },
+  noResultsText: {
+    fontSize: 18,
+    color: "#333",
+    textAlign: "center",
+    marginTop: 10,
+    fontWeight: "bold",
+  },
+  noResultsSubText: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 5,
   },
   noCommentsText: {
     fontSize: 18,
