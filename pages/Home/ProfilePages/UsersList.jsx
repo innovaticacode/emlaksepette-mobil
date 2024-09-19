@@ -192,13 +192,13 @@ export default function UsersList() {
           <View
             style={[
               styles.card,
-              { alignItems: "center", justifyContent: "center"},
+              { alignItems: "center", justifyContent: "center" },
             ]}
           >
             <Icon2 name="user-tie" size={35} color={"#EA2A28"} />
           </View>
           <View>
-          <Text style={styles.noCommentsText}>
+            <Text style={styles.noCommentsText}>
               Daha önce alt kullanıcı oluşturmadınız.
             </Text>
             <Text></Text>
@@ -214,9 +214,7 @@ export default function UsersList() {
                 }, 700);
               }}
             >
-              <Text style={styles.returnButtonText}>
-                Oluştur
-              </Text>
+              <Text style={styles.returnButtonText}>Oluştur</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -530,20 +528,20 @@ const styles = StyleSheet.create({
   },
   noCommentsText: {
     fontSize: 18,
-    color: '#333',
-    textAlign: 'center',
+    color: "#333",
+    textAlign: "center",
     marginTop: 8,
   },
   returnButton: {
-    backgroundColor: '#EA2B2E',
+    backgroundColor: "#EA2B2E",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
   },
   returnButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   modal3: {
     justifyContent: "flex-end",

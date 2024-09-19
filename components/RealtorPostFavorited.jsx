@@ -70,7 +70,7 @@ export default function RealtorPostFavorited({
       axios
         .post(
           "https://private.emlaksepette.com/api/add_project_to_favorites/" +
-          housingId,
+            housingId,
           {
             project_id: projectId,
             housing_id: housingId,
@@ -95,7 +95,7 @@ export default function RealtorPostFavorited({
       axios
         .post(
           "https://private.emlaksepette.com/api/add_housing_to_favorites/" +
-          HouseId,
+            HouseId,
           {
             housing_id: HouseId,
           },
