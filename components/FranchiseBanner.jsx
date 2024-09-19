@@ -1,21 +1,18 @@
 import React from "react";
 import { View, Image, Text, StyleSheet } from "react-native";
-import TestFranchise from "../assets/test-franchise.png";
 
 const FranchiseBanner = (props) => {
-  const { image, text } = props;
+  const { image, text, data } = props;
   return (
-    <React.Fragment>
-      <View style={styles.container}>
-        <Image
-          source={image ? image : TestFranchise}
-          style={styles.image}
-          resizeMode="contain"
-          alt="Franchise Banner"
-        />
-        <Text style={styles.text}>{text ? text : "Franchise"}</Text>
-      </View>
-    </React.Fragment>
+    <View style={styles.container}>
+      <Image
+        source={{ uri: image }}
+        style={styles.image}
+        resizeMode="contain"
+        alt="Franchise Banner"
+      />
+      <Text style={styles.text}>{text ? text : "Franchise"}</Text>
+    </View>
   );
 };
 
@@ -25,11 +22,13 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "rgb(228, 228, 228)",
     width: 110,
+    paddingHorizontal: 10,
     height: "auto",
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     marginVertical: 8,
+    marginHorizontal: 6,
   },
   image: {
     width: 90,

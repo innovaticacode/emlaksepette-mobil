@@ -72,7 +72,7 @@ const Estates = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 1) {
+    if (index == 2) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);

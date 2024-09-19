@@ -72,7 +72,7 @@ const Area = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 3) {
+    if (index == 4) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);

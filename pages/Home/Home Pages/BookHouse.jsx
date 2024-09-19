@@ -72,7 +72,7 @@ const BookHouse = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 5) {
+    if (index == 6) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);

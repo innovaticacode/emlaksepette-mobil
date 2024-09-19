@@ -72,7 +72,7 @@ const SellAcil = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 6) {
+    if (index == 7) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);

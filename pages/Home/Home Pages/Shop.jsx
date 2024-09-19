@@ -73,7 +73,7 @@ const Shop = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 2) {
+    if (index == 3) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);

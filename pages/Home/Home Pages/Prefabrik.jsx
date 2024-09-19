@@ -72,7 +72,7 @@ const Prefabrik = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 4) {
+    if (index == 5) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);
