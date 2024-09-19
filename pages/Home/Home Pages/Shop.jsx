@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   RefreshControl,
-  ScrollView,
+  Image,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";

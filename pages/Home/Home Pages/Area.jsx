@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   ScrollView,
+  Image,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
@@ -16,6 +17,8 @@ import Modal from "react-native-modal";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import Land from "../../../assets/land.png";
+
 const PAGE_SIZE = 10;
 
 const Area = ({ index }) => {
@@ -105,6 +108,12 @@ const Area = ({ index }) => {
         </View>
       ) : (
         <View style={styles.container}>
+          <View style={{ paddingHorizontal: 8 }}>
+            <Image
+              source={Land}
+              style={{ width: "auto", height: 120, resizeMode: "cover" }}
+            />
+          </View>
           <View
             style={{
               paddingBottom: 3,
@@ -114,6 +123,7 @@ const Area = ({ index }) => {
               paddingRight: 10,
               alignItems: "center",
               backgroundColor: "white",
+              paddingVertical: 10,
             }}
           >
             <Text style={{ fontSize: 12, fontWeight: 700 }}>

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   ScrollView,
+  Image,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
@@ -16,6 +17,7 @@ import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import PrefabrikBanner from "../../../assets/prefabrik.png";
 const PAGE_SIZE = 10;
 
 const Prefabrik = ({ index }) => {
@@ -105,6 +107,13 @@ const Prefabrik = ({ index }) => {
         </View>
       ) : (
         <View style={styles.container}>
+          <View style={{ paddingHorizontal: 8 }}>
+            <Image
+              source={PrefabrikBanner}
+              style={{ width: "100%", height: 120 }}
+              resizeMode="cover"
+            />
+          </View>
           <View
             style={{
               paddingBottom: 3,
@@ -114,6 +123,7 @@ const Prefabrik = ({ index }) => {
               paddingRight: 10,
               alignItems: "center",
               backgroundColor: "white",
+              paddingVertical: 10,
             }}
           >
             <Text style={{ fontSize: 12, fontWeight: 700 }}>

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   ScrollView,
+  Image,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
@@ -16,6 +17,7 @@ import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import Banner from "../../../assets/tatilim-sepette-banner.png";
 const PAGE_SIZE = 10;
 
 const BookHouse = ({ index }) => {
@@ -105,6 +107,16 @@ const BookHouse = ({ index }) => {
         </View>
       ) : (
         <View style={styles.container}>
+          <View style={{ paddingHorizontal: 8 }}>
+            <Image
+              source={Banner}
+              style={{
+                width: "100%",
+                height: 120,
+              }}
+              resizeMode="cover"
+            />
+          </View>
           <View
             style={{
               paddingBottom: 3,
@@ -114,6 +126,7 @@ const BookHouse = ({ index }) => {
               paddingRight: 10,
               alignItems: "center",
               backgroundColor: "white",
+              paddingVertical: 10,
             }}
           >
             <Text style={{ fontSize: 12, fontWeight: 700 }}>

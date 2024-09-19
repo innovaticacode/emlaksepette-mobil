@@ -23,6 +23,7 @@ import { useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import ProjectButton from "../../components/ProjectButton";
+import Banner from "../../assets/project-banner.png";
 
 const apiUrl = "https://private.emlaksepette.com";
 
@@ -121,8 +122,19 @@ const HomePage = ({ index }) => {
               contentContainerStyle={styles.scrollViewContent}
               scrollEventThrottle={16}
             >
+              <View>
+                <Image
+                  source={Banner}
+                  alt="project"
+                  style={{
+                    width: "100%",
+                    height: 120,
+                  }}
+                  resizeMode="cover"
+                />
+              </View>
               {/* Featured Sliders */}
-              <View style={styles.sliderContainer}>
+              {/* <View style={styles.sliderContainer}>
                 {loadingSliders ? (
                   <ActivityIndicator
                     style={styles.loadingIndicator}
@@ -151,7 +163,7 @@ const HomePage = ({ index }) => {
                     ))}
                   </PagerView>
                 )}
-              </View>
+              </View> */}
 
               {/* Popular Construction Brands */}
               <View style={styles.sliderBarContainer}>
@@ -171,30 +183,33 @@ const HomePage = ({ index }) => {
                       </View>
                     ) : (
                       <>
-                          <View style={{flexDirection:'row'
-                          ,justifyContent:'space-between'
-                          }}>
-                           <View>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <View>
                             <ProjectButton
-                              color='#0E49B5'
-                              text='Yatırım Projeleri'
+                              color="#0E49B5"
+                              text="Yatırım Projeleri"
                             />
                             <ProjectButton
-                              color='#A70107'
-                              text='Konut Projeleri'
+                              color="#A70107"
+                              text="Konut Projeleri"
                             />
-                            </View>
-                            <View>
-                            <ProjectButton
-                              color='#A2DAE0'
-                              text='Villa Projeleri'
-                            />
-                            <ProjectButton
-                              color='#06065d'
-                              text='Ticari Projeler'
-                            />
-                            </View>
                           </View>
+                          <View>
+                            <ProjectButton
+                              color="#A2DAE0"
+                              text="Villa Projeleri"
+                            />
+                            <ProjectButton
+                              color="#06065d"
+                              text="Ticari Projeler"
+                            />
+                          </View>
+                        </View>
 
                         <FlatList
                           data={featuredProjects}
@@ -261,7 +276,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    paddingTop: 25,
   },
   scrollViewContent: {
     paddingHorizontal: 10,
@@ -272,7 +286,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     overflow: "hidden",
-    marginBottom: 5
+    marginBottom: 5,
   },
   pagerView: {
     flex: 1,
@@ -293,7 +307,7 @@ const styles = StyleSheet.create({
   },
   sliderBarContainer: {
     paddingBottom: 3,
-    paddingTop:5,
+    paddingTop: 5,
     backgroundColor: "white",
   },
   sliderBarTitle: {
@@ -309,8 +323,8 @@ const styles = StyleSheet.create({
   featuredProjectsHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center"
-    },
+    alignItems: "center",
+  },
   featuredProjectsTitle: {
     fontSize: 12,
     fontWeight: "700",

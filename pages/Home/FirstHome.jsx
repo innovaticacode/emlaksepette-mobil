@@ -23,6 +23,7 @@ import ProjectButton from "../../components/ProjectButton";
 import FranchiseBanner from "../../components/FranchiseBanner";
 import SliderItem from "../../components/SliderItem";
 import WhatIsEmlakSepette from "../../components/WhatIsEmlakSepette";
+import SliderEstateBar from "../../components/SliderEstateBar";
 
 const apiUrl = "https://private.emlaksepette.com";
 
@@ -328,22 +329,9 @@ const FirstHome = (props) => {
                     <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                   </TouchableOpacity>
                 </View>
-                <FlatList
-                  data={popularConstructionBrands}
-                  horizontal={true}
-                  nestedScrollEnabled={true}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item, index }) => (
-                    <SliderItem
-                      key={index}
-                      image={`${apiUrl}/storage/profile_images/${item.profile_image}`}
-                      text={item.name}
-                      borderColor={"#e6e6e6"}
-                    />
-                  )}
-                />
-
+                <View>
+                  <SliderEstateBar />
+                </View>
                 <View
                   style={{
                     flexDirection: "row",
@@ -382,7 +370,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    paddingTop: 25,
   },
   scrollViewContent: {
     paddingHorizontal: 10,

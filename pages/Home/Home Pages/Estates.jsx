@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   RefreshControl,
+  Image,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
@@ -16,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import SliderEstateBar from "../../../components/SliderEstateBar";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import Housing from "../../../assets/housing.png";
 const PAGE_SIZE = 10;
 
 const Estates = ({ index }) => {
@@ -196,6 +198,12 @@ const Estates = ({ index }) => {
                 }
                 ListHeaderComponent={
                   <>
+                    <View style={{ paddingHorizontal: 8 }}>
+                      <Image
+                        source={Housing}
+                        style={{ width: "100%", height: 120 }}
+                      />
+                    </View>
                     <View
                       style={{
                         paddingBottom: 3,

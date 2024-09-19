@@ -439,7 +439,7 @@ export default function AllProjects() {
   const [index, setindex] = useState(0);
   const [tab, settab] = useState(0);
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF"}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
       <Header onPress={toggleDrawer} index={setindex} tab={settab} />
 
       <Modal
@@ -459,10 +459,7 @@ export default function AllProjects() {
         style={styles.modal}
       >
         <View style={styles.modalContent}>
-       
-            <DrawerMenu setIsDrawerOpen={setState} />
-          
-        
+          <DrawerMenu setIsDrawerOpen={setState} />
         </View>
       </Modal>
 
@@ -525,7 +522,7 @@ export default function AllProjects() {
                     width: "100%",
                   }}
                 >
-                  <View style={{paddingHorizontal:8}}>
+                  <View style={{ paddingHorizontal: 8 }}>
                     <ProjectPost
                       project={item}
                       key={item.id}

@@ -87,7 +87,7 @@ const CustomTabBar = ({
           "https://private.emlaksepette.com/api/menu-list"
         );
         setMenuItems(response.data);
-        setMenuItems([{ text: "Anasayfa" }, ...response.data]);
+        setMenuItems([{ text: "Anasayfa" }, ...response.data.slice(0, -1)]);
       } catch (error) {
         console.error("Error fetching menu items:", error);
       }
