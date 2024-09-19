@@ -294,7 +294,7 @@ const FirstHome = (props) => {
                   </Text>
                   <TouchableOpacity
                     style={styles.allProjectsButton}
-                    onPress={() => null}
+                    onPress={() => navigation.navigate("AllFranchiseBrands")}
                   >
                     <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                   </TouchableOpacity>

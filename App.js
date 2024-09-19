@@ -116,6 +116,7 @@ import Toast from 'react-native-toast-message';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
 import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
 import ApplyForBeCompany from "./pages/Home/ProfilePages/ApplyForBeCompany";
+import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
 
 
 const Stack = createNativeStackNavigator();
@@ -1157,6 +1158,17 @@ export default function App({ route }) {
               },
             })}
           />
+          <Stack.Screen
+          name="AllFranchiseBrands"
+          component={AllFranchiseBrands}
+          options={({ route }) => ({
+            title: "Franchise Markalar",
+            headerBackTitleVisible: false,
+            headerStyle: {
+              backgroundColor: "#ffffff",
+            },
+          })}
+        />
          
         </Stack.Navigator>
       </NavigationContainer>
