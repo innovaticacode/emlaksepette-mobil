@@ -105,9 +105,7 @@ export default function Takeds() {
                   }, 700);
                 }}
               >
-                <Text style={style.returnButtonText}>
-                  İlanlara Göz At
-                </Text>
+                <Text style={style.returnButtonText}>İlanlara Göz At</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -174,20 +172,20 @@ const style = StyleSheet.create({
   },
   noCommentsText: {
     fontSize: 18,
-    color: '#333',
-    textAlign: 'center',
+    color: "#333",
+    textAlign: "center",
     marginTop: 8,
   },
   returnButton: {
-    backgroundColor: '#EA2B2E',
+    backgroundColor: "#EA2B2E",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
   },
   returnButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   Navbar: {
     width: "100%",

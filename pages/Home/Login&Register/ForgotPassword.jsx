@@ -47,12 +47,9 @@ export default function ForgotPassword() {
     }
     return () => clearInterval(timer);
   }, [isCooldown]);
-const [buttonDisabled, setbuttonDisabled] = useState(false)
+  const [buttonDisabled, setbuttonDisabled] = useState(false);
   const postData = async () => {
-  
     setLoading(true); // Butonu loading durumuna al
-    
-
 
     try {
       if (!validateEmail(email)) {
@@ -79,12 +76,12 @@ const [buttonDisabled, setbuttonDisabled] = useState(false)
         formData
       );
       console.log("API çağrısı başarılı. Yanıt:", response.data);
-        
-    // Modal kapanır
+
+      // Modal kapanır
 
       setTimeout(() => {
         if (response.data.success) {
-          setbuttonDisabled(true)
+          setbuttonDisabled(true);
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Başarılı",
@@ -109,11 +106,11 @@ const [buttonDisabled, setbuttonDisabled] = useState(false)
         }
         // Loading durumu kapat
       }, 500); // Modal kapanırken zamanlama ekleyin
-
-    } catch (error) { // "errors" yerine "error"
+    } catch (error) {
+      // "errors" yerine "error"
       console.log("Hata oluştu:", error);
       setShowAlert(false); // Modal kapanır
-    
+
       setTimeout(() => {
         if (error) {
           Dialog.show({
@@ -124,8 +121,8 @@ const [buttonDisabled, setbuttonDisabled] = useState(false)
           });
         }
       }, 500); // Modal kapanırken zamanlama ekleyin
-    }finally{
-      setLoading(false); 
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -172,7 +169,9 @@ const [buttonDisabled, setbuttonDisabled] = useState(false)
           <View style={{ paddingLeft: 10, paddingRight: 10 }}>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 0 }}>
-                <Text style={{ fontSize: 14, color: "grey", fontWeight: "600" }}>
+                <Text
+                  style={{ fontSize: 14, color: "grey", fontWeight: "600" }}
+                >
                   E-Posta
                 </Text>
               </View>
@@ -188,7 +187,11 @@ const [buttonDisabled, setbuttonDisabled] = useState(false)
           </View>
           <View style={{ padding: 10 }}>
             <TouchableOpacity
-              style={[styles.btn, loading && styles.btnDisabled,{opacity:buttonDisabled? 0.5:1}]}
+              style={[
+                styles.btn,
+                loading && styles.btnDisabled,
+                { opacity: buttonDisabled ? 0.5 : 1 },
+              ]}
               onPress={postData}
               disabled={buttonDisabled} // Butonu disable et
             >
@@ -222,7 +225,6 @@ const [buttonDisabled, setbuttonDisabled] = useState(false)
               <Text>Başarıyla gönderildi!</Text>
             </View>
           </Dialog>
-
         </SafeAreaView>
       </TouchableWithoutFeedback>
     </AlertNotificationRoot>
@@ -250,7 +252,7 @@ const styles = StyleSheet.create({
     justifyContent: "center", // İçeriği ortalar
   },
   btnDisabled: {
-    opacity:0.5// Disable durumunda buton rengi
+    opacity: 0.5, // Disable durumunda buton rengi
   },
   modal: {
     justifyContent: "center",

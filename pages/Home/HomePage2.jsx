@@ -205,10 +205,7 @@ export default function HomePage2() {
         onSwipeComplete={() => setIsDrawerOpen(false)}
       >
         <View style={styles.modalContent}>
-        
-            <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-         
-        
+          <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
         </View>
       </Modal>
       <View style={{ paddingLeft: 10, paddingRight: 10 }}>

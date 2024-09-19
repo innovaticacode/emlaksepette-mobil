@@ -323,8 +323,14 @@ export default function PostDetail() {
         setTimeout(() => {
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
-            title:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${newCollectionNameCreate} Adlı portföyünüz oluşturuldu ` : `${newCollectionNameCreate} Adlı koleksiyonunuz oluşturuldu `,
-            textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${houseId} No'lu Konut ${newCollectionNameCreate} Adlı Portföyünüze Eklendi` : `${houseId} No'lu Konut ${newCollectionNameCreate} Adlı Koleksiyonuza Eklendi`,
+            title:
+              user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                ? `${newCollectionNameCreate} Adlı portföyünüz oluşturuldu `
+                : `${newCollectionNameCreate} Adlı koleksiyonunuz oluşturuldu `,
+            textBody:
+              user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                ? `${houseId} No'lu Konut ${newCollectionNameCreate} Adlı Portföyünüze Eklendi`
+                : `${houseId} No'lu Konut ${newCollectionNameCreate} Adlı Koleksiyonuza Eklendi`,
           });
         }, 700);
         // Başarılı yanıtı işleyin
@@ -366,8 +372,14 @@ export default function PostDetail() {
         setTimeout(() => {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
-            title:(user.type==2 && user.corporate_type=='Emlak Ofisi')?'Portföye Ekleme Başarılı': "Koleksiyona ekleme başarılı",
-            textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi') ? `${id} No'lu Konut ${name} Adlı Portföyünüze Eklendi`: `${id} No'lu Konut ${name} Adlı Koleksiyonunuza Eklendi`,
+            title:
+              user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                ? "Portföye Ekleme Başarılı"
+                : "Koleksiyona ekleme başarılı",
+            textBody:
+              user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                ? `${id} No'lu Konut ${name} Adlı Portföyünüze Eklendi`
+                : `${id} No'lu Konut ${name} Adlı Koleksiyonunuza Eklendi`,
             button: "Tamam",
           });
         }, 700);
@@ -443,7 +455,7 @@ export default function PostDetail() {
 
     return check;
   };
-  const removeItemOnCollection = (collectionId,name) => {
+  const removeItemOnCollection = (collectionId, name) => {
     const collectionData = {
       item_type: 2,
 
@@ -463,11 +475,17 @@ export default function PostDetail() {
         }
       )
       .then((response) => {
-        setColectionSheet(false)
+        setColectionSheet(false);
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
-          title:(user.type==2 && user.corporate_type=='Emlak Ofisi') ? 'Portföyden Silindi': "Koleksiyondan Silindi",
-          textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi') ? `${houseId} No'lu Konut ${name} Adlı Portföyünüzden Silindi` : `${houseId} No'lu Konut ${name} Adlı Koleksiyonunuzdan Silindi`,
+          title:
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? "Portföyden Silindi"
+              : "Koleksiyondan Silindi",
+          textBody:
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? `${houseId} No'lu Konut ${name} Adlı Portföyünüzden Silindi`
+              : `${houseId} No'lu Konut ${name} Adlı Koleksiyonunuzdan Silindi`,
         });
         var newCollections = collections.map((collection) => {
           if (collection.id == collectionId) {
@@ -645,10 +663,7 @@ export default function PostDetail() {
               onSwipeComplete={() => setIsDrawerOpen(false)}
             >
               <View style={styles.modalContent}>
-               
-                  <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-               
-              
+                <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
               </View>
             </Modal>
             <View
@@ -907,7 +922,9 @@ export default function PostDetail() {
                     </View>
                   </TouchableOpacity>
 
-                  {(OpenSharing == "Evet"   && user.corporate_type=='Emlak Ofisi' || user.type==1)&& (
+                  {((OpenSharing == "Evet" &&
+                    user.corporate_type == "Emlak Ofisi") ||
+                    user.type == 1) && (
                     <TouchableOpacity
                       onPress={() => {
                         openCollection();
@@ -1343,12 +1360,10 @@ export default function PostDetail() {
                               fontWeight: "400",
                             }}
                           >
-                            {
-                              (user.type==2 && user.corporate_type=='Emlak Ofisi') ? 'Portföye Ekle'
-                              :
-                              'Koleksiyona Ekle'
-                            }
-                            
+                            {user.type == 2 &&
+                            user.corporate_type == "Emlak Ofisi"
+                              ? "Portföye Ekle"
+                              : "Koleksiyona Ekle"}
                           </Text>
                           <Text
                             style={{
@@ -1357,12 +1372,10 @@ export default function PostDetail() {
                               fontSize: 14,
                             }}
                           >
-                            {
-                               (user.type==2 && user.corporate_type=='Emlak Ofisi') ? 
-                               'Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin':
-                               'Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin'
-                            }
-                            
+                            {user.type == 2 &&
+                            user.corporate_type == "Emlak Ofisi"
+                              ? "Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin"
+                              : "Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin"}
                           </Text>
                         </View>
 
@@ -1461,13 +1474,10 @@ export default function PostDetail() {
                                       color: "#7A8A95",
                                     }}
                                   >
-                                    {
-                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
-                                      'Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir':
-                                      'Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir'
-
-                                    }
-                                   
+                                    {user.type == 2 &&
+                                    user.corporate_type == "Emlak Ofisi"
+                                      ? "Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir"
+                                      : "Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir"}
                                   </Text>
                                 </View>
                                 <TouchableOpacity
@@ -1516,13 +1526,10 @@ export default function PostDetail() {
                                       color: "#7A8A95",
                                     }}
                                   >
-                                    {
-                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
-                                      'Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir':
-                                      'Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir'
-
-                                    }
-                                    
+                                    {user.type == 2 &&
+                                    user.corporate_type == "Emlak Ofisi"
+                                      ? "Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"
+                                      : "Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"}
                                   </Text>
                                 </View>
                                 <TouchableOpacity
@@ -1570,12 +1577,10 @@ export default function PostDetail() {
                                       color: "#7A8A95",
                                     }}
                                   >
-                                   {
-                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
-                                      'Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir':
-                                      'Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir'
-
-                                    }
+                                    {user.type == 2 &&
+                                    user.corporate_type == "Emlak Ofisi"
+                                      ? "Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"
+                                      : "Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"}
                                   </Text>
                                 </View>
                               </>
@@ -1603,12 +1608,10 @@ export default function PostDetail() {
                                       color: "#7A8A95",
                                     }}
                                   >
-                                    {
-                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
-                                      'Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir':
-                                      'Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir'
-
-                                    }
+                                    {user.type == 2 &&
+                                    user.corporate_type == "Emlak Ofisi"
+                                      ? "Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"
+                                      : "Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"}
                                   </Text>
                                 </View>
                                 <TouchableOpacity
@@ -1827,13 +1830,10 @@ export default function PostDetail() {
                               fontWeight: "400",
                             }}
                           >
-                            {
-                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
-                                      'Portföy Oluştur':
-                                      'Koleksiyon Oluştur'
-
-                                    }
-                            
+                            {user.type == 2 &&
+                            user.corporate_type == "Emlak Ofisi"
+                              ? "Portföy Oluştur"
+                              : "Koleksiyon Oluştur"}
                           </Text>
                         </View>
                       </View>
@@ -1851,13 +1851,10 @@ export default function PostDetail() {
                             fontWeight: "500",
                           }}
                         >
-                            {
-                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
-                                      'Portföy İsmi':
-                                      'Koleksiyon İsmi'
-
-                                    }
-                          
+                          {user.type == 2 &&
+                          user.corporate_type == "Emlak Ofisi"
+                            ? "Portföy İsmi"
+                            : "Koleksiyon İsmi"}
                         </Text>
                         <TextInput
                           style={styles.Input}
@@ -1885,13 +1882,10 @@ export default function PostDetail() {
                               fontWeight: "500",
                             }}
                           >
-                              {
-                                      (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
-                                      'Portföy Oluştur':
-                                      'Koleksiyon Oluştur'
-
-                                    }
-                          
+                            {user.type == 2 &&
+                            user.corporate_type == "Emlak Ofisi"
+                              ? "Portföy Oluştur"
+                              : "Koleksiyon Oluştur"}
                           </Text>
                         </TouchableOpacity>
                       </View>

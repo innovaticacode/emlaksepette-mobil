@@ -92,7 +92,10 @@ export default function CreateCollections() {
       Dialog.show({
         type: ALERT_TYPE.WARNING,
         title: "Hata",
-        textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? 'Lütfen Portföy Adı Girin': "Lütfen Koleksiyon Adı Girin.",
+        textBody:
+          user.type == 2 && user.corporate_type == "Emlak Ofisi"
+            ? "Lütfen Portföy Adı Girin"
+            : "Lütfen Koleksiyon Adı Girin.",
         button: "Tamam",
       });
       return;
@@ -123,8 +126,14 @@ export default function CreateCollections() {
       .then((response) => {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
-          title: (user.type==2 && user.corporate_type=='Emlak Ofisi') ? 'Portföy Oluşturuldu': "Koleksiyon Oluşturuldu.",
-          textBody: (user.type==2 && user.corporate_type=='Emlak Ofisi')?`${CollectionName} Adlı Portföy Oluşturuldu.` : `${CollectionName} Adlı Koleksiyon Oluşturuldu.`,
+          title:
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? "Portföy Oluşturuldu"
+              : "Koleksiyon Oluşturuldu.",
+          textBody:
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? `${CollectionName} Adlı Portföy Oluşturuldu.`
+              : `${CollectionName} Adlı Koleksiyon Oluşturuldu.`,
           button: "Tamam",
         });
         fetchData();
@@ -161,8 +170,14 @@ export default function CreateCollections() {
       .then((response) => {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
-          title: (user.type==2 && user.corporate_type=='Emlak Ofisi')?'Portföye Eklendi': "Koleksiyona Eklendi",
-          textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${name} Adlı Portföye eklendi` : `${name} Adlı koleksiyona eklendi`,
+          title:
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? "Portföye Eklendi"
+              : "Koleksiyona Eklendi",
+          textBody:
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? `${name} Adlı Portföye eklendi`
+              : `${name} Adlı koleksiyona eklendi`,
           button: "Tamam",
         });
 
@@ -232,8 +247,11 @@ export default function CreateCollections() {
       .then((response) => {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
-          title:"1 Konut silindi",
-          textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${name} Adlı portföyden 1 konut silindi`: `${name} Adlı koleksiyondan 1 konut silindi`,
+          title: "1 Konut silindi",
+          textBody:
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? `${name} Adlı portföyden 1 konut silindi`
+              : `${name} Adlı koleksiyondan 1 konut silindi`,
         });
 
         var newCollections = collections.map((collection) => {
@@ -319,12 +337,9 @@ export default function CreateCollections() {
                         fontWeight: "bold",
                       }}
                     >
-                      {
-                        (user.type==2 && user.corporate_type == 'Emlak Ofisi')?
-                        'Portföy İsmi':
-                        'Koleksiyon İsmi'
-                      }
-                    
+                      {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                        ? "Portföy İsmi"
+                        : "Koleksiyon İsmi"}
                     </Text>
 
                     <TextInput
@@ -352,12 +367,10 @@ export default function CreateCollections() {
                             textAlign: "center",
                           }}
                         >
-                           {
-                        (user.type==2 && user.corporate_type == 'Emlak Ofisi')?
-                        'Portföy Ekle':
-                        'Koleksiyon Ekle'
-                      }
-                         
+                          {user.type == 2 &&
+                          user.corporate_type == "Emlak Ofisi"
+                            ? "Portföy Ekle"
+                            : "Koleksiyon Ekle"}
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -367,12 +380,9 @@ export default function CreateCollections() {
                     <Text
                       style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
                     >
-                           {
-                        (user.type==2 && user.corporate_type == 'Emlak Ofisi')?
-                        'Portföylerim':
-                        'Koleksiyonlarım'
-                      }
-                      
+                      {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                        ? "Portföylerim"
+                        : "Koleksiyonlarım"}
                     </Text>
                   </View>
                   <View style={{ gap: 5, padding: 10 }}>
@@ -415,12 +425,10 @@ export default function CreateCollections() {
                                 fontWeight: "600",
                               }}
                             >
-                              {
-                                (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
-                                'Portföyünüze İlan bulunmamaktadır':
-                                'Koleksiyonunuzda ilan bulunmamaktadır'
-                              }
-                             
+                              {user.type == 2 &&
+                              user.corporate_type == "Emlak Ofisi"
+                                ? "Portföyünüze İlan bulunmamaktadır"
+                                : "Koleksiyonunuzda ilan bulunmamaktadır"}
                             </Text>
                           </View>
                           <View
@@ -463,12 +471,10 @@ export default function CreateCollections() {
                       </View>
                       <View style={{ width: "80%" }}>
                         <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                          {
-                             (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                             'Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir'
-                             :'Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir'
-                          }
-                        
+                          {user.type == 2 &&
+                          user.corporate_type == "Emlak Ofisi"
+                            ? "Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir"
+                            : "Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir"}
                         </Text>
                       </View>
                       <TouchableOpacity
@@ -504,12 +510,10 @@ export default function CreateCollections() {
                       </View>
                       <View style={{ width: "80%" }}>
                         <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                        {
-                             (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                             'Portföyünüze konut ekleyebilmeniz için emlak kulüp üyesi olmanız gerekmektedir'
-                             :'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir'
-                          }
-                         
+                          {user.type == 2 &&
+                          user.corporate_type == "Emlak Ofisi"
+                            ? "Portföyünüze konut ekleyebilmeniz için emlak kulüp üyesi olmanız gerekmektedir"
+                            : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"}
                         </Text>
                       </View>
                       <TouchableOpacity
@@ -545,11 +549,10 @@ export default function CreateCollections() {
                       </View>
                       <View style={{ width: "80%", paddingBottom: 10 }}>
                         <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                        {
-                             (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                             'Portföyünüze konut ekleyebilmeniz için emlak kulüp üyesi olmanız gerekmektedir'
-                             :'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir'
-                          }
+                          {user.type == 2 &&
+                          user.corporate_type == "Emlak Ofisi"
+                            ? "Portföyünüze konut ekleyebilmeniz için emlak kulüp üyesi olmanız gerekmektedir"
+                            : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"}
                         </Text>
                       </View>
                     </View>
@@ -571,11 +574,10 @@ export default function CreateCollections() {
                       </View>
                       <View style={{ width: "80%", paddingBottom: 10 }}>
                         <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                        {
-                             (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                             'Portföyünüze konut ekleyebilmeniz için emlak kulüp üyesi olmanız gerekmektedir'
-                             :'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir'
-                          }
+                          {user.type == 2 &&
+                          user.corporate_type == "Emlak Ofisi"
+                            ? "Portföyünüze konut ekleyebilmeniz için emlak kulüp üyesi olmanız gerekmektedir"
+                            : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"}
                         </Text>
                       </View>
                       <TouchableOpacity
@@ -617,9 +619,6 @@ export default function CreateCollections() {
                 </View>
               </>
             )}
-
-           
-        
           </>
         )}
       </>

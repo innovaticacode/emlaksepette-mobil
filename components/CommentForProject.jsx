@@ -56,6 +56,7 @@ export default function CommentForProject({ projectId }) {
       console.error("Error fetching data:", error);
     }
   };
+  console.log(projectId + " project id budur");
   useEffect(() => {
     fetchData();
   }, [user]);
@@ -102,7 +103,7 @@ export default function CommentForProject({ projectId }) {
             ) : (
               comments.map((itemComment, _index) => (
                 <CommentItem
-                  username={"Anonim"}
+                  username={itemComment?.user?.name}
                   key={_index}
                   comment={itemComment?.comment}
                   date={itemComment?.created_at}

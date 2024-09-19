@@ -459,10 +459,7 @@ export default function AllProjects() {
         style={styles.modal}
       >
         <View style={styles.modalContent}>
-       
-            <DrawerMenu setIsDrawerOpen={setState} />
-          
-        
+          <DrawerMenu setIsDrawerOpen={setState} />
         </View>
       </Modal>
 

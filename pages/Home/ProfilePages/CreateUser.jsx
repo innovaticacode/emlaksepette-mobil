@@ -160,7 +160,7 @@ export default function CreateUser() {
           Dialog.show({
             type: ALERT_TYPE.DANGER,
             title: "Hata",
-            textBody: `${ error.response?.data?.errors.email[0] }`,
+            textBody: `${error.response?.data?.errors.email[0]}`,
             button: "Tamam",
             onPressButton: () => {
               Dialog.hide();
@@ -472,7 +472,6 @@ const pickerSelectStyles = StyleSheet.create({
     fontWeight: "600", // to ensure the text is never behind the icon
   },
 });
-
 
 const style = StyleSheet.create({
   container: {

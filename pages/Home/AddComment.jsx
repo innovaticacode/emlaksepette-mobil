@@ -74,6 +74,7 @@ export default function AddComment() {
   const [image, setImage] = useState([]);
   console.log(image);
   const [selectedIndex, setselectedIndex] = useState(null);
+
   const pickImage = async () => {
     // Kullanıcıdan izin isteme
     const permissionResult =
@@ -146,37 +147,41 @@ export default function AddComment() {
         formData.append(`images[${index}]`, {
           uri: Platform.OS === "android" ? image : image.replace("file://", ""), // Android ve iOS için uygun URI
           type: "image/jpeg", // Resmin tipi, genellikle image/jpeg veya image/png
-          name: `photo_${index}.jpg`, // Sunucuya gönderilecek dosya adı
+          name: `image${index}.jpg`, // Sunucuya gönderilecek dosya adı
         });
       }
     });
 
     try {
-      if (comment) {
-        if (user?.access_token) {
-          const response = await axios.post(
-            `https://private.emlaksepette.com/api/housing/${HouseID}/send-comment`,
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${user?.access_token}`,
-                "Content-Type": "multipart/form-data", // FormData için doğru Content-Type
-              },
-            }
-          );
+      if (
+        user?.access_token &&
+        typeof rating === "number" &&
+        rating > 0 &&
+        typeof comment === "string" &&
+        comment.length > 0
+      ) {
+        const response = await axios.post(
+          `https://private.emlaksepette.com/api/housing/${HouseID}/send-comment`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+              "Content-Type": "multipart/form-data", // FormData için doğru Content-Type
+            },
+          }
+        );
 
-          // Gönderim başarılı olduğunda yapılacak işlemler
-          setcomment("");
-          setrate(0);
-          setRating(0);
-          setImage([null, null, null]); // Resim alanlarını temizleme
-          nav.navigate("Success", {
-            name: "Yorum başarılı",
-            message: "Değerlendirmeniz İçin Teşekkürler",
-            HouseID: HouseID,
-            type: "House",
-          });
-        }
+        // Gönderim başarılı olduğunda yapılacak işlemler
+        setcomment("");
+        setrate(0);
+        setRating(0);
+        setImage([null, null, null]); // Resim alanlarını temizleme
+        nav.navigate("Success", {
+          name: "Yorum başarılı",
+          message: "Değerlendirmeniz İçin Teşekkürler",
+          HouseID: HouseID,
+          type: "House",
+        });
       } else {
         Dialog.show({
           type: ALERT_TYPE.DANGER,
@@ -242,13 +247,14 @@ export default function AddComment() {
                 <ImageBackground
                   source={{
                     uri:
-                      data &&
-                      data.housing_type_data &&
-                      `${apiUrl}/housing_images/${
-                        JSON.parse(data.housing_type_data)["images"]
-                      }`,
+                      data && data.housing_type_data
+                        ? `${apiUrl}/housing_images/${
+                            JSON.parse(data.housing_type_data)["images"][0]
+                          }`
+                        : null,
                   }}
                   style={{ width: "100%", height: "100%" }}
+                  resizeMode="cover"
                 />
               </View>
               <View style={{ flexDirection: "column", gap: 5, width: "100%" }}>
@@ -518,16 +524,42 @@ export default function AddComment() {
                   </View>
                 </View>
               </View>
+              <View>
+                <CheckBox
+                  checked={checkedForm}
+                  onPress={toggleCheckboxForm}
+                  // Use ThemeProvider to make change for all checkbox
+                  iconType="material-community"
+                  checkedIcon="checkbox-marked"
+                  uncheckedIcon="checkbox-blank-outline"
+                  checkedColor="red"
+                  title={
+                    <Text style={{ fontSize: 12, left: 5 }}>
+                      Yorum Kurallarını Okudum Kabul Ediyorum
+                    </Text>
+                  }
+                  size={20}
+                  containerStyle={{
+                    backgroundColor: "white",
+                    borderWidth: 0,
+                    width: "100%",
+                    margin: 4,
+                    marginLeft: 0,
+                    paddingLeft: 0,
+                  }}
+                />
+              </View>
 
               <TouchableOpacity
-                disabled={loadingShare}
                 style={{
                   backgroundColor: "#EB2B2E",
                   padding: 10,
                   borderRadius: 5,
                   marginTop: 5,
+                  opacity: checkedForm ? 1 : 0.5,
                 }}
                 onPress={shareComment}
+                disabled={!checkedForm}
               >
                 {loadingShare ? (
                   <ActivityIndicator color="white" />
@@ -572,9 +604,15 @@ const style = StyleSheet.create({
     }),
   },
   Image: {
-    backgroundColor: "red",
     width: 80,
     height: 70,
+    justifyContent: "center", // İçeriği ortalamak için
+    alignItems: "center", // İçeriği ortalamak için
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   Input: {
     backgroundColor: "#f5f5f5",

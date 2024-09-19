@@ -25,11 +25,13 @@ export default function ChangePassword() {
 
   const [SecureTextForPass1, setSecureTextForPass1] = useState(true);
   const [SecuretextForNewPass, setSecuretextForNewPass] = useState(true);
-  const [SecureTextForNewPassAgain, setSecureTextForNewPassAgain] = useState(true);
+  const [SecureTextForNewPassAgain, setSecureTextForNewPassAgain] =
+    useState(true);
 
   const ToggleForPass1 = () => setSecureTextForPass1(!SecureTextForPass1);
   const ToggleForPass2 = () => setSecuretextForNewPass(!SecuretextForNewPass);
-  const ToggleForPass3 = () => setSecureTextForNewPassAgain(!SecureTextForNewPassAgain);
+  const ToggleForPass3 = () =>
+    setSecureTextForNewPassAgain(!SecureTextForNewPassAgain);
 
   const [currentPasword, setcurrentPasword] = useState("");
   const [newPassword, setnewPassword] = useState("");
@@ -43,7 +45,7 @@ export default function ChangePassword() {
 
   const postData = async () => {
     setchangeLoading(true);
-    
+
     // İşlem başladığında kullanıcıya bilgi verme
     Dialog.show({
       type: ALERT_TYPE.INFO,
@@ -51,13 +53,13 @@ export default function ChangePassword() {
       textBody: "Şifreniz güncelleniyor, lütfen bekleyin...",
       button: "Tamam",
     });
-  
+
     try {
       var formData = new FormData();
       formData.append("current_password", currentPasword);
       formData.append("new_password", newPassword);
       formData.append("new_password_confirmation", newPasswordconfirmation);
-  
+
       const response = await axios.post(
         "https://private.emlaksepette.com/api/client/password/update",
         formData,
@@ -75,26 +77,25 @@ export default function ChangePassword() {
         textBody: "Şifreniz başarıyla güncellendi.",
         button: "Tamam",
       });
-  
+
       // Success durumunda Dialog'u belli bir süre sonra otomatik kapatma
       setTimeout(() => {
         Dialog.hide();
       }, 5000); // 5 saniye sonra otomatik kapanma
-  
     } catch (error) {
       console.log("Error Response:", error.response); // Hata objesini konsola yazdır
-  
+
       let errorMessage = "Bilinmeyen bir hata oluştu.";
-      
+
       // Error mesajını daha kapsamlı kontrol et
       if (error.response?.data?.errors) {
         errorMessage = Object.values(error.response.data.errors)
           .flat()
-          .join(', ');
+          .join(", ");
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
-  
+
       // Hata durumunda özel mesaj gösterimi
       Dialog.show({
         type: ALERT_TYPE.DANGER,
@@ -107,7 +108,7 @@ export default function ChangePassword() {
       setchangeLoading(false);
     }
   };
-  
+
   const HandleSubmit = () => {
     if (!currentPasword || !newPassword || !newPasswordconfirmation) {
       Dialog.show({
