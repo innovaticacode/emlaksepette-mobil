@@ -197,6 +197,7 @@ export default function UserTypeList() {
             height: "100%",
             gap: 10,
             backgroundColor: "white",
+            marginTop: -62,
           }}
         >
           <View
@@ -205,21 +206,17 @@ export default function UserTypeList() {
               { alignItems: "center", justifyContent: "center" },
             ]}
           >
-            <Icon2 name="user-tie" size={50} color={"#EA2A28"} />
+            <Icon2 name="user-tie" size={35} color={"#EA2A28"} />
           </View>
           <View>
-            <Text style={{ color: "grey", fontSize: 16, fontWeight: "600" }}>
-              Kullanıcı Tipi Bulunanmadı
+            <Text style={styles.noCommentsText}>
+              Daha önce kullanıcı tipi oluşturmadınız.
             </Text>
+            <Text></Text>
           </View>
           <View style={{ width: "100%", alignItems: "center" }}>
             <TouchableOpacity
-              style={{
-                backgroundColor: "#EA2A28",
-                width: "90%",
-                padding: 8,
-                borderRadius: 5,
-              }}
+              style={styles.returnButton}
               onPress={() => {
                 setloading(true);
                 setTimeout(() => {
@@ -228,13 +225,7 @@ export default function UserTypeList() {
                 }, 700);
               }}
             >
-              <Text
-                style={{
-                  color: "#ffffff",
-                  fontWeight: "600",
-                  textAlign: "center",
-                }}
-              >
+              <Text style={styles.returnButtonText}>
                 Oluştur
               </Text>
             </TouchableOpacity>
@@ -443,6 +434,23 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#f5f5f7",
   },
+  noCommentsText: {
+    fontSize: 18,
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  returnButton: {
+    backgroundColor: '#EA2B2E',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  returnButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   modal4: {
     justifyContent: "center",
     margin: 0,
@@ -461,7 +469,7 @@ const styles = StyleSheet.create({
 
     borderRadius: 50,
 
-    borderWidth: 0.7,
+    borderWidth: 0.6,
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {

@@ -254,6 +254,7 @@ export default function CreateUser() {
                   style={style.Input}
                   value={email}
                   onChangeText={(value) => setemail(value)}
+                  autoCapitalize="none" // İlk harfin büyük olmasını engeller
                 />
                 {validationErrors.email && (
                   <Text style={style.errorText}>

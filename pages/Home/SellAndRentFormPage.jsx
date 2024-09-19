@@ -1,290 +1,242 @@
 import {
+  ScrollView,
+  StyleSheet,
   View,
   Text,
-  StyleSheet,
-  ScrollView,
   TouchableOpacity,
+  Image,
 } from "react-native";
-import React,{useState} from "react";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import Icon2 from "react-native-vector-icons/FontAwesome5";
-import Icon3 from 'react-native-vector-icons/MaterialIcons'
-import { useNavigation } from "@react-navigation/native";
-import InfoUsual from "./Sell And Rent tab Pages/InfoUsual";
-import PaymentProcces from "./Sell And Rent tab Pages/PaymentProcces";
-import DateProcces from "./Sell And Rent tab Pages/DateProcces";
-import ApplyProcces from "./Sell And Rent tab Pages/ApplyProcces";
-import { Platform } from "react-native";
-export default function SellAndRentFormPage() {
-  const [tabs, settabs] = useState(1)
-    const navigation=useNavigation()
+import React from "react";
+import Icon from "react-native-vector-icons/SimpleLineIcons";
+import SellAndRentList from "../../components/SellAndRentList";
+import BGTwo from "../../assets/buyAndRentBg.png";
+import FastRent from "../../assets/FastRent.png";
+import IndividualRent from "../../assets/IndividualRent.png";
+
+export default function SellAndRentFormPage(props) {
+  const { navigation } = props;
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.headerText}>
-        <Text style={styles.TextHead}>
-          Hızlı güvenli ve kolay satışın yolu...{" "}
-        </Text>
-        <Text style={{ fontSize: 18, color: "#333", fontWeight: "500" }}>
-          Emlaksepette/Sat Kirala
-        </Text>
-
-        <Text style={{ color: "#898F9E", width: 300 }}>
-          Arsa, konut, işyeri, turistik tesis, devremülk tüm
-          gayrimenkullerinizin satış veya kiralamasını emlaksepette sizin
-          yerinize yapsın zamanınız size kalsın formu doldur bilgilerini gir kolay sat kirala!
-        </Text>
-      </View>
-      <View style={{ paddingTop:20, gap: 10 }}>
-
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity 
-          onPress={()=>{
-            navigation.navigate('SendSellAndRentForm')
-          }}
-          style={styles.btnToForm}>
-            <Text style={{ color: "white", fontSize: 14, textAlign: "center" }}>
-              Formu Doldur
+    <View style={styles.container}>
+      <ScrollView style={{ flexGrow: 1, flex: 1 }}>
+        <Image source={BGTwo} style={styles.bgImage} resizeMode="cover" />
+        <View style={{ width: "100%", paddingHorizontal: 24 }}>
+          <View style={styles.headTextArea}>
+            <View>
+              <Text style={styles.title}>MÜLKLERİNİZİ</Text>
+              <Text
+                style={styles.redTitle}
+              >{`HIZLI SATIN, \nHIZLI KİRALAYIN!`}</Text>
+            </View>
+            <Text style={styles.desc}>
+              Sat kirala, emlak satış ve kiralama işlerinizi güvenli ve hızlı
+              bir şekilde hallediyor. Biz mülkünüzü alıcıya veya kiracıya
+              ulaştırıyoruz!
             </Text>
+          </View>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {}}
+            style={styles.redButton}
+          >
+            <Text style={styles.redButtonText}>Hemen İlan Ver</Text>
           </TouchableOpacity>
         </View>
-      </View>
-      <View style={{ paddingTop: 50, margin: 10 }}>
-        <Text style={{ textAlign: "center", fontSize: 22, color: "#E54242",fontWeight:'500' }}>
-          Sat Kiralanın Avantajları
-        </Text>
-
-        <View style={[styles.card, { alignItems: "center", gap: 5 }]}>
-          <View style={{backgroundColor:'#E54242',padding:5,borderRadius:5,       transform: [{ perspective: 300 }, { rotateY: '-45deg' }], paddingLeft:32,paddingRight:32}}>
-          <Icon name="cash-fast" size={30} color={"white"} />
-          </View>
-        
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "bold",
-              textAlign: "center",
-              color: "#E54242",
+        <View style={styles.cardArea}>
+          <TouchableOpacity
+            style={styles.redCard}
+            activeOpacity={0.8}
+            onPress={() => {
+              navigation.navigate("SellAndRentAdvantage", { index: 0 });
             }}
           >
-            Sat Kirala İle Hızlı Satış
-          </Text>
-
-          <View style={{ paddingTop: 10 }}>
-            <Text style={{ color: "grey", fontWeight: "400", fontSize: 13 }}>
-              Satmak veya kiralamak istediğiniz gayrimenkulünüzün bilgilerini
-              girin. Binlerce profesyonel emlak danışmanı vasıtasıyla hızlı ve
-              kolayca satışını sizin yerinize biz sağlayalım.
-            </Text>
-          </View>
-        </View>
-        <View style={[styles.card, { alignItems: "center" }]}>
-          <View style={{backgroundColor:'#E54242',padding:5,borderRadius:5,       transform: [{ perspective: 300 }, { rotateY: '-45deg' }], paddingLeft:32,paddingRight:32}}>
-          <Icon name="cash-lock" size={32} color={"white"} />
-          </View>
-     
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "bold",
-              textAlign: "center",
-              color: "#E54242",
-            }}
-          >
-            Kapora Güvence Sistemi
-          </Text>
-
-          <View style={{ paddingTop: 10 }}>
-            <Text style={{ color: "grey", fontWeight: "400", fontSize: 13 }}>
-              Gayrimenkulünüzün satışı tamamlandığı takdirde kapora güvence
-              sistemiyle kaporanız bizim güvencemiz altındadır.
-            </Text>
-          </View>
-        </View>
-        <View style={[styles.card, { alignItems: "center" }]}>
-          <View style={{backgroundColor:'#E54242',padding:5,borderRadius:5,       transform: [{ perspective: 300 }, { rotateY: '-45deg' }], paddingLeft:32,paddingRight:32}}>
-          <Icon2 name='users' size={30} color={"white"} />
-          </View>
-       
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "bold",
-              textAlign: "center",
-              color: "#E54242",
-            }}
-          >
-         test.emlaksepette.com Uzmanlğı
-          </Text>
-
-          <View style={{ paddingTop: 10 }}>
-            <Text style={{ color: "grey", fontWeight: "400", fontSize: 13 }}>
-            test.emlaksepette.com ile tüm satış veya kiralama süreçlerinde profesyonel ve güvenilir hizmet alırsınız.
-            </Text>
-          </View>
-        </View>
-            <View style={{padding:10}}>
-              <Text style={{textAlign: "center", fontSize: 22, color: "#E54242",fontWeight:'500'}}>İlanımı nasıl satarım?</Text>
+            <View style={styles.inner}>
+              <View style={styles.cardDesc}>
+                <Text style={styles.redCardText}>
+                  Hızlı satıp kiralama avantajlarını hemen öğren..
+                </Text>
+                <Text></Text>
+              </View>
+              <View style={styles.whiteButton}>
+                <Icon name="arrow-right" size={18} color="#EA2B2E" />
+                <Text style={styles.whiteButtonText}>
+                  Hızlı Sat Kirala Avantajları
+                </Text>
+              </View>
+              <Image
+                source={FastRent}
+                style={styles.redCardImage}
+                resizeMode="contain"
+              />
             </View>
-            <View style={[styles.card, { alignItems: "center" }]}>
-              <View style={{backgroundColor:'#E54242',padding:5,borderRadius:5,transform: [{ perspective: 300 }, { rotateY: '-45deg' }], paddingLeft:32,paddingRight:32}}>  
-          <Icon name='form-select' size={25} color={"white"} />
-          </View>
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "bold",
-              textAlign: "center",
-              color: "#E54242",
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.whiteCard}
+            onPress={() => {
+              navigation.navigate("SellAndRentAdvantage", { index: 1 });
             }}
+            activeOpacity={0.8}
           >
-             Formu Doldurun
-          </Text>
-
-          <View style={{ paddingTop: 10 }}>
-            <Text style={{ color: "grey", fontWeight: "400", fontSize: 13 }}>
-            Satmak veya kiralamak istediğiniz gayrimenkulünüzün ilan bilgilerini girin (Fiyat,Lokasyon vb) profesyonel gayrimenkul danışmanlarımız sizi arasın.
-            </Text>
-          </View>
+            <View style={styles.whiteCardInner}>
+              <View style={styles.whiteCardInnerTextArea}>
+                <Text style={styles.whiteCardText}>
+                  Bireysel satıp kiralama dezavantajlarını hemen öğren..
+                </Text>
+                <Text></Text>
+              </View>
+              <View style={styles.whiteButton}>
+                <Icon name="arrow-right" size={18} color="#EA2B2E" />
+                <Text style={styles.whiteButtonText}>
+                  Bireysel Sat Kirala Dezavantajları
+                </Text>
+              </View>
+              <Image
+                source={IndividualRent}
+                style={styles.whiteCardImage}
+                resizeMode="contain"
+              />
+            </View>
+          </TouchableOpacity>
         </View>
-        <View style={[styles.card, { alignItems: "center" }]}>
-          <View style={{backgroundColor:'#E54242',padding:1,borderRadius:5,transform: [{ perspective: 300 }, { rotateY: '-45deg' }], paddingLeft:28,paddingRight:28}}>
-          <Icon name='home-account' size={37} color={"white"} />
-          </View>
-       
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "bold",
-              textAlign: "center",
-              color: "#E54242",
-            }}
-          >
-            Profesyonel Emlak Danışmanlığı
-          </Text>
-
-          <View style={{ paddingTop: 10 }}>
-            <Text style={{ color: "grey", fontWeight: "400", fontSize: 13 }}>
-            İlanınız gerekli incelemeler sonrasında onaylandığında profesyonel emlak danışmanlarımız satış süreciyle ilgili tüm süreçlerde danışmanlık hizmeti vermektedir. Gayrimenkulünüzün Fotoğraf çekimleri, potansiyel alıcı/müşteri bulma, satış sürecindeki devir ve tüm yasal işlemleri adınıza takip etmektedir.
-            </Text>
-          </View>
+        <View style={{ marginTop: 20, paddingBottom: 20 }}>
+          <SellAndRentList />
         </View>
-        <View style={[styles.card, { alignItems: "center" }]}>
-          <View style={{backgroundColor:'#E54242',padding:1,borderRadius:5,transform: [{ perspective: 300 }, { rotateY: '-45deg' }], paddingLeft:28,paddingRight:28}}>
-          <Icon name='cash-check' size={37} color={"white"} />
-          </View>
-       
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "bold",
-              textAlign: "center",
-              color: "#E54242",
-            }}
-          >
-            Hızlı Güvenli ve Kolay Satın
-          </Text>
-
-          <View style={{ paddingTop: 10 }}>
-            <Text style={{ color: "grey", fontWeight: "400", fontSize: 13 }}>
-            Gayrimenkulünüzün sorunsuz zahmetsiz hızlı ve kolay satışını tamamlayın.
-            </Text>
-          </View>
-        </View>
-        <View style={{padding:20}}>
-          <Text style={{color:'#333',textAlign:'center',fontSize:20}}>Sıkça Sorulan Sorular</Text>
-        </View>
-       <ScrollView horizontal contentContainerStyle={{gap:10,paddingBottom:10}} showsHorizontalScrollIndicator={false}>
-
-        <TouchableOpacity style={[styles.btn,{
-          backgroundColor:tabs==1?'#5396DF':'#ebebeb',
-        }]} onPress={()=>{
-          settabs(1)
-        }}>
-          <Text style={{color: tabs==1? 'white':'#5396DF'}}>Genel Bilgiler</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.btn,{
-          backgroundColor:tabs==2?'#5396DF':'#ebebeb',
-        }]} onPress={()=>{
-          settabs(2)
-        }}>
-          <Text style={{color: tabs==2? 'white':'#5396DF'}}>Fiyatlama Süreci</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity  style={[styles.btn,{
-          backgroundColor:tabs==3?'#5396DF':'#ebebeb',
-        }]} onPress={()=>{
-          settabs(3)
-        }}>
-          <Text style={{color: tabs==3? 'white':'#5396DF'}}>Randevu Süreci</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.btn,{
-          backgroundColor:tabs==4?'#5396DF':'#ebebeb',
-        }]}
-        onPress={()=>{
-          settabs(4)
-        }}
-        >
-          <Text style={{color: tabs==4? 'white':'#5396DF'}}>Başvuru Ve Onay Süreci</Text>
-        </TouchableOpacity>
-
-       </ScrollView>
-       {tabs==1 && <InfoUsual/>}
-       {tabs==2 && <PaymentProcces/>}
-       {tabs==3 && <DateProcces/>}
-       {tabs==4 && <ApplyProcces/>}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#f5f5f7",
     flex: 1,
-    padding: 10,
-    
+    backgroundColor: "#FFF",
   },
-  headerText: {
-    gap: 10,
-  },
-  TextHead: {
-    fontSize: 20,
-    color: "#333",
-    fontWeight: "bold",
-  },
-  btnToForm: {
-    backgroundColor: "#5396DF",
-    padding: 8,
-    borderRadius: 4,
-    width: "50%",
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 15,
-    paddingVertical: 20,
-    paddingHorizontal: 5,
+  bgImage: {
     width: "100%",
-    marginVertical: 10,
-    gap:5,
-    borderWidth: 0.7,
-    borderColor: "#f4f4f4",
-    ...Platform.select({
-      ios: {
-        shadowColor: "#f4f4f4",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
+    height: 310,
   },
-  btn:{
-    backgroundColor: "#5396DF",
-    padding: 8,
-    borderRadius: 4,
-  }
+  headTextArea: {
+    paddingTop: 16,
+  },
+  title: {
+    color: "#000000",
+    fontSize: 35,
+    lineHeight: 42,
+    fontWeight: "300",
+  },
+  redTitle: {
+    color: "#EA2B2E",
+    fontSize: 35,
+    lineHeight: 42,
+    fontWeight: "700",
+  },
+  desc: {
+    fontWeight: "400",
+    fontSize: 14,
+    lineHeight: 17,
+  },
+  redButton: {
+    backgroundColor: "#EA2B2E",
+    width: "100%",
+    height: 38,
+    borderRadius: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  redButtonText: {
+    color: "#FFF",
+    fontWeight: "700",
+    fontSize: 20,
+    lineHeight: 24,
+  },
+  cardArea: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 14,
+  },
+  redCard: {
+    width: "90%",
+    minWidth: 336,
+    height: 132,
+    alignSelf: "center",
+    height: 132,
+    backgroundColor: "#EA2B2E",
+    borderRadius: 14,
+  },
+  inner: {
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+  },
+  cardDesc: {
+    width: "62%",
+    height: "auto",
+    paddingVertical: 6,
+  },
+  redCardText: {
+    fontWeight: "500",
+    fontSize: 14,
+    lineHeight: 17,
+    color: "#FFF",
+  },
+
+  whiteButton: {
+    flexDirection: "row",
+    backgroundColor: "#FFFFFF",
+    width: "76%",
+    borderRadius: 22,
+    height: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  whiteButtonText: {
+    color: "#EA2B2E",
+    fontSize: 14,
+    lineHeight: 17,
+    fontWeight: "500",
+  },
+  redCardImage: {
+    position: "absolute",
+    right: 12,
+    top: 0,
+    width: 150,
+    height: 130,
+    zIndex: -1,
+  },
+  whiteCard: {
+    width: "90%",
+    minWidth: 336,
+    height:'auto',
+    alignSelf: "center",
+    backgroundColor: "#FFE3E3",
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "#EA2b2E",
+    marginTop: 20,
+  },
+
+  whiteCardInner: {
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+  },
+  whiteCardInnerTextArea: {
+    width: "62%",
+    height: 'auto',
+    paddingVertical: 6,
+  },
+  whiteCardText: {
+    fontWeight: "500",
+    fontSize: 14,
+    lineHeight: 17,
+    color: "#EA2B2E",
+  },
+  whiteCardImage: {
+    position: "absolute",
+    right: 12,
+    top: 0,
+    width: 150,
+    height: 130,
+    zIndex: -1,
+  },
 });
