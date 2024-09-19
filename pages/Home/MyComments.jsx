@@ -24,6 +24,7 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import { Button } from "react-native-paper";
 
 export default function MyComments() {
   const [user, setuser] = useState({});
@@ -298,9 +299,22 @@ export default function MyComments() {
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
-            <Text style={{ fontSize: 16, color: "#555" }}>
-              Henüz yorum yok.
-            </Text>
+            <View style={{}}>
+              <Text style={{ fontSize: 16, color: "#555" }}>
+                Henüz yorum yok.
+              </Text>
+              <TouchableOpacity
+                style={{
+                  marginTop: 10,
+                  backgroundColor: "red",
+                  padding: 10,
+                  borderRadius: 5,
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ color: "white" }}>İlanlara göz at</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
 

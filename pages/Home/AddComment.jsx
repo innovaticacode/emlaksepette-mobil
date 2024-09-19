@@ -8,6 +8,7 @@ import {
   TextInput,
   Dimensions,
   Alert,
+  Image,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import {
@@ -35,6 +36,8 @@ import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import HTML from "react-native-render-html";
 import Modal from "react-native-modal";
 import AwesomeAlert from "react-native-awesome-alerts";
+import ActionSheet from "react-native-actionsheet";
+import ImageViewing from "react-native-image-viewing";
 
 export default function AddComment() {
   const [data, setData] = useState({});
@@ -42,12 +45,85 @@ export default function AddComment() {
   const nav = useNavigation();
   const { HouseID } = route.params;
   const [loading, setloading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedIndexx, setSelectedIndexx] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [selectedIndex, setselectedIndex] = useState(null);
+  const [removeImage, setremoveImage] = useState(false);
+  const [image, setImage] = useState([]);
+
   useEffect(() => {
     apiRequestGet("housing/" + HouseID).then((res) => {
       setData(res.data.housing);
       setloading(false);
     });
   }, []);
+
+  const showActionSheet = (index) => {
+    setSelectedIndexx(index);
+    this.ActionSheet.show();
+  };
+
+  const handleImagePress = (index) => {
+    // Eğer resim varsa, ImageViewing'i aç
+    if (image[index]) {
+      const filteredImages = image.filter((img) => img !== null);
+      const filteredIndex = filteredImages.indexOf(image[index]);
+
+      if (filteredIndex !== -1) {
+        setCurrentImageIndex(filteredIndex);
+        setVisible(true);
+      }
+    } else {
+      // Eğer resim yoksa, eylem sayfasını göster
+      showActionSheet(index);
+    }
+  };
+
+  const handleActionSheet = async (buttonIndex) => {
+    console.log("Selected index:", selectedIndexx); // Ekleyin
+    let result;
+
+    if (buttonIndex === 0) {
+      result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+    } else if (buttonIndex === 1) {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+    } else if (buttonIndex === 2) {
+      const newImages = [...image];
+      newImages[selectedIndexx] = null;
+      setImage(newImages);
+      console.log("Removed image at index:", selectedIndexx);
+      return;
+    }
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const uri = result.assets[0].uri;
+      console.log("Selected image URI:", uri);
+      const newImages = [...image];
+
+      if (selectedIndexx < 3) {
+        newImages[selectedIndexx] = uri;
+      } else {
+        if (newImages.length >= 3) {
+          newImages.shift();
+        }
+        newImages.push(uri);
+      }
+
+      setImage(newImages);
+      console.log("Updated images:", newImages);
+    }
+  };
 
   const [rating, setRating] = useState(0); // Başlangıçta hiçbir yıldız dolu değil
   const [rate, setrate] = useState(0);
@@ -71,9 +147,7 @@ export default function AddComment() {
     getValueFor("user", setUser);
   }, []);
   const [comment, setcomment] = useState("");
-  const [image, setImage] = useState([]);
   console.log(image);
-  const [selectedIndex, setselectedIndex] = useState(null);
 
   const pickImage = async () => {
     // Kullanıcıdan izin isteme
@@ -217,7 +291,6 @@ export default function AddComment() {
       // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     }
   };
-  const [removeImage, setremoveImage] = useState(false);
   const removePhoto = () => {
     const newImages = [...image];
     newImages[selectedIndex] = null;
@@ -442,50 +515,100 @@ export default function AddComment() {
                       flexWrap: "wrap",
                     }}
                   >
-                    <TouchableOpacity
-                      style={[
-                        style.Input,
-                        {
-                          width: 90,
-                          height: 90,
-                          alignItems: "center",
-                          justifyContent: "center",
-                        },
+                    {image.slice(0, 3).map((image, index) => {
+                      console.log(`Image ${index}: `, image); // Resimleri konsola yazdır
+
+                      return (
+                        <View style={style.imageContainer} key={index}>
+                          <TouchableOpacity
+                            onLongPress={() => showActionSheet(index)}
+                            onPress={() => handleImagePress(index)}
+                            style={[
+                              style.input,
+                              {
+                                width: 90,
+                                height: 90,
+                                alignItems: "center",
+                                justifyContent: "center",
+                                margin: 5,
+                              },
+                            ]}
+                          >
+                            {image ? (
+                              <View style={{ width: "100%", height: "100%" }}>
+                                <Image
+                                  source={{ uri: image }}
+                                  style={{ width: "100%", height: "100%" }}
+                                  resizeMode="cover"
+                                />
+                                <TouchableOpacity
+                                  onPress={() => showActionSheet(index)}
+                                  style={style.editIcon}
+                                >
+                                  <Icon2
+                                    name="pencil"
+                                    size={20}
+                                    color={"#fff"}
+                                  />
+                                </TouchableOpacity>
+                              </View>
+                            ) : (
+                              <Icon2
+                                name="camera"
+                                size={25}
+                                color={"#babbbc"}
+                              />
+                            )}
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    })}
+
+                    {image.length < 3 &&
+                      Array.from({ length: 3 - image.length }).map(
+                        (_, index) => (
+                          <TouchableOpacity
+                            key={index + image.length}
+                            onPress={() =>
+                              showActionSheet(image.length + index)
+                            }
+                            style={[
+                              style.input,
+                              {
+                                width: 90,
+                                height: 90,
+                                alignItems: "center",
+                                justifyContent: "center",
+                                margin: 5,
+                              },
+                            ]}
+                          >
+                            <Icon2 name="camera" size={25} color={"#babbbc"} />
+                          </TouchableOpacity>
+                        )
+                      )}
+
+                    <ImageViewing
+                      images={image
+                        .filter((img) => img)
+                        .map((image) => ({ uri: image }))}
+                      imageIndex={currentImageIndex}
+                      visible={visible}
+                      onRequestClose={() => setVisible(false)}
+                    />
+
+                    <ActionSheet
+                      ref={(o) => (this.ActionSheet = o)}
+                      options={[
+                        "Fotoğraf çek",
+                        "Kütüphaneden seç",
+                        "Fotoğrafı kaldır",
+                        "İptal",
                       ]}
-                      onPress={pickImage}
-                      onLongPress={takePhoto}
-                    >
-                      <Icon2 name="camera" size={25} color={"grey"} />
-                    </TouchableOpacity>
-                    {image.map((image, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        onLongPress={() => {
-                          takePhoto(index);
-                        }}
-                        onPress={() => {
-                          pickImage(index);
-                        }}
-                        style={[
-                          style.Input,
-                          {
-                            width: 90,
-                            height: 90,
-                            alignItems: "center",
-                            justifyContent: "center",
-                          },
-                        ]}
-                      >
-                        {image ? (
-                          <ImageBackground
-                            source={image}
-                            style={{ width: "100%", height: "100%" }}
-                          />
-                        ) : (
-                          <Icon2 name="camera" size={25} color={"#babbbc"} />
-                        )}
-                      </TouchableOpacity>
-                    ))}
+                      cancelButtonIndex={3}
+                      destructiveButtonIndex={2}
+                      onPress={handleActionSheet}
+                    />
                     <AwesomeAlert
                       show={removeImage}
                       showProgress={false}
