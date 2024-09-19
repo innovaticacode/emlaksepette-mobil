@@ -1,31 +1,37 @@
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Keyboard,
   ScrollView,
-  Platform,
+  Modal,
+  TouchableWithoutFeedback,
+  Platform
 } from "react-native";
-import { useState, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { SearchBar } from "@rneui/base";
 import Icon from "react-native-vector-icons/Ionicons";
+import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
+import { ActivityIndicator } from "react-native-paper";
 import Order from "./profileComponents/Order";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
-import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
-import { ActivityIndicator } from "react-native-paper";
 
 export default function Sell() {
   const [search, setSearch] = useState("");
-  const [Tabs, setTabs] = useState(0);
+  const [tabs, setTabs] = useState(0);
+  const [user, setUser] = useState({});
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [sortOption, setSortOption] = useState("");
+
   const nav = useNavigation();
   const route = useRoute();
-  const [user, setUser] = useState({});
 
   const updateSearch = (search) => {
-    console.log("Search Input: ", search);  // Arama girişini kontrol et
     setSearch(search);
   };
 
@@ -33,80 +39,99 @@ export default function Sell() {
     getValueFor("user", setUser);
   }, []);
 
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      if (user?.access_token) {
-        const response = await axios.get(
-          "https://private.emlaksepette.com/api/institutional/get_solds",
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
-        setProducts(response.data.solds);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
   useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        if (user?.access_token) {
+          const response = await axios.get(
+            "https://private.emlaksepette.com/api/institutional/get_solds",
+            {
+              headers: {
+                Authorization: `Bearer ${user.access_token}`,
+              },
+            }
+          );
+          setProducts(response.data.solds);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchData();
   }, [user]);
 
   useEffect(() => {
-    console.log("Products: ", products); // Ürünlerin doğru şekilde geldiğini kontrol et
-  }, [products]);
+    const filterProducts = () => {
+      const searchLower = search.toLowerCase();
+      return products.filter(product => {
+        const parsedCart = product.cart ? JSON.parse(product.cart) : {};
+        const title = parsedCart["item"]["title"] ? parsedCart["item"]["title"].toLowerCase() : "";
+        const houseId = parsedCart["item"]["id"] ? parsedCart["item"]["id"].toString().toLowerCase() : "";
 
-// Filtrelenmiş ürünleri hesaplamak için bir yardımcı fonksiyon
-const filteredProducts = products.filter(product => {
-  const parsedCart = product.cart ? JSON.parse(product.cart) : {};
-  const title = parsedCart["item"]["title"] ? parsedCart["item"]["title"].toLowerCase() : "";
-  const houseId = parsedCart["item"]["id"] ? parsedCart["item"]["id"].toString().toLowerCase() : "";
+        return (
+          title.includes(searchLower) ||
+          houseId.includes(searchLower)
+        );
+      });
+    };
 
-  return (
-    title.includes(search.toLowerCase()) ||
-    houseId.includes(search.toLowerCase())
-  );
-});
+    const sortProducts = (products) => {
+      switch (sortOption) {
+        case "name-asc":
+          return products.sort((a, b) => {
+            const titleA = JSON.parse(a.cart)["item"]["title"].toLowerCase();
+            const titleB = JSON.parse(b.cart)["item"]["title"].toLowerCase();
+            return titleA.localeCompare(titleB);
+          });
+        case "name-desc":
+          return products.sort((a, b) => {
+            const titleA = JSON.parse(a.cart)["item"]["title"].toLowerCase();
+            const titleB = JSON.parse(b.cart)["item"]["title"].toLowerCase();
+            return titleB.localeCompare(titleA);
+          });
+        case "price-asc":
+          return products.sort((a, b) => {
+            const priceA = parseFloat(JSON.parse(a.cart)["item"]["price"] || 0);
+            const priceB = parseFloat(JSON.parse(b.cart)["item"]["price"] || 0);
+            return priceA - priceB;
+          });
+        case "price-desc":
+          return products.sort((a, b) => {
+            const priceA = parseFloat(JSON.parse(a.cart)["item"]["price"] || 0);
+            const priceB = parseFloat(JSON.parse(b.cart)["item"]["price"] || 0);
+            return priceB - priceA;
+          });
+        default:
+          return products;
+      }
+    };
 
+    const filtered = filterProducts();
+    const sorted = sortProducts(filtered);
+    setFilteredProducts(sorted);
+  }, [search, products, sortOption]);
 
-  console.log("Filtered Products: ", filteredProducts);  // Filtrelenmiş ürünleri kontrol et
-  console.log(user.access_token)
+  const handleSort = (option) => {
+    setSortOption(option);
+    setModalVisible(false);
+  };
+
   return (
     <>
       {loading ? (
-        <View
-          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
-        >
+        <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
           <ActivityIndicator color="#333" />
         </View>
-      ) : products.length == 0 ? (
-        <View
-          style={{
-            height: "90%",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 10,
-          }}
-        >
-          <View
-            style={[
-              style.card,
-              { alignItems: "center", justifyContent: "center" },
-            ]}
-          >
+      ) : products.length === 0 ? (
+        <View style={{ height: "90%", alignItems: "center", justifyContent: "center", gap: 10 }}>
+          <View style={{ alignItems: "center", justifyContent: "center" }}>
             <Icon2 name="basket-plus" size={50} color={"#EA2A28"} />
           </View>
           <View>
-            <Text style={style.noCommentsText}>
-              Sattığınız İlan Bulunmamaktadır.
-            </Text>
+            <Text style={style.noCommentsText}>Sattığınız İlan Bulunmamaktadır.</Text>
           </View>
           <View style={{ width: "100%", alignItems: "center" }}>
             <TouchableOpacity
@@ -159,6 +184,7 @@ const filteredProducts = products.filter(product => {
                   padding: 5,
                   borderRadius: 6,
                 }}
+                onPress={() => setModalVisible(true)}
               >
                 <View>
                   <Icon name="swap-vertical" size={18} color={"#333"} />
@@ -181,6 +207,35 @@ const filteredProducts = products.filter(product => {
               )}
             </View>
           </ScrollView>
+          {/* Modal */}
+          <Modal
+            transparent={true}
+            visible={modalVisible}
+            animationType="fade"
+            onRequestClose={() => setModalVisible(false)}
+          >
+            <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+              <View style={style.modalOverlay}>
+                <TouchableWithoutFeedback>
+                  <View style={style.modalContent}>
+                    <Text style={style.modalTitle}>Sıralama Seçenekleri</Text>
+                    <TouchableOpacity onPress={() => handleSort("name-asc")}>
+                      <Text style={style.modalOption}>İsme Göre (A-Z)</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleSort("name-desc")}>
+                      <Text style={style.modalOption}>İsme Göre (Z-A)</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleSort("price-asc")}>
+                      <Text style={style.modalOption}>Fiyata Göre (Küçükten Büyüğe)</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleSort("price-desc")}>
+                      <Text style={style.modalOption}>Fiyata Göre (Büyükten Küçüğe)</Text>
+                    </TouchableOpacity>
+                  </View>
+                </TouchableWithoutFeedback>
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
         </View>
       )}
     </>
@@ -212,66 +267,64 @@ const style = StyleSheet.create({
     textAlign: "center",
     marginTop: 5,
   },
+  Navbar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 10,
+    backgroundColor: "#fff",
+    elevation: 2,
+  },
+  SearchInput: {
+    flex: 1,
+  },
+  ListIcon: {
+    padding: 5,
+  },
+  orders: {
+    flex: 1,
+    padding: 10,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    width: "80%",
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalOption: {
+    fontSize: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    width: "100%",
+    textAlign: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
   noCommentsText: {
     fontSize: 18,
     color: "#333",
     textAlign: "center",
-    marginTop: 8,
-  },
-  returnButton: {
-    backgroundColor: "#EA2B2E",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginTop: 8,
-  },
-  returnButtonText: {
-    color: "#fff",
-    fontSize: 16,
     fontWeight: "bold",
   },
-  Navbar: {
-    width: "100%",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ebebeb",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FFFF",
-    borderColor: "#e6e6e6",
-    ...Platform.select({
-      ios: {
-        shadowColor: "#e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
+  returnButton: {
+    backgroundColor: "#e5e5e5",
+    padding: 10,
+    borderRadius: 5,
   },
-  SearchInput: {
-    flex: 1.7 / 2,
-    padding: 5,
-  },
-  ListIcon: {
-    flex: 0.3 / 2,
-    borderBottomColor: "#e5e5e5",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  TabBar: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  TabBarBtn: {
-    backgroundColor: "red",
-    borderRadius: 4,
-  },
-  orders: {
-    width: "100%",
-    padding: 5,
-    gap: 15,
+  returnButtonText: {
+    fontSize: 16,
+    color: "#333",
   },
 });
