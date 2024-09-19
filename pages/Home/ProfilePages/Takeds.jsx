@@ -80,12 +80,13 @@ export default function Takeds() {
               gap: 10,
             }}
           >
-            <View
+            {/* <View
               style={[
                 style.card,
                 { alignItems: "center", justifyContent: "center" },
               ]}
-            >
+            > */}
+            <View style={{ alignItems: "center", justifyContent: "center" }}>
               <Icon2 name="basket-plus" size={50} color={"#EA2A28"} />
             </View>
             <View>
