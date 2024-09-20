@@ -67,6 +67,7 @@ import PaymentItem from "../components/PaymentItem";
 import DrawerMenu from "../components/DrawerMenu";
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../components/CommentForProject";
+import { leftButtonsForPost } from "./helper";
 
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
@@ -88,12 +89,7 @@ export default function PostDetail() {
 
   const {
     HomeId,
-
     projectId,
-    // price,
-    //  discountAmount,
-    // offSaleCheck,
-    // soldCheck,
   } = route.params;
   console.log(HomeId);
   useEffect(() => {
@@ -1061,82 +1057,81 @@ export default function PostDetail() {
 
               <View style={styles.priceAndButtons}>
                 <View style={styles.btns}>
-                  <View
-                    style={{
-                      width:
-                        ProjectHomeData?.projectCartOrders[HomeId]?.status ==
-                          1 &&
-                        ProjectHomeData?.projectCartOrders &&
-                        !ProjectHomeData?.projectCartOrders[HomeId]
-                          ?.is_show_user === "on"
-                          ? "100%"
-                          : "50%",
-                    }}
-                  >
-                    {ProjectHomeData?.projectCartOrders[HomeId]?.status ==
-                      1 && (
-                      <View style={styles.sold}>
-                        <Text style={styles.soldText}>Satıldı</Text>
-                      </View>
-                    )}
-                    {ProjectHomeData?.projectCartOrders[HomeId]?.status ==
-                      0 && (
-                      <View style={styles.pending}>
-                        <Text style={styles.pendingText}>Rezerve Edildi</Text>
-                      </View>
-                    )}
-                    {roomData && ["off_sale[]"] &&
-                      roomData["off_sale[]"] !== "[]" && (
-                        <View style={styles.offSale} disabled>
-                          <Text style={styles.offSaleText}>Satışa Kapalı</Text>
-                        </View>
-                      )}
-                    {roomData && ["off_sale[]"] &&
-                      roomData["off_sale[]"] === "[]" &&
-                      ProjectHomeData?.projectCartOrders[HomeId]?.status != 0 &&
-                      ProjectHomeData?.projectCartOrders[HomeId]?.status !=
-                        1 && (
-                        <View style={styles.priceContainer}>
-                          <TouchableOpacity
-                            style={styles.addBasket}
-                            onPress={() => GetIdForCart(HomeId)}
-                          >
-                            <Text style={styles.addBasketText}>
-                              Sepete Ekle
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      )}
-
-                    {/* {ProjectHomeData?.projectCartOrders ? (
-                      ProjectHomeData?.projectCartOrders[HomeId]?.status == 1 ? (
-                        <View style={styles.sold}>
-                          <Text style={styles.soldText}>Satıldı</Text>
-                        </View>
-                      ) :  (
-                        <View style={styles.pending}>
-                          <Text style={styles.pendingText}>Rezerve Edildi</Text>
-                        </View>
-                      )
-                    ) : roomData && ["off_sale[]"] &&
-                      roomData["off_sale[]"] !== "[]" ? (
-                      <View style={styles.offSale} disabled>
-                        <Text style={styles.offSaleText}>Satışa Kapalı</Text>
-                      </View>
-                    ) : (
-                      <View style={styles.priceContainer}>
-                        <TouchableOpacity
-                          style={styles.addBasket}
-                          onPress={() => GetIdForCart(HomeId)}
-                        >
-                          <Text style={styles.addBasketText}>Sepete Ekle</Text>
-                        </TouchableOpacity>
-                      </View>
-                    )} */}
+                {/* <View
+                style={{
+                  width:
+                    (offSaleStatus == 1 && roomData["share_sale[]"] !== "[]") ||
+                    (sold && sold.is_show_user !== "on") ||
+                    (sold &&
+                      sold.is_show_user == "on" &&
+                      sold.user_id == user.id) ||
+                    project.user.id == user.id ||
+                    project.user.id == user.parent_id
+                      ? "100%"
+                      : "50%",
+                }}
+              >
+                {project.user.id == user.id ||
+                project.user.id == user.parent_id ? (
+                  <View style={styles.priceContainer}>
+                    <TouchableOpacity style={styles.addBasket}>
+                      <Text style={styles.addBasketText}>İlanı Düzenle</Text>
+                    </TouchableOpacity>
                   </View>
+                ) : sold ? (
+                  sold?.status == 1 ? (
+                    <View
+                      style={
+                        sold.user_id == user.id
+                          ? styles.showCustomer
+                          : styles.sold
+                      }
+                    >
+                      {sold.user_id == user.id ? (
+                        <Text style={styles.soldText}>Siz satın aldınız</Text>
+                      ) : (
+                        <Text style={styles.soldText}>Satıldı</Text>
+                      )}
+                    </View>
+                  ) : (
+                    <View style={styles.pending}>
+                      <Text style={styles.soldText}>Rezerve Edildi</Text>
+                    </View>
+                  )
+                ) : (
+                  leftButtonsForPost.map((item, _i) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        LeftBtnFunctionsForkey(item.key);
+                      }}
+                      style={[
+                        styles.addBasket,
+                        {
+                          backgroundColor: item.BackgroundColor,
+                          display:
+                            user.type == 2
+                              ? Array.isArray(item.OnlySee) &&
+                                item.OnlySee.includes(user.corporate_type) &&
+                                item.offsale == offSaleStatus
+                                ? "flex"
+                                : "none"
+                              : item.isShowClient == 1 &&
+                                item.offsale == offSaleStatus
+                              ? "flex"
+                              : "none",
+                        },
+                      ]}
+                      key={_i}
+                    >
+                      <Text style={styles.addBasketText}>{item.title}</Text>
+                    </TouchableOpacity>
+                  ))
+                )}
+              </View> */}
 
                   <View style={{ width: "50%" }}>
-                    {roomData && ["off_sale[]"] &&
+
+                    {/* {roomData && ["off_sale[]"] &&
                       roomData["off_sale[]"] !== "[]" && (
                         <TouchableOpacity
                           onPress={() => {
@@ -1170,7 +1165,7 @@ export default function PostDetail() {
                         >
                           <Text style={styles.payDetailText}>Ödeme Detayı</Text>
                         </TouchableOpacity>
-                      )}
+                      )} */}
 
                     {/* {ProjectHomeData?.projectCartOrders ? (
                        ProjectHomeData?.projectCartOrders[HomeId]?.is_show_user === "on" ? (

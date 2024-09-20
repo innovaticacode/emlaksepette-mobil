@@ -61,7 +61,8 @@ export const leftButtonsForPost=[
         OnlySee:['Emlak Ofisi','İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
         type:[1,2],
         isShowClient : 1,
-        BackgroundColor:'#264ABB'
+        BackgroundColor:'#264ABB',
+        key:'ShowAdvert'
     },
     {
         title:'İlanı Gör',
@@ -69,7 +70,8 @@ export const leftButtonsForPost=[
         OnlySee:['İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
         type:[1,2],
         isShowClient : 1,
-          BackgroundColor:'#264ABB'
+          BackgroundColor:'#264ABB',
+           key:'ShowAdvert'
     },
     {
         title:'Sepete Ekle',
@@ -77,7 +79,7 @@ export const leftButtonsForPost=[
         OnlySee:['Emlak Ofisi'],
         type:[1,2],
         isShowClient : 0,
-
+        key:'AddBasket',
           BackgroundColor:'#264ABB'
     },
     {
@@ -86,7 +88,8 @@ export const leftButtonsForPost=[
         OnlySee:['Emlak Ofisi','İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
         type:[1,2],
         isShowClient : 1,
-         BackgroundColor:'#264ABB'
+         BackgroundColor:'#264ABB',
+         key:'AddBasket'
     },
     {
         title:'Satışa Kapalı',
@@ -106,7 +109,8 @@ export const rightButtonsForPost = [
         OnlySee:['Emlak Ofisi','İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
         type:[1,2],
         isShowClient : 1,
-        BackgroundColor:'#000000'
+        BackgroundColor:'#000000',
+        key:'GiveOffer'
     },
     {
         title:'Bilgi Al',
@@ -114,7 +118,8 @@ export const rightButtonsForPost = [
         OnlySee:['İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
         isShowClient : 1,
         type:[1,2],
-        BackgroundColor:'#000000'
+        BackgroundColor:'#000000',
+        key:'request'
     },
     {
         title:'Ödeme Detayı',
@@ -122,7 +127,8 @@ export const rightButtonsForPost = [
         OnlySee:['Emlak Ofisi'],
         type:[1,2],
         isShowClient : 0,
-        BackgroundColor:'#000000'
+        BackgroundColor:'#000000',
+        key:'PaymentModal'
     },
     {
         title:'Ödeme Detayı',
@@ -130,7 +136,8 @@ export const rightButtonsForPost = [
         OnlySee:['Emlak Ofisi','İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
         type:[1,2],
         isShowClient : 1,
-        BackgroundColor:'#000000'
+        BackgroundColor:'#000000',
+        key:'PaymentModal'
     },
     {
         title:'Başvur',
@@ -138,6 +145,16 @@ export const rightButtonsForPost = [
         OnlySee:['Emlak Ofisi','İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
         type:[1,2],
         isShowClient : 1,
-        BackgroundColor:'#000000'
+        BackgroundColor:'#000000',
+         key:'GiveOffer'
+    }
+]
+
+export const BookmarkStatus = [
+    {
+        offsale:[2,5],
+        OnlySee:['Emlak Ofisi'],
+        isShowClient : 1,
+        offsalePersonal:[5],
     }
 ]
