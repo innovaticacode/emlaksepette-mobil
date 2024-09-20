@@ -250,7 +250,8 @@ export default function AllRealtorAdverts() {
         )
         .catch((error) =>
           console.error("Veri alınırken bir hata oluştu:", error)
-        );s
+        );
+      s;
     } else {
       setState((prevState) => ({ ...prevState, neighborhoods: [] }));
     }
@@ -481,10 +482,7 @@ export default function AllRealtorAdverts() {
         style={styles.modal}
       >
         <View style={styles.modalContent}>
-       
-            <DrawerMenu setIsDrawerOpen={setState} />
-         
-       
+          <DrawerMenu setIsDrawerOpen={setState} />
         </View>
       </Modal>
 
@@ -669,26 +667,31 @@ export default function AllRealtorAdverts() {
                   <View style={styles.filterLabel}>
                     <Text style={{ fontWeight: "bold" }}>Kategori</Text>
                     <View style={styles.brandsSquare}>
-                      {state && state.slugName && state.slugName?.length > 0 && (
-                        <Text style={[styles.brandName, { color: "black" }]}>
-                          {state.slugName}
-                        </Text>
-                      )}
-                      {state.housingTypeSlugName && state.housingTypeSlugName?.length > 0 && (
-                        <>
-                          {state.slugName != null && (
-                            <Text style={styles.brandName}>
-                              <FontAwesome5Icon
-                                name="angle-right"
-                                style={{ color: "black" }}
-                              />
-                            </Text>
-                          )}
+                      {state &&
+                        state.slugName &&
+                        state.slugName?.length > 0 && (
                           <Text style={[styles.brandName, { color: "black" }]}>
-                            {state.housingTypeSlugName}
+                            {state.slugName}
                           </Text>
-                        </>
-                      )}
+                        )}
+                      {state.housingTypeSlugName &&
+                        state.housingTypeSlugName?.length > 0 && (
+                          <>
+                            {state.slugName != null && (
+                              <Text style={styles.brandName}>
+                                <FontAwesome5Icon
+                                  name="angle-right"
+                                  style={{ color: "black" }}
+                                />
+                              </Text>
+                            )}
+                            <Text
+                              style={[styles.brandName, { color: "black" }]}
+                            >
+                              {state.housingTypeSlugName}
+                            </Text>
+                          </>
+                        )}
                       {state.optName && state.optName?.length > 0 && (
                         <>
                           <Text style={styles.brandName}>
@@ -702,19 +705,22 @@ export default function AllRealtorAdverts() {
                           </Text>
                         </>
                       )}
-                      {state.housingTypeName && state.housingTypeName?.length > 0 && (
-                        <>
-                          <Text style={styles.brandName}>
-                            <FontAwesome5Icon
-                              name="angle-right"
-                              style={{ color: "black" }}
-                            />
-                          </Text>
-                          <Text style={[styles.brandName, { color: "black" }]}>
-                            {state.housingTypeName}
-                          </Text>
-                        </>
-                      )}
+                      {state.housingTypeName &&
+                        state.housingTypeName?.length > 0 && (
+                          <>
+                            <Text style={styles.brandName}>
+                              <FontAwesome5Icon
+                                name="angle-right"
+                                style={{ color: "black" }}
+                              />
+                            </Text>
+                            <Text
+                              style={[styles.brandName, { color: "black" }]}
+                            >
+                              {state.housingTypeName}
+                            </Text>
+                          </>
+                        )}
                       {state.checkTitle && (
                         <>
                           <Text style={styles.brandName}>

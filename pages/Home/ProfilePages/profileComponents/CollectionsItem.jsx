@@ -29,7 +29,7 @@ export default function CollectionsItem({
   onRemove,
   SelectCollection,
   isChoosed,
-  showDots
+  showDots,
 }) {
   const navigation = useNavigation();
   const [collectionItems, setCollectionItems] = useState([]);
@@ -103,21 +103,19 @@ export default function CollectionsItem({
               {item.name}
             </Text>
           </View>
-          {
-            showDots &&
-            showDots  ?
-            <></>:
+          {showDots && showDots ? (
+            <></>
+          ) : (
             <TouchableOpacity
-            hitSlop={{ top: 20, bottom: 20, left: 40, right: 20 }}
-            onPress={() => {
-              openBottom();
-              getId(item.id, item.name, item);
-            }}
-          >
-            <Dot name="dots-three-vertical" size={22} color={"#333"} />
-          </TouchableOpacity>
-          }
-      
+              hitSlop={{ top: 20, bottom: 20, left: 40, right: 20 }}
+              onPress={() => {
+                openBottom();
+                getId(item.id, item.name, item);
+              }}
+            >
+              <Dot name="dots-three-vertical" size={22} color={"#333"} />
+            </TouchableOpacity>
+          )}
         </View>
         <View style={{ flexDirection: "row" }}>
           <View style={{ width: "50%", height: 180, padding: 10 }}>

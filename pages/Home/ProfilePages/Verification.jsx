@@ -15,12 +15,11 @@ import { ActivityIndicator } from "react-native-paper";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
-export default function Verification({nextStep,prevStep}) {
+export default function Verification({ nextStep, prevStep }) {
   const [codes, setCodes] = useState("");
   const inputs = useRef([]);
   const [Isucces, setIsucces] = useState(false);
   const navigation = useNavigation();
-
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("beforeRemove", (e) => {
@@ -67,7 +66,7 @@ export default function Verification({nextStep,prevStep}) {
 
       // Kullanıcı durumunu güncelleme
       setuser(updatedUser);
-      
+
       // SecureStore ile güncellenmiş kullanıcı verilerini kaydetme
       await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
     } catch (error) {
@@ -75,17 +74,15 @@ export default function Verification({nextStep,prevStep}) {
     }
   };
   const isfocused = useIsFocused();
- 
- 
-  
+
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
 
-const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState(false);
   const handleSubmit = async () => {
-    setloading(true)
+    setloading(true);
     try {
       // POST isteği yap
       const response = await axios.post(
@@ -101,8 +98,8 @@ const [loading, setloading] = useState(false)
       updateUserData();
       setCodes("");
       setsucces(true);
-       nextStep()
-       SecureStore.setItemAsync("PhoneVerify", '1');
+      nextStep();
+      SecureStore.setItemAsync("PhoneVerify", "1");
       setIsucces(true);
       setTimeout(() => {
         setIsucces(false);
@@ -111,13 +108,12 @@ const [loading, setloading] = useState(false)
       console.error("Doğrulama isteği başarısız:", error);
       setfalseCodeAlert(true);
       setsucces(false);
-    }finally{
-      setloading(false)
+    } finally {
+      setloading(false);
     }
   };
 
-  const [verifyStatu, setverifyStatu] = useState(null)
-
+  const [verifyStatu, setverifyStatu] = useState(null);
 
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -146,19 +142,16 @@ const [loading, setloading] = useState(false)
     }
   };
 
-useEffect(() => {
-    getValueFor('PhoneVerify',setverifyStatu)
-}, [user])
+  useEffect(() => {
+    getValueFor("PhoneVerify", setverifyStatu);
+  }, [user]);
 
   useEffect(() => {
-      if (verifyStatu==0) {
-        sendPostRequest();
-        setIsActive(true);
-      }
-  
-
+    if (verifyStatu == 0) {
+      sendPostRequest();
+      setIsActive(true);
+    }
   }, [verifyStatu]);
-
 
   const [succes, setsucces] = useState(true);
 
@@ -192,14 +185,20 @@ useEffect(() => {
     const seconds = timeInSeconds % 60;
     return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
   };
-console.log(verifyStatu)
-
+  console.log(verifyStatu);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ padding: 10, }}>
+      <View style={{ padding: 10 }}>
         <View style={{}}>
-          <Text style={{ fontSize: 30, color: "#333", fontWeight: "800" ,textAlign:'center'}}>
+          <Text
+            style={{
+              fontSize: 30,
+              color: "#333",
+              fontWeight: "800",
+              textAlign: "center",
+            }}
+          >
             Hoş Geldiniz!
           </Text>
           <View style={{ paddingTop: 30 }}>
@@ -209,7 +208,7 @@ console.log(verifyStatu)
                 color: "#262020",
                 fontWeight: "400",
                 letterSpacing: 0.8,
-                textAlign:'center'
+                textAlign: "center",
               }}
             >
               Lütfen hesabınızı doğrulamak için{" "}
@@ -224,7 +223,7 @@ console.log(verifyStatu)
           {formatTime(seconds)}
         </Text>
       </View>
-      <View style={{ paddingTop: 30,}}>
+      <View style={{ paddingTop: 30 }}>
         <View
           style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}
         >
@@ -243,26 +242,31 @@ console.log(verifyStatu)
         <View style={{ padding: 10, paddingTop: 50, gap: 20 }}>
           <TouchableOpacity
             disabled={codes.length == 6 ? false : true}
-            onPress={()=>{ handleSubmit()}}
+            onPress={() => {
+              handleSubmit();
+            }}
             style={{
               backgroundColor: "#EA2A28",
               padding: 9,
               borderRadius: 5,
               opacity: codes.length == 6 ? 1 : 0.5,
-              alignItems:'center',justifyContent:'center'
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            {
-              loading ?
-              <ActivityIndicator color="white"/>
-              :
+            {loading ? (
+              <ActivityIndicator color="white" />
+            ) : (
               <Text
-              style={{ color: "white", textAlign: "center", fontWeight: "600" }}
-            >
-              Onayla
-            </Text>
-            }
-           
+                style={{
+                  color: "white",
+                  textAlign: "center",
+                  fontWeight: "600",
+                }}
+              >
+                Onayla
+              </Text>
+            )}
           </TouchableOpacity>
           {showSendAgain == true && (
             <TouchableOpacity onPress={sendPostRequest}>
@@ -458,8 +462,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FCFCFC",
-    margin:33
-    
+    margin: 33,
   },
   Input: {
     backgroundColor: "#ebebeb",

@@ -17,7 +17,7 @@ import { getValueFor } from "../../../../components/methods/user";
 import moment from "moment";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import ImageViewing from 'react-native-image-viewing';
+import ImageViewing from "react-native-image-viewing";
 import RenderHtml from "react-native-render-html";
 import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
@@ -121,12 +121,12 @@ export default function SupportList() {
     saveFile(result.uri, filename, result.headers["Content-Type"]);
   }
   const [isVisible, setIsVisible] = useState(false);
-  const [selectedUri, setselectedUri] = useState(null)
-  const OpenImage=(uri)=>{
-    setIsVisible(true)
-    setselectedUri(uri)
-  }
-  const navigation=useNavigation()
+  const [selectedUri, setselectedUri] = useState(null);
+  const OpenImage = (uri) => {
+    setIsVisible(true);
+    setselectedUri(uri);
+  };
+  const navigation = useNavigation();
   const openPdf = async (uri) => {
     if (uri) {
       try {
@@ -145,7 +145,14 @@ export default function SupportList() {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center",paddingBottom:35 }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        paddingBottom: 35,
+      }}
+    >
       {loading ? (
         <ActivityIndicator size="large" color="#333" />
       ) : (
@@ -252,16 +259,14 @@ export default function SupportList() {
                       }}
                     >
                       <View style={{ width: "45%" }}>
-                        {support.file_path !==null ? (
+                        {support.file_path !== null ? (
                           <TouchableOpacity
                             onPress={() => {
-                              if (support?.file_path?.slice(-3) =='pdf') {
-                                  download(support.file_path)
-                              }else{
-                                OpenImage(support.file_path)
+                              if (support?.file_path?.slice(-3) == "pdf") {
+                                download(support.file_path);
+                              } else {
+                                OpenImage(support.file_path);
                               }
-                          
-                            
                             }}
                             style={{
                               backgroundColor: "rgba(234, 43, 46, 0.2)",
@@ -291,11 +296,12 @@ export default function SupportList() {
                                 numberOfLines={1}
                               >
                                 {pdfFile}
-                           
                               </Text>
                             </View>
                           </TouchableOpacity>
-                        ):<></>}
+                        ) : (
+                          <></>
+                        )}
                       </View>
                       {support.return_support ? (
                         <View style={{ width: "45%" }}>
@@ -397,7 +403,9 @@ export default function SupportList() {
         </TouchableWithoutFeedback>
       </Modal>
       <ImageViewing
-        images={[{ uri:`https://private.emlaksepette.com/support/${selectedUri}`}]}
+        images={[
+          { uri: `https://private.emlaksepette.com/support/${selectedUri}` },
+        ]}
         imageIndex={0}
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
