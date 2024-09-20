@@ -7,6 +7,9 @@ import { ActivityIndicator } from 'react-native-paper';
 import Order from './profileComponents/Order';
 import axios from 'axios';
 import { getValueFor } from '../../../components/methods/user';
+import { Stack } from "@react-native-material/core";
+import { CheckBox } from "react-native-elements";
+import Modal from "react-native-modal";
 
 export default function Takeds() {
   const [search, setSearch] = useState('');
@@ -14,6 +17,11 @@ export default function Takeds() {
   const [takeds, setTakeds] = useState([]);
   const [filteredTakeds, setFilteredTakeds] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [EditModalVisible, setEditModalVisible] = useState(false);
+  const [selectedIndex, setIndex] = useState(0);
+  const [sortListModal, setSortListModal] = useState(false);
+
+
 
   useEffect(() => {
     getValueFor('user', setUser);
@@ -63,7 +71,7 @@ export default function Takeds() {
             Title.includes(searchLower) ||
             HouseId.includes(searchLower)
           );
-          
+
         } catch (error) {
           console.error('Error parsing cart:', error);
           return false;  // Bu durumda filtreleme yapma
@@ -88,6 +96,90 @@ export default function Takeds() {
     }, 700);
   };
 
+  // Fiyata göre (önce en düşük)
+  const sortByPriceLowToHigh = () => {
+    const sorted = [...takeds].sort((a, b) => {
+      const amountA = parseFloat(a.amount); // amount değerini sayıya çevir
+      const amountB = parseFloat(b.amount); // amount değerini sayıya çevir
+      return amountA - amountB;
+    });
+    setFilteredTakeds(sorted);
+  };
+
+
+  // Fiyata göre (önce en yüksek)
+  const sortByPriceHighToLow = () => {
+    const sorted = [...takeds].sort((a, b) => {
+      const amountA = parseFloat(a.amount); // amount değerini sayıya çevir
+      const amountB = parseFloat(b.amount); // amount değerini sayıya çevir
+      return amountB - amountA;
+    });
+    setFilteredTakeds(sorted);
+  };
+
+  // Tarihe göre (önce en eski)
+  const sortByDateOldest = () => {
+    const sorted = [...takeds].sort((a, b) => new Date(a.date) - new Date(b.date));
+    setFilteredTakeds(sorted);
+  };
+
+  // Tarihe göre (önce en yeni)
+  const sortByDateNewest = () => {
+    const sorted = [...takeds].sort((a, b) => new Date(b.date) - new Date(a.date));
+    setFilteredTakeds(sorted);
+  };
+
+  // A'dan Z'ye sıralama
+  const sortByNameAZ = () => {
+    const sorted = [...takeds].sort((a, b) => {
+      const nameA = JSON.parse(a.cart).item.title.toLowerCase();
+      const nameB = JSON.parse(b.cart).item.title.toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+    setFilteredTakeds(sorted);
+  };
+
+  // Z'den A'ya sıralama
+  const sortByNameZA = () => {
+    const sorted = [...takeds].sort((a, b) => {
+      const nameA = JSON.parse(a.cart).item.title.toLowerCase();
+      const nameB = JSON.parse(b.cart).item.title.toLowerCase();
+      return nameB.localeCompare(nameA);
+    });
+    setFilteredTakeds(sorted);
+  };
+
+
+  // Radio seçildiğinde tetiklenen fonksiyon
+  const handleRadio = (index) => {
+    setIndex(index);
+
+    switch (index) {
+      case 0:
+        sortByPriceLowToHigh();
+        break;
+      case 1:
+        sortByPriceHighToLow();
+        break;
+      case 2:
+        sortByDateOldest();
+        break;
+      case 3:
+        sortByDateNewest();
+        break;
+      case 4: // A'dan Z'ye sıralama
+        sortByNameAZ();
+        break;
+      case 5: // Z'den A'ya sıralama
+        sortByNameZA();
+        break;
+      default:
+        break;
+    }
+  };
+
+  console.log(takeds)
+  console.log(user.access_token)
   return (
     <>
       {loading ? (
@@ -146,8 +238,11 @@ export default function Takeds() {
                 }}
               >
                 <View>
-                  <Icon name="swap-vertical" size={18} color={"#333"} />
+                  <TouchableOpacity onPress={() => setSortListModal(!sortListModal)}>
+                    <Icon2 name="swap-vertical" size={23} color={"#333"} />
+                  </TouchableOpacity>
                 </View>
+
               </TouchableOpacity>
             </View>
           </View>
@@ -166,6 +261,163 @@ export default function Takeds() {
               )}
             </View>
           </ScrollView>
+
+          {/* Modal */}
+          <Modal
+            style={styles.modal}
+            isVisible={sortListModal}
+            onBackdropPress={() => setSortListModal(false)}
+            backdropColor="transparent"
+            animationIn={"fadeIn"}
+            animationOut={"fadeOut"}
+            swipeDirection={["down"]}
+            onSwipeComplete={() => setEditModalVisible(false)}
+          >
+            <View
+              style={[
+                styles.modalContent,
+                {
+                  borderTopLeftRadius: 6,
+                  borderTopRightRadius: 6,
+                  padding: 0,
+                  borderRadius: 6,
+                  backgroundColor: "#ffffff",
+                },
+              ]}
+            >
+              <View style={{ paddingTop: 15, alignItems: "center" }}>
+                <Text style={{ color: "#333", fontSize: 17, fontWeight: "600" }}>
+                  Sıralama
+                </Text>
+              </View>
+              <View>
+                <Stack row align="center" spacing={4}>
+                  <CheckBox
+                    checked={selectedIndex === 0}
+                    onPress={() => {
+                      handleRadio(0);
+                      setSortListModal(false); // Seçim yapıldığında modalı kapatır
+                    }}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    title={
+                      <Text style={{ color: "#333", fontWeight: "600" }}>
+                        Fiyata göre (Önce en düşük)
+                      </Text>
+                    }
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      margin: 0,
+                    }}
+                    checkedColor="#333"
+                  />
+                  <CheckBox
+                    checked={selectedIndex === 1}
+                    onPress={() => {
+                      handleRadio(1);
+                      setSortListModal(false);
+                    }}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    title={
+                      <Text style={{ color: "#333", fontWeight: "600" }}>
+                        Fiyata göre (Önce en yüksek)
+                      </Text>
+                    }
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      margin: 0,
+                    }}
+                    checkedColor="#333"
+                  />
+                  <CheckBox
+                    checked={selectedIndex === 2}
+                    onPress={() => {
+                      handleRadio(2);
+                      setSortListModal(false);
+                    }}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    title={
+                      <Text style={{ color: "#333", fontWeight: "600" }}>
+                        Tarihe göre (Önce en eski ilan)
+                      </Text>
+                    }
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      margin: 0,
+                    }}
+                    checkedColor="#333"
+                  />
+                  <CheckBox
+                    checked={selectedIndex === 3}
+                    onPress={() => {
+                      handleRadio(3);
+                      setSortListModal(false);
+                    }}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    title={
+                      <Text style={{ color: "#333", fontWeight: "600" }}>
+                        Tarihe göre (Önce en yeni ilan)
+                      </Text>
+                    }
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      margin: 0,
+                    }}
+                    checkedColor="#333"
+                  />
+
+                  <CheckBox
+                    checked={selectedIndex === 4}
+                    onPress={() => {
+                      handleRadio(4);
+                      setSortListModal(false);
+                    }}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    title={
+                      <Text style={{ color: "#333", fontWeight: "600" }}>
+                        Ada göre (A'dan Z'ye)
+                      </Text>
+                    }
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      margin: 0,
+                    }}
+                    checkedColor="#333"
+                  />
+                  <CheckBox
+                    checked={selectedIndex === 5}
+                    onPress={() => {
+                      handleRadio(5);
+                      setSortListModal(false);
+                    }}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    title={
+                      <Text style={{ color: "#333", fontWeight: "600" }}>
+                        Ada göre (Z'den A'ya)
+                      </Text>
+                    }
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      margin: 0,
+                    }}
+                    checkedColor="#333"
+                  />
+
+                </Stack>
+              </View>
+            </View>
+          </Modal>
         </View>
       )}
     </>
@@ -249,5 +501,37 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 5,
     gap: 15,
+  },
+  modal: {
+    justifyContent: "center",
+    margin: 0,
+    backgroundColor: "#0c03033d",
+    padding: 20,
+  },
+  modalContent: {
+    gap: 5,
+    paddingBottom: 25,
+    backgroundColor: "#f8f8ff",
+    padding: 10,
+
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    ...Platform.select({
+      ios: {
+        shadowColor: "white",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  Input: {
+    backgroundColor: "#ebebeb",
+    padding: 10,
+    borderRadius: 5,
+    width: "90%",
   },
 });
