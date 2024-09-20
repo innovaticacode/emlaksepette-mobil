@@ -116,7 +116,8 @@ import Toast from 'react-native-toast-message';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
 import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
 import ApplyForBeCompany from "./pages/Home/ProfilePages/ApplyForBeCompany";
-import SellAndRentAdvantage from "./pages/Home/SellAndRentAdvantage";
+import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
+import AllFeaturedRealEstate from "./pages/Home/AllFeaturedRealEstate";
 
 
 const Stack = createNativeStackNavigator();
@@ -1136,7 +1137,7 @@ export default function App({ route }) {
               },
             })}
           />
-              <Stack.Screen
+          <Stack.Screen
             name="SellPlace"
             component={SellPlaces}
             options={({ route }) => ({
@@ -1147,7 +1148,7 @@ export default function App({ route }) {
               },
             })}
           />
-               <Stack.Screen
+          <Stack.Screen
             name="ApplyCompany"
             component={ApplyForBeCompany}
             options={({ route }) => ({
@@ -1159,16 +1160,27 @@ export default function App({ route }) {
             })}
           />
           <Stack.Screen
-          name="SellAndRentAdvantage"
-          component={SellAndRentAdvantage}
+          name="AllFranchiseBrands"
+          component={AllFranchiseBrands}
           options={({ route }) => ({
-            title: "Sat Kirala",
+            title: "Franchise Markalar",
             headerBackTitleVisible: false,
             headerStyle: {
               backgroundColor: "#ffffff",
             },
           })}
-          />
+        />
+        <Stack.Screen
+        name="AllFeaturedRealEstate"
+        component={AllFeaturedRealEstate}
+        options={({ route }) => ({
+          title: "Öne Çıkan Markalar",
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: "#ffffff",
+          },
+        })}
+        />
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>

@@ -72,7 +72,7 @@ const Shared = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 7) {
+    if (index == 8) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);

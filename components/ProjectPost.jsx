@@ -30,7 +30,12 @@ export default function ProjectPost({
     return color;
   };
 
-  const RandomColor = generateRandomColorCode();
+ 
+  const [randomColor,setRandomColor]=useState(null)
+  useEffect(()=>{
+    const RandomColor = generateRandomColorCode();
+      setRandomColor(RandomColor)
+  },[user])
   const navigation = useNavigation();
   const [userLogin, setuserLogin] = useState({});
   useEffect(() => {
@@ -58,7 +63,7 @@ export default function ProjectPost({
           <View
             style={[
               styles.titleContainer,
-              { backgroundColor: RandomColor + "CC" },
+              { backgroundColor: randomColor + "CC" },
             ]}
           >
             <View

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   ScrollView,
+  Image,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
@@ -16,6 +17,7 @@ import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import Banner from "../../../assets/tatilim-sepette-banner.png";
 const PAGE_SIZE = 10;
 
 const BookHouse = ({ index }) => {
@@ -72,7 +74,7 @@ const BookHouse = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 5) {
+    if (index == 6) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);
@@ -105,24 +107,24 @@ const BookHouse = ({ index }) => {
         </View>
       ) : (
         <View style={styles.container}>
-          <View
-            style={{
-              paddingBottom: 3,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingLeft: 10,
-              paddingRight: 10,
-              alignItems: "center",
-              backgroundColor: "white",
-            }}
-          >
-            <Text style={{ fontSize: 12, fontWeight: 700 }}>
+          <View style={{ paddingHorizontal: 0 }}>
+            <Image
+              source={Banner}
+              style={{
+                width: "100%",
+                height: 120,
+              }}
+              resizeMode="cover"
+            />
+          </View>
+          <View style={styles.header}>
+            <Text style={{ fontSize: 14, fontWeight: 700 }}>
               ÖNE ÇIKAN TATİL EVLERİ
             </Text>
 
             <TouchableOpacity style={styles.allBtn}>
               <Text
-                style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
+                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
                 onPress={() =>
                   navigation.navigate("AllRealtorAdverts", {
                     name: "Emlak İlanları",
@@ -263,6 +265,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fefefe",
     padding: 20,
     borderRadius: 5,
+  },
+  header: {
+    paddingBottom: 3,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingLeft: 10,
+    paddingRight: 10,
+    alignItems: "center",
+    backgroundColor: "white",
+    marginTop: 20,
   },
 });
 
