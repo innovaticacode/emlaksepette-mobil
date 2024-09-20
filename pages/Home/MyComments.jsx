@@ -19,6 +19,7 @@ import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
+import Icon8 from "react-native-vector-icons/FontAwesome5";
 import {
   ALERT_TYPE,
   Dialog,
@@ -51,7 +52,7 @@ export default function MyComments() {
     getValueFor("user", setuser);
   }, []);
   console.log(user.id);
-
+  const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = async () => {
@@ -296,26 +297,47 @@ export default function MyComments() {
             />
           ))
         ) : (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <View style={{}}>
-              <Text style={{ fontSize: 16, color: "#555" }}>
-                Henüz yorum yok.
-              </Text>
-              <TouchableOpacity
-                style={{
-                  marginTop: 10,
-                  backgroundColor: "red",
-                  padding: 10,
-                  borderRadius: 5,
-                  alignItems: "center",
-                }}
+          <>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                gap: 10,
+                marginTop: 80,
+                flex: 1,
+              }}
+            >
+              <View
+                style={[
+                  styles.card2,
+                  { alignItems: "center", justifyContent: "center" },
+                ]}
               >
-                <Text style={{ color: "white" }}>İlanlara göz at</Text>
-              </TouchableOpacity>
+                <Icon8 name="comment-slash" size={50} color={"#EA2A28"} />
+              </View>
+              <View>
+                <Text style={styles.noCommentsText}>
+                  Yorumunuz bulunmamaktadır.
+                </Text>
+                <Text></Text>
+              </View>
+              <View style={{ width: "100%", alignItems: "center" }}>
+                <TouchableOpacity
+                  style={styles.returnButton}
+                  onPress={() => {
+                    setLoading(true);
+                    setTimeout(() => {
+                      navigation.navigate("HomePage");
+                      setLoading(false);
+                    }, 700);
+                  }}
+                >
+                  <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          </>
         )}
 
         <Modal
@@ -402,6 +424,26 @@ const styles = StyleSheet.create({
       },
       android: {
         elevation: 3,
+      },
+    }),
+  },
+  card2: {
+    backgroundColor: "#FFFFFF",
+    padding: 15,
+
+    borderRadius: 50,
+
+    borderWidth: 0.7,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
       },
     }),
   },
@@ -538,6 +580,23 @@ const styles = StyleSheet.create({
   },
   cancelButtonTextStyle2: {
     color: "#333",
+    fontWeight: "bold",
+  },
+  noCommentsText: {
+    fontSize: 18,
+    color: "#333",
+    textAlign: "center",
+    marginTop: 8,
+  },
+  returnButton: {
+    backgroundColor: "#EA2B2E",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  returnButtonText: {
+    color: "#fff",
+    fontSize: 16,
     fontWeight: "bold",
   },
 });

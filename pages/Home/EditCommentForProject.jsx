@@ -332,7 +332,7 @@ export default function EditCommentForProject() {
 
   console.log(UserImages);
   const [rating, setRating] = useState(commentInfo.rate); // Başlangıçta hiçbir yıldız dolu değil
-  const [rate, setrate] = useState(0);
+  const [rate, setrate] = useState(commentInfo.rate);
 
   const handleStarPress = (index) => {
     // Tıklanan yıldıza kadar olan tüm yıldızları dolu yap
@@ -382,7 +382,7 @@ export default function EditCommentForProject() {
     fetchDataDeal();
   }, []);
   const fetchDataDeal = async () => {
-    const url = `https://private.emlaksepette.com/api/sayfa/yorum-yazma-kurallari`;
+    const url = `https://private.emlaksepette.com/api/sayfa/emlaksepette-yorum-yazma-kurallari`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);

@@ -278,7 +278,7 @@ export default function AddComment() {
     fetchDataDeal();
   }, []);
   const fetchDataDeal = async () => {
-    const url = `https://private.emlaksepette.com/api/sayfa/yorum-yazma-kurallari`;
+    const url = `https://private.emlaksepette.com/api/sayfa/emlaksepette-yorum-yazma-kurallari`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);
