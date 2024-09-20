@@ -49,11 +49,11 @@ export default function Company() {
   const [ShoppingName, setShoppingName] = useState("");
   const [licence, setlicence] = useState("");
   const [acccountType, setacccountType] = useState("");
-  const [cityCode, setcityCode] = useState("")
-  const [IsGiveFrancheise, setIsGiveFrancheise] = useState(null)
-  const [IsConnectFranchaise, setIsConnectFranchaise] = useState(null)
-  const [MarcaName, setMarcaName] = useState('')
-  const [FrancheiseMarc, setFrancheiseMarc] = useState(null)
+  const [cityCode, setcityCode] = useState("");
+  const [IsGiveFrancheise, setIsGiveFrancheise] = useState(null);
+  const [IsConnectFranchaise, setIsConnectFranchaise] = useState(null);
+  const [MarcaName, setMarcaName] = useState("");
+  const [FrancheiseMarc, setFrancheiseMarc] = useState(null);
   {
     /* cheked documents */
   }
@@ -203,10 +203,10 @@ export default function Company() {
       formData.append("authority_licence", licence);
       formData.append("activity", null);
       formData.append("iban", null);
-      formData.append("is_brand",IsGiveFrancheise)
-      formData.append('other_brand_name',MarcaName)
-      formData.append('Franchise-question',IsConnectFranchaise)
-      formData.append('brand_id',FrancheiseMarc)
+      formData.append("is_brand", IsGiveFrancheise);
+      formData.append("other_brand_name", MarcaName);
+      formData.append("Franchise-question", IsConnectFranchaise);
+      formData.append("brand_id", FrancheiseMarc);
       const response = await axios.post(
         "https://private.emlaksepette.com/api/register",
         formData
@@ -237,7 +237,7 @@ export default function Company() {
       setChecked1(false);
       setChecked2(false);
       setChecked3(false);
-      setcityCode("")
+      setcityCode("");
       Navigation.navigate("Login", { showAlert: true });
     } catch (error) {
       // Hata durumunda
@@ -373,47 +373,51 @@ export default function Company() {
           seterrorStatu(0);
         }, 10000);
         break;
-      case focusArea=='Emlak Ofisi'&& !licence:
+      case focusArea == "Emlak Ofisi" && !licence:
         seterrorStatu(14);
         seterrorMessage("Yetki Belgesi zorunludur");
-        
+
         setTimeout(() => {
           seterrorStatu(0);
         }, 10000);
         break;
-        case focusArea=='Emlak Ofisi' && !IsGiveFrancheise:
-          seterrorStatu(16);
-          seterrorMessage("Bu Alan Zorunludur");
-          
-          setTimeout(() => {
-            seterrorStatu(0);
-          }, 10000);
-          break;
-        case focusArea=='Emlak Ofisi' && IsGiveFrancheise==0 && !IsConnectFranchaise:
-          seterrorStatu(15);
-          seterrorMessage("Bu Alan Zorunludur");
-          
-          setTimeout(() => {
-            seterrorStatu(0);
-          }, 10000);
-          break;
-         
-            case focusArea=='Emlak Ofisi' && IsConnectFranchaise==0 &&!MarcaName:
-              seterrorStatu(17);
-              seterrorMessage("Bu Alan Zorunludur");
-              
-              setTimeout(() => {
-                seterrorStatu(0);
-              }, 10000);
-              break;
-              case focusArea=='Emlak Ofisi' && IsConnectFranchaise==1 &&!FrancheiseMarc:
-                seterrorStatu(18);
-                seterrorMessage("Bu Alan Zorunludur");
-                
-                setTimeout(() => {
-                  seterrorStatu(0);
-                }, 10000);
-                break;
+      case focusArea == "Emlak Ofisi" && !IsGiveFrancheise:
+        seterrorStatu(16);
+        seterrorMessage("Bu Alan Zorunludur");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
+      case focusArea == "Emlak Ofisi" &&
+        IsGiveFrancheise == 0 &&
+        !IsConnectFranchaise:
+        seterrorStatu(15);
+        seterrorMessage("Bu Alan Zorunludur");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
+
+      case focusArea == "Emlak Ofisi" && IsConnectFranchaise == 0 && !MarcaName:
+        seterrorStatu(17);
+        seterrorMessage("Bu Alan Zorunludur");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
+      case focusArea == "Emlak Ofisi" &&
+        IsConnectFranchaise == 1 &&
+        !FrancheiseMarc:
+        seterrorStatu(18);
+        seterrorMessage("Bu Alan Zorunludur");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
       case !checked || !checked1 || !checked2:
         seterrorStatu(15);
         seterrorMessage("Sözleşmeleri Onaylamayı Unutmayın");
@@ -516,7 +520,7 @@ export default function Company() {
   const handlePhoneNumberChange = (value) => {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setphoneNumber(formattedPhoneNumber);
-    setcompanyPhone(value)
+    setcompanyPhone(value);
   };
 
   const GetDeal = (deal) => {
@@ -634,7 +638,7 @@ export default function Company() {
   ];
   const formatNumber = (text) => {
     // Sadece rakamları filtrele
-    let cleaned = text.replace(/[^0-9]/g, '');
+    let cleaned = text.replace(/[^0-9]/g, "");
 
     // 7 karakterden fazla olmamalı
     if (cleaned.length > 7) {
@@ -644,13 +648,13 @@ export default function Company() {
     // 3-2-2 formatında düzenle
     let formatted = cleaned;
     if (cleaned.length > 3) {
-      formatted = cleaned.slice(0, 3) + '-' + cleaned.slice(3, 5);
+      formatted = cleaned.slice(0, 3) + "-" + cleaned.slice(3, 5);
     }
     if (cleaned.length > 5) {
-      formatted += '-' + cleaned.slice(5, 7);
+      formatted += "-" + cleaned.slice(5, 7);
     }
 
-    setcompanyPhone(formatted)
+    setcompanyPhone(formatted);
   };
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -658,10 +662,12 @@ export default function Company() {
   // API'ye GET isteği atan fonksiyon
   const fetchFranchiseMarkalari = async () => {
     try {
-      const response = await axios.get('https://private.emlaksepette.com/api/franchise-markalari');
+      const response = await axios.get(
+        "https://private.emlaksepette.com/api/franchise-markalari"
+      );
       setData(response.data.data); // 'data' alanına erişiyoruz
     } catch (error) {
-      console.error('API isteği başarısız:', error);
+      console.error("API isteği başarısız:", error);
     } finally {
       setLoading(false);
     }
@@ -673,7 +679,7 @@ export default function Company() {
   }, []);
   const pickerItems = data.map((item) => ({
     label: item.title,
-    value: item?.id
+    value: item?.id,
   }));
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -802,7 +808,6 @@ export default function Company() {
               )}
             </View>
 
-
             <View style={{ gap: 5 }}>
               <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 Faaliyet Alanınız
@@ -821,8 +826,7 @@ export default function Company() {
                   { label: "İnşaat Ofisi", value: "İnşaat Ofisi" },
                   { label: "Banka", value: "Banka" },
                   { label: "Turizm", value: "Turizm" },
-                  { label: "Üretici", value: "Üretici" }
-                 
+                  { label: "Üretici", value: "Üretici" },
                 ]}
               />
               {errorStatu == 7 ? (
@@ -834,65 +838,68 @@ export default function Company() {
               )}
             </View>
 
-{
-  focusArea =='Emlak Ofisi' && 
-  <>
-    <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Yetki Belgesi No
-                </Text>
-              </View>
-              <TextInput
-                value={licence}
-                onChangeText={(value) => setlicence(value)}
-                style={styles.Input}
-                placeholder="Yetki Belgesi No"
-                keyboardType="number-pad"
-                maxLength={7}
-              />
-              {errorStatu == 14 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
-            </View>
+            {focusArea == "Emlak Ofisi" && (
+              <>
+                <View style={{ gap: 5 }}>
+                  <View style={{ paddingLeft: 5 }}>
+                    <Text
+                      style={{ fontSize: 14, color: "black", fontWeight: 600 }}
+                    >
+                      Yetki Belgesi No
+                    </Text>
+                  </View>
+                  <TextInput
+                    value={licence}
+                    onChangeText={(value) => setlicence(value)}
+                    style={styles.Input}
+                    placeholder="Yetki Belgesi No"
+                    keyboardType="number-pad"
+                    maxLength={7}
+                  />
+                  {errorStatu == 14 ? (
+                    <Text style={{ fontSize: 12, color: "red" }}>
+                      {errorMessage}
+                    </Text>
+                  ) : (
+                    ""
+                  )}
+                </View>
 
+                <View style={{ gap: 5 }}>
+                  <Text
+                    style={{ fontSize: 14, color: "black", fontWeight: 600 }}
+                  >
+                    Franchise Veriyor Musun?
+                  </Text>
+                  <RNPickerSelect
+                    doneText="Tamam"
+                    value={IsGiveFrancheise}
+                    placeholder={{
+                      label: "Seçiniz...",
+                      value: null,
+                    }}
+                    style={pickerSelectStyles}
+                    onValueChange={(value) => setIsGiveFrancheise(value)}
+                    items={[
+                      { label: "Evet", value: 1 },
+                      { label: "Hayır", value: 0 },
+                    ]}
+                  />
+                  {errorStatu == 15 ? (
+                    <Text style={{ fontSize: 12, color: "red" }}>
+                      {errorMessage}
+                    </Text>
+                  ) : (
+                    ""
+                  )}
+                </View>
 
-            <View style={{ gap: 5 }}>
-              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-              Franchise Veriyor Musun?
-              </Text>
-              <RNPickerSelect
-                doneText="Tamam"
-                value={IsGiveFrancheise}
-                placeholder={{
-                  label: "Seçiniz...",
-                  value: null,
-                }}
-                style={pickerSelectStyles}
-                onValueChange={(value) =>setIsGiveFrancheise(value)}
-                items={[
-                  { label: "Evet", value: 1 },
-                  { label: "Hayır", value: 0 }, 
-                ]}
-              />
-               {errorStatu == 15 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
-              </View>
-
-                  {
-                    IsGiveFrancheise ==0 &&
-                    <View style={{ gap: 5 }}>
-                    <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                    Franchise Ofisine Bağlı Mısın?
+                {IsGiveFrancheise == 0 && (
+                  <View style={{ gap: 5 }}>
+                    <Text
+                      style={{ fontSize: 14, color: "black", fontWeight: 600 }}
+                    >
+                      Franchise Ofisine Bağlı Mısın?
                     </Text>
                     <RNPickerSelect
                       doneText="Tamam"
@@ -905,79 +912,82 @@ export default function Company() {
                       onValueChange={(value) => setIsConnectFranchaise(value)}
                       items={[
                         { label: "Evet", value: 1 },
-                        { label: "Hayır", value: 0 },  
+                        { label: "Hayır", value: 0 },
                       ]}
                     />
-                     {errorStatu == 16 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
-                    </View>
-                  }
-             
-{
-        IsConnectFranchaise==1 &&
-        <View style={{ gap: 5 }}>
-        <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-        Bağlı Olduğun Franchise Markasını Seç
-        </Text>
-        <RNPickerSelect
-          doneText="Tamam"
-          value={FrancheiseMarc}
-          placeholder={{
-            label: "Seçiniz...",
-            value: null,
-          }}
-          style={pickerSelectStyles}
-          onValueChange={(value) =>setFrancheiseMarc(value)}
-          items={pickerItems}
-        />
-         {errorStatu == 18 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
-        </View>
-}
-                    {
-                      IsConnectFranchaise==0 &&
-                      <View style={{ gap: 5 }}>
-                      <View style={{ paddingLeft: 5 }}>
-                        <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                          Marka Adı
-                        </Text>
-                      </View>
-                      <TextInput
-                        style={[
-                          styles.Input,
-                          {
-                            borderColor: errorStatu == 5 ? "red" : "#ebebeb",
-                          },
-                        ]}
-                        value={MarcaName}
-                        onChangeText={(value) => setMarcaName(value)}
-                        placeholder="Marka Adı"
-                      />
-                      {errorStatu == 17 ? (
-                        <Text style={{ fontSize: 12, color: "red" }}>
-                          {errorMessage}
-                        </Text>
-                      ) : (
-                        ""
-                      )}
-                    </View>
-                    }
-             
+                    {errorStatu == 16 ? (
+                      <Text style={{ fontSize: 12, color: "red" }}>
+                        {errorMessage}
+                      </Text>
+                    ) : (
+                      ""
+                    )}
+                  </View>
+                )}
 
+                {IsConnectFranchaise == 1 && (
+                  <View style={{ gap: 5 }}>
+                    <Text
+                      style={{ fontSize: 14, color: "black", fontWeight: 600 }}
+                    >
+                      Bağlı Olduğun Franchise Markasını Seç
+                    </Text>
+                    <RNPickerSelect
+                      doneText="Tamam"
+                      value={FrancheiseMarc}
+                      placeholder={{
+                        label: "Seçiniz...",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      onValueChange={(value) => setFrancheiseMarc(value)}
+                      items={pickerItems}
+                    />
+                    {errorStatu == 18 ? (
+                      <Text style={{ fontSize: 12, color: "red" }}>
+                        {errorMessage}
+                      </Text>
+                    ) : (
+                      ""
+                    )}
+                  </View>
+                )}
+                {IsConnectFranchaise == 0 && (
+                  <View style={{ gap: 5 }}>
+                    <View style={{ paddingLeft: 5 }}>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: "black",
+                          fontWeight: 600,
+                        }}
+                      >
+                        Marka Adı
+                      </Text>
+                    </View>
+                    <TextInput
+                      style={[
+                        styles.Input,
+                        {
+                          borderColor: errorStatu == 5 ? "red" : "#ebebeb",
+                        },
+                      ]}
+                      value={MarcaName}
+                      onChangeText={(value) => setMarcaName(value)}
+                      placeholder="Marka Adı"
+                    />
+                    {errorStatu == 17 ? (
+                      <Text style={{ fontSize: 12, color: "red" }}>
+                        {errorMessage}
+                      </Text>
+                    ) : (
+                      ""
+                    )}
+                  </View>
+                )}
+              </>
+            )}
 
-  </>
-}
-          
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
@@ -1028,41 +1038,41 @@ export default function Company() {
                 ""
               )}
             </View>
-            <View style={{gap:5}}>
-              <View style={{paddingLeft:5}}>
-              <Text style={{fontSize: 14, color: "black", fontWeight: 600}}>Sabit Telefon (Opsiyonel)</Text>
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Sabit Telefon (Opsiyonel)
+                </Text>
               </View>
-                   
 
-                    <View style={{ flexDirection: "row" }}>
-                      <View style={{ width: "32%" }}>
-                        <RNPickerSelect
-                          doneText="Tamam"
-                          value={cityCode}
-                          placeholder={{
-                            label: "Alan Kodu",
-                            value: null,
-                          }}
-                          style={pickerSelectStyles}
-                          onValueChange={(value) => {
-                            setcityCode(value);
-                          }}
-                          items={cityData}
-                        />
-                      </View>
-                      <View style={{ width: "70%" }}>
-                      <TextInput
-                value={companyPhone}
-                onChangeText={(value) => formatNumber(value)}
-                style={styles.Input}
-                placeholder="Sabit Telefon"
-                keyboardType="number-pad"
-                maxLength={9}
-                
-              />
-                      </View>
-                    </View>
-                  </View>
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ width: "32%" }}>
+                  <RNPickerSelect
+                    doneText="Tamam"
+                    value={cityCode}
+                    placeholder={{
+                      label: "Alan Kodu",
+                      value: null,
+                    }}
+                    style={pickerSelectStyles}
+                    onValueChange={(value) => {
+                      setcityCode(value);
+                    }}
+                    items={cityData}
+                  />
+                </View>
+                <View style={{ width: "70%" }}>
+                  <TextInput
+                    value={companyPhone}
+                    onChangeText={(value) => formatNumber(value)}
+                    style={styles.Input}
+                    placeholder="Sabit Telefon"
+                    keyboardType="number-pad"
+                    maxLength={9}
+                  />
+                </View>
+              </View>
+            </View>
             {/* <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
@@ -1078,7 +1088,6 @@ export default function Company() {
               />
             </View> */}
 
-            
             <View style={{ gap: 6 }}>
               <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                 İl
@@ -1272,7 +1281,7 @@ export default function Company() {
                 ""
               )}
             </View>
-           
+
             <View
               style={{
                 gap: 5,
@@ -1521,10 +1530,10 @@ export default function Company() {
           style={styles.modal2}
         >
           <SafeAreaView style={styles.modalContent2}>
-            <ScrollView style={{padding:10,}}> 
+            <ScrollView style={{ padding: 10 }}>
               <HTML source={{ html: Deals }} contentWidth={100} />
 
-              <View style={{ alignItems: "center",paddingBottom:20 }}>
+              <View style={{ alignItems: "center", paddingBottom: 20 }}>
                 <TouchableOpacity
                   style={styles.Acceptbtn}
                   onPress={() => {

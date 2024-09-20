@@ -65,25 +65,22 @@ const Home = ({ route }) => {
   }, [user]);
 
   const { width, height } = Dimensions.get("window");
-const nav =useNavigation()
- if (userdata && user.access_token ) {
-    if (user.type==1) {
-      if (verifyStatus==0) {
+  const nav = useNavigation();
+  if (userdata && user.access_token) {
+    if (user.type == 1) {
+      if (verifyStatus == 0) {
         setTimeout(() => {
-          nav.navigate('VerifyScreen')
+          nav.navigate("VerifyScreen");
         }, 100);
-         
       }
-    
-    }else{
-      if (  verifyStatus==0|| userdata.corporate_account_status==0 ) {
+    } else {
+      if (verifyStatus == 0 || userdata.corporate_account_status == 0) {
         setTimeout(() => {
-          nav.navigate('VerifyScreen')
+          nav.navigate("VerifyScreen");
         }, 100);
-    
-      
-      }}
+      }
     }
+  }
 
   console.log(userdata.corporate_account_status + "dosya");
   console.log(verifyStatus + "telfon");
@@ -92,7 +89,7 @@ const nav =useNavigation()
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarHideOnKeyboard:Platform.OS === "ios" ? false:true,
+        tabBarHideOnKeyboard: Platform.OS === "ios" ? false : true,
         tabBarLabelStyle: {
           fontWeight: "500", // Kalın font
           color: "black",
@@ -205,9 +202,10 @@ const nav =useNavigation()
                 color={focused ? "#333" : "grey"}
               />
             ) : (
-              
-              <FontAwesomeIcon name= {focused ? 'user':'user-o'} size={focused?28: 23}/>
-            
+              <FontAwesomeIcon
+                name={focused ? "user" : "user-o"}
+                size={focused ? 28 : 23}
+              />
             ),
         }}
       />

@@ -71,36 +71,40 @@ export default function Login({ navigation }) {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  const [loadingForLogin, setloadingForLogin] = useState(false)
+  const [loadingForLogin, setloadingForLogin] = useState(false);
   const Login = () => {
-    setloadingForLogin(true)
+    setloadingForLogin(true);
     apiRequestPost("login", {
       email: email,
       password: password,
-    }).then((res) => {
-      if (res.data.status) {
-        SecureStore.setItemAsync("user", JSON.stringify(res.data));
-        SecureStore.setItemAsync("PhoneVerify", JSON.stringify(res.data.phone_verification_status));
-        navigation.push("Home", {
-          status: "login"
-
-        })
-      } else {
-        // setshowMailSendAlert(true);
-        setStatus(false);
-        Dialog.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Hata!",
-          textBody: `${res.data.message}`,
-          button: "Tamam",
-        });
-        console.log(res.data.message + "OKAN")
-        // setStatusMessage(res.data.message);
-      }
-    }).finally(() => {
-      setloadingForLogin(false)
-    });
-  }
+    })
+      .then((res) => {
+        if (res.data.status) {
+          SecureStore.setItemAsync("user", JSON.stringify(res.data));
+          SecureStore.setItemAsync(
+            "PhoneVerify",
+            JSON.stringify(res.data.phone_verification_status)
+          );
+          navigation.push("Home", {
+            status: "login",
+          });
+        } else {
+          // setshowMailSendAlert(true);
+          setStatus(false);
+          Dialog.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Hata!",
+            textBody: `${res.data.message}`,
+            button: "Tamam",
+          });
+          console.log(res.data.message + "OKAN");
+          // setStatusMessage(res.data.message);
+        }
+      })
+      .finally(() => {
+        setloadingForLogin(false);
+      });
+  };
   const Submit = () => {
     if (!(email.trim() !== "" && email.includes("@"))) {
       setemailControl(true);
@@ -113,11 +117,8 @@ export default function Login({ navigation }) {
         setpassControl(false);
       }, 2000);
     } else {
-      Login()
+      Login();
     }
-
-
-
   };
 
   const [status, setStatus] = useState(false);
@@ -174,9 +175,9 @@ export default function Login({ navigation }) {
     }
   };
   const [Deals, setDeals] = useState("");
-  const [loadingDeal, setloadingDeal] = useState(false)
+  const [loadingDeal, setloadingDeal] = useState(false);
   const fetchData = async () => {
-    setloadingDeal(true)
+    setloadingDeal(true);
     const url = `https://private.emlaksepette.com/api/sayfa/bireysel-uyelik-sozlesmesi`;
     try {
       const data = await fetchFromURL(url);
@@ -186,12 +187,11 @@ export default function Login({ navigation }) {
       console.error("İstek hatası:", error);
       // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     } finally {
-      setloadingDeal(false)
+      setloadingDeal(false);
     }
   };
   const [modalVisible, setModalVisible] = useState(false);
   return (
-
     <AlertNotificationRoot>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <SafeAreaView style={styles.container}>
@@ -231,7 +231,7 @@ export default function Login({ navigation }) {
                     </View>
                   )}
                   <KeyboardAvoidingView>
-                    <View style={{ gap: 20, }}>
+                    <View style={{ gap: 20 }}>
                       <View>
                         <Text
                           style={{
@@ -245,7 +245,7 @@ export default function Login({ navigation }) {
                         </Text>
                       </View>
 
-                      <View style={{ gap: 10, }}>
+                      <View style={{ gap: 10 }}>
                         <View style={{}}>
                           <Text
                             style={{
@@ -377,7 +377,9 @@ export default function Login({ navigation }) {
                                 color="black"
                               />
                             )}
-                            <Text style={styles.checkboxLabel}>Beni Hatırla</Text>
+                            <Text style={styles.checkboxLabel}>
+                              Beni Hatırla
+                            </Text>
                           </TouchableOpacity>
                           <TouchableOpacity
                             style={{}}
@@ -402,11 +404,11 @@ export default function Login({ navigation }) {
                         style={{
                           opacity:
                             showLengthAlert == true ||
-                              showNumberAlert == true ||
-                              showSymbolAlert == true ||
-                              showUpperAlert == true ||
-                              textfull == true ||
-                              submitDisabled == true
+                            showNumberAlert == true ||
+                            showSymbolAlert == true ||
+                            showUpperAlert == true ||
+                            textfull == true ||
+                            submitDisabled == true
                               ? 0.3
                               : 1,
                           backgroundColor: "#EA2C2E",
@@ -416,27 +418,26 @@ export default function Login({ navigation }) {
                         onPress={Submit}
                         disabled={
                           showLengthAlert == true ||
-                            showNumberAlert == true ||
-                            showSymbolAlert == true ||
-                            showUpperAlert == true
+                          showNumberAlert == true ||
+                          showSymbolAlert == true ||
+                          showUpperAlert == true
                             ? true
                             : false
                         }
                       >
-                        {
-                          loadingForLogin ?
-                            <ActivityIndicator color="white" size={'small'} /> :
-                            <Text
-                              style={{
-                                textAlign: "center",
-                                color: "white",
-                                fontWeight: "600",
-                              }}
-                            >
-                              Giriş Yap
-                            </Text>
-                        }
-
+                        {loadingForLogin ? (
+                          <ActivityIndicator color="white" size={"small"} />
+                        ) : (
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              color: "white",
+                              fontWeight: "600",
+                            }}
+                          >
+                            Giriş Yap
+                          </Text>
+                        )}
                       </TouchableOpacity>
                       <View>
                         <Text style={{ textAlign: "center", marginTop: 0 }}>
@@ -579,7 +580,9 @@ export default function Login({ navigation }) {
                       >
                         <HTML source={{ html: Deals }} contentWidth={100} />
 
-                        <View style={{ alignItems: "center", paddingBottom: 25 }}>
+                        <View
+                          style={{ alignItems: "center", paddingBottom: 25 }}
+                        >
                           <TouchableOpacity
                             style={styles.Acceptbtn}
                             onPress={() => {
@@ -649,8 +652,6 @@ export default function Login({ navigation }) {
         </SafeAreaView>
       </TouchableWithoutFeedback>
     </AlertNotificationRoot>
-
-
   );
 }
 
@@ -668,10 +669,7 @@ const styles = StyleSheet.create({
   logIn: {
     paddingTop: Platform.OS !== "ios" ? 100 : 0,
 
-
     alignItems: "center",
-
-
   },
   checkbox: {
     flexDirection: "row",
@@ -695,7 +693,7 @@ const styles = StyleSheet.create({
     padding: 0,
     gap: 20,
     height: "100%",
-    justifyContent: Platform.OS === "ios" ? 'center' : null,
+    justifyContent: Platform.OS === "ios" ? "center" : null,
     display: "flex",
     alignItems: "center",
   },
@@ -737,5 +735,3 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
 });
-
-

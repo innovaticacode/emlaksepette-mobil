@@ -319,13 +319,16 @@ export default function ShoppingProfile() {
                     key={index}
                     style={{
                       display:
-                        (user.type == 2 && user.corporate_type == "Emlak Ofisi" && group.label == "Satış Noktalarımız") ||
-                        (user.corporate_type !== "Emlak Ofisi" && user.type == 2 && group.label == "Emlak Kulüp") ||
+                        (user.type == 2 &&
+                          user.corporate_type == "Emlak Ofisi" &&
+                          group.label == "Satış Noktalarımız") ||
+                        (user.corporate_type !== "Emlak Ofisi" &&
+                          user.type == 2 &&
+                          group.label == "Emlak Kulüp") ||
                         (user.type == 1 && group.label == "Satış Noktalarımız")
                           ? "none"
-                          : "flex"
+                          : "flex",
                     }}
-                    
                   >
                     {/* Başlık */}
                     <Text style={[style.headerText]}>{group.label}</Text>

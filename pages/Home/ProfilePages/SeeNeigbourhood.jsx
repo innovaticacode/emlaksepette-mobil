@@ -79,7 +79,12 @@ export default function SeeNeigbourhood() {
               ))
             ) : (
               <View style={styles.noCommentsContainer}>
-                  <Icon name="users-slash" size={50} color="#333" style={{ marginBottom: 20 }} />
+                <Icon
+                  name="users-slash"
+                  size={50}
+                  color="#333"
+                  style={{ marginBottom: 20 }}
+                />
                 <Text style={styles.noCommentsText}>
                   Henüz Komşumu Gör bilgisi satın almadınız.
                 </Text>
@@ -99,7 +104,6 @@ export default function SeeNeigbourhood() {
             )}
           </View>
         </ScrollView>
-
       )}
     </View>
   );
@@ -113,36 +117,36 @@ const styles = StyleSheet.create({
   },
   noCommentsContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: -62,
   },
   noCommentsText: {
     fontSize: 18,
-    color: '#333',
-    textAlign: 'center',
+    color: "#333",
+    textAlign: "center",
     marginBottom: 20,
   },
   returnButton: {
-    backgroundColor: '#EA2B2E',
+    backgroundColor: "#EA2B2E",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
   },
   returnButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   scrollViewContainer: {
     flexGrow: 1,
-    justifyContent: 'center', // İçeriği dikey olarak ortala
+    justifyContent: "center", // İçeriği dikey olarak ortala
   },
   noDataOuterContainer: {
     flex: 1,
-    justifyContent: 'center', // İçeriği dikey olarak ortala
-    alignItems: 'center', // İçeriği yatay olarak ortala
-    minHeight: '100%', // Ekranı tam doldurması için
+    justifyContent: "center", // İçeriği dikey olarak ortala
+    alignItems: "center", // İçeriği yatay olarak ortala
+    minHeight: "100%", // Ekranı tam doldurması için
   },
   noDataContainer: {
     alignItems: "center",
@@ -170,5 +174,4 @@ const styles = StyleSheet.create({
       },
     }),
   },
-
 });

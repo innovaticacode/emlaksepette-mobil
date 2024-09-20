@@ -47,13 +47,15 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
 
   const formatIban = (text) => {
     // Sadece harfleri ve rakamları içeren bir metin oluştur
-    const cleanedText = text.replace(/[^a-zA-Z0-9]/g, '');
+    const cleanedText = text.replace(/[^a-zA-Z0-9]/g, "");
 
     // Eğer metin TR ile başlamıyorsa başa ekle
-    let formattedText = cleanedText.startsWith('TR') ? cleanedText : 'TR' + cleanedText;
+    let formattedText = cleanedText.startsWith("TR")
+      ? cleanedText
+      : "TR" + cleanedText;
 
     // TR sonrası sadece rakamlar olmalı
-    formattedText = formattedText.replace(/[^0-9]/g, '');
+    formattedText = formattedText.replace(/[^0-9]/g, "");
 
     // İlk iki rakam TR'den sonra gelecek
     const firstTwo = formattedText.slice(0, 2);
@@ -67,7 +69,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     }
 
     // Gruplandırılmış metni birleştir ve başına 'TR' ve ilk iki rakamı ekle
-    let finalIban = `TR${firstTwo} ${groups.join(' ')}`.trim();
+    let finalIban = `TR${firstTwo} ${groups.join(" ")}`.trim();
 
     // IBAN maksimum 32 karakter uzunluğunda olmalı (TR dahil)
     return finalIban.substring(0, 32);
@@ -84,7 +86,6 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     // Eğer metin tamamen boşsa, IBAN'ı temizle
     setIban(formattedText);
   };
-
 
   const [fullName, setFullName] = useState("");
 
@@ -197,7 +198,6 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
 
   const RegisterClub = () => {
     switch (true) {
-
       case !fullName:
         seterrorStatu(2);
         setTimeout(() => {
@@ -278,17 +278,17 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     }
   };
   useEffect(() => {
-    fetchDataDeal()
-  }, [user])
+    fetchDataDeal();
+  }, [user]);
 
   const [checked, setChecked] = useState(false);
   const toggleCheckbox = () => {
-    setChecked(!checked)
-    setshowAlertForDeal(false)
+    setChecked(!checked);
+    setshowAlertForDeal(false);
   };
-  const [DealModal, setDealModal] = useState(false)
-  const [showAlertForDeal, setshowAlertForDeal] = useState(false)
-  console.log(errorStatu)
+  const [DealModal, setDealModal] = useState(false);
+  const [showAlertForDeal, setshowAlertForDeal] = useState(false);
+  console.log(errorStatu);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
@@ -421,12 +421,15 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
                   </View>
                 </View>
 
-
-                <View style={{ padding: 5, }}>
-
-                  <TouchableOpacity style={{ flexDirection: 'row', paddingLeft: 10, alignItems: 'center' }}
+                <View style={{ padding: 5 }}>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      paddingLeft: 10,
+                      alignItems: "center",
+                    }}
                     onPress={() => {
-                      toggleCheckbox()
+                      toggleCheckbox();
                     }}
                   >
                     <CheckBox
@@ -437,23 +440,47 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
                       checkedIcon="checkbox-marked"
                       uncheckedIcon="checkbox-blank-outline"
                       checkedColor="red"
-                      containerStyle={{ paddingRight: 0, padding: 0, marginTop: 0, marginBottom: 10, marginLeft: -2, borderColor: '#f27b7d', borderWidth: showAlertForDeal ? 2 : 0, borderRadius: 5, marginRight: 2 }}
-
-
+                      containerStyle={{
+                        paddingRight: 0,
+                        padding: 0,
+                        marginTop: 0,
+                        marginBottom: 10,
+                        marginLeft: -2,
+                        borderColor: "#f27b7d",
+                        borderWidth: showAlertForDeal ? 2 : 0,
+                        borderRadius: 5,
+                        marginRight: 2,
+                      }}
                     />
                     <Text>
-                      <Text style={{ color: '#2F5F9E', textDecorationLine: 'underline', fontWeight: '600' }} onPress={() => {
-                        setDealModal(true)
-                      }}>Emlaksepette Paylaşımcı Davranış Kuralları'nı</Text>{" "}okudum onaylıyorum.
-
+                      <Text
+                        style={{
+                          color: "#2F5F9E",
+                          textDecorationLine: "underline",
+                          fontWeight: "600",
+                        }}
+                        onPress={() => {
+                          setDealModal(true);
+                        }}
+                      >
+                        Emlaksepette Paylaşımcı Davranış Kuralları'nı
+                      </Text>{" "}
+                      okudum onaylıyorum.
                     </Text>
-
                   </TouchableOpacity>
                 </View>
-                {
-                  showAlertForDeal &&
-                  <Text style={{ textAlign: 'center', fontSize: 14, color: '#f27b7d', fontWeight: '700' }}>Lütfen Sözleşmeyi Onaylayın</Text>
-                }
+                {showAlertForDeal && (
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontSize: 14,
+                      color: "#f27b7d",
+                      fontWeight: "700",
+                    }}
+                  >
+                    Lütfen Sözleşmeyi Onaylayın
+                  </Text>
+                )}
                 <View style={{ alignItems: "center", padding: 10 }}>
                   <TouchableOpacity
                     style={{
@@ -466,16 +493,12 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
                       if (checked) {
                         user.account_type == "Limited veya Anonim Şirketi"
                           ? RegisterAgainClub()
-                          : RegisterClub()
-                        setshowAlertForDeal(false)
+                          : RegisterClub();
+                        setshowAlertForDeal(false);
                       } else {
-                        setshowAlertForDeal(true)
-
+                        setshowAlertForDeal(true);
                       }
-
-                    }
-
-                    }
+                    }}
                   >
                     <Text
                       style={{
@@ -489,7 +512,6 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
                     </Text>
                   </TouchableOpacity>
                 </View>
-
               </View>
             </View>
           </>
@@ -536,7 +558,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
           style={styles.modal2}
         >
           <SafeAreaView style={styles.modalContent2}>
-            <ScrollView style={{ padding: 10, }}>
+            <ScrollView style={{ padding: 10 }}>
               <HTML source={{ html: Deals }} contentWidth={100} />
 
               <View style={{ alignItems: "center", paddingBottom: 20 }}>

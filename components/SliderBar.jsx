@@ -41,27 +41,27 @@ export default function SliderBar() {
       image: "https://private.emlaksepette.com/images/al-sat-acil-image.png",
       color: "#FF0000",
       url: "",
-      isShow:'All'
+      isShow: "All",
     },
     {
       text: "Emlak Kulüp",
       image: "https://private.emlaksepette.com/images/emlak-kulup.png",
       color: "#F4A226",
       url: "RealtorClubExplore",
-          isShow:'Emlak Ofisi'
+      isShow: "Emlak Ofisi",
     },
     {
       text: "Sat Kirala",
       image: "https://private.emlaksepette.com/images/sat-kirala.png",
       color: "#0000FF",
       url: "SellAndRent",
-      isShow:'All'
+      isShow: "All",
     },
   ];
-  const [user, setuser] = useState({})
+  const [user, setuser] = useState({});
   useEffect(() => {
-      getValueFor('user',setuser)
-  }, [])
+    getValueFor("user", setuser);
+  }, []);
   return (
     <GestureHandlerRootView>
       <ScrollView
@@ -72,14 +72,26 @@ export default function SliderBar() {
         }}
       >
         {firstBrands.map((item, i) => (
-          <View style={{ width: 80, marginLeft: 3, alignItems: "center",
-            display: item.isShow=='All' ?'flex':'none' && ((!user.access_token || user.type==1 ) || item.isShow==user.corporate_type )  ? 'flex':'none'
-            
-           }} key={i}>
+          <View
+            style={{
+              width: 80,
+              marginLeft: 3,
+              alignItems: "center",
+              display:
+                item.isShow == "All"
+                  ? "flex"
+                  : "none" &&
+                    (!user.access_token ||
+                      user.type == 1 ||
+                      item.isShow == user.corporate_type)
+                  ? "flex"
+                  : "none",
+            }}
+            key={i}
+          >
             <SliderItem
               navigationStatus={true}
               borderColor={item.color}
-            
               image={item.image}
               url={item.url}
             />
