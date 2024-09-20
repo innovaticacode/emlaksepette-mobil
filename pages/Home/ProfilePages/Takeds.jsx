@@ -17,10 +17,9 @@ export default function Takeds() {
   const [takeds, setTakeds] = useState([]);
   const [filteredTakeds, setFilteredTakeds] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [EditModalVisible, setEditModalVisible] = useState(false);
   const [selectedIndex, setIndex] = useState(0);
   const [sortListModal, setSortListModal] = useState(false);
-
+  const searchLower = search.toLowerCase();
 
 
   useEffect(() => {
@@ -51,14 +50,13 @@ export default function Takeds() {
     fetchData();
   }, [user]);
 
+
   useEffect(() => {
     const filterTakeds = () => {
       if (!search.trim()) {
         // Arama terimi boşsa, tüm takeds listesini göster
         return takeds;
       }
-
-      const searchLower = search.toLowerCase();
 
       return takeds.filter((item) => {
         try {
@@ -242,7 +240,6 @@ export default function Takeds() {
                     <Icon2 name="swap-vertical" size={23} color={"#333"} />
                   </TouchableOpacity>
                 </View>
-
               </TouchableOpacity>
             </View>
           </View>

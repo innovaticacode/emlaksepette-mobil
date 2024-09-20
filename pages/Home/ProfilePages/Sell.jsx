@@ -5,31 +5,30 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Modal,
-  TouchableWithoutFeedback,
-  Platform
+  Keyboard,
+  ActivityIndicator
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { SearchBar } from "@rneui/base";
-import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
-import { ActivityIndicator } from "react-native-paper";
-import Order from "./profileComponents/Order";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
+import Order from "./profileComponents/Order";
+import Modal from "react-native-modal";
+import { Platform } from "react-native";
+import { Stack } from "@react-native-material/core";
+import { CheckBox } from "react-native-elements";
 
 export default function Sell() {
   const [search, setSearch] = useState("");
-  const [tabs, setTabs] = useState(0);
   const [user, setUser] = useState({});
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [sortOption, setSortOption] = useState("");
-
+  const [selectedIndex, setIndex] = useState(0);
+  const [sortListModal, setSortListModal] = useState(false);
+  const searchLower = search.toLowerCase();
   const nav = useNavigation();
-  const route = useRoute();
 
   const updateSearch = (search) => {
     setSearch(search);
@@ -78,45 +77,91 @@ export default function Sell() {
       });
     };
 
-    const sortProducts = (products) => {
-      switch (sortOption) {
-        case "name-asc":
-          return products.sort((a, b) => {
-            const titleA = JSON.parse(a.cart)["item"]["title"].toLowerCase();
-            const titleB = JSON.parse(b.cart)["item"]["title"].toLowerCase();
-            return titleA.localeCompare(titleB);
-          });
-        case "name-desc":
-          return products.sort((a, b) => {
-            const titleA = JSON.parse(a.cart)["item"]["title"].toLowerCase();
-            const titleB = JSON.parse(b.cart)["item"]["title"].toLowerCase();
-            return titleB.localeCompare(titleA);
-          });
-        case "price-asc":
-          return products.sort((a, b) => {
-            const priceA = parseFloat(JSON.parse(a.cart)["item"]["price"] || 0);
-            const priceB = parseFloat(JSON.parse(b.cart)["item"]["price"] || 0);
-            return priceA - priceB;
-          });
-        case "price-desc":
-          return products.sort((a, b) => {
-            const priceA = parseFloat(JSON.parse(a.cart)["item"]["price"] || 0);
-            const priceB = parseFloat(JSON.parse(b.cart)["item"]["price"] || 0);
-            return priceB - priceA;
-          });
-        default:
-          return products;
-      }
-    };
-
     const filtered = filterProducts();
-    const sorted = sortProducts(filtered);
-    setFilteredProducts(sorted);
-  }, [search, products, sortOption]);
+    setFilteredProducts(filtered);
+  }, [search, products]);
 
-  const handleSort = (option) => {
-    setSortOption(option);
-    setModalVisible(false);
+
+  // Fiyata göre (önce en düşük)
+  const sortByPriceLowToHigh = () => {
+    const sorted = [...products].sort((a, b) => {
+      const amountA = parseFloat(a.amount); // amount değerini sayıya çevir
+      const amountB = parseFloat(b.amount); // amount değerini sayıya çevir
+      return amountA - amountB;
+    });
+    setFilteredProducts(sorted);
+  };
+
+
+  // Fiyata göre (önce en yüksek)
+  const sortByPriceHighToLow = () => {
+    const sorted = [...products].sort((a, b) => {
+      const amountA = parseFloat(a.amount); // amount değerini sayıya çevir
+      const amountB = parseFloat(b.amount); // amount değerini sayıya çevir
+      return amountB - amountA;
+    });
+    setFilteredProducts(sorted);
+  };
+
+  // Tarihe göre (önce en eski)
+  const sortByDateOldest = () => {
+    const sorted = [...products].sort((a, b) => new Date(a.date) - new Date(b.date));
+    setFilteredProducts(sorted);
+  };
+
+  // Tarihe göre (önce en yeni)
+  const sortByDateNewest = () => {
+    const sorted = [...products].sort((a, b) => new Date(b.date) - new Date(a.date));
+    setFilteredProducts(sorted);
+  };
+
+  // A'dan Z'ye sıralama
+  const sortByNameAZ = () => {
+    const sorted = [...products].sort((a, b) => {
+      const nameA = JSON.parse(a.cart).item.title.toLowerCase();
+      const nameB = JSON.parse(b.cart).item.title.toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+    setFilteredProducts(sorted);
+  };
+
+  // Z'den A'ya sıralama
+  const sortByNameZA = () => {
+    const sorted = [...products].sort((a, b) => {
+      const nameA = JSON.parse(a.cart).item.title.toLowerCase();
+      const nameB = JSON.parse(b.cart).item.title.toLowerCase();
+      return nameB.localeCompare(nameA);
+    });
+    setFilteredProducts(sorted);
+  };
+
+
+  // Radio seçildiğinde tetiklenen fonksiyon
+  const handleRadio = (index) => {
+    setIndex(index);
+
+    switch (index) {
+      case 0:
+        sortByPriceLowToHigh();
+        break;
+      case 1:
+        sortByPriceHighToLow();
+        break;
+      case 2:
+        sortByDateOldest();
+        break;
+      case 3:
+        sortByDateNewest();
+        break;
+      case 4: // A'dan Z'ye sıralama
+        sortByNameAZ();
+        break;
+      case 5: // Z'den A'ya sıralama
+        sortByNameZA();
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -137,11 +182,7 @@ export default function Sell() {
             <TouchableOpacity
               style={style.returnButton}
               onPress={() => {
-                setLoading(true);
-                setTimeout(() => {
-                  nav.goBack();
-                  setLoading(false);
-                }, 700);
+                nav.goBack();
               }}
             >
               <Text style={style.returnButtonText}>İlanlara Göz At</Text>
@@ -149,7 +190,7 @@ export default function Sell() {
           </View>
         </View>
       ) : (
-        <View style={style.container}>
+        <View style={style.container} onTouchStart={() => Keyboard.dismiss()}>
           <View style={style.Navbar}>
             <View style={style.SearchInput}>
               <SearchBar
@@ -180,14 +221,15 @@ export default function Sell() {
             <View style={style.ListIcon}>
               <TouchableOpacity
                 style={{
-                  backgroundColor: "#e5e5e5",
+                  backgroundColor: '#e5e5e5',
                   padding: 5,
                   borderRadius: 6,
                 }}
-                onPress={() => setModalVisible(true)}
               >
                 <View>
-                  <Icon name="swap-vertical" size={18} color={"#333"} />
+                  <TouchableOpacity onPress={() => setSortListModal(!sortListModal)}>
+                    <Icon2 name="swap-vertical" size={23} color={"#333"} />
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             </View>
@@ -207,36 +249,164 @@ export default function Sell() {
               )}
             </View>
           </ScrollView>
+
           {/* Modal */}
           <Modal
-            transparent={true}
-            visible={modalVisible}
-            animationType="fade"
-            onRequestClose={() => setModalVisible(false)}
+            style={style.modal}
+            isVisible={sortListModal}
+            onBackdropPress={() => setSortListModal(false)}
+            backdropColor="transparent"
+            animationIn={"fadeIn"}
+            animationOut={"fadeOut"}
+            swipeDirection={["down"]}
+            onSwipeComplete={() => setEditModalVisible(false)}
           >
-            <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-              <View style={style.modalOverlay}>
-                <TouchableWithoutFeedback>
-                  <View style={style.modalContent}>
-                    <Text style={style.modalTitle}>Sıralama Seçenekleri</Text>
-                    <TouchableOpacity onPress={() => handleSort("name-asc")}>
-                      <Text style={style.modalOption}>İsme Göre (A-Z)</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleSort("name-desc")}>
-                      <Text style={style.modalOption}>İsme Göre (Z-A)</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleSort("price-asc")}>
-                      <Text style={style.modalOption}>Fiyata Göre (Küçükten Büyüğe)</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleSort("price-desc")}>
-                      <Text style={style.modalOption}>Fiyata Göre (Büyükten Küçüğe)</Text>
-                    </TouchableOpacity>
-                  </View>
-                </TouchableWithoutFeedback>
+            <View
+              style={[
+                style.modalContent,
+                {
+                  borderTopLeftRadius: 6,
+                  borderTopRightRadius: 6,
+                  padding: 0,
+                  borderRadius: 6,
+                  backgroundColor: "#ffffff",
+                },
+              ]}
+            >
+              <View style={{ paddingTop: 15, alignItems: "center" }}>
+                <Text style={{ color: "#333", fontSize: 17, fontWeight: "600" }}>
+                  Sıralama
+                </Text>
               </View>
-            </TouchableWithoutFeedback>
+              <View>
+                <Stack row align="center" spacing={4}>
+                  <CheckBox
+                    checked={selectedIndex === 0}
+                    onPress={() => {
+                      handleRadio(0);
+                      setSortListModal(false); // Seçim yapıldığında modalı kapatır
+                    }}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    title={
+                      <Text style={{ color: "#333", fontWeight: "600" }}>
+                        Fiyata göre (Önce en düşük)
+                      </Text>
+                    }
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      margin: 0,
+                    }}
+                    checkedColor="#333"
+                  />
+                  <CheckBox
+                    checked={selectedIndex === 1}
+                    onPress={() => {
+                      handleRadio(1);
+                      setSortListModal(false);
+                    }}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    title={
+                      <Text style={{ color: "#333", fontWeight: "600" }}>
+                        Fiyata göre (Önce en yüksek)
+                      </Text>
+                    }
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      margin: 0,
+                    }}
+                    checkedColor="#333"
+                  />
+                  <CheckBox
+                    checked={selectedIndex === 2}
+                    onPress={() => {
+                      handleRadio(2);
+                      setSortListModal(false);
+                    }}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    title={
+                      <Text style={{ color: "#333", fontWeight: "600" }}>
+                        Tarihe göre (Önce en eski ilan)
+                      </Text>
+                    }
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      margin: 0,
+                    }}
+                    checkedColor="#333"
+                  />
+                  <CheckBox
+                    checked={selectedIndex === 3}
+                    onPress={() => {
+                      handleRadio(3);
+                      setSortListModal(false);
+                    }}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    title={
+                      <Text style={{ color: "#333", fontWeight: "600" }}>
+                        Tarihe göre (Önce en yeni ilan)
+                      </Text>
+                    }
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      margin: 0,
+                    }}
+                    checkedColor="#333"
+                  />
+
+                  <CheckBox
+                    checked={selectedIndex === 4}
+                    onPress={() => {
+                      handleRadio(4);
+                      setSortListModal(false);
+                    }}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    title={
+                      <Text style={{ color: "#333", fontWeight: "600" }}>
+                        Ada göre (A'dan Z'ye)
+                      </Text>
+                    }
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      margin: 0,
+                    }}
+                    checkedColor="#333"
+                  />
+                  <CheckBox
+                    checked={selectedIndex === 5}
+                    onPress={() => {
+                      handleRadio(5);
+                      setSortListModal(false);
+                    }}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    title={
+                      <Text style={{ color: "#333", fontWeight: "600" }}>
+                        Ada göre (Z'den A'ya)
+                      </Text>
+                    }
+                    containerStyle={{
+                      backgroundColor: "transparent",
+                      borderWidth: 0,
+                      margin: 0,
+                    }}
+                    checkedColor="#333"
+                  />
+                </Stack>
+              </View>
+            </View>
           </Modal>
         </View>
+
       )}
     </>
   );
@@ -245,7 +415,7 @@ export default function Sell() {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   noResultsContainer: {
     flex: 1,
@@ -267,64 +437,89 @@ const style = StyleSheet.create({
     textAlign: "center",
     marginTop: 5,
   },
-  Navbar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 10,
-    backgroundColor: "#fff",
-    elevation: 2,
-  },
-  SearchInput: {
-    flex: 1,
-  },
-  ListIcon: {
-    padding: 5,
-  },
-  orders: {
-    flex: 1,
-    padding: 10,
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
-    width: "80%",
-    alignItems: "center",
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  modalOption: {
-    fontSize: 16,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    width: "100%",
-    textAlign: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
   noCommentsText: {
     fontSize: 18,
-    color: "#333",
-    textAlign: "center",
-    fontWeight: "bold",
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 8,
   },
   returnButton: {
-    backgroundColor: "#e5e5e5",
-    padding: 10,
-    borderRadius: 5,
+    backgroundColor: '#EA2B2E',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
   },
   returnButtonText: {
+    color: '#fff',
     fontSize: 16,
-    color: "#333",
+    fontWeight: 'bold',
+  },
+  Navbar: {
+    width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ebebeb',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFF',
+    borderColor: '#e6e6e6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#e6e6e6',
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  SearchInput: {
+    flex: 1.7 / 2,
+    padding: 5,
+  },
+  ListIcon: {
+    flex: 0.3 / 2,
+    borderBottomColor: '#e5e5e5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  orders: {
+    width: '100%',
+    padding: 5,
+    gap: 15,
+  },
+  modal: {
+    justifyContent: "center",
+    margin: 0,
+    backgroundColor: "#0c03033d",
+    padding: 20,
+  },
+  modalContent: {
+    gap: 5,
+    paddingBottom: 25,
+    backgroundColor: "#f8f8ff",
+    padding: 10,
+
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    ...Platform.select({
+      ios: {
+        shadowColor: "white",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  Input: {
+    backgroundColor: "#ebebeb",
+    padding: 10,
+    borderRadius: 5,
+    width: "90%",
   },
 });
