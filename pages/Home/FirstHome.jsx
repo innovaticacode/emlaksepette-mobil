@@ -141,15 +141,14 @@ const FirstHome = (props) => {
   return (
     <AlertNotificationRoot>
       {loadingProjects && loadingSliders ? (
-        <View
-          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
-        >
+        <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
           <ActivityIndicator />
         </View>
       ) : (
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        
           <SafeAreaView style={styles.container}>
             <ScrollView
+              keyboardShouldPersistTaps="handled"
               contentContainerStyle={styles.scrollViewContent}
               scrollEventThrottle={16}
             >
@@ -290,7 +289,7 @@ const FirstHome = (props) => {
               >
                 <View style={styles.featuredProjectsHeader}>
                   <Text style={styles.featuredProjectsTitle}>
-                    FRANCHİSE MARKALARI
+                    ÖNE ÇIKAN FRANCHİSE MARKALARI
                   </Text>
                   <TouchableOpacity
                     style={styles.allProjectsButton}
@@ -320,7 +319,7 @@ const FirstHome = (props) => {
               <View>
                 <View style={styles.featuredProjectsHeader}>
                   <Text style={styles.featuredProjectsTitle}>
-                    Öne Çıkan Gayrimenkul Markaları
+                    ÖNE ÇIKAN GAYRİMENKUL MARKALARI
                   </Text>
                   <TouchableOpacity
                     style={styles.allProjectsButton}
@@ -367,7 +366,7 @@ const FirstHome = (props) => {
               </View>
             </ScrollView>
           </SafeAreaView>
-        </TouchableWithoutFeedback>
+        
       )}
     </AlertNotificationRoot>
   );
@@ -382,6 +381,7 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     paddingHorizontal: 10,
     paddingBottom: 10,
+    flexGrow: 1
   },
   sliderContainer: {
     height: 200,
@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   sliderBarTitle: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: "700",
     marginBottom: 7,
   },
@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   featuredProjectsTitle: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: "700",
   },
   allProjectsButton: {
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
   },
   allProjectsButtonText: {
     color: "white",
-    fontSize: 11,
+    fontSize: 14,
     paddingHorizontal: 10,
   },
   projectPostContainer: {

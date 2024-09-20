@@ -195,9 +195,7 @@ export default function HomePage2() {
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}
-    >
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}>
       <Header onPress={toggleDrawer} index={setIndex} tab={settab} />
 
       <Modal
@@ -216,7 +214,7 @@ export default function HomePage2() {
       <View style={{ paddingLeft: 10, paddingRight: 10 }}>
         <TextInput
           style={{ padding: 8, backgroundColor: "#ebebeb", borderRadius: 5 }}
-          placeholder="Kelime veya İlan no ile ara.."
+          placeholder="Kelime veya İlan no ile ara..."
           onPress={() => {
             navigation.navigate("SearchPage");
           }}
