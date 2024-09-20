@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   ImageBackground,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Icon from "react-native-vector-icons/Entypo";
 import { Platform } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -18,11 +19,13 @@ import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
+import Icon8 from "react-native-vector-icons/FontAwesome5";
 import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import { Button } from "react-native-paper";
 
 export default function MyComments() {
   const [user, setuser] = useState({});
@@ -43,11 +46,14 @@ export default function MyComments() {
   const [modalVisible, setModalVisible] = useState(false); // Modal görünürlüğü için
   const [modalMessage, setModalMessage] = useState(""); // Başarı veya hata mesajı
   const [deleteSuccess, setDeleteSuccess] = useState(null);
+  const [modalDelete, setModalDelete] = useState(false);
 
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
   console.log(user.id);
+  const navigation = useNavigation();
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -73,6 +79,11 @@ export default function MyComments() {
 
   useEffect(() => {
     fetchData();
+  }, [user]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true); // Yenileme işlemi başlıyor
+    fetchData().then(() => setRefreshing(false)); // Yenileme işlemi bittikten sonra refreshing'i false yap
   }, [user]);
 
   const MycommentItem = ({ item, EditComment, goToEditComment, store }) => {
@@ -206,6 +217,11 @@ export default function MyComments() {
     setchoose(false);
   };
 
+  const confirmDeleteComment = () => {
+    setModalDelete(true);
+    setchoose(false);
+  };
+
   const DeleteComment = async () => {
     try {
       if (user?.access_token) {
@@ -223,7 +239,7 @@ export default function MyComments() {
             setModalMessage("Yorum başarıyla silindi!");
             setchoose(false); // İşlem başarılı olduğunda seçimi kapat
             fetchData(); // Veri çekmeyi çağır
-
+            setModalDelete(false);
             // Başarılı işlemde dialog'u göster
             Dialog.show({
               type: ALERT_TYPE.SUCCESS,
@@ -235,12 +251,13 @@ export default function MyComments() {
       } else {
         setDeleteSuccess(false);
         setModalMessage("Yorum bulunamadı.");
+        setModalDelete(false);
       }
     } catch (error) {
       setDeleteSuccess(false);
       setModalMessage("Yorum silme işlemi başarısız oldu.");
       console.error("Silme işlemi başarısız oldu", error);
-
+      setModalDelete(false);
       // Hata durumunda dialog'u göster
       Dialog.show({
         type: ALERT_TYPE.DANGER,
@@ -259,6 +276,9 @@ export default function MyComments() {
       <ScrollView
         contentContainerStyle={{ gap: 10, padding: 10 }}
         style={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         {loading ? (
           <View
@@ -277,13 +297,47 @@ export default function MyComments() {
             />
           ))
         ) : (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <Text style={{ fontSize: 16, color: "#555" }}>
-              Henüz yorum yok.
-            </Text>
-          </View>
+          <>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                gap: 10,
+                marginTop: 80,
+                flex: 1,
+              }}
+            >
+              <View
+                style={[
+                  styles.card2,
+                  { alignItems: "center", justifyContent: "center" },
+                ]}
+              >
+                <Icon8 name="comment-slash" size={50} color={"#EA2A28"} />
+              </View>
+              <View>
+                <Text style={styles.noCommentsText}>
+                  Yorumunuz bulunmamaktadır.
+                </Text>
+                <Text></Text>
+              </View>
+              <View style={{ width: "100%", alignItems: "center" }}>
+                <TouchableOpacity
+                  style={styles.returnButton}
+                  onPress={() => {
+                    setLoading(true);
+                    setTimeout(() => {
+                      navigation.navigate("HomePage");
+                      setLoading(false);
+                    }, 700);
+                  }}
+                >
+                  <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
         )}
 
         <Modal
@@ -309,10 +363,39 @@ export default function MyComments() {
 
               <TouchableOpacity
                 style={styles.modalOption}
-                onPress={DeleteComment}
+                onPress={confirmDeleteComment}
               >
                 <Icon3 name="delete" size={21} color={"#EA2A28"} />
                 <Text style={styles.modalOptionText}>Yorumu Sil</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+        <Modal
+          isVisible={modalDelete}
+          style={styles.confirmationModal2}
+          animationIn={"fadeInDown"}
+          animationOut={"fadeOutDown"}
+          onBackdropPress={() => setModalDelete(false)}
+          swipeDirection={["down"]}
+          onSwipeComplete={() => setModalDelete(false)}
+        >
+          <View style={styles.modalContainer2}>
+            <Text style={styles.modalHeader2}>
+              Yorumu silmek istediğinizden emin misiniz?
+            </Text>
+            <View style={styles.modalButtonContainer2}>
+              <TouchableOpacity
+                style={styles.confirmButtonStyle2}
+                onPress={DeleteComment}
+              >
+                <Text style={styles.confirmButtonTextStyle2}>Evet</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.cancelButtonStyle2}
+                onPress={() => setModalDelete(false)}
+              >
+                <Text style={styles.cancelButtonTextStyle2}>Hayır</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -341,6 +424,26 @@ const styles = StyleSheet.create({
       },
       android: {
         elevation: 3,
+      },
+    }),
+  },
+  card2: {
+    backgroundColor: "#FFFFFF",
+    padding: 15,
+
+    borderRadius: 50,
+
+    borderWidth: 0.7,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
       },
     }),
   },
@@ -430,5 +533,70 @@ const styles = StyleSheet.create({
   modalOptionText: {
     marginLeft: 10,
     fontSize: 16,
+  },
+  confirmationModal2: {
+    // Modal stil ayarları
+  },
+  modalContainer2: {
+    // Modal içeriği stil ayarları
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    width: "100%",
+    maxWidth: 400,
+    alignItems: "center",
+  },
+  modalHeader2: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#333",
+    textAlign: "center",
+  },
+  modalButtonContainer2: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  confirmButtonStyle2: {
+    backgroundColor: "#ea2a28",
+    color: "#fff",
+    padding: 10,
+    borderRadius: 5,
+    width: "45%",
+    alignItems: "center",
+  },
+  confirmButtonTextStyle2: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  cancelButtonStyle2: {
+    backgroundColor: "#ccc",
+    color: "#333",
+    padding: 10,
+    borderRadius: 5,
+    width: "45%",
+    alignItems: "center",
+  },
+  cancelButtonTextStyle2: {
+    color: "#333",
+    fontWeight: "bold",
+  },
+  noCommentsText: {
+    fontSize: 18,
+    color: "#333",
+    textAlign: "center",
+    marginTop: 8,
+  },
+  returnButton: {
+    backgroundColor: "#EA2B2E",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  returnButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

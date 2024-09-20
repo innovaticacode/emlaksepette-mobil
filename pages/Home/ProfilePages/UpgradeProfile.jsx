@@ -642,10 +642,10 @@ export default function UpgradeProfile() {
           "profile_image",
           image
             ? {
-              uri: image.uri,
-              name: image.fileName,
-              type: image.type,
-            }
+                uri: image.uri,
+                name: image.fileName,
+                type: image.type,
+              }
             : null
         );
         formData.append(
@@ -661,10 +661,10 @@ export default function UpgradeProfile() {
           "profile_image",
           image
             ? {
-              uri: image.uri,
-              name: image.fileName,
-              type: image.type,
-            }
+                uri: image.uri,
+                name: image.fileName,
+                type: image.type,
+              }
             : null
         );
         formData.append("city_id", formData.city_id);
@@ -845,7 +845,9 @@ export default function UpgradeProfile() {
                     {user?.corporate_type}
                   </Text>
                 )}
-                <Text style={{ fontSize: 11, color: "#fff", fontWeight: "700" }}>
+                <Text
+                  style={{ fontSize: 11, color: "#fff", fontWeight: "700" }}
+                >
                   {user.email}
                 </Text>
               </View>
@@ -878,7 +880,11 @@ export default function UpgradeProfile() {
             <View style={{ width: "100%", alignItems: "center" }}>
               <View style={{ padding: 5, width: "90%", gap: 25 }}>
                 {Forms.map((item, i) => {
-                  if ((item?.key == "authority_licence" && item?.isShow == user?.corporate_type) || !item.isShow) {
+                  if (
+                    (item?.key == "authority_licence" &&
+                      item?.isShow == user?.corporate_type) ||
+                    !item.isShow
+                  ) {
                     return (
                       <View
                         key={i}
@@ -917,26 +923,37 @@ export default function UpgradeProfile() {
                           )}
 
                           {item.type == "input" ? (
-                            <View style={{ width: item.showArea ? "55%" : "100%" }}>
+                            <View
+                              style={{ width: item.showArea ? "55%" : "100%" }}
+                            >
                               <TextInput
                                 editable={item.disabled ? false : true}
                                 maxLength={item.maxlength ? item.maxlength : 90}
-                                placeholder={item.placeholder ? item.placeholder : ""}
+                                placeholder={
+                                  item.placeholder ? item.placeholder : ""
+                                }
                                 style={[
                                   styles.input,
                                   item.disabled ? { color: "grey" } : {},
                                 ]}
                                 value={formData[item.key]}
                                 keyboardType={
-                                  item.key === "iban" || item.key === "phone" || item.key === "taxNumber"
+                                  item.key === "iban" ||
+                                  item.key === "phone" ||
+                                  item.key === "taxNumber"
                                     ? "number-pad"
                                     : "default"
                                 }
-                                autoCapitalize={item.key === "website" ? "none" : "sentences"}
+                                autoCapitalize={
+                                  item.key === "website" ? "none" : "sentences"
+                                }
                                 onChangeText={(value) => {
                                   if (item.key === "iban") {
                                     // Eğer IBAN alanıysa formatlamayı uygula
-                                    handleInputChange(item.key, formatIban(value));
+                                    handleInputChange(
+                                      item.key,
+                                      formatIban(value)
+                                    );
                                   } else {
                                     // Diğer alanlar için normal input değişikliği
                                     handleInputChange(item.key, value);
@@ -982,18 +999,18 @@ export default function UpgradeProfile() {
                           )}
                         </View>
                       </View>
-                    )
+                    );
                   }
-
-                }
-
-
-                )}
+                })}
                 {
                   //Harita
                   tab == 3 && (
                     <View
-                      style={{ alignItems: "center", height: 300, width: "100%" }}
+                      style={{
+                        alignItems: "center",
+                        height: 300,
+                        width: "100%",
+                      }}
                     >
                       <MapView
                         style={{ width: "100%", height: "100%" }}
@@ -1268,7 +1285,7 @@ export default function UpgradeProfile() {
                       gap: 10,
                     }}
                     onPress={removeProfileImage} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
-                  // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
+                    // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
                   >
                     <Icon3
                       name="restore-from-trash"
