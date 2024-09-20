@@ -102,20 +102,9 @@ const HomePage = (props) => {
                   resizeMode="cover"
                 />
               </View>
-              <View
-                style={{
-                  paddingBottom: 3,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  alignItems: "center",
-                  backgroundColor: "white",
-                  paddingVertical: 10,
-                }}
-              >
-                <Text style={{ fontSize: 12, fontWeight: 700 }}>
-                  ÖNE ÇIKAN EMLAK PROJELER
+              <View style={styles.header}>
+                <Text style={{ fontSize: 14, fontWeight: 700 }}>
+                  ÖNE ÇIKAN PROJELER
                 </Text>
                 <TouchableOpacity
                   style={styles.allBtn}
@@ -138,8 +127,9 @@ const HomePage = (props) => {
                   <Text
                     style={{
                       color: "white",
-                      fontSize: 11,
+                      fontSize: 12,
                       fontWeight: "bold",
+                      padding: 3,
                     }}
                   >
                     Tüm İlanları Gör
@@ -190,19 +180,21 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   scrollViewContent: {
-    paddingHorizontal: 10,
-    paddingBottom: 10,
+    
   },
   bannerImage: {
     width: "100%",
     height: 120,
+    marginBottom: 10,
+    paddingHorizontal: 0,
   },
   featuredProjectsContainer: {
     paddingBottom: 3,
     backgroundColor: "white",
+    paddingHorizontal: 10,
+    paddingBottom: 10,
   },
   projectPostContainer: {
-    marginTop: 7,
     width: "100%",
   },
   loadingContainer: {
@@ -214,8 +206,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#EA2C2E",
     paddingLeft: 15,
     paddingRight: 15,
-    padding: 5,
+    padding: 3,
     borderRadius: 4,
+  },
+  header: {
+    paddingBottom: 3,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingLeft: 10,
+    paddingRight: 10,
+    alignItems: "center",
+    backgroundColor: "white",
+    marginTop: 8,
   },
 });
 

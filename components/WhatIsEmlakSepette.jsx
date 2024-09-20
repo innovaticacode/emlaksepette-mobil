@@ -5,7 +5,6 @@ import { ScrollView } from "react-native-gesture-handler";
 
 const WhatIsEmlakSepette = () => {
   return (
-    // <ScrollView>
       <View style={styles.card}>
         <View>
           <Text style={styles.title}>
@@ -111,7 +110,6 @@ const WhatIsEmlakSepette = () => {
           </Text>
         </View>
       </View>
-    // </ScrollView>
   );
 };
 
@@ -120,8 +118,8 @@ export default WhatIsEmlakSepette;
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#F9F9F9",
-    marginTop: 8,
-
+    padding: 10,
+    
   },
   title: {
     color: "#444",

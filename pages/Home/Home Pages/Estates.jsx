@@ -40,8 +40,7 @@ const Estates = ({ index }) => {
     console.log(config);
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${
-          reset ? 1 : page
+        `https://private.emlaksepette.com/api/real-estates?page=${reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
       );
@@ -97,16 +96,14 @@ const Estates = ({ index }) => {
   const renderFooter = () => {
     if (!loading) return null;
     return (
-      <ActivityIndicator style={{ margin: 20 }} size="small" color="#333" />
+      <ActivityIndicator style={{ margin: 0 }} size="small" color="#333" />
     );
   };
 
   return (
     <>
       {loading ? (
-        <View
-          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
-        >
+        <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
@@ -152,9 +149,8 @@ const Estates = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${apiUrl}/housing_images/${
-                      JSON.parse(item.housing_type_data).image
-                    }`}
+                    image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image
+                      }`}
                     openSharing={
                       JSON.parse(item.housing_type_data)["open_sharing1"]
                     }
@@ -198,46 +194,15 @@ const Estates = ({ index }) => {
                 }
                 ListHeaderComponent={
                   <>
-                    <View style={{ paddingHorizontal: 8 }}>
+                    <View style={{ paddingHorizontal: 0 }}>
                       <Image
                         source={Housing}
                         style={{ width: "100%", height: 120 }}
                       />
                     </View>
-                    <View
-                      style={{
-                        paddingBottom: 3,
-                        paddingLeft: 10,
-                        paddingRight: 10,
-                        marginTop: 10,
-                        backgroundColor: "white",
-                        height: 130,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          fontWeight: 700,
-                          marginBottom: 7,
-                        }}
-                      >
-                        FRANCHAISE VEREN GAYRIMENKUL MARKALARI
-                      </Text>
 
-                      <SliderEstateBar />
-                    </View>
-                    <View
-                      style={{
-                        paddingBottom: 3,
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        paddingLeft: 10,
-                        paddingRight: 10,
-                        alignItems: "center",
-                        backgroundColor: "white",
-                      }}
-                    >
-                      <Text style={{ fontSize: 12, fontWeight: 700 }}>
+                    <View style={styles.header}>
+                      <Text style={{ fontSize: 14, fontWeight: 700 }}>
                         ÖNE ÇIKAN EMLAK İLANLARI
                       </Text>
 
@@ -262,7 +227,7 @@ const Estates = ({ index }) => {
                         <Text
                           style={{
                             color: "white",
-                            fontSize: 11,
+                            fontSize: 12,
                             fontWeight: "bold",
                           }}
                         >
@@ -308,6 +273,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fefefe",
     padding: 20,
     borderRadius: 5,
+  },
+  header: {
+    paddingBottom: 3,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingLeft: 10,
+    paddingRight: 10,
+    alignItems: "center",
+    backgroundColor: "white",
+    marginTop: 20,
   },
 });
 

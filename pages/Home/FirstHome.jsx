@@ -335,6 +335,8 @@ const FirstHome = (props) => {
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
+                    marginBottom: 10,
+                    marginTop: 20,
                   }}
                 >
                   <View>
@@ -358,7 +360,7 @@ const FirstHome = (props) => {
                   style={{
                     width: "100%",
                     height: "auto",
-                    paddingBottom: 10,
+                    paddingBottom: 20,
                   }}
                 >
                   <WhatIsEmlakSepette />
@@ -426,7 +428,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 12,
+    paddingVertical: 8,
   },
   featuredProjectsTitle: {
     fontSize: 14,
@@ -439,8 +441,10 @@ const styles = StyleSheet.create({
   },
   allProjectsButtonText: {
     color: "white",
-    fontSize: 14,
-    paddingHorizontal: 10,
+    fontSize: 12,
+    paddingHorizontal: 12,
+    fontWeight: "bold",
+    padding: 3,
   },
   projectPostContainer: {
     marginTop: 7,

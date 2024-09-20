@@ -107,32 +107,21 @@ const Prefabrik = ({ index }) => {
         </View>
       ) : (
         <View style={styles.container}>
-          <View style={{ paddingHorizontal: 8 }}>
+          <View style={{ paddingHorizontal: 0 }}>
             <Image
               source={PrefabrikBanner}
               style={{ width: "100%", height: 120 }}
               resizeMode="cover"
             />
           </View>
-          <View
-            style={{
-              paddingBottom: 3,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingLeft: 10,
-              paddingRight: 10,
-              alignItems: "center",
-              backgroundColor: "white",
-              paddingVertical: 10,
-            }}
-          >
-            <Text style={{ fontSize: 12, fontWeight: 700 }}>
+          <View style={styles.header}>
+            <Text style={{ fontSize: 14, fontWeight: 700 }}>
               ÖNE ÇIKAN PREFABRİK İLANLARI
             </Text>
 
             <TouchableOpacity style={styles.allBtn}>
               <Text
-                style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
+                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
                 onPress={() =>
                   navigation.navigate("AllRealtorAdverts", {
                     name: "Emlak İlanları",
@@ -269,6 +258,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fefefe",
     padding: 20,
     borderRadius: 5,
+  },
+  header: {
+    paddingBottom: 3,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingLeft: 10,
+    paddingRight: 10,
+    alignItems: "center",
+    backgroundColor: "white",
+    marginTop: 20,
   },
 });
 
