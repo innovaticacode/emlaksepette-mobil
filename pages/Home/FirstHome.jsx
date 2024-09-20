@@ -324,7 +324,7 @@ const FirstHome = (props) => {
                   </Text>
                   <TouchableOpacity
                     style={styles.allProjectsButton}
-                    onPress={() => null}
+                    onPress={() => navigation.navigate("AllFeaturedRealEstate")}
                   >
                     <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                   </TouchableOpacity>
@@ -355,7 +355,15 @@ const FirstHome = (props) => {
                     marginVertical: 6,
                   }}
                 />
-                <WhatIsEmlakSepette />
+                <View
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    paddingBottom: 10,
+                  }}
+                >
+                  <WhatIsEmlakSepette />
+                </View>
               </View>
             </ScrollView>
           </SafeAreaView>

@@ -17,7 +17,6 @@ const AllFranchiseBrands = () => {
 
   useEffect(() => {
     fetchBrands();
-    console.debug("Brands:", brands);
   }, []);
 
   return (
