@@ -31,6 +31,7 @@ export default function SellPlacesForBrands({ data }) {
   };
   useEffect(() => {
     GetSellPlace();
+    // console.debug("Placess=========>>>", Places);
   }, [user]);
 
   console.log(Places, "satışNoktaları");

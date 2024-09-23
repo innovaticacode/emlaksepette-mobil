@@ -175,7 +175,7 @@ export default function Profile() {
         setloadingShopping(false);
       });
   }, [id]);
-  console.log(id);
+  // console.log(id);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -193,8 +193,7 @@ export default function Profile() {
   };
   const ApiUrl = "https://private.emlaksepette.com/";
   const handleOpenPhone = () => {
-    // Telefon uygulamasını açmak için
-    Linking.openURL(`tel:+${storeData.data.phone}`);
+    Linking.openURL(`tel:${storeData.data.phone}`);
   };
   const [formVisible, setFormVisible] = useState("false");
 
@@ -505,7 +504,7 @@ export default function Profile() {
               }}
             >
               <TouchableOpacity
-                onPress={() => null}
+                onPress={() => handleOpenPhone()}
                 style={{
                   backgroundColor: "#ffffff",
                   width: "45%",

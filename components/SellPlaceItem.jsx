@@ -4,6 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function SellPlaceItem({ item }) {
   const navigation = useNavigation();
+
+  console.debug("ITEM ==============>>> ", item);
   return (
     <TouchableOpacity
       onPress={() => {
@@ -49,8 +51,12 @@ export default function SellPlaceItem({ item }) {
             <Text style={{ color: "#333", fontWeight: "600", fontSize: 13 }}>
               {item?.headquarters_city} / {item?.headquarters_district}
             </Text>
+          ) : item?.city?.title && item?.district?.ilce_title ? (
+            <Text style={{ fontSize: 13 }}>
+              {`${item?.city?.title} / ${item?.district?.ilce_title}`}
+            </Text>
           ) : (
-            <Text style={{ fontSize: 13 }}>İl / İlçe Bilgisi Bulunmuyor</Text>
+            <Text style={{ fontSize: 13 }}>Konum bilgisi mevcut değil.</Text>
           )}
         </View>
       </View>
