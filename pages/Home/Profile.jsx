@@ -33,6 +33,7 @@ import CollectionsOfBrand from "./ProfilePageItem/CollectionsOfBrand";
 import CommentsOfBrands from "./ProfilePageItem/CommentsOfBrands";
 import SellPlacesForBrands from "./ProfilePageItem/SellPlaceForBrand";
 import { ActivityIndicator } from "react-native-paper";
+import EstateBottomSheetFilter from "../../components/EstateBottomSheetFilter";
 
 export default function Profile() {
   const route = useRoute();
