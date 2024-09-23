@@ -118,6 +118,7 @@ import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
 import ApplyForBeCompany from "./pages/Home/ProfilePages/ApplyForBeCompany";
 import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
 import AllFeaturedRealEstate from "./pages/Home/AllFeaturedRealEstate";
+import SalePage from "./pages/Home/PointOfSale/SalePage";
 
 
 const Stack = createNativeStackNavigator();
@@ -1175,6 +1176,17 @@ export default function App({ route }) {
         component={AllFeaturedRealEstate}
         options={({ route }) => ({
           title: "Öne Çıkan Markalar",
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: "#ffffff",
+          },
+        })}
+        />
+            <Stack.Screen
+        name="SalePage"
+        component={SalePage}
+        options={({ route }) => ({
+          title:"Satış Noktası Ol",
           headerBackTitleVisible: false,
           headerStyle: {
             backgroundColor: "#ffffff",
