@@ -85,6 +85,7 @@ export default function CreateUserType() {
     postData();
   };
   const [loadingUpdate, setloadingUpdate] = useState(false);
+
   const postData = async () => {
     if (!TypeName) {
       Dialog.show({
@@ -93,41 +94,50 @@ export default function CreateUserType() {
         textBody: "Lütfen kullanıcı rolü giriniz.",
         button: "Tamam",
       });
-    } else {
-      setloadingUpdate(true);
-      try {
-        var formData = new FormData();
-        formData.append("name", TypeName);
-        checkedItems.forEach((item) => {
-          formData.append("permissions[]", item); // [] kullanarak PHP tarafında bir dizi olarak alınmasını sağlar
-        });
-        const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/roles",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
-        setTypeName("");
-        setCheckedItems([]);
-        fetchData();
-        Dialog.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "Başarılı",
-          textBody: "Kullanıcı tipi oluşturuldu.",
-          button: "Tamam",
-          onPressButton: () => {
-            navigation.goBack();
-            Dialog.hide();
+      return; // Eğer TypeName yoksa fonksiyonu sonlandır
+    }
+
+    setloadingUpdate(true);
+
+    try {
+      // FormData oluştur
+      const formData = new FormData();
+      formData.append("name", TypeName); // TypeName'ı ekleyin
+
+      // Seçilen izinleri dizi olarak ekleyin
+      checkedItems.forEach((item) => {
+        formData.append("permissions[]", item); // [] kullanarak PHP tarafında bir dizi olarak alınmasını sağlar
+      });
+
+      const response = await axios.post(
+        "https://private.emlaksepette.com/api/institutional/roles",
+        formData, // formData kullanın
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // İçerik türünü belirtin
+            Authorization: `Bearer ${user.access_token}`,
           },
-        });
-      } catch (error) {
-        console.error("Hata:", error + "post isteği başarısız ");
-      } finally {
-        setloadingUpdate(false);
-      }
+        }
+      );
+
+      console.log("Response:", response.data); // API yanıtını kontrol edin
+      setTypeName("");
+      setCheckedItems([]);
+      fetchData(); // Verileri güncelle
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Başarılı",
+        textBody: "Kullanıcı tipi oluşturuldu.",
+        button: "Tamam",
+        onPressButton: () => {
+          navigation.goBack();
+          Dialog.hide();
+        },
+      });
+    } catch (error) {
+      console.error("Hata:", error.message); // Hata mesajını göster
+    } finally {
+      setloadingUpdate(false); // Yükleme durumunu kapat
     }
   };
 
