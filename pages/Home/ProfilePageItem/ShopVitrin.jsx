@@ -119,7 +119,10 @@ export default function ShopVitrin({ data, housingdata, settab }) {
         <View style={{ height: 245 }}>
           <Swiper autoplay>
             {banners.map((banner, index) => (
-              <View key={index} style={{ width: "100%", height: 200 }}>
+              <View
+                key={index}
+                style={{ width: "100%", height: 200, paddingHorizontal: 4 }}
+              >
                 <Image
                   source={{
                     uri: `${ApiUrl}${banner.image}`,
@@ -172,7 +175,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
                 <Text style={{ fontSize: 18 }}>Emlak İlanları</Text>
                 <TouchableOpacity
                   style={styles.allBtn}
-                  onPress={() => settab(2)}
+                  onPress={() => settab(3)}
                 >
                   <Text style={{ color: "white", fontSize: 11 }}>
                     Tüm İlanları Gör
@@ -252,7 +255,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
               }}
             >
               <Text style={{ fontSize: 18 }}>Proje İlanları</Text>
-              <TouchableOpacity style={styles.allBtn} onPress={() => settab(1)}>
+              <TouchableOpacity style={styles.allBtn} onPress={() => settab(2)}>
                 <Text style={{ color: "white", fontSize: 11 }}>
                   Tüm Projeleri Gör
                 </Text>
