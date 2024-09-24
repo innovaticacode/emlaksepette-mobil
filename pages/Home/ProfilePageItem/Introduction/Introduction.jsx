@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  ScrollView,
+  FlatList,
+} from "react-native";
 import { apiRequestGet } from "../../../../components/methods/apiRequest";
 import { removeHtmlTags } from "../../../../utils";
-import { ScrollView } from "react-native-gesture-handler";
 import { styles } from "./Introduction.styles";
 import { Dialog } from "react-native-alert-notification";
+import { CommentCard } from "../../../../components";
 
 const Introduction = (props) => {
   const { id } = props;
-
   const [storeInfo, setStoreInfo] = useState({});
+  const [owners, setOwners] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const handleGetStoreInfo = async () => {
@@ -17,7 +23,7 @@ const Introduction = (props) => {
     try {
       const response = await apiRequestGet("brand/" + id);
       setStoreInfo(response.data.data);
-
+      setOwners(response.data.data.owners);
       return await setLoading(false);
     } catch (error) {
       Dialog.show({
@@ -25,7 +31,7 @@ const Introduction = (props) => {
         title: "Hata",
         text: "İşletme bilgileri alınırken bir hata oluştu.",
       });
-      await setLoading(false);
+      return await setLoading(false);
     }
   };
   useEffect(() => {
@@ -43,14 +49,36 @@ const Introduction = (props) => {
           showsVerticalScrollIndicator={false}
           style={styles.scrollView}
         >
-          <Text style={styles.title}>
-            {storeInfo?.name || "İşletme ismi bulunamadı."}
-          </Text>
-          <Text style={styles.description}>
-            {removeHtmlTags(
-              storeInfo?.about || "İşletme hakkında bilgi bulunamadı."
-            )}
-          </Text>
+          <>
+            <Text style={styles.title}>
+              {storeInfo?.name || "İşletme ismi bulunamadı."}
+            </Text>
+            <Text style={styles.description}>
+              {removeHtmlTags(
+                storeInfo?.about || "İşletme hakkında bilgi bulunamadı."
+              )}
+            </Text>
+          </>
+          <FlatList
+            data={owners}
+            keyExtractor={(item) => item.id.toString()}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => {
+              return (
+                <View style={styles.list}>
+                  <CommentCard
+                    rate={item?.rate}
+                    comment={item?.comment}
+                    created_at={item?.created_at}
+                    images={item?.images}
+                    title={item?.housing?.title}
+                    addres={item?.housing?.address}
+                  />
+                </View>
+              );
+            }}
+          />
         </ScrollView>
       )}
     </View>
