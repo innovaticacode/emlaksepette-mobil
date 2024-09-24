@@ -28,4 +28,23 @@ export const styles = StyleSheet.create({
   starArea: {
     marginVertical: 10,
   },
+  flatList: {
+    paddingVertical: 10,
+  },
+  imgArea: {
+    width: "100%",
+    height: 200,
+    paddingHorizontal: 4,
+  },
+  bannerImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 20,
+  },
+  noDataText: {
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 20,
+    color: "#555",
+  },
 });
