@@ -10,6 +10,7 @@ import { getValueFor } from '../../../components/methods/user';
 import { Stack } from "@react-native-material/core";
 import { CheckBox } from "react-native-elements";
 import Modal from "react-native-modal";
+import NoDataScreen from '../components/NoDataScreen';
 
 export default function Takeds() {
   const [search, setSearch] = useState('');
@@ -185,19 +186,12 @@ export default function Takeds() {
           <ActivityIndicator color="#333" />
         </View>
       ) : takeds.length === 0 ? (
-        <View style={{ height: '90%', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
-          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <Icon2 name="basket-plus" size={50} color={"#EA2A28"} />
-          </View>
-          <View>
-            <Text style={styles.noCommentsText}>Siparişiniz bulunmamaktadır.</Text>
-          </View>
-          <View style={{ width: '100%', alignItems: 'center' }}>
-            <TouchableOpacity style={styles.returnButton} onPress={handleGoToHomePage}>
-              <Text style={styles.returnButtonText}>İlanlara Göz At</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+         <NoDataScreen
+         message="Alınan ilan bulunmamaktadır."
+         iconName="basket-plus"
+         buttonText="İlanlara Göz At"
+         navigateTo="HomePage"
+       />
       ) : (
         <View style={styles.container} onTouchStart={() => Keyboard.dismiss()}>
           <View style={styles.Navbar}>

@@ -18,6 +18,7 @@ import Modal from "react-native-modal";
 import { Platform } from "react-native";
 import { Stack } from "@react-native-material/core";
 import { CheckBox } from "react-native-elements";
+import NoDataScreen from "../components/NoDataScreen";
 
 export default function Sell() {
   const [search, setSearch] = useState("");
@@ -171,24 +172,12 @@ export default function Sell() {
           <ActivityIndicator color="#333" />
         </View>
       ) : products.length === 0 ? (
-        <View style={{ height: "90%", alignItems: "center", justifyContent: "center", gap: 10 }}>
-          <View style={{ alignItems: "center", justifyContent: "center" }}>
-            <Icon2 name="basket-plus" size={50} color={"#EA2A28"} />
-          </View>
-          <View>
-            <Text style={style.noCommentsText}>Sattığınız İlan Bulunmamaktadır.</Text>
-          </View>
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <TouchableOpacity
-              style={style.returnButton}
-              onPress={() => {
-                nav.goBack();
-              }}
-            >
-              <Text style={style.returnButtonText}>İlanlara Göz At</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <NoDataScreen
+          message="Sattığınız ilan bulunmamaktadır."
+          iconName="basket-plus"
+          buttonText="İlanlara Göz At"
+          navigateTo="HomePage"
+        />
       ) : (
         <View style={style.container} onTouchStart={() => Keyboard.dismiss()}>
           <View style={style.Navbar}>
@@ -436,23 +425,6 @@ const style = StyleSheet.create({
     color: "#666",
     textAlign: "center",
     marginTop: 5,
-  },
-  noCommentsText: {
-    fontSize: 18,
-    color: '#333',
-    textAlign: 'center',
-    marginTop: 8,
-  },
-  returnButton: {
-    backgroundColor: '#EA2B2E',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-  },
-  returnButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
   Navbar: {
     width: '100%',

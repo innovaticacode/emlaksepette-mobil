@@ -28,6 +28,7 @@ import {
   ALERT_TYPE,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import NoDataScreen from "./components/NoDataScreen";
 
 export default function Favorites() {
   const navigation = useNavigation();
@@ -331,46 +332,12 @@ export default function Favorites() {
       ) : (
         <View style={styles.container}>
           {favorites.length == 0 ? (
-            <>
-              <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: "100%",
-                  gap: 10,
-                  marginTop: -40,
-                }}
-              >
-                <View
-                  style={[
-                    styles.card,
-                    { alignItems: "center", justifyContent: "center" },
-                  ]}
-                >
-                  <Icon name="heart-plus" size={50} color={"#EA2A28"} />
-                </View>
-                <View>
-                  <Text style={styles.noCommentsText}>
-                    Favorilerinizde ilan bulunmamaktadır.
-                  </Text>
-                  <Text></Text>
-                </View>
-                <View style={{ width: "100%", alignItems: "center" }}>
-                  <TouchableOpacity
-                    style={styles.returnButton}
-                    onPress={() => {
-                      setLoading(true);
-                      setTimeout(() => {
-                        navigation.navigate("HomePage");
-                        setLoading(false);
-                      }, 700);
-                    }}
-                  >
-                    <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </>
+              <NoDataScreen
+                message="Favorilerinizde ilan bulunmamaktadır."
+                iconName="heart-plus"
+                buttonText="Anasayfaya Dön"
+                navigateTo="HomePage"
+              />
           ) : (
             <>
               <View
@@ -556,8 +523,8 @@ export default function Favorites() {
                         if (
                           projectHousing.room_order == favorite?.housing_id &&
                           projectHousing.name ==
-                            favorite?.project?.list_item_values?.column1_name +
-                              "[]" &&
+                          favorite?.project?.list_item_values?.column1_name +
+                          "[]" &&
                           projectHousing.project_id == favorite?.project?.id
                         ) {
                           return projectHousing;
@@ -569,8 +536,8 @@ export default function Favorites() {
                         if (
                           projectHousing.room_order == favorite?.housing_id &&
                           projectHousing.name ==
-                            favorite?.project?.list_item_values?.column2_name +
-                              "[]" &&
+                          favorite?.project?.list_item_values?.column2_name +
+                          "[]" &&
                           projectHousing.project_id == favorite?.project?.id
                         ) {
                           return projectHousing;
@@ -582,8 +549,8 @@ export default function Favorites() {
                         if (
                           projectHousing.room_order == favorite?.housing_id &&
                           projectHousing.name ==
-                            favorite?.project?.list_item_values?.column3_name +
-                              "[]" &&
+                          favorite?.project?.list_item_values?.column3_name +
+                          "[]" &&
                           projectHousing.project_id == favorite?.project?.id
                         ) {
                           return projectHousing;
@@ -596,7 +563,7 @@ export default function Favorites() {
                         " " +
                         (favorite?.project?.list_item_values?.column1_additional
                           ? favorite?.project?.list_item_values
-                              ?.column1_additional
+                            ?.column1_additional
                           : "");
                     }
                     if (column2) {
@@ -605,7 +572,7 @@ export default function Favorites() {
                         " " +
                         (favorite?.project?.list_item_values?.column2_additional
                           ? favorite?.project?.list_item_values
-                              ?.column2_additional
+                            ?.column2_additional
                           : "");
                     }
                     if (column3) {
@@ -614,7 +581,7 @@ export default function Favorites() {
                         " " +
                         (favorite?.project?.list_item_values?.column3_additional
                           ? favorite?.project?.list_item_values
-                              ?.column3_additional
+                            ?.column3_additional
                           : "");
                     }
                     var no = 1000000 + favorite?.project.id;
@@ -648,7 +615,7 @@ export default function Favorites() {
                           favorite?.project_housing?.find((projectHousing) => {
                             if (
                               projectHousing.room_order ==
-                                favorite?.housing_id &&
+                              favorite?.housing_id &&
                               projectHousing.name == "price[]"
                             ) {
                               return projectHousing;
@@ -692,13 +659,13 @@ export default function Favorites() {
                             favorite?.housing?.list_items?.column1_name
                           ]
                             ? housingData[
-                                favorite?.housing?.list_items?.column1_name
-                              ] +
-                              " " +
-                              (favorite?.housing?.list_items?.column1_additional
-                                ? favorite?.housing?.list_items
-                                    ?.column1_additional
-                                : "")
+                            favorite?.housing?.list_items?.column1_name
+                            ] +
+                            " " +
+                            (favorite?.housing?.list_items?.column1_additional
+                              ? favorite?.housing?.list_items
+                                ?.column1_additional
+                              : "")
                             : ""
                         }
                         column2={
@@ -706,13 +673,13 @@ export default function Favorites() {
                             favorite?.housing?.list_items?.column2_name
                           ]
                             ? housingData[
-                                favorite?.housing?.list_items?.column2_name
-                              ] +
-                              " " +
-                              (favorite?.housing?.list_items?.column2_additional
-                                ? favorite?.housing?.list_items
-                                    ?.column2_additional
-                                : "")
+                            favorite?.housing?.list_items?.column2_name
+                            ] +
+                            " " +
+                            (favorite?.housing?.list_items?.column2_additional
+                              ? favorite?.housing?.list_items
+                                ?.column2_additional
+                              : "")
                             : ""
                         }
                         column3={
@@ -720,13 +687,13 @@ export default function Favorites() {
                             favorite?.housing?.list_items?.column3_name
                           ]
                             ? housingData[
-                                favorite?.housing?.list_items?.column3_name
-                              ] +
-                              " " +
-                              (favorite?.housing?.list_items?.column3_additional
-                                ? favorite?.housing?.list_items
-                                    ?.column3_additional
-                                : "")
+                            favorite?.housing?.list_items?.column3_name
+                            ] +
+                            " " +
+                            (favorite?.housing?.list_items?.column3_additional
+                              ? favorite?.housing?.list_items
+                                ?.column3_additional
+                              : "")
                             : ""
                         }
                         location={
@@ -863,23 +830,6 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
   },
-  noCommentsText: {
-    fontSize: 18,
-    color: "#333",
-    textAlign: "center",
-    marginTop: 8,
-  },
-  returnButton: {
-    backgroundColor: "#EA2B2E",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-  },
-  returnButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
   leftAction: {
     backgroundColor: "red",
     justifyContent: "center",
@@ -898,26 +848,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 5,
   },
-  card: {
-    backgroundColor: "#FFFFFF",
-    padding: 15,
-
-    borderRadius: 50,
-
-    borderWidth: 0.7,
-    borderColor: "#e6e6e6",
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
+  
   btnRemove: {
     backgroundColor: "#EA2A28",
     padding: 7,

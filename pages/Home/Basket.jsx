@@ -41,6 +41,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import DrawerMenu from "../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
+import NoDataScreen from "./components/NoDataScreen";
 
 export default function Basket() {
   const route = useRoute();
@@ -685,15 +686,15 @@ export default function Basket() {
                           {" "}
                           {isInstallament == 2
                             ? formatAmount(
-                                (Cart?.installmentPrice *
-                                  offerControl?.project?.deposit_rate) /
-                                  100
-                              )
+                              (Cart?.installmentPrice *
+                                offerControl?.project?.deposit_rate) /
+                              100
+                            )
                             : formatAmount(
-                                (Cart?.amount *
-                                  offerControl?.project?.deposit_rate) /
-                                  100
-                              )}{" "}
+                              (Cart?.amount *
+                                offerControl?.project?.deposit_rate) /
+                              100
+                            )}{" "}
                           ₺
                         </Text>
                       </View>
@@ -876,14 +877,14 @@ export default function Basket() {
                           formatAmount(
                             (Cart?.amount *
                               offerControl?.project?.deposit_rate) /
-                              100
+                            100
                           )}
                         {isInstallament == 2 &&
                           type?.type == "project" &&
                           addDotEveryThreeDigits(
                             (Cart?.installmentPrice *
                               offerControl?.project?.deposit_rate) /
-                              100
+                            100
                           )}
                         {type?.type == "housing" &&
                           saleType == "kiralik" &&
@@ -932,24 +933,12 @@ export default function Basket() {
               </ScrollView>
             </TouchableWithoutFeedback>
           ) : (
-            <View style={styles.noCommentsContainer}>
-              <Icon2 name="basket-plus" size={62} color="#333" />
-              <Text style={styles.noCommentsText}>
-                Sepetinizde ilan bulunmamaktadır.
-              </Text>
-              <TouchableOpacity
-                style={styles.returnButton}
-                onPress={() => {
-                  setLoading(true);
-                  setTimeout(() => {
-                    nav.navigate("HomePage");
-                    setLoading(false);
-                  }, 700);
-                }}
-              >
-                <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
-              </TouchableOpacity>
-            </View>
+            <NoDataScreen
+                message="Sepetinizde ilan bulunmamaktadır."
+                iconName="basket-plus"
+                buttonText="Anasayfaya Dön"
+                navigateTo="HomePage"
+              />
           )}
         </SafeAreaView>
       )}
@@ -965,31 +954,6 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     gap: 10,
   },
-  noCommentsContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: -62,
-  },
-  noCommentsText: {
-    fontSize: 18,
-    color: "#333",
-    textAlign: "center",
-    marginTop: 8,
-  },
-  returnButton: {
-    backgroundColor: "#EA2B2E",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginTop: 18,
-  },
-  returnButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-
   acceptCart: {
     width: "100%",
     marginTop: 10,
