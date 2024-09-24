@@ -326,7 +326,7 @@ export default function UserTypeList() {
             {transformedRoles.map((item, index) => (
               <Users
                 name={item.name}
-                id="1"
+                id={item.id}
                 key={index}
                 index={index}
                 item={item}

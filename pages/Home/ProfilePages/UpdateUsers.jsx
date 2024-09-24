@@ -152,6 +152,7 @@ export default function UpdateUsers() {
   };
   console.log(UserID);
   const [userDetail, setuserDetail] = useState([]);
+  console.log(UserID + " user id budur");
   const getUserDetail = async () => {
     try {
       if (user?.access_token) {

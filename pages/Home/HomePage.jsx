@@ -27,15 +27,21 @@ const HomePage = (props) => {
   const navigation = useNavigation();
   // Fetch featured sliders
   const fetchFeaturedSliders = async () => {
+    if (loadingSliders) return; // Eğer yükleniyorsa, yeni istek atma
+
+    setLoadingSliders(true); // Yükleniyor durumunu başlat
     try {
       const response = await axios.get(`${apiUrl}/api/featured-sliders`);
       setFeaturedSliders(response.data);
-      setLoadingSliders(false);
     } catch (error) {
       console.log("Error fetching featured sliders:", error);
-      setLoadingSliders(false);
+    } finally {
+      setLoadingSliders(false); // Yükleniyor durumunu kapat
     }
   };
+  useEffect(() => {
+    fetchFeaturedSliders(); // Yalnızca bileşen yüklendiğinde
+  }, []);
 
   // State for featured projects
   const [loadingProjects, setLoadingProjects] = useState(false);
@@ -65,7 +71,6 @@ const HomePage = (props) => {
   const pagerViewRef = useRef(null);
 
   useEffect(() => {
-    fetchFeaturedSliders();
     const interval = setInterval(() => {
       pagerViewRef.current?.setPage(
         currentPage === featuredSliders.length - 1 ? 0 : currentPage + 1
@@ -74,8 +79,9 @@ const HomePage = (props) => {
         currentPage === featuredSliders.length - 1 ? 0 : currentPage + 1
       );
     }, 4000);
-    return () => clearInterval(interval);
-  }, [currentPage, featuredSliders.length]);
+
+    return () => clearInterval(interval); // Temizlik
+  }, [currentPage, featuredSliders.length]); // Burada featuredSliders.length kullanımı uygun
 
   // State for user
   const [user, setUser] = useState({});
@@ -179,9 +185,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
-  scrollViewContent: {
-    
-  },
+  scrollViewContent: {},
   bannerImage: {
     width: "100%",
     height: 120,

@@ -113,17 +113,22 @@ export default function CreateUser() {
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
+  console.log(user?.access_token);
   const [loadingUpdate, setloadingUpdate] = useState(false);
   const createUser = () => {
     if (!validateForm()) return;
+
     setloadingUpdate(true);
+
     let formdata = new FormData();
+
     formdata.append("name", nameAndSurname);
     formdata.append("title", title);
     formdata.append("email", email);
     formdata.append("mobile_phone", phoneNumber);
     formdata.append("password", password);
     formdata.append("type", UserType);
+    console.log("aykutasdasd");
 
     if (user?.access_token) {
       axios
@@ -133,9 +138,11 @@ export default function CreateUser() {
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
+              "Content-Type": "multipart/form-data",
             },
           }
         )
+
         .then((response) => {
           setmessage(response.data.message);
 
