@@ -403,7 +403,7 @@ export default function Posts({
         }}
         title={"Giriş Yap"}
         messageStyle={{ textAlign: "center" }}
-        message={`Favorilerinize Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
+        message={`Favorilerinize konut ekleyebilmek için giriş yapmanız gerekmektedir.`}
         closeOnTouchOutside={true}
         closeOnHardwareBackPress={false}
         showCancelButton={true}
@@ -433,7 +433,7 @@ export default function Posts({
         }}
         title={"Giriş Yap"}
         messageStyle={{ textAlign: "center" }}
-        message={`Sepetine Konut Ekleyebilmek için Giriş Yapmanız Gerekir`}
+        message={`Sepetine konut ekleyebilmek için giriş yapmanız gerekmektedir.`}
         closeOnTouchOutside={true}
         closeOnHardwareBackPress={false}
         showCancelButton={true}
