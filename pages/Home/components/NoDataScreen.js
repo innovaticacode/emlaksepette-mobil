@@ -6,52 +6,54 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons"; // İkon k�
 import { useNavigation } from "@react-navigation/native"; // Navigasyonu kullanabilmek için
 
 const NoDataScreen = ({ message, iconName, buttonText, navigateTo }) => {
-  const navigation = useNavigation();
+    const navigation = useNavigation();
 
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {/* İkon */}
-      <Icon
-        name={iconName} // İkon ismi özelleştirilebilir
-        size={62}
-        color="#EA2A28"
-        style={{ marginBottom: 20 }}
-      />
+    return (
+        <View
+            style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: -100
+            }}
+        >
 
-      {/* Bilgilendirme yazısı */}
-      <Text
-        style={{
-          fontSize: 18,
-          color: "#333",
-          textAlign: "center",
-          marginBottom: 20,
-        }}
-      >
-        {message} {/* Mesaj özelleştirilebilir */}
-      </Text>
+            {/* İkon */}
+            <Icon
+                name={iconName} // İkon ismi özelleştirilebilir
+                size={62}
+                color="#EA2A28"
+                style={{ marginBottom: 20 }}
+            />
 
-      {/* Anasayfaya Dön Butonu */}
-      <TouchableOpacity
-        style={{
-          backgroundColor: "#EA2A28",
-          paddingVertical: 12,
-          paddingHorizontal: 20,
-          borderRadius: 8,
-        }}
-        onPress={() => navigation.navigate(navigateTo)} // Yönlendirme özelleştirilebilir
-      >
-        <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
-          {buttonText} {/* Buton yazısı özelleştirilebilir */}
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
+            {/* Bilgilendirme yazısı */}
+            <Text
+                style={{
+                    fontSize: 18,
+                    color: "#333",
+                    textAlign: "center",
+                    marginBottom: 20,
+                }}
+            >
+                {message} {/* Mesaj özelleştirilebilir */}
+            </Text>
+
+            {/* Anasayfaya Dön Butonu */}
+            <TouchableOpacity
+                style={{
+                    backgroundColor: "#EA2A28",
+                    paddingVertical: 12,
+                    paddingHorizontal: 20,
+                    borderRadius: 8,
+                }}
+                onPress={() => navigation.navigate(navigateTo)} // Yönlendirme özelleştirilebilir
+            >
+                <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
+                    {buttonText} {/* Buton yazısı özelleştirilebilir */}
+                </Text>
+            </TouchableOpacity>
+        </View>
+    );
 };
 
 export default NoDataScreen;

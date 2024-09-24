@@ -26,6 +26,7 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 import { Button } from "react-native-paper";
+import NoDataScreen from "./components/NoDataScreen";
 
 export default function MyComments() {
   const [user, setuser] = useState({});
@@ -97,9 +98,8 @@ export default function MyComments() {
     const imageSource =
       type === "project"
         ? `${API_URL}${info?.image.replace("public/", "storage/")}`
-        : `${API_URL}housing_images/${
-            JSON.parse(info.housing_type_data)?.image ?? ""
-          }`;
+        : `${API_URL}housing_images/${JSON.parse(info.housing_type_data)?.image ?? ""
+        }`;
 
     const handleNavigate = () => {
       if (type === "project") {
@@ -179,8 +179,8 @@ export default function MyComments() {
               {comment?.status === 0
                 ? "Onay Bekliyor"
                 : comment?.status === 1
-                ? "Onaylandı"
-                : "Reddedildi"}
+                  ? "Onaylandı"
+                  : "Reddedildi"}
             </Text>
           </View>
         </View>
@@ -274,142 +274,105 @@ export default function MyComments() {
   return (
     <AlertNotificationRoot>
       <ScrollView
-        contentContainerStyle={{ gap: 10, padding: 10 }}
-        style={styles.scrollView}
+        contentContainerStyle={{ flex: 1, flexGrow: 1 }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {loading ? (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <ActivityIndicator size="large" color="#0000ff" />
-          </View>
-        ) : comments?.length > 0 ? (
-          comments.map((item, index) => (
-            <MycommentItem
-              key={index}
-              store={item.store}
-              item={item}
-              EditComment={EditComment}
-              goToEditComment={() => goToEditComment(item)} // info'yu prop olarak gönderiyoruz
-            />
-          ))
-        ) : (
-          <>
+        <View style={{ gap: 10, padding: 10, flex: 1 }}>
+          {loading ? (
             <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100%",
-                gap: 10,
-                marginTop: 80,
-                flex: 1,
-              }}
+              style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
             >
-              <View
-                style={[
-                  styles.card2,
-                  { alignItems: "center", justifyContent: "center" },
-                ]}
-              >
-                <Icon8 name="comment-slash" size={50} color={"#EA2A28"} />
-              </View>
-              <View>
-                <Text style={styles.noCommentsText}>
-                  Yorumunuz bulunmamaktadır.
-                </Text>
-                <Text></Text>
-              </View>
-              <View style={{ width: "100%", alignItems: "center" }}>
-                <TouchableOpacity
-                  style={styles.returnButton}
-                  onPress={() => {
-                    setLoading(true);
-                    setTimeout(() => {
-                      navigation.navigate("HomePage");
-                      setLoading(false);
-                    }, 700);
-                  }}
-                >
-                  <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
-                </TouchableOpacity>
-              </View>
+              <ActivityIndicator size="large" color="#0000ff" />
             </View>
-          </>
-        )}
+          ) : comments?.length > 0 ? (
+            comments.map((item, index) => (
+              <MycommentItem
+                key={index}
+                store={item.store}
+                item={item}
+                EditComment={EditComment}
+                goToEditComment={() => goToEditComment(item)} // info'yu prop olarak gönderiyoruz
+              />
+            ))
+          ) : (
+            <NoDataScreen
+              message="Yorumunuz bulunmamaktadır."
+              iconName="comment-off"
+              buttonText="Anasayfaya Dön"
+              navigateTo="HomePage"
+            />
+          )}
 
-        <Modal
-          isVisible={choose}
-          style={styles.modal}
-          animationIn={"fadeInDown"}
-          animationOut={"fadeOutDown"}
-          onBackdropPress={() => setchoose(false)}
-          swipeDirection={["down"]}
-          onSwipeComplete={() => setchoose(false)}
-        >
-          <View style={styles.modalContent}>
-            <View style={styles.modalOptions}>
-              {(selectedCommentStatus === 1 || selectedCommentStatus === 2) && (
+          <Modal
+            isVisible={choose}
+            style={styles.modal}
+            animationIn={"fadeInDown"}
+            animationOut={"fadeOutDown"}
+            onBackdropPress={() => setchoose(false)}
+            swipeDirection={["down"]}
+            onSwipeComplete={() => setchoose(false)}
+          >
+            <View style={styles.modalContent}>
+              <View style={styles.modalOptions}>
+                {(selectedCommentStatus === 1 || selectedCommentStatus === 2) && (
+                  <TouchableOpacity
+                    style={styles.modalOption}
+                    onPress={goToEditComment}
+                  >
+                    <Icon3 name="edit-note" size={29} color={"#333"} />
+                    <Text style={styles.modalOptionText}>Yorumu Düzenle</Text>
+                  </TouchableOpacity>
+                )}
+
                 <TouchableOpacity
                   style={styles.modalOption}
-                  onPress={goToEditComment}
+                  onPress={confirmDeleteComment}
                 >
-                  <Icon3 name="edit-note" size={29} color={"#333"} />
-                  <Text style={styles.modalOptionText}>Yorumu Düzenle</Text>
+                  <Icon3 name="delete" size={21} color={"#EA2A28"} />
+                  <Text style={styles.modalOptionText}>Yorumu Sil</Text>
                 </TouchableOpacity>
-              )}
-
-              <TouchableOpacity
-                style={styles.modalOption}
-                onPress={confirmDeleteComment}
-              >
-                <Icon3 name="delete" size={21} color={"#EA2A28"} />
-                <Text style={styles.modalOptionText}>Yorumu Sil</Text>
-              </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </Modal>
-        <Modal
-          isVisible={modalDelete}
-          style={styles.confirmationModal2}
-          animationIn={"fadeInDown"}
-          animationOut={"fadeOutDown"}
-          onBackdropPress={() => setModalDelete(false)}
-          swipeDirection={["down"]}
-          onSwipeComplete={() => setModalDelete(false)}
-        >
-          <View style={styles.modalContainer2}>
-            <Text style={styles.modalHeader2}>
-              Yorumu silmek istediğinizden emin misiniz?
-            </Text>
-            <View style={styles.modalButtonContainer2}>
-              <TouchableOpacity
-                style={styles.confirmButtonStyle2}
-                onPress={DeleteComment}
-              >
-                <Text style={styles.confirmButtonTextStyle2}>Evet</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.cancelButtonStyle2}
-                onPress={() => setModalDelete(false)}
-              >
-                <Text style={styles.cancelButtonTextStyle2}>Hayır</Text>
-              </TouchableOpacity>
+          </Modal>
+          <Modal
+            isVisible={modalDelete}
+            style={styles.confirmationModal2}
+            animationIn={"fadeInDown"}
+            animationOut={"fadeOutDown"}
+            onBackdropPress={() => setModalDelete(false)}
+            swipeDirection={["down"]}
+            onSwipeComplete={() => setModalDelete(false)}
+          >
+            <View style={styles.modalContainer2}>
+              <Text style={styles.modalHeader2}>
+                Yorumu silmek istediğinizden emin misiniz?
+              </Text>
+              <View style={styles.modalButtonContainer2}>
+                <TouchableOpacity
+                  style={styles.confirmButtonStyle2}
+                  onPress={DeleteComment}
+                >
+                  <Text style={styles.confirmButtonTextStyle2}>Evet</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.cancelButtonStyle2}
+                  onPress={() => setModalDelete(false)}
+                >
+                  <Text style={styles.cancelButtonTextStyle2}>Hayır</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </Modal>
+          </Modal>
+        </View>
       </ScrollView>
     </AlertNotificationRoot>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-    backgroundColor: "#F5F5F5",
-  },
+
   card: {
     backgroundColor: "#FFFFFF",
     borderWidth: 0.7,
