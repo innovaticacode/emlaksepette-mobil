@@ -346,7 +346,7 @@ export default function UserTypeList() {
               textAlign: "center",
               margin: 5,
             }}
-            title={`${UsersId.length} Kullanıcı tipini silmek istediğinize eminm misiniz?`}
+            title={`${UsersId.length} Kullanıcı tipini silmek istediğinize emin misiniz?`}
             messageStyle={{ textAlign: "center" }}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}

@@ -2,18 +2,28 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Entypo";
 import { Platform } from "react-native";
-export default function SubUser({ setModalVisible, item, GetId, isChoosed, getUserID }) {
-  const [isHighLighted, setisHighLighted] = useState(false)
+export default function SubUser({
+  setModalVisible,
+  item,
+  GetId,
+  isChoosed,
+  getUserID,
+}) {
+  const [isHighLighted, setisHighLighted] = useState(false);
   useEffect(() => {
-    setisHighLighted(false)
-  }, [isChoosed])
+    setisHighLighted(false);
+  }, [isChoosed]);
 
   return (
-    <TouchableOpacity style={[styles.card, { borderWidth: isHighLighted ? 1 : 0, borderColor: 'red' }]}
+    <TouchableOpacity
+      style={[
+        styles.card,
+        { borderWidth: isHighLighted ? 1 : 0, borderColor: "red" },
+      ]}
       disabled={!isChoosed}
       onPress={() => {
-        getUserID(item.id)
-        setisHighLighted(!isHighLighted)
+        getUserID(item.id);
+        setisHighLighted(!isHighLighted);
       }}
     >
       <View style={{ flexDirection: "column" }}>

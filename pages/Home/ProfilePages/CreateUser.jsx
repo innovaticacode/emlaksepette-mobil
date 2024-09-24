@@ -29,6 +29,7 @@ import {
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { ActivityIndicator } from "react-native-paper";
+import CreateUserType from "./CreateUserType";
 export default function CreateUser() {
   const route = useRoute();
   const navigation = useNavigation();
@@ -323,17 +324,29 @@ export default function CreateUser() {
               </View>
               <View>
                 <Text style={style.Label}>Kullanıcı Tipi</Text>
-                <RNPickerSelect
-                  doneText="Tamam"
-                  value={UserType}
-                  placeholder={{
-                    label: "Seçiniz...",
-                    value: null,
-                  }}
-                  style={pickerSelectStyles}
-                  onValueChange={(value) => setUserType(value)}
-                  items={roleItems}
-                />
+                {roleItems.length == 0 ? (
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("CreateUserType")}
+                  >
+                    <Text
+                      style={{ color: "red", marginBottom: 10, marginTop: 10 }}
+                    >
+                      Kullanıcı tipi yok, oluşturmak için tıklayınız.
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <RNPickerSelect
+                    doneText="Tamam"
+                    value={UserType}
+                    placeholder={{
+                      label: "Seçiniz...",
+                      value: null,
+                    }}
+                    style={pickerSelectStyles}
+                    onValueChange={(value) => setUserType(value)}
+                    items={roleItems}
+                  />
+                )}
                 {validationErrors.UserType && (
                   <Text style={style.errorText}>
                     {validationErrors.UserType}

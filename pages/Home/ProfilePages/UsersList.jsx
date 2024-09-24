@@ -459,24 +459,6 @@ export default function UsersList() {
                 <TouchableOpacity
                   onPress={() => {
                     setModalVisible(false);
-                    setTimeout(() => {
-                      setopenDeleteModal(true);
-                    }, 600);
-                  }}
-                  style={{
-                    padding: 10,
-                    backgroundColor: "#EA2A28",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 5,
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Kullanıcıyı Sil</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    setModalVisible(false);
                     navigation.navigate("UpdateUsers", {
                       UserID: selectedUser,
                       fetcData: fetchData,
@@ -492,6 +474,24 @@ export default function UsersList() {
                   }}
                 >
                   <Text style={{ color: "white" }}>Kullanıcıyı Düzenle</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(false);
+                    setTimeout(() => {
+                      setopenDeleteModal(true);
+                    }, 600);
+                  }}
+                  style={{
+                    padding: 10,
+                    backgroundColor: "#EA2A28",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 5,
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Kullanıcıyı Sil</Text>
                 </TouchableOpacity>
               </View>
             </View>
