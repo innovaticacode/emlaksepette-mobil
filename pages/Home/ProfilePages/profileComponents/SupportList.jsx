@@ -159,7 +159,7 @@ export default function SupportList() {
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
-          <View style={{}}>
+          <View style={{ flex: 1 }}>
             {supportData.length > 0 ? (
               supportData.map((support, index) => (
                 <View key={index} style={{ marginTop: 20 }}>

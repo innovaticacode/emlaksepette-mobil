@@ -67,7 +67,7 @@ export default function SeeNeigbourhood() {
         </View>
       ) : (
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-          <View style={styles.noDataOuterContainer}>
+          <View style={{ flex: 1 }}>
             {suggests.length > 0 ? (
               suggests.map((suggest) => (
                 <NeigbourhoodCard
@@ -78,12 +78,14 @@ export default function SeeNeigbourhood() {
                 />
               ))
             ) : (
-              <NoDataScreen
-              message="Komşu bilgisi bulunamadı."
-              iconName="run-fast"
-              buttonText="Anasayfaya Dön"
-              navigateTo="HomePage"
-            />
+              <View style={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <NoDataScreen
+                  message="Komşu bilgisi bulunamadı."
+                  iconName="run-fast"
+                  buttonText="Anasayfaya Dön"
+                  navigateTo="HomePage"
+                />
+              </View>
             )}
           </View>
         </ScrollView>
@@ -105,12 +107,10 @@ const styles = StyleSheet.create({
   },
   scrollViewContainer: {
     flexGrow: 1,
-    // İçeriği üstte sıralamak için justifyContent'u değiştirdik
-    justifyContent: "flex-start", 
+    justifyContent: "center",
   },
   neighbourhoodContainer: {
     flexGrow: 1,
-    // Komşu kartlarının üstten başlaması için stil
-    alignItems: "flex-start", 
+    alignItems: "flex-start",
   },
 });
