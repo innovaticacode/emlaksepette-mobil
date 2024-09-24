@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 12,
+    backgroundColor: "#FFF",
   },
   scrollView: {
     flexGrow: 1,
@@ -23,5 +24,8 @@ export const styles = StyleSheet.create({
   },
   list: {
     paddingHorizontal: 6,
+  },
+  starArea: {
+    marginVertical: 10,
   },
 });

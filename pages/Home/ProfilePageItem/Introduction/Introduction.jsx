@@ -10,7 +10,7 @@ import { apiRequestGet } from "../../../../components/methods/apiRequest";
 import { removeHtmlTags } from "../../../../utils";
 import { styles } from "./Introduction.styles";
 import { Dialog } from "react-native-alert-notification";
-import { CommentCard } from "../../../../components";
+import { CommentCard, TotalStarCard } from "../../../../components";
 
 const Introduction = (props) => {
   const { id } = props;
@@ -59,6 +59,9 @@ const Introduction = (props) => {
               )}
             </Text>
           </>
+          <View style={styles.starArea}>
+            <TotalStarCard />
+          </View>
           <FlatList
             data={owners}
             keyExtractor={(item) => item.id.toString()}

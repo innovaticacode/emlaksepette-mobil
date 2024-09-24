@@ -1,2 +1,3 @@
 import CommentCard from "./Card/CommentCard/CommentCard";
-export { CommentCard };
+import TotalStarCard from "./Card/TotalStarCard/TotalStarCard";
+export { CommentCard, TotalStarCard };
