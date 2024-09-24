@@ -36,6 +36,7 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import NoDataScreen from "./components/NoDataScreen";
 export default function CollectionsPage() {
   const [showAlert, setshowAlert] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -473,44 +474,16 @@ export default function CollectionsPage() {
               <ActivityIndicator color="#333" size={"large"} />
             </View>
           ) : collections.length == 0 ? (
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                height: "90%",
-                gap: 10,
-              }}
-            >
-              <View
-                style={[
-                  styles.card,
-                  { alignItems: "center", justifyContent: "center" },
-                ]}
-              >
-                <Icon3 name="bookmark-add" size={50} color={"#EA2A28"} />
-              </View>
-              <View>
-                <Text style={styles.noCommentsText}>
-                  {user.type == 2 && user.corporate_type == "Emlak Ofisi"
-                    ? "Portföyünüzde İlan bulunmamaktadır."
-                    : "Koleksiyonunuzda ilan bulunmamaktadır."}
-                </Text>
-              </View>
-              <View style={{ width: "100%", alignItems: "center" }}>
-                <TouchableOpacity
-                  style={styles.returnButton}
-                  onPress={() => {
-                    setloading(true);
-                    setTimeout(() => {
-                      nav.navigate("HomePage");
-                      setloading(false);
-                    }, 700);
-                  }}
-                >
-                  <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+             <NoDataScreen
+             message={
+              user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                ? "Portföyünüzde ilan bulunmamaktadır."
+                : "Koleksiyonunuzda ilan bulunmamaktadır."
+            }
+             iconName="bookmark-add"
+             buttonText="Anasayfaya Dön"
+             navigateTo="HomePage"
+           />
           ) : (
             <View style={{ height: "100%", paddingTop: 5 }}>
               <ScrollView
@@ -1183,24 +1156,6 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "white",
   },
-  noCommentsText: {
-    fontSize: 18,
-    color: "#333",
-    textAlign: "center",
-    marginTop: 8,
-  },
-  returnButton: {
-    backgroundColor: "#EA2B2E",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    marginTop: 8,
-  },
-  returnButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
   Input: {
     backgroundColor: "#ebebebab",
     marginTop: 0,
@@ -1317,26 +1272,7 @@ const styles = StyleSheet.create({
     padding: 7,
     borderRadius: 5,
   },
-  card: {
-    backgroundColor: "#FFFFFF",
-    padding: 15,
-
-    borderRadius: 50,
-
-    borderWidth: 0.7,
-    borderColor: "#e6e6e6",
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
+  
   modalView4: {
     width: "100%",
 

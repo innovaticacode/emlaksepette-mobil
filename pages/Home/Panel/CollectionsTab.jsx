@@ -14,22 +14,18 @@ import {
 import { ActivityIndicator } from "react-native-paper";
 import Modal from "react-native-modal";
 import { useState, useRef, useEffect } from "react";
-
 import { Platform } from "react-native";
 import ShareIcon from "react-native-vector-icons/Entypo";
 import DeleteIcon from "react-native-vector-icons/MaterialIcons";
 import PencilIcon from "react-native-vector-icons/FontAwesome5";
 import Icon from "react-native-vector-icons/FontAwesome";
-import Heart from "react-native-vector-icons/AntDesign";
 import IconMessenger from "react-native-vector-icons/Fontisto";
 import IconSms from "react-native-vector-icons/Feather";
 import * as Clipboard from "expo-clipboard";
 import Icon2 from "react-native-vector-icons/Feather";
-
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import { SearchBar } from "@rneui/themed";
 import axios from "axios";
-
 import AwesomeAlert from "react-native-awesome-alerts";
 import {
   ALERT_TYPE,
@@ -40,6 +36,8 @@ import { useNavigation } from "@react-navigation/native";
 import CollectionsItem from "../ProfilePages/profileComponents/CollectionsItem";
 import RegisterRealtorClub from "../ProfilePages/RegisterRealtorClub";
 import { getValueFor } from "../../../components/methods/user";
+import NoDataScreen from "../components/NoDataScreen";
+
 export default function CollectionsTab() {
   const navigation = useNavigation();
   const [showAlert, setshowAlert] = useState(false);
