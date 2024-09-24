@@ -115,7 +115,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
       style={{ flex: 1, paddingLeft: 15, paddingRight: 15 }}
       contentContainerStyle={{ flexGrow: 1 }}
     >
-      {banners.length > 0 && (
+      {/* {banners.length > 0 && (
         <View style={{ height: 245 }}>
           <Swiper autoplay>
             {banners.map((banner, index) => (
@@ -137,31 +137,10 @@ export default function ShopVitrin({ data, housingdata, settab }) {
             ))}
           </Swiper>
         </View>
-      )}
-
-      {/* {owners.length > 0 && (
-        <View style={[{ top: 5 }, styles.shadow]}>
-          <ScrollView
-            horizontal
-            contentContainerStyle={{ padding: 10, gap: 10 }}
-            showsHorizontalScrollIndicator={false}
-          >
-            {owners.map((itemComment, index) => (
-              <CommentItem
-                username=""
-                key={index}
-                comment={itemComment.comment}
-                date={itemComment.created_at}
-                rate={itemComment.rate}
-                image={itemComment?.images}
-              />
-            ))}
-          </ScrollView>
-        </View>
       )} */}
-
+      {/*
       <View style={{ marginTop: 10 }}>
-        {objectKeys.length > 0 &&
+         {objectKeys.length > 0 &&
           objectKeys.slice(0, 1).map((key, index) => (
             <View key={index}>
               <View
@@ -238,10 +217,11 @@ export default function ShopVitrin({ data, housingdata, settab }) {
                 }
               />
             </View>
-          ))}
+          ))} 
       </View>
+      */}
 
-      {data?.data?.corporate_type !== "Emlak Ofisi" &&
+      {/* {data?.data?.corporate_type !== "Emlak Ofisi" &&
         featuredProjects.length > 0 && (
           <View>
             <View
@@ -279,9 +259,9 @@ export default function ShopVitrin({ data, housingdata, settab }) {
               />
             ))}
           </View>
-        )}
+        )} */}
 
-      <Modal
+      {/* <Modal
         isVisible={ModalForAddToCart}
         onBackdropPress={() => setModalForAddToCart(false)}
         animationType="fade" // veya "fade", "none" gibi
@@ -333,7 +313,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
             </View>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </ScrollView>
   );
 }

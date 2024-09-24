@@ -23,7 +23,6 @@ import Star from "react-native-vector-icons/MaterialIcons";
 import Team from "./ProfilePageItem/Team";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { apiRequestGet } from "../../components/methods/apiRequest";
-import ShopVitrin from "./ProfilePageItem/ShopVitrin";
 import Modal from "react-native-modal";
 import { CheckBox } from "@rneui/themed";
 import { Platform } from "react-native";
@@ -33,7 +32,7 @@ import CollectionsOfBrand from "./ProfilePageItem/CollectionsOfBrand";
 import CommentsOfBrands from "./ProfilePageItem/CommentsOfBrands";
 import SellPlacesForBrands from "./ProfilePageItem/SellPlaceForBrand";
 import { ActivityIndicator } from "react-native-paper";
-import EstateBottomSheetFilter from "../../components/EstateBottomSheetFilter";
+import Introduction from "./ProfilePageItem/Introduction/Introduction";
 
 export default function Profile() {
   const route = useRoute();
@@ -253,7 +252,7 @@ export default function Profile() {
   const [tabWidth, setTabWidth] = useState(0);
   const [items, setItems] = useState([
     {
-      text: "Ana Sayfa",
+      text: "Tanıtım",
       isShow: "All",
     },
     {
@@ -307,6 +306,10 @@ export default function Profile() {
     const { width: measuredWidth } = event.nativeEvent.layout;
     setTabWidth(measuredWidth);
   };
+
+  useEffect(() => {
+    // console.debug("STORE DATA ================>>>>>>>>> ", storeData);
+  }, []);
   return (
     <>
       {loadingShopping ? (
@@ -466,14 +469,7 @@ export default function Profile() {
               </ScrollView>
             </View>
             <View style={{ flex: 1, paddingBottom: height * 0.1 }}>
-              {tab === 0 && (
-                <ShopVitrin
-                  housingdata={Housings}
-                  data={storeData}
-                  loading={loading}
-                  settab={settab}
-                />
-              )}
+              {tab === 0 && <Introduction id={id} />}
               {tab === 2 && <ProjectAdverts data={storeData} />}
               {tab === 3 && <RealtorAdverts housingdata={housingRecords} />}
               {tab === 5 && <Team teamm={teamm} />}
