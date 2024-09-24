@@ -2196,7 +2196,7 @@ export default function PostDetail() {
               }}
               title={"Giriş Yap"}
               messageStyle={{ textAlign: "center" }}
-              message="Favorilerinize İlan Ekleyebilmek İçin Giriş Yapmanız Gerekir"
+              message="Favorilerinize ilan ekleyebilmek için giriş yapmanız gerekmektedir."
               closeOnTouchOutside={true}
               closeOnHardwareBackPress={false}
               showCancelButton={true}

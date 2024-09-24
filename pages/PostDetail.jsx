@@ -2470,7 +2470,7 @@ export default function PostDetail() {
                 textAlign: "center",
                 margin: 5,
               }}
-              title={"Sepetinize İlan Ekleyebilmek İçin Giriş Yapmanız Gerekir"}
+              title={"Sepetinize ilan ekleyebilmek için giriş yapmanız gerekiyor."}
               messageStyle={{ textAlign: "center" }}
               closeOnTouchOutside={true}
               closeOnHardwareBackPress={false}
@@ -2503,7 +2503,7 @@ export default function PostDetail() {
                 margin: 5,
               }}
               title={
-                "Favorilerinize İlan Ekleyebilmek İçin Giriş Yapmanız Gerekir"
+                "Favorilerinize ilan ekleyebilmek için giriş yapmanız gerekmektedir."
               }
               messageStyle={{ textAlign: "center" }}
               closeOnTouchOutside={true}

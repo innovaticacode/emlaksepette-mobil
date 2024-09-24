@@ -300,60 +300,12 @@ export default function Notifications() {
               )}
             </View>
           ) : (
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100%",
-                gap: 10,
-                backgroundColor: "white",
-              }}
-            >
-              <View
-                style={[
-                  styles.card,
-                  { alignItems: "center", justifyContent: "center" },
-                ]}
-              >
-                <Icon name="bell" size={50} color={"#EA2A28"} />
-              </View>
-              <View>
-                <Text
-                  style={{
-                    color: "grey",
-                    fontSize: 16,
-                    fontWeight: "600",
-                    textAlign: "center",
-                  }}
-                >
-                  Bildirimlerinizi görmek için giriş yapmanız gerekmektedir
-                </Text>
-                <Text></Text>
-              </View>
-              <View style={{ width: "100%", alignItems: "center" }}>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#EA2A28",
-                    width: "90%",
-                    padding: 8,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    navigation.navigate("Login");
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#ffffff",
-                      fontWeight: "600",
-                      textAlign: "center",
-                    }}
-                  >
-                    Giriş Yap
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+            <NoDataScreen 
+            message="Bildirimlerinizi görmek için giriş yapmanız gerekmektedir." 
+            iconName="bell" 
+            buttonText="Giriş Yap"
+            navigateTo="Login"
+          />
           )}
         </>
       )}
