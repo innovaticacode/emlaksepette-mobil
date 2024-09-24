@@ -118,6 +118,7 @@ import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
 import ApplyForBeCompany from "./pages/Home/ProfilePages/ApplyForBeCompany";
 import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
 import AllFeaturedRealEstate from "./pages/Home/AllFeaturedRealEstate";
+import SalePageMain from "./pages/Home/PointOfSale/SalePageMain";
 import SalePage from "./pages/Home/PointOfSale/SalePage";
 
 
@@ -1182,9 +1183,9 @@ export default function App({ route }) {
           },
         })}
         />
-            <Stack.Screen
-        name="SalePage"
-        component={SalePage}
+        <Stack.Screen
+        name="SalePageMain"
+        component={SalePageMain}
         options={({ route }) => ({
           title:"Satış Noktası Ol",
           headerBackTitleVisible: false,
@@ -1193,6 +1194,16 @@ export default function App({ route }) {
           },
         })}
         />
+        <Stack.Screen name="SalePage" component={SalePage} 
+            options={({ route }) => ({
+              title:"Satış Noktası Başvur",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+            })}
+        />
+
         </Stack.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>

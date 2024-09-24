@@ -61,7 +61,7 @@ export default function SliderBar() {
       text: "Satış Noktası Ol",
       image: "https://private.emlaksepette.com/images/sat-kirala.png",
       color: "#0000FF",
-      url: "SalePage",
+      url: "SalePageMain",
       isShow: "All",
     },
   ];
