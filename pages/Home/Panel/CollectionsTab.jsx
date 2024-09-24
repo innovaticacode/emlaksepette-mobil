@@ -152,8 +152,8 @@ export default function CollectionsTab() {
     // Aksi takdirde, collections array'ini olduğu gibi bırak
     const filteredData = text
       ? collections.filter((item) =>
-          item.name.toLowerCase().includes(text.toLowerCase())
-        )
+        item.name.toLowerCase().includes(text.toLowerCase())
+      )
       : collections;
     setcollectionsRecods(filteredData);
 
@@ -421,52 +421,17 @@ export default function CollectionsTab() {
       ) : (
         <>
           {collections.length == 0 ? (
-            <>
-              <View
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: "100%",
-                  gap: 10,
-                  backgroundColor: "white",
-                  marginTop: -82,
-                }}
-              >
-                <View
-                  style={[
-                    styles.card,
-                    { alignItems: "center", justifyContent: "center" },
-                  ]}
-                >
-                  <Icon3 name="bookmark-add" size={50} color={"#EA2A28"} />
-                </View>
-                <View>
-                  <Text style={styles.noCommentsText}>
-                    Koleksiyonunuzda ilan bulunmamaktadır.
-                  </Text>
-                  <Text></Text>
-                </View>
-                <View style={{ width: "100%", alignItems: "center" }}>
-                  <TouchableOpacity
-                    style={styles.returnButton}
-                    onPress={() => {
-                      setloading(true);
-                      setTimeout(() => {
-                        navigation.navigate("HomePage");
-                        setloading(false);
-                      }, 700);
-                    }}
-                  >
-                    <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </>
+              <NoDataScreen
+                message="Koleksiyonunuzda ilan bulunmamaktadır."
+                iconName="bookmark-add"
+                buttonText="Anasayfaya Dön"
+                navigateTo="HomePage"
+              />
           ) : (
             <AlertNotificationRoot>
               {namFromGetUser.has_club == 0 ||
-              namFromGetUser.has_club == 2 ||
-              namFromGetUser.has_club == 3 ? (
+                namFromGetUser.has_club == 2 ||
+                namFromGetUser.has_club == 3 ? (
                 <RegisterRealtorClub />
               ) : (
                 <View style={styles.container}>
@@ -640,7 +605,7 @@ export default function CollectionsTab() {
                               }}
                               placeholder={
                                 user.type == 2 &&
-                                user.corporate_type == "Emlak Ofisi"
+                                  user.corporate_type == "Emlak Ofisi"
                                   ? "Portföy Ara"
                                   : "Koleksiyon Ara..."
                               }
@@ -747,7 +712,7 @@ export default function CollectionsTab() {
                                       title: "Lütfen seçiniz",
                                       textBody:
                                         user.type == 2 &&
-                                        user.corporate_type == "Emlak Ofisi"
+                                          user.corporate_type == "Emlak Ofisi"
                                           ? "Silmek istediğiniz Portföyleri seçiniz"
                                           : `Silmek istediğiniz koleksiyonları seçiniz`,
                                       button: "Tamam",
@@ -1018,7 +983,7 @@ export default function CollectionsTab() {
                               }}
                             >
                               {user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
+                                user.corporate_type == "Emlak Ofisi"
                                 ? "Portföy Adını Düzenle"
                                 : "Koleksiyon Adını Düzenle"}
                             </Text>
@@ -1049,7 +1014,7 @@ export default function CollectionsTab() {
                               }}
                             >
                               {user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
+                                user.corporate_type == "Emlak Ofisi"
                                 ? "Portföyü Sil"
                                 : "Koleksiyonu Sil"}
                             </Text>
@@ -1078,7 +1043,7 @@ export default function CollectionsTab() {
                             }}
                           >
                             {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                               ? "Portföy Adını Değiştir"
                               : "Koleksiyon Adını Değiştir"}
                           </Text>
@@ -1116,7 +1081,7 @@ export default function CollectionsTab() {
                             <Text>
                               {" "}
                               {user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
+                                user.corporate_type == "Emlak Ofisi"
                                 ? "Oluşturduğun Portföyü paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir."
                                 : "Oluşturduğun Koleksiyonu paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir."}
                             </Text>
@@ -1296,57 +1261,6 @@ export default function CollectionsTab() {
                         </View>
                       </View>
                     </Modal>
-                    {/* <Modal
-           
-            animationIn={'fadeIn'}
-            animationOut={'fadeOut'}// veya "fade", "none" gibi
-            transparent={true}
-            visible={modalVisible2}
-            onRequestClose={() => {
-              setModalVisible2(!modalVisible2);
-            }}
-            style={styles.modal4}
-          >
-           
-              <View style={styles.modalView4}>
-                <Text style={styles.modalText3}>
-                  Koleksiyonu Silmek İstediğinize eminmisin?
-                </Text>
-                <View
-                  style={{ display: "flex", flexDirection: "row", gap: 25 }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "red",
-                      paddingLeft: 20,
-                      paddingRight: 20,
-                      paddingTop: 10,
-                      paddingBottom: 10,
-                      borderRadius: 5,
-                    }}
-                    onPress={() => {
-                      deleteCollection(selectedCollection);
-                    }}
-                  >
-                    <Text style={{ color: "white" }}>Evet</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => setModalVisible2(!modalVisible2)}
-                    style={{
-                      backgroundColor: "#35f40e",
-                      paddingLeft: 20,
-                      paddingRight: 20,
-                      paddingTop: 10,
-                      paddingBottom: 10,
-                      borderRadius: 5,
-                    }}
-                  >
-                    <Text style={{ color: "white" }}>Vazgeç</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            
-          </Modal> */}
                   </View>
                 </View>
               )}
@@ -1365,23 +1279,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     width: "100%",
     marginVertical: 0,
-  },
-  noCommentsText: {
-    fontSize: 18,
-    color: "#333",
-    textAlign: "center",
-    marginTop: 8,
-  },
-  returnButton: {
-    backgroundColor: "#EA2A28",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-  },
-  returnButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
   },
   closeButtonContainer: {
     flexDirection: "row",
@@ -1563,24 +1460,5 @@ const styles = StyleSheet.create({
     margin: 0,
     padding: 10,
   },
-  card: {
-    backgroundColor: "#FFFFFF",
-    padding: 15,
 
-    borderRadius: 50,
-
-    borderWidth: 0.7,
-    borderColor: "#e6e6e6",
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
 });

@@ -390,26 +390,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  card2: {
-    backgroundColor: "#FFFFFF",
-    padding: 15,
-
-    borderRadius: 50,
-
-    borderWidth: 0.7,
-    borderColor: "#e6e6e6",
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
+  
   cardContent: {
     padding: 12,
     paddingBottom: 0,
@@ -545,21 +526,5 @@ const styles = StyleSheet.create({
     color: "#333",
     fontWeight: "bold",
   },
-  noCommentsText: {
-    fontSize: 18,
-    color: "#333",
-    textAlign: "center",
-    marginTop: 8,
-  },
-  returnButton: {
-    backgroundColor: "#EA2B2E",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-  },
-  returnButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+  
 });
