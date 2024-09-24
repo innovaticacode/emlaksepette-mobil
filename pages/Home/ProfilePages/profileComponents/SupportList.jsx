@@ -25,6 +25,7 @@ import * as Sharing from "expo-sharing";
 
 import { useNavigation } from "@react-navigation/native";
 import { UrlTile } from "react-native-maps";
+import NoDataScreen from "../../components/NoDataScreen";
 
 export default function SupportList() {
   const [supportData, setSupportData] = useState([]);
@@ -156,7 +157,8 @@ export default function SupportList() {
       {loading ? (
         <ActivityIndicator size="large" color="#333" />
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
           <View style={{}}>
             {supportData.length > 0 ? (
               supportData.map((support, index) => (
@@ -363,11 +365,14 @@ export default function SupportList() {
                 </View>
               ))
             ) : (
-              <Text
-                style={{ marginTop: 20, textAlign: "center", fontSize: 16 }}
-              >
-                Henüz talep oluşturmadınız
-              </Text>
+              <View style={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <NoDataScreen
+                  message="Talep bulunamadı."
+                  iconName="rss-box"
+                  buttonText="Anasayfaya Dön"
+                  navigateTo="HomePage"
+                />
+              </View>
             )}
           </View>
         </ScrollView>
