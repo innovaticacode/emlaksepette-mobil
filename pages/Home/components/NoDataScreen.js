@@ -14,14 +14,13 @@ const NoDataScreen = ({ message, iconName, buttonText, navigateTo }) => {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        padding: 20,
       }}
     >
       {/* İkon */}
       <Icon
         name={iconName} // İkon ismi özelleştirilebilir
-        size={64}
-        color="#333"
+        size={62}
+        color="#EA2A28"
         style={{ marginBottom: 20 }}
       />
 
