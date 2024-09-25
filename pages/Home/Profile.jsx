@@ -261,7 +261,7 @@ export default function Profile() {
       isShow: "All",
     },
     {
-      text: "Mağaza Profili",
+      text: "Emlak İlanları",
       isShow: "All",
     },
     {
@@ -269,19 +269,19 @@ export default function Profile() {
       isShow: "All",
     },
     {
-      text: "Emlak İlanları",
-      isShow: "All",
-    },
-    {
       text: "Satış Noktalarımız",
       isShow: "All",
     },
     {
-      text: "Ekip",
+      text: "Mağaza Profili",
+      isShow: "All",
     },
     {
       text: "Değerlendirmeler",
       isShow: "All",
+    },
+    {
+      text: "Ekip",
     },
   ]);
 
@@ -482,22 +482,18 @@ export default function Profile() {
             </View>
             <View style={{ flex: 1, paddingBottom: height * 0.1 }}>
               {tab === 0 && <Introduction id={id} setTab={settab} />}
+              {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
               {tab === 2 && <ProjectAdverts data={storeData} />}
-              {tab === 3 && <RealtorAdverts housingdata={housingRecords} />}
-              {tab === 5 && <Team teamm={teamm} />}
-              {tab === 1 && <ShopInfo data={storeData} loading={loading} />}
+              {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
               {tab === 4 &&
-                (() => {
-                  if (
-                    storeData?.data?.corporate_type !== "Emlak Ofisi" &&
-                    storeData.data.type == 2
-                  ) {
-                    return <SellPlacesForBrands data={storeData} />;
-                  } else {
-                    return <CollectionsOfBrand data={storeData} />;
-                  }
-                })()}
-              {tab === 6 && <CommentsOfBrands data={storeData} />}
+                (storeData?.data?.corporate_type !== "Emlak Ofisi" &&
+                storeData.data.type === 2 ? (
+                  <SellPlacesForBrands data={storeData} />
+                ) : (
+                  <CollectionsOfBrand data={storeData} />
+                ))}
+              {tab === 5 && <CommentsOfBrands data={storeData} />}
+              {tab === 6 && <Team teamm={teamm} />}
             </View>
           </View>
 
@@ -512,7 +508,7 @@ export default function Profile() {
                 width: "100%",
               }}
             >
-              {(tab == 2 || tab == 3) && (
+              {(tab == 1 || tab == 2) && (
                 <TouchableOpacity
                   onPress={() =>
                     tab == 2
