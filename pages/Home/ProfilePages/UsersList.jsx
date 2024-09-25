@@ -51,6 +51,7 @@ export default function UsersList() {
     }
   };
   const isfocused = useIsFocused();
+  console.log(user?.access_token);
   useEffect(() => {
     fetchData();
   }, [user, isfocused]);
@@ -85,10 +86,12 @@ export default function UsersList() {
   const [selectedUserName, setselectedUserName] = useState("");
   const [SelecteduserID, setSelecteduserID] = useState(0);
   const [SelectedUserIDS, setSelectedUserIDS] = useState([]);
+
   const GetId = (UserID, name) => {
     setselectedUser(UserID);
     setselectedUserName(name);
   };
+
   const getUserID = (UserID) => {
     setSelecteduserID(UserID);
     setSelectedUserIDS((prevIds) => {
@@ -169,6 +172,7 @@ export default function UsersList() {
       console.error("Error making DELETE request:", error);
     }
   };
+
   const [showText, setshowText] = useState(false);
   return (
     <AlertNotificationRoot>
@@ -192,13 +196,13 @@ export default function UsersList() {
           <View
             style={[
               styles.card,
-              { alignItems: "center", justifyContent: "center"},
+              { alignItems: "center", justifyContent: "center" },
             ]}
           >
             <Icon2 name="user-tie" size={35} color={"#EA2A28"} />
           </View>
           <View>
-          <Text style={styles.noCommentsText}>
+            <Text style={styles.noCommentsText}>
               Daha önce alt kullanıcı oluşturmadınız.
             </Text>
             <Text></Text>
@@ -214,9 +218,7 @@ export default function UsersList() {
                 }, 700);
               }}
             >
-              <Text style={styles.returnButtonText}>
-                Oluştur
-              </Text>
+              <Text style={styles.returnButtonText}>Oluştur</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -460,24 +462,6 @@ export default function UsersList() {
                 <TouchableOpacity
                   onPress={() => {
                     setModalVisible(false);
-                    setTimeout(() => {
-                      setopenDeleteModal(true);
-                    }, 600);
-                  }}
-                  style={{
-                    padding: 10,
-                    backgroundColor: "#EA2A28",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 5,
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Kullanıcıyı Sil</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    setModalVisible(false);
                     navigation.navigate("UpdateUsers", {
                       UserID: selectedUser,
                       fetcData: fetchData,
@@ -493,6 +477,24 @@ export default function UsersList() {
                   }}
                 >
                   <Text style={{ color: "white" }}>Kullanıcıyı Düzenle</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(false);
+                    setTimeout(() => {
+                      setopenDeleteModal(true);
+                    }, 600);
+                  }}
+                  style={{
+                    padding: 10,
+                    backgroundColor: "#EA2A28",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 5,
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Kullanıcıyı Sil</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -530,20 +532,20 @@ const styles = StyleSheet.create({
   },
   noCommentsText: {
     fontSize: 18,
-    color: '#333',
-    textAlign: 'center',
+    color: "#333",
+    textAlign: "center",
     marginTop: 8,
   },
   returnButton: {
-    backgroundColor: '#EA2B2E',
+    backgroundColor: "#EA2B2E",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
   },
   returnButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   modal3: {
     justifyContent: "flex-end",

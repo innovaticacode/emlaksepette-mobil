@@ -23,7 +23,12 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/FontAwesome";
 import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
-import { Dialog, ALERT_TYPE, AlertNotificationRoot } from 'react-native-alert-notification';
+import {
+  Dialog,
+  ALERT_TYPE,
+  AlertNotificationRoot,
+} from "react-native-alert-notification";
+import NoDataScreen from "./components/NoDataScreen";
 
 export default function Favorites() {
   const navigation = useNavigation();
@@ -56,7 +61,6 @@ export default function Favorites() {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     if (user.access_token) {
@@ -245,14 +249,15 @@ export default function Favorites() {
       }
     });
   };
-  const [FavoriteRemoveIDSForProject, setFavoriteRemoveIDSForProject] = useState([]);
-
+  const [FavoriteRemoveIDSForProject, setFavoriteRemoveIDSForProject] =
+    useState([]);
 
   // BATCH SELECTION - DELETE FUNCTION STAT
   const [isChoosed, setIsChoosed] = useState(false); // Toplu seçim modu
   const [FavoriteRemoveIDS, setFavoriteRemoveIDS] = useState([]); // Silinecek ilanların ID'leri
   const [loading, setLoading] = useState(false); // Yüklenme durumu
-  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] = useState(false); // Modal durumu
+  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
+    useState(false); // Modal durumu
 
   const handleToggleSelect = () => {
     setIsChoosed(!isChoosed); // Toplu seçim modunu değiştir
@@ -270,8 +275,8 @@ export default function Favorites() {
     try {
       // Axios DELETE isteği
       const response = await axios({
-        method: 'delete',
-        url: 'https://private.emlaksepette.com/api/institutional/favorites/delete',
+        method: "delete",
+        url: "https://private.emlaksepette.com/api/institutional/favorites/delete",
         data: data,
         headers: {
           Authorization: `Bearer ${user.access_token}`,
@@ -298,7 +303,6 @@ export default function Favorites() {
           button: "Tamam",
         });
       }
-
     } catch (error) {
       // Hata durumunda kullanıcıya geri bildirim sağla
       Dialog.show({
@@ -328,51 +332,31 @@ export default function Favorites() {
       ) : (
         <View style={styles.container}>
           {favorites.length == 0 ? (
+              <NoDataScreen
+                message="Favorilerinizde ilan bulunmamaktadır."
+                iconName="heart-plus"
+                buttonText="Anasayfaya Dön"
+                navigateTo="HomePage"
+              />
+          ) : (
             <>
               <View
                 style={{
+                  width: "100%",
+                  flexDirection: "row",
                   alignItems: "center",
-                  justifyContent: "center",
-                  height: "100%",
-                  gap: 10,
-                  marginTop: -40,
+                  justifyContent: "space-between",
                 }}
               >
                 <View
-                  style={[
-                    styles.card,
-                    { alignItems: "center", justifyContent: "center" },
-                  ]}
+                  style={{
+                    flexDirection: "row",
+                    gap: 10,
+                    marginLeft: 20,
+                    marginTop: 10,
+                    paddingBottom: 8,
+                  }}
                 >
-                  <Icon name="heart-plus" size={50} color={"#EA2A28"} />
-                </View>
-                <View>
-                  <Text style={styles.noCommentsText}>
-                    Favorilerinizde ilan bulunmamaktadır.
-                  </Text>
-                  <Text></Text>
-                </View>
-                <View style={{ width: "100%", alignItems: "center" }}>
-                  <TouchableOpacity
-                    style={styles.returnButton}
-                    onPress={() => {
-                      setLoading(true);
-                      setTimeout(() => {
-                        navigation.navigate("HomePage");
-                        setLoading(false);
-                      }, 700);
-                    }}
-                  >
-                    <Text style={styles.returnButtonText}>Anasayfaya Dön</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </>
-          ) : (
-
-            <>
-              <View style={{ width: "100%", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                <View style={{ flexDirection: "row", gap: 10, marginLeft: 20, marginTop: 10, paddingBottom: 8 }}>
                   <TouchableOpacity
                     style={{
                       backgroundColor: "#EEEDEB",
@@ -405,11 +389,9 @@ export default function Favorites() {
                       borderWidth: 1,
                       borderColor: "#ebebeb",
                     }}
-
                     onPress={() => {
                       handleToggleSelect(); // Toplu seçim modunu aç/kapat
                     }}
-
                   >
                     <Text
                       style={{
@@ -419,7 +401,7 @@ export default function Favorites() {
                         color: "#333",
                       }}
                     >
-                      {isChoosed ? 'Seçimi İptal Et' : 'Toplu Seç'}
+                      {isChoosed ? "Seçimi İptal Et" : "Toplu Seç"}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -433,8 +415,7 @@ export default function Favorites() {
                   >
                     <Text>
                       Seçili(
-                      {FavoriteRemoveIDS.length}
-                      )
+                      {FavoriteRemoveIDS.length})
                     </Text>
                     <View>
                       <TouchableOpacity
@@ -451,10 +432,9 @@ export default function Favorites() {
                               button: "Tamam",
                             });
                           } else {
-                            setRemoveSelectedCollectionsModal(true)
+                            setRemoveSelectedCollectionsModal(true);
                           }
                         }}
-
                       >
                         <Icon2 name="trash" size={18} color={"white"} />
                       </TouchableOpacity>
@@ -526,7 +506,6 @@ export default function Favorites() {
                 showsVerticalScrollIndicator={false}
               >
                 {favorites?.map((favorite, i) => {
-
                   if (favorite?.project) {
                     var image = favorite?.project_housing?.find(
                       (projectHousing) => {
@@ -544,8 +523,7 @@ export default function Favorites() {
                         if (
                           projectHousing.room_order == favorite?.housing_id &&
                           projectHousing.name ==
-                          favorite?.project?.list_item_values
-                            ?.column1_name +
+                          favorite?.project?.list_item_values?.column1_name +
                           "[]" &&
                           projectHousing.project_id == favorite?.project?.id
                         ) {
@@ -558,8 +536,7 @@ export default function Favorites() {
                         if (
                           projectHousing.room_order == favorite?.housing_id &&
                           projectHousing.name ==
-                          favorite?.project?.list_item_values
-                            ?.column2_name +
+                          favorite?.project?.list_item_values?.column2_name +
                           "[]" &&
                           projectHousing.project_id == favorite?.project?.id
                         ) {
@@ -572,8 +549,7 @@ export default function Favorites() {
                         if (
                           projectHousing.room_order == favorite?.housing_id &&
                           projectHousing.name ==
-                          favorite?.project?.list_item_values
-                            ?.column3_name +
+                          favorite?.project?.list_item_values?.column3_name +
                           "[]" &&
                           projectHousing.project_id == favorite?.project?.id
                         ) {
@@ -585,8 +561,7 @@ export default function Favorites() {
                       column1 =
                         column1 +
                         " " +
-                        (favorite?.project?.list_item_values
-                          ?.column1_additional
+                        (favorite?.project?.list_item_values?.column1_additional
                           ? favorite?.project?.list_item_values
                             ?.column1_additional
                           : "");
@@ -595,8 +570,7 @@ export default function Favorites() {
                       column2 =
                         column2 +
                         " " +
-                        (favorite?.project?.list_item_values
-                          ?.column2_additional
+                        (favorite?.project?.list_item_values?.column2_additional
                           ? favorite?.project?.list_item_values
                             ?.column2_additional
                           : "");
@@ -605,8 +579,7 @@ export default function Favorites() {
                       column3 =
                         column3 +
                         " " +
-                        (favorite?.project?.list_item_values
-                          ?.column3_additional
+                        (favorite?.project?.list_item_values?.column3_additional
                           ? favorite?.project?.list_item_values
                             ?.column3_additional
                           : "");
@@ -639,17 +612,15 @@ export default function Favorites() {
                           " No'lu konut"
                         }
                         price={
-                          favorite?.project_housing?.find(
-                            (projectHousing) => {
-                              if (
-                                projectHousing.room_order ==
-                                favorite?.housing_id &&
-                                projectHousing.name == "price[]"
-                              ) {
-                                return projectHousing;
-                              }
+                          favorite?.project_housing?.find((projectHousing) => {
+                            if (
+                              projectHousing.room_order ==
+                              favorite?.housing_id &&
+                              projectHousing.name == "price[]"
+                            ) {
+                              return projectHousing;
                             }
-                          )?.value
+                          })?.value
                         }
                         m2="20"
                         GetId={GetIdForCart}
@@ -691,8 +662,7 @@ export default function Favorites() {
                             favorite?.housing?.list_items?.column1_name
                             ] +
                             " " +
-                            (favorite?.housing?.list_items
-                              ?.column1_additional
+                            (favorite?.housing?.list_items?.column1_additional
                               ? favorite?.housing?.list_items
                                 ?.column1_additional
                               : "")
@@ -706,8 +676,7 @@ export default function Favorites() {
                             favorite?.housing?.list_items?.column2_name
                             ] +
                             " " +
-                            (favorite?.housing?.list_items
-                              ?.column2_additional
+                            (favorite?.housing?.list_items?.column2_additional
                               ? favorite?.housing?.list_items
                                 ?.column2_additional
                               : "")
@@ -721,8 +690,7 @@ export default function Favorites() {
                             favorite?.housing?.list_items?.column3_name
                             ] +
                             " " +
-                            (favorite?.housing?.list_items
-                              ?.column3_additional
+                            (favorite?.housing?.list_items?.column3_additional
                               ? favorite?.housing?.list_items
                                 ?.column3_additional
                               : "")
@@ -862,23 +830,6 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
   },
-  noCommentsText: {
-    fontSize: 18,
-    color: '#333',
-    textAlign: 'center',
-    marginTop: 8,
-  },
-  returnButton: {
-    backgroundColor: '#EA2B2E',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-  },
-  returnButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
   leftAction: {
     backgroundColor: "red",
     justifyContent: "center",
@@ -897,26 +848,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 5,
   },
-  card: {
-    backgroundColor: "#FFFFFF",
-    padding: 15,
-
-    borderRadius: 50,
-
-    borderWidth: 0.7,
-    borderColor: "#e6e6e6",
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
+  
   btnRemove: {
     backgroundColor: "#EA2A28",
     padding: 7,

@@ -2043,8 +2043,8 @@ export default function Details({ navigation }) {
                                 >
                                   {user.type == 2 &&
                                   user.corporate_type == "Emlak Ofisi"
-                                    ? "Portföyünüze konut ekleyebilmeniz Giriş Yapmanız gerekmektedir"
-                                    : "Koleksiyonunuza konut ekleyebilmeniz Giril Yapmanız gerekmektedir"}
+                                    ? "Portföyünüze konut ekleyebilmeniz Giriş yapmanız gerekmektedir."
+                                    : "Koleksiyonunuza konut ekleyebilmeniz Giriş yapmanız gerekmektedir."}
                                 </Text>
                               </View>
                               <TouchableOpacity
@@ -2577,7 +2577,7 @@ export default function Details({ navigation }) {
               textAlign: "center",
               margin: 5,
             }}
-            title={"Sepetinize Ürün Ekleyebilmek İçin Giriş Yapmanız Gerekir"}
+            title={"Sepetinize ürün ekleyebilmek için giriş yapmanız gerekmektedir."}
             messageStyle={{ textAlign: "center" }}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}

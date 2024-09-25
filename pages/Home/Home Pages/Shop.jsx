@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   RefreshControl,
-  ScrollView,
+  Image,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
@@ -73,7 +73,7 @@ const Shop = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 2) {
+    if (index == 3) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);

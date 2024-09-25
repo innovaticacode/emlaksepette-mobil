@@ -225,9 +225,7 @@ export default function UserTypeList() {
                 }, 700);
               }}
             >
-              <Text style={styles.returnButtonText}>
-                Oluştur
-              </Text>
+              <Text style={styles.returnButtonText}>Oluştur</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -328,7 +326,7 @@ export default function UserTypeList() {
             {transformedRoles.map((item, index) => (
               <Users
                 name={item.name}
-                id="1"
+                id={item.id}
                 key={index}
                 index={index}
                 item={item}
@@ -348,7 +346,7 @@ export default function UserTypeList() {
               textAlign: "center",
               margin: 5,
             }}
-            title={`${UsersId.length} Kullanıcı tipini silmek istediğinize eminm misiniz?`}
+            title={`${UsersId.length} Kullanıcı tipini silmek istediğinize emin misiniz?`}
             messageStyle={{ textAlign: "center" }}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
@@ -436,20 +434,20 @@ const styles = StyleSheet.create({
   },
   noCommentsText: {
     fontSize: 18,
-    color: '#333',
-    textAlign: 'center',
+    color: "#333",
+    textAlign: "center",
     marginTop: 8,
   },
   returnButton: {
-    backgroundColor: '#EA2B2E',
+    backgroundColor: "#EA2B2E",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
   },
   returnButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   modal4: {
     justifyContent: "center",

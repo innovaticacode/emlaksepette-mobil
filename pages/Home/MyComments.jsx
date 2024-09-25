@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   ImageBackground,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Icon from "react-native-vector-icons/Entypo";
 import { Platform } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -18,11 +19,14 @@ import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
+import Icon8 from "react-native-vector-icons/FontAwesome5";
 import {
   ALERT_TYPE,
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import { Button } from "react-native-paper";
+import NoDataScreen from "./components/NoDataScreen";
 
 export default function MyComments() {
   const [user, setuser] = useState({});
@@ -43,11 +47,14 @@ export default function MyComments() {
   const [modalVisible, setModalVisible] = useState(false); // Modal görünürlüğü için
   const [modalMessage, setModalMessage] = useState(""); // Başarı veya hata mesajı
   const [deleteSuccess, setDeleteSuccess] = useState(null);
+  const [modalDelete, setModalDelete] = useState(false);
 
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
   console.log(user.id);
+  const navigation = useNavigation();
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -75,6 +82,11 @@ export default function MyComments() {
     fetchData();
   }, [user]);
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true); // Yenileme işlemi başlıyor
+    fetchData().then(() => setRefreshing(false)); // Yenileme işlemi bittikten sonra refreshing'i false yap
+  }, [user]);
+
   const MycommentItem = ({ item, EditComment, goToEditComment, store }) => {
     const API_URL = "https://private.emlaksepette.com/";
     const { type, comment } = item;
@@ -86,9 +98,8 @@ export default function MyComments() {
     const imageSource =
       type === "project"
         ? `${API_URL}${info?.image.replace("public/", "storage/")}`
-        : `${API_URL}housing_images/${
-            JSON.parse(info.housing_type_data)?.image ?? ""
-          }`;
+        : `${API_URL}housing_images/${JSON.parse(info.housing_type_data)?.image ?? ""
+        }`;
 
     const handleNavigate = () => {
       if (type === "project") {
@@ -168,8 +179,8 @@ export default function MyComments() {
               {comment?.status === 0
                 ? "Onay Bekliyor"
                 : comment?.status === 1
-                ? "Onaylandı"
-                : "Reddedildi"}
+                  ? "Onaylandı"
+                  : "Reddedildi"}
             </Text>
           </View>
         </View>
@@ -206,6 +217,11 @@ export default function MyComments() {
     setchoose(false);
   };
 
+  const confirmDeleteComment = () => {
+    setModalDelete(true);
+    setchoose(false);
+  };
+
   const DeleteComment = async () => {
     try {
       if (user?.access_token) {
@@ -223,7 +239,7 @@ export default function MyComments() {
             setModalMessage("Yorum başarıyla silindi!");
             setchoose(false); // İşlem başarılı olduğunda seçimi kapat
             fetchData(); // Veri çekmeyi çağır
-
+            setModalDelete(false);
             // Başarılı işlemde dialog'u göster
             Dialog.show({
               type: ALERT_TYPE.SUCCESS,
@@ -235,12 +251,13 @@ export default function MyComments() {
       } else {
         setDeleteSuccess(false);
         setModalMessage("Yorum bulunamadı.");
+        setModalDelete(false);
       }
     } catch (error) {
       setDeleteSuccess(false);
       setModalMessage("Yorum silme işlemi başarısız oldu.");
       console.error("Silme işlemi başarısız oldu", error);
-
+      setModalDelete(false);
       // Hata durumunda dialog'u göster
       Dialog.show({
         type: ALERT_TYPE.DANGER,
@@ -257,76 +274,105 @@ export default function MyComments() {
   return (
     <AlertNotificationRoot>
       <ScrollView
-        contentContainerStyle={{ gap: 10, padding: 10 }}
-        style={styles.scrollView}
+        contentContainerStyle={{ flex: 1, flexGrow: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
-        {loading ? (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <ActivityIndicator size="large" color="#0000ff" />
-          </View>
-        ) : comments?.length > 0 ? (
-          comments.map((item, index) => (
-            <MycommentItem
-              key={index}
-              store={item.store}
-              item={item}
-              EditComment={EditComment}
-              goToEditComment={() => goToEditComment(item)} // info'yu prop olarak gönderiyoruz
+        <View style={{ gap: 10, padding: 10, flex: 1 }}>
+          {loading ? (
+            <View
+              style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+            >
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          ) : comments?.length > 0 ? (
+            comments.map((item, index) => (
+              <MycommentItem
+                key={index}
+                store={item.store}
+                item={item}
+                EditComment={EditComment}
+                goToEditComment={() => goToEditComment(item)} // info'yu prop olarak gönderiyoruz
+              />
+            ))
+          ) : (
+            <NoDataScreen
+              message="Yorumunuz bulunmamaktadır."
+              iconName="comment-off"
+              buttonText="Anasayfaya Dön"
+              navigateTo="HomePage"
             />
-          ))
-        ) : (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <Text style={{ fontSize: 16, color: "#555" }}>
-              Henüz yorum yok.
-            </Text>
-          </View>
-        )}
+          )}
 
-        <Modal
-          isVisible={choose}
-          style={styles.modal}
-          animationIn={"fadeInDown"}
-          animationOut={"fadeOutDown"}
-          onBackdropPress={() => setchoose(false)}
-          swipeDirection={["down"]}
-          onSwipeComplete={() => setchoose(false)}
-        >
-          <View style={styles.modalContent}>
-            <View style={styles.modalOptions}>
-              {(selectedCommentStatus === 1 || selectedCommentStatus === 2) && (
+          <Modal
+            isVisible={choose}
+            style={styles.modal}
+            animationIn={"fadeInDown"}
+            animationOut={"fadeOutDown"}
+            onBackdropPress={() => setchoose(false)}
+            swipeDirection={["down"]}
+            onSwipeComplete={() => setchoose(false)}
+          >
+            <View style={styles.modalContent}>
+              <View style={styles.modalOptions}>
+                {(selectedCommentStatus === 1 || selectedCommentStatus === 2) && (
+                  <TouchableOpacity
+                    style={styles.modalOption}
+                    onPress={goToEditComment}
+                  >
+                    <Icon3 name="edit-note" size={29} color={"#333"} />
+                    <Text style={styles.modalOptionText}>Yorumu Düzenle</Text>
+                  </TouchableOpacity>
+                )}
+
                 <TouchableOpacity
                   style={styles.modalOption}
-                  onPress={goToEditComment}
+                  onPress={confirmDeleteComment}
                 >
-                  <Icon3 name="edit-note" size={29} color={"#333"} />
-                  <Text style={styles.modalOptionText}>Yorumu Düzenle</Text>
+                  <Icon3 name="delete" size={21} color={"#EA2A28"} />
+                  <Text style={styles.modalOptionText}>Yorumu Sil</Text>
                 </TouchableOpacity>
-              )}
-
-              <TouchableOpacity
-                style={styles.modalOption}
-                onPress={DeleteComment}
-              >
-                <Icon3 name="delete" size={21} color={"#EA2A28"} />
-                <Text style={styles.modalOptionText}>Yorumu Sil</Text>
-              </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </Modal>
+          </Modal>
+          <Modal
+            isVisible={modalDelete}
+            style={styles.confirmationModal2}
+            animationIn={"fadeInDown"}
+            animationOut={"fadeOutDown"}
+            onBackdropPress={() => setModalDelete(false)}
+            swipeDirection={["down"]}
+            onSwipeComplete={() => setModalDelete(false)}
+          >
+            <View style={styles.modalContainer2}>
+              <Text style={styles.modalHeader2}>
+                Yorumu silmek istediğinizden emin misiniz?
+              </Text>
+              <View style={styles.modalButtonContainer2}>
+                <TouchableOpacity
+                  style={styles.confirmButtonStyle2}
+                  onPress={DeleteComment}
+                >
+                  <Text style={styles.confirmButtonTextStyle2}>Evet</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.cancelButtonStyle2}
+                  onPress={() => setModalDelete(false)}
+                >
+                  <Text style={styles.cancelButtonTextStyle2}>Hayır</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
       </ScrollView>
     </AlertNotificationRoot>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-    backgroundColor: "#F5F5F5",
-  },
+
   card: {
     backgroundColor: "#FFFFFF",
     borderWidth: 0.7,
@@ -344,6 +390,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  
   cardContent: {
     padding: 12,
     paddingBottom: 0,
@@ -431,4 +478,53 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 16,
   },
+  confirmationModal2: {
+    // Modal stil ayarları
+  },
+  modalContainer2: {
+    // Modal içeriği stil ayarları
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    width: "100%",
+    maxWidth: 400,
+    alignItems: "center",
+  },
+  modalHeader2: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#333",
+    textAlign: "center",
+  },
+  modalButtonContainer2: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  confirmButtonStyle2: {
+    backgroundColor: "#ea2a28",
+    color: "#fff",
+    padding: 10,
+    borderRadius: 5,
+    width: "45%",
+    alignItems: "center",
+  },
+  confirmButtonTextStyle2: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  cancelButtonStyle2: {
+    backgroundColor: "#ccc",
+    color: "#333",
+    padding: 10,
+    borderRadius: 5,
+    width: "45%",
+    alignItems: "center",
+  },
+  cancelButtonTextStyle2: {
+    color: "#333",
+    fontWeight: "bold",
+  },
+  
 });

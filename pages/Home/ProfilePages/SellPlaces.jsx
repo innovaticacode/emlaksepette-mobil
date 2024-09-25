@@ -6,6 +6,7 @@ import { getValueFor } from "../../../components/methods/user";
 import { ActivityIndicator } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
+import NoDataScreen from "../components/NoDataScreen";
 
 export default function SellPlaces({ data }) {
   const [Places, setPlaces] = useState([]);
@@ -58,51 +59,12 @@ export default function SellPlaces({ data }) {
           contentContainerStyle={{ padding: 10, flexGrow: 1 }}
         >
           {Places.length == 0 ? (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 20,
-              }}
-            >
-              {/* İkon */}
-              <Icon
-                name="store-off-outline"
-                size={64}
-                color="#333"
-                style={{ marginBottom: 20 }}
-              />
-
-              {/* Bilgilendirme yazısı */}
-              <Text
-                style={{
-                  fontSize: 18,
-                  color: "#333",
-                  textAlign: "center",
-                  marginBottom: 20,
-                }}
-              >
-                Henüz satış noktası bulunmamaktadır.
-              </Text>
-
-              {/* Anasayfaya Dön Butonu */}
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#EA2A28",
-                  paddingVertical: 12,
-                  paddingHorizontal: 20,
-                  borderRadius: 8,
-                }}
-                onPress={() => navigation.navigate("HomePage")} // 'Home' rotasına yönlendirme
-              >
-                <Text
-                  style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}
-                >
-                  Anasayfaya Dön
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <NoDataScreen
+              message="Satış noktası bulunamadı."
+              iconName="store-off-outline"
+              buttonText="Anasayfaya Dön"
+              navigateTo="HomePage"
+            />
           ) : (
             Places.map((item, _i) => <SellPlaceItem key={_i} item={item} />)
           )}

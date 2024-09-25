@@ -32,6 +32,7 @@ import Modal from "react-native-modal";
 import Categories from "../../components/Categories";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
+import FirstHome from "./FirstHome";
 
 const { width, height } = Dimensions.get("window");
 
@@ -45,6 +46,8 @@ const SecondRoute = () => (
 
 const renderScene = ({ route, index }) => {
   switch (route.key) {
+    case "home":
+      return <FirstHome index={index} />;
     case "first":
       return <HomePage index={index} />;
     case "second":
@@ -84,6 +87,7 @@ const CustomTabBar = ({
           "https://private.emlaksepette.com/api/menu-list"
         );
         setMenuItems(response.data);
+        setMenuItems([{ text: "Anasayfa" }, ...response.data.slice(0, -1)]);
       } catch (error) {
         console.error("Error fetching menu items:", error);
       }
@@ -147,7 +151,7 @@ const CustomTabBar = ({
               onPress={() => {
                 indexChange(index);
               }}
-              onLayout={onTabLayout} // Measure each tab's layout
+              onLayout={onTabLayout}
             >
               <Text
                 style={{
@@ -175,6 +179,7 @@ export default function HomePage2() {
   const [tab, settab] = React.useState(0);
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
+    { key: "home", title: "Home" },
     { key: "first", title: "First" },
     { key: "second", title: "Second" },
     { key: "shop", title: "Shop" },
@@ -190,9 +195,7 @@ export default function HomePage2() {
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}
-    >
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}>
       <Header onPress={toggleDrawer} index={setIndex} tab={settab} />
 
       <Modal
@@ -211,7 +214,7 @@ export default function HomePage2() {
       <View style={{ paddingLeft: 10, paddingRight: 10 }}>
         <TextInput
           style={{ padding: 8, backgroundColor: "#ebebeb", borderRadius: 5 }}
-          placeholder="Kelime veya İlan no ile ara.."
+          placeholder="Kelime veya İlan no ile ara..."
           onPress={() => {
             navigation.navigate("SearchPage");
           }}
