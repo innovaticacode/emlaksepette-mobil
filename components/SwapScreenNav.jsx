@@ -282,56 +282,55 @@ const SwapScreenNav = () => {
               <Text
                 style={{
                   fontWeight: "bold",
-                  fontSize: 12,
+                  fontSize: 20,
                   textAlign: "center",
+                  color: "#EA2B2E",
+                  fontWeight: "600",
                 }}
               >
                 {projectData.project.project_title} projesinde {roomOrder} No'lu
                 Konut Başvuru Formu
               </Text>
               <View showsVerticalScrollIndicator={false}>
-                <View style={{ gap: 15, marginTop: 20 }}>
-                  <View style={{ gap: 7 }}>
+                <View style={{ gap: 10, marginTop: 20 }}>
+                  <View>
                     <Text style={styles.label}>Ad Soyad</Text>
                     <TextInput
                       style={styles.input}
                       value={nameid}
                       onChangeText={(value) => setNameId(value)}
+                      placeholder="Adınız Soyadınız"
                     />
                     {errorStatu == 1 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
-                  <View style={{ gap: 7 }}>
+                  <View>
                     <Text style={styles.label}>Telefon Numarası</Text>
                     <TextInput
                       style={styles.input}
                       value={phoneid}
                       keyboardType="number-pad"
                       onChangeText={handlePhoneNumberChange}
+                      placeholder="Telefon Numaranız"
                     />
                     {errorStatu == 2 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
-                  <View style={{ gap: 7 }}>
+                  <View>
                     <Text style={styles.label}>E-Posta</Text>
                     <TextInput
                       style={styles.input}
                       value={emailid}
                       onChangeText={(value) => setEmailId(value)}
+                      placeholder="Email Adresiniz"
                     />
                     {errorStatu == 6 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
-                  <View style={{ gap: 7 }}>
+                  <View>
                     <Text style={styles.label} value={titleid}>
                       Meslek
                     </Text>
@@ -339,37 +338,27 @@ const SwapScreenNav = () => {
                       style={styles.input}
                       value={titleid}
                       onChangeText={(value) => setTitleId(value)}
+                      placeholder="Mesleğiniz"
                     />
                     {errorStatu == 3 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
-                  <View style={{ gap: 7 }}>
+                  <View>
                     <Text style={styles.label}>Açıklama</Text>
                     <TextInput
                       style={styles.input}
                       value={offerid}
                       onChangeText={(value) => setOfferId(value)}
+                      placeholder="Açıklamanız"
                     />
                     {errorStatu == 7 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
 
-                  <View style={{ gap: 6 }}>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: "grey",
-                        fontWeight: 600,
-                      }}
-                    >
-                      Şehir
-                    </Text>
+                  <View>
+                    <Text style={styles.label}>Şehir</Text>
                     <RNPickerSelect
                       doneText="Tamam"
                       placeholder={{
@@ -384,21 +373,11 @@ const SwapScreenNav = () => {
                       items={citites}
                     />
                     {errorStatu == 4 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
-                  <View style={{ gap: 6 }}>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: "grey",
-                        fontWeight: 600,
-                      }}
-                    >
-                      İlçe
-                    </Text>
+                  <View>
+                    <Text style={styles.label}>İlçe</Text>
                     <RNPickerSelect
                       doneText="Tamam"
                       placeholder={{
@@ -411,45 +390,24 @@ const SwapScreenNav = () => {
                       items={counties}
                     />
                     {errorStatu == 5 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
                 </View>
               </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-around",
-                }}
-              >
+              <View style={{ alignItems: "center" }}>
                 <TouchableOpacity
                   style={{
-                    backgroundColor: "#28A745",
-                    width: "40%",
-                    padding: 15,
-                    borderRadius: 5,
+                    backgroundColor: "#EA2B2E",
+                    width: "100%",
+                    padding: 10,
+                    borderRadius: 10,
+                    marginVertical: 10,
                   }}
                   onPress={GiveOffer}
                 >
                   <Text style={{ color: "white", textAlign: "center" }}>
                     Gönder
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#DC3545",
-                    width: "40%",
-                    padding: 15,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    setFormVisible(false);
-                  }}
-                >
-                  <Text style={{ color: "white", textAlign: "center" }}>
-                    Kapat
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -467,6 +425,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 100,
+    padding: 10,
+    backgroundColor: "#FFFFFF",
+  },
+  errorStyle: {
+    color: "#EA2B2E",
+    fontSize: 13,
+    fontWeight: "600",
+    padding: 2,
   },
   text: {
     fontSize: 18,
@@ -477,41 +443,45 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  label: {
+    color: "#777777",
+    fontSize: 13,
+    fontWeight: "600",
+    padding: 5,
+    gap: 10,
+  },
   input: {
-    height: 40,
+    height: 35,
     width: "100%",
     borderColor: "#ccc",
-    borderWidth: 1,
     borderRadius: 10,
     marginBottom: 10,
     paddingHorizontal: 10,
     color: "black",
-    backgroundColor: "white",
+    backgroundColor: "#F3F3F3",
   },
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-    height: 40,
+    height: 35,
     width: "100%",
     borderColor: "#ccc",
-    borderWidth: 1,
     borderRadius: 10,
     marginBottom: 10,
     paddingHorizontal: 10,
     color: "black",
-    backgroundColor: "white",
+    backgroundColor: "#F3F3F3",
     fontSize: 16,
   },
   inputAndroid: {
-    height: 40,
+    height: 35,
     width: "100%",
     borderColor: "#ccc",
-    borderWidth: 1,
     borderRadius: 10,
     marginBottom: 10,
     paddingHorizontal: 10,
     color: "black",
-    backgroundColor: "white",
+    backgroundColor: "#F3F3F3",
     fontSize: 16,
   },
 });
