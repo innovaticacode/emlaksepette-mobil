@@ -37,9 +37,14 @@ export default function UpdateUsers() {
   const [UserTypeValue, setUserTypeValue] = useState("");
   const [isSelected, setisSelected] = useState(false);
   const toggleSwitch = () => {
-    setIsEnabled((previousState) => !previousState);
-    setisActive(isEnabled ? 0 : 5);
+    setIsEnabled((previousState) => {
+      const newState = !previousState; // Mevcut durumun tersini alıyoruz
+      const newActive = newState ? 5 : 0; // True ise 5 (engelli), false ise 0 (aktif) olacak
+      setisActive(newActive); // Güncellenmiş isActive değeri
+      return newState;
+    });
   };
+
   const [isShowSheet, setisShowSheet] = useState(false);
   const [isShowText, setisShowText] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -87,10 +92,11 @@ export default function UpdateUsers() {
   const [email, setemail] = useState("");
   const [phoneNumber, setphoneNumber] = useState("");
   const [password, setpassword] = useState("");
-  const [UserType, setUserType] = useState(null);
+  const [UserType, setUserType] = useState("");
 
-  const [isActive, setisActive] = useState(1);
+  const [isActive, setisActive] = useState(0);
   const [loadingUpdate, setloadingUpdate] = useState(false);
+
   const createUser = async () => {
     setloadingUpdate(true);
     let formdata = new FormData();
@@ -102,9 +108,7 @@ export default function UpdateUsers() {
     formdata.append("type", UserType);
     formdata.append("_method", "PUT");
 
-    if (isActive == 5) {
-      formdata.append("is_active", isActive);
-    }
+    formdata.append("is_active", isActive);
 
     if (user?.access_token) {
       axios
@@ -114,6 +118,7 @@ export default function UpdateUsers() {
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
+              "Content-Type": "multipart/form-data",
             },
           }
         )
@@ -122,7 +127,7 @@ export default function UpdateUsers() {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Başarılı",
-            textBody: `${response.data.success}`,
+            textBody: "Başarılı bir şekilde güncelleme işlemi yaptınız",
             button: "Tamam",
           });
           // Durumları sıfırlayın
@@ -150,9 +155,11 @@ export default function UpdateUsers() {
         });
     }
   };
+
   console.log(UserID);
   const [userDetail, setuserDetail] = useState([]);
   console.log(UserID + " user id budur");
+
   const getUserDetail = async () => {
     try {
       if (user?.access_token) {
@@ -165,7 +172,7 @@ export default function UpdateUsers() {
             },
           }
         );
-
+        console.log(UserID);
         // Dönüştürülmüş veriyi state'e atama
         setuserDetail(response.data.user);
       }
@@ -173,18 +180,25 @@ export default function UpdateUsers() {
       console.error("Veri getirme hatası:", error);
     }
   };
-  const [isEnabled, setIsEnabled] = useState(
-    userDetail.status === 5 ? true : false
-  );
+
+  console.log(UserID + "asdasd asd asd");
+  const [isEnabled, setIsEnabled] = useState(false);
+
   useEffect(() => {
     getUserDetail();
   }, [user]);
 
   useEffect(() => {
+    if (userDetail && typeof userDetail.status !== "undefined") {
+      setIsEnabled(userDetail.status === 5); // Eğer status 5 ise true yapıyoruz
+      setisActive(userDetail.status); // isActive'ı userDetail'den al
+    }
+
     setnameAndSurname(userDetail?.name);
     settitle(userDetail?.title);
     setemail(userDetail?.email);
     setphoneNumber(userDetail?.mobile_phone);
+    setUserType(userDetail?.role_id);
   }, [userDetail]);
 
   const formatPhoneNumber = (value) => {
@@ -224,6 +238,7 @@ export default function UpdateUsers() {
     const formattedValue = formatPhoneNumber(value);
     setphoneNumber(formattedValue);
   };
+
   const [showPassword, setshowPassword] = useState(true);
   return (
     <TouchableWithoutFeedback
@@ -262,7 +277,12 @@ export default function UpdateUsers() {
               <Text style={style.Label}>Cep No</Text>
               <TextInput
                 style={style.Input}
-                value={phoneNumber}
+                keyboardType="phone-pad"
+                value={
+                  phoneNumber === "null"
+                    ? "Telefon numarası girilmemiştir"
+                    : phoneNumber
+                }
                 onChangeText={handlePhoneNumberChange}
               />
             </View>
