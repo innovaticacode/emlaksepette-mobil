@@ -351,6 +351,9 @@ const SwapScreenNav = () => {
                       value={offerid}
                       onChangeText={(value) => setOfferId(value)}
                       placeholder="Açıklamanız"
+                      multiline
+                      numberOfLines={4}
+                      maxLength={254}
                     />
                     {errorStatu == 7 && (
                       <Text style={styles.errorStyle}>{errorMessage}</Text>
@@ -451,8 +454,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   input: {
-    height: 35,
-    width: "100%",
+    padding: 10,
     borderColor: "#ccc",
     borderRadius: 10,
     marginBottom: 10,
@@ -463,7 +465,7 @@ const styles = StyleSheet.create({
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-    height: 35,
+    padding: 10,
     width: "100%",
     borderColor: "#ccc",
     borderRadius: 10,
@@ -474,7 +476,7 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 16,
   },
   inputAndroid: {
-    height: 35,
+    padding: 10,
     width: "100%",
     borderColor: "#ccc",
     borderRadius: 10,
