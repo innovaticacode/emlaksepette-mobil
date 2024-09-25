@@ -129,7 +129,6 @@ export default function CreateUser() {
     formdata.append("mobile_phone", phoneNumber);
     formdata.append("password", password);
     formdata.append("type", UserType);
-    console.log("aykutasdasd");
 
     if (user?.access_token) {
       axios

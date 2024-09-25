@@ -51,6 +51,7 @@ export default function UsersList() {
     }
   };
   const isfocused = useIsFocused();
+  console.log(user?.access_token);
   useEffect(() => {
     fetchData();
   }, [user, isfocused]);
@@ -85,10 +86,12 @@ export default function UsersList() {
   const [selectedUserName, setselectedUserName] = useState("");
   const [SelecteduserID, setSelecteduserID] = useState(0);
   const [SelectedUserIDS, setSelectedUserIDS] = useState([]);
+
   const GetId = (UserID, name) => {
     setselectedUser(UserID);
     setselectedUserName(name);
   };
+
   const getUserID = (UserID) => {
     setSelecteduserID(UserID);
     setSelectedUserIDS((prevIds) => {
