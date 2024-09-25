@@ -33,6 +33,9 @@ import CommentsOfBrands from "./ProfilePageItem/CommentsOfBrands";
 import SellPlacesForBrands from "./ProfilePageItem/SellPlaceForBrand";
 import { ActivityIndicator } from "react-native-paper";
 import Introduction from "./ProfilePageItem/Introduction/Introduction";
+import Filter from "../../assets/filter.png";
+import ProjectBottomSheetFilter from "../../components/ProjectBottomSheetFilter";
+import EstateBottomSheetFilter from "../../components/EstateBottomSheetFilter";
 
 export default function Profile() {
   const route = useRoute();
@@ -58,6 +61,8 @@ export default function Profile() {
   const [teamm, setTeamm] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [housingRecords, sethousingRecords] = useState([]);
+  const [openProjectFilter, setOpenProjectFilter] = useState(false);
+  const [openEstateFilter, setOpenEstateFilter] = useState(false);
 
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   useEffect(() => {
@@ -307,9 +312,6 @@ export default function Profile() {
     setTabWidth(measuredWidth);
   };
 
-  useEffect(() => {
-    // console.debug("STORE DATA ================>>>>>>>>> ", storeData);
-  }, []);
   return (
     <>
       {loadingShopping ? (
@@ -319,6 +321,16 @@ export default function Profile() {
       ) : (
         <View style={{ flex: 1 }}>
           <View style={styles.container}>
+            <>
+              <ProjectBottomSheetFilter
+                isVisible={openProjectFilter}
+                setIsVisible={setOpenProjectFilter}
+              />
+              <EstateBottomSheetFilter
+                isVisible={openEstateFilter}
+                setIsVisible={setOpenEstateFilter}
+              />
+            </>
             <View
               style={[
                 {
@@ -500,6 +512,27 @@ export default function Profile() {
                 width: "100%",
               }}
             >
+              {(tab == 2 || tab == 3) && (
+                <TouchableOpacity
+                  onPress={() =>
+                    tab == 2
+                      ? setOpenProjectFilter(true)
+                      : setOpenEstateFilter(true)
+                  }
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderWidth: 1,
+                    borderColor: "#EA2B2E",
+                    backgroundColor: "#ffffff",
+                    padding: 10,
+                    borderRadius: 4,
+                  }}
+                >
+                  <Image source={Filter} style={{ width: 16, height: 16 }} />
+                </TouchableOpacity>
+              )}
+
               <TouchableOpacity
                 onPress={() => handleOpenPhone()}
                 style={{
