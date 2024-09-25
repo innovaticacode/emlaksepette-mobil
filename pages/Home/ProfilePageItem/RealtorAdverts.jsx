@@ -34,10 +34,6 @@ export default function RealtorAdverts({ housingdata, filteredResults }) {
   };
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const GetIdForCart = (id) => {
-    setselectedCartItem(id);
-    setModalForAddToCart(true);
-  };
   const [loadingEstates, setloadingEstates] = useState(false);
   return (
     <>
@@ -46,7 +42,6 @@ export default function RealtorAdverts({ housingdata, filteredResults }) {
         data={housingdata}
         renderItem={({ item }) => (
           <RealtorPost
-            GetId={GetIdForCart}
             HouseId={item.id}
             openSharing={JSON.parse(item.housing_type_data)["open_sharing1"]}
             price={

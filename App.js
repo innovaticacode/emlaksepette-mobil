@@ -116,8 +116,13 @@ import Toast from 'react-native-toast-message';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
 import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
 import ApplyForBeCompany from "./pages/Home/ProfilePages/ApplyForBeCompany";
+
+import SellAndRentAdvantage from "./pages/Home/SellAndRentAdvantage";
+import {SheetProvider} from 'react-native-actions-sheet';
+
 import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
 import AllFeaturedRealEstate from "./pages/Home/AllFeaturedRealEstate";
+
 
 
 const Stack = createNativeStackNavigator();
@@ -181,7 +186,10 @@ export default function App({ route }) {
   }
   return (
     <AlertNotificationRoot>
+      
     <GestureHandlerRootView style={{ flex: 1 }}>
+    <SheetProvider>
+
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
@@ -1183,6 +1191,7 @@ export default function App({ route }) {
         />
         </Stack.Navigator>
       </NavigationContainer>
+      </SheetProvider>
     </GestureHandlerRootView>
     </AlertNotificationRoot>
   );
