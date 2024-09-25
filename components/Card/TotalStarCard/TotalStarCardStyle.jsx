@@ -1,26 +1,22 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  areaCont: {
-    width: "56%",
-    minWidth: 200,
-    height: 40,
-    borderRadius: 6,
-    borderColor: "rgb(230, 230, 230)",
+  container: {
+    marginBottom: 20,
+  },
+  ratingCountContainer: {
     borderWidth: 1,
-    backgroundColor: "#FFF",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  desc: {
+    borderColor: "rgb(230, 230, 230)",
+    padding: 10,
+    marginVertical: 5,
     flexDirection: "row",
-    padding: 6,
-    justifyContent: "center",
     alignItems: "center",
   },
-  text: {
-    fontWeight: "bold",
-    fontSize: 12,
-    color: "#000",
+  starRatingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  ratingCount: {
+    marginLeft: 8,
   },
 });

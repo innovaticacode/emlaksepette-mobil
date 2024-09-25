@@ -24,6 +24,7 @@ const Introduction = (props) => {
   const [owners, setOwners] = useState([]);
   const [projects, setProjects] = useState([]);
   const [banners, setBanners] = useState([]);
+  const [ratingCount, setRatingCount] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const handleGetStoreInfo = async () => {
@@ -34,6 +35,7 @@ const Introduction = (props) => {
       setProjects(response.data.data.projects);
       setOwners(response.data.data.owners);
       setBanners(response.data.data.banners);
+      setRatingCount(response.data?.ratingCounts);
       setLoading(false);
     } catch (error) {
       Dialog.show({
@@ -48,17 +50,18 @@ const Introduction = (props) => {
   useEffect(() => {
     if (id) {
       handleGetStoreInfo();
+      console.log("===========>>", ratingCount);
     }
   }, [id]);
 
-  // Helper to check if any data is available
   const isDataAvailable = () => {
     return (
       storeInfo?.name ||
       storeInfo?.about ||
       owners.length > 0 ||
       banners.length > 0 ||
-      projects.length > 0
+      projects.length > 0 ||
+      ratingCount
     );
   };
 
@@ -85,9 +88,11 @@ const Introduction = (props) => {
                 </Text>
               )}
 
-              <View style={styles.starArea}>
-                <TotalStarCard />
-              </View>
+              {ratingCount && (
+                <View style={styles.starArea}>
+                  <TotalStarCard ratingCounts={ratingCount} />
+                </View>
+              )}
 
               {owners.length > 0 && (
                 <FlatList
@@ -95,6 +100,7 @@ const Introduction = (props) => {
                   keyExtractor={(item) => item.id.toString()}
                   horizontal
                   showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ paddingVertical: 10 }}
                   renderItem={({ item }) => (
                     <View style={styles.list}>
                       <CommentCard
