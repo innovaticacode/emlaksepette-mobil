@@ -375,13 +375,13 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
                     user.role_id == "2") ||
                     (user.role_id == "1" && (
                       <View>
-                        <Text style={styles.Label}>Tc Kimlik No</Text>
+                        <Text style={styles.Label}>TC Kimlik No</Text>
                         <TextInput
                           style={styles.Input}
                           keyboardType="number-pad"
                           value={tcNo}
                           onChangeText={onChangeTC}
-                          maxLength={15}
+                          maxLength={11}
                         />
                         {errorStatu == 1 && (
                           <Text style={{ fontSize: 12, color: "red" }}>
