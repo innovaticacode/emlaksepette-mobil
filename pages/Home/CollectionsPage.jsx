@@ -357,109 +357,37 @@ export default function CollectionsPage() {
   return (
     <AlertNotificationRoot>
       {namFromGetUser.has_club == 2 && (
-        <>
-          <View style={{ paddingTop: 10, gap: 10, gap: 10 }}>
-            <View>
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "#4C6272",
-                  fontWeight: "bold",
-                  fontSize: 16,
-                }}
-              >
-                {" "}
-                Emlak Kulüp Üyeliğiniz Başvuru Sürecinde!
-              </Text>
-            </View>
-
-            <View style={{ width: "100%" }}>
-              <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                {user.type == 2 && user.corporate_type == "Emlak Ofisi"
-                  ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"
-                  : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"}
-              </Text>
-            </View>
-          </View>
-        </>
+        <NoDataScreen
+        message="Emlak kulüp üyeliğiniz başvuru sürecindedir. Adminlerimiz en kısa sürede inceleyip dönüş sağlayacaktır."
+        iconName="chat-processing"
+        buttonText="Anasayfaya Dön"
+        navigateTo="HomePage"
+      />
       )}
       {namFromGetUser.has_club == 3 && (
-        <View style={{ gap: 10 }}>
-          <View style={{ paddingTop: 10 }}>
-            <Text
-              style={{
-                textAlign: "center",
-                color: "#4C6272",
-                fontWeight: "bold",
-                fontSize: 16,
-              }}
-            >
-              {" "}
-              Emlak Kulüp Üyeliğiniz Reddedildi!
-            </Text>
-          </View>
-          <View style={{ width: "100%" }}>
-            <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-              {user.type == 2 && user.corporate_type == "Emlak Ofisi"
-                ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"
-                : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"}
-            </Text>
-          </View>
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#F65656",
-              width: "100%",
-              padding: 10,
-            }}
-            onPress={() => {
-              nav.navigate("Collections");
-            }}
-          >
-            <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
-              Tekrar Başvur
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <NoDataScreen
+        message={
+          user.type == 2 && user.corporate_type == "Emlak Ofisi"
+            ? "Emlak Kulüp Üyeliğiniz Reddedildi! Portföy oluşturabilmek için tekrar başvuru yapabilirsiniz."
+            : "Emlak Kulüp Üyeliğiniz Reddedildi! Koleksiyon oluşturabilmek için tekrar başvuru yapabilirsiniz."
+        }
+        iconName="emoticon-sad-outline"
+        buttonText="Tekrar Başvur"
+        navigateTo="Collections"
+      />
       )}
       {namFromGetUser.has_club == 0 && (
-        <>
-          <View style={{ paddingTop: 10, gap: 10 }}>
-            <View>
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "#4C6272",
-                  fontWeight: "bold",
-                  fontSize: 16,
-                }}
-              >
-                Emlak Kulüp Üyeliğiniz Bulunmamaktadır!
-              </Text>
-            </View>
+        <NoDataScreen
+          message={
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir."
+              : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir."
+          }
+          iconName="wallet-plus"
+          buttonText="Başvur"
+          navigateTo="Collections"
+        />
 
-            <View style={{ width: "100%" }}>
-              <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                {user.type == 2 && user.corporate_type == "Emlak Ofisi"
-                  ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"
-                  : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"}
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#F65656",
-                width: "100%",
-                padding: 10,
-              }}
-              onPress={() => {
-                nav.navigate("Collections");
-              }}
-            >
-              <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
-                Tekrar Başvur
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </>
       )}
       {namFromGetUser.has_club == 1 && (
         <>
@@ -474,16 +402,16 @@ export default function CollectionsPage() {
               <ActivityIndicator color="#333" size={"large"} />
             </View>
           ) : collections.length == 0 ? (
-             <NoDataScreen
-             message={
-              user.type == 2 && user.corporate_type == "Emlak Ofisi"
-                ? "Portföyünüzde ilan bulunmamaktadır."
-                : "Koleksiyonunuzda ilan bulunmamaktadır."
-            }
-             iconName="bookmark-add"
-             buttonText="Anasayfaya Dön"
-             navigateTo="HomePage"
-           />
+            <NoDataScreen
+              message={
+                user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                  ? "Portföyünüzde ilan bulunmamaktadır."
+                  : "Koleksiyonunuzda ilan bulunmamaktadır."
+              }
+              iconName="bookmark"
+              buttonText="Anasayfaya Dön"
+              navigateTo="HomePage"
+            />
           ) : (
             <View style={{ height: "100%", paddingTop: 5 }}>
               <ScrollView
@@ -578,13 +506,13 @@ export default function CollectionsPage() {
                           Dialog.show({
                             title:
                               user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
+                                user.corporate_type == "Emlak Ofisi"
                                 ? "Seçili Portföy Bulunmamaktadır"
                                 : `Seçili koleksiyon bulunmamaktadır`,
                             type: ALERT_TYPE.WARNING,
                             textBody:
                               user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
+                                user.corporate_type == "Emlak Ofisi"
                                 ? "Lütfen silmek istediğiniz Portföyü seçin"
                                 : "Lütfen silmek istediğiniz Koleksiyonu seçin",
                             button: "Tamam",
@@ -1272,7 +1200,7 @@ const styles = StyleSheet.create({
     padding: 7,
     borderRadius: 5,
   },
-  
+
   modalView4: {
     width: "100%",
 
