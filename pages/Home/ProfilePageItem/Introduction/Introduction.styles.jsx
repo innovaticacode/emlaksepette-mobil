@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
   starArea: {
-    marginVertical: 10,
+    marginVertical: 16,
   },
   flatList: {
     paddingVertical: 10,
@@ -46,5 +46,40 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
     color: "#555",
+  },
+  projectTitle: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#000",
+  },
+  seperator: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    height: 2,
+    backgroundColor: "#eaeff5",
+    marginVertical: 4,
+  },
+  allProjectsButton: {
+    backgroundColor: "#EA2C2E",
+    paddingVertical: 5,
+    borderRadius: 4,
+  },
+  allProjectsButtonText: {
+    color: "white",
+    fontSize: 11,
+    paddingHorizontal: 10,
+  },
+  titleArea: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 4,
+  },
+  infoArea: {
+    borderColor: "#eaeff5",
+    borderWidth: 1,
+    padding: 4,
+    borderRadius: 6,
   },
 });

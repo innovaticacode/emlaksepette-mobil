@@ -469,7 +469,7 @@ export default function Profile() {
               </ScrollView>
             </View>
             <View style={{ flex: 1, paddingBottom: height * 0.1 }}>
-              {tab === 0 && <Introduction id={id} />}
+              {tab === 0 && <Introduction id={id} setTab={settab} />}
               {tab === 2 && <ProjectAdverts data={storeData} />}
               {tab === 3 && <RealtorAdverts housingdata={housingRecords} />}
               {tab === 5 && <Team teamm={teamm} />}
