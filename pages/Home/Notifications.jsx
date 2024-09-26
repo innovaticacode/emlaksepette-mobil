@@ -19,20 +19,20 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import { ActivityIndicator } from "react-native-paper";
 import NoDataScreen from "./components/NoDataScreen";
 import { apiUrl } from "../../components/methods/apiRequest";
+import { useDispatch } from "react-redux";
+import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
 
 export default function Notifications() {
+  const dispatch = useDispatch();
   const [user, setUser] = useState({});
+  const [loading, setloading] = useState(false);
+  const navigation = useNavigation();
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [notifications, setNotifications] = useState([]);
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  // console.log(user);
-  const [loading, setloading] = useState(false);
-
-  const navigation = useNavigation();
-
-  const [notificationCount, setNotificationCount] = useState(0);
-
-  const [notifications, setNotifications] = useState([]);
 
   const fetchNotifications = async () => {
     try {
@@ -93,7 +93,14 @@ export default function Notifications() {
         }
       );
       Alert.alert("Başarılı", "Silme işlemi başarılı!");
-      fetchNotifications();
+      await fetchNotifications();
+
+      return dispatch(
+        setNotificationsRedux({
+          notificationsCount: 0,
+        })
+      );
+
       console.log("Delete request successful:", response.data);
     } catch (error) {
       Alert.alert("Hata", "Silme işlemi başarısız oldu!");
@@ -108,7 +115,7 @@ export default function Notifications() {
     setalertFordeleteNotificate(true);
   };
 
-  const deleteNotifacte = async () => {
+  const deleteNotificate = async () => {
     setloading(true);
     try {
       const response = await axios.delete(
@@ -122,19 +129,28 @@ export default function Notifications() {
           },
         }
       );
+
       if (response.data.status) {
         await fetchNotifications();
+
+        dispatch(
+          setNotificationsRedux({
+            notificationsCount: Math.max(0, notificationCount - 1),
+          })
+        );
+
         Alert.alert("Başarılı", response.data.message);
       } else {
         setalertFordeleteNotificate(false);
         Alert.alert("Başarısız", response.data.message);
       }
+
       setalertFordeleteNotificate(false);
-      setloading(false);
     } catch (error) {
-      // Alert.alert("Hata", "Silme işlemi başarısız oldu!");
-      // console.error("Error making DELETE request:", error);
-      setloading(false);
+      Alert.alert("Hata", "Silme işlemi başarısız oldu!");
+      console.error("Error making DELETE request:", error);
+    } finally {
+      setloading(false); // Move setloading(false) to the finally block
     }
   };
 
@@ -215,7 +231,7 @@ export default function Notifications() {
                         />
                       ))}
                     </View>
-                    {/* <AwesomeAlert
+                    <AwesomeAlert
                       show={deleteAlertForNotification}
                       showProgress={false}
                       titleStyle={{
@@ -251,7 +267,7 @@ export default function Notifications() {
                         marginLeft: 20,
                         marginRight: 20,
                       }}
-                    /> */}
+                    />
 
                     <AwesomeAlert
                       show={alertFordeleteNotificate}
@@ -277,7 +293,7 @@ export default function Notifications() {
                         setalertFordeleteNotificate(false);
                       }}
                       onConfirmPressed={() => {
-                        deleteNotifacte();
+                        deleteNotificate();
                         setalertFordeleteNotificate(false);
                       }}
                       confirmButtonTextStyle={{
