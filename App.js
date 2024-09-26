@@ -122,6 +122,8 @@ import {SheetProvider} from 'react-native-actions-sheet';
 
 import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
 import AllFeaturedRealEstate from "./pages/Home/AllFeaturedRealEstate";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 
 
 
@@ -185,6 +187,7 @@ export default function App({ route }) {
     return <SplashScreen />;
   }
   return (
+    <Provider store={store}>
     <AlertNotificationRoot>
       
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -1194,5 +1197,6 @@ export default function App({ route }) {
       </SheetProvider>
     </GestureHandlerRootView>
     </AlertNotificationRoot>
+    </Provider>
   );
 }
