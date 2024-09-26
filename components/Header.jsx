@@ -34,7 +34,7 @@ export default function Header({ loading, onPress, index, tab }) {
         },
       });
       const unreadCount = response.data.filter(
-        (notification) => notification.is_show === 1
+        (notification) => notification.is_show === 0
       ).length;
       return setNotificationCount(unreadCount);
     } catch (error) {

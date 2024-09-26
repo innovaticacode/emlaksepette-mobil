@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 
 import Notificate from "../../components/Notificate";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
 import "moment/locale/tr";
 import { getValueFor } from "../../components/methods/user";
@@ -18,10 +18,9 @@ import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { ActivityIndicator } from "react-native-paper";
 import NoDataScreen from "./components/NoDataScreen";
+import { apiUrl } from "../../components/methods/apiRequest";
 
 export default function Notifications() {
-  const route = useRoute();
-
   const [user, setUser] = useState({});
   useEffect(() => {
     getValueFor("user", setUser);
@@ -63,7 +62,7 @@ export default function Notifications() {
       }
 
       const unreadCount = response.data.filter(
-        (notification) => notification.readed === 0
+        (notification) => notification.is_show === 0
       ).length;
       setNotificationCount(unreadCount);
     } catch (error) {
@@ -111,46 +110,30 @@ export default function Notifications() {
 
   const deleteNotifacte = async () => {
     setloading(true);
-
-    console.log("Silinecek Bildirim ID'si:", selectedNotificateId);
-    console.log("Kullanıcı ID'si:", user?.id);
-
     try {
       const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/notification/delete",
+        `${apiUrl}institutional/notification/delete`,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
           },
           data: {
             id: selectedNotificateId,
-            userId: user?.id,
           },
         }
       );
-
-      console.debug(
-        "Delete request DATA ----------------------------:",
-        response.data
-      );
-      console.debug(
-        "Delete request STATUS ----------------------------:",
-        response.data.success
-      );
-
-      if (response.data.success) {
-        // Başarı kontrolü yapın
+      if (response.data.status) {
         await fetchNotifications();
-        Alert.alert("Başarılı", "Silme işlemi başarılı!");
+        Alert.alert("Başarılı", response.data.message);
       } else {
-        Alert.alert("Hata", "Silme işlemi başarısız oldu!");
+        setalertFordeleteNotificate(false);
+        Alert.alert("Başarısız", response.data.message);
       }
-
       setalertFordeleteNotificate(false);
+      setloading(false);
     } catch (error) {
-      Alert.alert("Hata", "Silme işlemi başarısız oldu!");
-      console.error("Error making DELETE request:", error);
-    } finally {
+      // Alert.alert("Hata", "Silme işlemi başarısız oldu!");
+      // console.error("Error making DELETE request:", error);
       setloading(false);
     }
   };
@@ -232,7 +215,7 @@ export default function Notifications() {
                         />
                       ))}
                     </View>
-                    <AwesomeAlert
+                    {/* <AwesomeAlert
                       show={deleteAlertForNotification}
                       showProgress={false}
                       titleStyle={{
@@ -243,7 +226,7 @@ export default function Notifications() {
                         margin: 5,
                       }}
                       title={
-                        "Tüm bildirimleri silmek istediğinize eminmisiniz?"
+                        "Tüm bildirimleri silmek istediğinize emin misiniz?"
                       }
                       messageStyle={{ textAlign: "center" }}
                       closeOnTouchOutside={true}
@@ -268,7 +251,8 @@ export default function Notifications() {
                         marginLeft: 20,
                         marginRight: 20,
                       }}
-                    />
+                    /> */}
+
                     <AwesomeAlert
                       show={alertFordeleteNotificate}
                       showProgress={false}
@@ -294,6 +278,7 @@ export default function Notifications() {
                       }}
                       onConfirmPressed={() => {
                         deleteNotifacte();
+                        setalertFordeleteNotificate(false);
                       }}
                       confirmButtonTextStyle={{
                         marginLeft: 20,
