@@ -6,11 +6,13 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
+  KeyboardAvoidingView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Platform, findNodeHandle, UIManager } from "react-native";
 
 import RNPickerSelect from "react-native-picker-select";
 import { getValueFor } from "./methods/user";
@@ -19,6 +21,7 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import { ScrollView } from "react-native-gesture-handler";
 const { width, height } = Dimensions.get("window");
 
 const SwapScreenNav = () => {
@@ -44,6 +47,7 @@ const SwapScreenNav = () => {
   const [formVisible, setFormVisible] = useState(false);
   console.log(projectId);
   const [user, setUser] = useState({});
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -275,10 +279,16 @@ const SwapScreenNav = () => {
 
   return (
     <AlertNotificationRoot>
-      <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+      <KeyboardAwareScrollView
+        style={styles.keyboardContainer}
+        showsVerticalScrollIndicator={false}
+        extraScrollHeight={300} // Adds extra height to avoid keyboard overlapping
+        enableOnAndroid={true} // Ensures it works well on Android
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.container}>
-          <View style={[styles.centeredView, {}]}>
-            <View style={[styles.modalView, { height: "90%" }]}>
+          <ScrollView style={[styles.centeredView, {}]}>
+            <View style={[styles.modalView, { height: "100%" }]}>
               <Text
                 style={{
                   fontWeight: "bold",
@@ -286,6 +296,7 @@ const SwapScreenNav = () => {
                   textAlign: "center",
                   color: "#EA2B2E",
                   fontWeight: "600",
+                  paddingTop: 10,
                 }}
               >
                 {projectData.project.project_title} projesinde {roomOrder} No'lu
@@ -324,6 +335,7 @@ const SwapScreenNav = () => {
                       style={styles.input}
                       value={emailid}
                       onChangeText={(value) => setEmailId(value)}
+                      keyboardType="email-address"
                       placeholder="Email Adresiniz"
                     />
                     {errorStatu == 6 && (
@@ -363,7 +375,7 @@ const SwapScreenNav = () => {
                   <View>
                     <Text style={styles.label}>Şehir</Text>
                     <RNPickerSelect
-                      doneText="Tamam"
+                      eText="Tamam"
                       placeholder={{
                         label: "Şehir Seçiniz...",
                         value: null,
@@ -415,7 +427,7 @@ const SwapScreenNav = () => {
                 </TouchableOpacity>
               </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
       </KeyboardAwareScrollView>
     </AlertNotificationRoot>
@@ -424,10 +436,11 @@ const SwapScreenNav = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 100,
+  },
+  keyboardContainer: {
+    flex: 1,
     padding: 10,
     backgroundColor: "#FFFFFF",
   },
