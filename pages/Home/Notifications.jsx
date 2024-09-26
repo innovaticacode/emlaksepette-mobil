@@ -6,19 +6,14 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Notificate from "../../components/Notificate";
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import moment from "moment";
 import "moment/locale/tr";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { ActivityIndicator } from "react-native-paper";
@@ -31,7 +26,7 @@ export default function Notifications() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  console.log(user);
+  // console.log(user);
   const [loading, setloading] = useState(false);
 
   const navigation = useNavigation();
@@ -86,6 +81,7 @@ export default function Notifications() {
     }
   }, [user.access_token]);
 
+  //click tumunu sil button
   const deleteRequestWithToken = async () => {
     setloading(true);
     try {
@@ -107,8 +103,17 @@ export default function Notifications() {
       setloading(false);
     }
   };
+
+  const selectnotificate = (id) => {
+    setselectedNotificateId(id);
+    setalertFordeleteNotificate(true);
+  };
+
   const deleteNotifacte = async () => {
     setloading(true);
+
+    console.log("Silinecek Bildirim ID'si:", selectedNotificateId);
+    console.log("Kullanıcı ID'si:", user?.id);
 
     try {
       const response = await axios.delete(
@@ -124,9 +129,18 @@ export default function Notifications() {
         }
       );
 
+      console.debug(
+        "Delete request DATA ----------------------------:",
+        response.data
+      );
+      console.debug(
+        "Delete request STATUS ----------------------------:",
+        response.data.success
+      );
+
       if (response.data.success) {
         // Başarı kontrolü yapın
-        fetchNotifications();
+        await fetchNotifications();
         Alert.alert("Başarılı", "Silme işlemi başarılı!");
       } else {
         Alert.alert("Hata", "Silme işlemi başarısız oldu!");
@@ -146,12 +160,7 @@ export default function Notifications() {
   const [selectedNotificateId, setselectedNotificateId] = useState(0);
   const [alertFordeleteNotificate, setalertFordeleteNotificate] =
     useState(false);
-  const selectnotificate = (id) => {
-    setselectedNotificateId(id);
-    setalertFordeleteNotificate(true);
-  };
 
-  console.log(selectedNotificateId);
   return (
     <>
       {loading ? (
@@ -209,7 +218,7 @@ export default function Notifications() {
                       </Text>
                     </TouchableOpacity>
                   </View>
-                  <ScrollView style={{}}>
+                  <ScrollView>
                     <View style={{ gap: 15 }}>
                       {notifications.map((item, index) => (
                         <Notificate
@@ -300,12 +309,12 @@ export default function Notifications() {
               )}
             </View>
           ) : (
-            <NoDataScreen 
-            message="Bildirimlerinizi görmek için giriş yapmanız gerekmektedir." 
-            iconName="bell" 
-            buttonText="Giriş Yap"
-            navigateTo="Login"
-          />
+            <NoDataScreen
+              message="Bildirimlerinizi görmek için giriş yapmanız gerekmektedir."
+              iconName="bell"
+              buttonText="Giriş Yap"
+              navigateTo="Login"
+            />
           )}
         </>
       )}
