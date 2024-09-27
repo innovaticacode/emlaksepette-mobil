@@ -283,8 +283,9 @@ export default function UpgradeProfile() {
       const response = await axios.get(
         `https://private.emlaksepette.com/api/neighborhoods/${value}`
       );
-      // Yanıtı kontrol et
-      setNeighborhoods(response.data.data);
+      console.log("Neighborhood API Response:", response.data); // API yanıtını logla
+      setNeighborhoods(response.data.data); // Gelen mahalle verisini set et
+
       setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
     } catch (error) {
       console.error("Hata:", error);
@@ -545,6 +546,7 @@ export default function UpgradeProfile() {
       GetUserInfo();
     }
   }, [user]);
+  console.log(user?.id);
 
   // namFromGetUser güncellendiğinde form verilerini ve rengi güncelle
 
@@ -917,6 +919,8 @@ export default function UpgradeProfile() {
                         <View
                           style={{
                             flexDirection: item.showArea ? "row" : "",
+                            overflow: "hidden",
+                            borderRadius: 8,
                           }}
                         >
                           {item.showArea && (
@@ -989,28 +993,37 @@ export default function UpgradeProfile() {
                               />
                             </View>
                           ) : (
-                            <RNPickerSelect
-                              doneText="Tamam"
-                              value={formData[item.key]}
-                              placeholder={{
-                                label: "Seçiniz...",
-                                value: null,
+                            <View
+                              style={{
+                                borderRadius: 8,
+                                overflow: "hidden",
+                                borderColor: "#eaeff5",
+                                borderWidth: 1,
                               }}
-                              style={pickerSelectStyles}
-                              onValueChange={(value) => {
-                                handleInputChange(item.key, value);
-                                if (item.key === "city_id") {
-                                  onChangeCity(value); // Şehir seçilince ilçe verilerini almak için
-                                } else if (item.key === "county_id") {
-                                  onChangeCounty(value); // İlçe seçilince mahalle verilerini almak için
-                                } else if (item.key === "neighborhood_id") {
-                                  onChangeNeighborhood(value); // Mahalle seçimi
-                                } else if (item.key === "taxOfficeCity") {
-                                  onchangeTaxOffice(value);
-                                }
-                              }}
-                              items={getItemsForKey(item.key)}
-                            />
+                            >
+                              <RNPickerSelect
+                                doneText="Tamam"
+                                value={formData[item.key]}
+                                placeholder={{
+                                  label: "Seçiniz...",
+                                  value: null,
+                                }}
+                                style={pickerSelectStyles}
+                                onValueChange={(value) => {
+                                  handleInputChange(item.key, value);
+                                  if (item.key === "city_id") {
+                                    onChangeCity(value);
+                                  } else if (item.key === "county_id") {
+                                    onChangeCounty(value);
+                                  } else if (item.key === "neighborhood_id") {
+                                    onChangeNeighborhood(value);
+                                  } else if (item.key === "taxOfficeCity") {
+                                    onchangeTaxOffice(value);
+                                  }
+                                }}
+                                items={getItemsForKey(item.key)}
+                              />
+                            </View>
                           )}
                         </View>
                       </View>
@@ -1431,7 +1444,7 @@ const pickerSelectStyles = StyleSheet.create({
     backgroundColor: "#F3F3F3",
     borderWidth: 1,
     borderColor: "#eaeff5",
-    borderRadius: 48,
+    borderRadius: 8,
     padding: 8,
     fontSize: 14, // to ensure the text is never behind the icon
   },
