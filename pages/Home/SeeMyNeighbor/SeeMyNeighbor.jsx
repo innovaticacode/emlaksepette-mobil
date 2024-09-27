@@ -1,9 +1,121 @@
-import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
-import React from "react";
-import { ScrollView } from "react-native-gesture-handler";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  FlatList,
+  Platform,
+  Dimensions,
+} from "react-native";
+import React, { useState } from "react";
+import Icon5 from "react-native-vector-icons/MaterialIcons";
+import IconGroup from "./IconGroup";
+import IconGroup2 from "./IconGroup2";
+
 const { width, height } = Dimensions.get("window");
 
 const SeeMyNeighbor = () => {
+  const [selectedId, setSelectedId] = useState(null);
+
+  const faqData = [
+    {
+      id: "1",
+      question: '"Komşunu Gör" özelliği nedir?',
+      answer:
+        '"Komşunu Gör" özelliği, aynı inşaat projesinden mülk satın alan kişilerin birbirleriyle iletişim kurmasını sağlar. Bu sayede mülk sahipleri komşularıyla tanışabilir ve daha bilinçli kararlar alabilirler. Sat kirala sistemi gayrimenkullerini hızlı güvenli ve değerinde satmak isteyen bireysel satıcıların gayrimenkullerin platforma kayıtlı kurumsal emlak firmaları vasıtasıyla satışını sağlayan bir hizmettir.',
+    },
+    {
+      id: "2",
+      question: '"Komşunu Gör" özelliğini nasıl kullanabilirim?',
+      answer:
+        "EmlakSepette.com'a kaydolduktan sonra, mülk sahibi olduğunuz projeyi seçip kendinizi ekleyebilirsiniz. Eğer bir projeden mülk almak istiyorsanız, o projedeki mevcut mülk sahiplerine ulaşarak bilgi alabilirsiniz.",
+    },
+    {
+      id: "3",
+      question: "Bu özellik ücretli mi?",
+      answer:
+        "EmlakSepette.com, Kişisel Verilerin Korunması Kanunu (KVKK) çerçevesinde, tüm kullanıcı verilerini güvenli bir şekilde korur. İletişim bilgileri sadece izin verilen kişiler tarafından görüntülenebilir.",
+    },
+    {
+      id: "4",
+      question: '"Komşunu Gör" özelliğini kullanırken bilgilerim güvende mi?',
+      answer:
+        '"Komşunu Gör" özelliği, aynı inşaat projesinden mülk satın alan kişilerin birbirleriyle iletişim kurmasını sağlar. Bu sayede mülk sahipleri komşularıyla tanışabilir ve daha bilinçli kararlar alabilirler. Sat kirala sistemi gayrimenkullerini hızlı güvenli ve değerinde satmak isteyen bireysel satıcıların gayrimenkullerin platforma kayıtlı kurumsal emlak firmaları vasıtasıyla satışını sağlayan bir hizmettir.',
+    },
+    {
+      id: "5",
+      question: "Mülk sahibi değilsem de bu özelliği kullanabilir miyim?",
+      answer:
+        "Evet, bir projeden mülk satın almayı düşünüyorsanız, mevcut mülk sahipleriyle iletişim kurabilir, onların deneyimlerinden faydalanabilirsiniz.",
+    },
+    {
+      id: "6",
+      question: "Projeden mülk aldığımı sisteme nasıl eklerim?",
+      answer:
+        "EmlakSepette.com üzerinden mülkünüzün alımını gerçekleştirirken otomatik olarak verdiğiniz izin ile birlikte kendinizi Komşunu Gör alanına ekleyebilirsiniz. Öncesinde almış olduğunuz bir mülk ise bilgilerinizi eklemek için emlak Sepette çağrı merkezi ile iletişime geçebilirsiniz.",
+    },
+    {
+      id: "7",
+      question: "Komisyonumu ne zaman alabilirim?",
+      answer:
+        '"Komşunu Gör" özelliği, aynı inşaat projesinden mülk satın alan kişilerin birbirleriyle iletişim kurmasını sağlar. Bu sayede mülk sahipleri komşularıyla tanışabilir ve daha bilinçli kararlar alabilirler. Sat kirala sistemi gayrimenkullerini hızlı güvenli ve değerinde satmak isteyen bireysel satıcıların gayrimenkullerin platforma kayıtlı kurumsal emlak firmaları vasıtasıyla satışını sağlayan bir hizmettir.',
+    },
+    {
+      id: "8",
+      question: "Bu özellik hangi projelerde geçerli?",
+      answer:
+        'EmlakSepette.com’da yer alan tüm inşaat projeleri için "Komşunu Gör" özelliği kullanılabilir. İlgili projeyi platformda arayarak özellikten faydalanabilirsiniz.',
+    },
+    {
+      id: "9",
+      question: "İstediğim komşularla nasıl iletişim kurabilirim?",
+      answer:
+        "Komşularınızın iletişim bilgilerine belirli bir ücret karşılığında ulaşabilir ve iletişim bilgilerin görüntülediğiniz müşterilerle irtibata geçebilirisiniz.",
+    },
+  ];
+
+  const toggleExpand = (id) => {
+    setSelectedId(selectedId === id ? null : id);
+  };
+
+  const renderItem = ({ item }) => {
+    const isExpanded = selectedId === item.id;
+
+    return (
+      <View style={styles.itemContainer}>
+        <TouchableOpacity
+          style={[
+            styles.questionContainer,
+            isExpanded ? styles.activeQuestion : null,
+          ]}
+          onPress={() => toggleExpand(item.id)}
+        >
+          <Text
+            style={[
+              styles.questionText,
+              isExpanded ? styles.activeQuestionText : null,
+            ]}
+          >
+            {item.question}
+          </Text>
+
+          <Icon5
+            name={isExpanded ? "keyboard-arrow-up" : "keyboard-arrow-down"}
+            size={24}
+            color={isExpanded ? "#fff" : "#999"}
+          />
+        </TouchableOpacity>
+        {isExpanded && (
+          <View style={styles.answerContainer}>
+            <Text style={styles.answerText}>{item.answer}</Text>
+          </View>
+        )}
+      </View>
+    );
+  };
+
   return (
     <ScrollView style={styles.mainContainer}>
       <View style={styles.mainContainer2}>
@@ -24,7 +136,9 @@ const SeeMyNeighbor = () => {
             iletişime geçebilir, onların deneyimlerinden faydalanarak daha
             bilinçli kararlar alabilirsiniz.
           </Text>
-          <View style={styles.iconContainer}></View>
+          <View style={styles.iconContainer}>
+            <IconGroup />
+          </View>
           <Text style={styles.title}>Projeye Kendinizi Ekleyin</Text>
           <Text style={styles.mainContent}>
             Bir inşaat projesinden mülk satın aldıysanız, emlaksepette.com'da o
@@ -32,7 +146,9 @@ const SeeMyNeighbor = () => {
             diğer mülk sahipleriyle bağlantı kurabilir ve onları
             tanıyabilirsiniz.
           </Text>
-          <View style={styles.iconContainer}></View>
+          <View style={styles.iconContainer}>
+            <IconGroup2 />
+          </View>
           <Text style={styles.title}>Mülk Almak İsteyenler</Text>
           <Text style={styles.mainContent}>
             Eğer bir projeden mülk satın almayı düşünüyorsanız,
@@ -66,15 +182,22 @@ const SeeMyNeighbor = () => {
             atabilirsiniz.
           </Text>
         </View>
-        <View></View>
-        <View></View>
-        <View></View>
-        <View></View>
-        <View></View>
-        <View></View>
-        <View></View>
-        <View></View>
-        <View></View>
+      </View>
+      <View style={styles.SSS}>
+        {/* Sıkça Sorulan Sorular Başlığı */}
+        <View style={styles.faqSection}>
+          <Text style={styles.titleSSS}>Sıkça Sorulan Sorular</Text>
+        </View>
+
+        {/* Alt Bilgi ve SSS */}
+        <View style={styles.container}>
+          <FlatList
+            data={faqData}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={false}
+          />
+        </View>
       </View>
     </ScrollView>
   );
@@ -134,6 +257,53 @@ const styles = StyleSheet.create({
     marginHorizontal: 35,
     marginVertical: 20,
     fontFamily: "Montserrat",
+  },
+  titleSSS: {
+    fontWeight: "700",
+    fontSize: 30,
+    textAlign: "center",
+    color: "black",
+    marginHorizontal: 35,
+    marginVertical: 20,
+    fontFamily: "Inter",
+  },
+  //ALT BİLGİ & SSS STİLLERİ
+  itemContainer: {
+    marginBottom: 10,
+  },
+  questionContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 16, // Sadece dikey padding ekleyelim
+    paddingHorizontal: 20,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 10,
+  },
+  activeQuestion: {
+    backgroundColor: "#EC302E",
+  },
+  questionText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+    flex: 1,
+  },
+  activeQuestionText: {
+    color: "#fff",
+  },
+  answerContainer: {
+    padding: 16,
+    backgroundColor: "#f9f9f9",
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+  },
+  answerText: {
+    fontSize: 14,
+    color: "#666",
+  },
+  SSS: {
+    padding: 20,
   },
 });
 export default SeeMyNeighbor;
