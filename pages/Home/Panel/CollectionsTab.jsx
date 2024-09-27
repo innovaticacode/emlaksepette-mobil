@@ -421,7 +421,7 @@ export default function CollectionsTab() {
           {collections.length == 0 ? (
               <NoDataScreen
                 message="Koleksiyonunuzda ilan bulunmamaktadır."
-                iconName="bookmark-add"
+                iconName="bookmark"
                 buttonText="Anasayfaya Dön"
                 navigateTo="HomePage"
               />
