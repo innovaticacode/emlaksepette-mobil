@@ -37,32 +37,24 @@ const SalePage = () => {
   const [checked1, setChecked1] = useState(false);
   const [checked2, setChecked2] = useState(false);
   const [errors, setErrors] = useState({});
+  const [storeData, setStoreData] = useState([]); // All store data
+  const [store, setStore] = useState([]); // All store data
+
+  const [selectedPoint, setSelectedPoint] = useState(null); // State to hold the selected point
 
   const show = () => {
     setShow(!Show);
   };
   const inputRefs = {
     salePoint: useRef(null),
-    firmName: useRef(null),
-    competentName: useRef(null),
-    email: useRef(null),
-    tel: useRef(null),
     workerNumber: useRef(null),
     city_id: useRef(null),
     county_id: useRef(null),
-    taxOffice: useRef(null),
-    taxNumber: useRef(null),
     message: useRef(null),
   };
 
   const [formData, setFormData] = useState({
     salePoint: "",
-    firmName: "",
-    competentName: "",
-    email: "",
-    tel: "",
-    taxOffice: "",
-    taxNumber: "",
     workerNumber: "",
     city_id: "",
     county_id: "",
@@ -116,15 +108,6 @@ const SalePage = () => {
     setshowMailSendAlert(true);
   };
 
-  const [pointOptions, setPointOptions] = useState([
-    { label: "İnşaat Ofisi", value: "option1" },
-    { label: "Üretici Firma", value: "option2" },
-    { label: "Turizm Amaçlı Kiralama", value: "option3" },
-  ]);
-
-  const handleInputChange = (key, value) => {
-    setFormData({ ...formData, [key]: value });
-  };
   const [cities, setCities] = useState([]);
   const [counties, setCounties] = useState([]);
 
@@ -134,48 +117,18 @@ const SalePage = () => {
     getValueFor("user", setuser);
     console.log(user);
   }, []);
+  const [error, setError] = useState({});
 
   const handleSubmit = async () => {
-    const {
-      salePoint,
-      firmName,
-      competentName,
-      email,
-      tel,
-      workerNumber,
-      city_id,
-      county_id,
-      taxOffice,
-      taxNumber,
-      message,
-    } = formData;
-
-    /*   console.log("Form values before validation:", {
-      salePoint,
-      firmName,
-      competentName,
-      email,
-      tel,
-      workerNumber,
-      city_id,
-      county_id,
-      taxOffice,
-      taxNumber,
-      message,
-      point,
-    }); */
-    // Reset errors
-    setErrors({});
+    const { salePoint, workerNumber, city_id, county_id, message } = formData;
 
     // Validation logic
     const newErrors = {};
     if (!salePoint) newErrors.salePoint = "İnşaat Ofisi seçimi gerekli.";
-    if (!firmName) newErrors.firmName = "Firma adı gerekli.";
-    if (!competentName) newErrors.competentName = "Yetkili adı gerekli.";
-    if (!email) newErrors.email = "E-posta gerekli.";
-    if (!tel) newErrors.tel = "Telefon numarası gerekli.";
     if (!city_id) newErrors.city_id = "Şehir gerekli.";
     if (!county_id) newErrors.county_id = "İlçe gerekli.";
+    if (!workerNumber) newErrors.workerNumber = "Çalışan sayısı gerekli.";
+
     // Add more validations as needed
 
     // If there are errors, focus on the first error
@@ -185,18 +138,31 @@ const SalePage = () => {
       inputRefs[firstErrorKey].current.focus(); // Focus the first input with an error
       return;
     }
+    if (!checked || !checked1 || !checked2) {
+      Alert.alert(
+        "Onay Gerekli",
+        "Lütfen tüm onay kutularını işaretleyin." // Alert message in Turkish
+      );
+      return;
+    } else {
+      setError(""); // Clear the error if all checkboxes are checked
+      // Proceed with your logic
+    }
+    setErrors({});
+
+    console.log("Form Data to Send:", {
+      store_id: salePoint,
+      employee_count: workerNumber,
+      city_id,
+      district_id: county_id,
+      message,
+    });
 
     const formDataToSend = new FormData();
     formDataToSend.append("store_id", salePoint);
-    formDataToSend.append("company_name", firmName);
-    formDataToSend.append("authorized_name", competentName);
-    formDataToSend.append("email", email);
-    formDataToSend.append("phone", tel);
     formDataToSend.append("employee_count", workerNumber);
     formDataToSend.append("city_id", city_id);
     formDataToSend.append("district_id", county_id);
-    formDataToSend.append("tax_office", taxOffice);
-    formDataToSend.append("tax_number", taxNumber);
     formDataToSend.append("message", message);
 
     try {
@@ -211,6 +177,13 @@ const SalePage = () => {
             },
           }
         );
+        console.log("Form Data tooS Send:", {
+          store_id: salePoint,
+          employee_count: workerNumber,
+          city_id,
+          district_id: county_id,
+          message,
+        });
         console.log("Form Data to Send:", formDataToSend);
 
         console.log("User Token:", user?.access_token);
@@ -218,21 +191,29 @@ const SalePage = () => {
         // Reset form
         setFormData({
           salePoint: "",
-          firmName: "",
-          competentName: "",
-          email: "",
-          tel: "",
-          taxOffice: "",
-          taxNumber: "",
           workerNumber: "",
           city_id: "",
           county_id: "",
           message: "",
         });
+        setChecked(false); // Reset checkbox 1
+        setChecked1(false); // Reset checkbox 2
+        setChecked2(false); // Reset checkbox 3
+        setPointOptions(false);
       }
     } catch (error) {
-      console.error("Hata:", error);
-      Alert.alert("Başvuru Hatası", "Bir hata oluştu. Lütfen tekrar deneyin.");
+      if (error.response) {
+        // Server responded with a status code outside the range of 2xx
+        console.error("Response Data:", error.response.data); // Log the response data from the server
+        console.error("Response Status:", error.response.status); // Log the status code
+        console.error("Response Headers:", error.response.headers); // Log the response headers
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("Request Data:", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error Message:", error.message);
+      }
     }
   };
 
@@ -253,6 +234,7 @@ const SalePage = () => {
     };
     fetchTaxOfficeCity();
   }, []);
+
   const fetchTaxOffice = async (value) => {
     try {
       const response = await axios.get(
@@ -277,6 +259,54 @@ const SalePage = () => {
     };
     fetchCities();
   }, []);
+
+  const [pointOptions, setPointOptions] = useState([
+    { label: "İnşaat Ofisi", value: "İnşaat Ofisi" },
+    { label: "Üretici Firma", value: "Üretici" },
+    { label: "Turizm Amaçlı Kiralama", value: "Turizm Amaçlı Kiralama" },
+  ]);
+
+  // Example of handling corporate type change
+  const [corporateType, setCorporateType] = useState(null);
+
+  const fetchStores = async (selectedCorporateType) => {
+    try {
+      const response = await axios.get(
+        `https://private.emlaksepette.com/api/fetch-stores`,
+        {
+          params: { corporate_type: selectedCorporateType }, // Send the corporate type as a query parameter
+        }
+      );
+      const storesFormatted = response.data.stores.map((store) => ({
+        label: store.name, // Assuming the API returns store names in 'name'
+        value: store.id, // Assuming the API returns store IDs in 'id'
+      }));
+
+      // Update state with formatted stores
+      setStoreData(storesFormatted); // Store the fetched stores in desired format
+      setFilteredStores(storesFormatted); // Filtered stores for picker
+    } catch (error) {
+      console.error("Hata:", error);
+    }
+  };
+  const handleCorporateTypeChange = (value) => {
+    setCorporateType(value); // Store the selected corporate type
+    fetchStores(value); // Fetch stores for the selected corporate type
+  };
+  const handleStores = (key, value) => {
+    setFormData((prevData) => ({ ...prevData, [key]: value }));
+  };
+
+  const handleInputChange = (key, value) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [key]: value,
+    }));
+  };
+  const onChangeStore = (value) => {
+    setFormData({ ...formData, salePoint: value });
+  };
+  const [filteredStores, setFilteredStores] = useState([]);
 
   const fetchCounties = async (value) => {
     try {
@@ -363,6 +393,30 @@ const SalePage = () => {
                 </View>
               );
             }
+            if (item.key === "salePoint") {
+              return (
+                <View key={i} style={styles.inputContainer}>
+                  <Text style={[styles.label, labelStyle]}>{item.label}</Text>
+                  <RNPickerSelect
+                    doneText="Tamam"
+                    value={formData.salePoint || null}
+                    placeholder={{ label: "Seçiniz...", value: null }}
+                    style={pickerSelectStyles}
+                    keyboardType={item.keyboardType || "default"}
+                    onValueChange={(value) => {
+                      handleInputChange(item.key, value);
+                      console.log("Selected Store:", value);
+                    }}
+                    items={filteredStores} // Use filteredStores here
+                    useNativeAndroidPickerStyle={false}
+                  />
+                  {errors.salePoint && (
+                    <Text style={styles.errorText}>{errors[item.key]}</Text>
+                  )}
+                </View>
+              );
+            }
+
             if (item.key === "message") {
               return (
                 <View key={i} style={styles.inputContainer}>
@@ -384,18 +438,16 @@ const SalePage = () => {
                 </View>
               );
             }
-            if (item.key === "point") {
+            if (item.key === "corporateType") {
               return (
                 <View key={i} style={styles.inputContainer}>
                   <Text style={[styles.label, labelStyle]}>{item.label}</Text>
                   <RNPickerSelect
                     doneText="Tamam"
-                    value={formData[item.key] || null}
+                    value={corporateType}
                     placeholder={{ label: "Seçiniz...", value: null }}
                     style={pickerSelectStyles}
-                    onValueChange={(value) =>
-                      handleInputChange(item.key, value)
-                    }
+                    onValueChange={handleCorporateTypeChange}
                     items={pointOptions}
                     useNativeAndroidPickerStyle={false}
                   />
@@ -405,23 +457,25 @@ const SalePage = () => {
                 </View>
               );
             }
-            return (
-              <View key={i} style={styles.inputContainer}>
-                <Text style={[styles.label, labelStyle]}>{item.label}</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder={item.placeholder || ""}
-                  value={formData[item.key]}
-                  onChangeText={(value) => handleInputChange(item.key, value)}
-                  keyboardType={item.keyboardType || "default"}
-                  editable={!item.disabled}
-                  maxLength={item.maxlength}
-                />
-                {errors[item.key] && (
-                  <Text style={styles.errorText}>{errors[item.key]}</Text>
-                )}
-              </View>
-            );
+            if (item.key === "workerNumber") {
+              return (
+                <View key={i} style={styles.inputContainer}>
+                  <Text style={[styles.label, labelStyle]}>{item.label}</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder={item.placeholder || ""}
+                    value={formData[item.key]}
+                    onChangeText={(value) => handleInputChange(item.key, value)}
+                    keyboardType={item.keyboardType || "default"}
+                    editable={!item.disabled}
+                    maxLength={item.maxlength}
+                  />
+                  {errors[item.key] && (
+                    <Text style={styles.errorText}>{errors[item.key]}</Text>
+                  )}
+                </View>
+              );
+            }
           })}
           <View>
             {/* Accept KVKK Checkbox */}
@@ -564,7 +618,7 @@ const SalePage = () => {
                   fontWeight: "600",
                 }}
               >
-                Başvuruyu gönder
+                Başvuruyu Gönder
               </Text>
             </TouchableOpacity>
           </View>
@@ -804,7 +858,6 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: "white",
     padding: 20,
-
     borderRadius: 5,
   },
   Acceptbtn: {
