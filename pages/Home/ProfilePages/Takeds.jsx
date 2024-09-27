@@ -10,7 +10,7 @@ import { getValueFor } from '../../../components/methods/user';
 import { Stack } from "@react-native-material/core";
 import { CheckBox } from "react-native-elements";
 import Modal from "react-native-modal";
-import NoDataScreen from '../components/NoDataScreen';
+import NoDataScreen from '../../../components/NoDataScreen';
 
 export default function Takeds() {
   const [search, setSearch] = useState('');

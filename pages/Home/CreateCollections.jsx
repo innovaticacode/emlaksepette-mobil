@@ -19,7 +19,7 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
-import NoDataScreen from "./components/NoDataScreen";
+import NoDataScreen from "../../components/NoDataScreen";
 export default function CreateCollections() {
   const route = useRoute();
   const { HouseID } = route.params;

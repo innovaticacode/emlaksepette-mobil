@@ -41,7 +41,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import DrawerMenu from "../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
-import NoDataScreen from "./components/NoDataScreen";
+import NoDataScreen from "../../components/NoDataScreen";
 
 export default function Basket() {
   const route = useRoute();

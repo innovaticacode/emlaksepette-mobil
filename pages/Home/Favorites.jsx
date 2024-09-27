@@ -28,7 +28,7 @@ import {
   ALERT_TYPE,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
-import NoDataScreen from "./components/NoDataScreen";
+import NoDataScreen from "../../components/NoDataScreen";
 
 export default function Favorites() {
   const navigation = useNavigation();

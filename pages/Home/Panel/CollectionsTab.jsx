@@ -36,7 +36,7 @@ import { useNavigation } from "@react-navigation/native";
 import CollectionsItem from "../ProfilePages/profileComponents/CollectionsItem";
 import RegisterRealtorClub from "../ProfilePages/RegisterRealtorClub";
 import { getValueFor } from "../../../components/methods/user";
-import NoDataScreen from "../components/NoDataScreen";
+import NoDataScreen from "../../../components/NoDataScreen";
 
 export default function CollectionsTab() {
   const navigation = useNavigation();
