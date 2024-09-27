@@ -35,6 +35,11 @@ export default function Notifications() {
   const [selectedNotificateId, setselectedNotificateId] = useState(0);
   const [alertFordeleteNotificate, setalertFordeleteNotificate] =
     useState(false);
+  const [showDeletedAlert, setShowDeletedAlert] = useState({
+    show: false,
+    message: "",
+    success: false,
+  });
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -98,14 +103,18 @@ export default function Notifications() {
           },
         }
       );
-      Alert.alert("Başarılı", "Silme işlemi başarılı!");
       await fetchNotifications();
 
-      return dispatch(
+      dispatch(
         setNotificationsRedux({
           notificationsCount: 0,
         })
       );
+      return setShowDeletedAlert({
+        show: true,
+        message: response.data.message,
+        success: true,
+      });
     } catch (error) {
       Alert.alert("Hata", "Silme işlemi başarısız oldu!");
       console.error("Error making DELETE request:", error);
@@ -142,8 +151,11 @@ export default function Notifications() {
             notificationsCount: Math.max(0, notificationCount - 1),
           })
         );
-
-        Alert.alert("Başarılı", response.data.message);
+        return setShowDeletedAlert({
+          show: true,
+          message: response.data.message,
+          success: true,
+        });
       } else {
         setalertFordeleteNotificate(false);
         Alert.alert("Başarısız", response.data.message);
@@ -156,6 +168,51 @@ export default function Notifications() {
     } finally {
       setloading(false); // Move setloading(false) to the finally block
     }
+  };
+
+  const deletedAlert = () => {
+    return (
+      <AwesomeAlert
+        show={showDeletedAlert.show === true}
+        showProgress={false}
+        titleStyle={{
+          color: "#333",
+          fontSize: 16,
+          fontWeight: "700",
+          textAlign: "center",
+          margin: 5,
+        }}
+        title={showDeletedAlert.message}
+        messageStyle={{ textAlign: "center" }}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={false}
+        showConfirmButton={true}
+        confirmText="Tamam"
+        confirmButtonColor={showDeletedAlert.success ? "#1d8027" : "#ce4d63"}
+        onConfirmPressed={() => {
+          setShowDeletedAlert({
+            ...showDeletedAlert,
+            show: false,
+          });
+          setTimeout(() => {
+            setShowDeletedAlert({
+              show: false,
+              message: "",
+              success: false,
+            });
+          }, 300);
+        }}
+        confirmButtonTextStyle={{
+          marginLeft: 20,
+          marginRight: 20,
+        }}
+        cancelButtonTextStyle={{
+          marginLeft: 20,
+          marginRight: 20,
+        }}
+      />
+    );
   };
 
   return (
@@ -172,6 +229,7 @@ export default function Notifications() {
         </View>
       ) : (
         <>
+          {deletedAlert()}
           {user.access_token ? (
             <View style={styles.container}>
               {notifications?.length == 0 ? (
