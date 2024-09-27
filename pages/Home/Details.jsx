@@ -1095,7 +1095,7 @@ export default function Details({ navigation }) {
                         color={"#333"}
                       />
                       <ImageBackground
-                        source={require("./BadgeYellow.png")}
+                        source={require("../../src/assets/images/BadgeYellow.png")}
                         style={{ width: "100%", height: "100%" }}
                       />
                     </View>

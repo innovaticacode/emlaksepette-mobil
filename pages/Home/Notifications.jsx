@@ -22,7 +22,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { ActivityIndicator } from "react-native-paper";
-import NoDataScreen from "./components/NoDataScreen";
+import NoDataScreen from "../../components/NoDataScreen";
 
 export default function Notifications() {
   const route = useRoute();

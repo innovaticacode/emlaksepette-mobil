@@ -14,7 +14,7 @@ import axios from "axios";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import { Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import NoDataScreen from "../components/NoDataScreen";
+import NoDataScreen from "../../../components/NoDataScreen";
 export default function SwapScreen() {
   const [DetailModal, setDetailModal] = useState(false);
   const openModal = () => {
