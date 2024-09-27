@@ -317,7 +317,7 @@ export default function OrderDetails() {
                   İlan No:{" "}
                 </Text>
                 <Text style={{ fontSize: 13, color: "green" }}>
-                  #{2000000 + id}
+                  #{1000000 + id + '-' + parsedData?.item?.housing}
                 </Text>
               </View>
               <View
@@ -393,14 +393,7 @@ export default function OrderDetails() {
                 </Text>
               </TouchableOpacity>
             </View>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 5,
-                paddingTop: 5,
-              }}
-            ></View>
+
 
             <View
               style={{
@@ -418,13 +411,7 @@ export default function OrderDetails() {
                   {housing?.county?.title}
                 </Text>
               </View>
-              <View
-                style={{ borderWidth: 1, padding: 8, borderColor: "#ebebeb" }}
-              >
-                <Text style={{ fontSize: 13, color: "#EA2C2E" }}>
-                  Taksitli Ödeme
-                </Text>
-              </View>
+
             </View>
             <View style={style.OrderPost}>
               <View style={style.Image}>
@@ -593,7 +580,7 @@ export default function OrderDetails() {
                 fontWeight: "500",
               }}
             >
-              Özet
+              Sipariş Özeti
             </Text>
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -712,7 +699,7 @@ export default function OrderDetails() {
                     padding: 13,
                     borderRadius: 5,
                   }}
-                  onPress={() => {}}
+                  onPress={() => { }}
                 >
                   <Text
                     style={{
