@@ -14,11 +14,12 @@ import { useNavigation } from "@react-navigation/native";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
 import AwesomeAlert from "react-native-awesome-alerts";
+import AsyncStorage from '@react-native-async-storage/async-storage';  // AsyncStorage ekle
 
 export default function SalePageMain() {
   const [isUserHaveToken, setIsUserHaveToken] = useState(false);
   const [isCorporateTypeRight, setIsCorporateTypeRight] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);  // Kullanıcı bilgilerini başlangıçta null olarak ayarla
   useEffect(() => {
     getValueFor("user", setUser);
     console.log(user);
@@ -38,7 +39,7 @@ export default function SalePageMain() {
     }
   };
   const navigateToLogin = () => {
-    navigation.navigate("Register");
+    navigation.navigate("Login");
     setIsCorporateTypeRight(false); // Close the modal
     setIsUserHaveToken(false);
   };
@@ -46,6 +47,10 @@ export default function SalePageMain() {
     setIsCorporateTypeRight(false); // Close the modal
     setIsUserHaveToken(false);
   };
+
+  const firstFunc =() => {
+    
+  }
 
   return (
     <ScrollView
@@ -65,13 +70,13 @@ export default function SalePageMain() {
           margin: 5,
         }}
         messageStyle={{ textAlign: "center" }}
-        message={`Başvuru yapabilmek için üye olmalısınız!`}
+        message={`Başvuru yapabilmek için önce giriş yapmalısınız!`}
         closeOnTouchOutside={true}
         closeOnHardwareBackPress={false}
         showCancelButton={true}
         showConfirmButton={true}
         cancelText="Kapat"
-        confirmText="Üye Ol"
+        confirmText="Giriş Yap"
         cancelButtonColor="#ce4d63"
         confirmButtonColor="#1d8027"
         onCancelPressed={closeModal}
@@ -273,11 +278,10 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)", // modal dışı koyu arkaplan
   },
   salePageImage: {
-    width: 354,
-    height: 80,
+    width: "100%",
+    height: 120,
   },
   salePageImageContainer: {
-    padding: 10,
     justifyContent: "center",
     alignItems: "center",
   },
