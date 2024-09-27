@@ -15,6 +15,8 @@ import {
 import React, { useState, useEffect, useRef } from "react";
 import RNPickerSelect from "react-native-picker-select";
 import HTML from "react-native-render-html";
+import AwesomeAlert from "react-native-awesome-alerts";
+
 import {
   Forms,
   SaleForms,
@@ -39,6 +41,8 @@ const SalePage = () => {
   const [errors, setErrors] = useState({});
   const [storeData, setStoreData] = useState([]); // All store data
   const [store, setStore] = useState([]); // All store data
+  const [errorMessage, setErrorMessage] = useState(""); // State for error messages
+  const [successMessage, setSuccessMessage] = useState("");
 
   const [selectedPoint, setSelectedPoint] = useState(null); // State to hold the selected point
 
@@ -139,16 +143,12 @@ const SalePage = () => {
       return;
     }
     if (!checked || !checked1 || !checked2) {
-      Alert.alert(
-        "Onay Gerekli",
-        "Lütfen tüm onay kutularını işaretleyin." // Alert message in Turkish
-      );
+      setErrorMessage("Lütfen tüm onay kutularını işaretleyin."); // Show error message if checkboxes are not checked
+
       return;
     } else {
-      setError(""); // Clear the error if all checkboxes are checked
-      // Proceed with your logic
+      setErrors({});
     }
-    setErrors({});
 
     console.log("Form Data to Send:", {
       store_id: salePoint,
@@ -184,10 +184,8 @@ const SalePage = () => {
           district_id: county_id,
           message,
         });
-        console.log("Form Data to Send:", formDataToSend);
+        setSuccessMessage("Başvurunuz başarıyla gönderildi."); // Show success message
 
-        console.log("User Token:", user?.access_token);
-        Alert.alert("Başvuru Başarılı", "Başvurunuz başarıyla gönderildi.");
         // Reset form
         setFormData({
           salePoint: "",
@@ -207,14 +205,22 @@ const SalePage = () => {
         console.error("Response Data:", error.response.data); // Log the response data from the server
         console.error("Response Status:", error.response.status); // Log the status code
         console.error("Response Headers:", error.response.headers); // Log the response headers
+        setErrorMessage("Bir hata oluştu: " + error.response.data.message); // Set error message
       } else if (error.request) {
         // The request was made but no response was received
         console.error("Request Data:", error.request);
+        setErrorMessage("Bir hata oluştu. Lütfen tekrar deneyin.");
       } else {
         // Something happened in setting up the request that triggered an Error
         console.error("Error Message:", error.message);
       }
     }
+  };
+  const closeErrorModal = () => {
+    setErrorMessage(""); // Close the error alert
+  };
+  const closeSuccessModal = () => {
+    setSuccessMessage(""); // Close the success alert
   };
 
   //
@@ -360,6 +366,50 @@ const SalePage = () => {
         }}
       >
         <View style={styles.container}>
+          <AwesomeAlert
+            show={!!errorMessage} // Show if there's an error message
+            showProgress={false}
+            titleStyle={{
+              color: "#333",
+              fontSize: 13,
+              fontWeight: "700",
+              textAlign: "center",
+              margin: 5,
+            }}
+            messageStyle={{ textAlign: "center" }}
+            message={errorMessage} // Display error message
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false} // Optional
+            showConfirmButton={true} // Show only confirm button
+            confirmText="Tamam"
+            confirmButtonColor="#1d8027"
+            onConfirmPressed={closeErrorModal} // Close the alert
+            confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          />
+
+          {/* Success Alert */}
+          <AwesomeAlert
+            show={!!successMessage} // Show if there's a success message
+            showProgress={false}
+            titleStyle={{
+              color: "#333",
+              fontSize: 13,
+              fontWeight: "700",
+              textAlign: "center",
+              margin: 5,
+            }}
+            messageStyle={{ textAlign: "center" }}
+            message={successMessage} // Display success message
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={false} // Optional
+            showConfirmButton={true} // Show only confirm button
+            confirmText="Tamam"
+            confirmButtonColor="#1d8027"
+            onConfirmPressed={closeSuccessModal} // Close the alert
+            confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          />
           <Text style={styles.bigTitle}>Satış Noktası Başvuru Formu</Text>
           {SaleForms.map((item, i) => {
             const labelStyle =
@@ -405,7 +455,6 @@ const SalePage = () => {
                     keyboardType={item.keyboardType || "default"}
                     onValueChange={(value) => {
                       handleInputChange(item.key, value);
-                      console.log("Selected Store:", value);
                     }}
                     items={filteredStores} // Use filteredStores here
                     useNativeAndroidPickerStyle={false}
