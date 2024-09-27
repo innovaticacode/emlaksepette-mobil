@@ -19,8 +19,8 @@ import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { ActivityIndicator } from "react-native-paper";
 import NoDataScreen from "./components/NoDataScreen";
-import { apiUrl } from "../../components/methods/apiRequest";
-import { useDispatch } from "react-redux";
+import { apiRequestGet, apiUrl } from "../../components/methods/apiRequest";
+import { useDispatch, useSelector } from "react-redux";
 import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
 
 export default function Notifications() {
@@ -40,6 +40,11 @@ export default function Notifications() {
     message: "",
     success: false,
   });
+  const [readShowAlert, setReadShowAlert] = useState(false);
+
+  const notifiCountRedux = useSelector(
+    (state) => state.notifications.notificationsCount
+  );
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -185,9 +190,23 @@ export default function Notifications() {
           },
         }
       );
-      await fetchNotifications();
+
+      return response && (await fetchNotifications());
     } catch (error) {
       console.error("Error marking notification as read:", error);
+    }
+  };
+
+  const allRead = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}institutional/markAllAsRead`, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
+      return response && (await fetchNotifications());
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error);
     }
   };
 
@@ -271,30 +290,94 @@ export default function Notifications() {
                     }}
                   >
                     <Text style={{ color: "grey" }}>Bugün</Text>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: "#EB2B2E",
-                        paddingLeft: 20,
-                        paddingRight: 20,
-                        padding: 3,
-                        borderRadius: 5,
-                      }}
-                      onPress={() => {
-                        setdeleteAlertForNotification(true);
-                      }}
-                    >
-                      <Text
+                    <View style={{ flexDirection: "row", gap: 16 }}>
+                      {notifiCountRedux > 1 && (
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: "#EB2B2E",
+                            textAlign: "center",
+                            paddingHorizontal: 16,
+                            paddingVertical: 4,
+                            borderRadius: 5,
+                          }}
+                          onPress={() => {
+                            setReadShowAlert(true);
+                          }}
+                        >
+                          <Text
+                            style={{
+                              alignItems: "center",
+                              color: "#ffffff",
+                              fontWeight: "700",
+                            }}
+                          >
+                            Tümünü Oku
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                      <TouchableOpacity
                         style={{
-                          alignItems: "center",
-                          color: "#ffffff",
-                          fontWeight: "700",
+                          backgroundColor: "#EB2B2E",
+                          textAlign: "center",
+                          paddingHorizontal: 16,
+                          paddingVertical: 4,
+                          borderRadius: 5,
+                        }}
+                        onPress={() => {
+                          setdeleteAlertForNotification(true);
                         }}
                       >
-                        Tümünü Sil
-                      </Text>
-                    </TouchableOpacity>
+                        <Text
+                          style={{
+                            alignItems: "center",
+                            color: "#ffffff",
+                            fontWeight: "700",
+                          }}
+                        >
+                          Tümünü Sil
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                   <ScrollView>
+                    <AwesomeAlert
+                      show={readShowAlert}
+                      showProgress={false}
+                      titleStyle={{
+                        color: "#333",
+                        fontSize: 13,
+                        fontWeight: "700",
+                        textAlign: "center",
+                        margin: 5,
+                      }}
+                      title={
+                        "Tüm bildirimleri okundu olarak işaretlemek istediğinize emin misiniz?"
+                      }
+                      messageStyle={{ textAlign: "center" }}
+                      closeOnTouchOutside={true}
+                      closeOnHardwareBackPress={false}
+                      showCancelButton={true}
+                      showConfirmButton={true}
+                      cancelText="Hayır"
+                      confirmText="Evet"
+                      cancelButtonColor="#ce4d63"
+                      confirmButtonColor="#1d8027"
+                      onCancelPressed={() => {
+                        setReadShowAlert(false);
+                      }}
+                      onConfirmPressed={() => {
+                        allRead();
+                        setReadShowAlert(false);
+                      }}
+                      confirmButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                      cancelButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                    />
                     <>
                       <FlatList
                         data={notifications}
