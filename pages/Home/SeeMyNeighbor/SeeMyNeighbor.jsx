@@ -24,9 +24,48 @@ const SeeMyNeighbor = () => {
             iletişime geçebilir, onların deneyimlerinden faydalanarak daha
             bilinçli kararlar alabilirsiniz.
           </Text>
+          <View style={styles.iconContainer}></View>
+          <Text style={styles.title}>Projeye Kendinizi Ekleyin</Text>
+          <Text style={styles.mainContent}>
+            Bir inşaat projesinden mülk satın aldıysanız, emlaksepette.com'da o
+            projeye kendinizi ekleyebilirsiniz. Bu sayede, aynı projede yer alan
+            diğer mülk sahipleriyle bağlantı kurabilir ve onları
+            tanıyabilirsiniz.
+          </Text>
+          <View style={styles.iconContainer}></View>
+          <Text style={styles.title}>Mülk Almak İsteyenler</Text>
+          <Text style={styles.mainContent}>
+            Eğer bir projeden mülk satın almayı düşünüyorsanız,
+            emlaksepette.com'a girerek ilgilendiğiniz projeyi seçebilir ve
+            "Komşunu Gör" özelliğini kullanarak o projeden mülk almış kişilerle
+            görüşebilirsiniz. Bu sayede, projeyle ilgili süreçler hakkında
+            doğrudan bilgi alabilirsiniz.
+          </Text>
+          <View style={styles.iconContainer}></View>
+          <Text style={styles.title}>Mülk Sahipliği</Text>
+          <Text style={styles.mainContent}>
+            Projeden bir mülk satın aldığınızda, EmlakSepette.com'da hangi
+            dairenin sahibi olduğunuz kaydedilir ve bu bilgi platformda açıkça
+            gösterilir. Böylece, diğer mülk sahipleriyle projede yer alabilir ve
+            komşularınızı tanıyabilirsiniz.
+          </Text>
+          <Image
+            style={styles.image}
+            resizeMode="contain"
+            source={require("../../../images/KomsumuGor1.png")}
+          ></Image>
+          <Text style={styles.bigTitle}>Gizlilik ve Güvenlik </Text>
+          <Text style={styles.mainContent}>
+            EmlakSepette.com, "Komşunu Gör" özelliğini Kişisel Verilerin
+            Korunması Kanunu (KVKK) çerçevesinde güvenli bir şekilde sunar.
+            Komşularla iletişime geçmek isteyen kullanıcılar, belirli bir ücret
+            karşılığında komşularının iletişim bilgilerine ulaşabilirler. Bu
+            özellik sayesinde, sadece bir mülk değil, aynı zamanda bir
+            topluluğun parçası olabilirsiniz. Komşularınızla tanışarak, mülk
+            sahibi olma sürecinde daha güvenli ve bilinçli adımlar
+            atabilirsiniz.
+          </Text>
         </View>
-        <View></View>
-        <View></View>
         <View></View>
         <View></View>
         <View></View>
@@ -46,6 +85,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     showsVerticalScrollIndicator: false,
     alignContent: "center",
+    alignSelf: "center",
   },
   imageContainer: {
     alignItems: "center",
@@ -70,12 +110,30 @@ const styles = StyleSheet.create({
   },
   mainContent: {
     textAlign: "center",
-    marginHorizontal: 40,
+    marginHorizontal: 55,
     marginVertical: 10,
     fontWeight: "400",
     padding: 5,
     fontSize: 18,
     margin: 20,
+    lineHeight: 24,
+  },
+  iconContainer: {
+    width: width * 0.4, // ekran genişliğinin %80'i
+    height: width * 0.4,
+    borderRadius: (width * 0.4) / 2,
+    backgroundColor: "#EA2B2E",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    fontWeight: "600",
+    fontSize: 20,
+    textAlign: "center",
+    color: "black",
+    marginHorizontal: 35,
+    marginVertical: 20,
+    fontFamily: "Montserrat",
   },
 });
 export default SeeMyNeighbor;
