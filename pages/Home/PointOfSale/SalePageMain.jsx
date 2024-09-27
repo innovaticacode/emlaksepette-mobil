@@ -14,19 +14,15 @@ import { useNavigation } from "@react-navigation/native";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
 import AwesomeAlert from "react-native-awesome-alerts";
-import AsyncStorage from '@react-native-async-storage/async-storage';  // AsyncStorage ekle
+import AsyncStorage from "@react-native-async-storage/async-storage"; // AsyncStorage ekle
 
 export default function SalePageMain() {
   const [isUserHaveToken, setIsUserHaveToken] = useState(false);
   const [isCorporateTypeRight, setIsCorporateTypeRight] = useState(false);
-  const [user, setUser] = useState(null);  // Kullanıcı bilgilerini başlangıçta null olarak ayarla
+  const [user, setUser] = useState({}); // Kullanıcı bilgilerini başlangıçta null olarak ayarla
   useEffect(() => {
     getValueFor("user", setUser);
-    console.log(user);
   }, []);
-  console.log("User: ", user); // Check if user is defined
-  console.log("Access Token: ", user?.access_token);
-  console.log("corporate type: ", user?.corporate_type);
 
   const navigation = useNavigation();
   const handleSubmit = () => {
@@ -40,18 +36,12 @@ export default function SalePageMain() {
   };
   const navigateToLogin = () => {
     navigation.navigate("Login");
-    setIsCorporateTypeRight(false); // Close the modal
-    setIsUserHaveToken(false);
+    closeModal();
   };
   const closeModal = () => {
     setIsCorporateTypeRight(false); // Close the modal
     setIsUserHaveToken(false);
   };
-
-  const firstFunc =() => {
-    
-  }
-
   return (
     <ScrollView
       keyboardShouldPersistTaps="handled"
