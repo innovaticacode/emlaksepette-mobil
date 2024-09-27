@@ -21,6 +21,7 @@ import NoDataScreen from "./components/NoDataScreen";
 import { apiUrl } from "../../components/methods/apiRequest";
 import { useDispatch } from "react-redux";
 import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
+import { Dialog } from "react-native-alert-notification";
 
 export default function Notifications() {
   const dispatch = useDispatch();
@@ -29,6 +30,11 @@ export default function Notifications() {
   const navigation = useNavigation();
   const [notificationCount, setNotificationCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
+  const [deleteAlertForNotification, setdeleteAlertForNotification] =
+    useState(false);
+  const [selectedNotificateId, setselectedNotificateId] = useState(0);
+  const [alertFordeleteNotificate, setalertFordeleteNotificate] =
+    useState(false);
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -100,8 +106,6 @@ export default function Notifications() {
           notificationsCount: 0,
         })
       );
-
-      console.log("Delete request successful:", response.data);
     } catch (error) {
       Alert.alert("Hata", "Silme işlemi başarısız oldu!");
       console.error("Error making DELETE request:", error);
@@ -153,12 +157,6 @@ export default function Notifications() {
       setloading(false); // Move setloading(false) to the finally block
     }
   };
-
-  const [deleteAlertForNotification, setdeleteAlertForNotification] =
-    useState(false);
-  const [selectedNotificateId, setselectedNotificateId] = useState(0);
-  const [alertFordeleteNotificate, setalertFordeleteNotificate] =
-    useState(false);
 
   return (
     <>
@@ -218,9 +216,10 @@ export default function Notifications() {
                     </TouchableOpacity>
                   </View>
                   <ScrollView>
-                    <View style={{ gap: 15 }}>
+                    <>
                       {notifications.map((item, index) => (
                         <Notificate
+                          isShow={item.is_show}
                           selectnotificate={selectnotificate}
                           key={index}
                           id={item.id}
@@ -230,7 +229,7 @@ export default function Notifications() {
                             .format("LLL")}
                         />
                       ))}
-                    </View>
+                    </>
                     <AwesomeAlert
                       show={deleteAlertForNotification}
                       showProgress={false}

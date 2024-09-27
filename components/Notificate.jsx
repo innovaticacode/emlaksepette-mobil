@@ -2,9 +2,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { Swipeable } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/AntDesign";
-export default function Notificate({ name, time, selectnotificate, id }) {
-  // console.debug("Notificate", name, "-", selectnotificate, "-", id);
-
+export default function Notificate({
+  name,
+  time,
+  selectnotificate,
+  id,
+  isShow,
+}) {
   const renderRightActions = () => (
     <TouchableOpacity
       style={styles.deleteButton}
@@ -15,10 +19,20 @@ export default function Notificate({ name, time, selectnotificate, id }) {
       <Text style={styles.deleteButtonText}>Sil</Text>
     </TouchableOpacity>
   );
+
   return (
     <>
       <Swipeable renderRightActions={renderRightActions}>
-        <View style={styles.container}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => {}}
+          style={
+            ([styles.container],
+            {
+              backgroundColor: isShow == 0 ? "#FFF5F5" : "#FFF",
+            })
+          }
+        >
           <View style={{ flexDirection: "row", paddingVertical: 15 }}>
             <View style={{ flex: 0.2 / 2, alignItems: "center" }}>
               <Icon name="home" size={20} />
@@ -41,7 +55,7 @@ export default function Notificate({ name, time, selectnotificate, id }) {
               <Icon name="delete" size={18} color={"#EA2B2E"} />
             </TouchableOpacity>
           </View>
-        </View>
+        </TouchableOpacity>
       </Swipeable>
     </>
   );
@@ -52,7 +66,6 @@ const styles = StyleSheet.create({
     borderTopColor: "#ebebeb",
     borderBottomWidth: 1,
     borderBottomColor: "#ebebeb",
-    paddingTop: 5,
   },
   deleteButton: {
     paddingLeft: 30,
