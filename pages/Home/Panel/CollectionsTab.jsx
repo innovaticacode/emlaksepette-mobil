@@ -36,7 +36,7 @@ import { useNavigation } from "@react-navigation/native";
 import CollectionsItem from "../ProfilePages/profileComponents/CollectionsItem";
 import RegisterRealtorClub from "../ProfilePages/RegisterRealtorClub";
 import { getValueFor } from "../../../components/methods/user";
-import NoDataScreen from "../components/NoDataScreen";
+import NoDataScreen from "../../../components/NoDataScreen";
 
 export default function CollectionsTab() {
   const navigation = useNavigation();
@@ -421,7 +421,7 @@ export default function CollectionsTab() {
           {collections.length == 0 ? (
               <NoDataScreen
                 message="Koleksiyonunuzda ilan bulunmamaktadır."
-                iconName="bookmark-add"
+                iconName="bookmark"
                 buttonText="Anasayfaya Dön"
                 navigateTo="HomePage"
               />

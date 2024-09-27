@@ -18,10 +18,11 @@ import axios from "axios";
 import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { ActivityIndicator } from "react-native-paper";
-import NoDataScreen from "./components/NoDataScreen";
 import { apiRequestGet, apiUrl } from "../../components/methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
+import NoDataScreen from "../../components/NoDataScreen";
+
 
 export default function Notifications() {
   const dispatch = useDispatch();
