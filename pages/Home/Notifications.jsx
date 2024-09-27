@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -295,19 +296,24 @@ export default function Notifications() {
                   </View>
                   <ScrollView>
                     <>
-                      {notifications.map((item, index) => (
-                        <Notificate
-                          isShow={item.is_show}
-                          selectnotificate={selectnotificate}
-                          key={index}
-                          id={item.id}
-                          name={item.text}
-                          time={moment(item.created_at)
-                            .locale("tr")
-                            .format("LLL")}
-                          onRead={oneAlertRead}
-                        />
-                      ))}
+                      <FlatList
+                        data={notifications}
+                        keyExtractor={(item) => item.id.toString()}
+                        initialNumToRender={10}
+                        onEndReachedThreshold={0.5}
+                        renderItem={({ item }) => (
+                          <Notificate
+                            isShow={item.is_show}
+                            selectnotificate={selectnotificate}
+                            id={item.id}
+                            name={item.text}
+                            time={moment(item.created_at)
+                              .locale("tr")
+                              .format("LLL")}
+                            onRead={oneAlertRead}
+                          />
+                        )}
+                      />
                     </>
                     <AwesomeAlert
                       show={deleteAlertForNotification}
