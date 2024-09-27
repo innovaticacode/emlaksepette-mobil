@@ -143,7 +143,7 @@ const SalePage = () => {
       return;
     }
     if (!checked || !checked1 || !checked2) {
-      setErrorMessage("Lütfen tüm onay kutularını işaretleyin."); // Show error message if checkboxes are not checked
+      setErrorMessage("Tüm sözleşmeler onaylanmadan başvuru yapılamamaktadır."); // Show error message if checkboxes are not checked
 
       return;
     } else {
