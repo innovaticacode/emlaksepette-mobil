@@ -92,7 +92,7 @@ export default function EftPay({
           </Text>
           <ImageBackground
             style={{ width: "100%", height: "100%" }}
-            source={require("./Garanti.png")}
+            source={require("../../src/assets/images/Garanti.png")}
             resizeMode="contain"
           />
         </TouchableOpacity>
@@ -125,7 +125,7 @@ export default function EftPay({
           </Text>
           <ImageBackground
             style={{ width: "100%", height: "100%" }}
-            source={require("./Ziraat.png")}
+            source={require("../../src/assets/images/Ziraat.png")}
             resizeMode="contain"
           />
         </TouchableOpacity>

@@ -94,14 +94,7 @@ export default function ShareScreen() {
               />
               <View style={{ alignItems: "center" }}>
                 <View style={{ width: 80, height: 80 }}>
-                  <Image
-                    source={require("./proje.png")}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      tintColor: "#EA2A28",
-                    }}
-                  />
+                  
                 </View>
               </View>
               <View style={{ padding: 10 }}>
@@ -151,14 +144,7 @@ export default function ShareScreen() {
               />
               <View style={{ alignItems: "center" }}>
                 <View style={{ width: 80, height: 80 }}>
-                  <Image
-                    source={require("./emlak.png")}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      tintColor: "#274ABB",
-                    }}
-                  />
+                  
                 </View>
               </View>
               <View style={{ padding: 10 }}>
@@ -213,14 +199,7 @@ export default function ShareScreen() {
               />
               <View style={{ alignItems: "center" }}>
                 <View style={{ width: 80, height: 80 }}>
-                  <Image
-                    source={require("./emlak.png")}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      tintColor: "#274ABB",
-                    }}
-                  />
+                  
                 </View>
               </View>
               <View style={{ padding: 10 }}>
@@ -279,14 +258,7 @@ export default function ShareScreen() {
             />
             <View style={{ alignItems: "center" }}>
               <View style={{ width: 80, height: 80 }}>
-                <Image
-                  source={require("./emlak.png")}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    tintColor: "#274ABB",
-                  }}
-                />
+                
               </View>
             </View>
             <View style={{ padding: 10 }}>

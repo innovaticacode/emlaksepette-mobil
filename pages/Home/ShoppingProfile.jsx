@@ -230,7 +230,7 @@ export default function ShoppingProfile() {
             ></View>
 
             <ImageBackground
-              source={require("./profilePhoto.jpg")}
+              source={require("../../src/assets/images/profilePhoto.jpg")}
               style={{ width: "100%", height: "100%" }}
               imageStyle={{
                 borderBottomLeftRadius: 30,
@@ -283,7 +283,7 @@ export default function ShoppingProfile() {
                       </Text>
                       <View style={{ width: 20, height: 20, left: 10 }}>
                         <ImageBackground
-                          source={require("./BadgeYellow.png")}
+                          source={require("../../src/assets/images/BadgeYellow.png")}
                           style={{ flex: 1 }}
                         />
 
