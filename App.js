@@ -122,6 +122,7 @@ import {SheetProvider} from 'react-native-actions-sheet';
 
 import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
 import AllFeaturedRealEstate from "./pages/Home/AllFeaturedRealEstate";
+import SeeMyNeighbor from "./pages/Home/SeeMyNeighbor/SeeMyNeighbor";
 
 
 
@@ -1183,6 +1184,17 @@ export default function App({ route }) {
         component={AllFeaturedRealEstate}
         options={({ route }) => ({
           title: "Öne Çıkan Markalar",
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: "#ffffff",
+          },
+        })}
+        />
+        <Stack.Screen
+        name="SeeMyNeighbor"
+        component={SeeMyNeighbor}
+        options={({ route }) => ({
+          title: "Komşumu Gör Nedir?",
           headerBackTitleVisible: false,
           headerStyle: {
             backgroundColor: "#ffffff",
