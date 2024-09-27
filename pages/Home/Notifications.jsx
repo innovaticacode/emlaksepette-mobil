@@ -111,11 +111,11 @@ export default function Notifications() {
       );
       await fetchNotifications();
 
-      dispatch(
-        setNotificationsRedux({
-          notificationsCount: 0,
-        })
-      );
+      // dispatch(
+      //   setNotificationsRedux({
+      //     notificationsCount: 0,
+      //   })
+      // );
       return setShowDeletedAlert({
         show: true,
         message: response.data.message,
@@ -151,11 +151,11 @@ export default function Notifications() {
       if (response.data.status) {
         await fetchNotifications();
 
-        dispatch(
-          setNotificationsRedux({
-            notificationsCount: Math.max(0, notificationCount - 1),
-          })
-        );
+        // dispatch(
+        //   setNotificationsRedux({
+        //     notificationsCount: Math.max(0, notificationCount - 1),
+        //   })
+        // );
         return setShowDeletedAlert({
           show: true,
           message: response.data.message,
