@@ -166,7 +166,31 @@ export default function Notifications() {
       Alert.alert("Hata", "Silme işlemi başarısız oldu!");
       console.error("Error making DELETE request:", error);
     } finally {
-      setloading(false); // Move setloading(false) to the finally block
+      setloading(false);
+    }
+  };
+
+  const oneAlertRead = async (id) => {
+    try {
+      const response = await axios.post(
+        `${apiUrl}institutional/notification/read`,
+        { id: id },
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+      await fetchNotifications();
+      const unreadCount = notifications.filter(
+        (notification) => notification.is_show === 0
+      ).length;
+      setNotificationCount(unreadCount);
+      setNotificationsRedux({
+        notificationsCount: unreadCount,
+      });
+    } catch (error) {
+      console.error("error: read alert", error);
     }
   };
 
@@ -285,6 +309,7 @@ export default function Notifications() {
                           time={moment(item.created_at)
                             .locale("tr")
                             .format("LLL")}
+                          onRead={oneAlertRead}
                         />
                       ))}
                     </>

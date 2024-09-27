@@ -8,6 +8,7 @@ export default function Notificate({
   selectnotificate,
   id,
   isShow,
+  onRead,
 }) {
   const renderRightActions = () => (
     <TouchableOpacity
@@ -25,7 +26,9 @@ export default function Notificate({
       <Swipeable renderRightActions={renderRightActions}>
         <TouchableOpacity
           activeOpacity={0.9}
-          onPress={() => {}}
+          onPress={() => {
+            onRead(id);
+          }}
           style={
             ([styles.container],
             {
