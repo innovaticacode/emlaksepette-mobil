@@ -21,7 +21,6 @@ import NoDataScreen from "./components/NoDataScreen";
 import { apiUrl } from "../../components/methods/apiRequest";
 import { useDispatch } from "react-redux";
 import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
-import { Dialog } from "react-native-alert-notification";
 
 export default function Notifications() {
   const dispatch = useDispatch();
@@ -72,12 +71,18 @@ export default function Notifications() {
         setNotifications([]);
       }
 
-      const unreadCount = response.data.filter(
-        (notification) => notification.is_show === 0
-      ).length;
-      setNotificationCount(unreadCount);
+      if (response) {
+        const unreadCount = response.data.filter(
+          (notification) => notification.is_show === 0
+        ).length;
+
+        dispatch(
+          setNotificationsRedux({
+            notificationsCount: unreadCount,
+          })
+        );
+      }
     } catch (error) {
-      console.error("Error fetching notifications:", error);
       setNotifications([]);
       setNotificationCount(0); // Set unreadCount to 0 in case of an error
     } finally {
@@ -117,7 +122,6 @@ export default function Notifications() {
       });
     } catch (error) {
       Alert.alert("Hata", "Silme işlemi başarısız oldu!");
-      console.error("Error making DELETE request:", error);
     } finally {
       setloading(false);
     }
@@ -164,7 +168,6 @@ export default function Notifications() {
       setalertFordeleteNotificate(false);
     } catch (error) {
       Alert.alert("Hata", "Silme işlemi başarısız oldu!");
-      console.error("Error making DELETE request:", error);
     } finally {
       setloading(false);
     }
@@ -182,15 +185,8 @@ export default function Notifications() {
         }
       );
       await fetchNotifications();
-      const unreadCount = notifications.filter(
-        (notification) => notification.is_show === 0
-      ).length;
-      setNotificationCount(unreadCount);
-      setNotificationsRedux({
-        notificationsCount: unreadCount,
-      });
     } catch (error) {
-      console.error("error: read alert", error);
+      console.error("Error marking notification as read:", error);
     }
   };
 
