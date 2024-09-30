@@ -16,9 +16,12 @@ const ProjectBottomSheetFilter = (props) => {
     { label: "Topraktan Projeler", checked: false, count: 9 },
   ]);
 
-  const toggleCheckbox = (index) => {
-    const newCheckboxes = [...checkboxes];
-    newCheckboxes[index].checked = !newCheckboxes[index].checked;
+  // only one checkbox can be selected at a time
+  const handleCheckboxChange = (index) => {
+    const newCheckboxes = checkboxes.map((checkbox, i) => ({
+      ...checkbox,
+      checked: i === index, // only one checkbox can be selected others will be false
+    }));
     setCheckboxes(newCheckboxes);
   };
 
@@ -92,10 +95,8 @@ const ProjectBottomSheetFilter = (props) => {
               checkedIcon="checkbox-marked"
               uncheckedIcon="checkbox-blank-outline"
               checkedColor="red"
-              label={checkbox.label}
-              checked={checkbox.checked} // Checkbox durumu
-              onChange={() => handleCheckboxChange(index)} // Checkbox değiştirildiğinde
-              onPress={() => toggleCheckbox(index)} // Checkbox tıklandığında
+              checked={checkbox.checked}
+              onPress={() => handleCheckboxChange(index)}
             />
             <Text>{`${checkbox.label} (${checkbox?.count})`}</Text>
           </View>
