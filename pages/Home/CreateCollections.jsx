@@ -19,7 +19,7 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
-import NoDataScreen from "./components/NoDataScreen";
+import NoDataScreen from "../../components/NoDataScreen";
 export default function CreateCollections() {
   const route = useRoute();
   const { HouseID } = route.params;
@@ -378,7 +378,7 @@ export default function CreateCollections() {
                     </View>
                   </View>
 
-                  <View style={{ paddingTop: 45 }}>
+                  {/* <View style={{ paddingTop: 45 }}>
                     <Text
                       style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
                     >
@@ -386,7 +386,7 @@ export default function CreateCollections() {
                         ? "Portföylerim"
                         : "Koleksiyonlarım"}
                     </Text>
-                  </View>
+                  </View> */}
                   <View style={{ gap: 5, padding: 10 }}>
                     {loading ? (
                       <>
@@ -396,7 +396,7 @@ export default function CreateCollections() {
                       </>
                     ) : collections.length == 0 ? (
                       <>
-                        <View
+                        {/* <View
                           style={{
                             alignItems: "center",
                             justifyContent: "center",
@@ -429,14 +429,14 @@ export default function CreateCollections() {
                             >
                               {user.type == 2 &&
                                 user.corporate_type == "Emlak Ofisi"
-                                ? "Portföyünüze İlan bulunmamaktadır"
-                                : "Koleksiyonunuzda ilan bulunmamaktadır"}
+                                ? "Portföyünüze İlan bulunmamaktadır."
+                                : "Koleksiyonunuzda ilan bulunmamaktadır."}
                             </Text>
                           </View>
                           <View
                             style={{ width: "100%", alignItems: "center" }}
                           ></View>
-                        </View>
+                        </View> */}
                       </>
                     ) : (
                       collections.map((item, index) => (

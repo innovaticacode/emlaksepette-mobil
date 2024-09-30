@@ -35,7 +35,7 @@ export default function OrderDetails() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  console.log(user);
+  // console.log(user);
   console.log(OrderId);
   const [Detail, setDetail] = useState({});
   const [refund, setRefund] = useState({});

@@ -7,103 +7,64 @@ import {
   Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import AddBtn from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/EvilIcons";
 import IconMenu from "react-native-vector-icons/Entypo";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
+import { apiUrl } from "./methods/apiRequest";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setNotifications,
+  setNotificationsRedux,
+} from "../store/slices/Notifications/NotificationsSlice";
 
 export default function Header({ loading, onPress, index, tab }) {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [notificationCount, setNotificationCount] = useState(0);
   const [user, setuser] = useState({});
-  const [notifications, setNotifications] = useState([]);
+
+  const notificationCount = useSelector(
+    (state) => state.notifications.notificationsCount
+  );
 
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
 
-  // const fetchNotifications = async () => {
-  //   try {
-  //     if (!user?.access_token) {
-  //       setNotifications([]);
-  //       setNotificationCount(0);
-  //       return;
-  //     }
+  const getNotifications = async () => {
+    try {
+      if (!user?.access_token) {
+        // return setNotificationCount(0);
+      }
+      if (user?.access_token) {
+        const response = await axios.get(`${apiUrl}user/notification`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
+        const unreadCount = response.data.filter(
+          (notification) => notification.is_show === 0
+        ).length;
+        console.debug("unreadCount------------------------->>> :", unreadCount);
+        // setNotificationCount(unreadCount);
 
-  //     const response = await axios.get(
-  //       "https://private.emlaksepette.com/api/user/notification",
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${user.access_token}`,
-  //         },
-  //       }
-  //     );
+        return dispatch(
+          setNotificationsRedux({
+            notificationsCount: unreadCount,
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      // setNotificationCount(0);
+    }
+  };
 
-  //     if (response.data) {
-  //       setNotifications(response.data);
-  //     } else {
-  //       setNotifications([]);
-  //     }
-
-  //     const unreadCount = response.data.filter(
-  //       (notification) => notification.readed === 0
-  //     ).length;
-  //     setNotificationCount(unreadCount);
-  //   } catch (error) {
-  //     console.error("Error fetching notifications:", error);
-  //     setNotifications([]);
-  //     setNotificationCount(0); // Set unreadCount to 0 in case of an error
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (user?.access_token) {
-  //     fetchNotifications();
-  //   }
-  // }, [user.access_token, notifications]);
-
-  //   10 DAKİKA ARALIKLARLA İSTEK AT
-
-  // const [loading, setLoading] = useState(false);
-
-  //   useEffect(() => {
-  //     const intervalId = setInterval(() => {
-  //       fetchNotifications();
-  //     }, 60 * 1000); // 1 dakika aralıklarla kontrol et
-
-  //     return () => clearInterval(intervalId); // Cleanup
-  //   }, []);
-
-  //   const fetchNotifications = async () => {
-  //     try {
-  //       if (!user?.access_token) return;
-  //       setLoading(true);
-  //       const response = await axios.get(
-  //         'https://private.emlaksepette.com/api/user/notification',
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${user.access_token}`,
-  //           },
-  //         }
-  //       );
-
-  //       if (response.data) {
-  //         setNotifications(response.data);
-  //         setNotificationCount(
-  //           response.data.filter(notification => notification.readed === 0).length
-  //         );
-  //       } else {
-  //         setNotifications([]);
-  //         setNotificationCount(0);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching notifications:', error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    getNotifications();
+    console.debug("no------------------------->>> :", notificationCount);
+  }, [user]);
 
   return (
     <View style={styles.header}>
@@ -151,19 +112,19 @@ export default function Header({ loading, onPress, index, tab }) {
             <View
               style={{
                 position: "absolute",
+                top: -4,
+                right: 4,
                 backgroundColor: "red",
-                paddingLeft: 6,
-                paddingRight: 6,
-                paddingTop: 2,
-                paddingBottom: 2,
-                bottom: 22,
-                left: 23,
-                zIndex: 1,
-                borderRadius: 20,
+                borderRadius: 10,
+                width: 20,
+                height: 20,
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 999,
               }}
             >
               <Text style={{ color: "white", fontSize: 11 }}>
-                {notifications.length}
+                {notificationCount}
               </Text>
             </View>
           )}

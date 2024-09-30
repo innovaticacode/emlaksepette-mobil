@@ -26,7 +26,7 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 import { Button } from "react-native-paper";
-import NoDataScreen from "./components/NoDataScreen";
+import NoDataScreen from "../../components/NoDataScreen";
 
 export default function MyComments() {
   const [user, setuser] = useState({});

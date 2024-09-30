@@ -124,6 +124,13 @@ import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
 import AllFeaturedRealEstate from "./pages/Home/AllFeaturedRealEstate";
 import SeeMyNeighbor from "./pages/Home/SeeMyNeighbor/SeeMyNeighbor";
 
+import { Provider } from "react-redux";
+import { store } from "./store/store";
+
+import SalePageMain from "./pages/Home/PointOfSale/SalePageMain";
+import SalePage from "./pages/Home/PointOfSale/SalePage";
+
+
 
 
 const Stack = createNativeStackNavigator();
@@ -186,6 +193,7 @@ export default function App({ route }) {
     return <SplashScreen />;
   }
   return (
+    <Provider store={store}>
     <AlertNotificationRoot>
       
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -1201,10 +1209,34 @@ export default function App({ route }) {
           },
         })}
         />
+        <Stack.Screen
+        name="SalePageMain"
+        component={SalePageMain}
+        options={({ route }) => ({
+          title:"Satış Noktası Ol",
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: "#ffffff",
+          },
+        })}
+        />
+
+        <Stack.Screen name="SalePage" component={SalePage} 
+            options={({ route }) => ({
+              title:"Satış Noktası Başvur",
+              headerBackTitleVisible: false,
+              headerStyle: {
+                backgroundColor: "#ffffff",
+              },
+            })}
+        />
+
+
         </Stack.Navigator>
       </NavigationContainer>
       </SheetProvider>
     </GestureHandlerRootView>
     </AlertNotificationRoot>
+    </Provider>
   );
 }
