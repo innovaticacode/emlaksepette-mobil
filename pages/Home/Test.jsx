@@ -19,7 +19,8 @@ import CollectionsPage from "./CollectionsPage";
 import { getValueFor } from "../../components/methods/user";
 import { ActivityIndicator } from "react-native";
 import { Platform } from "react-native";
-import DrawerMenu from "../../components/DrawerMenu";
+import { DrawerMenu } from "../../components";
+
 import {
   ALERT_TYPE,
   Dialog,

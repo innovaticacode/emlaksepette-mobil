@@ -18,7 +18,7 @@ import Navbar from "../../components/Navbar";
 import SliderMenu from "../../components/SliderMenu";
 import axios from "axios";
 import { useState } from "react";
-import DrawerMenu from "../../components/DrawerMenu";
+import { DrawerMenu } from "../../components";
 import Search from "./Search";
 import Header from "../../components/Header";
 import Estates from "./Home Pages/Estates";

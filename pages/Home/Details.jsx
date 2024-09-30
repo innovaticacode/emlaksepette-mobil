@@ -64,11 +64,11 @@ import { Skeleton } from "@rneui/base";
 import PaymentItem from "../../components/PaymentItem";
 import { err } from "react-native-svg";
 
-import DrawerMenu from "../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../../components/CommentForProject";
 import ImageViewing from "react-native-image-viewing";
+import { DrawerMenu } from "../../components";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);

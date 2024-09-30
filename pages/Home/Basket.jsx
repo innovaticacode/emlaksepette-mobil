@@ -39,7 +39,7 @@ import { Image } from "react-native-svg";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import DrawerMenu from "../../components/DrawerMenu";
+import { DrawerMenu } from "../../components";
 import { ActivityIndicator } from "react-native-paper";
 import NoDataScreen from "../../components/NoDataScreen";
 

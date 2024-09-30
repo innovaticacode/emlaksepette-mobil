@@ -18,7 +18,7 @@ import Categories from "../../components/Categories";
 import Search from "./Search";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
-import DrawerMenu from "../../components/DrawerMenu";
+import { DrawerMenu } from "../../components";
 export default function ShareScreen() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

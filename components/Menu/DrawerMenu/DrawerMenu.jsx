@@ -7,14 +7,15 @@ import {
   Text,
   Image,
 } from "react-native";
-import Search from "../pages/Home/Search";
-import Categories from "./Categories";
+import Search from "../../../pages/Home/Search";
+import Categories from "../../Categories";
 import { useNavigation } from "@react-navigation/native";
-import { getValueFor } from "./methods/user";
+import { getValueFor } from "../../methods/user";
 import IconAntDesign from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/EvilIcons";
 import axios from "axios";
+import { styles } from "./DrawerMenu.style";
 
 const DrawerMenu = ({ setIsDrawerOpen }) => {
   const navigation = useNavigation();
@@ -48,43 +49,23 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
 
   return (
     <SafeAreaView>
-      <ScrollView contentContainerStyle={{ gap: 15 }}>
-        <View
-          style={{
-            backgroundColor: "#FFF",
-            flex: 1,
-            borderTopRightRadius: 10,
-            width: 320,
-            paddingVertical: 12,
-          }}
-        >
-          <View style={{ alignItems: "flex-end", paddingRight: 15 }}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.mainContainer}>
+          <View style={styles.closeIconContainer}>
             <TouchableOpacity onPress={() => setIsDrawerOpen(false)}>
               <IconAntDesign name="close" size={22} color={"#333"} />
             </TouchableOpacity>
           </View>
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <View
-              style={{
-                width: "90%",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 7,
-              }}
-            >
+          <View style={styles.profileContainer}>
+            <View style={styles.profileRow}>
               {/* PROFİL FOTO START */}
-              <View
-                style={{
-                  width: 65,
-                  height: 65,
-                }}
-              >
-                <View style={{ borderRadius: 50 }}>
+              <View style={styles.profileImageContainer}>
+                <View style={styles.profileImageWrapper}>
                   {user.access_token ? (
                     <Image
                       source={{ uri: PhotoUrl + namFromGetUser.profile_image }}
-                      style={{ width: "100%", height: "100%" }}
-                      borderRadius={50}
+                      style={styles.profileImage}
+                      resizeMode="contain"
                     />
                   ) : (
                     <Icon2 name="user" size={65} color="#333" padding={10} />
@@ -94,7 +75,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
               {/* PROFİL FOTO START */}
 
               {/* GİRİŞ YAP-HESABIM BÖLÜMÜ START */}
-              <View style={{ gap: 6 }}>
+              <View style={styles.userInfoContainer}>
                 <TouchableOpacity
                   disabled={user.access_token ? true : false}
                   onPress={() => {
@@ -102,9 +83,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
                     setIsDrawerOpen(false);
                   }}
                 >
-                  <Text
-                    style={{ color: "#333", fontWeight: "600", fontSize: 13 }}
-                  >
+                  <Text style={styles.userName}>
                     {user.access_token ? namFromGetUser.name : "Giriş Yap"}
                   </Text>
                 </TouchableOpacity>
@@ -116,7 +95,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
                     setIsDrawerOpen(false);
                   }}
                 >
-                  <Text style={{ fontSize: 12 }}>
+                  <Text style={styles.userAccountText}>
                     {user.access_token
                       ? user.type == 1
                         ? "Hesabım"
@@ -130,39 +109,24 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
           {/* GİRİŞ YAP-HESABIM BÖLÜMÜ END */}
 
           {/* ÇİZGİ ÖGESİ START */}
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <View
-              style={{ width: "85%", backgroundColor: "#C4C4C4", padding: 0.5 }}
-            />
-          </View>
+          <View style={styles.divider} />
           {/* ÇİZGİ ÖGESİ END */}
 
           {/* MENÜ ÖGELERİ START */}
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <View style={{ width: "80%" }}>
+          <View style={styles.searchContainer}>
+            <View style={styles.searchWrapper}>
               <Search setIsDrawerOpen={setIsDrawerOpen} />
             </View>
           </View>
           {/* MENÜ ÖGELERİ END */}
 
           {/* ÇİZGİ ÖGESİ START */}
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <View
-              style={{ width: "85%", backgroundColor: "#C4C4C4", padding: 0.5 }}
-            />
-          </View>
+          <View style={styles.divider} />
           {/* ÇİZGİ ÖGESİ END */}
 
           {/* GRİ ALAN START */}
-          <View style={{ width: "100%", alignItems: "center", gap: 10 }}>
-            <View
-              style={{
-                backgroundColor: "#F7F7F7",
-                padding: 10,
-                width: "85%",
-                // borderRadius: 8,
-              }}
-            >
+          <View style={styles.grayArea}>
+            <View style={styles.categoryWrapper}>
               {(!user.access_token ||
                 user.type == 1 ||
                 user.corporate_type == "Emlak Ofisi") && (
@@ -189,74 +153,38 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
             {/* GRİ ALAN END */}
 
             {/* İLAN VER BUTONU START */}
-            <View style={{ width: "100%", alignItems: "center" }}>
+            <View style={styles.advertButtonContainer}>
               <TouchableOpacity
-                style={{
-                  backgroundColor: "#EA2C2E",
-                  width: "85%",
-                  padding: 10,
-                  // borderRadius: 10,
-                  flexDirection: "row",
-                  gap: 8,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
+                style={styles.advertButton}
                 onPress={() => {
                   setIsDrawerOpen(false);
                   navigation.navigate("ShareAdvert");
                 }}
               >
                 <IconAntDesign name="plus" color={"white"} size={18} />
-                <Text style={{ color: "white", fontWeight: "600" }}>
-                  İlan Ver
-                </Text>
+                <Text style={styles.advertButtonText}>İlan Ver</Text>
               </TouchableOpacity>
             </View>
           </View>
           {/* İLAN VER BUTONU END */}
 
           {/* MÜŞTERİ HİZMETLERİ ALANI START */}
-          <View style={{ alignItems: "center" }}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#FFF3F2",
-                flexDirection: "row",
-                alignItems: "center",
-                width: "85%",
-                justifyContent: "center",
-                gap: 10,
-                padding: 8,
-                // borderRadius: 8,
-              }}
-            >
+          <View style={styles.customerServiceContainer}>
+            <TouchableOpacity style={styles.customerServiceButton}>
               <View>
                 <Icon name="headset" size={30} color={"#EA2C2E"} />
               </View>
-              <View style={{ gap: 5 }}>
-                <Text
-                  style={{
-                    color: "#EA2C2E",
-                    fontWeight: "400",
-                    letterSpacing: 1,
-                  }}
-                >
+              <View style={styles.customerServiceTextContainer}>
+                <Text style={styles.customerServiceText}>
                   Müşteri Hizmetleri
                 </Text>
-                <Text
-                  style={{
-                    color: "#EA2C2E",
-                    fontWeight: "400",
-                    letterSpacing: 1,
-                  }}
-                >
-                  444 3 284
-                </Text>
+                <Text style={styles.customerServiceNumber}>444 3 284</Text>
               </View>
             </TouchableOpacity>
           </View>
+          {/* MÜŞTERİ HİZMETLERİ ALANI END */}
         </View>
       </ScrollView>
-      {/* MÜŞTERİ HİZMETLERİ ALANI END */}
     </SafeAreaView>
   );
 };
