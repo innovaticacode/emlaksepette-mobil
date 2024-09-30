@@ -23,7 +23,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
 import NoDataScreen from "../../components/NoDataScreen";
 
-
 export default function Notifications() {
   const dispatch = useDispatch();
   const [user, setUser] = useState({});
@@ -46,6 +45,8 @@ export default function Notifications() {
   const notifiCountRedux = useSelector(
     (state) => state.notifications.notificationsCount
   );
+
+  const [notifiContent, setNotifiContent] = useState([]);
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -117,11 +118,6 @@ export default function Notifications() {
       );
       await fetchNotifications();
 
-      // dispatch(
-      //   setNotificationsRedux({
-      //     notificationsCount: 0,
-      //   })
-      // );
       return setShowDeletedAlert({
         show: true,
         message: response.data.message,
@@ -157,11 +153,6 @@ export default function Notifications() {
       if (response.data.status) {
         await fetchNotifications();
 
-        // dispatch(
-        //   setNotificationsRedux({
-        //     notificationsCount: Math.max(0, notificationCount - 1),
-        //   })
-        // );
         return setShowDeletedAlert({
           show: true,
           message: response.data.message,
@@ -340,7 +331,7 @@ export default function Notifications() {
                       </TouchableOpacity>
                     </View>
                   </View>
-                  <ScrollView>
+                  <ScrollView showsVerticalScrollIndicator={false}>
                     <AwesomeAlert
                       show={readShowAlert}
                       showProgress={false}
@@ -395,6 +386,8 @@ export default function Notifications() {
                               .locale("tr")
                               .format("LLL")}
                             onRead={oneAlertRead}
+                            desc={item.content}
+                            title={item.title}
                           />
                         )}
                       />
@@ -493,7 +486,7 @@ export default function Notifications() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    padding: 10,
+    // padding: 10,
     flex: 1,
   },
 
