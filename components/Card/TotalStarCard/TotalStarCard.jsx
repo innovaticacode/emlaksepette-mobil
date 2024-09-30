@@ -32,7 +32,7 @@ const TotalStarCard = ({ ratingCounts }) => {
     return stars;
   };
   return (
-    <View style={styles.container}>
+    <View>
       <FlatList
         data={ratings}
         renderItem={({ item }) => (

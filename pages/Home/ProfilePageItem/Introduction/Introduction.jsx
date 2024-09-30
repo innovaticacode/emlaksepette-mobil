@@ -96,7 +96,7 @@ const Introduction = (props) => {
               {ratingCount && (
                 <View style={styles.starArea}>
                   <Text style={styles.projectTitle}>
-                    MAĞZA DEĞERLENDİRMELERİ
+                    MAĞAZA DEĞERLENDİRMELERİ
                   </Text>
                   <TotalStarCard ratingCounts={ratingCount} />
                 </View>
@@ -108,7 +108,7 @@ const Introduction = (props) => {
                     keyExtractor={(item) => item.id.toString()}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ paddingVertical: 10 }}
+                    contentContainerStyle={{ paddingBottom: 10 }}
                     renderItem={({ item }) => (
                       <View style={styles.list}>
                         <CommentCard

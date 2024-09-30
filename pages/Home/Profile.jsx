@@ -269,11 +269,11 @@ export default function Profile() {
       isShow: "All",
     },
     {
-      text: "Satış Noktalarımız",
+      text: "Mağaza Profili",
       isShow: "All",
     },
     {
-      text: "Mağaza Profili",
+      text: "Satış Noktalarımız",
       isShow: "All",
     },
     {
@@ -506,6 +506,7 @@ export default function Profile() {
                 position: "absolute",
                 bottom: 0,
                 width: "100%",
+                paddingBottom: Platform.OS === "ios" ? 24 : 14,
               }}
             >
               {(tab == 1 || tab == 2) && (

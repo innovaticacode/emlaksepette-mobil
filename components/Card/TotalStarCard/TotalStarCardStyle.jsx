@@ -1,9 +1,6 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  container: {
-    marginBottom: 20,
-  },
   ratingCountContainer: {
     borderWidth: 1,
     borderColor: "rgb(230, 230, 230)",
