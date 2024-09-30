@@ -14,10 +14,7 @@ import axios from "axios";
 import { getValueFor } from "./methods/user";
 import { apiUrl } from "./methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setNotifications,
-  setNotificationsRedux,
-} from "../store/slices/Notifications/NotificationsSlice";
+import { setNotificationsRedux } from "../store/slices/Notifications/NotificationsSlice";
 
 export default function Header({ loading, onPress, index, tab }) {
   const dispatch = useDispatch();
@@ -35,7 +32,11 @@ export default function Header({ loading, onPress, index, tab }) {
   const getNotifications = async () => {
     try {
       if (!user?.access_token) {
-        // return setNotificationCount(0);
+        return dispatch(
+          setNotificationsRedux({
+            notificationsCount: 0,
+          })
+        );
       }
       if (user?.access_token) {
         const response = await axios.get(`${apiUrl}user/notification`, {
@@ -46,9 +47,6 @@ export default function Header({ loading, onPress, index, tab }) {
         const unreadCount = response.data.filter(
           (notification) => notification.is_show === 0
         ).length;
-        console.debug("unreadCount------------------------->>> :", unreadCount);
-        // setNotificationCount(unreadCount);
-
         return dispatch(
           setNotificationsRedux({
             notificationsCount: unreadCount,
@@ -57,13 +55,11 @@ export default function Header({ loading, onPress, index, tab }) {
       }
     } catch (error) {
       console.error("Error fetching notifications:", error);
-      // setNotificationCount(0);
     }
   };
 
   useEffect(() => {
     getNotifications();
-    console.debug("no------------------------->>> :", notificationCount);
   }, [user]);
 
   return (
