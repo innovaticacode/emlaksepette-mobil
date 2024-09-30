@@ -122,6 +122,7 @@ import {SheetProvider} from 'react-native-actions-sheet';
 
 import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
 import AllFeaturedRealEstate from "./pages/Home/AllFeaturedRealEstate";
+import SeeMyNeighbor from "./pages/Home/SeeMyNeighbor/SeeMyNeighbor";
 
 import { Provider } from "react-redux";
 import { store } from "./store/store";
@@ -1198,6 +1199,17 @@ export default function App({ route }) {
         })}
         />
         <Stack.Screen
+        name="SeeMyNeighbor"
+        component={SeeMyNeighbor}
+        options={({ route }) => ({
+          title: "Komşumu Gör Nedir?",
+          headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: "#ffffff",
+          },
+        })}
+        />
+        <Stack.Screen
         name="SalePageMain"
         component={SalePageMain}
         options={({ route }) => ({
@@ -1208,6 +1220,7 @@ export default function App({ route }) {
           },
         })}
         />
+
         <Stack.Screen name="SalePage" component={SalePage} 
             options={({ route }) => ({
               title:"Satış Noktası Başvur",
@@ -1217,6 +1230,7 @@ export default function App({ route }) {
               },
             })}
         />
+
 
         </Stack.Navigator>
       </NavigationContainer>
