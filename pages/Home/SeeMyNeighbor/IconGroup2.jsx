@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
-import Icon1 from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon1 from "react-native-vector-icons/AntDesign";
 import Icon2 from "react-native-vector-icons/FontAwesome6";
 import Icon3 from "react-native-vector-icons/FontAwesome5";
 import { he } from "date-fns/locale";
@@ -8,12 +8,12 @@ import { he } from "date-fns/locale";
 const { width } = Dimensions.get("window"); // Get the width of the window
 
 const IconGroup = () => {
-  const circleSize = width * 0.5; // 50% of the screen width
-  const apartmentSize = circleSize * 0.3; // Size of the apartment icon
-  const plusIconSize = circleSize * 0.18; // 20% of the circle size
+  const circleSize = width * 0.4; // 50% of the screen width
+  const apartmentSize = circleSize * 0.32; // Size of the apartment icon
+  const plusIconSize = circleSize * 0.2; // 20% of the circle size
   const plusIconPosition = {
-    bottom: plusIconSize + plusIconSize * 0.5, // Adjusted to center it correctly below the apartment icon
-    right: plusIconSize + plusIconSize * 0.5, // Adjusted to center it correctly to the right of the apartment icon
+    bottom: plusIconSize + plusIconSize * 0.55,
+    right: plusIconSize + plusIconSize * 0.3,
   };
 
   return (
@@ -25,7 +25,7 @@ const IconGroup = () => {
     >
       <View style={styles.iconContainerApartment}>
         <Icon1
-          name="file-document-outline"
+          name="file1"
           size={apartmentSize}
           color="white"
           style={styles.apartmentIcon}
@@ -41,13 +41,18 @@ const IconGroup = () => {
           style={[
             styles.plusIconBackground,
             {
-              width: plusIconSize,
+              width: plusIconSize * 1.4,
               height: plusIconSize,
-              borderRadius: plusIconSize / 2,
+              borderRadius: plusIconSize,
             },
           ]}
         >
-          <Icon2 name="handshake" size={plusIconSize * 0.9} color="white" />
+          <Icon2
+            style={styles.handshake}
+            name="handshake"
+            size={plusIconSize * 0.9}
+            color="white"
+          />
         </View>
       </View>
     </View>
@@ -61,6 +66,8 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   iconContainerApartment: {
+    border: 50,
+    borderColor: "#EA2B2E",
     justifyContent: "center", // Center the icon
     alignItems: "center", // Center the icon
     position: "relative",
@@ -76,6 +83,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#EA2B2E",
     justifyContent: "center",
     alignItems: "center",
+  },
+  handshake: {
+    border: 100,
+    borderColor: "black",
   },
 });
 

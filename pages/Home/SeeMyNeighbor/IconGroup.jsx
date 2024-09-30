@@ -8,7 +8,7 @@ import { he } from "date-fns/locale";
 const { width } = Dimensions.get("window"); // Get the width of the window
 
 const IconGroup = () => {
-  const circleSize = width * 0.5; // 50% of the screen width
+  const circleSize = width * 0.4; // 50% of the screen width
   const apartmentSize = circleSize * 0.3; // Size of the apartment icon
   const plusIconSize = circleSize * 0.14; // 20% of the circle size
   const plusIconPosition = {

@@ -119,69 +119,89 @@ const SeeMyNeighbor = () => {
   return (
     <ScrollView style={styles.mainContainer}>
       <View style={styles.mainContainer2}>
+        <View style={styles.coloredContainer}>
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.image}
+              resizeMode="contain"
+              source={require("../../../images/KomsumuGorNedir/KomsumuGor2.png")}
+            ></Image>
+            <Text style={styles.bigTitle}>
+              <Text style={styles.bigTitleRed}> "Komşunu Gör" </Text> ile Yeni
+              Komşularınızla Tanışın, Güvenle Yatırım Yapın!
+            </Text>
+            <Text style={styles.mainContent}>
+              EmlakSepette.com, inşaat projelerinden mülk satın alan kişilere,
+              komşularıyla tanışma ve etkileşim kurma imkânı sunar. "Komşunu
+              Gör" özelliği sayesinde, aynı projeden mülk alan diğer kişilerle
+              iletişime geçebilir, onların deneyimlerinden faydalanarak daha
+              bilinçli kararlar alabilirsiniz.
+            </Text>
+            <View style={styles.iconContainer}>
+              <Image
+                style={styles.iconImage}
+                resizeMode="contain"
+                source={require("../../../images/KomsumuGorNedir/icon1.png")}
+              ></Image>
+            </View>
+            <Text style={styles.title}>Projeye Kendinizi Ekleyin</Text>
+            <Text style={styles.mainContent}>
+              Bir inşaat projesinden mülk satın aldıysanız, emlaksepette.com'da
+              o projeye kendinizi ekleyebilirsiniz. Bu sayede, aynı projede yer
+              alan diğer mülk sahipleriyle bağlantı kurabilir ve onları
+              tanıyabilirsiniz.
+            </Text>
+            <View style={styles.divider}></View>
+            <View style={styles.iconContainer}>
+              <Image
+                style={styles.iconImage2}
+                resizeMode="contain"
+                source={require("../../../images/KomsumuGorNedir/icon2.png")}
+              ></Image>
+            </View>
+            <Text style={styles.title}>Mülk Almak İsteyenler</Text>
+            <Text style={styles.mainContent}>
+              Eğer bir projeden mülk satın almayı düşünüyorsanız,
+              emlaksepette.com'a girerek ilgilendiğiniz projeyi seçebilir ve
+              "Komşunu Gör" özelliğini kullanarak o projeden mülk almış
+              kişilerle görüşebilirsiniz. Bu sayede, projeyle ilgili süreçler
+              hakkında doğrudan bilgi alabilirsiniz.
+            </Text>
+            <View style={styles.divider}></View>
+
+            <View style={styles.iconContainer}>
+              <Image
+                style={styles.iconImage3}
+                resizeMode="contain"
+                source={require("../../../images/KomsumuGorNedir/icon3.png")}
+              ></Image>
+            </View>
+            <Text style={styles.title}>Mülk Sahipliği</Text>
+            <Text style={styles.mainContent}>
+              Projeden bir mülk satın aldığınızda, EmlakSepette.com'da hangi
+              dairenin sahibi olduğunuz kaydedilir ve bu bilgi platformda açıkça
+              gösterilir. Böylece, diğer mülk sahipleriyle projede yer alabilir
+              ve komşularınızı tanıyabilirsiniz.
+            </Text>
+          </View>
+        </View>
         <View style={styles.imageContainer}>
           <Image
             style={styles.image}
             resizeMode="contain"
-            source={require("../../../images/KomsumuGor2.png")}
+            source={require("../../../images/KomsumuGorNedir/KomsumuGor1.png")}
           ></Image>
-          <Text style={styles.bigTitle}>
-            <Text style={styles.bigTitleRed}> "Komşunu Gör" </Text> ile Yeni
-            Komşularınızla Tanışın, Güvenle Yatırım Yapın!
-          </Text>
-          <Text style={styles.mainContent}>
-            EmlakSepette.com, inşaat projelerinden mülk satın alan kişilere,
-            komşularıyla tanışma ve etkileşim kurma imkânı sunar. "Komşunu Gör"
-            özelliği sayesinde, aynı projeden mülk alan diğer kişilerle
-            iletişime geçebilir, onların deneyimlerinden faydalanarak daha
-            bilinçli kararlar alabilirsiniz.
-          </Text>
-          <View style={styles.iconContainer}>
-            <IconGroup />
-          </View>
-          <Text style={styles.title}>Projeye Kendinizi Ekleyin</Text>
-          <Text style={styles.mainContent}>
-            Bir inşaat projesinden mülk satın aldıysanız, emlaksepette.com'da o
-            projeye kendinizi ekleyebilirsiniz. Bu sayede, aynı projede yer alan
-            diğer mülk sahipleriyle bağlantı kurabilir ve onları
-            tanıyabilirsiniz.
-          </Text>
-          <View style={styles.iconContainer}>
-            <IconGroup2 />
-          </View>
-          <Text style={styles.title}>Mülk Almak İsteyenler</Text>
-          <Text style={styles.mainContent}>
-            Eğer bir projeden mülk satın almayı düşünüyorsanız,
-            emlaksepette.com'a girerek ilgilendiğiniz projeyi seçebilir ve
-            "Komşunu Gör" özelliğini kullanarak o projeden mülk almış kişilerle
-            görüşebilirsiniz. Bu sayede, projeyle ilgili süreçler hakkında
-            doğrudan bilgi alabilirsiniz.
-          </Text>
-          <View style={styles.iconContainer}></View>
-          <Text style={styles.title}>Mülk Sahipliği</Text>
-          <Text style={styles.mainContent}>
-            Projeden bir mülk satın aldığınızda, EmlakSepette.com'da hangi
-            dairenin sahibi olduğunuz kaydedilir ve bu bilgi platformda açıkça
-            gösterilir. Böylece, diğer mülk sahipleriyle projede yer alabilir ve
-            komşularınızı tanıyabilirsiniz.
-          </Text>
-          <Image
-            style={styles.image}
-            resizeMode="contain"
-            source={require("../../../images/KomsumuGor1.png")}
-          ></Image>
-          <Text style={styles.bigTitle}>Gizlilik ve Güvenlik </Text>
-          <Text style={styles.mainContent}>
-            EmlakSepette.com, "Komşunu Gör" özelliğini Kişisel Verilerin
-            Korunması Kanunu (KVKK) çerçevesinde güvenli bir şekilde sunar.
-            Komşularla iletişime geçmek isteyen kullanıcılar, belirli bir ücret
-            karşılığında komşularının iletişim bilgilerine ulaşabilirler. Bu
-            özellik sayesinde, sadece bir mülk değil, aynı zamanda bir
-            topluluğun parçası olabilirsiniz. Komşularınızla tanışarak, mülk
-            sahibi olma sürecinde daha güvenli ve bilinçli adımlar
-            atabilirsiniz.
-          </Text>
         </View>
+        <Text style={styles.bigTitle2}>Gizlilik ve Güvenlik </Text>
+        <Text style={styles.mainContent}>
+          EmlakSepette.com, "Komşunu Gör" özelliğini Kişisel Verilerin Korunması
+          Kanunu (KVKK) çerçevesinde güvenli bir şekilde sunar. Komşularla
+          iletişime geçmek isteyen kullanıcılar, belirli bir ücret karşılığında
+          komşularının iletişim bilgilerine ulaşabilirler. Bu özellik sayesinde,
+          sadece bir mülk değil, aynı zamanda bir topluluğun parçası
+          olabilirsiniz. Komşularınızla tanışarak, mülk sahibi olma sürecinde
+          daha güvenli ve bilinçli adımlar atabilirsiniz.
+        </Text>
       </View>
       <View style={styles.SSS}>
         {/* Sıkça Sorulan Sorular Başlığı */}
@@ -228,6 +248,15 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     fontFamily: "Inter",
   },
+  bigTitle2: {
+    fontWeight: "700",
+    fontSize: 30,
+    textAlign: "center",
+    color: "black",
+    marginHorizontal: 35,
+    marginVertical: 20,
+    fontFamily: "Inter",
+  },
   bigTitleRed: {
     color: "#EA2B2E",
   },
@@ -240,22 +269,40 @@ const styles = StyleSheet.create({
     fontSize: 18,
     margin: 20,
     lineHeight: 24,
+    marginBottom: 40,
   },
+  iconImage: {
+    width: width * 0.1, // ekran genişliğinin %80'i
+    height: width * 0.1,
+  },
+  iconImage2: {
+    width: width * 0.15, // ekran genişliğinin %80'i
+    height: width * 0.15,
+  },
+  iconImage3: {
+    width: width * 0.12, // ekran genişliğinin %80'i
+    height: width * 0.12,
+  },
+  coloredContainer: {
+    backgroundColor: "#FAFAFA",
+  },
+
   iconContainer: {
-    width: width * 0.4, // ekran genişliğinin %80'i
-    height: width * 0.4,
-    borderRadius: (width * 0.4) / 2,
+    width: width * 0.25, // ekran genişliğinin %80'i
+    height: width * 0.25,
+    borderRadius: (width * 0.25) / 2,
     backgroundColor: "#EA2B2E",
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 40,
   },
   title: {
     fontWeight: "600",
-    fontSize: 20,
+    fontSize: 22,
     textAlign: "center",
     color: "black",
     marginHorizontal: 35,
-    marginVertical: 20,
+    marginTop: 20,
     fontFamily: "Montserrat",
   },
   titleSSS: {
@@ -266,6 +313,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 35,
     marginVertical: 20,
     fontFamily: "Inter",
+  },
+  divider: {
+    flex: 1,
+    backgroundColor: "#C8C8C88C",
+    height: 1,
+    width: width * 0.8,
+    marginTop: 10,
+    marginBottom: 50,
+    opacity: 0.9,
   },
   //ALT BİLGİ & SSS STİLLERİ
   itemContainer: {
