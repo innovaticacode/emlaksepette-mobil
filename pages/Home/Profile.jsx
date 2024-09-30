@@ -285,33 +285,6 @@ export default function Profile() {
     },
   ]);
 
-  useEffect(() => {
-    if (scrollViewRef.current && tabWidth > 0) {
-      const tabCount = items.length;
-      const viewWidth = width;
-      const tabOffset = tab * tabWidth;
-      const contentWidth = tabWidth * tabCount;
-      const centeredOffset = Math.max(
-        0,
-        Math.min(
-          tabOffset - (viewWidth / 2 - tabWidth / 2),
-          contentWidth - viewWidth
-        )
-      );
-
-      scrollViewRef.current.scrollTo({
-        x: centeredOffset,
-        animated: true,
-      });
-    }
-  }, [tab, items, tabWidth]);
-
-  // Calculate the width of each tab after layout
-  const onTabLayout = (event) => {
-    const { width: measuredWidth } = event.nativeEvent.layout;
-    setTabWidth(measuredWidth);
-  };
-
   return (
     <>
       {loadingShopping ? (
@@ -461,7 +434,6 @@ export default function Profile() {
                         },
                       ]}
                       onPress={() => settab(index)}
-                      onLayout={onTabLayout}
                     >
                       <Text
                         style={{
