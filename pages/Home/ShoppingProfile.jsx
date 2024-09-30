@@ -31,9 +31,12 @@ import Menu from "./Menu.json";
 import { Platform } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { useDispatch } from "react-redux";
+import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
 
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
   const [loading, setLoading] = useState(false);
@@ -163,8 +166,13 @@ export default function ShoppingProfile() {
     return acc;
   }, []);
 
-  const logout = () => {
+  const logout = async () => {
     setDialogVisible(false);
+    dispatch(
+      setNotificationsRedux({
+        notificationsCount: 0,
+      })
+    );
     setTimeout(() => {
       SecureStore.setItemAsync("user", "");
       navigation.push("Home", { status: "logout" });

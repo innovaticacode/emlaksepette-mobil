@@ -486,7 +486,7 @@ export default function Notifications() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    // padding: 10,
+    paddingVertical: 10,
     flex: 1,
   },
 
