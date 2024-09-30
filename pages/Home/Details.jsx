@@ -1022,7 +1022,7 @@ export default function Details({ navigation }) {
                 animationOut="fadeOutLeftBig"
                 style={styles.modal}
               >
-                <View style={styles.modalContent}>
+                <View>
                   <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
                 </View>
               </Modal>
@@ -2577,7 +2577,9 @@ export default function Details({ navigation }) {
               textAlign: "center",
               margin: 5,
             }}
-            title={"Sepetinize ürün ekleyebilmek için giriş yapmanız gerekmektedir."}
+            title={
+              "Sepetinize ürün ekleyebilmek için giriş yapmanız gerekmektedir."
+            }
             messageStyle={{ textAlign: "center" }}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
@@ -2651,14 +2653,6 @@ const styles = StyleSheet.create({
   },
   modal: {
     margin: 0,
-  },
-  modalContent: {
-    backgroundColor: "white",
-
-    flex: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: 320,
   },
   pagination: {
     position: "absolute",

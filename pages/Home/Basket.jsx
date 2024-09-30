@@ -381,7 +381,7 @@ export default function Basket() {
             onSwipeComplete={() => setIsDrawerOpen(false)}
             style={styles.modal}
           >
-            <View style={styles.modalContent}>
+            <View>
               <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
             </View>
           </Modal>
@@ -686,15 +686,15 @@ export default function Basket() {
                           {" "}
                           {isInstallament == 2
                             ? formatAmount(
-                              (Cart?.installmentPrice *
-                                offerControl?.project?.deposit_rate) /
-                              100
-                            )
+                                (Cart?.installmentPrice *
+                                  offerControl?.project?.deposit_rate) /
+                                  100
+                              )
                             : formatAmount(
-                              (Cart?.amount *
-                                offerControl?.project?.deposit_rate) /
-                              100
-                            )}{" "}
+                                (Cart?.amount *
+                                  offerControl?.project?.deposit_rate) /
+                                  100
+                              )}{" "}
                           ₺
                         </Text>
                       </View>
@@ -877,14 +877,14 @@ export default function Basket() {
                           formatAmount(
                             (Cart?.amount *
                               offerControl?.project?.deposit_rate) /
-                            100
+                              100
                           )}
                         {isInstallament == 2 &&
                           type?.type == "project" &&
                           addDotEveryThreeDigits(
                             (Cart?.installmentPrice *
                               offerControl?.project?.deposit_rate) /
-                            100
+                              100
                           )}
                         {type?.type == "housing" &&
                           saleType == "kiralik" &&
@@ -934,11 +934,11 @@ export default function Basket() {
             </TouchableWithoutFeedback>
           ) : (
             <NoDataScreen
-                message="Sepetinizde ilan bulunmamaktadır."
-                iconName="basket-plus"
-                buttonText="Anasayfaya Dön"
-                navigateTo="HomePage"
-              />
+              message="Sepetinizde ilan bulunmamaktadır."
+              iconName="basket-plus"
+              buttonText="Anasayfaya Dön"
+              navigateTo="HomePage"
+            />
           )}
         </SafeAreaView>
       )}
@@ -1006,14 +1006,6 @@ const styles = StyleSheet.create({
 
   modal: {
     margin: 0,
-  },
-  modalContent: {
-    backgroundColor: "white",
-
-    flex: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: 320,
   },
   HouseInfo: {
     backgroundColor: "#FFFFFF",

@@ -662,7 +662,7 @@ export default function PostDetail() {
               swipeDirection={["left"]}
               onSwipeComplete={() => setIsDrawerOpen(false)}
             >
-              <View style={styles.modalContent}>
+              <View>
                 <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
               </View>
             </Modal>
@@ -2334,14 +2334,7 @@ const styles = StyleSheet.create({
   modal: {
     margin: 0,
   },
-  modalContent: {
-    backgroundColor: "white",
 
-    flex: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: 320,
-  },
   ıconContainer: {
     width: 50,
     height: 150,
