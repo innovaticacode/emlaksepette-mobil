@@ -92,6 +92,7 @@ export const styles = StyleSheet.create({
   },
   customerServiceContainer: {
     alignItems: "center",
+    paddingVertical: 10,
   },
   customerServiceButton: {
     backgroundColor: "#FFF3F2",

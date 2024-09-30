@@ -3,32 +3,25 @@ import { View, Text, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function Categories({ category, iconName }) {
-
   if (category == "Projeler") {
-    iconName="folder-home";
+    iconName = "folder-home";
+  } else if (category == "Konut") {
+    iconName = "home-group";
+  } else if (category == "İş Yeri") {
+    iconName = "storefront";
+  } else if (category == "Arsa") {
+    iconName = "terrain";
+  } else if (category == "Tiny House") {
+    iconName = "hoop-house";
+  } else if (category == "Bungalov") {
+    iconName = "tent";
+  } else if (category == "Prefabrik Yapılar") {
+    iconName = "greenhouse";
+  } else if (category == "Tatil Sepette") {
+    iconName = "island";
+  } else if (category == "Karavan") {
+    iconName = "caravan";
   }
-  else if (category == "Konut") {
-    iconName="home-group";
-  }
-  else if (category == "İş Yeri") {
-    iconName="storefront";
-  }
-  else if (category == "Arsa") {
-    iconName="terrain";
-  }
-  else if (category == "Tiny House") {
-    iconName="hoop-house";
-  }
-  else if (category == "Bungalov") {
-    iconName="tent";
-  }
-  else if (category == "Prefabrik Yapılar") {
-    iconName="greenhouse";
-  }
-  else if (category == "Tatil Sepette") {
-    iconName="island";
-  }
-
 
   return (
     <View style={styles.category}>

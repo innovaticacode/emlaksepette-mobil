@@ -37,7 +37,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
         "https://private.emlaksepette.com/api/menu-list"
       );
 
-      const filteredMenuItems = response.data.slice(0, -1); // Menünün sondaki ögesini çıkarıyor.
+      const filteredMenuItems = response.data.slice(0, -2); // Menünün sondaki ögesini çıkarıyor.
 
       setMenuItems(filteredMenuItems); // Filtrelenmiş menü öğelerini set ediyoruz
     } catch (error) {
