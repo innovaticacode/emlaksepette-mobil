@@ -15,10 +15,10 @@ export default function SliderMenuPostDetails({tab,setTab,changeTab}) {
     <ScrollView
       horizontal={true}
       showsHorizontalScrollIndicator={false}
-      style={{}}
+ 
       bounces={false}
     >
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", alignItems:'center',gap:5 }}>
         {menuItems.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -49,12 +49,16 @@ export default function SliderMenuPostDetails({tab,setTab,changeTab}) {
 }
 const styles = StyleSheet.create({
   tabBtn: {
+    gap:5,
+    flexDirection:'row',
     backgroundColor: "white",
-    paddingLeft: 15,
-    paddingRight: 15,
+    paddingLeft: 20,
+    paddingRight: 20,
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
+    padding: 7,
+    borderRadius: 5,
+    borderWidth: 1,
     borderColor: "#ebebeb",
   },
   text: {

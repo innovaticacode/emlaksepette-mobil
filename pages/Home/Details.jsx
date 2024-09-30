@@ -69,7 +69,7 @@ import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../../components/CommentForProject";
 import ImageViewing from "react-native-image-viewing";
-
+import Megaphone from '../../assets/megaphone.png'
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [IsOpenSheet, setIsOpenSheet] = useState(false);
@@ -680,54 +680,9 @@ export default function Details({ navigation }) {
       console.error("Post isteği başarısız:", error);
     }
   };
-  const [city, setcity] = useState("");
-  const [county, setcounty] = useState("");
-  const fetchCity = async () => {
-    try {
-      const response = await axios.get(
-        "https://private.emlaksepette.com/api/cities"
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Hata:", error);
-      throw error;
-    }
-  };
 
-  const [citites, setCities] = useState([]);
-  useEffect(() => {
-    fetchCity()
-      .then((citites) => setCities(citites.data))
-      .catch((error) =>
-        console.error("Veri alınırken bir hata oluştu:", error)
-      );
-  }, []);
 
-  const [counties, setcounties] = useState([]);
-  const fetchDataCounty = async (value) => {
-    try {
-      const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Hata:", error);
-      throw error;
-    }
-  };
 
-  const onChangeCity = (value) => {
-    setcity(value);
-    if (value) {
-      fetchDataCounty(value)
-        .then((county) => setcounties(county.data))
-        .catch((error) =>
-          console.error("Veri alınırken bir hata oluştu:", error)
-        );
-    } else {
-      setcounties([]);
-    }
-  };
 
   const { width, height } = Dimensions.get("window");
   const [errorStatu, seterrorStatu] = useState(0);
@@ -863,74 +818,7 @@ export default function Details({ navigation }) {
     "Aralık",
   ];
 
-  const [paymentItems, setPaymentItems] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
 
-  const formatPrice = (price) => addDotEveryThreeDigits(Math.round(price));
-
-  useEffect(() => {
-    setPaymentItems([]);
-    setTotalPrice(0);
-    if (data && data.projectHousingsList && paymentModalShowOrder !== null) {
-      let total = 0;
-      const items = [];
-
-      for (
-        let _index = 0;
-        _index <
-        data.projectHousingsList[paymentModalShowOrder][
-          "pay-dec-count" + paymentModalShowOrder
-        ];
-        _index++
-      ) {
-        const priceString = addDotEveryThreeDigits(
-          data.projectHousingsList[paymentModalShowOrder]["share_sale[]"] !==
-            "[]"
-            ? data.projectHousingsList[paymentModalShowOrder][
-                `pay_desc_price${paymentModalShowOrder}` + _index
-              ] /
-                data.projectHousingsList[paymentModalShowOrder][
-                  "number_of_shares[]"
-                ]
-            : data.projectHousingsList[paymentModalShowOrder][
-                `pay_desc_price${paymentModalShowOrder}` + _index
-              ]
-        );
-
-        const price = parseInt(priceString.replace(/\./g, ""), 10);
-        const roundedPrice = Math.round(price);
-        total += roundedPrice;
-
-        const date = new Date(
-          data.projectHousingsList[paymentModalShowOrder][
-            "pay_desc_date" + paymentModalShowOrder + _index
-          ]
-        );
-
-        const padZero = (num) => (num < 10 ? `0${num}` : num);
-
-        const formattedDate = `${padZero(date.getDate())}.${padZero(
-          date.getMonth() + 1
-        )}.${date.getFullYear()}`;
-
-        items.push(
-          <View key={_index}>
-            <PaymentItem
-              header={`${_index + 1} . Ara Ödeme`}
-              price={formatPrice(price)}
-              date={formattedDate}
-              dFlex="column"
-            />
-          </View>
-        );
-      }
-
-      console.log(totalPrice);
-      setTotalPrice(total);
-
-      setPaymentItems(items);
-    }
-  }, [data, paymentModalShowOrder]);
 
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("tr-TR", {
@@ -982,27 +870,7 @@ export default function Details({ navigation }) {
     .map((item) => parseFloat(item?.rate) || 0)
     .reduce((acc, rate) => acc + rate, 0);
 
-  // ((parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]']) - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]']) + parseInt(totalPrice))) / parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])) / data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]']).toFixed(0))
-  // console.log(data.projectHousingsList[paymentModalShowOrder]['installments-price[]'] - (parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]'])+parseInt(totalPrice) /parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'])   /data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'] ))
-  console.log(parseInt(totalPrice));
-  // const advance = parseInt(data.projectHousingsList[paymentModalShowOrder]['advance[]'], 10);
-  // const numberOfShares = parseInt(data.projectHousingsList[paymentModalShowOrder]['number_of_shares[]'], 10);
-  // const installmentsPrice = parseInt(data.projectHousingsList[paymentModalShowOrder]['installments-price[]'], 10);
-  // const totalPrice2 = totalPrice
-  // const installments = parseInt(data.projectHousingsList[paymentModalShowOrder]['installments[]'], 10);
-
-  // // İşlemlerin gerçekleştirilmesi
-  // const perShareAdvance = advance / numberOfShares;
-  // const subtotal = perShareAdvance + totalPrice2;
-  // const remaining = installmentsPrice - subtotal;
-  // const finalInstallment = remaining / installments;
-
-  // // Sonucu formatlama ve yazdırma
-  // const formattedFinalInstallment = Math.round(finalInstallment); // Yuvarlama işlemi
-  // console.log( parseInt(data?.projectHousingsList[1]['installments-price[]']) - (parseInt(data?.projectHousingsList[1]['advance[]'] )  / parseInt(data?.projectHousingsList[1]['number_of_shares[]']) + parseInt(totalPrice)) + 'fsdfdsf')
-  // console.log(parseInt(data?.projectHousingsList[1]['installments-price[]']) -  (parseInt(data?.projectHousingsList[1]['advance[]'] )  / parseInt(data?.projectHousingsList[1]['number_of_shares[]']) + parseInt(totalPrice)) / parseInt(data.projectHousingsList[1]['installments[]']) + 'Takstili Fiyat')
-  // console.log( ((data.projectHousingsList[1]['installments-price[]'] / data?.projectHousingsList[1]['number_of_shares[]']) - ((parseInt(data?.projectHousingsList[1]['advance[]'] )/parseInt(data?.projectHousingsList[1]['number_of_shares[]'])) + parseInt(totalPrice) ) ) / parseInt(data.projectHousingsList[1]['installments[]']) )
-  console.log(ProjectId + "asd w wasdcxvfd qwe21aszxc asd");
+ 
 
   return (
     <>
@@ -1226,13 +1094,7 @@ export default function Details({ navigation }) {
                 </View>
 
                 <View
-                  style={{
-                    paddingTop: 13,
-                    gap: 5,
-                    borderBottomWidth: 1,
-                    borderColor: "#e8e8e8",
-                    paddingBottom: 10,
-                  }}
+                  style={styles.CaptionPriceAndSlider}
                 >
                   {totalRate != 0 && (
                     <View
@@ -1257,12 +1119,14 @@ export default function Details({ navigation }) {
                       <Icon2 name="star" color={"gold"} />
                     </View>
                   )}
+                  <View style={{width:'100%'}}>
+                  <View style={{gap:5,width:'70%'}}>
                   <Text
                     style={{
-                      textAlign: "center",
+                   
                       fontSize: 11,
                       color: "#333",
-                      fontWeight: "700",
+                      fontWeight: "600",
                     }}
                   >
                     {data?.project?.city?.title
@@ -1271,23 +1135,50 @@ export default function Details({ navigation }) {
                   </Text>
                   <Text
                     style={{
-                      textAlign: "center",
+                     
                       fontSize: 16,
-                      color: "#264ABB",
-                      fontWeight: "700",
+                      color: "#333",
+                      fontWeight: "600",
                     }}
                   >
                     {data?.project?.project_title}
                   </Text>
-                </View>
-                <View>
+                  </View>
+
+                  </View>
+                 
+                
+                  <View>
                   <SliderMenuDetails
                     tab={tabs}
                     setTab={setTabs}
                     changeTab={changeTab}
                   />
                 </View>
-                {tabs == 0 && (
+              
+                </View>
+                {
+                  data?.isShareLink?.length!==0 &&
+                  <View style={{paddingTop:6,paddingBottom:2,width:'100%',alignItems:'center'}}>
+                  <View style={{padding:6,backgroundColor:'#ffc9ca',borderRadius:8,flexDirection:'row',gap:5,width:'95%'}}>
+                    <View style={{alignItems:'center',justifyContent:'center'}}>
+                    <View style={{width:45,height:45}}>
+                      <ImageBackground source={Megaphone} style={{width:'100%',height:'100%'}}/>
+                    </View>
+                    </View>
+                   
+                    <View style={{width:'85%'}}>
+                      <Text style={{color:'#EA2C2E',fontSize:14,fontWeight:'700'}}>Harika bir haberimiz var!</Text>
+                      <Text style={{color:'#721C23',fontSize:13}}>
+                      Bu projenin ilanlarını , emlak ofislerinin özel koleksiyonlarından şimdi çok daha uygun fiyatlarla satın alabilirsiniz. <Text style={{fontWeight:'700'}}>Satış noktalarına</Text> hemen göz atın! 
+                      </Text>
+                    </View>
+                  </View>
+                 </View>
+                }
+
+                     <View style={{marginTop:5}}>
+                    {tabs == 0 && (
                   <OtherHomeInProject
                     GetID={getRoomID}
                     GetIdForCart={GetIdForCart}
@@ -1306,7 +1197,7 @@ export default function Details({ navigation }) {
                     setLastBlockItemCount={setLastBlockItemCount}
                     lastBlockItemCount={lastBlockItemCount}
                     setPage={setPage}
-                    setPaymentModalShowOrder={setPaymentModalShowOrder}
+                
                   />
                 )}
                 <View>{tabs == 1 && <Caption data={data} />}</View>
@@ -1317,449 +1208,12 @@ export default function Details({ navigation }) {
                 {tabs == 5 && (
                   <CommentForProject projectId={data?.project?.id} />
                 )}
-
-                <Modal
-                  animationType="fade" // veya "fade", "none" gibi
-                  visible={modalVisible}
-                  onRequestClose={() => {
-                    setModalVisible(!modalVisible);
-                  }}
-                  style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", margin: 0 }}
-                >
-                  {data.projectHousingsList[paymentModalShowOrder] ? (
-                    <View style={styles.centeredView}>
-                      <View style={styles.modalView}>
-                        <TouchableOpacity
-                          style={{
-                            position: "absolute",
-                            right: -5,
-                            backgroundColor: "#333",
-                            padding: 6,
-                            zIndex: 1,
-                            borderRadius: 30,
-                            top: -15,
-                          }}
-                          onPress={() => setModalVisible(!modalVisible)}
-                        >
-                          <Heart name="close" size={20} color={"white"} />
-                        </TouchableOpacity>
-                        <View
-                          style={{ backgroundColor: "#EEEEEE", padding: 10 }}
-                        >
-                          <Text style={{ fontWeight: "bold", fontSize: 12 }}>
-                            {data.project.have_blocks ? (
-                              <>
-                                {data?.project?.project_title} projesinde{" "}
-                                {data.project.blocks[selectedBlockx].block_name}{" "}
-                                {paymentModalShowOrder - lastBlockItemCount}{" "}
-                                No'lu ilan Ödeme Planı
-                              </>
-                            ) : (
-                              <>
-                                {data?.project?.project_title} projesinde{" "}
-                                {paymentModalShowOrder - lastBlockItemCount}{" "}
-                                No'lu ilan Ödeme Planı
-                              </>
-                            )}
-                          </Text>
-                        </View>
-                        <View>
-                          <SettingsItem
-                            info="Peşin Fiyat"
-                            numbers={
-                              paymentModalShowOrder != null
-                                ? data.projectHousingsList[
-                                    paymentModalShowOrder
-                                  ]["share_sale[]"] != "[]" &&
-                                  data.projectHousingsList[
-                                    paymentModalShowOrder
-                                  ]["number_of_shares[]"]
-                                  ? addDotEveryThreeDigits(
-                                      (
-                                        parseInt(
-                                          data.projectHousingsList[
-                                            paymentModalShowOrder
-                                          ]["price[]"]
-                                        ) /
-                                        parseInt(
-                                          data.projectHousingsList[
-                                            paymentModalShowOrder
-                                          ]["number_of_shares[]"]
-                                        )
-                                      ).toFixed(0)
-                                    ) + " ₺"
-                                  : addDotEveryThreeDigits(
-                                      data.projectHousingsList[
-                                        paymentModalShowOrder
-                                      ]["price[]"]
-                                    ) + " ₺"
-                                : "0"
-                            }
-                          />
-                          {showInstallment ? (
-                            <>
-                              {paymentModalShowOrder != null ? (
-                                JSON.parse(
-                                  data.projectHousingsList[
-                                    paymentModalShowOrder
-                                  ]["payment-plan[]"]
-                                ) &&
-                                JSON.parse(
-                                  data.projectHousingsList[
-                                    paymentModalShowOrder
-                                  ]["payment-plan[]"]
-                                ).includes("taksitli") ? (
-                                  <SettingsItem
-                                    info={
-                                      data.projectHousingsList[
-                                        paymentModalShowOrder
-                                      ]["installments[]"] +
-                                      " " +
-                                      "Ay Taksitli Fiyat"
-                                    }
-                                    numbers={
-                                      data.projectHousingsList[
-                                        paymentModalShowOrder
-                                      ]["share_sale[]"] !== "[]" &&
-                                      data.projectHousingsList[
-                                        paymentModalShowOrder
-                                      ]["number_of_shares[]"]
-                                        ? addDotEveryThreeDigits(
-                                            Math.round(
-                                              data.projectHousingsList[
-                                                paymentModalShowOrder
-                                              ]["installments-price[]"] /
-                                                data.projectHousingsList[
-                                                  paymentModalShowOrder
-                                                ]["number_of_shares[]"]
-                                            )
-                                          ) + "₺"
-                                        : addDotEveryThreeDigits(
-                                            Math.round(
-                                              data.projectHousingsList[
-                                                paymentModalShowOrder
-                                              ]["installments-price[]"]
-                                            )
-                                          ) + "₺"
-                                    }
-                                  />
-                                ) : (
-                                  <SettingsItem
-                                    info="Taksitli 12 Ay Fiyat"
-                                    numbers="0"
-                                  />
-                                )
-                              ) : (
-                                <SettingsItem
-                                  info="Taksitli 12 Ay Fiyat"
-                                  numbers="0"
-                                />
-                              )}
-                              {paymentModalShowOrder != null ? (
-                                JSON.parse(
-                                  data.projectHousingsList[
-                                    paymentModalShowOrder
-                                  ]["payment-plan[]"]
-                                ) &&
-                                JSON.parse(
-                                  data.projectHousingsList[
-                                    paymentModalShowOrder
-                                  ]["payment-plan[]"]
-                                ).includes("taksitli") ? (
-                                  <SettingsItem
-                                    info="Peşinat"
-                                    numbers={
-                                      data.projectHousingsList[
-                                        paymentModalShowOrder
-                                      ]["share_sale[]"] != "[]" &&
-                                      data.projectHousingsList[
-                                        paymentModalShowOrder
-                                      ]["number_of_shares[]"]
-                                        ? addDotEveryThreeDigits(
-                                            Math.round(
-                                              data.projectHousingsList[
-                                                paymentModalShowOrder
-                                              ]["advance[]"] /
-                                                data.projectHousingsList[
-                                                  paymentModalShowOrder
-                                                ]["number_of_shares[]"]
-                                            )
-                                          ) + "₺"
-                                        : addDotEveryThreeDigits(
-                                            Math.round(
-                                              data.projectHousingsList[
-                                                paymentModalShowOrder
-                                              ]["advance[]"]
-                                            )
-                                          ) + "₺"
-                                    }
-                                  />
-                                ) : (
-                                  <SettingsItem info="Peşinat" numbers="0" />
-                                )
-                              ) : (
-                                <SettingsItem info="Peşinat" numbers="0" />
-                              )}
-
-                              {paymentModalShowOrder != null ? (
-                                JSON.parse(
-                                  data.projectHousingsList[
-                                    paymentModalShowOrder
-                                  ]["payment-plan[]"]
-                                ) &&
-                                JSON.parse(
-                                  data.projectHousingsList[
-                                    paymentModalShowOrder
-                                  ]["payment-plan[]"]
-                                ).includes("taksitli") ? (
-                                  <SettingsItem
-                                    info="Aylık Ödenecek Tutar"
-                                    numbers={
-                                      data.projectHousingsList[
-                                        paymentModalShowOrder
-                                      ]["share_sale[]"] != "[]" &&
-                                      data.projectHousingsList[
-                                        paymentModalShowOrder
-                                      ]["number_of_shares[]"]
-                                        ? addDotEveryThreeDigits(
-                                            (data.projectHousingsList[
-                                              paymentModalShowOrder
-                                            ]["installments-price[]"] /
-                                              data?.projectHousingsList[
-                                                paymentModalShowOrder
-                                              ]["number_of_shares[]"] -
-                                              (parseInt(
-                                                data?.projectHousingsList[
-                                                  paymentModalShowOrder
-                                                ]["advance[]"]
-                                              ) /
-                                                parseInt(
-                                                  data?.projectHousingsList[
-                                                    paymentModalShowOrder
-                                                  ]["number_of_shares[]"]
-                                                ) +
-                                                parseInt(totalPrice))) /
-                                              parseInt(
-                                                data.projectHousingsList[
-                                                  paymentModalShowOrder
-                                                ]["installments[]"]
-                                              )
-                                          ) + "₺"
-                                        : addDotEveryThreeDigits(
-                                            (
-                                              (parseInt(
-                                                data.projectHousingsList[
-                                                  paymentModalShowOrder
-                                                ]["installments-price[]"]
-                                              ) -
-                                                (parseInt(
-                                                  data.projectHousingsList[
-                                                    paymentModalShowOrder
-                                                  ]["advance[]"]
-                                                ) +
-                                                  parseInt(totalPrice))) /
-                                              parseInt(
-                                                data.projectHousingsList[
-                                                  paymentModalShowOrder
-                                                ]["installments[]"]
-                                              )
-                                            ).toFixed(0)
-                                          ) + "₺"
-                                    }
-                                  />
-                                ) : (
-                                  <SettingsItem
-                                    info="Aylık Ödenecek Tutar"
-                                    numbers="0"
-                                  />
-                                )
-                              ) : (
-                                <SettingsItem
-                                  info="Aylık Ödenecek Tutar"
-                                  numbers="0"
-                                />
-                              )}
-                              {paymentItems && paymentItems}
-                            </>
-                          ) : (
-                            ""
-                          )}
-                        </View>
-
-                        <TouchableOpacity
-                          onPress={() => {
-                            addToCardPaymentModal();
-                          }}
-                          style={{
-                            backgroundColor: "#EA2C2E",
-                            padding: 10,
-                            borderRadius: 5,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              textAlign: "center",
-                              color: "white",
-                              fontSize: 15,
-                              fontWeight: "bold",
-                            }}
-                          >
-                            Sepete Ekle
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
                     </View>
-                  ) : (
-                    ""
-                  )}
-                </Modal>
+            
 
-                {/* <Modal
-            isVisible={IsOpenSheet}
-            onBackdropPress={() => setIsOpenSheet(false)}
-            backdropColor="transparent"
-            style={styles.modal2}
-            animationIn={"fadeInDown"}
-            animationOut={"fadeOutDown"}
-          >
-            <View
-              style={[
-                styles.card,
-                {
-                  backgroundColor: "white",
-                  height: width > 400 ? "30%" : "37%",
-                  padding: 10,
-                  borderTopLeftRadius: 25,
-                  borderTopRightRadius: 25,
-                },
-              ]}
-            >
-              <View style={{ gap: 7 }}>
-                <View style={{ padding: 10, paddingTop: 25 }}>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      color: "#333",
-                      fontWeight: "700",
-                      textAlign: "center",
-                    }}
-                  >
-                    Paylaş
-                  </Text>
-                </View>
-                <ScrollView
-                  horizontal
-                  contentContainerStyle={{ gap: 20 }}
-                  showsHorizontalScrollIndicator={false}
-                >
-                  <TouchableOpacity
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                      paddingTop: 5,
-                    }}
-                  >
-                    <Icon
-                      name="link"
-                      size={32}
-                      iconStyle={{ color: "#ffffff" }}
-                      style={{
-                        backgroundColor: "red",
-                        padding: 12,
-                        borderRadius: 8,
-                      }}
-                      reverseColor={"orange"}
-                    />
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        color: "#333",
-                        textAlign: "center",
-                        top: 5,
-                      }}
-                    >
-                      Bağlantı Kopyala
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity>
-                    <SocialIcon
-                      iconSize={30}
-                      style={{ backgroundColor: "#52CD60", borderRadius: 8 }}
-                      raised
-                      type="whatsapp"
-                    />
-                    <Text
-                      style={{ fontSize: 12, color: "#333", textAlign: "center" }}
-                    >
-                      Whatsapp
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity>
-                    <SocialIcon
-                      iconSize={30}
-                      style={{ backgroundColor: "#D33380", borderRadius: 8 }}
-                      raised
-                      type="instagram"
-                    />
-                    <Text
-                      style={{ fontSize: 12, color: "#333", textAlign: "center" }}
-                    >
-                      İnstagram
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity>
-                    <SocialIcon
-                      iconSize={30}
-                      style={{ borderRadius: 8 }}
-                      raised
-                      type="facebook"
-                    />
-                    <Text
-                      style={{ fontSize: 12, color: "#333", textAlign: "center" }}
-                    >
-                      Facebook
-                    </Text>
-                  </TouchableOpacity>
+               
 
-                  <TouchableOpacity>
-                    <SocialIcon
-                      iconSize={30}
-                      style={{ borderRadius: 8 }}
-                      raised
-                      type="twitter"
-                    />
-                    <Text
-                      style={{ fontSize: 12, color: "#333", textAlign: "center" }}
-                    >
-                      Twitter
-                    </Text>
-                  </TouchableOpacity>
-                </ScrollView>
-                <View style={{ paddingTop: 20 }}>
-                  <TouchableOpacity
-                    onPress={() => setIsOpenSheet(false)}
-                    style={{
-                      backgroundColor: "#F0F0F0",
-                      padding: 17,
-                      borderRadius: 20,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "#7A7A7A",
-                        fontWeight: "bold",
-                        textAlign: "center",
-                      }}
-                    >
-                      İptal
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          </Modal> */}
-
-                <Modal
+                         <Modal
                   isVisible={ColectionSheet}
                   onBackdropPress={ToggleColSheet}
                   animationIn={"fadeInDown"}
@@ -2075,31 +1529,7 @@ export default function Details({ navigation }) {
                   </View>
                 </Modal>
 
-                {/* <Modal
-                  isVisible={collectionAddedSucces}
-                  onBackdropPress={() => setcollectionAddedSucces(false)}
-                  animationIn={"fadeInDown"}
-                  animationOut={"fadeOutDown"}
-                  animationInTiming={200}
-                  animationOutTiming={200}
-                  backdropColor="transparent"
-                  style={styles.modal4}
-                >
-                  <View style={styles.modalContent4}>
-                    <View style={{ padding: 10 }}>
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          color: "green",
-                          fontWeight: "500",
-                        }}
-                      >
-                        {selectedHouse} No'lu konutu {selectedCollectionName}{" "}
-                        adlı koleksiyonunuza eklendi
-                      </Text>
-                    </View>
-                  </View>
-                </Modal> */}
+              
 
                 {/* */}
                 <Modal
@@ -2222,197 +1652,7 @@ export default function Details({ navigation }) {
                     </ScrollView>
                   </View>
                 </Modal>
-                <Modal
-                  animationType="fade"
-                  transparent={true}
-                  onBackdropPress={() => setFormVisible(false)}
-                  visible={FormVisible}
-                  onRequestClose={() => {
-                    setFormVisible(false);
-                  }}
-                  style={{ margin: 0 }}
-                >
-                  <View style={[styles.centeredView, { padding: 10 }]}>
-                    <View style={[styles.modalView, { height: "90%" }]}>
-                      <Text
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: 12,
-                          textAlign: "center",
-                        }}
-                      >
-                        {data?.project?.project_title} projesinde{" "}
-                        {paymentModalShowOrder} No'lu Konut Başvuru Formu
-                      </Text>
-                      <KeyboardAwareScrollView
-                        showsVerticalScrollIndicator={false}
-                      >
-                        <View style={{ gap: 15 }}>
-                          <View style={{ gap: 7 }}>
-                            <Text style={styles.label}>Ad Soyad</Text>
-                            <TextInput
-                              style={styles.Input}
-                              value={nameid}
-                              onChangeText={(value) => setNameId(value)}
-                            />
-                            {errorStatu == 1 && (
-                              <Text style={{ color: "red", fontSize: 12 }}>
-                                {errorMessage}
-                              </Text>
-                            )}
-                          </View>
-                          <View style={{ gap: 7 }}>
-                            <Text style={styles.label}>Telefon Numarası</Text>
-                            <TextInput
-                              style={styles.Input}
-                              value={phoneid}
-                              keyboardType="number-pad"
-                              onChangeText={handlePhoneNumberChange}
-                            />
-                            {errorStatu == 2 && (
-                              <Text style={{ color: "red", fontSize: 12 }}>
-                                {errorMessage}
-                              </Text>
-                            )}
-                          </View>
-                          <View style={{ gap: 7 }}>
-                            <Text style={styles.label}>E-Posta</Text>
-                            <TextInput
-                              style={styles.Input}
-                              value={emailid}
-                              onChangeText={(value) => setEmailId(value)}
-                            />
-                            {errorStatu == 6 && (
-                              <Text style={{ color: "red", fontSize: 12 }}>
-                                {errorMessage}
-                              </Text>
-                            )}
-                          </View>
-                          <View style={{ gap: 7 }}>
-                            <Text style={styles.label} value={titleid}>
-                              Meslek
-                            </Text>
-                            <TextInput
-                              style={styles.Input}
-                              value={titleid}
-                              onChangeText={(value) => setTitleId(value)}
-                            />
-                            {errorStatu == 3 && (
-                              <Text style={{ color: "red", fontSize: 12 }}>
-                                {errorMessage}
-                              </Text>
-                            )}
-                          </View>
-                          <View style={{ gap: 7 }}>
-                            <Text style={styles.label}>Açıklama</Text>
-                            <TextInput
-                              style={styles.Input}
-                              value={offerid}
-                              onChangeText={(value) => setOfferId(value)}
-                            />
-                            {errorStatu == 7 && (
-                              <Text style={{ color: "red", fontSize: 12 }}>
-                                {errorMessage}
-                              </Text>
-                            )}
-                          </View>
-
-                          <View style={{ gap: 6 }}>
-                            <Text
-                              style={{
-                                fontSize: 14,
-                                color: "grey",
-                                fontWeight: 600,
-                              }}
-                            >
-                              Şehir
-                            </Text>
-                            <RNPickerSelect
-                              doneText="Tamam"
-                              placeholder={{
-                                label: "Şehir Seçiniz...",
-                                value: null,
-                              }}
-                              style={pickerSelectStyles}
-                              value={city}
-                              onValueChange={(value) => {
-                                onChangeCity(value);
-                              }}
-                              items={citites}
-                            />
-                            {errorStatu == 4 && (
-                              <Text style={{ color: "red", fontSize: 12 }}>
-                                {errorMessage}
-                              </Text>
-                            )}
-                          </View>
-                          <View style={{ gap: 6 }}>
-                            <Text
-                              style={{
-                                fontSize: 14,
-                                color: "grey",
-                                fontWeight: 600,
-                              }}
-                            >
-                              İlçe
-                            </Text>
-                            <RNPickerSelect
-                              doneText="Tamam"
-                              placeholder={{
-                                label: "İlçe Seçiniz...",
-                                value: null,
-                              }}
-                              value={county}
-                              style={pickerSelectStyles}
-                              onValueChange={(value) => setcounty(value)}
-                              items={counties}
-                            />
-                            {errorStatu == 5 && (
-                              <Text style={{ color: "red", fontSize: 12 }}>
-                                {errorMessage}
-                              </Text>
-                            )}
-                          </View>
-                        </View>
-                      </KeyboardAwareScrollView>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-around",
-                        }}
-                      >
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "#28A745",
-                            width: "40%",
-                            padding: 15,
-                            borderRadius: 5,
-                          }}
-                          onPress={GiveOffer}
-                        >
-                          <Text style={{ color: "white", textAlign: "center" }}>
-                            Gönder
-                          </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "#DC3545",
-                            width: "40%",
-                            padding: 15,
-                            borderRadius: 5,
-                          }}
-                          onPress={() => {
-                            setFormVisible(false);
-                          }}
-                        >
-                          <Text style={{ color: "white", textAlign: "center" }}>
-                            Kapat
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  </View>
-                </Modal>
+               
                 <Modal
                   isVisible={showCoverImageModal}
                   onBackdropPress={() => setCoverImageModal(false)}
@@ -2432,114 +1672,10 @@ export default function Details({ navigation }) {
                       </TouchableOpacity>
                     </View>
 
-                    {/* <PagerView
-              style={{ height: 300 }}
-              initialPage={selectedImage}
-              onPageSelected={(event) =>
-                handlePageChange(event.nativeEvent.position)
-              }
-            >
-              {data.project.images.map((image, index) => {
-                return (
-                  <Pressable
-                    key={index + 1}
-                    onPress={() => setCoverImageModal(true)}
-                  >
-                    <ImageBackground
-                      source={{
-                        uri: `${apiUrl}${image.image.replace(
-                          "public",
-                          "storage"
-                        )}`,
-                      }}
-                      style={{ width: "100%", height: "100%" }}
-                      resizeMode="cover"
-                    />
-                  </Pressable>
-                );
-              })}
-            </PagerView> */}
+          
                   </View>
                 </Modal>
 
-                {/* <Modal
-            isVisible={ModalForAddToCart}
-            onBackdropPress={() => setModalForAddToCart(false)}
-            animationType="fade"
-            transparent={true}
-            style={styles.modal4}
-          >
-            <View style={styles.modalContent4}>
-              {
-                user.access_token ?
-                  <>
-                    <View style={{ padding: 10, gap: 10 }}>
-                      <Text style={{ textAlign: "center" }}>
-                        {selectedCartItem} No'lu Konutu Sepete Eklemek İsteiğinize
-                        Eminmisiniz?
-                      </Text>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "center",
-                          gap: 20,
-                        }}
-                      >
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "green",
-                            padding: 10,
-                            paddingLeft: 20,
-                            paddingRight: 20,
-                            borderRadius: 5,
-                          }}
-                          onPress={() => {
-                            addToCard();
-                          }}
-                        >
-                          <Text style={{ color: "white" }}>Sepete Ekle</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "#e44242",
-                            padding: 10,
-                            paddingLeft: 20,
-                            paddingRight: 20,
-                            borderRadius: 5,
-                          }}
-                          onPress={() => {
-                            setModalForAddToCart(false);
-                          }}
-                        >
-                          <Text style={{ color: "white" }}>Vazgeç</Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  </> :
-                  <>
-                    <View style={{ gap: 10 }}>
-
-                      <View style={{}}>
-                        <Text style={{ textAlign: 'center', color: '#4C6272', fontWeight: 'bold', fontSize: 16 }}>Üyeliğiniz Bulunmamaktadır!</Text>
-                      </View>
-                      <View style={{ width: '100%' }}>
-                        <Text style={{ textAlign: 'center', color: '#7A8A95' }}>Sepetinize konut ekleyebilmeniz için giriş yapmanız gerekmektedir</Text>
-                      </View>
-                      <TouchableOpacity style={{ backgroundColor: '#F65656', width: '100%', padding: 10 }}
-                        onPress={() => {
-                          setModalForAddToCart(false)
-                          navigation.navigate('Login')
-                        }}
-                      >
-                        <Text style={{ color: '#FFFFFF', textAlign: 'center' }}>Giriş Yap</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </>
-              }
-
-            </View>
-          </Modal> */}
               </ScrollView>
             </>
           )}
@@ -2608,8 +1744,9 @@ export default function Details({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
+  
     justifyContent: "center",
-    backgroundColor: "white",
+   
     flex: 1,
     ...Platform.select({
       ios: {},
@@ -2645,7 +1782,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   commissionText: {
-    color: "green",
+    color: "#EA2C2E",
     fontWeight: "700",
     fontSize: 13,
   },
@@ -2798,6 +1935,32 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 5,
   },
+  CaptionPriceAndSlider:{
+    gap:8,
+    paddingBottom:10,
+      width: "100%",
+      paddingTop:10,
+      paddingLeft:12,
+      paddingRight:12,
+      backgroundColor: "#FFFFFF",
+
+      width: "100%",
+
+      borderWidth: 0.7,
+      borderColor: "#e6e6e6",
+      ...Platform.select({
+        ios: {
+          shadowColor: " #e6e6e6",
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+   
+  }
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {

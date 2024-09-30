@@ -34,8 +34,10 @@ import * as SecureStore from "expo-secure-store";
 import {
   BookmarkStatus,
   leftButtonsForPost,
+  PriceStatus,
   rightButtonsForPost,
 } from "../pages/helper";
+import PaymentPlanModal from "./PaymentPlanModal";
 
 export default function Posts({
   project,
@@ -87,6 +89,7 @@ export default function Posts({
   };
 
   const [neightboord, setNeightboord] = useState(false);
+
 
   const saveData = async (
     title,
@@ -269,7 +272,7 @@ export default function Posts({
     });
   };
 
-  console.log(data);
+ 
 
   const [offSaleStatus, setoffSaleStatus] = useState(null);
   useEffect(() => {
@@ -279,16 +282,21 @@ export default function Posts({
     }
   }, [roomData]);
 
-  console.log(offSaleStatus + "jdflsdjfl");
+
 
   const [PaymaentAlert, setPaymaentAlert] = useState(false);
+  const [paymentModalVisible, setpaymentModalVisible] = useState(false)
   const HandleModal = () => {
-    if (offSaleStatus != 5 && !user.access_token) {
-      setPaymaentAlert(true);
-    } else {
-      openModal(roomOrder);
-    }
+    setpaymentModalVisible(true)
+    // if (offSaleStatus != 5 && !user.access_token) {
+    //   setPaymaentAlert(true);
+    // } else {
+    //   openModal(roomOrder);
+    // }
   };
+  const onClose=()=>{
+    setpaymentModalVisible(false)
+  }
   const AddCartModal = () => {
     if (user.access_token) {
       if (user.cartItem !== null) {
@@ -327,7 +335,8 @@ export default function Posts({
         return [];
     }
   };
-  console.log(sumCartOrderQt[roomOrder]?.qt_total);
+
+  console.log(data?.neighborViews[roomOrder]?.user_id==user.id)
   return (
     <View style={styles.container}>
       <AwesomeAlert
@@ -585,69 +594,101 @@ export default function Posts({
             </View>
           </View>
 
-          {offSaleCheck && !soldCheck && shareSaleEmpty ? (
-            <View>
-              {projectDiscountAmount ? (
-                <View style={styles.discountContainer}>
-                  <Svg
-                    viewBox="0 0 24 24"
-                    width={18}
-                    height={18}
-                    stroke="#EA2B2E"
-                    strokeWidth={2}
-                    fill="#EA2B2E"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="css-i6dzq1"
-                  >
-                    <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
-                    <Polyline points="17 18 23 18 23 12" />
-                  </Svg>
-                  <Text style={styles.originalPrice}>
-                    <Text style={styles.strikethrough}>
-                      {formatPrice(roomData["price[]"])} ₺
-                    </Text>
-                  </Text>
-                  <Text style={styles.discountedPrice}>
-                    {formatPrice(formattedDiscountedPrice)} ₺
-                  </Text>
-                </View>
-              ) : (
-                <Text style={styles.regularPrice}>
-                  {formatPrice(roomData["price[]"])} ₺
-                </Text>
-              )}
-              {projectDiscountAmount > 0 && (
-                <Text style={styles.discountText}>
-                  {formatPrice(projectDiscountAmount)} ₺ indirim
-                </Text>
-              )}
-            </View>
-          ) : (shareSale &&
-              shareSale !== "[]" &&
-              sumCartOrderQt[roomOrder]?.qt_total !== numberOfShare) ||
-            (shareSale && shareSale !== "[]" && !sumCartOrderQt[roomOrder]) ? (
-            <View>
-              <Text style={[styles.regularPrice, {}]}>
-                {shareSale && shareSale !== "[]" && numberOfShare !== 0 && (
-                  <Text style={styles.shareSaleText}>1/{numberOfShare}</Text>
-                )}
-                {" Pay Fiyatı - "}
-                {shareSale && shareSale !== "[]" && numberOfShare !== 0
-                  ? formatPrice(roomData["price[]"] / numberOfShare)
-                  : formatPrice(roomData["price[]"])}
-                ₺
-              </Text>
-            </View>
-          ) : (
-            <View style={{ paddingTop: 5, alignItems: "flex-end" }}>
-              <Text
-                style={{ fontSize: 12, color: "#264ABB", fontWeight: "800" }}
-              >
-                {formatPrice(roomData["price[]"])}₺
-              </Text>
-            </View>
-          )}
+          { 
+          PriceStatus.map((item)=>(
+            <View style={{
+              display:
+              
+              user.type == 2
+                ? Array.isArray(item.OnlySee) &&
+                  item.OnlySee.includes(
+                    user.corporate_type
+                  ) &&
+                  item.offsale == offSaleStatus&&
+                  !sold
+                  ? "flex"
+                  : "none"
+                : item.isShowClient == 1 &&
+                  item.offsale == offSaleStatus&&
+                  !sold
+                ? "flex"
+                : "none",
+          
+            }}>
+
+            {offSaleCheck && !soldCheck && shareSaleEmpty ? (
+                 
+               <View>
+                 {projectDiscountAmount ? (
+                   <View style={styles.discountContainer}>
+                     <Svg
+                       viewBox="0 0 24 24"
+                       width={18}
+                       height={18}
+                       stroke="#EA2B2E"
+                       strokeWidth={2}
+                       fill="#EA2B2E"
+                       strokeLinecap="round"
+                       strokeLinejoin="round"
+                       className="css-i6dzq1"
+                     >
+                       <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+                       <Polyline points="17 18 23 18 23 12" />
+                     </Svg>
+                     <Text style={styles.originalPrice}>
+                       <Text style={styles.strikethrough}>
+                         {formatPrice(roomData["price[]"])} ₺
+                       </Text>
+                     </Text>
+                     <Text style={styles.discountedPrice}>
+                       {formatPrice(formattedDiscountedPrice)} ₺
+                     </Text>
+                   </View>
+                 ) : (
+                   <Text style={styles.regularPrice}>
+                     {formatPrice(roomData["price[]"])} ₺
+                   </Text>
+                 )}
+                 {projectDiscountAmount > 0 && (
+                   <Text style={styles.discountText}>
+                     {formatPrice(projectDiscountAmount)} ₺ indirim
+                   </Text>
+                 )}
+               </View>
+             ) : (shareSale &&
+                 shareSale !== "[]" &&
+                 sumCartOrderQt[roomOrder]?.qt_total !== numberOfShare) ||
+               (shareSale && shareSale !== "[]" && !sumCartOrderQt[roomOrder]) ? (
+               <View>
+                 <Text style={[styles.regularPrice, {}]}>
+                   {shareSale && shareSale !== "[]" && numberOfShare !== 0 && (
+                     <Text style={styles.shareSaleText}>1/{numberOfShare}</Text>
+                   )}
+                   {" Pay Fiyatı - "}
+                   {shareSale && shareSale !== "[]" && numberOfShare !== 0
+                     ? formatPrice(roomData["price[]"] / numberOfShare)
+                     : formatPrice(roomData["price[]"])}
+                   ₺
+                 </Text>
+               </View>
+             ) : (
+               <View style={{ paddingTop: 5, alignItems: "flex-end" }}>
+                 <Text
+                   style={{ fontSize: 12, color: "#264ABB", fontWeight: "800" }}
+                 >
+                   {formatPrice(roomData["price[]"])}₺
+                 </Text>
+               </View>
+             )
+           }
+                 </View>
+             
+          ))
+           
+          
+          
+          }
+          
 
           <View style={styles.priceAndButtons}>
             <View style={styles.btns}>
@@ -656,7 +697,7 @@ export default function Posts({
                   <>
                     <View
                       style={{
-                        width: "100%",
+                        width: "50%",
                       }}
                     >
                       <View style={styles.sold}>
@@ -898,10 +939,12 @@ export default function Posts({
                     }}
                   >
                     {sold ? (
-                      (sold?.status == 1 && sold.is_show_user == "on") ||
+                      (sold?.status == 1 && sold.is_show_user == "on"  ) ||
                       (sold &&
                         sold.is_show_user == "on" &&
-                        sold.user_id != user.id) ? (
+                        sold.user_id != user.id) 
+                       
+                      ? (
                         <TouchableOpacity
                           style={styles.showCustomer}
                           onPress={() => openAlert(roomData)}
@@ -911,7 +954,7 @@ export default function Posts({
                           </Text>
                         </TouchableOpacity>
                       ) : (
-                        <></>
+                        <><Text>Komşu</Text></>
                       )
                     ) : (
                       rightButtonsForPost.map((item, _i) => (
@@ -1026,6 +1069,7 @@ export default function Posts({
           </View>
         </View>
       )}
+      <PaymentPlanModal visible={paymentModalVisible} title={data?.project?.project_title} onClose={onClose} data={roomData} RoomOrder={roomOrder}/>
     </View>
   );
 }

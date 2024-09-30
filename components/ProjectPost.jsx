@@ -50,7 +50,17 @@ export default function ProjectPost({
         })
       }
     >
+      
       <View style={styles.container}>
+        {
+          userLogin.corporate_type ==='Emlak Ofisi' &&
+          <View style={{position:'absolute',right:0,height:'50%',zIndex:1,justifyContent:'flex-end'}}>
+          <View style={{backgroundColor:'white',padding:8,borderTopLeftRadius:40,borderBottomLeftRadius:40}}>
+            <Text style={{color:'#EA2C2E',fontSize:14,fontWeight:'700'}}>%{project.club_rate} KOMİSYON!</Text>
+          </View>
+  </View>
+        }
+   
         <Image
           source={{ uri: ımage }}
           style={styles.image}
@@ -60,12 +70,14 @@ export default function ProjectPost({
 
         {/* Logo ve Başlığı içeren alan */}
         <View style={styles.logoTitleContainer}>
+      
           <View
             style={[
               styles.titleContainer,
               { backgroundColor: randomColor + "CC" },
             ]}
           >
+          
             <View
               style={{
                 height: "40%",

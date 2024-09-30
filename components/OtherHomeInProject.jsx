@@ -103,7 +103,7 @@ export default function OtherHomeInProject({
       <View>
        
         <View style={styles.container}>
-          {data.project.blocks &&
+          {data.project.have_blocks !==0 &&data?.project?.blocks&&
            <ScrollView
            horizontal={true}
            showsHorizontalScrollIndicator={false}
@@ -116,7 +116,7 @@ export default function OtherHomeInProject({
            }}
            bounces={false}
          >
-           { data.project.blocks.map((block, blockIndex) => (
+           { data?.project?.blocks?.map((block, blockIndex) => (
              <TouchableOpacity
                key={blockIndex}
                onPress={() => {
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 5,
     top: 0,
-
+    
     backgroundColor: "#FFFFFF",
 
     marginTop: 0,
