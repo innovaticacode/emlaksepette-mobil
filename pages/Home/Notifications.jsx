@@ -281,8 +281,8 @@ export default function Notifications() {
                       justifyContent: "space-between",
                     }}
                   >
-                    <Text style={{ color: "grey" }}>Bugün</Text>
-                    <View style={{ flexDirection: "row", gap: 16 }}>
+                    <Text style={{ color: "grey" }}></Text>
+                    <View style={{ flexDirection: "row", gap: 16, marginRight: 5 }}>
                       {notifiCountRedux > 1 && (
                         <TouchableOpacity
                           style={{
