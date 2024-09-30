@@ -650,7 +650,7 @@ export default function PostDetail() {
           </View>
         ) : (
           <SafeAreaView
-            style={{ backgroundColor: "#f9f9f9", flex: 1, paddingTop: 20 }}
+            style={{  flex: 1, paddingTop: 20 }}
           >
             <Header onPress={toggleDrawer} index={setindex} tab={settab} />
             <Modal
@@ -971,57 +971,38 @@ export default function PostDetail() {
                   onRequestClose={() => setIsVisible(false)}
                 />
               </View>
-              <View
-                style={{
-                  width: "100%",
-                  padding: 10,
-                  backgroundColor: "#FFFFFF",
-
-                  width: "100%",
-
-                  borderWidth: 0.7,
-                  borderColor: "#e6e6e6",
-                  ...Platform.select({
-                    ios: {
-                      shadowColor: " #e6e6e6",
-                      shadowOffset: { width: 1, height: 1 },
-                      shadowOpacity: 0.1,
-                      shadowRadius: 5,
-                    },
-                    android: {
-                      elevation: 5,
-                    },
-                  }),
-                }}
-              >
-                <View style={{ paddingTop: 0, gap: 5 }}>
-                  {totalRate != 0 && (
-                    <View
+             
+              <View style={styles.CaptionPriceAndSlider}>
+                <View style={{gap:25}}>
+                  <View>
+                  <Text
                       style={{
-                        position: "absolute",
-                        right: 10,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 4,
+                       
+                        fontSize: 11,
+                        color: "grey",
+                        fontWeight: "700",
                       }}
                     >
-                      <Text
-                        style={{
-                          color: "#264ABB",
-                          fontWeight: "600",
-                          fontSize: 13,
-                        }}
-                      >
-                        {(totalRate / data?.housingComments?.length).toFixed(1)}
-                      </Text>
-                      <Icon2 name="star" color={"gold"} />
-                    </View>
-                  )}
+                      
+                      {"Emlak" +
+                        " > " +
+                        data?.housing?.step1_slug.charAt(0).toUpperCase() +
+                        data?.housing?.step1_slug.slice(1) +
+                        " > " +
+                        data?.housing?.step2_slug.charAt(0).toUpperCase() +
+                        data?.housing?.step2_slug.slice(1)}
+                    </Text>
+                  </View>
+                  <View style={{width:'100%',flexDirection:'row'}}>
+                  
 
-                  <Text
+                    <View style={{width:'100%',flexDirection:'row',alignItems:'center'}}>
+                    <View style={{width:'70%',gap:5}}>
+                        <View>
+                        <Text
                     style={{
-                      textAlign: "center",
-                      fontSize: 12,
+                    
+                      fontSize: 11,
                       color: "#333",
                       fontWeight: "600",
                     }}
@@ -1029,24 +1010,27 @@ export default function PostDetail() {
                     {data?.housing?.city?.title} /{" "}
                     {data?.housing?.county?.title}
                   </Text>
-
-                  {/* <Text style={{textAlign:'center',color: "#264A" ,fontSize:15}}>{addDotEveryThreeDigits(JSON.parse(data?.housing?.housing_type_data)?.price)} ₺</Text>   */}
-                  <Text
+                        </View>
+                        <View>
+                        <Text
+                        numberOfLines={2}
                     style={{
-                      textAlign: "center",
-                      fontSize: 15,
-                      color: "#264ABB",
+                      fontWeight:'600',
+                      fontSize: 16,
+                      color: "#333",
+                      
                     }}
                   >
                     {data?.pageInfo?.meta_title}
                   </Text>
-                </View>
-                <View style={{ padding: 10 }}>
-                  {data && data.housing && data.housing.housing_type_data && (
+                        </View>
+                    </View>
+                    <View style={{width:'30%'}}>
+                    {data && data.housing && data.housing.housing_type_data && (
                     <Text
                       style={{
-                        textAlign: "center",
-                        color: "green",
+                        textAlign:'right',
+                        color: "#0DAC2E",
                         fontWeight: "bold",
                         fontSize: 13,
                       }}
@@ -1064,85 +1048,11 @@ export default function PostDetail() {
                       ] && <Text style={{ color: "#EA2A28" }}>/ Gecelik</Text>}
                     </Text>
                   )}
-                  <View style={{ paddingTop: 5 }}>
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        fontSize: 11,
-                        color: "grey",
-                        fontWeight: "700",
-                      }}
-                    >
-                      {" "}
-                      {"Emlak" +
-                        " > " +
-                        data?.housing?.step1_slug.charAt(0).toUpperCase() +
-                        data?.housing?.step1_slug.slice(1) +
-                        " > " +
-                        data?.housing?.step2_slug.charAt(0).toUpperCase() +
-                        data?.housing?.step2_slug.slice(1)}
-                    </Text>
+                    </View>
+                  
+                    </View>
                   </View>
                 </View>
-                {data.housing &&
-                  data.housing.housing_type_data &&
-                  JSON.parse(data.housing.housing_type_data)["swap"] ==
-                    "Evet" && (
-                    <View>
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: "#FEF4EB",
-                          flexDirection: "row",
-                          padding: 6,
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          borderRadius: 5,
-                        }}
-                        onPress={() => {
-                          navigation.navigate("SwapForm", {
-                            houseid: data?.housing?.id,
-                          });
-                        }}
-                      >
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 10,
-                          }}
-                        >
-                          <View
-                            style={{
-                              backgroundColor: "#F37919",
-                              padding: 6,
-                              borderRadius: 5,
-                            }}
-                          >
-                            <Icon2 name="plus" size={16} color={"#fff"} />
-                          </View>
-                          <View style={{}}>
-                            <Text
-                              style={{
-                                fontSize: 12,
-                                color: "#333",
-                                fontWeight: "600",
-                              }}
-                            >
-                              Takas Başvurusu Yap
-                            </Text>
-                          </View>
-                        </View>
-                        <View>
-                          <Arrow
-                            name="arrow-forward-ios"
-                            size={16}
-                            color={"#333"}
-                          />
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-
                 <View
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
@@ -1160,169 +1070,7 @@ export default function PostDetail() {
                 {tabs == 3 && <Comment data={data} handleModal={handleModal} />}
               </View>
 
-              {/* {tabs == 4 && (
-              <SwapForm
-                data={data}
-                openModal={openSwapAler}
-                color={setcolorAlert}
-              />
-            )} */}
-
-              {/* 
-                  {
-                    ProjectHomeData.projectHousingsList((item,index)=>(
-                      <Text>asd</Text>
-                        // <Posts
-                        //     key={index}
-                        // />
-                    ))
-                  } */}
-
-              {/* <Modal
-              isVisible={IsOpenSheet}
-              onBackdropPress={() => setIsOpenSheet(false)}
-              backdropColor="transparent"
-              style={styles.modal2}
-              animationIn={"fadeInDown"}
-              animationOut={"fadeOutDown"}
-            >
-              <View
-                style={[
-                  styles.card,
-                  {
-                    backgroundColor: "white",
-                    height: width > 400 ? "30%" : "37%",
-                    padding: 10,
-                    borderTopLeftRadius: 25,
-                    borderTopRightRadius: 25,
-                  },
-                ]}
-              >
-                <View style={{ gap: 7 }}>
-                  <View style={{ padding: 10, paddingTop: 25 }}>
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        color: "#333",
-                        fontWeight: "700",
-                        textAlign: "center",
-                      }}
-                    >
-                      Paylaş
-                    </Text>
-                  </View>
-                  <ScrollView
-                    horizontal
-                    contentContainerStyle={{ gap: 20 }}
-                    showsHorizontalScrollIndicator={false}
-                  >
-                    <TouchableOpacity
-                      onPress={copyToClipboard}
-                      style={{
-                        alignItems: "center",
-                        justifyContent: "center",
-                        paddingTop: 5,
-                      }}
-                    >
-                      <Icon
-                        name="link"
-                        size={32}
-                        iconStyle={{ color: "#ffffff" }}
-                        style={{
-                          backgroundColor: "red",
-                          padding: 12,
-                          borderRadius: 8,
-                        }}
-                        reverseColor={"orange"}
-                      />
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          color: "#333",
-                          textAlign: "center",
-                          top: 5,
-                        }}
-                      >
-                        Bağlantı Kopyala
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={shareLinkOnWhatsApp}>
-                      <SocialIcon
-                        iconSize={30}
-                        style={{ backgroundColor: "#52CD60", borderRadius: 8 }}
-                        raised
-                        type="whatsapp"
-                      />
-                      <Text
-                        style={{ fontSize: 12, color: "#333", textAlign: "center" }}
-                      >
-                        Whatsapp
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                      <SocialIcon
-                        iconSize={30}
-                        style={{ backgroundColor: "#D33380", borderRadius: 8 }}
-                        raised
-                        type="instagram"
-                      />
-                      <Text
-                        style={{ fontSize: 12, color: "#333", textAlign: "center" }}
-                      >
-                        İnstagram
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                      <SocialIcon
-                        iconSize={30}
-                        style={{ borderRadius: 8 }}
-                        raised
-                        type="facebook"
-                      />
-                      <Text
-                        style={{ fontSize: 12, color: "#333", textAlign: "center" }}
-                      >
-                        Facebook
-                      </Text>
-                    </TouchableOpacity>
-    
-                    <TouchableOpacity>
-                      <SocialIcon
-                        iconSize={30}
-                        style={{ borderRadius: 8 }}
-                        raised
-                        type="twitter"
-                      />
-                      <Text
-                        style={{ fontSize: 12, color: "#333", textAlign: "center" }}
-                      >
-                        Twitter
-                      </Text>
-                    </TouchableOpacity>
-                  </ScrollView>
-                  <View style={{ paddingTop: 20 }}>
-                    <TouchableOpacity
-                      onPress={() => setIsOpenSheet(false)}
-                      style={{
-                        backgroundColor: "#F0F0F0",
-                        padding: 17,
-                        borderRadius: 20,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: "#7A7A7A",
-                          fontWeight: "bold",
-                          textAlign: "center",
-                        }}
-                      >
-                        İptal
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </Modal> */}
+           
               <Modal
                 isVisible={ColectionSheet}
                 onBackdropPress={ToggleColSheet}
@@ -1894,192 +1642,7 @@ export default function PostDetail() {
                 </View>
               </Modal>
 
-              {/* <Modal
-              isVisible={modalVisibleComennet}
-              onBackdropPress={() => setmodalVisibleComment(false)}
-              backdropColor="transparent"
-              style={styles.modal2}
-            >
-              <View style={styles.modalContent2}>
-                <View
-                  style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    margin: 10,
-                  }}
-                >
-                  <Text style={{ textAlign: "center", fontSize: 16 }}>
-                    Konutu Değerlendir
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => setmodalVisibleComment(false)}
-                    style={{
-                      backgroundColor: "#E54242",
-                      width: "30%",
-                      padding: 8,
-                      borderRadius: 5,
-                    }}
-                  >
-                    <Text style={{ textAlign: "center", color: "white" }}>
-                      İptal Et
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <TouchableOpacity>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 4,
-                      alignItems: "center",
-                      borderBottomWidth: 1,
-                      borderBottomColor: "#ebebeb",
-                      padding: 10,
-                    }}
-                  >
-                    <View style={{ height: 35, width: 35 }}>
-                      {data?.housing?.user?.profile_image ? (
-                        <ImageBackground
-                          source={{
-                            uri: `${apiUrl}/storage/profile_images/${data?.housing?.user?.profile_image}`,
-                          }}
-                          style={{ width: "100%", height: "100%" }}
-                          borderRadius={20}
-                        />
-                      ) : (
-                        <ImageBackground
-                          source={{
-                            uri: `${apiUrl}/storage/profile_images/indir.png`,
-                          }}
-                          style={{ width: "100%", height: "100%" }}
-                          borderRadius={20}
-                        />
-                      )}
-                    </View>
-    
-                    <Text style={{ color: "#333" }}>
-                      {data?.housing?.user?.name}
-                    </Text>
-                    <View
-                      style={{
-                        width: 18,
-                        height: 18,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <LinkIcon
-                        name="check"
-                        style={{ position: "absolute", zIndex: 1 }}
-                        color={"#333"}
-                      />
-                      <ImageBackground
-                        source={require("../BadgeYellow.png")}
-                        style={{ width: "100%", height: "100%" }}
-                      />
-                    </View>
-                  </View>
-                </TouchableOpacity>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    width: "100%",
-                    justifyContent: "center",
-                    gap: 20,
-                    paddingTop: 15,
-                  }}
-                >
-                  {[...Array(5)].map((_, index) => (
-                    <View key={index}>
-                      <TouchableOpacity onPress={() => handleStarPress(index)}>
-                        <Ionicons
-                          name={index < rating ? "md-star" : "md-star-outline"}
-                          size={30}
-                          color={index < rating ? "gold" : "gray"}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  ))}
-                </View>
-                <View style={{ paddingTop: 20, gap: 5 }}>
-                  <Text style={{ fontSize: 13 }}>Yorumunuz</Text>
-                  <TextInput
-                    style={{
-                      borderWidth: 1,
-                      padding: 9,
-                      borderRadius: 6,
-                      borderColor: "#ebebeb",
-                      backgroundColor: "#EDEFF7",
-                    }}
-                    placeholder="Örn:Mahalle gerçekten çok nezih "
-                  />
-                </View>
-                <View style={{ marginTop: 15 }}>
-                  <ScrollView
-                    horizontal
-                    style={{ height: 100, gap: 10 }}
-                    contentContainerStyle={{ gap: 15 }}
-                    bounces={false}
-                    showsHorizontalScrollIndicator={false}
-                  >
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: "#f2f2f2",
-                        height: 100,
-                        borderWidth: 1,
-                        borderStyle: "dashed",
-                        borderColor: "grey",
-                        width: 100,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <View style={{ alignItems: "center" }}>
-                        <Ionicons
-                          name="camera-outline"
-                          size={30}
-                          color={"#EA2B2E"}
-                        />
-                        <Text style={{ fontSize: 10, color: "#333" }}>
-                          Fotoğraf Ekle
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </ScrollView>
-                </View>
-                <View style={{ width: "100%", alignItems: "center" }}>
-                  <CheckBox
-                    checked={checked}
-                    onPress={toggleCheked}
-                    // Use ThemeProvider to make change for all checkbox
-                    iconType="material-community"
-                    checkedIcon="checkbox-marked"
-                    uncheckedIcon="checkbox-blank-outline"
-                    checkedColor="#E54242"
-                    title={
-                      <View style={{ paddingLeft: 10 }}>
-                        <Text>
-                          <Text style={{ fontSize: 13 }} numberOfLines={2}>
-                            Yorumlarda ismiminin gözükmesine ve yorum detaylanının
-                            site genelinde kullanılmmasına izin veriyorum.
-                          </Text>
-                          <Text style={{ fontSize: 13 }}>
-                            Aydınlatma Metnine ulaşmak için tıklayınız
-                          </Text>
-                        </Text>
-                      </View>
-                    }
-                    containerStyle={{
-                      backgroundColor: "white",
-                      borderWidth: 0.5,
-                      borderColor: "#ebebeb",
-                    }}
-                  />
-                </View>
-              </View>
-            </Modal> */}
+            
               <Modal
                 animationType="slide"
                 transparent={true}
@@ -2543,4 +2106,30 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
+  CaptionPriceAndSlider:{
+    gap:8,
+    paddingBottom:10,
+      width: "100%",
+      paddingTop:10,
+      paddingLeft:12,
+      paddingRight:12,
+      backgroundColor: "#FFFFFF",
+
+      width: "100%",
+
+      borderWidth: 0.7,
+      borderColor: "#e6e6e6",
+      ...Platform.select({
+        ios: {
+          shadowColor: " #e6e6e6",
+          shadowOffset: { width: 1, height: 1 },
+          shadowOpacity: 0.1,
+          shadowRadius: 5,
+        },
+        android: {
+          elevation: 5,
+        },
+      }),
+   
+  }
 });

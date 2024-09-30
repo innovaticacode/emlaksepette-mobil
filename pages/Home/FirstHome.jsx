@@ -254,7 +254,7 @@ const FirstHome = (props) => {
                                 // acıklama={item.description
                                 //   .replace(/<\/?[^>]+(>|$)/g, "")
                                 //   .replace(/&nbsp;/g, " ")}
-
+                                ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
                                 loading={loadingProjects}
                               />
                             </View>

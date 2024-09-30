@@ -17,7 +17,7 @@ export default function SliderMenuDetails({tab,setTab,changeTab}) {
       style={{}}
       bounces={false}
     >
-      <View style={{ flexDirection: "row"}}>
+      <View style={{ flexDirection: "row",gap:5, alignItems:'center'}}>
         {menuItems.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -47,15 +47,19 @@ export default function SliderMenuDetails({tab,setTab,changeTab}) {
   )
 }
 const styles = StyleSheet.create({
-    tabBtn: {
-      backgroundColor: "white",
-      paddingLeft: 15,
-      paddingRight: 15,
-      justifyContent: "center",
-      alignItems: "center",
-      padding: 10,
-      borderColor: "#ebebeb",
-    },
+  tabBtn: {
+    gap:5,
+    flexDirection:'row',
+    backgroundColor: "white",
+    paddingLeft: 20,
+    paddingRight: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 7,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ebebeb",
+  },
     text: {
       fontSize: 12,
     },
