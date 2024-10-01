@@ -127,7 +127,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
           {/* GRİ ALAN START */}
           <View style={styles.grayArea}>
             <View style={styles.categoryWrapper}>
-              {(!user.access_token ||
+              {/* {(!user.access_token ||
                 user.type == 1 ||
                 user.corporate_type == "Emlak Ofisi") && (
                 <TouchableOpacity
@@ -135,17 +135,31 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
                 >
                   <Categories category={"Emlak Kulüp"} iconName={"hand-coin"} />
                 </TouchableOpacity>
-              )}
+              )} */}
 
-              <TouchableOpacity onPress={() => navigateToScreen("")}>
+              <TouchableOpacity
+                onPress={() => navigateToScreen("RealtorClubExplore")}
+              >
                 <Categories
-                  category={"Gayrimenkul Ligi"}
-                  iconName={"trophy-variant"}
+                  category={"Emlak Kulüp Nedir ?"}
+                  materialIcon={"groups-2"}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigateToScreen("")}>
+
+              <TouchableOpacity
+                onPress={() => navigateToScreen("SeeMyNeighbor")}
+              >
                 <Categories
-                  category={"Paylaşımlı İlanlar"}
+                  category={"Komşunu Gör Nedir ?"}
+                  materialIcon={"emoji-people"}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => navigateToScreen("SalePageMain")}
+              >
+                <Categories
+                  category={"Satış Noktası Ol"}
                   iconName={"handshake"}
                 />
               </TouchableOpacity>
