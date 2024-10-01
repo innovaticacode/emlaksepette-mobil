@@ -89,8 +89,6 @@ export default function Basket() {
     fetchDatass();
   }, []);
 
-  console.log(imageUrl, "aa");
-
   const [Basket, SetBasket] = useState([
     {
       name: "MASTER ORMAN KÖY EVLERİ",
@@ -126,7 +124,7 @@ export default function Basket() {
       if (user?.access_token && isFocused) {
         setLoading(true);
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/institutional/my-cart",
+          "http://192.168.18.31:8000/api/institutional/my-cart",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -209,7 +207,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/update-cart-qt",
+          "http://192.168.18.31:8000/api/update-cart-qt",
           formData,
           {
             headers: {
@@ -234,7 +232,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/update-cart-qt",
+          "http://192.168.18.31:8000/api/update-cart-qt",
           formData,
           {
             headers: {
@@ -254,7 +252,7 @@ export default function Basket() {
   const updateUserData = async () => {
     try {
       const updateResponse = await axios.get(
-        "https://private.emlaksepette.com/api/users/" + user?.id,
+        "http://192.168.18.31:8000/api/users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -283,7 +281,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/remove-from-cart",
+          "http://192.168.18.31:8000/api/remove-from-cart",
           {},
           {
             headers: {
@@ -294,7 +292,6 @@ export default function Basket() {
         updateUserData();
         fetchData();
 
-        //  console.log(updateResponse.data + 'User')
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -323,7 +320,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/update-cart",
+          "http://192.168.18.31:8000/api/update-cart",
           formData,
           {
             headers: {
@@ -342,7 +339,6 @@ export default function Basket() {
   const nav = useNavigation();
   const [index, setindex] = useState(0);
   const [tab, settab] = useState(0);
-  console.log(CartLength);
 
   const [paymentMethod, setPaymentMethod] = useState("");
 

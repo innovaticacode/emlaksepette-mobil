@@ -39,7 +39,7 @@ export default function NeigbourhoodCard({
 
     return formattedNumber;
   };
-  const apiUrl = "https://private.emlaksepette.com";
+  const apiUrl = "http://192.168.18.31:8000";
   console.log(project);
   const navigation = useNavigation();
   return (

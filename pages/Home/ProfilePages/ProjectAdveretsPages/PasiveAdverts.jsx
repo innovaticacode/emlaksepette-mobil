@@ -43,7 +43,7 @@ export default function ActiveAdverts({}) {
   const fetchProjects = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/get_my_projects?status=0&start=" +
+        "http://192.168.18.31:8000/api/get_my_projects?status=0&start=" +
           start +
           "&take=" +
           take,

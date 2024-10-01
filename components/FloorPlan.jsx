@@ -13,10 +13,10 @@ export default function FloorPlan({ data }) {
     getValueFor("user", setUser);
   }, []);
 
-  const apiUrl = "https://private.emlaksepette.com/situation_images/";
+  const apiUrl = "http://192.168.18.31:8000/situation_images/";
 
   const getFullImageURL = (partialURL) => {
-    return `https://private.emlaksepette.com/${partialURL}`;
+    return `http://192.168.18.31:8000/${partialURL}`;
   };
 
   // Resimleri, react-native-image-viewing için uygun formata getirme

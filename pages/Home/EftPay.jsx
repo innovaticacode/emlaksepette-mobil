@@ -34,8 +34,6 @@ export default function EftPay({
     Clipboard.setStringAsync(Iban);
   };
 
-  console.log(onPress);
-
   const openPdf = async () => {
     if (url) {
       try {

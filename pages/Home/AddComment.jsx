@@ -140,7 +140,7 @@ export default function AddComment() {
   const toggleCheckboxForm = () => {
     setCheckedForm(!checkedForm);
   };
-  const apiUrl = "https://private.emlaksepette.com/";
+  const apiUrl = "http://192.168.18.31:8000/";
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -235,7 +235,7 @@ export default function AddComment() {
         comment.length > 0
       ) {
         const response = await axios.post(
-          `https://private.emlaksepette.com/api/housing/${HouseID}/send-comment`,
+          `http://192.168.18.31:8000/api/housing/${HouseID}/send-comment`,
           formData,
           {
             headers: {
@@ -278,7 +278,7 @@ export default function AddComment() {
     fetchDataDeal();
   }, []);
   const fetchDataDeal = async () => {
-    const url = `https://private.emlaksepette.com/api/sayfa/emlaksepette-yorum-yazma-kurallari`;
+    const url = `http://192.168.18.31:8000/api/sayfa/emlaksepette-yorum-yazma-kurallari`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);

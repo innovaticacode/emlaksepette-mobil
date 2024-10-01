@@ -19,7 +19,7 @@ export default function SellPlacesForBrands({ data }) {
     try {
       if (user?.access_token && user) {
         const placeInfo = await axios.get(
-          `https://private.emlaksepette.com/api/magaza/${data?.data?.id}/satis-noktalari`
+          `http://192.168.18.31:8000/api/magaza/${data?.data?.id}/satis-noktalari`
         );
         setPlaces(placeInfo?.data?.usersFromCollections);
       }

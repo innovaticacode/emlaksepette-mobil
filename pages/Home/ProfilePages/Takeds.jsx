@@ -33,7 +33,7 @@ export default function Takeds() {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            'https://private.emlaksepette.com/api/institutional/get_boughts',
+            'http://192.168.18.31:8000/api/institutional/get_boughts',
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,

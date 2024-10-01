@@ -9,7 +9,7 @@ import {
   ImageBackground,
   Dimensions,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import IconIdCard from "react-native-vector-icons/FontAwesome";
 import HTML from "react-native-render-html";
 import { CheckBox } from "@rneui/themed";
@@ -18,15 +18,15 @@ import EftPay from "./EftPay";
 import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as DocumentPicker from "expo-document-picker";
-import * as SecureStore from "expo-secure-store";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
 import { Platform } from "react-native";
-import { apiRequestGet, apiUrl } from "../../components/methods/apiRequest";
+import { apiRequestGet, apiRequestGetWithBearer, apiUrl } from "../../components/methods/apiRequest";
 import { useRoute } from "@react-navigation/native";
-import axios from "axios";
-import WebView from "react-native-webview";
+import {WebView} from "react-native-webview";
 import HTMLView from "react-native-htmlview";
+import { io } from "socket.io-client";
+import { getValueFor } from "../../components/methods/user";
 export default function PaymentScreen() {
   // Kullanarak bu değerleri göstermek için devam edin
 
@@ -49,46 +49,201 @@ export default function PaymentScreen() {
     offerControl,
   } = route.params;
 
-  console.log(route.params);
   const [checked, setChecked] = React.useState(false);
+  const [cartInfoHeight,setCartInfoHeight] = useState(0);
   const toggleCheckbox = () => setChecked(!checked);
   const [checked2, setChecked2] = React.useState(false);
-  const toggleCheckbox2 = () => setChecked2(!checked2);
   const [tabs, settabs] = useState(0);
   const [paymentModal, setPaymentModal] = useState(false);
   const [paymentModalContent, setPaymentModalContent] = useState("");
+  const [paymentModalShow,setPaymentModalShow] = useState(false);
+  const [errors,setErrors] = useState([]);
+  const scrollViewRef = useRef();
+  const socket = io("http://192.168.18.31:3000/");
+  const [inputPositions, setInputPositions] = useState({}); // Her input'un pozisyonunu tutacak
+  const [approximatelyTop,setApproximatelyTop] = useState(0);
+  const [approximatelyInputHeight,setApproximatelyInputHeight] = useState(0);
+  const [scrollOffset, setScrollOffset] = useState(0);
+  const handleScrollViewLayout = (event) => {
+    console.log(event.nativeEvent.layout,"aaa")
+    setScrollOffset(event.nativeEvent.layout.y);
+  };
+  const [user,setUser] = useState({});
+
+  const handleLayout = (key, event) => {
+    const { y } = event.nativeEvent.layout;
+    const adjustedY = y + scrollOffset; // Y konumunu kaydırma ile ayarlama
+    console.log(adjustedY)
+    setInputPositions((prevPositions) => ({
+      ...prevPositions,
+      [key]: adjustedY,
+    }));
+  };
+
+
+  console.log(scrollOffset,"aa",approximatelyTop)
 
   useEffect(() => {
-    setIdNumber("53872475124");
-    setNameAndSurnam("Abdurrahman İslamoğlu");
-    setePosta("islamoglu.abd@gmail.com");
-    setphoneNumber("5511083652");
-    setadress("Güzelyalı");
-    setnotes("Deneme notu");
-    setChecked("true");
-    setChecked2("true");
+    function onConnect() {
+    }
+
+    function onDisconnect() {
+    }
+
+    function paymentCheck(value) {
+      setPaymentModalShow(false);
+      alert(value.message)
+    }
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on('result_api_payment_cart', paymentCheck);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.off('result_api_payment_cart', paymentCheck);
+    };
   }, []);
 
+  useEffect(() => {
+    if(user?.IdNumber){
+      setIdNumber(user?.IdNumber);
+      setNameAndSurnam(user?.IdNumber);
+      setePosta("islamoglu.abd@gmail.com");
+      setphoneNumber("5511083652");
+      setadress("Güzelyalı");
+      setnotes("Deneme notu");
+      setChecked("true");
+      setChecked2("true");
+    }
+  }, [user]);
+
+
+  useEffect(() => {
+    apiRequestGetWithBearer('current_user').then((res) => {
+      setUser(res);
+    }).catch((err) => {
+      console.log(err)
+    })
+  },[])
+
+  const getError = (key,itemType) => {
+    if(errors.find((error) => {return error.key == key})){
+      return 'red'
+    }else{
+      if(itemType == "checkbox"){
+        return '#bfbfbf';
+      }else{
+        return '#ebebeb';
+      }
+    }
+  }
+
   const completeCreditCardPay = () => {
-    if (
-      IdNumber &&
-      NameAndSurnam &&
-      ePosta &&
-      phoneNumber &&
-      adress &&
-      notes &&
-      checked &&
-      checked2
-    ) {
-      axios.post(apiUrl + "pay", creditCartData).then((res) => {
-        setPaymentModal(true);
-        setPaymentModalContent(res.data);
+    var tempErrors = [];
+    var scrollPositionsTemp = [];
+    if(!IdNumber){
+      tempErrors.push({
+        key : "IdNumber",
+        message : "TC Kimlik alanı zorunludur"
       });
+      scrollPosition = ((approximatelyInputHeight * 1) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(!NameAndSurnam){
+      tempErrors.push({
+        key : "NameAndSurnam",
+        message : "Ad Soyad alanı zorunludur"
+      });
+      scrollPosition = ((approximatelyInputHeight * 2) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(!ePosta){
+      tempErrors.push({
+        key : "ePosta",
+        message : "E-posta alanı zorunludur"
+      });
+      scrollPosition = ((approximatelyInputHeight * 3) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(!phoneNumber){
+      tempErrors.push({
+        key : "phoneNumber",
+        message : "Telefon alanı zorunludur"
+      });
+      scrollPosition = inputPositions['phoneNumber']; 
+      scrollPosition = ((approximatelyInputHeight * 4) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(!adress){
+      tempErrors.push({
+        key : "adress",
+        message : "Adres alanı zorunludur"
+      });
+      scrollPosition = ((approximatelyInputHeight * 5) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(!checked){
+      tempErrors.push({
+        key : "checked",
+        message : "Mesafeli kapora emanet sözleşmesi onay kutucuğunu işaretleyiniz"
+      });
+      scrollPosition = ((approximatelyInputHeight * 8) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(!checked2){
+      tempErrors.push({
+        key : "checked2",
+        message : "Sözleşme aslını imzalamak için 7 iş günü içerisinde geleceğinizi belirten kutucuğu işaretleyiniz"
+      });
+      scrollPosition = ((approximatelyInputHeight * 9) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+
+    if(!creditCartData.card_number){
+      tempErrors.push({
+        key : "card_number",
+        message : "Kart numaranızı giriniz"
+      });
+
+      scrollPosition = ((approximatelyInputHeight * 9) + approximatelyTop + cartInfoHeight); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(!creditCartData.month){
+      tempErrors.push({
+        key : "month",
+        message : "Ay değerini giriniz"
+      });
+      scrollPosition = inputPositions['month']; 
+    }
+
+    if(!creditCartData.year){
+      tempErrors.push({
+        key : "year",
+        message : "Yıl değerini giriniz"
+      });
+      scrollPosition = inputPositions['year']; 
+    }
+    scrollViewRef.current?.scrollToPosition(0, scrollPositionsTemp[0], true);
+    setErrors(tempErrors)
+    if (
+      tempErrors.length == 0
+    ) {
+      setPaymentModalShow(true)
     } else {
+
       alert("tüm alanları doldur");
     }
   };
-  console.log(paymentModalContent);
   {
     /** State Of Inputs **/
   }
@@ -109,24 +264,22 @@ export default function PaymentScreen() {
   const [selectedPdfUrl, setselectedPdfUrl] = useState(null);
 
   const [creditCartData, setCreditCartData] = useState({
-    amount: 1000,
+    credit_cart_number : "5218487962459752",
+    exp_month : 12,
+    exp_year : 2026,
+    cvc : 246,
+    name : "Abdurrahman İslamoğlu"
   });
 
   const pickDocument = async () => {
     DocumentPicker.getDocumentAsync({ type: "application/pdf" })
       .then((result) => {
-        console.log(
-          "Seçilen PDF Dosyasının İçeriği:",
-          JSON.stringify(result, null, 2)
-        );
 
         if (!result.canceled && result.assets && result.assets.length > 0) {
           const pdfAsset = result.assets[0];
           setPdfFile(pdfAsset);
           setSelectedDocumentName(pdfAsset.name);
-          console.log(pdfAsset.uri);
           setselectedPdfUrl(pdfAsset.uri);
-          console.log(selectedDocumentName);
         }
       })
       .catch((error) => {
@@ -134,13 +287,10 @@ export default function PaymentScreen() {
       });
   };
 
-  const getFileNameFromUri = (uri) => {
-    const uriComponents = uri.split("/");
-    return uriComponents[uriComponents.length - 1];
-  };
   const [data, setData] = useState({});
   const [project, setproject] = useState({});
   const [housing, sethousing] = useState({});
+
   useEffect(() => {
     apiRequestGet(`${slug}/` + id).then((res) => {
       if (slug == "housing") {
@@ -161,12 +311,11 @@ export default function PaymentScreen() {
   const [Deals, setDeals] = useState("");
 
   const fetchDataDeal = async () => {
-    const url = `https://private.emlaksepette.com/api/sayfa/mesafeli-kiralama-sozlesmesi`;
+    const url = `http://192.168.18.31:8000/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);
       const data = await response.json();
-      console.log(data);
       setDeals(data.content);
       // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     } catch (error) {
@@ -175,17 +324,54 @@ export default function PaymentScreen() {
     }
   };
 
+  const formHtml = `
+    <html>
+      <body>
+        <form id="paymentForm" action="http://192.168.18.31:8000/api/pay-cart" method="POST">
+          <input type="hidden" name="name" value="${creditCartData.name}" />
+          <input type="hidden" name="creditcard" value="${creditCartData.credit_cart_number}" />
+          <input type="hidden" name="month" value="${creditCartData.exp_month}" />
+          <input type="hidden" name="year" value="${creditCartData.exp_year}" />
+          <input type="hidden" name="cvc" value="${creditCartData.cvc}" />
+          <input type="hidden" name="user_id" value="${user?.id}" />
+          <input type="hidden" name="payable_amount" value="${route.params.deposit}" />
+          <input type="submit" value="Submit" />
+        </form>
+        <script>
+          document.getElementById('paymentForm').submit();
+        </script>
+      </body>
+    </html>
+  `;
+
+  const { height } = Dimensions.get('window');
+
   useEffect(() => {
     fetchDataDeal();
-  }, []);
-  console.log(paymentModalContent);
+  }, [modalVisible]);
+
   return (
     <KeyboardAwareScrollView
       style={styles.container}
       contentContainerStyle={{ gap: 20, paddingBottom: 50 }}
       showsVerticalScrollIndicator={false}
+      ref={scrollViewRef}
+      onLayout={(e) => handleScrollViewLayout(e)} // Ana ScrollView için onLayout ekliyoruz
     >
-      <></>
+      <Modal isVisible={paymentModalShow} onBackdropPress={() => setPaymentModalShow(false)}>
+        <View style={{height:height - 200}}>
+          <WebView
+            style={{height : 2,width:'100%'}}
+            originWhitelist={['*']}
+            automaticallyAdjustContentInsets={false}
+            source={{ html: formHtml }} // WebView'e HTML formu yüklüyoruz ve otomatik gönderiliyor
+            onNavigationStateChange={(navState) => {
+              if (navState.url !== "http://192.168.18.31:8000/api/pay-cart") {
+              }
+            }}
+          />
+        </View>
+      </Modal>
       <Modal
         isVisible={paymentModal}
         onBackdropPress={() => setPaymentModal(false)}
@@ -195,11 +381,11 @@ export default function PaymentScreen() {
         </View>
       </Modal>
       <View>
-        <View style={[styles.AdvertDetail, { flexDirection: "row" }]}>
+        <View style={[styles.AdvertDetail, { flexDirection: "row" }]} onLayout={(e) => {setApproximatelyTop(e.nativeEvent.layout.height)}}>
           <View style={styles.image}>
             <ImageBackground
               source={{
-                uri: `https://private.emlaksepette.com/project_housing_images/${project["image[]"]}`,
+                uri: `http://192.168.18.31:8000/project_housing_images/${project["image[]"]}`,
               }}
               style={{ width: "100%", height: "100%" }}
             />
@@ -224,7 +410,7 @@ export default function PaymentScreen() {
                 ) : (
                   <Text style={{ fontSize: 13 }} numberOfLines={3}>
                     {data?.project?.project_title} Projesinde {roomOrder} No'lu
-                    Konut{" "}
+                    Konut
                   </Text>
                 )}
               </View>
@@ -280,44 +466,48 @@ export default function PaymentScreen() {
           <IconIdCard name="id-card-o" size={15} />
           <Text>Satın alan Kişinin Bilgileri</Text>
         </View>
-        <View style={{ gap: 15 }}>
-          <View style={{ gap: 5 }}>
+        <View  style={{ gap: 15 }}>
+          <View onLayout={(event) => setApproximatelyInputHeight(event.nativeEvent.layout.height)} style={{ gap: 5 }}>
             <Text style={styles.label}>TC</Text>
             <TextInput
               value={IdNumber}
               onChangeText={(value) => setIdNumber(value)}
-              style={styles.Input}
+              style={{...styles.Input,borderColor : getError('IdNumber')}}
             />
           </View>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Ad Soyad</Text>
             <TextInput
-              style={styles.Input}
+              style={{...styles.Input,borderColor :getError('NameAndSurnam')}}
               value={NameAndSurnam}
+              onLayout={(event) => {handleLayout('NameAndSurnam', event),console.log(event.nativeEvent.layout)}}
               onChangeText={(value) => setNameAndSurnam(value)}
             />
           </View>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>E-posta</Text>
             <TextInput
-              style={styles.Input}
+              style={{...styles.Input,borderColor : getError('ePosta')}}
               value={ePosta}
+              onLayout={(event) => {handleLayout('ePosta', event),console.log(event.nativeEvent.layout)}}
               onChangeText={(value) => setePosta(value)}
             />
           </View>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Telefon</Text>
             <TextInput
-              style={styles.Input}
+              style={{...styles.Input,borderColor : getError('phoneNumber') }}
               value={phoneNumber}
+              onLayout={(event) => handleLayout('phoneNumber', event)}
               onChangeText={(value) => setphoneNumber(value)}
             />
           </View>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Adres</Text>
             <TextInput
-              style={styles.Input}
+              style={{...styles.Input,borderColor : getError('adress')}}
               value={adress}
+              onLayout={(event) => handleLayout('adress', event)}
               onChangeText={(value) => setadress(value)}
             />
           </View>
@@ -345,12 +535,14 @@ export default function PaymentScreen() {
               checked2 ? setModalVisible(false) : setModalVisible(true);
               setChecked2(false);
             }}
+            onLayout={(event) => handleLayout('checked2', event)}
             // Use ThemeProvider to make change for all checkbox
             iconType="material-community"
             checkedIcon="checkbox-marked"
             uncheckedIcon="checkbox-blank-outline"
             checkedColor="red"
             size={21}
+            uncheckedColor={getError('checked2','checkbox')}
             containerStyle={{
               padding: 0,
               margin: 0,
@@ -369,6 +561,7 @@ export default function PaymentScreen() {
           />
           <CheckBox
             checked={checked}
+            onLayout={(event) => handleLayout('checked', event)}
             onPress={toggleCheckbox}
             // Use ThemeProvider to make change for all checkbox
             iconType="material-community"
@@ -381,6 +574,7 @@ export default function PaymentScreen() {
               marginLeft: 0,
             }}
             size={21}
+            uncheckedColor={getError('checked','checkbox')}
             checkedColor="red"
             title={
               <View
@@ -400,7 +594,7 @@ export default function PaymentScreen() {
         </View>
       </View>
       {slug == "housing" ? (
-        <View style={[styles.AdvertDetail, { borderRadius: 3 }]}>
+        <View style={[styles.AdvertDetail, { borderRadius: 3 }]} onLayout={(event) => {setCartInfoHeight(event.nativeEvent.layout.height)}}>
           <View
             style={{
               flexDirection: "row",
@@ -1073,6 +1267,8 @@ export default function PaymentScreen() {
         <CreditCardScreen
           setCreditCartData={setCreditCartData}
           creditCartData={creditCartData}
+          errors={errors}
+          getError={getError}
           CompeletePayment={completeCreditCardPay}
         />
       )}

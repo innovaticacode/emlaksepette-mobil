@@ -127,7 +127,7 @@ const SwapScreenNav = () => {
     const fetchProjectTitle = async () => {
       try {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/project/${projectId}`
+          `http://192.168.18.31:8000/api/project/${projectId}`
         );
         setProjectData(response.data); // Başlığı state'e aktarma
       } catch (error) {
@@ -155,7 +155,7 @@ const SwapScreenNav = () => {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/institutional/give_offer",
+        "http://192.168.18.31:8000/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -202,7 +202,7 @@ const SwapScreenNav = () => {
   const fetchCity = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/cities"
+        "http://192.168.18.31:8000/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -258,7 +258,7 @@ const SwapScreenNav = () => {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
+        `http://192.168.18.31:8000/api/counties/${value}`
       );
       return response.data;
     } catch (error) {

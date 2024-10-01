@@ -61,7 +61,7 @@ export default function ChangePassword() {
       formData.append("new_password_confirmation", newPasswordconfirmation);
 
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/client/password/update",
+        "http://192.168.18.31:8000/api/client/password/update",
         formData,
         {
           headers: {

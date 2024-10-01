@@ -54,7 +54,7 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 export default function PostDetail() {
-  const apiUrl = "https://private.emlaksepette.com/";
+  const apiUrl = "http://192.168.18.31:8000/";
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [images, setImages] = useState([]);
@@ -75,12 +75,12 @@ export default function PostDetail() {
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(
-      `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`
+      `http://192.168.18.31:8000/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`
     );
     alert("Metin kopyalandı!");
   };
   const shareLinkOnWhatsApp = () => {
-    const url = `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`;
+    const url = `http://192.168.18.31:8000/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`;
 
     const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
 
@@ -157,7 +157,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          "http://192.168.18.31:8000/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -182,7 +182,7 @@ export default function PostDetail() {
     try {
       setloading(true);
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/housing/${houseId}`,
+        `http://192.168.18.31:8000/api/housing/${houseId}`,
         config
       );
       setloading(false);
@@ -266,7 +266,7 @@ export default function PostDetail() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/client/collections",
+          "http://192.168.18.31:8000/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -308,7 +308,7 @@ export default function PostDetail() {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/add/collection",
+        "http://192.168.18.31:8000/api/add/collection",
         collectionData,
         {
           headers: {
@@ -358,7 +358,7 @@ export default function PostDetail() {
     };
 
     axios
-      .post("https://private.emlaksepette.com/api/addLink", collectionData, {
+      .post("http://192.168.18.31:8000/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -423,7 +423,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          "http://192.168.18.31:8000/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -465,7 +465,7 @@ export default function PostDetail() {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/remove_item_on_collection",
+        "http://192.168.18.31:8000/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -521,7 +521,7 @@ export default function PostDetail() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
+        message: `http://192.168.18.31:8000/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
       });
 
       if (result.action === Share.sharedAction) {
@@ -550,7 +550,7 @@ export default function PostDetail() {
       };
       axios
         .post(
-          `https://private.emlaksepette.com/api/add_housing_to_favorites/${data?.housing?.id}`,
+          `http://192.168.18.31:8000/api/add_housing_to_favorites/${data?.housing?.id}`,
           {},
           config
         )
