@@ -56,9 +56,9 @@ export default function ShareScreen() {
         swipeDirection={["left"]}
         onSwipeComplete={() => setIsDrawerOpen(false)}
       >
-        <View>
+        {/* <View>
           <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-        </View>
+        </View> */}
       </Modal>
       <ScrollView
         showsVerticalScrollIndicator={false}

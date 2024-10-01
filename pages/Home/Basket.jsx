@@ -381,9 +381,9 @@ export default function Basket() {
             onSwipeComplete={() => setIsDrawerOpen(false)}
             style={styles.modal}
           >
-            <View>
+            {/* <View>
               <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-            </View>
+            </View> */}
           </Modal>
 
           {CartLength !== false ? (

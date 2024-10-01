@@ -1022,9 +1022,9 @@ export default function Details({ navigation }) {
                 animationOut="fadeOutLeftBig"
                 style={styles.modal}
               >
-                <View>
+                {/* <View>
                   <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-                </View>
+                </View> */}
               </Modal>
 
               <View

@@ -67,9 +67,9 @@ export default function Test() {
           swipeDirection={["left"]}
           onSwipeComplete={() => setIsDrawerOpen(false)}
         >
-          <View>
+          {/* <View>
             <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-          </View>
+          </View> */}
         </Modal>
         {user.type == 1 ||
         (user.type == 2 && user.corporate_type == "Emlak Ofisi") ? (

@@ -760,9 +760,9 @@ export default function PostDetail() {
               swipeDirection={["left"]}
               onSwipeComplete={() => setIsDrawerOpen(false)}
             >
-              <View style={styles.modalContent}>
+              {/* <View style={styles.modalContent}>
                 <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} on />
-              </View>
+              </View> */}
             </Modal>
 
             <View

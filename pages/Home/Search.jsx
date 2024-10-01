@@ -56,7 +56,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
 
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
-    setIsDrawerOpen(false);
+    // setIsDrawerOpen(false);
   };
 
   // const iconMapping = {
@@ -105,7 +105,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  setIsDrawerOpen(false);
+                  // setIsDrawerOpen(false);
 
                   if (item.submenus && item.submenus?.length > 0) {
                     navigation.navigate("Public", {
