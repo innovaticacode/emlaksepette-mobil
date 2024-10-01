@@ -21,12 +21,12 @@ import * as DocumentPicker from "expo-document-picker";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
 import { Platform } from "react-native";
-import { apiRequestGet, apiRequestGetWithBearer, apiUrl } from "../../components/methods/apiRequest";
+import { apiRequestGet} from "../../components/methods/apiRequest";
 import { useRoute } from "@react-navigation/native";
 import {WebView} from "react-native-webview";
 import HTMLView from "react-native-htmlview";
 import { io } from "socket.io-client";
-import { getValueFor } from "../../components/methods/user";
+import {  useSelector } from "react-redux";
 export default function PaymentScreen() {
   // Kullanarak bu değerleri göstermek için devam edin
 
@@ -65,23 +65,22 @@ export default function PaymentScreen() {
   const [approximatelyInputHeight,setApproximatelyInputHeight] = useState(0);
   const [scrollOffset, setScrollOffset] = useState(0);
   const handleScrollViewLayout = (event) => {
-    console.log(event.nativeEvent.layout,"aaa")
     setScrollOffset(event.nativeEvent.layout.y);
   };
-  const [user,setUser] = useState({});
+
+  const user = useSelector((state) => {
+    return state.user.user
+  })
+
 
   const handleLayout = (key, event) => {
     const { y } = event.nativeEvent.layout;
     const adjustedY = y + scrollOffset; // Y konumunu kaydırma ile ayarlama
-    console.log(adjustedY)
     setInputPositions((prevPositions) => ({
       ...prevPositions,
       [key]: adjustedY,
     }));
   };
-
-
-  console.log(scrollOffset,"aa",approximatelyTop)
 
   useEffect(() => {
     function onConnect() {
@@ -107,26 +106,13 @@ export default function PaymentScreen() {
   }, []);
 
   useEffect(() => {
-    if(user?.IdNumber){
+    if(user?.name){
       setIdNumber(user?.IdNumber);
-      setNameAndSurnam(user?.IdNumber);
-      setePosta("islamoglu.abd@gmail.com");
-      setphoneNumber("5511083652");
-      setadress("Güzelyalı");
-      setnotes("Deneme notu");
-      setChecked("true");
-      setChecked2("true");
+      setNameAndSurnam(user?.name);
+      setePosta(user?.email);
+      setphoneNumber(user?.mobile_phone);
     }
   }, [user]);
-
-
-  useEffect(() => {
-    apiRequestGetWithBearer('current_user').then((res) => {
-      setUser(res);
-    }).catch((err) => {
-      console.log(err)
-    })
-  },[])
 
   const getError = (key,itemType) => {
     if(errors.find((error) => {return error.key == key})){
@@ -358,6 +344,7 @@ export default function PaymentScreen() {
       ref={scrollViewRef}
       onLayout={(e) => handleScrollViewLayout(e)} // Ana ScrollView için onLayout ekliyoruz
     >
+      
       <Modal isVisible={paymentModalShow} onBackdropPress={() => setPaymentModalShow(false)}>
         <View style={{height:height - 200}}>
           <WebView
@@ -480,7 +467,7 @@ export default function PaymentScreen() {
             <TextInput
               style={{...styles.Input,borderColor :getError('NameAndSurnam')}}
               value={NameAndSurnam}
-              onLayout={(event) => {handleLayout('NameAndSurnam', event),console.log(event.nativeEvent.layout)}}
+              onLayout={(event) => {handleLayout('NameAndSurnam', event)}}
               onChangeText={(value) => setNameAndSurnam(value)}
             />
           </View>
@@ -489,7 +476,7 @@ export default function PaymentScreen() {
             <TextInput
               style={{...styles.Input,borderColor : getError('ePosta')}}
               value={ePosta}
-              onLayout={(event) => {handleLayout('ePosta', event),console.log(event.nativeEvent.layout)}}
+              onLayout={(event) => {handleLayout('ePosta', event)}}
               onChangeText={(value) => setePosta(value)}
             />
           </View>

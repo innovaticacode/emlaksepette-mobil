@@ -53,7 +53,7 @@
       },
       {
         "text": "Sattıklarım",
-        "key": "GetOrders",
+        "key": "ShowCartOrders",
         "url": "Sell",
         "activePath": "/hesabim/sattiklarim"
       }
@@ -102,7 +102,16 @@
     "url": "Collections",
     "activePath": "/hesabim/koleksiyonlarim*"
   },
- 
+  {
+    "id": "neighbors",
+    "label": "Komşumu Gör",
+    "icon": "eye",
+    "text": "Komşumu Gör Nedir?",
+    "key": "neighborView",
+    "url": "SeeMyNeighbor",
+    "activePath": "/hesabim/komsumu-gor"
+  },
+
   {
     "id": "neighbors",
     "label": "Komşumu Gör",
