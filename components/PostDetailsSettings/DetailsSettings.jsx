@@ -41,12 +41,18 @@ export default function DetailsSettings({ data, HomeId }) {
             data.projectHousingsList[HomeId ? HomeId : 1][
               setting.column_name + "[]"
             ]
+            && 
+            data.projectHousingsList[HomeId ? HomeId : 1][
+              setting.column_name + "[]"] !=='[]'
+            
           ) {
             return (
               <SettingsItem
                 key={index}
                 info={setting.label}
                 numbers={
+                  setting.label=='Krediye Uygun'?
+                  JSON.parse(data.projectHousingsList[HomeId][setting.column_name + "[]"]):
                   data.projectHousingsList[HomeId][setting.column_name + "[]"]
                 }
                 fontWeight={500}

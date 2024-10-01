@@ -57,13 +57,17 @@ export default function Information({ settings }) {
        <SettingsItem info={'Mağaza'} numbers={settings?.project?.user?.name} fontWeight={500}/>
       {settings.projectHousingSetting.map((setting, index) => {
         if (!setting.is_array) {
-          if (settings.projectHousingsList[1][setting.column_name + "[]"]) {
+          if (settings.projectHousingsList[1][setting.column_name + "[]"] && settings.projectHousingsList[1][setting.column_name + "[]"] !=='[]') {
             return (
+              setting.label!=='Krediye Uygun' &&
               <SettingsItem
                 key={index}
-                info={setting.label }
+                info={setting.label}
                 numbers={
-                  settings.projectHousingsList[1][setting.column_name + "[]"]
+                  
+                  settings.projectHousingsList[1][setting.column_name + "[]"] 
+                 
+                  
                 }
                 fontWeight={500}
               />

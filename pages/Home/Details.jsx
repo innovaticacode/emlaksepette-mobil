@@ -57,7 +57,7 @@ import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 
 import RNPickerSelect from "react-native-picker-select";
-
+import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "expo-status-bar";
 
 import { Skeleton } from "@rneui/base";
@@ -70,6 +70,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../../components/CommentForProject";
 import ImageViewing from "react-native-image-viewing";
 import Megaphone from '../../assets/megaphone.png'
+import TextAlertModal from "../../components/TextAlertModal";
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [IsOpenSheet, setIsOpenSheet] = useState(false);
@@ -160,6 +161,12 @@ export default function Details({ navigation }) {
     } finally {
     }
   };
+  const [SeeAlertModal, setSeeAlertModal] = useState(false)
+
+  
+ 
+
+
   useEffect(() => {
     const config = {
       headers: { Authorization: `Bearer ${user?.access_token}` },
@@ -170,7 +177,11 @@ export default function Details({ navigation }) {
         setData(res?.data);
         setloadingDetails(true);
         GetUserInfo();
-      });
+      }).finally(()=>{
+        setloadingDetails(false)
+      
+      })
+      
   }, [ProjectId, user]);
 
   const getLastItemCount = () => {
@@ -870,7 +881,7 @@ export default function Details({ navigation }) {
     .map((item) => parseFloat(item?.rate) || 0)
     .reduce((acc, rate) => acc + rate, 0);
 
- 
+
 
   return (
     <>
@@ -1141,7 +1152,7 @@ export default function Details({ navigation }) {
                       fontWeight: "600",
                     }}
                   >
-                    {data?.project?.project_title}
+                    {data?.project?.project_title?.toLocaleUpperCase('tr-TR')}
                   </Text>
                   </View>
 
@@ -1679,30 +1690,7 @@ export default function Details({ navigation }) {
               </ScrollView>
             </>
           )}
-          {/* <AwesomeAlert
-            show={DeleteAlert}
-            showProgress={false}
-            titleStyle={{
-              color: "#333",
-              fontSize: 15,
-              fontWeight: "700",
-              textAlign: "center",
-              margin: 5,
-            }}
-            title={"siliindi"}
-            messageStyle={{ textAlign: "center" }}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={false}
-            showConfirmButton={false}
-            cancelText="Vazgeç"
-            confirmText="Giriş Yap"
-            cancelButtonColor="#ce4d63"
-            confirmButtonColor="#1d8027"
-          
-            confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-            cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-          /> */}
+            <TextAlertModal visible={SeeAlertModal} onClose={setSeeAlertModal}/>
           <AwesomeAlert
             show={AlertForSign}
             showProgress={false}

@@ -523,7 +523,7 @@ export default function Posts({
           <View style={styles.captionAndIcons}>
             <View style={styles.caption}>
               <Text style={styles.ilanNoText}>
-                İlan No: {1000000 + data.project.id + roomOrder}
+                İlan No: {1000000 + data.project.id + '-' + roomOrder}
               </Text>
               <Text style={styles.adTitleText}>
                 {truncateText(roomData["advertise_title[]"], 4)}

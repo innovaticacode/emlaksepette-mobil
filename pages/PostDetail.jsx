@@ -68,7 +68,7 @@ import PaymentItem from "../components/PaymentItem";
 import DrawerMenu from "../components/DrawerMenu";
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../components/CommentForProject";
-import { leftButtonsForPost, rightButtonsForPost } from "./helper";
+import { leftButtonsForPost, PriceStatus, rightButtonsForPost } from "./helper";
 import ImageViewing from "react-native-image-viewing";
 import PaymentPlanModal from "../components/PaymentPlanModal";
 export default function PostDetail() {
@@ -1137,9 +1137,7 @@ export default function PostDetail() {
                   }}
                 >
                   {ProjectHomeData?.projectHousingsList[HomeId]
-                    ? ProjectHomeData?.projectHousingsList[HomeId][
-                        "advertise_title[]"
-                      ] +
+                    ? ProjectHomeData?.projectHousingsList[HomeId]["advertise_title[]"]?.toLocaleUpperCase('tr-TR') +
                       " " +
                       HomeId +
                       " No'lu " +
@@ -1150,9 +1148,104 @@ export default function PostDetail() {
                     : ""}
                 </Text>
                 </View>
-               
+                { 
+          PriceStatus .map((item)=>(
+            <View style={{
+              display:
+              
+              user.type == 2
+                ? Array.isArray(item.OnlySee) &&
+                  item.OnlySee.includes(
+                    user.corporate_type
+                  ) &&
+                  item.offsale == offSaleStatus&&
+                  !ProjectHomeData.projectCartOrders[HomeId]
+                  ? "flex"
+                  : "none"
+                : item.isShowClient == 1 &&
+                  item.offsale == offSaleStatus&&
+                  !ProjectHomeData.projectCartOrders[HomeId]
+                ? "flex"
+                : "none",
+          
+            }}>
 
-                {offSaleCheck && !soldCheck && ShareSaleEmpty ? (
+                 
+            { !ProjectHomeData.projectCartOrders[HomeId] && !roomData['share_sale[]'] ? (
+                 
+               <View>
+                 {discountAmount ? (
+                   <View style={styles.discountContainer}>
+                     <Svg
+                       viewBox="0 0 24 24"
+                       width={18}
+                       height={18}
+                       stroke="#EA2B2E"
+                       strokeWidth={2}
+                       fill="#EA2B2E"
+                       strokeLinecap="round"
+                       strokeLinejoin="round"
+                       className="css-i6dzq1"
+                     >
+                       <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+                       <Polyline points="17 18 23 18 23 12" />
+                     </Svg>
+                     <Text style={styles.originalPrice}>
+                       <Text style={styles.strikethrough}>
+                         {formatPrice(roomData["price[]"])} ₺
+                       </Text>
+                     </Text>
+                     <Text style={styles.discountedPrice}>
+                       {formatPrice(discountedPrice)} ₺
+                     </Text>
+                   </View>
+                 ) : (
+                   <Text style={styles.regularPrice}>
+                     {formatPrice(roomData["price[]"])} ₺
+                   </Text>
+                 )}
+                 {discountAmount > 0 && (
+                   <Text style={styles.discountText}>
+                     {formatPrice(discountAmount)} ₺ indirim
+                   </Text>
+                 )}
+               </View>
+             ) : (roomData['share_sale[]'] &&
+              roomData['share_sale[]'] !== "[]" &&
+                ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total !== roomData['number_of_shares[]']) ||
+               (roomData['share_sale[]'] && roomData['share_sale[]']!== "[]" && !ProjectHomeData.sumCartOrderQt[HomeId]) ? (
+               <View>
+                 <Text style={[styles.regularPrice, {}]}>
+                   { roomData['share_sale[]'] &&  roomData['share_sale[]'] !== "[]" && roomData['number_of_shares[]'] !== 0 && (
+                     <Text style={styles.shareSaleText}>1/{roomData['number_of_shares[]']}</Text>
+                   )}
+                   {" Pay Fiyatı - "}
+                   {roomData['share_sale[]'] && roomData['share_sale[]'] !== "[]" && roomData['number_of_shares[]'] !== 0
+                     ? formatPrice(roomData["price[]"] / roomData['number_of_shares[]'])
+                     : formatPrice(roomData["price[]"])}
+                   ₺
+                 </Text>
+               </View>
+             ) : (
+               <View style={{ paddingTop: 5, }}>
+                 <Text
+                   style={{ fontSize: 12, color: "#264ABB", fontWeight: "800" ,textAlign:'center'}}
+                 >
+                   {formatPrice(roomData["price[]"])}₺
+                 </Text>
+               </View>
+             )
+           }
+                 </View>
+             
+          ))
+           
+          
+          
+          }
+
+                {/* {   
+                offSaleCheck && !soldCheck && ShareSaleEmpty  ? (
                   <>
                     {discountAmount != 0 ? (
                       <View style={styles.discountContainer}>
@@ -1216,7 +1309,7 @@ export default function PostDetail() {
                 >
                   {formatPrice(roomData["price[]"])}₺
                 </Text>
-              </View>}
+              </View> } */}
               </View>
                    
               <View style={styles.priceAndButtons}>
