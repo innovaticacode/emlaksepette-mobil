@@ -439,7 +439,7 @@ export default function AllProjects() {
   const [index, setindex] = useState(0);
   const [tab, settab] = useState(0);
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF", paddingTop: 30 }}>
       <Header onPress={toggleDrawer} index={setindex} tab={settab} />
 
       <Modal

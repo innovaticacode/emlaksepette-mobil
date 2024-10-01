@@ -34,6 +34,8 @@ const AllFeaturedRealEstate = (prosp) => {
           navigation.navigate("FirstHome");
         },
       });
+    } finally {
+      setLoading(false);
     }
   };
 

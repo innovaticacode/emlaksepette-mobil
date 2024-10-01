@@ -138,6 +138,37 @@ const FirstHome = (props) => {
     });
   };
 
+  const navigateToVillaProjects = () => {
+    navigation.navigate("AllProject", {
+      name: "Tüm Projeler",
+      slug: "tum-projeler",
+      data: featuredProjects,
+      count: featuredProjects.length,
+      type: null,
+      optional: "satilik",
+      title: "konut",
+      check: "villa",
+      city: null,
+      county: null,
+      hood: null,
+    });
+  };
+  const navigateToHousingProjects = () => {
+    navigation.navigate("AllProject", {
+      name: "Tüm Projeler",
+      slug: "tum-projeler",
+      data: featuredProjects,
+      count: featuredProjects.length,
+      type: null,
+      optional: "satilik",
+      title: "konut",
+      check: null,
+      city: null,
+      county: null,
+      hood: null,
+    });
+  };
+
   return (
     <AlertNotificationRoot>
       {loadingProjects && loadingSliders ? (
@@ -183,6 +214,19 @@ const FirstHome = (props) => {
                   ))}
                 </PagerView>
               )}
+              <View style={styles.dotsContainer}>
+                {featuredSliders.map((_, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.dot,
+                      index === currentPage
+                        ? styles.activeDot
+                        : styles.inactiveDot,
+                    ]}
+                  />
+                ))}
+              </View>
             </View>
 
             {/* Popular Construction Brands */}
@@ -217,12 +261,14 @@ const FirstHome = (props) => {
                           <ProjectButton
                             color="#A70107"
                             text="Konut Projeleri"
+                            onPress={navigateToHousingProjects}
                           />
                         </View>
                         <View>
                           <ProjectButton
                             color="#A2DAE0"
                             text="Villa Projeleri"
+                            onPress={navigateToVillaProjects}
                           />
                           <ProjectButton
                             color="#06065d"
@@ -290,7 +336,7 @@ const FirstHome = (props) => {
             >
               <View style={styles.featuredProjectsHeader}>
                 <Text style={styles.featuredProjectsTitle}>
-                  ÖNE ÇIKAN FRANCHİSE MARKALARI
+                  FRANCHİSE MARKALARI
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
@@ -318,20 +364,41 @@ const FirstHome = (props) => {
             </View>
             {/* bottom area */}
             <View>
-              <View style={styles.featuredProjectsHeader}>
-                <Text style={styles.featuredProjectsTitle}>
-                  ÖNE ÇIKAN GAYRİMENKUL MARKALARI
-                </Text>
-                <TouchableOpacity
-                  style={styles.allProjectsButton}
-                  onPress={() => navigation.navigate("AllFeaturedRealEstate")}
-                >
-                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-                </TouchableOpacity>
+              <View>
+                <View style={styles.featuredProjectsHeader}>
+                  <Text style={styles.featuredProjectsTitle}>
+                    ÖNE ÇIKAN GAYRİMENKUL MARKALARI
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.allProjectsButton}
+                    onPress={() => navigation.navigate("AllFeaturedRealEstate")}
+                  >
+                    <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View>
+                  <SliderEstateBar />
+                </View>
               </View>
               <View>
-                <SliderEstateBar />
+                <View style={styles.featuredProjectsHeader}>
+                  <Text style={styles.featuredProjectsTitle}>
+                    TURİZM AMAÇLI KİRALAMA MARKALARI
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.allProjectsButton}
+                    onPress={() => navigation.navigate("AllFeaturedRealEstate")}
+                  >
+                    <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View>
+                  <SliderEstateBar />
+                </View>
               </View>
+
               <View
                 style={{
                   flexDirection: "row",
@@ -449,5 +516,22 @@ const styles = StyleSheet.create({
   projectPostContainer: {
     marginTop: 7,
     width: "100%",
+  },
+  dotsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    margin: 4,
+  },
+  activeDot: {
+    backgroundColor: "red", // Aktif nokta rengi
+  },
+  inactiveDot: {
+    backgroundColor: "#ccc", // Pasif nokta rengi
   },
 });
