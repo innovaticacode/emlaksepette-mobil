@@ -274,7 +274,7 @@ export default function MyComments() {
   return (
     <AlertNotificationRoot>
       <ScrollView
-        contentContainerStyle={{ flex: 1, flexGrow: 1 }}
+        contentContainerStyle={{flexGrow: 1 }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
