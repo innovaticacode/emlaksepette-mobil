@@ -27,19 +27,25 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
     getValueFor("user", setUser);
   }, []);
 
-  useEffect(() => {
-    if (user?.access_token && user?.id) {
-      axios
-        .get(`https://private.emlaksepette.com/api/users/${user.id}`, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        })
-        .then((response) => setnamFromGetUser(response.data.user))
-        .catch((error) =>
-          console.error("Kullanıcı verileri güncellenirken hata oluştu:", error)
+  const fetchMenuItems = async () => {
+    try {
+      if (user?.access_token && user?.id) {
+        const response = await axios.get(
+          `https://private.emlaksepette.com/api/users/${user.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
         );
+        setnamFromGetUser(response.data.user);
+      }
+    } catch (error) {
+      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     }
+  };
+  useEffect(() => {
+    fetchMenuItems();
   }, [user]);
 
   const navigateToScreen = (screenName) => {
