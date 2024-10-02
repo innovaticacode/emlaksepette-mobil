@@ -3,13 +3,9 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  Alert,
   TouchableOpacity,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
   ScrollView,
-  Pressable,
   SafeAreaView,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
@@ -17,16 +13,12 @@ import RNPickerSelect from "react-native-picker-select";
 import HTML from "react-native-render-html";
 import AwesomeAlert from "react-native-awesome-alerts";
 
-import {
-  Forms,
-  SaleForms,
-} from "../../../pages/Home/PointOfSale/SaleFormHelper";
+import { SaleForms } from "../../../pages/Home/PointOfSale/SaleFormHelper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { Platform } from "react-native";
 import axios from "axios";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
-import { CheckBox } from "react-native-elements";
 
 const SalePage = () => {
   const [modalVisible, setModalVisible] = useState(false); // State for Modal visibility
@@ -870,7 +862,6 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontSize: 13,
-    flex: 1,
     marginLeft: 10,
     marginBottom: 10,
   },
