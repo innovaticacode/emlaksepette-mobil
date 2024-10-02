@@ -12,18 +12,20 @@ import {
 import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-const apiUrl = "https://private.emlaksepette.com";
+const apiUrl = "http://192.168.18.31:8000";
 
-const AllFeaturedRealEstate = (prosp) => {
+export default function AllTourismRent(prosp) {
   const { navigation } = prosp;
-  const [estateBrands, setEstateBrands] = useState([]);
+  const [tourismBrand, setTourismBrand] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchFeaturedStores = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/api/popular-estate-brands`);
+      const response = await axios.get(
+        `${apiUrl}/api/get_featured_acente_brands`
+      );
       if (response.data.length > 0) {
-        setEstateBrands(response.data);
+        setTourismBrand(response.data);
       }
       setLoading(false);
     } catch (error) {
@@ -54,7 +56,7 @@ const AllFeaturedRealEstate = (prosp) => {
         />
       ) : (
         <FlatList
-          data={estateBrands}
+          data={tourismBrand}
           keyExtractor={(item) =>
             item.id ? item.id.toString() : Math.random().toString()
           }
@@ -95,9 +97,7 @@ const AllFeaturedRealEstate = (prosp) => {
       )}
     </View>
   );
-};
-
-export default AllFeaturedRealEstate;
+}
 
 const styles = StyleSheet.create({
   container: {

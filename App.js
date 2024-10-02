@@ -125,6 +125,8 @@ import { store } from "./store/store";
 
 import SalePageMain from "./pages/Home/PointOfSale/SalePageMain";
 import SalePage from "./pages/Home/PointOfSale/SalePage";
+import SliderTourismRent from "./pages/Home/SliderTourismRent";
+import AllTourismRent from "./pages/Home/AllTourismRent";
 
 const Stack = createNativeStackNavigator();
 
@@ -1022,6 +1024,28 @@ export default function App({ route }) {
                   component={UpgradeProfile}
                   options={({ route }) => ({
                     title: route.params.name,
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#f7f7f7",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="SliderTourismRent"
+                  component={SliderTourismRent}
+                  options={({ route }) => ({
+                    title: route.params.name,
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#f7f7f7",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="AllTourismRent"
+                  component={AllTourismRent}
+                  options={({ route }) => ({
+                    title: "Öne Çıkan Markalar",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#f7f7f7",

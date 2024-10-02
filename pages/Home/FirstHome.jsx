@@ -24,6 +24,7 @@ import FranchiseBanner from "../../components/FranchiseBanner";
 import SliderItem from "../../components/SliderItem";
 import WhatIsEmlakSepette from "../../components/WhatIsEmlakSepette";
 import SliderEstateBar from "../../components/SliderEstateBar";
+import SliderTourismRent from "./SliderTourismRent";
 
 const apiUrl = "https://private.emlaksepette.com";
 
@@ -388,14 +389,14 @@ const FirstHome = (props) => {
                   </Text>
                   <TouchableOpacity
                     style={styles.allProjectsButton}
-                    onPress={() => navigation.navigate("AllFeaturedRealEstate")}
+                    onPress={() => navigation.navigate("AllTourismRent")}
                   >
                     <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                   </TouchableOpacity>
                 </View>
 
                 <View>
-                  <SliderEstateBar />
+                  <SliderTourismRent />
                 </View>
               </View>
 
