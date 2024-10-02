@@ -750,7 +750,7 @@ export default function PostDetail() {
           <SafeAreaView
             style={{ backgroundColor: "white", flex: 1, paddingTop: 30 }}
           >
-            <Header onPress={toggleDrawer} tab={settab} index={setindex} />
+            {/* <Header onPress={toggleDrawer} tab={settab} index={setindex} /> */}
             <Modal
               isVisible={isDrawerOpen}
               onBackdropPress={() => setIsDrawerOpen(false)}

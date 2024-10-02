@@ -149,18 +149,68 @@ export default function App({ route }) {
   );
 }
 
-const DrawerNavigator = () => (
+const DrawerNavigator = (props) => (
   <Drawer.Navigator drawerContent={(props) => <DrawerMenu />}>
     <Drawer.Screen
       name="Home"
       component={Home}
-      options={
-        {
-          // header: () => <Header />,
-        }
-      }
+      options={{
+        header: () => <Header />,
+      }}
     />
-    <Drawer.Screen name="AllProjects" component={AllProjects} />
+    <Drawer.Screen
+      name="AllProjects"
+      component={AllProjects}
+      options={{
+        header: () => <Header />,
+      }}
+    />
+    <Drawer.Screen
+      name="PostDetails"
+      component={PostDetail}
+      options={{
+        header: () => <Header />,
+      }}
+    />
+    <Drawer.Screen
+      name="AllRealtorAdverts"
+      component={AllRealtorAdverts}
+      options={({ route }) => ({
+        header: () => <Header />,
+        title:
+          route?.params?.name +
+          " - " +
+          route?.params?.count +
+          " Emlak İlanları",
+        headerBackTitle: "",
+        headerBackTitleVisible: false,
+        headerTintColor: "white",
+        headerTitleStyle: {
+          fontSize: 14,
+        },
+      })}
+    />
+    {/* <Drawer.Screen
+      name="Details"
+      component={Details}
+      options={({ route }) => ({
+        header: () => <Header />,
+        title: route.params.name,
+      })}
+    />
+    <Drawer.Screen
+      name="ShareAdvert"
+      options={({ route }) => ({
+        animationTypeForReplace: "pop",
+        title: "",
+        headerBackTitle: "",
+        headerBackTitleVisible: false,
+        headerTintColor: "black",
+      })} 
+    >
+      {(props) => <ShareScreenProject {...props} />}
+    </Drawer.Screen>
+    */}
   </Drawer.Navigator>
 );
 
@@ -238,60 +288,14 @@ const StackScreenNavigator = () => {
             options={{ headerShown: false }}
           />
         )}
-        {/* <Stack.Screen
-          name="Home" // Drawer'ı Stack'e ekliyoruz
-          component={DrawerNavigator}
-          options={{
-            headerShown: false,
-            gestureEnabled: false,
-          }}
-        /> */}
+
         <Stack.Screen
           name="Drawer"
           component={DrawerNavigator}
-          options={{ headerShown: false }} // Drawer'ı stack'e ekleyin
-        />
-
-        {/* <Stack.Screen
-          name="AllProject"
-          component={AllProjects}
-          options={({ route, navigation }) => ({
-            headerShown: true,
-            headerStyle: {
-              backgroundColor: "#EA2B2E",
-            },
-            title: `Projeler`,
-            headerBackTitleVisible: false,
-            headerTintColor: "white",
-            headerTitleStyle: {
-              fontSize: 14,
-            },
-            headerLeft: () => (
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-                // onPress={() => console.debug("Menu açıldı")}
-              >
-                <IconAntDesign name="menu-fold" size={24} color="white" />
-              </TouchableOpacity>
-            ),
+          options={({ route }) => ({
+            headerShown: false, // Buraya başka özellikler ekleyebilirsin
           })}
-        /> */}
-
-        {/* <Stack.Screen
-                  name="Home"
-                  options={{
-                    headerShown: false,
-                    gestureEnabled: false,
-                  }}
-                >
-                  {(props) => (
-                    <Home
-                      {...props}
-                      showBackIcon={showBackIcon}
-                      setshowBackIcon={setshowBackIcon}
-                    />
-                  )}
-                </Stack.Screen> */}
+        />
 
         <Stack.Group>
           <Stack.Screen
@@ -363,6 +367,8 @@ const StackScreenNavigator = () => {
             title: route.params.name,
           })}
         />
+
+        {/* test için geri açtım TEST1 */}
         <Stack.Screen
           name="Details"
           component={Details}
@@ -371,14 +377,14 @@ const StackScreenNavigator = () => {
             title: route.params.name,
           })}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="PostDetails"
           component={PostDetail}
           options={({ route }) => ({
             headerShown: false,
             headerBackTitleVisible: false,
           })}
-        />
+        /> */}
 
         <Stack.Screen
           name="Profile"
@@ -667,6 +673,7 @@ const StackScreenNavigator = () => {
           {(props) => <AdvertForm />}
         </Stack.Screen>
 
+        {/* test için geri açtım TEST2 */}
         <Stack.Screen
           name="ShareAdvert"
           options={({ route }) => ({
@@ -859,7 +866,7 @@ const StackScreenNavigator = () => {
             title: "Mapde Görüntüle",
           })}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="AllRealtorAdverts"
           component={AllRealtorAdverts}
           options={({ route }) => ({
@@ -879,7 +886,7 @@ const StackScreenNavigator = () => {
               fontSize: 14,
             },
           })}
-        />
+        /> */}
         <Stack.Screen
           name="UploadAdsPicture"
           component={UploadAdsPicture}

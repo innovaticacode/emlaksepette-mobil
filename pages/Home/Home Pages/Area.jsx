@@ -41,7 +41,8 @@ const Area = ({ index }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${reset ? 1 : page
+        `https://private.emlaksepette.com/api/real-estates?page=${
+          reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
       );
@@ -122,18 +123,21 @@ const Area = ({ index }) => {
               <Text
                 style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
                 onPress={() =>
-                  navigation.navigate("AllRealtorAdverts", {
-                    name: "Emlak İlanları",
-                    slug: "emlak-ilanlari",
-                    data: filteredHomes,
-                    count: filteredHomes.length,
-                    type: "arsa",
-                    optional: null,
-                    title: null,
-                    check: null,
-                    city: null,
-                    county: null,
-                    hood: null,
+                  navigation.navigate("Drawer", {
+                    screen: "AllRealtorAdverts",
+                    params: {
+                      name: "Emlak İlanları",
+                      slug: "emlak-ilanlari",
+                      data: filteredHomes,
+                      count: filteredHomes.length,
+                      type: "arsa",
+                      optional: null,
+                      title: null,
+                      check: null,
+                      city: null,
+                      county: null,
+                      hood: null,
+                    },
                   })
                 }
               >
@@ -179,8 +183,9 @@ const Area = ({ index }) => {
                     openSharing={
                       JSON.parse(item.housing_type_data)["open_sharing1"]
                     }
-                    image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image
-                      }`}
+                    image={`${apiUrl}/housing_images/${
+                      JSON.parse(item.housing_type_data).image
+                    }`}
                     column1_additional={item.column1_additional}
                     column1_name={
                       JSON.parse(item.housing_type_data)[item.column1_name]

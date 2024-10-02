@@ -369,7 +369,7 @@ export default function Basket() {
               }),
             }}
           >
-            <Header onPress={toggleDrawer} index={setindex} tab={settab} />
+            {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
           </View>
 
           <Modal

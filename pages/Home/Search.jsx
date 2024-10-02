@@ -113,11 +113,12 @@ export default function Search({ onpres, setIsDrawerOpen }) {
                       data: item.submenus,
                     });
                   } else {
-                    navigation.navigate(
-                      item.text == "Projeler"
-                        ? "AllProject"
-                        : "AllRealtorAdverts",
-                      {
+                    navigation.navigate("Drawer", {
+                      screen:
+                        item.text === "Projeler"
+                          ? "AllProjects"
+                          : "AllRealtorAdverts",
+                      params: {
                         name: name,
                         slug: slug,
                         data: null,
@@ -125,8 +126,8 @@ export default function Search({ onpres, setIsDrawerOpen }) {
                         type: null,
                         optional: null,
                         title:
-                          item.text == "Al Sat Acil" ||
-                          item.text == "Paylaşımlı İlanlar"
+                          item.text === "Al Sat Acil" ||
+                          item.text === "Paylaşımlı İlanlar"
                             ? item.text
                             : null,
                         check: null,
@@ -134,8 +135,8 @@ export default function Search({ onpres, setIsDrawerOpen }) {
                         county: null,
                         hood: null,
                         href: item.href,
-                      }
-                    );
+                      },
+                    });
                   }
                 }}
                 key={index}

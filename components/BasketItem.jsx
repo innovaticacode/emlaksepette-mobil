@@ -125,9 +125,12 @@ export default function BasketItem({
           <TouchableOpacity
             onPress={() => {
               if (type == "project") {
-                navigation.navigate("PostDetails", {
-                  HomeId: roomOrder,
-                  projectId: id,
+                navigation.navigate("Drawer", {
+                  screen: "PostDetails",
+                  params: {
+                    HomeId: roomOrder,
+                    projectId: id,
+                  },
                 });
               } else {
                 navigation.navigate("Realtor details", { houseId: id });

@@ -55,7 +55,7 @@ export default function Test() {
             }),
           }}
         >
-          <Header onPress={toggleDrawer} index={setindex} tab={settab} />
+          {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
         </View>
 
         <Modal

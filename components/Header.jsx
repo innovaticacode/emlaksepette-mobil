@@ -5,6 +5,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   Platform,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/EvilIcons";
@@ -19,7 +20,8 @@ import {
   setNotificationsRedux,
 } from "../store/slices/Notifications/NotificationsSlice";
 
-export default function Header({ loading, onPress, index, tab }) {
+export default function Header(props) {
+  const { loading, onPress, index, tabs } = props;
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [user, setuser] = useState({});
@@ -63,23 +65,23 @@ export default function Header({ loading, onPress, index, tab }) {
 
   useEffect(() => {
     getNotifications();
-    console.debug("no------------------------->>> :", notificationCount);
   }, [user]);
 
   return (
-    <View style={styles.header}>
-      <TouchableOpacity
-        onPress={() => {
-          onPress();
-        }}
-      >
-        <IconMenu name="menu" size={37} color={"#333"} />
-      </TouchableOpacity>
+    <SafeAreaView style={styles.header}>
+      <View>
+        <IconMenu
+          name="menu"
+          size={36}
+          color={"#333"}
+          onPress={() => {
+            navigation.openDrawer();
+          }}
+        />
+      </View>
       <View
         onTouchStart={() => {
           navigation.navigate("HomePage");
-          index(0);
-          tab(0);
         }}
         style={{
           width: 200,
@@ -131,19 +133,17 @@ export default function Header({ loading, onPress, index, tab }) {
           <Icon name="bell" size={35} />
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
-    alignItems: "center",
-    display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 15,
+    alignItems: "center",
     padding: 10,
-    paddingTop: Platform.OS === "android" ? 0 : 0,
     width: "100%",
+    marginTop: 30,
   },
 });

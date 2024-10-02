@@ -1012,7 +1012,7 @@ export default function Details({ navigation }) {
             <ActivityIndicator size={"large"} color="#333" />
           ) : (
             <>
-              <Header onPress={toggleDrawer} index={setindex} tab={settab} />
+              {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
               <Modal
                 isVisible={isDrawerOpen}
                 onBackdropPress={() => setIsDrawerOpen(false)}

@@ -196,7 +196,7 @@ export default function HomePage2() {
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}
+      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 10 }}
     >
       {/* <Header onPress={toggleDrawer} index={setIndex} tab={settab} /> */}
 

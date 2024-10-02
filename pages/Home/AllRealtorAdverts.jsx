@@ -463,7 +463,7 @@ export default function AllRealtorAdverts() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <Header onPress={toggleDrawer} tab={settab} index={setindex} />
+      {/* <Header onPress={toggleDrawer} tab={settab} index={setindex} /> */}
 
       <Modal
         swipeDirection="left"
