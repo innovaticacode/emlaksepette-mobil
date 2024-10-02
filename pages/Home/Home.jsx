@@ -25,6 +25,9 @@ const Tab = createBottomTabNavigator();
 
 const Home = ({ route }) => {
   const isFocused = useIsFocused();
+
+  console.debug("Home.js: isFocused", isFocused);
+  console.debug("Home.js: route", route.params);
   const [user, setUser] = useState({});
   const [verifyStatus, setverifyStatus] = useState(null);
   useEffect(() => {
@@ -193,7 +196,6 @@ const Home = ({ route }) => {
               : "Hesabım"
             : "Giriş Yap",
           headerShown: false,
-
           tabBarIcon: ({ color, focused }) =>
             user.role == "Kurumsal Hesap" ? (
               <IconStore

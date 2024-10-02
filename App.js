@@ -149,7 +149,7 @@ export default function App({ route }) {
   );
 }
 
-const DrawerNavigator = (props) => (
+const DrawerNavigator = () => (
   <Drawer.Navigator drawerContent={(props) => <DrawerMenu />}>
     <Drawer.Screen
       name="Home"
@@ -198,7 +198,6 @@ const DrawerNavigator = (props) => (
         title: route?.params?.name,
       })}
     />
-    {/*
     <Drawer.Screen
       name="ShareAdvert"
       options={({ route }) => ({
@@ -207,11 +206,10 @@ const DrawerNavigator = (props) => (
         headerBackTitle: "",
         headerBackTitleVisible: false,
         headerTintColor: "black",
-      })} 
+      })}
     >
       {(props) => <ShareScreenProject {...props} />}
     </Drawer.Screen>
-    */}
   </Drawer.Navigator>
 );
 
@@ -673,8 +671,7 @@ const StackScreenNavigator = () => {
           {(props) => <AdvertForm />}
         </Stack.Screen>
 
-        {/* test için geri açtım TEST2 */}
-        <Stack.Screen
+        {/* <Stack.Screen
           name="ShareAdvert"
           options={({ route }) => ({
             animationTypeForReplace: "pop",
@@ -685,7 +682,7 @@ const StackScreenNavigator = () => {
           })}
         >
           {(props) => <ShareScreenProject {...props} />}
-        </Stack.Screen>
+        </Stack.Screen> */}
 
         <Stack.Screen
           name="Notifications"

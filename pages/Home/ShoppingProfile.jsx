@@ -167,7 +167,7 @@ export default function ShoppingProfile() {
     setDialogVisible(false);
     setTimeout(() => {
       SecureStore.setItemAsync("user", "");
-      navigation.push("Home", { status: "logout" });
+      navigation.push("Drawer", { screen: "Home" }, { status: "logout" });
     }, 500);
   };
 
