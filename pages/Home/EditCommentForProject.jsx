@@ -9,10 +9,6 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import {
-  apiRequestGet,
-  frontEndUri,
-} from "../../components/methods/apiRequest";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import Icon2 from "react-native-vector-icons/Entypo";
@@ -22,20 +18,13 @@ import { ImageBackground } from "expo-image";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import { getValueFor } from "../../components/methods/user";
-import {
-  ALERT_TYPE,
-  Dialog,
-  AlertNotificationRoot,
-} from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ActionSheet from "react-native-actionsheet";
 import ImageViewing from "react-native-image-viewing";
-
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import HTML from "react-native-render-html";
 import Modal from "react-native-modal";
-import { da } from "date-fns/locale";
 import AwesomeAlert from "react-native-awesome-alerts";
 
 export default function EditCommentForProject() {
@@ -64,15 +53,14 @@ export default function EditCommentForProject() {
   const [removeImage, setremoveImage] = useState(false);
   const [comment, setcomment] = useState(commentInfo.comment || "");
   const API_URL = "https://private.emlaksepette.com/";
+  const [rating, setRating] = useState(commentInfo.rate); // Başlangıçta hiçbir yıldız dolu değil
+  const [rate, setrate] = useState(commentInfo.rate);
+  const [checkedForm, setCheckedForm] = React.useState(false);
+  const [user, setUser] = useState({});
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [Deals, setDeals] = useState("");
 
-  // const imageSource =
-  //   type === "project"
-  //     ? `${API_URL}${info?.image.replace("public/", "storage/")}`
-  //     : `${API_URL}housing_images/${
-  //         JSON.parse(info.housing_type_data)?.image ?? ""
-  //       }`;
 
-  console.log(commentInfo.id + " iddddd dddd");
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -97,6 +85,7 @@ export default function EditCommentForProject() {
       showActionSheet(index);
     }
   };
+
   const handleActionSheet = async (buttonIndex) => {
     console.log("Selected index:", selectedIndexx); // Ekleyin
     let result;
@@ -305,79 +294,17 @@ export default function EditCommentForProject() {
     }
   };
 
-  console.log(comment + "asdsd");
-  console.log(commentID + "qweqeqwe");
-  console.log(imagesComment); // undefined olup olmadığını kontrol edin
-  console.log(type + " type budursdssssssd");
-  // useEffect(() => {
-  //   apiRequestGet("project/" + projectId).then((res) => {
-  //     setData(res.data.project);
-  //     setloading(false);
-  //     setRating(commentInfo.rate);
-  //     setcomment(commentInfo?.comment);
-  //     const Images =
-  //       projectId &&
-  //       commentInfo &&
-  //       commentInfo?.images &&
-  //       JSON.parse(commentInfo.images);
-  //     setImage(Images);
-  //   });
-  // }, []);
-  // const imageSource =
-  //   info === "project"
-  //     ? `${API_URL}${info?.images.replace("public/", "storage/")}`
-  //     : `${API_URL}housing_images/${
-  //         JSON.parse(info.housing_type_data)?.image ?? ""
-  //       }`;
-
-  console.log(UserImages);
-  const [rating, setRating] = useState(commentInfo.rate); // Başlangıçta hiçbir yıldız dolu değil
-  const [rate, setrate] = useState(commentInfo.rate);
-
   const handleStarPress = (index) => {
     // Tıklanan yıldıza kadar olan tüm yıldızları dolu yap
     setRating(index + 1);
-
-    // Sarı yıldızların sayısını hesapla ve konsola yazdır
     const yellowStars = index + 1;
     setrate(yellowStars);
   };
-  console.log(rate);
-  const [checkedForm, setCheckedForm] = React.useState(false);
+ 
   const toggleCheckboxForm = () => {
     setCheckedForm(!checkedForm);
   };
-  const apiUrl = "https://private.emlaksepette.com/";
-  const [user, setUser] = useState({});
-
-  console.log(user?.id + " asd22222");
-
-  // const imageSource =
-  //   type === "project"
-  //     ? `${API_URL}${commentInfo.comment.image.replace("public/", "storage/")}`
-  //     : (() => {
-  //         try {
-  //           const imageData = commentInfo.comment.image;
-  //           if (
-  //             imageData &&
-  //             typeof imageData === "string" &&
-  //             imageData.startsWith("{")
-  //           ) {
-  //             const parsedImage = JSON.parse(imageData);
-  //             return `${API_URL}housing_images/${parsedImage?.image ?? ""}`;
-  //           } else {
-  //             return `${API_URL}housing_images/${imageData}`;
-  //           }
-  //         } catch (error) {
-  //           console.error("JSON Parse Error:", error);
-  //           return "";
-  //         }
-  //       })();
-
-  console.log(image);
-
-  const [modalVisible2, setModalVisible2] = useState(false);
-  const [Deals, setDeals] = useState("");
+ 
   useEffect(() => {
     fetchDataDeal();
   }, []);
