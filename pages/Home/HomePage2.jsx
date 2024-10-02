@@ -18,7 +18,7 @@ import Navbar from "../../components/Navbar";
 import SliderMenu from "../../components/SliderMenu";
 import axios from "axios";
 import { useState } from "react";
-import DrawerMenu from "../../components/DrawerMenu";
+import { DrawerMenu } from "../../components";
 import Search from "./Search";
 import Header from "../../components/Header";
 import Estates from "./Home Pages/Estates";
@@ -195,7 +195,9 @@ export default function HomePage2() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}
+    >
       <Header onPress={toggleDrawer} index={setIndex} tab={settab} />
 
       <Modal
@@ -276,9 +278,8 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "white",
-
     flex: 1,
-    borderTopLeftRadius: 10,
+    // borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     width: 320,
   },
