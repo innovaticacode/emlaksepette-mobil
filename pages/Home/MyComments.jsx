@@ -17,15 +17,6 @@ import axios from "axios";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
-import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
-import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
-import Icon8 from "react-native-vector-icons/FontAwesome5";
-import {
-  ALERT_TYPE,
-  Dialog,
-  AlertNotificationRoot,
-} from "react-native-alert-notification";
-import { Button } from "react-native-paper";
 import NoDataScreen from "../../components/NoDataScreen";
 import AwesomeAlert from "react-native-awesome-alerts";
 
@@ -47,7 +38,10 @@ export default function MyComments() {
   const [modalVisible, setModalVisible] = useState(false); // Modal görünürlüğü için
   const [successAlertVisible, setSuccessAlertVisible] = useState(false);
   const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [initialComment, setInitialComment] = useState(""); // Başlangıçtaki yorum
+  const [editedComment, setEditedComment] = useState(""); // Düzenlenmiş yorum
 
+  
 
   useEffect(() => {
     getValueFor("user", setuser);
@@ -109,6 +103,8 @@ export default function MyComments() {
       }
     };
 
+    
+    
     return (
       <View style={styles.card}>
         <View style={styles.cardContent}>
@@ -251,7 +247,6 @@ export default function MyComments() {
   };
 
   return (
-    <AlertNotificationRoot>
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         refreshControl={
@@ -441,7 +436,7 @@ export default function MyComments() {
           />
         </View>
       </ScrollView>
-    </AlertNotificationRoot>
+    
   );
 }
 
