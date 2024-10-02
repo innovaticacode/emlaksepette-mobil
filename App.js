@@ -190,14 +190,15 @@ const DrawerNavigator = (props) => (
         },
       })}
     />
-    {/* <Drawer.Screen
+    <Drawer.Screen
       name="Details"
       component={Details}
       options={({ route }) => ({
         header: () => <Header />,
-        title: route.params.name,
+        title: route?.params?.name,
       })}
     />
+    {/*
     <Drawer.Screen
       name="ShareAdvert"
       options={({ route }) => ({
@@ -368,15 +369,14 @@ const StackScreenNavigator = () => {
           })}
         />
 
-        {/* test için geri açtım TEST1 */}
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Details"
           component={Details}
           options={({ route }) => ({
             headerShown: false,
             title: route.params.name,
           })}
-        />
+        /> */}
         {/* <Stack.Screen
           name="PostDetails"
           component={PostDetail}
