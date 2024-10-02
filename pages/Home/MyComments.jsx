@@ -32,7 +32,6 @@ import AwesomeAlert from "react-native-awesome-alerts";
 export default function MyComments() {
   const [user, setuser] = useState({});
   const [comments, setcomments] = useState([]);
-  const [choose, setchoose] = useState(false);
   const [selectedCommentID, setselectedCommentID] = useState(0);
   const [selectedProjectID, setselectedProjectID] = useState(0);
   const [selectcommentInfo, setselectcommentInfo] = useState({});
@@ -43,12 +42,12 @@ export default function MyComments() {
   const [selectedType, setSelectedType] = useState(null);
   const [selectedSource, setSelectedSource] = useState(null);
   const [selectedStore, setSelectedStore] = useState([]);
-
   const [loading, setLoading] = useState(true); // Yüklenme animasyonu için
+  const [choose, setchoose] = useState(false);
   const [modalVisible, setModalVisible] = useState(false); // Modal görünürlüğü için
-  const [modalMessage, setModalMessage] = useState(""); // Başarı veya hata mesajı
-  const [deleteSuccess, setDeleteSuccess] = useState(null);
-  const [modalDelete, setModalDelete] = useState(false);
+  const [successAlertVisible, setSuccessAlertVisible] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+
 
   useEffect(() => {
     getValueFor("user", setuser);
@@ -214,9 +213,9 @@ export default function MyComments() {
   };
 
   const confirmDeleteComment = () => {
-    setchoose(false);
+    setchoose(false); // İlk modalı kapat
     setTimeout(() => {
-      setModalVisible(true)
+      setModalVisible(true); // İkinci modalı 400ms sonra aç
     }, 400);
   };
 
@@ -232,30 +231,22 @@ export default function MyComments() {
           }
         );
 
-        if (response.status === 200) {
+        if (response.status == 200) {
+          setSuccessAlertVisible(true); // Success Alert'i aç
           fetchData(); // Veri güncellemek için çağır
-          
         } else {
           throw new Error("Yorum silme işlemi başarısız.");
         }
       } else {
         setDeleteSuccess(false);
         setModalMessage("Yorum bulunamadı.");
-        setModalVisible(false); // Modalı kapat
+
       }
     } catch (error) {
       setDeleteSuccess(false);
       setModalMessage("Yorum silme işlemi başarısız oldu.");
       console.error("Silme işlemi başarısız oldu:", error);
-      setModalVisible(false); // Modalı kapat
-
-      // Hata durumunda dialog'u göster
-      Dialog.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Hata",
-        textBody: "Yorum silme işlemi başarısız oldu.",
-        button: "Tamam",
-      });
+      setErrorAlertVisible(true); // Error Alert'i aç
     }
   };
 
@@ -377,11 +368,76 @@ export default function MyComments() {
               setModalVisible(!modalVisible);
             }}
             onConfirmPressed={() => {
-              DeleteComment();
-              setModalVisible(false); // Modalı kapat
+              setModalVisible(false)
+              setTimeout(() => {
+                DeleteComment();
+              }, 400);
+
             }}
             confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
             cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          />
+
+          <AwesomeAlert
+            show={successAlertVisible} // Başarılı işlem alert'i görünür
+            showProgress={false}
+            titleStyle={{
+              color: "#333",
+              fontSize: 22,
+              fontWeight: "700",
+              textAlign: "center",
+              margin: 5,
+            }}
+            messageStyle={{
+              fontSize: 18,
+              margin: 5,
+              paddingHorizontal: 40,
+            }}
+            confirmButtonTextStyle={{
+              fontSize: 18,
+              margin: 5,
+            }}
+            title="Başarılı"
+            message="Yorum başarıyla silindi."
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Tamam"
+            confirmButtonColor="#1d8027"
+            onConfirmPressed={() => {
+              setSuccessAlertVisible(false); // Success Alert'i kapat
+            }}
+          />
+
+          <AwesomeAlert
+            show={errorAlertVisible} // Hata alert'i görünür
+            showProgress={false}
+            titleStyle={{
+              color: "#333",
+              fontSize: 22,
+              fontWeight: "700",
+              textAlign: "center",
+              margin: 5,
+            }}
+            messageStyle={{
+              fontSize: 18,
+              margin: 5,
+              paddingHorizontal: 40,
+            }}
+            confirmButtonTextStyle={{
+              fontSize: 18,
+              margin: 5,
+            }}
+            title="Hata"
+            message="Yorum silme işlemi başarısız oldu."
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Tamam"
+            confirmButtonColor="#EA2A28"
+            onConfirmPressed={() => {
+              setErrorAlertVisible(false); // Error Alert'i kapat
+            }}
           />
         </View>
       </ScrollView>
