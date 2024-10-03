@@ -151,7 +151,7 @@ export default function OrderDetails() {
   const [Deals, setDeals] = useState("");
 
   const fetchDataDeal = async () => {
-    const url = `https://emlaksepette.com/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
+    const url = `https://private.emlaksepette.com/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);

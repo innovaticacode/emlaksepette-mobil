@@ -206,9 +206,13 @@ export default function PostDetail() {
     setSelectedImage(pageNumber);
   };
   const [paymentModalVisible, setpaymentModalVisible] = useState(false)
+  const [PaymaentAlert, setPaymaentAlert] = useState(false);
   const openModal = () => {
+    if ((roomData['share_sale[]'] !=='[]' && ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total == roomData['number_of_shares[]'])) {
+      setPaymaentAlert(true)
+  }else{
     setpaymentModalVisible(true)
-  
+  }
   };
   const [FormVisible, setFormVisible] = useState(false);
   const openFormModal = (no) => {
@@ -1007,7 +1011,6 @@ export default function PostDetail() {
                       color: "white",
                       fontWeight: 600,
                       fontSize: 12,
-                      paddingLeft: 10,
                     }}
                   >
                     {ProjectHomeData?.project?.user?.name}
@@ -1037,7 +1040,7 @@ export default function PostDetail() {
                       color: "white",
                       fontWeight: 600,
                       fontSize: 12,
-                      paddingLeft: 10,
+                      marginHorizontal: 15,
                     }}
                   >
                     İlan No: {1000000 + ProjectHomeData?.project?.id  + '-'+ HomeId}
@@ -2575,6 +2578,34 @@ export default function PostDetail() {
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
               cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
             />
+             <AwesomeAlert
+        show={PaymaentAlert}
+        showProgress={false}
+        titleStyle={{
+          color: "#333",
+          fontSize: 13,
+          fontWeight: "700",
+          textAlign: "center",
+          margin: 5,
+        }}
+        title={"Satıldı"}
+        messageStyle={{ textAlign: "center" }}
+        message={`Bu İlan İçin Ödeme Detayı Bilgisi Gösterilemiyor`}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={false}
+        showConfirmButton={true}
+        
+        confirmText="Tamam"
+        
+        confirmButtonColor="#1d8027"
+      
+        onConfirmPressed={() => {
+         setPaymaentAlert(false)
+        }}
+        confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+       
+      />
             <AwesomeAlert
               show={AlertForFavorite}
               showProgress={false}

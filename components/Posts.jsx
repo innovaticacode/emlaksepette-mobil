@@ -124,7 +124,7 @@ export default function Posts({
     const amount = 250; // Fiyatı burada belirliyoruz
     const imageUrl = selectedRoom
       ? "https://private.emlaksepette.com/project_housing_images/" +
-        selectedRoom["image[]"]
+      selectedRoom["image[]"]
       : ""; // Resim URL'sini burada belirleyin
     const neightboord = false;
     const ilanNo = 1000000 + data.project.id + roomOrder; // İlan numarasını belirliyoruz
@@ -192,7 +192,7 @@ export default function Posts({
       axios
         .post(
           "https://private.emlaksepette.com/api/add_project_to_favorites/" +
-            roomOrder,
+          roomOrder,
           {
             project_id: project?.id,
             housing_id: roomOrder,
@@ -273,7 +273,7 @@ export default function Posts({
     });
   };
 
- 
+
 
   const [offSaleStatus, setoffSaleStatus] = useState(null);
   useEffect(() => {
@@ -288,20 +288,20 @@ export default function Posts({
   const [PaymaentAlert, setPaymaentAlert] = useState(false);
   const [paymentModalVisible, setpaymentModalVisible] = useState(false)
   const HandleModal = () => {
-    if ((roomData['share_sale[]'] !=='[]' && sumCartOrderQt[roomOrder]?.qt_total == numberOfShare)) {
-        setPaymaentAlert(true)
-    }else{
+    if ((roomData['share_sale[]'] !== '[]' && sumCartOrderQt[roomOrder]?.qt_total == numberOfShare)) {
+      setPaymaentAlert(true)
+    } else {
       setpaymentModalVisible(true)
     }
-      
-   
+
+
     // if (offSaleStatus != 5 && !user.access_token) {
     //   setPaymaentAlert(true);
     // } else {
     //   openModal(roomOrder);
     // }
   };
-  const onClose=()=>{
+  const onClose = () => {
     setpaymentModalVisible(false)
   }
   const AddCartModal = () => {
@@ -343,7 +343,7 @@ export default function Posts({
     }
   };
 
-  console.log(data?.neighborViews[roomOrder]?.user_id==user.id)
+  console.log(data?.neighborViews[roomOrder]?.user_id == user.id)
   return (
     <View style={styles.container}>
       <AwesomeAlert
@@ -363,16 +363,16 @@ export default function Posts({
         closeOnHardwareBackPress={false}
         showCancelButton={false}
         showConfirmButton={true}
-        
+
         confirmText="Tamam"
-        
+
         confirmButtonColor="#1d8027"
-      
+
         onConfirmPressed={() => {
-         setPaymaentAlert(false)
+          setPaymaentAlert(false)
         }}
         confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-       
+
       />
       <AwesomeAlert
         show={cartIsNull}
@@ -568,8 +568,8 @@ export default function Posts({
                                 item.offsalePersonal.includes(
                                   Number(offSaleStatus)
                                 )
-                              ? "flex"
-                              : "none",
+                                ? "flex"
+                                : "none",
                         },
                       ]}
                     >
@@ -599,101 +599,96 @@ export default function Posts({
             </View>
           </View>
 
-          { 
-          PriceStatus.map((item)=>(
-            <View style={{
-              display:
-              
-              user.type == 2
-                ? Array.isArray(item.OnlySee) &&
-                  item.OnlySee.includes(
-                    user.corporate_type
-                  ) &&
-                  item.offsale == offSaleStatus&&
-                  !sold
-                  ? "flex"
-                  : "none"
-                : item.isShowClient == 1 &&
-                  item.offsale == offSaleStatus&&
-                  !sold
-                ? "flex"
-                : "none",
-          
-            }}>
+          {
+            PriceStatus.map((item) => (
+              <View style={{
+                display:
 
-            {offSaleCheck && !soldCheck && shareSaleEmpty ? (
-                 
-               <View>
-                 {projectDiscountAmount ? (
-                   <View style={styles.discountContainer}>
-                     <Svg
-                       viewBox="0 0 24 24"
-                       width={18}
-                       height={18}
-                       stroke="#EA2B2E"
-                       strokeWidth={2}
-                       fill="#EA2B2E"
-                       strokeLinecap="round"
-                       strokeLinejoin="round"
-                       className="css-i6dzq1"
-                     >
-                       <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
-                       <Polyline points="17 18 23 18 23 12" />
-                     </Svg>
-                     <Text style={styles.originalPrice}>
-                       <Text style={styles.strikethrough}>
-                         {formatPrice(roomData["price[]"])} ₺
-                       </Text>
-                     </Text>
-                     <Text style={styles.discountedPrice}>
-                       {formatPrice(formattedDiscountedPrice)} ₺
-                     </Text>
-                   </View>
-                 ) : (
-                   <Text style={styles.regularPrice}>
-                     {formatPrice(roomData["price[]"])} ₺
-                   </Text>
-                 )}
-                 {projectDiscountAmount > 0 && (
-                   <Text style={styles.discountText}>
-                     {formatPrice(projectDiscountAmount)} ₺ indirim
-                   </Text>
-                 )}
-               </View>
-             ) : (shareSale &&
-                 shareSale !== "[]" &&
-                 sumCartOrderQt[roomOrder]?.qt_total !== numberOfShare) ||
-               (shareSale && shareSale !== "[]" && !sumCartOrderQt[roomOrder]) ? (
-               <View>
-                 <Text style={[styles.regularPrice, {}]}>
-                   {shareSale && shareSale !== "[]" && numberOfShare !== 0 && (
-                     <Text style={styles.shareSaleText}>1/{numberOfShare}</Text>
-                   )}
-                   {" Pay Fiyatı - "}
-                   {shareSale && shareSale !== "[]" && numberOfShare !== 0
-                     ? formatPrice(roomData["price[]"] / numberOfShare)
-                     : formatPrice(roomData["price[]"])}
-                   ₺
-                 </Text>
-               </View>
-             ) : (
-               <View style={{ paddingTop: 5, alignItems: "flex-end" }}>
-                 <Text
-                   style={{ fontSize: 12, color: "#264ABB", fontWeight: "800" }}
-                 >
-                   {formatPrice(roomData["price[]"])}₺
-                 </Text>
-               </View>
-             )
-           }
-                 </View>
-             
-          ))
-           
-          
-          
+                  user.type == 2
+                    ? Array.isArray(item.OnlySee) &&
+                      item.OnlySee.includes(
+                        user.corporate_type
+                      ) &&
+                      item.offsale == offSaleStatus &&
+                      !sold
+                      ? "flex"
+                      : "none"
+                    : item.isShowClient == 1 &&
+                      item.offsale == offSaleStatus &&
+                      !sold
+                      ? "flex"
+                      : "none",
+
+              }}>
+
+                {offSaleCheck && !soldCheck && shareSaleEmpty ? (
+
+                  <View>
+                    {projectDiscountAmount ? (
+                      <View style={styles.discountContainer}>
+                        <Svg
+                          viewBox="0 0 24 24"
+                          width={18}
+                          height={18}
+                          stroke="#EA2B2E"
+                          strokeWidth={2}
+                          fill="#EA2B2E"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="css-i6dzq1"
+                        >
+                          <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+                          <Polyline points="17 18 23 18 23 12" />
+                        </Svg>
+                        <Text style={styles.originalPrice}>
+                          <Text style={styles.strikethrough}>
+                            {formatPrice(roomData["price[]"])} ₺
+                          </Text>
+                        </Text>
+                        <Text style={styles.discountedPrice}>
+                          {formatPrice(formattedDiscountedPrice)} ₺
+                        </Text>
+                      </View>
+                    ) : (
+                      <Text style={styles.regularPrice}>
+                        {formatPrice(roomData["price[]"])} ₺
+                      </Text>
+                    )}
+                    {projectDiscountAmount > 0 && (
+                      <Text style={styles.discountText}>
+                        {formatPrice(projectDiscountAmount)} ₺ indirim
+                      </Text>
+                    )}
+                  </View>
+                ) : (shareSale &&
+                  shareSale !== "[]" &&
+                  sumCartOrderQt[roomOrder]?.qt_total !== numberOfShare) ||
+                  (shareSale && shareSale !== "[]" && !sumCartOrderQt[roomOrder]) ? (
+                  <View>
+                    <Text style={[styles.regularPrice, {}]}>
+                      {shareSale && shareSale !== "[]" && numberOfShare !== 0 && (
+                        <Text style={styles.shareSaleText}>1/{numberOfShare}</Text>
+                      )}
+                      {" Pay Fiyatı - "}
+                      {shareSale && shareSale !== "[]" && numberOfShare !== 0
+                        ? formatPrice(roomData["price[]"] / numberOfShare)
+                        : formatPrice(roomData["price[]"])}
+                      ₺
+                    </Text>
+                  </View>
+                ) : (
+                  <View style={{ paddingTop: 5, alignItems: "flex-end" }}>
+                    <Text
+                      style={{ fontSize: 12, color: "#264ABB", fontWeight: "800" }}
+                    >
+                      {formatPrice(roomData["price[]"])}₺
+                    </Text>
+                  </View>
+                )
+                }
+              </View>
+            ))
           }
-          
 
           <View style={styles.priceAndButtons}>
             <View style={styles.btns}>
@@ -716,9 +711,9 @@ export default function Posts({
                         display:
                           (offSaleStatus == 1 &&
                             roomData["share_sale[]"] !== "[]") ||
-                          (sold?.status == 1 && sold.is_show_user !== "on") ||
-                          project.user.id == user.id ||
-                          project.user.id == user.parent_id
+                            (sold?.status == 1 && sold.is_show_user !== "on") ||
+                            project.user.id == user.id ||
+                            project.user.id == user.parent_id
                             ? "none"
                             : "flex",
                       }}
@@ -740,8 +735,8 @@ export default function Posts({
                                     : "none"
                                   : item.isShowClient == 1 &&
                                     item.offsale == offSaleStatus
-                                  ? "flex"
-                                  : "none",
+                                    ? "flex"
+                                    : "none",
                             },
                           ]}
                           onPress={() => {
@@ -761,7 +756,7 @@ export default function Posts({
                       }}
                     >
                       {project.user.id == user.id ||
-                      project.user.id == user.parent_id ? (
+                        project.user.id == user.parent_id ? (
                         <View style={styles.priceContainer}>
                           <TouchableOpacity style={styles.addBasket}>
                             <Text style={styles.addBasketText}>
@@ -790,8 +785,8 @@ export default function Posts({
                                       : "none"
                                     : item.isShowClient == 1 &&
                                       item.offsale == offSaleStatus
-                                    ? "flex"
-                                    : "none",
+                                      ? "flex"
+                                      : "none",
                               },
                             ]}
                             key={_i}
@@ -810,9 +805,9 @@ export default function Posts({
                         display:
                           (offSaleStatus == 1 &&
                             roomData["share_sale[]"] !== "[]") ||
-                          (sold?.status == 1 && sold.is_show_user !== "on") ||
-                          project.user.id == user.id ||
-                          project.user.id == user.parent_id
+                            (sold?.status == 1 && sold.is_show_user !== "on") ||
+                            project.user.id == user.id ||
+                            project.user.id == user.parent_id
                             ? "none"
                             : "flex",
                       }}
@@ -834,8 +829,8 @@ export default function Posts({
                                     : "none"
                                   : item.isShowClient == 1 &&
                                     item.offsale == offSaleStatus
-                                  ? "flex"
-                                  : "none",
+                                    ? "flex"
+                                    : "none",
                             },
                           ]}
                           onPress={() => {
@@ -855,19 +850,19 @@ export default function Posts({
                       width:
                         (offSaleStatus == 1 &&
                           roomData["share_sale[]"] !== "[]") ||
-                        (sold && sold.is_show_user !== "on") ||
-                        (sold &&
-                          sold.is_show_user == "on" &&
-                          sold.user_id == user.id) ||
-                        project.user.id == user.id ||
-                        project.user.id == user.parent_id
+                          (sold && sold.is_show_user !== "on") ||
+                          (sold &&
+                            sold.is_show_user == "on" &&
+                            sold.user_id == user.id) ||
+                          project.user.id == user.id ||
+                          project.user.id == user.parent_id
                           ? "100%"
                           : "50%",
                     }}
                   >
-                    
+
                     {!sold && project.user.id == user.id ||
-                   !sold && project.user.id == user.parent_id ? (
+                      !sold && project.user.id == user.parent_id ? (
                       <View style={styles.priceContainer}>
                         <TouchableOpacity style={styles.addBasket}>
                           <Text style={styles.addBasketText}>
@@ -918,8 +913,8 @@ export default function Posts({
                                     : "none"
                                   : item.isShowClient == 1 &&
                                     item.offsale == offSaleStatus
-                                  ? "flex"
-                                  : "none",
+                                    ? "flex"
+                                    : "none",
                             },
                           ]}
                           key={_i}
@@ -936,31 +931,31 @@ export default function Posts({
                       display:
                         (offSaleStatus == 1 &&
                           roomData["share_sale[]"] !== "[]") ||
-                        (sold?.status == 1 && sold.is_show_user !== "on") ||
-                        project.user.id == user.id ||
-                        project.user.id == user.parent_id
+                          (sold?.status == 1 && sold.is_show_user !== "on") ||
+                          project.user.id == user.id ||
+                          project.user.id == user.parent_id
                           ? "none"
                           : "flex",
                     }}
                   >
                     {sold ? (
-                      (sold?.status == 1 && sold.is_show_user == "on"  ) ||
-                      (sold &&
-                        sold.is_show_user == "on" &&
-                        sold.user_id != user.id) 
-                       
-                      ? (
-                        <TouchableOpacity
-                          style={styles.showCustomer}
-                          onPress={() => openAlert(roomData)}
-                        >
-                          <Text style={styles.showCustomerText}>
-                            Komşumu Gör
-                          </Text>
-                        </TouchableOpacity>
-                      ) : (
-                        null
-                      )
+                      (sold?.status == 1 && sold.is_show_user == "on") ||
+                        (sold &&
+                          sold.is_show_user == "on" &&
+                          sold.user_id != user.id)
+
+                        ? (
+                          <TouchableOpacity
+                            style={styles.showCustomer}
+                            onPress={() => openAlert(roomData)}
+                          >
+                            <Text style={styles.showCustomerText}>
+                              Komşumu Gör
+                            </Text>
+                          </TouchableOpacity>
+                        ) : (
+                          null
+                        )
                     ) : (
                       rightButtonsForPost.map((item, _i) => (
                         <TouchableOpacity
@@ -979,8 +974,8 @@ export default function Posts({
                                     : "none"
                                   : item.isShowClient == 1 &&
                                     item.offsale == offSaleStatus
-                                  ? "flex"
-                                  : "none",
+                                    ? "flex"
+                                    : "none",
                             },
                           ]}
                           onPress={() => {
@@ -1004,9 +999,8 @@ export default function Posts({
                     ? selectedRoom["advertise_title[]"]
                     : "Başlık bulunamadı",
                   20
-                )}"\n\nİlan No: ${
-                  1000000 + data.project.id + roomOrder
-                }\nÖdeme Tarihi: ${formattedDate}\nTutar: 250 TL\n\nKomşumu Gör Özelliği: İlgilendiğiniz projeden konut alanları arayıp proje hakkında detaylı referans bilgisi almanıza imkan sağlar.\n\nKomşunuza ait iletişim bilgilerini görmek için aşağıdaki adımları takip edin:\n\n1. Ödeme işlemini tamamlayın ve belirtilen tutarı ödediğiniz takdirde,\n2. Ödemeniz onaylandıktan sonra, "Komşumu Gör" düğmesi aktif olacak ve komşunuzun iletişim bilgilerine ulaşabileceksiniz.`}
+                )}"\n\nİlan No: ${1000000 + data.project.id + roomOrder
+                  }\nÖdeme Tarihi: ${formattedDate}\nTutar: 250 TL\n\nKomşumu Gör Özelliği: İlgilendiğiniz projeden konut alanları arayıp proje hakkında detaylı referans bilgisi almanıza imkan sağlar.\n\nKomşunuza ait iletişim bilgilerini görmek için aşağıdaki adımları takip edin:\n\n1. Ödeme işlemini tamamlayın ve belirtilen tutarı ödediğiniz takdirde,\n2. Ödemeniz onaylandıktan sonra, "Komşumu Gör" düğmesi aktif olacak ve komşunuzun iletişim bilgilerine ulaşabileceksiniz.`}
                 closeOnTouchOutside={true}
                 closeOnHardwareBackPress={false}
                 showCancelButton={true}
@@ -1043,17 +1037,17 @@ export default function Posts({
           </View>
         </View>
       </View>
-      
+
       {
-        
-        (roomData['share_sale[]'] !=='[]'  && offSaleStatus!=1  ) &&
 
-        <ShareProgressBar toplamHisse={roomData['number_of_shares[]']} satilanHisse={sold? sumCartOrderQt[roomOrder]?.qt_total :0 } IsShowText={sumCartOrderQt[roomOrder]?.qt_total == numberOfShare}/>
+        (roomData['share_sale[]'] !== '[]' && offSaleStatus != 1) &&
 
-      
-        
+        <ShareProgressBar toplamHisse={roomData['number_of_shares[]']} satilanHisse={sold ? sumCartOrderQt[roomOrder]?.qt_total : 0} IsShowText={sumCartOrderQt[roomOrder]?.qt_total == numberOfShare} />
+
+
+
       }
-      
+
       {data?.project?.list_item_values && (
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>
@@ -1085,7 +1079,7 @@ export default function Posts({
           </View>
         </View>
       )}
-      <PaymentPlanModal visible={paymentModalVisible} title={data?.project?.project_title} onClose={onClose} data={roomData} RoomOrder={roomOrder}/>
+      <PaymentPlanModal visible={paymentModalVisible} title={data?.project?.project_title} onClose={onClose} data={roomData} RoomOrder={roomOrder} />
     </View>
   );
 }
@@ -1244,12 +1238,16 @@ const styles = StyleSheet.create({
     right: width > 400 ? 10 : 5,
   },
   ilanNoText: {
-    fontSize: 9,
+    fontSize: 11,
     color: "black",
+    fontWeight: 800,
+    marginHorizontal: 5,
   },
   adTitleText: {
-    fontSize: 9,
+    fontSize: 11,
     fontWeight: "700",
+    paddingTop: 3,
+    marginHorizontal: 5,
   },
   noText: {
     color: "white",
