@@ -23,8 +23,8 @@ import { ActivityIndicator, Switch, TextInput } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
-import DrawerMenu from "../../components/DrawerMenu";
 import SortModal from "../../components/SortModal";
+import { DrawerMenu } from "../../components";
 
 export default function AllProjects() {
   const [cityItems, setCityItems] = useState();
@@ -1167,7 +1167,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
 
     flex: 1,
-    borderTopLeftRadius: 10,
+    // borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     width: 320,
   },

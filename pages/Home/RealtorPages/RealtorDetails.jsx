@@ -45,7 +45,6 @@ import SwapForm from "./SwapForm";
 import AddCollection from "../../../components/AddCollection";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
-import DrawerMenu from "../../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
 import {
@@ -54,6 +53,7 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 import TextAlertModal from "../../../components/TextAlertModal";
+import { DrawerMenu } from "../../../components";
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
@@ -663,7 +663,7 @@ export default function PostDetail() {
               swipeDirection={["left"]}
               onSwipeComplete={() => setIsDrawerOpen(false)}
             >
-              <View style={styles.modalContent}>
+              <View>
                 <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
               </View>
             </Modal>
@@ -1887,14 +1887,7 @@ const styles = StyleSheet.create({
   modal: {
     margin: 0,
   },
-  modalContent: {
-    backgroundColor: "white",
 
-    flex: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: 320,
-  },
   ıconContainer: {
     width: 50,
     height: 150,

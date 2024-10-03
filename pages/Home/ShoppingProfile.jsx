@@ -417,15 +417,15 @@ export default function ShoppingProfile() {
                 }}
                 title={"Çıkış Yap"}
                 messageStyle={{ textAlign: "center" }}
-                message={`Çıkış Yapmak istediğinize emin misiniz?`}
+                message={`Çıkış yapmak istediğinize emin misiniz?`}
                 closeOnTouchOutside={false}
                 closeOnHardwareBackPress={false}
                 showCancelButton={true}
                 showConfirmButton={true}
                 cancelText="Hayır"
                 confirmText="Evet"
-                cancelButtonColor="#1d8027"
-                confirmButtonColor="#ce4d63"
+                cancelButtonColor="#ce4d63"
+                confirmButtonColor="#1d8027"
                 onCancelPressed={() => {
                   setDialogVisible(false);
                 }}

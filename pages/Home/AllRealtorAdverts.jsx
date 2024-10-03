@@ -25,12 +25,12 @@ import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
 import { RefreshControl } from "react-native-gesture-handler";
 import RealtorPost from "../../components/RealtorPost";
-import DrawerMenu from "../../components/DrawerMenu";
 
 import { getValueFor } from "../../components/methods/user";
 
 import SortModal from "../../components/SortModal";
 import { Image } from "react-native-svg";
+import { DrawerMenu } from "../../components";
 
 export default function AllRealtorAdverts() {
   const [cityItems, setCityItems] = useState();
@@ -1244,7 +1244,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
 
     flex: 1,
-    borderTopLeftRadius: 10,
+    // borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     width: 320,
   },

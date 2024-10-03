@@ -121,7 +121,7 @@ export default function PostDetail() {
   const ToggleColSheet = () => {
     setColectionSheet(!ColectionSheet);
   };
- 
+
 
   const [ProjectHomeData, setProjectHomeData] = useState({
     project: {
@@ -138,7 +138,7 @@ export default function PostDetail() {
     apiRequestGet("project/" + projectId).then((res) => {
       setLoading(true)
       setProjectHomeData(res.data);
-    }).finally(()=>{
+    }).finally(() => {
       setLoading(false)
     });
   }, [HomeId]);
@@ -167,32 +167,32 @@ export default function PostDetail() {
     }
   };
 
- 
+
   const [galleries, setGalleries] = useState([]);
   const [roomData, setroomData] = useState({})
   useEffect(() => {
     setShareSaleEmpty(
       !roomData["share_sale[]"] || roomData["share_sale[]"] === "[]"
     );
-    if (user,ProjectHomeData) {
+    if (user, ProjectHomeData) {
       const roomData = ProjectHomeData.projectHousingsList[HomeId] || {};
       setroomData(roomData)
     }
-  
+
   }, [ProjectHomeData]);
 
   useEffect(() => {
     if (ProjectHomeData?.project && ProjectHomeData.projectHousingsList && roomData) {
-     
+
       const imageObject = { image: `/project_housing_images/${roomData['image[]']}` };
 
-      
-      const updatedImages = [imageObject,...ProjectHomeData?.project?.images];
+
+      const updatedImages = [imageObject, ...ProjectHomeData?.project?.images];
       setGalleries(updatedImages);
-    } else if (ProjectHomeData.project.images ) {
+    } else if (ProjectHomeData.project.images) {
       setGalleries(ProjectHomeData.project.images);
     }
-  }, [ProjectHomeData,roomData]);
+  }, [ProjectHomeData, roomData]);
 
   const images = galleries.map((image) => ({
     uri: `${apiUrl}${image.image.replace("public", "storage")}`,
@@ -208,18 +208,18 @@ export default function PostDetail() {
   const [paymentModalVisible, setpaymentModalVisible] = useState(false)
   const [PaymaentAlert, setPaymaentAlert] = useState(false);
   const openModal = () => {
-    if ((roomData['share_sale[]'] !=='[]' && ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total == roomData['number_of_shares[]'])) {
+    if ((roomData['share_sale[]'] !== '[]' && ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total == roomData['number_of_shares[]'])) {
       setPaymaentAlert(true)
-  }else{
-    setpaymentModalVisible(true)
-  }
+    } else {
+      setpaymentModalVisible(true)
+    }
   };
   const [FormVisible, setFormVisible] = useState(false);
   const openFormModal = (no) => {
     setPaymentModalShowOrder(no);
     setFormVisible(!FormVisible);
   };
-  const onClose=()=>{
+  const onClose = () => {
     setpaymentModalVisible(false)
   }
   const [changeIcon, setchangeIcon] = useState(false);
@@ -255,14 +255,14 @@ export default function PostDetail() {
             },
           }
         );
-  
+
         if (response?.data?.collections) {
           setCollections(response.data.collections);
         } else {
           setCollections([]);
         }
       }
-   
+
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -415,10 +415,10 @@ export default function PostDetail() {
     if (user.access_token) {
       setselectedCartItem(id);
       setModalForAddToCart(true);
-    }else{
+    } else {
       setAlertForSign(true)
     }
- 
+
   };
 
   const [itemCount, setItemCount] = useState(10);
@@ -451,11 +451,11 @@ export default function PostDetail() {
     }
     apiRequestGet(
       "project_housings/" +
-        projectId +
-        "?start=" +
-        lastBlockItemsCount +
-        "&end=" +
-        (lastBlockItemsCount + 10)
+      projectId +
+      "?start=" +
+      lastBlockItemsCount +
+      "&end=" +
+      (lastBlockItemsCount + 10)
     ).then((res) => {
       setData({
         ...data,
@@ -470,14 +470,14 @@ export default function PostDetail() {
       if (page * 10 < ProjectHomeData.project.blocks[selectedTab].housing_count) {
         apiRequestGet(
           "project_housings/" +
-            projectId +
-            "?start=" +
-            (parseInt(lastBlockItemCount) + parseInt(page * 10)) +
-            "&end=" +
-            ((page + 1) * 10 > ProjectHomeData.project.blocks[selectedTab].housing_count
-              ? parseInt(lastBlockItemCount) +
-                parseInt(ProjectHomeData.project.blocks[selectedTab].housing_count)
-              : parseInt(lastBlockItemCount) + parseInt((page + 1) * 10))
+          projectId +
+          "?start=" +
+          (parseInt(lastBlockItemCount) + parseInt(page * 10)) +
+          "&end=" +
+          ((page + 1) * 10 > ProjectHomeData.project.blocks[selectedTab].housing_count
+            ? parseInt(lastBlockItemCount) +
+            parseInt(ProjectHomeData.project.blocks[selectedTab].housing_count)
+            : parseInt(lastBlockItemCount) + parseInt((page + 1) * 10))
         ).then((res) => {
           // console.log(res);
           setProjectHomeData({
@@ -500,11 +500,11 @@ export default function PostDetail() {
         setIsLoading(true);
         apiRequestGet(
           "project_housings/" +
-           projectId +
-            "?start=" +
-            page * 10 +
-            "&end=" +
-            (page + 1) * 10
+          projectId +
+          "?start=" +
+          page * 10 +
+          "&end=" +
+          (page + 1) * 10
         ).then((res) => {
           setProjectHomeData({
             ...ProjectHomeData,
@@ -631,7 +631,7 @@ export default function PostDetail() {
     formData.append(
       "numbershare",
       ProjectHomeData.projectHousingsList[selectedCartItem][
-        "number_of_shares[]"
+      "number_of_shares[]"
       ]
     );
     formData.append("qt", 1);
@@ -666,7 +666,7 @@ export default function PostDetail() {
     formData.append(
       "numbershare",
       ProjectHomeData.projectHousingsList[paymentModalShowOrder][
-        "number_of_shares[]"
+      "number_of_shares[]"
       ]
     );
     formData.append("qt", 1);
@@ -729,7 +729,7 @@ export default function PostDetail() {
       axios
         .post(
           "https://private.emlaksepette.com/api/add_project_to_favorites/" +
-            HomeId,
+          HomeId,
           {
             project_id: projectId,
             housing_id: HomeId,
@@ -750,8 +750,8 @@ export default function PostDetail() {
     }
   };
   const getDiscountAmount = (project, roomIndex) => {
-    
-    const projectOffer = ProjectHomeData.project.offer ;
+
+    const projectOffer = ProjectHomeData.project.offer;
     return projectOffer ? projectOffer.discount_amount : 0;
   };
 
@@ -768,11 +768,11 @@ export default function PostDetail() {
       ? formatPrice(discountedPrice / roomData["number_of_shares[]"])
       : formatPrice(roomData["price[]"] / roomData["number_of_shares[]"])
     : discountAmount != 0
-    ? formatPrice(discountedPrice)
-    : formatPrice(roomData["price[]"]);
- 
-    console.log(discountAmount + '---DiscountAmount')
-    console.log(discountedPrice + '---DiscountedPrice')
+      ? formatPrice(discountedPrice)
+      : formatPrice(roomData["price[]"]);
+
+  console.log(discountAmount + '---DiscountAmount')
+  console.log(discountedPrice + '---DiscountedPrice')
   const [comments, setcomments] = useState([]);
   const fetchCommentTotalRate = async () => {
     try {
@@ -794,14 +794,14 @@ export default function PostDetail() {
     .reduce((acc, rate) => acc + rate, 0);
 
 
-  
-   const [offSaleStatus, setoffSaleStatus] = useState(null);
+
+  const [offSaleStatus, setoffSaleStatus] = useState(null);
   useEffect(() => {
     if (ProjectHomeData && ProjectHomeData.project && roomData && roomData["off_sale[]"]) {
       const parsedOffsale = JSON.parse(roomData["off_sale[]"]);
       ProjectHomeData && ProjectHomeData.project && roomData && setoffSaleStatus(parsedOffsale);
     }
-  }, [HomeId,roomData]) 
+  }, [HomeId, roomData])
 
   // console.log(ProjectHomeData.project.images)
 
@@ -887,10 +887,10 @@ export default function PostDetail() {
     const amount = 250; // Fiyatı burada belirliyoruz
     const imageUrl = roomData
       ? "https://private.emlaksepette.com/project_housing_images/" +
-        roomData["image[]"]
+      roomData["image[]"]
       : ""; // Resim URL'sini burada belirleyin
     const neightboord = false;
-    const ilanNo = 1000000 + ProjectHomeData.project.id +  '-'+ HomeId; // İlan numarasını belirliyoruz
+    const ilanNo = 1000000 + ProjectHomeData.project.id + '-' + HomeId; // İlan numarasını belirliyoruz
     const roomOrderString = HomeId.toString();
 
     // Verileri secureStore ile saklayın
@@ -900,7 +900,7 @@ export default function PostDetail() {
         navigation.navigate("Basket2");
 
         // Modalı kapatın
-        
+
       })
       .catch((error) => {
         console.error("Onay işlemi sırasında bir hata oluştu:", error);
@@ -956,21 +956,21 @@ export default function PostDetail() {
                 <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} on />
               </View>
             </Modal>
-            <View style={{position:'absolute',width:'100%',bottom:35,padding:4,zIndex:1,flexDirection:'row',justifyContent:'space-around'}}>
-                <TouchableOpacity style={{width:'45%',backgroundColor:'#EA2B2E',padding:12,borderRadius:8}} onPress={handleOpenPhone}>
-                  <Text style={{fontSize:14,color:'white',fontWeight:'600',textAlign:'center'}}>Ara</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{width:'45%',backgroundColor:'#EA2B2E',padding:12,borderRadius:8}}
-                 onPress={() => {
+            <View style={{ position: 'absolute', width: '100%', bottom: 35, padding: 4, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
+              <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }} onPress={handleOpenPhone}>
+                <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }}>Ara</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }}
+                onPress={() => {
                   navigation.navigate("Profile", {
                     name: "",
                     id: ProjectHomeData?.project?.user?.id,
                   });
                 }}
-                >
-                  <Text style={{fontSize:14,color:'white',fontWeight:'600',textAlign:'center'}}>Satış Noktalarını Gör</Text>
-                </TouchableOpacity>
-              </View> 
+              >
+                <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }}>Satış Noktalarını Gör</Text>
+              </TouchableOpacity>
+            </View>
             <View
               style={{
                 flexDirection: "row",
@@ -1043,66 +1043,65 @@ export default function PostDetail() {
                       marginHorizontal: 15,
                     }}
                   >
-                    İlan No: {1000000 + ProjectHomeData?.project?.id  + '-'+ HomeId}
-                  
+                    İlan No: {1000000 + ProjectHomeData?.project?.id + '-' + HomeId}
+
                   </Text>
                 </View>
               </TouchableOpacity>
             </View>
             <AwesomeAlert
-                show={showAlert}
-                showProgress={false}
-                title="Komşumu Gör"
-                message={`"${truncateText(
-                  HomeId
-                    ? roomData["advertise_title[]"]
-                    : "Başlık bulunamadı",
-                  20
-                )}"\n\nİlan No: ${
-                  1000000 + ProjectHomeData.project.id + '-'+ HomeId
+              show={showAlert}
+              showProgress={false}
+              title="Komşumu Gör"
+              message={`"${truncateText(
+                HomeId
+                  ? roomData["advertise_title[]"]
+                  : "Başlık bulunamadı",
+                20
+              )}"\n\nİlan No: ${1000000 + ProjectHomeData.project.id + '-' + HomeId
                 }\nÖdeme Tarihi: ${formattedDate}\nTutar: 250 TL\n\nKomşumu Gör Özelliği: İlgilendiğiniz projeden konut alanları arayıp proje hakkında detaylı referans bilgisi almanıza imkan sağlar.\n\nKomşunuza ait iletişim bilgilerini görmek için aşağıdaki adımları takip edin:\n\n1. Ödeme işlemini tamamlayın ve belirtilen tutarı ödediğiniz takdirde,\n2. Ödemeniz onaylandıktan sonra, "Komşumu Gör" düğmesi aktif olacak ve komşunuzun iletişim bilgilerine ulaşabileceksiniz.`}
-                closeOnTouchOutside={true}
-                closeOnHardwareBackPress={false}
-                showCancelButton={true}
-                showConfirmButton={true}
-                cancelText="Hayır"
-                confirmText="Evet"
-                confirmButtonColor="#EA2A28"
-                onCancelPressed={()=>{
-                  setShowAlert(false)
-                }}
-                onConfirmPressed={()=>{
-                  setShowAlert(false)
-                 
-                  setTimeout(() => {
-                    handleYes()
-                  }, 300);
-                }}
-                contentContainerStyle={{
-                  borderRadius: 10,
-                  padding: 20,
-                  width: "100%",
-                }}
-                titleStyle={{
-                  fontSize: 18,
-                  fontWeight: "bold",
-                  color: "#EA2A28",
-                  textAlign: "center",
-                }}
-                messageStyle={{
-                  fontSize: 14,
-                  color: "#333",
-                  textAlign: "left",
-                }}
-                cancelButtonTextStyle={{
-                  fontSize: 16,
-                }}
-                confirmButtonTextStyle={{
-                  fontSize: 16,
-                }}
-              />
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={false}
+              showCancelButton={true}
+              showConfirmButton={true}
+              cancelText="Hayır"
+              confirmText="Evet"
+              confirmButtonColor="#EA2A28"
+              onCancelPressed={() => {
+                setShowAlert(false)
+              }}
+              onConfirmPressed={() => {
+                setShowAlert(false)
+
+                setTimeout(() => {
+                  handleYes()
+                }, 300);
+              }}
+              contentContainerStyle={{
+                borderRadius: 10,
+                padding: 20,
+                width: "100%",
+              }}
+              titleStyle={{
+                fontSize: 18,
+                fontWeight: "bold",
+                color: "#EA2A28",
+                textAlign: "center",
+              }}
+              messageStyle={{
+                fontSize: 14,
+                color: "#333",
+                textAlign: "left",
+              }}
+              cancelButtonTextStyle={{
+                fontSize: 16,
+              }}
+              confirmButtonTextStyle={{
+                fontSize: 16,
+              }}
+            />
             <ScrollView scrollEventThrottle={16}
-                contentContainerStyle={{paddingBottom:60}}
+              contentContainerStyle={{ paddingBottom: 60 }}
               onScroll={({ nativeEvent }) => {
                 if (isCloseToBottom(nativeEvent)) {
                   if (ProjectHomeData.project.have_blocks) {
@@ -1193,60 +1192,60 @@ export default function PostDetail() {
                     ProjectHomeData?.project?.club_rate && (
                       <View style={styles.commissionBadge}>
                         <Text style={styles.commissionText}>
-                         %{ProjectHomeData?.project?.club_rate} KOMİSYON! 
+                          %{ProjectHomeData?.project?.club_rate} KOMİSYON!
                         </Text>
                       </View>
                     )}
                 </View>
                 <PagerView
-                    style={{ height: 250 }}
-                    initialPage={pagination}
-                    onPageSelected={(e) =>
-                      setPagination(e.nativeEvent.position)
-                    }
-                  >
-                    {galleries.map((image, index) => (
-                      <Pressable
-                        key={index}
-                        onPress={() => {
-                          setCurrentIndex(index);
-                          setIsVisible(true);
+                  style={{ height: 250 }}
+                  initialPage={pagination}
+                  onPageSelected={(e) =>
+                    setPagination(e.nativeEvent.position)
+                  }
+                >
+                  {galleries.map((image, index) => (
+                    <Pressable
+                      key={index}
+                      onPress={() => {
+                        setCurrentIndex(index);
+                        setIsVisible(true);
+                      }}
+                    >
+                      <ImageBackground
+                        source={{
+                          uri: `${apiUrl}${image.image.replace(
+                            "public",
+                            "storage"
+                          )}`,
                         }}
-                      >
-                        <ImageBackground
-                          source={{
-                            uri: `${apiUrl}${image.image.replace(
-                              "public",
-                              "storage"
-                            )}`,
-                          }}
-                          style={{ width: "100%", height: "100%" }}
-                        />
-                      </Pressable>
-                    ))}
-                  </PagerView>
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    </Pressable>
+                  ))}
+                </PagerView>
 
-                  <ImageViewing
-                    images={images}
-                    imageIndex={currentIndex}
-                    visible={isVisible}
-                    onRequestClose={() => setIsVisible(false)}
-                  />
-               
-               
+                <ImageViewing
+                  images={images}
+                  imageIndex={currentIndex}
+                  visible={isVisible}
+                  onRequestClose={() => setIsVisible(false)}
+                />
+
+
               </View>
               {
-                  user?.corporate_type!=='Emlak Ofisi' &&
-                  <TouchableOpacity style={{padding:5,flexDirection:'row',alignItems:'center',gap:5,}} onPress={()=>{
-                    navigation.navigate("Profile", {
-                      name: "",
-                      id: ProjectHomeData?.project?.user?.id,
-                    })
-                  }}>
-                    <Text style={{fontSize:13,color:'#ED3135',fontWeight:'600'}}>Satış Noktalarında Alırsanız %2 İndirim</Text>
-                    <Icon2 name="arrowright" size={17} color={'#ED3135'}/>
-                  </TouchableOpacity>
-                }
+                user?.corporate_type !== 'Emlak Ofisi' &&
+                <TouchableOpacity style={{ padding: 5, flexDirection: 'row', alignItems: 'center', gap: 5, }} onPress={() => {
+                  navigation.navigate("Profile", {
+                    name: "",
+                    id: ProjectHomeData?.project?.user?.id,
+                  })
+                }}>
+                  <Text style={{ fontSize: 13, color: '#ED3135', fontWeight: '600' }}>Satış Noktalarında Alırsanız %2 İndirim</Text>
+                  <Icon2 name="arrowright" size={17} color={'#ED3135'} />
+                </TouchableOpacity>
+              }
               <View
                 style={{
                   paddingTop: 8,
@@ -1281,31 +1280,31 @@ export default function PostDetail() {
                     <Icon2 name="star" color={"gold"} />
                   </View>
                 )}
-                <View style={{paddingLeft:8,gap:5,paddingTop:8}}>
-                <Text
-                  style={{
-                   
-                    fontSize: 11,
-                    color: "#333",
-                    fontWeight: "700",
-                   
-                  }}
-                >
-                  {ProjectHomeData?.project?.city?.title
-                    ? `${ProjectHomeData?.project?.city?.title} / ${ProjectHomeData?.project?.county?.ilce_title}`
-                    : ""}
-                </Text>
-                <Text
-                  style={{
-                   
-                    fontSize: 16,
-                    color: "#333",
-                    fontWeight: "700",
-                   
-                  }}
-                >
-                  {ProjectHomeData?.projectHousingsList[HomeId]
-                    ? ProjectHomeData?.projectHousingsList[HomeId]["advertise_title[]"]?.toLocaleUpperCase('tr-TR') +
+                <View style={{ paddingLeft: 8, gap: 5, paddingTop: 8 }}>
+                  <Text
+                    style={{
+
+                      fontSize: 11,
+                      color: "#333",
+                      fontWeight: "700",
+
+                    }}
+                  >
+                    {ProjectHomeData?.project?.city?.title
+                      ? `${ProjectHomeData?.project?.city?.title} / ${ProjectHomeData?.project?.county?.ilce_title}`
+                      : ""}
+                  </Text>
+                  <Text
+                    style={{
+
+                      fontSize: 16,
+                      color: "#333",
+                      fontWeight: "700",
+
+                    }}
+                  >
+                    {ProjectHomeData?.projectHousingsList[HomeId]
+                      ? ProjectHomeData?.projectHousingsList[HomeId]["advertise_title[]"]?.toLocaleUpperCase('tr-TR') +
                       " " +
                       HomeId +
                       " No'lu " +
@@ -1313,423 +1312,423 @@ export default function PostDetail() {
                         .charAt(0)
                         .toUpperCase() + // İlk harfi büyütme
                       ProjectHomeData.project.step1_slug.slice(1) // Geri kalanı olduğu gibi bırakma
-                    : ""}
-                </Text>
+                      : ""}
+                  </Text>
                 </View>
-                { 
-          PriceStatus .map((item)=>(
-            <View style={{
-              display:
-              
-              user.type == 2
-                ? Array.isArray(item.OnlySee) &&
-                  item.OnlySee.includes(
-                    user.corporate_type
-                  ) &&
-                  item.offsale == offSaleStatus&&
-                  !ProjectHomeData.projectCartOrders[HomeId]
-                  ? "flex"
-                  : "none"
-                : item.isShowClient == 1 &&
-                  item.offsale == offSaleStatus&&
-                  !ProjectHomeData.projectCartOrders[HomeId]
-                ? "flex"
-                : "none",
-          
-            }}>
+                {
+                  PriceStatus.map((item) => (
+                    <View style={{
+                      display:
 
-                 
-            { !ProjectHomeData.projectCartOrders[HomeId] && !roomData['share_sale[]'] ? (
-                 
-               <View>
-                 {discountAmount ? (
-                   <View style={styles.discountContainer}>
-                     <Svg
-                       viewBox="0 0 24 24"
-                       width={18}
-                       height={18}
-                       stroke="#EA2B2E"
-                       strokeWidth={2}
-                       fill="#EA2B2E"
-                       strokeLinecap="round"
-                       strokeLinejoin="round"
-                       className="css-i6dzq1"
-                     >
-                       <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
-                       <Polyline points="17 18 23 18 23 12" />
-                     </Svg>
-                     <Text style={styles.originalPrice}>
-                       <Text style={styles.strikethrough}>
-                         {formatPrice(roomData["price[]"])} ₺
-                       </Text>
-                     </Text>
-                     <Text style={styles.discountedPrice}>
-                       {formatPrice(discountedPrice)} ₺
-                     </Text>
-                   </View>
-                 ) : (
-                   <Text style={styles.regularPrice}>
-                     {formatPrice(roomData["price[]"])} ₺
-                   </Text>
-                 )}
-                 {discountAmount > 0 && (
-                   <Text style={styles.discountText}>
-                     {formatPrice(discountAmount)} ₺ indirim
-                   </Text>
-                 )}
-               </View>
-             ) : (roomData['share_sale[]'] &&
-              roomData['share_sale[]'] !== "[]" &&
-                ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total !== roomData['number_of_shares[]']) ||
-               (roomData['share_sale[]'] && roomData['share_sale[]']!== "[]" && !ProjectHomeData.sumCartOrderQt[HomeId]) ? (
-               <View>
-                 <Text style={[styles.regularPrice, {}]}>
-                   { roomData['share_sale[]'] &&  roomData['share_sale[]'] !== "[]" && roomData['number_of_shares[]'] !== 0 && (
-                     <Text style={styles.shareSaleText}>1/{roomData['number_of_shares[]']}</Text>
-                   )}
-                   {" Pay Fiyatı - "}
-                   {roomData['share_sale[]'] && roomData['share_sale[]'] !== "[]" && roomData['number_of_shares[]'] !== 0
-                     ? formatPrice(roomData["price[]"] / roomData['number_of_shares[]'])
-                     : formatPrice(roomData["price[]"])}
-                   ₺
-                 </Text>
-               </View>
-             ) : (
-               <View style={{ paddingTop: 5, }}>
-                 <Text
-                   style={{ fontSize: 12, color: "#264ABB", fontWeight: "800" ,textAlign:'center'}}
-                 >
-                   {formatPrice(roomData["price[]"])}₺
-                 </Text>
-               </View>
-             )
-           }
-                 </View>
-             
-          ))
-           
-          
-          
-          }
+                        user.type == 2
+                          ? Array.isArray(item.OnlySee) &&
+                            item.OnlySee.includes(
+                              user.corporate_type
+                            ) &&
+                            item.offsale == offSaleStatus &&
+                            !ProjectHomeData.projectCartOrders[HomeId]
+                            ? "flex"
+                            : "none"
+                          : item.isShowClient == 1 &&
+                            item.offsale == offSaleStatus &&
+                            !ProjectHomeData.projectCartOrders[HomeId]
+                            ? "flex"
+                            : "none",
 
-              </View>
-                   
-              <View style={styles.priceAndButtons}>
-                <View style={[styles.btns,{
-                  justifyContent:(roomData["share_sale[]"] !== "[]" && offSaleStatus==1)? '':'center'
-                }]}>
-                {roomData["share_sale[]"] !== "[]" ? (
-                ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total == roomData["number_of_shares[]"] ? (
-                  <>
-                    <View
-                      style={{
-                        width: "50%",
-                      }}
-                    >
-                      <View style={styles.sold}>
-                        <Text style={styles.soldText}>Satıldı</Text>
-                      </View>
-                    </View>
+                    }}>
 
-                    <View
-                      style={{
-                        width: "50%",
-                        display:
-                          ( offSaleStatus== 1 &&
-                            roomData["share_sale[]"] !== "[]") ||
-                          (ProjectHomeData.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData.projectCartOrders[HomeId]?.is_show_user !== "on") ||
-                          ProjectHomeData?.project?.user?.id == user.id ||
-                          ProjectHomeData?.project?.user?.id == user.parent_id
-                            ? "none"
-                            : "flex",
-                      }}
-                    >
-                      {rightButtonsForPost.map((item, _i) => (
-                        <TouchableOpacity
-                          key={_i}
-                          style={[
-                            styles.payDetailBtn,
-                            {
-                              display:
-                                user.type == 2
-                                  ? Array.isArray(item.OnlySee) &&
-                                    item.OnlySee.includes(
-                                      user.corporate_type
-                                    ) &&
-                                    item.offsale == offSaleStatus
-                                    ? "flex"
-                                    : "none"
-                                  : item.isShowClient == 1 &&
-                                    item.offsale == offSaleStatus
-                                  ? "flex"
-                                  : "none",
-                            },
-                          ]}
-                          onPress={() => {
-                             RigthBtnFunctionsForkey(item.key);
-                          }}
-                        >
-                          <Text style={styles.payDetailText}>{item.title}</Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                  </>
-                ) : (
-                  <>
-                    <View
-                      style={{
-                        width: offSaleStatus == 1 ? "100%" : "50%",
-                      }}
-                    >
-                      { ProjectHomeData?.project?.user?.id == user.id ||
-                       ProjectHomeData?.project?.user?.id == user.parent_id ? (
-                        <View style={styles.priceContainer}>
-                          <TouchableOpacity style={styles.addBasket}>
-                            <Text style={styles.addBasketText}>
-                              İlanı Düzenle
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      ) : (
-                        leftButtonsForPost.map((item, _i) => (
-                          <TouchableOpacity
-                            onPress={() => {
-                               LeftBtnFunctionsForkey(item.key);
-                            }}
-                            style={[
-                              styles.addBasket,
-                              {
-                                backgroundColor: item.BackgroundColor,
-                                display:
-                                  user.type == 2
-                                    ? Array.isArray(item.OnlySee) &&
-                                      item.OnlySee.includes(
-                                        user.corporate_type
-                                      ) &&
-                                      item.offsale == offSaleStatus
-                                      ? "flex"
-                                      : "none"
-                                    : item.isShowClient == 1 &&
-                                      item.offsale == offSaleStatus
-                                    ? "flex"
-                                    : "none",
-                              },
-                            ]}
-                            key={_i}
-                          >
-                            <Text style={styles.addBasketText}>
-                              {item.title}
-                            </Text>
-                          </TouchableOpacity>
-                        ))
-                      )}
-                    </View>
 
-                    <View
-                      style={{
-                        width: "50%",
-                        display:
-                          (roomData["off_sale[]"] == 1 &&
-                            roomData["share_sale[]"] !== "[]") ||
-                          (ProjectHomeData.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData.projectCartOrders[HomeId].is_show_user !== "on") ||
-                          ProjectHomeData?.project?.user?.id == user.id ||
-                          ProjectHomeData?.project?.user?.id == user.parent_id
-                            ? "none"
-                            : "flex",
-                      }}
-                    >
-                      {rightButtonsForPost.map((item, _i) => (
-                        <TouchableOpacity
-                          key={_i}
-                          style={[
-                            styles.payDetailBtn,
-                            {
-                              display:
-                                user.type == 2
-                                  ? Array.isArray(item.OnlySee) &&
-                                    item.OnlySee.includes(
-                                      user.corporate_type
-                                    ) &&
-                                    item.offsale == offSaleStatus
-                                    ? "flex"
-                                    : "none"
-                                  : item.isShowClient == 1 &&
-                                    item.offsale == offSaleStatus
-                                  ? "flex"
-                                  : "none",
-                            },
-                          ]}
-                          onPress={() => {
-                             RigthBtnFunctionsForkey(item.key);
-                          }}
-                        >
-                          <Text style={styles.payDetailText}>{item.title}</Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                  </>
-                )
-              ) : (
-                <>
-                  <View
-                    style={{
-                      width:
-                        (roomData["off_sale[]"] == 1 &&
-                          roomData["share_sale[]"] !== "[]") ||
-                        (ProjectHomeData.projectCartOrders[HomeId] && ProjectHomeData.projectCartOrders[HomeId].is_show_user !== "on") ||
-                        (ProjectHomeData.projectCartOrders[HomeId] &&
-                          ProjectHomeData.projectCartOrders[HomeId].is_show_user == "on" &&
-                          ProjectHomeData.projectCartOrders[HomeId].user_id == user.id) ||
-                          ProjectHomeData?.project?.user?.id == user.id ||
-                          ProjectHomeData?.project?.user?.id == user.parent_id
-                          ? "100%"
-                          : "50%",
-                    }}
-                  >
-                    
-                    {!ProjectHomeData.projectCartOrders[HomeId] && ProjectHomeData.project.user.id == user.id ||
-                   !ProjectHomeData.projectCartOrders[HomeId] && ProjectHomeData.project.user.id == user.parent_id ? (
-                      <View style={styles.priceContainer}>
-                        <TouchableOpacity style={styles.addBasket}>
-                          <Text style={styles.addBasketText}>
-                            İlanı Düzenle
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    ) : ProjectHomeData.projectCartOrders[HomeId] ? (
-                      ProjectHomeData.projectCartOrders[HomeId]?.status == 1 ? (
-                        <View
-                          style={
-                            ProjectHomeData.projectCartOrders[HomeId].user_id == user.id
-                              ? styles.showCustomer
-                              : styles.sold
-                          }
-                        >
-                          {ProjectHomeData.projectCartOrders[HomeId].user_id == user.id ? (
-                            <Text style={styles.soldText}>
-                              Siz satın aldınız
-                            </Text>
+                      {!ProjectHomeData.projectCartOrders[HomeId] && !roomData['share_sale[]'] ? (
+
+                        <View>
+                          {discountAmount ? (
+                            <View style={styles.discountContainer}>
+                              <Svg
+                                viewBox="0 0 24 24"
+                                width={18}
+                                height={18}
+                                stroke="#EA2B2E"
+                                strokeWidth={2}
+                                fill="#EA2B2E"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="css-i6dzq1"
+                              >
+                                <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+                                <Polyline points="17 18 23 18 23 12" />
+                              </Svg>
+                              <Text style={styles.originalPrice}>
+                                <Text style={styles.strikethrough}>
+                                  {formatPrice(roomData["price[]"])} ₺
+                                </Text>
+                              </Text>
+                              <Text style={styles.discountedPrice}>
+                                {formatPrice(discountedPrice)} ₺
+                              </Text>
+                            </View>
                           ) : (
-                            <Text style={styles.soldText}>Satıldı</Text>
+                            <Text style={styles.regularPrice}>
+                              {formatPrice(roomData["price[]"])} ₺
+                            </Text>
+                          )}
+                          {discountAmount > 0 && (
+                            <Text style={styles.discountText}>
+                              {formatPrice(discountAmount)} ₺ indirim
+                            </Text>
                           )}
                         </View>
+                      ) : (roomData['share_sale[]'] &&
+                        roomData['share_sale[]'] !== "[]" &&
+                        ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total !== roomData['number_of_shares[]']) ||
+                        (roomData['share_sale[]'] && roomData['share_sale[]'] !== "[]" && !ProjectHomeData.sumCartOrderQt[HomeId]) ? (
+                        <View>
+                          <Text style={[styles.regularPrice, {}]}>
+                            {roomData['share_sale[]'] && roomData['share_sale[]'] !== "[]" && roomData['number_of_shares[]'] !== 0 && (
+                              <Text style={styles.shareSaleText}>1/{roomData['number_of_shares[]']}</Text>
+                            )}
+                            {" Pay Fiyatı - "}
+                            {roomData['share_sale[]'] && roomData['share_sale[]'] !== "[]" && roomData['number_of_shares[]'] !== 0
+                              ? formatPrice(roomData["price[]"] / roomData['number_of_shares[]'])
+                              : formatPrice(roomData["price[]"])}
+                            ₺
+                          </Text>
+                        </View>
                       ) : (
-                        <View style={styles.pending}>
-                          <Text style={styles.soldText}>Rezerve Edildi</Text>
+                        <View style={{ paddingTop: 5, }}>
+                          <Text
+                            style={{ fontSize: 12, color: "#264ABB", fontWeight: "800", textAlign: 'center' }}
+                          >
+                            {formatPrice(roomData["price[]"])}₺
+                          </Text>
                         </View>
                       )
-                    ) : (
-                      leftButtonsForPost.map((item, _i) => (
-                        <TouchableOpacity
-                          onPress={() => {
-                             LeftBtnFunctionsForkey(item.key);
-                          }}
-                          style={[
-                            styles.addBasket,
-                            {
-                              backgroundColor: item.BackgroundColor,
-                              display:
-                                user.type == 2
-                                  ? Array.isArray(item.OnlySee) &&
-                                    item.OnlySee.includes(
-                                      user.corporate_type
-                                    ) &&
-                                    item.offsale == offSaleStatus
-                                    ? "flex"
-                                    : "none"
-                                  : item.isShowClient == 1 &&
-                                    item.offsale == offSaleStatus
-                                  ? "flex"
-                                  : "none",
-                            },
-                          ]}
-                          key={_i}
-                        >
-                          <Text style={styles.addBasketText}>{item.title}</Text>
-                        </TouchableOpacity>
-                      ))
-                    )}
-                  </View>
+                      }
+                    </View>
 
-                  <View
-                    style={{
-                      width: "50%",
-                      display:
-                        (offSaleStatus == 1 &&
-                          roomData["share_sale[]"] !== "[]") ||
-                        (ProjectHomeData.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData.projectCartOrders[HomeId].is_show_user !== "on") ||
-                        ProjectHomeData?.project?.user?.id == user.id ||
-                        ProjectHomeData?.project?.user?.id == user.parent_id
-                          ? "none"
-                          : "flex",
-                    }}
-                  >
-                    {ProjectHomeData.projectCartOrders[HomeId] ? (
-                      (ProjectHomeData.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData.projectCartOrders[HomeId].is_show_user == "on"  ) ||
-                      (ProjectHomeData.projectCartOrders[HomeId] &&
-                        ProjectHomeData.projectCartOrders[HomeId].is_show_user == "on" &&
-                        ProjectHomeData.projectCartOrders[HomeId].user_id != user.id) 
-                       
-                      ? (
-                        <TouchableOpacity
-                          style={styles.showCustomer}
-                           onPress={() => setShowAlert(true)}
-                        >
-                          <Text style={styles.showCustomerText}>
-                            Komşumu Gör
-                          </Text>
-                        </TouchableOpacity>
-                      ) : (
-                        <></>
-                      )
-                    ) : (
-                      rightButtonsForPost.map((item, _i) => (
-                        <TouchableOpacity
-                          key={_i}
-                          style={[
-                            styles.payDetailBtn,
-                            {
-                              display:
-                                user.type == 2
-                                  ? Array.isArray(item.OnlySee) &&
-                                    item.OnlySee.includes(
-                                      user.corporate_type
-                                    ) &&
-                                    item.offsale == offSaleStatus
-                                    ? "flex"
-                                    : "none"
-                                  : item.isShowClient == 1 &&
-                                    item.offsale == offSaleStatus
-                                  ? "flex"
-                                  : "none",
-                            },
-                          ]}
-                          onPress={() => {
-                              RigthBtnFunctionsForkey(item.key)
+                  ))
+
+
+
+                }
+
+              </View>
+
+              <View style={styles.priceAndButtons}>
+                <View style={[styles.btns, {
+                  justifyContent: (roomData["share_sale[]"] !== "[]" && offSaleStatus == 1) ? '' : 'center'
+                }]}>
+                  {roomData["share_sale[]"] !== "[]" ? (
+                    ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total == roomData["number_of_shares[]"] ? (
+                      <>
+                        <View
+                          style={{
+                            width: "50%",
                           }}
                         >
-                          <Text style={styles.payDetailText}>{item.title}</Text>
-                        </TouchableOpacity>
-                      ))
-                    )}
-                  </View>
-                </>
-              )}
+                          <View style={styles.sold}>
+                            <Text style={styles.soldText}>Satıldı</Text>
+                          </View>
+                        </View>
 
-                  
+                        <View
+                          style={{
+                            width: "50%",
+                            display:
+                              (offSaleStatus == 1 &&
+                                roomData["share_sale[]"] !== "[]") ||
+                                (ProjectHomeData.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData.projectCartOrders[HomeId]?.is_show_user !== "on") ||
+                                ProjectHomeData?.project?.user?.id == user.id ||
+                                ProjectHomeData?.project?.user?.id == user.parent_id
+                                ? "none"
+                                : "flex",
+                          }}
+                        >
+                          {rightButtonsForPost.map((item, _i) => (
+                            <TouchableOpacity
+                              key={_i}
+                              style={[
+                                styles.payDetailBtn,
+                                {
+                                  display:
+                                    user.type == 2
+                                      ? Array.isArray(item.OnlySee) &&
+                                        item.OnlySee.includes(
+                                          user.corporate_type
+                                        ) &&
+                                        item.offsale == offSaleStatus
+                                        ? "flex"
+                                        : "none"
+                                      : item.isShowClient == 1 &&
+                                        item.offsale == offSaleStatus
+                                        ? "flex"
+                                        : "none",
+                                },
+                              ]}
+                              onPress={() => {
+                                RigthBtnFunctionsForkey(item.key);
+                              }}
+                            >
+                              <Text style={styles.payDetailText}>{item.title}</Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      </>
+                    ) : (
+                      <>
+                        <View
+                          style={{
+                            width: offSaleStatus == 1 ? "100%" : "50%",
+                          }}
+                        >
+                          {ProjectHomeData?.project?.user?.id == user.id ||
+                            ProjectHomeData?.project?.user?.id == user.parent_id ? (
+                            <View style={styles.priceContainer}>
+                              <TouchableOpacity style={styles.addBasket}>
+                                <Text style={styles.addBasketText}>
+                                  İlanı Düzenle
+                                </Text>
+                              </TouchableOpacity>
+                            </View>
+                          ) : (
+                            leftButtonsForPost.map((item, _i) => (
+                              <TouchableOpacity
+                                onPress={() => {
+                                  LeftBtnFunctionsForkey(item.key);
+                                }}
+                                style={[
+                                  styles.addBasket,
+                                  {
+                                    backgroundColor: item.BackgroundColor,
+                                    display:
+                                      user.type == 2
+                                        ? Array.isArray(item.OnlySee) &&
+                                          item.OnlySee.includes(
+                                            user.corporate_type
+                                          ) &&
+                                          item.offsale == offSaleStatus
+                                          ? "flex"
+                                          : "none"
+                                        : item.isShowClient == 1 &&
+                                          item.offsale == offSaleStatus
+                                          ? "flex"
+                                          : "none",
+                                  },
+                                ]}
+                                key={_i}
+                              >
+                                <Text style={styles.addBasketText}>
+                                  {item.title}
+                                </Text>
+                              </TouchableOpacity>
+                            ))
+                          )}
+                        </View>
+
+                        <View
+                          style={{
+                            width: "50%",
+                            display:
+                              (roomData["off_sale[]"] == 1 &&
+                                roomData["share_sale[]"] !== "[]") ||
+                                (ProjectHomeData.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData.projectCartOrders[HomeId].is_show_user !== "on") ||
+                                ProjectHomeData?.project?.user?.id == user.id ||
+                                ProjectHomeData?.project?.user?.id == user.parent_id
+                                ? "none"
+                                : "flex",
+                          }}
+                        >
+                          {rightButtonsForPost.map((item, _i) => (
+                            <TouchableOpacity
+                              key={_i}
+                              style={[
+                                styles.payDetailBtn,
+                                {
+                                  display:
+                                    user.type == 2
+                                      ? Array.isArray(item.OnlySee) &&
+                                        item.OnlySee.includes(
+                                          user.corporate_type
+                                        ) &&
+                                        item.offsale == offSaleStatus
+                                        ? "flex"
+                                        : "none"
+                                      : item.isShowClient == 1 &&
+                                        item.offsale == offSaleStatus
+                                        ? "flex"
+                                        : "none",
+                                },
+                              ]}
+                              onPress={() => {
+                                RigthBtnFunctionsForkey(item.key);
+                              }}
+                            >
+                              <Text style={styles.payDetailText}>{item.title}</Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      </>
+                    )
+                  ) : (
+                    <>
+                      <View
+                        style={{
+                          width:
+                            (roomData["off_sale[]"] == 1 &&
+                              roomData["share_sale[]"] !== "[]") ||
+                              (ProjectHomeData.projectCartOrders[HomeId] && ProjectHomeData.projectCartOrders[HomeId].is_show_user !== "on") ||
+                              (ProjectHomeData.projectCartOrders[HomeId] &&
+                                ProjectHomeData.projectCartOrders[HomeId].is_show_user == "on" &&
+                                ProjectHomeData.projectCartOrders[HomeId].user_id == user.id) ||
+                              ProjectHomeData?.project?.user?.id == user.id ||
+                              ProjectHomeData?.project?.user?.id == user.parent_id
+                              ? "100%"
+                              : "50%",
+                        }}
+                      >
+
+                        {!ProjectHomeData.projectCartOrders[HomeId] && ProjectHomeData.project.user.id == user.id ||
+                          !ProjectHomeData.projectCartOrders[HomeId] && ProjectHomeData.project.user.id == user.parent_id ? (
+                          <View style={styles.priceContainer}>
+                            <TouchableOpacity style={styles.addBasket}>
+                              <Text style={styles.addBasketText}>
+                                İlanı Düzenle
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        ) : ProjectHomeData.projectCartOrders[HomeId] ? (
+                          ProjectHomeData.projectCartOrders[HomeId]?.status == 1 ? (
+                            <View
+                              style={
+                                ProjectHomeData.projectCartOrders[HomeId].user_id == user.id
+                                  ? styles.showCustomer
+                                  : styles.sold
+                              }
+                            >
+                              {ProjectHomeData.projectCartOrders[HomeId].user_id == user.id ? (
+                                <Text style={styles.soldText}>
+                                  Siz satın aldınız
+                                </Text>
+                              ) : (
+                                <Text style={styles.soldText}>Satıldı</Text>
+                              )}
+                            </View>
+                          ) : (
+                            <View style={styles.pending}>
+                              <Text style={styles.soldText}>Rezerve Edildi</Text>
+                            </View>
+                          )
+                        ) : (
+                          leftButtonsForPost.map((item, _i) => (
+                            <TouchableOpacity
+                              onPress={() => {
+                                LeftBtnFunctionsForkey(item.key);
+                              }}
+                              style={[
+                                styles.addBasket,
+                                {
+                                  backgroundColor: item.BackgroundColor,
+                                  display:
+                                    user.type == 2
+                                      ? Array.isArray(item.OnlySee) &&
+                                        item.OnlySee.includes(
+                                          user.corporate_type
+                                        ) &&
+                                        item.offsale == offSaleStatus
+                                        ? "flex"
+                                        : "none"
+                                      : item.isShowClient == 1 &&
+                                        item.offsale == offSaleStatus
+                                        ? "flex"
+                                        : "none",
+                                },
+                              ]}
+                              key={_i}
+                            >
+                              <Text style={styles.addBasketText}>{item.title}</Text>
+                            </TouchableOpacity>
+                          ))
+                        )}
+                      </View>
+
+                      <View
+                        style={{
+                          width: "50%",
+                          display:
+                            (offSaleStatus == 1 &&
+                              roomData["share_sale[]"] !== "[]") ||
+                              (ProjectHomeData.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData.projectCartOrders[HomeId].is_show_user !== "on") ||
+                              ProjectHomeData?.project?.user?.id == user.id ||
+                              ProjectHomeData?.project?.user?.id == user.parent_id
+                              ? "none"
+                              : "flex",
+                        }}
+                      >
+                        {ProjectHomeData.projectCartOrders[HomeId] ? (
+                          (ProjectHomeData.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData.projectCartOrders[HomeId].is_show_user == "on") ||
+                            (ProjectHomeData.projectCartOrders[HomeId] &&
+                              ProjectHomeData.projectCartOrders[HomeId].is_show_user == "on" &&
+                              ProjectHomeData.projectCartOrders[HomeId].user_id != user.id)
+
+                            ? (
+                              <TouchableOpacity
+                                style={styles.showCustomer}
+                                onPress={() => setShowAlert(true)}
+                              >
+                                <Text style={styles.showCustomerText}>
+                                  Komşumu Gör
+                                </Text>
+                              </TouchableOpacity>
+                            ) : (
+                              <></>
+                            )
+                        ) : (
+                          rightButtonsForPost.map((item, _i) => (
+                            <TouchableOpacity
+                              key={_i}
+                              style={[
+                                styles.payDetailBtn,
+                                {
+                                  display:
+                                    user.type == 2
+                                      ? Array.isArray(item.OnlySee) &&
+                                        item.OnlySee.includes(
+                                          user.corporate_type
+                                        ) &&
+                                        item.offsale == offSaleStatus
+                                        ? "flex"
+                                        : "none"
+                                      : item.isShowClient == 1 &&
+                                        item.offsale == offSaleStatus
+                                        ? "flex"
+                                        : "none",
+                                },
+                              ]}
+                              onPress={() => {
+                                RigthBtnFunctionsForkey(item.key)
+                              }}
+                            >
+                              <Text style={styles.payDetailText}>{item.title}</Text>
+                            </TouchableOpacity>
+                          ))
+                        )}
+                      </View>
+                    </>
+                  )}
+
+
                 </View>
               </View>
               {
-        
-        (roomData['share_sale[]'] !=='[]'  && offSaleStatus!=1  ) &&
 
-        <ShareProgressBar toplamHisse={roomData['number_of_shares[]']} satilanHisse={ProjectHomeData.projectCartOrders[HomeId]? ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total :0 } IsShowText={ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total == roomData['number_of_shares[]']}/>
+                (roomData['share_sale[]'] !== '[]' && offSaleStatus != 1) &&
 
-      
-        
-      }
-            
-             
+                <ShareProgressBar toplamHisse={roomData['number_of_shares[]']} satilanHisse={ProjectHomeData.projectCartOrders[HomeId] ? ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total : 0} IsShowText={ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total == roomData['number_of_shares[]']} />
+
+
+
+              }
+
+
               <View>
                 {roomData &&
                   roomData["projected_earnings[]"] &&
@@ -1767,7 +1766,7 @@ export default function PostDetail() {
               {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
                 <TouchableOpacity
                   onPress={() => {
-                   
+
                     getRoomID(HomeId);
                     GetUserInfo();
                     setColectionSheet(true);
@@ -1790,43 +1789,43 @@ export default function PostDetail() {
                 </TouchableOpacity>
               )}
 
-              <View style={{padding:8}}>
-              <SliderMenuPostDetails
+              <View style={{ padding: 8 }}>
+                <SliderMenuPostDetails
                   tab={tabs}
                   setTab={setTabs}
                   changeTab={changeTab}
                 />
               </View>
-               
-            
-              <View style={{paddingLeft:5,paddingRight:5,paddingBottom:5}}>
-                  <TouchableOpacity style={{borderWidth:1,borderColor:'#EA2B2E',padding:5,borderRadius:6,backgroundColor:'white'}} onPress={()=>{
-                    setSeeAlertModal(true)
-                  }}>
-                    <Text style={{textAlign:'center',fontSize:13,color:'#EA2B2E',fontWeight:'600'}}>Bilgilendirme!</Text>
-                  </TouchableOpacity>
-                  </View>
-                  
+
+
+              <View style={{ paddingLeft: 5, paddingRight: 5, paddingBottom: 5 }}>
+                <TouchableOpacity style={{ borderWidth: 1, borderColor: '#EA2B2E', padding: 5, borderRadius: 6, backgroundColor: 'white' }} onPress={() => {
+                  setSeeAlertModal(true)
+                }}>
+                  <Text style={{ textAlign: 'center', fontSize: 13, color: '#EA2B2E', fontWeight: '600' }}>Bilgilendirme!</Text>
+                </TouchableOpacity>
+              </View>
+
               {tabs == 0 && (
                 <OtherHomeInProject
-                 GetID={getRoomID}
-                    GetIdForCart={GetIdForCart}
-                    openCollection={openCollection}
-                    itemCount={itemCount}
-                    data={ProjectHomeData}
-                    getLastItemCount={getLastItemCount}
-                    setSelectedTab={setSelectedTab}
-                    selectedTab={selectedTab}
-                    openModal={openModal}
-                    isLoading={isLoading}
-                    getBlockItems={getBlockItems}
-                    OpenFormModal={OpenFormModal}
-                    selectedBlock={selectedBlockx}
-                    setSelectedBlock={setSelectedBlockx}
-                    setLastBlockItemCount={setLastBlockItemCount}
-                    lastBlockItemCount={lastBlockItemCount}
-                    setPage={setPage}
-                 
+                  GetID={getRoomID}
+                  GetIdForCart={GetIdForCart}
+                  openCollection={openCollection}
+                  itemCount={itemCount}
+                  data={ProjectHomeData}
+                  getLastItemCount={getLastItemCount}
+                  setSelectedTab={setSelectedTab}
+                  selectedTab={selectedTab}
+                  openModal={openModal}
+                  isLoading={isLoading}
+                  getBlockItems={getBlockItems}
+                  OpenFormModal={OpenFormModal}
+                  selectedBlock={selectedBlockx}
+                  setSelectedBlock={setSelectedBlockx}
+                  setLastBlockItemCount={setLastBlockItemCount}
+                  lastBlockItemCount={lastBlockItemCount}
+                  setPage={setPage}
+
                 />
               )}
               {tabs == 1 && <PostCaption data={ProjectHomeData} />}
@@ -1844,9 +1843,9 @@ export default function PostDetail() {
 
               <View style={{ padding: 10 }}></View>
 
-              <PaymentPlanModal visible={paymentModalVisible} title={ProjectHomeData?.project?.project_title} onClose={onClose} data={roomData ?? roomData } RoomOrder={HomeId}/>
+              <PaymentPlanModal visible={paymentModalVisible} title={ProjectHomeData?.project?.project_title} onClose={onClose} data={roomData ?? roomData} RoomOrder={HomeId} />
 
-              
+
               <Modal
                 isVisible={showCoverImageModal}
                 onBackdropPress={() => setCoverImageModal(false)}
@@ -1937,7 +1936,7 @@ export default function PostDetail() {
                           }}
                         >
                           {user.type == 2 &&
-                          user.corporate_type == "Emlak Ofisi"
+                            user.corporate_type == "Emlak Ofisi"
                             ? "Portföye Ekle"
                             : "Koleksiyona Ekle"}
                         </Text>
@@ -1949,7 +1948,7 @@ export default function PostDetail() {
                           }}
                         >
                           {user.type == 2 &&
-                          user.corporate_type == "Emlak Ofisi"
+                            user.corporate_type == "Emlak Ofisi"
                             ? " Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin"
                             : "Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin"}
                         </Text>
@@ -1994,7 +1993,7 @@ export default function PostDetail() {
                                       }}
                                     >
                                       {user.type == 2 &&
-                                      user.corporate_type == "Emlak Ofisi"
+                                        user.corporate_type == "Emlak Ofisi"
                                         ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
                                         : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                     </Text>
@@ -2025,7 +2024,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                    user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                   </Text>
@@ -2076,7 +2075,7 @@ export default function PostDetail() {
                                       }}
                                     >
                                       {user.type == 2 &&
-                                      user.corporate_type == "Emlak Ofisi"
+                                        user.corporate_type == "Emlak Ofisi"
                                         ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
                                         : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                     </Text>
@@ -2191,7 +2190,7 @@ export default function PostDetail() {
                                   }}
                                 >
                                   {user.type == 2 &&
-                                  user.corporate_type == "Emlak Ofisi"
+                                    user.corporate_type == "Emlak Ofisi"
                                     ? "Portföyünüze konut ekleyebilmeniz giriş yapmanız gerekmektedir"
                                     : "Koleksiyonunuza konut ekleyebilmeniz giriş yapmanız gerekmektedir"}
                                 </Text>
@@ -2286,7 +2285,7 @@ export default function PostDetail() {
                           }}
                         >
                           {user.type == 2 &&
-                          user.corporate_type == "Emlak Ofisi"
+                            user.corporate_type == "Emlak Ofisi"
                             ? "Portföy Oluştur"
                             : "Koleksiyon Oluştur"}
                         </Text>
@@ -2342,7 +2341,7 @@ export default function PostDetail() {
                           }}
                         >
                           {user.type == 2 &&
-                          user.corporate_type == "Emlak Ofisi"
+                            user.corporate_type == "Emlak Ofisi"
                             ? "Portföy Oluştur"
                             : "Koleksiyon Oluştur"}
                         </Text>
@@ -2353,7 +2352,7 @@ export default function PostDetail() {
               </View>
             </Modal>
 
-          
+
             <Modal
               isVisible={IsOpenSheet}
               onBackdropPress={() => setIsOpenSheet(false)}
@@ -2539,8 +2538,8 @@ export default function PostDetail() {
                 setModalVisible(false);
               }}
               onConfirmPressed={() => {
-             addToCard()
-               setModalForAddToCart(false)
+                addToCard()
+                setModalForAddToCart(false)
                 setModalVisible(false);
               }}
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -2578,34 +2577,34 @@ export default function PostDetail() {
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
               cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
             />
-             <AwesomeAlert
-        show={PaymaentAlert}
-        showProgress={false}
-        titleStyle={{
-          color: "#333",
-          fontSize: 13,
-          fontWeight: "700",
-          textAlign: "center",
-          margin: 5,
-        }}
-        title={"Satıldı"}
-        messageStyle={{ textAlign: "center" }}
-        message={`Bu İlan İçin Ödeme Detayı Bilgisi Gösterilemiyor`}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={false}
-        showConfirmButton={true}
-        
-        confirmText="Tamam"
-        
-        confirmButtonColor="#1d8027"
-      
-        onConfirmPressed={() => {
-         setPaymaentAlert(false)
-        }}
-        confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-       
-      />
+            <AwesomeAlert
+              show={PaymaentAlert}
+              showProgress={false}
+              titleStyle={{
+                color: "#333",
+                fontSize: 13,
+                fontWeight: "700",
+                textAlign: "center",
+                margin: 5,
+              }}
+              title={"Satıldı"}
+              messageStyle={{ textAlign: "center" }}
+              message={`Bu İlan İçin Ödeme Detayı Bilgisi Gösterilemiyor`}
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={false}
+              showCancelButton={false}
+              showConfirmButton={true}
+
+              confirmText="Tamam"
+
+              confirmButtonColor="#1d8027"
+
+              onConfirmPressed={() => {
+                setPaymaentAlert(false)
+              }}
+              confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+
+            />
             <AwesomeAlert
               show={AlertForFavorite}
               showProgress={false}
@@ -2710,8 +2709,8 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "transparent",
     position: "absolute",
-      left:0,
-    
+    left: 0,
+
     display: "flex",
     flexDirection: "column",
     justifyContent: "start",
@@ -2911,7 +2910,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     backgroundColor: "#EA2C2E",
-    borderRadius:5
+    borderRadius: 5
   },
   offSaleText: {
     color: "white",
@@ -2925,7 +2924,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     backgroundColor: "#EA2C2E",
-    borderRadius:5
+    borderRadius: 5
   },
   soldText: {
     color: "white",
@@ -2938,7 +2937,7 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "center",
     backgroundColor: "#000000",
-    borderRadius:5
+    borderRadius: 5
   },
   payDetailText: {
     fontWeight: "500",
@@ -2963,10 +2962,10 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent:'center',
+    justifyContent: 'center',
     width: "100%",
-    padding:6,
-    gap:3  
+    padding: 6,
+    gap: 3
   },
   addBasket: {
     paddingLeft: 20,
@@ -2975,7 +2974,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     backgroundColor: "#264ABB",
-    borderRadius:5
+    borderRadius: 5
   },
   addBasketText: {
     color: "white",
@@ -2989,7 +2988,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     backgroundColor: "green",
-    borderRadius:5
+    borderRadius: 5
   },
   showCustomerText: {
     color: "white",
@@ -3002,7 +3001,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     backgroundColor: "orange",
-    borderRadius:5
+    borderRadius: 5
   },
   pendingText: {
     color: "white",
@@ -3018,8 +3017,8 @@ const styles = StyleSheet.create({
   },
   commissionBadge: {
     position: "absolute",
-  left:0,
- bottom:50,
+    left: 0,
+    bottom: 50,
     width: 120,
     height: 30,
     borderBottomRightRadius: 15,
