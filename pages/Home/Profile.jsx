@@ -37,6 +37,7 @@ import Filter from "../../assets/filter.png";
 import ProjectBottomSheetFilter from "../../components/ProjectBottomSheetFilter";
 import EstateBottomSheetFilter from "../../components/EstateBottomSheetFilter";
 
+const ApiUrl = "https://private.emlaksepette.com/";
 export default function Profile() {
   const route = useRoute();
   const [Housings, setHousings] = useState([]);
@@ -45,13 +46,6 @@ export default function Profile() {
   const { width, height, fontScale } = Dimensions.get("window");
   const translateY = useRef(new Animated.Value(400)).current;
   const navigation = useNavigation();
-  const openSheet = () => {
-    Animated.timing(translateY, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
   const [nameId, setNameId] = useState("");
   const [phoneId, setPhoneId] = useState("");
   const [emailId, setEmailId] = useState("");
@@ -63,8 +57,48 @@ export default function Profile() {
   const [housingRecords, sethousingRecords] = useState([]);
   const [openProjectFilter, setOpenProjectFilter] = useState(false);
   const [openEstateFilter, setOpenEstateFilter] = useState(false);
-
+  const [loading, setloading] = useState(false);
+  const [storeData, setstoreData] = useState([]);
+  const [loadingShopping, setloadingShopping] = useState(false);
+  const [projectsData, setProjectsData] = useState([]);
+  const [checked, setChecked] = useState(false);
+  const toggleCheckbox = () => setChecked(!checked);
+  const [formVisible, setFormVisible] = useState("false");
+  const [featuredProjects, setFeaturedProjects] = useState([]);
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
+  // Scroll width değerini al
+  const scrollViewRef = useRef(null); // ScrollView için ref
+  const [tabWidth, setTabWidth] = useState(0);
+  const [items, setItems] = useState([
+    {
+      text: "Tanıtım",
+      isShow: "All",
+    },
+    {
+      text: "Emlak İlanları",
+      isShow: "All",
+    },
+    {
+      text: "Proje İlanları",
+      isShow: "All",
+    },
+    {
+      text: "Mağaza Profili",
+      isShow: "All",
+    },
+    {
+      text: "Satış Noktalarımız",
+      isShow: "All",
+    },
+    {
+      text: "Değerlendirmeler",
+      isShow: "All",
+    },
+    {
+      text: "Ekip",
+    },
+  ]);
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -147,18 +181,6 @@ export default function Profile() {
     }
   };
 
-  const closeSheet = () => {
-    Animated.timing(translateY, {
-      toValue: 400,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
-  const [loading, setloading] = useState(false);
-  const [storeData, setstoreData] = useState([]);
-  const [loadingShopping, setloadingShopping] = useState(false);
-  const [projectsData, setProjectsData] = useState([]);
-
   const fetchData = async () => {
     try {
       setloadingShopping(true);
@@ -182,32 +204,9 @@ export default function Profile() {
     fetchData();
   }, [id]);
 
-  console.debug("store data =============>>>>>>", projectsData);
-  // console.log(id);
-
-  // console.debug("store data =============>>>>>>", projectsData);
-
-  const handleSearch = (text) => {
-    setSearchText(text);
-    ("");
-    const filteredData = text
-      ? Housings.filter(
-          (item) =>
-            item.title.toLowerCase().includes(text.toLowerCase()) ||
-            item.prefixedID.includes(text) || // prefixedID'yi kontrol et
-            item.id.toString().includes(text) // id'yi kontrol et
-        )
-      : Housings;
-
-    sethousingRecords(filteredData);
-  };
-  const ApiUrl = "https://private.emlaksepette.com/";
   const handleOpenPhone = () => {
     Linking.openURL(`tel:${storeData.data.phone}`);
   };
-  const [formVisible, setFormVisible] = useState("false");
-
-  const [featuredProjects, setFeaturedProjects] = useState([]);
 
   const fetchFeaturedProjects = async () => {
     try {
@@ -221,21 +220,6 @@ export default function Profile() {
     fetchFeaturedProjects();
   }, []);
 
-  const [checked, setChecked] = useState(false);
-  const toggleCheckbox = () => setChecked(!checked);
-
-  const SkeletonBox = () => (
-    <Animated.View
-      style={{
-        width: "40%",
-        height: 40,
-        backgroundColor: "#e0e0e0",
-        borderRadius: 5,
-        margin: 5,
-        opacity: 0.5, // Skeleton efektini verecek opaklık değeri
-      }}
-    />
-  );
   const onShare = async () => {
     try {
       const result = await Share.share({
@@ -255,40 +239,38 @@ export default function Profile() {
       alert(error.message);
     }
   };
+  const [filtered, setfiltered] = useState([]);
+  const onFilterChange = async (filter) => {
+    const uri = `http://192.168.18.31:8000/api/get_institutional_projects_by_housing_type/${id}`;
 
-  // Scroll width değerini al
-  const screenWidth = Dimensions.get("window").width;
-  const scrollViewRef = useRef(null); // ScrollView için ref
-  const [tabWidth, setTabWidth] = useState(0);
-  const [items, setItems] = useState([
-    {
-      text: "Tanıtım",
-      isShow: "All",
-    },
-    {
-      text: "Emlak İlanları",
-      isShow: "All",
-    },
-    {
-      text: "Proje İlanları",
-      isShow: "All",
-    },
-    {
-      text: "Mağaza Profili",
-      isShow: "All",
-    },
-    {
-      text: "Satış Noktalarımız",
-      isShow: "All",
-    },
-    {
-      text: "Değerlendirmeler",
-      isShow: "All",
-    },
-    {
-      text: "Ekip",
-    },
-  ]);
+    console.debug("Filter----------:", filter);
+    const params = {
+      housing_type: filter,
+      skip: 0,
+      take: 10,
+    };
+
+    try {
+      const response = await axios.get(uri, {
+        headers: { Authorization: `Bearer ${user.access_token}` },
+        params: params,
+      });
+
+      // console.log("response data>>> ", response.data);
+      // Burada güncellenmiş veriyi featuredProjects'a atayın
+      // console.debug("Response Data laaallalalalal: ", response.data);
+      setfiltered(response.data);
+      setFeaturedProjects(response.data); // Veriyi burada ayarlayın
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  // useEffect(() => {
+  //   if (housingTypeProject) {
+  //     onFilterChange();
+  //   }
+  // }, [housingTypeProject]);
 
   return (
     <>
@@ -303,6 +285,7 @@ export default function Profile() {
               <ProjectBottomSheetFilter
                 isVisible={openProjectFilter}
                 setIsVisible={setOpenProjectFilter}
+                onFilterChange={onFilterChange} // Callback fonksiyonunu geçir
               />
               <EstateBottomSheetFilter
                 isVisible={openEstateFilter}
@@ -460,7 +443,11 @@ export default function Profile() {
             <View style={{ flex: 1, paddingBottom: height * 0.1 }}>
               {tab === 0 && <Introduction id={id} setTab={settab} />}
               {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
-              {tab === 2 && <ProjectAdverts data={projectsData} />}
+              {tab === 2 && (
+                <ProjectAdverts
+                  data={filtered.length > 0 ? filtered : featuredProjects}
+                />
+              )}
               {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
               {tab === 4 &&
                 (storeData?.data?.corporate_type !== "Emlak Ofisi" &&

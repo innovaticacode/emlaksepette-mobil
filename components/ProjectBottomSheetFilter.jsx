@@ -6,23 +6,42 @@ import { CheckBox } from "@rneui/themed";
 const { width, height } = Dimensions.get("screen");
 
 const ProjectBottomSheetFilter = (props) => {
-  const { isVisible, setIsVisible } = props;
+  const { isVisible, setIsVisible, onFilterChange } = props;
   const actionSheetRef = useRef(null);
 
   const [checkboxes, setCheckboxes] = useState([
-    { label: "Tümü", checked: true, count: 23 },
-    { label: "Devam Eden Projeler", checked: false, count: 9 },
-    { label: "Tamamlanan Projeler", checked: false, count: 5 },
-    { label: "Topraktan Projeler", checked: false, count: 9 },
+    { label: "Tümü", checked: true, count: 23, slug: "tum-projeler" },
+    {
+      label: "Devam Eden Projeler",
+      checked: false,
+      count: 9,
+      slug: "devam-eden-projeler",
+    },
+    {
+      label: "Tamamlanan Projeler",
+      checked: false,
+      count: 5,
+      slug: "tamamlanan-projeler",
+    },
+    {
+      label: "Topraktan Projeler",
+      checked: false,
+      count: 9,
+      slug: "topraktan-projeler",
+    },
   ]);
 
   // only one checkbox can be selected at a time
   const handleCheckboxChange = (index) => {
     const newCheckboxes = checkboxes.map((checkbox, i) => ({
       ...checkbox,
-      checked: i === index, // only one checkbox can be selected others will be false
+      checked: i === index, // only one checkbox can be selected, others will be false
     }));
     setCheckboxes(newCheckboxes);
+
+    // Seçilen checkbox değerini üst bileşene ilet
+    const selectedHousingType = newCheckboxes[index].slug;
+    onFilterChange(selectedHousingType); // Ana bileşene filtreyi gönder
   };
 
   useEffect(() => {
@@ -48,11 +67,7 @@ const ProjectBottomSheetFilter = (props) => {
       defaultOverlayOpacity={0.3}
       animated={true}
     >
-      <View
-        style={{
-          padding: 16,
-        }}
-      >
+      <View style={{ padding: 16 }}>
         <View
           style={{
             justifyContent: "center",

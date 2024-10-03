@@ -19,6 +19,7 @@ export default function ProjectAdverts({ data }) {
     try {
       setFeaturedProjects(data);
       setloadingPrjoects(true);
+      console.log("---------------", data);
     } catch (error) {
       console.log(error);
     }
@@ -40,7 +41,7 @@ export default function ProjectAdverts({ data }) {
               key={index}
               project={item}
               caption={item.project_title}
-              ımage={`${ApiUrl}/${item.image.replace("public/", "storage/")}`}
+              ımage={`${ApiUrl}/${item?.image?.replace("public/", "storage/")}`}
               location={item?.city?.title}
               city={item?.county?.ilce_title}
               ProjectNo={item.id}
@@ -59,6 +60,7 @@ export default function ProjectAdverts({ data }) {
           <Text>Proje bulunamadı.</Text>
         </View>
       )}
+      {/* {data.map && data.map((item, index) => <Text>{item.project_title}</Text>)} */}
     </View>
   );
 }
