@@ -819,9 +819,8 @@ export default function Posts({
                           : "50%",
                     }}
                   >
-                    
-                    {!sold && project.user.id == user.id ||
-                   !sold && project.user.id == user.parent_id ? (
+                    {(!sold && project.user.id == user.id) ||
+                    (!sold && project.user.id == user.parent_id) ? (
                       <View style={styles.priceContainer}>
                         <TouchableOpacity style={styles.addBasket}>
                           <Text style={styles.addBasketText}>
@@ -965,7 +964,8 @@ export default function Posts({
                 showConfirmButton={true}
                 cancelText="Hayır"
                 confirmText="Evet"
-                confirmButtonColor="#EA2A28"
+                confirmButtonColor="#008000"
+                cancelButtonColor="#EA2A28"
                 onCancelPressed={closeAlert}
                 onConfirmPressed={handleYes}
                 contentContainerStyle={{
