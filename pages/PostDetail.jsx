@@ -64,10 +64,10 @@ import FloorPlan from "../components/FloorPlan";
 import { Svg } from "react-native-svg";
 import { Polyline } from "react-native-maps";
 import PaymentItem from "../components/PaymentItem";
-import DrawerMenu from "../components/DrawerMenu";
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../components/CommentForProject";
 import { leftButtonsForPost } from "./helper";
+import { DrawerMenu } from "../components";
 
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
@@ -87,10 +87,7 @@ export default function PostDetail() {
   const route = useRoute();
   const [loading, setLoading] = useState(false);
 
-  const {
-    HomeId,
-    projectId,
-  } = route.params;
+  const { HomeId, projectId } = route.params;
   console.log(HomeId);
   useEffect(() => {
     getValueFor("user", setUser);
@@ -1063,7 +1060,7 @@ export default function PostDetail() {
 
               <View style={styles.priceAndButtons}>
                 <View style={styles.btns}>
-                {/* <View
+                  {/* <View
                 style={{
                   width:
                     (offSaleStatus == 1 && roomData["share_sale[]"] !== "[]") ||
@@ -1136,7 +1133,6 @@ export default function PostDetail() {
               </View> */}
 
                   <View style={{ width: "50%" }}>
-
                     {/* {roomData && ["off_sale[]"] &&
                       roomData["off_sale[]"] !== "[]" && (
                         <TouchableOpacity
@@ -2470,7 +2466,9 @@ export default function PostDetail() {
                 textAlign: "center",
                 margin: 5,
               }}
-              title={"Sepetinize ilan ekleyebilmek için giriş yapmanız gerekiyor."}
+              title={
+                "Sepetinize ilan ekleyebilmek için giriş yapmanız gerekiyor."
+              }
               messageStyle={{ textAlign: "center" }}
               closeOnTouchOutside={true}
               closeOnHardwareBackPress={false}
@@ -2587,7 +2585,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
 
     flex: 1,
-    borderTopLeftRadius: 10,
+    // borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     width: 320,
   },
