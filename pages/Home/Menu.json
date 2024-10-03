@@ -63,7 +63,7 @@
     "id": "shopping-bag",
     "label": "Kaporam Güvende",
     "icon": "activity",
-    "text": "Rezervasyon Geçimişim",
+    "text": "Rezervasyon Geçmişim",
     "key": "Reservations",
     "url": "#nv-shopping",
     "activePath": ["/hesabim/kiraladiklarim", "/hesabim/reservations"],
@@ -77,7 +77,7 @@
       {
         "text": "Kiraladıklarım",
         "key": "MyReservations",
-        "url": "Rent",
+        "url": "RentByMe",
         "activePath": "/hesabim/kiraladiklarim"
       }
     ]

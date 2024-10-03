@@ -50,7 +50,7 @@ export default function OrderDetails() {
       try {
         if (user?.access_token) {
           const response = await axios.get(
-            `https://private.emlaksepette.com/api/institutional/order_detail/${OrderId}`,
+            `http://192.168.18.31:8000/api/institutional/order_detail/${OrderId}`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -317,7 +317,7 @@ export default function OrderDetails() {
                   İlan No:{" "}
                 </Text>
                 <Text style={{ fontSize: 13, color: "green" }}>
-                  #{1000000 + id + '-' + parsedData?.item?.housing}
+                  #{1000000 + id + "-" + parsedData?.item?.housing}
                 </Text>
               </View>
               <View
@@ -394,7 +394,6 @@ export default function OrderDetails() {
               </TouchableOpacity>
             </View>
 
-
             <View
               style={{
                 display: "flex",
@@ -411,7 +410,6 @@ export default function OrderDetails() {
                   {housing?.county?.title}
                 </Text>
               </View>
-
             </View>
             <View style={style.OrderPost}>
               <View style={style.Image}>
@@ -699,7 +697,7 @@ export default function OrderDetails() {
                     padding: 13,
                     borderRadius: 5,
                   }}
-                  onPress={() => { }}
+                  onPress={() => {}}
                 >
                   <Text
                     style={{
