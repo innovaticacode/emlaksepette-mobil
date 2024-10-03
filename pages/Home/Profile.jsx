@@ -157,30 +157,35 @@ export default function Profile() {
   const [loading, setloading] = useState(false);
   const [storeData, setstoreData] = useState([]);
   const [loadingShopping, setloadingShopping] = useState(false);
+  const [projectsData, setProjectsData] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      setloadingShopping(true);
+      const res = await apiRequestGet("brand/" + id);
+      const housingsWithPrefixedID = res.data.data.housings.map((housing) => ({
+        ...housing,
+        prefixedID: `20000${housing.id}`,
+      }));
+      setstoreData(res.data);
+      setProjectsData(res?.data?.data?.projects);
+      setHousings(housingsWithPrefixedID);
+      setTeamm(res.data.data.child);
+      sethousingRecords(housingsWithPrefixedID); // Housings dizisini başlangıçta kopyala
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setloadingShopping(false);
+    }
+  };
   useEffect(() => {
-    // Örnek API isteği
-    setloadingShopping(true);
-    apiRequestGet("brand/" + id)
-      .then((res) => {
-        const housingsWithPrefixedID = res.data.data.housings.map(
-          (housing) => ({
-            ...housing,
-            prefixedID: `20000${housing.id}`,
-          })
-        );
-        setstoreData(res.data);
-        setHousings(housingsWithPrefixedID);
-        setTeamm(res.data.data.child);
-        sethousingRecords(housingsWithPrefixedID); // Housings dizisini başlangıçta kopyala
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      })
-      .finally(() => {
-        setloadingShopping(false);
-      });
+    fetchData();
   }, [id]);
+
+  console.debug("store data =============>>>>>>", projectsData);
   // console.log(id);
+
+  // console.debug("store data =============>>>>>>", projectsData);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -455,7 +460,7 @@ export default function Profile() {
             <View style={{ flex: 1, paddingBottom: height * 0.1 }}>
               {tab === 0 && <Introduction id={id} setTab={settab} />}
               {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
-              {tab === 2 && <ProjectAdverts data={storeData} />}
+              {tab === 2 && <ProjectAdverts data={projectsData} />}
               {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
               {tab === 4 &&
                 (storeData?.data?.corporate_type !== "Emlak Ofisi" &&
@@ -481,6 +486,7 @@ export default function Profile() {
                 paddingBottom: Platform.OS === "ios" ? 24 : 14,
               }}
             >
+              {/* filter button */}
               {(tab == 1 || tab == 2) && (
                 <TouchableOpacity
                   onPress={() =>

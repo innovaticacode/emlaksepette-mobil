@@ -13,12 +13,11 @@ import axios from "axios";
 
 export default function ProjectAdverts({ data }) {
   const [loadingPrjoects, setloadingPrjoects] = useState(false);
-
   const [featuredProjects, setFeaturedProjects] = useState([]);
 
   const fetchFeaturedProjects = async () => {
     try {
-      setFeaturedProjects(data.data.projects);
+      setFeaturedProjects(data);
       setloadingPrjoects(true);
     } catch (error) {
       console.log(error);
@@ -50,7 +49,7 @@ export default function ProjectAdverts({ data }) {
               //   .replace(/<\/?[^>]+(>|$)/g, "")
               //   .replace(/&nbsp;/g, " ")}
 
-              ProfilImage={`${ApiUrl}/storage/profile_images/${data.data.profile_image}`}
+              ProfilImage={`${ApiUrl}/storage/profile_images/${data.profile_image}`}
               loading={loadingPrjoects}
             />
           )}
