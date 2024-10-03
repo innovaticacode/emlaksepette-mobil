@@ -53,6 +53,7 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import TextAlertModal from "../../../components/TextAlertModal";
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
@@ -635,10 +636,10 @@ export default function PostDetail() {
     }
   };
 
-  console.log(data?.housing?.user?.mobile_phone + "qeqw eqw eqw ewq");
+  
 
   // Handle page change in PagerView
-
+  const [SeeAlertModal, setSeeAlertModal] = useState(false)
   return (
     <>
       <AlertNotificationRoot>
@@ -669,9 +670,9 @@ export default function PostDetail() {
             <View
               style={{
                 width: "100%",
-                backgroundColor: "white",
+           
                 position: "absolute",
-                bottom: 0,
+                bottom: 13,
                 padding: 10,
                 zIndex: 1,
               }}
@@ -686,34 +687,16 @@ export default function PostDetail() {
                 {data?.housing?.user?.id == user?.id ? (
                   <></>
                 ) : (
-                  <TouchableOpacity
-                    onPress={handleOpenPhone}
-                    style={{
-                      backgroundColor: "#ffffff",
-                      width: "45%",
-                      padding: 10,
-                      borderRadius: 5,
-                      borderWidth: 1,
-                      borderColor: "#EB2B2E",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        color: "#EB2B2E",
-                        fontWeight: "700",
-                      }}
-                    >
-                      Ara
-                    </Text>
-                  </TouchableOpacity>
+                  <TouchableOpacity style={{width:'45%',backgroundColor:'#EA2B2E',padding:12,borderRadius:8}}  onPress={handleOpenPhone}>
+                  <Text style={{fontSize:14,color:'white',fontWeight:'600',textAlign:'center'}}>Ara</Text>
+                </TouchableOpacity>
                 )}
                 {data?.housing?.user?.id == user?.id ? (
                   <TouchableOpacity
                     style={{
                       backgroundColor: "#008001",
                       width: "90%",
-                      padding: 10,
+                      padding: 12,
                       borderRadius: 5,
                     }}
                   >
@@ -736,7 +719,7 @@ export default function PostDetail() {
                     style={{
                       backgroundColor: "#EB2B2E",
                       width: "45%",
-                      padding: 10,
+                      padding: 12,
                       borderRadius: 5,
                     }}
                   >
@@ -762,7 +745,7 @@ export default function PostDetail() {
                     style={{
                       backgroundColor: "#EB2B2E",
                       width: "45%",
-                      padding: 10,
+                      padding: 12,
                       borderRadius: 5,
                     }}
                   >
@@ -881,7 +864,7 @@ export default function PostDetail() {
             <ScrollView
               showsVerticalScrollIndicator={false}
               scrollEventThrottle={16}
-              contentContainerStyle={{ paddingBottom: 50 }}
+              contentContainerStyle={{ paddingBottom: 80 }}
             >
               <View style={{ height: 250 }}>
                 <View style={styles.pagination}>
@@ -1062,6 +1045,13 @@ export default function PostDetail() {
                     changeTab={changeTab}
                   />
                 </View>
+                <View>
+                <TouchableOpacity style={{borderWidth:1,borderColor:'#EA2B2E',padding:5,borderRadius:6,backgroundColor:'white'}} onPress={()=>{
+                    setSeeAlertModal(true)
+                  }}>
+                    <Text style={{textAlign:'center',fontSize:13,color:'#EA2B2E',fontWeight:'600'}}>Bilgilendirme!</Text>
+                  </TouchableOpacity>
+                  </View>
               </View>
               <View style={{ marginTop: 7 }}>
                 {tabs == 0 && <RealtorCaption data={data} />}
@@ -1070,7 +1060,7 @@ export default function PostDetail() {
                 {tabs == 3 && <Comment data={data} handleModal={handleModal} />}
               </View>
 
-           
+              <TextAlertModal visible={SeeAlertModal} onClose={setSeeAlertModal} />
               <Modal
                 isVisible={ColectionSheet}
                 onBackdropPress={ToggleColSheet}

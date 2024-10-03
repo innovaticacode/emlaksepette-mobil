@@ -38,6 +38,7 @@ import {
   rightButtonsForPost,
 } from "../pages/helper";
 import PaymentPlanModal from "./PaymentPlanModal";
+import ShareProgressBar from "./ShareProgessBar";
 
 export default function Posts({
   project,
@@ -287,7 +288,13 @@ export default function Posts({
   const [PaymaentAlert, setPaymaentAlert] = useState(false);
   const [paymentModalVisible, setpaymentModalVisible] = useState(false)
   const HandleModal = () => {
-    setpaymentModalVisible(true)
+    if ((roomData['share_sale[]'] !=='[]' && sumCartOrderQt[roomOrder]?.qt_total == numberOfShare)) {
+        setPaymaentAlert(true)
+    }else{
+      setpaymentModalVisible(true)
+    }
+      
+   
     // if (offSaleStatus != 5 && !user.access_token) {
     //   setPaymaentAlert(true);
     // } else {
@@ -349,25 +356,23 @@ export default function Posts({
           textAlign: "center",
           margin: 5,
         }}
-        title={"Giriş Yap"}
+        title={"Satıldı"}
         messageStyle={{ textAlign: "center" }}
-        message={`Ödeme Detayını Görmek için lütfen Giriş Yapınız`}
+        message={`Bu İlan İçin Ödeme Detayı Bilgisi Gösterilemiyor`}
         closeOnTouchOutside={true}
         closeOnHardwareBackPress={false}
-        showCancelButton={true}
+        showCancelButton={false}
         showConfirmButton={true}
-        cancelText="Vazgeç"
-        confirmText="Giriş Yap"
-        cancelButtonColor="#ce4d63"
+        
+        confirmText="Tamam"
+        
         confirmButtonColor="#1d8027"
-        onCancelPressed={() => {
-          setPaymaentAlert(false);
-        }}
+      
         onConfirmPressed={() => {
-          navigation.navigate("Login");
+         setPaymaentAlert(false)
         }}
         confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-        cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+       
       />
       <AwesomeAlert
         show={cartIsNull}
@@ -954,7 +959,7 @@ export default function Posts({
                           </Text>
                         </TouchableOpacity>
                       ) : (
-                        <><Text>Komşu</Text></>
+                        null
                       )
                     ) : (
                       rightButtonsForPost.map((item, _i) => (
@@ -1038,6 +1043,17 @@ export default function Posts({
           </View>
         </View>
       </View>
+      
+      {
+        
+        (roomData['share_sale[]'] !=='[]'  && offSaleStatus!=1  ) &&
+
+        <ShareProgressBar toplamHisse={roomData['number_of_shares[]']} satilanHisse={sold? sumCartOrderQt[roomOrder]?.qt_total :0 } IsShowText={sumCartOrderQt[roomOrder]?.qt_total == numberOfShare}/>
+
+      
+        
+      }
+      
       {data?.project?.list_item_values && (
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>

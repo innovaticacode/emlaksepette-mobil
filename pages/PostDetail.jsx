@@ -19,6 +19,7 @@ import Icon2 from "react-native-vector-icons/AntDesign";
 import Phone from "react-native-vector-icons/Entypo";
 import { Platform } from "react-native";
 import PagerView from "react-native-pager-view";
+import * as SecureStore from "expo-secure-store";
 import {
   useIsFocused,
   useNavigation,
@@ -71,6 +72,8 @@ import CommentForProject from "../components/CommentForProject";
 import { leftButtonsForPost, PriceStatus, rightButtonsForPost } from "./helper";
 import ImageViewing from "react-native-image-viewing";
 import PaymentPlanModal from "../components/PaymentPlanModal";
+import TextAlertModal from "../components/TextAlertModal";
+import ShareProgressBar from "../components/ShareProgessBar";
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
@@ -102,10 +105,7 @@ export default function PostDetail() {
   }, [isFocused]);
   const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
-  const handleOpenPhone = () => {
-    // Telefon uygulamasını açmak için
-    Linking.openURL("tel:+905537064474");
-  };
+
 
   const changeTab = (tabs) => {
     setTabs(tabs);
@@ -838,7 +838,94 @@ export default function PostDetail() {
         return [];
     }
   };
+  const saveData = async (
+    title,
+    amount,
+    imageUrl,
+    neightboord,
+    ilanNo,
+    roomOrderString
+  ) => {
+    try {
+      // SecureStore'a verileri kaydediyoruz
+      await SecureStore.setItemAsync("advertise_title", title);
+      await SecureStore.setItemAsync("amount", amount.toString()); // Amount'u string olarak kaydediyoruz
+      await SecureStore.setItemAsync("imageUrl", imageUrl);
+      await SecureStore.setItemAsync("neightboord", neightboord.toString()); // Boolean'ı string olarak kaydediyoruz
+      await SecureStore.setItemAsync("ilanNo", ilanNo.toString()); // İlan numarasını string olarak kaydediyoruz
+      await SecureStore.setItemAsync(
+        "roomOrderString",
+        roomOrderString.toString()
+      ); // Oda sırasını string olarak kaydediyoruz
+    } catch (error) {
+      console.error("Veri saklanırken bir hata oluştu:", error);
+    }
+  };
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString("tr-TR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  function truncateText(text, wordLimit) {
+    const words = text?.split(" ");
+    return words?.length > wordLimit
+      ? words?.slice(0, wordLimit).join(" ") + "..."
+      : text;
+  }
+  const [SeeAlertModal, setSeeAlertModal] = useState(false)
+  const [showAlert, setShowAlert] = useState(false);
+  const handleYes = () => {
+    // İlan başlığını, fiyatı ve ilan numarasını alın
+    const title = HomeId
+      ? roomData["advertise_title[]"]
+      : "Başlık bulunamadı";
+    const amount = 250; // Fiyatı burada belirliyoruz
+    const imageUrl = roomData
+      ? "https://private.emlaksepette.com/project_housing_images/" +
+        roomData["image[]"]
+      : ""; // Resim URL'sini burada belirleyin
+    const neightboord = false;
+    const ilanNo = 1000000 + ProjectHomeData.project.id +  '-'+ HomeId; // İlan numarasını belirliyoruz
+    const roomOrderString = HomeId.toString();
 
+    // Verileri secureStore ile saklayın
+    saveData(title, amount, imageUrl, neightboord, ilanNo, roomOrderString)
+      .then(() => {
+        // Basket bileşenine yönlendirin
+        navigation.navigate("Basket2");
+
+        // Modalı kapatın
+        
+      })
+      .catch((error) => {
+        console.error("Onay işlemi sırasında bir hata oluştu:", error);
+      });
+  };
+  const handleOpenPhone = () => {
+    let phoneNumber;
+
+    // Eğer data?.housing?.user?.phone varsa ve area_code mevcutsa
+    if (ProjectHomeData?.project?.user?.phone && ProjectHomeData?.project?.user?.area_code) {
+      // Alan kodu ve telefon numarasını birleştir
+      phoneNumber = `90${ProjectHomeData.project?.user.area_code}${ProjectHomeData?.project?.user?.phone}`;
+    }
+    // Eğer data?.housing?.mobile_phone varsa
+    else if (ProjectHomeData?.project?.user.mobile_phone) {
+      // Telefon numarası başında 0 ile başlıyorsa 0'ı kaldır ve +90 ekle
+      phoneNumber = ProjectHomeData.project?.user?.mobile_phone.startsWith("0")
+        ? `90${ProjectHomeData.project?.user?.mobile_phone.slice(1)}`
+        : `90${ProjectHomeData.project?.user?.mobile_phone}`;
+    }
+
+    // Telefon numarasını kontrol et ve URL'yi oluştur
+    if (phoneNumber) {
+      // Numara başında + ekle
+      Linking.openURL(`tel:+${phoneNumber}`);
+    } else {
+      console.error("Telefon numarası bulunamadı.");
+    }
+  };
   return (
 
     <>
@@ -865,7 +952,21 @@ export default function PostDetail() {
                 <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} on />
               </View>
             </Modal>
-
+            <View style={{position:'absolute',width:'100%',bottom:35,padding:4,zIndex:1,flexDirection:'row',justifyContent:'space-around'}}>
+                <TouchableOpacity style={{width:'45%',backgroundColor:'#EA2B2E',padding:12,borderRadius:8}} onPress={handleOpenPhone}>
+                  <Text style={{fontSize:14,color:'white',fontWeight:'600',textAlign:'center'}}>Ara</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{width:'45%',backgroundColor:'#EA2B2E',padding:12,borderRadius:8}}
+                 onPress={() => {
+                  navigation.navigate("Profile", {
+                    name: "",
+                    id: ProjectHomeData?.project?.user?.id,
+                  });
+                }}
+                >
+                  <Text style={{fontSize:14,color:'white',fontWeight:'600',textAlign:'center'}}>Satış Noktalarını Gör</Text>
+                </TouchableOpacity>
+              </View> 
             <View
               style={{
                 flexDirection: "row",
@@ -945,8 +1046,60 @@ export default function PostDetail() {
                 </View>
               </TouchableOpacity>
             </View>
-
+            <AwesomeAlert
+                show={showAlert}
+                showProgress={false}
+                title="Komşumu Gör"
+                message={`"${truncateText(
+                  HomeId
+                    ? roomData["advertise_title[]"]
+                    : "Başlık bulunamadı",
+                  20
+                )}"\n\nİlan No: ${
+                  1000000 + ProjectHomeData.project.id + '-'+ HomeId
+                }\nÖdeme Tarihi: ${formattedDate}\nTutar: 250 TL\n\nKomşumu Gör Özelliği: İlgilendiğiniz projeden konut alanları arayıp proje hakkında detaylı referans bilgisi almanıza imkan sağlar.\n\nKomşunuza ait iletişim bilgilerini görmek için aşağıdaki adımları takip edin:\n\n1. Ödeme işlemini tamamlayın ve belirtilen tutarı ödediğiniz takdirde,\n2. Ödemeniz onaylandıktan sonra, "Komşumu Gör" düğmesi aktif olacak ve komşunuzun iletişim bilgilerine ulaşabileceksiniz.`}
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showCancelButton={true}
+                showConfirmButton={true}
+                cancelText="Hayır"
+                confirmText="Evet"
+                confirmButtonColor="#EA2A28"
+                onCancelPressed={()=>{
+                  setShowAlert(false)
+                }}
+                onConfirmPressed={()=>{
+                  setShowAlert(false)
+                 
+                  setTimeout(() => {
+                    handleYes()
+                  }, 300);
+                }}
+                contentContainerStyle={{
+                  borderRadius: 10,
+                  padding: 20,
+                  width: "100%",
+                }}
+                titleStyle={{
+                  fontSize: 18,
+                  fontWeight: "bold",
+                  color: "#EA2A28",
+                  textAlign: "center",
+                }}
+                messageStyle={{
+                  fontSize: 14,
+                  color: "#333",
+                  textAlign: "left",
+                }}
+                cancelButtonTextStyle={{
+                  fontSize: 16,
+                }}
+                confirmButtonTextStyle={{
+                  fontSize: 16,
+                }}
+              />
             <ScrollView scrollEventThrottle={16}
+                contentContainerStyle={{paddingBottom:60}}
               onScroll={({ nativeEvent }) => {
                 if (isCloseToBottom(nativeEvent)) {
                   if (ProjectHomeData.project.have_blocks) {
@@ -1079,6 +1232,18 @@ export default function PostDetail() {
                
                
               </View>
+              {
+                  user?.corporate_type!=='Emlak Ofisi' &&
+                  <TouchableOpacity style={{padding:5,flexDirection:'row',alignItems:'center',gap:5,}} onPress={()=>{
+                    navigation.navigate("Profile", {
+                      name: "",
+                      id: ProjectHomeData?.project?.user?.id,
+                    })
+                  }}>
+                    <Text style={{fontSize:13,color:'#ED3135',fontWeight:'600'}}>Satış Noktalarında Alırsanız %2 İndirim</Text>
+                    <Icon2 name="arrowright" size={17} color={'#ED3135'}/>
+                  </TouchableOpacity>
+                }
               <View
                 style={{
                   paddingTop: 8,
@@ -1244,72 +1409,6 @@ export default function PostDetail() {
           
           }
 
-                {/* {   
-                offSaleCheck && !soldCheck && ShareSaleEmpty  ? (
-                  <>
-                    {discountAmount != 0 ? (
-                      <View style={styles.discountContainer}>
-                        <Svg
-                          viewBox="0 0 24 24"
-                          width={18}
-                          height={18}
-                          stroke="#EA2B2E"
-                          strokeWidth={2}
-                          fill="#EA2B2E"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="css-i6dzq1"
-                        >
-                          <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
-                          <Polyline points="17 18 23 18 23 12" />
-                        </Svg>
-                        <Text style={styles.originalPrice}>
-                          <Text style={styles.strikethrough}>{price} ₺</Text>
-                        </Text>
-                        <Text style={styles.discountedPrice}>
-                          {discountedPrice} ₺
-                        </Text>
-                      </View>
-                    ) : (
-                      <View>
-                        <Text style={styles.regularPrice}>{price} ₺</Text>
-                      </View>
-                    )}
-                    {discountAmount > 0 && (
-                      <View>
-                        <Text style={styles.discountText}>
-                          {discountAmount} ₺ indirim
-                        </Text>
-                      </View>
-                    )}
-                  </>
-                ) : (roomData["share_sale[]"] &&
-                    roomData["share_sale[]"] !== "[]" &&
-                    ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total !==
-                      roomData["number_of_shares[]"]) ||
-                  (roomData["share_sale[]"] &&
-                    roomData["share_sale[]"] !== "[]" &&
-                    !ProjectHomeData.sumCartOrderQt[HomeId]) ? (
-                  <View>
-                    <Text style={[styles.regularPrice]}>
-                      {roomData["share_sale[]"] &&
-                        roomData["share_sale[]"] !== "[]" &&
-                        roomData["number_of_shares[]"] !== 0 && (
-                          <Text style={styles.shareSaleText}>
-                            1/{roomData["number_of_shares[]"]}
-                          </Text>
-                        )}
-                      {" Pay Fiyatı - "}
-                      {price}₺
-                    </Text>
-                  </View>
-                ) : <View style={{ paddingTop: 5, }}>
-                <Text
-                  style={{ fontSize: 14, color: "#264ABB", fontWeight: "800",textAlign:'center'}}
-                >
-                  {formatPrice(roomData["price[]"])}₺
-                </Text>
-              </View> } */}
               </View>
                    
               <View style={styles.priceAndButtons}>
@@ -1571,14 +1670,14 @@ export default function PostDetail() {
                       ? (
                         <TouchableOpacity
                           style={styles.showCustomer}
-                          // onPress={() => openAlert(roomData)}
+                           onPress={() => setShowAlert(true)}
                         >
                           <Text style={styles.showCustomerText}>
                             Komşumu Gör
                           </Text>
                         </TouchableOpacity>
                       ) : (
-                        <><Text>Komşu</Text></>
+                        <></>
                       )
                     ) : (
                       rightButtonsForPost.map((item, _i) => (
@@ -1617,7 +1716,15 @@ export default function PostDetail() {
                   
                 </View>
               </View>
-                
+              {
+        
+        (roomData['share_sale[]'] !=='[]'  && offSaleStatus!=1  ) &&
+
+        <ShareProgressBar toplamHisse={roomData['number_of_shares[]']} satilanHisse={ProjectHomeData.projectCartOrders[HomeId]? ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total :0 } IsShowText={ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total == roomData['number_of_shares[]']}/>
+
+      
+        
+      }
             
              
               <View>
@@ -1688,8 +1795,15 @@ export default function PostDetail() {
                 />
               </View>
                
-             
-
+            
+              <View style={{paddingLeft:5,paddingRight:5,paddingBottom:5}}>
+                  <TouchableOpacity style={{borderWidth:1,borderColor:'#EA2B2E',padding:5,borderRadius:6,backgroundColor:'white'}} onPress={()=>{
+                    setSeeAlertModal(true)
+                  }}>
+                    <Text style={{textAlign:'center',fontSize:13,color:'#EA2B2E',fontWeight:'600'}}>Bilgilendirme!</Text>
+                  </TouchableOpacity>
+                  </View>
+                  
               {tabs == 0 && (
                 <OtherHomeInProject
                  GetID={getRoomID}
@@ -1777,7 +1891,7 @@ export default function PostDetail() {
                 </View>
               </Modal>
             </ScrollView>
-
+            <TextAlertModal visible={SeeAlertModal} onClose={setSeeAlertModal} />
             <Modal
               isVisible={ColectionSheet}
               onBackdropPress={() => setColectionSheet(false)}
@@ -2236,101 +2350,7 @@ export default function PostDetail() {
               </View>
             </Modal>
 
-            {/* <Modal
-              isVisible={ModalForAddToCart}
-              onBackdropPress={() => setModalForAddToCart(false)}
-              animationType="fade"
-              transparent={true}
-              style={styles.modal4}
-            >
-              <View style={styles.modalContent4}>
-                {user.access_token ? (
-                  <>
-                    <View style={{ padding: 10, gap: 10 }}>
-                      <Text style={{ textAlign: "center" }}>
-                        {selectedCartItem} No'lu Konutu Sepete Eklemek
-                        İsteiğinize Eminmisiniz?
-                      </Text>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "center",
-                          gap: 20,
-                        }}
-                      >
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "green",
-                            padding: 10,
-                            paddingLeft: 20,
-                            paddingRight: 20,
-                            borderRadius: 5,
-                          }}
-                          onPress={() => {
-                            addToCard();
-                          }}
-                        >
-                          <Text style={{ color: "white" }}>Sepete Ekle</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "#e44242",
-                            padding: 10,
-                            paddingLeft: 20,
-                            paddingRight: 20,
-                            borderRadius: 5,
-                          }}
-                          onPress={() => {
-                            setModalForAddToCart(false);
-                          }}
-                        >
-                          <Text style={{ color: "white" }}>Vazgeç</Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  </>
-                ) : (
-                  <>
-                    <View style={{ gap: 10 }}>
-                      <View>
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            color: "#4C6272",
-                            fontWeight: "bold",
-                            fontSize: 16,
-                          }}
-                        >
-                          Üyeliğiniz Bulunmamaktadır!
-                        </Text>
-                      </View>
-                      <View style={{ width: "100%" }}>
-                        <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                          Sepetinize konut ekleyebilmeniz için giriş yapmanız
-                          gerekmektedir
-                        </Text>
-                      </View>
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: "#F65656",
-                          width: "100%",
-                          padding: 10,
-                        }}
-                        onPress={() => {
-                          setModalForAddToCart(false);
-                          navigation.navigate("Login");
-                        }}
-                      >
-                        <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
-                          Giriş Yap
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                )}
-              </View>
-            </Modal> */}
+          
             <Modal
               isVisible={IsOpenSheet}
               onBackdropPress={() => setIsOpenSheet(false)}
@@ -2946,8 +2966,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   pending: {
-    paddingLeft: 20,
-    paddingRight: 20,
+
     padding: 10,
     width: "100%",
     alignItems: "center",

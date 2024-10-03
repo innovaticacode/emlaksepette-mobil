@@ -32,6 +32,16 @@ export default function TextAlertModal({ visible, onClose }) {
             </View>
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{gap:5}}>
             <View style={{padding:5}}>
+                  <Text style={{color:'#EC4042',fontSize:14,fontWeight:'700'}}>Gayrimenkul Projeden Güvenli Ev Nasıl Alınır?</Text>
+                  
+            </View>
+            <View>
+            <Text style={{color:'#333',fontSize:13,fontWeight:'400'}}>
+                  Güvenliğiniz için lütfen emlaksepette.com platformu dışında kapora ödememeye dikkat edin. Herhangi bir ödeme yapmadan önce, ilgili platformun kurallarını ve güvenlik önlemlerini kontrol etmek önemlidir. Herhangi bir sorunla karşılaşırsanız, doğrudan platformun müşteri hizmetleriyle iletişime geçin. Bu şekilde, dolandırıcılıklara karşı kendinizi korumuş olursunuz.
+                  </Text>
+            </View>
+
+            <View style={{padding:5}}>
             <Text style={{color:'#EC4042',fontSize:14,fontWeight:'700'}}>Gayrimenkul Alırken/Kiralarken </Text>
             <Text style={{color:'#EC4042',fontSize:14,fontWeight:'700'}}>Dikkat Edilmesi Gerekenler!</Text>
             </View>
@@ -47,8 +57,10 @@ export default function TextAlertModal({ visible, onClose }) {
           </ScrollView>
 
           <View style={{paddingTop:10}}>
-            <TouchableOpacity style={{padding:8,backgroundColor:'#EC4042',borderRadius:5}}>
-                <Text style={{textAlign:'center',fontSize:14,fontWeight:'600',color:'white'}}>Bir daha Gösterme</Text>
+            <TouchableOpacity style={{padding:8,backgroundColor:'#EC4042',borderRadius:5}} onPress={()=>{
+              onClose(false)
+            }}>
+                <Text style={{textAlign:'center',fontSize:14,fontWeight:'600',color:'white'}}>Tamam</Text>
             </TouchableOpacity>
           </View>
         </View>

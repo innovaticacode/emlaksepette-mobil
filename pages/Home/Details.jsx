@@ -71,6 +71,7 @@ import CommentForProject from "../../components/CommentForProject";
 import ImageViewing from "react-native-image-viewing";
 import Megaphone from '../../assets/megaphone.png'
 import TextAlertModal from "../../components/TextAlertModal";
+import { PanResponder } from "react-native";
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [IsOpenSheet, setIsOpenSheet] = useState(false);
@@ -722,76 +723,7 @@ export default function Details({ navigation }) {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setPhoneId(formattedPhoneNumber);
   };
-  const GiveOffer = () => {
-    switch (true) {
-      case !nameid:
-        seterrorStatu(1);
-        seterrorMessage("İsim Alanı Boş Bırakılmaz");
 
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      case !phoneid:
-        seterrorStatu(2);
-        seterrorMessage("Telefon Alanı Boş Bırakılmaz");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      case phoneid.length < 10:
-        seterrorStatu(2);
-        seterrorMessage("Geçerli bir telefon numarası giriniz");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      case !titleid:
-        seterrorStatu(3);
-        seterrorMessage("Meslek Alanı Boş Bırakılmaz");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      case !city:
-        seterrorStatu(4);
-        seterrorMessage("Şehir Seçiniz ");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      case !county:
-        seterrorStatu(5);
-        seterrorMessage("İlçe Seçniz");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      case !emailid:
-        seterrorStatu(6);
-        seterrorMessage("Mail Alanı Boş Bırakılmaz");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      case !offerid:
-        seterrorStatu(7);
-        seterrorMessage("Açıklama alanı boş bırakılamaz");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 5000);
-        break;
-      default:
-        postData();
-    }
-  };
   const [galleries, setGalleries] = useState([]);
 
   useEffect(() => {
@@ -882,7 +814,36 @@ export default function Details({ navigation }) {
     .reduce((acc, rate) => acc + rate, 0);
 
 
+  
+    const [isModalVisible, setModalIsVisible] = useState(false);
 
+    const toggleModal = () => {
+      setModalIsVisible(!isModalVisible);
+    };
+    const handleOpenPhone = () => {
+      let phoneNumber;
+  
+      // Eğer data?.housing?.user?.phone varsa ve area_code mevcutsa
+      if (data?.project?.user?.phone && data?.project?.user?.area_code) {
+        // Alan kodu ve telefon numarasını birleştir
+        phoneNumber = `90${data.project?.user.area_code}${data?.project?.user?.phone}`;
+      }
+      // Eğer data?.housing?.mobile_phone varsa
+      else if (data?.project?.user.mobile_phone) {
+        // Telefon numarası başında 0 ile başlıyorsa 0'ı kaldır ve +90 ekle
+        phoneNumber = data.project?.user?.mobile_phone.startsWith("0")
+          ? `90${data.project?.user?.mobile_phone.slice(1)}`
+          : `90${data.project?.user?.mobile_phone}`;
+      }
+  
+      // Telefon numarasını kontrol et ve URL'yi oluştur
+      if (phoneNumber) {
+        // Numara başında + ekle
+        Linking.openURL(`tel:+${phoneNumber}`);
+      } else {
+        console.error("Telefon numarası bulunamadı.");
+      }
+    };
   return (
     <>
       <AlertNotificationRoot>
@@ -905,7 +866,19 @@ export default function Details({ navigation }) {
                   <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
                 </View>
               </Modal>
-
+              <View style={{position:'absolute',width:'100%',bottom:35,padding:4,zIndex:1,flexDirection:'row',justifyContent:'space-around'}}>
+                <TouchableOpacity style={{width:'45%',backgroundColor:'#EA2B2E',padding:12,borderRadius:8}} onPress={handleOpenPhone}>
+                  <Text style={{fontSize:14,color:'white',fontWeight:'600',textAlign:'center'}} >Ara</Text>
+                </TouchableOpacity> 
+                <TouchableOpacity style={{width:'45%',backgroundColor:'#EA2B2E',padding:12,borderRadius:8}} onPress={()=>{
+                    navigation.navigate("Profile", {
+                      name: "",
+                      id: data?.project?.user?.id,
+                    })
+                }}> 
+                  <Text style={{fontSize:14,color:'white',fontWeight:'600',textAlign:'center'}}>Satış Noktalarını Gör</Text>
+                </TouchableOpacity>
+              </View>   
               <View
                 style={{
                   flexDirection: "row",
@@ -992,9 +965,11 @@ export default function Details({ navigation }) {
                   </Text>
                 </TouchableOpacity>
               </View>
-
+                   
+                     
               <ScrollView
                 ref={scrollViewRef}
+                contentContainerStyle={{paddingBottom:80}}
                 scrollEventThrottle={16}
                 onScroll={({ nativeEvent }) => {
                   if (isCloseToBottom(nativeEvent)) {
@@ -1032,7 +1007,8 @@ export default function Details({ navigation }) {
                     }
                   }
                 }}
-              >
+              > 
+    
                 <View style={{ height: 250 }}>
                   <View style={styles.pagination}>
                     <View
@@ -1049,13 +1025,14 @@ export default function Details({ navigation }) {
                       </Text>
                     </View>
                   </View>
-
+                
                   <View style={styles.ıconContainer}>
                     <TouchableOpacity onPress={onShare}>
                       <View style={styles.ıcon}>
                         <Icon2 name="sharealt" size={18} />
                       </View>
                     </TouchableOpacity>
+                  
                   </View>
                   <View style={styles.clubRateContainer}>
                     {user &&
@@ -1068,6 +1045,7 @@ export default function Details({ navigation }) {
                         </View>
                       )}
                   </View>
+                     
                   <PagerView
                     style={{ height: 250 }}
                     initialPage={pagination}
@@ -1103,7 +1081,19 @@ export default function Details({ navigation }) {
                     onRequestClose={() => setIsVisible(false)}
                   />
                 </View>
-
+                {
+                  user.corporate_type!=='Emlak Ofisi' &&
+                  <TouchableOpacity style={{padding:5,flexDirection:'row',alignItems:'center',gap:5}} onPress={()=>{
+                    navigation.navigate("Profile", {
+                      name: "",
+                      id: data?.project?.user?.id,
+                    })
+                  }}>
+                    <Text style={{fontSize:13,color:'#ED3135',fontWeight:'600'}}>Satış Noktalarında Alırsanız %2 İndirim</Text>
+                    <Icon2 name="arrowright" size={17} color={'#ED3135'}/>
+                  </TouchableOpacity>
+                }
+                  
                 <View
                   style={styles.CaptionPriceAndSlider}
                 >
@@ -1168,7 +1158,7 @@ export default function Details({ navigation }) {
                 </View>
               
                 </View>
-                {
+                {/* {
                   data?.isShareLink?.length!==0 &&
                   <View style={{paddingTop:6,paddingBottom:2,width:'100%',alignItems:'center'}}>
                   <View style={{padding:6,backgroundColor:'#ffc9ca',borderRadius:8,flexDirection:'row',gap:5,width:'95%'}}>
@@ -1186,9 +1176,16 @@ export default function Details({ navigation }) {
                     </View>
                   </View>
                  </View>
-                }
-
+                } */}
+            
                      <View style={{marginTop:5}}>
+                     <View style={{paddingLeft:5,paddingRight:5,paddingBottom:5}}>
+                  <TouchableOpacity style={{borderWidth:1,borderColor:'#EA2B2E',padding:5,borderRadius:6,backgroundColor:'white'}} onPress={()=>{
+                    setSeeAlertModal(true)
+                  }}>
+                    <Text style={{textAlign:'center',fontSize:13,color:'#EA2B2E',fontWeight:'600'}}>Bilgilendirme!</Text>
+                  </TouchableOpacity>
+                </View>
                     {tabs == 0 && (
                   <OtherHomeInProject
                     GetID={getRoomID}
@@ -1219,8 +1216,9 @@ export default function Details({ navigation }) {
                 {tabs == 5 && (
                   <CommentForProject projectId={data?.project?.id} />
                 )}
+
                     </View>
-            
+             
 
                
 
@@ -1664,33 +1662,15 @@ export default function Details({ navigation }) {
                   </View>
                 </Modal>
                
-                <Modal
-                  isVisible={showCoverImageModal}
-                  onBackdropPress={() => setCoverImageModal(false)}
-                  swipeDirection={["down"]}
-                  animationIn={"fadeInRightBig"}
-                  animationOut={"fadeOutDownBig"}
-                  onSwipeComplete={() => setCoverImageModal(false)}
-                  backdropColor="transparent"
-                  style={styles.modalImage}
-                >
-                  <View style={styles.modalContentImage}>
-                    <View style={{ alignItems: "flex-end", marginBottom: 20 }}>
-                      <TouchableOpacity
-                        onPress={() => setCoverImageModal(false)}
-                      >
-                        <CloseIcon name="close" color={"white"} size={30} />
-                      </TouchableOpacity>
-                    </View>
-
-          
-                  </View>
-                </Modal>
+         
 
               </ScrollView>
             </>
           )}
-            <TextAlertModal visible={SeeAlertModal} onClose={setSeeAlertModal}/>
+            <TextAlertModal visible={SeeAlertModal} onClose={setSeeAlertModal} />
+
+  
+
           <AwesomeAlert
             show={AlertForSign}
             showProgress={false}
@@ -1948,7 +1928,31 @@ const styles = StyleSheet.create({
         },
       }),
    
-  }
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContainer: {
+    width: "95%",
+  
+    backgroundColor: "white",
+    borderRadius: 6,
+  
+ 
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalContent: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
