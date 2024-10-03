@@ -145,5 +145,14 @@ const styles = StyleSheet.create({
     padding: 10,
     width: "100%",
     marginTop: 30,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 1.84,
+    elevation: 2,
   },
 });
