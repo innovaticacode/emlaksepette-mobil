@@ -713,7 +713,7 @@ export default function UpgradeProfile() {
         error.response ? error.response.data : error.message
       );
       Dialog.show({
-        type: ALERT_TYPE.ERROR,
+        type: ALERT_TYPE.DANGER,
         title: "Hata",
         textBody: "Profil güncelleme sırasında bir hata oluştu.",
         button: "Tamam",

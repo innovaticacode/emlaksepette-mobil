@@ -89,8 +89,8 @@ export default function Basket() {
     fetchDatass();
   }, []);
 
-  console.log(imageUrl, "aa");
-
+  /*   console.log(imageUrl, "aa");
+   */
   const [Basket, SetBasket] = useState([
     {
       name: "MASTER ORMAN KÖY EVLERİ",
@@ -342,8 +342,8 @@ export default function Basket() {
   const nav = useNavigation();
   const [index, setindex] = useState(0);
   const [tab, settab] = useState(0);
-  console.log(CartLength);
-
+  /*   console.log(CartLength);
+   */
   const [paymentMethod, setPaymentMethod] = useState("");
 
   const renderRightActions = () => (
@@ -686,15 +686,15 @@ export default function Basket() {
                           {" "}
                           {isInstallament == 2
                             ? formatAmount(
-                              (Cart?.installmentPrice *
-                                offerControl?.project?.deposit_rate) /
-                              100
-                            )
+                                (Cart?.installmentPrice *
+                                  offerControl?.project?.deposit_rate) /
+                                  100
+                              )
                             : formatAmount(
-                              (Cart?.amount *
-                                offerControl?.project?.deposit_rate) /
-                              100
-                            )}{" "}
+                                (Cart?.amount *
+                                  offerControl?.project?.deposit_rate) /
+                                  100
+                              )}{" "}
                           ₺
                         </Text>
                       </View>
@@ -877,14 +877,14 @@ export default function Basket() {
                           formatAmount(
                             (Cart?.amount *
                               offerControl?.project?.deposit_rate) /
-                            100
+                              100
                           )}
                         {isInstallament == 2 &&
                           type?.type == "project" &&
                           addDotEveryThreeDigits(
                             (Cart?.installmentPrice *
                               offerControl?.project?.deposit_rate) /
-                            100
+                              100
                           )}
                         {type?.type == "housing" &&
                           saleType == "kiralik" &&
@@ -934,11 +934,11 @@ export default function Basket() {
             </TouchableWithoutFeedback>
           ) : (
             <NoDataScreen
-                message="Sepetinizde ilan bulunmamaktadır."
-                iconName="basket-plus"
-                buttonText="Anasayfaya Dön"
-                navigateTo="HomePage"
-              />
+              message="Sepetinizde ilan bulunmamaktadır."
+              iconName="basket-plus"
+              buttonText="Anasayfaya Dön"
+              navigateTo="HomePage"
+            />
           )}
         </SafeAreaView>
       )}

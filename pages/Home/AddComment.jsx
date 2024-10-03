@@ -108,8 +108,8 @@ export default function AddComment() {
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const uri = result.assets[0].uri;
-      console.log("Selected image URI:", uri);
-      const newImages = [...image];
+      /*       console.log("Selected image URI:", uri);
+       */ const newImages = [...image];
 
       if (selectedIndexx < 3) {
         newImages[selectedIndexx] = uri;
@@ -121,7 +121,8 @@ export default function AddComment() {
       }
 
       setImage(newImages);
-      console.log("Updated images:", newImages);
+      /*       console.log("Updated images:", newImages);
+       */
     }
   };
 
@@ -135,7 +136,7 @@ export default function AddComment() {
     const yellowStars = index + 1;
     setrate(yellowStars);
   };
-  console.log(rate);
+  /* console.log(rate); */
   const [checkedForm, setCheckedForm] = React.useState(false);
   const toggleCheckboxForm = () => {
     setCheckedForm(!checkedForm);
@@ -147,7 +148,7 @@ export default function AddComment() {
     getValueFor("user", setUser);
   }, []);
   const [comment, setcomment] = useState("");
-  console.log(image);
+  /*   console.log(image); */
 
   const pickImage = async () => {
     // Kullanıcıdan izin isteme
@@ -177,7 +178,7 @@ export default function AddComment() {
       setImage([...image, result.assets[0].uri]); // Expo SDK 45 ve sonrası için .assets[0].uri kullanılmalıdır.
     }
   };
-  console.log(image);
+  /* console.log(image); */
   const takePhoto = async (index) => {
     // Kamera izni isteme
     setselectedIndex(index);
@@ -283,7 +284,7 @@ export default function AddComment() {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);
       const data = await response.json();
-      console.log(data);
+      /* console.log(data); */
       setDeals(data.content);
       // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     } catch (error) {
