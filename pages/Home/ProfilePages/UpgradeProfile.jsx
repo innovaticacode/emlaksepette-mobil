@@ -46,12 +46,22 @@ import {
   Dialog,
 } from "react-native-alert-notification";
 import { Forms } from "../../../components/ProfileUpgradeComponents/formshelper";
+import ImageView from "react-native-image-viewing";
+
 export default function UpgradeProfile() {
   const route = useRoute();
   const { name, tab } = route.params;
   const [choose, setchoose] = useState(false);
   const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
   const [image, setImage] = useState(null);
+
+  const [isImageVisible, setIsImageVisible] = useState(false);
+
+  const images = [
+    {
+      uri: "https://private.emlaksepette.com/images/phone-update-image/phonefile.jpg",
+    },
+  ];
 
   const [cities, setCities] = useState([]);
   const [counties, setCounties] = useState([]);
@@ -273,8 +283,9 @@ export default function UpgradeProfile() {
       const response = await axios.get(
         `https://private.emlaksepette.com/api/neighborhoods/${value}`
       );
-      // Yanıtı kontrol et
-      setNeighborhoods(response.data.data);
+      console.log("Neighborhood API Response:", response.data); // API yanıtını logla
+      setNeighborhoods(response.data.data); // Gelen mahalle verisini set et
+
       setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
     } catch (error) {
       console.error("Hata:", error);
@@ -535,6 +546,7 @@ export default function UpgradeProfile() {
       GetUserInfo();
     }
   }, [user]);
+  console.log(user?.id);
 
   // namFromGetUser güncellendiğinde form verilerini ve rengi güncelle
 
@@ -596,8 +608,8 @@ export default function UpgradeProfile() {
   };
   const [region, setRegion] = useState(null);
   const initialRegion = {
-    latitude: 39.9334,
-    longitude: 32.8597,
+    latitude: parseFloat(39.9334),
+    longitude: parseFloat(32.8597),
     latitudeDelta: 0.05,
     longitudeDelta: 0.05,
   };
@@ -605,8 +617,8 @@ export default function UpgradeProfile() {
     // API'den gelen koordinatları kontrol et, null ise varsayılanı kullan
     if (namFromGetUser.latitude != null && namFromGetUser.longitude != null) {
       setRegion({
-        latitude: namFromGetUser.latitude,
-        longitude: namFromGetUser.longitude,
+        latitude: parseFloat(namFromGetUser.latitude),
+        longitude: parseFloat(namFromGetUser.longitude),
         latitudeDelta: 0.05,
         longitudeDelta: 0.05,
       });
@@ -618,7 +630,10 @@ export default function UpgradeProfile() {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const handleMapPress = (event) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
-    setSelectedLocation({ latitude, longitude });
+    setSelectedLocation({
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude),
+    });
   };
   // Eğer region henüz belirlenmediyse (API'den veri gelmemişse) bir yükleniyor göstergesi göster
   const [areaCode, setareaCode] = useState(null);
@@ -629,6 +644,7 @@ export default function UpgradeProfile() {
       </View>
     );
   }
+  console.log(user?.access_token);
 
   const postData = async () => {
     try {
@@ -720,6 +736,7 @@ export default function UpgradeProfile() {
       });
     }
   };
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -902,6 +919,8 @@ export default function UpgradeProfile() {
                         <View
                           style={{
                             flexDirection: item.showArea ? "row" : "",
+                            overflow: "hidden",
+                            borderRadius: 8,
                           }}
                         >
                           {item.showArea && (
@@ -974,28 +993,37 @@ export default function UpgradeProfile() {
                               />
                             </View>
                           ) : (
-                            <RNPickerSelect
-                              doneText="Tamam"
-                              value={formData[item.key]}
-                              placeholder={{
-                                label: "Seçiniz...",
-                                value: null,
+                            <View
+                              style={{
+                                borderRadius: 8,
+                                overflow: "hidden",
+                                borderColor: "#eaeff5",
+                                borderWidth: 1,
                               }}
-                              style={pickerSelectStyles}
-                              onValueChange={(value) => {
-                                handleInputChange(item.key, value);
-                                if (item.key === "city_id") {
-                                  onChangeCity(value); // Şehir seçilince ilçe verilerini almak için
-                                } else if (item.key === "county_id") {
-                                  onChangeCounty(value); // İlçe seçilince mahalle verilerini almak için
-                                } else if (item.key === "neighborhood_id") {
-                                  onChangeNeighborhood(value); // Mahalle seçimi
-                                } else if (item.key === "taxOfficeCity") {
-                                  onchangeTaxOffice(value);
-                                }
-                              }}
-                              items={getItemsForKey(item.key)}
-                            />
+                            >
+                              <RNPickerSelect
+                                doneText="Tamam"
+                                value={formData[item.key]}
+                                placeholder={{
+                                  label: "Seçiniz...",
+                                  value: null,
+                                }}
+                                style={pickerSelectStyles}
+                                onValueChange={(value) => {
+                                  handleInputChange(item.key, value);
+                                  if (item.key === "city_id") {
+                                    onChangeCity(value);
+                                  } else if (item.key === "county_id") {
+                                    onChangeCounty(value);
+                                  } else if (item.key === "neighborhood_id") {
+                                    onChangeNeighborhood(value);
+                                  } else if (item.key === "taxOfficeCity") {
+                                    onchangeTaxOffice(value);
+                                  }
+                                }}
+                                items={getItemsForKey(item.key)}
+                              />
+                            </View>
                           )}
                         </View>
                       </View>
@@ -1012,28 +1040,28 @@ export default function UpgradeProfile() {
                         width: "100%",
                       }}
                     >
-                      <MapView
-                        style={{ width: "100%", height: "100%" }}
-                        initialRegion={region}
-                        onPress={handleMapPress}
-                      >
-                        {/* Marker örneği */}
-                        {selectedLocation ? (
-                          <Marker
-                            coordinate={selectedLocation}
-                            title="Selected Location"
-                          />
-                        ) : (
-                          <Marker
-                            coordinate={{
-                              latitude: region.latitude,
-                              longitude: region.longitude,
-                            }}
-                            title="Marker Title"
-                            description="Marker description"
-                          />
-                        )}
-                      </MapView>
+                      {region && (
+                        <MapView
+                          style={{ width: "100%", height: "100%" }}
+                          initialRegion={region}
+                          onPress={handleMapPress}
+                        >
+                          {selectedLocation ? (
+                            <Marker
+                              coordinate={selectedLocation}
+                              title={namFromGetUser.name}
+                            />
+                          ) : (
+                            <Marker
+                              coordinate={{
+                                latitude: region.latitude,
+                                longitude: region.longitude,
+                              }}
+                              title={namFromGetUser.name}
+                            />
+                          )}
+                        </MapView>
+                      )}
                     </View>
                   )
                 }
@@ -1189,17 +1217,27 @@ export default function UpgradeProfile() {
                             },
                           ]}
                         >
-                          <View style={{ width: 250, height: 200 }}>
-                            <Image
-                              source={{
-                                uri: "https://private.emlaksepette.com/images/phone-update-image/phonefile.jpg",
-                              }}
-                              style={{ width: "100%", height: "100%" }}
-                            />
-                          </View>
+                          <TouchableOpacity
+                            onPress={() => setIsImageVisible(true)}
+                          >
+                            <View style={{ width: 250, height: 200 }}>
+                              <Image
+                                source={{
+                                  uri: "https://private.emlaksepette.com/images/phone-update-image/phonefile.jpg",
+                                }}
+                                style={{ width: "100%", height: "100%" }}
+                              />
+                            </View>
+                          </TouchableOpacity>
                         </View>
                       </CollapseBody>
                     </Collapse>
+                    <ImageView
+                      images={images}
+                      imageIndex={0}
+                      visible={isImageVisible}
+                      onRequestClose={() => setIsImageVisible(false)}
+                    />
                   </>
                 )}
               </View>
@@ -1394,7 +1432,7 @@ export default function UpgradeProfile() {
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     width: "100%",
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#F3F3F3",
     borderWidth: 1,
     borderColor: "#ebebeb",
     borderRadius: 8,
@@ -1403,7 +1441,7 @@ const pickerSelectStyles = StyleSheet.create({
   },
   inputAndroid: {
     width: "100%",
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#F3F3F3",
     borderWidth: 1,
     borderColor: "#eaeff5",
     borderRadius: 8,
@@ -1414,7 +1452,7 @@ const pickerSelectStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#fff",
   },
   titles: {
     flexDirection: "row",
@@ -1424,7 +1462,7 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 10,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#F3F3F3",
     borderRadius: 8,
   },
   label: {
