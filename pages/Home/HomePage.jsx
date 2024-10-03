@@ -40,8 +40,9 @@ const HomePage = (props) => {
     }
   };
   useEffect(() => {
-    fetchFeaturedSliders(); // Yalnızca bileşen yüklendiğinde
-  }, []);
+    fetchFeaturedSliders()
+  }, [user])
+  
 
   // State for featured projects
   const [loadingProjects, setLoadingProjects] = useState(false);
@@ -71,6 +72,7 @@ const HomePage = (props) => {
   const pagerViewRef = useRef(null);
 
   useEffect(() => {
+    
     const interval = setInterval(() => {
       pagerViewRef.current?.setPage(
         currentPage === featuredSliders.length - 1 ? 0 : currentPage + 1

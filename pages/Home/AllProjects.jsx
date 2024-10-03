@@ -542,7 +542,7 @@ export default function AllProjects() {
                       ShoppingName={item.user?.name}
                       ShoppingMail={item.user?.email}
                       Phone={item.user?.phone}
-                      ProfilImage={`${apiUrl}/storage/profile_images/${item.user?.profile_image}`}
+                      ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
                       ShopingInfo={item.user?.corporate_type}
                     />
                   </View>
