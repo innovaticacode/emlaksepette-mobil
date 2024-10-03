@@ -2,24 +2,19 @@ import {
   View,
   Text,
   Image,
-  Button,
   StyleSheet,
-  Alert,
   TouchableOpacity,
-  KeyboardAvoidingView,
   ScrollView,
 } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
 import AwesomeAlert from "react-native-awesome-alerts";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // AsyncStorage ekle
 
 export default function SalePageMain() {
   const [isUserHaveToken, setIsUserHaveToken] = useState(false);
   const [isCorporateTypeRight, setIsCorporateTypeRight] = useState(false);
-  const [user, setUser] = useState({}); // Kullanıcı bilgilerini başlangıçta null olarak ayarla
+  const [user, setUser] = useState({});
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -39,7 +34,7 @@ export default function SalePageMain() {
     closeModal();
   };
   const closeModal = () => {
-    setIsCorporateTypeRight(false); // Close the modal
+    setIsCorporateTypeRight(false);
     setIsUserHaveToken(false);
   };
   return (
@@ -133,7 +128,6 @@ export default function SalePageMain() {
           <Text style={styles.title}>
             Tek Tıkla Proje Satış Noktası Olursunuz:
             <Text style={styles.text}>
-              {" "}
               EmlakSepette.com ile birçok inşaat firmasının satış noktası
               olarak, geniş bir proje portföyüne sahip olursunuz. Bu sayede
               farklı müşteri taleplerine uygun projeleri kolayca sunabilir, stok
@@ -143,7 +137,6 @@ export default function SalePageMain() {
           <Text style={styles.title}>
             Stok Kontrolü Kolaylığı:
             <Text style={styles.text}>
-              {" "}
               Stok kontrol yöntemi sayesinde projelerin güncel durumunu takip
               etme ve doğru bilgilendirme yapma avantajına sahip olursunuz.
               Satışlarınızı yönetmek ve potansiyel müşterilere en uygun
@@ -153,7 +146,6 @@ export default function SalePageMain() {
           <Text style={styles.title}>
             Referans Kodu:
             <Text style={styles.text}>
-              {" "}
               Kendi referans kodunuzla yaptığınız satışlardan gelir elde
               edersiniz. Bu sistem, size satış performansınızı artırma ve daha
               fazla kazanma imkanı sunar.
@@ -162,7 +154,6 @@ export default function SalePageMain() {
           <Text style={styles.title}>
             Özel İndirimler ve Fırsatlar:
             <Text style={styles.text}>
-              {" "}
               Satış noktası olarak EmlakSepette.com'un sizlere sunduğu özel
               indirimler sayesinde müşterilerinize cazip fiyat avantajları
               sağlayabilir ve bu sayede daha fazla müşteri çekebilirsiniz.
@@ -171,7 +162,6 @@ export default function SalePageMain() {
           <Text style={styles.title}>
             Müşteri Yönlendirme Avantajı:
             <Text style={styles.text}>
-              {" "}
               Platform üzerinden müşteriler doğrudan size yönlendirilir, böylece
               aktif bir müşteri havuzuna sahip olur ve potansiyel alıcılarla
               hızlıca iletişim kurabilirsiniz.
@@ -180,7 +170,6 @@ export default function SalePageMain() {
           <Text style={styles.title}>
             Hızlı Satış İmkanı:
             <Text style={styles.text}>
-              {" "}
               Portföy aramak zorunda kalmadan hızlı satışlar yapmanın keyfini
               çıkarırsınız. EmlakSepette.com'un sağladığı altyapı, satış
               sürecinizi hızlandırır ve verimliliğinizi artırır.
@@ -227,8 +216,6 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     color: "#EA2B2E",
     fontWeight: "600",
-    fontFamily: "Inter",
-    flex: "start",
     paddingHorizontal: 20,
   },
   bigTitle2: {
@@ -236,8 +223,6 @@ const styles = StyleSheet.create({
     padding: 14,
     color: "#EA2B2E",
     fontWeight: "600",
-    fontFamily: "Inter",
-    flex: "start",
     paddingHorizontal: 20,
   },
   modalView: {
@@ -276,8 +261,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   paragraph: {
-    fontWeight: 400,
-    fontFamily: "Montserrat",
+    fontWeight: "400",
     fontSize: 12,
     marginBottom: 12,
     lineHeight: 15,
@@ -297,7 +281,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#333333",
     marginBottom: 12,
-    fontWeight: 400,
+    fontWeight: "400",
     lineHeight: 15,
     paddingHorizontal: 20,
   },
