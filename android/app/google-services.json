@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "847138346411",
+    "project_id": "emlak-sepette-6ced2",
+    "storage_bucket": "emlak-sepette-6ced2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:847138346411:android:a44a1558d1dc8b6a3deeee",
+        "android_client_info": {
+          "package_name": "com.anonymous.frontend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlby3p5kKwY6_MJCSuiujDZvjFKfOqt58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

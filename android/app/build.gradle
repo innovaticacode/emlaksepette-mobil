@@ -1,8 +1,13 @@
-def enableProguardInReleaseBuilds = true
-def enableHermes = true
-def activeHermes = project.ext.react.get(“enableHermes”, true);
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services' // Firebase için gerekli eklenti
+
 android {
     ...
+    
+    // Proguard ve Hermes ayarları
+    def enableProguardInReleaseBuilds = true
+    def enableHermes = true
+    def activeHermes = project.ext.react.get("enableHermes", true)
 
     buildTypes {
         debug {
@@ -11,7 +16,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release // Debug yerine release signing config kullanmalısınız
             shrinkResources true // Kaynak küçültme
             minifyEnabled enableProguardInReleaseBuilds // Proguard etkinleştirme
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
@@ -23,9 +28,15 @@ dependencies {
     // Hermes etkinse, hermes-android bağımlılığını ekleyin
     if (enableHermes) {
         implementation("com.facebook.react:hermes-android")
+        implementation project(path: ":@react-native-firebase_auth")
+
     } else {
         implementation jscFlavor
     }
 
-    ...
+    // Firebase bağımlılıklarını ekleyin
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-messaging'
 }

@@ -14,16 +14,26 @@
           "NSCameraUsageDescription": "This app uses the camera to take photos."
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "@react-native-firebase/crashlytics",
+      "@react-native-firebase/messaging",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
     ],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -32,7 +42,10 @@
         "NSCameraUsageDescription": "This app uses the camera to take photos.",
         "NSPhotoLibraryUsageDescription": "This app needs access to the photo library to select photos."
       },
-      "bundleIdentifier": "y"
+      "bundleIdentifier": "com.mycorp.myapp",
+      "entitlements": {
+        "aps-environment": "production"
+      }
     },
     "android": {
       "permissions": [

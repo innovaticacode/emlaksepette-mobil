@@ -24,6 +24,7 @@ import FranchiseBanner from "../../components/FranchiseBanner";
 import SliderItem from "../../components/SliderItem";
 import WhatIsEmlakSepette from "../../components/WhatIsEmlakSepette";
 import SliderEstateBar from "../../components/SliderEstateBar";
+import firebase from "@react-native-firebase/app";
 
 const apiUrl = "https://private.emlaksepette.com";
 
@@ -40,6 +41,21 @@ const FirstHome = (props) => {
     } catch (error) {
       console.log("Error fetching featured sliders:", error);
       setLoadingSliders(false);
+    }
+  };
+
+  const testFirebase = async () => {
+    // try {
+    //   const result = await firebase.messaging().getToken();
+    //   console.log("Token: ", result);
+    // } catch (error) {
+    //   console.log("Error fetching featured sliders:", error);
+    // }
+    try {
+      const result = await firebase.app().name; // Firebase uygulamasının adını al
+      console.log("Firebase Kurulumu Başarılı:", result);
+    } catch (error) {
+      console.error("Firebase Kurulumu Başarısız:", error);
     }
   };
 
@@ -294,7 +310,8 @@ const FirstHome = (props) => {
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
-                  onPress={() => navigation.navigate("AllFranchiseBrands")}
+                  // onPress={() => navigation.navigate("AllFranchiseBrands")}
+                  onPress={() => testFirebase()}
                 >
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
