@@ -244,7 +244,7 @@ export default function SupportAdd() {
       }
 
       const response = await axios.post(
-        "http://192.168.18.31:8000/api/support",
+        "http://192.168.1.102:8000/api/support",
         formData,
         {
           headers: {

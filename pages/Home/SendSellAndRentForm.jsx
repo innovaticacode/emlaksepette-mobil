@@ -181,7 +181,7 @@ export default function SendSellAndRentForm() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.18.31:8000/api/cities"
+        "http://192.168.1.102:8000/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -203,7 +203,7 @@ export default function SendSellAndRentForm() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.31:8000/api/counties/${value}`
+        `http://192.168.1.102:8000/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -233,7 +233,7 @@ export default function SendSellAndRentForm() {
   const fetchDataNeigbour = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.31:8000/api/neighborhoods/${value}`
+        `http://192.168.1.102:8000/api/neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {

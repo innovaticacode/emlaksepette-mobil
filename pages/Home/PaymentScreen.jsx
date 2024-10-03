@@ -8,9 +8,11 @@ import {
   SafeAreaView,
   ImageBackground,
   Dimensions,
+  Keyboard,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import IconIdCard from "react-native-vector-icons/FontAwesome";
+import WarningIcon from "react-native-vector-icons/AntDesign";
 import HTML from "react-native-render-html";
 import { CheckBox } from "@rneui/themed";
 import CreditCardScreen from "./CreditCardScreen";
@@ -22,11 +24,14 @@ import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
 import { Platform } from "react-native";
 import { apiRequestGet} from "../../components/methods/apiRequest";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {WebView} from "react-native-webview";
 import HTMLView from "react-native-htmlview";
 import { io } from "socket.io-client";
 import {  useSelector } from "react-redux";
+import { checkReferanceCode, payEft } from "../../services/apiServices";
+import { ALERT_TYPE, AlertNotificationRoot, Dialog } from "react-native-alert-notification";
+import AbsoluteErrorInput from "../../components/custom_inputs/AbsoluteErrorInput";
 export default function PaymentScreen() {
   // Kullanarak bu değerleri göstermek için devam edin
 
@@ -67,10 +72,18 @@ export default function PaymentScreen() {
   const handleScrollViewLayout = (event) => {
     setScrollOffset(event.nativeEvent.layout.y);
   };
-
+  const nav = useNavigation();
   const user = useSelector((state) => {
     return state.user.user
   })
+  const [IdNumberWarningText,setIdNumberWarningText] = useState("Zorunlu");
+  const [tcWarningColor,setTcWarningColor] = useState('#cc3300');
+ 
+  const [addressWarningText,setAddressWarningText] = useState("Zorunlu");
+  const [addressWarningColor,setAddressWarningColor] = useState("#cc3300");
+ 
+  const [referanceCodeWarningText,setReferanceCodeWarningText] = useState("7 Hane Olmalıdır");
+  const [referanceCodeWarningColor,setReferanceCodeWarningColor] = useState("#cc3300");
 
 
   const handleLayout = (key, event) => {
@@ -92,6 +105,15 @@ export default function PaymentScreen() {
     function paymentCheck(value) {
       setPaymentModalShow(false);
       alert(value.message)
+      nav.navigate('PaymentSuccess', {
+        title: "SİPARİŞ İÇİN TEŞEKKÜRLER!",
+        message: "Siparişiniz başarıyla oluşturuldu.",
+        primaryButtonText: "Siparişlerim",
+        secondaryButtonText: "Ana Sayfa",
+        icon: "check-circle", // İkonu belirt
+        onContinue: () => nav.navigate('Settings'), // Ayarlar ekranına git
+        onGoHome: () => nav.navigate('Home'), // Ana sayfaya git
+      });
     }
 
     socket.on('connect', onConnect);
@@ -103,7 +125,7 @@ export default function PaymentScreen() {
       socket.off('disconnect', onDisconnect);
       socket.off('result_api_payment_cart', paymentCheck);
     };
-  }, []);
+  }, [nav]);
 
   useEffect(() => {
     if(user?.name){
@@ -124,6 +146,39 @@ export default function PaymentScreen() {
         return '#ebebeb';
       }
     }
+  }
+
+  function tcKimlikDogrula(tcKimlik) {
+    // TC Kimlik numarası 11 haneli olmalı ve ilk hanesi sıfır olamaz
+    if (tcKimlik.length !== 11 || tcKimlik[0] === '0') {
+      return false;
+    }
+  
+    // TC Kimlik numarasının rakamlardan oluştuğunu kontrol et
+    if (!/^\d+$/.test(tcKimlik)) {
+      return false;
+    }
+  
+    const digits = tcKimlik.split('').map(Number);
+  
+    // 1. 3. 5. 7. 9. basamakların toplamı
+    const oddSum = digits[0] + digits[2] + digits[4] + digits[6] + digits[8];
+    // 2. 4. 6. 8. basamakların toplamı
+    const evenSum = digits[1] + digits[3] + digits[5] + digits[7];
+  
+    // 10. basamak kontrolü
+    const tenthDigit = (7 * oddSum - evenSum) % 10;
+    if (tenthDigit !== digits[9]) {
+      return false;
+    } 
+    // 11. basamak kontrolü
+    const sumOfFirstTen = digits.slice(0, 10).reduce((a, b) => a + b, 0);
+    const eleventhDigit = sumOfFirstTen % 10;
+    if (eleventhDigit !== digits[10]) {
+      return false;
+    }
+  
+    return true;
   }
 
   const completeCreditCardPay = () => {
@@ -225,9 +280,6 @@ export default function PaymentScreen() {
       tempErrors.length == 0
     ) {
       setPaymentModalShow(true)
-    } else {
-
-      alert("tüm alanları doldur");
     }
   };
   {
@@ -240,6 +292,7 @@ export default function PaymentScreen() {
   const [adress, setadress] = useState("");
   const [notes, setnotes] = useState("");
   const [referanceCode, setreferanceCode] = useState("");
+  const [selectedBank, setSelectedBank] = useState(0);
   {
     /** State Of Inputs **/
   }
@@ -297,7 +350,7 @@ export default function PaymentScreen() {
   const [Deals, setDeals] = useState("");
 
   const fetchDataDeal = async () => {
-    const url = `http://192.168.18.31:8000/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
+    const url = `http://192.168.1.102:8000/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);
@@ -313,7 +366,7 @@ export default function PaymentScreen() {
   const formHtml = `
     <html>
       <body>
-        <form id="paymentForm" action="http://192.168.18.31:8000/api/pay-cart" method="POST">
+        <form id="paymentForm" action="http://192.168.1.102:8000/api/pay-cart" method="POST">
           <input type="hidden" name="name" value="${creditCartData.name}" />
           <input type="hidden" name="creditcard" value="${creditCartData.credit_cart_number}" />
           <input type="hidden" name="month" value="${creditCartData.exp_month}" />
@@ -336,12 +389,161 @@ export default function PaymentScreen() {
     fetchDataDeal();
   }, [modalVisible]);
 
+  const eftPay = ({}) => {
+    var tempErrors = [];
+    var scrollPositionsTemp = [];
+    if(!IdNumber){
+      tempErrors.push({
+        key : "IdNumber",
+        message : "TC Kimlik alanı zorunludur"
+      });
+      scrollPosition = ((approximatelyInputHeight * 1) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(!NameAndSurnam){
+      tempErrors.push({
+        key : "NameAndSurnam",
+        message : "Ad Soyad alanı zorunludur"
+      });
+      scrollPosition = ((approximatelyInputHeight * 2) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(!ePosta){
+      tempErrors.push({
+        key : "ePosta",
+        message : "E-posta alanı zorunludur"
+      });
+      scrollPosition = ((approximatelyInputHeight * 3) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(!phoneNumber){
+      tempErrors.push({
+        key : "phoneNumber",
+        message : "Telefon alanı zorunludur"
+      });
+      scrollPosition = inputPositions['phoneNumber']; 
+      scrollPosition = ((approximatelyInputHeight * 4) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(!adress){
+      tempErrors.push({
+        key : "adress",
+        message : "Adres alanı zorunludur"
+      });
+      scrollPosition = ((approximatelyInputHeight * 5) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(!checked){
+      tempErrors.push({
+        key : "checked",
+        message : "Mesafeli kapora emanet sözleşmesi onay kutucuğunu işaretleyiniz"
+      });
+      scrollPosition = ((approximatelyInputHeight * 8) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(!checked2){
+      tempErrors.push({
+        key : "checked2",
+        message : "Sözleşme aslını imzalamak için 7 iş günü içerisinde geleceğinizi belirten kutucuğu işaretleyiniz"
+      });
+      scrollPosition = ((approximatelyInputHeight * 9) + approximatelyTop); 
+      scrollPositionsTemp.push(scrollPosition)
+    }
+
+    if(tempErrors.length == 0) {
+      if(!selectedBank){
+        Dialog.show({
+          type: ALERT_TYPE.WARNING,
+          title: "Uyarı",
+          textBody: "Lütfen havale yapacağınız bankayı seçiniz",
+          button: "Tamam",
+        });
+      }else{
+        if(!pdfFile){
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Lütfen dekont ekleyiniz",
+            button: "Tamam",
+          });
+        }else{
+          if (
+            tempErrors.length == 0
+          ) {
+            payEft({
+              bank_id : selectedBank,
+              pdf : pdfFile,
+              payableAmount : route.params.deposit 
+            }).then((res) => {
+              console.log(res)
+              if(res.status == 200){
+                nav.navigate('PaymentSuccess', {
+                  title: "SİPARİŞ İÇİN TEŞEKKÜRLER!",
+                  message: "Siparişiniz başarıyla oluşturuldu.",
+                  primaryButtonText: "Siparişlerim",
+                  secondaryButtonText: "Ana Sayfa",
+                  icon: "check-circle", // İkonu belirt
+                  onContinue: () => nav.navigate('Settings'), // Ayarlar ekranına git
+                  onGoHome: () => nav.navigate('Home'), // Ana sayfaya git
+                });
+              }
+            }).catch((err) => {
+              console.log(err);
+            })
+          }
+        }
+      }
+    }
+    
+
+    if(tempErrors.length > 0){
+      scrollViewRef.current?.scrollToPosition(0, scrollPositionsTemp[0], true);
+    }
+    setErrors(tempErrors)
+    
+  }
+
+  const filterErrors = (key) => {
+    var newErrors = errors.filter((error) => error.key != key)
+
+    return newErrors;
+  }
+
+  const checkReferanceFunc = (referanceCode) => {
+    setReferanceCodeWarningText("Kontrol Ediliyor")
+    setReferanceCodeWarningColor("#555555")
+    checkReferanceCode(referanceCode).then((res) => {
+      if(res.status == 200){
+        setReferanceCodeWarningText(res.data.name)
+        setReferanceCodeWarningColor("green")
+      }else{
+        setReferanceCodeWarningText("Zorunlu")
+        setReferanceCodeWarningColor("#cc3300")
+      }
+    }).catch((err) => {
+      setReferanceCodeWarningText("Geçersiz Referans Kodu")
+      setReferanceCodeWarningColor("#cc3300")
+      console.log(err);
+    })
+  }
+
   return (
-    <KeyboardAwareScrollView
+    <AlertNotificationRoot>
+
+    <ScrollView
+      keyboardDismissMode='on-drag' 
       style={styles.container}
       contentContainerStyle={{ gap: 20, paddingBottom: 50 }}
       showsVerticalScrollIndicator={false}
+      onScrollBeginDrag={() => {Keyboard.dismiss();console.log("asd")}}
       ref={scrollViewRef}
+      scrollEventThrottle={16}
       onLayout={(e) => handleScrollViewLayout(e)} // Ana ScrollView için onLayout ekliyoruz
     >
       
@@ -353,7 +555,7 @@ export default function PaymentScreen() {
             automaticallyAdjustContentInsets={false}
             source={{ html: formHtml }} // WebView'e HTML formu yüklüyoruz ve otomatik gönderiliyor
             onNavigationStateChange={(navState) => {
-              if (navState.url !== "http://192.168.18.31:8000/api/pay-cart") {
+              if (navState.url !== "http://192.168.1.102:8000/api/pay-cart") {
               }
             }}
           />
@@ -372,7 +574,7 @@ export default function PaymentScreen() {
           <View style={styles.image}>
             <ImageBackground
               source={{
-                uri: `http://192.168.18.31:8000/project_housing_images/${project["image[]"]}`,
+                uri: `http://192.168.1.102:8000/project_housing_images/${project["image[]"]}`,
               }}
               style={{ width: "100%", height: "100%" }}
             />
@@ -456,16 +658,98 @@ export default function PaymentScreen() {
         <View  style={{ gap: 15 }}>
           <View onLayout={(event) => setApproximatelyInputHeight(event.nativeEvent.layout.height)} style={{ gap: 5 }}>
             <Text style={styles.label}>TC</Text>
+            <View style={{position:'absolute',right:0,top:11,backgroundColor:(tcWarningColor),zIndex:222,padding:5,display:'flex',alignItems:'center',flexDirection:'row',borderRadius:5}}>{tcWarningColor == "green" ? <WarningIcon style={{fontSize:'9px',color:'#fff'}} name="check"/> : <WarningIcon style={{fontSize:'9px',color:'#fff'}} name="warning"/>}<Text style={{fontSize:'9px',color:'#fff',marginLeft:3}}>{IdNumberWarningText}</Text></View>
             <TextInput
+              keyboardType="numeric"
               value={IdNumber}
-              onChangeText={(value) => setIdNumber(value)}
+              onChangeText={(value) => {
+                const numericValue = value.replace(/[^0-9]/g, ''); 
+                if(numericValue == value){
+                  setIdNumber(value);
+                  if(value.length == 11){
+                    if(tcKimlikDogrula(value)){
+                      setTcWarningColor("green");
+                      setIdNumberWarningText("Başarılı")
+                      setErrors([
+                        ...filterErrors("IdNumber")
+                      ])
+                    }else{
+                      setIdNumberWarningText("Geçersiz TC");
+                      setTcWarningColor('#cc3300')
+                      setErrors([
+                        ...filterErrors("IdNumber"),
+                        {
+                          key : "IdNumber",
+                          message : "Geçersiz TC"
+                        }
+                      ])
+                    }
+                  }else{
+                    if(value.length <= 11){
+                      setIdNumberWarningText("11 Hane Olmalıdır");
+                      setTcWarningColor('#cc3300')
+                      setIdNumber(numericValue)
+                      setErrors([
+                        ...filterErrors("IdNumber"),
+                        {
+                          key : "IdNumber",
+                          message : "11 Hane Olmalıdır"
+                        }
+                      ])
+                    }else{
+                      setIdNumberWarningText("Maksimum karakter sayısına ulaştınız");
+                      setTcWarningColor('#cc3300')
+                      setIdNumber(numericValue.substring(0,11))
+                      setErrors([
+                        ...filterErrors("IdNumber"),
+                        {
+                          key : "IdNumber",
+                          message : "Maksimum karakter sayısına ulaştınız"
+                        }
+                      ])
+                      setTimeout(() => {
+                        if(tcKimlikDogrula(numericValue.substring(0,11))){
+                          setTcWarningColor("green");
+                          setIdNumberWarningText("Başarılı")
+                          setErrors([
+                            ...filterErrors("IdNumber")
+                          ])
+                        }else{
+                          setIdNumberWarningText("Geçersiz TC");
+                          setTcWarningColor('#cc3300')
+                          setErrors([
+                            ...filterErrors("IdNumber"),
+                            {
+                              key : "IdNumber",
+                              message : "Geçersiz TC"
+                            }
+                          ])
+                        }
+                      },1000)
+                      
+                    }
+                  }
+                }else{
+                  setIdNumberWarningText("Sadece sayı giriniz");
+                  setTcWarningColor('#cc3300');
+                  setIdNumber(numericValue)
+                  setErrors([
+                    ...filterErrors("IdNumber"),
+                    {
+                      key : "IdNumber",
+                      message : "Sadece sayı giriniz"
+                    }
+                  ])
+                }
+              }}
               style={{...styles.Input,borderColor : getError('IdNumber')}}
             />
           </View>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Ad Soyad</Text>
             <TextInput
-              style={{...styles.Input,borderColor :getError('NameAndSurnam')}}
+              editable={false}
+              style={{...styles.Input,borderColor :getError('NameAndSurnam'),backgroundColor:'lightgrey'}}
               value={NameAndSurnam}
               onLayout={(event) => {handleLayout('NameAndSurnam', event)}}
               onChangeText={(value) => setNameAndSurnam(value)}
@@ -474,7 +758,7 @@ export default function PaymentScreen() {
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>E-posta</Text>
             <TextInput
-              style={{...styles.Input,borderColor : getError('ePosta')}}
+              style={{...styles.Input,borderColor : getError('ePosta'),backgroundColor:'lightgrey'}}
               value={ePosta}
               onLayout={(event) => {handleLayout('ePosta', event)}}
               onChangeText={(value) => setePosta(value)}
@@ -483,7 +767,7 @@ export default function PaymentScreen() {
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Telefon</Text>
             <TextInput
-              style={{...styles.Input,borderColor : getError('phoneNumber') }}
+              style={{...styles.Input,borderColor : getError('phoneNumber'),backgroundColor:'lightgrey'}}
               value={phoneNumber}
               onLayout={(event) => handleLayout('phoneNumber', event)}
               onChangeText={(value) => setphoneNumber(value)}
@@ -491,11 +775,28 @@ export default function PaymentScreen() {
           </View>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Adres</Text>
+            <AbsoluteErrorInput warningColor={addressWarningColor} warningText={addressWarningText} show={true}/>
             <TextInput
               style={{...styles.Input,borderColor : getError('adress')}}
               value={adress}
               onLayout={(event) => handleLayout('adress', event)}
-              onChangeText={(value) => setadress(value)}
+              onChangeText={(value) => {
+                if(value){
+                  if(value.length >= 5){
+                    setadress(value)
+                    setAddressWarningText("Başarılı")
+                    setAddressWarningColor("green")
+                  }else{
+                    setadress(value)
+                    setAddressWarningText("Minimum 5 karakter olmalıdır")
+                    setAddressWarningColor("#cc3300")
+                  }
+                }else{
+                  setadress(value)
+                  setAddressWarningText("Zorunlu")
+                  setAddressWarningColor("#cc3300")
+                }
+              }}
             />
           </View>
           <View style={{ gap: 5 }}>
@@ -508,10 +809,45 @@ export default function PaymentScreen() {
           </View>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Referans Kodu (Opsiyonel)</Text>
+            {
+              referanceCode != "" ? 
+                <AbsoluteErrorInput warningColor={referanceCodeWarningColor} warningText={referanceCodeWarningText} show={true}/>
+              : ''
+            }
             <TextInput
               style={styles.Input}
               value={referanceCode}
-              onChangeText={(value) => setreferanceCode(value)}
+              keyboardType="numeric"
+              onChangeText={(value) => {
+                const numericValue = value.replace(/[^0-9]/g, ''); 
+                if(value.length > 7){
+                  setReferanceCodeWarningText("Maksimum karakter sayısına ulaştınız");
+                  setReferanceCodeWarningColor('#cc3300')
+                  setreferanceCode(value.substring(0,7))
+
+                  setTimeout(() => {
+                    setReferanceCodeWarningText("Başarılı")
+                    setReferanceCodeWarningColor("green")
+                  },1000)
+                }else{
+                  if(numericValue == value){
+                    if(value.length == 7){
+                      setReferanceCodeWarningText("Başarılı")
+                      setReferanceCodeWarningColor("green")
+                      setreferanceCode(value)
+                      checkReferanceFunc(value)
+                    }else{
+                      setReferanceCodeWarningText("7 Hane Olmalıdır")
+                      setReferanceCodeWarningColor("#cc3300")
+                      setreferanceCode(value)
+                    }
+                  }else{
+                    setReferanceCodeWarningText("Sadece sayı giriniz");
+                    setReferanceCodeWarningColor('#cc3300');
+                    setreferanceCode(numericValue)
+                  }
+                }
+              }}
             />
           </View>
         </View>
@@ -1264,6 +1600,9 @@ export default function PaymentScreen() {
           onPress={pickDocument}
           selectedDocumentName={selectedDocumentName}
           url={selectedPdfUrl}
+          onHandlePayment={eftPay}
+          setSelectedBank={setSelectedBank}
+          selectedBank={selectedBank}
         />
       )}
       <Modal
@@ -1308,7 +1647,8 @@ export default function PaymentScreen() {
           </SafeAreaView>
         </View>
       </Modal>
-    </KeyboardAwareScrollView>
+    </ScrollView>
+    </AlertNotificationRoot>
   );
 }
 const styles = StyleSheet.create({

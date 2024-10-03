@@ -67,7 +67,7 @@ export default function SearchPage({ navigation }) {
 
       try {
         const { data } = await axios.get(
-          "http://192.168.18.31:8000/api/get-search-list",
+          "http://192.168.1.102:8000/api/get-search-list",
           {
             params: { searchTerm: term },
             headers: { "Content-Type": "application/json" },
@@ -110,9 +110,9 @@ export default function SearchPage({ navigation }) {
     if (!items.length) return null;
 
     const photoBaseUrl = {
-      "Emlak İlanları": "http://192.168.18.31:8000/housing_images/",
-      "Proje İlanları": "http://192.168.18.31:8000",
-      Üyeler: "http://192.168.18.31:8000/storage/profile_images",
+      "Emlak İlanları": "http://192.168.1.102:8000/housing_images/",
+      "Proje İlanları": "http://192.168.1.102:8000",
+      Üyeler: "http://192.168.1.102:8000/storage/profile_images",
     }[type];
 
     const modifyPhotoUrl = (photo) => {

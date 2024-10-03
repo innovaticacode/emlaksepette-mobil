@@ -25,7 +25,7 @@ import SliderItem from "../../components/SliderItem";
 import WhatIsEmlakSepette from "../../components/WhatIsEmlakSepette";
 import SliderEstateBar from "../../components/SliderEstateBar";
 
-const apiUrl = "http://192.168.18.31:8000";
+const apiUrl = "http://192.168.1.102:8000";
 
 const FirstHome = (props) => {
   const { index } = props;

@@ -130,7 +130,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
   const updateUserData = async () => {
     try {
       const updateResponse = await axios.get(
-        "http://192.168.18.31:8000/api/users/" + user?.id,
+        "http://192.168.1.102:8000/api/users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -170,7 +170,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
 
     try {
       const response = await axios.put(
-        "http://192.168.18.31:8000/api/institutional/club/update",
+        "http://192.168.1.102:8000/api/institutional/club/update",
         data,
         {
           headers: {
@@ -238,7 +238,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "http://192.168.18.31:8000/api/users/" + user?.id,
+          "http://192.168.1.102:8000/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -267,7 +267,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     }
   };
   const fetchDataDeal = async () => {
-    const url = `http://192.168.18.31:8000/api/sayfa/emlaksepette-paylasimci-davranis-kurallari`;
+    const url = `http://192.168.1.102:8000/api/sayfa/emlaksepette-paylasimci-davranis-kurallari`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);

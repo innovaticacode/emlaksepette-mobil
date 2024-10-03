@@ -21,8 +21,8 @@ import { ActivityIndicator } from "react-native-paper";
 
 export default function ShopVitrin({ data, housingdata, settab }) {
   const navigation = useNavigation();
-  const ApiUrl = "http://192.168.18.31:8000/storage/store_banners/";
-  const ApiUrls = "http://192.168.18.31:8000";
+  const ApiUrl = "http://192.168.1.102:8000/storage/store_banners/";
+  const ApiUrls = "http://192.168.1.102:8000";
 
   const [banners, setBanners] = useState([]);
   const [owners, setOwners] = useState([]);
@@ -77,7 +77,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "http://192.168.18.31:8000/api/institutional/add_to_cart",
+          "http://192.168.1.102:8000/api/institutional/add_to_cart",
           formData,
           {
             headers: {

@@ -14,7 +14,7 @@ import { Platform } from "react-native";
 import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
 export default function RealtorAdvertPost({ Onpress, housing }) {
   const [status, setStatus] = useState(housing.status);
-  const apiUrl = "http://192.168.18.31:8000/";
+  const apiUrl = "http://192.168.1.102:8000/";
   const { width, height } = Dimensions.get("window");
   return (
     <View style={[style.card, { gap: 5 }]}>

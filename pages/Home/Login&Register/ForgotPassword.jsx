@@ -72,7 +72,7 @@ export default function ForgotPassword() {
 
       console.log("API çağrısı yapılıyor...");
       const response = await axios.post(
-        "http://192.168.18.31:8000/api/password/email",
+        "http://192.168.1.102:8000/api/password/email",
         formData
       );
       console.log("API çağrısı başarılı. Yanıt:", response.data);

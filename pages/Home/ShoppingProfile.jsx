@@ -49,7 +49,7 @@ export default function ShoppingProfile() {
   const [permissionsUser, setPermissionsUser] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [openAccor, setOpenAccor] = useState({});
-  const PhotoUrl = "http://192.168.18.31:8000/storage/profile_images/";
+  const PhotoUrl = "http://192.168.1.102:8000/storage/profile_images/";
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -65,7 +65,7 @@ export default function ShoppingProfile() {
         }
 
         const response = await axios.get(
-          "http://192.168.18.31:8000/api/user/notification",
+          "http://192.168.1.102:8000/api/user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -99,7 +99,7 @@ export default function ShoppingProfile() {
     try {
       if (user.access_token && user) {
         const response = await axios.get(
-          `http://192.168.18.31:8000/api/users/${user?.id}`,
+          `http://192.168.1.102:8000/api/users/${user?.id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -203,7 +203,7 @@ export default function ShoppingProfile() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "http://192.168.18.31:8000/api/users/" + user?.id,
+          "http://192.168.1.102:8000/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

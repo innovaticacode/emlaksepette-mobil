@@ -45,7 +45,7 @@ export default function Sell() {
       try {
         if (user?.access_token) {
           const response = await axios.get(
-            "http://192.168.18.31:8000/api/institutional/get_solds",
+            "http://192.168.1.102:8000/api/institutional/get_solds",
             {
               headers: {
                 Authorization: `Bearer ${user.access_token}`,

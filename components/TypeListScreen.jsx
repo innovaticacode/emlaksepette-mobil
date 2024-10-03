@@ -19,7 +19,7 @@ function TypeListScreen({
   selectedTypes,
   nextStep,
 }) {
-  const baseUrl = "http://192.168.18.31:8000/react/";
+  const baseUrl = "http://192.168.1.102:8000/react/";
 
   const [loadingOrder, setLoadingOrder] = useState(null);
   const [loadingOrderStatusId, setLoadingOrderStatusId] = useState(null);

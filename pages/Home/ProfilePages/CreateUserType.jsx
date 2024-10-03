@@ -41,7 +41,7 @@ export default function CreateUserType() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "http://192.168.18.31:8000/api/institutional/roles/create",
+          "http://192.168.1.102:8000/api/institutional/roles/create",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -110,7 +110,7 @@ export default function CreateUserType() {
       });
 
       const response = await axios.post(
-        "http://192.168.18.31:8000/api/institutional/roles",
+        "http://192.168.1.102:8000/api/institutional/roles",
         formData, // formData kullanın
         {
           headers: {

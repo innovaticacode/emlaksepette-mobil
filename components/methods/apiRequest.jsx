@@ -1,8 +1,8 @@
 import axios from "axios";
 import { getValueFor } from "./user";
-export const apiUrl = "http://192.168.18.31:8000/api/";
-export const frontEndUri = "http://192.168.18.31:8000/api/";
-export const frontEndUriBase = "http://192.168.18.31:8000/";
+export const apiUrl = "http://192.168.1.102:8000/api/";
+export const frontEndUri = "http://192.168.1.102:8000/api/";
+export const frontEndUriBase = "http://192.168.1.102:8000/";
 
 export const apiRequestGet = (url) => {
   return axios.get(apiUrl + url);
@@ -30,3 +30,19 @@ export const apiRequestGetWithBearer = async (url) => {
     throw new Error("Kullanıcı access token'ı bulunamadı.");
   }
 };
+
+export const apiRequestPostWithBearer = async (url,params) => {
+  await getValueFor("user", (res) => {
+    user = res; // access_token değerini alıyoruz
+  });
+
+  // Eğer token alınmışsa isteği yapıyoruz
+  if (user && user.access_token) {
+    return axios.post(apiUrl + url, params ,{
+      headers: { Authorization: "Bearer " + user.access_token },
+    });
+  } else {
+    console.error("Access token bulunamadı");
+    throw new Error("Kullanıcı access token'ı bulunamadı.");
+  }
+}
