@@ -19,6 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import slugify from "react-slugify";
 import { Platform } from "react-native";
+import { DrawerActions } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("window");
 
@@ -56,6 +57,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
 
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
+    navigation.dispatch(DrawerActions.closeDrawer()); // Drawer'ı kapatıyoruz
     // setIsDrawerOpen(false);
   };
 
@@ -106,6 +108,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
               <TouchableOpacity
                 onPress={() => {
                   // setIsDrawerOpen(false);
+                  navigation.dispatch(DrawerActions.closeDrawer()); // Drawer'ı kapatıyoruz
 
                   if (item.submenus && item.submenus?.length > 0) {
                     navigation.navigate("Public", {

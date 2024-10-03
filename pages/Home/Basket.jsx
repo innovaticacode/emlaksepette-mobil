@@ -354,7 +354,7 @@ export default function Basket() {
   );
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={{ flex: 1 }}>
       {loading ? (
         <ActivityIndicator color="#333" size="large" />
       ) : (
