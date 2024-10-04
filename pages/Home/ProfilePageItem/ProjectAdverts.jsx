@@ -1,31 +1,58 @@
-import { View, Text, Dimensions, FlatList } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import React, { useState, useEffect } from "react";
 import ProjectPost from "../../../components/ProjectPost";
+import ProjectBottomSheetFilter from "../../../components/ProjectBottomSheetFilter";
+import axios from "axios";
 
-export default function ProjectAdverts({ data }) {
+const ApiUrl = "https://private.emlaksepette.com";
+
+export default function ProjectAdverts(props) {
+  const { data, isVisible, setIsVisible, id } = props;
   const [loadingPrjoects, setloadingPrjoects] = useState(false);
   const [featuredProjects, setFeaturedProjects] = useState([]);
-
   const fetchFeaturedProjects = async () => {
-    setloadingPrjoects(false);
     try {
-      setFeaturedProjects(data && data);
-      return setloadingPrjoects(false);
+      setFeaturedProjects(data);
     } catch (error) {
-      return setloadingPrjoects(false);
+      console.error("Error fetching featured projects:", error);
+    } finally {
+      setloadingPrjoects(false);
     }
   };
 
   useEffect(() => {
     setloadingPrjoects(true);
     fetchFeaturedProjects();
-    return setloadingPrjoects(false);
   }, [data]);
 
-  const { width, height } = Dimensions.get("window");
-  const ApiUrl = "https://private.emlaksepette.com";
+  const onFilterChange = async (filter) => {
+    setloadingPrjoects(true);
+    const uri = `${ApiUrl}/api/get_institutional_projects_by_housing_type/${id}`;
+    const params = {
+      housing_type: filter,
+      skip: 0,
+      take: 10,
+    };
+    try {
+      const response = await axios.get(uri, {
+        params: params,
+      });
+      console.debug("Response Data:", response.data); // Yanıt verisini kontrol et
+      setloadingPrjoects(false);
+      return setFeaturedProjects(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error.response || error.message); // Hata mesajını kontrol et
+      setloadingPrjoects(false);
+    }
+  };
+
   return (
     <View style={{ padding: 5 }}>
+      <ProjectBottomSheetFilter
+        onFilterChange={onFilterChange}
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+      />
       {featuredProjects &&
       Array.isArray(featuredProjects) &&
       featuredProjects.length > 0 ? (

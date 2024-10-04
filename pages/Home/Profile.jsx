@@ -284,33 +284,6 @@ export default function Profile() {
     setTabWidth(measuredWidth);
   };
 
-  const onFilterChange = async (filter) => {
-    const uri = `${ApiUrl}api/get_institutional_projects_by_housing_type/${id}`;
-
-    const params = {
-      housing_type: filter,
-      skip: 0,
-      take: 10,
-    };
-    try {
-      setloading(true);
-      const response = await axios.get(uri, {
-        headers: { Authorization: `Bearer ${user.access_token}` },
-        params: params,
-      });
-      setProjectData(response.data);
-      console.debug(
-        "Filtreleme başarılı: aloooooooooooo>>>>>>>>>>>>>>>>>>>>>>>>> ",
-        projectData
-      );
-      console.debug("Filtreleme başarılı: ", response.data);
-      return setloading(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      return setloading(false);
-    }
-  };
-
   return (
     <>
       {loadingShopping ? (
@@ -321,11 +294,6 @@ export default function Profile() {
         <View style={{ flex: 1 }}>
           <View style={styles.container}>
             <>
-              <ProjectBottomSheetFilter
-                isVisible={openProjectFilter}
-                setIsVisible={setOpenProjectFilter}
-                onFilterChange={onFilterChange}
-              />
               <EstateBottomSheetFilter
                 isVisible={openEstateFilter}
                 setIsVisible={setOpenEstateFilter}
@@ -483,7 +451,14 @@ export default function Profile() {
             <View style={{ flex: 1, paddingBottom: height * 0.1 }}>
               {tab === 0 && <Introduction id={id} setTab={settab} />}
               {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
-              {tab === 2 && <ProjectAdverts data={projectData} />}
+              {tab === 2 && (
+                <ProjectAdverts
+                  data={projectData}
+                  isVisible={openProjectFilter}
+                  setIsVisible={setOpenProjectFilter}
+                  id={id}
+                />
+              )}
               {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
               {tab === 4 &&
                 (storeData?.data?.corporate_type !== "Emlak Ofisi" &&
