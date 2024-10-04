@@ -457,7 +457,6 @@ export default function UpgradeProfile() {
         return [];
     }
   };
-
   const initialRegion = {
     latitude: parseFloat(39.9334),
     longitude: parseFloat(32.8597),
@@ -480,12 +479,11 @@ export default function UpgradeProfile() {
       </View>
     );
   }
-
+  console.log(user.role);
   const postData = async () => {
     try {
       let fullNumber = `${areaCode}${formData.phone}`;
       let FormData = new FormData();
-
       if (user.role === "Bireysel Hesap") {
         formData.append("name", formData.name);
         formData.append("iban", formData.iban);
@@ -561,7 +559,7 @@ export default function UpgradeProfile() {
     } catch (error) {
       console.error(
         "Error:",
-        error.response ? error.response.data : error.message
+        error?.response ? error?.response?.data : error?.message
       );
       Dialog.show({
         type: ALERT_TYPE.DANGER,

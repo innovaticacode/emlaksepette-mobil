@@ -8,7 +8,11 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
+import {
+  ALERT_TYPE,
+  AlertNotificationRoot,
+  Dialog,
+} from "react-native-alert-notification";
 
 const apiUrl = "https://private.emlaksepette.com";
 
@@ -42,40 +46,42 @@ const AllFeaturedRealEstate = (prosp) => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      {loading ? (
-        <ActivityIndicator
-          size="large"
-          color="#0056b3"
-          style={styles.loading}
-        />
-      ) : (
-        <FlatList
-          data={estateBrands}
-          keyExtractor={(item) =>
-            item.id ? item.id.toString() : Math.random().toString()
-          }
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <View style={styles.area}>
-              <View style={styles.imageArea}>
-                <Image
-                  source={{
-                    uri: `${apiUrl}/storage/profile_images/${item.profile_image}`,
-                  }}
-                  alt="brands"
-                  resizeMode="contain"
-                  style={styles.image}
-                />
-                <View style={styles.separator} />
-                <Text style={styles.title}>{item.name}</Text>
+    <AlertNotificationRoot>
+      <View style={styles.container}>
+        {loading ? (
+          <ActivityIndicator
+            size="large"
+            color="#0056b3"
+            style={styles.loading}
+          />
+        ) : (
+          <FlatList
+            data={estateBrands}
+            keyExtractor={(item) =>
+              item.id ? item.id.toString() : Math.random().toString()
+            }
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <View style={styles.area}>
+                <View style={styles.imageArea}>
+                  <Image
+                    source={{
+                      uri: `${apiUrl}/storage/profile_images/${item.profile_image}`,
+                    }}
+                    alt="brands"
+                    resizeMode="contain"
+                    style={styles.image}
+                  />
+                  <View style={styles.separator} />
+                  <Text style={styles.title}>{item.name}</Text>
+                </View>
               </View>
-            </View>
-          )}
-        />
-      )}
-    </View>
+            )}
+          />
+        )}
+      </View>
+    </AlertNotificationRoot>
   );
 };
 
