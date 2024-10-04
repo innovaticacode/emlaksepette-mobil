@@ -39,7 +39,8 @@ export default function ProjectAdverts(props) {
       });
       console.debug("Response Data:", response.data); // Yanıt verisini kontrol et
       setloadingPrjoects(false);
-      return setFeaturedProjects(response.data);
+      setFeaturedProjects(response.data);
+      return setIsVisible(false);
     } catch (error) {
       console.error("Error fetching data:", error.response || error.message); // Hata mesajını kontrol et
       setloadingPrjoects(false);
