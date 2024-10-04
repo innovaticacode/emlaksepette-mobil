@@ -81,12 +81,13 @@ export default function Profile() {
       text: "Proje İlanları",
       isShow: "All",
     },
+
     {
-      text: "Satış Noktalarımız",
+      text: "Mağaza Profili",
       isShow: "All",
     },
     {
-      text: "Mağaza Profili",
+      text: "Satış Noktalarımız",
       isShow: "All",
     },
     {
