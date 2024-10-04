@@ -1,31 +1,42 @@
-import { View, Text, ScrollView } from 'react-native'
-import React from 'react'
-import CommentItem from '../RealtorPages/CommentItem'
+import { View, Text, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { SubjectFilter } from "../../../components";
 
-export default function CommentsOfBrands({data}) {
-    console.log(data.data.owners)
+export default function CommentsOfBrands(props) {
+  const {} = props;
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleActive = (index) => {
+    setActiveIndex(index);
+  };
+
   return (
-    <View style={{padding:10,gap:10}}>
-        <View style={{width:'100%',padding:5,backgroundColor:'#EDEFF7',flexDirection:'row'}}>
-            <View style={{width:'50%',backgroundColor:'red',padding:2}}>
-                <View>
-
-                </View>
-            </View>
-
+    <View style={{ flex: 1, paddingHorizontal: 10 }}>
+      <View>
+        <Text style={styles.title}>Konuya Göre Filtrele</Text>
+        <View style={{ flexDirection: "row" }}>
+          <SubjectFilter
+            text="Tümü"
+            active={activeIndex === 0}
+            onPress={() => handleActive(0)}
+          />
+          <SubjectFilter
+            text="Fotoğraflı Yorum"
+            active={activeIndex === 1}
+            onPress={() => handleActive(1)}
+          />
         </View>
-            <ScrollView horizontal contentContainerStyle={{gap:10}} showsHorizontalScrollIndicator={false}>
-      {
-                data.data.owners.map((item,i)=>(
-                    <CommentItem comment={item?.comment} rate={item?.rate} username={item?.username} key={i} date={item?.created_at} />
-                ))
-      }
-    </ScrollView>
+      </View>
     </View>
-
-  )
+  );
 }
 
-
-
-
+export const styles = StyleSheet.create({
+  title: {
+    fontSize: 10,
+    fontWeight: "600",
+    lineHeight: 19,
+    color: "#0C0C0C",
+    lineHeight: 12,
+  },
+});
