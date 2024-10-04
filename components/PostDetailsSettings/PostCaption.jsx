@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, ScrollView ,TouchableOpacity} from "react-native";
 import React,{useState} from "react";
-import ShoppinInfo from "../ShoppinInfo";
 import HTML from "react-native-render-html";
 import { Platform } from "react-native";
 export default function PostCaption({ data }) {
