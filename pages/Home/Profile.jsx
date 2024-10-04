@@ -57,18 +57,17 @@ export default function Profile() {
   const [housingRecords, sethousingRecords] = useState([]);
   const [openProjectFilter, setOpenProjectFilter] = useState(false);
   const [openEstateFilter, setOpenEstateFilter] = useState(false);
+  const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   const [loading, setloading] = useState(false);
   const [storeData, setstoreData] = useState([]);
   const [loadingShopping, setloadingShopping] = useState(false);
-  const [projectsData, setProjectsData] = useState([]);
-  const [checked, setChecked] = useState(false);
-  const toggleCheckbox = () => setChecked(!checked);
   const [formVisible, setFormVisible] = useState("false");
   const [featuredProjects, setFeaturedProjects] = useState([]);
-  const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
-  // Scroll width değerini al
+  const [checked, setChecked] = useState(false);
+  const toggleCheckbox = () => setChecked(!checked);
   const scrollViewRef = useRef(null); // ScrollView için ref
   const [tabWidth, setTabWidth] = useState(0);
+  const [projectData, setProjectData] = useState([]);
   const [items, setItems] = useState([
     {
       text: "Tanıtım",
@@ -83,11 +82,11 @@ export default function Profile() {
       isShow: "All",
     },
     {
-      text: "Mağaza Profili",
+      text: "Satış Noktalarımız",
       isShow: "All",
     },
     {
-      text: "Satış Noktalarımız",
+      text: "Mağaza Profili",
       isShow: "All",
     },
     {
@@ -181,29 +180,45 @@ export default function Profile() {
     }
   };
 
-  const fetchData = async () => {
-    try {
-      setloadingShopping(true);
-      const res = await apiRequestGet("brand/" + id);
-      const housingsWithPrefixedID = res.data.data.housings.map((housing) => ({
-        ...housing,
-        prefixedID: `20000${housing.id}`,
-      }));
-      setstoreData(res.data);
-      setProjectsData(res?.data?.data?.projects);
-      setHousings(housingsWithPrefixedID);
-      setTeamm(res.data.data.child);
-      sethousingRecords(housingsWithPrefixedID); // Housings dizisini başlangıçta kopyala
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
-      setloadingShopping(false);
-    }
-  };
   useEffect(() => {
-    fetchData();
+    // Örnek API isteği
+    setloadingShopping(true);
+    apiRequestGet("brand/" + id)
+      .then((res) => {
+        const housingsWithPrefixedID = res.data.data.housings.map(
+          (housing) => ({
+            ...housing,
+            prefixedID: `20000${housing.id}`,
+          })
+        );
+        setstoreData(res.data);
+        setProjectData(res.data.data.projects);
+        setHousings(housingsWithPrefixedID);
+        setTeamm(res.data.data.child);
+        sethousingRecords(housingsWithPrefixedID); // Housings dizisini başlangıçta kopyala
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      })
+      .finally(() => {
+        setloadingShopping(false);
+      });
   }, [id]);
 
+  const handleSearch = (text) => {
+    setSearchText(text);
+    ("");
+    const filteredData = text
+      ? Housings.filter(
+          (item) =>
+            item.title.toLowerCase().includes(text.toLowerCase()) ||
+            item.prefixedID.includes(text) || // prefixedID'yi kontrol et
+            item.id.toString().includes(text) // id'yi kontrol et
+        )
+      : Housings;
+
+    sethousingRecords(filteredData);
+  };
   const handleOpenPhone = () => {
     Linking.openURL(`tel:${storeData.data.phone}`);
   };
@@ -239,38 +254,62 @@ export default function Profile() {
       alert(error.message);
     }
   };
-  const [filtered, setfiltered] = useState([]);
-  const onFilterChange = async (filter) => {
-    const uri = `http://192.168.18.31:8000/api/get_institutional_projects_by_housing_type/${id}`;
 
-    console.debug("Filter----------:", filter);
+  // Scroll width değerini al
+
+  useEffect(() => {
+    if (scrollViewRef.current && tabWidth > 0) {
+      const tabCount = items.length;
+      const viewWidth = width;
+      const tabOffset = tab * tabWidth;
+      const contentWidth = tabWidth * tabCount;
+      const centeredOffset = Math.max(
+        0,
+        Math.min(
+          tabOffset - (viewWidth / 2 - tabWidth / 2),
+          contentWidth - viewWidth
+        )
+      );
+
+      scrollViewRef.current.scrollTo({
+        x: centeredOffset,
+        animated: true,
+      });
+    }
+  }, [tab, items, tabWidth]);
+
+  // Calculate the width of each tab after layout
+  const onTabLayout = (event) => {
+    const { width: measuredWidth } = event.nativeEvent.layout;
+    setTabWidth(measuredWidth);
+  };
+
+  const onFilterChange = async (filter) => {
+    const uri = `${ApiUrl}api/get_institutional_projects_by_housing_type/${id}`;
+
     const params = {
       housing_type: filter,
       skip: 0,
       take: 10,
     };
-
     try {
+      setloading(true);
       const response = await axios.get(uri, {
         headers: { Authorization: `Bearer ${user.access_token}` },
         params: params,
       });
-
-      // console.log("response data>>> ", response.data);
-      // Burada güncellenmiş veriyi featuredProjects'a atayın
-      // console.debug("Response Data laaallalalalal: ", response.data);
-      setfiltered(response.data);
-      setFeaturedProjects(response.data); // Veriyi burada ayarlayın
+      setProjectData(response.data);
+      console.debug(
+        "Filtreleme başarılı: aloooooooooooo>>>>>>>>>>>>>>>>>>>>>>>>> ",
+        projectData
+      );
+      console.debug("Filtreleme başarılı: ", response.data);
+      return setloading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
+      return setloading(false);
     }
   };
-
-  // useEffect(() => {
-  //   if (housingTypeProject) {
-  //     onFilterChange();
-  //   }
-  // }, [housingTypeProject]);
 
   return (
     <>
@@ -285,7 +324,7 @@ export default function Profile() {
               <ProjectBottomSheetFilter
                 isVisible={openProjectFilter}
                 setIsVisible={setOpenProjectFilter}
-                onFilterChange={onFilterChange} // Callback fonksiyonunu geçir
+                onFilterChange={onFilterChange}
               />
               <EstateBottomSheetFilter
                 isVisible={openEstateFilter}
@@ -422,6 +461,7 @@ export default function Profile() {
                         },
                       ]}
                       onPress={() => settab(index)}
+                      onLayout={onTabLayout}
                     >
                       <Text
                         style={{
@@ -443,11 +483,7 @@ export default function Profile() {
             <View style={{ flex: 1, paddingBottom: height * 0.1 }}>
               {tab === 0 && <Introduction id={id} setTab={settab} />}
               {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
-              {tab === 2 && (
-                <ProjectAdverts
-                  data={filtered.length > 0 ? filtered : featuredProjects}
-                />
-              )}
+              {tab === 2 && <ProjectAdverts data={projectData} />}
               {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
               {tab === 4 &&
                 (storeData?.data?.corporate_type !== "Emlak Ofisi" &&
@@ -470,10 +506,8 @@ export default function Profile() {
                 position: "absolute",
                 bottom: 0,
                 width: "100%",
-                paddingBottom: Platform.OS === "ios" ? 24 : 14,
               }}
             >
-              {/* filter button */}
               {(tab == 1 || tab == 2) && (
                 <TouchableOpacity
                   onPress={() =>

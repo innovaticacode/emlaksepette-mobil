@@ -1,66 +1,62 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-  Dimensions,
-  FlatList,
-} from "react-native";
+import { View, Text, Dimensions, FlatList } from "react-native";
 import React, { useState, useEffect } from "react";
-import Posts from "../../../components/Posts";
 import ProjectPost from "../../../components/ProjectPost";
-import axios from "axios";
 
 export default function ProjectAdverts({ data }) {
   const [loadingPrjoects, setloadingPrjoects] = useState(false);
   const [featuredProjects, setFeaturedProjects] = useState([]);
 
   const fetchFeaturedProjects = async () => {
+    setloadingPrjoects(false);
     try {
-      setFeaturedProjects(data);
-      setloadingPrjoects(true);
-      console.log("---------------", data);
+      setFeaturedProjects(data && data);
+      return setloadingPrjoects(false);
     } catch (error) {
-      console.log(error);
+      return setloadingPrjoects(false);
     }
   };
 
   useEffect(() => {
+    setloadingPrjoects(true);
     fetchFeaturedProjects();
-  }, []);
+    return setloadingPrjoects(false);
+  }, [data]);
 
   const { width, height } = Dimensions.get("window");
   const ApiUrl = "https://private.emlaksepette.com";
   return (
     <View style={{ padding: 5 }}>
-      {featuredProjects && featuredProjects.length > 0 ? (
+      {featuredProjects &&
+      Array.isArray(featuredProjects) &&
+      featuredProjects.length > 0 ? (
         <FlatList
           data={featuredProjects}
           renderItem={({ item, index }) => (
             <ProjectPost
               key={index}
               project={item}
-              caption={item.project_title}
-              ımage={`${ApiUrl}/${item?.image?.replace("public/", "storage/")}`}
+              caption={item?.project_title}
+              ımage={`${ApiUrl}/${item?.image.replace("public/", "storage/")}`}
               location={item?.city?.title}
               city={item?.county?.ilce_title}
-              ProjectNo={item.id}
-              user={data.data}
-              // acıklama={item.description
-              //   .replace(/<\/?[^>]+(>|$)/g, "")
-              //   .replace(/&nbsp;/g, " ")}
-
-              ProfilImage={`${ApiUrl}/storage/profile_images/${data.profile_image}`}
+              ProjectNo={item?.id}
+              user={data?.data}
+              ProfilImage={`${ApiUrl}/storage/profile_images/${data?.profile_image}`}
               loading={loadingPrjoects}
             />
           )}
         />
       ) : (
-        <View style={{ padding: 10 }}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+          }}
+        >
           <Text>Proje bulunamadı.</Text>
         </View>
       )}
-      {/* {data.map && data.map((item, index) => <Text>{item.project_title}</Text>)} */}
     </View>
   );
 }
