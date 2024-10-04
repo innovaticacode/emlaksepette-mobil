@@ -1,7 +1,6 @@
 import { View, Text,ScrollView,FlatList } from 'react-native'
 import React from 'react'
 import Posts from '../Posts'
-import ShoppinInfo from '../ShoppinInfo'
 
 export default function Ablok({openModal}) {
   const Home = [

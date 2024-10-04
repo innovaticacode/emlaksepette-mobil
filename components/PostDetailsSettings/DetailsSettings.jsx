@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import React from "react";
 import SettingsItem from "../SettingsItem";
-import ShoppinInfo from "../ShoppinInfo";
 import { useRoute } from "@react-navigation/native";
 import CheckSetting from "../CheckSetting";
 import { Platform } from "react-native";

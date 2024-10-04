@@ -94,7 +94,7 @@ export default function SalePageMain() {
         <View style={styles.salePageImageContainer}>
           <Image
             style={styles.salePageImage}
-            source={require("../../../images/satisOfisi.png")}
+            source={require("../../../src/assets/images/satisOfisi.png")}
           ></Image>
         </View>
         <View style={styles.firstParStyle}>

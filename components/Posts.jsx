@@ -1240,7 +1240,7 @@ const styles = StyleSheet.create({
   ilanNoText: {
     fontSize: 11,
     color: "black",
-    fontWeight: 800,
+    fontWeight: "800",
     marginHorizontal: 5,
   },
   adTitleText: {

@@ -1009,7 +1009,7 @@ export default function PostDetail() {
                   <Text
                     style={{
                       color: "white",
-                      fontWeight: 600,
+                      fontWeight: "600",
                       fontSize: 12,
                     }}
                   >
@@ -1038,7 +1038,7 @@ export default function PostDetail() {
                   <Text
                     style={{
                       color: "white",
-                      fontWeight: 600,
+                      fontWeight: "600",
                       fontSize: 12,
                       marginHorizontal: 15,
                     }}
