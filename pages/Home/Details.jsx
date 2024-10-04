@@ -701,7 +701,7 @@ export default function Details({ navigation }) {
                     <Text
                       style={{
                         color: "white",
-                        fontWeight: 600,
+                        fontWeight: "600",
                         fontSize: 12,
                         paddingLeft: 10,
                       }}
@@ -733,7 +733,7 @@ export default function Details({ navigation }) {
                   <Text
                     style={{
                       color: "white",
-                      fontWeight: 600,
+                      fontWeight: "600",
                       fontSize: 12,
                       paddingLeft: "10px",
                     }}
