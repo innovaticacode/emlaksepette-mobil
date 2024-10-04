@@ -1237,6 +1237,17 @@ export default function App({ route }) {
                     },
                   })}
                 />
+                <Stack.Screen
+                  name="SeeMyNeighbor"
+                  component={SeeMyNeighbor}
+                  options={({ route }) => ({
+                    title: "Komşumu Gör Nedir?",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
               </Stack.Navigator>
             </NavigationContainer>
           </SheetProvider>
