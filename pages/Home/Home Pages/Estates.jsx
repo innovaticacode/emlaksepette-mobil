@@ -17,7 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import SliderEstateBar from "../../../components/SliderEstateBar";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import Housing from "../../../assets/housing.png";
+import Housing from "../../../src/assets/images/Konut.png";
 const PAGE_SIZE = 10;
 
 const Estates = ({ index }) => {
