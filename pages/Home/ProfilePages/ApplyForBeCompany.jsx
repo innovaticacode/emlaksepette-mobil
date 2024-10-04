@@ -1024,7 +1024,7 @@ export default function ApplyForBeCompany() {
                         style={{
                           fontSize: 14,
                           color: "black",
-                          fontWeight: 600,
+                          fontWeight: "600",
                         }}
                       >
                         Marka Adı
