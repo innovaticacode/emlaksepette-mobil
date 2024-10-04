@@ -182,6 +182,7 @@ export default function Favorites() {
 
   // DELETE ALL FUNCTION START
   const deleteRequestWithToken = async () => {
+    setLoading(true);
     try {
       const response = await axios.delete(
         "https://private.emlaksepette.com/api/institutional/housing-favorite",
@@ -191,25 +192,45 @@ export default function Favorites() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Başarılı",
-        textBody: `${FavoriteRemoveIDS.length} Tüm ilanlar favorilerden kaldırıldı.`,
-        button: "Tamam",
-      });
-      fetchFavorites();
+      if (response.status === 200) {
+        console.log("showing");
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: ` Tüm ilanlar favorilerden kaldırıldı.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchFavorites(); // Fetch favorites after dialog is dismissed
+            },
+          });
+          setLoading(false); // End loading after showing the dialog
+        }, 300);
+      }
       setmodalForDeleteFavorites(false);
     } catch (error) {
-      Dialog.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Hata",
-        textBody: "Tümünü Silme işlemi başarısız oldu!",
-        button: "Tamam",
-      });
+      console.log("err");
+      setTimeout(() => {
+        Dialog.show({
+          type: ALERT_TYPE.WARNING,
+          title: "Hata!",
+          textBody: "Tümünü Silme işlemi başarısız oldu.",
+          button: "Tamam",
+          onHide: () => {
+            fetchFavorites(); // Fetch favorites after dialog is dismissed
+          },
+        });
+        setLoading(false); // End loading after showing the dialog
+      }, 500);
+      setmodalForDeleteFavorites(false);
+    } finally {
+      setTimeout(() => setLoading(false));
+      setmodalForDeleteFavorites(false);
     }
   };
 
   const deleteRequestWithTokenProject = async () => {
+    setLoading(true);
     try {
       const response = await axios.delete(
         "https://private.emlaksepette.com/api/institutional/project-favorite",
@@ -219,21 +240,40 @@ export default function Favorites() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Başarılı",
-        textBody: `${FavoriteRemoveIDS.length} Tüm ilanlar favorilerden kaldırıldı.`,
-        button: "Tamam",
-      });
-      fetchFavorites();
+      if (response.status === 200) {
+        console.log("showing");
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: `${FavoriteRemoveIDS.length} Tüm ilanlar favorilerden kaldırıldı.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchFavorites(); // Fetch favorites after dialog is dismissed
+            },
+          });
+          setLoading(false); // End loading after showing the dialog
+        }, 300);
+      }
       setmodalForDeleteFavorites(false);
     } catch (error) {
-      Dialog.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Hata!",
-        textBody: "Tümünü Silme işlemi başarısız oldu.",
-        button: "Tamam",
-      });
+      console.log("rr");
+      setTimeout(() => {
+        Dialog.show({
+          type: ALERT_TYPE.WARNING,
+          title: "Hata!",
+          textBody: "Tümünü Silme işlemi başarısız oldu.",
+          button: "Tamam",
+          onHide: () => {
+            fetchFavorites(); // Fetch favorites after dialog is dismissed
+          },
+        });
+        setLoading(false); // End loading after showing the dialog
+      }, 300);
+      setmodalForDeleteFavorites(false);
+    } finally {
+      setTimeout(() => setLoading(false));
+      setmodalForDeleteFavorites(false);
     }
   };
   // DELETE ALL FUNCTION END
@@ -278,41 +318,50 @@ export default function Favorites() {
         method: "delete",
         url: "https://private.emlaksepette.com/api/institutional/favorites/delete",
         data: data,
-        headers: {
-          Authorization: `Bearer ${user.access_token}`,
-        },
+        headers: {},
       });
 
       if (response.status === 200) {
-        Dialog.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "Başarılı",
-          textBody: `${FavoriteRemoveIDS.length} İlan favorilerden kaldırıldı.`,
-          button: "Tamam",
-        });
+        setTimeout(() => {
+          console.log("showing");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: `${FavoriteRemoveIDS.length} İlan favorilerden kaldırıldı.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchFavorites(); // Fetch favorites after dialog is dismissed
+              setFavoriteRemoveIDS([]); // Clear the selected favorites
+            },
+          });
+          setLoading(false); // End loading after showing the dialog
+        }, 300);
 
-        fetchFavorites(); // Favori ilanları yeniden yükle
+        // Favori ilanları yeniden yükle
         setFavoriteRemoveIDS([]); // Seçili ilanları temizle
         setRemoveSelectedCollectionsModal(false); // Modal'ı kapat
         setIsChoosed(false); // Toplu seçim modunu kapat
-      } else {
+      }
+    } catch (error) {
+      setRemoveSelectedCollectionsModal(false); // Modal'ı kapat
+      setIsChoosed(false); // Toplu seçim modunu kapat
+      console.log("errorrrr");
+      // Hata durumunda kullanıcıya geri bildirim sağla
+      setTimeout(() => {
+        console.log("showing");
         Dialog.show({
           type: ALERT_TYPE.WARNING,
           title: "Hata!",
           textBody: "Silme işlemi başarısız oldu.",
           button: "Tamam",
         });
-      }
-    } catch (error) {
-      // Hata durumunda kullanıcıya geri bildirim sağla
-      Dialog.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Hata!",
-        textBody: "Silme işlemi başarısız oldu.",
-        button: "Tamam",
-      });
+        setLoading(false); // End loading after showing the dialog
+      }, 300);
     } finally {
       setLoading(false); // İşlem tamamlandıktan sonra yüklenme durumunu kapat
+
+      setRemoveSelectedCollectionsModal(false); // Modal'ı kapat
+      setIsChoosed(false); // Toplu seçim modunu kapat
     }
   };
   // BATCH SELECTION - DELETE FUNCTION END
