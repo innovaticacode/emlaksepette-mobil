@@ -10,23 +10,20 @@ const ProjectBottomSheetFilter = (props) => {
   const actionSheetRef = useRef(null);
 
   const [checkboxes, setCheckboxes] = useState([
-    { label: "Tümü", checked: true, count: 23, slug: "tum-projeler" },
+    { label: "Tümü", checked: true, slug: "tum-projeler" },
     {
       label: "Devam Eden Projeler",
       checked: false,
-      count: 9,
       slug: "devam-eden-projeler",
     },
     {
       label: "Tamamlanan Projeler",
       checked: false,
-      count: 5,
       slug: "tamamlanan-projeler",
     },
     {
       label: "Topraktan Projeler",
       checked: false,
-      count: 9,
       slug: "topraktan-projeler",
     },
   ]);
@@ -113,7 +110,7 @@ const ProjectBottomSheetFilter = (props) => {
               checked={checkbox.checked}
               onPress={() => handleCheckboxChange(index)}
             />
-            <Text>{`${checkbox.label} (${checkbox?.count})`}</Text>
+            <Text>{`${checkbox.label}`}</Text>
           </View>
         ))}
       </View>
