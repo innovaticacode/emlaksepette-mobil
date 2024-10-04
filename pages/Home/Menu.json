@@ -257,13 +257,13 @@
     "id": "store-banners",
     "label": "Hesabım & Yardım",
     "icon": "image",
-    "text": "Reklam Görselleri",
+    "text": "Mağazamı Özelleştir",
     "key": "StoreBanners",
     "url": "#nv-store-banners",
     "activePath": "/hesabim/store-banners*",
     "subMenu": [
       {
-        "text": "Oluştur",
+        "text": "Mağaza Görseli Oluştur",
         "key": "CreateStoreBanner",
         "url": "UploadAdsPicture",
         "activePath": "/hesabim/reklam-gorseli/olustur"
@@ -273,7 +273,14 @@
         "key": "GetStoreBanners",
         "url": "AdsPictureList",
         "activePath": "/hesabim/reklam-gorselleri"
+      },
+      {
+        "text": "Tanıtım Yazısı Ekle",
+        "key": "GetStoreBanners",
+        "url": "AdsPictureList",
+        "activePath": "/hesabim/reklam-gorselleri"
       }
+
     ]
   },
   {

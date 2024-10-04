@@ -107,14 +107,14 @@ export default function AllRealtorAdverts() {
     return intValue.toLocaleString("tr-TR");
   };
 
-  const apiUrl = "https://private.emlaksepette.com/";
+  const apiUrl = "http://192.168.18.31:8000/";
   const route = useRoute();
   const navigation = useNavigation();
   const { params } = route;
 
   useEffect(() => {
     if (params.href) {
-      const baseUrl = "https://private.emlaksepette.com";
+      const baseUrl = "http://192.168.18.31:8000";
       const relativeUrl = params.href.replace(`${baseUrl}/kategori`, "");
       let urlSegments = relativeUrl.split("/").filter((segment) => segment);
 

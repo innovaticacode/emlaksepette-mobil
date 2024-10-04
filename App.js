@@ -836,6 +836,7 @@ export default function App({ route }) {
                   component={AdsPictureList}
                   options={({ route }) => ({
                     title: "Reklam Görselleri",
+                    headerBackTitleVisible:false,
                     headerStyle: {
                       backgroundColor: "#F5F5F7",
                     },

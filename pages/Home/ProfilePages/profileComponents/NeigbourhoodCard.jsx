@@ -15,7 +15,7 @@ export default function NeigbourhoodCard({
   project,
   projectInfo,
 }) {
-  const apiUrl = "https://private.emlaksepette.com";
+  const apiUrl = "http://192.168.18.31:8000";
   const navigation = useNavigation();
 
   const handleOpenPhone = () => {

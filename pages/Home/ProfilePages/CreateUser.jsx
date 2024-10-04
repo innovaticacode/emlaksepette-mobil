@@ -58,7 +58,7 @@ export default function CreateUser() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/institutional/roles`,
+          `http://192.168.18.31:8000/api/institutional/roles`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -133,7 +133,7 @@ export default function CreateUser() {
     if (user?.access_token) {
       axios
         .post(
-          `https://private.emlaksepette.com/api/institutional/users`,
+          `http://192.168.18.31:8000/api/institutional/users`,
           formdata,
           {
             headers: {

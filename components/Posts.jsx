@@ -119,7 +119,7 @@ export default function Posts({
       : "Başlık bulunamadı";
     const amount = 250; // Fiyatı burada belirliyoruz
     const imageUrl = selectedRoom
-      ? "https://private.emlaksepette.com/project_housing_images/" +
+      ? "http://192.168.18.31:8000/project_housing_images/" +
         selectedRoom["image[]"]
       : ""; // Resim URL'sini burada belirleyin
     const neightboord = false;
@@ -187,7 +187,7 @@ export default function Posts({
       };
       axios
         .post(
-          "https://private.emlaksepette.com/api/add_project_to_favorites/" +
+          "http://192.168.18.31:8000/api/add_project_to_favorites/" +
             roomOrder,
           {
             project_id: project?.id,
@@ -240,7 +240,7 @@ export default function Posts({
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          "http://192.168.18.31:8000/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -503,7 +503,7 @@ export default function Posts({
             <Image
               source={{
                 uri:
-                  "https://private.emlaksepette.com/project_housing_images/" +
+                  "http://192.168.18.31:8000/project_housing_images/" +
                   roomData["image[]"],
               }}
               style={styles.image}

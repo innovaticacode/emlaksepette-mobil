@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 
-const apiUrl = "https://private.emlaksepette.com";
+const apiUrl = "http://192.168.18.31:8000";
 
 const AllFeaturedRealEstate = (prosp) => {
   const { navigation } = prosp;

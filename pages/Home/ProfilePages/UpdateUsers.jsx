@@ -60,7 +60,7 @@ export default function UpdateUsers() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/institutional/roles`,
+          `http://192.168.18.31:8000/api/institutional/roles`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -113,7 +113,7 @@ export default function UpdateUsers() {
     if (user?.access_token) {
       axios
         .post(
-          `https://private.emlaksepette.com/api/institutional/users/${UserID}`,
+          `http://192.168.18.31:8000/api/institutional/users/${UserID}`,
           formdata,
           {
             headers: {
@@ -164,7 +164,7 @@ export default function UpdateUsers() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/users/${UserID}`,
+          `http://192.168.18.31:8000/api/users/${UserID}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

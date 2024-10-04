@@ -89,7 +89,7 @@ export default function Details({ navigation }) {
   const [lastBlockItemCount, setLastBlockItemCount] = useState(0);
   const [showInstallment, setShowInstallment] = useState(false);
   const scrollViewRef = useRef();
-  const apiUrl = "https://private.emlaksepette.com/";
+  const apiUrl = "http://192.168.18.31:8000/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -145,7 +145,7 @@ export default function Details({ navigation }) {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          "http://192.168.18.31:8000/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -165,7 +165,7 @@ export default function Details({ navigation }) {
       headers: { Authorization: `Bearer ${user?.access_token}` },
     };
     axios
-      .get("https://private.emlaksepette.com/api/project/" + ProjectId, config)
+      .get("http://192.168.18.31:8000/api/project/" + ProjectId, config)
       .then((res) => {
         setData(res?.data);
         setloadingDetails(true);
@@ -276,7 +276,7 @@ export default function Details({ navigation }) {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/remove_item_on_collection",
+        "http://192.168.18.31:8000/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -388,7 +388,7 @@ export default function Details({ navigation }) {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/client/collections",
+          "http://192.168.18.31:8000/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -450,7 +450,7 @@ export default function Details({ navigation }) {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/add/collection",
+        "http://192.168.18.31:8000/api/add/collection",
         collectionData,
         {
           headers: {
@@ -503,7 +503,7 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post("https://private.emlaksepette.com/api/addLink", collectionData, {
+      .post("http://192.168.18.31:8000/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -585,7 +585,7 @@ export default function Details({ navigation }) {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          "http://192.168.18.31:8000/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -639,7 +639,7 @@ export default function Details({ navigation }) {
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/institutional/give_offer",
+        "http://192.168.18.31:8000/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -685,7 +685,7 @@ export default function Details({ navigation }) {
   const fetchCity = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/cities"
+        "http://192.168.18.31:8000/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -707,7 +707,7 @@ export default function Details({ navigation }) {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
+        `http://192.168.18.31:8000/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -945,7 +945,7 @@ export default function Details({ navigation }) {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
+        message: `http://192.168.18.31:8000/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
       });
 
       if (result.action === Share.sharedAction) {
@@ -967,7 +967,7 @@ export default function Details({ navigation }) {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/project/${ProjectId}/comments`
+          `http://192.168.18.31:8000/api/project/${ProjectId}/comments`
         );
         setcomments(response.data);
       }

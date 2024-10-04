@@ -84,7 +84,7 @@ export default function Header({ loading, onPress, index, tab }) {
       >
         <ImageBackground
           source={{
-            uri: "https://private.emlaksepette.com/images/emlaksepettelogo.png",
+            uri: "http://192.168.18.31:8000/images/emlaksepettelogo.png",
           }}
           resizeMode="contain"
           style={{

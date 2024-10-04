@@ -44,7 +44,7 @@ export default function Order({ item }) {
   const imageUrl = cartObject.item.image;
 
   const navigation = useNavigation();
-  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
+  const PhotoUrl = "http://192.168.18.31:8000/storage/profile_images/";
   console.log(JSON.parse(item.cart)["item"]["id"]);
   const HouseId = item && item.cart && JSON.parse(item.cart)["item"]["id"];
   const Type = item && item.cart && JSON.parse(item.cart)["type"];

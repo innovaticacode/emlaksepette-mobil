@@ -75,7 +75,7 @@ export default function Personal({ type }) {
       formData.append("check-c", checked2);
       formData.append("check-e", checked3);
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/register",
+        "http://192.168.18.31:8000/api/register",
         formData
       );
 
@@ -193,7 +193,7 @@ export default function Personal({ type }) {
   // Örnek kullanım
 
   const fetchData = async (deal) => {
-    const url = `https://private.emlaksepette.com/api/sayfa/${deal}`;
+    const url = `http://192.168.18.31:8000/api/sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);

@@ -151,7 +151,7 @@ export default function CollectionsPage() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          "http://192.168.18.31:8000/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -175,7 +175,7 @@ export default function CollectionsPage() {
 
       if (user?.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/client/collections",
+          "http://192.168.18.31:8000/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -206,7 +206,7 @@ export default function CollectionsPage() {
       let formData = new FormData();
       formData.append();
       const response = await axios.delete(
-        `https://private.emlaksepette.com/api/collection/${id}/delete`,
+        `http://192.168.18.31:8000/api/collection/${id}/delete`,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -244,7 +244,7 @@ export default function CollectionsPage() {
       formData.append("collectionName", newName);
 
       const response = await axios.post(
-        `https://private.emlaksepette.com/api/collection/${id}/edit`,
+        `http://192.168.18.31:8000/api/collection/${id}/edit`,
         formData,
         {
           headers: {
@@ -278,7 +278,7 @@ export default function CollectionsPage() {
     };
     try {
       const response = await axios.delete(
-        `https://private.emlaksepette.com/api/collections`,
+        `http://192.168.18.31:8000/api/collections`,
 
         {
           data: data,
@@ -314,7 +314,7 @@ export default function CollectionsPage() {
     };
     try {
       const response = await axios.delete(
-        `https://private.emlaksepette.com/api/collections`,
+        `http://192.168.18.31:8000/api/collections`,
 
         {
           data: data,

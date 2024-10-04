@@ -46,7 +46,7 @@ const Home = ({ route }) => {
     try {
       if (user.access_token) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          "http://192.168.18.31:8000/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

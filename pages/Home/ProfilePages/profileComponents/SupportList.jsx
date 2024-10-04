@@ -55,7 +55,7 @@ export default function SupportList() {
     if (user.access_token) {
       // API'den veriyi çekme
       axios
-        .get("https://private.emlaksepette.com/api/support", {
+        .get("http://192.168.18.31:8000/api/support", {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
@@ -111,7 +111,7 @@ export default function SupportList() {
   async function download(URL) {
     const filename = URL;
     const result = await FileSystem.downloadAsync(
-      `https://private.emlaksepette.com/support/${URL}`,
+      `http://192.168.18.31:8000/support/${URL}`,
       FileSystem.documentDirectory + filename
     );
 
@@ -409,7 +409,7 @@ export default function SupportList() {
       </Modal>
       <ImageViewing
         images={[
-          { uri: `https://private.emlaksepette.com/support/${selectedUri}` },
+          { uri: `http://192.168.18.31:8000/support/${selectedUri}` },
         ]}
         imageIndex={0}
         visible={isVisible}

@@ -15,7 +15,7 @@ import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
 
 export default function SuggestItem({ item }) {
   const [modalVisible, setModalVisible] = useState(false);
-  const apiUrl = "https://private.emlaksepette.com";
+  const apiUrl = "http://192.168.18.31:8000";
   const stripHtmlTags = (str) => {
     if (str) {
       return str.replace(/<\/?[^>]+(>|$)/g, "");

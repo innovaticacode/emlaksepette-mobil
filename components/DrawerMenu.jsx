@@ -21,7 +21,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
   const [namFromGetUser, setnamFromGetUser] = useState([]);
-  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
+  const PhotoUrl = "http://192.168.18.31:8000/storage/profile_images/";
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -30,7 +30,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
   useEffect(() => {
     if (user?.access_token && user?.id) {
       axios
-        .get(`https://private.emlaksepette.com/api/users/${user.id}`, {
+        .get(`http://192.168.18.31:8000/api/users/${user.id}`, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
