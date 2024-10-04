@@ -66,7 +66,7 @@ import FloorPlan from "../components/FloorPlan";
 import { Svg } from "react-native-svg";
 import { Polyline } from "react-native-maps";
 import PaymentItem from "../components/PaymentItem";
-import DrawerMenu from "../components/Menu/DrawerMenu/DrawerMenu"
+import DrawerMenu from "../components/Menu/DrawerMenu/DrawerMenu";
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../components/CommentForProject";
 import { leftButtonsForPost, PriceStatus, rightButtonsForPost } from "./helper";

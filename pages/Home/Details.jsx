@@ -36,7 +36,7 @@ import { apiRequestGet } from "../../components/methods/apiRequest";
 import AddCollection from "../../components/AddCollection";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
-import DrawerMenu from "../../components/Menu/DrawerMenu/DrawerMenu"
+import DrawerMenu from "../../components/Menu/DrawerMenu/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../../components/CommentForProject";
