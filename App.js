@@ -227,39 +227,6 @@ export default function App({ route }) {
                   )}
                 </Stack.Screen>
 
-                <Stack.Screen
-                  name="Home"
-                  options={{
-                    headerShown: false,
-                    gestureEnabled: false,
-                  }}
-                >
-                  {(props) => (
-                    <Home
-                      {...props}
-                      showBackIcon={showBackIcon}
-                      setshowBackIcon={setshowBackIcon}
-                    />
-                  )}
-                </Stack.Screen>
-
-                <Stack.Group>
-                  <Stack.Screen
-                    name="Login"
-                    options={{
-                      title: "Giriş Yap",
-                      headerBackTitleVisible: false,
-                      headerShown: false,
-                    }}
-                  >
-                    {(props) => <Login {...props} />}
-                  </Stack.Screen>
-                  <Stack.Screen
-                    name="Register"
-                    component={Register}
-                    options={{ title: "Üye Ol", headerBackTitleVisible: false }}
-                  />
-                </Stack.Group>
                 <Stack.Group>
                   <Stack.Screen
                     name="Login"
@@ -314,74 +281,7 @@ export default function App({ route }) {
                     />
                   )}
                 </Stack.Screen>
-                <Stack.Screen name="Step1">
-                  {(props) => (
-                    <StepScreen
-                      {...props}
-                      step={1}
-                      setHousingTypes={setHousingTypes}
-                      setSelectedTypes={setSelectedTypes}
-                      housingTypes={housingTypes}
-                      selectedTypes={selectedTypes}
-                    />
-                  )}
-                </Stack.Screen>
-                <Stack.Screen name="Step2">
-                  {(props) => (
-                    <StepScreen
-                      {...props}
-                      step={2}
-                      setHousingTypes={setHousingTypes}
-                      setSelectedTypes={setSelectedTypes}
-                      housingTypes={housingTypes}
-                      selectedTypes={selectedTypes}
-                    />
-                  )}
-                </Stack.Screen>
-                <Stack.Screen name="Step3">
-                  {(props) => (
-                    <StepScreen
-                      {...props}
-                      step={3}
-                      setHousingTypes={setHousingTypes}
-                      setSelectedTypes={setSelectedTypes}
-                      housingTypes={housingTypes}
-                      selectedTypes={selectedTypes}
-                    />
-                  )}
-                </Stack.Screen>
 
-                <Stack.Screen
-                  name="Emlak"
-                  component={Emlakİlanı}
-                  options={({ route }) => ({
-                    title: route.params.name,
-                    headerBackTitleVisible: false,
-                  })}
-                />
-                <Stack.Screen
-                  name="Proje"
-                  component={Projeİlanı}
-                  options={({ route }) => ({
-                    title: route.params.name,
-                  })}
-                />
-                <Stack.Screen
-                  name="Details"
-                  component={Details}
-                  options={({ route }) => ({
-                    headerShown: false,
-                    title: route.params.name,
-                  })}
-                />
-                <Stack.Screen
-                  name="PostDetails"
-                  component={PostDetail}
-                  options={({ route }) => ({
-                    headerShown: false,
-                    headerBackTitleVisible: false,
-                  })}
-                />
                 <Stack.Screen
                   name="Emlak"
                   component={Emlakİlanı}
@@ -700,63 +600,7 @@ export default function App({ route }) {
                 >
                   {(props) => <AdvertForm />}
                 </Stack.Screen>
-                <Stack.Screen
-                  name="CategorieChoose"
-                  component={CategoryChoose}
-                  options={({ route }) => ({
-                    animationTypeForReplace: "pop",
-                    title: route.params.name,
-                    headerBackTitle: "",
-                    headerBackTitleVisible: false,
-                    headerTintColor: "black",
-                  })}
-                />
-                <Stack.Screen
-                  name="CategorieStatu"
-                  component={CategorieStatus}
-                  options={({ route }) => ({
-                    animationTypeForReplace: "pop",
-                    title: route.params.name,
-                    headerBackTitle: "",
-                    headerBackTitleVisible: false,
-                    headerTintColor: "black",
-                  })}
-                />
-                <Stack.Screen
-                  name="AdvertPlace"
-                  component={AdvertsPlace}
-                  options={({ route }) => ({
-                    animationTypeForReplace: "pop",
-                    title: route.params.name,
-                    headerBackTitle: "",
-                    headerBackTitleVisible: false,
-                    headerTintColor: "black",
-                  })}
-                />
-                <Stack.Screen
-                  name="AdvertForm"
-                  options={({ route }) => ({
-                    animationTypeForReplace: "pop",
-                    headerBackTitle: "",
-                    headerBackTitleVisible: false,
-                    headerTintColor: "black",
-                  })}
-                >
-                  {(props) => <AdvertForm />}
-                </Stack.Screen>
 
-                <Stack.Screen
-                  name="ShareAdvert"
-                  options={({ route }) => ({
-                    animationTypeForReplace: "pop",
-                    title: "",
-                    headerBackTitle: "",
-                    headerBackTitleVisible: false,
-                    headerTintColor: "black",
-                  })}
-                >
-                  {(props) => <ShareScreenProject {...props} />}
-                </Stack.Screen>
                 <Stack.Screen
                   name="ShareAdvert"
                   options={({ route }) => ({
@@ -994,7 +838,7 @@ export default function App({ route }) {
                 <Stack.Screen
                   name="UserTypes"
                   component={UserTypeList}
-                  options={({}) => ({
+                  options={({ }) => ({
                     title: "Kullanıcı Tipleri",
                     headerBackTitleVisible: false,
 
