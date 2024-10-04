@@ -17,7 +17,7 @@ import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import PrefabrikBanner from "../../../assets/prefabrik.png";
+import PrefabrikBanner from "../../../src/assets/images/prefabrik.png";
 const PAGE_SIZE = 10;
 
 const Prefabrik = ({ index }) => {
