@@ -41,6 +41,7 @@ export default function AllTourismRent(prosp) {
       setLoading(false);
     }
   };
+  console.log(loading);
 
   useEffect(() => {
     fetchFeaturedStores();
