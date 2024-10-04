@@ -17,21 +17,12 @@ import axios from "axios";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
-import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
-import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
-import Icon8 from "react-native-vector-icons/FontAwesome5";
-import {
-  ALERT_TYPE,
-  Dialog,
-  AlertNotificationRoot,
-} from "react-native-alert-notification";
-import { Button } from "react-native-paper";
 import NoDataScreen from "../../components/NoDataScreen";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 export default function MyComments() {
   const [user, setuser] = useState({});
   const [comments, setcomments] = useState([]);
-  const [choose, setchoose] = useState(false);
   const [selectedCommentID, setselectedCommentID] = useState(0);
   const [selectedProjectID, setselectedProjectID] = useState(0);
   const [selectcommentInfo, setselectcommentInfo] = useState({});
@@ -42,17 +33,19 @@ export default function MyComments() {
   const [selectedType, setSelectedType] = useState(null);
   const [selectedSource, setSelectedSource] = useState(null);
   const [selectedStore, setSelectedStore] = useState([]);
-
   const [loading, setLoading] = useState(true); // Yüklenme animasyonu için
+  const [choose, setchoose] = useState(false);
   const [modalVisible, setModalVisible] = useState(false); // Modal görünürlüğü için
-  const [modalMessage, setModalMessage] = useState(""); // Başarı veya hata mesajı
-  const [deleteSuccess, setDeleteSuccess] = useState(null);
-  const [modalDelete, setModalDelete] = useState(false);
+  const [successAlertVisible, setSuccessAlertVisible] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [initialComment, setInitialComment] = useState(""); // Başlangıçtaki yorum
+  const [editedComment, setEditedComment] = useState(""); // Düzenlenmiş yorum
+
+  
 
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-  console.log(user.id);
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -76,7 +69,6 @@ export default function MyComments() {
       setLoading(false);
     }
   };
-  console.log(user?.id + "userrrrrrİDDDDD");
 
   useEffect(() => {
     fetchData();
@@ -92,8 +84,6 @@ export default function MyComments() {
     const { type, comment } = item;
     const info = type === "project" ? item.project : item.housing;
     const numStars = Math.round(comment?.rate);
-    console.log(store + "store budurr");
-    console.log(store.name + "store budur assadasads");
 
     const imageSource =
       type === "project"
@@ -113,6 +103,8 @@ export default function MyComments() {
       }
     };
 
+    
+    
     return (
       <View style={styles.card}>
         <View style={styles.cardContent}>
@@ -202,7 +194,6 @@ export default function MyComments() {
   const goToEditComment = (item) => {
     const { type, comment } = item;
     const info = type === "project" ? item.project : item.housing;
-    console.log(info);
 
     nav.navigate("EditProjectComment", {
       projectId: selectedProjectID,
@@ -218,63 +209,46 @@ export default function MyComments() {
   };
 
   const confirmDeleteComment = () => {
-    setModalDelete(true);
-    setchoose(false);
+    setchoose(false); // İlk modalı kapat
+    setTimeout(() => {
+      setModalVisible(true); // İkinci modalı 400ms sonra aç
+    }, 400);
   };
 
   const DeleteComment = async () => {
     try {
       if (user?.access_token) {
-        const response = await axios
-          .delete(
-            `https://private.emlaksepette.com/api/delete/comment/${selectedCommentID}/${selectedType}`,
-            {
-              headers: {
-                Authorization: `Bearer ${user?.access_token}`,
-              },
-            }
-          )
-          .then(() => {
-            setDeleteSuccess(true);
-            setModalMessage("Yorum başarıyla silindi!");
-            setchoose(false); // İşlem başarılı olduğunda seçimi kapat
-            fetchData(); // Veri çekmeyi çağır
-            setModalDelete(false);
-            // Başarılı işlemde dialog'u göster
-            Dialog.show({
-              type: ALERT_TYPE.SUCCESS,
-              title: "Başarılı",
-              textBody: "Yorum başarıyla silindi!",
-              button: "Tamam",
-            });
-          });
+        const response = await axios.delete(
+          `https://private.emlaksepette.com/api/delete/comment/${selectedCommentID}/${selectedType}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+
+        if (response.status == 200) {
+          setSuccessAlertVisible(true); // Success Alert'i aç
+          fetchData(); // Veri güncellemek için çağır
+        } else {
+          throw new Error("Yorum silme işlemi başarısız.");
+        }
       } else {
         setDeleteSuccess(false);
         setModalMessage("Yorum bulunamadı.");
-        setModalDelete(false);
+
       }
     } catch (error) {
       setDeleteSuccess(false);
       setModalMessage("Yorum silme işlemi başarısız oldu.");
-      console.error("Silme işlemi başarısız oldu", error);
-      setModalDelete(false);
-      // Hata durumunda dialog'u göster
-      Dialog.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Hata",
-        textBody: "Yorum silme işlemi başarısız oldu.",
-        button: "Tamam",
-      });
+      console.error("Silme işlemi başarısız oldu:", error);
+      setErrorAlertVisible(true); // Error Alert'i aç
     }
   };
 
-  console.log(user?.access_token);
-  console.log(selectedCommentID + "selectedddd iddddddd ");
-
   return (
-    <AlertNotificationRoot>
       <ScrollView
-        contentContainerStyle={{ flex: 1, flexGrow: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -336,7 +310,7 @@ export default function MyComments() {
               </View>
             </View>
           </Modal>
-          <Modal
+          {/* <Modal
             isVisible={modalDelete}
             style={styles.confirmationModal2}
             animationIn={"fadeInDown"}
@@ -345,7 +319,7 @@ export default function MyComments() {
             swipeDirection={["down"]}
             onSwipeComplete={() => setModalDelete(false)}
           >
-            <View style={styles.modalContainer2}>
+            <View style={{ backgroundColor: "white", padding: 20 }}>
               <Text style={styles.modalHeader2}>
                 Yorumu silmek istediğinizden emin misiniz?
               </Text>
@@ -364,10 +338,105 @@ export default function MyComments() {
                 </TouchableOpacity>
               </View>
             </View>
-          </Modal>
+          </Modal> */}
+          <AwesomeAlert
+            show={modalVisible}
+            showProgress={false}
+            titleStyle={{
+              color: "#333",
+              fontSize: 13,
+              fontWeight: "700",
+              textAlign: "center",
+              margin: 5,
+            }}
+            messageStyle={{ textAlign: "center" }}
+            message={`Yorumu silmek istediğinizden emin misiniz?`}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+            cancelText="Hayır"
+            confirmText="Evet"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+              setModalVisible(!modalVisible);
+            }}
+            onConfirmPressed={() => {
+              setModalVisible(false)
+              setTimeout(() => {
+                DeleteComment();
+              }, 400);
+
+            }}
+            confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+            cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          />
+
+          <AwesomeAlert
+            show={successAlertVisible} // Başarılı işlem alert'i görünür
+            showProgress={false}
+            titleStyle={{
+              color: "#333",
+              fontSize: 22,
+              fontWeight: "700",
+              textAlign: "center",
+              margin: 5,
+            }}
+            messageStyle={{
+              fontSize: 18,
+              margin: 5,
+              paddingHorizontal: 40,
+            }}
+            confirmButtonTextStyle={{
+              fontSize: 18,
+              margin: 5,
+            }}
+            title="Başarılı"
+            message="Yorum başarıyla silindi."
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Tamam"
+            confirmButtonColor="#1d8027"
+            onConfirmPressed={() => {
+              setSuccessAlertVisible(false); // Success Alert'i kapat
+            }}
+          />
+
+          <AwesomeAlert
+            show={errorAlertVisible} // Hata alert'i görünür
+            showProgress={false}
+            titleStyle={{
+              color: "#333",
+              fontSize: 22,
+              fontWeight: "700",
+              textAlign: "center",
+              margin: 5,
+            }}
+            messageStyle={{
+              fontSize: 18,
+              margin: 5,
+              paddingHorizontal: 40,
+            }}
+            confirmButtonTextStyle={{
+              fontSize: 18,
+              margin: 5,
+            }}
+            title="Hata"
+            message="Yorum silme işlemi başarısız oldu."
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Tamam"
+            confirmButtonColor="#EA2A28"
+            onConfirmPressed={() => {
+              setErrorAlertVisible(false); // Error Alert'i kapat
+            }}
+          />
         </View>
       </ScrollView>
-    </AlertNotificationRoot>
+    
   );
 }
 
@@ -390,7 +459,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  
+
   cardContent: {
     padding: 12,
     paddingBottom: 0,
@@ -526,5 +595,5 @@ const styles = StyleSheet.create({
     color: "#333",
     fontWeight: "bold",
   },
-  
+
 });

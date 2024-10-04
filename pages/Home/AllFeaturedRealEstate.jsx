@@ -7,8 +7,10 @@ import {
   FlatList,
   StyleSheet,
   ActivityIndicator,
+  ImageBackground,
 } from "react-native";
 import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const apiUrl = "https://private.emlaksepette.com";
 
@@ -19,11 +21,11 @@ const AllFeaturedRealEstate = (prosp) => {
 
   const fetchFeaturedStores = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/api/invalid-endpoint`);
+      const response = await axios.get(`${apiUrl}/api/popular-estate-brands`);
       if (response.data.length > 0) {
         setEstateBrands(response.data);
       }
-      return setLoading(false);
+      setLoading(false);
     } catch (error) {
       Dialog.show({
         type: ALERT_TYPE.DANGER,
@@ -34,6 +36,7 @@ const AllFeaturedRealEstate = (prosp) => {
           navigation.navigate("FirstHome");
         },
       });
+      setLoading(false);
     }
   };
 
@@ -59,18 +62,33 @@ const AllFeaturedRealEstate = (prosp) => {
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             <View style={styles.area}>
-              <View style={styles.imageArea}>
-                <Image
-                  source={{
-                    uri: `${apiUrl}/storage/profile_images/${item.profile_image}`,
-                  }}
-                  alt="brands"
-                  resizeMode="contain"
-                  style={styles.image}
-                />
-                <View style={styles.separator} />
-                <Text style={styles.title}>{item.name}</Text>
-              </View>
+              <TouchableOpacity
+                style={styles.touchableArea} // touchable alanı burada kontrol ediyoruz
+                onPress={() => navigation.navigate("Profile", { id: item.id })}
+              >
+                <View style={styles.imageArea}>
+                  <ImageBackground
+                    source={{
+                      uri: `${apiUrl}/storage/profile_images/${item.profile_image}`,
+                    }}
+                    alt="brands"
+                    resizeMode="contain"
+                    style={styles.image}
+                  />
+                  <View style={styles.separator} />
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode="tail"
+                    style={styles.title}
+                  >
+                    {item.name}
+                  </Text>
+                  <View style={styles.referenceCode}>
+                    <Text style={{ fontSize: 10 }}>Referans Kodu:</Text>
+                    <Text style={{ fontSize: 10 }}> {item.code} </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
             </View>
           )}
         />
@@ -88,25 +106,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   area: {
-    flex: 1,
+    flex: 1 / 2,
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 6,
+    height: 200,
+  },
+  touchableArea: {
+    width: "100%", // %100 genişlikte olmasını sağlıyoruz
+    height: "100%", // Tam yükseklik
   },
   imageArea: {
-    width: "90%",
+    width: "90%", // %90 genişlik
     backgroundColor: "#FFF",
     borderWidth: 1,
     borderColor: "#FFF",
     borderRadius: 10,
     padding: 10,
-    alignItems: "center",
+    height: "100%",
   },
   image: {
     width: "100%",
     height: 100,
     backgroundColor: "#FFF",
     borderRadius: 10,
+    objectFit: "contain",
   },
   separator: {
     width: "100%",
@@ -118,6 +142,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "bold",
     color: "#0056b3",
+    textAlign: "center", // Başlığı ortalamak için
+  },
+  referenceCode: {
+    flexDirection: "row",
+    marginTop: 10,
+    justifyContent: "space-between", // Referans kodunun düzgün yerleşmesi için
+    width: "100%", // Tam genişlikte olması
   },
   loading: {
     flex: 1,

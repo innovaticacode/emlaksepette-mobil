@@ -158,3 +158,19 @@ export const BookmarkStatus = [
         offsalePersonal:[5],
     }
 ]
+export const PriceStatus = [
+    {
+        offsale:2,
+        OnlySee:['Emlak Ofisi'],
+        
+        isShowClient : 0,
+        sold:1
+    },
+    {
+        offsale:5,
+        OnlySee:['Emlak Ofisi','İnşaat Ofisi','Banka','Turizm Amaçlı Kiralama','Üretici'],
+       
+        isShowClient : 1,
+        sold:1
+    },
+]

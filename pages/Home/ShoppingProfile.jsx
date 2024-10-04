@@ -31,9 +31,12 @@ import Menu from "./Menu.json";
 import { Platform } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { useDispatch } from "react-redux";
+import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
 
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
   const [loading, setLoading] = useState(false);
@@ -163,8 +166,13 @@ export default function ShoppingProfile() {
     return acc;
   }, []);
 
-  const logout = () => {
+  const logout = async () => {
     setDialogVisible(false);
+    dispatch(
+      setNotificationsRedux({
+        notificationsCount: 0,
+      })
+    );
     setTimeout(() => {
       SecureStore.setItemAsync("user", "");
       navigation.push("Home", { status: "logout" });
@@ -409,15 +417,15 @@ export default function ShoppingProfile() {
                 }}
                 title={"Çıkış Yap"}
                 messageStyle={{ textAlign: "center" }}
-                message={`Çıkış Yapmak istediğinize emin misiniz?`}
+                message={`Çıkış yapmak istediğinize emin misiniz?`}
                 closeOnTouchOutside={false}
                 closeOnHardwareBackPress={false}
                 showCancelButton={true}
                 showConfirmButton={true}
                 cancelText="Hayır"
                 confirmText="Evet"
-                cancelButtonColor="#1d8027"
-                confirmButtonColor="#ce4d63"
+                cancelButtonColor="#ce4d63"
+                confirmButtonColor="#1d8027"
                 onCancelPressed={() => {
                   setDialogVisible(false);
                 }}
@@ -450,79 +458,6 @@ export default function ShoppingProfile() {
                   </Text>
                 </TouchableOpacity>
               </View>
-              {/* <Modal
-              animationType="fade"
-              onBackdropPress={() => setDialogVisible(!dialogVisible)}
-              visible={dialogVisible}
-              onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-                setDialogVisible(!dialogVisible);
-              }}
-            >
-              <View style={{}}>
-                <View
-                  style={[
-                    style.modalView,
-                    style.card,
-                    {
-                      padding: 0,
-                      borderRadius: 5,
-                      backgroundColor: "#F8F7F4",
-                      alignItems: "center",
-                      gap: 20,
-                    },
-                  ]}
-                >
-                  <Text style={{ color: "#333" }}>
-                    Çıkış Yapmak İstedğinize Emin misiniz?
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 10,
-                    }}
-                  >
-                    <View style={{ flex: 1 / 2 }}>
-                      <TouchableOpacity
-                        onPress={logout}
-                        style={{
-                          backgroundColor: "#F8D7DA",
-                          padding: 10,
-                          borderRadius: 5,
-                        }}
-                      >
-                        <Text style={{ textAlign: "center", color: "#721C24" }}>
-                          Çıkış Yap
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View style={{ flex: 1 / 2 }}>
-                      <TouchableOpacity
-                        style={[
-                          {
-                            backgroundColor: "#D4EDDA",
-                            padding: 10,
-                            borderRadius: 5,
-                          },
-                        ]}
-                        onPress={() => setDialogVisible(!dialogVisible)}
-                      >
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            color: "#165724",
-                            fontWeight: "600",
-                          }}
-                        >
-                          İptal Et
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </Modal> */}
             </ScrollView>
           )}
         </View>

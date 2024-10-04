@@ -23,8 +23,8 @@ import { ActivityIndicator, Switch, TextInput } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
-import DrawerMenu from "../../components/DrawerMenu";
 import SortModal from "../../components/SortModal";
+import { DrawerMenu } from "../../components";
 
 export default function AllProjects() {
   const [cityItems, setCityItems] = useState();
@@ -439,7 +439,7 @@ export default function AllProjects() {
   const [index, setindex] = useState(0);
   const [tab, settab] = useState(0);
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF", paddingTop: 30 }}>
       <Header onPress={toggleDrawer} index={setindex} tab={settab} />
 
       <Modal
@@ -542,7 +542,7 @@ export default function AllProjects() {
                       ShoppingName={item.user?.name}
                       ShoppingMail={item.user?.email}
                       Phone={item.user?.phone}
-                      ProfilImage={`${apiUrl}/storage/profile_images/${item.user?.profile_image}`}
+                      ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
                       ShopingInfo={item.user?.corporate_type}
                     />
                   </View>
@@ -1167,7 +1167,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
 
     flex: 1,
-    borderTopLeftRadius: 10,
+    // borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     width: 320,
   },

@@ -44,7 +44,12 @@ export default function SliderEstateBar() {
       >
         {featuredStores.map((item, index) => (
           <View
-            style={{ width: 80, marginLeft: 3, alignItems: "center", marginBottom:10}}
+            style={{
+              width: 80,
+              marginLeft: 3,
+              alignItems: "center",
+              marginBottom: 10,
+            }}
             key={index}
           >
             {loading == false ? (

@@ -1,3 +1,4 @@
 import CommentCard from "./Card/CommentCard/CommentCard";
 import TotalStarCard from "./Card/TotalStarCard/TotalStarCard";
-export { CommentCard, TotalStarCard };
+import DrawerMenu from "./Menu/DrawerMenu/DrawerMenu";
+export { CommentCard, TotalStarCard, DrawerMenu };

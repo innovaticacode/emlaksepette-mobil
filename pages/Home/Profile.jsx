@@ -303,6 +303,7 @@ export default function Profile() {
               style={[
                 {
                   backgroundColor: storeData?.data?.banner_hex_code,
+                  ...(Platform.OS == "ios" && { paddingTop: 50 }),
                 },
                 styles.headerBg,
               ]}

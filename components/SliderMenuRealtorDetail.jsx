@@ -18,7 +18,7 @@ export default function SliderMenuRealtorDetails({tab,setTab,changeTab}) {
       bounces={false}
       contentContainerStyle={{justifyContent:'center'}}
     >
-      <View style={{ padding: 10, flexDirection: "row", gap: 10, alignItems:'center',width:'100%'}}>
+      <View style={{ padding: 0, flexDirection: "row", gap: 10, alignItems:'center',width:'100%'}}>
         {menuItems.map((item, index) => (
           <TouchableOpacity
             key={index}
@@ -43,7 +43,8 @@ export default function SliderMenuRealtorDetails({tab,setTab,changeTab}) {
               style={{
                 textAlign: "center",
                 color: tab == index ? "white" : "#333",
-                fontSize: 12,
+                fontSize: 13,
+                fontWeight:'600'
               }}
             >
               {item.text}
@@ -60,8 +61,8 @@ const styles = StyleSheet.create({
       gap:5,
       flexDirection:'row',
       backgroundColor: "white",
-      paddingLeft: 15,
-      paddingRight: 15,
+      paddingLeft: 20,
+      paddingRight: 20,
       justifyContent: "center",
       alignItems: "center",
       padding: 7,

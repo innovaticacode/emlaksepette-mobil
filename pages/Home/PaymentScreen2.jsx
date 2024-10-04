@@ -236,7 +236,10 @@ export default function PaymentScreen2() {
               source={{
                 uri: imageUrl,
               }}
-              style={{ width: "100%", height: "100%" }}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
             />
           </View>
           <View style={styles.Description}>

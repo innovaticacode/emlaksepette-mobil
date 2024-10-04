@@ -17,7 +17,7 @@ import Modal from "react-native-modal";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import Land from "../../../assets/land.png";
+import Land from "../../../src/assets/images/Arsa.png";
 
 const PAGE_SIZE = 10;
 
@@ -30,9 +30,11 @@ const Area = ({ index }) => {
   const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [user, setuser] = useState({});
+
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
+  
   const fetchFeaturedEstates = async (reset = false) => {
     if (loading || (!hasMore && !reset)) return;
     const config = {
