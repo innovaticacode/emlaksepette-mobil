@@ -111,7 +111,7 @@ export default function AddComment() {
       /*       console.log("Selected image URI:", uri);
        */ const newImages = [...image];
 
-      if (selectedIndexx < 3) {
+      if (selectedIndexx !== null && selectedIndexx >= 0 && selectedIndexx < 3) {
         newImages[selectedIndexx] = uri;
       } else {
         if (newImages.length >= 3) {

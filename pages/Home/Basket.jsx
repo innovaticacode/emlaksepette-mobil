@@ -39,7 +39,7 @@ import { Image } from "react-native-svg";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import DrawerMenu from "../../components/DrawerMenu";
+import { DrawerMenu } from "../../components";
 import { ActivityIndicator } from "react-native-paper";
 import NoDataScreen from "../../components/NoDataScreen";
 
@@ -381,7 +381,7 @@ export default function Basket() {
             onSwipeComplete={() => setIsDrawerOpen(false)}
             style={styles.modal}
           >
-            <View style={styles.modalContent}>
+            <View>
               <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
             </View>
           </Modal>
@@ -1006,14 +1006,6 @@ const styles = StyleSheet.create({
 
   modal: {
     margin: 0,
-  },
-  modalContent: {
-    backgroundColor: "white",
-
-    flex: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: 320,
   },
   HouseInfo: {
     backgroundColor: "#FFFFFF",

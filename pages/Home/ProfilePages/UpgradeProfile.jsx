@@ -6,39 +6,29 @@ import {
   TextInput,
   ScrollView,
   Image,
-  Alert,
-  Dimensions,
   KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { useIsFocused, useRoute } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/EvilIcons";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
-import Entypo from "react-native-vector-icons/Entypo";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import FontAwesome2 from "react-native-vector-icons/FontAwesome6";
 import Feather from "react-native-vector-icons/Ionicons";
 import Modal from "react-native-modal";
 import {
   Collapse,
   CollapseHeader,
   CollapseBody,
-  AccordionList,
 } from "accordion-collapse-react-native";
-
 import RNPickerSelect from "react-native-picker-select";
 import { Platform } from "react-native";
 import Arrow from "react-native-vector-icons/SimpleLineIcons";
-
-import * as SecureStore from "expo-secure-store";
 import * as ImagePicker from "expo-image-picker";
 import ColorPicker from "react-native-wheel-color-picker";
 import { getValueFor } from "../../../components/methods/user";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as Progress from "react-native-progress";
 import {
   AlertNotificationRoot,
@@ -46,25 +36,43 @@ import {
   Dialog,
 } from "react-native-alert-notification";
 import { Forms } from "../../../components/ProfileUpgradeComponents/formshelper";
+import ImageView from "react-native-image-viewing";
+
 export default function UpgradeProfile() {
   const route = useRoute();
   const { name, tab } = route.params;
   const [choose, setchoose] = useState(false);
   const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
   const [image, setImage] = useState(null);
-
+  const [isImageVisible, setIsImageVisible] = useState(false);
+  const images = [
+    {
+      uri: "https://private.emlaksepette.com/images/phone-update-image/phonefile.jpg",
+    },
+  ];
   const [cities, setCities] = useState([]);
   const [counties, setCounties] = useState([]);
   const [neighborhoods, setNeighborhoods] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
   const [selectedCounty, setSelectedCounty] = useState(null);
   const [selectedNeighborhood, setSelectedNeighborhood] = useState(null);
-
   const [openAccor, setopenAccor] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
   const [file, setfile] = useState(null);
+  const [TaxOfficesCities, setTaxOfficesCities] = useState([]);
+  const [TaxOffice, setTaxOffice] = useState([]);
+  const [openColorPicker, setopenColorPicker] = useState(false);
+  const [swatchesLast, setSwatchesLast] = useState(false);
+  const [swatchesEnabled, setSwatchesEnabled] = useState(true);
+  const [chooseFile, setchooseFile] = useState(false);
+  const [user, setUser] = useState({});
+  const [namFromGetUser, setnamFromGetUser] = useState({});
+  const [currentColor, setCurrentColor] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [region, setRegion] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [areaCode, setareaCode] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -90,16 +98,6 @@ export default function UpgradeProfile() {
       setchoose(false); // Modal'ı kapatıyoruz
     }
   };
-  useEffect(() => {
-    (async () => {
-      if (Platform.OS !== "web") {
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== "granted") {
-          // alert('Sorry, we need camera permissions to make this work!');
-        }
-      }
-    })();
-  }, []);
 
   const takePhoto = async () => {
     let result = await ImagePicker.launchCameraAsync({
@@ -119,7 +117,6 @@ export default function UpgradeProfile() {
     setchoose(false); // Modal'ı kapatıyoruz
   };
 
-  //Cep Telefonu Numarası İçin
   const pickImageForfile = async () => {
     setIsLoading(true);
     setProgress(0);
@@ -148,16 +145,6 @@ export default function UpgradeProfile() {
       setIsLoading(false);
     }
   };
-  useEffect(() => {
-    (async () => {
-      if (Platform.OS !== "web") {
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== "granted") {
-          // alert('Sorry, we need camera permissions to make this work!');
-        }
-      }
-    })();
-  }, []);
 
   const takePhotoforFile = async () => {
     let result = await ImagePicker.launchCameraAsync({
@@ -201,23 +188,6 @@ export default function UpgradeProfile() {
     return formattedNumber;
   };
 
-  const [TaxOfficesCities, setTaxOfficesCities] = useState([]);
-  const [TaxOffice, setTaxOffice] = useState([]);
-  useEffect(() => {
-    const fetchTaxOfficeCity = async () => {
-      try {
-        const response = await axios.get(
-          "https://private.emlaksepette.com/api/get-tax-offices"
-        );
-        setTaxOfficesCities(response.data);
-      } catch (error) {
-        console.error("Hata:", error);
-        throw error;
-      }
-    };
-    fetchTaxOfficeCity();
-  }, []);
-
   const uniqueCities = TaxOfficesCities.map((city) => ({
     label: city.il,
     value: city.plaka,
@@ -238,22 +208,10 @@ export default function UpgradeProfile() {
       throw error;
     }
   };
+
   const onchangeTaxOffice = (value) => {
     fetchTaxOffice(value);
   };
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const response = await axios.get(
-          "https://private.emlaksepette.com/api/cities"
-        );
-        setCities(response.data.data);
-      } catch (error) {
-        console.error("Hata:", error);
-      }
-    };
-    fetchCities();
-  }, []);
 
   const fetchCounties = async (value) => {
     try {
@@ -273,8 +231,8 @@ export default function UpgradeProfile() {
       const response = await axios.get(
         `https://private.emlaksepette.com/api/neighborhoods/${value}`
       );
-      // Yanıtı kontrol et
-      setNeighborhoods(response.data.data);
+      setNeighborhoods(response.data.data); // Gelen mahalle verisini set et
+
       setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
     } catch (error) {
       console.error("Hata:", error);
@@ -391,35 +349,9 @@ export default function UpgradeProfile() {
     { label: "Zonguldak (372)", value: 372 },
   ];
 
-  const [openColorPicker, setopenColorPicker] = useState(false);
-
-  const [swatchesOnly, setSwatchesOnly] = useState(false);
-  const [swatchesLast, setSwatchesLast] = useState(false);
-  const [swatchesEnabled, setSwatchesEnabled] = useState(true);
-  const [disc, setDisc] = useState(false);
-
   const onColorChangeComplete = (color) => {
     // Renk değişimi tamamlandığında burada istediğiniz işlemleri yapabilirsiniz
   };
-
-  const handleIbanChange = (text) => {
-    // Harf ve rakamlardan başka karakterlerin girişini engelle
-    text = text.replace(/[^A-Za-z0-9]/g, "");
-
-    // Metnin başında TR olup olmadığını kontrol edin
-    if (text.startsWith("TR")) {
-      text = "TR" + text.substring(2).replace(/^TR/, ""); // Eğer başta TR varsa, fazladan TR'yi kaldırın
-    } else {
-      text = "TR" + text; // Eğer başta TR yoksa, başına TR ekleyin
-    }
-
-    // IBAN'ı 4 haneli gruplar halinde formatla
-    const formattedText = text.match(/.{1,4}/g)?.join(" ") ?? text;
-
-    setData("Iban", formattedText);
-  };
-
-  const [chooseFile, setchooseFile] = useState(false);
 
   const initialFormData = {
     name: "",
@@ -441,7 +373,7 @@ export default function UpgradeProfile() {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const [loading, setLoading] = useState(false); // Yüklenme durumu
+
   const formatIban = (text) => {
     // Sadece harfleri ve rakamları içeren bir metin oluştur
     const cleanedText = text.replace(/[^a-zA-Z0-9]/g, "");
@@ -499,75 +431,6 @@ export default function UpgradeProfile() {
       onChangeCity(key);
     }
   };
-  const [user, setUser] = useState({});
-  const [namFromGetUser, setnamFromGetUser] = useState({});
-  const [currentColor, setCurrentColor] = useState("");
-
-  useEffect(() => {
-    getValueFor("user", setUser);
-  }, []);
-
-  useEffect(() => {
-    const GetUserInfo = async () => {
-      setLoading(true);
-      try {
-        if (user.access_token) {
-          const userInfo = await axios.get(
-            `https://private.emlaksepette.com/api/users/${user.id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${user.access_token}`,
-              },
-            }
-          );
-
-          setnamFromGetUser(userInfo?.data?.user);
-        }
-      } catch (error) {
-        console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (user.access_token) {
-      // Eğer user bilgileri geldiyse, GetUserInfo fonksiyonunu çalıştır
-      GetUserInfo();
-    }
-  }, [user]);
-
-  // namFromGetUser güncellendiğinde form verilerini ve rengi güncelle
-
-  useEffect(() => {
-    if (Object.keys(namFromGetUser).length > 0) {
-      setFormData({
-        name: namFromGetUser.name || "",
-        mobile_phone: namFromGetUser.mobile_phone || "",
-        new_phone_number: namFromGetUser.new_phone_number || "",
-        store_name: namFromGetUser.store_name || "",
-        username: namFromGetUser.username || "",
-        authority_licence: namFromGetUser.authority_licence || "",
-        iban: namFromGetUser.iban || "",
-        website: namFromGetUser.website || "",
-        phone: formatPhoneNumber(namFromGetUser.phone) || "",
-        year: namFromGetUser.year || "",
-        city_id: namFromGetUser.city_id || "",
-        county_id: namFromGetUser.county_id || "",
-        neighborhood_id: namFromGetUser.neighborhood_id || "",
-        taxOfficeCity: namFromGetUser.taxOfficeCity || "",
-        taxOffice: namFromGetUser.taxOffice || "",
-        taxNumber: namFromGetUser.taxNumber || "",
-      });
-      setCurrentColor(namFromGetUser.banner_hex_code);
-      setareaCode(namFromGetUser.area_code);
-      setTimeout(() => {
-        onChangeCity(namFromGetUser.city_id);
-        onChangeCounty(namFromGetUser.county_id);
-        onChangeNeighborhood(namFromGetUser.neighborhood_id);
-        onchangeTaxOffice(namFromGetUser.taxOfficeCity);
-      }, 500);
-    }
-  }, [namFromGetUser]);
 
   const onColorChange = (color) => {
     setCurrentColor(color);
@@ -594,34 +457,22 @@ export default function UpgradeProfile() {
         return [];
     }
   };
-  const [region, setRegion] = useState(null);
+
   const initialRegion = {
-    latitude: 39.9334,
-    longitude: 32.8597,
+    latitude: parseFloat(39.9334),
+    longitude: parseFloat(32.8597),
     latitudeDelta: 0.05,
     longitudeDelta: 0.05,
   };
-  useEffect(() => {
-    // API'den gelen koordinatları kontrol et, null ise varsayılanı kullan
-    if (namFromGetUser.latitude != null && namFromGetUser.longitude != null) {
-      setRegion({
-        latitude: namFromGetUser.latitude,
-        longitude: namFromGetUser.longitude,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
-      });
-    } else {
-      // API'den değer gelmezse varsayılan konumu kullan
-      setRegion(initialRegion);
-    }
-  }, [namFromGetUser]);
-  const [selectedLocation, setSelectedLocation] = useState(null);
+
   const handleMapPress = (event) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
-    setSelectedLocation({ latitude, longitude });
+    setSelectedLocation({
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude),
+    });
   };
-  // Eğer region henüz belirlenmediyse (API'den veri gelmemişse) bir yükleniyor göstergesi göster
-  const [areaCode, setareaCode] = useState(null);
+
   if (!region) {
     return (
       <View style={styles.loadingContainer}>
@@ -902,6 +753,8 @@ export default function UpgradeProfile() {
                         <View
                           style={{
                             flexDirection: item.showArea ? "row" : "",
+                            overflow: "hidden",
+                            borderRadius: 8,
                           }}
                         >
                           {item.showArea && (
@@ -974,28 +827,37 @@ export default function UpgradeProfile() {
                               />
                             </View>
                           ) : (
-                            <RNPickerSelect
-                              doneText="Tamam"
-                              value={formData[item.key]}
-                              placeholder={{
-                                label: "Seçiniz...",
-                                value: null,
+                            <View
+                              style={{
+                                borderRadius: 8,
+                                overflow: "hidden",
+                                borderColor: "#eaeff5",
+                                borderWidth: 1,
                               }}
-                              style={pickerSelectStyles}
-                              onValueChange={(value) => {
-                                handleInputChange(item.key, value);
-                                if (item.key === "city_id") {
-                                  onChangeCity(value); // Şehir seçilince ilçe verilerini almak için
-                                } else if (item.key === "county_id") {
-                                  onChangeCounty(value); // İlçe seçilince mahalle verilerini almak için
-                                } else if (item.key === "neighborhood_id") {
-                                  onChangeNeighborhood(value); // Mahalle seçimi
-                                } else if (item.key === "taxOfficeCity") {
-                                  onchangeTaxOffice(value);
-                                }
-                              }}
-                              items={getItemsForKey(item.key)}
-                            />
+                            >
+                              <RNPickerSelect
+                                doneText="Tamam"
+                                value={formData[item.key]}
+                                placeholder={{
+                                  label: "Seçiniz...",
+                                  value: null,
+                                }}
+                                style={pickerSelectStyles}
+                                onValueChange={(value) => {
+                                  handleInputChange(item.key, value);
+                                  if (item.key === "city_id") {
+                                    onChangeCity(value);
+                                  } else if (item.key === "county_id") {
+                                    onChangeCounty(value);
+                                  } else if (item.key === "neighborhood_id") {
+                                    onChangeNeighborhood(value);
+                                  } else if (item.key === "taxOfficeCity") {
+                                    onchangeTaxOffice(value);
+                                  }
+                                }}
+                                items={getItemsForKey(item.key)}
+                              />
+                            </View>
                           )}
                         </View>
                       </View>
@@ -1012,28 +874,28 @@ export default function UpgradeProfile() {
                         width: "100%",
                       }}
                     >
-                      <MapView
-                        style={{ width: "100%", height: "100%" }}
-                        initialRegion={region}
-                        onPress={handleMapPress}
-                      >
-                        {/* Marker örneği */}
-                        {selectedLocation ? (
-                          <Marker
-                            coordinate={selectedLocation}
-                            title="Selected Location"
-                          />
-                        ) : (
-                          <Marker
-                            coordinate={{
-                              latitude: region.latitude,
-                              longitude: region.longitude,
-                            }}
-                            title="Marker Title"
-                            description="Marker description"
-                          />
-                        )}
-                      </MapView>
+                      {region && (
+                        <MapView
+                          style={{ width: "100%", height: "100%" }}
+                          initialRegion={region}
+                          onPress={handleMapPress}
+                        >
+                          {selectedLocation ? (
+                            <Marker
+                              coordinate={selectedLocation}
+                              title={namFromGetUser.name}
+                            />
+                          ) : (
+                            <Marker
+                              coordinate={{
+                                latitude: region.latitude,
+                                longitude: region.longitude,
+                              }}
+                              title={namFromGetUser.name}
+                            />
+                          )}
+                        </MapView>
+                      )}
                     </View>
                   )
                 }
@@ -1189,17 +1051,27 @@ export default function UpgradeProfile() {
                             },
                           ]}
                         >
-                          <View style={{ width: 250, height: 200 }}>
-                            <Image
-                              source={{
-                                uri: "https://private.emlaksepette.com/images/phone-update-image/phonefile.jpg",
-                              }}
-                              style={{ width: "100%", height: "100%" }}
-                            />
-                          </View>
+                          <TouchableOpacity
+                            onPress={() => setIsImageVisible(true)}
+                          >
+                            <View style={{ width: 250, height: 200 }}>
+                              <Image
+                                source={{
+                                  uri: "https://private.emlaksepette.com/images/phone-update-image/phonefile.jpg",
+                                }}
+                                style={{ width: "100%", height: "100%" }}
+                              />
+                            </View>
+                          </TouchableOpacity>
                         </View>
                       </CollapseBody>
                     </Collapse>
+                    <ImageView
+                      images={images}
+                      imageIndex={0}
+                      visible={isImageVisible}
+                      onRequestClose={() => setIsImageVisible(false)}
+                    />
                   </>
                 )}
               </View>
@@ -1394,7 +1266,7 @@ export default function UpgradeProfile() {
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     width: "100%",
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#F3F3F3",
     borderWidth: 1,
     borderColor: "#ebebeb",
     borderRadius: 8,
@@ -1403,7 +1275,7 @@ const pickerSelectStyles = StyleSheet.create({
   },
   inputAndroid: {
     width: "100%",
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#F3F3F3",
     borderWidth: 1,
     borderColor: "#eaeff5",
     borderRadius: 8,
@@ -1414,7 +1286,7 @@ const pickerSelectStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#fff",
   },
   titles: {
     flexDirection: "row",
@@ -1424,7 +1296,7 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 10,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#F3F3F3",
     borderRadius: 8,
   },
   label: {
