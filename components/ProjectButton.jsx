@@ -12,7 +12,7 @@ const ProjectButton = (props) => {
     <TouchableOpacity
       style={[styles.button, { backgroundColor: getColor() }]}
       activeOpacity={0.8}
-      onPress={() => onPress}
+      onPress={() => onPress()}
     >
       <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
