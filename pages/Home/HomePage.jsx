@@ -16,7 +16,7 @@ import ProjectPost from "../../components/ProjectPost";
 import { getValueFor } from "../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
-import Banner from "../../assets/project-banner.png";
+import bannerSRC from "../../src/assets/images/project-banner.png";
 import { useNavigation } from "@react-navigation/native";
 
 const apiUrl = "https://private.emlaksepette.com";
@@ -104,7 +104,7 @@ const HomePage = (props) => {
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
               <View>
                 <Image
-                  source={Banner}
+                  source={bannerSRC}
                   alt="project"
                   style={styles.bannerImage}
                   resizeMode="cover"
