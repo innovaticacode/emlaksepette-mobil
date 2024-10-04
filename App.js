@@ -65,7 +65,6 @@ import AdsPictureList from "./pages/Home/ProfilePages/AdsPictureList";
 import UserTypeList from "./pages/Home/ProfilePages/UserTypeList";
 import PaymentScreen from "./pages/Home/PaymentScreen";
 
-
 import ForgotPassword from "./pages/Home/Login&Register/ForgotPassword";
 import UpdateUserType from "./pages/Home/ProfilePages/UpdateUserType";
 import UpdateUsers from "./pages/Home/ProfilePages/UpdateUsers";
@@ -75,7 +74,6 @@ import Invoice from "./pages/Home/Invoice";
 import CreateReservation from "./pages/Home/RealtorPages/CreateReservation";
 import PaymentScreenForReserve from "./pages/Home/PaymentScreenForReserve";
 import CreateCollections from "./pages/Home/CreateCollections";
-
 
 import * as SecureStore from "expo-secure-store";
 
@@ -111,9 +109,8 @@ import Onboard from "./pages/Home/Onboarding/Onboard";
 import { View } from "moti";
 import SplashScreen from "./pages/Home/Onboarding/SplashScreen";
 
-
-import Toast from 'react-native-toast-message';
-import { AlertNotificationRoot } from 'react-native-alert-notification';
+import Toast from "react-native-toast-message";
+import { AlertNotificationRoot } from "react-native-alert-notification";
 import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
 import ApplyForBeCompany from "./pages/Home/ProfilePages/ApplyForBeCompany";
 
@@ -130,9 +127,8 @@ import { store } from "./store/store";
 import SalePageMain from "./pages/Home/PointOfSale/SalePageMain";
 import SalePage from "./pages/Home/PointOfSale/SalePage";
 import PaymentSuccessScreen from "./src/pages/PaymentSuccessScreen";
-
-
-
+import SliderTourismRent from "./pages/Home/SliderTourismRent";
+import AllTourismRent from "./pages/Home/AllTourismRent";
 
 const Stack = createNativeStackNavigator();
 
@@ -172,13 +168,13 @@ export default function App({ route }) {
   useEffect(() => {
     const loadApp = async () => {
       // Splash screen'in görünme süresini ayarlamak için yapay bir gecikme ekle
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // İlk açılış kontrolünü yap
-      const hasLaunched = await SecureStore.getItemAsync('hasLaunched');
+      const hasLaunched = await SecureStore.getItemAsync("hasLaunched");
       if (hasLaunched === null) {
         setIsFirstLaunch(true);
-        await SecureStore.setItemAsync('hasLaunched', 'true');
+        await SecureStore.setItemAsync("hasLaunched", "true");
       } else {
         setIsFirstLaunch(false);
       }
@@ -196,10 +192,8 @@ export default function App({ route }) {
   return (
     <Provider store={store}>
       <AlertNotificationRoot>
-
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SheetProvider>
-
             <NavigationContainer>
               <Stack.Navigator
                 screenOptions={{
@@ -233,7 +227,39 @@ export default function App({ route }) {
                   )}
                 </Stack.Screen>
 
+                <Stack.Screen
+                  name="Home"
+                  options={{
+                    headerShown: false,
+                    gestureEnabled: false,
+                  }}
+                >
+                  {(props) => (
+                    <Home
+                      {...props}
+                      showBackIcon={showBackIcon}
+                      setshowBackIcon={setshowBackIcon}
+                    />
+                  )}
+                </Stack.Screen>
 
+                <Stack.Group>
+                  <Stack.Screen
+                    name="Login"
+                    options={{
+                      title: "Giriş Yap",
+                      headerBackTitleVisible: false,
+                      headerShown: false,
+                    }}
+                  >
+                    {(props) => <Login {...props} />}
+                  </Stack.Screen>
+                  <Stack.Screen
+                    name="Register"
+                    component={Register}
+                    options={{ title: "Üye Ol", headerBackTitleVisible: false }}
+                  />
+                </Stack.Group>
                 <Stack.Group>
                   <Stack.Screen
                     name="Login"
@@ -288,7 +314,74 @@ export default function App({ route }) {
                     />
                   )}
                 </Stack.Screen>
+                <Stack.Screen name="Step1">
+                  {(props) => (
+                    <StepScreen
+                      {...props}
+                      step={1}
+                      setHousingTypes={setHousingTypes}
+                      setSelectedTypes={setSelectedTypes}
+                      housingTypes={housingTypes}
+                      selectedTypes={selectedTypes}
+                    />
+                  )}
+                </Stack.Screen>
+                <Stack.Screen name="Step2">
+                  {(props) => (
+                    <StepScreen
+                      {...props}
+                      step={2}
+                      setHousingTypes={setHousingTypes}
+                      setSelectedTypes={setSelectedTypes}
+                      housingTypes={housingTypes}
+                      selectedTypes={selectedTypes}
+                    />
+                  )}
+                </Stack.Screen>
+                <Stack.Screen name="Step3">
+                  {(props) => (
+                    <StepScreen
+                      {...props}
+                      step={3}
+                      setHousingTypes={setHousingTypes}
+                      setSelectedTypes={setSelectedTypes}
+                      housingTypes={housingTypes}
+                      selectedTypes={selectedTypes}
+                    />
+                  )}
+                </Stack.Screen>
 
+                <Stack.Screen
+                  name="Emlak"
+                  component={Emlakİlanı}
+                  options={({ route }) => ({
+                    title: route.params.name,
+                    headerBackTitleVisible: false,
+                  })}
+                />
+                <Stack.Screen
+                  name="Proje"
+                  component={Projeİlanı}
+                  options={({ route }) => ({
+                    title: route.params.name,
+                  })}
+                />
+                <Stack.Screen
+                  name="Details"
+                  component={Details}
+                  options={({ route }) => ({
+                    headerShown: false,
+                    title: route.params.name,
+                  })}
+                />
+                <Stack.Screen
+                  name="PostDetails"
+                  component={PostDetail}
+                  options={({ route }) => ({
+                    headerShown: false,
+                    headerBackTitleVisible: false,
+                  })}
+                />
                 <Stack.Screen
                   name="Emlak"
                   component={Emlakİlanı}
@@ -607,7 +700,63 @@ export default function App({ route }) {
                 >
                   {(props) => <AdvertForm />}
                 </Stack.Screen>
+                <Stack.Screen
+                  name="CategorieChoose"
+                  component={CategoryChoose}
+                  options={({ route }) => ({
+                    animationTypeForReplace: "pop",
+                    title: route.params.name,
+                    headerBackTitle: "",
+                    headerBackTitleVisible: false,
+                    headerTintColor: "black",
+                  })}
+                />
+                <Stack.Screen
+                  name="CategorieStatu"
+                  component={CategorieStatus}
+                  options={({ route }) => ({
+                    animationTypeForReplace: "pop",
+                    title: route.params.name,
+                    headerBackTitle: "",
+                    headerBackTitleVisible: false,
+                    headerTintColor: "black",
+                  })}
+                />
+                <Stack.Screen
+                  name="AdvertPlace"
+                  component={AdvertsPlace}
+                  options={({ route }) => ({
+                    animationTypeForReplace: "pop",
+                    title: route.params.name,
+                    headerBackTitle: "",
+                    headerBackTitleVisible: false,
+                    headerTintColor: "black",
+                  })}
+                />
+                <Stack.Screen
+                  name="AdvertForm"
+                  options={({ route }) => ({
+                    animationTypeForReplace: "pop",
+                    headerBackTitle: "",
+                    headerBackTitleVisible: false,
+                    headerTintColor: "black",
+                  })}
+                >
+                  {(props) => <AdvertForm />}
+                </Stack.Screen>
 
+                <Stack.Screen
+                  name="ShareAdvert"
+                  options={({ route }) => ({
+                    animationTypeForReplace: "pop",
+                    title: "",
+                    headerBackTitle: "",
+                    headerBackTitleVisible: false,
+                    headerTintColor: "black",
+                  })}
+                >
+                  {(props) => <ShareScreenProject {...props} />}
+                </Stack.Screen>
                 <Stack.Screen
                   name="ShareAdvert"
                   options={({ route }) => ({
@@ -720,7 +869,8 @@ export default function App({ route }) {
                     headerStyle: {
                       backgroundColor: "#EA2B2E",
                     },
-                    title: route.params.name + " - " + route.params.count + " Proje",
+                    title:
+                      route.params.name + " - " + route.params.count + " Proje",
                     headerBackTitle: "",
                     headerBackTitleVisible: false,
                     headerTintColor: "white",
@@ -758,7 +908,7 @@ export default function App({ route }) {
                   component={SellAndRentFormPage}
                   options={({ route }) => ({
                     title: "Sat Kirala",
-                    headerBackTitleVisible: false
+                    headerBackTitleVisible: false,
                   })}
                 />
                 <Stack.Screen
@@ -766,7 +916,7 @@ export default function App({ route }) {
                   component={SendSellAndRentForm}
                   options={({ route }) => ({
                     title: "Sat Kirala Formu",
-                    headerBackTitleVisible: false
+                    headerBackTitleVisible: false,
                   })}
                 />
                 <Stack.Screen
@@ -844,7 +994,7 @@ export default function App({ route }) {
                 <Stack.Screen
                   name="UserTypes"
                   component={UserTypeList}
-                  options={({ }) => ({
+                  options={({}) => ({
                     title: "Kullanıcı Tipleri",
                     headerBackTitleVisible: false,
 
@@ -919,7 +1069,7 @@ export default function App({ route }) {
                   options={({ route }) => ({
                     headerBackTitleVisible: false,
                     headerShown: true,
-                    title: "Siparişlerim",
+                    title: "Aldıklarım",
                   })}
                 />
                 <Stack.Screen
@@ -1024,6 +1174,28 @@ export default function App({ route }) {
                   component={UpgradeProfile}
                   options={({ route }) => ({
                     title: route.params.name,
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#f7f7f7",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="SliderTourismRent"
+                  component={SliderTourismRent}
+                  options={({ route }) => ({
+                    title: route.params.name,
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#f7f7f7",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="AllTourismRent"
+                  component={AllTourismRent}
+                  options={({ route }) => ({
+                    title: "Öne Çıkan Markalar",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#f7f7f7",
@@ -1200,17 +1372,6 @@ export default function App({ route }) {
                   })}
                 />
                 <Stack.Screen
-                  name="SeeMyNeighbor"
-                  component={SeeMyNeighbor}
-                  options={({ route }) => ({
-                    title: "Komşumu Gör Nedir?",
-                    headerBackTitleVisible: false,
-                    headerStyle: {
-                      backgroundColor: "#ffffff",
-                    },
-                  })}
-                />
-                <Stack.Screen
                   name="SalePageMain"
                   component={SalePageMain}
                   options={({ route }) => ({
@@ -1221,8 +1382,9 @@ export default function App({ route }) {
                     },
                   })}
                 />
-
-                <Stack.Screen name="SalePage" component={SalePage}
+                <Stack.Screen
+                  name="SalePage"
+                  component={SalePage}
                   options={({ route }) => ({
                     title: "Satış Noktası Başvur",
                     headerBackTitleVisible: false,
@@ -1231,19 +1393,6 @@ export default function App({ route }) {
                     },
                   })}
                 />
-
-                <Stack.Screen name="PaymentSuccess" component={PaymentSuccessScreen}
-                  options={({ route }) => ({
-                    title: "Ödeme Başarılı",
-                    headerBackTitleVisible: false,
-                    headerStyle: {
-                      backgroundColor: "#ffffff",
-                    },
-                  })}
-                />
-                
-
-
               </Stack.Navigator>
             </NavigationContainer>
           </SheetProvider>

@@ -24,6 +24,7 @@ import FranchiseBanner from "../../components/FranchiseBanner";
 import SliderItem from "../../components/SliderItem";
 import WhatIsEmlakSepette from "../../components/WhatIsEmlakSepette";
 import SliderEstateBar from "../../components/SliderEstateBar";
+import SliderTourismRent from "./SliderTourismRent";
 
 const apiUrl = "https://private.emlaksepette.com";
 
@@ -138,6 +139,37 @@ const FirstHome = (props) => {
     });
   };
 
+  const navigateToVillaProjects = () => {
+    navigation.navigate("AllProject", {
+      name: "Tüm Projeler",
+      slug: "tum-projeler",
+      data: featuredProjects,
+      count: featuredProjects.length,
+      type: null,
+      optional: "satilik",
+      title: "konut",
+      check: "villa",
+      city: null,
+      county: null,
+      hood: null,
+    });
+  };
+  const navigateToHousingProjects = () => {
+    navigation.navigate("AllProject", {
+      name: "Tüm Projeler",
+      slug: "tum-projeler",
+      data: featuredProjects,
+      count: featuredProjects.length,
+      type: null,
+      optional: "satilik",
+      title: "konut",
+      check: null,
+      city: null,
+      county: null,
+      hood: null,
+    });
+  };
+
   return (
     <AlertNotificationRoot>
       {loadingProjects && loadingSliders ? (
@@ -183,6 +215,19 @@ const FirstHome = (props) => {
                   ))}
                 </PagerView>
               )}
+              <View style={styles.dotsContainer}>
+                {featuredSliders.map((_, index) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.dot,
+                      index === currentPage
+                        ? styles.activeDot
+                        : styles.inactiveDot,
+                    ]}
+                  />
+                ))}
+              </View>
             </View>
 
             {/* Popular Construction Brands */}
@@ -217,12 +262,14 @@ const FirstHome = (props) => {
                           <ProjectButton
                             color="#A70107"
                             text="Konut Projeleri"
+                            onPress={navigateToHousingProjects}
                           />
                         </View>
                         <View>
                           <ProjectButton
                             color="#A2DAE0"
                             text="Villa Projeleri"
+                            onPress={navigateToVillaProjects}
                           />
                           <ProjectButton
                             color="#06065d"
@@ -231,145 +278,240 @@ const FirstHome = (props) => {
                         </View>
                       </View>
 
-                        <FlatList
-                          data={featuredProjects}
-                          renderItem={({ item, index }) => (
-                            <View
-                              style={{
-                                marginTop: 7,
-                                width: "100%",
-                              }}
+                      <FlatList
+                        data={featuredProjects}
+                        renderItem={({ item, index }) => (
+                          <View
+                            style={{
+                              marginTop: 7,
+                              width: "100%",
+                            }}
+                          >
+                            <ProjectPost
+                              key={index}
+                              project={item}
+                              caption={item.project_title}
+                              ımage={`${apiUrl}/${item.image.replace(
+                                "public/",
+                                "storage/"
+                              )}`}
+                              user={item.user}
+                              location={item.city.title}
+                              city={item.county.ilce_title}
+                              ProjectNo={item.id}
+                              // acıklama={item.description
+                              //   .replace(/<\/?[^>]+(>|$)/g, "")
+                              //   .replace(/&nbsp;/g, " ")}
+                              ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
+                              loading={loadingProjects}
+                            />
+                          </View>
+                        )}
+                        ListHeaderComponent={
+                          <View style={styles.featuredProjectsHeader}>
+                            <Text style={styles.featuredProjectsTitle}>
+                              ÖNE ÇIKAN PROJELER
+                            </Text>
+                            <TouchableOpacity
+                              style={styles.allProjectsButton}
+                              onPress={navigateToAllProjects}
                             >
-                              <ProjectPost
-                                key={index}
-                                project={item}
-                                caption={item.project_title}
-                                ımage={`${apiUrl}/${item.image.replace(
-                                  "public/",
-                                  "storage/"
-                                )}`}
-                                user={item.user}
-                                location={item.city.title}
-                                city={item.county.ilce_title}
-                                ProjectNo={item.id}
-                                // acıklama={item.description
-                                //   .replace(/<\/?[^>]+(>|$)/g, "")
-                                //   .replace(/&nbsp;/g, " ")}
-                                ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                                loading={loadingProjects}
-                              />
-                            </View>
-                          )}
-                          ListHeaderComponent={
-                            <View style={styles.featuredProjectsHeader}>
-                              <Text style={styles.featuredProjectsTitle}>
-                                ÖNE ÇIKAN PROJELER
+                              <Text style={styles.allProjectsButtonText}>
+                                Tüm Projeleri Gör
                               </Text>
-                              <TouchableOpacity
-                                style={styles.allProjectsButton}
-                                onPress={navigateToAllProjects}
-                              >
-                                <Text style={styles.allProjectsButtonText}>
-                                  Tüm Projeleri Gör
-                                </Text>
-                              </TouchableOpacity>
-                            </View>
-                          }
-                          scrollEnabled={false}
-                        />
-                      </>
-                    )}
-                  </View>
+                            </TouchableOpacity>
+                          </View>
+                        }
+                        scrollEnabled={false}
+                      />
+                    </>
+                  )}
+                </View>
+              </View>
+            </View>
+            <View
+              style={{
+                width: "100%",
+                height: "auto",
+              }}
+            >
+              <View style={styles.featuredProjectsHeader}>
+                <Text style={styles.featuredProjectsTitle}>
+                  FRANCHİSE MARKALARI
+                </Text>
+                <TouchableOpacity
+                  style={styles.allProjectsButton}
+                  onPress={() => navigation.navigate("AllFranchiseBrands")}
+                >
+                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <FlatList
+                  data={franchise}
+                  horizontal={true}
+                  nestedScrollEnabled={true}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item, index }) => (
+                    <FranchiseBanner
+                      key={index}
+                      image={`${apiUrl}/logos/${item.logo}`}
+                      text={item.title}
+                    />
+                  )}
+                />
+              </View>
+            </View>
+            {/* bottom area */}
+            <View>
+              <View style={styles.featuredProjectsHeader}>
+                <Text style={styles.featuredProjectsTitle}>
+                  ÖNE ÇIKAN GAYRİMENKUL MARKALARI
+                </Text>
+                <TouchableOpacity
+                  style={styles.allProjectsButton}
+                  onPress={() => navigation.navigate("AllFeaturedRealEstate")}
+                >
+                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View>
+                <SliderEstateBar />
+              </View>
+            </View>
+            <View>
+              <View style={styles.featuredProjectsHeader}>
+                <Text style={styles.featuredProjectsTitle}>
+                  TURİZM AMAÇLI KİRALAMA MARKALARI
+                </Text>
+                <TouchableOpacity
+                  style={styles.allProjectsButton}
+                  onPress={() => navigation.navigate("AllTourismRent")}
+                >
+                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View>
+                <SliderTourismRent />
+              </View>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginBottom: 10,
+                marginTop: 20,
+              }}
+            >
+              <View>
+                <ProjectButton color="#0E49B5" text="Paylaşımlı İlanlar" />
+                <ProjectButton color="#A70107" text="Kiralık Konutlar" />
+              </View>
+              <View>
+                <ProjectButton color="#A2DAE0" text="Sahibinden" />
+                <ProjectButton color="#06065d" text="Emlak Ofisinden" />
+              </View>
+            </View>
+            <View
+              style={{
+                width: "100%",
+                height: 1,
+                backgroundColor: "#ddd",
+                marginVertical: 6,
+              }}
+            />
+            <View
+              style={{
+                width: "100%",
+                height: "auto",
+              }}
+            >
+              <View style={styles.featuredProjectsHeader}>
+                <Text style={styles.featuredProjectsTitle}>
+                  ÖNE ÇIKAN FRANCHİSE MARKALARI
+                </Text>
+                <TouchableOpacity
+                  style={styles.allProjectsButton}
+                  onPress={() => navigation.navigate("AllFranchiseBrands")}
+                >
+                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <FlatList
+                  data={franchise}
+                  horizontal={true}
+                  nestedScrollEnabled={true}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item, index }) => (
+                    <FranchiseBanner
+                      key={index}
+                      image={`${apiUrl}/logos/${item.logo}`}
+                      text={item.title}
+                    />
+                  )}
+                />
+              </View>
+            </View>
+            {/* bottom area */}
+            <View>
+              <View style={styles.featuredProjectsHeader}>
+                <Text style={styles.featuredProjectsTitle}>
+                  ÖNE ÇIKAN GAYRİMENKUL MARKALARI
+                </Text>
+                <TouchableOpacity
+                  style={styles.allProjectsButton}
+                  onPress={() => navigation.navigate("AllFeaturedRealEstate")}
+                >
+                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <SliderEstateBar />
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginBottom: 10,
+                  marginTop: 20,
+                }}
+              >
+                <View>
+                  <ProjectButton color="#0E49B5" text="Paylaşımlı İlanlar" />
+                  <ProjectButton color="#A70107" text="Kiralık Konutlar" />
+                </View>
+                <View>
+                  <ProjectButton color="#A2DAE0" text="Sahibinden" />
+                  <ProjectButton color="#06065d" text="Emlak Ofisinden" />
                 </View>
               </View>
               <View
                 style={{
                   width: "100%",
+                  height: 1,
+                  backgroundColor: "#ddd",
+                  marginVertical: 6,
+                }}
+              />
+              <View
+                style={{
+                  width: "100%",
                   height: "auto",
+                  paddingBottom: 20,
                 }}
               >
-                <View style={styles.featuredProjectsHeader}>
-                  <Text style={styles.featuredProjectsTitle}>
-                    ÖNE ÇIKAN FRANCHİSE MARKALARI
-                  </Text>
-                  <TouchableOpacity
-                    style={styles.allProjectsButton}
-                    onPress={() => navigation.navigate("AllFranchiseBrands")}
-                  >
-                    <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <FlatList
-                    data={franchise}
-                    horizontal={true}
-                    nestedScrollEnabled={true}
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item, index }) => (
-                      <FranchiseBanner
-                        key={index}
-                        image={`${apiUrl}/logos/${item.logo}`}
-                        text={item.title}
-                      />
-                    )}
-                  />
-                </View>
+                <WhatIsEmlakSepette />
               </View>
-              {/* bottom area */}
-              <View>
-                <View style={styles.featuredProjectsHeader}>
-                  <Text style={styles.featuredProjectsTitle}>
-                    ÖNE ÇIKAN GAYRİMENKUL MARKALARI
-                  </Text>
-                  <TouchableOpacity
-                    style={styles.allProjectsButton}
-                    onPress={() => navigation.navigate("AllFeaturedRealEstate")}
-                  >
-                    <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <SliderEstateBar />
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginBottom: 10,
-                    marginTop: 20,
-                  }}
-                >
-                  <View>
-                    <ProjectButton color="#0E49B5" text="Paylaşımlı İlanlar" />
-                    <ProjectButton color="#A70107" text="Kiralık Konutlar" />
-                  </View>
-                  <View>
-                    <ProjectButton color="#A2DAE0" text="Sahibinden" />
-                    <ProjectButton color="#06065d" text="Emlak Ofisinden" />
-                  </View>
-                </View>
-                <View
-                  style={{
-                    width: "100%",
-                    height: 1,
-                    backgroundColor: "#ddd",
-                    marginVertical: 6,
-                  }}
-                />
-                <View
-                  style={{
-                    width: "100%",
-                    height: "auto",
-                    paddingBottom: 20,
-                  }}
-                >
-                  <WhatIsEmlakSepette />
-                </View>
-              </View>
-            </ScrollView>
-          </SafeAreaView>
-        
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+
       )}
     </AlertNotificationRoot>
   );
@@ -450,5 +592,22 @@ const styles = StyleSheet.create({
   projectPostContainer: {
     marginTop: 7,
     width: "100%",
+  },
+  dotsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    margin: 4,
+  },
+  activeDot: {
+    backgroundColor: "red", // Aktif nokta rengi
+  },
+  inactiveDot: {
+    backgroundColor: "#ccc", // Pasif nokta rengi
   },
 });
