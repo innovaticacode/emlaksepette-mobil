@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   ScrollView,
+  Image,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
@@ -16,6 +17,7 @@ import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import bannerSRC from "../../../src/assets/images/karavan.png";
 const PAGE_SIZE = 10;
 
 const SellAcil = ({ index }) => {
@@ -38,8 +40,7 @@ const SellAcil = ({ index }) => {
     };
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${
-          reset ? 1 : page
+        `https://private.emlaksepette.com/api/real-estates?page=${reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
       );
@@ -103,6 +104,12 @@ const SellAcil = ({ index }) => {
         </View>
       ) : (
         <View style={styles.container}>
+          <View style={{ marginBottom: 20 }}>
+            <Image
+              source={bannerSRC}
+              style={{ width: "auto", height: 120, resizeMode: "cover" }}
+            />
+          </View>
           <View
             style={{
               paddingBottom: 3,
@@ -114,8 +121,8 @@ const SellAcil = ({ index }) => {
               backgroundColor: "white",
             }}
           >
-            <Text style={{ fontSize: 12, fontWeight: 700 }}>
-              ÖNE ÇIKAN ACİL İLANLAR
+            <Text style={{ fontSize: 14, fontWeight: 700 }}>
+              KARAVAN İLANLARI
             </Text>
 
             <TouchableOpacity
@@ -137,7 +144,7 @@ const SellAcil = ({ index }) => {
               }
             >
               <Text
-                style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
+                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
               >
                 Tüm İlanları Gör
               </Text>
@@ -182,9 +189,8 @@ const SellAcil = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${apiUrl}/housing_images/${
-                      JSON.parse(item.housing_type_data).image
-                    }`}
+                    image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image
+                      }`}
                     column1_additional={item.column1_additional}
                     column1_name={
                       JSON.parse(item.housing_type_data)[item.column1_name]
