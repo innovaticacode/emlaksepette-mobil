@@ -131,6 +131,7 @@ import { store } from "./store/store";
 import SalePageMain from "./pages/Home/PointOfSale/SalePageMain";
 import SalePage from "./pages/Home/PointOfSale/SalePage";
 import SuccessForRent from "./pages/Home/ProfilePages/SuccessForRent";
+import RentByMeDetails from "./pages/Home/ProfilePages/RentByMeDetails";
 
 
 
@@ -397,6 +398,17 @@ export default function App({ route }) {
               options={({ route }) => ({
                 animationTypeForReplace: "pop",
                 title: "Kiraladıklarım",
+                headerBackTitle: "",
+                headerBackTitleVisible: false,
+                headerTintColor: "black",
+              })}
+            />
+              <Stack.Screen
+              name="RentByMeDetails"
+              component={RentByMeDetails}
+              options={({ route }) => ({
+                animationTypeForReplace: "pop",
+                title: "Rezervaston Detayı",
                 headerBackTitle: "",
                 headerBackTitleVisible: false,
                 headerTintColor: "black",
@@ -1253,6 +1265,7 @@ export default function App({ route }) {
               },
             })}
         />
+        
 
 
         </Stack.Navigator>

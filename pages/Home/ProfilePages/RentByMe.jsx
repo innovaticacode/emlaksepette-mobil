@@ -13,6 +13,7 @@ import Icon from "react-native-vector-icons/Entypo";
 import axios from "axios";
 import { Platform } from "react-native";
 import { getValueFor } from "../../../components/methods/user";
+
 export default function RentByMe() {
   const [Tabs, setTabs] = useState(0);
   const [TabIndex, setTabIndex] = useState(0);
@@ -66,7 +67,7 @@ export default function RentByMe() {
         const skipValue = page * 10; // Calculate skip value
         console.log("Fetching items with skip:", skipValue, "and take:", 10);
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/get_my_reservations",
+          "https://private.emlaksepette.com/api/get_customer_reservations",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -193,7 +194,7 @@ export default function RentByMe() {
                 <TouchableOpacity
                   key={item.id} // Use item.id as the key
                   onPress={() => {
-                    navigation.navigate("RentOrderDetail", {
+                    navigation.navigate("RentByMeDetails", {
                       id: item.id, // Pass the item.id to navigate
                     });
                   }}

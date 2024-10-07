@@ -31,6 +31,7 @@ export default function Rent() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
+  console.log(user.access_token);
 
   const TabBarItem = [
     {
