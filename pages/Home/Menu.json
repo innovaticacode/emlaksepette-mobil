@@ -125,7 +125,7 @@
     "id": "GetSwapApplications",
     "label": "Başvurular",
     "icon": "users",
-    "text": "Takas Taleplerim",
+    "text": "Gelen Takas Başvuruları",
     "key": "GetSwapApplications",
     "url": "SwapScreen",
     "activePath": "/hesabim/takas-basvurularim"
@@ -134,9 +134,9 @@
     "id": "GetSwapApplications",
     "label": "Başvurular",
     "icon": "users",
-    "text": "Gelen Takas Talepleri",
+    "text": "Takas Taleplerim",
     "key": "GetSwapApplications",
-    "url": "SwapScreen",
+    "url": "ComeSwapScreen",
     "activePath": "/hesabim/takas-basvurularim"
   },
 
