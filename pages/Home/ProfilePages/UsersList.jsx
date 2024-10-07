@@ -84,9 +84,7 @@ export default function UsersList() {
             setloading(false); // End loading after showing the dialog
           }, 300);
         }
-
         setopenDeleteModal(false);
-
         setsubUsers(response.data.users);
       }
     } catch (error) {
@@ -143,15 +141,27 @@ export default function UsersList() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: `Başarılı`,
-        textBody: `${userList.length} Kullanıcı Silindi.`,
-        button: "Tamam",
-      });
-      fetchData();
-      setuserList([]);
-      setdeleteAllUserType(false);
+      console.log("DELETE Response:", response);
+
+      if (response.status === 200) {
+        setTimeout(() => {
+          console.log("dialog");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: `Başarılı`,
+            textBody: `${userList.length} Kullanıcı Silindi.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchData();
+              setuserList([]);
+            },
+          });
+          setloading(false);
+        }, 300);
+        console.log("done");
+
+        setdeleteAllUserType(false);
+      }
     } catch (error) {
       console.error("Error making DELETE request:", error);
     }
@@ -170,17 +180,27 @@ export default function UsersList() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: `Başarılı.`,
-        textBody: `${SelectedUserIDS.length} Kullanıcı Silindi.`,
-        button: "Tamam",
-      });
-      fetchData();
-      setSelectedUserIDS([]);
-      setselectedUserDeleteModa(false);
-      setisChoosed(false);
-      setisShowDeleteButon(!isShowDeleteButon);
+      if (response.status === 200) {
+        setTimeout(() => {
+          console.log("dialog");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: `Başarılı.`,
+            textBody: `${SelectedUserIDS.length} Kullanıcı Silindi.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchData();
+              setSelectedUserIDS([]);
+            },
+          });
+          console.log("load");
+          setloading(false);
+        }, 2000);
+
+        setselectedUserDeleteModa(false);
+        setisChoosed(false);
+        setisShowDeleteButon(!isShowDeleteButon);
+      }
     } catch (error) {
       console.error("Error making DELETE request:", error);
     }
