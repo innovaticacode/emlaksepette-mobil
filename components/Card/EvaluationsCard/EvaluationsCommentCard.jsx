@@ -5,17 +5,12 @@ import { styles } from "./EvaluationsCommentCard.styles";
 
 const EvaluationsCommentCard = (props) => {
   const {
-    mainImage = "https://picsum.photos/200",
-    title = "PROJE ADI",
+    mainImage = "",
+    title = "",
     star = 5,
-    desc = "Lorem ipsum dolor sit amet consectet. Pharetra morbi sed lorem dignissim semper morbi habitant sit.",
-    info = "22 Eylül 2024 | K****",
-    images = [
-      "https://picsum.photos/200",
-      "https://picsum.photos/200",
-      "https://picsum.photos/200",
-      "https://picsum.photos/200",
-    ],
+    desc = "",
+    info = "",
+    images = [],
   } = props;
 
   return (

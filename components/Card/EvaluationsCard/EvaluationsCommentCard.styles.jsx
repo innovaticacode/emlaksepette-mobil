@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
     width: "100%",
     padding: 10, // Ekstra padding
     height: "auto",
+    marginVertical: 6,
   },
   body: {
     flexDirection: "row",

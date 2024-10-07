@@ -420,7 +420,7 @@ export default function Profile() {
                 </View>
               </ScrollView>
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, paddingBottom: 60 }}>
               {tab === 0 && <Introduction id={id} setTab={settab} />}
               {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
               {tab === 2 && (
@@ -439,7 +439,7 @@ export default function Profile() {
                 ) : (
                   <CollectionsOfBrand data={storeData} />
                 ))}
-              {tab === 5 && <CommentsOfBrands data={storeData} />}
+              {tab === 5 && <CommentsOfBrands id={id} />}
               {tab === 6 && <Team teamm={teamm} />}
             </View>
           </View>
