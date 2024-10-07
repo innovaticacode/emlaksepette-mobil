@@ -242,7 +242,7 @@ export default function UploadAdsPicture() {
                  
                 </View>
               
-                <View style={styles.alert}>
+                {/* <View style={styles.alert}>
                   <View style={styles.alertContent}>
                     <View>
                       <Icon name="questioncircleo" size={15} color={"#EA2C2E"} />
@@ -258,7 +258,7 @@ export default function UploadAdsPicture() {
                       </Text>
                     </View>
                   </View>
-                </View>
+                </View> */}
           
                 <View>
                   <TouchableOpacity
@@ -280,7 +280,7 @@ export default function UploadAdsPicture() {
                           fontWeight: "600",
                         }}
                       >
-                        Değişikleri Kaydet
+                       Ekle
                       </Text>
                     }
                   

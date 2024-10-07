@@ -9,14 +9,14 @@ import {
 } from "react-native-gesture-handler";
 
 export default function SliderEstateBar() {
-  const apiUrl = "http://192.168.18.31:8000";
+  const apiUrl = "http://192.168.18.32:8000";
   const [loading, setloading] = useState(false);
   const [featuredStores, setFeaturedStores] = useState([]);
 
   const fetchFeaturedStores = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.18.31:8000/api/popular-estate-brands"
+        "http://192.168.18.32:8000/api/popular-estate-brands"
       );
       if (response.data.length > 0) {
         setFeaturedStores(response.data);

@@ -43,7 +43,7 @@ export default function ActiveRealtorAdverts({ index }) {
     };
     try {
       const res = await axios.get(
-        "http://192.168.18.31:8000/api/get_my_housings?orderByHousings=" +
+        "http://192.168.18.32:8000/api/get_my_housings?orderByHousings=" +
           sort,
         {
           headers: {

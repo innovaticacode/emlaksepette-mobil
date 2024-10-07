@@ -15,7 +15,7 @@ export default function NeigbourhoodCard({
   project,
   projectInfo,
 }) {
-  const apiUrl = "http://192.168.18.31:8000";
+  const apiUrl = "http://192.168.18.32:8000";
   const navigation = useNavigation();
 
   const handleOpenPhone = () => {

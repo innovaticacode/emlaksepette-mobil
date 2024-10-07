@@ -112,7 +112,7 @@ export default function SwapForm({ openModal, color }) {
   //    try {
   //      if (user?.access_token && user) {
   //        const userInfo = await axios.get(
-  //          "http://192.168.18.31:8000/api/users/" + user?.id,
+  //          "http://192.168.18.32:8000/api/users/" + user?.id,
   //          {
   //            headers: {
   //              Authorization: `Bearer ${user?.access_token}`,
@@ -135,7 +135,7 @@ export default function SwapForm({ openModal, color }) {
     try {
       setloading(true);
       const response = await axios.get(
-        `http://192.168.18.31:8000/api/housing/${houseid}`
+        `http://192.168.18.32:8000/api/housing/${houseid}`
       );
       setloading(false);
       // GetUserInfo()
@@ -214,7 +214,7 @@ export default function SwapForm({ openModal, color }) {
       }
 
       const response = await axios.post(
-        "http://192.168.18.31:8000/api/swap",
+        "http://192.168.18.32:8000/api/swap",
         formData
       );
 
@@ -272,7 +272,7 @@ export default function SwapForm({ openModal, color }) {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.18.31:8000/api/cities"
+        "http://192.168.18.32:8000/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -294,7 +294,7 @@ export default function SwapForm({ openModal, color }) {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.31:8000/api/counties/${value}`
+        `http://192.168.18.32:8000/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -332,7 +332,7 @@ export default function SwapForm({ openModal, color }) {
   const fetchDataNeigbour = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.31:8000/api/neighborhoods/${value}`
+        `http://192.168.18.32:8000/api/neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {
@@ -479,7 +479,7 @@ export default function SwapForm({ openModal, color }) {
     { label: "Voyah", value: "Voyah" },
     { label: "Yudo", value: "Yudo" },
   ];
-  const apiUrl = "http://192.168.18.31:8000/";
+  const apiUrl = "http://192.168.18.32:8000/";
   const [errorMessage, seterrorMessage] = useState("");
 
   const AlertFunc = (message) => {

@@ -13,10 +13,10 @@ export default function FloorPlan({ data }) {
     getValueFor("user", setUser);
   }, []);
 
-  const apiUrl = "http://192.168.18.31:8000/situation_images/";
+  const apiUrl = "http://192.168.18.32:8000/situation_images/";
 
   const getFullImageURL = (partialURL) => {
-    return `http://192.168.18.31:8000/${partialURL}`;
+    return `http://192.168.18.32:8000/${partialURL}`;
   };
 
   // Resimleri, react-native-image-viewing için uygun formata getirme

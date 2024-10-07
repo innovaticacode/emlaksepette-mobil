@@ -126,7 +126,7 @@ export default function Basket() {
       if (user?.access_token && isFocused) {
         setLoading(true);
         const response = await axios.get(
-          "http://192.168.18.31:8000/api/institutional/my-cart",
+          "http://192.168.18.32:8000/api/institutional/my-cart",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -209,7 +209,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "http://192.168.18.31:8000/api/update-cart-qt",
+          "http://192.168.18.32:8000/api/update-cart-qt",
           formData,
           {
             headers: {
@@ -234,7 +234,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "http://192.168.18.31:8000/api/update-cart-qt",
+          "http://192.168.18.32:8000/api/update-cart-qt",
           formData,
           {
             headers: {
@@ -254,7 +254,7 @@ export default function Basket() {
   const updateUserData = async () => {
     try {
       const updateResponse = await axios.get(
-        "http://192.168.18.31:8000/api/users/" + user?.id,
+        "http://192.168.18.32:8000/api/users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -283,7 +283,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "http://192.168.18.31:8000/api/remove-from-cart",
+          "http://192.168.18.32:8000/api/remove-from-cart",
           {},
           {
             headers: {
@@ -323,7 +323,7 @@ export default function Basket() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "http://192.168.18.31:8000/api/update-cart",
+          "http://192.168.18.32:8000/api/update-cart",
           formData,
           {
             headers: {

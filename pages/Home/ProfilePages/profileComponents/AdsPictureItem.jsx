@@ -23,11 +23,11 @@ const [isVisible, setIsVisible] = useState(false)
         </View>
       </View>
 
-      <ImageBackground source={{uri:`http://192.168.18.31:8000${image}`}} style={{width:'100%',height:'100%'}} borderRadius={10}/>
+      <ImageBackground source={{uri:`http://192.168.18.32:8000${image}`}} style={{width:'100%',height:'100%'}} borderRadius={10}/>
       <ImageViewing
               images={[
                 {
-                  uri: `http://192.168.18.31:8000${image}`,
+                  uri: `http://192.168.18.32:8000${image}`,
                 },
               ]}
               imageIndex={0}

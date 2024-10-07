@@ -8,6 +8,7 @@ import { ActivityIndicator } from 'react-native-paper'
 import AwesomeAlert from 'react-native-awesome-alerts'
 import { ALERT_TYPE, AlertNotificationDialog, AlertNotificationRoot, Dialog } from 'react-native-alert-notification'
 import ImageViewing from "react-native-image-viewing";
+import NoDataScreen from '../../../components/NoDataScreen'
 export default function AdsPictureList({StoreBanners,getStoreBanner}) {
     const navigation=useNavigation()
     
@@ -66,7 +67,10 @@ export default function AdsPictureList({StoreBanners,getStoreBanner}) {
                </View>
                    {
                        StoreBanners.length==0?
-                       <Text>afda</Text>:
+                      <View style={{flex:1,paddingTop:50}}>
+                              <NoDataScreen message={'Reklam Görseliniz Bulunmamaktadır'} iconName={'image-plus'} buttonText={null} />
+                      </View>
+                      :
                        StoreBanners?.map((item, _i) => (
                            <AdsPictureItem key={_i} image={item.image} id={item.id}  getIdForDelete={getIdForDelete}/>
                          ))

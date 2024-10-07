@@ -94,7 +94,7 @@ export default function Company() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.18.31:8000/api/cities"
+        "http://192.168.18.32:8000/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -116,7 +116,7 @@ export default function Company() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.31:8000/api/counties/${value}`
+        `http://192.168.18.32:8000/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -152,7 +152,7 @@ export default function Company() {
   const fetchDataNeigbour = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.31:8000/api/neighborhoods/${value}`
+        `http://192.168.18.32:8000/api/neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {
@@ -208,7 +208,7 @@ export default function Company() {
       formData.append("Franchise-question", IsConnectFranchaise);
       formData.append("brand_id", FrancheiseMarc);
       const response = await axios.post(
-        "http://192.168.18.31:8000/api/register",
+        "http://192.168.18.32:8000/api/register",
         formData
       );
 
@@ -440,7 +440,7 @@ export default function Company() {
   const fetchTaxOfficeCity = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.18.31:8000/api/get-tax-offices"
+        "http://192.168.18.32:8000/api/get-tax-offices"
       );
       return response.data;
     } catch (error) {
@@ -472,7 +472,7 @@ export default function Company() {
   const fetchTaxOffice = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.31:8000/api/get-tax-office/${value}`
+        `http://192.168.18.32:8000/api/get-tax-office/${value}`
       );
       return response.data;
     } catch (error) {
@@ -538,7 +538,7 @@ export default function Company() {
   // Örnek kullanım
 
   const fetchDataDeal = async (deal) => {
-    const url = `http://192.168.18.31:8000/api/sayfa/${deal}`;
+    const url = `http://192.168.18.32:8000/api/sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
@@ -663,7 +663,7 @@ export default function Company() {
   const fetchFranchiseMarkalari = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.18.31:8000/api/franchise-markalari"
+        "http://192.168.18.32:8000/api/franchise-markalari"
       );
       setData(response.data.data); // 'data' alanına erişiyoruz
     } catch (error) {

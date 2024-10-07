@@ -35,7 +35,7 @@ export default function UsersList() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "http://192.168.18.31:8000/api/institutional/users",
+          "http://192.168.18.32:8000/api/institutional/users",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -60,7 +60,7 @@ export default function UsersList() {
     try {
       if (user.access_token) {
         const response = await axios.delete(
-          `http://192.168.18.31:8000/api/institutional/users/${selectedUser}`,
+          `http://192.168.18.32:8000/api/institutional/users/${selectedUser}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -122,7 +122,7 @@ export default function UsersList() {
     };
     try {
       const response = await axios.delete(
-        "http://192.168.18.31:8000/api/institutional/sub-users",
+        "http://192.168.18.32:8000/api/institutional/sub-users",
         {
           data: data,
           headers: {
@@ -149,7 +149,7 @@ export default function UsersList() {
     };
     try {
       const response = await axios.delete(
-        "http://192.168.18.31:8000/api/institutional/sub-users",
+        "http://192.168.18.32:8000/api/institutional/sub-users",
         {
           data: data,
           headers: {

@@ -65,7 +65,7 @@ export default function Panel({ options, onSelect }) {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            `http://192.168.18.31:8000/api/profile/info/mobile/dashboard`,
+            `http://192.168.18.32:8000/api/profile/info/mobile/dashboard`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -82,7 +82,7 @@ export default function Panel({ options, onSelect }) {
     fetchData();
   }, [user]);
 
-  const PhotoUrl = "http://192.168.18.31:8000/storage/profile_images/";
+  const PhotoUrl = "http://192.168.18.32:8000/storage/profile_images/";
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -105,7 +105,7 @@ export default function Panel({ options, onSelect }) {
         }
 
         const response = await axios.get(
-          "http://192.168.18.31:8000/api/user/notification",
+          "http://192.168.18.32:8000/api/user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -185,7 +185,7 @@ console.log(user.access_token)
                 >
                   <ImageBackground
                     source={{
-                      uri: `http://192.168.18.31:8000/storage/profile_images/${panelInfo.user.profile_image}`,
+                      uri: `http://192.168.18.32:8000/storage/profile_images/${panelInfo.user.profile_image}`,
                     }}
                     style={styles.imageBackground}
                     resizeMode="cover"

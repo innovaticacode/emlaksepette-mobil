@@ -19,7 +19,7 @@ import { ActivityIndicator } from "react-native-paper";
 import Banner from "../../assets/project-banner.png";
 import { useNavigation } from "@react-navigation/native";
 
-const apiUrl = "http://192.168.18.31:8000";
+const apiUrl = "http://192.168.18.32:8000";
 
 const HomePage = (props) => {
   const { index } = props;

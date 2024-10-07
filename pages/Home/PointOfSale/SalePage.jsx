@@ -79,7 +79,7 @@ const SalePage = () => {
     fetchData(deal);
   };
   const fetchData = async (deal) => {
-    const url = `http://192.168.18.31:8000/api/sayfa/${deal}`;
+    const url = `http://192.168.18.32:8000/api/sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
@@ -160,7 +160,7 @@ const SalePage = () => {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "http://192.168.18.31:8000/api/sales-points",
+          "http://192.168.18.32:8000/api/sales-points",
           formDataToSend,
           {
             headers: {
@@ -222,7 +222,7 @@ const SalePage = () => {
     const fetchTaxOfficeCity = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.18.31:8000/api/get-tax-offices"
+          "http://192.168.18.32:8000/api/get-tax-offices"
         );
         setTaxOfficesCities(response.data);
       } catch (error) {
@@ -236,7 +236,7 @@ const SalePage = () => {
   const fetchTaxOffice = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.31:8000/api/get-tax-office/${value}`
+        `http://192.168.18.32:8000/api/get-tax-office/${value}`
       );
       setTaxOffice(response.data);
     } catch (error) {
@@ -248,7 +248,7 @@ const SalePage = () => {
     const fetchCities = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.18.31:8000/api/cities"
+          "http://192.168.18.32:8000/api/cities"
         );
         setCities(response.data.data);
       } catch (error) {
@@ -270,7 +270,7 @@ const SalePage = () => {
   const fetchStores = async (selectedCorporateType) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.31:8000/api/fetch-stores`,
+        `http://192.168.18.32:8000/api/fetch-stores`,
         {
           params: { corporate_type: selectedCorporateType }, // Send the corporate type as a query parameter
         }
@@ -309,7 +309,7 @@ const SalePage = () => {
   const fetchCounties = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.31:8000/api/counties/${value}`
+        `http://192.168.18.32:8000/api/counties/${value}`
       );
       setCounties(response.data.data);
       setSelectedCounty(null); // Seçili ilçe sıfırla

@@ -126,7 +126,7 @@ export default function RealtorPost({
       };
       axios
         .post(
-          "http://192.168.18.31:8000/api/add_housing_to_favorites/" +
+          "http://192.168.18.32:8000/api/add_housing_to_favorites/" +
             HouseId,
           {},
           config
@@ -155,7 +155,7 @@ export default function RealtorPost({
   const updateUserData = async () => {
     try {
       const updateResponse = await axios.get(
-        "http://192.168.18.31:8000/api/users/" + user?.id,
+        "http://192.168.18.32:8000/api/users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -192,7 +192,7 @@ export default function RealtorPost({
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "http://192.168.18.31:8000/api/institutional/add_to_cart",
+          "http://192.168.18.32:8000/api/institutional/add_to_cart",
           formData,
           {
             headers: {

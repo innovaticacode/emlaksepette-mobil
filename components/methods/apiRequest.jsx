@@ -1,9 +1,9 @@
 import axios from "axios";
 import { getValueFor } from "./user";
 import { useState } from "react";
-export const apiUrl = "http://192.168.18.31:8000/api/";
-export const frontEndUri = "http://192.168.18.31:8000/api/";
-export const frontEndUriBase = "http://192.168.18.31:8000/";
+export const apiUrl = "http://192.168.18.32:8000/api/";
+export const frontEndUri = "http://192.168.18.32:8000/api/";
+export const frontEndUriBase = "http://192.168.18.32:8000/";
 
 export const apiRequestGet = (url) => {
   return axios.get(apiUrl + url);

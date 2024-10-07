@@ -232,7 +232,7 @@ export default function VerifyDocument({ nextStep, prevStep }) {
         : null
     );
     axios
-      .post("http://192.168.18.31:8000/api/verify-account", formData, {
+      .post("http://192.168.18.32:8000/api/verify-account", formData, {
         headers: {
           Authorization: `Bearer ${user?.access_token}`,
           "Content-Type": "multipart/form-data",
@@ -283,7 +283,7 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "http://192.168.18.31:8000/api/users/" + user?.id,
+          "http://192.168.18.32:8000/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -530,7 +530,7 @@ export default function VerifyDocument({ nextStep, prevStep }) {
             <ImageViewing
               images={[
                 {
-                  uri: `http://192.168.18.31:8000/${selectedUrl}/${namFromGetUser[selectedDocument]}`,
+                  uri: `http://192.168.18.32:8000/${selectedUrl}/${namFromGetUser[selectedDocument]}`,
                 },
               ]}
               imageIndex={0}

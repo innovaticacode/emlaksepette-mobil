@@ -49,7 +49,7 @@ export default function Verification({ nextStep, prevStep }) {
   const updateUserData = async () => {
     try {
       const updateResponse = await axios.get(
-        "http://192.168.18.31:8000/api/users/" + user?.id,
+        "http://192.168.18.32:8000/api/users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -86,7 +86,7 @@ export default function Verification({ nextStep, prevStep }) {
     try {
       // POST isteği yap
       const response = await axios.post(
-        "http://192.168.18.31:8000/api/phone-verification/verify",
+        "http://192.168.18.32:8000/api/phone-verification/verify",
         { code: codes },
         {
           headers: {
@@ -127,7 +127,7 @@ export default function Verification({ nextStep, prevStep }) {
       };
       if (user?.access_token) {
         const response = await axios.post(
-          "http://192.168.18.31:8000/api/phone-verification/generate",
+          "http://192.168.18.32:8000/api/phone-verification/generate",
           {}, // Veri gövdesi boş olabilir veya isteğe özel verileri ekleyebilirsiniz
           config
         );

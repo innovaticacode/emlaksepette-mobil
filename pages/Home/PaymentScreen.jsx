@@ -161,7 +161,7 @@ export default function PaymentScreen() {
   const [Deals, setDeals] = useState("");
 
   const fetchDataDeal = async () => {
-    const url = `http://192.168.18.31:8000/api/sayfa/mesafeli-kiralama-sozlesmesi`;
+    const url = `http://192.168.18.32:8000/api/sayfa/mesafeli-kiralama-sozlesmesi`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);
@@ -199,7 +199,7 @@ export default function PaymentScreen() {
           <View style={styles.image}>
             <ImageBackground
               source={{
-                uri: `http://192.168.18.31:8000/project_housing_images/${project["image[]"]}`,
+                uri: `http://192.168.18.32:8000/project_housing_images/${project["image[]"]}`,
               }}
               style={{ width: "100%", height: "100%" }}
             />

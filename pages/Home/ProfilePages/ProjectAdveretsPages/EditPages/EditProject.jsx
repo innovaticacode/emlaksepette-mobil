@@ -100,7 +100,7 @@ export default function EditProject() {
     const fetchCities = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.18.31:8000/api/cities"
+          "http://192.168.18.32:8000/api/cities"
         );
         setCities(response.data.data);
       } catch (error) {
@@ -115,7 +115,7 @@ export default function EditProject() {
   const fetchCounties = async (cityId) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.31:8000/api/counties/${cityId}`
+        `http://192.168.18.32:8000/api/counties/${cityId}`
       );
       setCounties(response.data.data);
     } catch (error) {
@@ -127,7 +127,7 @@ export default function EditProject() {
   const fetchNeighborhoods = async (countyId) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.31:8000/api/neighborhoods/${countyId}`
+        `http://192.168.18.32:8000/api/neighborhoods/${countyId}`
       );
       setNeighborhoods(response.data.data);
     } catch (error) {

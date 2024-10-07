@@ -38,7 +38,7 @@ export default function Team({ teamm }) {
                   <View style={[styles.profileImage, { borderRadius: 50 }]}>
                     <ImageBackground
                       source={{
-                        uri: `http://192.168.18.31:8000/storage/profile_images/${team.profile_image}`,
+                        uri: `http://192.168.18.32:8000/storage/profile_images/${team.profile_image}`,
                       }}
                       style={{ width: "100%", height: "100%" }}
                       borderRadius={50}

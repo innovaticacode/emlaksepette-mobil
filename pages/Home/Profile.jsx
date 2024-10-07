@@ -78,7 +78,7 @@ export default function Profile() {
       formData.append("email", emailId);
 
       const response = await axios.post(
-        "http://192.168.18.31:8000/api/institutional/give_offer",
+        "http://192.168.18.32:8000/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -196,7 +196,7 @@ export default function Profile() {
 
     sethousingRecords(filteredData);
   };
-  const ApiUrl = "http://192.168.18.31:8000/";
+  const ApiUrl = "http://192.168.18.32:8000/";
   const handleOpenPhone = () => {
     Linking.openURL(`tel:${storeData.data.phone}`);
   };
@@ -234,7 +234,7 @@ export default function Profile() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `http://192.168.18.31:8000/`,
+        message: `http://192.168.18.32:8000/`,
       });
 
       if (result.action === Share.sharedAction) {
@@ -384,7 +384,7 @@ export default function Profile() {
                   >
                     <Image
                       source={{
-                        uri: `http://192.168.18.31:8000/storage/profile_images/${storeData?.data?.profile_image}`,
+                        uri: `http://192.168.18.32:8000/storage/profile_images/${storeData?.data?.profile_image}`,
                       }}
                       style={{
                         width: 50,
