@@ -10,7 +10,7 @@ import SliderItemSkeleton from "../../components/SkeletonComponents/SliderItemSk
 import SliderTourismItem from "./SliderTourismItem";
 
 export default function SliderTourismRent() {
-  const apiUrl = "http://192.168.18.31:8000";
+  const apiUrl = "https://private.emlaksepette.com";
   const [loading, setloading] = useState(true);
   const [tourismRent, setTourismRent] = useState([]);
 
@@ -18,7 +18,7 @@ export default function SliderTourismRent() {
     try {
       setloading(true);
       const response = await axios.get(
-        "http://192.168.18.31:8000/api/get_featured_acente_brands"
+        "https://private.emlaksepette.com/api/get_featured_acente_brands"
       );
       if (response?.data?.length > 0) {
         setTourismRent(response.data);
