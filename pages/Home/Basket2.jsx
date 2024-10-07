@@ -40,7 +40,6 @@ import * as SecureStore from "expo-secure-store";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import DrawerMenu from "../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
 
 export default function Basket2() {

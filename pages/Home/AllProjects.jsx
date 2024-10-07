@@ -23,8 +23,8 @@ import { ActivityIndicator, Switch, TextInput } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
-import DrawerMenu from "../../components/DrawerMenu";
 import SortModal from "../../components/SortModal";
+import { DrawerMenu } from "../../components";
 
 export default function AllProjects() {
   const [cityItems, setCityItems] = useState();
@@ -440,7 +440,7 @@ export default function AllProjects() {
   const [tab, settab] = useState(0);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
-      <Header onPress={toggleDrawer} index={setindex} tab={settab} />
+      {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
 
       <Modal
         swipeDirection="left"
@@ -458,9 +458,9 @@ export default function AllProjects() {
         animationOut="bounceOutLeft"
         style={styles.modal}
       >
-        <View style={styles.modalContent}>
+        {/* <View style={styles.modalContent}>
           <DrawerMenu setIsDrawerOpen={setState} />
-        </View>
+        </View> */}
       </Modal>
 
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -1167,7 +1167,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
 
     flex: 1,
-    borderTopLeftRadius: 10,
+    // borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     width: 320,
   },

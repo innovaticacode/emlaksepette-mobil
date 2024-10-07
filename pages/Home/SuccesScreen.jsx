@@ -100,7 +100,10 @@ export default function SuccesScreen() {
           }}
           onPress={() => {
             if (type == "Project") {
-              nav.navigate("Details", { ProjectId: HouseID });
+              nav.navigate("Drawer", {
+                screen: "Details",
+                params: { ProjectId: HouseID },
+              });
             } else {
               nav.navigate("Realtor details", { houseId: HouseID });
             }

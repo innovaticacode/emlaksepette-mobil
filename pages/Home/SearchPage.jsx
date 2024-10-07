@@ -139,18 +139,27 @@ export default function SearchPage({ navigation }) {
             name={item.name}
             onPress={() => {
               const routes = {
-                "Emlak İlanları": "Realtor details",
-                "Proje İlanları": "Details",
-                Üyeler: "Profile",
+                "Emlak İlanları": "AllRealtorAdverts", // Emlak İlanları için yönlendirme
+                "Proje İlanları": "Details", // Proje İlanları için yönlendirme
+                Üyeler: "Profile", // Üyeler için yönlendirme
               };
 
               const params = {
-                "Emlak İlanları": { houseId: item.id },
-                "Proje İlanları": { ProjectId: item.id },
-                Üyeler: { id: item.id },
+                "Emlak İlanları": { houseId: item.id }, // Emlak İlanları için parametre
+                "Proje İlanları": { ProjectId: item.id }, // Proje İlanları için parametre
+                Üyeler: { id: item.id }, // Üyeler için parametre
               };
 
-              navigation.navigate(routes[type], params[type]);
+              // Eğer 'Proje İlanları' seçilmişse ve detaylar Drawer içinde
+              if (type === "Proje İlanları") {
+                navigation.navigate("Drawer", {
+                  screen: "Details", // Details ekranı
+                  params: params[type], // Detayları geçir
+                });
+              } else {
+                // Diğer yönlendirmeler için
+                navigation.navigate(routes[type], params[type]);
+              }
             }}
           />
         ))}

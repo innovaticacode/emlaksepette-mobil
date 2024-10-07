@@ -25,12 +25,12 @@ import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
 import { RefreshControl } from "react-native-gesture-handler";
 import RealtorPost from "../../components/RealtorPost";
-import DrawerMenu from "../../components/DrawerMenu";
 
 import { getValueFor } from "../../components/methods/user";
 
 import SortModal from "../../components/SortModal";
 import { Image } from "react-native-svg";
+import { DrawerMenu } from "../../components";
 
 export default function AllRealtorAdverts() {
   const [cityItems, setCityItems] = useState();
@@ -463,7 +463,7 @@ export default function AllRealtorAdverts() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <Header onPress={toggleDrawer} tab={settab} index={setindex} />
+      {/* <Header onPress={toggleDrawer} tab={settab} index={setindex} /> */}
 
       <Modal
         swipeDirection="left"
@@ -481,9 +481,9 @@ export default function AllRealtorAdverts() {
         animationOut="bounceOutLeft"
         style={styles.modal}
       >
-        <View style={styles.modalContent}>
+        {/* <View style={styles.modalContent}>
           <DrawerMenu setIsDrawerOpen={setState} />
-        </View>
+        </View> */}
       </Modal>
 
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -1244,7 +1244,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
 
     flex: 1,
-    borderTopLeftRadius: 10,
+    // borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     width: 320,
   },

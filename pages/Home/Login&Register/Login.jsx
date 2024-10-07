@@ -85,8 +85,11 @@ export default function Login({ navigation }) {
             "PhoneVerify",
             JSON.stringify(res.data.phone_verification_status)
           );
-          navigation.push("Home", {
-            status: "login",
+          navigation.push("Drawer", {
+            screen: "Home",
+            params: {
+              status: "login",
+            },
           });
         } else {
           // setshowMailSendAlert(true);

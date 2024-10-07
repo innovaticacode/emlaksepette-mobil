@@ -18,7 +18,7 @@ import Modal from "react-native-modal";
 import { Platform } from "react-native";
 import { Stack } from "@react-native-material/core";
 import { CheckBox } from "react-native-elements";
-import NoDataScreen from "../components/NoDataScreen";
+import NoDataScreen from "../../../components/NoDataScreen";
 
 export default function Sell() {
   const [search, setSearch] = useState("");

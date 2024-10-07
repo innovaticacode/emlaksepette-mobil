@@ -40,7 +40,8 @@ const Estates = ({ index }) => {
     console.log(config);
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${reset ? 1 : page
+        `https://private.emlaksepette.com/api/real-estates?page=${
+          reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
       );
@@ -103,7 +104,9 @@ const Estates = ({ index }) => {
   return (
     <>
       {loading ? (
-        <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
+        <View
+          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
+        >
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
@@ -149,8 +152,9 @@ const Estates = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image
-                      }`}
+                    image={`${apiUrl}/housing_images/${
+                      JSON.parse(item.housing_type_data).image
+                    }`}
                     openSharing={
                       JSON.parse(item.housing_type_data)["open_sharing1"]
                     }
@@ -209,18 +213,21 @@ const Estates = ({ index }) => {
                       <TouchableOpacity
                         style={styles.allBtn}
                         onPress={() =>
-                          navigation.navigate("AllRealtorAdverts", {
-                            name: "Emlak İlanları",
-                            slug: "emlak-ilanlari",
-                            data: filteredHomes,
-                            count: filteredHomes.length,
-                            type: "konut",
-                            optional: null,
-                            title: null,
-                            check: null,
-                            city: null,
-                            county: null,
-                            hood: null,
+                          navigation.navigate("Drawer", {
+                            screen: "AllRealtorAdverts",
+                            params: {
+                              name: "Emlak İlanları",
+                              slug: "emlak-ilanlari",
+                              data: filteredHomes,
+                              count: filteredHomes.length,
+                              type: "konut",
+                              optional: null,
+                              title: null,
+                              check: null,
+                              city: null,
+                              county: null,
+                              hood: null,
+                            },
                           })
                         }
                       >

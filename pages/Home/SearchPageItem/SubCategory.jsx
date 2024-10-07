@@ -2,14 +2,13 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import CategoryAdverts from "../İlanYükleme/ProjectAdvertsAdd/CategoryAdverts";
-import slugify from 'react-slugify';
+import slugify from "react-slugify";
 
 export default function SubCategoryPage({}) {
   const route = useRoute();
   const navigation = useNavigation();
   const { Submenu, title, name } = route.params;
 
-  
   const handlePress = (item) => {
     if (item.submenus && item.submenus.length > 0) {
       navigation.navigate("SubCategoryChild", {
@@ -17,30 +16,28 @@ export default function SubCategoryPage({}) {
         title: title,
         name: name,
         Submenu: item.submenus,
-        href: item.href
+        href: item.href,
       });
     } else {
-   
-
-      navigation.navigate(
-        title == "Projeler" ? "AllProject" : "AllRealtorAdverts",
-        {
-          name: title == "Projeler" ? `${name}${title}` : "Emlak İlanları",
+      navigation.navigate("Drawer", {
+        screen: title === "Projeler" ? "AllProject" : "AllRealtorAdverts",
+        params: {
+          name: title === "Projeler" ? `${name}${title}` : "Emlak İlanları",
           slug: slugify(
-            title == "Projeler" ? `${name}${title}` : "emlak-ilanlari"
+            title === "Projeler" ? `${name}${title}` : "emlak-ilanlari"
           ),
           data: null,
           count: 0,
           type: null,
           optional: slugify(name),
-          title: slugify(title == "Projeler" ? "" : title || ""),
+          title: slugify(title === "Projeler" ? "" : title || ""),
           check: slugify(item.text || ""),
           city: null,
           county: null,
           hood: null,
-          href: item.href
-        }
-      );
+          href: item.href,
+        },
+      });
     }
   };
   return (

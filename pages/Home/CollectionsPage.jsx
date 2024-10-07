@@ -36,7 +36,7 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
-import NoDataScreen from "./components/NoDataScreen";
+import NoDataScreen from "../../components/NoDataScreen";
 export default function CollectionsPage() {
   const [showAlert, setshowAlert] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);

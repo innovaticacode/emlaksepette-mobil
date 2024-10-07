@@ -64,10 +64,10 @@ import FloorPlan from "../components/FloorPlan";
 import { Svg } from "react-native-svg";
 import { Polyline } from "react-native-maps";
 import PaymentItem from "../components/PaymentItem";
-import DrawerMenu from "../components/DrawerMenu";
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../components/CommentForProject";
 import { leftButtonsForPost } from "./helper";
+import { DrawerMenu } from "../components";
 
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
@@ -87,10 +87,7 @@ export default function PostDetail() {
   const route = useRoute();
   const [loading, setLoading] = useState(false);
 
-  const {
-    HomeId,
-    projectId,
-  } = route.params;
+  const { HomeId, projectId } = route.params;
   console.log(HomeId);
   useEffect(() => {
     getValueFor("user", setUser);
@@ -753,7 +750,7 @@ export default function PostDetail() {
           <SafeAreaView
             style={{ backgroundColor: "white", flex: 1, paddingTop: 30 }}
           >
-            <Header onPress={toggleDrawer} tab={settab} index={setindex} />
+            {/* <Header onPress={toggleDrawer} tab={settab} index={setindex} /> */}
             <Modal
               isVisible={isDrawerOpen}
               onBackdropPress={() => setIsDrawerOpen(false)}
@@ -763,9 +760,9 @@ export default function PostDetail() {
               swipeDirection={["left"]}
               onSwipeComplete={() => setIsDrawerOpen(false)}
             >
-              <View style={styles.modalContent}>
+              {/* <View style={styles.modalContent}>
                 <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} on />
-              </View>
+              </View> */}
             </Modal>
 
             <View
@@ -827,7 +824,7 @@ export default function PostDetail() {
                       color={"#333"}
                     />
                     <ImageBackground
-                      source={require("../pages/Home/BadgeYellow.png")}
+                      source={require("../src/assets/images/BadgeYellow.png")}
                       style={{ width: "100%", height: "100%" }}
                     />
                   </View>
@@ -1063,7 +1060,7 @@ export default function PostDetail() {
 
               <View style={styles.priceAndButtons}>
                 <View style={styles.btns}>
-                {/* <View
+                  {/* <View
                 style={{
                   width:
                     (offSaleStatus == 1 && roomData["share_sale[]"] !== "[]") ||
@@ -1136,7 +1133,6 @@ export default function PostDetail() {
               </View> */}
 
                   <View style={{ width: "50%" }}>
-
                     {/* {roomData && ["off_sale[]"] &&
                       roomData["off_sale[]"] !== "[]" && (
                         <TouchableOpacity
@@ -2470,7 +2466,9 @@ export default function PostDetail() {
                 textAlign: "center",
                 margin: 5,
               }}
-              title={"Sepetinize ilan ekleyebilmek için giriş yapmanız gerekiyor."}
+              title={
+                "Sepetinize ilan ekleyebilmek için giriş yapmanız gerekiyor."
+              }
               messageStyle={{ textAlign: "center" }}
               closeOnTouchOutside={true}
               closeOnHardwareBackPress={false}
@@ -2587,7 +2585,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
 
     flex: 1,
-    borderTopLeftRadius: 10,
+    // borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     width: 320,
   },

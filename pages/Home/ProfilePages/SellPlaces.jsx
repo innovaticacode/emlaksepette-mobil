@@ -6,7 +6,7 @@ import { getValueFor } from "../../../components/methods/user";
 import { ActivityIndicator } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
-import NoDataScreen from "../components/NoDataScreen";
+import NoDataScreen from "../../../components/NoDataScreen";
 
 export default function SellPlaces({ data }) {
   const [Places, setPlaces] = useState([]);

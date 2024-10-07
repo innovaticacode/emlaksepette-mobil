@@ -18,7 +18,7 @@ import Categories from "../../components/Categories";
 import Search from "./Search";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
-import DrawerMenu from "../../components/DrawerMenu";
+import { DrawerMenu } from "../../components";
 export default function ShareScreen() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -31,8 +31,8 @@ export default function ShareScreen() {
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-  const [index, setindex] = useState(0)
-  const [tab, settab] = useState(0)
+  const [index, setindex] = useState(0);
+  const [tab, settab] = useState(0);
   return (
     <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
       <View
@@ -45,7 +45,7 @@ export default function ShareScreen() {
           }),
         }}
       >
-        <Header onPress={toggleDrawer} index={setindex}  tab={settab}/>
+        {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
       </View>
       <Modal
         isVisible={isDrawerOpen}
@@ -56,13 +56,9 @@ export default function ShareScreen() {
         swipeDirection={["left"]}
         onSwipeComplete={() => setIsDrawerOpen(false)}
       >
-        <View style={styles.modalContent}>
-      
-          <DrawerMenu setIsDrawerOpen={setIsDrawerOpen}/>
-           
-         
-        
-        </View>
+        {/* <View>
+          <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
+        </View> */}
       </Modal>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -79,128 +75,110 @@ export default function ShareScreen() {
           }}
         >
           {/* Project Card */}
-          {
-          (user.role == "Kurumsal Hesap" && user.corporate_type=='İnşaat Ofisi') && (
+          {user.role == "Kurumsal Hesap" &&
+            user.corporate_type == "İnşaat Ofisi" && (
               <>
                 <View style={styles.card}>
-              <View
-                style={{
-                  width: "100%",
-                  height: 13,
-                  backgroundColor: "#EA2A28",
-                  borderTopLeftRadius: 15,
-                  borderTopRightRadius: 15,
-                }}
-              />
-              <View style={{ alignItems: "center" }}>
-                <View style={{ width: 80, height: 80 }}>
-                  <Image
-                    source={require("./proje.png")}
+                  <View
                     style={{
                       width: "100%",
-                      height: "100%",
-                      tintColor: "#EA2A28",
+                      height: 13,
+                      backgroundColor: "#EA2A28",
+                      borderTopLeftRadius: 15,
+                      borderTopRightRadius: 15,
                     }}
                   />
+                  <View style={{ alignItems: "center" }}>
+                    <View style={{ width: 80, height: 80 }}></View>
+                  </View>
+                  <View style={{ padding: 10 }}>
+                    <Text
+                      style={{
+                        fontWeight: "400",
+                        textAlign: "center",
+                        fontSize: 12,
+                      }}
+                    >
+                      Kendi proje ilanınızı ekleyin ve hayalinzdeki projenizi
+                      paylaşın. Binlerce kişiye ulaşın
+                    </Text>
+                  </View>
+                  <View style={{ alignItems: "center" }}>
+                    <TouchableOpacity
+                      style={styles.addBtn}
+                      onPress={() => {
+                        navigation.navigate("CategorieChoose", {
+                          name: "Proje İLanı",
+                          previousName: "Proje İlanı",
+                        });
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "white",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Proje İlanı Ekle
+                      </Text>
+                      <Icon name="pluscircle" color={"white"} size={15} />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-              <View style={{ padding: 10 }}>
-                <Text
-                  style={{
-                    fontWeight: "400",
-                    textAlign: "center",
-                    fontSize: 12,
-                  }}
-                >
-                  Kendi proje ilanınızı ekleyin ve hayalinzdeki projenizi
-                  paylaşın. Binlerce kişiye ulaşın
-                </Text>
-              </View>
-              <View style={{ alignItems: "center" }}>
-                <TouchableOpacity
-                  style={styles.addBtn}
-                  onPress={() => {
-                    navigation.navigate("CategorieChoose", {
-                      name: "Proje İLanı",
-                      previousName: "Proje İlanı",
-                    });
-                  }}
-                >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "white",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Proje İlanı Ekle
-                  </Text>
-                  <Icon name="pluscircle" color={"white"} size={15} />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={styles.card}>
-              <View
-                style={{
-                  width: "100%",
-                  height: 13,
-                  backgroundColor: "#274ABB",
-                  borderTopLeftRadius: 15,
-                  borderTopRightRadius: 15,
-                }}
-              />
-              <View style={{ alignItems: "center" }}>
-                <View style={{ width: 80, height: 80 }}>
-                  <Image
-                    source={require("./emlak.png")}
+                <View style={styles.card}>
+                  <View
                     style={{
                       width: "100%",
-                      height: "100%",
-                      tintColor: "#274ABB",
+                      height: 13,
+                      backgroundColor: "#274ABB",
+                      borderTopLeftRadius: 15,
+                      borderTopRightRadius: 15,
                     }}
                   />
+                  <View style={{ alignItems: "center" }}>
+                    <View style={{ width: 80, height: 80 }}></View>
+                  </View>
+                  <View style={{ padding: 10 }}>
+                    <Text
+                      style={{
+                        fontWeight: "400",
+                        textAlign: "center",
+                        fontSize: 12,
+                      }}
+                    >
+                      Kendi emlak ilanınızı ekleyin ve ev, daire veya arsa
+                      satışınızı hızlandırın. Hemen ilan verin!
+                    </Text>
+                  </View>
+                  <View style={{ alignItems: "center" }}>
+                    <TouchableOpacity
+                      style={[styles.addBtn, { backgroundColor: "#274ABB" }]}
+                      onPress={() => {
+                        navigation.navigate("Emlak", {
+                          name: "İlan Ver",
+                        });
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "white",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Emlak İlanı Ekle
+                      </Text>
+                      <Icon name="pluscircle" color={"white"} size={15} />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-              <View style={{ padding: 10 }}>
-                <Text
-                  style={{
-                    fontWeight: "400",
-                    textAlign: "center",
-                    fontSize: 12,
-                  }}
-                >
-                  Kendi emlak ilanınızı ekleyin ve ev, daire veya arsa
-                  satışınızı hızlandırın. Hemen ilan verin!
-                </Text>
-              </View>
-              <View style={{ alignItems: "center" }}>
-                <TouchableOpacity
-                  style={[styles.addBtn, { backgroundColor: "#274ABB" }]}
-                  onPress={() => {
-                    navigation.navigate("Emlak", {
-                      name: "İlan Ver",
-                    });
-                  }}
-                >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "white",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Emlak İlanı Ekle
-                  </Text>
-                  <Icon name="pluscircle" color={"white"} size={15} />
-                </TouchableOpacity>
-              </View>
-            </View>
               </>
-          
-          )}
+            )}
 
           {/* Estate Card */}
-          {(user.role == "Kurumsal Hesap" && user.corporate_type!='İnşaat Ofisi') ? (
+          {user.role == "Kurumsal Hesap" &&
+          user.corporate_type != "İnşaat Ofisi" ? (
             <View style={styles.card}>
               <View
                 style={{
@@ -212,16 +190,7 @@ export default function ShareScreen() {
                 }}
               />
               <View style={{ alignItems: "center" }}>
-                <View style={{ width: 80, height: 80 }}>
-                  <Image
-                    source={require("./emlak.png")}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      tintColor: "#274ABB",
-                    }}
-                  />
-                </View>
+                <View style={{ width: 80, height: 80 }}></View>
               </View>
               <View style={{ padding: 10 }}>
                 <Text
@@ -278,16 +247,7 @@ export default function ShareScreen() {
               }}
             />
             <View style={{ alignItems: "center" }}>
-              <View style={{ width: 80, height: 80 }}>
-                <Image
-                  source={require("./emlak.png")}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    tintColor: "#274ABB",
-                  }}
-                />
-              </View>
+              <View style={{ width: 80, height: 80 }}></View>
             </View>
             <View style={{ padding: 10 }}>
               <Text
@@ -338,14 +298,6 @@ const styles = StyleSheet.create({
 
   modal: {
     margin: 0,
-  },
-  modalContent: {
-    backgroundColor: "white",
-
-    flex: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: 320,
   },
   card: {
     backgroundColor: "#FFFFFF",

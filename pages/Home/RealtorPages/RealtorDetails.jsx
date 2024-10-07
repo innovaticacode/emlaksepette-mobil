@@ -45,7 +45,6 @@ import SwapForm from "./SwapForm";
 import AddCollection from "../../../components/AddCollection";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
-import DrawerMenu from "../../../components/DrawerMenu";
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
 import {
@@ -53,6 +52,7 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import { DrawerMenu } from "../../../components";
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
@@ -662,9 +662,9 @@ export default function PostDetail() {
               swipeDirection={["left"]}
               onSwipeComplete={() => setIsDrawerOpen(false)}
             >
-              <View style={styles.modalContent}>
+              {/* <View>
                 <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-              </View>
+              </View> */}
             </Modal>
             <View
               style={{
@@ -857,7 +857,7 @@ export default function PostDetail() {
                         color={"#333"}
                       />
                       <ImageBackground
-                        source={require("../BadgeYellow.png")}
+                        source={require("../../../src/assets/images/BadgeYellow.png")}
                         style={{ width: "100%", height: "100%" }}
                       />
                     </View>
@@ -2334,14 +2334,7 @@ const styles = StyleSheet.create({
   modal: {
     margin: 0,
   },
-  modalContent: {
-    backgroundColor: "white",
 
-    flex: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: 320,
-  },
   ıconContainer: {
     width: 50,
     height: 150,

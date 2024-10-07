@@ -25,7 +25,7 @@ import * as Sharing from "expo-sharing";
 
 import { useNavigation } from "@react-navigation/native";
 import { UrlTile } from "react-native-maps";
-import NoDataScreen from "../../components/NoDataScreen";
+import NoDataScreen from "../../../../components/NoDataScreen";
 
 export default function SupportList() {
   const [supportData, setSupportData] = useState([]);

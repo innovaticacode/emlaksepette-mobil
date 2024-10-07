@@ -18,7 +18,7 @@ import Navbar from "../../components/Navbar";
 import SliderMenu from "../../components/SliderMenu";
 import axios from "axios";
 import { useState } from "react";
-import DrawerMenu from "../../components/DrawerMenu";
+import { DrawerMenu } from "../../components";
 import Search from "./Search";
 import Header from "../../components/Header";
 import Estates from "./Home Pages/Estates";
@@ -173,7 +173,7 @@ export default function HomePage2() {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
+    // setIsDrawerOpen(!isDrawerOpen);
   };
   const layout = useWindowDimensions();
   const [tab, settab] = React.useState(0);
@@ -195,21 +195,23 @@ export default function HomePage2() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}>
-      <Header onPress={toggleDrawer} index={setIndex} tab={settab} />
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 10 }}
+    >
+      {/* <Header onPress={toggleDrawer} index={setIndex} tab={settab} /> */}
 
       <Modal
         isVisible={isDrawerOpen}
-        onBackdropPress={() => setIsDrawerOpen(false)}
+        // onBackdropPress={() => setIsDrawerOpen(false)}
         animationIn="bounceInLeft"
         animationOut="bounceOutLeft"
         style={styles.modal}
         swipeDirection={["left"]}
-        onSwipeComplete={() => setIsDrawerOpen(false)}
+        // onSwipeComplete={() => setIsDrawerOpen(false)}
       >
-        <View style={styles.modalContent}>
+        {/* <View style={styles.modalContent}>
           <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-        </View>
+        </View> */}
       </Modal>
       <View style={{ paddingLeft: 10, paddingRight: 10 }}>
         <TextInput
@@ -276,9 +278,8 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "white",
-
     flex: 1,
-    borderTopLeftRadius: 10,
+    // borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     width: 320,
   },

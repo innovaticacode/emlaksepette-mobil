@@ -25,6 +25,9 @@ const Tab = createBottomTabNavigator();
 
 const Home = ({ route }) => {
   const isFocused = useIsFocused();
+
+  console.debug("Home.js: isFocused", isFocused);
+  console.debug("Home.js: route", route.params);
   const [user, setUser] = useState({});
   const [verifyStatus, setverifyStatus] = useState(null);
   useEffect(() => {
@@ -122,7 +125,7 @@ const Home = ({ route }) => {
       />
       <Tab.Screen
         name="Favoriler"
-        component={user.access_token ? Test : Login}
+        component={Test}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
@@ -133,15 +136,23 @@ const Home = ({ route }) => {
             />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            if (!user.access_token) {
+              // Eğer token yoksa tabPress eventini durdur ve Login sayfasına yönlendir
+              e.preventDefault();
+              navigation.navigate("Login");
+            }
+          },
+        })}
       />
 
       <Tab.Screen
         name="ShareAdvert"
-        component={user.access_token ? ShareScreen : Login}
+        component={ShareScreen}
         options={{
           headerShown: false,
           tabBarLabel: "İlan Ver",
-
           tabBarIcon: ({ color, focused }) => (
             <View style={styles.ilanVerIconContainer}>
               <Ionicons
@@ -153,10 +164,19 @@ const Home = ({ route }) => {
             </View>
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            if (!user.access_token) {
+              // Eğer token yoksa tabPress eventini durdur ve Login sayfasına yönlendir
+              e.preventDefault();
+              navigation.navigate("Login");
+            }
+          },
+        })}
       />
 
       <Tab.Screen
-        component={user.access_token ? Basket : Login}
+        component={Basket}
         name="Sepetim"
         options={({ route }) => ({
           headerShown: false,
@@ -181,11 +201,20 @@ const Home = ({ route }) => {
             borderRadius: 6,
           },
         })}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            if (!user.access_token) {
+              // Eğer token yoksa tabPress eventini durdur ve Login sayfasına yönlendir
+              e.preventDefault();
+              navigation.navigate("Login");
+            }
+          },
+        })}
       />
       {}
       <Tab.Screen
-        name={"Hesabım"}
-        component={user.access_token ? ShoppingProfile : Login}
+        name="Hesabım"
+        component={ShoppingProfile}
         options={{
           tabBarLabel: user.access_token
             ? user.role === "Kurumsal Hesap"
@@ -193,7 +222,6 @@ const Home = ({ route }) => {
               : "Hesabım"
             : "Giriş Yap",
           headerShown: false,
-
           tabBarIcon: ({ color, focused }) =>
             user.role == "Kurumsal Hesap" ? (
               <IconStore
@@ -208,6 +236,15 @@ const Home = ({ route }) => {
               />
             ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            console.log("Navigating to Hesabım");
+            if (!user.access_token) {
+              e.preventDefault();
+              navigation.navigate("Login");
+            }
+          },
+        })}
       />
     </Tab.Navigator>
   );

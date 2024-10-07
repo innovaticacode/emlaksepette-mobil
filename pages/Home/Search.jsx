@@ -1,26 +1,18 @@
 import {
   View,
-  Text,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
   StyleSheet,
   Keyboard,
-  Image,
-  Dimensions,
 } from "react-native";
 import { React, useState, useEffect } from "react";
-import Icon from "react-native-vector-icons/EvilIcons";
 import Categories from "../../components/Categories";
-import Header from "../../components/Header";
-import { SearchBar } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import slugify from "react-slugify";
 import { Platform } from "react-native";
-
-const { width, height } = Dimensions.get("window");
+import { DrawerActions } from "@react-navigation/native";
 
 export default function Search({ onpres, setIsDrawerOpen }) {
   const navigation = useNavigation();
@@ -37,7 +29,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
         "https://private.emlaksepette.com/api/menu-list"
       );
 
-      const filteredMenuItems = response.data.slice(0, -1); // Menünün sondaki ögesini çıkarıyor.
+      const filteredMenuItems = response.data; // Menünün sondaki ögesini çıkarıyor.
 
       setMenuItems(filteredMenuItems); // Filtrelenmiş menü öğelerini set ediyoruz
     } catch (error) {
@@ -49,27 +41,10 @@ export default function Search({ onpres, setIsDrawerOpen }) {
     fetchmenuItems();
   }, []);
 
-  useEffect(() => {
-    // Güncellenen menuItems state'ini kontrol etmek için burayı kullanıyoruz
-    console.log("Render Edilen Menü Öğeleri:", menuItems);
-  }, [menuItems]); // menuItems her değiştiğinde bu çalışacak
-
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
-    setIsDrawerOpen(false);
+    navigation.dispatch(DrawerActions.closeDrawer()); // Drawer'ı kapatıyoruz
   };
-
-  // const iconMapping = {
-  //   'Projeler': 'folder-home',
-  //   'Konut': 'home-group',
-  //   'İş Yeri': 'storefront',
-  //   'Arsa': 'terrain',
-  //   'Tiny House': 'hoop-house',
-  //   'Bungalov': 'tent',
-  //   'Prefabrik Yapılar': 'greenhouse',
-  //   'Tatil Sepette': 'island',
-  //   'Gayrimenkul Ligi': 'trophy-variant',
-  // };
 
   return (
     <SafeAreaView onTouchStart={() => Keyboard.dismiss()} style={{}}>
@@ -105,7 +80,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  setIsDrawerOpen(false);
+                  navigation.dispatch(DrawerActions.closeDrawer()); // Drawer'ı kapatıyoruz
 
                   if (item.submenus && item.submenus?.length > 0) {
                     navigation.navigate("Public", {
@@ -113,11 +88,12 @@ export default function Search({ onpres, setIsDrawerOpen }) {
                       data: item.submenus,
                     });
                   } else {
-                    navigation.navigate(
-                      item.text == "Projeler"
-                        ? "AllProject"
-                        : "AllRealtorAdverts",
-                      {
+                    navigation.navigate("Drawer", {
+                      screen:
+                        item.text === "Projeler"
+                          ? "AllProjects"
+                          : "AllRealtorAdverts",
+                      params: {
                         name: name,
                         slug: slug,
                         data: null,
@@ -125,8 +101,8 @@ export default function Search({ onpres, setIsDrawerOpen }) {
                         type: null,
                         optional: null,
                         title:
-                          item.text == "Al Sat Acil" ||
-                          item.text == "Paylaşımlı İlanlar"
+                          item.text === "Al Sat Acil" ||
+                          item.text === "Paylaşımlı İlanlar"
                             ? item.text
                             : null,
                         check: null,
@@ -134,8 +110,8 @@ export default function Search({ onpres, setIsDrawerOpen }) {
                         county: null,
                         hood: null,
                         href: item.href,
-                      }
-                    );
+                      },
+                    });
                   }
                 }}
                 key={index}
@@ -144,14 +120,6 @@ export default function Search({ onpres, setIsDrawerOpen }) {
               </TouchableOpacity>
             );
           })}
-
-          {/* {Object.keys(iconMapping).map((category,index) => (
-            <Categories
-              key={category}
-              category={category}
-              iconName={iconMapping[category]}
-            />
-          ))} */}
         </View>
       </ScrollView>
     </SafeAreaView>

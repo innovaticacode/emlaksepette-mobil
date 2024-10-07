@@ -113,9 +113,12 @@ export default function NeigbourhoodCard({
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("PostDetails", {
-                HomeId: JSON.parse(project)["item"]["housing"],
-                projectId: projectInfo.id,
+              navigation.navigate("Drawer", {
+                screen: "PostDetails",
+                params: {
+                  HomeId: JSON.parse(project)?.item?.housing,
+                  projectId: projectInfo?.id,
+                },
               });
             }}
             style={{

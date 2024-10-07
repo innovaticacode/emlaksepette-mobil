@@ -121,18 +121,21 @@ const SellAcil = ({ index }) => {
             <TouchableOpacity
               style={styles.allBtn}
               onPress={() =>
-                navigation.navigate("AllRealtorAdverts", {
-                  name: "Al Sat Acil",
-                  slug: "al-sat-acil",
-                  data: filteredHomes,
-                  count: filteredHomes.length,
-                  type: null,
-                  optional: null,
-                  title: null,
-                  check: null,
-                  city: null,
-                  county: null,
-                  hood: null,
+                navigation.navigate("Drawer", {
+                  screen: "AllRealtorAdverts",
+                  params: {
+                    name: "Al Sat Acil",
+                    slug: "al-sat-acil",
+                    data: filteredHomes,
+                    count: filteredHomes.length,
+                    type: null,
+                    optional: null,
+                    title: null,
+                    check: null,
+                    city: null,
+                    county: null,
+                    hood: null,
+                  },
                 })
               }
             >
