@@ -1,6 +1,10 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import React, { useState } from "react";
-import { StarFilter, SubjectFilter } from "../../../components";
+import {
+  EvaluationsCommentCard,
+  StarFilter,
+  SubjectFilter,
+} from "../../../components";
 
 export default function CommentsOfBrands(props) {
   const {} = props;
@@ -48,6 +52,9 @@ export default function CommentsOfBrands(props) {
             horizontal
             showsHorizontalScrollIndicator={false}
           />
+        </View>
+        <View>
+          <EvaluationsCommentCard />
         </View>
       </View>
     </View>

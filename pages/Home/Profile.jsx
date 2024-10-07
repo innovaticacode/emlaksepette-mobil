@@ -452,7 +452,10 @@ export default function Profile() {
                 padding: 10,
                 position: "absolute",
                 bottom: 0,
+                paddingBottom: Platform.OS === "ios" ? 22 : 12,
                 width: "100%",
+                backgroundColor: "#F2F2F2",
+                height: "auto",
               }}
             >
               {(tab == 1 || tab == 2) && (
@@ -485,12 +488,13 @@ export default function Profile() {
                   borderRadius: 5,
                   borderWidth: 1,
                   borderColor: "#EB2B2E",
+                  backgroundColor: "#EA2B2E",
                 }}
               >
                 <Text
                   style={{
                     textAlign: "center",
-                    color: "#EB2B2E",
+                    color: "#FFF",
                     fontWeight: "700",
                   }}
                 >
