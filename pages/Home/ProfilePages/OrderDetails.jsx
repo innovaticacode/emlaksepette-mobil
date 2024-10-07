@@ -114,8 +114,8 @@ export default function OrderDetails() {
   let deposit_rate = 0.04;
   let discount_percent = 4;
   let saleType = "";
-  let kapora_tutari =
-    parseFloat(Detail?.amount?.replace(",", "").replace(".", "")) / 100;
+  let kapora_tutari = parseFloat(Detail?.amount) / 100;
+
   let urun_fiyati = parseFloat(parsedData?.item?.price);
   let tam_tutar;
   let tam_tutar_formatli;
