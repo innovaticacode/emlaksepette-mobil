@@ -21,7 +21,7 @@ import SuccessForRent from "./SuccessForRent";
 import axios from "axios";
 import { color } from "@rneui/base";
 const { width, height } = Dimensions.get("window");
-export default function RentOrderDetails({ route }) {
+export default function RentByMeDetails({ route }) {
   const [user, setUser] = useState({});
   const [orderDetails, setOrderDetails] = useState([]);
   const [orderDetailsHousing, setOrderDetailsHousing] = useState([]);
@@ -34,26 +34,26 @@ export default function RentOrderDetails({ route }) {
     getValueFor("user", setUser);
   }, []);
   const { id, display } = route.params;
-
+  console.log(user.access_token);
   const getOrderDetails = async (id) => {
-    console.log("Fetching order details for id:", id); // Log the id,
+    console.log("Fetching order details for id:", id); // Log the id
     console.log("aaaaaaaaaaa", user.access_token);
 
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/reservation_detail/${id}`,
+          `https://private.emlaksepette.com/api/get_customer_reservations/{id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
             },
           }
         );
-
+        console.log(response);
         setOrderDetails(response.data || []);
         setOrderDetailsHousing(response.data.housing || []);
         /*    setCityTitle(response.data.housing.city.title || []);
-        setDistrictTitle(response.data.housing.district.ilce_title || []); */
+          setDistrictTitle(response.data.housing.district.ilce_title || []); */
       }
     } catch (error) {
       console.error("Hata:", error.response?.data || error.message);
@@ -92,25 +92,25 @@ export default function RentOrderDetails({ route }) {
     }
   }, [user, id]);
   /*   const handleStatus = () => {
-    // Default values
-    let backgroundColor = "gray"; // Default color
-    let text = "Loading..."; // Default text
-    if (orderDetails && orderDetails.status !== undefined) {
-      switch (orderDetails.status) {
-        case 0:
-          return { backgroundColor: "#FFCE86", text: "Onay Bekliyor..." };
-        case 1:
-          return { backgroundColor: "#3E9D36", text: "Onaylandı" };
-        case 2:
-          return { backgroundColor: "white", text: "İptal Edildi" };
-        case 3:
-          return { backgroundColor: "#EA2B2E", text: "Reddedildi" };
-        default: // Add a default case
-          return { backgroundColor: "gray", text: "Yükleniyor" };
+      // Default values
+      let backgroundColor = "gray"; // Default color
+      let text = "Loading..."; // Default text
+      if (orderDetails && orderDetails.status !== undefined) {
+        switch (orderDetails.status) {
+          case 0:
+            return { backgroundColor: "#FFCE86", text: "Onay Bekliyor..." };
+          case 1:
+            return { backgroundColor: "#3E9D36", text: "Onaylandı" };
+          case 2:
+            return { backgroundColor: "white", text: "İptal Edildi" };
+          case 3:
+            return { backgroundColor: "#EA2B2E", text: "Reddedildi" };
+          default: // Add a default case
+            return { backgroundColor: "gray", text: "Yükleniyor" };
+        }
       }
-    }
-    return { backgroundColor, text };
-  }; */
+      return { backgroundColor, text };
+    }; */
   const handleStatusIcon = () => {
     if (orderDetails && orderDetails.status !== undefined) {
       switch (orderDetails.status) {

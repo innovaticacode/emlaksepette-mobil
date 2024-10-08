@@ -13,7 +13,8 @@ import Icon from "react-native-vector-icons/Entypo";
 import axios from "axios";
 import { Platform } from "react-native";
 import { getValueFor } from "../../../components/methods/user";
-export default function Rent() {
+
+export default function RentByMe() {
   const [Tabs, setTabs] = useState(0);
   const [TabIndex, setTabIndex] = useState(0);
 
@@ -31,7 +32,6 @@ export default function Rent() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  console.log(user.access_token);
 
   const TabBarItem = [
     {
@@ -67,7 +67,7 @@ export default function Rent() {
         const skipValue = page * 10; // Calculate skip value
         console.log("Fetching items with skip:", skipValue, "and take:", 10);
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/get_my_reservations",
+          "https://private.emlaksepette.com/api/get_customer_reservations",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -175,26 +175,26 @@ export default function Rent() {
 
         <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
           {/* {RentItems.map((reservation, index) => (
-                <View key={index} style={styles.reservationCard}>
-                    <Text>Reservation ID: {reservation.id}</Text>
-                    <Text>Housing Title: {reservation.housing.title}</Text>
-                    <Text>Check-in Date: {reservation.check_in_date}</Text>
-                    <Text>Check-out Date: {reservation.check_out_date}</Text>
-                    <Text>Total Price: {reservation.total_price}</Text>
-                    <Text>Full Name: {reservation.full_name}</Text>
-                    <Text>Email: {reservation.email}</Text>
-                    <Text>Phone: {reservation.phone}</Text>
-                    <Text>Address: {reservation.address}</Text>
-                    <Text>Notes: {reservation.notes}</Text>
-                </View>
-            ))} */}
+                  <View key={index} style={styles.reservationCard}>
+                      <Text>Reservation ID: {reservation.id}</Text>
+                      <Text>Housing Title: {reservation.housing.title}</Text>
+                      <Text>Check-in Date: {reservation.check_in_date}</Text>
+                      <Text>Check-out Date: {reservation.check_out_date}</Text>
+                      <Text>Total Price: {reservation.total_price}</Text>
+                      <Text>Full Name: {reservation.full_name}</Text>
+                      <Text>Email: {reservation.email}</Text>
+                      <Text>Phone: {reservation.phone}</Text>
+                      <Text>Address: {reservation.address}</Text>
+                      <Text>Notes: {reservation.notes}</Text>
+                  </View>
+              ))} */}
           <View style={styles.OrdersArea}>
             {RentItems.length > 0 ? (
               RentItems.map((item) => (
                 <TouchableOpacity
                   key={item.id} // Use item.id as the key
                   onPress={() => {
-                    navigation.navigate("RentOrderDetail", {
+                    navigation.navigate("RentByMeDetails", {
                       id: item.id, // Pass the item.id to navigate
                     });
                   }}

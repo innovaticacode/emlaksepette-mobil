@@ -78,7 +78,7 @@
       {
         "text": "Kiraladıklarım",
         "key": "MyReservations",
-        "url": "Rent",
+        "url": "RentByMe",
         "activePath": "/hesabim/kiraladiklarim"
       }
     ]
