@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
 import React from "react";
 import { ImageBackground } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
@@ -8,12 +15,15 @@ import { Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
 export default function RentOrder({
+  id,
   display,
   title,
-  chekIn,
-  chekOut,
+  checkIn,
+  checkOut,
   price,
   status,
+  address,
+  totalPrice,
 }) {
   const navigation = useNavigation();
   const months = [
@@ -30,8 +40,8 @@ export default function RentOrder({
     "Kasım",
     "Aralık",
   ];
-  const checkInDateParts = chekIn.split("-");
-  const checkOutDateParts = chekOut.split("-");
+  const checkInDateParts = checkIn.split("-");
+  const checkOutDateParts = checkOut.split("-");
 
   const checkInDay = checkInDateParts[2];
 
@@ -41,93 +51,80 @@ export default function RentOrder({
   const checkOutDay = checkOutDateParts[2];
 
   const checkOutYear = checkOutDateParts[0];
+  const calculateDaysDifference = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    // Calculate the time difference
+    const timeDifference = end.getTime() - start.getTime();
+
+    // Convert time difference from milliseconds to days
+    const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24));
+
+    return daysDifference;
+  };
+
   return (
-    <TouchableOpacity
-      onPress={() => {
-        navigation.navigate("RentOrderDetail", { display });
-      }}
-    >
-      <View style={styles.container}>
-        <View style={styles.Post}>
-          <View style={styles.Image}>
-            <ImageBackground
-              source={require("./home.jpg")}
-              style={{ width: "100%", height: "100%" }}
-              borderRadius={20}
-            />
+    <View style={styles.mainContainer}>
+      <View style={styles.mainContent}>
+        <View style={styles.image}>
+          <Image
+            source={require("../../../../assets/buyAndRentBg.png")}
+            style={{ width: "100%", height: "100%", borderRadius: 10 }}
+            resizeMode="cover"
+          />
+        </View>
+        <View style={styles.content}>
+          <View>
+            <Text style={styles.name}>{title}</Text>
           </View>
-          <View style={styles.CaptionArea}>
-            <View style={{ padding: 4 }}>
-              <Text style={{ fontSize: 14 }}>{title}</Text>
-            </View>
-            <View style={{ flexDirection: "row", padding: 4, gap: 8 }}>
-              <Text style={{ fontSize: 12 }}>
+          <View style={{ marginTop: 15 }}>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={{ fontSize: 13, fontWeight: "400", opacity: "0.6" }}>
                 {checkInDay}-{checkOutDay} {checkInMonth} {checkInYear}
               </Text>
-
-              <Text style={{ fontSize: 12 }}>
-                - {addDotEveryThreeDigits(price)} ₺
+            </View>
+            <View style={{ flexDirection: "row", paddingVertical: 5 }}>
+              <Icon
+                name="wallet"
+                size={17}
+                color="#EA2B2E"
+                style={{ paddingRight: 6 }}
+              />
+              <Text style={{ fontSize: 15, fontWeight: "500" }}>
+                {addDotEveryThreeDigits(totalPrice)} ₺ /
+                <Text style={{ fontWeight: "400", opacity: "0.7" }}>
+                  {" "}
+                  {calculateDaysDifference(checkIn, checkOut)} Gece
+                </Text>
               </Text>
             </View>
-            <View
+          </View>
+
+          <TouchableOpacity style={styles.btn}>
+            <Text
               style={{
-                padding: 4,
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 5,
+                textAlign: "center",
+                color: "#fff",
+                fontWeight: "600",
               }}
             >
-              {status == 1 && (
-                <>
-                  <Icon name="check" color={"green"} />
-                  <Text style={{ fontSize: 13, color: "green" }}>
-                    Onaylandı
-                  </Text>
-                </>
-              )}
-
-              {status == 0 && (
-                <>
-                  <Icon name="check" color={"#e5781e"} />
-                  <Text style={{ fontSize: 13, color: "#e5781e" }}>
-                    Onay Bekliyor
-                  </Text>
-                </>
-              )}
-            </View>
-          </View>
+              Tekrar Rezervasyon Yap
+            </Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={[styles.AgainReservation, { display: display }]}
-        >
-          <View
-            style={{ flexDirection: "row", gap: 10, justifyContent: "center" }}
-          >
-            <View>
-              <Icon name="back-in-time" size={20} />
-            </View>
-            <View style={{ justifyContent: "center" }}>
-              {<Text>Yeniden rezervasyon yap</Text>}
-            </View>
-          </View>
-          <View style={{ alignItems: "center", justifyContent: "center" }}>
-            <Icon2 name="arrow-right" color={"grey"} size={15} />
-          </View>
-        </TouchableOpacity>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: "100%",
+  mainContainer: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: "#fff",
+    borderRadius: 10,
 
-    padding: 2,
-    borderWidth: 1.5,
-    borderRadius: 5,
-    backgroundColor: "#FFFF",
-    borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
         shadowColor: " #e6e6e6",
@@ -140,26 +137,27 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  Image: {
-    height: 70,
-    borderRadius: 20,
-    flex: 0.4 / 2,
-  },
-  Post: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 10,
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ebebeb",
-  },
-  CaptionArea: {
-    flex: 1.5 / 2,
-  },
-  AgainReservation: {
-    width: "100%",
+  mainContent: {
     padding: 10,
     flexDirection: "row",
-    justifyContent: "space-between",
+  },
+  image: {
+    backgroundColor: "#fff",
+    width: 130,
+    height: 130,
+    borderRadius: 10,
+  },
+  content: { flex: 1, marginLeft: 10, justifyContent: "space-between" },
+  name: {
+    flex: 1,
+    flexDirection: "flex-start",
+    fontSize: 17,
+    fontWeight: "600",
+  },
+  btn: {
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center",
+    backgroundColor: "#EA2B2E",
   },
 });
