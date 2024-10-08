@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Keyboard,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { SearchBar } from "@rneui/base";
@@ -19,6 +19,7 @@ import { Platform } from "react-native";
 import { Stack } from "@react-native-material/core";
 import { CheckBox } from "react-native-elements";
 import NoDataScreen from "../../../components/NoDataScreen";
+import { RadioFilter } from "../../../components";
 
 export default function Sell() {
   const [search, setSearch] = useState("");
@@ -66,22 +67,22 @@ export default function Sell() {
   useEffect(() => {
     const filterProducts = () => {
       const searchLower = search.toLowerCase();
-      return products.filter(product => {
+      return products.filter((product) => {
         const parsedCart = product.cart ? JSON.parse(product.cart) : {};
-        const title = parsedCart["item"]["title"] ? parsedCart["item"]["title"].toLowerCase() : "";
-        const houseId = parsedCart["item"]["id"] ? parsedCart["item"]["id"].toString().toLowerCase() : "";
+        const title = parsedCart["item"]["title"]
+          ? parsedCart["item"]["title"].toLowerCase()
+          : "";
+        const houseId = parsedCart["item"]["id"]
+          ? parsedCart["item"]["id"].toString().toLowerCase()
+          : "";
 
-        return (
-          title.includes(searchLower) ||
-          houseId.includes(searchLower)
-        );
+        return title.includes(searchLower) || houseId.includes(searchLower);
       });
     };
 
     const filtered = filterProducts();
     setFilteredProducts(filtered);
   }, [search, products]);
-
 
   // Fiyata göre (önce en düşük)
   const sortByPriceLowToHigh = () => {
@@ -92,7 +93,6 @@ export default function Sell() {
     });
     setFilteredProducts(sorted);
   };
-
 
   // Fiyata göre (önce en yüksek)
   const sortByPriceHighToLow = () => {
@@ -106,13 +106,17 @@ export default function Sell() {
 
   // Tarihe göre (önce en eski)
   const sortByDateOldest = () => {
-    const sorted = [...products].sort((a, b) => new Date(a.date) - new Date(b.date));
+    const sorted = [...products].sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
     setFilteredProducts(sorted);
   };
 
   // Tarihe göre (önce en yeni)
   const sortByDateNewest = () => {
-    const sorted = [...products].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const sorted = [...products].sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
     setFilteredProducts(sorted);
   };
 
@@ -135,7 +139,6 @@ export default function Sell() {
     });
     setFilteredProducts(sorted);
   };
-
 
   // Radio seçildiğinde tetiklenen fonksiyon
   const handleRadio = (index) => {
@@ -168,7 +171,9 @@ export default function Sell() {
   return (
     <>
       {loading ? (
-        <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
+        <View
+          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
+        >
           <ActivityIndicator color="#333" />
         </View>
       ) : products.length === 0 ? (
@@ -210,26 +215,39 @@ export default function Sell() {
             <View style={style.ListIcon}>
               <TouchableOpacity
                 style={{
-                  backgroundColor: '#e5e5e5',
+                  backgroundColor: "#e5e5e5",
                   padding: 5,
                   borderRadius: 6,
                 }}
               >
                 <View>
-                  <TouchableOpacity onPress={() => setSortListModal(!sortListModal)}>
+                  <TouchableOpacity
+                    onPress={() => setSortListModal(!sortListModal)}
+                  >
                     <Icon2 name="swap-vertical" size={23} color={"#333"} />
                   </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             </View>
           </View>
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={style.container}>
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            style={style.container}
+          >
             <View style={style.orders}>
               {filteredProducts.length === 0 ? (
                 <View style={style.noResultsContainer}>
-                  <Icon2 name="emoticon-sad-outline" size={50} color="#EA2B2E" />
-                  <Text style={style.noResultsText}>Arama sonucu bulunamadı.</Text>
-                  <Text style={style.noResultsSubText}>Lütfen başka bir terim deneyin.</Text>
+                  <Icon2
+                    name="emoticon-sad-outline"
+                    size={50}
+                    color="#EA2B2E"
+                  />
+                  <Text style={style.noResultsText}>
+                    Arama sonucu bulunamadı.
+                  </Text>
+                  <Text style={style.noResultsSubText}>
+                    Lütfen başka bir terim deneyin.
+                  </Text>
                 </View>
               ) : (
                 filteredProducts.map((item, index) => (
@@ -238,164 +256,13 @@ export default function Sell() {
               )}
             </View>
           </ScrollView>
-
-          {/* Modal */}
-          <Modal
-            style={style.modal}
-            isVisible={sortListModal}
-            onBackdropPress={() => setSortListModal(false)}
-            backdropColor="transparent"
-            animationIn={"fadeIn"}
-            animationOut={"fadeOut"}
-            swipeDirection={["down"]}
-            onSwipeComplete={() => setEditModalVisible(false)}
-          >
-            <View
-              style={[
-                style.modalContent,
-                {
-                  borderTopLeftRadius: 6,
-                  borderTopRightRadius: 6,
-                  padding: 0,
-                  borderRadius: 6,
-                  backgroundColor: "#ffffff",
-                },
-              ]}
-            >
-              <View style={{ paddingTop: 15, alignItems: "center" }}>
-                <Text style={{ color: "#333", fontSize: 17, fontWeight: "600" }}>
-                  Sıralama
-                </Text>
-              </View>
-              <View>
-                <Stack row align="center" spacing={4}>
-                  <CheckBox
-                    checked={selectedIndex === 0}
-                    onPress={() => {
-                      handleRadio(0);
-                      setSortListModal(false); // Seçim yapıldığında modalı kapatır
-                    }}
-                    checkedIcon="dot-circle-o"
-                    uncheckedIcon="circle-o"
-                    title={
-                      <Text style={{ color: "#333", fontWeight: "600" }}>
-                        Fiyata göre (Önce en düşük)
-                      </Text>
-                    }
-                    containerStyle={{
-                      backgroundColor: "transparent",
-                      borderWidth: 0,
-                      margin: 0,
-                    }}
-                    checkedColor="#333"
-                  />
-                  <CheckBox
-                    checked={selectedIndex === 1}
-                    onPress={() => {
-                      handleRadio(1);
-                      setSortListModal(false);
-                    }}
-                    checkedIcon="dot-circle-o"
-                    uncheckedIcon="circle-o"
-                    title={
-                      <Text style={{ color: "#333", fontWeight: "600" }}>
-                        Fiyata göre (Önce en yüksek)
-                      </Text>
-                    }
-                    containerStyle={{
-                      backgroundColor: "transparent",
-                      borderWidth: 0,
-                      margin: 0,
-                    }}
-                    checkedColor="#333"
-                  />
-                  <CheckBox
-                    checked={selectedIndex === 2}
-                    onPress={() => {
-                      handleRadio(2);
-                      setSortListModal(false);
-                    }}
-                    checkedIcon="dot-circle-o"
-                    uncheckedIcon="circle-o"
-                    title={
-                      <Text style={{ color: "#333", fontWeight: "600" }}>
-                        Tarihe göre (Önce en eski ilan)
-                      </Text>
-                    }
-                    containerStyle={{
-                      backgroundColor: "transparent",
-                      borderWidth: 0,
-                      margin: 0,
-                    }}
-                    checkedColor="#333"
-                  />
-                  <CheckBox
-                    checked={selectedIndex === 3}
-                    onPress={() => {
-                      handleRadio(3);
-                      setSortListModal(false);
-                    }}
-                    checkedIcon="dot-circle-o"
-                    uncheckedIcon="circle-o"
-                    title={
-                      <Text style={{ color: "#333", fontWeight: "600" }}>
-                        Tarihe göre (Önce en yeni ilan)
-                      </Text>
-                    }
-                    containerStyle={{
-                      backgroundColor: "transparent",
-                      borderWidth: 0,
-                      margin: 0,
-                    }}
-                    checkedColor="#333"
-                  />
-
-                  <CheckBox
-                    checked={selectedIndex === 4}
-                    onPress={() => {
-                      handleRadio(4);
-                      setSortListModal(false);
-                    }}
-                    checkedIcon="dot-circle-o"
-                    uncheckedIcon="circle-o"
-                    title={
-                      <Text style={{ color: "#333", fontWeight: "600" }}>
-                        Ada göre (A'dan Z'ye)
-                      </Text>
-                    }
-                    containerStyle={{
-                      backgroundColor: "transparent",
-                      borderWidth: 0,
-                      margin: 0,
-                    }}
-                    checkedColor="#333"
-                  />
-                  <CheckBox
-                    checked={selectedIndex === 5}
-                    onPress={() => {
-                      handleRadio(5);
-                      setSortListModal(false);
-                    }}
-                    checkedIcon="dot-circle-o"
-                    uncheckedIcon="circle-o"
-                    title={
-                      <Text style={{ color: "#333", fontWeight: "600" }}>
-                        Ada göre (Z'den A'ya)
-                      </Text>
-                    }
-                    containerStyle={{
-                      backgroundColor: "transparent",
-                      borderWidth: 0,
-                      margin: 0,
-                    }}
-                    checkedColor="#333"
-                  />
-                </Stack>
-              </View>
-            </View>
-          </Modal>
+          <RadioFilter
+            selectedIndex={selectedIndex}
+            sortListModal={sortListModal}
+            setSortListModal={setSortListModal}
+            handleRadio={handleRadio}
+          />
         </View>
-
       )}
     </>
   );
@@ -404,7 +271,7 @@ export default function Sell() {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   noResultsContainer: {
     flex: 1,
@@ -427,17 +294,17 @@ const style = StyleSheet.create({
     marginTop: 5,
   },
   Navbar: {
-    width: '100%',
+    width: "100%",
     borderBottomWidth: 1,
-    borderBottomColor: '#ebebeb',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFF',
-    borderColor: '#e6e6e6',
+    borderBottomColor: "#ebebeb",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFF",
+    borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
-        shadowColor: '#e6e6e6',
+        shadowColor: "#e6e6e6",
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 5,
@@ -453,12 +320,12 @@ const style = StyleSheet.create({
   },
   ListIcon: {
     flex: 0.3 / 2,
-    borderBottomColor: '#e5e5e5',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderBottomColor: "#e5e5e5",
+    alignItems: "center",
+    justifyContent: "center",
   },
   orders: {
-    width: '100%',
+    width: "100%",
     padding: 5,
     gap: 15,
   },
