@@ -5,7 +5,6 @@ import {
   ScrollView,
   RefreshControl,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import RealtorPostFavorited from "../../components/RealtorPostFavorited";
@@ -13,15 +12,9 @@ import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import {
-  GestureHandlerRootView,
-  Swipeable,
-} from "react-native-gesture-handler";
 import Modal from "react-native-modal";
 import { ActivityIndicator } from "react-native-paper";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/FontAwesome";
-import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import {
   Dialog,
@@ -32,17 +25,24 @@ import NoDataScreen from "../../components/NoDataScreen";
 
 export default function Favorites() {
   const navigation = useNavigation();
+  const focused = useIsFocused();
   const [user, setUser] = useState({});
   const [favorites, setFavorites] = useState([]);
-  const focused = useIsFocused();
-
   const [refreshing, setRefreshing] = useState(false);
+  const [ModalForAddToCart, setModalForAddToCart] = useState(false);
+  const [selectedCartItem, setselectedCartItem] = useState(0);
+  const [selectedRoomID, setselectedRoomID] = useState(0);
+  const [type, settype] = useState(0);
+  const [modalForDeleteFavorites, setmodalForDeleteFavorites] = useState(false);
+  const [isChoosed, setIsChoosed] = useState(false); // Toplu seçim modu
+  const [FavoriteRemoveIDS, setFavoriteRemoveIDS] = useState([]); // Silinecek ilanların ID'leri
+  const [loading, setLoading] = useState(false); // Yüklenme durumu
+  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
+    useState(false); // Modal durumu
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-
-  const [hasHousingFavorites, setHasHousingFavorites] = useState(false);
-  const [hasProjectFavorites, setHasProjectFavorites] = useState(false);
 
   const fetchFavorites = async () => {
     try {
@@ -54,7 +54,11 @@ export default function Favorites() {
         "https://private.emlaksepette.com/api/favorites",
         config
       );
-      setFavorites(Object.values(response.data.mergedFavorites));
+      const reversedFavorites = Object.values(
+        response.data.mergedFavorites
+      ).reverse();
+
+      return setFavorites(reversedFavorites);
     } catch (error) {
       console.error("Error fetching favorites:", error);
     } finally {
@@ -63,7 +67,7 @@ export default function Favorites() {
   };
 
   useEffect(() => {
-    if (user.access_token) {
+    if (user?.access_token) {
       fetchFavorites();
     }
   }, [user, focused]);
@@ -101,11 +105,6 @@ export default function Favorites() {
       setRefreshing(false);
     }
   };
-
-  const [ModalForAddToCart, setModalForAddToCart] = useState(false);
-  const [selectedCartItem, setselectedCartItem] = useState(0);
-  const [selectedRoomID, setselectedRoomID] = useState(0);
-  const [type, settype] = useState(0);
 
   const GetIdForCart = (id, roomId, type) => {
     setselectedCartItem(id);
@@ -277,9 +276,6 @@ export default function Favorites() {
     }
   };
   // DELETE ALL FUNCTION END
-
-  const [modalForDeleteFavorites, setmodalForDeleteFavorites] = useState(false);
-  const [setFavoriteRemoveItem, setsetFavoriteRemoveItem] = useState(0);
   const SelectFavorite = (id) => {
     setFavoriteRemoveIDS((prevIds) => {
       if (prevIds.includes(id)) {
@@ -289,15 +285,6 @@ export default function Favorites() {
       }
     });
   };
-  const [FavoriteRemoveIDSForProject, setFavoriteRemoveIDSForProject] =
-    useState([]);
-
-  // BATCH SELECTION - DELETE FUNCTION STAT
-  const [isChoosed, setIsChoosed] = useState(false); // Toplu seçim modu
-  const [FavoriteRemoveIDS, setFavoriteRemoveIDS] = useState([]); // Silinecek ilanların ID'leri
-  const [loading, setLoading] = useState(false); // Yüklenme durumu
-  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
-    useState(false); // Modal durumu
 
   const handleToggleSelect = () => {
     setIsChoosed(!isChoosed); // Toplu seçim modunu değiştir
