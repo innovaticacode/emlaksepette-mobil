@@ -5,6 +5,7 @@ import {
   ScrollView,
   RefreshControl,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import RealtorPostFavorited from "../../components/RealtorPostFavorited";
@@ -295,6 +296,25 @@ export default function Favorites() {
       setFavoriteRemoveIDS([]); // Toplu seçim modundan çıkıldığında seçili ID'leri temizle
     }
   };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("blur", () => {
+      Alert.alert("Uyarı", "Seçimleriniz gidecek.Kabul ediyor musunuz?", [
+        {
+          text: "Hayır",
+          style: "cancel",
+        },
+        {
+          text: "Evet",
+          onPress: () => {
+            setIsChoosed(false); // Seçimleri sıfırla
+          },
+        },
+      ]);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const deleteSelectedFavorite = async () => {
     setLoading(true); // İşlem başladığında yüklenme durumu aktif edilir
