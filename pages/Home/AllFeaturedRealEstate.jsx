@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   ImageBackground,
 } from "react-native";
-import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
+import { ALERT_TYPE, Dialog, AlertNotificationRoot } from "react-native-alert-notification";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const apiUrl = "https://private.emlaksepette.com";
@@ -45,55 +45,57 @@ const AllFeaturedRealEstate = (prosp) => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      {loading ? (
-        <ActivityIndicator
-          size="large"
-          color="#0056b3"
-          style={styles.loading}
-        />
-      ) : (
-        <FlatList
-          data={estateBrands}
-          keyExtractor={(item) =>
-            item.id ? item.id.toString() : Math.random().toString()
-          }
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <View style={styles.area}>
-              <TouchableOpacity
-                style={styles.touchableArea} // touchable alanı burada kontrol ediyoruz
-                onPress={() => navigation.navigate("Profile", { id: item.id })}
-              >
-                <View style={styles.imageArea}>
-                  <ImageBackground
-                    source={{
-                      uri: `${apiUrl}/storage/profile_images/${item.profile_image}`,
-                    }}
-                    alt="brands"
-                    resizeMode="contain"
-                    style={styles.image}
-                  />
-                  <View style={styles.separator} />
-                  <Text
-                    numberOfLines={2}
-                    ellipsizeMode="tail"
-                    style={styles.title}
-                  >
-                    {item.name}
-                  </Text>
-                  <View style={styles.referenceCode}>
-                    <Text style={{ fontSize: 10 }}>Referans Kodu:</Text>
-                    <Text style={{ fontSize: 10 }}> {item.code} </Text>
+    <AlertNotificationRoot>
+      <View style={styles.container}>
+        {loading ? (
+          <ActivityIndicator
+            size="large"
+            color="#0056b3"
+            style={styles.loading}
+          />
+        ) : (
+          <FlatList
+            data={estateBrands}
+            keyExtractor={(item) =>
+              item.id ? item.id.toString() : Math.random().toString()
+            }
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <View style={styles.area}>
+                <TouchableOpacity
+                  style={styles.touchableArea} // touchable alanı burada kontrol ediyoruz
+                  onPress={() => navigation.navigate("Profile", { id: item.id })}
+                >
+                  <View style={styles.imageArea}>
+                    <ImageBackground
+                      source={{
+                        uri: `${apiUrl}/storage/profile_images/${item.profile_image}`,
+                      }}
+                      alt="brands"
+                      resizeMode="contain"
+                      style={styles.image}
+                    />
+                    <View style={styles.separator} />
+                    <Text
+                      numberOfLines={2}
+                      ellipsizeMode="tail"
+                      style={styles.title}
+                    >
+                      {item.name}
+                    </Text>
+                    <View style={styles.referenceCode}>
+                      <Text style={{ fontSize: 10 }}>Referans Kodu:</Text>
+                      <Text style={{ fontSize: 10 }}> {item.code} </Text>
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-          )}
-        />
-      )}
-    </View>
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        )}
+      </View>
+    </AlertNotificationRoot>
   );
 };
 

@@ -109,7 +109,6 @@ export default function UpdateUsers() {
     formdata.append("_method", "PUT");
 
     formdata.append("is_active", isActive);
-
     if (user?.access_token) {
       axios
         .post(

@@ -51,12 +51,13 @@ export default function UsersList() {
     }
   };
   const isfocused = useIsFocused();
-  console.log(user?.access_token);
   useEffect(() => {
     fetchData();
   }, [user, isfocused]);
   const [SuccessDelete, setSuccessDelete] = useState(false);
   const DeleteUser = async () => {
+    setloading(true);
+
     try {
       if (user.access_token) {
         const response = await axios.delete(
@@ -67,19 +68,29 @@ export default function UsersList() {
             },
           }
         );
-        Dialog.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "Başarılı",
-          textBody: `${selectedUserName} Adlı kullanıcı silindi.`,
-          button: "Tamam",
-        });
+        console.log("deleted");
+        if (response.status === 200) {
+          setTimeout(() => {
+            console.log("dialog");
+            Dialog.show({
+              type: ALERT_TYPE.SUCCESS,
+              title: "Başarılı",
+              textBody: `${selectedUserName} Adlı kullanıcı silindi.`,
+              button: "Tamam",
+              onHide: () => {
+                fetchData();
+              },
+            });
+            setloading(false); // End loading after showing the dialog
+          }, 300);
+        }
         setopenDeleteModal(false);
-        fetchData();
-
         setsubUsers(response.data.users);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setloading(false);
     }
   };
   const [selectedUser, setselectedUser] = useState(0);
@@ -130,15 +141,27 @@ export default function UsersList() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: `Başarılı`,
-        textBody: `${userList.length} Kullanıcı Silindi.`,
-        button: "Tamam",
-      });
-      fetchData();
-      setuserList([]);
-      setdeleteAllUserType(false);
+      console.log("DELETE Response:", response);
+
+      if (response.status === 200) {
+        setTimeout(() => {
+          console.log("dialog");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: `Başarılı`,
+            textBody: `${userList.length} Kullanıcı Silindi.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchData();
+              setuserList([]);
+            },
+          });
+          setloading(false);
+        }, 300);
+        console.log("done");
+
+        setdeleteAllUserType(false);
+      }
     } catch (error) {
       console.error("Error making DELETE request:", error);
     }
@@ -157,17 +180,27 @@ export default function UsersList() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: `Başarılı.`,
-        textBody: `${SelectedUserIDS.length} Kullanıcı Silindi.`,
-        button: "Tamam",
-      });
-      fetchData();
-      setSelectedUserIDS([]);
-      setselectedUserDeleteModa(false);
-      setisChoosed(false);
-      setisShowDeleteButon(!isShowDeleteButon);
+      if (response.status === 200) {
+        setTimeout(() => {
+          console.log("dialog");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: `Başarılı.`,
+            textBody: `${SelectedUserIDS.length} Kullanıcı Silindi.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchData();
+              setSelectedUserIDS([]);
+            },
+          });
+          console.log("load");
+          setloading(false);
+        }, 2000);
+
+        setselectedUserDeleteModa(false);
+        setisChoosed(false);
+        setisShowDeleteButon(!isShowDeleteButon);
+      }
     } catch (error) {
       console.error("Error making DELETE request:", error);
     }

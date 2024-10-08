@@ -182,6 +182,7 @@ export default function Favorites() {
 
   // DELETE ALL FUNCTION START
   const deleteRequestWithToken = async () => {
+    setLoading(true);
     try {
       const response = await axios.delete(
         "https://private.emlaksepette.com/api/institutional/housing-favorite",
@@ -191,25 +192,45 @@ export default function Favorites() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Başarılı",
-        textBody: `${FavoriteRemoveIDS.length} Tüm ilanlar favorilerden kaldırıldı.`,
-        button: "Tamam",
-      });
-      fetchFavorites();
+      if (response.status === 200) {
+        console.log("showing");
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: ` Tüm ilanlar favorilerden kaldırıldı.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchFavorites(); // Fetch favorites after dialog is dismissed
+            },
+          });
+          setLoading(false); // End loading after showing the dialog
+        }, 300);
+      }
       setmodalForDeleteFavorites(false);
     } catch (error) {
-      Dialog.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Hata",
-        textBody: "Tümünü Silme işlemi başarısız oldu!",
-        button: "Tamam",
-      });
+      console.log("err");
+      setTimeout(() => {
+        Dialog.show({
+          type: ALERT_TYPE.WARNING,
+          title: "Hata!",
+          textBody: "Tümünü Silme işlemi başarısız oldu.",
+          button: "Tamam",
+          onHide: () => {
+            fetchFavorites(); // Fetch favorites after dialog is dismissed
+          },
+        });
+        setLoading(false); // End loading after showing the dialog
+      }, 500);
+      setmodalForDeleteFavorites(false);
+    } finally {
+      setTimeout(() => setLoading(false));
+      setmodalForDeleteFavorites(false);
     }
   };
 
   const deleteRequestWithTokenProject = async () => {
+    setLoading(true);
     try {
       const response = await axios.delete(
         "https://private.emlaksepette.com/api/institutional/project-favorite",
@@ -219,21 +240,40 @@ export default function Favorites() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Başarılı",
-        textBody: `${FavoriteRemoveIDS.length} Tüm ilanlar favorilerden kaldırıldı.`,
-        button: "Tamam",
-      });
-      fetchFavorites();
+      if (response.status === 200) {
+        console.log("showing");
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: `${FavoriteRemoveIDS.length} Tüm ilanlar favorilerden kaldırıldı.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchFavorites(); // Fetch favorites after dialog is dismissed
+            },
+          });
+          setLoading(false); // End loading after showing the dialog
+        }, 300);
+      }
       setmodalForDeleteFavorites(false);
     } catch (error) {
-      Dialog.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Hata!",
-        textBody: "Tümünü Silme işlemi başarısız oldu.",
-        button: "Tamam",
-      });
+      console.log("rr");
+      setTimeout(() => {
+        Dialog.show({
+          type: ALERT_TYPE.WARNING,
+          title: "Hata!",
+          textBody: "Tümünü Silme işlemi başarısız oldu.",
+          button: "Tamam",
+          onHide: () => {
+            fetchFavorites(); // Fetch favorites after dialog is dismissed
+          },
+        });
+        setLoading(false); // End loading after showing the dialog
+      }, 300);
+      setmodalForDeleteFavorites(false);
+    } finally {
+      setTimeout(() => setLoading(false));
+      setmodalForDeleteFavorites(false);
     }
   };
   // DELETE ALL FUNCTION END
@@ -278,41 +318,50 @@ export default function Favorites() {
         method: "delete",
         url: "https://private.emlaksepette.com/api/institutional/favorites/delete",
         data: data,
-        headers: {
-          Authorization: `Bearer ${user.access_token}`,
-        },
+        headers: {},
       });
 
       if (response.status === 200) {
-        Dialog.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "Başarılı",
-          textBody: `${FavoriteRemoveIDS.length} İlan favorilerden kaldırıldı.`,
-          button: "Tamam",
-        });
+        setTimeout(() => {
+          console.log("showing");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: `${FavoriteRemoveIDS.length} İlan favorilerden kaldırıldı.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchFavorites(); // Fetch favorites after dialog is dismissed
+              setFavoriteRemoveIDS([]); // Clear the selected favorites
+            },
+          });
+          setLoading(false); // End loading after showing the dialog
+        }, 300);
 
-        fetchFavorites(); // Favori ilanları yeniden yükle
+        // Favori ilanları yeniden yükle
         setFavoriteRemoveIDS([]); // Seçili ilanları temizle
         setRemoveSelectedCollectionsModal(false); // Modal'ı kapat
         setIsChoosed(false); // Toplu seçim modunu kapat
-      } else {
+      }
+    } catch (error) {
+      setRemoveSelectedCollectionsModal(false); // Modal'ı kapat
+      setIsChoosed(false); // Toplu seçim modunu kapat
+      console.log("errorrrr");
+      // Hata durumunda kullanıcıya geri bildirim sağla
+      setTimeout(() => {
+        console.log("showing");
         Dialog.show({
           type: ALERT_TYPE.WARNING,
           title: "Hata!",
           textBody: "Silme işlemi başarısız oldu.",
           button: "Tamam",
         });
-      }
-    } catch (error) {
-      // Hata durumunda kullanıcıya geri bildirim sağla
-      Dialog.show({
-        type: ALERT_TYPE.WARNING,
-        title: "Hata!",
-        textBody: "Silme işlemi başarısız oldu.",
-        button: "Tamam",
-      });
+        setLoading(false); // End loading after showing the dialog
+      }, 300);
     } finally {
       setLoading(false); // İşlem tamamlandıktan sonra yüklenme durumunu kapat
+
+      setRemoveSelectedCollectionsModal(false); // Modal'ı kapat
+      setIsChoosed(false); // Toplu seçim modunu kapat
     }
   };
   // BATCH SELECTION - DELETE FUNCTION END
@@ -332,12 +381,12 @@ export default function Favorites() {
       ) : (
         <View style={styles.container}>
           {favorites.length == 0 ? (
-              <NoDataScreen
-                message="Favorilerinizde ilan bulunmamaktadır."
-                iconName="heart-plus"
-                buttonText="Anasayfaya Dön"
-                navigateTo="HomePage"
-              />
+            <NoDataScreen
+              message="Favorilerinizde ilan bulunmamaktadır."
+              iconName="heart-plus"
+              buttonText="Anasayfaya Dön"
+              navigateTo="HomePage"
+            />
           ) : (
             <>
               <View
@@ -523,8 +572,8 @@ export default function Favorites() {
                         if (
                           projectHousing.room_order == favorite?.housing_id &&
                           projectHousing.name ==
-                          favorite?.project?.list_item_values?.column1_name +
-                          "[]" &&
+                            favorite?.project?.list_item_values?.column1_name +
+                              "[]" &&
                           projectHousing.project_id == favorite?.project?.id
                         ) {
                           return projectHousing;
@@ -536,8 +585,8 @@ export default function Favorites() {
                         if (
                           projectHousing.room_order == favorite?.housing_id &&
                           projectHousing.name ==
-                          favorite?.project?.list_item_values?.column2_name +
-                          "[]" &&
+                            favorite?.project?.list_item_values?.column2_name +
+                              "[]" &&
                           projectHousing.project_id == favorite?.project?.id
                         ) {
                           return projectHousing;
@@ -549,8 +598,8 @@ export default function Favorites() {
                         if (
                           projectHousing.room_order == favorite?.housing_id &&
                           projectHousing.name ==
-                          favorite?.project?.list_item_values?.column3_name +
-                          "[]" &&
+                            favorite?.project?.list_item_values?.column3_name +
+                              "[]" &&
                           projectHousing.project_id == favorite?.project?.id
                         ) {
                           return projectHousing;
@@ -563,7 +612,7 @@ export default function Favorites() {
                         " " +
                         (favorite?.project?.list_item_values?.column1_additional
                           ? favorite?.project?.list_item_values
-                            ?.column1_additional
+                              ?.column1_additional
                           : "");
                     }
                     if (column2) {
@@ -572,7 +621,7 @@ export default function Favorites() {
                         " " +
                         (favorite?.project?.list_item_values?.column2_additional
                           ? favorite?.project?.list_item_values
-                            ?.column2_additional
+                              ?.column2_additional
                           : "");
                     }
                     if (column3) {
@@ -581,7 +630,7 @@ export default function Favorites() {
                         " " +
                         (favorite?.project?.list_item_values?.column3_additional
                           ? favorite?.project?.list_item_values
-                            ?.column3_additional
+                              ?.column3_additional
                           : "");
                     }
                     var no = 1000000 + favorite?.project.id;
@@ -615,7 +664,7 @@ export default function Favorites() {
                           favorite?.project_housing?.find((projectHousing) => {
                             if (
                               projectHousing.room_order ==
-                              favorite?.housing_id &&
+                                favorite?.housing_id &&
                               projectHousing.name == "price[]"
                             ) {
                               return projectHousing;
@@ -659,13 +708,13 @@ export default function Favorites() {
                             favorite?.housing?.list_items?.column1_name
                           ]
                             ? housingData[
-                            favorite?.housing?.list_items?.column1_name
-                            ] +
-                            " " +
-                            (favorite?.housing?.list_items?.column1_additional
-                              ? favorite?.housing?.list_items
-                                ?.column1_additional
-                              : "")
+                                favorite?.housing?.list_items?.column1_name
+                              ] +
+                              " " +
+                              (favorite?.housing?.list_items?.column1_additional
+                                ? favorite?.housing?.list_items
+                                    ?.column1_additional
+                                : "")
                             : ""
                         }
                         column2={
@@ -673,13 +722,13 @@ export default function Favorites() {
                             favorite?.housing?.list_items?.column2_name
                           ]
                             ? housingData[
-                            favorite?.housing?.list_items?.column2_name
-                            ] +
-                            " " +
-                            (favorite?.housing?.list_items?.column2_additional
-                              ? favorite?.housing?.list_items
-                                ?.column2_additional
-                              : "")
+                                favorite?.housing?.list_items?.column2_name
+                              ] +
+                              " " +
+                              (favorite?.housing?.list_items?.column2_additional
+                                ? favorite?.housing?.list_items
+                                    ?.column2_additional
+                                : "")
                             : ""
                         }
                         column3={
@@ -687,13 +736,13 @@ export default function Favorites() {
                             favorite?.housing?.list_items?.column3_name
                           ]
                             ? housingData[
-                            favorite?.housing?.list_items?.column3_name
-                            ] +
-                            " " +
-                            (favorite?.housing?.list_items?.column3_additional
-                              ? favorite?.housing?.list_items
-                                ?.column3_additional
-                              : "")
+                                favorite?.housing?.list_items?.column3_name
+                              ] +
+                              " " +
+                              (favorite?.housing?.list_items?.column3_additional
+                                ? favorite?.housing?.list_items
+                                    ?.column3_additional
+                                : "")
                             : ""
                         }
                         location={
@@ -848,7 +897,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 5,
   },
-  
+
   btnRemove: {
     backgroundColor: "#EA2A28",
     padding: 7,

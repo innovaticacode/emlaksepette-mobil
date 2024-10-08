@@ -84,228 +84,7 @@ export default function UpgradeProfile() {
       }
     })();
   }, []);
-
-  useEffect(() => {
-    (async () => {
-      if (Platform.OS !== "web") {
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== "granted") {
-          // alert('Sorry, we need camera permissions to make this work!');
-        }
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      if (Platform.OS !== "web") {
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== "granted") {
-          // alert('Sorry, we need camera permissions to make this work!');
-        }
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    const fetchTaxOfficeCity = async () => {
-      try {
-        const response = await axios.get(
-          "https://private.emlaksepette.com/api/get-tax-offices"
-        );
-        setTaxOfficesCities(response.data);
-      } catch (error) {
-        console.error("Hata:", error);
-        throw error;
-      }
-    };
-    fetchTaxOfficeCity();
-  }, []);
-
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const response = await axios.get(
-          "https://private.emlaksepette.com/api/cities"
-        );
-        setCities(response.data.data);
-      } catch (error) {
-        console.error("Hata:", error);
-      }
-    };
-    fetchCities();
-  }, []);
-
-  useEffect(() => {
-    // API'den gelen koordinatları kontrol et, null ise varsayılanı kullan
-    if (namFromGetUser.latitude != null && namFromGetUser.longitude != null) {
-      setRegion({
-        latitude: parseFloat(namFromGetUser.latitude),
-        longitude: parseFloat(namFromGetUser.longitude),
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
-      });
-    } else {
-      // API'den değer gelmezse varsayılan konumu kullan
-      setRegion(initialRegion);
-    }
-  }, [namFromGetUser]);
-
-  useEffect(() => {
-    getValueFor("user", setUser);
-  }, []);
-
-  useEffect(() => {
-    const GetUserInfo = async () => {
-      setLoading(true);
-      try {
-        if (user.access_token) {
-          const userInfo = await axios.get(
-            `https://private.emlaksepette.com/api/users/${user.id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${user.access_token}`,
-              },
-            }
-          );
-
-          setnamFromGetUser(userInfo?.data?.user);
-        }
-      } catch (error) {
-        console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (user.access_token) {
-      // Eğer user bilgileri geldiyse, GetUserInfo fonksiyonunu çalıştır
-      GetUserInfo();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (Object.keys(namFromGetUser).length > 0) {
-      setFormData({
-        name: namFromGetUser.name || "",
-        mobile_phone: namFromGetUser.mobile_phone || "",
-        new_phone_number: namFromGetUser.new_phone_number || "",
-        store_name: namFromGetUser.store_name || "",
-        username: namFromGetUser.username || "",
-        authority_licence: namFromGetUser.authority_licence || "",
-        iban: namFromGetUser.iban || "",
-        website: namFromGetUser.website || "",
-        phone: formatPhoneNumber(namFromGetUser.phone) || "",
-        year: namFromGetUser.year || "",
-        city_id: namFromGetUser.city_id || "",
-        county_id: namFromGetUser.county_id || "",
-        neighborhood_id: namFromGetUser.neighborhood_id || "",
-        taxOfficeCity: namFromGetUser.taxOfficeCity || "",
-        taxOffice: namFromGetUser.taxOffice || "",
-        taxNumber: namFromGetUser.taxNumber || "",
-      });
-      setCurrentColor(namFromGetUser.banner_hex_code);
-      setareaCode(namFromGetUser.area_code);
-      setTimeout(() => {
-        onChangeCity(namFromGetUser.city_id);
-        onChangeCounty(namFromGetUser.county_id);
-        onChangeNeighborhood(namFromGetUser.neighborhood_id);
-        onchangeTaxOffice(namFromGetUser.taxOfficeCity);
-      }, 500);
-    }
-  }, [namFromGetUser]);
-
-  const postData = async () => {
-    try {
-      let fullNumber = `${areaCode}${formData.phone}`;
-      let FormData = new FormData();
-
-      if (user.role === "Bireysel Hesap") {
-        formData.append("name", formData.name);
-        formData.append("iban", formData.iban);
-        formData.append(
-          "profile_image",
-          image
-            ? {
-              uri: image.uri,
-              name: image.fileName,
-              type: image.type,
-            }
-            : null
-        );
-        formData.append(
-          "mobile_phone",
-          formData.new_phone_number
-            ? formData.new_phone_number
-            : formData.mobile_phone
-        );
-        formData.append("banner_hex_code", currentColor);
-        formData.append("_method", "PUT");
-      } else {
-        formData.append(
-          "profile_image",
-          image
-            ? {
-              uri: image.uri,
-              name: image.fileName,
-              type: image.type,
-            }
-            : null
-        );
-        formData.append("city_id", formData.city_id);
-        formData.append("county_id", formData.county_id);
-        formData.append("neighborhood_id", formData.neighborhood_id);
-        formData.append("name", formData.name);
-        formData.append("username", formData.username);
-        formData.append("banner_hex_code", currentColor);
-        formData.append("iban", formData.iban);
-        formData.append("website", formData.website);
-        formData.append("phone", fullNumber);
-        formData.append("year", formData.year);
-        formData.append(
-          "mobile_phone",
-          formData.new_phone_number
-            ? formData.new_phone_number
-            : formData.mobile_phone
-        );
-        formData.append("latitude", selectedLocation.latitude);
-        formData.append("longitude", selectedLocation.longitude);
-        formData.append("_method", "PUT");
-      }
-
-      const response = await axios.post(
-        "https://private.emlaksepette.com/api/client/profile/update",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Başarılı",
-        textBody: "Profiliniz başarıyla güncellendi.",
-        button: "Tamam",
-      });
-
-      GetUserInfo();
-    } catch (error) {
-      console.error(
-        "Error:",
-        error.response ? error.response.data : error.message
-      );
-      Dialog.show({
-        type: ALERT_TYPE.ERROR,
-        title: "Hata",
-        textBody: "Profil güncelleme sırasında bir hata oluştu.",
-        button: "Tamam",
-      });
-    }
-  };
-
+  //Profil Resmi İçin
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -412,13 +191,12 @@ export default function UpgradeProfile() {
   const uniqueCities = TaxOfficesCities.map((city) => ({
     label: city.il,
     value: city.plaka,
-  }))
+  })) // Şehir isimlerini ve plakalarını map'le
     .filter(
       (city, index, self) =>
         index ===
         self.findIndex((c) => c.label === city.label && c.value === city.value) // Benzersiz olmasını kontrol et
     );
-
   const fetchTaxOffice = async (value) => {
     try {
       const response = await axios.get(
@@ -679,7 +457,6 @@ export default function UpgradeProfile() {
         return [];
     }
   };
-
   const initialRegion = {
     latitude: parseFloat(39.9334),
     longitude: parseFloat(32.8597),
@@ -702,7 +479,96 @@ export default function UpgradeProfile() {
       </View>
     );
   }
+  console.log(user.role);
+  const postData = async () => {
+    try {
+      let fullNumber = `${areaCode}${formData.phone}`;
+      let FormData = new FormData();
+      if (user.role === "Bireysel Hesap") {
+        formData.append("name", formData.name);
+        formData.append("iban", formData.iban);
+        formData.append(
+          "profile_image",
+          image
+            ? {
+                uri: image.uri,
+                name: image.fileName,
+                type: image.type,
+              }
+            : null
+        );
+        formData.append(
+          "mobile_phone",
+          formData.new_phone_number
+            ? formData.new_phone_number
+            : formData.mobile_phone
+        );
+        formData.append("banner_hex_code", currentColor);
+        formData.append("_method", "PUT");
+      } else {
+        formData.append(
+          "profile_image",
+          image
+            ? {
+                uri: image.uri,
+                name: image.fileName,
+                type: image.type,
+              }
+            : null
+        );
+        formData.append("city_id", formData.city_id);
+        formData.append("county_id", formData.county_id);
+        formData.append("neighborhood_id", formData.neighborhood_id);
+        formData.append("name", formData.name);
+        formData.append("username", formData.username);
+        formData.append("banner_hex_code", currentColor);
+        formData.append("iban", formData.iban);
+        formData.append("website", formData.website);
+        formData.append("phone", fullNumber);
+        formData.append("year", formData.year);
+        formData.append(
+          "mobile_phone",
+          formData.new_phone_number
+            ? formData.new_phone_number
+            : formData.mobile_phone
+        );
+        formData.append("latitude", selectedLocation.latitude);
+        formData.append("longitude", selectedLocation.longitude);
+        formData.append("_method", "PUT");
+      }
 
+      const response = await axios.post(
+        "https://private.emlaksepette.com/api/client/profile/update",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Başarılı",
+        textBody: "Profiliniz başarıyla güncellendi.",
+        button: "Tamam",
+      });
+
+      GetUserInfo();
+    } catch (error) {
+      console.error(
+        "Error:",
+        error?.response ? error?.response?.data : error?.message
+      );
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Hata",
+        textBody: "Profil güncelleme sırasında bir hata oluştu.",
+        button: "Tamam",
+      });
+    }
+  };
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -924,8 +790,8 @@ export default function UpgradeProfile() {
                                 value={formData[item.key]}
                                 keyboardType={
                                   item.key === "iban" ||
-                                    item.key === "phone" ||
-                                    item.key === "taxNumber"
+                                  item.key === "phone" ||
+                                  item.key === "taxNumber"
                                     ? "number-pad"
                                     : "default"
                                 }
@@ -1289,7 +1155,7 @@ export default function UpgradeProfile() {
                       gap: 10,
                     }}
                     onPress={removeProfileImage} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
-                  // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
+                    // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
                   >
                     <Icon3
                       name="restore-from-trash"

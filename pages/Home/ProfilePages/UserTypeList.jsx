@@ -66,6 +66,8 @@ export default function UserTypeList() {
   const [DeletedData, setDeletedData] = useState({});
   const [deletedSuccessMessage, setdeletedSuccessMessage] = useState(false);
   const DeleteUser = async (UserId) => {
+    setloading(true);
+
     try {
       const response = await axios.delete(
         `https://private.emlaksepette.com/api/institutional/roles/${UserId}`,
@@ -75,15 +77,27 @@ export default function UserTypeList() {
           },
         }
       );
-      fetchData();
-      setDeletedData(response.data);
+      console.log("deletedd");
+      if (response.status === 200) {
+        setTimeout(() => {
+          console.log("dialog");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: `${selectedUserName} adlı kullanıcı silindi.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchData();
+              setDeletedData(response.data);
+            },
+          });
+          console.log("loadd");
+          setloading(false); // End loading after showing the dialog
+        }, 2000);
+      }
+      console.log("donee");
+
       setdeletedSuccessMessage(false);
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Başarılı",
-        textBody: `${selectedUserName} adlı kullanıcı silindi.`,
-        button: "Tamam",
-      });
     } catch (error) {
       console.error("Delete request error:", error);
     }
@@ -118,7 +132,13 @@ export default function UserTypeList() {
     });
   };
 
+  const handleDeleteAllUsersPress = () => {
+    setdeleteAllUserType(true); // Show dialog
+  };
+
   const deleteSelectedUserType = async () => {
+    setloading(true);
+
     const data = {
       role_ids: SelectedUserIDS,
     };
@@ -132,17 +152,27 @@ export default function UserTypeList() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.WARNING,
-        title: `Başarılı`,
-        textBody: `${SelectedUserIDS.length} Kullanıcı Tipi Silindi.`,
-        button: "Tamam",
-      });
-      fetchData();
-      setSelectedUserIDS([]);
-      setisChoosed(false);
-      setisShowDeleteButon(!isShowDeleteButon);
-      setdeleteUserModal(false);
+
+      console.log("deleted");
+      if (response.status === 200) {
+        setTimeout(() => {
+          console.log("dialog");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: `Başarılı`,
+            textBody: `${SelectedUserIDS.length} Kullanıcı Tipi Silindi.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchData();
+              setSelectedUserIDS([]);
+            },
+          });
+          console.log("load");
+          setloading(false);
+        }, 2000);
+
+        setdeleteAllUserType(false); // Hide alert after confirmation
+      }
     } catch (error) {
       console.error("Error making DELETE request:", error);
     }
@@ -167,15 +197,26 @@ export default function UserTypeList() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: `Başarılı`,
-        textBody: `${userList.length} İlan silindi.`,
-        button: "Tamam",
-      });
-      fetchData();
-      setUsersId([]);
-      setdeleteAllUserType(false);
+      console.log("deleted");
+      if (response.status === 200) {
+        setTimeout(() => {
+          console.log("dialog");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: `Başarılı`,
+            textBody: `${userList.length} İlan silindi.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchData();
+              setUsersId([]);
+            },
+          });
+          console.log("load");
+          setloading(false);
+        }, 2000);
+
+        setdeleteAllUserType(false); // Hide alert after confirmation
+      }
     } catch (error) {
       console.error("Error making DELETE request:", error);
     }

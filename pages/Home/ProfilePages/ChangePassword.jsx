@@ -69,8 +69,6 @@ export default function ChangePassword() {
           },
         }
       );
-
-      // Başarılı işlem durumunda dialog gösterimi
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
@@ -82,9 +80,11 @@ export default function ChangePassword() {
       setTimeout(() => {
         Dialog.hide();
       }, 5000); // 5 saniye sonra otomatik kapanma
+      setcurrentPasword("");
+      setnewPassword("");
+      setnewPasswordconfirmation("");
     } catch (error) {
-      console.log("Error Response:", error.response); // Hata objesini konsola yazdır
-
+      console.log("Error Response:", error.message); // Hata objesini konsola yazdır
       let errorMessage = "Bilinmeyen bir hata oluştu.";
 
       // Error mesajını daha kapsamlı kontrol et
@@ -95,15 +95,15 @@ export default function ChangePassword() {
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
-
-      // Hata durumunda özel mesaj gösterimi
       Dialog.show({
         type: ALERT_TYPE.DANGER,
         title: "Hata",
-        textBody: `${errorMessage}`,
+        textBody: errorMessage || "Şifrenizin karakterleri uygun değil.",
         button: "Tamam",
       });
-      console.log("Dialog gösterildi"); // Ekrana çıktı alır
+      console.log(errorMessage);
+
+      // Hata durumunda özel mesaj gösterimi
     } finally {
       setchangeLoading(false);
     }
