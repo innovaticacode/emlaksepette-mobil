@@ -959,7 +959,7 @@ export default function Company() {
                         style={{
                           fontSize: 14,
                           color: "black",
-                          fontWeight: 600,
+                          fontWeight: "600",
                         }}
                       >
                         Marka Adı

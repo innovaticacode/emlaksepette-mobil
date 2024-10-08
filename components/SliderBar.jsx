@@ -57,13 +57,6 @@ export default function SliderBar() {
       url: "SellAndRent",
       isShow: "All",
     },
-    {
-      text: "Satış Noktası Ol",
-      image: "https://private.emlaksepette.com/images/sat-kirala.png",
-      color: "#0000FF",
-      url: "SalePageMain",
-      isShow: "All",
-    },
   ];
   const [user, setuser] = useState({});
   useEffect(() => {

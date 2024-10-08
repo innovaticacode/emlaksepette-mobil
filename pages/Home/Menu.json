@@ -35,11 +35,11 @@
     "url": "MyRealtor",
     "activePath": "/hesabim/konutlar"
   },
-  
+
   {
     "id": "shopping-bag",
-    "label": "Kaporam Güvende",
-    "icon": "activity",
+    "label": "Siparişlerim",
+    "icon": "briefcase",
     "text": "Alım Satım Geçmişim",
     "key": "Orders",
     "url": "#nv-shopping",
@@ -59,10 +59,11 @@
       }
     ]
   },
+
   {
     "id": "shopping-bag",
-    "label": "Kaporam Güvende",
-    "icon": "activity",
+    "label": "Rezervasyonlarım",
+    "icon": "calendar",
     "text": "Rezervasyon Geçimişim",
     "key": "Reservations",
     "url": "#nv-shopping",
@@ -82,8 +83,6 @@
       }
     ]
   },
-  
-
   {
     "id": "shopping-bag",
     "label": "Emlak Kulüp",
@@ -102,15 +101,6 @@
     "url": "Collections",
     "activePath": "/hesabim/koleksiyonlarim*"
   },
-  {
-    "id": "neighbors",
-    "label": "Komşumu Gör",
-    "icon": "eye",
-    "text": "Komşumu Gör Nedir?",
-    "key": "neighborView",
-    "url": "SeeMyNeighbor",
-    "activePath": "/hesabim/komsumu-gor"
-  },
 
   {
     "id": "neighbors",
@@ -122,8 +112,6 @@
     "activePath": "/hesabim/komsumu-gor"
   },
 
-
-  
   {
     "id": "EmlakClubUsers",
     "label": "Emlak Kulüp",
@@ -135,7 +123,7 @@
   },
   {
     "id": "GetSwapApplications",
-    "label": "Takaslar",
+    "label": "Başvurular",
     "icon": "users",
     "text": "Takas Taleplerim",
     "key": "GetSwapApplications",
@@ -144,7 +132,7 @@
   },
   {
     "id": "GetSwapApplications",
-    "label": "Takaslar",
+    "label": "Başvurular",
     "icon": "users",
     "text": "Gelen Takas Talepleri",
     "key": "GetSwapApplications",
@@ -229,7 +217,6 @@
     ]
   },
 
-
   {
     "id": "brands",
     "label": "Uygulama",
@@ -304,4 +291,3 @@
     "activePath": "/hesabim/membershipType"
   }
 ]
-

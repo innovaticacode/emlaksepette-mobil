@@ -2,11 +2,17 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
+    flex: 1, // Added to make the container fill the screen
     paddingHorizontal: 12,
     backgroundColor: "#FFF",
   },
   scrollView: {
     flexGrow: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     color: "#ea2b2e",
@@ -16,11 +22,6 @@ export const styles = StyleSheet.create({
     color: "#000",
     fontSize: 14,
     marginVertical: 10,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   list: {
     paddingHorizontal: 6,

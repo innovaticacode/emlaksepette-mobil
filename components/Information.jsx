@@ -2,7 +2,6 @@ import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import SettingsItem from "./SettingsItem";
 import { useRoute } from "@react-navigation/native";
-import ShoppinInfo from "./ShoppinInfo";
 import CheckIcon from "react-native-vector-icons/AntDesign";
 import { CheckBox } from "react-native-elements";
 import CheckSetting from "./CheckSetting";

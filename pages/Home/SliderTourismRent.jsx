@@ -1,29 +1,32 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
-import SliderItem from "./SliderItem";
 import axios from "axios";
-import SliderItemSkeleton from "./SkeletonComponents/SliderItemSkeleton";
+
 import {
   GestureHandlerRootView,
   ScrollView,
 } from "react-native-gesture-handler";
+import SliderItemSkeleton from "../../components/SkeletonComponents/SliderItemSkeleton";
+import SliderTourismItem from "./SliderTourismItem";
 
-export default function SliderEstateBar() {
+export default function SliderTourismRent() {
   const apiUrl = "https://private.emlaksepette.com";
-  const [loading, setloading] = useState(false);
-  const [featuredStores, setFeaturedStores] = useState([]);
+  const [loading, setloading] = useState(true);
+  const [tourismRent, setTourismRent] = useState([]);
 
   const fetchFeaturedStores = async () => {
     try {
+      setloading(true);
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/popular-estate-brands"
+        "https://private.emlaksepette.com/api/get_featured_acente_brands"
       );
-      if (response.data.length > 0) {
-        setFeaturedStores(response.data);
-        setloading(true);
+      if (response?.data?.length > 0) {
+        setTourismRent(response.data);
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setloading(false);
     }
   };
 
@@ -42,7 +45,7 @@ export default function SliderEstateBar() {
           top: 0,
         }}
       >
-        {featuredStores.map((item, index) => (
+        {tourismRent?.map((item, i) => (
           <View
             style={{
               width: 80,
@@ -50,24 +53,18 @@ export default function SliderEstateBar() {
               alignItems: "center",
               marginBottom: 10,
             }}
-            key={index}
+            key={i}
           >
-            {loading == false ? (
-              <>
-                <SliderItemSkeleton />
-              </>
+            {loading ? (
+              <SliderItemSkeleton />
             ) : (
               <>
-                <SliderItem
+                <SliderTourismItem
+                  id={item.id}
                   borderColor={"#e6e6e6"}
-                  StoreID={item.id}
-                  key={index}
                   image={`${apiUrl}/storage/profile_images/${item.profile_image}`}
                 />
-                <Text
-                  numberOfLines={2}
-                  style={{ fontSize: 11, textAlign: "center" }}
-                >
+                <Text numberOfLines={2}>
                   {capitalizeFirstLetter(item.name)}
                 </Text>
               </>

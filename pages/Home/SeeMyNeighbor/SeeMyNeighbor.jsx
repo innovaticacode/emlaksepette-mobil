@@ -124,7 +124,7 @@ const SeeMyNeighbor = () => {
             <Image
               style={styles.image}
               resizeMode="contain"
-              source={require("../../../images/KomsumuGorNedir/KomsumuGor2.png")}
+              source={require("../../../src/assets/images/KomsumuGorNedir/KomsumuGor2.png")}
             ></Image>
             <Text style={styles.bigTitle}>
               <Text style={styles.bigTitleRed}> "Komşunu Gör" </Text> ile Yeni
@@ -141,7 +141,7 @@ const SeeMyNeighbor = () => {
               <Image
                 style={styles.iconImage}
                 resizeMode="contain"
-                source={require("../../../images/KomsumuGorNedir/icon1.png")}
+                source={require("../../../src/assets/images/KomsumuGorNedir/icon1.png")}
               ></Image>
             </View>
             <Text style={styles.title}>Projeye Kendinizi Ekleyin</Text>
@@ -156,7 +156,7 @@ const SeeMyNeighbor = () => {
               <Image
                 style={styles.iconImage2}
                 resizeMode="contain"
-                source={require("../../../images/KomsumuGorNedir/icon2.png")}
+                source={require("../../../src/assets/images/KomsumuGorNedir/icon2.png")}
               ></Image>
             </View>
             <Text style={styles.title}>Mülk Almak İsteyenler</Text>
@@ -173,7 +173,7 @@ const SeeMyNeighbor = () => {
               <Image
                 style={styles.iconImage3}
                 resizeMode="contain"
-                source={require("../../../images/KomsumuGorNedir/icon3.png")}
+                source={require("../../../src/assets/images/KomsumuGorNedir/icon3.png")}
               ></Image>
             </View>
             <Text style={styles.title}>Mülk Sahipliği</Text>
@@ -189,7 +189,7 @@ const SeeMyNeighbor = () => {
           <Image
             style={styles.image}
             resizeMode="contain"
-            source={require("../../../images/KomsumuGorNedir/KomsumuGor1.png")}
+            source={require("../../../src/assets/images/KomsumuGorNedir/KomsumuGor1.png")}
           ></Image>
         </View>
         <Text style={styles.bigTitle2}>Gizlilik ve Güvenlik </Text>

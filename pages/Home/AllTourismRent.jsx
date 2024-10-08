@@ -9,21 +9,23 @@ import {
   ActivityIndicator,
   ImageBackground,
 } from "react-native";
-import { ALERT_TYPE, Dialog, AlertNotificationRoot } from "react-native-alert-notification";
+import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const apiUrl = "https://private.emlaksepette.com";
 
-const AllFeaturedRealEstate = (prosp) => {
+export default function AllTourismRent(prosp) {
   const { navigation } = prosp;
-  const [estateBrands, setEstateBrands] = useState([]);
+  const [tourismBrand, setTourismBrand] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchFeaturedStores = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/api/popular-estate-brands`);
+      const response = await axios.get(
+        `${apiUrl}/api/get_featured_acente_brands`
+      );
       if (response.data.length > 0) {
-        setEstateBrands(response.data);
+        setTourismBrand(response.data);
       }
       setLoading(false);
     } catch (error) {
@@ -39,67 +41,64 @@ const AllFeaturedRealEstate = (prosp) => {
       setLoading(false);
     }
   };
+  console.log(loading);
 
   useEffect(() => {
     fetchFeaturedStores();
   }, []);
 
   return (
-    <AlertNotificationRoot>
-      <View style={styles.container}>
-        {loading ? (
-          <ActivityIndicator
-            size="large"
-            color="#0056b3"
-            style={styles.loading}
-          />
-        ) : (
-          <FlatList
-            data={estateBrands}
-            keyExtractor={(item) =>
-              item.id ? item.id.toString() : Math.random().toString()
-            }
-            numColumns={2}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => (
-              <View style={styles.area}>
-                <TouchableOpacity
-                  style={styles.touchableArea} // touchable alanı burada kontrol ediyoruz
-                  onPress={() => navigation.navigate("Profile", { id: item.id })}
-                >
-                  <View style={styles.imageArea}>
-                    <ImageBackground
-                      source={{
-                        uri: `${apiUrl}/storage/profile_images/${item.profile_image}`,
-                      }}
-                      alt="brands"
-                      resizeMode="contain"
-                      style={styles.image}
-                    />
-                    <View style={styles.separator} />
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={styles.title}
-                    >
-                      {item.name}
-                    </Text>
-                    <View style={styles.referenceCode}>
-                      <Text style={{ fontSize: 10 }}>Referans Kodu:</Text>
-                      <Text style={{ fontSize: 10 }}> {item.code} </Text>
-                    </View>
+    <View style={styles.container}>
+      {loading ? (
+        <ActivityIndicator
+          size="large"
+          color="#0056b3"
+          style={styles.loading}
+        />
+      ) : (
+        <FlatList
+          data={tourismBrand}
+          keyExtractor={(item) =>
+            item.id ? item.id.toString() : Math.random().toString()
+          }
+          numColumns={2}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <View style={styles.area}>
+              <TouchableOpacity
+                style={styles.touchableArea} // touchable alanı burada kontrol ediyoruz
+                onPress={() => navigation.navigate("Profile", { id: item.id })}
+              >
+                <View style={styles.imageArea}>
+                  <ImageBackground
+                    source={{
+                      uri: `${apiUrl}/storage/profile_images/${item.profile_image}`,
+                    }}
+                    alt="brands"
+                    resizeMode="contain"
+                    style={styles.image}
+                  />
+                  <View style={styles.separator} />
+                  <Text
+                    numberOfLines={2}
+                    ellipsizeMode="tail"
+                    style={styles.title}
+                  >
+                    {item.name}
+                  </Text>
+                  <View style={styles.referenceCode}>
+                    <Text style={{ fontSize: 10 }}>Referans Kodu:</Text>
+                    <Text style={{ fontSize: 10 }}> {item.code} </Text>
                   </View>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
-        )}
-      </View>
-    </AlertNotificationRoot>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+      )}
+    </View>
   );
-};
-
-export default AllFeaturedRealEstate;
+}
 
 const styles = StyleSheet.create({
   container: {
