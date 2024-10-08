@@ -94,7 +94,7 @@ export default function Company() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.18.32:8000/api/cities"
+        "https://private.emlaksepette.com/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -116,7 +116,7 @@ export default function Company() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.32:8000/api/counties/${value}`
+        `https://private.emlaksepette.com/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -152,7 +152,7 @@ export default function Company() {
   const fetchDataNeigbour = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.32:8000/api/neighborhoods/${value}`
+        `https://private.emlaksepette.com/api/neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {
@@ -208,7 +208,7 @@ export default function Company() {
       formData.append("Franchise-question", IsConnectFranchaise);
       formData.append("brand_id", FrancheiseMarc);
       const response = await axios.post(
-        "http://192.168.18.32:8000/api/register",
+        "https://private.emlaksepette.com/api/register",
         formData
       );
 
@@ -440,7 +440,7 @@ export default function Company() {
   const fetchTaxOfficeCity = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.18.32:8000/api/get-tax-offices"
+        "https://private.emlaksepette.com/api/get-tax-offices"
       );
       return response.data;
     } catch (error) {
@@ -472,7 +472,7 @@ export default function Company() {
   const fetchTaxOffice = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.18.32:8000/api/get-tax-office/${value}`
+        `https://private.emlaksepette.com/api/get-tax-office/${value}`
       );
       return response.data;
     } catch (error) {
@@ -538,7 +538,7 @@ export default function Company() {
   // Örnek kullanım
 
   const fetchDataDeal = async (deal) => {
-    const url = `http://192.168.18.32:8000/api/sayfa/${deal}`;
+    const url = `https://private.emlaksepette.com/api/sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
@@ -663,7 +663,7 @@ export default function Company() {
   const fetchFranchiseMarkalari = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.18.32:8000/api/franchise-markalari"
+        "https://private.emlaksepette.com/api/franchise-markalari"
       );
       setData(response.data.data); // 'data' alanına erişiyoruz
     } catch (error) {

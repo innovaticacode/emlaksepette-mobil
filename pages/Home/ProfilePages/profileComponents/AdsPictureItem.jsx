@@ -2,7 +2,7 @@ import { View, Text ,StyleSheet,TouchableOpacity, ImageBackground} from 'react-n
 import React,{useState} from 'react'
 import {apiRequestGetWithBearer, apiRequestPostWithBearer, frontEndUriBase } from '../../../../components/methods/apiRequest'
 import ImageViewing from "react-native-image-viewing";
-export default function AdsPictureItem({image,id,getIdForDelete}) {
+export default function AdsPictureItem({image,id,getIdForDelete,editBtn,NewImage,IsSelectImage,SelectedPictureId,order}) {
 
 const [isVisible, setIsVisible] = useState(false)
   return (
@@ -11,7 +11,9 @@ const [isVisible, setIsVisible] = useState(false)
     }}>
       <View style={styles.opacityAndButtons}>
         <View style={styles.buttons}>
-          <TouchableOpacity style={styles.editButton}>
+          <TouchableOpacity style={styles.editButton} onPress={()=>{
+            editBtn(id,order)
+          }}>
               <Text style={{color:'white',fontSize:15,fontWeight:'600'}}>Düzenle</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.deleteButton} onPress={()=>{
@@ -23,11 +25,11 @@ const [isVisible, setIsVisible] = useState(false)
         </View>
       </View>
 
-      <ImageBackground source={{uri:`http://192.168.18.32:8000${image}`}} style={{width:'100%',height:'100%'}} borderRadius={10}/>
+      <ImageBackground source={{uri:(IsSelectImage && SelectedPictureId==id && NewImage)? NewImage.uri: `https://private.emlaksepette.com${image}`}} style={{width:'100%',height:'100%'}} borderRadius={10}/>
       <ImageViewing
               images={[
                 {
-                  uri: `http://192.168.18.32:8000${image}`,
+                  uri: `https://private.emlaksepette.com${image}`,
                 },
               ]}
               imageIndex={0}

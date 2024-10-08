@@ -130,6 +130,7 @@ import { store } from "./store/store";
 import SalePageMain from "./pages/Home/PointOfSale/SalePageMain";
 import SalePage from "./pages/Home/PointOfSale/SalePage";
 import PaymentSuccessScreen from "./src/pages/PaymentSuccessScreen";
+import AddBioText from "./pages/Home/ProfilePages/AddBioText";
 
 
 
@@ -1236,6 +1237,15 @@ export default function App({ route }) {
                 <Stack.Screen name="PaymentSuccess" component={PaymentSuccessScreen}
                   options={({ route }) => ({
                     title: "Ödeme Başarılı",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                  <Stack.Screen name="AddBioText" component={AddBioText}
+                  options={({ route }) => ({
+                    title: "Tanıtım Yazısı Ekle",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#ffffff",

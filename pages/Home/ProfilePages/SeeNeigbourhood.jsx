@@ -22,7 +22,7 @@ export default function SeeNeigbourhood() {
 
     if (user.access_token) {
       axios
-        .get("http://192.168.18.32:8000/api/neighbor-view", {
+        .get("https://private.emlaksepette.com/api/neighbor-view", {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },

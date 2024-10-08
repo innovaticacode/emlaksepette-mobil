@@ -51,7 +51,7 @@ export default function Favorites() {
         headers: { Authorization: `Bearer ${user?.access_token}` },
       };
       const response = await axios.get(
-        "http://192.168.18.32:8000/api/favorites",
+        "https://private.emlaksepette.com/api/favorites",
         config
       );
       setFavorites(Object.values(response.data.mergedFavorites));
@@ -126,7 +126,7 @@ export default function Favorites() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "http://192.168.18.32:8000/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -165,7 +165,7 @@ export default function Favorites() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "http://192.168.18.32:8000/api/institutional/add_to_cart",
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -184,7 +184,7 @@ export default function Favorites() {
   const deleteRequestWithToken = async () => {
     try {
       const response = await axios.delete(
-        "http://192.168.18.32:8000/api/institutional/housing-favorite",
+        "https://private.emlaksepette.com/api/institutional/housing-favorite",
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -212,7 +212,7 @@ export default function Favorites() {
   const deleteRequestWithTokenProject = async () => {
     try {
       const response = await axios.delete(
-        "http://192.168.18.32:8000/api/institutional/project-favorite",
+        "https://private.emlaksepette.com/api/institutional/project-favorite",
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -276,7 +276,7 @@ export default function Favorites() {
       // Axios DELETE isteği
       const response = await axios({
         method: "delete",
-        url: "http://192.168.18.32:8000/api/institutional/favorites/delete",
+        url: "https://private.emlaksepette.com/api/institutional/favorites/delete",
         data: data,
         headers: {
           Authorization: `Bearer ${user.access_token}`,
@@ -602,7 +602,7 @@ export default function Favorites() {
                           favorite?.project?.county?.ilce_title
                         }
                         image={
-                          "http://192.168.18.32:8000/project_housing_images/" +
+                          "https://private.emlaksepette.com/project_housing_images/" +
                           image
                         }
                         title={
@@ -645,7 +645,7 @@ export default function Favorites() {
                         HouseId={favorite?.housing?.id}
                         no={favorite?.housing?.id + 2000000}
                         image={
-                          "http://192.168.18.32:8000/housing_images/" +
+                          "https://private.emlaksepette.com/housing_images/" +
                           housingData?.image
                         }
                         title={favorite?.housing?.title}

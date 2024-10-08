@@ -35,7 +35,7 @@ export default function UserTypeList() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "http://192.168.18.32:8000/api/institutional/roles",
+          "https://private.emlaksepette.com/api/institutional/roles",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -68,7 +68,7 @@ export default function UserTypeList() {
   const DeleteUser = async (UserId) => {
     try {
       const response = await axios.delete(
-        `http://192.168.18.32:8000/api/institutional/roles/${UserId}`,
+        `https://private.emlaksepette.com/api/institutional/roles/${UserId}`,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -124,7 +124,7 @@ export default function UserTypeList() {
     };
     try {
       const response = await axios.delete(
-        "http://192.168.18.32:8000/api/institutional/rol-users",
+        "https://private.emlaksepette.com/api/institutional/rol-users",
         {
           data: data,
           headers: {
@@ -159,7 +159,7 @@ export default function UserTypeList() {
     };
     try {
       const response = await axios.delete(
-        "http://192.168.18.32:8000/api/institutional/rol-users",
+        "https://private.emlaksepette.com/api/institutional/rol-users",
         {
           data: data,
           headers: {

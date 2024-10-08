@@ -30,7 +30,7 @@ export default function ProjectAdverts({ data }) {
   }, []);
 
   const { width, height } = Dimensions.get("window");
-  const ApiUrl = "http://192.168.18.32:8000";
+  const ApiUrl = "https://private.emlaksepette.com";
   return (
     <View style={{ padding: 5 }}>
       {featuredProjects && featuredProjects.length > 0 ? (

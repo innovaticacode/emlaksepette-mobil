@@ -10,7 +10,7 @@ import TypeListScreen from "../../../components/TypeListScreen";
 export default function Emlak() {
   const navigation = useNavigation();
   const route = useRoute();
-  const baseUrl = "http://192.168.18.32:8000/react/";
+  const baseUrl = "https://private.emlaksepette.com/react/";
   const { name } = route.params;
   const [step, setStep] = useState(1);
   const [loadingModal, setLoadingModal] = useState(false);

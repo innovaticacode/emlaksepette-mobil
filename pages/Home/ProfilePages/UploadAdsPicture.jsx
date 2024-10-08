@@ -10,8 +10,7 @@ import {
   ImageBackground,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import UploadIcon from "react-native-vector-icons/AntDesign";
-import AdsPictureItem from "./profileComponents/AdsPictureItem";
+
 import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/AntDesign";
 import {
@@ -22,7 +21,7 @@ import { ActivityIndicator } from "react-native-paper";
 import Modal from "react-native-modal";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import AwesomeAlert from "react-native-awesome-alerts";
-import axios from "axios";
+
 import { ALERT_TYPE, AlertNotificationRoot, Dialog } from "react-native-alert-notification";
 import { useIsFocused } from "@react-navigation/native";
 import AdsPictureList from "./AdsPictureList";
@@ -112,58 +111,30 @@ export default function UploadAdsPicture() {
     dad.append("order", StoreBanners.length + 1);
     apiRequestPostWithBearer("institutional/store_banner", dad)
       .then((res) => {
-        setTimeout(() => {
-            Dialog.show({
-                type: ALERT_TYPE.SUCCESS,
-                title: "Başarılı",
-                textBody:'Mağaza Görseli Başarıyla Oluşturuldu' ,
-                button: "Tamam",
-              }); 
-              setImage(null)
-              getStoreBanner()
-        }, 200);
+       
       
       })
       .catch((err) => {
         alert(err);
       }).finally(()=>{
         setloadingUpdate(false)
+        setTimeout(() => {
+          Dialog.show({
+              type: ALERT_TYPE.SUCCESS,
+              title: "Başarılı",
+              textBody:'Mağaza Görseli Başarıyla Oluşturuldu' ,
+              button: "Tamam",
+             
+              onHide:()=>{
+                getStoreBanner()
+              }
+            }); 
+            setImage(null)
+         
+      }, 500);
       })
   };
-  const UpdatePictureToApı = () => {
-    setloadingUpdate(true)
-     var dad = new FormData();
-     dad.append("image", {
-       uri:
-         Platform.OS === "android"
-           ? ımage.uri
-           : ımage?.uri.replace("file://", ""),
- 
-       type: ımage.mimeType,
-       name: ımage.fileName==null ? 'Image.jpeg': ımage.fileName,
-     });
-     dad.append("order", StoreBanners.length + 1);
-     apiRequestPostWithBearer("institutional/store_banner", dad)
-       .then((res) => {
-         setTimeout(() => {
-             Dialog.show({
-                 type: ALERT_TYPE.SUCCESS,
-                 title: "Başarılı",
-                 textBody:'Mağaza Görseli Başarıyla Oluşturuldu' ,
-                 button: "Tamam",
-               }); 
-               setImage(null)
-               getStoreBanner()
-         }, 200);
-       
-       })
-       .catch((err) => {
-         alert(err);
-       }).finally(()=>{
-         setloadingUpdate(false)
-       })
-   };
- 
+
  
   return (
     <AlertNotificationRoot>
@@ -193,52 +164,85 @@ export default function UploadAdsPicture() {
                 )}
         
                 <View>
+                  {
+                    StoreBanners.length!==4 && 
+                    <View style={{gap:10}}>
+                         <TouchableOpacity
+                 
+                 style={[
+                   styles.AddPicture,
+                   {
+                     borderColor: ımage ? "green" : "#EA2C2E",
+                     borderStyle: ımage ? "solid" : "dashed",
+                   },
+                 ]}
+                 onPress={() => {
+                   if (ımage) {
+                     setdeleteAlert(true);
+                   } else {
+                     setchoose(true);
+                   }
+                 }}
+               >
+                 {   StoreBanners.length!==4?
+                 
+                 ımage ? (
+                   <ImageBackground
+                     source={ımage}
+                     style={{ width: "100%", height: "100%" }}
+                     borderRadius={10}
+                   />
+                 ) : (
+                   <View style={styles.NonImageContent}>
+                     <View
+                       style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+                     >
+                       <Icon name="plus" color={"#EA2C2E"} size={20} />
+                       <Text
+                         style={{ fontSize: 14, color: "#EA2C2E", fontWeight: "600" }}
+                       >
+                         Reklam Görseli Ekle
+                       </Text>
+                     </View>
+                   </View>
+                 )
+                 :<View style={{alignItems:'center',justifyContent:'center',flex:1}}>
+                     <Text style={{color:'#EA2B2E',fontWeight:'600',fontSize:16}}>Maximum Mağaza Görseli Sayısına Ulaştınız</Text>
 
-                  <TouchableOpacity
-                  disabled={StoreBanners.length == 4 ? true:false}
-                    style={[
-                      styles.AddPicture,
-                      {
-                        borderColor: ımage ? "green" : "#EA2C2E",
-                        borderStyle: ımage ? "solid" : "dashed",
-                      },
-                    ]}
-                    onPress={() => {
-                      if (ımage) {
-                        setdeleteAlert(true);
-                      } else {
-                        setchoose(true);
-                      }
-                    }}
-                  >
-                    {   StoreBanners.length!==4?
-                    
-                    ımage ? (
-                      <ImageBackground
-                        source={ımage}
-                        style={{ width: "100%", height: "100%" }}
-                        borderRadius={10}
-                      />
-                    ) : (
-                      <View style={styles.NonImageContent}>
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-                        >
-                          <Icon name="plus" color={"#EA2C2E"} size={20} />
-                          <Text
-                            style={{ fontSize: 14, color: "#EA2C2E", fontWeight: "600" }}
-                          >
-                            Reklam Görseli Ekle
-                          </Text>
-                        </View>
-                      </View>
-                    )
-                    :<View style={{alignItems:'center',justifyContent:'center',flex:1}}>
-                        <Text style={{color:'#EA2B2E',fontWeight:'600',fontSize:16}}>Maximum Mağaza Görseli Sayısına Ulaştınız</Text>
+                 </View>
+             }
+               </TouchableOpacity>
 
+             <View>
+             <TouchableOpacity
+               style={{ backgroundColor: "#EA2C2E", borderRadius: 8, padding: 8,opacity:StoreBanners.length==4 || !ımage?0.5:1 }}
+               onPress={SendPictureToApı}
+               disabled={StoreBanners.length==4  || !ımage ? true:false}
+             >
+               {
+                   loadingUpdate ?
+                   <View style={{alignItems:'center',justifyContent:'center'}}>
+                           <ActivityIndicator color="white"/>
+                   </View>
+                   :
+                   <Text
+                   style={{
+                     textAlign: "center",
+                     fontSize: 14,
+                     color: "white",
+                     fontWeight: "600",
+                   }}
+                 >
+                  Ekle
+                 </Text>
+               }
+             
+             </TouchableOpacity>
+           </View>
                     </View>
-                }
-                  </TouchableOpacity>
+               
+                  }
+               
                  
                 </View>
               
@@ -260,32 +264,6 @@ export default function UploadAdsPicture() {
                   </View>
                 </View> */}
           
-                <View>
-                  <TouchableOpacity
-                    style={{ backgroundColor: "#EA2C2E", borderRadius: 8, padding: 8,opacity:StoreBanners.length==4 || !ımage?0.5:1 }}
-                    onPress={SendPictureToApı}
-                    disabled={StoreBanners.length==4  || !ımage ? true:false}
-                  >
-                    {
-                        loadingUpdate ?
-                        <View style={{alignItems:'center',justifyContent:'center'}}>
-                                <ActivityIndicator color="white"/>
-                        </View>
-                        :
-                        <Text
-                        style={{
-                          textAlign: "center",
-                          fontSize: 14,
-                          color: "white",
-                          fontWeight: "600",
-                        }}
-                      >
-                       Ekle
-                      </Text>
-                    }
-                  
-                  </TouchableOpacity>
-                </View>
                         <View>
                             <AdsPictureList StoreBanners={StoreBanners} getStoreBanner={getStoreBanner}/>
                         </View>

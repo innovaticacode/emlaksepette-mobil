@@ -22,7 +22,7 @@ export default function Collections() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "http://192.168.18.32:8000/api/users/" + user?.id,
+          "https://private.emlaksepette.com/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

@@ -84,7 +84,7 @@ const CustomTabBar = ({
     const fetchMenuItems = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.18.32:8000/api/menu-list"
+          "https://private.emlaksepette.com/api/menu-list"
         );
         setMenuItems(response.data);
         setMenuItems([{ text: "Anasayfa" }, ...response.data.slice(0, -1)]);

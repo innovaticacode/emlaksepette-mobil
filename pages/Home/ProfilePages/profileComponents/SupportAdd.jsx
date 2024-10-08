@@ -244,7 +244,7 @@ export default function SupportAdd() {
       }
 
       const response = await axios.post(
-        "http://192.168.18.32:8000/api/support",
+        "https://private.emlaksepette.com/api/support",
         formData,
         {
           headers: {

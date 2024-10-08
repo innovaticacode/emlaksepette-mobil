@@ -34,7 +34,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
   const fetchmenuItems = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.18.32:8000/api/menu-list"
+        "https://private.emlaksepette.com/api/menu-list"
       );
 
       const filteredMenuItems = response.data.slice(0, -1); // Menünün sondaki ögesini çıkarıyor.

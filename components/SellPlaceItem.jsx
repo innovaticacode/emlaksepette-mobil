@@ -29,7 +29,7 @@ export default function SellPlaceItem({ item }) {
         <View style={{ width: 90, height: 90 }}>
           <Image
             source={{
-              uri: `http://192.168.18.32:8000/storage/profile_images/${item.profile_image}`,
+              uri: `https://private.emlaksepette.com/storage/profile_images/${item.profile_image}`,
             }}
             style={{ width: "100%", height: "100%", borderRadius: 8 }}
           />

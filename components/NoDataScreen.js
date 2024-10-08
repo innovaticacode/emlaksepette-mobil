@@ -14,7 +14,7 @@ const NoDataScreen = ({ message, iconName, buttonText, navigateTo,isShowButton }
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-
+                
             }}
         >
             <View

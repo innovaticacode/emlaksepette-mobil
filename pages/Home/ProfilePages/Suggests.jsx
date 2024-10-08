@@ -54,7 +54,7 @@ export default function Suggests() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "http://192.168.18.32:8000/api/institutional/user/offers",
+          "https://private.emlaksepette.com/api/institutional/user/offers",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

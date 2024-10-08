@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { View, Image, Text, FlatList, StyleSheet } from "react-native";
 
-const apiUrl = "http://192.168.18.32:8000";
+const apiUrl = "https://private.emlaksepette.com";
 const AllFranchiseBrands = () => {
   const [brands, setBrands] = useState([]);
 

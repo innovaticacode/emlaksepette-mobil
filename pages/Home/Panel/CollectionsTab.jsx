@@ -173,7 +173,7 @@ export default function CollectionsTab() {
 
       if (user.access_token) {
         const response = await axios.get(
-          "http://192.168.18.32:8000/api/client/collections",
+          "https://private.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -211,7 +211,7 @@ export default function CollectionsTab() {
       let formData = new FormData();
       formData.append();
       const response = await axios.delete(
-        `http://192.168.18.32:8000/api/collection/${id}/delete`,
+        `https://private.emlaksepette.com/api/collection/${id}/delete`,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -245,7 +245,7 @@ export default function CollectionsTab() {
       formData.append("collectionName", newName);
 
       const response = await axios.post(
-        `http://192.168.18.32:8000/api/collection/${id}/edit`,
+        `https://private.emlaksepette.com/api/collection/${id}/edit`,
         formData,
         {
           headers: {
@@ -298,7 +298,7 @@ export default function CollectionsTab() {
     };
     try {
       const response = await axios.delete(
-        `http://192.168.18.32:8000/api/collections`,
+        `https://private.emlaksepette.com/api/collections`,
 
         {
           data: data,
@@ -333,7 +333,7 @@ export default function CollectionsTab() {
     };
     try {
       const response = await axios.delete(
-        `http://192.168.18.32:8000/api/collections`,
+        `https://private.emlaksepette.com/api/collections`,
 
         {
           data: data,
@@ -363,7 +363,7 @@ export default function CollectionsTab() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "http://192.168.18.32:8000/api/users/" + user?.id,
+          "https://private.emlaksepette.com/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -385,7 +385,7 @@ export default function CollectionsTab() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `http://192.168.18.32:8000/`,
+        message: `https://private.emlaksepette.com/`,
       });
 
       if (result.action === Share.sharedAction) {

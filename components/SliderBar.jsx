@@ -10,14 +10,14 @@ import {
 import { getValueFor } from "./methods/user";
 
 export default function SliderBar() {
-  const apiUrl = "http://192.168.18.32:8000";
+  const apiUrl = "https://private.emlaksepette.com";
   const [loading, setloading] = useState(false);
   const [featuredStores, setFeaturedStores] = useState([]);
 
   const fetchFeaturedStores = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.18.32:8000/api/popular-construction-brands"
+        "https://private.emlaksepette.com/api/popular-construction-brands"
       );
       if (response.data.length > 0) {
         setFeaturedStores(response.data);
@@ -38,28 +38,28 @@ export default function SliderBar() {
   const firstBrands = [
     {
       text: "Al Sat Acil",
-      image: "http://192.168.18.32:8000/images/al-sat-acil-image.png",
+      image: "https://private.emlaksepette.com/images/al-sat-acil-image.png",
       color: "#FF0000",
       url: "",
       isShow: "All",
     },
     {
       text: "Emlak Kulüp",
-      image: "http://192.168.18.32:8000/images/emlak-kulup.png",
+      image: "https://private.emlaksepette.com/images/emlak-kulup.png",
       color: "#F4A226",
       url: "RealtorClubExplore",
       isShow: "Emlak Ofisi",
     },
     {
       text: "Sat Kirala",
-      image: "http://192.168.18.32:8000/images/sat-kirala.png",
+      image: "https://private.emlaksepette.com/images/sat-kirala.png",
       color: "#0000FF",
       url: "SellAndRent",
       isShow: "All",
     },
     {
       text: "Satış Noktası Ol",
-      image: "http://192.168.18.32:8000/images/sat-kirala.png",
+      image: "https://private.emlaksepette.com/images/sat-kirala.png",
       color: "#0000FF",
       url: "SalePageMain",
       isShow: "All",

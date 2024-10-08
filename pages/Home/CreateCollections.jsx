@@ -36,7 +36,7 @@ export default function CreateCollections() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "http://192.168.18.32:8000/api/client/collections",
+          "https://private.emlaksepette.com/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -61,7 +61,7 @@ export default function CreateCollections() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "http://192.168.18.32:8000/api/users/" + user?.id,
+          "https://private.emlaksepette.com/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -115,7 +115,7 @@ export default function CreateCollections() {
 
     axios
       .post(
-        "http://192.168.18.32:8000/api/add/collection",
+        "https://private.emlaksepette.com/api/add/collection",
         collectionData,
         {
           headers: {
@@ -162,7 +162,7 @@ export default function CreateCollections() {
     };
 
     axios
-      .post("http://192.168.18.32:8000/api/addLink", collectionData, {
+      .post("https://private.emlaksepette.com/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -236,7 +236,7 @@ export default function CreateCollections() {
 
     axios
       .post(
-        "http://192.168.18.32:8000/api/remove_item_on_collection",
+        "https://private.emlaksepette.com/api/remove_item_on_collection",
         collectionData,
         {
           headers: {

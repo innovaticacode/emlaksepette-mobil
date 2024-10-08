@@ -269,15 +269,9 @@
         "activePath": "/hesabim/reklam-gorseli/olustur"
       },
       {
-        "text": "Listele",
-        "key": "GetStoreBanners",
-        "url": "AdsPictureList",
-        "activePath": "/hesabim/reklam-gorselleri"
-      },
-      {
         "text": "Tanıtım Yazısı Ekle",
         "key": "GetStoreBanners",
-        "url": "AdsPictureList",
+        "url": "AddBioText",
         "activePath": "/hesabim/reklam-gorselleri"
       }
 
