@@ -116,7 +116,7 @@ import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
 import ApplyForBeCompany from "./pages/Home/ProfilePages/ApplyForBeCompany";
 
 import SellAndRentAdvantage from "./pages/Home/SellAndRentAdvantage";
-import { SheetProvider } from 'react-native-actions-sheet';
+import { SheetProvider } from "react-native-actions-sheet";
 
 import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
 import AllFeaturedRealEstate from "./pages/Home/AllFeaturedRealEstate";
@@ -324,8 +324,13 @@ export default function App({ route }) {
                     headerShown: false,
                   }}
                 />
-                <Stack.Screen name="ShopProfile" options={{ headerShown: false }}>
-                  {(props) => <ShoppingProfile {...props} İsLoggedIn={İsLoggedIn} />}
+                <Stack.Screen
+                  name="ShopProfile"
+                  options={{ headerShown: false }}
+                >
+                  {(props) => (
+                    <ShoppingProfile {...props} İsLoggedIn={İsLoggedIn} />
+                  )}
                 </Stack.Screen>
                 <Stack.Screen
                   name="Realtor details"
@@ -453,7 +458,10 @@ export default function App({ route }) {
                     }}
                   >
                     {(props) => (
-                      <RegisterRealtorClub {...props} setİsLoggedIn={setİsLoggedIn} />
+                      <RegisterRealtorClub
+                        {...props}
+                        setİsLoggedIn={setİsLoggedIn}
+                      />
                     )}
                   </Stack.Screen>
                   <Stack.Screen
@@ -665,7 +673,7 @@ export default function App({ route }) {
                   component={RealtorClub}
                   options={({ route }) => ({
                     title: "Emlak Kulübü Keşfet",
-                    headerBackTitleVisible: false
+                    headerBackTitleVisible: false,
                   })}
                 />
                 <Stack.Screen
@@ -812,13 +820,15 @@ export default function App({ route }) {
                   component={SwapScreen}
                   options={({ route }) => ({
                     title: "Gelen Takas Başvurularım",
+                    headerBackTitleVisible: false,
                   })}
                 />
                 <Stack.Screen
                   name="ComeSwapScreen"
                   component={ComeSwapScreen}
                   options={({ route }) => ({
-                    title: "Takas Başvurularım",
+                    title: "Takas Taleplerim",
+                    headerBackTitleVisible: false,
                   })}
                 />
                 <Stack.Screen
@@ -874,7 +884,7 @@ export default function App({ route }) {
                 <Stack.Screen
                   name="UserTypes"
                   component={UserTypeList}
-                  options={({ }) => ({
+                  options={({}) => ({
                     title: "Kullanıcı Tipleri",
                     headerBackTitleVisible: false,
 
