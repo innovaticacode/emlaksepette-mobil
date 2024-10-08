@@ -5,7 +5,7 @@ import { View, Text, TouchableOpacity, Platform } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"; // İkon kütüphaneni burada ekle
 import { useNavigation } from "@react-navigation/native"; // Navigasyonu kullanabilmek için
 
-const NoDataScreen = ({ message, iconName, buttonText, navigateTo }) => {
+const NoDataScreen = ({ message, iconName, buttonText, navigateTo,isShowButton }) => {
     const navigation = useNavigation();
 
     return (
@@ -14,7 +14,7 @@ const NoDataScreen = ({ message, iconName, buttonText, navigateTo }) => {
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
-
+                
             }}
         >
             <View
@@ -59,19 +59,25 @@ const NoDataScreen = ({ message, iconName, buttonText, navigateTo }) => {
             </Text>
 
             {/* Anasayfaya Dön Butonu */}
+         {
+            buttonText &&
+
             <TouchableOpacity
-                style={{
-                    backgroundColor: "#EA2A28",
-                    paddingVertical: 12,
-                    paddingHorizontal: 20,
-                    borderRadius: 8,
-                }}
-                onPress={() => navigation.navigate(navigateTo)} // Yönlendirme özelleştirilebilir
-            >
-                <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
-                    {buttonText} {/* Buton yazısı özelleştirilebilir */}
-                </Text>
-            </TouchableOpacity>
+            style={{
+                backgroundColor: "#EA2A28",
+                paddingVertical: 12,
+                paddingHorizontal: 20,
+                borderRadius: 8,
+            }}
+            onPress={() => navigation.navigate(navigateTo)} // Yönlendirme özelleştirilebilir
+        >
+            <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
+                {buttonText} {/* Buton yazısı özelleştirilebilir */}
+            </Text>
+        </TouchableOpacity>
+         }
+            
+          
         </View>
     );
 };
