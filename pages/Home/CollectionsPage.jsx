@@ -358,23 +358,23 @@ export default function CollectionsPage() {
     <AlertNotificationRoot>
       {namFromGetUser.has_club == 2 && (
         <NoDataScreen
-        message="Emlak kulüp üyeliğiniz başvuru sürecindedir. Adminlerimiz en kısa sürede inceleyip dönüş sağlayacaktır."
-        iconName="chat-processing"
-        buttonText="Anasayfaya Dön"
-        navigateTo="HomePage"
-      />
+          message="Emlak kulüp üyeliğiniz başvuru sürecindedir. Adminlerimiz en kısa sürede inceleyip dönüş sağlayacaktır."
+          iconName="chat-processing"
+          buttonText="Anasayfaya Dön"
+          navigateTo="HomePage"
+        />
       )}
       {namFromGetUser.has_club == 3 && (
         <NoDataScreen
-        message={
-          user.type == 2 && user.corporate_type == "Emlak Ofisi"
-            ? "Emlak Kulüp Üyeliğiniz Reddedildi! Portföy oluşturabilmek için tekrar başvuru yapabilirsiniz."
-            : "Emlak Kulüp Üyeliğiniz Reddedildi! Koleksiyon oluşturabilmek için tekrar başvuru yapabilirsiniz."
-        }
-        iconName="emoticon-sad-outline"
-        buttonText="Tekrar Başvur"
-        navigateTo="Collections"
-      />
+          message={
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? "Emlak Kulüp Üyeliğiniz Reddedildi! Portföy oluşturabilmek için tekrar başvuru yapabilirsiniz."
+              : "Emlak Kulüp Üyeliğiniz Reddedildi! Koleksiyon oluşturabilmek için tekrar başvuru yapabilirsiniz."
+          }
+          iconName="emoticon-sad-outline"
+          buttonText="Tekrar Başvur"
+          navigateTo="Collections"
+        />
       )}
       {namFromGetUser.has_club == 0 && (
         <NoDataScreen
@@ -387,7 +387,6 @@ export default function CollectionsPage() {
           buttonText="Başvur"
           navigateTo="Collections"
         />
-
       )}
       {namFromGetUser.has_club == 1 && (
         <>
@@ -506,13 +505,13 @@ export default function CollectionsPage() {
                           Dialog.show({
                             title:
                               user.type == 2 &&
-                                user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                                 ? "Seçili Portföy Bulunmamaktadır"
                                 : `Seçili koleksiyon bulunmamaktadır`,
                             type: ALERT_TYPE.WARNING,
                             textBody:
                               user.type == 2 &&
-                                user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                                 ? "Lütfen silmek istediğiniz Portföyü seçin"
                                 : "Lütfen silmek istediğiniz Koleksiyonu seçin",
                             button: "Tamam",
