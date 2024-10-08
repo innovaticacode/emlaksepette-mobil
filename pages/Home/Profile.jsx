@@ -81,12 +81,13 @@ export default function Profile() {
       text: "Proje İlanları",
       isShow: "All",
     },
+
     {
-      text: "Satış Noktalarımız",
+      text: "Mağaza Profili",
       isShow: "All",
     },
     {
-      text: "Mağaza Profili",
+      text: "Satış Noktalarımız",
       isShow: "All",
     },
     {
@@ -255,35 +256,6 @@ export default function Profile() {
     }
   };
 
-  // Scroll width değerini al
-
-  useEffect(() => {
-    if (scrollViewRef.current && tabWidth > 0) {
-      const tabCount = items.length;
-      const viewWidth = width;
-      const tabOffset = tab * tabWidth;
-      const contentWidth = tabWidth * tabCount;
-      const centeredOffset = Math.max(
-        0,
-        Math.min(
-          tabOffset - (viewWidth / 2 - tabWidth / 2),
-          contentWidth - viewWidth
-        )
-      );
-
-      scrollViewRef.current.scrollTo({
-        x: centeredOffset,
-        animated: true,
-      });
-    }
-  }, [tab, items, tabWidth]);
-
-  // Calculate the width of each tab after layout
-  const onTabLayout = (event) => {
-    const { width: measuredWidth } = event.nativeEvent.layout;
-    setTabWidth(measuredWidth);
-  };
-
   return (
     <>
       {loadingShopping ? (
@@ -430,7 +402,6 @@ export default function Profile() {
                         },
                       ]}
                       onPress={() => settab(index)}
-                      onLayout={onTabLayout}
                     >
                       <Text
                         style={{
@@ -449,7 +420,7 @@ export default function Profile() {
                 </View>
               </ScrollView>
             </View>
-            <View style={{ flex: 1, paddingBottom: height * 0.1 }}>
+            <View style={{ flex: 1, paddingBottom: 60 }}>
               {tab === 0 && <Introduction id={id} setTab={settab} />}
               {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
               {tab === 2 && (
@@ -468,7 +439,7 @@ export default function Profile() {
                 ) : (
                   <CollectionsOfBrand data={storeData} />
                 ))}
-              {tab === 5 && <CommentsOfBrands data={storeData} />}
+              {tab === 5 && <CommentsOfBrands id={id} />}
               {tab === 6 && <Team teamm={teamm} />}
             </View>
           </View>
@@ -481,7 +452,10 @@ export default function Profile() {
                 padding: 10,
                 position: "absolute",
                 bottom: 0,
+                paddingBottom: Platform.OS === "ios" ? 22 : 12,
                 width: "100%",
+                backgroundColor: "#F2F2F2",
+                height: "auto",
               }}
             >
               {(tab == 1 || tab == 2) && (
@@ -514,12 +488,13 @@ export default function Profile() {
                   borderRadius: 5,
                   borderWidth: 1,
                   borderColor: "#EB2B2E",
+                  backgroundColor: "#EA2B2E",
                 }}
               >
                 <Text
                   style={{
                     textAlign: "center",
-                    color: "#EB2B2E",
+                    color: "#FFF",
                     fontWeight: "700",
                   }}
                 >
