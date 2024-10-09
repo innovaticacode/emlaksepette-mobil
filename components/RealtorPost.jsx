@@ -52,6 +52,7 @@ export default function RealtorPost({
   step1_slug,
   sold,
   openSharing,
+  isFavorite,
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -61,23 +62,8 @@ export default function RealtorPost({
   const [AddCartShow, setAddCartShow] = useState(false);
   const [getPostId, setgetPostId] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
-
   useEffect(() => {
     getValueFor("user", setUser);
-  }, []);
-
-  const changeHeart = () => {
-    setHeart(heart === "hearto" ? "heart" : "hearto");
-  };
-
-  useEffect(() => {
-    if (housing.is_housing_favorite == null) {
-      setHeart("hearto");
-      setInFavorite(false);
-    } else {
-      setHeart("heart");
-      setInFavorite(true);
-    }
   }, []);
 
   const CreateCollection = (id) => {
@@ -120,9 +106,18 @@ export default function RealtorPost({
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
 
+  useEffect(() => {
+    if (isFavorite === 1) {
+      setHeart("heart");
+    } else {
+      setHeart("hearto");
+    }
+  }, []);
+
   const addFavorites = async () => {
     if (user.access_token) {
-      // UI'da kullanıcıya hemen kalp dolu olarak göster
+      // UI'da hemen favori olarak göster
+      setHeart("heart"); // Geçici olarak kalp dolu yap
       setInFavorite(true);
       const config = {
         headers: { Authorization: `Bearer ${user.access_token}` },
@@ -133,26 +128,22 @@ export default function RealtorPost({
           {},
           config
         );
-        changeHeart();
-        // İstek yanıtına göre durumu güncelle
+        // İstek başarılıysa durumu güncelle
         if (res.data.status === "removed") {
-          setInFavorite(false); // Eğer favorilerden çıkarıldıysa kalbi boşalt
+          setHeart("hearto"); // Eğer favorilerden çıkarıldıysa kalbi boş yap
+          setInFavorite(false);
         }
         setShowAlert(false); // İşlem başarılıysa alert kapat
       } catch (error) {
         console.error("Favorilere ekleme hatası:", error);
-        // Eğer istek başarısız olursa UI'daki geçici gösterimi geri al
+        // Hata durumunda geçici durumu geri al
+        setHeart("hearto");
         setInFavorite(false);
       }
     } else {
-      // Kullanıcı giriş yapmadıysa alert göster
       setalertForFavorite(true);
     }
   };
-
-  useEffect(() => {
-    getValueFor("user", setUser);
-  }, []);
 
   const updateUserData = async () => {
     try {
@@ -198,7 +189,7 @@ export default function RealtorPost({
           formData,
           {
             headers: {
-              Authorization: `Bearer ${user?.access_token}`,
+              Authorization: `Bearer ${user.access_token}`,
             },
           }
         );
@@ -449,7 +440,13 @@ export default function RealtorPost({
                     <Heart
                       name={heart}
                       size={13}
-                      color={heart == "hearto" ? "black" : "red"}
+                      color={
+                        heart == "hearto"
+                          ? "black"
+                          : "red" || isFavorite === 1
+                          ? "red"
+                          : "black"
+                      }
                     />
                   </View>
                 </TouchableOpacity>
