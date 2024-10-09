@@ -299,22 +299,26 @@ export default function Favorites() {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("blur", () => {
-      Alert.alert("Uyarı", "Seçimleriniz gidecek.Kabul ediyor musunuz?", [
-        {
-          text: "Hayır",
-          style: "cancel",
-        },
-        {
-          text: "Evet",
-          onPress: () => {
-            setIsChoosed(false); // Seçimleri sıfırla
+      if (isChoosed) {
+        // Sadece isChoosed true ise çalışsın
+        Alert.alert("Uyarı", "Seçimleriniz gidecek. Kabul ediyor musunuz?", [
+          {
+            text: "Hayır",
+            style: "cancel",
+            onPress: () => {},
           },
-        },
-      ]);
+          {
+            text: "Evet",
+            onPress: () => {
+              setIsChoosed(false); // Seçimleri sıfırla
+            },
+          },
+        ]);
+      }
     });
 
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, isChoosed]);
 
   const deleteSelectedFavorite = async () => {
     setLoading(true); // İşlem başladığında yüklenme durumu aktif edilir
