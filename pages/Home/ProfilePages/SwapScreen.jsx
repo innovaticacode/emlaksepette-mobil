@@ -37,7 +37,7 @@ export default function SwapScreen() {
             },
           }
         );
-    
+
         setSwapSuggest(response.data);
       }
     } catch (error) {
@@ -54,7 +54,6 @@ export default function SwapScreen() {
         console.error("Error message:", error.message);
       }
     }
-    
   };
 
   useEffect(() => {
@@ -63,6 +62,8 @@ export default function SwapScreen() {
   const [swapSuggestdetails, setswapSuggestdetails] = useState([]);
   const [selectedModalIndex, setselectedModalIndex] = useState(0);
   const getDetails = async (id, index) => {
+    console.log(id + " asd w 22  2");
+
     try {
       if (user?.access_token) {
         const response = await axios.get(
@@ -83,9 +84,8 @@ export default function SwapScreen() {
   };
 
   return (
-
     <View style={{ flex: 1 }}>
-      {(SwapSuggest.length == 0) ? (
+      {SwapSuggest.length == 0 ? (
         // Eğer item boşsa NoDataScreen'i göster
         <NoDataScreen
           message="Takas bilgisi bulunamadı."
@@ -240,7 +240,9 @@ export default function SwapScreen() {
                   >
                     <Text style={{ color: "#333" }}>
                       {" "}
-                      <Text style={{ fontWeight: "bold" }}>Takas Tercihi: </Text>
+                      <Text style={{ fontWeight: "bold" }}>
+                        Takas Tercihi:{" "}
+                      </Text>
                       {swapSuggestdetails.takas_tercihi}
                     </Text>
                   </View>
@@ -270,7 +272,9 @@ export default function SwapScreen() {
                       >
                         <Text style={{ color: "#333" }}>
                           {" "}
-                          <Text style={{ fontWeight: "bold" }}>Araç Markası: </Text>
+                          <Text style={{ fontWeight: "bold" }}>
+                            Araç Markası:{" "}
+                          </Text>
                           {swapSuggestdetails.arac_markasi}
                         </Text>
                       </View>
@@ -283,7 +287,9 @@ export default function SwapScreen() {
                       >
                         <Text style={{ color: "#333" }}>
                           {" "}
-                          <Text style={{ fontWeight: "bold" }}>Yakıt Tipi: </Text>
+                          <Text style={{ fontWeight: "bold" }}>
+                            Yakıt Tipi:{" "}
+                          </Text>
                           {swapSuggestdetails.yakit_tipi}
                         </Text>
                       </View>
@@ -296,7 +302,9 @@ export default function SwapScreen() {
                       >
                         <Text style={{ color: "#333" }}>
                           {" "}
-                          <Text style={{ fontWeight: "bold" }}>Vites Tipi: </Text>
+                          <Text style={{ fontWeight: "bold" }}>
+                            Vites Tipi:{" "}
+                          </Text>
                           {swapSuggestdetails.vites_tipi}
                         </Text>
                       </View>
@@ -331,7 +339,9 @@ export default function SwapScreen() {
                         >
                           <Text style={{ color: "#333" }}>
                             {" "}
-                            <Text style={{ fontWeight: "bold" }}>Emlak tipi: </Text>
+                            <Text style={{ fontWeight: "bold" }}>
+                              Emlak tipi:{" "}
+                            </Text>
                             {swapSuggestdetails.emlak_tipi}
                           </Text>
                         </View>
@@ -359,7 +369,9 @@ export default function SwapScreen() {
                         >
                           <Text style={{ color: "#333" }}>
                             {" "}
-                            <Text style={{ fontWeight: "bold" }}>Arsa İli: </Text>
+                            <Text style={{ fontWeight: "bold" }}>
+                              Arsa İli:{" "}
+                            </Text>
                             {swapSuggestdetails?.acity?.title}
                           </Text>
                         </View>
@@ -372,7 +384,9 @@ export default function SwapScreen() {
                         >
                           <Text style={{ color: "#333" }}>
                             {" "}
-                            <Text style={{ fontWeight: "bold" }}>Arsa İlçe </Text>
+                            <Text style={{ fontWeight: "bold" }}>
+                              Arsa İlçe{" "}
+                            </Text>
                             {swapSuggestdetails?.acounty?.title}
                           </Text>
                         </View>
@@ -435,7 +449,9 @@ export default function SwapScreen() {
                         >
                           <Text style={{ color: "#333" }}>
                             {" "}
-                            <Text style={{ fontWeight: "bold" }}>Emlak tipi: </Text>
+                            <Text style={{ fontWeight: "bold" }}>
+                              Emlak tipi:{" "}
+                            </Text>
                             {swapSuggestdetails.emlak_tipi}
                           </Text>
                         </View>
@@ -448,7 +464,9 @@ export default function SwapScreen() {
                         >
                           <Text style={{ color: "#333" }}>
                             {" "}
-                            <Text style={{ fontWeight: "bold" }}>Konut tipi: </Text>
+                            <Text style={{ fontWeight: "bold" }}>
+                              Konut tipi:{" "}
+                            </Text>
                             {swapSuggestdetails.konut_tipi}
                           </Text>
                         </View>
@@ -461,7 +479,9 @@ export default function SwapScreen() {
                         >
                           <Text style={{ color: "#333" }}>
                             {" "}
-                            <Text style={{ fontWeight: "bold" }}>Oda Sayısı: </Text>
+                            <Text style={{ fontWeight: "bold" }}>
+                              Oda Sayısı:{" "}
+                            </Text>
                             {swapSuggestdetails.oda_sayisi}
                           </Text>
                         </View>
@@ -474,7 +494,9 @@ export default function SwapScreen() {
                         >
                           <Text style={{ color: "#333" }}>
                             {" "}
-                            <Text style={{ fontWeight: "bold" }}>Konut Yaşı: </Text>
+                            <Text style={{ fontWeight: "bold" }}>
+                              Konut Yaşı:{" "}
+                            </Text>
                             {swapSuggestdetails.konut_yasi}
                           </Text>
                         </View>
@@ -526,7 +548,9 @@ export default function SwapScreen() {
                         >
                           <Text style={{ color: "#333" }}>
                             {" "}
-                            <Text style={{ fontWeight: "bold" }}>Emlak tipi: </Text>
+                            <Text style={{ fontWeight: "bold" }}>
+                              Emlak tipi:{" "}
+                            </Text>
                             {swapSuggestdetails.emlak_tipi}
                           </Text>
                         </View>

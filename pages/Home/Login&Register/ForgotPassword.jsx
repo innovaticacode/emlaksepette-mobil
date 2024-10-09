@@ -108,7 +108,7 @@ export default function ForgotPassword() {
       }, 500); // Modal kapanırken zamanlama ekleyin
     } catch (error) {
       // "errors" yerine "error"
-      console.log("Hata oluştu:", error);
+      console.log("Hata oluştu:", error?.response);
       setShowAlert(false); // Modal kapanır
 
       setTimeout(() => {
@@ -160,7 +160,7 @@ export default function ForgotPassword() {
                 textAlign: "center",
               }}
             >
-              Şifrenimi Unuttun?
+              Şifreni mi Unuttun?
             </Text>
             <Text style={{ color: "grey", fontSize: 13, textAlign: "center" }}>
               Şifre Yenileme Bağlantısı Gönder

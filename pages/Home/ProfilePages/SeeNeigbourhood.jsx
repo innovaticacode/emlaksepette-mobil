@@ -1,12 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Platform,
-  ActivityIndicator,
-} from "react-native";
+import { View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import React, { useState, useEffect } from "react";
 import NeigbourhoodCard from "./profileComponents/NeigbourhoodCard";
 import axios from "axios";
@@ -78,7 +70,13 @@ export default function SeeNeigbourhood() {
                 />
               ))
             ) : (
-              <View style={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <View
+                style={{
+                  flexGrow: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <NoDataScreen
                   message="Komşu bilgisi bulunamadı."
                   iconName="run-fast"

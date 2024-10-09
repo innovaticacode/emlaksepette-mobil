@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, ScrollView ,TouchableOpacity} from "react-native";
 import React,{useState} from "react";
-import ShoppinInfo from "../ShoppinInfo";
 import HTML from "react-native-render-html";
 import { Platform } from "react-native";
 export default function PostCaption({ data }) {
@@ -35,17 +34,7 @@ export default function PostCaption({ data }) {
           source={{ html: data?.project?.description }}
           contentWidth={100}
         />
-             <View style={{padding:10,borderTopWidth:1,borderTopColor:'grey'}}>
-        <Text style={styles.text}>{showFullText ? fullText : previewText}</Text>
-        <TouchableOpacity
-          onPress={toggleText}
-          style={styles.toggleButtonContainer}
-        >
-          <Text style={styles.toggleButtonText}>
-            {showFullText ? "Daha Az Göster" : "Devamını Gör"}
-          </Text>
-        </TouchableOpacity>
-      </View>
+         
       </View>
   
   );

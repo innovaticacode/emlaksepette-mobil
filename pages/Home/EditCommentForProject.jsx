@@ -9,10 +9,6 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import {
-  apiRequestGet,
-  frontEndUri,
-} from "../../components/methods/apiRequest";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import Icon2 from "react-native-vector-icons/Entypo";
@@ -22,20 +18,13 @@ import { ImageBackground } from "expo-image";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 import { getValueFor } from "../../components/methods/user";
-import {
-  ALERT_TYPE,
-  Dialog,
-  AlertNotificationRoot,
-} from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ActionSheet from "react-native-actionsheet";
 import ImageViewing from "react-native-image-viewing";
-
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import HTML from "react-native-render-html";
 import Modal from "react-native-modal";
-import { da } from "date-fns/locale";
 import AwesomeAlert from "react-native-awesome-alerts";
 
 export default function EditCommentForProject() {
@@ -64,18 +53,63 @@ export default function EditCommentForProject() {
   const [removeImage, setremoveImage] = useState(false);
   const [comment, setcomment] = useState(commentInfo.comment || "");
   const API_URL = "https://private.emlaksepette.com/";
+  const [rating, setRating] = useState(commentInfo.rate); // Başlangıçta hiçbir yıldız dolu değil
+  const [rate, setrate] = useState(commentInfo.rate);
+  const [checkedForm, setCheckedForm] = React.useState(false);
+  const [user, setUser] = useState({});
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [Deals, setDeals] = useState("");
 
-  // const imageSource =
-  //   type === "project"
-  //     ? `${API_URL}${info?.image.replace("public/", "storage/")}`
-  //     : `${API_URL}housing_images/${
-  //         JSON.parse(info.housing_type_data)?.image ?? ""
-  //       }`;
-
-  console.log(commentInfo.id + " iddddd dddd");
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
+
+  useEffect(() => {
+    if (commentInfo?.images && typeof commentInfo.images === "string") {
+      try {
+        const parsedImages = JSON.parse(commentInfo.images);
+        console.log("Parsed Images:", parsedImages); // Ham veriyi kontrol edin
+        if (Array.isArray(parsedImages)) {
+          const updatedImages = parsedImages.map((img) => {
+            const fixedUrl = img.replace("public/", "storage/");
+            const fullUrl = `${API_URL}${fixedUrl}`;
+            console.log("Image URL:", fullUrl); // URL'yi kontrol edin
+            return fullUrl;
+          });
+          setImagesComment(updatedImages); // Resimleri state'e güncelleyin
+          console.debug("999999999999999999999 ", imagesComment)
+        } else {
+          console.error("Parsed images is not an array.");
+          setImagesComment([]);
+        }
+      } catch (error) {
+        console.error("Invalid image format:", error);
+        setImagesComment([]);
+      }
+    } else {
+      setImagesComment([]);
+    }
+  }, [commentInfo?.images]);
+
+  useEffect(() => {
+    fetchDataDeal();
+  }, []);
+
+
+  const fetchDataDeal = async () => {
+    const url = `https://private.emlaksepette.com/api/sayfa/emlaksepette-yorum-yazma-kurallari`;
+    try {
+      const response = await fetch(url);
+      // const data = await fetchFromURL(url);
+      const data = await response.json();
+      // console.log(data);
+      setDeals(data.content);
+      // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
+    } catch (error) {
+      console.error("İstek hatası:", error);
+      // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
+    }
+  };
 
   const showActionSheet = (index) => {
     setSelectedIndexx(index);
@@ -97,10 +131,9 @@ export default function EditCommentForProject() {
       showActionSheet(index);
     }
   };
-  const handleActionSheet = async (buttonIndex) => {
-    console.log("Selected index:", selectedIndexx); // Ekleyin
-    let result;
 
+  const handleActionSheet = async (buttonIndex) => {
+    let result;
     if (buttonIndex === 0) {
       result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -119,16 +152,14 @@ export default function EditCommentForProject() {
       const newImages = [...imagesComment];
       newImages[selectedIndexx] = null;
       setImagesComment(newImages);
-      console.log("Removed image at index:", selectedIndexx);
       return;
     }
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const uri = result.assets[0].uri;
-      console.log("Selected image URI:", uri);
       const newImages = [...imagesComment];
 
-      if (selectedIndexx < 3) {
+      if (selectedIndexx !== null && selectedIndexx >= 0 && selectedIndexx < 3) {
         newImages[selectedIndexx] = uri;
       } else {
         if (newImages.length >= 3) {
@@ -137,115 +168,10 @@ export default function EditCommentForProject() {
         newImages.push(uri);
       }
 
-      setImagesComment(newImages);
-      console.log("Updated images:", newImages);
-    }
-  };
-
-  useEffect(() => {
-    if (commentInfo?.images && typeof commentInfo.images === "string") {
-      try {
-        const parsedImages = JSON.parse(commentInfo.images);
-        console.log("Parsed Images:", parsedImages); // Ham veriyi kontrol edin
-        if (Array.isArray(parsedImages)) {
-          const updatedImages = parsedImages.map((img) => {
-            const fixedUrl = img.replace("public/", "storage/");
-            const fullUrl = `${API_URL}${fixedUrl}`;
-            console.log("Image URL:", fullUrl); // URL'yi kontrol edin
-            return fullUrl;
-          });
-          setImagesComment(updatedImages); // Resimleri state'e güncelleyin
-        } else {
-          console.error("Parsed images is not an array.");
-          setImagesComment([]);
-        }
-      } catch (error) {
-        console.error("Invalid image format:", error);
-        setImagesComment([]);
-      }
-    } else {
-      setImagesComment([]);
-    }
-  }, [commentInfo?.images]);
-
-  const takePhoto = async (index) => {
-    if (image[index]) {
-      // Eğer resim varsa, resmi kaldır
-      setselectedIndex(index);
-      setremoveImage(true);
-    } else {
-      // Eğer resim yoksa, kamera aç ve resim çek
-      if (image.filter((img) => img).length >= 3) {
-        Alert.alert("Limit Reached", "You can only select up to 3 images.");
-        return;
-      }
-
-      let permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-      if (permissionResult.granted === false) {
-        Alert.alert(
-          "Permission Denied",
-          "You need to allow permission to access the camera."
-        );
-        return;
-      }
-
-      let result = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-
-      if (!result.canceled) {
-        const newImages = [...image];
-        newImages[index] = [result.assets[0]];
-        setImage(newImages);
-      }
-    }
-  };
-
-  const removePhoto = () => {
-    const newImages = [...image];
-    newImages[selectedIndex] = null;
-    setImage(newImages);
-    setremoveImage(false);
-    setselectedIndex(null);
-  };
-
-  const pickImage = async (index) => {
-    // Eğer resim varsa, resmi kaldır
-    if (imagesComment[index]) {
-      const newImages = [...imagesComment];
-      newImages[index] = null; // Resmi kaldır
-      setImagesComment(newImages);
-    } else {
-      // Eğer resim yoksa, galeri aç ve resim seç
-      if (imagesComment.filter((img) => img).length >= 3) {
-        Alert.alert("Limit Reached", "You can only select up to 3 images.");
-        return;
-      }
-
-      let permissionResult =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (permissionResult.granted === false) {
-        Alert.alert(
-          "Permission Denied",
-          "You need to allow permission to access the library."
-        );
-        return;
-      }
-
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-
-      if (!result.canceled) {
-        const newImages = [...imagesComment];
-        newImages[index] = result.assets[0].uri; // URI ile güncelle
-        setImagesComment(newImages);
-      }
+      // Log'ları kontrol et
+      console.log("Before updating:", imagesComment); // Eski hali
+      setImagesComment(newImages); // State'i güncelle
+      console.log("After updating:", newImages); // Güncellenmiş hali
     }
   };
 
@@ -305,95 +231,23 @@ export default function EditCommentForProject() {
     }
   };
 
-  console.log(comment + "asdsd");
-  console.log(commentID + "qweqeqwe");
-  console.log(imagesComment); // undefined olup olmadığını kontrol edin
-  console.log(type + " type budursdssssssd");
-  // useEffect(() => {
-  //   apiRequestGet("project/" + projectId).then((res) => {
-  //     setData(res.data.project);
-  //     setloading(false);
-  //     setRating(commentInfo.rate);
-  //     setcomment(commentInfo?.comment);
-  //     const Images =
-  //       projectId &&
-  //       commentInfo &&
-  //       commentInfo?.images &&
-  //       JSON.parse(commentInfo.images);
-  //     setImage(Images);
-  //   });
-  // }, []);
-  // const imageSource =
-  //   info === "project"
-  //     ? `${API_URL}${info?.images.replace("public/", "storage/")}`
-  //     : `${API_URL}housing_images/${
-  //         JSON.parse(info.housing_type_data)?.image ?? ""
-  //       }`;
-
-  console.log(UserImages);
-  const [rating, setRating] = useState(commentInfo.rate); // Başlangıçta hiçbir yıldız dolu değil
-  const [rate, setrate] = useState(commentInfo.rate);
-
   const handleStarPress = (index) => {
     // Tıklanan yıldıza kadar olan tüm yıldızları dolu yap
     setRating(index + 1);
-
-    // Sarı yıldızların sayısını hesapla ve konsola yazdır
     const yellowStars = index + 1;
     setrate(yellowStars);
   };
-  console.log(rate);
-  const [checkedForm, setCheckedForm] = React.useState(false);
+
   const toggleCheckboxForm = () => {
     setCheckedForm(!checkedForm);
   };
-  const apiUrl = "https://private.emlaksepette.com/";
-  const [user, setUser] = useState({});
 
-  console.log(user?.id + " asd22222");
-
-  // const imageSource =
-  //   type === "project"
-  //     ? `${API_URL}${commentInfo.comment.image.replace("public/", "storage/")}`
-  //     : (() => {
-  //         try {
-  //           const imageData = commentInfo.comment.image;
-  //           if (
-  //             imageData &&
-  //             typeof imageData === "string" &&
-  //             imageData.startsWith("{")
-  //           ) {
-  //             const parsedImage = JSON.parse(imageData);
-  //             return `${API_URL}housing_images/${parsedImage?.image ?? ""}`;
-  //           } else {
-  //             return `${API_URL}housing_images/${imageData}`;
-  //           }
-  //         } catch (error) {
-  //           console.error("JSON Parse Error:", error);
-  //           return "";
-  //         }
-  //       })();
-
-  console.log(image);
-
-  const [modalVisible2, setModalVisible2] = useState(false);
-  const [Deals, setDeals] = useState("");
-  useEffect(() => {
-    fetchDataDeal();
-  }, []);
-  const fetchDataDeal = async () => {
-    const url = `https://private.emlaksepette.com/api/sayfa/emlaksepette-yorum-yazma-kurallari`;
-    try {
-      const response = await fetch(url);
-      // const data = await fetchFromURL(url);
-      const data = await response.json();
-      console.log(data);
-      setDeals(data.content);
-      // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
-    } catch (error) {
-      console.error("İstek hatası:", error);
-      // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
-    }
+  const removePhoto = () => {
+    const newImages = [...image];
+    newImages[selectedIndex] = null;
+    setImage(newImages);
+    setremoveImage(false);
+    setselectedIndex(null);
   };
 
   return (

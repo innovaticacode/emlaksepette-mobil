@@ -16,6 +16,8 @@ import Modal from "react-native-modal";
 import Icon from "react-native-vector-icons/AntDesign";
 import { getValueFor } from "../../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import bannerSRC from "../../../src/assets/images/is_yeri.png";
+
 const PAGE_SIZE = 10;
 
 const Shop = ({ index }) => {
@@ -106,6 +108,12 @@ const Shop = ({ index }) => {
         </View>
       ) : (
         <View style={styles.container}>
+          <View style={{ marginBottom:20 }}>
+            <Image
+              source={bannerSRC}
+              style={{ width: "auto", height: 120, resizeMode: "cover" }}
+            />
+          </View>
           <View
             style={{
               paddingBottom: 3,
@@ -117,7 +125,7 @@ const Shop = ({ index }) => {
               backgroundColor: "white",
             }}
           >
-            <Text style={{ fontSize: 12, fontWeight: 700 }}>
+            <Text style={{ fontSize: 14, fontWeight: 700 }}>
               ÖNE ÇIKAN İŞ YERLERİ
             </Text>
 
@@ -150,8 +158,9 @@ const Shop = ({ index }) => {
           {refreshing && (
             <View
               style={{
-                padding: 10,
+                padding: 12,
                 backgroundColor: "white",
+                fontWeight: "bold",
                 alignItems: "center",
               }}
             >

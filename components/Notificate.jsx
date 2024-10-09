@@ -1,7 +1,10 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Swipeable } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/AntDesign";
+import { getValueFor } from "./methods/user";
+import axios from "axios";
+import { apiUrl } from "./methods/apiRequest";
 export default function Notificate({
   name,
   time,
@@ -9,6 +12,8 @@ export default function Notificate({
   id,
   isShow,
   onRead,
+  desc,
+  title,
 }) {
   const renderRightActions = () => (
     <TouchableOpacity
@@ -36,15 +41,19 @@ export default function Notificate({
             })
           }
         >
-          <View style={{ flexDirection: "row", paddingVertical: 15 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              paddingVertical: 15,
+              paddingHorizontal: 6,
+            }}
+          >
             <View style={{ flex: 0.2 / 2, alignItems: "center" }}>
               <Icon name="home" size={20} />
             </View>
             <View style={{ flex: 1.8 / 2, gap: 8 }}>
-              <Text style={{ fontSize: 13, color: "#ea2b2e" }}>
-                Emlak Sepette Yönetimi
-              </Text>
-              <Text>{name}</Text>
+              <Text style={{ fontSize: 13, color: "#ea2b2e" }}>{title}</Text>
+              <Text>{desc}</Text>
               <Text style={{ color: "grey", textAlign: "right", right: 10 }}>
                 {time}
               </Text>
@@ -71,10 +80,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ebebeb",
   },
   deleteButton: {
-    paddingLeft: 30,
-    paddingRight: 30,
+    paddingHorizontal: 30,
     backgroundColor: "#ea2b2e",
-
     flexDirection: "row",
     alignItems: "center",
   },

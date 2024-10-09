@@ -16,7 +16,7 @@ import ProjectPost from "../../components/ProjectPost";
 import { getValueFor } from "../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
-import Banner from "../../assets/project-banner.png";
+import bannerSRC from "../../src/assets/images/project-banner.png";
 import { useNavigation } from "@react-navigation/native";
 
 const apiUrl = "https://private.emlaksepette.com";
@@ -40,8 +40,9 @@ const HomePage = (props) => {
     }
   };
   useEffect(() => {
-    fetchFeaturedSliders(); // Yalnızca bileşen yüklendiğinde
-  }, []);
+    fetchFeaturedSliders()
+  }, [user])
+  
 
   // State for featured projects
   const [loadingProjects, setLoadingProjects] = useState(false);
@@ -71,6 +72,7 @@ const HomePage = (props) => {
   const pagerViewRef = useRef(null);
 
   useEffect(() => {
+    
     const interval = setInterval(() => {
       pagerViewRef.current?.setPage(
         currentPage === featuredSliders.length - 1 ? 0 : currentPage + 1
@@ -102,7 +104,7 @@ const HomePage = (props) => {
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
               <View>
                 <Image
-                  source={Banner}
+                  source={bannerSRC}
                   alt="project"
                   style={styles.bannerImage}
                   resizeMode="cover"

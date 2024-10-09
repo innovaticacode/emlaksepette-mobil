@@ -23,9 +23,7 @@ import {
   import Map from "../../components/Map";
   import Icon2 from 'react-native-vector-icons/Feather';
   import DetailsPicture from "../../components/DetailsPicture";
-  import ShoppinInfo from "../../components/ShoppinInfo";
   import * as Clipboard from 'expo-clipboard';
-  
   import OtherHomeInProject from "../../components/OtherHomeInProject";
   import PaymentDetail from "../../components/PaymentDetail";
   import Alert from "../../components/Alert";

@@ -149,7 +149,7 @@ const RealtorClub = () => {
       >
         <View style={styles.imageContainer}>
           <Image
-            source={require("../../images/emlak_kulup.png")}
+            source={require("../../src/assets/images/emlak_kulup.png")}
             style={styles.circleImage}
           />
         </View>
@@ -244,8 +244,8 @@ const RealtorClub = () => {
       {/* Telefon Görseli ve CTA Butonu */}
       <View style={styles.mainSection}>
         <Image
-          source={require("../../images/emlak_kulup_2.png")}
-          style={styles.mainImage}
+          source={require("../../src/assets/images/emlak_kulup_2.png")}
+          style={styles.Image2}
         />
 
         <Text style={styles.mainSubtitle}>
@@ -324,20 +324,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-
   imageContainer: {
-    width: width * 0.75, // ekran genişliğinin %80'i
-    height: height * 0.45, // ekran yüksekliğinin %35'i
-    backgroundColor: "#FEF7F7",
-    paddingTop: 40,
+    width: width * 0.62, // ekran genişliğinin %80'i
+    height: height * 0.40, // ekran yüksekliğinin %35'i
+    marginTop:20
   },
   circleImage: {
     width: "100%",
-    height: "100%",
-    resizeMode: "contain", // Resmi kapsayıcıya göre uyumlu hale getirir
+    height: "90%",
+    resizeMode: "contain",
   },
   mainContent: {
-    padding: 20,
+    marginBottom: 20,
     alignItems: "center",
   },
   title: {
@@ -386,7 +384,6 @@ const styles = StyleSheet.create({
     paddingRight: 40,
     flex: 1,
   },
-
   iconContainer: {
     width: 70,
     height: 70,
@@ -444,7 +441,7 @@ const styles = StyleSheet.create({
   mainSection: {
     alignItems: "center",
   },
-  mainImage: {
+  Image2: {
     width: width * 0.75, // ekran genişliğinin %80'i
     height: height * 0.45, // ekran yüksekliğinin %35'i
     marginLeft: 20,
@@ -522,7 +519,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 10,
     padding: 10,
-    marginTop: 30,
   },
   faqTitle: {
     fontSize: 25,

@@ -31,15 +31,12 @@ import {
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import HTML from "react-native-render-html";
 import Modal from "react-native-modal";
-
 import AwesomeAlert from "react-native-awesome-alerts";
 import ImageViewing from "react-native-image-viewing";
-
-import ActionSheet from "react-native-actionsheet"; // ActionSheet doğru import edilmiş mi?
+import ActionSheet from "react-native-actionsheet";
 
 export default function AddCommentForProject() {
   const [data, setData] = useState({});
@@ -53,6 +50,15 @@ export default function AddCommentForProject() {
   const [visible, setVisible] = useState(false);
   const [selectedIndex, setselectedIndex] = useState(null);
   const [removeImage, setremoveImage] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [rate, setrate] = useState(0);
+  const [checkedForm, setCheckedForm] = React.useState(false);
+  const apiUrl = "https://private.emlaksepette.com/";
+  const [user, setUser] = useState({});
+  const [loadingForPost, setloadingForPost] = useState(false);
+  const [comment, setcomment] = useState("");
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [Deals, setDeals] = useState("");
 
   useEffect(() => {
     apiRequestGet("project/" + projectId).then((res) => {
@@ -60,7 +66,6 @@ export default function AddCommentForProject() {
       setloading(false);
     });
   }, []);
-  console.log(projectId + " added");
 
   const showActionSheet = (index) => {
     setSelectedIndexx(index);
@@ -68,7 +73,6 @@ export default function AddCommentForProject() {
   };
 
   const handleImagePress = (index) => {
-    // Eğer resim varsa, ImageViewing'i aç
     if (image[index]) {
       const filteredImages = image.filter((img) => img !== null);
       const filteredIndex = filteredImages.indexOf(image[index]);
@@ -78,43 +82,39 @@ export default function AddCommentForProject() {
         setVisible(true);
       }
     } else {
-      // Eğer resim yoksa, eylem sayfasını göster
       showActionSheet(index);
     }
   };
 
   const handleActionSheet = async (buttonIndex) => {
-    console.log("Selected index:", selectedIndexx); // Ekleyin
     let result;
 
-    if (buttonIndex === 0) {
+    if (buttonIndex == 0) {
       result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
       });
-    } else if (buttonIndex === 1) {
+    } else if (buttonIndex == 1) {
       result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
       });
-    } else if (buttonIndex === 2) {
+    } else if (buttonIndex == 2) {
       const newImages = [...image];
       newImages[selectedIndexx] = null;
       setImage(newImages);
-      console.log("Removed image at index:", selectedIndexx);
       return;
     }
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const uri = result.assets[0].uri;
-      console.log("Selected image URI:", uri);
       const newImages = [...image];
 
-      if (selectedIndexx < 3) {
+      if (selectedIndexx !== null && selectedIndexx >= 0 && selectedIndexx < 3) {
         newImages[selectedIndexx] = uri;
       } else {
         if (newImages.length >= 3) {
@@ -122,93 +122,23 @@ export default function AddCommentForProject() {
         }
         newImages.push(uri);
       }
-
       setImage(newImages);
-      console.log("Updated images:", newImages);
     }
   };
 
-  const [rating, setRating] = useState(0); // Başlangıçta hiçbir yıldız dolu değil
-  const [rate, setrate] = useState(0);
   const handleStarPress = (index) => {
-    // Tıklanan yıldıza kadar olan tüm yıldızları dolu yap
     setRating(index + 1);
-
-    // Sarı yıldızların sayısını hesapla ve konsola yazdır
     const yellowStars = index + 1;
     setrate(yellowStars);
   };
-  console.log(rate);
-  const [checkedForm, setCheckedForm] = React.useState(false);
+
   const toggleCheckboxForm = () => {
     setCheckedForm(!checkedForm);
   };
-  const apiUrl = "https://private.emlaksepette.com/";
-  const [user, setUser] = useState({});
 
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-
-  const pickImage = async () => {
-    // Kullanıcıdan izin isteme
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert("Resimlere erişim izni verilmedi!");
-      return;
-    }
-
-    // Resim seçme
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    // Eğer kullanıcı seçim yapmadıysa geri dön
-    if (result.canceled) {
-      return;
-    }
-
-    // Seçilen resmi diziye ekleme
-    if (!result.canceled) {
-      setImage([...image, result.assets[0].uri]); // Expo SDK 45 ve sonrası için .assets[0].uri kullanılmalıdır.
-    }
-  };
-
-  console.log(image);
-  const takePhoto = async (index) => {
-    // Kamera izni isteme
-    setselectedIndex(index);
-    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert("Kameraya erişim izni verilmedi!");
-      return;
-    }
-
-    // Kamera ile resim çekme
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    // Eğer kullanıcı bir resim çekmediyse geri dön
-    if (result.canceled) {
-      return;
-    }
-
-    // Çekilen resmi diziye ekleme
-    if (!result.canceled) {
-      setImage([...image, result.assets[0].uri]); // Expo SDK 45 ve sonrası için .assets[0].uri kullanılmalıdır.
-    }
-  };
-  const [loadingForPost, setloadingForPost] = useState(false);
-  const [comment, setcomment] = useState("");
 
   const shareComment = async () => {
     setloadingForPost(true);
@@ -219,13 +149,12 @@ export default function AddCommentForProject() {
     formData.append("owner_id", data?.user?.id);
     formData.append("project_id", projectId);
 
-    // Resimlerinizi FormData'ya ekleme
     image.forEach((image, index) => {
       if (image) {
         formData.append(`images[${index}]`, {
-          uri: Platform.OS === "android" ? image : image.replace("file://", ""), // Android ve iOS için uygun URI
-          type: "image/jpeg", // Resmin tipi, genellikle image/jpeg veya image/png
-          name: `image${index}.jpg`, // Sunucuya gönderilecek dosya adı
+          uri: Platform.OS === "android" ? image : image.replace("file://", ""),
+          type: "image/jpeg",
+          name: `image${index}.jpg`,
         });
       }
     });
@@ -251,6 +180,7 @@ export default function AddCommentForProject() {
         setcomment("");
         setrate(0);
         setRating(0);
+        setImage([null, null, null]);
         nav.navigate("Success", {
           name: "Yorum başarılı",
           message: "Değerlendirmeniz İçin Teşekkürler",
@@ -266,14 +196,13 @@ export default function AddCommentForProject() {
         });
       }
     } catch (error) {
-      console.error("post isteği olmadı", error);
+      console.error("Post isteği başarısız oldu:", error);
     } finally {
       setloadingForPost(false);
     }
   };
 
-  const [modalVisible2, setModalVisible2] = useState(false);
-  const [Deals, setDeals] = useState("");
+
   useEffect(() => {
     fetchDataDeal();
   }, []);
@@ -281,14 +210,10 @@ export default function AddCommentForProject() {
     const url = `https://private.emlaksepette.com/api/sayfa/emlaksepette-yorum-yazma-kurallari`;
     try {
       const response = await fetch(url);
-      // const data = await fetchFromURL(url);
       const data = await response.json();
-      console.log(data);
       setDeals(data.content);
-      // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     } catch (error) {
       console.error("İstek hatası:", error);
-      // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     }
   };
 
@@ -633,7 +558,6 @@ export default function AddCommentForProject() {
                 <CheckBox
                   checked={checkedForm}
                   onPress={toggleCheckboxForm}
-                  // Use ThemeProvider to make change for all checkbox
                   iconType="material-community"
                   checkedIcon="checkbox-marked"
                   uncheckedIcon="checkbox-blank-outline"
@@ -728,8 +652,6 @@ const style = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-
-    // modal dışı koyu arkaplan
   },
   modalView: {
     backgroundColor: "#333",

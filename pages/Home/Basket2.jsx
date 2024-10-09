@@ -364,7 +364,13 @@ export default function Basket2() {
                 },
               ]}
             >
-              <View style={{ flexDirection: "row" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  gap: 16,
+                  justifyContent: "center",
+                }}
+              >
                 {imageUrl !== "resim yok" && imageUrl !== "" && (
                   <Image
                     source={{ uri: imageUrl }}

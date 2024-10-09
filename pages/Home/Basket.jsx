@@ -89,8 +89,8 @@ export default function Basket() {
     fetchDatass();
   }, []);
 
-  console.log(imageUrl, "aa");
-
+  /*   console.log(imageUrl, "aa");
+   */
   const [Basket, SetBasket] = useState([
     {
       name: "MASTER ORMAN KÖY EVLERİ",
@@ -342,8 +342,8 @@ export default function Basket() {
   const nav = useNavigation();
   const [index, setindex] = useState(0);
   const [tab, settab] = useState(0);
-  console.log(CartLength);
-
+  /*   console.log(CartLength);
+   */
   const [paymentMethod, setPaymentMethod] = useState("");
 
   const renderRightActions = () => (

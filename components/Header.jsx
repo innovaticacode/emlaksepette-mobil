@@ -16,10 +16,7 @@ import axios from "axios";
 import { getValueFor } from "./methods/user";
 import { apiUrl } from "./methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setNotifications,
-  setNotificationsRedux,
-} from "../store/slices/Notifications/NotificationsSlice";
+import { setNotificationsRedux } from "../store/slices/Notifications/NotificationsSlice";
 
 export default function Header(props) {
   const { loading, onPress, index, tabs } = props;
@@ -43,7 +40,11 @@ export default function Header(props) {
   const getNotifications = async () => {
     try {
       if (!user?.access_token) {
-        // return setNotificationCount(0);
+        return dispatch(
+          setNotificationsRedux({
+            notificationsCount: 0,
+          })
+        );
       }
       if (user?.access_token) {
         const response = await axios.get(`${apiUrl}user/notification`, {
@@ -54,9 +55,6 @@ export default function Header(props) {
         const unreadCount = response.data.filter(
           (notification) => notification.is_show === 0
         ).length;
-        console.debug("unreadCount------------------------->>> :", unreadCount);
-        // setNotificationCount(unreadCount);
-
         return dispatch(
           setNotificationsRedux({
             notificationsCount: unreadCount,
@@ -65,7 +63,6 @@ export default function Header(props) {
       }
     } catch (error) {
       console.error("Error fetching notifications:", error);
-      // setNotificationCount(0);
     }
   };
 

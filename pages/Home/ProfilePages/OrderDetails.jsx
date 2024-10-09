@@ -151,7 +151,7 @@ export default function OrderDetails() {
   const [Deals, setDeals] = useState("");
 
   const fetchDataDeal = async () => {
-    const url = `https://emlaksepette.com/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
+    const url = `https://private.emlaksepette.com/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);
@@ -317,7 +317,7 @@ export default function OrderDetails() {
                   İlan No:{" "}
                 </Text>
                 <Text style={{ fontSize: 13, color: "green" }}>
-                  #{1000000 + id + '-' + parsedData?.item?.housing}
+                  #{1000000 + id + "-" + parsedData?.item?.housing}
                 </Text>
               </View>
               <View
@@ -394,7 +394,6 @@ export default function OrderDetails() {
               </TouchableOpacity>
             </View>
 
-
             <View
               style={{
                 display: "flex",
@@ -411,7 +410,6 @@ export default function OrderDetails() {
                   {housing?.county?.title}
                 </Text>
               </View>
-
             </View>
             <View style={style.OrderPost}>
               <View style={style.Image}>
@@ -699,7 +697,7 @@ export default function OrderDetails() {
                     padding: 13,
                     borderRadius: 5,
                   }}
-                  onPress={() => { }}
+                  onPress={() => {}}
                 >
                   <Text
                     style={{

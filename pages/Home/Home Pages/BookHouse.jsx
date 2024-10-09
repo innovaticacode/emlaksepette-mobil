@@ -17,7 +17,7 @@ import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import Banner from "../../../assets/tatilim-sepette-banner.png";
+import bannerSRC from "../../../src/assets/images/tatilim-sepette-banner.png";
 const PAGE_SIZE = 10;
 
 const BookHouse = ({ index }) => {
@@ -40,8 +40,7 @@ const BookHouse = ({ index }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${
-          reset ? 1 : page
+        `https://private.emlaksepette.com/api/real-estates?page=${reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
       );
@@ -109,12 +108,11 @@ const BookHouse = ({ index }) => {
         <View style={styles.container}>
           <View style={{ paddingHorizontal: 0 }}>
             <Image
-              source={Banner}
+              source={bannerSRC}
               style={{
                 width: "100%",
                 height: 120,
               }}
-              resizeMode="cover"
             />
           </View>
           <View style={styles.header}>
@@ -191,9 +189,8 @@ const BookHouse = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${apiUrl}/housing_images/${
-                      JSON.parse(item.housing_type_data).image
-                    }`}
+                    image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image
+                      }`}
                     column1_additional={item.column1_additional}
                     column1_name={
                       JSON.parse(item.housing_type_data)[item.column1_name]

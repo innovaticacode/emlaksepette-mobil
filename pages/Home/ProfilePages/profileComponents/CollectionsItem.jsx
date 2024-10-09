@@ -4,18 +4,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
-  ImageBackground,
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Dot from "react-native-vector-icons/Entypo";
-import Icon from "react-native-vector-icons/Ionicons";
-import Icon2 from "react-native-vector-icons/FontAwesome5";
-import Icon3 from "react-native-vector-icons/FontAwesome";
 import Icon4 from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../../components/methods/user";
-import { slugify } from "slugify";
-import { Image } from "moti";
 
 export default function CollectionsItem({
   openBottom,
@@ -207,171 +202,6 @@ export default function CollectionsItem({
             </View>
           </View>
         </View>
-
-        {/* <View style={style.header}>
-          <View
-            style={{
-              flex: 1 / 2,
-              flexDirection: "row",
-              gap: 8,
-              alignItems: "center",
-            }}
-          >
-            <Dot name="eye" size={15} color={"#EA2B2E"} />
-            <Text style={{ color: "#EA2B2E", fontSize: 13 }}>
-              {item.clicks.length} Görüntülenme
-            </Text>
-          </View>
-          <View style={{ flex: 1 / 2, alignItems: "flex-end" }}>
-            <TouchableOpacity
-              onPress={() => {
-                openBottom();
-                getId(item.id, item.name);
-              }}
-            >
-              <Dot name="dots-three-horizontal" size={20} />
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <View style={{ paddingTop: 15, paddingBottom: 15 }}>
-            <View style={{ flexDirection: "row", gap: 5 }}>
-              <Text style={{ fontWeight: "700", fontSize: 13 }}>
-                Koleksiyon Adı:
-              </Text>
-              <Text style={{ color: "#EA2B2E" }} numberOfLines={2}>
-                {item.name}
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row", gap: 5 }}>
-              <Text style={{ fontWeight: "700", fontSize: 13 }}>
-                İlan Sayısı:
-              </Text>
-              <Text style={{ color: "#EA2B2E" }}>{collectionItems.length}</Text>
-            </View>
-          </View>
-        </View>
-        <View style={{ gap: 10 }}>
-          <View>
-            <TouchableOpacity
-              style={{
-                width: "100%",
-                backgroundColor: "#FFEFCA",
-                padding: 8,
-                flexDirection: "row",
-                justifyContent: "center",
-                gap: 6,
-              }}
-              onPress={() => {
-                navigation.navigate("EditColection", {
-                  collectionItems: collectionItems,
-                  item: item,
-                });
-              }}
-            >
-              <Icon name="pencil" size={15} color={"#BD3803"} />
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "#BD3803",
-                  fontWeight: "500",
-                  fontSize: 13,
-                }}
-              >
-                Düzenle
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity
-              style={{
-                width: "100%",
-                backgroundColor: "#C7EBFF",
-                padding: 8,
-                flexDirection: "row",
-                justifyContent: "center",
-                gap: 10,
-              }}
-              onPress={() => {
-                navigation.navigate("SeeColleciton", {
-                  item: item,
-                  collectionUser: user,
-                });
-              }}
-            >
-              <Dot
-                name="eye"
-                size={15}
-                style={{ textAlign: "center" }}
-                color={"#025787"}
-              />
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "#025787",
-                  fontWeight: "500",
-                  fontSize: 13,
-                }}
-              >
-                Önizle
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity
-              style={{
-                width: "100%",
-                backgroundColor: "#DAFBD0",
-                padding: 8,
-                flexDirection: "row",
-                justifyContent: "center",
-                gap: 10,
-              }}
-              onPress={() => {
-                copy();
-              }}
-            >
-              <Icon2 name="copy" size={15} color={"#1F6F11"} />
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "#1F6F11",
-                  fontWeight: "600",
-                  fontSize: 13,
-                }}
-              >
-                Linki Kopyala
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View>
-            <TouchableOpacity
-              style={{
-                width: "100%",
-                backgroundColor: "#DAFBD0",
-                padding: 8,
-                flexDirection: "row",
-                justifyContent: "center",
-                gap: 10,
-              }}
-              onPress={() => {
-                shareWp();
-              }}
-            >
-              <Icon3 name="whatsapp" size={15} color={"#1F6F11"} />
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "#1F6F11",
-                  fontWeight: "600",
-                  fontSize: 13,
-                }}
-              >
-                Whatsappta Paylaş
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View> */}
       </View>
     </TouchableOpacity>
   );

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
-import HomePage from "../Home/HomePage";
-import Search from "./Search";
 import ShareScreen from "./ShareScreen";
 import Test from "./Test";
 import Basket from "./Basket";
@@ -12,13 +10,11 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import IconStore from "react-native-vector-icons/MaterialCommunityIcons";
 import ShoppingProfile from "./ShoppingProfile";
 import Login from "./Login&Register/Login";
-import userData, { getValueFor } from "../../components/methods/user";
-import * as SecureStore from "expo-secure-store";
+import { getValueFor } from "../../components/methods/user";
 import { Platform } from "react-native";
 import HomePage2 from "./HomePage2";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
-import VerifyScreen from "./VerifyScreen";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 
 const Tab = createBottomTabNavigator();
@@ -30,13 +26,17 @@ const Home = ({ route }) => {
   console.debug("Home.js: route", route.params);
   const [user, setUser] = useState({});
   const [verifyStatus, setverifyStatus] = useState(null);
+  const [userdata, setuserdata] = useState({});
+  const nav = useNavigation();
+
   useEffect(() => {
-    if (route?.params?.status == "login") {
+    if (route?.params?.status === "login") {
       getValueFor("user", setUser);
-    } else if (route?.params?.status == "logout") {
+    } else if (route?.params?.status === "logout") {
       setUser({});
     }
   }, [route?.params?.status]);
+
   useEffect(() => {
     if (isFocused) {
       getValueFor("user", setUser);
@@ -44,50 +44,42 @@ const Home = ({ route }) => {
     }
   }, [isFocused]);
 
-  const [userdata, setuserdata] = useState({});
   const GetUserInfo = async () => {
     try {
       if (user.access_token) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          `https://private.emlaksepette.com/api/users/${user?.id}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
             },
           }
         );
-
         setuserdata(userInfo?.data?.user);
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     }
   };
+
   useEffect(() => {
     GetUserInfo();
   }, [user]);
 
-  const { width, height } = Dimensions.get("window");
-  const nav = useNavigation();
   if (userdata && user.access_token) {
-    if (user.type == 1) {
-      if (verifyStatus == 0) {
-        setTimeout(() => {
-          nav.navigate("VerifyScreen");
-        }, 100);
-      }
-    } else {
-      if (verifyStatus == 0 || userdata.corporate_account_status == 0) {
-        setTimeout(() => {
-          nav.navigate("VerifyScreen");
-        }, 100);
-      }
+    if (user.type === 1 && verifyStatus === 0) {
+      setTimeout(() => nav.navigate("VerifyScreen"), 100);
+    } else if (verifyStatus === 0 || userdata.corporate_account_status === 0) {
+      setTimeout(() => nav.navigate("VerifyScreen"), 100);
     }
   }
 
-  console.log(userdata.corporate_account_status + "dosya");
-  console.log(verifyStatus + "telfon");
-  console.log(userdata);
+  const handleTabPress = (e, navigation) => {
+    if (!user.access_token) {
+      e.preventDefault();
+      navigation.navigate("Login");
+    }
+  };
 
   return (
     <Tab.Navigator
@@ -102,7 +94,7 @@ const Home = ({ route }) => {
         tabBarStyle: {
           backgroundColor: "white",
           padding: 5,
-          height: Platform.OS === "android" ? "7%" : "9%",
+          height: Platform.OS === "android" ? "8%" : "9%",
         },
       }}
     >
@@ -111,10 +103,8 @@ const Home = ({ route }) => {
         component={HomePage2}
         options={{
           title: "Ana Sayfa",
-
           headerShown: false,
-
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "home" : "home-outline"}
               color={focused ? "black" : "grey"}
@@ -128,7 +118,7 @@ const Home = ({ route }) => {
         component={Test}
         options={{
           headerShown: false,
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "heart" : "heart-outline"}
               color={focused ? "black" : "grey"}
@@ -144,9 +134,9 @@ const Home = ({ route }) => {
               navigation.navigate("Login");
             }
           },
+
         })}
       />
-
       <Tab.Screen
         name="ShareAdvert"
         component={ShareScreen}
@@ -161,6 +151,7 @@ const Home = ({ route }) => {
                 size={30}
                 style={styles.ilanVerIcon}
               />
+
             </View>
           ),
         }}
@@ -172,26 +163,22 @@ const Home = ({ route }) => {
               navigation.navigate("Login");
             }
           },
+
         })}
       />
-
       <Tab.Screen
         component={Basket}
         name="Sepetim"
-        options={({ route }) => ({
+        options={{
           headerShown: false,
-
-          tabBarIcon: ({ color, focused }) =>
+          tabBarIcon: ({ focused }) =>
             focused ? (
               <FontAwesome5Icon name="shopping-cart" color="black" size={20} />
             ) : (
               <Feather name="shopping-cart" color="black" size={20} />
             ),
-          tabBarBadge: 1,
-
+          tabBarBadge: userdata.cartItem ? 1 : null,
           tabBarBadgeStyle: {
-            display: userdata.cartItem == null ? "none" : "flex",
-
             fontSize: 10,
             height: 17,
             width: 20,
@@ -200,6 +187,9 @@ const Home = ({ route }) => {
             right: 0,
             borderRadius: 6,
           },
+        }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => handleTabPress(e, navigation),
         })}
         listeners={({ navigation }) => ({
           tabPress: (e) => {
@@ -211,7 +201,6 @@ const Home = ({ route }) => {
           },
         })}
       />
-      {}
       <Tab.Screen
         name="Hesabım"
         component={ShoppingProfile}
@@ -251,20 +240,18 @@ const Home = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  ilanVerIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    bottom: 15,
-    backgroundColor: "#EA2B2E",
-    display: "flex",
-    alignItems: "center",
+  adverIconContainer: {
+    width: 42,
+    height: 42,
+    borderRadius: 25,
+    backgroundColor: "red",
     justifyContent: "center",
+    alignItems: "center",
+    bottom: 16,
   },
   ilanVerIcon: {
     borderRadius: 20,
     left: 1.3,
-    fontWeight: 700,
   },
 });
 

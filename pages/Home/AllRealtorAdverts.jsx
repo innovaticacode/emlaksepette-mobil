@@ -13,10 +13,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import Header from "../../components/Header";
 import Modal from "react-native-modal";
-import Search from "./Search";
-import Categories from "../../components/Categories";
-import ProjectPost from "../../components/ProjectPost";
-import * as Animatable from "react-native-animatable";
 import axios from "axios";
 import { Platform } from "react-native";
 import { ActivityIndicator, Switch, TextInput } from "react-native-paper";
@@ -618,7 +614,7 @@ export default function AllRealtorAdverts() {
                 <ImageBackground
                   resizeMode="contain"
                   style={{ width: "100%", height: "100%", borderRadius: 50 }}
-                  source={require("../../images/mapView.png")}
+                  source={require("../../src/assets/images/mapView.png")}
                 />
               </View>
             </View>

@@ -17,8 +17,10 @@ const EstateBottomSheetFilter = (props) => {
   ]);
 
   const toggleCheckbox = (index) => {
-    const newCheckboxes = [...checkboxes];
-    newCheckboxes[index].checked = !newCheckboxes[index].checked;
+    const newCheckboxes = checkboxes.map((checkbox, i) => ({
+      ...checkbox,
+      checked: i === index,
+    }));
     setCheckboxes(newCheckboxes);
   };
 
@@ -33,7 +35,7 @@ const EstateBottomSheetFilter = (props) => {
   return (
     <ActionSheet
       ref={actionSheetRef}
-      onClose={() => setIsVisible(false)} // Modal kapandığında dışarıya durumu bildir
+      onClose={() => setIsVisible(false)}
       containerStyle={{
         backgroundColor: "#FFF",
         width: width,
@@ -92,10 +94,8 @@ const EstateBottomSheetFilter = (props) => {
               checkedIcon="checkbox-marked"
               uncheckedIcon="checkbox-blank-outline"
               checkedColor="red"
-              label={checkbox.label}
               checked={checkbox.checked} // Checkbox durumu
-              onChange={() => handleCheckboxChange(index)} // Checkbox değiştirildiğinde
-              onPress={() => toggleCheckbox(index)} // Checkbox tıklandığında
+              onPress={() => toggleCheckbox(index)} // Sadece bir checkbox seçili olur
             />
             <Text>{`${checkbox.label} (${checkbox?.count})`}</Text>
           </View>

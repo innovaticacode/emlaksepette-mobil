@@ -439,6 +439,7 @@ export default function AllProjects() {
   const [index, setindex] = useState(0);
   const [tab, settab] = useState(0);
   return (
+
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
       {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
 
@@ -542,7 +543,7 @@ export default function AllProjects() {
                       ShoppingName={item.user?.name}
                       ShoppingMail={item.user?.email}
                       Phone={item.user?.phone}
-                      ProfilImage={`${apiUrl}/storage/profile_images/${item.user?.profile_image}`}
+                      ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
                       ShopingInfo={item.user?.corporate_type}
                     />
                   </View>

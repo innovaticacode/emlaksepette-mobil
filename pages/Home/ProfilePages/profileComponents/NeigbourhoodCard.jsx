@@ -6,7 +6,7 @@ import {
   Linking,
   ImageBackground,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import Icon from "react-native-vector-icons/Feather";
 import { Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -15,6 +15,9 @@ export default function NeigbourhoodCard({
   project,
   projectInfo,
 }) {
+  const apiUrl = "https://private.emlaksepette.com";
+  const navigation = useNavigation();
+
   const handleOpenPhone = () => {
     // Telefon uygulamasını açmak için
     Linking.openURL(`tel:+90${NeigBourHoodInfo.mobile_phone}`);
@@ -39,18 +42,25 @@ export default function NeigbourhoodCard({
 
     return formattedNumber;
   };
-  const apiUrl = "https://private.emlaksepette.com";
-  console.log(project);
-  const navigation = useNavigation();
+
+  useEffect(() => {
+    console.debug(">>>>>>>>>>>>>>>>>", projectInfo);
+  }, []);
+
   return (
     <View style={styles.contain}>
       <View style={{ padding: 17, gap: 20 }}>
-        <View style={{ flexDirection: "row", gap: 13, alignItems: "center" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 13,
+            alignItems: "center",
+          }}
+        >
           <View
             style={{
               width: 90,
               height: 90,
-              backgroundColor: "red",
               borderRadius: 5,
             }}
           >
@@ -61,7 +71,10 @@ export default function NeigbourhoodCard({
                   "storage/"
                 )}`,
               }}
-              style={{ width: "100%", height: "100%" }}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
               borderRadius={5}
             />
           </View>

@@ -88,11 +88,18 @@ export default function PostPayment({ data, HomeId }) {
     }).format(amount);
   };
   console.log(data.projectCartOrders[HomeId]?.status)
+  const [offSaleStatus, setoffSaleStatus] = useState(null);
+  useEffect(() => {
+    if (data && data?.project && data?.projectHousingsList && data.projectHousingsList[HomeId]["off_sale[]"]) {
+      const parsedOffsale = JSON.parse(data.projectHousingsList[HomeId]["off_sale[]"]);
+     data && data.project && data.projectHousingsList[HomeId] && setoffSaleStatus(parsedOffsale);
+    }
+  }, [HomeId,data.projectHousingsList[HomeId]])
   return (
-    <View style={{ padding: 8 }}>
+    <View style={{  }}>
       <View style={styles.container}>
         <View style={styles.PaymentPlan}>
-          {data?.projectHousingsList[HomeId]["off_sale[]"] != "[]" || data.projectCartOrders[HomeId]?.status ==1 ? (
+          {offSaleStatus==1 || data.projectCartOrders[HomeId]?.status ==1 ? (
             <>
               <Text
                 style={{
@@ -164,10 +171,10 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
 
-    top: -20,
+  
     backgroundColor: "#FFFFFF",
 
-    marginVertical: 10,
+   
     height: "auto",
     borderWidth: 0.7,
     borderColor: "#e6e6e6",
@@ -190,6 +197,6 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   Info: {
-    bottom: 35,
+ 
   },
 });
