@@ -121,7 +121,7 @@ import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
 import AllFeaturedRealEstate from "./pages/Home/AllFeaturedRealEstate";
 import SeeMyNeighbor from "./pages/Home/SeeMyNeighbor/SeeMyNeighbor";
 
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { store } from "./store/store";
 
 import SalePageMain from "./pages/Home/PointOfSale/SalePageMain";
@@ -149,69 +149,70 @@ export default function App({ route }) {
   );
 }
 
-const DrawerNavigator = () => (
-  <Drawer.Navigator drawerContent={(props) => <DrawerMenu />}>
-    <Drawer.Screen
-      name="Home"
-      component={Home}
-      options={{
-        header: () => <Header />,
+const DrawerNavigator = () => {
+  const isShoppingProfile = useSelector(
+    (state) => state.menu.isShoppingProfile
+  );
+  return (
+    <Drawer.Navigator
+      drawerContent={(props) => <DrawerMenu {...props} />}
+      screenOptions={{
+        swipeEdgeWidth: 0,
       }}
-    />
-    <Drawer.Screen
-      name="AllProjects"
-      component={AllProjects}
-      options={{
-        header: () => <Header />,
-      }}
-    />
-    <Drawer.Screen
-      name="PostDetails"
-      component={PostDetail}
-      options={{
-        header: () => <Header />,
-      }}
-    />
-    <Drawer.Screen
-      name="AllRealtorAdverts"
-      component={AllRealtorAdverts}
-      options={({ route }) => ({
-        header: () => <Header />,
-        title:
-          route?.params?.name +
-          " - " +
-          route?.params?.count +
-          " Emlak İlanları",
-        headerBackTitle: "",
-        headerBackTitleVisible: false,
-        headerTintColor: "white",
-        headerTitleStyle: {
-          fontSize: 14,
-        },
-      })}
-    />
-    <Drawer.Screen
-      name="Details"
-      component={Details}
-      options={({ route }) => ({
-        header: () => <Header />,
-        title: route?.params?.name,
-      })}
-    />
-    <Drawer.Screen
-      name="ShareAdvert"
-      options={({ route }) => ({
-        animationTypeForReplace: "pop",
-        title: "",
-        headerBackTitle: "",
-        headerBackTitleVisible: false,
-        headerTintColor: "black",
-      })}
     >
-      {(props) => <ShareScreenProject {...props} />}
-    </Drawer.Screen>
-  </Drawer.Navigator>
-);
+      <Drawer.Screen
+        name="Home"
+        component={Home}
+        options={{
+          header: () => <Header />,
+          headerShown: isShoppingProfile ? false : true,
+        }}
+      />
+      <Drawer.Screen
+        name="AllProjects"
+        component={AllProjects}
+        options={{ header: () => <Header /> }}
+      />
+      <Drawer.Screen
+        name="PostDetails"
+        component={PostDetail}
+        options={{ header: () => <Header /> }}
+      />
+      <Drawer.Screen
+        name="AllRealtorAdverts"
+        component={AllRealtorAdverts}
+        options={({ route }) => ({
+          header: () => <Header />,
+          title: `${route?.params?.name} - ${route?.params?.count} Emlak İlanları`,
+          headerBackTitle: "",
+          headerBackTitleVisible: false,
+          headerTintColor: "white",
+          headerTitleStyle: { fontSize: 14 },
+        })}
+      />
+      <Drawer.Screen
+        name="Details"
+        component={Details}
+        options={({ route }) => ({
+          header: () => <Header />,
+          title: route?.params?.name,
+        })}
+      />
+      <Drawer.Screen
+        name="ShareAdvert"
+        options={{
+          animationTypeForReplace: "pop",
+          title: "",
+          headerBackTitle: "",
+          headerBackTitleVisible: false,
+          headerTintColor: "black",
+        }}
+      >
+        {(props) => <ShareScreenProject {...props} />}
+      </Drawer.Screen>
+    </Drawer.Navigator>
+  );
+};
 
 const StackScreenNavigator = () => {
   const [İsLoggedIn, setİsLoggedIn] = useState(false);
@@ -230,6 +231,8 @@ const StackScreenNavigator = () => {
     housingTypes,
     selectedTypes,
   }) {
+    console.debug("StepScreen.js: step", step);
+
     return (
       <View style={styles.container}>
         <TypeListScreen
