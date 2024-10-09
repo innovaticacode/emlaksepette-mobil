@@ -196,7 +196,6 @@ export default function Favorites() {
         }
       );
       if (response.status === 200) {
-        console.log("showing");
         setTimeout(() => {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
@@ -212,7 +211,6 @@ export default function Favorites() {
       }
       setmodalForDeleteFavorites(false);
     } catch (error) {
-      console.log("err");
       setTimeout(() => {
         Dialog.show({
           type: ALERT_TYPE.WARNING,
@@ -244,7 +242,6 @@ export default function Favorites() {
         }
       );
       if (response.status === 200) {
-        console.log("showing");
         setTimeout(() => {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
@@ -260,7 +257,6 @@ export default function Favorites() {
       }
       setmodalForDeleteFavorites(false);
     } catch (error) {
-      console.log("rr");
       setTimeout(() => {
         Dialog.show({
           type: ALERT_TYPE.WARNING,
@@ -300,24 +296,11 @@ export default function Favorites() {
   useEffect(() => {
     const unsubscribe = navigation.addListener("blur", () => {
       if (isChoosed) {
-        // Sadece isChoosed true ise çalışsın
-        Alert.alert("Uyarı", "Seçimleriniz gidecek. Kabul ediyor musunuz?", [
-          {
-            text: "Hayır",
-            style: "cancel",
-            onPress: () => {},
-          },
-          {
-            text: "Evet",
-            onPress: () => {
-              setIsChoosed(false); // Seçimleri sıfırla
-            },
-          },
-        ]);
+        setIsChoosed(false); // Seçimleri sıfırla
       }
     });
 
-    return unsubscribe;
+    return unsubscribe; // Dinleyiciyi temizlemek için
   }, [navigation, isChoosed]);
 
   const deleteSelectedFavorite = async () => {
@@ -337,7 +320,6 @@ export default function Favorites() {
 
       if (response.status === 200) {
         setTimeout(() => {
-          console.log("showing");
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Başarılı",
@@ -359,10 +341,8 @@ export default function Favorites() {
     } catch (error) {
       setRemoveSelectedCollectionsModal(false); // Modal'ı kapat
       setIsChoosed(false); // Toplu seçim modunu kapat
-      console.log("errorrrr");
       // Hata durumunda kullanıcıya geri bildirim sağla
       setTimeout(() => {
-        console.log("showing");
         Dialog.show({
           type: ALERT_TYPE.WARNING,
           title: "Hata!",
