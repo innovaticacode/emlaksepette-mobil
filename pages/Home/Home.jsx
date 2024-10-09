@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
-import HomePage from "../Home/HomePage";
-import Search from "./Search";
 import ShareScreen from "./ShareScreen";
 import Test from "./Test";
 import Basket from "./Basket";
@@ -15,14 +13,11 @@ import {
 } from "@react-navigation/native";
 import IconStore from "react-native-vector-icons/MaterialCommunityIcons";
 import ShoppingProfile from "./ShoppingProfile";
-import Login from "./Login&Register/Login";
-import userData, { getValueFor } from "../../components/methods/user";
-import * as SecureStore from "expo-secure-store";
+import { getValueFor } from "../../components/methods/user";
 import { Platform } from "react-native";
 import HomePage2 from "./HomePage2";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
-import VerifyScreen from "./VerifyScreen";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
 import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
@@ -33,9 +28,8 @@ const Home = ({ route }) => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const shoppingPage = useSelector((state) => state.menu.isShoppingProfile);
+  const nav = useNavigation();
 
-  console.debug("Home.js: isFocused", isFocused);
-  console.debug("Home.js: route", route.params);
   const [user, setUser] = useState({});
   const [verifyStatus, setverifyStatus] = useState(null);
   useEffect(() => {
@@ -75,7 +69,6 @@ const Home = ({ route }) => {
     GetUserInfo();
   }, [user]);
 
-  const nav = useNavigation();
   if (userdata && user.access_token) {
     if (user.type == 1) {
       if (verifyStatus == 0) {
@@ -100,6 +93,13 @@ const Home = ({ route }) => {
       };
     }, [dispatch])
   );
+
+  // unmount olduğu anda dşspatch ile headeri yok saydırıyoruz
+  useEffect(() => {
+    return () => {
+      dispatch(setShoppingProfile({ isShoppingProfile: false }));
+    };
+  }, [dispatch]);
 
   return (
     <Tab.Navigator

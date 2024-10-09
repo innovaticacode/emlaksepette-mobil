@@ -158,6 +158,7 @@ const DrawerNavigator = () => {
       drawerContent={(props) => <DrawerMenu {...props} />}
       screenOptions={{
         swipeEdgeWidth: 0,
+        gestureEnabled: true,
       }}
     >
       <Drawer.Screen
@@ -210,6 +211,13 @@ const DrawerNavigator = () => {
       >
         {(props) => <ShareScreenProject {...props} />}
       </Drawer.Screen>
+      <Drawer.Screen
+        name="Realtor details"
+        component={RealtorDetails}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Drawer.Navigator>
   );
 };
@@ -370,23 +378,6 @@ const StackScreenNavigator = () => {
           })}
         />
 
-        {/* <Stack.Screen
-          name="Details"
-          component={Details}
-          options={({ route }) => ({
-            headerShown: false,
-            title: route.params.name,
-          })}
-        /> */}
-        {/* <Stack.Screen
-          name="PostDetails"
-          component={PostDetail}
-          options={({ route }) => ({
-            headerShown: false,
-            headerBackTitleVisible: false,
-          })}
-        /> */}
-
         <Stack.Screen
           name="Profile"
           component={Profile}
@@ -397,13 +388,6 @@ const StackScreenNavigator = () => {
         <Stack.Screen name="ShopProfile" options={{ headerShown: false }}>
           {(props) => <ShoppingProfile {...props} İsLoggedIn={İsLoggedIn} />}
         </Stack.Screen>
-        <Stack.Screen
-          name="Realtor details"
-          component={RealtorDetails}
-          options={{
-            headerShown: false,
-          }}
-        />
 
         <Stack.Group>
           <Stack.Screen
