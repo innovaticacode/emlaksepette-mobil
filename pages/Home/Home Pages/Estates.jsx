@@ -34,18 +34,17 @@ const Estates = ({ index }) => {
     if (loading || (!hasMore && !reset)) return;
     setLoading(true);
     const config = {
-      headers: { Authorization: `Bearer ${user?.access_token}` },
+      headers: {
+        Authorization: `Bearer ${user?.access_token}`,
+      },
     };
 
-    console.log(config);
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${
-          reset ? 1 : page
-        }&limit=${PAGE_SIZE}`,
+        `${apiUrl}api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,
         config
       );
-      const newEstates = response.data;
+      const newEstates = Object.values(response.data);
 
       if (reset) {
         setFeaturedEstates(newEstates);
@@ -184,6 +183,7 @@ const Estates = ({ index }) => {
                     column4_additional={item.column4_additional}
                     bookmarkStatus={true}
                     dailyRent={false}
+                    isFavorite={item.is_favorite}
                   />
                 )}
                 keyExtractor={(item, index) =>
