@@ -153,7 +153,7 @@ export default function ComeSwapScreen() {
                   </TouchableOpacity>
                 </View>
 
-                <View style={{ gap: 19 }}>
+                <View style={{ gap: 20 }}>
                   <View
                     style={{
                       borderBottomWidth: 1,
