@@ -58,6 +58,10 @@ export default function RealtorPost({
   const [bookmark, setbookmark] = useState("bookmark-o");
   const [user, setUser] = useState({});
   const [inFavorite, setInFavorite] = useState(false);
+  const [AddCartShow, setAddCartShow] = useState(false);
+  const [getPostId, setgetPostId] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -75,8 +79,6 @@ export default function RealtorPost({
       setInFavorite(true);
     }
   }, []);
-
-  const [getPostId, setgetPostId] = useState(0);
 
   const CreateCollection = (id) => {
     setgetPostId(id);
@@ -117,36 +119,36 @@ export default function RealtorPost({
   };
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
-  const [showAlert, setShowAlert] = useState(false);
 
-  const addFavorites = () => {
+  const addFavorites = async () => {
     if (user.access_token) {
+      // UI'da kullanıcıya hemen kalp dolu olarak göster
+      setInFavorite(true);
       const config = {
         headers: { Authorization: `Bearer ${user.access_token}` },
       };
-      axios
-        .post(
-          "https://private.emlaksepette.com/api/add_housing_to_favorites/" +
-            HouseId,
+      try {
+        const res = await axios.post(
+          `https://private.emlaksepette.com/api/add_housing_to_favorites/${HouseId}`,
           {},
           config
-        )
-        .then((res) => {
-          changeHeart();
-
-          if (res.data.status == "removed") {
-            setInFavorite(false);
-          } else {
-            setInFavorite(true);
-          }
-        });
-      setShowAlert(false);
+        );
+        changeHeart();
+        // İstek yanıtına göre durumu güncelle
+        if (res.data.status === "removed") {
+          setInFavorite(false); // Eğer favorilerden çıkarıldıysa kalbi boşalt
+        }
+        setShowAlert(false); // İşlem başarılıysa alert kapat
+      } catch (error) {
+        console.error("Favorilere ekleme hatası:", error);
+        // Eğer istek başarısız olursa UI'daki geçici gösterimi geri al
+        setInFavorite(false);
+      }
     } else {
+      // Kullanıcı giriş yapmadıysa alert göster
       setalertForFavorite(true);
     }
   };
-
-  const [AddCartShow, setAddCartShow] = useState(false);
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -390,6 +392,7 @@ export default function RealtorPost({
                     {title}
                   </Text>
                 </View>
+                {/* 
                 <View
                   style={{
                     ...styles.ıcons, // Diğer stil özelliklerini ekleyin
@@ -421,6 +424,7 @@ export default function RealtorPost({
                     )}
 
                   <TouchableOpacity
+                    activeOpacity={0.8}
                     onPress={() => {
                       addFavorites();
                     }}
@@ -432,8 +436,23 @@ export default function RealtorPost({
                         color={heart == "hearto" ? "black" : "red"}
                       />
                     </View>
-                  </TouchableOpacity>
+                  </TouchableOpacity> 
                 </View>
+                */}
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    addFavorites();
+                  }}
+                >
+                  <View style={styles.ıconContainer}>
+                    <Heart
+                      name={heart}
+                      size={13}
+                      color={heart == "hearto" ? "black" : "red"}
+                    />
+                  </View>
+                </TouchableOpacity>
               </View>
 
               <View style={styles.PriceAndButtons}>
