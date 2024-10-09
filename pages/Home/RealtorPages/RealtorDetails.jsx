@@ -638,6 +638,17 @@ export default function PostDetail() {
 
   // Handle page change in PagerView
   const [SeeAlertModal, setSeeAlertModal] = useState(false);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+      // Eğer geri gitme eylemi varsa
+      if (e.data.action.type === "GO_BACK") {
+        e.preventDefault(); // Varsayılan geri gitme işlemini durdur
+        navigation.navigate("PreviousScreen"); // Önceki sayfaya git
+      }
+    });
+
+    return unsubscribe; // Bileşen unmounted olduğunda dinleyiciyi temizle
+  }, [navigation]);
   return (
     <>
       <AlertNotificationRoot>

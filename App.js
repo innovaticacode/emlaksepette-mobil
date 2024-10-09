@@ -154,13 +154,7 @@ const DrawerNavigator = () => {
     (state) => state.menu.isShoppingProfile
   );
   return (
-    <Drawer.Navigator
-      drawerContent={(props) => <DrawerMenu {...props} />}
-      screenOptions={{
-        swipeEdgeWidth: 0,
-        gestureEnabled: true,
-      }}
-    >
+    <Drawer.Navigator drawerContent={(props) => <DrawerMenu {...props} />}>
       <Drawer.Screen
         name="Home"
         component={Home}
