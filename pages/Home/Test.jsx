@@ -71,7 +71,9 @@ export default function Test() {
             <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
           </View> */}
         </Modal>
-        {user.type == 1 ||
+
+        {/* SİLİNMESİN İLERİDE KULLANILABİLİR BİR ÖZELLİK OLABİLİR */}
+        {/* {user.type == 1 ||
         (user.type == 2 && user.corporate_type == "Emlak Ofisi") ? (
           <>
             <View style={styles.TabBar}>
@@ -155,7 +157,7 @@ export default function Test() {
               Favoriler
             </Text>
           </View>
-        )}
+        )} */}
         {tabs == 1 && <Favorites />}
         {tabs == 2 && <CollectionsPage />}
       </SafeAreaView>
