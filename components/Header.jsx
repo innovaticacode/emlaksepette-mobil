@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: "100%",
     // Android için paddingTop ekle
-    paddingTop: Platform.OS === 'android' ? 20 : 0,
+    paddingTop: Platform.OS === 'android' ? 30 : 0,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
