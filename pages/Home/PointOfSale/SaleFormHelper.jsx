@@ -1,21 +1,21 @@
 export const SaleForms = [
   {
     key: "corporateType",
-    label: "Faaliyet Alanı Seçiniz",
+    label: "Satış noktası olmak istediğiniz firmanın faaliyet alanını seçiniz.",
     placeholder: "Seçiniz",
     tab: [2],
     type: "select",
   },
   {
     key: "salePoint",
-    label: "Hangi inşaat ofisinin satış noktası olmak istiyorsunuz?",
+    label: "Satış noktası olmak istediğiniz firmayı seçiniz.",
     placeholder: "Seçiniz",
     tab: [2],
     type: "input",
   },
   {
     key: "workerNumber",
-    label: "Çalışan Sayısı",
+    label: "Çalışan Sayısı:",
     placeholder: "Çalışan sayısını giriniz",
     tab: [2],
     type: "input",
@@ -24,7 +24,7 @@ export const SaleForms = [
 
   {
     key: "city_id",
-    label: "İl",
+    label: "Şehir:",
     placeholder: "Seçiniz..",
     tab: [2],
     type: "select",
@@ -32,7 +32,7 @@ export const SaleForms = [
   },
   {
     key: "county_id",
-    label: "İlçe",
+    label: "İlçe:",
     placeholder: "Seçiniz..",
     tab: [2],
     type: "select",
@@ -40,8 +40,8 @@ export const SaleForms = [
   },
   {
     key: "message",
-    label: "Mesaj",
-    placeholder: "Mesajını yazın",
+    label: "Mesaj:",
+    placeholder: "Mesajınızı yazın",
     tab: [2],
     type: "input",
   },
