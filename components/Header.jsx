@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
   SafeAreaView,
+  useColorScheme,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/EvilIcons";
@@ -25,6 +26,11 @@ export default function Header(props) {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [user, setuser] = useState({});
+
+  const scheme = useColorScheme();
+  const headerStyle = {
+    backgroundColor: scheme === 'dark' ? '#000' : '#fff',
+  };
 
   const notificationCount = useSelector(
     (state) => state.notifications.notificationsCount
@@ -68,7 +74,7 @@ export default function Header(props) {
   }, [user]);
 
   return (
-    <SafeAreaView style={styles.header}>
+    <SafeAreaView style={[styles.header, headerStyle]}>
       <View>
         <IconMenu
           name="menu"
@@ -79,55 +85,21 @@ export default function Header(props) {
           }}
         />
       </View>
-      <View
-        onTouchStart={() => {
-          navigation.navigate("HomePage");
-        }}
-        style={{
-          width: 200,
-          height: 50,
-        }}
-      >
+      <View style={styles.logoContainer} onTouchStart={() => { navigation.navigate("HomePage"); }}>
         <ImageBackground
           source={{
             uri: "https://private.emlaksepette.com/images/emlaksepettelogo.png",
           }}
           resizeMode="contain"
-          style={{
-            width: "100%",
-            height: "100%",
-            justifyContent: "center",
-          }}
+          style={styles.logoImage}
         />
       </View>
 
-      <View style={{ display: "flex", flexDirection: "row-reverse" }}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Notifications")}
-          style={{
-            width: 50,
-            alignItems: "center",
-            borderRadius: 15,
-          }}
-        >
+      <View style={styles.notificationContainer}>
+      <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
           {notificationCount > 0 && (
-            <View
-              style={{
-                position: "absolute",
-                top: -4,
-                right: 4,
-                backgroundColor: "red",
-                borderRadius: 10,
-                width: 20,
-                height: 20,
-                justifyContent: "center",
-                alignItems: "center",
-                zIndex: 999,
-              }}
-            >
-              <Text style={{ color: "white", fontSize: 11 }}>
-                {notificationCount}
-              </Text>
+            <View style={styles.notificationBadge}>
+              <Text style={styles.notificationText}>{notificationCount}</Text>
             </View>
           )}
           <Icon name="bell" size={35} />
@@ -144,7 +116,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     width: "100%",
-    backgroundColor: "#fff",
+    // Android için paddingTop ekle
+    paddingTop: Platform.OS === 'android' ? 20 : 0,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -153,5 +126,34 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 1.84,
     elevation: 2,
+  },
+  logoContainer: {
+    width: 200,
+    height: 50,
+  },
+  logoImage: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+  },
+  notificationContainer: {
+    display: "flex",
+    flexDirection: "row-reverse",
+  },
+  notificationBadge: {
+    position: "absolute",
+    top: -4,
+    right: 4,
+    backgroundColor: "red",
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 999,
+  },
+  notificationText: {
+    color: "white",
+    fontSize: 11,
   },
 });
