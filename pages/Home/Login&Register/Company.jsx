@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
+  KeyboardAvoidingView,
 } from "react-native";
 import { React, useState, useEffect, useRef } from "react";
 import Modal from "react-native-modal";
@@ -520,7 +521,7 @@ export default function Company() {
   const handlePhoneNumberChange = (value) => {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setphoneNumber(formattedPhoneNumber);
-    setcompanyPhone(value);
+   
   };
 
   const GetDeal = (deal) => {
@@ -682,8 +683,8 @@ export default function Company() {
     value: item?.id,
   }));
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
+  
+      <KeyboardAwareScrollView behavior="padding" style={{flex:1}}>
         <View style={styles.container}>
           <View style={{ padding: 15, gap: 20 }}>
             <View style={{ gap: 5 }}>
@@ -752,7 +753,7 @@ export default function Company() {
                     borderColor: errorStatu == 4 ? "red" : "#ebebeb",
                   },
                 ]}
-                onChangeText={handlePhoneNumberChange}
+                onChangeText={(value)=>{ handlePhoneNumberChange(value)}}
                 placeholder="Cep Telefonu"
                 keyboardType="number-pad"
                 maxLength={15}
@@ -827,6 +828,7 @@ export default function Company() {
                   { label: "Banka", value: "Banka" },
                   { label: "Turizm", value: "Turizm" },
                   { label: "Üretici", value: "Üretici" },
+                  { label: "Gayrimenkul Franchise", value: "Gayrimenkul Franchise" }
                 ]}
               />
               {errorStatu == 7 ? (
@@ -845,7 +847,7 @@ export default function Company() {
                     <Text
                       style={{ fontSize: 14, color: "black", fontWeight: 600 }}
                     >
-                      Yetki Belgesi No
+                      Taşınmaz Ticareti Yetki Belgesi No
                     </Text>
                   </View>
                   <TextInput
@@ -865,11 +867,11 @@ export default function Company() {
                   )}
                 </View>
 
-                <View style={{ gap: 5 }}>
+                {/* <View style={{ gap: 5 }}>
                   <Text
                     style={{ fontSize: 14, color: "black", fontWeight: 600 }}
                   >
-                    Franchise Veriyor Musun?
+                   Franchise Ofisine Bağlı Mısın?
                   </Text>
                   <RNPickerSelect
                     doneText="Tamam"
@@ -892,9 +894,9 @@ export default function Company() {
                   ) : (
                     ""
                   )}
-                </View>
+                </View> */}
 
-                {IsGiveFrancheise == 0 && (
+                { focusArea=='Emlak Ofisi' && (
                   <View style={{ gap: 5 }}>
                     <Text
                       style={{ fontSize: 14, color: "black", fontWeight: 600 }}
@@ -925,7 +927,7 @@ export default function Company() {
                   </View>
                 )}
 
-                {IsConnectFranchaise == 1 && (
+                {IsConnectFranchaise == 1  && (
                   <View style={{ gap: 5 }}>
                     <Text
                       style={{ fontSize: 14, color: "black", fontWeight: 600 }}
@@ -991,7 +993,7 @@ export default function Company() {
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Ticaret Ünvanı
+                  Ticari Ünvan <Text style={{color:'#888888',fontSize:12}}>(Vergi Levhasında Yazan Firma Adı)</Text>
                 </Text>
               </View>
               <TextInput
@@ -1016,7 +1018,7 @@ export default function Company() {
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Mağaza Adı
+                  Mağaza Adı <Text style={{fontSize:12,color:'#888888'}}>(Ofisinizin tabela adı ile aynı olmalıdır)</Text>
                 </Text>
               </View>
               <TextInput
@@ -1180,6 +1182,7 @@ export default function Company() {
                   checkedColor="#E54242"
                   title={<Text style={{ fontSize: 12 }}>Şahıs Şirketi</Text>}
                   containerStyle={{
+                    
                     padding: 0,
                     backgroundColor: "transparent",
                     borderWidth: 0,
@@ -1198,7 +1201,30 @@ export default function Company() {
                   title={
                     <View style={{}}>
                       <Text style={{ fontSize: 12 }}>
-                        Limited veya Anonim Şirketi{" "}
+                        LTD.ŞTİ veya A.Ş{" "}
+                      </Text>
+                    </View>
+                  }
+                  containerStyle={{
+                    padding: 0,
+                    backgroundColor: "transparent",
+                    borderWidth: 0,
+                    borderTopWidth: 1,
+                  }}
+                />
+                   <CheckBox
+                  checked={selectedIndexRadio === 3}
+                  onPress={() => {
+                    setIndexRadio(3);
+                    chooseType("Limited veya Anonim Şirketi");
+                  }}
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checkedColor="#E54242"
+                  title={
+                    <View style={{}}>
+                      <Text style={{ fontSize: 12 }}>
+                        Diğer{" "}
                       </Text>
                     </View>
                   }
@@ -1285,12 +1311,12 @@ export default function Company() {
             <View
               style={{
                 gap: 5,
-                display: selectedIndexRadio == 1 ? "flex" : "none",
+                
               }}
             >
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Tc Kimlik No
+                  TC Kimlik No
                 </Text>
               </View>
               <TextInput
@@ -1601,8 +1627,8 @@ export default function Company() {
             </ScrollView>
           </SafeAreaView>
         </Modal>
-      </ScrollView>
-    </TouchableWithoutFeedback>
+      </KeyboardAwareScrollView>
+   
   );
 }
 const pickerSelectStyles = StyleSheet.create({
@@ -1619,7 +1645,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#eaeff5",
     borderRadius: 5,
-    padding: 10,
+    padding: 6,
     fontSize: 14, // to ensure the text is never behind the icon
   },
 });
