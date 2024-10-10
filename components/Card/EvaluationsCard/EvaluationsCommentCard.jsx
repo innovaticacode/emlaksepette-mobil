@@ -8,7 +8,7 @@ const EvaluationsCommentCard = (props) => {
   const {
     mainImage = "",
     title = "",
-    star = 0,
+    star,
     desc = "",
     info = "",
     images,
@@ -65,7 +65,6 @@ const EvaluationsCommentCard = (props) => {
           <Text style={styles.info}>{info}</Text>
         </View>
       </View>
-      {/* Çoklu yorum varsa burada göstereceğiz */}
       <View style={{ paddingTop: 10 }}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={{ flexDirection: "row" }}>

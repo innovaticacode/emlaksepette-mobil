@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, FlatList, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   EvaluationsCommentCard,
@@ -29,8 +36,9 @@ export default function CommentsOfBrands(props) {
       const response = await axios.get(
         `${apiUrl}get_brand_comments_by_rate/${id}/${rateID}`
       );
-      setComments(Object.values(response.data.comments));
-      return setLoading(false);
+      const reversedComments = Object.values(response.data.comments).reverse();
+      setComments(reversedComments);
+      setLoading(false);
     } catch (error) {
       console.error("errr", error);
       setLoading(false);
@@ -43,14 +51,9 @@ export default function CommentsOfBrands(props) {
     }
   };
 
-  // `comments` state'i her değiştiğinde log yazdırmak için bu `useEffect`'i kullanabilirsin
   useEffect(() => {
     handleComment(starIndex);
   }, [starIndex]);
-
-  useEffect(() => {
-    // console.log("comments>>>>>>>>>>>>>", comments);
-  }, [comments]);
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 10 }}>
@@ -88,30 +91,39 @@ export default function CommentsOfBrands(props) {
             />
           </View>
           <>
-            {loading && <Text>Yükleniyor...</Text>}
+            {loading && <ActivityIndicator size="large" color="#000" />}
 
-            {comments.length >= 1 ? (
+            {!loading && comments.length >= 1 ? ( // loading false ve yorum varsa render et
               <FlatList
                 data={comments}
                 renderItem={({ item }) => {
-                  // housing_type_data JSON verisini parse ediyoruz
                   const housingData = item?.housing?.housing_type_data
-                    ? JSON.parse(item.housing.housing_type_data) // housing varsa
-                    : null; // yoksa null
+                    ? JSON.parse(item.housing.housing_type_data)
+                    : null;
 
-                  // console.debug("item-images", item?.images);
+                  const formattedDate = new Date(
+                    item?.created_at
+                  ).toLocaleDateString("tr-TR", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  });
 
                   return (
                     <EvaluationsCommentCard
                       mainImage={
-                        item.project?.image // Eğer project'ten image varsa onu kullan
+                        item.project?.image
                           ? item.project.image
-                          : housingData?.image // Yoksa housingData'dan image al
+                          : housingData?.image
                       }
-                      title={item?.comment}
-                      star={item?.rating || 0} // Rating yoksa 0 kullan
+                      title={
+                        item.project?.project_title
+                          ? item?.project?.project_title
+                          : item?.housing?.title
+                      }
+                      star={starIndex}
                       desc={item?.comment}
-                      info={`${item?.created_at} | ${item?.user?.name}`} // Tarih ve kullanıcı adını gösteriyoruz
+                      info={`${formattedDate} | ${item?.user?.name}`}
                       images={item?.images}
                     />
                   );
@@ -119,7 +131,7 @@ export default function CommentsOfBrands(props) {
                 keyExtractor={(item) => item.id.toString()}
               />
             ) : (
-              <Text>Yorum bulunamadı.</Text>
+              !loading && <Text>Yorum bulunamadı.</Text> // loading false ve yorum yoksa mesajı göster
             )}
           </>
         </View>
