@@ -29,7 +29,7 @@ export default function CommentsOfBrands(props) {
       const response = await axios.get(
         `${apiUrl}get_brand_comments_by_rate/${id}/${rateID}`
       );
-      setComments(response.data);
+      setComments(Object.values(response.data.comments));
       return setLoading(false);
     } catch (error) {
       console.error("errr", error);
@@ -90,22 +90,29 @@ export default function CommentsOfBrands(props) {
           <>
             {loading && <Text>Yükleniyor...</Text>}
 
-            {comments.length > 0 ? (
+            {comments.length >= 1 ? (
               <FlatList
                 data={comments}
                 renderItem={({ item }) => {
-                  // console.log("item---------------", item);
+                  // housing_type_data JSON verisini parse ediyoruz
+                  const housingData = item?.housing?.housing_type_data
+                    ? JSON.parse(item.housing.housing_type_data) // housing varsa
+                    : null; // yoksa null
+
+                  // console.debug("item-images", item?.images);
+
                   return (
                     <EvaluationsCommentCard
-                      mainImage={item?.project?.image || item?.images}
-                      title={
-                        item?.project?.project_title
-                          ? item?.project?.project_title
-                          : item?.housing?.title
+                      mainImage={
+                        item.project?.image // Eğer project'ten image varsa onu kullan
+                          ? item.project.image
+                          : housingData?.image // Yoksa housingData'dan image al
                       }
-                      star={item?.rate}
+                      title={item?.comment}
+                      star={item?.rating || 0} // Rating yoksa 0 kullan
                       desc={item?.comment}
-                      info={`${item?.created_at} | ${item?.user?.name}`}
+                      info={`${item?.created_at} | ${item?.user?.name}`} // Tarih ve kullanıcı adını gösteriyoruz
+                      images={item?.images}
                     />
                   );
                 }}
