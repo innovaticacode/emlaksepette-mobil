@@ -82,8 +82,6 @@ export default function Personal({ type }) {
       // İsteğin başarılı bir şekilde tamamlandığı durum
 
       setmessage(response.data.message);
-      navigation.navigate("Login", { showAlert: true });
-
       setname("");
       setePosta("");
       setpassword("");
@@ -94,6 +92,9 @@ export default function Personal({ type }) {
       setChecked3(false);
       seterrorStatu(0);
       seterrorMessage("");
+      setTimeout(() => {
+        navigation.replace('Login',{showAlert: true})
+      }, 700);
     } catch (error) {
       // Hata durumunda
 
@@ -161,7 +162,7 @@ export default function Personal({ type }) {
         break;
       case password.length < 6:
         seterrorStatu(6);
-        seterrorMessage("Şifreniz En Az 5 Karakter Olmalıdır");
+        seterrorMessage("Şifreniz En Az 6 Karakter Olmalıdır");
         setTimeout(() => {
           seterrorStatu(0);
         }, 1000);

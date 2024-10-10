@@ -32,6 +32,7 @@ const Home = ({ route }) => {
     } else if (route?.params?.status === "logout") {
       setUser({});
     }
+ 
   }, [route?.params?.status]);
 
   useEffect(() => {
