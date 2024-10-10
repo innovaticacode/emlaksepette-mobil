@@ -99,6 +99,8 @@ export default function Profile() {
     },
   ]);
 
+  const [color, setColor] = useState("#000000");
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -256,6 +258,24 @@ export default function Profile() {
     }
   };
 
+  const controlColor = () => {
+    const dataColor = storeData?.data?.banner_hex_code;
+    if (!dataColor) return;
+    const isBlackOrShadesOfBlack = (color) => {
+      if (color === "#000000") return true;
+      const hexColor = parseInt(color.replace("#", ""), 16);
+      return hexColor >= 0x000000 && hexColor <= 0x111111; // Bu aralıkta ise beyaz yap
+    };
+
+    if (isBlackOrShadesOfBlack(dataColor)) {
+      setColor("#fff");
+    }
+  };
+
+  useEffect(() => {
+    controlColor();
+  }, [storeData]);
+
   return (
     <>
       {loadingShopping ? (
@@ -346,7 +366,7 @@ export default function Profile() {
                         <Text
                           style={{
                             fontSize: 14,
-                            color: "#000000",
+                            color: color ? color : "#000000",
                             fontWeight: "700",
                           }}
                         >
@@ -355,7 +375,12 @@ export default function Profile() {
                         <Star name="verified" size={19} color={"#0275FF"} />
                       </View>
 
-                      <Text style={{ fontSize: 12, color: "#000000" }}>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: color ? color : "#000000",
+                        }}
+                      >
                         {storeData?.data?.corporate_type}
                       </Text>
                     </View>
