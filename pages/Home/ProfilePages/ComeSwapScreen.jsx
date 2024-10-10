@@ -136,7 +136,7 @@ export default function ComeSwapScreen() {
                     padding: 0,
                     borderRadius: 10,
                     backgroundColor: "#F8F7F4",
-                    gap: 19,
+                    gap: 21,
                   },
                 ]}
               >
