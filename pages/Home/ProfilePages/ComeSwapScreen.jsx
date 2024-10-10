@@ -80,6 +80,8 @@ export default function ComeSwapScreen() {
             },
           }
         );
+        console.log(id + " id budurrr");
+
         openModal();
         setswapSuggestdetails(response?.data?.form);
         setselectedModalIndex(index);
@@ -134,7 +136,7 @@ export default function ComeSwapScreen() {
                     padding: 0,
                     borderRadius: 10,
                     backgroundColor: "#F8F7F4",
-                    gap: 20,
+                    gap: 19,
                   },
                 ]}
               >
