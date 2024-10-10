@@ -12,6 +12,7 @@ import {
   TextInput,
   Pressable,
   Share,
+  Dimensions,
 } from "react-native";
 import {
   ALERT_TYPE,
@@ -620,7 +621,7 @@ export default function Details({ navigation }) {
       console.error("Telefon numarası bulunamadı.");
     }
   };
-
+const {width,height}=Dimensions.get("window")
   return (
     <>
       <AlertNotificationRoot>
@@ -643,7 +644,7 @@ export default function Details({ navigation }) {
                   <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
                 </View>
               </Modal>
-              <View style={{ position: 'absolute', width: '100%', bottom: 35, padding: 4, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
+              <View style={{ position: 'absolute', width: '100%', bottom: 0, paddingBottom:Platform.OS ==='android'? width * 0.05:width * 0.07,paddingTop:9, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around',backgroundColor:'#F2F2F2' }}>
                 <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }} onPress={handleOpenPhone}>
                   <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }} >Ara</Text>
                 </TouchableOpacity>

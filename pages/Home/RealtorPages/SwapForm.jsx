@@ -29,6 +29,69 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import { ActivityIndicator } from "react-native-paper";
 import { Platform } from "react-native";
+import { apiRequestGet } from "../../../components/methods/apiRequest";
+
+const HomeInfo = ({ ımage, user, No, price, title, type }) => {
+  return(
+  <View style={{ flexDirection: "row", gap: 4 }}>
+    <View style={{ flex: 0.5 / 2 }}>
+      <View
+        style={{
+          width: 80,
+          height: 80,
+          backgroundColor: "red",
+          borderRadius: 5,
+        }}
+      >
+        <ImageBackground
+          source={{
+            uri: ımage,
+            // uri: `${apiUrl}housing_images/${
+            //   JSON.parse(data?.housing?.housing_type_data)["image"]
+            // }`,
+          }}
+          style={{ width: "100%", height: "100%" }}
+          borderRadius={5}
+        />
+      </View>
+    </View>
+    <View style={{ flex: 1.5 / 2, gap: 4 }}>
+      <View style={{ flex: 1 / 2, paddingTop: 2 }}>
+        <Text numberOfLines={2} style={{ color: "#333", fontSize: 13 }}>
+          {title}
+          {/* {data?.pageInfo?.meta_title} */}
+        </Text>
+      </View>
+      <View style={{ flex: 1 / 2, gap: 4, paddingTop: 2, bottom: 0 }}>
+        <Text style={{ fontSize: 12, fontWeight: "600", color: "#333" }}>
+          Satıcı:{" "}
+          <Text style={{ fontWeight: "400" }}>
+            {user}
+            {/* {data?.housing?.user?.name} */}
+          </Text>
+        </Text>
+        <Text style={{ fontSize: 12, fontWeight: "600", color: "#333" }}>
+          İlan No:{" "}
+          <Text style={{ fontWeight: "400" }}>
+           {No}
+          </Text>
+        </Text>
+        <Text style={{ fontSize: 12, color: "#264ABB", fontWeight: "700" }}>
+          {
+            addDotEveryThreeDigits(price)
+          }
+          ₺
+          {/* {data &&
+          data.housing &&
+          addDotEveryThreeDigits(
+            JSON.parse(data.housing.housing_type_data)["price"]
+          )}{" "} */}
+        </Text>
+      </View>
+    </View>
+  </View>
+  )
+};
 
 export default function SwapForm({ openModal, color }) {
   const [SwapChoose, setSwapChoose] = useState("");
@@ -103,33 +166,27 @@ export default function SwapForm({ openModal, color }) {
   const [email, setemail] = useState("");
   const [loading, setloading] = useState(false);
   const route = useRoute();
-  const { houseid } = route.params;
+  const { houseid, type, projectId } = route.params;
   const [data, setData] = useState({});
   const [namFromGetUser, setnamFromGetUser] = useState([]);
-
-  // const GetUserInfo =async ()=>{
-
-  //    try {
-  //      if (user?.access_token && user) {
-  //        const userInfo = await axios.get(
-  //          "https://private.emlaksepette.com/api/users/" + user?.id,
-  //          {
-  //            headers: {
-  //              Authorization: `Bearer ${user?.access_token}`,
-  //            },
-  //          }
-  //        );
-  //        const userData = userInfo?.data?.user
-  //        setnamFromGetUser(userData)
-
-  //      }
-
-  //    } catch (error) {
-  //      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
-  //    }finally{
-
-  //    }
-  //  }
+  const [projectInfo, setprojectInfo] = useState({});
+  const [loadingProject, setloadingProject] = useState(false);
+  const [roomData, setroomData] = useState({});
+  const GetProjectHousingDetails = () => {
+    setloadingProject(true);
+    apiRequestGet(`project/${projectId}`)
+      .then((res) => {
+        setprojectInfo(res.data);
+        const RoomInfo = res.data.projectHousingsList[houseid];
+        setroomData(RoomInfo);
+      })
+      .catch((err) => {
+        alert("Proje Bilgisi Yüklenemedi");
+      })
+      .finally(() => {
+        setloadingProject(false);
+      });
+  };
 
   const fetchDetails = async () => {
     try {
@@ -147,21 +204,31 @@ export default function SwapForm({ openModal, color }) {
     }
   };
   useEffect(() => {
-    fetchDetails();
+    if (type == 1 && user) {
+      GetProjectHousingDetails();
+    } else {
+      fetchDetails();
+    }
   }, []);
   const [loadingPost, setloadingPost] = useState(false);
   const postData = async () => {
     setloadingPost(true);
     try {
       var formData = new FormData();
+      formData.append('item_type',type)
+      formData.append('item_id',type==1? projectId:houseid)
+      if (type==1) {
+        formData.append('room_order',type==1?houseid:null)
+      }
       formData.append("ad", name);
+      
       formData.append("soyad", surname);
       formData.append("telefon", phoneNmber);
       formData.append("email", email);
       formData.append("sehir", city);
       formData.append("ilce", county);
       formData.append("takas_tercihi", SwapChoose);
-      formData.append("store_id", data?.housing?.user?.id);
+      formData.append("store_id", type==1 ? projectInfo?.project?.user?.id : data?.housing?.user?.id);
       formData.append("emlak_tipi", estateChoose);
       formData.append("konut_tipi", houseType);
       formData.append("oda_sayisi", roomCount);
@@ -623,7 +690,7 @@ export default function SwapForm({ openModal, color }) {
   const navigation = useNavigation();
   return (
     <AlertNotificationRoot>
-      {loading ? (
+      {loading || loadingProject ?  (
         <View
           style={{
             alignItems: "center",
@@ -639,65 +706,53 @@ export default function SwapForm({ openModal, color }) {
           style={{ padding: 10, gap: 10, backgroundColor: "#ffffff" }}
           contentContainerStyle={{ gap: 10, paddingBottom: 50 }}
         >
-          <View style={{ flexDirection: "row", gap: 4 }}>
-            <View style={{ flex: 0.5 / 2 }}>
-              <View
-                style={{
-                  width: 80,
-                  height: 80,
-                  backgroundColor: "red",
-                  borderRadius: 5,
-                }}
-              >
-                {data && data?.housing && data?.housing?.housing_type_data && (
-                  <ImageBackground
-                    source={{
-                      uri: `${apiUrl}housing_images/${
-                        JSON.parse(data?.housing?.housing_type_data)["image"]
-                      }`,
-                    }}
-                    style={{ width: "100%", height: "100%" }}
-                    borderRadius={5}
-                  />
-                )}
-              </View>
-            </View>
-            <View style={{ flex: 1.5 / 2, gap: 4 }}>
-              <View style={{ flex: 1 / 2, paddingTop: 2 }}>
-                <Text numberOfLines={2} style={{ color: "#333", fontSize: 13 }}>
-                  {data?.pageInfo?.meta_title}
-                </Text>
-              </View>
-              <View style={{ flex: 1 / 2, gap: 4, paddingTop: 2, bottom: 0 }}>
-                <Text
-                  style={{ fontSize: 12, fontWeight: "600", color: "#333" }}
-                >
-                  Satıcı:{" "}
-                  <Text style={{ fontWeight: "400" }}>
-                    {data?.housing?.user?.name}
-                  </Text>
-                </Text>
-                <Text
-                  style={{ fontSize: 12, fontWeight: "600", color: "#333" }}
-                >
-                  İlan No:{" "}
-                  <Text style={{ fontWeight: "400" }}>
-                    2000{data?.housing?.id}
-                  </Text>
-                </Text>
-                <Text
-                  style={{ fontSize: 12, color: "#264ABB", fontWeight: "700" }}
-                >
-                  {data &&
-                    data.housing &&
-                    addDotEveryThreeDigits(
-                      JSON.parse(data.housing.housing_type_data)["price"]
-                    )}{" "}
-                  ₺
-                </Text>
-              </View>
-            </View>
-          </View>
+        
+          {
+            (type == 1 ? (
+              
+              <HomeInfo
+              ımage={`${apiUrl}project_housing_images/${roomData['image[]']}`}
+              type={1}
+                title={
+                  roomData["advertise_title[]"]
+                    ? roomData["advertise_title[]"]
+                    : "Başlık Yok"
+                }
+                No={`1000${projectId}-${houseid}`}
+                user={projectInfo?.project?.user?.name}
+                price={
+                  projectInfo && projectId && projectInfo?.projectHousingsList && roomData && projectInfo?.project&&
+                  JSON.parse(roomData["payment-plan[]"]) &&
+                  roomData["share_sale[]"] &&
+                  JSON.parse(roomData["payment-plan[]"]).includes("taksitli")
+                    ? roomData["share_sale[]"] !== "[]"
+                      ? roomData["installments-price[]"] /
+                        roomData["number_of_shares[]"]
+                      : roomData["installments-price[]"]
+                    : roomData["share_sale[]"] !== "[]"
+                    ? roomData["price[]"] / roomData["number_of_shares[]"]
+                    : roomData["price[]"]
+                }
+              />
+            ) : (
+          <HomeInfo ımage={
+            data && data.housing && data.housing.housing_type_data && `${apiUrl}housing_images/${
+              JSON.parse(data?.housing?.housing_type_data)["image"]
+            }`} 
+              title={data?.pageInfo?.meta_title}
+              price={
+                data &&
+          data.housing &&
+          
+            JSON.parse(data?.housing?.housing_type_data)["price"]
+          
+              }
+              user={data?.housing?.user?.name}
+              No={`2000${data?.housing?.id}`}
+            />
+            ))
+          } 
+
           <View style={{ gap: 6 }}>
             <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
               Ad:

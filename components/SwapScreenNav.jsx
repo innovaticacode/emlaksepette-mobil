@@ -204,12 +204,14 @@ const SwapScreenNav = () => {
       const response = await axios.get(
         "https://private.emlaksepette.com/api/cities"
       );
+      
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
       throw error;
     }
   };
+
   useEffect(() => {
     fetchCity()
       .then((citites) => setCities(citites.data))
@@ -243,6 +245,17 @@ const SwapScreenNav = () => {
     setPhoneId(formattedPhoneNumber);
   };
 
+  const fetchDataCounty = async (value) => {
+    try {
+      const response = await axios.get(
+        `https://private.emlaksepette.com/api/counties/${value}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Hata:", error);
+      throw error;
+    }
+  };
   const onChangeCity = (value) => {
     setcity(value);
     if (value) {
@@ -255,17 +268,7 @@ const SwapScreenNav = () => {
       setcounties([]);
     }
   };
-  const fetchDataCounty = async (value) => {
-    try {
-      const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Hata:", error);
-      throw error;
-    }
-  };
+
 
   const [errorMessage, seterrorMessage] = useState("");
 
