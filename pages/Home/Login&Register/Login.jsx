@@ -170,6 +170,12 @@ export default function Login({ navigation }) {
     }
   };
 
+  const closeModal = () => {
+    navigation.goBack();
+  };
+  
+  
+
   return (
     <AlertNotificationRoot>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -437,7 +443,10 @@ export default function Login({ navigation }) {
                               fontSize: 13,
                             }}
                             onPress={() => {
-                              navigation.navigate("Register");
+                              closeModal();
+                              setTimeout(() => {
+                                navigation.navigate("Register");
+                              }, 400);
                             }}
                           >
                             Üye Ol
