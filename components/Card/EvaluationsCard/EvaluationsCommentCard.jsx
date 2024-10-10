@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, ScrollView } from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { styles } from "./EvaluationsCommentCard.styles";
 import { frontEndUriBase } from "../../methods/apiRequest";
+import ImageView from "react-native-image-viewing";
 
 const EvaluationsCommentCard = (props) => {
   const {
@@ -16,6 +17,8 @@ const EvaluationsCommentCard = (props) => {
 
   let formattedMainImage = "";
   const [parsedImages, setParsedImages] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     if (images) {
@@ -37,6 +40,15 @@ const EvaluationsCommentCard = (props) => {
   } else {
     console.warn("Main image is not provided or is invalid:", mainImage);
   }
+
+  const handleImagePress = (index) => {
+    setCurrentImageIndex(index);
+    setVisible(true);
+  };
+
+  const imagesList = parsedImages.map((image) => ({
+    uri: frontEndUriBase + image.replace("public/", "storage/"),
+  }));
 
   return (
     <View style={styles.container}>
@@ -70,18 +82,34 @@ const EvaluationsCommentCard = (props) => {
           <View style={{ flexDirection: "row" }}>
             {Array.isArray(parsedImages) && parsedImages.length > 0
               ? parsedImages.map((image, index) => (
-                  <Image
-                    source={{
-                      uri:
-                        frontEndUriBase + image.replace("public/", "storage/"),
-                    }}
-                    style={styles.multiImage}
-                  />
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => handleImagePress(index)}
+                  >
+                    <Image
+                      source={{
+                        uri:
+                          frontEndUriBase +
+                          image.replace("public/", "storage/"),
+                      }}
+                      style={styles.multiImage}
+                    />
+                  </TouchableOpacity>
                 ))
               : null}
           </View>
         </ScrollView>
       </View>
+
+      <ImageView
+        images={imagesList}
+        imageIndex={currentImageIndex}
+        visible={visible}
+        onRequestClose={() => {
+          setVisible(false);
+          setCurrentImageIndex(0);
+        }}
+      />
     </View>
   );
 };
