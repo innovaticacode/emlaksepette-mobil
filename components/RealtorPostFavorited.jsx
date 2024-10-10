@@ -186,8 +186,8 @@ export default function RealtorPostFavorited({
               showConfirmButton={true}
               cancelText="Hayır"
               confirmText="Evet"
-              cancelButtonColor="#1d8027"
-              confirmButtonColor="#ce4d63"
+              cancelButtonColor="#ce4d63"
+              confirmButtonColor="#1d8027"
               onCancelPressed={() => {
                 setShowAlert(false);
               }}
@@ -207,7 +207,7 @@ export default function RealtorPostFavorited({
                 <View style={[styles.captionAndIcons, { flex: 1 }]}>
                   <View style={styles.caption}>
                     <Text style={{ fontSize: 9, color: "black" }}>
-                      İlan No: {2000000 + (projectId ? projectId : HouseId)}-
+                      İlan No: {2000000 + (projectId ? projectId : HouseId)}
                       {housingId}
                     </Text>
                     <Text

@@ -515,8 +515,8 @@ export default function Favorites() {
                   showConfirmButton={true}
                   cancelText="Hayır"
                   confirmText="Evet"
-                  cancelButtonColor="#1d8027"
-                  confirmButtonColor="#ce4d63"
+                  cancelButtonColor="#ce4d63"
+                  confirmButtonColor="#1d8027"
                   onCancelPressed={() => {
                     setmodalForDeleteFavorites(false);
                   }}
