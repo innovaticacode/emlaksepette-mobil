@@ -2203,7 +2203,9 @@ export default function PostDetail() {
                                 }}
                                 onPress={() => {
                                   setColectionSheet(false);
-                                  navigation.navigate("Login");
+                                  setTimeout(() => {
+                                    navigation.navigate("Login");
+                                  }, 400);
                                 }}
                               >
                                 <Text
@@ -2570,9 +2572,11 @@ export default function PostDetail() {
                 setModalVisible(false);
               }}
               onConfirmPressed={() => {
-                navigation.navigate("Login");
                 setAlertForSign(false);
                 setModalVisible(false);
+                setTimeout(() => {
+                  navigation.navigate("Login");
+                }, 400);
               }}
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
               cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -2631,8 +2635,10 @@ export default function PostDetail() {
                 setAlertForFavorite(false);
               }}
               onConfirmPressed={() => {
-                navigation.navigate("Login");
                 setAlertForFavorite(false);
+                setTimeout(() => {
+                  navigation.navigate("Login");
+                }, 400);
               }}
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
               cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}

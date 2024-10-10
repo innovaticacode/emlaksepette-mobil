@@ -34,7 +34,7 @@ const Area = ({ index }) => {
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-  
+
   const fetchFeaturedEstates = async (reset = false) => {
     if (loading || (!hasMore && !reset)) return;
     const config = {
@@ -43,7 +43,8 @@ const Area = ({ index }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${reset ? 1 : page
+        `https://private.emlaksepette.com/api/real-estates?page=${
+          reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
       );
@@ -108,7 +109,7 @@ const Area = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <View style={{ paddingHorizontal: 0 }}>
             <Image
               source={Land}
@@ -181,8 +182,9 @@ const Area = ({ index }) => {
                     openSharing={
                       JSON.parse(item.housing_type_data)["open_sharing1"]
                     }
-                    image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image
-                      }`}
+                    image={`${apiUrl}/housing_images/${
+                      JSON.parse(item.housing_type_data).image
+                    }`}
                     column1_additional={item.column1_additional}
                     column1_name={
                       JSON.parse(item.housing_type_data)[item.column1_name]
@@ -225,7 +227,7 @@ const Area = ({ index }) => {
               />
             )}
           </AlertNotificationRoot>
-        </View>
+        </ScrollView>
       )}
     </>
   );

@@ -268,8 +268,10 @@ export default function RealtorPost({
             setalertForFavorite(false);
           }}
           onConfirmPressed={() => {
-            navigation.navigate("Login");
             setalertForFavorite(false);
+            setTimeout(() => {
+              navigation.navigate("Login");
+            }, 400);
           }}
           confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
           cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -299,8 +301,10 @@ export default function RealtorPost({
             setalertForSign(false);
           }}
           onConfirmPressed={() => {
-            navigation.navigate("Login");
             setalertForSign(false);
+            setTimeout(() => {
+              navigation.navigate("Login");
+            }, 400);
           }}
           confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
           cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}

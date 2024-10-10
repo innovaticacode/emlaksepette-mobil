@@ -1291,7 +1291,9 @@ export default function Details({ navigation }) {
                                 }}
                                 onPress={() => {
                                   setColectionSheet(false);
-                                  navigation.navigate("Login");
+                                  setTimeout(() => {
+                                    navigation.navigate("Login");
+                                  }, 400);
                                 }}
                               >
                                 <Text
@@ -1462,9 +1464,11 @@ export default function Details({ navigation }) {
               setModalVisible(false);
             }}
             onConfirmPressed={() => {
-              navigation.navigate("Login");
               setAlertForSign(false);
               setModalVisible(false);
+              setTimeout(() => {
+                navigation.navigate("Login");
+              }, 400);
             }}
             confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
             cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}

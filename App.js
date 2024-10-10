@@ -237,6 +237,7 @@ export default function App({ route }) {
                       title: "Giriş Yap",
                       headerBackTitleVisible: false,
                       headerShown: false,
+                      presentation: 'modal',
                     }}
                   >
                     {(props) => <Login {...props} />}

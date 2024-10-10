@@ -486,7 +486,9 @@ export default function CreateCollections() {
                           padding: 10,
                         }}
                         onPress={() => {
-                          navigation.navigate("Login");
+                          setTimeout(() => {
+                            navigation.navigate("Login");
+                          }, 400);
                         }}
                       >
                         <Text style={{ color: "#FFFFFF", textAlign: "center" }}>

@@ -85,8 +85,10 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
                 <TouchableOpacity
                   disabled={user.access_token ? true : false}
                   onPress={() => {
-                    navigation.navigate("Login");
                     setIsDrawerOpen(false);
+                    setTimeout(() => {
+                      navigation.navigate("Login");
+                    }, 1000);
                   }}
                 >
                   <Text style={styles.userName}>
