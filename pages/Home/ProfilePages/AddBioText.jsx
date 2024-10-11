@@ -127,7 +127,7 @@ const [showButton, setshowButton] = useState(false)
       
     });
   }, [prevBioText,BioText]);
- console.log(BioText==prevBioText)
+
   return (
     loadingGetText?
     <View style={{alignItems:'center',justifyContent:'center',flex:1}}>
@@ -149,23 +149,29 @@ const [showButton, setshowButton] = useState(false)
     
         <RichToolbar
           editor={richText}
+           selectedIconTint="blue" // Aktif olan ikonun rengi mavi olacak
+        iconTint="#333"
           actions={[
-            actions?.setBold,
-            actions?.insertImage,
-            actions?.insertBulletsList,
-            actions?.insertOrderedList,
-            actions?.insertLink,
-            actions?.setStrikethrough,
-            actions?.setItalic,
-            actions?.setUnderline,
-            actions?.heading1,
-            actions.setTextColor
+actions.setBold,
+actions.setItalic,
+actions.insertBulletsList,
+actions.insertOrderedList,
+actions.insertLink,
+actions.setStrikethrough,
+actions.setUnderline,
+actions.undo,
+actions.redo,
+actions.heading2,
+actions.fontSize,
+
           
           ]}
-          iconMap={{ [actions?.heading1]: handleHead }}
+          
+          iconMap={{ [actions?.heading2]: handleHead ,  }}
+     
         />
         <RichEditor
-
+          
         useContainer={false}
           ref={richText}
           placeholder="Tanıtım Yazısı Yazınız"
@@ -181,7 +187,6 @@ const [showButton, setshowButton] = useState(false)
       
         </View>
        
-        
        
      
       

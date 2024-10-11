@@ -185,7 +185,7 @@ const Home = ({ route }) => {
         options={{
           tabBarLabel: user.access_token
             ? user.role === "Kurumsal Hesap"
-              ? "Mağazam"
+              ? "Panelim"
               : "Hesabım"
             : "Giriş Yap",
           headerShown: false,
