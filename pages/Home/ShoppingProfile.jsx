@@ -229,9 +229,7 @@ export default function ShoppingProfile() {
     }
   };
 
-  useEffect(() => {
-    Image.prefetch(PhotoUrl + namFromGetUser.profile_image);
-  }, []);
+ 
 
   console.log(user?.id + " asdsd sd ");
   useEffect(() => {

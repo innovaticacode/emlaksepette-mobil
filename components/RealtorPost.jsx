@@ -607,7 +607,7 @@ export default function RealtorPost({
               {column3_name && (
                 <Info
                   text={`${column3_name} ${
-                    column3_additional ? column3_additional : ".Kat"
+                    column3_additional ? column3_additional :""
                   }`}
                 />
               )}

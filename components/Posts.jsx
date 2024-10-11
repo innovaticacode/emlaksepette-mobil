@@ -546,7 +546,7 @@ export default function Posts({
                 justifyContent: bookmarkStatus ? "space-between" : "flex-end",
               }}
             >
-              {BookmarkStatus.map((item) => (
+              {/* {BookmarkStatus.map((item) => (
                 <TouchableOpacity
                   onPress={() => {
                     changeBookmark();
@@ -587,7 +587,7 @@ export default function Posts({
                     </View>
                   )}
                 </TouchableOpacity>
-              ))}
+              ))} */}
 
               <TouchableOpacity onPress={addFavorites}>
                 {sold || offSaleStatus == 1 ? (
@@ -1057,27 +1057,39 @@ export default function Posts({
       {data?.project?.list_item_values && (
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>
-            <Info
-              text={
-                roomData[`${data?.project?.list_item_values?.column1_name}[]`] +
-                " " +
-                (data.project.list_item_values.column1_additional || "")
-              }
-            />
-            <Info
+            {
+               roomData[`${data?.project?.list_item_values?.column1_name}[]`] &&
+               <Info
+               text={
+                 roomData[`${data?.project?.list_item_values?.column1_name}[]`] +
+                 " " +
+                 (data.project.list_item_values.column1_additional || "")
+               }
+             />
+            }
+           
+            {
+              roomData[`${data?.project?.list_item_values?.column2_name}[]`] &&
+              <Info
               text={
                 roomData[`${data?.project?.list_item_values?.column2_name}[]`] +
                 " " +
                 (data.project.list_item_values.column2_additional || "")
               }
             />
-            <Info
+            }
+           
+            {
+              roomData[`${data?.project?.list_item_values?.column3_name}[]`] &&
+              <Info
               text={
-                roomData[`${data?.project?.list_item_values?.column3_name}[]`] +
+                roomData[`${data?.project?.list_item_values?.column3_name}[]`] ? roomData[`${data?.project?.list_item_values?.column3_name}[]`]:null +
                 " " +
                 (data.project.list_item_values.column3_additional || "")
               }
             />
+            }
+           
             <Info text={moment(project.created_at).locale("tr").format("LL")} />
           </View>
           <View style={styles.infoLocation}>
@@ -1235,7 +1247,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
       },
       android: {
-        elevation: 5,
+        elevation: 0,
       },
     }),
   },

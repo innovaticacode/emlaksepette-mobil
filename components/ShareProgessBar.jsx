@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     },
     progressBarContainer: {
       flexDirection: 'row',  // Parçaları yan yana diz
-      gap:3
+      gap:4
     },
     parca: {
       height: 10,
