@@ -32,6 +32,9 @@ export default function ComeSwapScreen() {
   const [mySwapRequest, setMySwapRequest] = useState([]);
 
   const [swapSuggestdetails, setswapSuggestdetails] = useState([]);
+  const [swapSuggestdetailsCompany, setswapSuggestdetailsCompany] = useState(
+    []
+  );
   const [selectedModalIndex, setselectedModalIndex] = useState(0);
   const [DetailModal, setDetailModal] = useState(false);
 
@@ -80,8 +83,12 @@ export default function ComeSwapScreen() {
             },
           }
         );
+        console.log(id + " id budurrr");
+
         openModal();
         setswapSuggestdetails(response?.data?.form);
+        setswapSuggestdetailsCompany(response?.data?.item);
+
         setselectedModalIndex(index);
       }
     } catch (error) {
@@ -134,7 +141,7 @@ export default function ComeSwapScreen() {
                     padding: 0,
                     borderRadius: 10,
                     backgroundColor: "#F8F7F4",
-                    gap: 20,
+                    gap: 21,
                   },
                 ]}
               >
@@ -618,12 +625,16 @@ export default function ComeSwapScreen() {
                         overflow: "hidden",
                       }}
                     />
-                    <Text style={{ fontWeight: "700" }}>Maliyetine Ev</Text>
+                    <Text style={{ fontWeight: "700" }}>
+                      {swapSuggestdetailsCompany?.title}
+                    </Text>
                   </View>
                   <View style={{ marginTop: 20 }}>
                     <Text style={{ fontWeight: "600" }}>
-                      Maliyetine evden kocaeli'de kandırada muhteşem fırsat
-                      5.Nolu proje
+                      {swapSuggestdetailsCompany?.description.replace(
+                        /<\/?(p|ol|li|ul)>/g,
+                        ""
+                      )}
                     </Text>
                   </View>
 
