@@ -25,11 +25,11 @@ const [isVisible, setIsVisible] = useState(false)
         </View>
       </View>
 
-      <ImageBackground source={{uri:(IsSelectImage && SelectedPictureId==id && NewImage)? NewImage.uri: `https://private.emlaksepette.com${image}`}} style={{width:'100%',height:'100%'}} borderRadius={10}/>
+      <ImageBackground source={{uri:`${frontEndUriBase}storage/store_banners/${image}`}} style={{width:'100%',height:'100%'}} borderRadius={10}/>
       <ImageViewing
               images={[
                 {
-                  uri: `https://private.emlaksepette.com${image}`,
+                  uri: `https://private.emlaksepette.com/storage/store_banners/${image}`,
                 },
               ]}
               imageIndex={0}
