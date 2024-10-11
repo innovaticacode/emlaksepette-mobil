@@ -631,10 +631,12 @@ export default function ComeSwapScreen() {
                   </View>
                   <View style={{ marginTop: 20 }}>
                     <Text style={{ fontWeight: "600" }}>
-                      {swapSuggestdetailsCompany?.description.replace(
-                        /<\/?(p|ol|li|ul)>/g,
-                        ""
-                      )}
+                      {swapSuggestdetailsCompany?.description
+                        ? swapSuggestdetailsCompany.description.replace(
+                            /<\/?(p|ol|li|ul)>/g,
+                            ""
+                          )
+                        : null}
                     </Text>
                   </View>
 
