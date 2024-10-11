@@ -400,12 +400,130 @@ export default function Favorites() {
       const filtered = filterFavorites();
       setFilteredFavorites(filtered);
     } else {
-      setFilteredFavorites(favorites); // Favoriler zaten varsa, tekrar API çağrısı yapma
-      if (favorites.length === 0) {
-        fetchFavorites(); // Sadece favorites boşsa API çağrısı yap
-      }
+      setFilteredFavorites([]);
     }
   }, [searchText]);
+
+  const renderFavorite = (favorite, i) => {
+    if (favorite?.project) {
+      const { image, column1, column2, column3, no, location, title, price } =
+        extractProjectData(favorite);
+      return (
+        <RealtorPostFavorited
+          key={i}
+          changeFavorites={changeFavorites}
+          type={1}
+          projectId={favorite?.project?.id}
+          housingId={favorite?.housing_id}
+          no={no}
+          column1={column1}
+          column2={column2}
+          column3={column3}
+          location={location}
+          image={image}
+          title={title}
+          price={price}
+          m2="20"
+          GetId={GetIdForCart}
+          fetchData={fetchFavorites}
+          selectFavorite={SelectFavorite}
+          isChoosed={isChoosed}
+        />
+      );
+    } else if (favorite?.housing) {
+      const { image, column1, column2, column3, location, title, price, no } =
+        extractHousingData(favorite);
+      return (
+        <RealtorPostFavorited
+          key={i}
+          changeFavorites={changeFavorites}
+          type={2}
+          HouseId={favorite?.housing?.id}
+          no={no}
+          image={image}
+          title={title}
+          price={price}
+          column1={column1}
+          column2={column2}
+          column3={column3}
+          location={location}
+          GetId={GetIdForCart}
+          fetchData={fetchFavorites}
+          selectFavorite={SelectFavorite}
+          isChoosed={isChoosed}
+        />
+      );
+    }
+  };
+
+  const extractProjectData = (favorite) => {
+    const image = favorite?.project_housing?.find(
+      (housing) =>
+        housing.room_order === favorite?.housing_id &&
+        housing.name === "image[]" &&
+        housing.project_id === favorite?.project?.id
+    )?.value;
+
+    const column1 = getColumnData(favorite, 1);
+    const column2 = getColumnData(favorite, 2);
+    const column3 = getColumnData(favorite, 3);
+
+    const no = 1000000 + favorite?.project?.id;
+    const location =
+      favorite?.project?.city?.title +
+      " / " +
+      favorite?.project?.county?.ilce_title;
+    const title =
+      favorite?.project?.project_title +
+      " adlı projede " +
+      favorite?.housing_id +
+      " No'lu konut";
+    const price = favorite?.project_housing?.find(
+      (housing) =>
+        housing.room_order === favorite?.housing_id &&
+        housing.name === "price[]"
+    )?.value;
+
+    return { image, column1, column2, column3, no, location, title, price };
+  };
+
+  const extractHousingData = (favorite) => {
+    const housingData = JSON.parse(
+      favorite?.housing?.housing_type_data || "{}"
+    );
+    const image = housingData?.image
+      ? "https://private.emlaksepette.com/housing_images/" + housingData?.image
+      : "";
+    const column1 =
+      housingData[favorite?.housing?.list_items?.column1_name] || "";
+    const column2 =
+      housingData[favorite?.housing?.list_items?.column2_name] || "";
+    const column3 =
+      housingData[favorite?.housing?.list_items?.column3_name] || "";
+    const no = favorite?.housing?.id + 2000000;
+    const location =
+      favorite?.housing?.city?.title + " / " + favorite?.housing?.county?.title;
+    const title = favorite?.housing?.title;
+    const price = housingData?.price || "0";
+
+    return { image, column1, column2, column3, no, location, title, price };
+  };
+
+  const getColumnData = (favorite, columnIndex) => {
+    return (
+      favorite?.project_housing?.find(
+        (housing) =>
+          housing.room_order === favorite?.housing_id &&
+          housing.name ===
+            favorite?.project?.list_item_values[`column${columnIndex}_name`] +
+              "[]" &&
+          housing.project_id === favorite?.project?.id
+      )?.value +
+      " " +
+      (favorite?.project?.list_item_values[`column${columnIndex}_additional`] ||
+        "")
+    );
+  };
 
   return (
     <AlertNotificationRoot>
@@ -422,7 +540,7 @@ export default function Favorites() {
           </View>
         ) : (
           <View style={styles.container}>
-            {favorites.length === 0 && filteredFavorites.length === 0 ? (
+            {favorites.length === 0 ? (
               <NoDataScreen
                 message="Favorilerinizde ilan bulunmamaktadır."
                 iconName="heart-plus"
@@ -483,6 +601,7 @@ export default function Favorites() {
                       </Text>
                     </TouchableOpacity>
                   </View>
+
                   {isChoosed && (
                     <View
                       style={{
@@ -582,7 +701,33 @@ export default function Favorites() {
                   contentContainerStyle={{}}
                   showsVerticalScrollIndicator={false}
                 >
-                  {(filteredFavorites.length > 0
+                  {searchText.length > 0 ? (
+                    filteredFavorites.length === 0 ? (
+                      <View style={styles.noResultsContainer}>
+                        <IconFilter
+                          name="emoticon-sad-outline"
+                          size={50}
+                          color="#EA2B2E"
+                        />
+                        <Text style={styles.noResultsText}>
+                          Arama sonucu bulunamadı.
+                        </Text>
+                        <Text style={styles.noResultsSubText}>
+                          Lütfen başka bir terim deneyin.
+                        </Text>
+                      </View>
+                    ) : (
+                      filteredFavorites.map((favorite, i) => {
+                        return renderFavorite(favorite, i);
+                      })
+                    )
+                  ) : (
+                    favorites.map((favorite, i) => {
+                      return renderFavorite(favorite, i);
+                    })
+                  )}
+
+                  {/* {(filteredFavorites.length > 0
                     ? filteredFavorites
                     : favorites
                   ).map((favorite, i) => {
@@ -790,7 +935,7 @@ export default function Favorites() {
                         />
                       );
                     }
-                  })}
+                  })} */}
                 </ScrollView>
               </>
             )}
@@ -912,6 +1057,26 @@ export default function Favorites() {
   );
 }
 const styles = StyleSheet.create({
+  noResultsContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+    backgroundColor: "#f8f8f8",
+  },
+  noResultsText: {
+    fontSize: 18,
+    color: "#333",
+    textAlign: "center",
+    marginTop: 10,
+    fontWeight: "bold",
+  },
+  noResultsSubText: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 5,
+  },
   container: {
     height: "100%",
   },
