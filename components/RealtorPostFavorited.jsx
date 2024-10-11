@@ -61,55 +61,59 @@ export default function RealtorPostFavorited({
     getValueFor("user", setUser);
   }, []);
 
-  const removeItem = () => {
-    if (type == 1) {
-      fetchData();
+  // favorite silme işleminde burası çalışıyor
+  const removeItem = async () => {
+    try {
       const config = {
         headers: { Authorization: `Bearer ${user.access_token}` },
       };
-      axios
-        .post(
-          "https://private.emlaksepette.com/api/add_project_to_favorites/" +
-            housingId,
+
+      let response;
+
+      if (type === 1) {
+        response = await axios.post(
+          `https://private.emlaksepette.com/api/add_project_to_favorites/${housingId}`,
           {
             project_id: projectId,
             housing_id: housingId,
           },
           config
-        )
-        .then((res) => {
-          Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "Başarılı",
-            textBody: `${res.data.message}`,
-            button: "Tamam",
-          });
-          changeFavorites(1, housingId, projectId);
-        });
-      setShowAlert(false);
-    } else {
-      fetchData();
-      const config = {
-        headers: { Authorization: `Bearer ${user.access_token}` },
-      };
-      axios
-        .post(
-          "https://private.emlaksepette.com/api/add_housing_to_favorites/" +
-            HouseId,
+        );
+        changeFavorites(1, housingId, projectId);
+        fetchData();
+      } else {
+        response = await axios.post(
+          `https://private.emlaksepette.com/api/add_housing_to_favorites/${HouseId}`,
           {
             housing_id: HouseId,
           },
           config
-        )
-        .then((res) => {
-          Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "Başarılı",
-            textBody: `${res.data.message}`,
-            button: "Tamam",
-          });
-          changeFavorites(1, housingId);
+        );
+        changeFavorites(1, housingId);
+        fetchData();
+      }
+
+      setTimeout(() => {
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Başarılı",
+          textBody: `${response.data.message}`,
+          button: "Tamam",
         });
+      }, 300);
+
+      setShowAlert(false);
+    } catch (error) {
+      console.error("Hata:", error);
+      setTimeout(() => {
+        Dialog.show({
+          type: ALERT_TYPE.WARNING,
+          title: "Hata",
+          textBody: "Favori ekleme işlemi sırasında bir hata oluştu.",
+          button: "Tamam",
+        });
+      }, 300);
+
       setShowAlert(false);
     }
   };
@@ -145,7 +149,6 @@ export default function RealtorPostFavorited({
       });
     }
   };
-  console.log(HouseId);
   const goToRealtorDetails = () => {
     if (isChoosed == true) {
       selectFavorite(HouseId);

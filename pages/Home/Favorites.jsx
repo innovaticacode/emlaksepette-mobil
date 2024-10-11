@@ -184,98 +184,114 @@ export default function Favorites() {
   };
 
   // DELETE ALL FUNCTION START
-  const deleteRequestWithToken = async () => {
+  const deleteAll = async () => {
+    console.debug("Favorite delete requests started");
     setLoading(true);
+
+    const deleteHousingRequest = axios.delete(
+      "https://private.emlaksepette.com/api/institutional/housing-favorite",
+      {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      }
+    );
+
+    const deleteProjectRequest = axios.delete(
+      "https://private.emlaksepette.com/api/institutional/project-favorite",
+      {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      }
+    );
+
     try {
-      const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/housing-favorite",
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
+      const [housingResponse, projectResponse] = await Promise.allSettled([
+        deleteHousingRequest,
+        deleteProjectRequest,
+      ]);
+
+      let successfulRequests = 0;
+      let housingSuccessful = false;
+      let projectSuccessful = false;
+      if (
+        housingResponse.status === "fulfilled" &&
+        housingResponse.value.status === 200
+      ) {
+        successfulRequests++;
+        housingSuccessful = true;
+      }
+
+      if (
+        projectResponse.status === "fulfilled" &&
+        projectResponse.value.status === 200
+      ) {
+        successfulRequests++;
+        projectSuccessful = true;
+      }
+      setTimeout(() => {
+        if (successfulRequests > 0) {
+          let message = "Favorilerden ";
+
+          if (housingSuccessful) {
+            message += "konut ";
+          }
+          if (projectSuccessful) {
+            message += (housingSuccessful ? "ve " : "") + "projeler ";
+          }
+
+          message += `başarıyla kaldırıldı.`;
+
+          setTimeout(() => {
+            Dialog.show({
+              type: ALERT_TYPE.SUCCESS,
+              title: "Başarılı",
+              textBody: message,
+              button: "Tamam",
+              onHide: () => {
+                fetchFavorites();
+              },
+            });
+          }, 500);
         }
-      );
-      if (response.status === 200) {
+        setLoading(false);
+      }, 300);
+      if (
+        housingResponse.status === "rejected" &&
+        projectResponse.status === "rejected"
+      ) {
         setTimeout(() => {
           Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "Başarılı",
-            textBody: ` Tüm ilanlar favorilerden kaldırıldı.`,
+            type: ALERT_TYPE.WARNING,
+            title: "Hata!",
+            textBody: "Tüm işlemler başarısız oldu.",
             button: "Tamam",
             onHide: () => {
-              fetchFavorites(); // Fetch favorites after dialog is dismissed
+              fetchFavorites();
             },
           });
-          setLoading(false); // End loading after showing the dialog
+          setLoading(false);
         }, 300);
       }
-      setmodalForDeleteFavorites(false);
     } catch (error) {
       setTimeout(() => {
         Dialog.show({
           type: ALERT_TYPE.WARNING,
           title: "Hata!",
-          textBody: "Tümünü Silme işlemi başarısız oldu.",
+          textBody: "İşlemler sırasında beklenmeyen bir hata oluştu.",
           button: "Tamam",
           onHide: () => {
-            fetchFavorites(); // Fetch favorites after dialog is dismissed
+            fetchFavorites();
           },
         });
-        setLoading(false); // End loading after showing the dialog
-      }, 500);
-      setmodalForDeleteFavorites(false);
+        setLoading(false);
+      }, 300);
     } finally {
-      setTimeout(() => setLoading(false));
       setmodalForDeleteFavorites(false);
     }
   };
 
-  const deleteRequestWithTokenProject = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/project-favorite",
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        setTimeout(() => {
-          Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "Başarılı",
-            textBody: `${FavoriteRemoveIDS.length} Tüm ilanlar favorilerden kaldırıldı.`,
-            button: "Tamam",
-            onHide: () => {
-              fetchFavorites(); // Fetch favorites after dialog is dismissed
-            },
-          });
-          setLoading(false); // End loading after showing the dialog
-        }, 300);
-      }
-      setmodalForDeleteFavorites(false);
-    } catch (error) {
-      setTimeout(() => {
-        Dialog.show({
-          type: ALERT_TYPE.WARNING,
-          title: "Hata!",
-          textBody: "Tümünü Silme işlemi başarısız oldu.",
-          button: "Tamam",
-          onHide: () => {
-            fetchFavorites(); // Fetch favorites after dialog is dismissed
-          },
-        });
-        setLoading(false); // End loading after showing the dialog
-      }, 300);
-      setmodalForDeleteFavorites(false);
-    } finally {
-      setTimeout(() => setLoading(false));
-      setmodalForDeleteFavorites(false);
-    }
-  };
-  // DELETE ALL FUNCTION END
   const SelectFavorite = (id) => {
     setFavoriteRemoveIDS((prevIds) => {
       if (prevIds.includes(id)) {
@@ -521,8 +537,7 @@ export default function Favorites() {
                     setmodalForDeleteFavorites(false);
                   }}
                   onConfirmPressed={() => {
-                    deleteRequestWithToken();
-                    deleteRequestWithTokenProject();
+                    deleteAll();
                   }}
                 />
 
