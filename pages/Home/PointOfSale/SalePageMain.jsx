@@ -29,10 +29,14 @@ export default function SalePageMain() {
       navigation.navigate("SalePage");
     }
   };
+
   const navigateToLogin = () => {
-    navigation.navigate("Login");
     closeModal();
+    setTimeout(() => {
+      navigation.navigate("Login");
+    }, 400);
   };
+
   const closeModal = () => {
     setIsCorporateTypeRight(false);
     setIsUserHaveToken(false);

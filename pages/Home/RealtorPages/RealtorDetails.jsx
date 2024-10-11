@@ -637,8 +637,6 @@ export default function PostDetail() {
     }
   };
 
-  
-
   // Handle page change in PagerView
   const [SeeAlertModal, setSeeAlertModal] = useState(false)
   const [show, setShow] = useState(false)
@@ -652,9 +650,7 @@ export default function PostDetail() {
             <ActivityIndicator color="#333" size={"large"} />
           </View>
         ) : (
-          <SafeAreaView
-            style={{  flex: 1, paddingTop: 20 }}
-          >
+          <SafeAreaView style={{ flex: 1, paddingTop: 20 }}>
             <Header onPress={toggleDrawer} index={setindex} tab={settab} />
             <Modal
               isVisible={isDrawerOpen}
@@ -689,9 +685,26 @@ export default function PostDetail() {
                 {data?.housing?.user?.id == user?.id ? (
                   <></>
                 ) : (
-                  <TouchableOpacity style={{width:'45%',backgroundColor:'#EA2B2E',padding:12,borderRadius:8}}  onPress={handleOpenPhone}>
-                  <Text style={{fontSize:14,color:'white',fontWeight:'600',textAlign:'center'}}>Ara</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      width: "45%",
+                      backgroundColor: "#EA2B2E",
+                      padding: 12,
+                      borderRadius: 8,
+                    }}
+                    onPress={handleOpenPhone}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: "white",
+                        fontWeight: "600",
+                        textAlign: "center",
+                      }}
+                    >
+                      Ara
+                    </Text>
+                  </TouchableOpacity>
                 )}
                 {data?.housing?.user?.id == user?.id ? (
                   <TouchableOpacity
@@ -956,19 +969,17 @@ export default function PostDetail() {
                   onRequestClose={() => setIsVisible(false)}
                 />
               </View>
-             
+
               <View style={styles.CaptionPriceAndSlider}>
-                <View style={{gap:25}}>
+                <View style={{ gap: 25 }}>
                   <View>
-                  <Text
+                    <Text
                       style={{
-                       
                         fontSize: 11,
                         color: "grey",
                         fontWeight: "700",
                       }}
                     >
-                      
                       {"Emlak" +
                         " > " +
                         data?.housing?.step1_slug.charAt(0).toUpperCase() +
@@ -978,63 +989,74 @@ export default function PostDetail() {
                         data?.housing?.step2_slug.slice(1)}
                     </Text>
                   </View>
-                  <View style={{width:'100%',flexDirection:'row'}}>
-                  
-
-                    <View style={{width:'100%',flexDirection:'row',alignItems:'center'}}>
-                    <View style={{width:'70%',gap:5}}>
-                        <View>
-                        <Text
-                    style={{
-                    
-                      fontSize: 11,
-                      color: "#333",
-                      fontWeight: "600",
-                    }}
-                  >
-                    {data?.housing?.city?.title} /{" "}
-                    {data?.housing?.county?.title}
-                  </Text>
-                        </View>
-                        <View>
-                        <Text
-                        numberOfLines={2}
-                    style={{
-                      fontWeight:'600',
-                      fontSize: 16,
-                      color: "#333",
-                      
-                    }}
-                  >
-                    {data?.pageInfo?.meta_title}
-                  </Text>
-                        </View>
-                    </View>
-                    <View style={{width:'30%'}}>
-                    {data && data.housing && data.housing.housing_type_data && (
-                    <Text
+                  <View style={{ width: "100%", flexDirection: "row" }}>
+                    <View
                       style={{
-                        textAlign:'right',
-                        color: "#0DAC2E",
-                        fontWeight: "bold",
-                        fontSize: 13,
+                        width: "100%",
+                        flexDirection: "row",
+                        alignItems: "center",
                       }}
                     >
-                      {addDotEveryThreeDigits(
-                        JSON.parse(data.housing.housing_type_data)["price"]
-                          ? JSON.parse(data.housing.housing_type_data)["price"]
-                          : JSON.parse(data.housing.housing_type_data)[
-                              "daily_rent"
-                            ]
-                      )}{" "}
-                      ₺{" "}
-                      {JSON.parse(data.housing.housing_type_data)[
-                        "daily_rent"
-                      ] && <Text style={{ color: "#EA2A28" }}>/ Gecelik</Text>}
-                    </Text>
-                  )}
-                    </View>
-                  
+                      <View style={{ width: "70%", gap: 5 }}>
+                        <View>
+                          <Text
+                            style={{
+                              fontSize: 11,
+                              color: "#333",
+                              fontWeight: "600",
+                            }}
+                          >
+                            {data?.housing?.city?.title} /{" "}
+                            {data?.housing?.county?.title}
+                          </Text>
+                        </View>
+                        <View>
+                          <Text
+                            numberOfLines={2}
+                            style={{
+                              fontWeight: "600",
+                              fontSize: 16,
+                              color: "#333",
+                            }}
+                          >
+                            {data?.pageInfo?.meta_title}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={{ width: "30%" }}>
+                        {data &&
+                          data.housing &&
+                          data.housing.housing_type_data && (
+                            <Text
+                              style={{
+                                textAlign: "right",
+                                color: "#0DAC2E",
+                                fontWeight: "bold",
+                                fontSize: 13,
+                              }}
+                            >
+                              {addDotEveryThreeDigits(
+                                JSON.parse(data.housing.housing_type_data)[
+                                  "price"
+                                ]
+                                  ? JSON.parse(data.housing.housing_type_data)[
+                                      "price"
+                                    ]
+                                  : JSON.parse(data.housing.housing_type_data)[
+                                      "daily_rent"
+                                    ]
+                              )}{" "}
+                              ₺{" "}
+                              {JSON.parse(data.housing.housing_type_data)[
+                                "daily_rent"
+                              ] && (
+                                <Text style={{ color: "#EA2A28" }}>
+                                  / Gecelik
+                                </Text>
+                              )}
+                            </Text>
+                          )}
+                      </View>
                     </View>
                   </View>
                 </View>
@@ -1113,12 +1135,30 @@ export default function PostDetail() {
                   />
                 </View>
                 <View>
-                <TouchableOpacity style={{borderWidth:1,borderColor:'#EA2B2E',padding:5,borderRadius:6,backgroundColor:'white'}} onPress={()=>{
-                    setSeeAlertModal(true)
-                  }}>
-                    <Text style={{textAlign:'center',fontSize:13,color:'#EA2B2E',fontWeight:'600'}}>Bilgilendirme!</Text>
+                  <TouchableOpacity
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#EA2B2E",
+                      padding: 5,
+                      borderRadius: 6,
+                      backgroundColor: "white",
+                    }}
+                    onPress={() => {
+                      setSeeAlertModal(true);
+                    }}
+                  >
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        fontSize: 13,
+                        color: "#EA2B2E",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Bilgilendirme!
+                    </Text>
                   </TouchableOpacity>
-                  </View>
+                </View>
               </View>
              
               <View style={{ marginTop: 7 }}>
@@ -1128,7 +1168,10 @@ export default function PostDetail() {
                 {tabs == 3 && <Comment data={data} handleModal={handleModal} />}
               </View>
 
-              <TextAlertModal visible={SeeAlertModal} onClose={setSeeAlertModal} />
+              <TextAlertModal
+                visible={SeeAlertModal}
+                onClose={setSeeAlertModal}
+              />
               <Modal
                 isVisible={ColectionSheet}
                 onBackdropPress={ToggleColSheet}
@@ -1294,7 +1337,9 @@ export default function PostDetail() {
                                   }}
                                   onPress={() => {
                                     setColectionSheet(false);
-                                    navigation.navigate("Login");
+                                    setTimeout(() => {
+                                      navigation.navigate("Login");
+                                    }, 400);
                                   }}
                                 >
                                   <Text
@@ -1715,7 +1760,6 @@ export default function PostDetail() {
                 </View>
               </Modal>
 
-            
               <Modal
                 animationType="slide"
                 transparent={true}
@@ -1845,8 +1889,10 @@ export default function PostDetail() {
                 setAlertForFavorite(false);
               }}
               onConfirmPressed={() => {
-                navigation.navigate("Login");
                 setAlertForFavorite(false);
+                setTimeout(() => {
+                  navigation.navigate("Login");
+                }, 400);
               }}
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
               cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -1863,7 +1909,7 @@ export default function PostDetail() {
               }}
               title={`Giriş Yap`}
               messageStyle={{ textAlign: "center" }}
-              message="Sepetinize konut ekleyebilmek için Giriş Yapmanız gerekmektedir"
+              message="Sepetinize konut ekleyebilmek için giriş yapmanız gerekmektedir."
               closeOnTouchOutside={true}
               closeOnHardwareBackPress={false}
               showCancelButton={true}
@@ -1876,8 +1922,10 @@ export default function PostDetail() {
                 setAlertForAddToCard(false);
               }}
               onConfirmPressed={() => {
-                navigation.navigate("Login");
                 setAlertForAddToCard(false);
+                setTimeout(() => {
+                  navigation.navigate("Login");
+                }, 400);
               }}
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
               cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -2172,30 +2220,29 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
-  CaptionPriceAndSlider:{
-    gap:8,
-    paddingBottom:10,
-      width: "100%",
-      paddingTop:10,
-      paddingLeft:12,
-      paddingRight:12,
-      backgroundColor: "#FFFFFF",
+  CaptionPriceAndSlider: {
+    gap: 8,
+    paddingBottom: 10,
+    width: "100%",
+    paddingTop: 10,
+    paddingLeft: 12,
+    paddingRight: 12,
+    backgroundColor: "#FFFFFF",
 
-      width: "100%",
+    width: "100%",
 
-      borderWidth: 0.7,
-      borderColor: "#e6e6e6",
-      ...Platform.select({
-        ios: {
-          shadowColor: " #e6e6e6",
-          shadowOffset: { width: 1, height: 1 },
-          shadowOpacity: 0.1,
-          shadowRadius: 5,
-        },
-        android: {
-          elevation: 5,
-        },
-      }),
-   
-  }
+    borderWidth: 0.7,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
 });

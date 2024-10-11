@@ -130,6 +130,7 @@ import SalePage from "./pages/Home/PointOfSale/SalePage";
 import SuccessForRent from "./pages/Home/ProfilePages/SuccessForRent";
 import RentByMeDetails from "./pages/Home/ProfilePages/RentByMeDetails";
 import PaymentSuccessScreen from "./src/pages/PaymentSuccessScreen";
+import AddBioText from "./pages/Home/ProfilePages/AddBioText";
 import SliderTourismRent from "./pages/Home/SliderTourismRent";
 import AllTourismRent from "./pages/Home/AllTourismRent";
 
@@ -237,6 +238,7 @@ export default function App({ route }) {
                       title: "Giriş Yap",
                       headerBackTitleVisible: false,
                       headerShown: false,
+                      presentation: 'modal',
                     }}
                   >
                     {(props) => <Login {...props} />}
@@ -876,6 +878,7 @@ export default function App({ route }) {
                   component={AdsPictureList}
                   options={({ route }) => ({
                     title: "Reklam Görselleri",
+                    headerBackTitleVisible:false,
                     headerStyle: {
                       backgroundColor: "#F5F5F7",
                     },
@@ -1288,6 +1291,15 @@ export default function App({ route }) {
                   component={SeeMyNeighbor}
                   options={({ route }) => ({
                     title: "Komşumu Gör Nedir?",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                  <Stack.Screen name="AddBioText" component={AddBioText}
+                  options={({ route }) => ({
+                    title: "Tanıtım Yazısı Ekle",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#ffffff",

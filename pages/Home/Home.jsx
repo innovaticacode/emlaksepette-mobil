@@ -32,6 +32,7 @@ const Home = ({ route }) => {
     } else if (route?.params?.status === "logout") {
       setUser({});
     }
+ 
   }, [route?.params?.status]);
 
   useEffect(() => {
@@ -74,7 +75,9 @@ const Home = ({ route }) => {
   const handleTabPress = (e, navigation) => {
     if (!user.access_token) {
       e.preventDefault();
-      navigation.navigate("Login");
+      setTimeout(() => {
+        navigation.navigate("Login");
+      }, 400);
     }
   };
 
@@ -175,7 +178,7 @@ const Home = ({ route }) => {
         options={{
           tabBarLabel: user.access_token
             ? user.role === "Kurumsal Hesap"
-              ? "Mağazam"
+              ? "Panelim"
               : "Hesabım"
             : "Giriş Yap",
           headerShown: false,

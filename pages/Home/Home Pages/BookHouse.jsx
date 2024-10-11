@@ -105,7 +105,7 @@ const BookHouse = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <View style={{ paddingHorizontal: 0 }}>
             <Image
               source={bannerSRC}
@@ -230,7 +230,7 @@ const BookHouse = ({ index }) => {
               />
             )}
           </AlertNotificationRoot>
-        </View>
+        </ScrollView>
       )}
     </>
   );
