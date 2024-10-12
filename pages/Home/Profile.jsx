@@ -28,7 +28,7 @@ import { CheckBox } from "@rneui/themed";
 import { Platform } from "react-native";
 import axios from "axios";
 import { getValueFor } from "../../components/methods/user";
-import CollectionsOfBrand from "./ProfilePageItem/CollectionsOfBrand";
+// import CollectionsOfBrand from "./ProfilePageItem/CollectionsOfBrand";
 import CommentsOfBrands from "./ProfilePageItem/CommentsOfBrands";
 import SellPlacesForBrands from "./ProfilePageItem/SellPlaceForBrand";
 import { ActivityIndicator } from "react-native-paper";
@@ -81,13 +81,12 @@ export default function Profile() {
       text: "Proje İlanları",
       isShow: "All",
     },
-
     {
       text: "Mağaza Profili",
       isShow: "All",
     },
     {
-      text: "Satış Noktalarımız",
+      text: "Satış Noktalarımız", // Koleksiyonlar yerine bu eklendi
       isShow: "All",
     },
     {
@@ -434,10 +433,13 @@ export default function Profile() {
                           fontWeight: tab === index ? "500" : "normal",
                         }}
                       >
-                        {item.text == "Satış Noktalarımız" &&
+                        {/* {item.text == "Satış Noktalarımız" &&
                         (storeData?.data?.corporate_type == "Emlak Ofisi" ||
                           storeData?.data?.type == 1)
                           ? "Koleksiyonlar"
+                          : item.text} */}
+                        {storeData?.data?.type === 2
+                          ? "Satış Noktalarımız"
                           : item.text}
                       </Text>
                     </TouchableOpacity>
@@ -457,13 +459,15 @@ export default function Profile() {
                 />
               )}
               {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
-              {tab === 4 &&
+              {/* {tab === 4 &&
                 (storeData?.data?.corporate_type !== "Emlak Ofisi" &&
                 storeData.data.type === 2 ? (
                   <SellPlacesForBrands data={storeData} />
                 ) : (
                   <CollectionsOfBrand data={storeData} />
-                ))}
+                ))} */}
+              {tab === 4 && <SellPlacesForBrands data={storeData} />}
+
               {tab === 5 && <CommentsOfBrands id={id} />}
               {tab === 6 && <Team teamm={teamm} />}
             </View>
