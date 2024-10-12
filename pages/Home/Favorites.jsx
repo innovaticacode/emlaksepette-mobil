@@ -27,6 +27,8 @@ import { SearchBar } from "@rneui/base";
 import SortModal from "../../components/SortModal";
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import IconFilter from "react-native-vector-icons/MaterialCommunityIcons";
+import RadioFilter from "../../components/Filter/RadioFilter/RadioFilter";
+import { frontEndUriBase } from "../../components/methods/apiRequest";
 
 export default function Favorites() {
   const navigation = useNavigation();
@@ -457,12 +459,10 @@ export default function Favorites() {
   };
 
   const extractProjectData = (favorite) => {
-    const image = favorite?.project_housing?.find(
-      (housing) =>
-        housing.room_order === favorite?.housing_id &&
-        housing.name === "image[]" &&
-        housing.project_id === favorite?.project?.id
-    )?.value;
+    const image =
+      frontEndUriBase +
+      "project_housing_images/" +
+      favorite?.project.room_info[0]?.value;
 
     const column1 = getColumnData(favorite, 1);
     const column2 = getColumnData(favorite, 2);
@@ -478,11 +478,17 @@ export default function Favorites() {
       " adlı projede " +
       favorite?.housing_id +
       " No'lu konut";
-    const price = favorite?.project_housing?.find(
-      (housing) =>
-        housing.room_order === favorite?.housing_id &&
-        housing.name === "price[]"
-    )?.value;
+
+    //data kontrol edilerek yazdırlacak
+    const price = favorite?.project.room_info[1]?.value;
+    // const price = favorite?.project_housing?.find((projectHousing) => {
+    //   if (
+    //     projectHousing.room_order === favorite?.housing_id &&
+    //     projectHousing.name === "price[]"
+    //   ) {
+    //     return projectHousing;
+    //   }
+    // })?.value;
 
     return { image, column1, column2, column3, no, location, title, price };
   };
@@ -524,6 +530,38 @@ export default function Favorites() {
         "")
     );
   };
+
+  const [selectedSortOption, setSelectedSortOption] = useState(null);
+
+  const shortToLong = () => {
+    const shortFilter = favorites.sort((a, b) => {
+      return a.created_at < b.created_at ? 1 : -1;
+    });
+    setFavorites(shortFilter);
+    console.debug("shortFilter", shortFilter);
+  };
+
+  const longToShort = () => {
+    const longFilter = favorites.sort((a, b) => {
+      return a.created_at > b.created_at ? 1 : -1;
+    });
+    setFavorites(longFilter);
+    console.debug("longFilter", longFilter);
+  };
+
+  const priceLongToShort = () => {
+    if (favorites.project) {
+      const priceFilter = favorites.sort((a, b) => {});
+    }
+  };
+
+  useEffect(() => {
+    if (selectedSortOption === "date-asc") {
+      longToShort();
+    } else if (selectedSortOption === "date-desc") {
+      shortToLong();
+    }
+  }, [favorites]);
 
   return (
     <AlertNotificationRoot>
@@ -573,8 +611,15 @@ export default function Favorites() {
                   <SortModal
                     isVisible={modalVisible}
                     onClose={() => setModalVisible(false)}
-                    onSortChange={() => {}}
-                    selectedSortOption={null}
+                    onSortChange={(value) => {
+                      setSelectedSortOption(value); // Seçilen sıralama seçeneğini güncelle
+                      if (value === "date-asc") {
+                        longToShort();
+                      } else if (value === "date-desc") {
+                        shortToLong();
+                      }
+                    }}
+                    selectedSortOption={selectedSortOption} // Seçilen sıralama seçeneği
                     type="favorites"
                   />
                 </View>
