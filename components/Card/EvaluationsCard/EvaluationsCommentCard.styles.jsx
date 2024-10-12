@@ -15,8 +15,8 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
   },
   mainImage: {
-    width: 100,
-    height: 90,
+    width: 46,
+    height: 46,
     marginRight: 10,
     borderRadius: 5,
     backgroundColor: "#D9D9D9",
@@ -26,7 +26,8 @@ export const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 9,
     flexWrap: "wrap",
-    color: "#606060",
+    // color: "#606060",
+    color: "#000000",
   },
   star: {
     flexDirection: "row",

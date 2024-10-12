@@ -59,7 +59,7 @@ export default function CommentsOfBrands(props) {
     <View style={{ flex: 1, paddingHorizontal: 10 }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.subjectArea}>
-          <Text style={styles.title}>Konuya Göre Filtrele</Text>
+          <Text style={styles.title}>Filtrele</Text>
           <View style={{ flexDirection: "row" }}>
             <SubjectFilter
               text="Tümü"

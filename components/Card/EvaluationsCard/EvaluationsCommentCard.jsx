@@ -73,10 +73,9 @@ const EvaluationsCommentCard = (props) => {
               />
             ))}
           </View>
-          <Text style={styles.desc}>{desc}</Text>
-          <Text style={styles.info}>{info}</Text>
         </View>
       </View>
+      <Text style={styles.desc}>{desc}</Text>
       <View style={{ paddingTop: 10 }}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={{ flexDirection: "row" }}>
@@ -99,6 +98,7 @@ const EvaluationsCommentCard = (props) => {
               : null}
           </View>
         </ScrollView>
+        <Text style={styles.info}>{info}</Text>
       </View>
 
       <ImageView
