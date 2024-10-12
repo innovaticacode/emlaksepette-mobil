@@ -22,6 +22,9 @@ export default function CommentsOfBrands(props) {
   const [starIndex, setStarIndex] = useState(5);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [filteredComments, setFilteredComments] = useState([]);
+  const [commentsLength, setCommentsLength] = useState({});
+
   const handleStar = (index) => {
     setStarIndex(index);
   };
@@ -30,15 +33,16 @@ export default function CommentsOfBrands(props) {
     setActiveIndex(index);
   };
 
-  const handleComment = async (rateID) => {
-    setLoading(true);
+  const fetchComment = async () => {
+    console.debug("api isteği başladı");
     try {
+      setLoading(true);
       const response = await axios.get(
-        `${apiUrl}get_brand_comments_by_rate/${id}/${rateID}`
+        `${apiUrl}get_brand_comments_by_rate/${id}`
       );
-      const reversedComments = Object.values(response.data.comments).reverse();
-      setComments(reversedComments);
-      setLoading(false);
+      const commentsObject = response.data?.comments;
+      setComments(Object.values(commentsObject));
+      return setLoading(false);
     } catch (error) {
       console.error("errr", error);
       setLoading(false);
@@ -52,8 +56,47 @@ export default function CommentsOfBrands(props) {
   };
 
   useEffect(() => {
-    handleComment(starIndex);
-  }, [starIndex]);
+    fetchComment();
+  }, []);
+
+  const starFilter = () => {
+    const oneStarComments = comments.filter((comment) => comment.rate == 1);
+    const twoStarComments = comments.filter((comment) => comment.rate == 2);
+    const threeStarComments = comments.filter((comment) => comment.rate == 3);
+    const fourStarComments = comments.filter((comment) => comment.rate == 4);
+    const fiveStarComments = comments.filter((comment) => comment.rate == 5);
+
+    setCommentsLength({
+      oneStar: oneStarComments.length,
+      twoStar: twoStarComments.length,
+      threeStar: threeStarComments.length,
+      fourStar: fourStarComments.length,
+      fiveStar: fiveStarComments.length,
+    });
+
+    switch (starIndex) {
+      case 1:
+        return setFilteredComments(oneStarComments);
+      case 2:
+        return setFilteredComments(twoStarComments);
+      case 3:
+        return setFilteredComments(threeStarComments);
+      case 4:
+        return setFilteredComments(fourStarComments);
+      case 5:
+        return setFilteredComments(fiveStarComments);
+      default:
+        return setFilteredComments(fiveStarComments);
+    }
+  };
+
+  useEffect(() => {
+    if (comments.length > 0) {
+      setLoading(true);
+      starFilter();
+      setLoading(false);
+    }
+  }, [comments, starIndex]);
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 10 }}>
@@ -65,6 +108,7 @@ export default function CommentsOfBrands(props) {
               text="Tümü"
               active={activeIndex === 0}
               onPress={() => handleActive(0)}
+              count={comments.length}
             />
             <SubjectFilter
               text="Fotoğraflı Yorum"
@@ -76,15 +120,26 @@ export default function CommentsOfBrands(props) {
             <Text style={styles.title}>Puana Göre Filitrele</Text>
             <FlatList
               data={[5, 4, 3, 2, 1]}
-              renderItem={({ item }) => (
-                <>
+              renderItem={({ item }) => {
+                return (
                   <StarFilter
                     star={item}
                     active={starIndex === item}
                     onPress={() => handleStar(item)}
+                    count={
+                      item === 5
+                        ? commentsLength.fiveStar
+                        : item === 4
+                        ? commentsLength.fourStar
+                        : item === 3
+                        ? commentsLength.threeStar
+                        : item === 2
+                        ? commentsLength.twoStar
+                        : commentsLength.oneStar
+                    }
                   />
-                </>
-              )}
+                );
+              }}
               keyExtractor={(item) => item.toString()}
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -95,7 +150,7 @@ export default function CommentsOfBrands(props) {
 
             {!loading && comments.length >= 1 ? ( // loading false ve yorum varsa render et
               <FlatList
-                data={comments}
+                data={filteredComments}
                 renderItem={({ item }) => {
                   const housingData = item?.housing?.housing_type_data
                     ? JSON.parse(item.housing.housing_type_data)
