@@ -4,7 +4,7 @@ import { styles } from "./StarFilter.styles";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const StarFilter = (props) => {
-  const { active = false, star = 5, onPress = () => {} } = props;
+  const { active = false, star = 5, onPress = () => {}, count } = props;
 
   return (
     <>
@@ -23,6 +23,7 @@ const StarFilter = (props) => {
               style={{ marginRight: 1 }}
             />
           ))}
+          {count ? <Text style={styles.count}>{`(${count})`}</Text> : null}
         </View>
       </TouchableOpacity>
     </>

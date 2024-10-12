@@ -29,4 +29,8 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  count: {
+    fontSize: 8,
+    color: "#777777",
+  },
 });
