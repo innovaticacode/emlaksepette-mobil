@@ -477,7 +477,7 @@ export default function Profile() {
                 padding: 10,
                 position: "absolute",
                 bottom: 0,
-                paddingBottom: Platform.OS === "ios" ? 22 : 12,
+                paddingBottom: Platform.OS === "ios" ? 40 : 12,
                 width: "100%",
                 backgroundColor: "#F2F2F2",
                 height: "auto",
