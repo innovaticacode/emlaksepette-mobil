@@ -53,7 +53,7 @@ const FirstHome = (props) => {
     try {
       setLoadingProjects(true);
       const response = await axios.get(`${apiUrl}/api/featured-projects`);
-      const projects = response.data.data.slice(0, 5); // Get first 5 projects
+      const projects = response.data.data.slice(0, 6); // Get first 5 projects
       setFeaturedProjects(projects);
     } catch (error) {
       console.log("Error fetching featured projects:", error);
@@ -259,17 +259,18 @@ const FirstHome = (props) => {
                             color="#0E49B5"
                             text="Yatırım Projeleri"
                           />
-                          <ProjectButton
-                            color="#A70107"
-                            text="Konut Projeleri"
-                            onPress={navigateToHousingProjects}
-                          />
-                        </View>
-                        <View>
+
                           <ProjectButton
                             color="#A2DAE0"
                             text="Villa Projeleri"
                             onPress={navigateToVillaProjects}
+                          />
+                        </View>
+                        <View>
+                          <ProjectButton
+                            color="#A70107"
+                            text="Lansman Projeleri"
+                            onPress={navigateToHousingProjects}
                           />
                           <ProjectButton
                             color="#06065d"
@@ -367,7 +368,7 @@ const FirstHome = (props) => {
             <View>
               <View style={styles.featuredProjectsHeader}>
                 <Text style={styles.featuredProjectsTitle}>
-                  ÖNE ÇIKAN GAYRİMENKUL MARKALARI
+                  Öne Çıkan Gayrimenkul Ofisleri
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
@@ -376,6 +377,25 @@ const FirstHome = (props) => {
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
               </View>
+              <>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginBottom: 10,
+                    marginTop: 20,
+                  }}
+                >
+                  <View>
+                    <ProjectButton color="#0E49B5" text="Paylaşımlı İlanlar" />
+                    <ProjectButton color="#A2DAE0" text="Sahibinden" />
+                  </View>
+                  <View>
+                    <ProjectButton color="#A70107" text="Kiralık Konutlar" />
+                    <ProjectButton color="#06065d" text="Emlak Ofisinden" />
+                  </View>
+                </View>
+              </>
 
               <View>
                 <SliderEstateBar />
@@ -462,7 +482,7 @@ const FirstHome = (props) => {
             <View>
               <View style={styles.featuredProjectsHeader}>
                 <Text style={styles.featuredProjectsTitle}>
-                  ÖNE ÇIKAN GAYRİMENKUL MARKALARI
+                  Öne Çıkan Gayrimenkul Ofisleri
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
@@ -511,7 +531,6 @@ const FirstHome = (props) => {
             </View>
           </ScrollView>
         </SafeAreaView>
-
       )}
     </AlertNotificationRoot>
   );
