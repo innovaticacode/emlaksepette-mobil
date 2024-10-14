@@ -25,6 +25,7 @@ import SliderItem from "../../components/SliderItem";
 import WhatIsEmlakSepette from "../../components/WhatIsEmlakSepette";
 import SliderEstateBar from "../../components/SliderEstateBar";
 import SliderTourismRent from "./SliderTourismRent";
+import RealtorPost from "../../components/RealtorPost";
 
 const apiUrl = "https://private.emlaksepette.com";
 
@@ -169,7 +170,26 @@ const FirstHome = (props) => {
       hood: null,
     });
   };
+  const [sellAdvert, setSellAdvert] = useState([]);
 
+  const advertsForSale = async () => {
+    try {
+      const response = await axios.get(
+        `https://private.emlaksepette.com/api/real-estates`
+      );
+
+      const advertSellFilter = response.data.filter(
+        (item) => item.step2_slug === "satilik"
+      );
+      setSellAdvert(advertSellFilter.slice(0, 4));
+    } catch (error) {
+      console.error("Error fetching real estate data:", error);
+    }
+  };
+
+  useEffect(() => {
+    advertsForSale();
+  }, []);
   return (
     <AlertNotificationRoot>
       {loadingProjects && loadingSliders ? (
@@ -368,7 +388,7 @@ const FirstHome = (props) => {
             <View>
               <View style={styles.featuredProjectsHeader}>
                 <Text style={styles.featuredProjectsTitle}>
-                  Öne Çıkan Gayrimenkul Ofisleri
+                  ÖNE ÇIKAN GAYRİMENKUL OFİSLERİ
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
@@ -377,6 +397,11 @@ const FirstHome = (props) => {
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
               </View>
+
+              <View>
+                <SliderEstateBar />
+              </View>
+
               <>
                 <View
                   style={{
@@ -397,9 +422,84 @@ const FirstHome = (props) => {
                 </View>
               </>
 
-              <View>
-                <SliderEstateBar />
-              </View>
+              <React.Fragment>
+                <FlatList
+                  data={sellAdvert}
+                  renderItem={({ item, index }) => (
+                    <RealtorPost
+                      housing={item}
+                      title={item.housing_title}
+                      HouseId={item.id}
+                      price={
+                        item.step2_slug == "gunluk-kiralik"
+                          ? JSON.parse(item.housing_type_data)["daily_rent"]
+                          : JSON.parse(item.housing_type_data)["price"]
+                      }
+                      location={`${item.city_title} / ${item.county_title}`} // Combine location
+                      image={`${apiUrl}/housing_images/${
+                        JSON.parse(item.housing_type_data)?.image ?? ""
+                      }`} // Safely access image
+                      column1_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column1_name
+                        ] ?? ""
+                      }`} // Safely access column1_name
+                      column1_additional={item.column1_additional}
+                      column2_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column2_name
+                        ] ?? ""
+                      }`} // Safely access column2_name
+                      column2_additional={item.column2_additional}
+                      openSharing={
+                        JSON.parse(item.housing_type_data)["open_sharing1"]
+                      }
+                      column3_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column3_name
+                        ] ?? ""
+                      }`} // Safely access column3_name
+                      column3_additional={item.column3_additional}
+                      column4_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column4_name
+                        ] ?? ""
+                      }`} // Safely access column4_name
+                      column4_additional={item.column4_additional}
+                      dailyRent={false}
+                    />
+                  )}
+                  ListHeaderComponent={
+                    <View style={styles.featuredProjectsHeader}>
+                      <Text style={styles.featuredProjectsTitle}>
+                        SATILIK İLANLAR
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.allProjectsButton}
+                        onPress={() =>
+                          navigation.navigate("AllRealtorAdverts", {
+                            name: "Emlak İlanları",
+                            slug: "emlak-ilanlari",
+                            data: sellAdvert,
+                            count: sellAdvert.length,
+                            type: "konut",
+                            optional: null,
+                            title: null,
+                            check: null,
+                            city: null,
+                            county: null,
+                            hood: null,
+                          })
+                        }
+                      >
+                        <Text style={styles.allProjectsButtonText}>
+                          Tümünü Gör
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  }
+                />
+              </React.Fragment>
             </View>
             <View>
               <View style={styles.featuredProjectsHeader}>
@@ -408,7 +508,7 @@ const FirstHome = (props) => {
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
-                  onPress={() => navigation.navigate("AllTourismRent")}
+                  onPress={() => navigation.navigate("")}
                 >
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
