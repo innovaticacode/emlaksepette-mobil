@@ -26,6 +26,9 @@ import NoDataScreen from "../../components/NoDataScreen";
 import { SearchBar } from "@rneui/base";
 import SortModal from "../../components/SortModal";
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
+import IconFilter from "react-native-vector-icons/MaterialCommunityIcons";
+import RadioFilter from "../../components/Filter/RadioFilter/RadioFilter";
+import { frontEndUriBase } from "../../components/methods/apiRequest";
 
 export default function Favorites() {
   const navigation = useNavigation();
@@ -44,6 +47,9 @@ export default function Favorites() {
   const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
     useState(false); // Modal durumu
   const [modalVisible, setModalVisible] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [filteredFavorites, setFilteredFavorites] = useState([]);
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -184,98 +190,114 @@ export default function Favorites() {
   };
 
   // DELETE ALL FUNCTION START
-  const deleteRequestWithToken = async () => {
+  const deleteAll = async () => {
+    console.debug("Favorite delete requests started");
     setLoading(true);
+
+    const deleteHousingRequest = axios.delete(
+      "https://private.emlaksepette.com/api/institutional/housing-favorite",
+      {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      }
+    );
+
+    const deleteProjectRequest = axios.delete(
+      "https://private.emlaksepette.com/api/institutional/project-favorite",
+      {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      }
+    );
+
     try {
-      const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/housing-favorite",
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
+      const [housingResponse, projectResponse] = await Promise.allSettled([
+        deleteHousingRequest,
+        deleteProjectRequest,
+      ]);
+
+      let successfulRequests = 0;
+      let housingSuccessful = false;
+      let projectSuccessful = false;
+      if (
+        housingResponse.status === "fulfilled" &&
+        housingResponse.value.status === 200
+      ) {
+        successfulRequests++;
+        housingSuccessful = true;
+      }
+
+      if (
+        projectResponse.status === "fulfilled" &&
+        projectResponse.value.status === 200
+      ) {
+        successfulRequests++;
+        projectSuccessful = true;
+      }
+      setTimeout(() => {
+        if (successfulRequests > 0) {
+          let message = "Favorilerden ";
+
+          if (housingSuccessful) {
+            message += "konut ";
+          }
+          if (projectSuccessful) {
+            message += (housingSuccessful ? "ve " : "") + "projeler ";
+          }
+
+          message += `başarıyla kaldırıldı.`;
+
+          setTimeout(() => {
+            Dialog.show({
+              type: ALERT_TYPE.SUCCESS,
+              title: "Başarılı",
+              textBody: message,
+              button: "Tamam",
+              onHide: () => {
+                fetchFavorites();
+              },
+            });
+          }, 500);
         }
-      );
-      if (response.status === 200) {
+        setLoading(false);
+      }, 300);
+      if (
+        housingResponse.status === "rejected" &&
+        projectResponse.status === "rejected"
+      ) {
         setTimeout(() => {
           Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "Başarılı",
-            textBody: ` Tüm ilanlar favorilerden kaldırıldı.`,
+            type: ALERT_TYPE.WARNING,
+            title: "Hata!",
+            textBody: "Tüm işlemler başarısız oldu.",
             button: "Tamam",
             onHide: () => {
-              fetchFavorites(); // Fetch favorites after dialog is dismissed
+              fetchFavorites();
             },
           });
-          setLoading(false); // End loading after showing the dialog
+          setLoading(false);
         }, 300);
       }
-      setmodalForDeleteFavorites(false);
     } catch (error) {
       setTimeout(() => {
         Dialog.show({
           type: ALERT_TYPE.WARNING,
           title: "Hata!",
-          textBody: "Tümünü Silme işlemi başarısız oldu.",
+          textBody: "İşlemler sırasında beklenmeyen bir hata oluştu.",
           button: "Tamam",
           onHide: () => {
-            fetchFavorites(); // Fetch favorites after dialog is dismissed
+            fetchFavorites();
           },
         });
-        setLoading(false); // End loading after showing the dialog
-      }, 500);
-      setmodalForDeleteFavorites(false);
+        setLoading(false);
+      }, 300);
     } finally {
-      setTimeout(() => setLoading(false));
       setmodalForDeleteFavorites(false);
     }
   };
 
-  const deleteRequestWithTokenProject = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/project-favorite",
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        setTimeout(() => {
-          Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "Başarılı",
-            textBody: `${FavoriteRemoveIDS.length} Tüm ilanlar favorilerden kaldırıldı.`,
-            button: "Tamam",
-            onHide: () => {
-              fetchFavorites(); // Fetch favorites after dialog is dismissed
-            },
-          });
-          setLoading(false); // End loading after showing the dialog
-        }, 300);
-      }
-      setmodalForDeleteFavorites(false);
-    } catch (error) {
-      setTimeout(() => {
-        Dialog.show({
-          type: ALERT_TYPE.WARNING,
-          title: "Hata!",
-          textBody: "Tümünü Silme işlemi başarısız oldu.",
-          button: "Tamam",
-          onHide: () => {
-            fetchFavorites(); // Fetch favorites after dialog is dismissed
-          },
-        });
-        setLoading(false); // End loading after showing the dialog
-      }, 300);
-      setmodalForDeleteFavorites(false);
-    } finally {
-      setTimeout(() => setLoading(false));
-      setmodalForDeleteFavorites(false);
-    }
-  };
-  // DELETE ALL FUNCTION END
   const SelectFavorite = (id) => {
     setFavoriteRemoveIDS((prevIds) => {
       if (prevIds.includes(id)) {
@@ -360,6 +382,187 @@ export default function Favorites() {
   };
   // BATCH SELECTION - DELETE FUNCTION END
 
+  //filter text function
+  useEffect(() => {
+    const filterFavorites = () => {
+      const searchLower = searchText.toLowerCase();
+
+      return favorites.filter((favorite) => {
+        if (favorite?.project) {
+          return favorite?.project?.project_title
+            .toLowerCase()
+            .includes(searchLower);
+        } else {
+          return favorite?.housing?.title.toLowerCase().includes(searchLower);
+        }
+      });
+    };
+
+    if (searchText.length > 0) {
+      const filtered = filterFavorites();
+      setFilteredFavorites(filtered);
+    } else {
+      setFilteredFavorites([]);
+    }
+  }, [searchText]);
+
+  const renderFavorite = (favorite, i) => {
+    if (favorite?.project) {
+      const { image, column1, column2, column3, no, location, title, price } =
+        extractProjectData(favorite);
+      return (
+        <RealtorPostFavorited
+          key={i}
+          changeFavorites={changeFavorites}
+          type={1}
+          projectId={favorite?.project?.id}
+          housingId={favorite?.housing_id}
+          no={no}
+          column1={column1}
+          column2={column2}
+          column3={column3}
+          location={location}
+          image={image}
+          title={title}
+          price={price}
+          m2="20"
+          GetId={GetIdForCart}
+          fetchData={fetchFavorites}
+          selectFavorite={SelectFavorite}
+          isChoosed={isChoosed}
+        />
+      );
+    } else if (favorite?.housing) {
+      const { image, column1, column2, column3, location, title, price, no } =
+        extractHousingData(favorite);
+      return (
+        <RealtorPostFavorited
+          key={i}
+          changeFavorites={changeFavorites}
+          type={2}
+          HouseId={favorite?.housing?.id}
+          no={no}
+          image={image}
+          title={title}
+          price={price}
+          column1={column1}
+          column2={column2}
+          column3={column3}
+          location={location}
+          GetId={GetIdForCart}
+          fetchData={fetchFavorites}
+          selectFavorite={SelectFavorite}
+          isChoosed={isChoosed}
+        />
+      );
+    }
+  };
+
+  const extractProjectData = (favorite) => {
+    const image =
+      frontEndUriBase +
+      "project_housing_images/" +
+      favorite?.project.room_info[0]?.value;
+
+    const column1 = getColumnData(favorite, 1);
+    const column2 = getColumnData(favorite, 2);
+    const column3 = getColumnData(favorite, 3);
+
+    const no = 1000000 + favorite?.project?.id;
+    const location =
+      favorite?.project?.city?.title +
+      " / " +
+      favorite?.project?.county?.ilce_title;
+    const title =
+      favorite?.project?.project_title +
+      " adlı projede " +
+      favorite?.housing_id +
+      " No'lu konut";
+
+    //data kontrol edilerek yazdırlacak
+    const price = favorite?.project.room_info[1]?.value;
+    // const price = favorite?.project_housing?.find((projectHousing) => {
+    //   if (
+    //     projectHousing.room_order === favorite?.housing_id &&
+    //     projectHousing.name === "price[]"
+    //   ) {
+    //     return projectHousing;
+    //   }
+    // })?.value;
+
+    return { image, column1, column2, column3, no, location, title, price };
+  };
+
+  const extractHousingData = (favorite) => {
+    const housingData = JSON.parse(
+      favorite?.housing?.housing_type_data || "{}"
+    );
+    const image = housingData?.image
+      ? "https://private.emlaksepette.com/housing_images/" + housingData?.image
+      : "";
+    const column1 =
+      housingData[favorite?.housing?.list_items?.column1_name] || "";
+    const column2 =
+      housingData[favorite?.housing?.list_items?.column2_name] || "";
+    const column3 =
+      housingData[favorite?.housing?.list_items?.column3_name] || "";
+    const no = favorite?.housing?.id + 2000000;
+    const location =
+      favorite?.housing?.city?.title + " / " + favorite?.housing?.county?.title;
+    const title = favorite?.housing?.title;
+    const price = housingData?.price || "0";
+
+    return { image, column1, column2, column3, no, location, title, price };
+  };
+
+  const getColumnData = (favorite, columnIndex) => {
+    return (
+      favorite?.project_housing?.find(
+        (housing) =>
+          housing.room_order === favorite?.housing_id &&
+          housing.name ===
+            favorite?.project?.list_item_values[`column${columnIndex}_name`] +
+              "[]" &&
+          housing.project_id === favorite?.project?.id
+      )?.value +
+      " " +
+      (favorite?.project?.list_item_values[`column${columnIndex}_additional`] ||
+        "")
+    );
+  };
+
+  const [selectedSortOption, setSelectedSortOption] = useState(null);
+
+  const shortToLong = () => {
+    const shortFilter = favorites.sort((a, b) => {
+      return a.created_at < b.created_at ? 1 : -1;
+    });
+    setFavorites(shortFilter);
+    console.debug("shortFilter", shortFilter);
+  };
+
+  const longToShort = () => {
+    const longFilter = favorites.sort((a, b) => {
+      return a.created_at > b.created_at ? 1 : -1;
+    });
+    setFavorites(longFilter);
+    console.debug("longFilter", longFilter);
+  };
+
+  const priceLongToShort = () => {
+    if (favorites.project) {
+      const priceFilter = favorites.sort((a, b) => {});
+    }
+  };
+
+  useEffect(() => {
+    if (selectedSortOption === "date-asc") {
+      longToShort();
+    } else if (selectedSortOption === "date-desc") {
+      shortToLong();
+    }
+  }, [favorites]);
+
   return (
     <AlertNotificationRoot>
       <View style={{ flex: 1, paddingHorizontal: 6 }}>
@@ -375,7 +578,7 @@ export default function Favorites() {
           </View>
         ) : (
           <View style={styles.container}>
-            {favorites.length == 0 ? (
+            {favorites.length === 0 ? (
               <NoDataScreen
                 message="Favorilerinizde ilan bulunmamaktadır."
                 iconName="heart-plus"
@@ -387,8 +590,8 @@ export default function Favorites() {
                 <View style={styles.searchBody}>
                   <SearchBar
                     placeholder="Ara..."
-                    onChangeText={null}
-                    value={null}
+                    onChangeText={(text) => setSearchText(text)}
+                    value={searchText}
                     containerStyle={styles.searchContainer}
                     searchIcon={{ size: 20 }}
                     inputContainerStyle={styles.inputCont}
@@ -408,8 +611,15 @@ export default function Favorites() {
                   <SortModal
                     isVisible={modalVisible}
                     onClose={() => setModalVisible(false)}
-                    onSortChange={() => {}}
-                    selectedSortOption={null}
+                    onSortChange={(value) => {
+                      setSelectedSortOption(value); // Seçilen sıralama seçeneğini güncelle
+                      if (value === "date-asc") {
+                        longToShort();
+                      } else if (value === "date-desc") {
+                        shortToLong();
+                      }
+                    }}
+                    selectedSortOption={selectedSortOption} // Seçilen sıralama seçeneği
                     type="favorites"
                   />
                 </View>
@@ -436,6 +646,7 @@ export default function Favorites() {
                       </Text>
                     </TouchableOpacity>
                   </View>
+
                   {isChoosed && (
                     <View
                       style={{
@@ -515,14 +726,13 @@ export default function Favorites() {
                   showConfirmButton={true}
                   cancelText="Hayır"
                   confirmText="Evet"
-                  cancelButtonColor="#1d8027"
-                  confirmButtonColor="#ce4d63"
+                  cancelButtonColor="#ce4d63"
+                  confirmButtonColor="#1d8027"
                   onCancelPressed={() => {
                     setmodalForDeleteFavorites(false);
                   }}
                   onConfirmPressed={() => {
-                    deleteRequestWithToken();
-                    deleteRequestWithTokenProject();
+                    deleteAll();
                   }}
                 />
 
@@ -536,91 +746,120 @@ export default function Favorites() {
                   contentContainerStyle={{}}
                   showsVerticalScrollIndicator={false}
                 >
-                  {favorites?.map((favorite, i) => {
+                  {searchText.length > 0 ? (
+                    filteredFavorites.length === 0 ? (
+                      <View style={styles.noResultsContainer}>
+                        <IconFilter
+                          name="emoticon-sad-outline"
+                          size={50}
+                          color="#EA2B2E"
+                        />
+                        <Text style={styles.noResultsText}>
+                          Arama sonucu bulunamadı.
+                        </Text>
+                        <Text style={styles.noResultsSubText}>
+                          Lütfen başka bir terim deneyin.
+                        </Text>
+                      </View>
+                    ) : (
+                      filteredFavorites.map((favorite, i) => {
+                        return renderFavorite(favorite, i);
+                      })
+                    )
+                  ) : (
+                    favorites.map((favorite, i) => {
+                      return renderFavorite(favorite, i);
+                    })
+                  )}
+
+                  {/* {(filteredFavorites.length > 0
+                    ? filteredFavorites
+                    : favorites
+                  ).map((favorite, i) => {
                     if (favorite?.project) {
                       var image = favorite?.project_housing?.find(
                         (projectHousing) => {
                           if (
-                            projectHousing.room_order == favorite?.housing_id &&
-                            projectHousing.name == "image[]" &&
-                            projectHousing.project_id == favorite?.project?.id
+                            projectHousing.room_order ===
+                              favorite?.housing_id &&
+                            projectHousing.name === "image[]" &&
+                            projectHousing.project_id === favorite?.project?.id
                           ) {
                             return projectHousing;
                           }
                         }
                       )?.value;
+
                       var column1 = favorite?.project_housing?.find(
                         (projectHousing) => {
                           if (
-                            projectHousing.room_order == favorite?.housing_id &&
-                            projectHousing.name ==
+                            projectHousing.room_order ===
+                              favorite?.housing_id &&
+                            projectHousing.name ===
                               favorite?.project?.list_item_values
                                 ?.column1_name +
                                 "[]" &&
-                            projectHousing.project_id == favorite?.project?.id
+                            projectHousing.project_id === favorite?.project?.id
                           ) {
                             return projectHousing;
                           }
                         }
                       )?.value;
+
                       var column2 = favorite?.project_housing?.find(
                         (projectHousing) => {
                           if (
-                            projectHousing.room_order == favorite?.housing_id &&
-                            projectHousing.name ==
+                            projectHousing.room_order ===
+                              favorite?.housing_id &&
+                            projectHousing.name ===
                               favorite?.project?.list_item_values
                                 ?.column2_name +
                                 "[]" &&
-                            projectHousing.project_id == favorite?.project?.id
+                            projectHousing.project_id === favorite?.project?.id
                           ) {
                             return projectHousing;
                           }
                         }
                       )?.value;
+
                       var column3 = favorite?.project_housing?.find(
                         (projectHousing) => {
                           if (
-                            projectHousing.room_order == favorite?.housing_id &&
-                            projectHousing.name ==
+                            projectHousing.room_order ===
+                              favorite?.housing_id &&
+                            projectHousing.name ===
                               favorite?.project?.list_item_values
                                 ?.column3_name +
                                 "[]" &&
-                            projectHousing.project_id == favorite?.project?.id
+                            projectHousing.project_id === favorite?.project?.id
                           ) {
                             return projectHousing;
                           }
                         }
                       )?.value;
+
                       if (column1) {
                         column1 =
                           column1 +
                           " " +
                           (favorite?.project?.list_item_values
-                            ?.column1_additional
-                            ? favorite?.project?.list_item_values
-                                ?.column1_additional
-                            : "");
+                            ?.column1_additional || "");
                       }
                       if (column2) {
                         column2 =
                           column2 +
                           " " +
                           (favorite?.project?.list_item_values
-                            ?.column2_additional
-                            ? favorite?.project?.list_item_values
-                                ?.column2_additional
-                            : "");
+                            ?.column2_additional || "");
                       }
                       if (column3) {
                         column3 =
                           column3 +
                           " " +
                           (favorite?.project?.list_item_values
-                            ?.column3_additional
-                            ? favorite?.project?.list_item_values
-                                ?.column3_additional
-                            : "");
+                            ?.column3_additional || "");
                       }
+
                       var no = 1000000 + favorite?.project.id;
                       return (
                         <RealtorPostFavorited
@@ -652,9 +891,9 @@ export default function Favorites() {
                             favorite?.project_housing?.find(
                               (projectHousing) => {
                                 if (
-                                  projectHousing.room_order ==
+                                  projectHousing.room_order ===
                                     favorite?.housing_id &&
-                                  projectHousing.name == "price[]"
+                                  projectHousing.name === "price[]"
                                 ) {
                                   return projectHousing;
                                 }
@@ -702,10 +941,7 @@ export default function Favorites() {
                                 ] +
                                 " " +
                                 (favorite?.housing?.list_items
-                                  ?.column1_additional
-                                  ? favorite?.housing?.list_items
-                                      ?.column1_additional
-                                  : "")
+                                  ?.column1_additional || "")
                               : ""
                           }
                           column2={
@@ -717,10 +953,7 @@ export default function Favorites() {
                                 ] +
                                 " " +
                                 (favorite?.housing?.list_items
-                                  ?.column2_additional
-                                  ? favorite?.housing?.list_items
-                                      ?.column2_additional
-                                  : "")
+                                  ?.column2_additional || "")
                               : ""
                           }
                           column3={
@@ -732,10 +965,7 @@ export default function Favorites() {
                                 ] +
                                 " " +
                                 (favorite?.housing?.list_items
-                                  ?.column3_additional
-                                  ? favorite?.housing?.list_items
-                                      ?.column3_additional
-                                  : "")
+                                  ?.column3_additional || "")
                               : ""
                           }
                           location={
@@ -750,7 +980,7 @@ export default function Favorites() {
                         />
                       );
                     }
-                  })}
+                  })} */}
                 </ScrollView>
               </>
             )}
@@ -872,6 +1102,26 @@ export default function Favorites() {
   );
 }
 const styles = StyleSheet.create({
+  noResultsContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+    backgroundColor: "#f8f8f8",
+  },
+  noResultsText: {
+    fontSize: 18,
+    color: "#333",
+    textAlign: "center",
+    marginTop: 10,
+    fontWeight: "bold",
+  },
+  noResultsSubText: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 5,
+  },
   container: {
     height: "100%",
   },

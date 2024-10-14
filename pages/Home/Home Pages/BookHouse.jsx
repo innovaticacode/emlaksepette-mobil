@@ -40,7 +40,8 @@ const BookHouse = ({ index }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${reset ? 1 : page
+        `https://private.emlaksepette.com/api/real-estates?page=${
+          reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
       );
@@ -152,8 +153,9 @@ const BookHouse = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image
-                      }`}
+                    image={`${apiUrl}/housing_images/${
+                      JSON.parse(item.housing_type_data).image
+                    }`}
                     column1_additional={item.column1_additional}
                     column1_name={
                       JSON.parse(item.housing_type_data)[item.column1_name]
@@ -180,6 +182,7 @@ const BookHouse = ({ index }) => {
                     column4_additional={item.column4_additional}
                     bookmarkStatus={true}
                     dailyRent={false}
+                    isFavorite={item.is_favorite}
                   />
                 )}
              ListHeaderComponent={

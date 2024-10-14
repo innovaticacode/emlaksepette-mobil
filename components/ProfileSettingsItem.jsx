@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import Icon2 from "react-native-vector-icons/Feather";
+import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 
 import Arrow from "react-native-vector-icons/SimpleLineIcons";
 import { getValueFor } from "./methods/user";

@@ -54,6 +54,7 @@ import {
 } from "react-native-alert-notification";
 import TextAlertModal from "../../../components/TextAlertModal";
 import { DrawerMenu } from "../../../components";
+import AwesomeAlertComp from "../../../components/AwesomeAlertComp";
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
@@ -197,7 +198,7 @@ export default function PostDetail() {
       // Kapak resmini al ve kontrol et
       const coverImage = response.data.labels["Kapak Resmi"];
       if (coverImage) {
-        const coverImageUri = `${apiUrl}/housing_images/${coverImage}`;
+        const coverImageUri = `${apiUrl}housing_images/${coverImage}`;
         console.log("Kapak Resmi URI:", coverImageUri); // URI'yi kontrol et
 
         setImages([coverImageUri, ...fetchedImages]);
@@ -637,7 +638,8 @@ export default function PostDetail() {
   };
 
   // Handle page change in PagerView
-  const [SeeAlertModal, setSeeAlertModal] = useState(false);
+  const [SeeAlertModal, setSeeAlertModal] = useState(false)
+  const [show, setShow] = useState(false)
   return (
     <>
       <AlertNotificationRoot>
@@ -666,7 +668,7 @@ export default function PostDetail() {
             <View
               style={{
                 width: "100%",
-
+                backgroundColor:'#F2F2F2',
                 position: "absolute",
                 bottom: 13,
                 padding: 10,
@@ -1074,6 +1076,71 @@ export default function PostDetail() {
                     </View>
                   </View>
                 </View>
+                {data.housing &&
+                  data.housing.housing_type_data &&
+                  JSON.parse(data.housing.housing_type_data)["swap"] ==
+                    "Evet" && (
+                    <View>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: "#FEF4EB",
+                          flexDirection: "row",
+                          padding: 6,
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          borderRadius: 5,
+                        }}
+                        onPress={() => {
+                          if (user.access_token) {
+                            navigation.navigate("SwapForm", {
+                              houseid: data?.housing?.id,
+                              type:2,
+                              projectId:null
+                            });
+                          }else{
+                            setShow(true)
+                          }
+                        
+                        }}
+                      >
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 10,
+                          }}
+                        >
+                          <View
+                            style={{
+                              backgroundColor: "#F37919",
+                              padding: 6,
+                              borderRadius: 5,
+                            }}
+                          >
+                            <Icon2 name="plus" size={16} color={"#fff"} />
+                          </View>
+                          <View style={{}}>
+                            <Text
+                              style={{
+                                fontSize: 12,
+                                color: "#333",
+                                fontWeight: "600",
+                              }}
+                            >
+                              Takas Başvurusu Yap
+                            </Text>
+                          </View>
+                        </View>
+                        <View>
+                          <Arrow
+                            name="arrow-forward-ios"
+                            size={16}
+                            color={"#333"}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  )}
                 <View
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
@@ -1109,6 +1176,7 @@ export default function PostDetail() {
                   </TouchableOpacity>
                 </View>
               </View>
+             
               <View style={{ marginTop: 7 }}>
                 {tabs == 0 && <RealtorCaption data={data} />}
                 {tabs == 1 && <Settings data={data} />}
@@ -1569,7 +1637,22 @@ export default function PostDetail() {
                   </>
                 </View>
               </Modal>
-
+              <AwesomeAlertComp
+          message={'Takas başvurusu yapmak için giriş yapmanız gerekmektedir'}
+          canselFunc={()=>{
+            setShow(false)
+          }}
+          confirmFunc={()=>{
+            setShow(false)
+            setTimeout(() => {
+              navigation.navigate('Login')
+              
+            }, 200);
+              
+          }}
+          show={show}
+          setShow={setShow}
+         />
               <Modal
                 isVisible={addCollection}
                 onBackdropPress={() => setaddCollection(false)}

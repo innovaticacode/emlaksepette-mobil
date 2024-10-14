@@ -9,8 +9,10 @@ import {
   Dimensions,
   TouchableOpacity,
   ScrollView,
+  Share,
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
+import ShoppingIcon from "react-native-vector-icons/Entypo";
 import {
   Collapse,
   CollapseHeader,
@@ -34,6 +36,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import { useDispatch } from "react-redux";
 import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
 import { Skeleton } from "@rneui/themed";
+import { id } from "date-fns/locale";
 
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
@@ -226,15 +229,30 @@ export default function ShoppingProfile() {
     }
   };
 
-  useEffect(() => {
-    Image.prefetch(PhotoUrl + namFromGetUser.profile_image);
-  }, []);
 
-  console.log(user?.id + " asdsd sd ");
   useEffect(() => {
     GetUserInfo();
   }, [user]);
 
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `https://private.emlaksepette.com/`,
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log("Link belirli bir aktivitede paylaşıldı");
+        } else {
+          console.log("Link paylaşıldı");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Paylaşım iptal edildi");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   return (
     <>
       {loading ? (
@@ -718,6 +736,27 @@ export default function ShoppingProfile() {
                     </Text>
                   </View>
                 </View>
+
+              </View>
+              <View style={{ paddingTop: 20, alignItems: 'center' }}>
+                <View style={[style.card, { flexDirection: 'row', padding: 0, paddingVertical: 0, justifyContent: 'space-around', alignItems: 'center', marginVertical: 0, paddingHorizontal: 0, width: '91%' }]}>
+
+                  <TouchableOpacity style={{ width: '50%', padding: 10, flexDirection: 'row', gap: 5, alignItems: 'center', justifyContent: 'center' }}
+                    onPress={() => {
+                      navigation.navigate('Profile', { name: '', id: namFromGetUser.id })
+                    }}
+                  >
+                    <ShoppingIcon name="shop" size={19} color={'#EA2C2E'} />
+                    <Text style={{ fontSize: 13, color: '#333', textAlign: 'center', fontWeight: '600' }}>Mağazama Git</Text>
+                  </TouchableOpacity>
+                  <View style={{ padding: 1, height: '70%', backgroundColor: '#CCCCCC' }} />
+                  <TouchableOpacity style={{ padding: 10, width: '50%', flexDirection: 'row', gap: 5, alignItems: 'center', justifyContent: 'center' }} onPress={() => {
+                    onShare()
+                  }}>
+                    <ShoppingIcon name="upload" size={19} color={'#EA2C2E'} />
+                    <Text style={{ fontSize: 13, color: '#333', textAlign: 'center', fontWeight: '600' }}>Mağazamı Paylaş</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </View>
@@ -732,10 +771,10 @@ export default function ShoppingProfile() {
                       (user.type == 2 &&
                         user.corporate_type == "Emlak Ofisi" &&
                         group.label == "Satış Noktalarımız") ||
-                      (user.corporate_type !== "Emlak Ofisi" &&
-                        user.type == 2 &&
-                        group.label == "Emlak Kulüp") ||
-                      (user.type == 1 && group.label == "Satış Noktalarımız")
+                        (user.corporate_type !== "Emlak Ofisi" &&
+                          user.type == 2 &&
+                          group.label == "Emlak Kulüp") ||
+                        (user.type == 1 && group.label == "Satış Noktalarımız")
                         ? "none"
                         : "flex",
                   }}
@@ -874,7 +913,7 @@ const style = StyleSheet.create({
   },
   header: {
     width: "100%",
-    height: "19%",
+    height: width < 400 ? "30%" : '25%',
     justifyContent: "center",
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
@@ -977,7 +1016,7 @@ const style = StyleSheet.create({
   },
   card: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 5,
+    borderRadius: 20,
     paddingVertical: 22,
     paddingHorizontal: 20,
     width: "100%",

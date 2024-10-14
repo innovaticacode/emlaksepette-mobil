@@ -178,6 +178,7 @@ const Area = ({ index }) => {
                     column4_additional={item.column4_additional}
                     bookmarkStatus={true}
                     dailyRent={false}
+                    isFavorite={item.is_favorite}
                   />
                 )}
                 keyExtractor={(item, index) =>

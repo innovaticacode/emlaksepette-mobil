@@ -47,7 +47,22 @@ export default function ShareScreen() {
       >
         <Header onPress={toggleDrawer} index={setindex} tab={settab} />
       </View>
-      <Modal
+      <Image
+        source={require("../../src/assets/images/ilan_ekle_gorsel.png")}
+        style={styles.image}
+        resizeMode='contain'
+      />
+
+      <Text style={styles.title}>
+        Opss, İlan Verme Özelliğimiz Şimdilik Web’de!
+      </Text>
+      <Text style={styles.description}>
+        Emlak Sepette mobil uygulamamızda ilan verme özelliği henüz
+        bulunmamaktadır. İlan vermek için lütfen web sitemizi ziyaret edin.
+      </Text>
+
+      {/* ************ Silme İlan ekleme özelliği geldiğinde kullanılabilir.********** */}
+      {/* <Modal
         isVisible={isDrawerOpen}
         onBackdropPress={() => setIsDrawerOpen(false)}
         animationIn="bounceInLeft"
@@ -59,8 +74,8 @@ export default function ShareScreen() {
         <View>
           <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
         </View>
-      </Modal>
-      <ScrollView
+      </Modal> */}
+      {/* <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ padding: 10 }}
         nestedScrollEnabled={true}
@@ -74,7 +89,6 @@ export default function ShareScreen() {
             alignItems: "center",
           }}
         >
-          {/* Project Card */}
           {user.role == "Kurumsal Hesap" &&
             user.corporate_type == "İnşaat Ofisi" && (
               <>
@@ -176,7 +190,6 @@ export default function ShareScreen() {
               </>
             )}
 
-          {/* Estate Card */}
           {user.role == "Kurumsal Hesap" &&
           user.corporate_type != "İnşaat Ofisi" ? (
             <View style={styles.card}>
@@ -230,7 +243,6 @@ export default function ShareScreen() {
             ""
           )}
 
-          {/* Sat Kirala */}
           <View
             style={[
               styles.card,
@@ -278,58 +290,87 @@ export default function ShareScreen() {
             </View>
           </View>
         </View>
-      </ScrollView>
+      </ScrollView> */}
+      {/* <<<<<<<<<< Silme İlan ekleme özelliği geldiğinde kullanılabilir. >>>>>>>>>>>>>>*/}
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
-  toggleButton: {
-    fontSize: 20,
-    marginBottom: 20,
+  image: {
+    width: "auto",
+    height: 300,
+    marginTop: 50,
   },
-  modalBackdrop: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#0C0C0C",
+    marginBottom: 8,
+    textAlign: "center",
+    paddingRight: 40,
+    paddingLeft: 40,
+    marginTop: 20,
   },
-  toggleButton: {
-    fontSize: 20,
-    marginBottom: 20,
-  },
-
-  modal: {
-    margin: 0,
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    gap: 8,
-    width: "90%",
-
-    height: 210,
-    borderWidth: 0.7,
-    borderColor: "#e6e6e6",
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  addBtn: {
-    backgroundColor: "#EA2A28",
-    padding: 8,
-    width: "60%",
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
+  description: {
+    fontSize: 16,
+    color: "#555",
+    textAlign: "center",
+    lineHeight: 22,
+    paddingRight: 40,
+    paddingLeft: 40,
+    marginTop: 10,
   },
 });
+
+// const styles = StyleSheet.create({
+//   toggleButton: {
+//     fontSize: 20,
+//     marginBottom: 20,
+//   },
+//   modalBackdrop: {
+//     flex: 1,
+//     backgroundColor: "rgba(0, 0, 0, 0.5)",
+//   },
+//   toggleButton: {
+//     fontSize: 20,
+//     marginBottom: 20,
+//   },
+
+//   modal: {
+//     margin: 0,
+//   },
+//   card: {
+//     backgroundColor: "#FFFFFF",
+//     borderTopLeftRadius: 15,
+//     borderTopRightRadius: 15,
+//     gap: 8,
+//     width: "90%",
+
+//     height: 210,
+//     borderWidth: 0.7,
+//     borderColor: "#e6e6e6",
+//     ...Platform.select({
+//       ios: {
+//         shadowColor: " #e6e6e6",
+//         shadowOffset: { width: 1, height: 1 },
+//         shadowOpacity: 0.1,
+//         shadowRadius: 5,
+//       },
+//       android: {
+//         elevation: 5,
+//       },
+//     }),
+//   },
+//   addBtn: {
+//     backgroundColor: "#EA2A28",
+//     padding: 8,
+//     width: "60%",
+//     borderTopLeftRadius: 10,
+//     borderTopRightRadius: 10,
+//     flexDirection: "row",
+//     alignItems: "center",
+//     justifyContent: "center",
+//     gap: 10,
+//   },
+// });
