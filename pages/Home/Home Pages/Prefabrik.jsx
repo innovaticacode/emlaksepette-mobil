@@ -106,7 +106,7 @@ const Prefabrik = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <View style={{ paddingHorizontal: 0 }}>
             <Image
               source={PrefabrikBanner}
@@ -210,6 +210,7 @@ const Prefabrik = ({ index }) => {
                     column4_additional={item.column4_additional}
                     bookmarkStatus={true}
                     dailyRent={false}
+                    isFavorite={item.is_favorite}
                   />
                 )}
                 keyExtractor={(item, index) =>
@@ -226,7 +227,7 @@ const Prefabrik = ({ index }) => {
               />
             )}
           </AlertNotificationRoot>
-        </View>
+        </ScrollView>
       )}
     </>
   );

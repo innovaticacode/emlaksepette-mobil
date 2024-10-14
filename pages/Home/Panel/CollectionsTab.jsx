@@ -150,8 +150,8 @@ export default function CollectionsTab() {
     // Aksi takdirde, collections array'ini olduğu gibi bırak
     const filteredData = text
       ? collections.filter((item) =>
-        item.name.toLowerCase().includes(text.toLowerCase())
-      )
+          item.name.toLowerCase().includes(text.toLowerCase())
+        )
       : collections;
     setcollectionsRecods(filteredData);
 
@@ -419,17 +419,17 @@ export default function CollectionsTab() {
       ) : (
         <>
           {collections.length == 0 ? (
-              <NoDataScreen
-                message="Koleksiyonunuzda ilan bulunmamaktadır."
-                iconName="bookmark"
-                buttonText="Anasayfaya Dön"
-                navigateTo="HomePage"
-              />
+            <NoDataScreen
+              message="Koleksiyonunuzda ilan bulunmamaktadır."
+              iconName="bookmark"
+              buttonText="Anasayfaya Dön"
+              navigateTo="HomePage"
+            />
           ) : (
             <AlertNotificationRoot>
               {namFromGetUser.has_club == 0 ||
-                namFromGetUser.has_club == 2 ||
-                namFromGetUser.has_club == 3 ? (
+              namFromGetUser.has_club == 2 ||
+              namFromGetUser.has_club == 3 ? (
                 <RegisterRealtorClub />
               ) : (
                 <View style={styles.container}>
@@ -603,7 +603,7 @@ export default function CollectionsTab() {
                               }}
                               placeholder={
                                 user.type == 2 &&
-                                  user.corporate_type == "Emlak Ofisi"
+                                user.corporate_type == "Emlak Ofisi"
                                   ? "Portföy Ara"
                                   : "Koleksiyon Ara..."
                               }
@@ -710,7 +710,7 @@ export default function CollectionsTab() {
                                       title: "Lütfen seçiniz",
                                       textBody:
                                         user.type == 2 &&
-                                          user.corporate_type == "Emlak Ofisi"
+                                        user.corporate_type == "Emlak Ofisi"
                                           ? "Silmek istediğiniz Portföyleri seçiniz"
                                           : `Silmek istediğiniz koleksiyonları seçiniz`,
                                       button: "Tamam",
@@ -981,7 +981,7 @@ export default function CollectionsTab() {
                               }}
                             >
                               {user.type == 2 &&
-                                user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                                 ? "Portföy Adını Düzenle"
                                 : "Koleksiyon Adını Düzenle"}
                             </Text>
@@ -1012,7 +1012,7 @@ export default function CollectionsTab() {
                               }}
                             >
                               {user.type == 2 &&
-                                user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                                 ? "Portföyü Sil"
                                 : "Koleksiyonu Sil"}
                             </Text>
@@ -1041,7 +1041,7 @@ export default function CollectionsTab() {
                             }}
                           >
                             {user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
+                            user.corporate_type == "Emlak Ofisi"
                               ? "Portföy Adını Değiştir"
                               : "Koleksiyon Adını Değiştir"}
                           </Text>
@@ -1079,7 +1079,7 @@ export default function CollectionsTab() {
                             <Text>
                               {" "}
                               {user.type == 2 &&
-                                user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                                 ? "Oluşturduğun Portföyü paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir."
                                 : "Oluşturduğun Koleksiyonu paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir."}
                             </Text>
@@ -1458,5 +1458,4 @@ const styles = StyleSheet.create({
     margin: 0,
     padding: 10,
   },
-
 });

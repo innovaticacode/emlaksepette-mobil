@@ -12,7 +12,7 @@ import {
 import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-const apiUrl = "http://192.168.18.31:8000";
+const apiUrl = "https://private.emlaksepette.com";
 
 export default function AllTourismRent(prosp) {
   const { navigation } = prosp;

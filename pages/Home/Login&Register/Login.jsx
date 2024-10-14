@@ -16,11 +16,8 @@ import {
 import { React, useState, useEffect, useCallback } from "react";
 import BackIcon from "react-native-vector-icons/AntDesign";
 import EyeIcon from "react-native-vector-icons/Ionicons";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import IconSocialMedia from "react-native-vector-icons/AntDesign";
-import Icon from "react-native-vector-icons/Entypo";
 import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
-import { CheckBox } from "react-native-elements";
 import Modal from "react-native-modal";
 import { apiRequestPost } from "../../../components/methods/apiRequest";
 import * as SecureStore from "expo-secure-store";
@@ -38,40 +35,44 @@ import {
 
 export default function Login({ navigation }) {
   const route = useRoute();
-
+  const [status, setStatus] = useState(false);
+  const [statusMessage, setStatusMessage] = useState(false);
+  const [showLengthAlert, setShowLengthAlert] = useState(false);
+  const [showUpperAlert, setShowUpperAlert] = useState(false);
+  const [showSymbolAlert, setShowSymbolAlert] = useState(false);
+  const [showNumberAlert, setShowNumberAlert] = useState(false);
+  const [textfull, settextfull] = useState(false);
+  const [submitDisabled, setsubmitDisabled] = useState(false);
   const [eye, seteye] = useState("eye-off-sharp");
   const [Show, setShow] = useState(false);
-  const show = () => {
-    setShow(!Show);
-  };
   const [checked, setChecked] = useState(false);
   const toggleCheckbox = () => setChecked(!checked);
-
-  {
-    /* ınput states*/
-  }
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailControl, setemailControl] = useState(false);
   const [passControl, setpassControl] = useState(false);
   const [showMailSendAlert, setshowMailSendAlert] = useState(false);
-  {
-    /* ınput states*/
-  }
+  const [user, setUser] = useState({});
+  const [loadingForLogin, setloadingForLogin] = useState(false);
+  const IsShowAlert = route.params?.showAlert;
+  const message = route.params?.message;
+  const [loading, setLoading] = useState(true);
+  const [Deals, setDeals] = useState("");
+  const [loadingDeal, setloadingDeal] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
-  {
-    /* ınput control*/
-  }
-
+  const show = () => {
+    setShow(!Show);
+  };
+  
   const handleTextInputChange = (text) => {
     setEmail(text);
   };
-  const [user, setUser] = useState({});
 
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  const [loadingForLogin, setloadingForLogin] = useState(false);
+
   const Login = () => {
     setloadingForLogin(true);
     apiRequestPost("login", {
@@ -85,9 +86,9 @@ export default function Login({ navigation }) {
             "PhoneVerify",
             JSON.stringify(res.data.phone_verification_status)
           );
-          navigation.push("Home", {
-            status: "login",
-          });
+          setUser(res.data); // Kullanıcı durumunu günceller
+          navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
+          navigation.replace('Home')
         } else {
           // setshowMailSendAlert(true);
           setStatus(false);
@@ -105,6 +106,7 @@ export default function Login({ navigation }) {
         setloadingForLogin(false);
       });
   };
+
   const Submit = () => {
     if (!(email.trim() !== "" && email.includes("@"))) {
       setemailControl(true);
@@ -121,20 +123,8 @@ export default function Login({ navigation }) {
     }
   };
 
-  const [status, setStatus] = useState(false);
-  const [statusMessage, setStatusMessage] = useState(false);
-
-  const [showLengthAlert, setShowLengthAlert] = useState(false);
-  const [showUpperAlert, setShowUpperAlert] = useState(false);
-  const [showSymbolAlert, setShowSymbolAlert] = useState(false);
-  const [showNumberAlert, setShowNumberAlert] = useState(false);
-  const [textfull, settextfull] = useState(false);
-
-  const [submitDisabled, setsubmitDisabled] = useState(false);
   const handlePasswordChange = (text) => {
     setPassword(text);
-    // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
-
     if (text.length < 5) {
       setShowLengthAlert(true);
     } else {
@@ -142,18 +132,9 @@ export default function Login({ navigation }) {
     }
   };
 
-  {
-    /* ınput control*/
-  }
-
-  const IsShowAlert = route.params?.showAlert;
-
-  const message = route.params?.message;
   Login.navigationOptions = {
-    headerShown: false, // Başlık gizleme
+    headerShown: false,
   };
-
-  const [loading, setLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -166,6 +147,7 @@ export default function Login({ navigation }) {
       return () => clearTimeout(timer);
     }, [])
   );
+
   const fetchFromURL = async (url) => {
     try {
       const response = await axios.get(url);
@@ -174,23 +156,26 @@ export default function Login({ navigation }) {
       throw error;
     }
   };
-  const [Deals, setDeals] = useState("");
-  const [loadingDeal, setloadingDeal] = useState(false);
+
   const fetchData = async () => {
     setloadingDeal(true);
     const url = `https://private.emlaksepette.com/api/sayfa/bireysel-uyelik-sozlesmesi`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
-      // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     } catch (error) {
       console.error("İstek hatası:", error);
-      // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     } finally {
       setloadingDeal(false);
     }
   };
-  const [modalVisible, setModalVisible] = useState(false);
+
+  const closeModal = () => {
+    navigation.goBack();
+  };
+  
+  
+
   return (
     <AlertNotificationRoot>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -329,7 +314,7 @@ export default function Login({ navigation }) {
                           )}
                           {showLengthAlert && (
                             <Text style={{ color: "red" }}>
-                              Şifreniz en az 5 karakter olmalıdır!
+                              Şifreniz en az 6 karakter olmalıdır!
                             </Text>
                           )}
                           {showNumberAlert && (
@@ -395,7 +380,7 @@ export default function Login({ navigation }) {
                                 color: "#161616",
                               }}
                             >
-                              Şifremi unuttum
+                              Şifremi Unuttum
                             </Text>
                           </TouchableOpacity>
                         </View>
@@ -458,7 +443,10 @@ export default function Login({ navigation }) {
                               fontSize: 13,
                             }}
                             onPress={() => {
-                              navigation.navigate("Register");
+                              closeModal();
+                              setTimeout(() => {
+                                navigation.navigate("Register");
+                              }, 400);
                             }}
                           >
                             Üye Ol

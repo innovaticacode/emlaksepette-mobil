@@ -52,31 +52,19 @@ export default function RealtorPost({
   step1_slug,
   sold,
   openSharing,
+  isFavorite,
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
   const [bookmark, setbookmark] = useState("bookmark-o");
   const [user, setUser] = useState({});
   const [inFavorite, setInFavorite] = useState(false);
+  const [AddCartShow, setAddCartShow] = useState(false);
+  const [getPostId, setgetPostId] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-
-  const changeHeart = () => {
-    setHeart(heart === "hearto" ? "heart" : "hearto");
-  };
-
-  useEffect(() => {
-    if (housing.is_housing_favorite == null) {
-      setHeart("hearto");
-      setInFavorite(false);
-    } else {
-      setHeart("heart");
-      setInFavorite(true);
-    }
-  }, []);
-
-  const [getPostId, setgetPostId] = useState(0);
 
   const CreateCollection = (id) => {
     setgetPostId(id);
@@ -117,40 +105,45 @@ export default function RealtorPost({
   };
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
-  const [showAlert, setShowAlert] = useState(false);
 
-  const addFavorites = () => {
+  useEffect(() => {
+    if (isFavorite === 1) {
+      setHeart("heart");
+    } else {
+      setHeart("hearto");
+    }
+  }, []);
+
+  const addFavorites = async () => {
     if (user.access_token) {
+      // UI'da hemen favori olarak göster
+      setHeart("heart"); // Geçici olarak kalp dolu yap
+      setInFavorite(true);
       const config = {
         headers: { Authorization: `Bearer ${user.access_token}` },
       };
-      axios
-        .post(
-          "https://private.emlaksepette.com/api/add_housing_to_favorites/" +
-            HouseId,
+      try {
+        const res = await axios.post(
+          `https://private.emlaksepette.com/api/add_housing_to_favorites/${HouseId}`,
           {},
           config
-        )
-        .then((res) => {
-          changeHeart();
-
-          if (res.data.status == "removed") {
-            setInFavorite(false);
-          } else {
-            setInFavorite(true);
-          }
-        });
-      setShowAlert(false);
+        );
+        // İstek başarılıysa durumu güncelle
+        if (res.data.status === "removed") {
+          setHeart("hearto"); // Eğer favorilerden çıkarıldıysa kalbi boş yap
+          setInFavorite(false);
+        }
+        setShowAlert(false); // İşlem başarılıysa alert kapat
+      } catch (error) {
+        console.error("Favorilere ekleme hatası:", error);
+        // Hata durumunda geçici durumu geri al
+        setHeart("hearto");
+        setInFavorite(false);
+      }
     } else {
       setalertForFavorite(true);
     }
   };
-
-  const [AddCartShow, setAddCartShow] = useState(false);
-
-  useEffect(() => {
-    getValueFor("user", setUser);
-  }, []);
 
   const updateUserData = async () => {
     try {
@@ -196,7 +189,7 @@ export default function RealtorPost({
           formData,
           {
             headers: {
-              Authorization: `Bearer ${user?.access_token}`,
+              Authorization: `Bearer ${user.access_token}`,
             },
           }
         );
@@ -275,8 +268,10 @@ export default function RealtorPost({
             setalertForFavorite(false);
           }}
           onConfirmPressed={() => {
-            navigation.navigate("Login");
             setalertForFavorite(false);
+            setTimeout(() => {
+              navigation.navigate("Login");
+            }, 400);
           }}
           confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
           cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -306,8 +301,10 @@ export default function RealtorPost({
             setalertForSign(false);
           }}
           onConfirmPressed={() => {
-            navigation.navigate("Login");
             setalertForSign(false);
+            setTimeout(() => {
+              navigation.navigate("Login");
+            }, 400);
           }}
           confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
           cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -390,6 +387,7 @@ export default function RealtorPost({
                     {title}
                   </Text>
                 </View>
+                {/* 
                 <View
                   style={{
                     ...styles.ıcons, // Diğer stil özelliklerini ekleyin
@@ -421,6 +419,7 @@ export default function RealtorPost({
                     )}
 
                   <TouchableOpacity
+                    activeOpacity={0.8}
                     onPress={() => {
                       addFavorites();
                     }}
@@ -432,8 +431,29 @@ export default function RealtorPost({
                         color={heart == "hearto" ? "black" : "red"}
                       />
                     </View>
-                  </TouchableOpacity>
+                  </TouchableOpacity> 
                 </View>
+                */}
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    addFavorites();
+                  }}
+                >
+                  <View style={styles.ıconContainer}>
+                    <Heart
+                      name={heart}
+                      size={13}
+                      color={
+                        heart == "hearto"
+                          ? "black"
+                          : "red" || isFavorite === 1
+                          ? "red"
+                          : "black"
+                      }
+                    />
+                  </View>
+                </TouchableOpacity>
               </View>
 
               <View style={styles.PriceAndButtons}>
@@ -587,7 +607,7 @@ export default function RealtorPost({
               {column3_name && (
                 <Info
                   text={`${column3_name} ${
-                    column3_additional ? column3_additional : ".Kat"
+                    column3_additional ? column3_additional :""
                   }`}
                 />
               )}

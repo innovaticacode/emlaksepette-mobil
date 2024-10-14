@@ -74,6 +74,7 @@ import ImageViewing from "react-native-image-viewing";
 import PaymentPlanModal from "../components/PaymentPlanModal";
 import TextAlertModal from "../components/TextAlertModal";
 import ShareProgressBar from "../components/ShareProgessBar";
+import AwesomeAlertComp from "../components/AwesomeAlertComp";
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
@@ -930,6 +931,7 @@ export default function PostDetail() {
       console.error("Telefon numarası bulunamadı.");
     }
   };
+  const [show, setShow] = useState(false)
   return (
 
     <>
@@ -956,7 +958,7 @@ export default function PostDetail() {
                 <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} on />
               </View>
             </Modal>
-            <View style={{ position: 'absolute', width: '100%', bottom: 35, padding: 4, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
+            <View style={{ position: 'absolute', width: '100%', bottom: 0, paddingBottom:35, padding: 4,paddingTop:9, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around' ,backgroundColor:'#F2F2F2'}}>
               <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }} onPress={handleOpenPhone}>
                 <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }}>Ara</Text>
               </TouchableOpacity>
@@ -1172,7 +1174,7 @@ export default function PostDetail() {
                       <Icon2 name="sharealt" size={18} />
                     </View>
                   </TouchableOpacity>
-                  {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
+                  {/* {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
                     <TouchableOpacity
                       onPress={() => {
                         getRoomID(HomeId);
@@ -1184,7 +1186,7 @@ export default function PostDetail() {
                         <Bookmark name={bookmark} size={18} />
                       </View>
                     </TouchableOpacity>
-                  )}
+                  )} */}
                 </View>
                 <View style={styles.clubRateContainer}>
                   {user &&
@@ -1753,16 +1755,7 @@ export default function PostDetail() {
                     />
                   )}
               </View>
-              <View>
-                {roomData && roomData["swap[]"] !== '[]' && (
-                  <SettingsItem
-                    info="Takas Başvurusu Yap"
-                    color={"orange"}
-                    fontWeight={"700"}
-                    icon={<LinkIcon3 name="plus" size={15} color={"orange"} />}
-                  />
-                )}
-              </View>
+{/*            
               {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
                 <TouchableOpacity
                   onPress={() => {
@@ -1787,8 +1780,72 @@ export default function PostDetail() {
                     />
                   )}
                 </TouchableOpacity>
-              )}
-
+              )} */}
+            {roomData &&
+                  roomData['swap[]'] &&
+                  roomData['swap[]'] !== '[]' ?
+                   (
+                    <View style={{paddingLeft:10,paddingRight:10}}>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: "#FEF4EB",
+                          flexDirection: "row",
+                          padding: 6,
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          borderRadius: 5,
+                        }}
+                        onPress={() => {
+                          if (user.access_token) {
+                            navigation.navigate("SwapForm", {
+                              projectId:projectId,
+                              houseid: HomeId,
+                              type:1
+                            });
+                          }else{
+                            setShow(true)
+                          }
+                        
+                        }}
+                      >
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 10,
+                          }}
+                        >
+                          <View
+                            style={{
+                              backgroundColor: "#F37919",
+                              padding: 6,
+                              borderRadius: 5,
+                            }}
+                          >
+                            <Icon2 name="plus" size={16} color={"#fff"} />
+                          </View>
+                          <View style={{}}>
+                            <Text
+                              style={{
+                                fontSize: 12,
+                                color: "#333",
+                                fontWeight: "600",
+                              }}
+                            >
+                              Takas Başvurusu Yap
+                            </Text>
+                          </View>
+                        </View>
+                        <View>
+                          <Arrow
+                            name="arrow-forward-ios"
+                            size={16}
+                            color={"#333"}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  ):null}
               <View style={{ padding: 8 }}>
                 <SliderMenuPostDetails
                   tab={tabs}
@@ -2203,7 +2260,9 @@ export default function PostDetail() {
                                 }}
                                 onPress={() => {
                                   setColectionSheet(false);
-                                  navigation.navigate("Login");
+                                  setTimeout(() => {
+                                    navigation.navigate("Login");
+                                  }, 400);
                                 }}
                               >
                                 <Text
@@ -2352,167 +2411,22 @@ export default function PostDetail() {
               </View>
             </Modal>
 
-
-            <Modal
-              isVisible={IsOpenSheet}
-              onBackdropPress={() => setIsOpenSheet(false)}
-              backdropColor="transparent"
-              style={styles.modal2}
-              animationIn={"fadeInDown"}
-              animationOut={"fadeOutDown"}
-            >
-              <View
-                style={[
-                  styles.card,
-                  {
-                    backgroundColor: "white",
-                    height: width > 400 ? "30%" : "37%",
-                    padding: 10,
-                    borderTopLeftRadius: 25,
-                    borderTopRightRadius: 25,
-                  },
-                ]}
-              >
-                <View style={{ gap: 7 }}>
-                  <View style={{ padding: 10, paddingTop: 25 }}>
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        color: "#333",
-                        fontWeight: "700",
-                        textAlign: "center",
-                      }}
-                    >
-                      Paylaş
-                    </Text>
-                  </View>
-                  <ScrollView
-                    horizontal
-                    contentContainerStyle={{ gap: 20 }}
-                    showsHorizontalScrollIndicator={false}
-                  >
-                    <TouchableOpacity
-                      style={{
-                        alignItems: "center",
-                        justifyContent: "center",
-                        paddingTop: 5,
-                      }}
-                    >
-                      <Icon
-                        name="link"
-                        size={32}
-                        iconStyle={{ color: "#ffffff" }}
-                        style={{
-                          backgroundColor: "red",
-                          padding: 12,
-                          borderRadius: 8,
-                        }}
-                        reverseColor={"orange"}
-                      />
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          color: "#333",
-                          textAlign: "center",
-                          top: 5,
-                        }}
-                      >
-                        Bağlantı Kopyala
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                      <SocialIcon
-                        iconSize={30}
-                        style={{ backgroundColor: "#52CD60", borderRadius: 8 }}
-                        raised
-                        type="whatsapp"
-                      />
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          color: "#333",
-                          textAlign: "center",
-                        }}
-                      >
-                        Whatsapp
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                      <SocialIcon
-                        iconSize={30}
-                        style={{ backgroundColor: "#D33380", borderRadius: 8 }}
-                        raised
-                        type="instagram"
-                      />
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          color: "#333",
-                          textAlign: "center",
-                        }}
-                      >
-                        İnstagram
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                      <SocialIcon
-                        iconSize={30}
-                        style={{ borderRadius: 8 }}
-                        raised
-                        type="facebook"
-                      />
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          color: "#333",
-                          textAlign: "center",
-                        }}
-                      >
-                        Facebook
-                      </Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity>
-                      <SocialIcon
-                        iconSize={30}
-                        style={{ borderRadius: 8 }}
-                        raised
-                        type="twitter"
-                      />
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          color: "#333",
-                          textAlign: "center",
-                        }}
-                      >
-                        Twitter
-                      </Text>
-                    </TouchableOpacity>
-                  </ScrollView>
-                  <View style={{ paddingTop: 20 }}>
-                    <TouchableOpacity
-                      onPress={() => setIsOpenSheet(false)}
-                      style={{
-                        backgroundColor: "#F0F0F0",
-                        padding: 17,
-                        borderRadius: 20,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: "#7A7A7A",
-                          fontWeight: "bold",
-                          textAlign: "center",
-                        }}
-                      >
-                        İptal
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </Modal>
+         <AwesomeAlertComp
+          message={'Takas başvurusu yapmak için giriş yapmanız gerekmektedir'}
+          canselFunc={()=>{
+            setShow(false)
+          }}
+          confirmFunc={()=>{
+            setShow(false)
+            setTimeout(() => {
+              navigation.navigate('Login')
+            }, 200);
+           
+          }}
+          show={show}
+          setShow={setShow}
+         />
+            
             <AwesomeAlert
               show={ModalForAddToCart}
               showProgress={false}
@@ -2570,9 +2484,11 @@ export default function PostDetail() {
                 setModalVisible(false);
               }}
               onConfirmPressed={() => {
-                navigation.navigate("Login");
                 setAlertForSign(false);
                 setModalVisible(false);
+                setTimeout(() => {
+                  navigation.navigate("Login");
+                }, 400);
               }}
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
               cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -2631,8 +2547,10 @@ export default function PostDetail() {
                 setAlertForFavorite(false);
               }}
               onConfirmPressed={() => {
-                navigation.navigate("Login");
                 setAlertForFavorite(false);
+                setTimeout(() => {
+                  navigation.navigate("Login");
+                }, 400);
               }}
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
               cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}

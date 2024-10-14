@@ -313,7 +313,7 @@ export default function CreateCollections() {
       });
     }
   }, [loading, namFromGetUser, navigation]);
-  console.log(user.access_token, namFromGetUser.has_club)
+  console.log(user.access_token, namFromGetUser.has_club);
   return (
     <AlertNotificationRoot>
       <>
@@ -370,7 +370,7 @@ export default function CreateCollections() {
                           }}
                         >
                           {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                          user.corporate_type == "Emlak Ofisi"
                             ? "Portföy Ekle"
                             : "Koleksiyon Ekle"}
                         </Text>
@@ -474,7 +474,7 @@ export default function CreateCollections() {
                       <View style={{ width: "80%" }}>
                         <Text style={{ textAlign: "center", color: "#7A8A95" }}>
                           {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                          user.corporate_type == "Emlak Ofisi"
                             ? "Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir"
                             : "Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir"}
                         </Text>
@@ -486,7 +486,9 @@ export default function CreateCollections() {
                           padding: 10,
                         }}
                         onPress={() => {
-                          navigation.navigate("Login");
+                          setTimeout(() => {
+                            navigation.navigate("Login");
+                          }, 400);
                         }}
                       >
                         <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
@@ -513,7 +515,7 @@ export default function CreateCollections() {
                       <View style={{ width: "80%" }}>
                         <Text style={{ textAlign: "center", color: "#7A8A95" }}>
                           {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                          user.corporate_type == "Emlak Ofisi"
                             ? "Portföyünüze konut ekleyebilmeniz için emlak kulüp üyesi olmanız gerekmektedir"
                             : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"}
                         </Text>
@@ -547,12 +549,12 @@ export default function CreateCollections() {
                     </View>
                   )}
                   {user.access_token && namFromGetUser.has_club == 3 && (
-
                     <View style={styles.card}>
                       <View style={{}}>
                         <NoDataScreen
                           message={
-                            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                            user.type == 2 &&
+                            user.corporate_type == "Emlak Ofisi"
                               ? "Emlak Kulüp Üyeliğiniz Reddedildi! Portföy oluşturabilmek için tekrar başvuru yapabilirsiniz."
                               : "Emlak Kulüp Üyeliğiniz Reddedildi! Koleksiyon oluşturabilmek için tekrar başvuru yapabilirsiniz."
                           }

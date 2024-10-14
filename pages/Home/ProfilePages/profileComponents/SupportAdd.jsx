@@ -255,7 +255,6 @@ export default function SupportAdd() {
       );
 
       console.log("API Yanıtı:", response);
-
       if (response.status) {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,

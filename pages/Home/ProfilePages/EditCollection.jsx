@@ -6,7 +6,9 @@ import { Platform } from "react-native";
 export default function EditCollection() {
   const route = useRoute();
   const { collectionItems: initialCollectionItems, item } = route.params;
-  const [collectionItems, setCollectionItems] = useState(initialCollectionItems);
+  const [collectionItems, setCollectionItems] = useState(
+    initialCollectionItems
+  );
   const navigation = useNavigation();
 
   const handleRemoveFromCollection = (removedItemId) => {
@@ -24,18 +26,20 @@ export default function EditCollection() {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ gap: 10, padding: 10 }}
     >
-     {collectionItems && collectionItems.length > 0 ? (
-    collectionItems.map((collectionItem, index) => (
-      <EditCollectionPost
-        item={collectionItem}
-        key={index}
-        collection={item}
-        onRemove={handleRemoveFromCollection}
-      />
-    ))
-  ) : (
-    <Text style={{ textAlign: 'center', marginTop: 20 }}>Koleksiyon boş</Text>
-  )}
+      {collectionItems && collectionItems.length > 0 ? (
+        collectionItems.map((collectionItem, index) => (
+          <EditCollectionPost
+            item={collectionItem}
+            key={index}
+            collection={item}
+            onRemove={handleRemoveFromCollection}
+          />
+        ))
+      ) : (
+        <Text style={{ textAlign: "center", marginTop: 20 }}>
+          Koleksiyon boş
+        </Text>
+      )}
     </ScrollView>
   );
 }

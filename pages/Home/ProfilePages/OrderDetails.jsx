@@ -114,8 +114,8 @@ export default function OrderDetails() {
   let deposit_rate = 0.04;
   let discount_percent = 4;
   let saleType = "";
-  let kapora_tutari =
-    parseFloat(Detail?.amount?.replace(",", "").replace(".", "")) / 100;
+  let kapora_tutari = parseFloat(Detail?.amount) / 100;
+
   let urun_fiyati = parseFloat(parsedData?.item?.price);
   let tam_tutar;
   let tam_tutar_formatli;
@@ -317,7 +317,7 @@ export default function OrderDetails() {
                   İlan No:{" "}
                 </Text>
                 <Text style={{ fontSize: 13, color: "green" }}>
-                  #{1000000 + id + '-' + parsedData?.item?.housing}
+                  #{1000000 + id + "-" + parsedData?.item?.housing}
                 </Text>
               </View>
               <View
@@ -394,7 +394,6 @@ export default function OrderDetails() {
               </TouchableOpacity>
             </View>
 
-
             <View
               style={{
                 display: "flex",
@@ -411,7 +410,6 @@ export default function OrderDetails() {
                   {housing?.county?.title}
                 </Text>
               </View>
-
             </View>
             <View style={style.OrderPost}>
               <View style={style.Image}>
@@ -699,7 +697,7 @@ export default function OrderDetails() {
                     padding: 13,
                     borderRadius: 5,
                   }}
-                  onPress={() => { }}
+                  onPress={() => {}}
                 >
                   <Text
                     style={{
