@@ -207,7 +207,11 @@ export default function RealtorPost({
   const [cartIsNull, setcartIsNull] = useState(false);
   return (
     <AlertNotificationRoot>
-      <View>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("Realtor details", { houseId: HouseId })
+        }
+      >
         <AwesomeAlert
           // contentContainerStyle={{
           //   transform: [{ scale: 1 }], // Uyarıyı animasyonsuz hale getirmek için
@@ -343,7 +347,7 @@ export default function RealtorPost({
 
         <View style={styles.container}>
           <View style={styles.İlan}>
-            <TouchableOpacity
+            <View
               style={{ width: "30%", height: 80 }}
               onPress={() =>
                 navigation.navigate("Realtor details", { houseId: HouseId })
@@ -372,7 +376,7 @@ export default function RealtorPost({
                 style={{ width: "100%", height: "100%" }}
                 resizeMode="cover"
               />
-            </TouchableOpacity>
+            </View>
 
             <View style={styles.container2}>
               <View style={styles.captionAndIcons}>
@@ -434,7 +438,9 @@ export default function RealtorPost({
                   </TouchableOpacity> 
                 </View>
                 */}
-                <TouchableOpacity
+                {
+                  !sold &&
+                  <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => {
                     addFavorites();
@@ -454,6 +460,8 @@ export default function RealtorPost({
                     />
                   </View>
                 </TouchableOpacity>
+                }
+              
               </View>
 
               <View style={styles.PriceAndButtons}>
@@ -480,51 +488,11 @@ export default function RealtorPost({
                     <Text style={styles.priceText}>{formattedPrice} </Text>
                   )}
                 </View>
-                {housing?.user?.id == user.id && user.access_token ? (
-                  <TouchableOpacity
-                    style={[styles.addBasket, { backgroundColor: "#008001" }]}
-                  >
-                    <Text
-                      style={{
-                        color: "white",
-                        fontWeight: "600",
-                        fontSize: 10,
-                      }}
+                {!sold ? (
+                  housing?.user?.id == user.id && user.access_token ? (
+                    <TouchableOpacity
+                      style={[styles.addBasket, { backgroundColor: "#008001" }]}
                     >
-                      İlanı Düzenle
-                    </Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    style={styles.addBasket}
-                    onPress={() => {
-                      // Metin kontrolü yapılıyor
-                      if (
-                        (housing?.step2_slug &&
-                          housing?.step2_slug === "gunluk-kiralik") ||
-                        housing?.step1_slug === "mustakil-tatil"
-                      ) {
-                        navigation.navigate("Realtor details", {
-                          houseId: HouseId,
-                        });
-                      } else {
-                        handlePress();
-                      }
-                    }}
-                  >
-                    {(housing?.step2_slug &&
-                      housing?.step2_slug == "gunluk-kiralik") ||
-                    housing?.step1_slug == "mustakil-tatil" ? (
-                      <Text
-                        style={{
-                          color: "white",
-                          fontWeight: "600",
-                          fontSize: 9,
-                        }}
-                      >
-                        Rezervasyon Yap
-                      </Text>
-                    ) : (
                       <Text
                         style={{
                           color: "white",
@@ -532,11 +500,62 @@ export default function RealtorPost({
                           fontSize: 10,
                         }}
                       >
-                        Sepete Ekle
+                        İlanı Düzenle
                       </Text>
-                    )}
-                  </TouchableOpacity>
-                )}
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.addBasket}
+                      onPress={() => {
+                        // Metin kontrolü yapılıyor
+                        if (
+                          (housing?.step2_slug &&
+                            housing?.step2_slug === "gunluk-kiralik") ||
+                          housing?.step1_slug === "mustakil-tatil"
+                        ) {
+                          navigation.navigate("Realtor details", {
+                            houseId: HouseId,
+                          });
+                        } else {
+                          handlePress();
+                        }
+                      }}
+                    >
+                      {(housing?.step2_slug &&
+                        housing?.step2_slug == "gunluk-kiralik") ||
+                      housing?.step1_slug == "mustakil-tatil" ? (
+                        <Text
+                          style={{
+                            color: "white",
+                            fontWeight: "600",
+                            fontSize: 9,
+                          }}
+                        >
+                          Rezervasyon Yap
+                        </Text>
+                      ) : (
+                        <Text
+                          style={{
+                            color: "white",
+                            fontWeight: "600",
+                            fontSize: 10,
+                          }}
+                        >
+                          Sepete Ekle
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  )
+                ):sold==1 ?
+                <View style={[styles.addBasket, {backgroundColor:'#EA2C2E'}]}>
+                    <Text style={{color:'white',fontWeight:'600',fontSize:10}}>Satıldı</Text>
+                </View> :
+              <View style={[styles.addBasket, {backgroundColor:'#FFA500'}]}>
+              <Text style={{color:'white',fontWeight:'600',fontSize:10}}>Rezerve Edildi</Text>
+          </View>
+              
+              }
+            
 
                 {/*                
                 <TouchableOpacity
@@ -632,7 +651,7 @@ export default function RealtorPost({
             </View>
           ) : null} */}
         </View>
-      </View>
+      </TouchableOpacity>
     </AlertNotificationRoot>
   );
 }
@@ -697,6 +716,7 @@ const styles = StyleSheet.create({
     width: "50%",
     alignItems: "center",
     backgroundColor: "#264ABB",
+    borderRadius: 5,
   },
 
   ıconContainer: {

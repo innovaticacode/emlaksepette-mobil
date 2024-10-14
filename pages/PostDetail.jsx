@@ -1755,8 +1755,18 @@ export default function PostDetail() {
                     />
                   )}
               </View>
-{/*            
-              {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
+
+              <View>
+                {roomData && roomData["swap[]"] !== '[]' && (
+                  <SettingsItem
+                    info="Takas Başvurusu Yap"
+                    color={"orange"}
+                    fontWeight={"700"}
+                    icon={<LinkIcon3 name="plus" size={15} color={"orange"} />}
+                  />
+                )}
+              </View>
+              {/* {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
                 <TouchableOpacity
                   onPress={() => {
 
@@ -1781,6 +1791,7 @@ export default function PostDetail() {
                   )}
                 </TouchableOpacity>
               )} */}
+
             {roomData &&
                   roomData['swap[]'] &&
                   roomData['swap[]'] !== '[]' ?
