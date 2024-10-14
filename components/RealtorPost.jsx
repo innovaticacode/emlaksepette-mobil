@@ -438,7 +438,9 @@ export default function RealtorPost({
                   </TouchableOpacity> 
                 </View>
                 */}
-                <TouchableOpacity
+                {
+                  !sold &&
+                  <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => {
                     addFavorites();
@@ -458,6 +460,8 @@ export default function RealtorPost({
                     />
                   </View>
                 </TouchableOpacity>
+                }
+              
               </View>
 
               <View style={styles.PriceAndButtons}>

@@ -680,7 +680,7 @@ export default function PostDetail() {
                   paddingBottom: width > 400 ? 15 : 7,
                 }}
               >
-                {data?.housing?.user?.id == user?.id ? (
+                {(data?.housing?.user?.id == user?.id ||data?.housing?.sold) ? (
                   <></>
                 ) : (
                   <TouchableOpacity
@@ -704,7 +704,11 @@ export default function PostDetail() {
                     </Text>
                   </TouchableOpacity>
                 )}
-                {data?.housing?.user?.id == user?.id ? (
+                { !data?.housing?.sold?
+
+                
+                
+                data?.housing?.user?.id == user?.id ? (
                   <TouchableOpacity
                     style={{
                       backgroundColor: "#008001",
@@ -772,7 +776,13 @@ export default function PostDetail() {
                       Sepete Ekle
                     </Text>
                   </TouchableOpacity>
-                )}
+                ) : data?.housing?.sold=='1' ?
+                <View style={{backgroundColor:'#EA2C2E',width:'100%',padding:12,borderRadius:5}}>
+                    <Text style={{color:'white',fontWeight:'600',textAlign:'center'}}>Satıldı</Text>
+                </View> :
+              <View style={ {backgroundColor:'#FFA500',padding:12,borderRadius:5,width:'100%'}}>
+              <Text style={{color:'white',fontWeight:'600',textAlign:'center'}}>Rezerve Edildi</Text>
+          </View>}
               </View>
             </View>
             <View
@@ -895,43 +905,49 @@ export default function PostDetail() {
                     </Text>
                   </View>
                 </View>
+{
+  !data?.housing?.sold &&
+  <View style={styles.ıconContainer}>
+  <TouchableOpacity onPress={onShare}>
+    <View style={styles.ıcon}>
+      <Icon2 name="sharealt" size={18} />
+    </View>
+  </TouchableOpacity>
+      
+      
+         <TouchableOpacity
+         onPress={() => {
+         
+           addFavorites();
+         }}
+       >
+         <View style={styles.ıcon}>
+           <Heart
+             name={heart}
+             size={18}
+             color={heart === "hearto" ? "black" : "red"}
+           />
+         </View>
+       </TouchableOpacity>
+      
 
-                <View style={styles.ıconContainer}>
-                  <TouchableOpacity onPress={onShare}>
-                    <View style={styles.ıcon}>
-                      <Icon2 name="sharealt" size={18} />
-                    </View>
-                  </TouchableOpacity>
 
-                  <TouchableOpacity
-                    onPress={() => {
-                      console.log("Favorite button pressed"); // Butona tıklanıp tıklanmadığını kontrol et
-                      addFavorites();
-                    }}
-                  >
-                    <View style={styles.ıcon}>
-                      <Heart
-                        name={heart}
-                        size={18}
-                        color={heart === "hearto" ? "black" : "red"}
-                      />
-                    </View>
-                  </TouchableOpacity>
-
-                  {((OpenSharing == "Evet" &&
-                    user.corporate_type == "Emlak Ofisi") ||
-                    user.type == 1) && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        openCollection();
-                      }}
-                    >
-                      <View style={styles.ıcon}>
-                        <Bookmark name={bookmark} size={18} />
-                      </View>
-                    </TouchableOpacity>
-                  )}
-                </View>
+  {((OpenSharing == "Evet" &&
+    user.corporate_type == "Emlak Ofisi") ||
+    user.type == 1) && (
+    <TouchableOpacity
+      onPress={() => {
+        openCollection();
+      }}
+    >
+      <View style={styles.ıcon}>
+        <Bookmark name={bookmark} size={18} />
+      </View>
+    </TouchableOpacity>
+  )}
+</View>
+}
+               
 
                 <PagerView
                   style={{ height: 250 }}

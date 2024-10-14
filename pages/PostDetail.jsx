@@ -1172,7 +1172,7 @@ export default function PostDetail() {
                       <Icon2 name="sharealt" size={18} />
                     </View>
                   </TouchableOpacity>
-                  {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
+                  {/* {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
                     <TouchableOpacity
                       onPress={() => {
                         getRoomID(HomeId);
@@ -1184,7 +1184,7 @@ export default function PostDetail() {
                         <Bookmark name={bookmark} size={18} />
                       </View>
                     </TouchableOpacity>
-                  )}
+                  )} */}
                 </View>
                 <View style={styles.clubRateContainer}>
                   {user &&
@@ -1763,7 +1763,7 @@ export default function PostDetail() {
                   />
                 )}
               </View>
-              {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
+              {/* {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
                 <TouchableOpacity
                   onPress={() => {
 
@@ -1787,7 +1787,7 @@ export default function PostDetail() {
                     />
                   )}
                 </TouchableOpacity>
-              )}
+              )} */}
 
               <View style={{ padding: 8 }}>
                 <SliderMenuPostDetails
