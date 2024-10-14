@@ -28,7 +28,7 @@ import { CheckBox } from "@rneui/themed";
 import { Platform } from "react-native";
 import axios from "axios";
 import { getValueFor } from "../../components/methods/user";
-import CollectionsOfBrand from "./ProfilePageItem/CollectionsOfBrand";
+// import CollectionsOfBrand from "./ProfilePageItem/CollectionsOfBrand";
 import CommentsOfBrands from "./ProfilePageItem/CommentsOfBrands";
 import SellPlacesForBrands from "./ProfilePageItem/SellPlaceForBrand";
 import { ActivityIndicator } from "react-native-paper";
@@ -68,35 +68,49 @@ export default function Profile() {
   const scrollViewRef = useRef(null); // ScrollView için ref
   const [tabWidth, setTabWidth] = useState(0);
   const [projectData, setProjectData] = useState([]);
-  const [items, setItems] = useState([
-    {
-      text: "Tanıtım",
-      isShow: "All",
-    },
-    {
-      text: "Emlak İlanları",
-      isShow: "All",
-    },
-    {
-      text: "Proje İlanları",
-      isShow: "All",
-    },
-    {
-      text: "Satış Noktalarımız",
-      isShow: "All",
-    },
-    {
-      text: "Mağaza Profili",
-      isShow: "All",
-    },
-    {
-      text: "Değerlendirmeler",
-      isShow: "All",
-    },
-    {
-      text: "Ekip",
-    },
-  ]);
+  const [items, setItems] = useState(() => {
+    const initialItems = [
+      {
+        text: "Tanıtım",
+        isShow: "All",
+      },
+      {
+        text: "Emlak İlanları",
+        isShow: "All",
+      },
+      {
+        text: "Proje İlanları",
+        isShow: "All",
+      },
+      {
+        text: "Mağaza Profili",
+        isShow: "All",
+      },
+      {
+        text: "Satış Noktalarımız", // Koleksiyonlar yerine bu eklendi
+        isShow: "All",
+      },
+      {
+        text: "Değerlendirmeler",
+        isShow: "All",
+      },
+      {
+        text: "Ekip",
+      },
+    ];
+
+    // Değerleri kontrol et ve 'Satış Noktalarımız' öğesini kaldır
+    if (
+      storeData?.data?.corporate_type === "Emlak Ofisi" ||
+      storeData?.data?.type === 1
+    ) {
+      return initialItems.filter((item) => item.text !== "Satış Noktalarımız");
+    }
+
+    return initialItems;
+  });
+
+  const [color, setColor] = useState("#000000");
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -255,35 +269,27 @@ export default function Profile() {
     }
   };
 
-  // Scroll width değerini al
+  const controlColor = () => {
+    const dataColor = storeData?.data?.banner_hex_code;
+    if (!dataColor) return;
+    const isBlackOrShadesOfBlack = (color) => {
+      if (color === "#000000") return true;
+      const hexColor = parseInt(color.replace("#", ""), 16);
+      return hexColor >= 0x000000 && hexColor <= 0x111111; // Bu aralıkta ise beyaz yap
+    };
 
-  useEffect(() => {
-    if (scrollViewRef.current && tabWidth > 0) {
-      const tabCount = items.length;
-      const viewWidth = width;
-      const tabOffset = tab * tabWidth;
-      const contentWidth = tabWidth * tabCount;
-      const centeredOffset = Math.max(
-        0,
-        Math.min(
-          tabOffset - (viewWidth / 2 - tabWidth / 2),
-          contentWidth - viewWidth
-        )
-      );
-
-      scrollViewRef.current.scrollTo({
-        x: centeredOffset,
-        animated: true,
-      });
+    if (isBlackOrShadesOfBlack(dataColor)) {
+      setColor("#fff");
     }
-  }, [tab, items, tabWidth]);
-
-  // Calculate the width of each tab after layout
-  const onTabLayout = (event) => {
-    const { width: measuredWidth } = event.nativeEvent.layout;
-    setTabWidth(measuredWidth);
   };
 
+  useEffect(() => {
+    controlColor();
+  }, [storeData]);
+
+  useEffect(() => {
+    console.debug("====>>", storeData?.data?.corporate_type);
+  }, [storeData]);
   return (
     <>
       {loadingShopping ? (
@@ -374,7 +380,7 @@ export default function Profile() {
                         <Text
                           style={{
                             fontSize: 14,
-                            color: "#000000",
+                            color: color ? color : "#000000",
                             fontWeight: "700",
                           }}
                         >
@@ -383,7 +389,12 @@ export default function Profile() {
                         <Star name="verified" size={19} color={"#0275FF"} />
                       </View>
 
-                      <Text style={{ fontSize: 12, color: "#000000" }}>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: color ? color : "#000000",
+                        }}
+                      >
                         {storeData?.data?.corporate_type}
                       </Text>
                     </View>
@@ -430,7 +441,6 @@ export default function Profile() {
                         },
                       ]}
                       onPress={() => settab(index)}
-                      onLayout={onTabLayout}
                     >
                       <Text
                         style={{
@@ -438,10 +448,10 @@ export default function Profile() {
                           fontWeight: tab === index ? "500" : "normal",
                         }}
                       >
-                        {item.text == "Satış Noktalarımız" &&
-                        (storeData?.data?.corporate_type == "Emlak Ofisi" ||
-                          storeData?.data?.type == 1)
-                          ? "Koleksiyonlar"
+                        {item.text === "Satış Noktalarımız" &&
+                        (storeData?.data?.corporate_type === "Emlak Ofisi" ||
+                          storeData?.data?.type === 1)
+                          ? null
                           : item.text}
                       </Text>
                     </TouchableOpacity>
@@ -449,7 +459,7 @@ export default function Profile() {
                 </View>
               </ScrollView>
             </View>
-            <View style={{ flex: 1, paddingBottom: height * 0.1 }}>
+            <View style={{ flex: 1, paddingBottom: 60 }}>
               {tab === 0 && <Introduction id={id} setTab={settab} />}
               {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
               {tab === 2 && (
@@ -462,13 +472,12 @@ export default function Profile() {
               )}
               {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
               {tab === 4 &&
-                (storeData?.data?.corporate_type !== "Emlak Ofisi" &&
-                storeData.data.type === 2 ? (
+                (storeData?.data?.type !== 1 &&
+                storeData?.data?.corporate_type !== "Emlak Ofisi" ? (
                   <SellPlacesForBrands data={storeData} />
-                ) : (
-                  <CollectionsOfBrand data={storeData} />
-                ))}
-              {tab === 5 && <CommentsOfBrands data={storeData} />}
+                ) : null)}
+
+              {tab === 5 && <CommentsOfBrands id={id} />}
               {tab === 6 && <Team teamm={teamm} />}
             </View>
           </View>
@@ -481,7 +490,10 @@ export default function Profile() {
                 padding: 10,
                 position: "absolute",
                 bottom: 0,
+                paddingBottom: Platform.OS === "ios" ? 40 : 12,
                 width: "100%",
+                backgroundColor: "#F2F2F2",
+                height: "auto",
               }}
             >
               {(tab == 1 || tab == 2) && (
@@ -514,12 +526,13 @@ export default function Profile() {
                   borderRadius: 5,
                   borderWidth: 1,
                   borderColor: "#EB2B2E",
+                  backgroundColor: "#EA2B2E",
                 }}
               >
                 <Text
                   style={{
                     textAlign: "center",
-                    color: "#EB2B2E",
+                    color: "#FFF",
                     fontWeight: "700",
                   }}
                 >
