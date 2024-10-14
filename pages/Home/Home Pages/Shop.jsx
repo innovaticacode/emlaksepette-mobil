@@ -107,7 +107,7 @@ const Shop = ({ index }) => {
         </View>
       ) : (
         <ScrollView style={styles.container}>
-          <View style={{ marginBottom:20 }}>
+          <View style={{ marginBottom: 20 }}>
             <Image
               source={bannerSRC}
               style={{ width: "auto", height: 120, resizeMode: "cover" }}
@@ -223,6 +223,7 @@ const Shop = ({ index }) => {
                     column4_additional={item.column4_additional}
                     bookmarkStatus={true}
                     dailyRent={false}
+                    isFavorite={item.is_favorite}
                   />
                 )}
                 keyExtractor={(item, index) =>
