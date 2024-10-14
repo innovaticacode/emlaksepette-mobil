@@ -20,7 +20,11 @@ export default FranchiseBanner;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "rgb(228, 228, 228)",
+    // backgroundColor: "rgb(228, 228, 228)",
+    backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#E4E4E4",
+    borderRadius: 10,
     width: 110,
     paddingHorizontal: 10,
     height: "auto",
@@ -30,6 +34,14 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 6,
     marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 2,
   },
   image: {
     width: 90,
