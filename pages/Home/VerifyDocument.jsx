@@ -96,11 +96,13 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     setselectedPick(key);
     setchoose(true);
   };
-  const showDocument = (url, document) => {
+  const showDocument = (url, document,state) => {
+    setselectedPick(state)
     setselectedUrl(url);
     setselectedDocument(document);
     setIsVisible(true);
   };
+  
   const [selectedDocumentName, setSelectedDocumentName] = useState(null);
 
   const [pdfFile, setPdfFile] = useState(null);
@@ -126,7 +128,7 @@ export default function VerifyDocument({ nextStep, prevStep }) {
         alert("hata");
       });
   };
-  console.log(FormDatas.pdfUrl);
+
   const [deleteModal, setdeleteModal] = useState(false);
   const deleteDocument = (key) => {
     setData(key, null);
@@ -134,7 +136,7 @@ export default function VerifyDocument({ nextStep, prevStep }) {
   };
 
   const navigation = useNavigation();
-  console.log(FormDatas.pdfUrl + "sfgdgdf");
+
 
   const [loading, setloading] = useState(false);
   const sendDocument = () => {
@@ -263,19 +265,15 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     getValueFor("PhoneVerify", setverifyStatus);
   }, []);
 
-  console.log(verifyStatus + "Document");
+  
 
-  console.log(FormDatas[selectedPick]?.name + "dosya tipi");
-  console.log(selectedPick + " state");
-  console.log(user.corporate_type + "sfsd");
+
   const [filteredDocuments, setfilteredDocuments] = useState([]);
   const isFocused = useIsFocused();
 
-  console.log(FormDatas[selectedPick]?.name + "dosya ismi");
+ 
 
-  const checkDocuments = () => {};
-  // console.log(user)
-  // console.log(user.corporate_account_status + 'dfs')
+
   const [namFromGetUser, setnamFromGetUser] = useState([]);
   const [loadingForUserInfo, setloadingForUserInfo] = useState(false);
   const GetUserInfo = async () => {
@@ -294,6 +292,7 @@ export default function VerifyDocument({ nextStep, prevStep }) {
         setnamFromGetUser(userData);
         setData("vergi_levhası", namFromGetUser.tax_document);
         setData("sicil_belgesi", namFromGetUser.record_document);
+        setData('')
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -306,7 +305,26 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     setfilteredDocuments(documentView);
     GetUserInfo();
   }, [user]);
-  console.log(namFromGetUser);
+
+
+const openPdf = async () => {
+  if (FormDatas[selectedPick]?.uri) {
+    try {
+      const contentUri = await FileSystem.getContentUriAsync(FormDatas[selectedPick]?.uri);
+      IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+        data: contentUri,
+        flags: 1,
+        type: "application/pdf",
+      });
+    } catch (error) {
+      console.error("PDF açılırken hata oluştu:", error);
+    }
+  } else {
+    Alert.alert("PDF dosyası bulunamadı");
+  }
+};
+console.log(FormDatas[selectedPick]?.uri , 'seçilen Dosya')
+console.log(selectedUrl , '/' , selectedDocument)
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -402,7 +420,21 @@ export default function VerifyDocument({ nextStep, prevStep }) {
                   >
                     <TouchableOpacity
                       onPress={() => {
-                        showDocument(item.url, item.document);
+
+                        if (FormDatas[item.state].uri.slice(-3) == "pdf") {
+                          if (Platform.OS === "android") {
+                            openPdf();
+                          } else if (Platform.OS === "ios") {
+                            navigation.navigate("DecontPdf", {
+                              name: FormDatas[item.state]?.name,
+                              pdfUri: FormDatas[item.state].uri,
+                            });
+                          }
+                        }else{
+                          // setselectedPick(FormDatas[item.state])
+                          showDocument(item.url, item.document , item.state );
+                        }
+                     
                       }}
                       style={{
                         backgroundColor: "#0FA958",
@@ -459,78 +491,12 @@ export default function VerifyDocument({ nextStep, prevStep }) {
                   </Text>
                 </>
               )}
-              {/* {   
-                         namFromGetUser[item.approve] == 1 && FormDatas[item.state]==null?
-                        <View style={{width:'100%',height:'100%',backgroundColor:'#E0F2E3',borderRadius:20,justifyContent:'center'}}>
-                            <View style={{gap:10,alignItems:'center',justifyContent:'center'}}>
-                            <TouchableOpacity
-                            style={{
-                              backgroundColor:'#0FA958',
-                              padding:9,                            
-                              borderRadius:9,
-                              width:'60%'
-                            }}
-                            >
-                                <Text style={{
-                                  fontSize:13,color:'white',fontWeight:'700',
-                                  textAlign:'center'
-                                }}>
-                                  Belgeyi Gör
-                                </Text>
-                              </TouchableOpacity>
-                              <TouchableOpacity
-                              onPress={()=>{
-                                setselectedPick(item.state)
-                                setdeleteModal(true)
-                              }}
-                              style={{
-                                backgroundColor:'#EA2A29',
-                                padding:9,                            
-                                borderRadius:9,
-                                 width:'60%'
-                              }}
-                              >
-                                <Text style={{color:'white',fontSize:13,fontWeight:'700',textAlign:'center'}}>
-                                  Belgeyi Sil
-                                </Text>
-                              </TouchableOpacity>
-                             
-                              </View>
-
-                        </View>:
-
-                            FormDatas[item.state] ? 
-                            FormDatas[item.state].uri?.slice(-3) == 'pdf'?
-                           <TouchableOpacity style={{
-                            backgroundColor:'#208011',
-                            padding:9,                            
-                            borderRadius:9
-                           }}
-                           onPress={() => {
-                            if (Platform.OS === "android") {
-                              openPdf(FormDatas[item.state]);
-                            } else if (Platform.OS === "ios") {
-                              navigation.navigate("DecontPdf", {
-                                name: 'pdf',
-                                pdfUri: FormDatas[item.state].uri,
-                              });
-                            }
-                          }}
-                           >
-                            <Text style={{fontSize:13,color:'white',fontWeight:'700'}}>Pdf Görüntüle</Text>
-                           </TouchableOpacity>:
-                            <Image source={{uri:FormDatas[item.state]?.uri}} style={{width:'100%',height:'100%',borderRadius:20}}/>
-                            :
-                            <>
-                             <Feather name="cloud-upload-outline" size={60} color={'#EA2B2E'}/>
-                             <Text style={{color:'#EA2B2E',fontSize:13}}>Dosyanızı buraya yükleyiniz</Text>
-                            </>
-                        } */}
+             
             </View>
             <ImageViewing
               images={[
                 {
-                  uri: `https://private.emlaksepette.com/${selectedUrl}/${namFromGetUser[selectedDocument]}`,
+                  uri:`${FormDatas[selectedPick]?.uri}`,
                 },
               ]}
               imageIndex={0}

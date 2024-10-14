@@ -6,14 +6,18 @@ import {
   SafeAreaView,
   Platform,
 } from "react-native";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { TextInput } from "react-native";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
 import Modal from "react-native-modal";
 import { ActivityIndicator } from "react-native-paper";
 import Icon from "react-native-vector-icons/AntDesign";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 export default function Verification({ nextStep, prevStep }) {
   const [codes, setCodes] = useState("");
@@ -45,6 +49,14 @@ export default function Verification({ nextStep, prevStep }) {
       inputs.current[index + 1].focus();
     }
   };
+
+  const handleDelete = (index) => {
+    let newCodes = [...codes];
+    newCodes[index] = ""; // Clear the current input
+
+    // Update the codes array
+    setCodes(newCodes);
+  };
   const [falseCodeAlert, setfalseCodeAlert] = useState(false);
   const updateUserData = async () => {
     try {
@@ -73,12 +85,6 @@ export default function Verification({ nextStep, prevStep }) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     }
   };
-  const isfocused = useIsFocused();
-
-  const [user, setuser] = useState({});
-  useEffect(() => {
-    getValueFor("user", setuser);
-  }, []);
 
   const [loading, setloading] = useState(false);
   const handleSubmit = async () => {
@@ -113,45 +119,13 @@ export default function Verification({ nextStep, prevStep }) {
     }
   };
 
-  const [verifyStatu, setverifyStatu] = useState(null);
-
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [butonDisabled, setbutonDisabled] = useState(false);
-  const sendPostRequest = async () => {
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user?.access_token}`,
-        },
-      };
-      if (user?.access_token) {
-        const response = await axios.post(
-          "https://private.emlaksepette.com/api/phone-verification/generate",
-          {}, // Veri gövdesi boş olabilir veya isteğe özel verileri ekleyebilirsiniz
-          config
-        );
-        setResponse(response.data);
-        setError(null);
-        setbutonDisabled(true);
-      }
-    } catch (error) {
-      setError("Post isteği başarısız oldu.");
-      console.error("Post isteği başarısız oldu:", error);
-    } finally {
-    }
-  };
-
-  useEffect(() => {
-    getValueFor("PhoneVerify", setverifyStatu);
-  }, [user]);
-
-  useEffect(() => {
-    if (verifyStatu == 0) {
-      sendPostRequest();
-      setIsActive(true);
-    }
-  }, [verifyStatu]);
+  const [verifyStatu, setverifyStatu] = useState(null);
+  const isfocused = useIsFocused();
+  const [hasRun, setHasRun] = useState(false);
+  const [user, setuser] = useState({});
 
   const [succes, setsucces] = useState(true);
 
@@ -185,8 +159,44 @@ export default function Verification({ nextStep, prevStep }) {
     const seconds = timeInSeconds % 60;
     return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
   };
-  console.log(verifyStatu);
 
+  // Kullanıcı verilerini almak için
+  useEffect(() => {
+    getValueFor("user", setuser);
+  }, []);
+
+  // Telefon doğrulama durumunu almak için
+  useEffect(() => {
+    if (user && user.access_token) {
+      getValueFor("PhoneVerify", setverifyStatu);
+    }
+  }, [user]);
+
+  // Doğrulama kodu gönderme fonksiyonu
+  const sendPostRequest = async () => {
+    setIsActive(true);
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      };
+      if (user?.access_token) {
+        const response = await axios.post(
+          "https://private.emlaksepette.com/api/phone-verification/generate",
+          {},
+          config
+        );
+        console.log("Kod gönderildi:", response.data);
+        setError(null);
+      }
+    } catch (error) {
+      setError("Post isteği başarısız oldu.");
+      alert("Kod gönderilemedi");
+      console.error("Post isteği başarısız oldu:", error);
+    }
+  };
+  console.log(isActive)
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ padding: 10 }}>
@@ -218,10 +228,21 @@ export default function Verification({ nextStep, prevStep }) {
           </View>
         </View>
       </View>
-      <View style={{ paddingTop: 10 }}>
-        <Text style={{ fontSize: 20, textAlign: "center", color: "#EA2A28" }}>
-          {formatTime(seconds)}
-        </Text>
+      <View style={{ paddingTop: 10, alignItems: "center" }}>
+        <View
+          style={{
+            backgroundColor: "#EA2C2E",
+            borderRadius: 50,
+            width: 60,
+            height: 60,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ fontSize: 20, textAlign: "center", color: "white" }}>
+            {formatTime(seconds)}
+          </Text>
+        </View>
       </View>
       <View style={{ paddingTop: 30 }}>
         <View
@@ -236,11 +257,21 @@ export default function Verification({ nextStep, prevStep }) {
               maxLength={1}
               keyboardType="numeric"
               onChangeText={(text) => handleInputChange(index, text)}
+              onKeyPress={({ nativeEvent }) => {
+                if (nativeEvent.key === "Backspace" && !codes[index]) {
+                  if (index > 0) {
+                    inputs.current[index - 1].focus();
+                  }
+                  handleDelete(index);
+                }
+              }}
             />
           ))}
         </View>
         <View style={{ padding: 10, paddingTop: 50, gap: 20 }}>
-          <TouchableOpacity
+          {
+            isActive ?
+            <TouchableOpacity
             disabled={codes.length == 6 ? false : true}
             onPress={() => {
               handleSubmit();
@@ -267,21 +298,38 @@ export default function Verification({ nextStep, prevStep }) {
                 Onayla
               </Text>
             )}
-          </TouchableOpacity>
-          {showSendAgain == true && (
-            <TouchableOpacity onPress={sendPostRequest}>
-              <Text
-                style={{
-                  textAlign: "center",
-                  fontSize: 14,
-                  fontWeight: "500",
-                  color: "#EA2A28",
-                }}
-              >
-                Tekrar Gönder
-              </Text>
-            </TouchableOpacity>
-          )}
+          </TouchableOpacity>:
+             <TouchableOpacity
+            
+             onPress={() => {
+              resetTimer()
+             sendPostRequest()
+             }}
+             style={{
+               backgroundColor: "#EA2A28",
+               padding: 9,
+               borderRadius: 5,
+          
+               alignItems: "center",
+               justifyContent: "center",
+             }}
+           >
+            
+               <Text
+                 style={{
+                   color: "white",
+                   textAlign: "center",
+                   fontWeight: "600",
+                 }}
+               >
+                 Kod Gönder
+               </Text>
+            
+           </TouchableOpacity>
+
+          }
+        
+          
         </View>
       </View>
       <Modal
@@ -396,65 +444,6 @@ export default function Verification({ nextStep, prevStep }) {
           </View>
         </View>
       </Modal>
-      {/* {
-        user.phone_verification_status!=1 ?
-        <>
-          <Text>Onaylandı</Text>
-        </>:
-        <>
-         <View style={{width:'100%',gap:15}}>
-          <View style={{width:'75%'}}>
-          <Text style={{fontSize:30,color:'#333',fontWeight:'500'}}>
-            Doğrulama kodunu giriniz
-          </Text>
-          </View>
-        
-          <Text style={{fontSize:14,color:'#333'}}> 
-            Paneli görüntüleyebilmek için {user?.mobile_phone} No'lu telefona gönderdiğimiz doğrulama kodunu giriniz
-          </Text>
-        </View>
-        <View style={{paddingTop:35,width:'100%',padding:10}}>
-          <View style={{flexDirection:'row',justifyContent:'center',gap:10,}}> 
-         
-          {[...Array(6)].map((_, index) => (
-          <TextInput
-            key={index}
-            ref={(ref) => (inputs.current[index] = ref)}
-            style={styles.Input}
-            value={codes[index] || ''}
-            maxLength={1}
-            keyboardType="numeric"
-            onChangeText={(text) => handleInputChange(index, text)}
-          />
-        ))}
-  
-          </View>
-        
-          <View style={{paddingTop:30,gap:20}}>
-          <TouchableOpacity  style={{backgroundColor:'#E54242',padding:10,borderRadius:5,opacity:!butonDisabled? 0.5:1}}
-            onPress={handleSubmit}
-          >
-            <Text style={{textAlign:'center',color:'#f7f7f7',fontSize:15,fontWeight:'600'}}>Onayla</Text>
-
-          </TouchableOpacity>
-          <TouchableOpacity disabled={butonDisabled} style={{backgroundColor:'#E54242',padding:10,borderRadius:5,opacity:butonDisabled? 0.5:1}}
-            onPress={sendPostRequest}
-          >
-            <Text style={{textAlign:'center',color:'#f7f7f7',fontSize:15,fontWeight:'600'}}>Gönder</Text>
-
-          </TouchableOpacity>
-          <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-          <TouchableOpacity>
-                    <Text style={{fontSize:13,color:'blue'}}>Tekrar Gönder</Text>
-                </TouchableOpacity>
-                </View>
-                
-          </View>
-      
-        </View>
-   
-        </>
-      } */}
     </SafeAreaView>
   );
 }
