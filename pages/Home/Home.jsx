@@ -155,7 +155,7 @@ const Home = ({ route }) => {
             focused ? (
               <FontAwesome5Icon name="shopping-cart" color="black" size={20} />
             ) : (
-              <Feather name="shopping-cart" color="black" size={20} />
+              <Feather name="shopping-cart" color="grey" size={20} />
             ),
           tabBarBadge: userdata.cartItem ? 1 : null,
           tabBarBadgeStyle: {

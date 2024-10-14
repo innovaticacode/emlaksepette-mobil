@@ -38,7 +38,7 @@
   {
     "id": "projects",
     "label": "Satış Noktalarımız",
-    "icon": "map-pin",
+    "icon": "map-marker",
     "text": "Satış Noktalarımız",
     "key": "ViewDashboard",
     "url": "SellPlace",
