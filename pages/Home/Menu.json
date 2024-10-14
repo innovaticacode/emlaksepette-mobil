@@ -9,9 +9,18 @@
     "activePath": "/hesabim"
   },
   {
+    "id": "real-estate-wallet",
+    "label": "Hesabım Emlak Sepette",
+    "icon": "wallet",
+    "text": "Cüzdanım",
+    "key": "ViewDashboard",
+    "url": "RealEstateWallet",
+    "activePath": "/hesabım"
+  },
+  {
     "id": "projects",
     "label": "İlan Yönetimi",
-    "icon": "plus",
+    "icon": "sign-real-estate",
     "text": "Proje İlanlarım",
     "key": "GetProjects",
     "url": "MyProject",
@@ -19,21 +28,21 @@
   },
   {
     "id": "projects",
-    "label": "Satış Noktalarımız",
-    "icon": "map-pin",
-    "text": "Satış Noktalarımız",
-    "key": "ViewDashboard",
-    "url": "SellPlace",
-    "activePath": "/hesabim/projects"
-  },
-  {
-    "id": "projects",
     "label": "İlan Yönetimi",
-    "icon": "plus",
+    "icon": "sign-real-estate",
     "text": "Emlak İlanlarım",
     "key": "GetHousings",
     "url": "MyRealtor",
     "activePath": "/hesabim/konutlar"
+  },
+  {
+    "id": "projects",
+    "label": "Satış Noktalarımız",
+    "icon": "map-marker",
+    "text": "Satış Noktalarımız",
+    "key": "ViewDashboard",
+    "url": "SellPlace",
+    "activePath": "/hesabim/projects"
   },
 
   {
@@ -86,22 +95,52 @@
   {
     "id": "shopping-bag",
     "label": "Emlak Kulüp",
-    "icon": "info",
+    "icon": "information-variant",
     "text": "Emlak Kulüp Nedir?",
-    "key": "GetMyCollection",
+    "key": "DevreDışı_GetMyCollection",
     "url": "RealtorClubExplore",
-    "activePath": "/hesabim/koleksiyonlarim*"
+    "activePath": "/hesabim/koleksiyonlarim*",
+    "_comment": "Bu öğe şu an geçici olarak devre dışı bırakıldı."
   },
   {
     "id": "shopping-bag",
     "label": "Emlak Kulüp",
     "icon": "bookmark",
     "text": "Koleksiyonlarım",
-    "key": "GetMyCollection",
+    "key": "DevreDışı_GetMyCollection",
     "url": "Collections",
-    "activePath": "/hesabim/koleksiyonlarim*"
+    "activePath": "/hesabim/koleksiyonlarim*",
+    "_comment": "Bu öğe şu an geçici olarak devre dışı bırakıldı."
   },
-
+  {
+    "id": "EmlakClubUsers",
+    "label": "Emlak Kulüp",
+    "icon": "users",
+    "text": "Üyelere Kupon Tanımla",
+    "key": "DevreDışı_EmlakClubUsers",
+    "url": "institutional.estate.club.users",
+    "activePath": "/hesabim/estate_club_users",
+    "_comment": "Bu öğe şu an geçici olarak devre dışı bırakıldı."
+  },
+  {
+    "id": "EmlakClubGift",
+    "label": "Emlak Kulüp",
+    "icon": "gift",
+    "text": "Kuponlarım",
+    "key": "DevreDışı_EmlakClubGift",
+    "url": "institutional.estate.coupons",
+    "activePath": "/hesabim/coupons",
+    "_comment": "Bu öğe şu an geçici olarak devre dışı bırakıldı."
+  },
+  {
+    "id": "neighbors",
+    "label": "Komşumu Gör",
+    "icon": "information-variant",
+    "text": "Komşumu Gör Nedir?",
+    "key": "neighborView",
+    "url": "SeeMyNeighbor",
+    "activePath": "/hesabim/komsumu-gor"
+  },
   {
     "id": "neighbors",
     "label": "Komşumu Gör",
@@ -113,18 +152,9 @@
   },
 
   {
-    "id": "EmlakClubUsers",
-    "label": "Emlak Kulüp",
-    "icon": "users",
-    "text": "Üyelere Kupon Tanımla",
-    "key": "EmlakClubUsers",
-    "url": "institutional.estate.club.users",
-    "activePath": "/hesabim/estate_club_users"
-  },
-  {
     "id": "GetSwapApplications",
     "label": "Başvurular",
-    "icon": "users",
+    "icon": "swap-horizontal-bold",
     "text": "Gelen Takas Başvuruları",
     "key": "GetSwapApplications",
     "url": "SwapScreen",
@@ -133,7 +163,7 @@
   {
     "id": "GetSwapApplications",
     "label": "Başvurular",
-    "icon": "users",
+    "icon": "swap-horizontal-bold",
     "text": "Takas Taleplerim",
     "key": "GetSwapApplications",
     "url": "ComeSwapScreen",
@@ -141,19 +171,9 @@
   },
 
   {
-    "id": "EmlakClubGift",
-    "label": "Emlak Kulüp",
-    "icon": "gift",
-    "text": "Kuponlarım",
-    "key": "EmlakClubGift",
-    "url": "institutional.estate.coupons",
-    "activePath": "/hesabim/coupons"
-  },
-
-  {
     "id": "EditProfile",
     "label": "Hesabım & Yardım",
-    "icon": "edit",
+    "icon": "account-edit",
     "text": "Profili Güncelle",
     "key": "EditProfile",
     "url": "UpdateProfile",
@@ -172,7 +192,7 @@
   {
     "id": "role",
     "label": "Hesabım & Yardım",
-    "icon": "user",
+    "icon": "account-settings",
     "text": "Kullanıcı Tipi Oluştur",
     "key": "Roles",
     "url": "",
@@ -196,7 +216,7 @@
   {
     "id": "user",
     "label": "Hesabım & Yardım",
-    "icon": "user-plus",
+    "icon": "account-group",
     "text": "Alt Kullanıcı Oluştur",
     "key": "Users",
     "url": "#nv-users",
@@ -267,7 +287,7 @@
   {
     "id": "ChangePassword",
     "label": "Hesabım & Yardım",
-    "icon": "info",
+    "icon": "information-variant",
     "text": "Destek & Talep",
     "key": "ChangePassword",
     "url": "Support",
@@ -276,7 +296,7 @@
   {
     "id": "EditProfile",
     "label": "Hesabım & Yardım",
-    "icon": "message-circle",
+    "icon": "comment",
     "text": "Değerlendirmelerim",
     "key": "EditProfile",
     "url": "MyComments",
@@ -285,7 +305,7 @@
   {
     "id": "membershipType",
     "label": "Rol Değişimi",
-    "icon": "eye",
+    "icon": "swap-horizontal-bold",
     "text": "Kurumsal Hesap Başvurusu",
     "key": "membershipType",
     "url": "ApplyCompany",
