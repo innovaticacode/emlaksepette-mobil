@@ -68,35 +68,47 @@ export default function Profile() {
   const scrollViewRef = useRef(null); // ScrollView için ref
   const [tabWidth, setTabWidth] = useState(0);
   const [projectData, setProjectData] = useState([]);
-  const [items, setItems] = useState([
-    {
-      text: "Tanıtım",
-      isShow: "All",
-    },
-    {
-      text: "Emlak İlanları",
-      isShow: "All",
-    },
-    {
-      text: "Proje İlanları",
-      isShow: "All",
-    },
-    {
-      text: "Mağaza Profili",
-      isShow: "All",
-    },
-    {
-      text: "Satış Noktalarımız", // Koleksiyonlar yerine bu eklendi
-      isShow: "All",
-    },
-    {
-      text: "Değerlendirmeler",
-      isShow: "All",
-    },
-    {
-      text: "Ekip",
-    },
-  ]);
+  const [items, setItems] = useState(() => {
+    const initialItems = [
+      {
+        text: "Tanıtım",
+        isShow: "All",
+      },
+      {
+        text: "Emlak İlanları",
+        isShow: "All",
+      },
+      {
+        text: "Proje İlanları",
+        isShow: "All",
+      },
+      {
+        text: "Mağaza Profili",
+        isShow: "All",
+      },
+      {
+        text: "Satış Noktalarımız", // Koleksiyonlar yerine bu eklendi
+        isShow: "All",
+      },
+      {
+        text: "Değerlendirmeler",
+        isShow: "All",
+      },
+      {
+        text: "Ekip",
+      },
+    ];
+
+    // Değerleri kontrol et ve 'Satış Noktalarımız' öğesini kaldır
+    if (
+      storeData?.data?.corporate_type === "Emlak Ofisi" ||
+      storeData?.data?.type === 1
+    ) {
+      return initialItems.filter((item) => item.text !== "Satış Noktalarımız");
+    }
+
+    return initialItems;
+  });
 
   const [color, setColor] = useState("#000000");
 
@@ -275,6 +287,9 @@ export default function Profile() {
     controlColor();
   }, [storeData]);
 
+  useEffect(() => {
+    console.debug("====>>", storeData?.data?.corporate_type);
+  }, [storeData]);
   return (
     <>
       {loadingShopping ? (
@@ -433,13 +448,10 @@ export default function Profile() {
                           fontWeight: tab === index ? "500" : "normal",
                         }}
                       >
-                        {/* {item.text == "Satış Noktalarımız" &&
-                        (storeData?.data?.corporate_type == "Emlak Ofisi" ||
-                          storeData?.data?.type == 1)
-                          ? "Koleksiyonlar"
-                          : item.text} */}
-                        {storeData?.data?.type === 2
-                          ? "Satış Noktalarımız"
+                        {item.text === "Satış Noktalarımız" &&
+                        (storeData?.data?.corporate_type === "Emlak Ofisi" ||
+                          storeData?.data?.type === 1)
+                          ? null
                           : item.text}
                       </Text>
                     </TouchableOpacity>
@@ -459,14 +471,11 @@ export default function Profile() {
                 />
               )}
               {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
-              {/* {tab === 4 &&
-                (storeData?.data?.corporate_type !== "Emlak Ofisi" &&
-                storeData.data.type === 2 ? (
+              {tab === 4 &&
+                (storeData?.data?.type !== 1 &&
+                storeData?.data?.corporate_type !== "Emlak Ofisi" ? (
                   <SellPlacesForBrands data={storeData} />
-                ) : (
-                  <CollectionsOfBrand data={storeData} />
-                ))} */}
-              {tab === 4 && <SellPlacesForBrands data={storeData} />}
+                ) : null)}
 
               {tab === 5 && <CommentsOfBrands id={id} />}
               {tab === 6 && <Team teamm={teamm} />}
