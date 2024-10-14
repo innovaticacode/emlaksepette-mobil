@@ -66,9 +66,9 @@ const Home = ({ route }) => {
 
   if (userdata && user.access_token) {
     if (user.type === 1 && verifyStatus === 0) {
-      setTimeout(() => nav.navigate("VerifyScreen"), 100);
+      setTimeout(() => nav.replace("VerifyScreen"), 100);
     } else if (verifyStatus === 0 || userdata.corporate_account_status === 0) {
-      setTimeout(() => nav.navigate("VerifyScreen"), 100);
+      setTimeout(() => nav.replace("VerifyScreen"), 100);
     }
   }
 
