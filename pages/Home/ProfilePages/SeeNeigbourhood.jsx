@@ -5,6 +5,7 @@ import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import NoDataScreen from "../../../components/NoDataScreen";
+import { Text } from "react-native";
 
 export default function SeeNeigbourhood() {
   const [loading, setLoading] = useState(false);

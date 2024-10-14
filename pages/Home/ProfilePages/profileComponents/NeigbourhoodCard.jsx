@@ -43,27 +43,11 @@ export default function NeigbourhoodCard({
     return formattedNumber;
   };
 
-  useEffect(() => {
-    console.debug(">>>>>>>>>>>>>>>>>", projectInfo);
-  }, []);
-
   return (
     <View style={styles.contain}>
-      <View style={{ padding: 17, gap: 20 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            gap: 13,
-            alignItems: "center",
-          }}
-        >
-          <View
-            style={{
-              width: 90,
-              height: 90,
-              borderRadius: 5,
-            }}
-          >
+      <View style={{ padding: 16, gap: 20 }}>
+        <View style={styles.body}>
+          <View style={styles.imageArea}>
             <ImageBackground
               source={{
                 uri: `${apiUrl}/${projectInfo.image.replace(
@@ -78,7 +62,7 @@ export default function NeigbourhoodCard({
               borderRadius={5}
             />
           </View>
-          <View style={{ gap: 4 }}>
+          <View style={styles.textArea}>
             <View style={{ gap: 1 }}>
               <Text style={styles.header}>Mülk Sahibi Adı</Text>
               <Text style={styles.Text}>{NeigBourHoodInfo.name}</Text>
@@ -108,16 +92,7 @@ export default function NeigbourhoodCard({
             onPress={() => {
               handleOpenPhone();
             }}
-            style={{
-              backgroundColor: "#10A958",
-              width: "45%",
-              padding: 6,
-              borderRadius: 6,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-            }}
+            style={styles.callButton}
           >
             <Icon name="phone" color={"#fff"} />
             <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
@@ -131,16 +106,7 @@ export default function NeigbourhoodCard({
                 projectId: projectInfo.id,
               });
             }}
-            style={{
-              backgroundColor: "#000000",
-              width: "45%",
-              padding: 6,
-              borderRadius: 6,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-            }}
+            style={styles.seeAdvertButton}
           >
             <Icon name="eye" color={"#fff"} />
             <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
@@ -156,9 +122,7 @@ const styles = StyleSheet.create({
   contain: {
     backgroundColor: "#FFFFFF",
     borderRadius: 12,
-
     width: "100%",
-
     borderWidth: 0.7,
     borderColor: "#e6e6e6",
     ...Platform.select({
@@ -172,6 +136,7 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+    marginVertical: 4,
   },
   Text: {
     color: "#333",
@@ -181,5 +146,40 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 12,
     fontWeight: "300",
+  },
+  body: {
+    flexDirection: "row",
+    gap: 13,
+    alignItems: "center",
+  },
+  imageArea: {
+    width: 90,
+    height: 90,
+    borderRadius: 5,
+  },
+  callButton: {
+    backgroundColor: "#10A958",
+    width: "45%",
+    padding: 6,
+    borderRadius: 6,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  seeAdvertButton: {
+    backgroundColor: "#000000",
+    width: "45%",
+    padding: 6,
+    borderRadius: 6,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  textArea: {
+    flex: 1,
+    justifyContent: "space-between",
+    paddingVertical: 5,
   },
 });
