@@ -6,16 +6,17 @@ import {
   Linking,
   ImageBackground,
 } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import Icon from "react-native-vector-icons/Feather";
 import { Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { frontEndUriBase } from "../../../../components/methods/apiRequest";
 export default function NeigbourhoodCard({
   NeigBourHoodInfo,
   project,
   projectInfo,
+  status,
 }) {
-  const apiUrl = "https://private.emlaksepette.com";
   const navigation = useNavigation();
 
   const handleOpenPhone = () => {
@@ -43,6 +44,7 @@ export default function NeigbourhoodCard({
     return formattedNumber;
   };
 
+  console.debug("NeigBourHoodInfo", NeigBourHoodInfo);
   return (
     <View style={styles.contain}>
       <View style={{ padding: 16, gap: 20 }}>
@@ -50,7 +52,7 @@ export default function NeigbourhoodCard({
           <View style={styles.imageArea}>
             <ImageBackground
               source={{
-                uri: `${apiUrl}/${projectInfo.image.replace(
+                uri: `${frontEndUriBase}${projectInfo.image.replace(
                   "public/",
                   "storage/"
                 )}`,
@@ -65,13 +67,21 @@ export default function NeigbourhoodCard({
           <View style={styles.textArea}>
             <View style={{ gap: 1 }}>
               <Text style={styles.header}>Mülk Sahibi Adı</Text>
-              <Text style={styles.Text}>{NeigBourHoodInfo.name}</Text>
+              <Text style={styles.Text}>
+                {status === 1
+                  ? NeigBourHoodInfo.name
+                  : `${NeigBourHoodInfo.name.slice(0, 2)}********`}
+              </Text>
             </View>
             <View style={{ gap: 1 }}>
               <Text style={styles.header}>Mülk Sahibi Telefonu</Text>
               <Text style={styles.Text}>
-                {" "}
-                {formatPhoneNumber(NeigBourHoodInfo.mobile_phone)}
+                {status === 1
+                  ? formatPhoneNumber(NeigBourHoodInfo.mobile_phone)
+                  : `${formatPhoneNumber(NeigBourHoodInfo.mobile_phone).slice(
+                      0,
+                      5
+                    )}******`}
               </Text>
             </View>
             <View style={{ gap: 1 }}>
@@ -90,13 +100,17 @@ export default function NeigbourhoodCard({
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <TouchableOpacity
             onPress={() => {
-              handleOpenPhone();
+              status === 1 ? handleOpenPhone() : null;
             }}
-            style={styles.callButton}
+            style={[
+              styles.callButton,
+              { backgroundColor: status === 1 ? "#10A958" : "#FFCE86" },
+            ]}
+            activeOpacity={status === 1 ? 0.2 : 1}
           >
             <Icon name="phone" color={"#fff"} />
-            <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
-              Komşumu Ara
+            <Text style={{ textAlign: "center", color: "#FFF" }}>
+              {status === 1 ? "Ara" : "Onay Bekleniyor"}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -158,7 +172,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   callButton: {
-    backgroundColor: "#10A958",
     width: "45%",
     padding: 6,
     borderRadius: 6,

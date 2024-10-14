@@ -5,45 +5,32 @@ import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import NoDataScreen from "../../../components/NoDataScreen";
-import { Text } from "react-native";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 export default function SeeNeigbourhood() {
   const [loading, setLoading] = useState(false);
   const [suggests, setSuggests] = useState([]);
   const [user, setUser] = useState({});
-
   const navigation = useNavigation();
 
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
 
-  const GetUserInfo = () => {
+  const GetUserInfo = async () => {
     setLoading(true);
-
-    if (user.access_token) {
-      axios
-        .get("https://private.emlaksepette.com/api/neighbor-view", {
+    try {
+      if (user.access_token) {
+        const response = await axios.get(`${apiUrl}neighbor-view`, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
-        })
-        .then((response) => {
-          // Başarılı yanıt alındı, veriyi ayarla
-          setSuggests(response?.data?.data || []);
-        })
-        .catch((error) => {
-          // Hata durumunda hata mesajını logla
-          console.error(
-            "Kullanıcı verileri güncellenirken hata oluştu:",
-            error
-          );
-        })
-        .finally(() => {
-          // İstek tamamlandığında loading durumunu kapat
-          setLoading(false);
         });
-    } else {
+        setSuggests(response?.data?.data || []);
+      }
+    } catch (error) {
+      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+    } finally {
       setLoading(false);
     }
   };
@@ -59,15 +46,19 @@ export default function SeeNeigbourhood() {
           <ActivityIndicator size="large" color="#EA2A28" />
         </View>
       ) : (
-        <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <ScrollView
+          contentContainerStyle={styles.scrollViewContainer}
+          showsVerticalScrollIndicator={false}
+        >
           <View style={{ flex: 1 }}>
             {suggests.length > 0 ? (
               suggests.map((suggest) => (
                 <NeigbourhoodCard
-                  key={suggest.id}
-                  NeigBourHoodInfo={suggest.owner}
+                  key={suggest?.id}
+                  NeigBourHoodInfo={suggest?.owner}
                   project={suggest?.order?.cart}
-                  projectInfo={suggest.project}
+                  projectInfo={suggest?.project}
+                  status={suggest?.status}
                 />
               ))
             ) : (
