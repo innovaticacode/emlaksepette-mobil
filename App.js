@@ -1296,7 +1296,7 @@ export default function App({ route }) {
                   name="RealEstateWallet"
                   component={RealEstateWallet}
                   options={{
-                    title: 'Cüzdanım',
+                    title: 'Emlak Cüzdan',
                     headerStyle: {
                       backgroundColor: '#f2f2f2',
                     },
@@ -1304,6 +1304,7 @@ export default function App({ route }) {
                     headerTitleStyle: {
                       fontWeight: 'bold',
                     },
+                    headerBackTitleVisible: false,
                   }}
                 />
               </Stack.Navigator>

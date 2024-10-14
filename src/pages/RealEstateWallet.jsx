@@ -1,220 +1,311 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Geri tuşu için ikon
-import { Card } from 'react-native-elements';
+import React, { useState } from "react";
+import {
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    TextInput,
+    FlatList,
+    ScrollView,
+    ImageBackground
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons"; // Geri tuşu için ikon
+import { Card, Image } from "react-native-elements";
 
-const RealEstateWallet  = () => {
-  const [selectedAmount, setSelectedAmount] = useState(null);
-  const [customAmount, setCustomAmount] = useState('');
+const RealEstateWallet = () => {
+    const [selectedAmount, setSelectedAmount] = useState(null);
+    const [customAmount, setCustomAmount] = useState("");
 
-  const amounts = ['1000', '2000', '3000', '4000', '5000'];
+    const amounts = ["1000", "2000", "3000", "4000", "5000"];
 
-  const renderAmountButton = (amount) => {
+    const renderAmountButton = (amount) => {
+        return (
+            <TouchableOpacity
+                key={amount}
+                style={[
+                    styles.amountButton,
+                    selectedAmount === amount && styles.selectedAmountButton,
+                ]}
+                onPress={() => setSelectedAmount(amount)}
+            >
+                <Text style={styles.amountText}>{amount} ₺</Text>
+            </TouchableOpacity>
+        );
+    };
+
     return (
-      <TouchableOpacity
-        key={amount}
-        style={[
-          styles.amountButton,
-          selectedAmount === amount && styles.selectedAmountButton
-        ]}
-        onPress={() => setSelectedAmount(amount)}
-      >
-        <Text style={styles.amountText}>{amount} ₺</Text>
-      </TouchableOpacity>
+        <ScrollView>
+            <View style={styles.container}>
+                {/* Balance Card */}
+                <View style={styles.withdrawSection}>
+                    <View style={[styles.balanceCard, { padding: 0 }]}>
+                        <ImageBackground source={require('../../src/assets/images/wallet_card.png')}
+                            style={styles.imageBack} borderRadius={20} />
+                        <View style={styles.balenceCardBottom}>
+                            <View style={styles.balenceCardRight}>
+                                <View>
+                                    <Text style={styles.balanceTitle}>Toplam Bakiye</Text>
+                                    <Text style={styles.balanceAmount}>0 ₺</Text>
+                                </View>
+                                <View>
+                                    <Text style={styles.balanceTitle}>Emlak</Text>
+                                    <Text style={styles.balanceTitle}>Cüzdan</Text>
+                                </View>
+                            </View>
+                            <View style={styles.balenceCardRight}>
+                                <View>
+                                    <Text style={styles.balanceTitle}>Yüklenen Bakiye</Text>
+                                    <Text style={styles.balanceAmount}>0,00 ₺</Text>
+                                </View>
+                                <View>
+                                    <Text style={styles.balanceTitle}>Kazanç</Text>
+                                    <Text style={styles.balanceAmount}>0,00 ₺</Text>
+                                </View>
+                            </View>
+                        </View>
+
+                    </View>
+                    <View>
+                        <Text style={styles.Title}>Emlak Cüzdan</Text>
+                        <Text style={styles.balanceDesc}>
+                            Emlak Cüzdan ile hızlıca ödeme yap. Emlak cüzdanlı olmanın
+                            ayrıcalıklarını yakala!
+                        </Text>
+                    </View>
+                </View>
+
+                {/* Withdraw Section */}
+                <View style={styles.withdrawSection}>
+                    <View style={styles.balenceCardRight}>
+                        <Text style={styles.sectionTitle}>Para Çek</Text>
+                        <TouchableOpacity>
+                            <Text style={styles.removeCardText}>Kartı Sil</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* Card Display */}
+                    <View style={styles.card}>
+                        <View style={styles.balenceCardBottom}>
+                            <View style={styles.balenceCardRight}>
+                                <Image
+                                    source={require("../../src/assets/images/Ziraat.png")}
+                                    style={styles.cardImage2}
+                                />
+                                <Ionicons name="checkmark-circle" size={24} color="green" />
+                            </View>
+                            <View style={styles.balenceCardRight}>
+                                <Text style={styles.cardText}>20576****7877</Text>
+                                <Image
+                                    source={require("../../src/assets/images/logos_mastercard.png")}
+                                    style={styles.cardImage}
+                                />
+                            </View>
+                        </View>
+                    </View>
+
+                    {/* Add Card Section */}
+                    <TouchableOpacity style={styles.addCard}>
+                        <Ionicons name="add-circle" size={24} color="red" />
+                        <Text style={styles.addCardText}>Kart Ekle</Text>
+                    </TouchableOpacity>
+
+                    {/* Amount Selection */}
+                    <View style={styles.amountContainer}>
+                        <FlatList
+                            data={amounts}
+                            horizontal
+                            renderItem={({ item }) => renderAmountButton(item)}
+                            keyExtractor={(item) => item}
+                            showsHorizontalScrollIndicator={false}
+                        />
+                    </View>
+
+                    {/* Custom Amount Input */}
+                    <TextInput
+                        style={styles.customInput}
+                        placeholder="Farklı Tutar giriniz..."
+                        keyboardType="numeric"
+                        value={customAmount}
+                        onChangeText={setCustomAmount}
+                    />
+
+                    {/* Withdraw Button */}
+                    <TouchableOpacity style={styles.withdrawButton}>
+                        <Text style={styles.withdrawButtonText}>Hemen Para Çek</Text>
+                    </TouchableOpacity>
+
+                </View>
+            </View>
+        </ScrollView>
     );
-  };
-
-  return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity>
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Emlak Cüzdan</Text>
-      </View>
-
-      {/* Balance Card */}
-      <Card containerStyle={styles.balanceCard}>
-        <View>
-          <Text style={styles.balanceTitle}>Toplam Bakiye</Text>
-          <Text style={styles.balanceAmount}>0 ₺</Text>
-        </View>
-        <View>
-          <Text style={styles.balanceSubtitle}>Yüklenen Bakiye</Text>
-          <Text style={styles.balanceAmount}>0,00 ₺</Text>
-          <Text style={styles.balanceSubtitle}>Kazanç</Text>
-          <Text style={styles.balanceAmount}>0,00 ₺</Text>
-        </View>
-        <Text style={styles.balanceDesc}>
-          Emlak Cüzdan ile hızlıca ödeme yap. Emlak cüzdanlı olmanın ayrıcalıklarını yakala!
-        </Text>
-      </Card>
-
-      {/* Withdraw Section */}
-      <View style={styles.withdrawSection}>
-        <Text style={styles.sectionTitle}>Para Çek</Text>
-        <TouchableOpacity>
-          <Text style={styles.removeCardText}>Kartı Sil</Text>
-        </TouchableOpacity>
-
-        {/* Card Display */}
-        <View style={styles.card}>
-          <Text style={styles.cardText}>20576****7877</Text>
-          <Text style={styles.cardText}>VakıfBank</Text>
-          <Ionicons name="checkmark-circle" size={24} color="green" />
-        </View>
-
-        {/* Amount Selection */}
-        <View style={styles.amountContainer}>
-          <FlatList
-            data={amounts}
-            horizontal
-            renderItem={({ item }) => renderAmountButton(item)}
-            keyExtractor={(item) => item}
-            showsHorizontalScrollIndicator={false}
-          />
-        </View>
-
-        {/* Custom Amount Input */}
-        <TextInput
-          style={styles.customInput}
-          placeholder="Farklı Tutar giriniz..."
-          keyboardType="numeric"
-          value={customAmount}
-          onChangeText={setCustomAmount}
-        />
-
-        {/* Withdraw Button */}
-        <TouchableOpacity style={styles.withdrawButton}>
-          <Text style={styles.withdrawButtonText}>Hemen Para Çek</Text>
-        </TouchableOpacity>
-
-        {/* Add Card Section */}
-        <TouchableOpacity style={styles.addCard}>
-          <Ionicons name="add-circle" size={24} color="red" />
-          <Text style={styles.addCardText}>Kart Ekle</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f2f2f2',
-    padding: 16,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginLeft: 8,
-  },
-  balanceCard: {
-    borderRadius: 10,
-    backgroundColor: '#fff',
-    padding: 20,
-    marginBottom: 20,
-  },
-  balanceTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#ff4d4d',
-  },
-  balanceAmount: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#ff4d4d',
-  },
-  balanceSubtitle: {
-    fontSize: 14,
-    color: '#000',
-  },
-  balanceDesc: {
-    fontSize: 14,
-    marginTop: 10,
-    color: '#333',
-  },
-  withdrawSection: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 16,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  removeCardText: {
-    fontSize: 14,
-    color: '#ff4d4d',
-    textAlign: 'right',
-    marginBottom: 16,
-  },
-  card: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#f9f9f9',
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  cardText: {
-    fontSize: 16,
-  },
-  amountContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  amountButton: {
-    backgroundColor: '#f9f9f9',
-    padding: 10,
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  selectedAmountButton: {
-    backgroundColor: '#ff4d4d',
-  },
-  amountText: {
-    color: '#000',
-    fontWeight: 'bold',
-  },
-  customInput: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 20,
-  },
-  withdrawButton: {
-    backgroundColor: '#ff4d4d',
-    padding: 16,
-    borderRadius: 10,
-  },
-  withdrawButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  addCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  addCardText: {
-    color: '#ff4d4d',
-    fontSize: 16,
-    marginLeft: 8,
-  },
+    container: {
+        flex: 1,
+        backgroundColor: "#f2f2f2",
+        padding: 16,
+    },
+    balanceCard: {
+        width: "90%",
+        height: 200,
+        borderRadius: 25,
+        backgroundColor: "#EA2B2E",
+        borderColor: "#ddd",
+        borderWidth: 1,
+        padding: 15,
+        alignSelf: "center",
+    },
+    imageBack: {
+        width: '100%',
+        height: '100%',
+        position: 'absolute'
+    },
+    balenceCardBottom: {
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: "100%",
+
+    },
+    balenceCardRight: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        padding: 15
+    },
+    balanceTitle: {
+        fontSize: 16,
+        fontWeight: "bold",
+        color: "#fff",
+    },
+    balanceAmount: {
+        fontSize: 22,
+        fontWeight: "bold",
+        color: "#fff",
+    },
+    balanceSubtitle: {
+        fontSize: 14,
+        color: "#fff",
+    },
+
+    Title: {
+        color: "#EA2B2E",
+        fontSize: 24,
+        marginTop: 20,
+        paddingHorizontal: 30,
+    },
+    balanceDesc: {
+        fontSize: 14,
+        marginTop: 10,
+        color: "#333",
+        marginBottom: 10,
+        paddingHorizontal: 30,
+    },
+    withdrawSection: {
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        padding: 16,
+        marginBottom: 20,
+    },
+    sectionTitle: {
+        fontSize: 22,
+        fontWeight: "bold",
+        marginBottom: 8,
+    },
+    removeCardText: {
+        fontSize: 16,
+        color: "#ff4d4d",
+        textAlign: "right",
+        marginBottom: 16,
+    },
+    card: {
+        width: "90%",
+        height: 200,
+        borderRadius: 25,
+        backgroundColor: "#fff",
+        borderColor: "#ddd",
+        borderWidth: 1,
+        padding: 15,
+        position: "relative",
+        alignSelf: "center",
+        marginBottom: 20,
+        marginTop: 10,
+
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+        elevation: 5, // Yalnızca Android için
+    },
+    cardText: {
+        fontSize: 22,
+        fontWeight: "bold",
+    },
+    cardImage: {
+        width: 38,
+        height: 38,
+        resizeMode: 'contain',
+    },
+    cardImage2: {
+        width: 62,
+        height: 62,
+        resizeMode: 'contain',
+    },
+    amountContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 16,
+    },
+    amountButton: {
+        backgroundColor: "#f9f9f9",
+        padding: 16,
+        borderRadius: 5,
+        marginRight: 10,
+        borderColor: "#919191",
+        borderWidth: 1,
+    },
+    selectedAmountButton: {
+        backgroundColor: "#ff4d4d",
+    },
+    amountText: {
+        color: "#919191",
+        fontWeight: "bold",
+    },
+    customInput: {
+        borderWidth: 1,
+        borderColor: "#ddd",
+        borderRadius: 5,
+        padding: 16,
+        marginBottom: 20,
+    },
+    withdrawButton: {
+        backgroundColor: "#EA2B2E",
+        padding: 16,
+        borderRadius: 10,
+    },
+    withdrawButtonText: {
+        color: "#fff",
+        textAlign: "center",
+        fontSize: 16,
+        fontWeight: "bold",
+    },
+    addCard: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 16,
+        marginBottom: 16,
+        padding: 16,
+        borderRadius: 10,
+        borderColor: "#EA2B2E",
+        borderWidth: 1,
+    },
+    addCardText: {
+        color: "#ff4d4d",
+        fontSize: 16,
+        marginLeft: 8,
+    },
 });
 
 export default RealEstateWallet;
