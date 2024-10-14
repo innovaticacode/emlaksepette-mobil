@@ -132,7 +132,55 @@ export default function ChangePassword() {
 
     postData();
   };
+  const [showLengthAlert, setShowLengthAlert] = useState(false);
+  const [showUpperAlert, setShowUpperAlert] = useState(false);
+  const [showSymbolAlert, setShowSymbolAlert] = useState(false);
+  const [showNumberAlert, setShowNumberAlert] = useState(false);
+  const [passControl, setpassControl] = useState(false);
+  const [colorForLength, setcolorForLength] = useState(false)
+  const [colorForNumberAlert, setcolorForNumberAlert] = useState(false)
+  const [colorForUpper, setcolorForUpper] = useState(false)
+  const [colorForSymbol, setcolorForSymbol] = useState(false)
+const handlePasswordChange = (text) => {
+  setnewPassword(text)
+  // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
 
+  if (text.length+1 <= 8) {
+    setShowLengthAlert(true)
+    setcolorForLength(false)
+  } else {
+
+    setcolorForLength(true)
+  }
+
+  //rakam kontrölü
+  const numberRegex = /[0-9]/;
+  if (!numberRegex.test(text)) {
+    setShowNumberAlert(true);
+    setcolorForNumberAlert(false)
+  } else {
+    
+    setcolorForNumberAlert(true)
+  }
+  //Büyük harf kontrolü
+  const upperCaseRegex = /[A-Z]/;
+  if (!upperCaseRegex.test(text)) {
+    setShowUpperAlert(true)
+    setcolorForUpper(false)
+  } else {
+    
+    setcolorForUpper(true)
+  }
+  // Sembole kontrolü
+  const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+  if (!symbolRegex.test(text)) {
+    setShowSymbolAlert(true)
+    setcolorForSymbol(false)
+  } else {
+   
+    setcolorForSymbol(true)
+  }
+};
   return (
     <AlertNotificationRoot>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -157,12 +205,14 @@ export default function ChangePassword() {
               </TouchableOpacity>
             </View>
             <View>
+            <View>
               <Text style={styles.label}>Yeni Şifre</Text>
               <TextInput
                 style={styles.Input}
                 value={newPassword}
-                onChangeText={(value) => setnewPassword(value)}
+                onChangeText={(value) => handlePasswordChange(value) }
                 secureTextEntry={SecuretextForNewPass}
+                autoCapitalize="none" 
               />
               <TouchableOpacity
                 style={{ position: "absolute", right: 15, top: 25 }}
@@ -176,6 +226,46 @@ export default function ChangePassword() {
                 />
               </TouchableOpacity>
             </View>
+            {
+              newPassword.length!==0 &&
+              <View style={{gap:5,paddingTop:5}}>
+              {passControl && (
+                <Text
+                  style={{
+                    color: "red",
+                    fontWeight: "500",
+                    fontSize: 12,
+                  }}
+                >
+                  Lütfen Şifrenizi girin!
+                </Text>
+              )}
+              {showLengthAlert  && (
+                <Text style={{ color: colorForLength? 'green': "red" }}>
+                  Şifreniz en az 8 karakter olmalıdır!
+                </Text>
+              )}
+              {showNumberAlert && (
+                <Text style={{ color: colorForNumberAlert? 'green': "red" }}>
+                  Şifrenizde en az bir rakam olmalıdır.
+                </Text>
+              )}
+              {showUpperAlert && (
+                <Text style={{ color: colorForUpper? 'green': "red" }}>
+                  Şifrenizde en az bir büyük harf olmalıdır!
+                </Text>
+              )}
+              {showSymbolAlert  && (
+                <Text style={{ color: colorForSymbol?'green': "red" }}>
+                  Şifrenizde en az bir özel karakter olmalıdır!
+                </Text>
+              )}
+              </View>
+            }
+          
+            </View>
+         
+       
             <View>
               <Text style={styles.label}>Yeni Şifre (Tekrar)</Text>
               <TextInput
@@ -198,6 +288,7 @@ export default function ChangePassword() {
                 />
               </TouchableOpacity>
             </View>
+           
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity style={styles.updatebtn} onPress={HandleSubmit}>
                 <Text style={styles.btnText}>Şifre Yenile</Text>
