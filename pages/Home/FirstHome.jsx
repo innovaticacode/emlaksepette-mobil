@@ -171,6 +171,7 @@ const FirstHome = (props) => {
     });
   };
   const [sellAdvert, setSellAdvert] = useState([]);
+  const [dailyRental, setDailyRental] = useState([]);
 
   const advertsForSale = async () => {
     try {
@@ -181,7 +182,11 @@ const FirstHome = (props) => {
       const advertSellFilter = response.data.filter(
         (item) => item.step2_slug === "satilik"
       );
-      setSellAdvert(advertSellFilter.slice(0, 4));
+      const advertDailyRentalFilter = response.data.filter(
+        (item) => item.step2_slug === "gunluk-kiralik"
+      );
+      setDailyRental(advertDailyRentalFilter.slice(0, 6));
+      setSellAdvert(advertSellFilter.slice(0, 6));
     } catch (error) {
       console.error("Error fetching real estate data:", error);
     }
@@ -423,6 +428,7 @@ const FirstHome = (props) => {
               </>
 
               <React.Fragment>
+                <View style={styles.seperator} />
                 <FlatList
                   data={sellAdvert}
                   renderItem={({ item, index }) => (
@@ -504,7 +510,7 @@ const FirstHome = (props) => {
             <View>
               <View style={styles.featuredProjectsHeader}>
                 <Text style={styles.featuredProjectsTitle}>
-                  TURİZM AMAÇLI KİRALAMA MARKALARI
+                  ÖNE ÇIKAN TURİZM AMAÇLI KİRALAMA MARKALARI
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
@@ -513,12 +519,10 @@ const FirstHome = (props) => {
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
               </View>
-
               <View>
                 <SliderTourismRent />
               </View>
             </View>
-
             <View
               style={{
                 flexDirection: "row",
@@ -528,12 +532,12 @@ const FirstHome = (props) => {
               }}
             >
               <View>
-                <ProjectButton color="#0E49B5" text="Paylaşımlı İlanlar" />
-                <ProjectButton color="#A70107" text="Kiralık Konutlar" />
+                <ProjectButton color="#0E49B5" text="Kiralık Oteller" />
+                <ProjectButton color="#A70107" text="Kiralık Bungalov" />
               </View>
               <View>
-                <ProjectButton color="#A2DAE0" text="Sahibinden" />
-                <ProjectButton color="#06065d" text="Emlak Ofisinden" />
+                <ProjectButton color="#A2DAE0" text="Kiralık Tiny House" />
+                <ProjectButton color="#06065d" text="Kiralık Müstakil Ev" />
               </View>
             </View>
             <View
@@ -544,81 +548,94 @@ const FirstHome = (props) => {
                 marginVertical: 6,
               }}
             />
-            <View
-              style={{
-                width: "100%",
-                height: "auto",
-              }}
-            >
-              <View style={styles.featuredProjectsHeader}>
-                <Text style={styles.featuredProjectsTitle}>
-                  ÖNE ÇIKAN FRANCHİSE MARKALARI
-                </Text>
-                <TouchableOpacity
-                  style={styles.allProjectsButton}
-                  onPress={() => navigation.navigate("AllFranchiseBrands")}
-                >
-                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-                </TouchableOpacity>
-              </View>
-              <View>
+            <View>
+              <React.Fragment>
+                <View style={styles.featuredProjectsHeader}>
+                  <Text style={styles.featuredProjectsTitle}>
+                    GÜNLÜK KİRALIK İLANLAR
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.allProjectsButton}
+                    onPress={() =>
+                      navigation.navigate("AllRealtorAdverts", {
+                        name: "Emlak İlanları",
+                        slug: "emlak-ilanlari",
+                        data: dailyRental,
+                        count: dailyRental.length,
+                        type: "mustakil-tatil",
+                        optional: null,
+                        title: null,
+                        check: null,
+                        city: null,
+                        county: null,
+                        hood: null,
+                      })
+                    }
+                  >
+                    <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
+                  </TouchableOpacity>
+                </View>
+
                 <FlatList
-                  data={franchise}
-                  horizontal={true}
-                  nestedScrollEnabled={true}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item, index) => index.toString()}
+                  data={dailyRental}
                   renderItem={({ item, index }) => (
-                    <FranchiseBanner
-                      key={index}
-                      image={`${apiUrl}/logos/${item.logo}`}
-                      text={item.title}
+                    <RealtorPost
+                      openSharing={
+                        JSON.parse(item.housing_type_data)["open_sharing1"]
+                      }
+                      HouseId={item.id}
+                      price={
+                        item.step2_slug == "gunluk-kiralik"
+                          ? JSON.parse(item.housing_type_data)["daily_rent"]
+                          : JSON.parse(item.housing_type_data)["price"]
+                      }
+                      housing={item}
+                      title={item.housing_title}
+                      location={item.city_title + " / " + item.county_title}
+                      image={`${apiUrl}/housing_images/${
+                        JSON.parse(item.housing_type_data).image
+                      }`}
+                      column1_additional={item.column1_additional}
+                      column1_name={
+                        JSON.parse(item.housing_type_data)[item.column1_name]
+                          ? JSON.parse(item.housing_type_data)[
+                              item.column1_name
+                            ]
+                          : ""
+                      }
+                      column2_name={
+                        JSON.parse(item.housing_type_data)[item.column2_name]
+                          ? JSON.parse(item.housing_type_data)[
+                              item.column2_name
+                            ]
+                          : ""
+                      }
+                      column2_additional={item.column2_additional}
+                      column3_name={
+                        JSON.parse(item.housing_type_data)[item.column3_name]
+                          ? JSON.parse(item.housing_type_data)[
+                              item.column3_name
+                            ]
+                          : ""
+                      }
+                      column3_additional={item.column3_additional}
+                      column4_name={
+                        JSON.parse(item.housing_type_data)[item.column4_name]
+                          ? JSON.parse(item.housing_type_data)[
+                              item.column4_name
+                            ]
+                          : ""
+                      }
+                      column4_additional={item.column4_additional}
+                      bookmarkStatus={true}
+                      dailyRent={false}
+                      isFavorite={item.is_favorite}
                     />
                   )}
                 />
-              </View>
-            </View>
-            {/* bottom area */}
-            <View>
-              <View style={styles.featuredProjectsHeader}>
-                <Text style={styles.featuredProjectsTitle}>
-                  Öne Çıkan Gayrimenkul Ofisleri
-                </Text>
-                <TouchableOpacity
-                  style={styles.allProjectsButton}
-                  onPress={() => navigation.navigate("AllFeaturedRealEstate")}
-                >
-                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-                </TouchableOpacity>
-              </View>
-              <View>
-                <SliderEstateBar />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginBottom: 10,
-                  marginTop: 20,
-                }}
-              >
-                <View>
-                  <ProjectButton color="#0E49B5" text="Paylaşımlı İlanlar" />
-                  <ProjectButton color="#A70107" text="Kiralık Konutlar" />
-                </View>
-                <View>
-                  <ProjectButton color="#A2DAE0" text="Sahibinden" />
-                  <ProjectButton color="#06065d" text="Emlak Ofisinden" />
-                </View>
-              </View>
-              <View
-                style={{
-                  width: "100%",
-                  height: 1,
-                  backgroundColor: "#ddd",
-                  marginVertical: 6,
-                }}
-              />
+
+                <View style={styles.seperator} />
+              </React.Fragment>
               <View
                 style={{
                   width: "100%",
@@ -695,6 +712,8 @@ const styles = StyleSheet.create({
   featuredProjectsTitle: {
     fontSize: 14,
     fontWeight: "700",
+    flexWrap: "wrap",
+    width: "70%",
   },
   allProjectsButton: {
     backgroundColor: "#EA2C2E",
@@ -728,5 +747,11 @@ const styles = StyleSheet.create({
   },
   inactiveDot: {
     backgroundColor: "#ccc", // Pasif nokta rengi
+  },
+  seperator: {
+    width: "100%",
+    height: 1,
+    backgroundColor: "#ddd",
+    marginVertical: 6,
   },
 });
