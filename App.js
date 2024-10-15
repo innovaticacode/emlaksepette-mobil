@@ -133,6 +133,7 @@ import PaymentSuccessScreen from "./src/pages/PaymentSuccessScreen";
 import AddBioText from "./pages/Home/ProfilePages/AddBioText";
 import SliderTourismRent from "./pages/Home/SliderTourismRent";
 import AllTourismRent from "./pages/Home/AllTourismRent";
+import ViewAll from "./pages/Home/ViewAll/ViewAll";
 
 const Stack = createNativeStackNavigator();
 
@@ -238,7 +239,7 @@ export default function App({ route }) {
                       title: "Giriş Yap",
                       headerBackTitleVisible: false,
                       headerShown: false,
-                      presentation: 'modal',
+                      presentation: "modal",
                     }}
                   >
                     {(props) => <Login {...props} />}
@@ -387,17 +388,17 @@ export default function App({ route }) {
                     name="Rent"
                     component={Rent}
                     options={({ route }) => ({
-                animationTypeForReplace: "pop",
-                title: "Kiraya Verdiklerim",
-                headerBackTitle: "",
-                headerBackTitleVisible: false,
-                headerTintColor: "black",
-              })}
-            />
-             <Stack.Screen
-              name="RentByMe"
-              component={RentByMe}
-              options={({ route }) => ({
+                      animationTypeForReplace: "pop",
+                      title: "Kiraya Verdiklerim",
+                      headerBackTitle: "",
+                      headerBackTitleVisible: false,
+                      headerTintColor: "black",
+                    })}
+                  />
+                  <Stack.Screen
+                    name="RentByMe"
+                    component={RentByMe}
+                    options={({ route }) => ({
                       animationTypeForReplace: "pop",
                       title: "Kiraladıklarım",
                       headerBackTitle: "",
@@ -405,29 +406,29 @@ export default function App({ route }) {
                       headerTintColor: "black",
                     })}
                   />
-                    <Stack.Screen
-              name="RentByMeDetails"
-              component={RentByMeDetails}
-              options={({ route }) => ({
-                animationTypeForReplace: "pop",
-                title: "Rezervaston Detayı",
-                headerBackTitle: "",
-                headerBackTitleVisible: false,
-                headerTintColor: "black",
-              })}
-            />
-             <Stack.Screen
-              name="SuccessForRent"
-              component={SuccessForRent}
-              options={({ route }) => ({
-                animationTypeForReplace: "pop",
-                title: "Detay",
-                headerBackTitle: "",
-                headerBackTitleVisible: false,
-                headerTintColor: "black",
-              })}
-            />
-            <Stack.Screen
+                  <Stack.Screen
+                    name="RentByMeDetails"
+                    component={RentByMeDetails}
+                    options={({ route }) => ({
+                      animationTypeForReplace: "pop",
+                      title: "Rezervaston Detayı",
+                      headerBackTitle: "",
+                      headerBackTitleVisible: false,
+                      headerTintColor: "black",
+                    })}
+                  />
+                  <Stack.Screen
+                    name="SuccessForRent"
+                    component={SuccessForRent}
+                    options={({ route }) => ({
+                      animationTypeForReplace: "pop",
+                      title: "Detay",
+                      headerBackTitle: "",
+                      headerBackTitleVisible: false,
+                      headerTintColor: "black",
+                    })}
+                  />
+                  <Stack.Screen
                     name="UpdateProfile"
                     component={UpdateProfile}
                     options={{
@@ -878,7 +879,7 @@ export default function App({ route }) {
                   component={AdsPictureList}
                   options={({ route }) => ({
                     title: "Reklam Görselleri",
-                    headerBackTitleVisible:false,
+                    headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#F5F5F7",
                     },
@@ -1297,9 +1298,22 @@ export default function App({ route }) {
                     },
                   })}
                 />
-                  <Stack.Screen name="AddBioText" component={AddBioText}
+                <Stack.Screen
+                  name="AddBioText"
+                  component={AddBioText}
                   options={({ route }) => ({
                     title: "Tanıtım Yazısı Ekle",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="ViewAll"
+                  component={ViewAll}
+                  options={({ route }) => ({
+                    title: "Tümü",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#ffffff",

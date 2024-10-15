@@ -517,11 +517,11 @@ const FirstHome = (props) => {
             <View>
               <View style={styles.featuredProjectsHeader}>
                 <Text style={styles.featuredProjectsTitle}>
-                  ÖNE ÇIKAN TURİZM AMAÇLI KİRALAMA MARKALARI
+                  TURİZM AMAÇLI KİRALAMA MARKALARI
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
-                  onPress={() => navigation.navigate("")}
+                  onPress={() => navigation.navigate("ViewAll")}
                 >
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
