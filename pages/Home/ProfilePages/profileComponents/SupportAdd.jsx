@@ -646,7 +646,7 @@ export default function SupportAdd() {
                 // PDF seçmek için tıklanabilir
               >
                 <Text style={{ textAlign: "center", color: "black" }}>
-                  Dosya Yükle
+                  Dosya Ekle
                 </Text>
               </TouchableOpacity>
 
