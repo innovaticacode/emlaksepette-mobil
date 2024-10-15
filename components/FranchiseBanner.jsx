@@ -1,8 +1,9 @@
 import React from "react";
+import { TouchableOpacity } from "react-native";
 import { View, Image, Text, StyleSheet } from "react-native";
 
 const FranchiseBanner = (props) => {
-  const { image, text, data } = props;
+  const { image, text, data, onPress } = props;
   return (
     <View style={styles.container}>
       <Image
@@ -12,6 +13,13 @@ const FranchiseBanner = (props) => {
         alt="Franchise Banner"
       />
       <Text style={styles.text}>{text ? text : "Franchise"}</Text>
+      <TouchableOpacity
+        style={styles.apply}
+        activeOpacity={0.8}
+        onPress={() => onPress}
+      >
+        <Text style={styles.btnText}>Hemen Başvur</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -53,5 +61,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingBottom: 8,
+    fontSize: 10,
+  },
+  apply: {
+    backgroundColor: "red",
+    padding: 5,
+    borderRadius: 5,
+    width: "100%",
+    alignItems: "center",
+  },
+  btnText: {
+    color: "#FFF",
+    fontWeight: "600",
+    fontSize: 9,
   },
 });
