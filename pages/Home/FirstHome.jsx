@@ -8,7 +8,6 @@ import {
   SafeAreaView,
   FlatList,
   ImageBackground,
-  LogBox,
 } from "react-native";
 import axios from "axios";
 import PagerView from "react-native-pager-view";
@@ -20,7 +19,6 @@ import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import ProjectButton from "../../components/ProjectButton";
 import FranchiseBanner from "../../components/FranchiseBanner";
-import SliderItem from "../../components/SliderItem";
 import WhatIsEmlakSepette from "../../components/WhatIsEmlakSepette";
 import SliderEstateBar from "../../components/SliderEstateBar";
 import SliderTourismRent from "./SliderTourismRent";
@@ -31,22 +29,30 @@ const apiUrl = "https://private.emlaksepette.com";
 const FirstHome = (props) => {
   const { index } = props;
   const navigation = useNavigation();
+  const [user, setUser] = useState({});
+  const [loadingProjects, setLoadingProjects] = useState(false);
+  const [featuredProjects, setFeaturedProjects] = useState([]);
+  const [franchise, setFranchise] = useState([]);
+  const [featuredSliders, setFeaturedSliders] = useState([]);
+  const [loadingSliders, setLoadingSliders] = useState(true);
+  const [currentPage, setCurrentPage] = useState(0);
+  const pagerViewRef = useRef(null);
+  const [sellAdvert, setSellAdvert] = useState([]);
+  const [dailyRental, setDailyRental] = useState([]);
+  const [popularConstructionBrands, setPopularConstructionBrands] = useState(
+    []
+  );
 
   // Fetch featured sliders
   const fetchFeaturedSliders = async () => {
     try {
       const response = await axios.get(`${apiUrl}/api/featured-sliders`);
       setFeaturedSliders(response.data);
-      setLoadingSliders(false);
+      return setLoadingSliders(false);
     } catch (error) {
-      console.log("Error fetching featured sliders:", error);
-      setLoadingSliders(false);
+      return setLoadingSliders(false);
     }
   };
-
-  // State for featured projects
-  const [loadingProjects, setLoadingProjects] = useState(false);
-  const [featuredProjects, setFeaturedProjects] = useState([]);
 
   // Fetch featured projects
   const fetchFeaturedProjects = async () => {
@@ -54,15 +60,13 @@ const FirstHome = (props) => {
       setLoadingProjects(true);
       const response = await axios.get(`${apiUrl}/api/featured-projects`);
       const projects = response.data.data.slice(0, 6); // Get first 5 projects
-      setFeaturedProjects(projects);
+      return setFeaturedProjects(projects);
     } catch (error) {
       console.log("Error fetching featured projects:", error);
     } finally {
-      setLoadingProjects(false);
+      return setLoadingProjects(false);
     }
   };
-
-  const [franchise, setFranchise] = useState([]);
 
   const fetchFranchiseBrands = async () => {
     try {
@@ -73,9 +77,6 @@ const FirstHome = (props) => {
     }
   };
 
-  const [popularConstructionBrands, setPopularConstructionBrands] = useState(
-    []
-  );
   const fetchPopularConstructionBrands = async () => {
     try {
       const response = await axios.get(
@@ -96,15 +97,11 @@ const FirstHome = (props) => {
     fetchPopularConstructionBrands();
   }, [index]);
 
-  // State for featured sliders
-  const [featuredSliders, setFeaturedSliders] = useState([]);
-  const [loadingSliders, setLoadingSliders] = useState(true);
-  const [currentPage, setCurrentPage] = useState(0);
-  const pagerViewRef = useRef(null);
+  useEffect(() => {
+    fetchFeaturedSliders();
+  }, []);
 
   useEffect(() => {
-    fetchFeaturedSliders(); // Fetch slider data
-
     const interval = setInterval(() => {
       pagerViewRef.current?.setPage(
         currentPage === featuredSliders.length - 1 ? 0 : currentPage + 1
@@ -118,14 +115,12 @@ const FirstHome = (props) => {
   }, [currentPage, featuredSliders.length]);
 
   // State for user
-  const [user, setUser] = useState({});
 
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
 
-  // Navigate to all projects screen
-  const navigateToAllProjects = () => {
+  const navigateToProjects = (checkValue) => {
     navigation.navigate("AllProject", {
       name: "Tüm Projeler",
       slug: "tum-projeler",
@@ -134,45 +129,15 @@ const FirstHome = (props) => {
       type: null,
       optional: "satilik",
       title: "konut",
-      check: "villa",
+      check: checkValue,
       city: null,
       county: null,
       hood: null,
     });
   };
-
-  const navigateToVillaProjects = () => {
-    navigation.navigate("AllProject", {
-      name: "Tüm Projeler",
-      slug: "tum-projeler",
-      data: featuredProjects,
-      count: featuredProjects.length,
-      type: null,
-      optional: "satilik",
-      title: "konut",
-      check: "villa",
-      city: null,
-      county: null,
-      hood: null,
-    });
-  };
-  const navigateToHousingProjects = () => {
-    navigation.navigate("AllProject", {
-      name: "Tüm Projeler",
-      slug: "tum-projeler",
-      data: featuredProjects,
-      count: featuredProjects.length,
-      type: null,
-      optional: "satilik",
-      title: "konut",
-      check: null,
-      city: null,
-      county: null,
-      hood: null,
-    });
-  };
-  const [sellAdvert, setSellAdvert] = useState([]);
-  const [dailyRental, setDailyRental] = useState([]);
+  const navigateToAllProjects = () => navigateToProjects("villa");
+  const navigateToVillaProjects = () => navigateToProjects("villa");
+  const navigateToHousingProjects = () => navigateToProjects(null);
 
   const advertsForSale = async () => {
     try {
@@ -195,9 +160,6 @@ const FirstHome = (props) => {
 
   useEffect(() => {
     advertsForSale();
-  }, []);
-  useEffect(() => {
-    LogBox.ignoreLogs(["Encountered two children with the same key"]);
   }, []);
 
   return (
@@ -233,8 +195,11 @@ const FirstHome = (props) => {
                     setCurrentPage(event.nativeEvent.position)
                   }
                 >
-                  {featuredSliders.map((item) => (
-                    <View style={styles.sliderItem} key={item.id}>
+                  {featuredSliders.map((item, index) => (
+                    <View
+                      style={styles.sliderItem}
+                      key={`slider-${item.id}-${index}`}
+                    >
                       <ImageBackground
                         source={{
                           uri: `${apiUrl}/storage/sliders/${item.mobile_image}`,
@@ -246,7 +211,7 @@ const FirstHome = (props) => {
                         <View style={styles.dotsContainer}>
                           {featuredSliders.map((_, dotIndex) => (
                             <View
-                              key={featuredSliders[dotIndex].id} // item.id yerine featuredSliders[dotIndex].id kullan
+                              key={`dot-${dotIndex}-${index}`} // İçteki key farklı ve benzersiz
                               style={[
                                 styles.dot,
                                 dotIndex === currentPage
@@ -439,6 +404,7 @@ const FirstHome = (props) => {
                 <View style={styles.seperator} />
                 <FlatList
                   data={sellAdvert}
+                  keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item, index }) => (
                     <RealtorPost
                       housing={item}
@@ -527,16 +493,16 @@ const FirstHome = (props) => {
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
               </View>
-              <View>
+              <>
                 <SliderTourismRent />
-              </View>
+              </>
             </View>
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
                 marginBottom: 10,
-                marginTop: 20,
+                marginTop: 10,
               }}
             >
               <View>
@@ -586,6 +552,7 @@ const FirstHome = (props) => {
 
                 <FlatList
                   data={dailyRental}
+                  keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item, index }) => (
                     <RealtorPost
                       openSharing={
