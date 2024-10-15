@@ -35,6 +35,9 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 
 export default function SupportAdd() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
   const [textAreaValue, setTextAreaValue] = useState("");
   const [user, setUser] = useState({});
@@ -55,26 +58,16 @@ export default function SupportAdd() {
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
   const [Deals, setDeals] = useState("");
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [choose, setchoose] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedUri, setselectedUri] = useState(null);
+  const [selectedIndex, setselectedIndex] = useState(null);
+  const [ModalForDeleteFile, setModalForDeleteFile] = useState(false);
 
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-
-  const handlePicker1Open = () => {
-    setIsPicker1Open(true);
-    setIconName1("angle-up"); // Ok yukarı yönlü
-    if (isPicker2Open) {
-      setIsPicker2Open(false);
-      setIconName2("angle-down");
-    }
-  };
-
-  const handlePicker1Close = () => {
-    setIsPicker1Open(false);
-    setIconName1("angle-down"); // Ok aşağı yönlü
-  };
-
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   const handlePickerOpen = () => {
     setIsPickerOpen(true);
@@ -124,6 +117,7 @@ export default function SupportAdd() {
         });
       });
   };
+
   const openPdf = async () => {
     if (pdfFile.uri) {
       try {
@@ -141,7 +135,6 @@ export default function SupportAdd() {
     }
   };
 
-  console.log(pdfFile);
   const handlePicker2Open = () => {
     setIsPicker2Open(true);
     setIconName2("angle-up");
@@ -182,6 +175,7 @@ export default function SupportAdd() {
       Keyboard.dismiss();
     }
   };
+
   const takePhoto = async (key) => {
     // Kameraya erişim izni iste
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -204,32 +198,42 @@ export default function SupportAdd() {
       setchoose(false);
     }
   };
-  const [choose, setchoose] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedUri, setselectedUri] = useState(null);
+
   const OpenImage = (uri) => {
     setIsVisible(true);
     setselectedUri(uri);
   };
 
   const submitData = async () => {
-    if (!selectedValue || !textAreaValue) {
+    if (
+      !selectedValue ||
+      !textAreaValue ||
+      !name ||
+      !email ||
+      !phone ||
+      !checked ||
+      !checked1 ||
+      !checked2
+    ) {
       Dialog.show({
         type: ALERT_TYPE.DANGER,
         title: "Hata!",
-        textBody: "Lütfen gerekli tüm alanları doldurunuz.",
+        textBody:
+          "Lütfen gerekli tüm alanları doldurunuz ve sözleşmeleri onaylayınız.",
         button: "Tamam",
       });
       return;
     }
 
     setLoading(true);
-
     try {
       const formData = new FormData();
 
       formData.append("category", selectedValue);
       formData.append("description", textAreaValue);
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("phone", phone);
 
       if (selectedValue === "Evrak Gönderimi" && additionalOption) {
         formData.append("sendReason", additionalOption);
@@ -240,18 +244,18 @@ export default function SupportAdd() {
           "file",
           image
             ? {
-              uri:
-                Platform.OS === "android"
-                  ? image[0]
-                  : image[0]?.uri?.replace("file://", ""),
-              type: image[0]?.mimeType,
-              name:
-                image[0]?.name == null
-                  ? "İmage.jpg"
-                  : image[0]?.name?.slice(-3) == "pdf"
+                uri:
+                  Platform.OS === "android"
+                    ? image[0]
+                    : image[0]?.uri?.replace("file://", ""),
+                type: image[0]?.mimeType,
+                name:
+                  image[0]?.name == null
+                    ? "İmage.jpg"
+                    : image[0]?.name?.slice(-3) == "pdf"
                     ? image[0]?.name
                     : image?.fileName,
-            }
+              }
             : null
         );
       }
@@ -278,14 +282,21 @@ export default function SupportAdd() {
         setSelectedValue(null);
         setTextAreaValue("");
         setAdditionalOption("");
-        setimage([]); // PDF dosyasını sıfırla
+        setImage([]);
         setPickerKey(Math.random());
+        setName("");
+        setEmail("");
+        setPhone("");
+        setChecked(false);
+        setChecked1(false);
+        setChecked2(false);
       } else {
         Dialog.show({
           type: ALERT_TYPE.DANGER,
           title: "Hata!",
-          textBody: `Bir hata oluştu: ${response.data.message || "Bilinmeyen hata"
-            }`,
+          textBody: `Bir hata oluştu: ${
+            response.data.message || "Bilinmeyen hata"
+          }`,
           button: "Tamam",
         });
       }
@@ -296,8 +307,9 @@ export default function SupportAdd() {
         Dialog.show({
           type: ALERT_TYPE.DANGER,
           title: "Hata",
-          textBody: `Talebiniz oluşturulamadı: ${error.response.data.message || error.message
-            }`,
+          textBody: `Talebiniz oluşturulamadı: ${
+            error.response.data.message || error.message
+          }`,
           button: "Tamam",
         });
       } else {
@@ -307,16 +319,16 @@ export default function SupportAdd() {
       setLoading(false);
     }
   };
-  const [selectedIndex, setselectedIndex] = useState(null);
-  const [ModalForDeleteFile, setModalForDeleteFile] = useState(false);
+
   const openModalAndDeleteFile = (index) => {
     setModalForDeleteFile(true);
     setselectedIndex(index);
   };
+
   const deleteFile = () => {
     const updatedFiles = [...image];
-    updatedFiles.splice(selectedIndex, 1); // İlgili indexteki öğeyi sil
-    setimage(updatedFiles); //
+    updatedFiles.splice(selectedIndex, 1);
+    setimage(updatedFiles);
     setModalForDeleteFile(false);
   };
 
@@ -407,25 +419,29 @@ export default function SupportAdd() {
               <Text style={styles.label}>Adınız</Text>
               <TextInput
                 style={styles.input}
+                value={name}
+                onChangeText={(text) => setName(text)}
                 placeholder="Adınızı giriniz"
               />
               <Text style={styles.label}>E-Posta</Text>
               <TextInput
                 style={styles.input}
+                value={email}
+                onChangeText={(text) => setEmail(text)}
                 placeholder="E-posta adresinizi giriniz"
               />
               <Text style={styles.label}>Telefon</Text>
               <TextInput
                 style={styles.input}
+                value={phone}
+                onChangeText={(text) => setPhone(text)}
                 placeholder="Telefon numaranızı giriniz"
               />
-
             </View>
 
             <View>
               {selectedValue === "Evrak Gönderimi" && (
-                <View style={{ paddingRight: 20, paddingLeft: 20 }} >
-
+                <View style={{ paddingRight: 20, paddingLeft: 20 }}>
                   <RNPickerSelect
                     onValueChange={(value) => setAdditionalOption(value)}
                     onOpen={handlePicker2Open}
@@ -464,7 +480,6 @@ export default function SupportAdd() {
                       );
                     }}
                   />
-
                 </View>
               )}
             </View>
@@ -489,10 +504,8 @@ export default function SupportAdd() {
               />
             </View>
             <View style={{ marginTop: 10, paddingRight: 20, paddingLeft: 20 }}>
-
               {image.length > 0 && (
                 <View style={{ paddingTop: 2, paddingBottom: 14 }}>
-
                   <Text style={{ color: "#333", fontSize: 13 }}>
                     Dosyayı Açmak İçin Üstüne Tıklayın
                   </Text>
@@ -630,7 +643,7 @@ export default function SupportAdd() {
                     Alert.alert("Sadece 1 adet Dosya yükleyebilirsiniz");
                   }
                 }}
-              // PDF seçmek için tıklanabilir
+                // PDF seçmek için tıklanabilir
               >
                 <Text style={{ textAlign: "center", color: "black" }}>
                   Dosya Yükle
@@ -700,7 +713,11 @@ export default function SupportAdd() {
                   style={styles.checkboxContainer}
                 >
                   {checked1 ? (
-                    <FontAwesome5Icon name="check-square" size={18} color="black" />
+                    <FontAwesome5Icon
+                      name="check-square"
+                      size={18}
+                      color="black"
+                    />
                   ) : (
                     <FontAwesome5Icon name="square" size={18} color="black" />
                   )}
@@ -736,7 +753,11 @@ export default function SupportAdd() {
                   style={styles.checkboxContainer}
                 >
                   {checked2 ? (
-                    <FontAwesome5Icon name="check-square" size={18} color="black" />
+                    <FontAwesome5Icon
+                      name="check-square"
+                      size={18}
+                      color="black"
+                    />
                   ) : (
                     <FontAwesome5Icon name="square" size={18} color="black" />
                   )}
@@ -759,7 +780,6 @@ export default function SupportAdd() {
                 </TouchableOpacity>
               </View>
 
-
               <TouchableOpacity
                 style={{
                   backgroundColor: "#ea2b2e",
@@ -773,7 +793,6 @@ export default function SupportAdd() {
                 <Text style={{ textAlign: "center", color: "white" }}>
                   {loading ? "Gönderiliyor..." : "Gönder"}
                 </Text>
-
               </TouchableOpacity>
             </View>
 
