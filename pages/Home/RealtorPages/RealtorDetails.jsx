@@ -638,17 +638,17 @@ export default function PostDetail() {
 
   // Handle page change in PagerView
   const [SeeAlertModal, setSeeAlertModal] = useState(false);
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-      // Eğer geri gitme eylemi varsa
-      if (e.data.action.type === "GO_BACK") {
-        e.preventDefault(); // Varsayılan geri gitme işlemini durdur
-        navigation.navigate("PreviousScreen"); // Önceki sayfaya git
-      }
-    });
+  // useEffect(() => {
+  //   const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+  //     // Eğer geri gitme eylemi varsa
+  //     if (e.data.action.type === "GO_BACK") {
+  //       e.preventDefault(); // Varsayılan geri gitme işlemini durdur
+  //       navigation.navigate("PreviousScreen"); // Önceki sayfaya git
+  //     }
+  //   });
 
-    return unsubscribe; // Bileşen unmounted olduğunda dinleyiciyi temizle
-  }, [navigation]);
+  //   return unsubscribe; // Bileşen unmounted olduğunda dinleyiciyi temizle
+  // }, [navigation]);
   return (
     <>
       <AlertNotificationRoot>
@@ -660,20 +660,8 @@ export default function PostDetail() {
           </View>
         ) : (
           <SafeAreaView style={{ flex: 1, paddingTop: 20 }}>
-            <Header onPress={toggleDrawer} index={setindex} tab={settab} />
-            <Modal
-              isVisible={isDrawerOpen}
-              onBackdropPress={() => setIsDrawerOpen(false)}
-              animationIn="bounceInLeft"
-              animationOut="bounceOutLeft"
-              style={styles.modal}
-              swipeDirection={["left"]}
-              onSwipeComplete={() => setIsDrawerOpen(false)}
-            >
-              {/* <View>
-                <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-              </View> */}
-            </Modal>
+          
+         
             <View
               style={{
                 width: "100%",

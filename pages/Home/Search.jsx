@@ -88,12 +88,11 @@ export default function Search({ onpres, setIsDrawerOpen }) {
                       data: item.submenus,
                     });
                   } else {
-                    navigation.navigate("Drawer", {
-                      screen:
-                        item.text === "Projeler"
-                          ? "AllProjects"
-                          : "AllRealtorAdverts",
-                      params: {
+                    navigation.navigate( item.text === "Projeler"
+                      ? "AllProjects"
+                      : "AllRealtorAdverts" ,{
+                    
+                    
                         name: name,
                         slug: slug,
                         data: null,
@@ -110,7 +109,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
                         county: null,
                         hood: null,
                         href: item.href,
-                      },
+                    
                     });
                   }
                 }}

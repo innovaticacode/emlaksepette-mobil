@@ -44,10 +44,8 @@ export default function ProjectPost({
   return (
     <TouchableOpacity
       onPress={() =>
-        navigation.navigate("Drawer", {
-          screen: "Details",
-          params: { ProjectId: ProjectNo },
-        })
+        navigation.navigate('Details',{ProjectId: ProjectNo})
+       
       }
     >
       

@@ -25,12 +25,10 @@ export default function PublicPage() {
                   title: title,
                 });
               } else {
-                navigation.navigate("Drawer", {
-                  screen:
-                    item.text === "Projeler"
-                      ? "AllProject"
-                      : "AllRealtorAdverts",
-                  params: {
+                navigation.navigate( item.text === "Projeler"
+                  ? "AllProjects"
+                  : "AllRealtorAdverts", {
+                
                     name: title === "Projeler" ? item.text : "Emlak İlanları",
                     slug: slugify(
                       title === "Projeler" ? item.text : "emlak-ilanlari"
@@ -45,7 +43,7 @@ export default function PublicPage() {
                     county: null,
                     hood: null,
                     href: item.href,
-                  },
+                  
                 });
               }
             }}

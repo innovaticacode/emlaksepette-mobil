@@ -19,9 +19,8 @@ export default function SubCategoryPage({}) {
         href: item.href,
       });
     } else {
-      navigation.navigate("Drawer", {
-        screen: title === "Projeler" ? "AllProject" : "AllRealtorAdverts",
-        params: {
+      navigation.navigate( title === "Projeler" ? "AllProject" : "AllRealtorAdverts", {
+       
           name: title === "Projeler" ? `${name}${title}` : "Emlak İlanları",
           slug: slugify(
             title === "Projeler" ? `${name}${title}` : "emlak-ilanlari"
@@ -36,7 +35,7 @@ export default function SubCategoryPage({}) {
           county: null,
           hood: null,
           href: item.href,
-        },
+        
       });
     }
   };

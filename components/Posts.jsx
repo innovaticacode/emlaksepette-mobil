@@ -172,17 +172,11 @@ export default function Posts({
   const formatPrice = (price) => addDotEveryThreeDigits(Math.round(price));
 
   function navigateToPostDetails() {
-    const params = {
-      HomeId: roomOrder,
-      projectId: data?.project?.id,
-    };
-
-    navigation.navigate("Drawer", {
-      screen: "PostDetails",
-      params: params,
-    });
+   
+navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id})
+  
   }
-
+  
   const changeFavorite = () => {
     setShowAlert(true);
   };

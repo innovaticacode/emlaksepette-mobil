@@ -11,6 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/EvilIcons";
 import IconMenu from "react-native-vector-icons/Entypo";
+import BackIcon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
@@ -18,8 +19,8 @@ import { apiUrl } from "./methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotificationsRedux } from "../store/slices/Notifications/NotificationsSlice";
 
-export default function Header(props) {
-  const { loading, onPress, index, tabs } = props;
+export default function Header({showBack}) {
+  // const { loading, onPress, index, tabs ,showBack} = props;
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [user, setuser] = useState({});
@@ -73,14 +74,33 @@ export default function Header(props) {
   return (
     <SafeAreaView style={[styles.header, headerStyle]}>
       <View>
-        <IconMenu
-          name="menu"
-          size={36}
-          color={"#333"}
-          onPress={() => {
-            navigation.openDrawer();
-          }}
-        />
+        {
+                showBack ==1 ?
+                <TouchableOpacity 
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                >
+                     <BackIcon
+                name="left"
+                size={25}
+                color={"#333"}
+                
+              />
+                </TouchableOpacity>
+             :
+              <IconMenu
+              name="menu"
+              size={36}
+              color={"#333"}
+              onPress={() => {
+                navigation.openDrawer();
+              }}
+            />
+
+        }
+    
+      
       </View>
       <View style={styles.logoContainer} onTouchStart={() => { navigation.navigate("HomePage"); }}>
         <ImageBackground
@@ -112,6 +132,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 10,
+    
     width: "100%",
     // Android için paddingTop ekle
     paddingTop: Platform.OS === 'android' ? 30 : 0,
@@ -120,7 +141,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.1,
     shadowRadius: 1.84,
     elevation: 2,
   },

@@ -629,21 +629,8 @@ export default function Details({ navigation }) {
             <ActivityIndicator size={"large"} color="#333" />
           ) : (
             <>
-              {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
-              <Modal
-                isVisible={isDrawerOpen}
-                onBackdropPress={() => setIsDrawerOpen(false)}
-                animationIn="fadeInLeftBig"
-                swipeDirection={["left"]}
-                onSwipeComplete={() => setIsDrawerOpen(false)}
-                animationOut="fadeOutLeftBig"
-                style={styles.modal}
-              >
-                {/* <View>
-                <View style={styles.modalContent}>
-                  <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-                </View> */}
-              </Modal>
+             
+              
               <View style={{ position: 'absolute', width: '100%', bottom: 35, padding: 4, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
                 <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }} onPress={handleOpenPhone}>
                   <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }} >Ara</Text>

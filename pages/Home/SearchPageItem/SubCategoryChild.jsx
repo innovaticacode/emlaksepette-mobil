@@ -13,10 +13,9 @@ export default function SubCategoryChild() {
 
   const handlePress = (item) => {
     navigation.navigate(
-      "Drawer", // Drawer'ı belirtiyorsun
+      title === "Projeler" ? "AllProject" : "AllRealtorAdverts",
       {
-        screen: title === "Projeler" ? "AllProject" : "AllRealtorAdverts",
-        params: {
+    
           name: title === "Projeler" ? `${name}${title}` : "Emlak İlanları",
           slug: slugify(
             title === "Projeler" ? `${name}${title}` : "emlak-ilanlari"
@@ -31,7 +30,7 @@ export default function SubCategoryChild() {
           county: null,
           hood: null,
           href: item.href,
-        },
+      
       }
     );
   };

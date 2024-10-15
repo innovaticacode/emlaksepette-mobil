@@ -163,36 +163,8 @@ const DrawerNavigator = () => {
           headerShown: isShoppingProfile ? false : true,
         }}
       />
-      <Drawer.Screen
-        name="AllProjects"
-        component={AllProjects}
-        options={{ header: () => <Header /> }}
-      />
-      <Drawer.Screen
-        name="PostDetails"
-        component={PostDetail}
-        options={{ header: () => <Header /> }}
-      />
-      <Drawer.Screen
-        name="AllRealtorAdverts"
-        component={AllRealtorAdverts}
-        options={({ route }) => ({
-          header: () => <Header />,
-          title: `${route?.params?.name} - ${route?.params?.count} Emlak İlanları`,
-          headerBackTitle: "",
-          headerBackTitleVisible: false,
-          headerTintColor: "white",
-          headerTitleStyle: { fontSize: 14 },
-        })}
-      />
-      <Drawer.Screen
-        name="Details"
-        component={Details}
-        options={({ route }) => ({
-          header: () => <Header />,
-          title: route?.params?.name,
-        })}
-      />
+    
+      
       <Drawer.Screen
         name="ShareAdvert"
         options={{
@@ -205,13 +177,7 @@ const DrawerNavigator = () => {
       >
         {(props) => <ShareScreenProject {...props} />}
       </Drawer.Screen>
-      <Drawer.Screen
-        name="Realtor details"
-        component={RealtorDetails}
-        options={{
-          headerShown: false,
-        }}
-      />
+   
     </Drawer.Navigator>
   );
 };
@@ -404,6 +370,60 @@ const StackScreenNavigator = () => {
               headerTintColor: "black",
             }}
           />
+             <Stack.Screen
+            name="Details"
+            component={Details}
+            options={{
+              header:()=><Header showBack={1}/>
+            }}
+          />
+          <Stack.Screen
+            name="PostDetails"
+            component={PostDetail}
+            options={{
+           
+             header:()=><Header showBack={1}/>
+            }}
+          />
+            <Stack.Screen
+            name="Realtor details"
+            component={RealtorDetails}
+            options={{
+              header:()=><Header showBack={1}/>
+            }}
+          />
+            <Stack.Screen
+        name="AllProject"
+        component={AllProjects}
+        options={({ route }) => ({
+          header:()=> <Header showBack={1} />,
+        
+          headerStyle: {
+            backgroundColor: "#EA2B2E",
+          },
+          title:
+            route.params.name + " - " + route.params.count + " Proje",
+          headerBackTitle: "",
+          headerBackTitleVisible: false,
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontSize: 14,
+          },
+        })}
+      />
+    
+      <Stack.Screen
+        name="AllRealtorAdverts"
+        component={AllRealtorAdverts}
+        options={({ route }) => ({
+          header: () => <Header showBack={1} />,
+          title: `${route?.params?.name} - ${route?.params?.count} Emlak İlanları`,
+          headerBackTitle: "",
+          headerBackTitleVisible: false,
+          headerTintColor: "white",
+          headerTitleStyle: { fontSize: 14 },
+        })}
+      />
           <Stack.Screen
             name="Forms"
             component={SellAndRentForms}
