@@ -157,32 +157,15 @@ export default function SupportList() {
       {loading ? (
         <ActivityIndicator size="large" color="#333" />
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+        >
           <View style={{ flex: 1 }}>
             {supportData.length > 0 ? (
               supportData.map((support, index) => (
                 <View key={index} style={{ marginTop: 20 }}>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "white",
-                      borderRadius: 8,
-                      padding: 15,
-                      borderWidth: 1,
-                      borderColor: "#e6e6e6",
-                      ...Platform.select({
-                        ios: {
-                          shadowColor: "gray",
-                          shadowOffset: { width: 1, height: 1 },
-                          shadowOpacity: 0.1,
-                          shadowRadius: 5,
-                        },
-                        android: {
-                          elevation: 5,
-                        },
-                      }),
-                    }}
-                  >
+                  <View style={styles.supportItem}>
                     <View
                       style={{
                         flexDirection: "row",
@@ -334,17 +317,8 @@ export default function SupportList() {
                         </View>
                       ) : (
                         <View style={{ width: "45%" }}>
-                          <TouchableOpacity
-                            style={{
-                              backgroundColor: "rgba(234, 43, 46, 0.2)",
-                              justifyContent: "center",
-                              borderRadius: 5,
-                              padding: 10,
-                              flex: 1 / 2,
-                              backgroundColor: "#FFCE86",
-                              flexDirection: "row",
-                              alignItems: "center",
-                            }}
+                          <View
+                            style={styles.buttonResponse}
                           >
                             <FeatherIcon
                               style={{ marginRight: 10 }}
@@ -356,16 +330,22 @@ export default function SupportList() {
                             >
                               Yanıt Bekleniyor
                             </Text>
-                          </TouchableOpacity>
+                          </View>
                         </View>
                       )}
                     </View>
                     <View></View>
-                  </TouchableOpacity>
+                  </View>
                 </View>
               ))
             ) : (
-              <View style={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <View
+                style={{
+                  flexGrow: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <NoDataScreen
                   message="Talep bulunamadı."
                   iconName="rss-box"
@@ -450,6 +430,16 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(234, 43, 46, 0.2)",
     borderRadius: 5,
     padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  buttonResponse: {
+    backgroundColor: "rgba(234, 43, 46, 0.2)",
+    justifyContent: "center",
+    borderRadius: 5,
+    padding: 10,
+    flex: 1 / 2,
+    backgroundColor: "#FFCE86",
     flexDirection: "row",
     alignItems: "center",
   },
