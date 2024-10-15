@@ -3,8 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableWithoutFeedback,
-  Keyboard,
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
@@ -235,24 +233,26 @@ const FirstHome = (props) => {
                         }}
                         style={styles.imageBackground}
                         resizeMode="cover"
-                      />
+                      >
+                        {/* Dots */}
+                        <View style={styles.dotsContainer}>
+                          {featuredSliders.map((_, dotIndex) => (
+                            <View
+                              key={dotIndex}
+                              style={[
+                                styles.dot,
+                                dotIndex === currentPage
+                                  ? styles.activeDot
+                                  : styles.inactiveDot,
+                              ]}
+                            />
+                          ))}
+                        </View>
+                      </ImageBackground>
                     </View>
                   ))}
                 </PagerView>
               )}
-              <View style={styles.dotsContainer}>
-                {featuredSliders.map((_, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      styles.dot,
-                      index === currentPage
-                        ? styles.activeDot
-                        : styles.inactiveDot,
-                    ]}
-                  />
-                ))}
-              </View>
             </View>
 
             {/* Popular Construction Brands */}
@@ -732,15 +732,20 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   dotsContainer: {
+    position: "absolute",
+    bottom: 10, // Sliderın altına mesafe
+    left: 0,
+    right: 0,
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 10,
+    alignItems: "center",
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    margin: 4,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    backgroundColor: "gray",
   },
   activeDot: {
     backgroundColor: "red", // Aktif nokta rengi
