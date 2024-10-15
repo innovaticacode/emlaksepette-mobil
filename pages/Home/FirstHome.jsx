@@ -211,6 +211,7 @@ const FirstHome = (props) => {
       ) : (
         <SafeAreaView style={styles.container}>
           <ScrollView
+            showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={styles.scrollViewContent}
             scrollEventThrottle={16}
