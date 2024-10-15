@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   FlatList,
   ImageBackground,
+  LogBox,
 } from "react-native";
 import axios from "axios";
 import PagerView from "react-native-pager-view";
@@ -102,17 +103,19 @@ const FirstHome = (props) => {
   const pagerViewRef = useRef(null);
 
   useEffect(() => {
-    fetchFeaturedSliders();
+    fetchFeaturedSliders(); // Fetch slider data
+
     const interval = setInterval(() => {
       pagerViewRef.current?.setPage(
         currentPage === featuredSliders.length - 1 ? 0 : currentPage + 1
       );
-      setCurrentPage(
-        currentPage === featuredSliders.length - 1 ? 0 : currentPage + 1
+      setCurrentPage((prevPage) =>
+        prevPage === featuredSliders.length - 1 ? 0 : prevPage + 1
       );
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+    }, 10000);
+
+    return () => clearInterval(interval); // Clean up the interval when unmounted
+  }, [currentPage, featuredSliders.length]);
 
   // State for user
   const [user, setUser] = useState({});
@@ -193,6 +196,10 @@ const FirstHome = (props) => {
   useEffect(() => {
     advertsForSale();
   }, []);
+  useEffect(() => {
+    LogBox.ignoreLogs(["Encountered two children with the same key"]);
+  }, []);
+
   return (
     <AlertNotificationRoot>
       {loadingProjects && loadingSliders ? (
@@ -225,8 +232,8 @@ const FirstHome = (props) => {
                     setCurrentPage(event.nativeEvent.position)
                   }
                 >
-                  {featuredSliders.map((item, index) => (
-                    <View style={styles.sliderItem} key={index}>
+                  {featuredSliders.map((item) => (
+                    <View style={styles.sliderItem} key={item.id}>
                       <ImageBackground
                         source={{
                           uri: `${apiUrl}/storage/sliders/${item.mobile_image}`,
@@ -238,7 +245,7 @@ const FirstHome = (props) => {
                         <View style={styles.dotsContainer}>
                           {featuredSliders.map((_, dotIndex) => (
                             <View
-                              key={dotIndex}
+                              key={featuredSliders[dotIndex].id} // item.id yerine featuredSliders[dotIndex].id kullan
                               style={[
                                 styles.dot,
                                 dotIndex === currentPage
