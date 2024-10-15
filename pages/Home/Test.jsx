@@ -55,7 +55,7 @@ export default function Test() {
             }),
           }}
         >
-          <Header onPress={toggleDrawer} index={setindex} tab={settab} />
+          {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
         </View>
 
         <Modal
@@ -67,9 +67,9 @@ export default function Test() {
           swipeDirection={["left"]}
           onSwipeComplete={() => setIsDrawerOpen(false)}
         >
-          <View>
+          {/* <View>
             <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-          </View>
+          </View> */}
         </Modal>
 
         {/* SİLİNMESİN İLERİDE KULLANILABİLİR BİR ÖZELLİK OLABİLİR */}

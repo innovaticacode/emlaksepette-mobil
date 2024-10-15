@@ -172,14 +172,11 @@ export default function Posts({
   const formatPrice = (price) => addDotEveryThreeDigits(Math.round(price));
 
   function navigateToPostDetails() {
-    const params = {
-      HomeId: roomOrder,
-      projectId: data?.project?.id,
-    };
-
-    navigation.navigate("PostDetails", params);
+   
+navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id})
+  
   }
-
+  
   const changeFavorite = () => {
     setShowAlert(true);
   };
@@ -866,8 +863,10 @@ export default function Posts({
                           : "50%",
                     }}
                   >
-                    {!sold && project.user.id == user.id ||
-                      !sold && project.user.id == user.parent_id ? (
+
+                    {(!sold && project.user.id == user.id) ||
+                    (!sold && project.user.id == user.parent_id) ? (
+
                       <View style={styles.priceContainer}>
                         <TouchableOpacity style={styles.addBasket}>
                           <Text style={styles.addBasketText}>

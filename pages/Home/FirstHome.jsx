@@ -124,18 +124,34 @@ const FirstHome = (props) => {
 
   // Navigate to all projects screen
   const navigateToAllProjects = () => {
-    navigation.navigate("AllProject", {
-      name: "Tüm Projeler",
-      slug: "tum-projeler",
-      data: featuredProjects,
-      count: featuredProjects.length,
-      type: null,
-      optional: "satilik",
-      title: "konut",
-      check: "villa",
-      city: null,
-      county: null,
-      hood: null,
+    // navigation.navigate("AllProject", {
+    //   name: "Tüm Projeler",
+    //   slug: "tum-projeler",
+    //   data: featuredProjects,
+    //   count: featuredProjects.length,
+    //   type: null,
+    //   optional: "satilik",
+    //   title: "konut",
+    //   check: "villa",
+    //   city: null,
+    //   county: null,
+    //   hood: null,
+    // });
+    navigation.navigate("Drawer", {
+      screen: "AllProjects",
+      params: {
+        name: "Tüm Projeler",
+        slug: "tum-projeler",
+        data: featuredProjects,
+        count: featuredProjects.length,
+        type: null,
+        optional: "satilik",
+        title: "konut",
+        check: "villa",
+        city: null,
+        county: null,
+        hood: null,
+      },
     });
   };
 

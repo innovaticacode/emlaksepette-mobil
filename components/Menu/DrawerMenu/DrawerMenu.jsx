@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Search from "../../../pages/Home/Search";
 import Categories from "../../Categories";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, DrawerActions } from "@react-navigation/native"; // DrawerActions'ı ekledik
 import { getValueFor } from "../../methods/user";
 import IconAntDesign from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -17,7 +17,7 @@ import Icon2 from "react-native-vector-icons/EvilIcons";
 import axios from "axios";
 import { styles } from "./DrawerMenu.style";
 
-const DrawerMenu = ({ setIsDrawerOpen }) => {
+const DrawerMenu = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
   const [namFromGetUser, setnamFromGetUser] = useState([]);
@@ -44,13 +44,14 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     }
   };
+
   useEffect(() => {
     fetchMenuItems();
   }, [user]);
 
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
-    setIsDrawerOpen(false);
+    navigation.dispatch(DrawerActions.closeDrawer()); // Drawer'ı kapatıyoruz
   };
 
   return (
@@ -58,7 +59,9 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.mainContainer}>
           <View style={styles.closeIconContainer}>
-            <TouchableOpacity onPress={() => setIsDrawerOpen(false)}>
+            <TouchableOpacity
+              onPress={() => navigation.dispatch(DrawerActions.closeDrawer())} // Drawer'ı kapatıyoruz
+            >
               <IconAntDesign name="close" size={22} color={"#333"} />
             </TouchableOpacity>
           </View>
@@ -78,7 +81,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
                   )}
                 </View>
               </View>
-              {/* PROFİL FOTO START */}
+              {/* PROFİL FOTO END */}
 
               {/* GİRİŞ YAP-HESABIM BÖLÜMÜ START */}
               <View style={styles.userInfoContainer}>
@@ -99,8 +102,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
                 <TouchableOpacity
                   disabled={user.access_token ? false : true}
                   onPress={() => {
-                    navigation.navigate("ShopProfile");
-                    setIsDrawerOpen(false);
+                    navigateToScreen("ShopProfile");
                   }}
                 >
                   <Text style={styles.userAccountText}>
@@ -123,7 +125,7 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
           {/* MENÜ ÖGELERİ START */}
           <View style={styles.searchContainer}>
             <View style={styles.searchWrapper}>
-              <Search setIsDrawerOpen={setIsDrawerOpen} />
+              <Search />
             </View>
           </View>
           {/* MENÜ ÖGELERİ END */}
@@ -135,16 +137,6 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
           {/* GRİ ALAN START */}
           <View style={styles.grayArea}>
             <View style={styles.categoryWrapper}>
-              {/* {(!user.access_token ||
-                user.type == 1 ||
-                user.corporate_type == "Emlak Ofisi") && (
-                <TouchableOpacity
-                  onPress={() => navigateToScreen("RealtorClubExplore")}
-                >
-                  <Categories category={"Emlak Kulüp"} iconName={"hand-coin"} />
-                </TouchableOpacity>
-              )} */}
-
               <TouchableOpacity
                 onPress={() => navigateToScreen("RealtorClubExplore")}
               >
@@ -172,15 +164,13 @@ const DrawerMenu = ({ setIsDrawerOpen }) => {
                 />
               </TouchableOpacity>
             </View>
-            {/* GRİ ALAN END */}
 
             {/* İLAN VER BUTONU START */}
             <View style={styles.advertButtonContainer}>
               <TouchableOpacity
                 style={styles.advertButton}
                 onPress={() => {
-                  setIsDrawerOpen(false);
-                  navigation.navigate("ShareAdvert");
+                  navigateToScreen("ShareAdvert");
                 }}
               >
                 <IconAntDesign name="plus" color={"white"} size={18} />

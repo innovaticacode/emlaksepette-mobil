@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     width: 320,
     paddingVertical: 12,
+    width: "100%",
   },
   closeIconContainer: {
     alignItems: "flex-end",

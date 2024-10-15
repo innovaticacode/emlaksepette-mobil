@@ -3,7 +3,7 @@ import React from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import Categories from "../../../components/Categories";
 import CategoryAdverts from "../İlanYükleme/ProjectAdvertsAdd/CategoryAdverts";
-import slugify from 'react-slugify';
+import slugify from "react-slugify";
 
 export default function PublicPage() {
   const navigation = useNavigation();
@@ -18,7 +18,6 @@ export default function PublicPage() {
         {filteredData.map((item, index) => (
           <TouchableOpacity
             onPress={() => {
-
               if (item.submenus && item.submenus.length > 0) {
                 navigation.navigate("SubCategory", {
                   name: item.text,
@@ -26,28 +25,26 @@ export default function PublicPage() {
                   title: title,
                 });
               } else {
-                navigation.navigate(
-                  item.text == "Projeler" ? "AllProject" : "AllRealtorAdverts",
-                  {
-                    name:
-                      title == "Projeler"
-                        ? item.text
-                        : "Emlak İlanları",
+                navigation.navigate( item.text === "Projeler"
+                  ? "AllProjects"
+                  : "AllRealtorAdverts", {
+                
+                    name: title === "Projeler" ? item.text : "Emlak İlanları",
                     slug: slugify(
-                      title == "Projeler" ?  item.text : "emlak-ilanlari"
+                      title === "Projeler" ? item.text : "emlak-ilanlari"
                     ),
                     data: null,
                     count: 0,
                     type: null,
                     optional: slugify(item.text),
-                    title: slugify(title == "Projeler" ? "" : title || ""),
+                    title: slugify(title === "Projeler" ? "" : title || ""),
                     check: slugify(item.text || ""),
                     city: null,
                     county: null,
                     hood: null,
                     href: item.href,
-                  }
-                );
+                  
+                });
               }
             }}
             key={index}

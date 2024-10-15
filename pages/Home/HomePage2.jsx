@@ -173,7 +173,7 @@ export default function HomePage2() {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
+    // setIsDrawerOpen(!isDrawerOpen);
   };
   const layout = useWindowDimensions();
   const [tab, settab] = React.useState(0);
@@ -196,24 +196,24 @@ export default function HomePage2() {
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}
+      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 10 }}
     >
-      <Header onPress={toggleDrawer} index={setIndex} tab={settab} />
+      {/* <Header onPress={toggleDrawer} index={setIndex} tab={settab} /> */}
 
       <Modal
         isVisible={isDrawerOpen}
-        onBackdropPress={() => setIsDrawerOpen(false)}
+        // onBackdropPress={() => setIsDrawerOpen(false)}
         animationIn="bounceInLeft"
         animationOut="bounceOutLeft"
         style={styles.modal}
         swipeDirection={["left"]}
-        onSwipeComplete={() => setIsDrawerOpen(false)}
+        // onSwipeComplete={() => setIsDrawerOpen(false)}
       >
-        <View style={styles.modalContent}>
+        {/* <View style={styles.modalContent}>
           <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-        </View>
+        </View> */}
       </Modal>
-      <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+      <View style={{ paddingLeft: 10, paddingRight: 10 ,paddingTop:10}}>
         <TextInput
           style={{ padding: 8, backgroundColor: "#ebebeb", borderRadius: 5 }}
           placeholder="Kelime veya İlan no ile ara..."

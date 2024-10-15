@@ -354,7 +354,7 @@ export default function Basket() {
   );
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={{ flex: 1 }}>
       {loading ? (
         <ActivityIndicator color="#333" size="large" />
       ) : (
@@ -369,7 +369,7 @@ export default function Basket() {
               }),
             }}
           >
-            <Header onPress={toggleDrawer} index={setindex} tab={settab} />
+            {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
           </View>
 
           <Modal
@@ -381,9 +381,9 @@ export default function Basket() {
             onSwipeComplete={() => setIsDrawerOpen(false)}
             style={styles.modal}
           >
-            <View>
+            {/* <View>
               <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-            </View>
+            </View> */}
           </Modal>
 
           {CartLength !== false ? (

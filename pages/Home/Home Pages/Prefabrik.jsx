@@ -200,18 +200,21 @@ const Prefabrik = ({ index }) => {
               <Text
                 style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
                 onPress={() =>
-                  navigation.navigate("AllRealtorAdverts", {
-                    name: "Emlak İlanları",
-                    slug: "emlak-ilanlari",
-                    data: filteredHomes,
-                    count: filteredHomes.length,
-                    type: null,
-                    optional: "satilik",
-                    title: "konut",
-                    check: "prefabrik-ev",
-                    city: null,
-                    county: null,
-                    hood: null,
+                  navigation.navigate("Drawer", {
+                    screen: "AllRealtorAdverts",
+                    params: {
+                      name: "Emlak İlanları",
+                      slug: "emlak-ilanlari",
+                      data: filteredHomes,
+                      count: filteredHomes.length,
+                      type: null,
+                      optional: "satilik",
+                      title: "konut",
+                      check: "prefabrik-ev",
+                      city: null,
+                      county: null,
+                      hood: null,
+                    },
                   })
                 }
               >
