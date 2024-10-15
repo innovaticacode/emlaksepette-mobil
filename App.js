@@ -123,6 +123,7 @@ import PaymentSuccessScreen from "./src/pages/PaymentSuccessScreen";
 import AddBioText from "./pages/Home/ProfilePages/AddBioText";
 import SliderTourismRent from "./pages/Home/SliderTourismRent";
 import AllTourismRent from "./pages/Home/AllTourismRent";
+import ViewAll from "./pages/Home/ViewAll/ViewAll";
 import RealEstateWallet from './src/pages/RealEstateWallet';
 
 
@@ -272,7 +273,7 @@ const StackScreenNavigator = () => {
                       title: "Giriş Yap",
                       headerBackTitleVisible: false,
                       headerShown: false,
-                      presentation: 'modal',
+                      presentation: "modal",
                     }}
                   >
                     {(props) => <Login {...props} />}
@@ -429,6 +430,39 @@ const StackScreenNavigator = () => {
                       headerBackTitleVisible: false,
                       headerTintColor: "white",
                       headerTitleStyle: { fontSize: 14 },
+                    })}
+                  />
+                  <Stack.Screen
+                    name="RentByMe"
+                    component={RentByMe}
+                    options={({ route }) => ({
+                      animationTypeForReplace: "pop",
+                      title: "Kiraladıklarım",
+                      headerBackTitle: "",
+                      headerBackTitleVisible: false,
+                      headerTintColor: "black",
+                    })}
+                  />
+                  <Stack.Screen
+                    name="RentByMeDetails"
+                    component={RentByMeDetails}
+                    options={({ route }) => ({
+                      animationTypeForReplace: "pop",
+                      title: "Rezervaston Detayı",
+                      headerBackTitle: "",
+                      headerBackTitleVisible: false,
+                      headerTintColor: "black",
+                    })}
+                  />
+                  <Stack.Screen
+                    name="SuccessForRent"
+                    component={SuccessForRent}
+                    options={({ route }) => ({
+                      animationTypeForReplace: "pop",
+                      title: "Detay",
+                      headerBackTitle: "",
+                      headerBackTitleVisible: false,
+                      headerTintColor: "black",
                     })}
                   />
                   <Stack.Screen
@@ -1329,10 +1363,22 @@ const StackScreenNavigator = () => {
                     },
                   })}
                 />
-                <Stack.Screen name="AddBioText"
+                <Stack.Screen
+                  name="AddBioText"
                   component={AddBioText}
                   options={({ route }) => ({
                     title: "Tanıtım Yazısı Ekle",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="ViewAll"
+                  component={ViewAll}
+                  options={({ route }) => ({
+                    title: "Tümü",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#ffffff",

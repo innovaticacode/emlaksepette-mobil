@@ -49,9 +49,7 @@ export default function SliderTourismRent() {
           <View
             style={{
               width: 80,
-              marginLeft: 3,
               alignItems: "center",
-              marginBottom: 10,
             }}
             key={i}
           >
