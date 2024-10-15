@@ -40,7 +40,7 @@ const ViewAll = (props) => {
           renderItem={({ item }) => (
             <ViewAllCard
               name={item?.name}
-              refCode={item?.ref_code}
+              refCode={item?.code}
               image={item?.profile_image}
               onPress={() => {
                 navigation.navigate("Profile", {
