@@ -33,6 +33,16 @@ export default function SupportList() {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSupport, setSelectedSupport] = useState(null);
+  const [pdfFile, setPdfFile] = useState([]);
+  const [selectedPdf, setSelectedPdf] = useState(null);
+  const nav = useNavigation();
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedUri, setselectedUri] = useState(null);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
 
   const openModal = (support) => {
     setSelectedSupport(support);
@@ -45,15 +55,7 @@ export default function SupportList() {
   };
 
   useEffect(() => {
-    getValueFor("user", setUser);
-  }, []);
-
-  const [pdfFile, setPdfFile] = useState([]);
-  const [selectedPdf, setSelectedPdf] = useState(null);
-
-  useEffect(() => {
     if (user.access_token) {
-      // API'den veriyi çekme
       axios
         .get("https://private.emlaksepette.com/api/support", {
           headers: {
@@ -62,23 +64,19 @@ export default function SupportList() {
         })
         .then((response) => {
           const data = response.data.data;
-          setSupportData(data); // Gelen veriyi state'e kaydedin
-
-          // file_path'leri çıkarıp pdfFile state'ine aktarın
+          setSupportData(data);
           const paths = data.map((item) => item.file_path);
           setPdfFile(paths);
-          console.log("PDF File Paths:", paths); // PDF dosya yollarını konsola yazdırın
         })
         .catch((error) => {
-          console.error("API Hatası:", error); // Hata detaylarını konsola yazdır
+          console.error("API Hatası:", error);
         })
         .finally(() => {
-          setLoading(false); // Loading state'ini kapat
+          setLoading(false);
         });
     }
   }, [user]);
 
-  const nav = useNavigation();
   async function saveFile(uri, filename, mimetype) {
     if (Platform.OS === "android") {
       const permissions =
@@ -114,20 +112,14 @@ export default function SupportList() {
       `https://private.emlaksepette.com/support/${URL}`,
       FileSystem.documentDirectory + filename
     );
-
-    // Log the download result
-    console.log(result);
-
-    // Save the downloaded file
     saveFile(result.uri, filename, result.headers["Content-Type"]);
   }
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedUri, setselectedUri] = useState(null);
+
   const OpenImage = (uri) => {
     setIsVisible(true);
     setselectedUri(uri);
   };
-  const navigation = useNavigation();
+
   const openPdf = async (uri) => {
     if (uri) {
       try {
@@ -223,6 +215,67 @@ export default function SupportList() {
                           fontSize: 13,
                         }}
                       >
+                        Adı:
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          flexShrink: 1,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {support.name}
+                      </Text>
+                    </View>
+                    <View style={{ marginTop: 10 }}>
+                      <Text
+                        style={{
+                          fontWeight: "700",
+                          marginBottom: 10,
+                          fontSize: 13,
+                        }}
+                      >
+                        Telefon:
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          flexShrink: 1,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {support.phone}
+                      </Text>
+                    </View>
+                    <View style={{ marginTop: 10 }}>
+                      <Text
+                        style={{
+                          fontWeight: "700",
+                          marginBottom: 10,
+                          fontSize: 13,
+                        }}
+                      >
+                        E-Mail
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          flexShrink: 1,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {support.email}
+                      </Text>
+                    </View>
+
+                    <View style={{ marginTop: 10 }}>
+                      <Text
+                        style={{
+                          fontWeight: "700",
+                          marginBottom: 10,
+                          fontSize: 13,
+                        }}
+                      >
                         Açıklama
                       </Text>
                       <Text
@@ -235,6 +288,9 @@ export default function SupportList() {
                         {support.description}
                       </Text>
                     </View>
+
+                    
+
                     <View
                       style={{
                         marginTop: 10,
@@ -317,9 +373,7 @@ export default function SupportList() {
                         </View>
                       ) : (
                         <View style={{ width: "45%" }}>
-                          <View
-                            style={styles.buttonResponse}
-                          >
+                          <View style={styles.buttonResponse}>
                             <FeatherIcon
                               style={{ marginRight: 10 }}
                               name="clock"
