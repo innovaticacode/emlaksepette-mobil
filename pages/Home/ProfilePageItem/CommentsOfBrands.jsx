@@ -236,7 +236,7 @@ export default function CommentsOfBrands(props) {
 
 export const styles = StyleSheet.create({
   title: {
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: "600",
     lineHeight: 19,
     color: "#0C0C0C",
