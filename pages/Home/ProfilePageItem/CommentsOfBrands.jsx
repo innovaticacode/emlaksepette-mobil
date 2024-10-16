@@ -145,7 +145,7 @@ export default function CommentsOfBrands(props) {
           ListHeaderComponent={
             <>
               <View style={styles.subjectArea}>
-                <Text style={styles.title}>Filitrele</Text>
+                <Text style={styles.title}>Filtrele</Text>
                 <View style={{ flexDirection: "row" }}>
                   <SubjectFilter
                     text="Tümü"
@@ -161,7 +161,7 @@ export default function CommentsOfBrands(props) {
                   />
                 </View>
                 <View style={styles.starArea}>
-                  <Text style={styles.title}>Puana Göre Filitrele</Text>
+                  <Text style={styles.title}>Puana Göre Filtrele</Text>
                   <FlatList
                     data={[5, 4, 3, 2, 1]}
                     renderItem={({ item }) => {
