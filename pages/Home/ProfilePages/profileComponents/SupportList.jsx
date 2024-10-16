@@ -38,7 +38,6 @@ export default function SupportList() {
   const nav = useNavigation();
   const [isVisible, setIsVisible] = useState(false);
   const [selectedUri, setselectedUri] = useState(null);
-  const navigation = useNavigation();
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -121,6 +120,7 @@ export default function SupportList() {
   }
 
   const OpenImage = (uri) => {
+    console.log('Opening image with URI:', uri); // URI'nın doğru olup olmadığını kontrol edin
     setIsVisible(true);
     setselectedUri(uri);
   };
@@ -448,7 +448,7 @@ export default function SupportList() {
       </Modal>
       <ImageViewing
         images={[
-          { uri: `https://private.emlaksepette.com/support/${selectedUri}` },
+          { uri: `https://private.emlaksepette.com/storage/support_images/${selectedUri}` },
         ]}
         imageIndex={0}
         visible={isVisible}
