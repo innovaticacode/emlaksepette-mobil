@@ -30,7 +30,11 @@ export default function CommentsOfBrands(props) {
   };
 
   const handleActive = (index) => {
-    setActiveIndex(index);
+    setLoading(true);
+    setTimeout(() => {
+      setActiveIndex(index);
+      setLoading(false);
+    }, 500);
   };
 
   const fetchComment = async () => {
@@ -43,12 +47,16 @@ export default function CommentsOfBrands(props) {
       const commentsObject = response.data?.comments;
       const allComments = Object.values(commentsObject);
 
-      const filteredImages = allComments.filter(
+      const sortedComments = allComments.sort((a, b) => {
+        return new Date(b.created_at) - new Date(a.created_at);
+      });
+
+      const filteredImages = sortedComments.filter(
         (comment) =>
           comment.images && comment.images !== "[]" && comment.images.length > 0
       );
 
-      setComments(allComments);
+      setComments(sortedComments);
       setImagesComments(filteredImages);
       return setLoading(false);
     } catch (error) {
@@ -126,7 +134,11 @@ export default function CommentsOfBrands(props) {
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 10 }}>
-      {loading && <ActivityIndicator size="large" color="#000" />}
+      {loading && (
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color="#000" />
+        </View>
+      )}
 
       {!loading && comments.length >= 1 ? (
         <FlatList
@@ -236,5 +248,10 @@ export const styles = StyleSheet.create({
   starArea: {
     marginTop: 6,
     gap: 4,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
