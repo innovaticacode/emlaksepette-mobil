@@ -146,9 +146,9 @@ export default function ClupTabPanel() {
       
      
       <View style={{paddingLeft:8,paddingRight:8,paddingTop:10}}>
-        <TextInput style={{padding:6,backgroundColor:'#FFFFFF',borderRadius:5,}} placeholder="Kelime veya İlan no ile ara.." 
+        {/* <TextInput style={{padding:6,backgroundColor:'#FFFFFF',borderRadius:5,}} placeholder="Kelime veya İlan no ile ara.." 
           
-        />
+        /> */}
       </View>
       <TabView
         navigationState={{ index, routes }}

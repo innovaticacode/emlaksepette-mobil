@@ -21,6 +21,7 @@ import {
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import { Platform } from "react-native";
+import NoDataScreen from "../../../components/NoDataScreen";
 export default function UsersList() {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
@@ -68,10 +69,10 @@ export default function UsersList() {
             },
           }
         );
-        console.log("deleted");
+       
         if (response.status === 200) {
           setTimeout(() => {
-            console.log("dialog");
+            
             Dialog.show({
               type: ALERT_TYPE.SUCCESS,
               title: "Başarılı",
@@ -81,16 +82,16 @@ export default function UsersList() {
                 fetchData();
               },
             });
-            setloading(false); // End loading after showing the dialog
+           
           }, 300);
         }
         setopenDeleteModal(false);
-        setsubUsers(response.data.users);
+      
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      setloading(false);
+      
     }
   };
   const [selectedUser, setselectedUser] = useState(0);
@@ -117,7 +118,7 @@ export default function UsersList() {
   const [openDeleteModal, setopenDeleteModal] = useState(false);
   useEffect(() => {
     navigation.setOptions({
-      title: `Alt Kullanıcılar (${subUsers?.length})`,
+      title: `Ekip Üyeleri (${subUsers?.length})`,
     });
   }, [navigation, subUsers]);
   const [isChoosed, setisChoosed] = useState(false);
@@ -158,7 +159,7 @@ export default function UsersList() {
           });
           setloading(false);
         }, 300);
-        console.log("done");
+       
 
         setdeleteAllUserType(false);
       }
@@ -195,7 +196,7 @@ export default function UsersList() {
           });
           console.log("load");
           setloading(false);
-        }, 2000);
+        }, 300);
 
         setselectedUserDeleteModa(false);
         setisChoosed(false);
@@ -215,46 +216,8 @@ export default function UsersList() {
         >
           <ActivityIndicator size={"large"} color="#333" />
         </View>
-      ) : subUsers.length == 0 ? (
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
-            gap: 10,
-            backgroundColor: "white",
-            marginTop: -62,
-          }}
-        >
-          <View
-            style={[
-              styles.card,
-              { alignItems: "center", justifyContent: "center" },
-            ]}
-          >
-            <Icon2 name="user-tie" size={35} color={"#EA2A28"} />
-          </View>
-          <View>
-            <Text style={styles.noCommentsText}>
-              Daha önce alt kullanıcı oluşturmadınız.
-            </Text>
-            <Text></Text>
-          </View>
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <TouchableOpacity
-              style={styles.returnButton}
-              onPress={() => {
-                setloading(true);
-                setTimeout(() => {
-                  navigation.navigate("CreateUser");
-                  setloading(false);
-                }, 700);
-              }}
-            >
-              <Text style={styles.returnButtonText}>Oluştur</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+      ) : subUsers?.length == 0 ? (
+       <NoDataScreen iconName={'account-multiple-plus'} buttonText={'Oluştur'} navigateTo={'CreateUser'} message={'Ekip Üyeniz Bulunmamaktadır'}/>
       ) : (
         <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
           <AwesomeAlert

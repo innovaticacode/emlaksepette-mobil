@@ -145,10 +145,10 @@ export default function RealtorAdvertTab() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#F6F6F6" }}>
       <View style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 10 }}>
-        <TextInput
+        {/* <TextInput
           style={{ padding: 6, backgroundColor: "#FFFFFF", borderRadius: 5 }}
           placeholder="Kelime veya İlan no ile ara.."
-        />
+        /> */}
       </View>
       <TabView
         navigationState={{ index, routes }}

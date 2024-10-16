@@ -497,7 +497,7 @@ export default function App({ route }) {
                     component={CreateUser}
                     options={({ route }) => ({
                       animationTypeForReplace: "pop",
-                      title: "Alt Kullanıcı Oluştur",
+                      title: "Ekip Üyesi Ekle",
                       headerBackTitle: "",
                       headerBackTitleVisible: false,
                       headerTintColor: "black",
@@ -929,7 +929,7 @@ export default function App({ route }) {
                   options={({ route }) => ({
                     headerBackTitleVisible: false,
                     headerShown: true,
-                    title: "Alt Kullanıcı Güncelle",
+                    title: "Ekip Üyesi Bilgi Güncelleme",
                   })}
                 />
                 <Stack.Screen
@@ -938,7 +938,7 @@ export default function App({ route }) {
                   options={({ route }) => ({
                     headerBackTitleVisible: false,
                     headerShown: true,
-                    title: "Alt Kullanıcılar",
+                    title: "Ekip Üyeleri",
                   })}
                 />
                 <Stack.Screen
