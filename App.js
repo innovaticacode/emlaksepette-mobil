@@ -1179,7 +1179,6 @@ const StackScreenNavigator = () => {
                   component={Support}
                   options={({ route }) => ({
                     title: "Destek",
-
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#f7f7f7",

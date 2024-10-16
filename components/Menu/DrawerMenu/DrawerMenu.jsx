@@ -14,6 +14,7 @@ import { getValueFor } from "../../methods/user";
 import IconAntDesign from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/EvilIcons";
+import SocialIcons from "react-native-vector-icons/Foundation";
 import axios from "axios";
 import { styles } from "./DrawerMenu.style";
 
@@ -56,7 +57,10 @@ const DrawerMenu = () => {
 
   return (
     <SafeAreaView>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={styles.scrollContainer}
+      >
         <View style={styles.mainContainer}>
           <View style={styles.closeIconContainer}>
             <TouchableOpacity
@@ -165,20 +169,22 @@ const DrawerMenu = () => {
               </TouchableOpacity>
             </View>
 
-            {/* İLAN VER BUTONU START */}
+            {/* BUTON START */}
             <View style={styles.advertButtonContainer}>
               <TouchableOpacity
                 style={styles.advertButton}
                 onPress={() => {
-                  navigateToScreen("ShareAdvert");
+                  navigateToScreen("Support");
                 }}
               >
                 <IconAntDesign name="plus" color={"white"} size={18} />
-                <Text style={styles.advertButtonText}>İlan Ver</Text>
+                <Text style={styles.advertButtonText}>
+                  Destek Talebi Oluştur
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
-          {/* İLAN VER BUTONU END */}
+          {/* BUTON END */}
 
           {/* MÜŞTERİ HİZMETLERİ ALANI START */}
           <View style={styles.customerServiceContainer}>
@@ -190,11 +196,17 @@ const DrawerMenu = () => {
                 <Text style={styles.customerServiceText}>
                   Müşteri Hizmetleri
                 </Text>
-                <Text style={styles.customerServiceNumber}>444 3 284</Text>
+                <Text style={styles.customerServiceNumber}>0850 309 55 39</Text>
               </View>
             </TouchableOpacity>
           </View>
           {/* MÜŞTERİ HİZMETLERİ ALANI END */}
+
+          <View style={styles.socialIcons}>
+            <SocialIcons style={styles.Icons} name="social-facebook" size={40} color={"#333"} />
+            <SocialIcons style={styles.Icons} name="social-instagram" size={40} color={"#333"} />
+            <SocialIcons style={styles.Icons} name="social-linkedin" size={40} color={"#333"} />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
