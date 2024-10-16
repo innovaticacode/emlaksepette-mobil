@@ -578,7 +578,7 @@ const StackScreenNavigator = () => {
                     component={CreateUser}
                     options={({ route }) => ({
                       animationTypeForReplace: "pop",
-                      title: "Alt Kullanıcı Oluştur",
+                      title: "Ekip Üyesi Ekle",
                       headerBackTitle: "",
                       headerBackTitleVisible: false,
                       headerTintColor: "black",
@@ -1011,7 +1011,7 @@ const StackScreenNavigator = () => {
                   options={({ route }) => ({
                     headerBackTitleVisible: false,
                     headerShown: true,
-                    title: "Alt Kullanıcı Güncelle",
+                    title: "Ekip Üyesi Bilgi Güncelleme",
                   })}
                 />
                 <Stack.Screen
@@ -1020,7 +1020,7 @@ const StackScreenNavigator = () => {
                   options={({ route }) => ({
                     headerBackTitleVisible: false,
                     headerShown: true,
-                    title: "Alt Kullanıcılar",
+                    title: "Ekip Üyeleri",
                   })}
                 />
                 <Stack.Screen
