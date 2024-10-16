@@ -1,4 +1,10 @@
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import ProjectPost from "../../../components/ProjectPost";
 import ProjectBottomSheetFilter from "../../../components/ProjectBottomSheetFilter";
@@ -75,34 +81,27 @@ export default function ProjectAdverts(props) {
 
   const renderFooter = () => {
     return loadingProjects ? (
-      <ActivityIndicator size="large" color="#000" />
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#000" />
+      </View>
     ) : null;
   };
 
   return (
-    <View style={{ padding: 5 }}>
+    <View style={styles.container}>
       <ProjectBottomSheetFilter
         onFilterChange={onFilterChange}
         isVisible={isVisible}
         setIsVisible={setIsVisible}
       />
-      {featuredProjects.length === 0 && !loadingProjects ? (
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 20,
-          }}
-        >
-          <Text>Proje bulunamadı.</Text>
-        </View>
-      ) : (
+      {featuredProjects.length > 0 ? (
         <FlatList
           data={featuredProjects}
           keyExtractor={(item, index) => `${item.id}-${index}`}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             <ProjectPost
+              key={item.id}
               project={item}
               caption={item?.project_title}
               ımage={`${ApiUrl}/${item?.image.replace("public/", "storage/")}`}
@@ -115,10 +114,35 @@ export default function ProjectAdverts(props) {
             />
           )}
           onEndReached={loadMore}
-          onEndReachedThreshold={0.1}
+          onEndReachedThreshold={0.5}
           ListFooterComponent={renderFooter}
         />
+      ) : loadingProjects ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#000" />
+        </View>
+      ) : (
+        <View style={styles.empty}>
+          <Text>Proje bulunamadı.</Text>
+        </View>
       )}
     </View>
   );
 }
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 5,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  empty: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+});
