@@ -63,7 +63,11 @@ export default function SupportList() {
           },
         })
         .then((response) => {
-          const data = response.data.data;
+          let data = response.data.data;
+  
+          // Verileri oluşturulma tarihine göre sıralama (en yeni en üstte olacak şekilde)
+          data = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  
           setSupportData(data);
           const paths = data.map((item) => item.file_path);
           setPdfFile(paths);
@@ -76,6 +80,7 @@ export default function SupportList() {
         });
     }
   }, [user]);
+  
 
   async function saveFile(uri, filename, mimetype) {
     if (Platform.OS === "android") {
