@@ -33,6 +33,15 @@ export default function SupportList() {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSupport, setSelectedSupport] = useState(null);
+  const [pdfFile, setPdfFile] = useState([]);
+  const [selectedPdf, setSelectedPdf] = useState(null);
+  const nav = useNavigation();
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedUri, setselectedUri] = useState(null);
+
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
 
   const openModal = (support) => {
     setSelectedSupport(support);
@@ -45,15 +54,7 @@ export default function SupportList() {
   };
 
   useEffect(() => {
-    getValueFor("user", setUser);
-  }, []);
-
-  const [pdfFile, setPdfFile] = useState([]);
-  const [selectedPdf, setSelectedPdf] = useState(null);
-
-  useEffect(() => {
     if (user.access_token) {
-      // API'den veriyi çekme
       axios
         .get("https://private.emlaksepette.com/api/support", {
           headers: {
@@ -61,24 +62,26 @@ export default function SupportList() {
           },
         })
         .then((response) => {
-          const data = response.data.data;
-          setSupportData(data); // Gelen veriyi state'e kaydedin
+          let data = response.data.data;
 
-          // file_path'leri çıkarıp pdfFile state'ine aktarın
+          // Verileri oluşturulma tarihine göre sıralama (en yeni en üstte olacak şekilde)
+          data = data.sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+          );
+
+          setSupportData(data);
           const paths = data.map((item) => item.file_path);
           setPdfFile(paths);
-          console.log("PDF File Paths:", paths); // PDF dosya yollarını konsola yazdırın
         })
         .catch((error) => {
-          console.error("API Hatası:", error); // Hata detaylarını konsola yazdır
+          console.error("API Hatası:", error);
         })
         .finally(() => {
-          setLoading(false); // Loading state'ini kapat
+          setLoading(false);
         });
     }
   }, [user]);
 
-  const nav = useNavigation();
   async function saveFile(uri, filename, mimetype) {
     if (Platform.OS === "android") {
       const permissions =
@@ -114,20 +117,15 @@ export default function SupportList() {
       `https://private.emlaksepette.com/support/${URL}`,
       FileSystem.documentDirectory + filename
     );
-
-    // Log the download result
-    console.log(result);
-
-    // Save the downloaded file
     saveFile(result.uri, filename, result.headers["Content-Type"]);
   }
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedUri, setselectedUri] = useState(null);
+
   const OpenImage = (uri) => {
+    console.log("Opening image with URI:", uri); // URI'nın doğru olup olmadığını kontrol edin
     setIsVisible(true);
     setselectedUri(uri);
   };
-  const navigation = useNavigation();
+
   const openPdf = async (uri) => {
     if (uri) {
       try {
@@ -157,32 +155,15 @@ export default function SupportList() {
       {loading ? (
         <ActivityIndicator size="large" color="#333" />
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+        >
           <View style={{ flex: 1 }}>
             {supportData.length > 0 ? (
               supportData.map((support, index) => (
                 <View key={index} style={{ marginTop: 20 }}>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: "white",
-                      borderRadius: 8,
-                      padding: 15,
-                      borderWidth: 1,
-                      borderColor: "#e6e6e6",
-                      ...Platform.select({
-                        ios: {
-                          shadowColor: "gray",
-                          shadowOffset: { width: 1, height: 1 },
-                          shadowOpacity: 0.1,
-                          shadowRadius: 5,
-                        },
-                        android: {
-                          elevation: 5,
-                        },
-                      }),
-                    }}
-                  >
+                  <View style={styles.supportItem}>
                     <View
                       style={{
                         flexDirection: "row",
@@ -240,6 +221,67 @@ export default function SupportList() {
                           fontSize: 13,
                         }}
                       >
+                        Adı:
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          flexShrink: 1,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {support.name}
+                      </Text>
+                    </View>
+                    <View style={{ marginTop: 10 }}>
+                      <Text
+                        style={{
+                          fontWeight: "700",
+                          marginBottom: 10,
+                          fontSize: 13,
+                        }}
+                      >
+                        Telefon:
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          flexShrink: 1,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {support.phone}
+                      </Text>
+                    </View>
+                    <View style={{ marginTop: 10 }}>
+                      <Text
+                        style={{
+                          fontWeight: "700",
+                          marginBottom: 10,
+                          fontSize: 13,
+                        }}
+                      >
+                        E-Mail
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 13,
+                          flexShrink: 1,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {support.email}
+                      </Text>
+                    </View>
+
+                    <View style={{ marginTop: 10 }}>
+                      <Text
+                        style={{
+                          fontWeight: "700",
+                          marginBottom: 10,
+                          fontSize: 13,
+                        }}
+                      >
                         Açıklama
                       </Text>
                       <Text
@@ -252,6 +294,7 @@ export default function SupportList() {
                         {support.description}
                       </Text>
                     </View>
+
                     <View
                       style={{
                         marginTop: 10,
@@ -286,9 +329,18 @@ export default function SupportList() {
                             >
                               <AntDesign
                                 style={{ marginRight: 0 }}
-                                name="pdffile1"
-                                color={"red"}
+                                name={
+                                  support.file_path.endsWith(".pdf")
+                                    ? "pdffile1"
+                                    : "picture"
+                                }
+                                color={
+                                  support.file_path.endsWith(".pdf")
+                                    ? "red"
+                                    : "red"
+                                }
                               />
+
                               <Text
                                 style={{
                                   textAlign: "center",
@@ -334,18 +386,7 @@ export default function SupportList() {
                         </View>
                       ) : (
                         <View style={{ width: "45%" }}>
-                          <TouchableOpacity
-                            style={{
-                              backgroundColor: "rgba(234, 43, 46, 0.2)",
-                              justifyContent: "center",
-                              borderRadius: 5,
-                              padding: 10,
-                              flex: 1 / 2,
-                              backgroundColor: "#FFCE86",
-                              flexDirection: "row",
-                              alignItems: "center",
-                            }}
-                          >
+                          <View style={styles.buttonResponse}>
                             <FeatherIcon
                               style={{ marginRight: 10 }}
                               name="clock"
@@ -356,16 +397,22 @@ export default function SupportList() {
                             >
                               Yanıt Bekleniyor
                             </Text>
-                          </TouchableOpacity>
+                          </View>
                         </View>
                       )}
                     </View>
                     <View></View>
-                  </TouchableOpacity>
+                  </View>
                 </View>
               ))
             ) : (
-              <View style={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <View
+                style={{
+                  flexGrow: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <NoDataScreen
                   message="Talep bulunamadı."
                   iconName="rss-box"
@@ -409,7 +456,9 @@ export default function SupportList() {
       </Modal>
       <ImageViewing
         images={[
-          { uri: `https://private.emlaksepette.com/support/${selectedUri}` },
+          {
+            uri: `https://private.emlaksepette.com/storage/support_images/${selectedUri}`,
+          },
         ]}
         imageIndex={0}
         visible={isVisible}
@@ -450,6 +499,16 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(234, 43, 46, 0.2)",
     borderRadius: 5,
     padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  buttonResponse: {
+    backgroundColor: "rgba(234, 43, 46, 0.2)",
+    justifyContent: "center",
+    borderRadius: 5,
+    padding: 10,
+    flex: 1 / 2,
+    backgroundColor: "#FFCE86",
     flexDirection: "row",
     alignItems: "center",
   },

@@ -10,7 +10,11 @@ import {
   Keyboard,
   Image,
   TouchableWithoutFeedback,
+  ScrollView,
+  SafeAreaView,
+  KeyboardAvoidingView,
 } from "react-native";
+import HTML from "react-native-render-html";
 import RNPickerSelect from "react-native-picker-select";
 import { getValueFor } from "../../../../components/methods/user";
 import axios from "axios";
@@ -29,8 +33,12 @@ import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { useNavigation } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 
 export default function SupportAdd() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
   const [textAreaValue, setTextAreaValue] = useState("");
   const [user, setUser] = useState({});
@@ -43,25 +51,27 @@ export default function SupportAdd() {
   const [iconName2, setIconName2] = useState("angle-down");
   const [pdfFile, setPdfFile] = useState("");
   const navigation = useNavigation();
+  const [errorStatu, seterrorStatu] = useState(0);
+  const [checked, setChecked] = useState(false);
+  const [checked1, setChecked1] = useState(false);
+  const [checked2, setChecked2] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [modalVisible3, setModalVisible3] = useState(false);
+  const [Deals, setDeals] = useState("");
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [choose, setchoose] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedUri, setselectedUri] = useState(null);
+  const [selectedIndex, setselectedIndex] = useState(null);
+  const [ModalForDeleteFile, setModalForDeleteFile] = useState(false);
+  const [image, setImage] = useState([]);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const phoneRegex = /^[0-9]{10}$/;
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-
-  const handlePicker1Open = () => {
-    setIsPicker1Open(true);
-    setIconName1("angle-up"); // Ok yukarı yönlü
-    if (isPicker2Open) {
-      setIsPicker2Open(false);
-      setIconName2("angle-down");
-    }
-  };
-
-  const handlePicker1Close = () => {
-    setIsPicker1Open(false);
-    setIconName1("angle-down"); // Ok aşağı yönlü
-  };
-
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
 
   const handlePickerOpen = () => {
     setIsPickerOpen(true);
@@ -91,7 +101,7 @@ export default function SupportAdd() {
 
         if (!result.canceled && result.assets && result.assets.length > 0) {
           const pdfAsset = result.assets[0];
-          setimage([...image, result.assets[0]]);
+          setImage([...image, result.assets[0]]);
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "PDF Seçildi",
@@ -111,6 +121,7 @@ export default function SupportAdd() {
         });
       });
   };
+
   const openPdf = async () => {
     if (pdfFile.uri) {
       try {
@@ -128,7 +139,6 @@ export default function SupportAdd() {
     }
   };
 
-  console.log(pdfFile);
   const handlePicker2Open = () => {
     setIsPicker2Open(true);
     setIconName2("angle-up");
@@ -143,7 +153,6 @@ export default function SupportAdd() {
     setIconName2("angle-down");
   };
 
-  const [image, setimage] = useState([]);
   const pickImage = async () => {
     // Kamera veya galeriden izin isteği
     let permissionResult =
@@ -164,11 +173,12 @@ export default function SupportAdd() {
 
     if (!result.canceled) {
       // Seçilen resmin uri'si ile ilgili form verisini güncelleme
-      setimage([...image, result.assets[0]]);
+      setImage([...image, result.assets[0]]);
       setchoose(false);
       Keyboard.dismiss();
     }
   };
+
   const takePhoto = async (key) => {
     // Kameraya erişim izni iste
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -187,61 +197,90 @@ export default function SupportAdd() {
     });
 
     if (!result.canceled) {
-      setimage([...image, result.assets[0]]);
+      setImage([...image, result.assets[0]]);
       setchoose(false);
     }
   };
-  const [choose, setchoose] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedUri, setselectedUri] = useState(null);
+
   const OpenImage = (uri) => {
     setIsVisible(true);
     setselectedUri(uri);
   };
 
   const submitData = async () => {
-    if (!selectedValue || !textAreaValue) {
+    if (!emailRegex.test(email)) {
       Dialog.show({
         type: ALERT_TYPE.DANGER,
         title: "Hata!",
-        textBody: "Lütfen gerekli tüm alanları doldurunuz.",
+        textBody: "Lütfen geçerli bir e-posta adresi giriniz.",
+        button: "Tamam",
+      });
+      return;
+    }
+
+    if (!phoneRegex.test(phone)) {
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Hata!",
+        textBody: "Lütfen geçerli bir telefon numarası giriniz (10 haneli).",
+        button: "Tamam",
+      });
+      return;
+    }
+
+    if (
+      !selectedValue ||
+      !textAreaValue ||
+      !name ||
+      !email ||
+      !phone ||
+      !checked || // KVKK checkbox'ının seçili olup olmadığını kontrol et
+      !checked1 || // Çerez politikasının checkbox'ını kontrol et
+      !checked2 // Gizlilik sözleşmesi checkbox'ını kontrol et
+    ) {
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Hata!",
+        textBody:
+          "Lütfen gerekli tüm alanları doldurunuz ve sözleşmeleri onaylayınız.",
         button: "Tamam",
       });
       return;
     }
 
     setLoading(true);
-
     try {
       const formData = new FormData();
 
       formData.append("category", selectedValue);
       formData.append("description", textAreaValue);
+      formData.append("name", name); // Ad alanı
+      formData.append("email", email); // Eposta alanı
+      formData.append("phone", phone); // Telefon alanı
 
       if (selectedValue === "Evrak Gönderimi" && additionalOption) {
         formData.append("sendReason", additionalOption);
       }
 
-      if (image) {
+      if (image && image.length > 0) {
         formData.append(
           "file",
-          image
-            ? {
-                uri:
-                  Platform.OS === "android"
-                    ? image[0]
-                    : image[0]?.uri?.replace("file://", ""),
-                type: image[0]?.mimeType,
-                name:
-                  image[0]?.name == null
-                    ? "İmage.jpg"
-                    : image[0]?.name?.slice(-3) == "pdf"
-                    ? image[0]?.name
-                    : image?.fileName,
-              }
-            : null
+          {
+            uri:
+              Platform.OS === "android"
+                ? image[0]
+                : image[0]?.uri?.replace("file://", ""),
+            type: image[0]?.mimeType,
+            name:
+              image[0]?.name == null
+                ? "Image.jpg"
+                : image[0]?.name?.slice(-3) == "pdf"
+                ? image[0]?.name
+                : image?.fileName,
+          }
         );
       }
+      
 
       const response = await axios.post(
         "https://private.emlaksepette.com/api/support",
@@ -265,8 +304,14 @@ export default function SupportAdd() {
         setSelectedValue(null);
         setTextAreaValue("");
         setAdditionalOption("");
-        setimage([]); // PDF dosyasını sıfırla
+        setImage([]); // PDF dosyasını sıfırla
         setPickerKey(Math.random());
+        setName(""); // Ad alanını sıfırla
+        setEmail(""); // Eposta alanını sıfırla
+        setPhone(""); // Telefon alanını sıfırla
+        setChecked(false); // KVKK checkbox'ını sıfırla
+        setChecked1(false); // Çerez checkbox'ını sıfırla
+        setChecked2(false); // Gizlilik checkbox'ını sıfırla
       } else {
         Dialog.show({
           type: ALERT_TYPE.DANGER,
@@ -296,359 +341,700 @@ export default function SupportAdd() {
       setLoading(false);
     }
   };
-  const [selectedIndex, setselectedIndex] = useState(null);
-  const [ModalForDeleteFile, setModalForDeleteFile] = useState(false);
+
   const openModalAndDeleteFile = (index) => {
     setModalForDeleteFile(true);
     setselectedIndex(index);
   };
+
   const deleteFile = () => {
     const updatedFiles = [...image];
-    updatedFiles.splice(selectedIndex, 1); // İlgili indexteki öğeyi sil
-    setimage(updatedFiles); //
+    updatedFiles.splice(selectedIndex, 1);
+    setImage(updatedFiles);
     setModalForDeleteFile(false);
   };
+
+  const handleCheckboxChange = (
+    checked,
+    setChecked,
+    modalVisible,
+    setModalVisible,
+    deal
+  ) => {
+    if (checked) {
+      setModalVisible(false);
+      setChecked(false);
+    } else {
+      setModalVisible(true);
+      if (deal) {
+        GetDeal(deal);
+      }
+    }
+  };
+
+  const GetDeal = (deal) => {
+    // setDeals(deal)
+    fetchData(deal);
+  };
+
+  const fetchData = async (deal) => {
+    const url = `https://private.emlaksepette.com/api/sayfa/${deal}`;
+    try {
+      const data = await fetchFromURL(url);
+      setDeals(data.content);
+    } catch (error) {
+      console.error("İstek hatası:", error);
+    }
+  };
+
+  const fetchFromURL = async (url) => {
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return (
     <AlertNotificationRoot>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20} // iOS için offset ayarı
       >
-        <View style={{ marginTop: 20 }}>
-          <View style={{ paddingRight: 20, paddingLeft: 20 }}>
-            <Text style={styles.label}>Kategori Seç</Text>
-            <RNPickerSelect
-              value={selectedValue}
-              onValueChange={(value) => {
-                setSelectedValue(value);
-                handlePickerClose(); // Seçim yapıldığında picker'ı kapat
-              }}
-              onOpen={handlePickerOpen}
-              onClose={handlePickerClose}
-              items={[
-                { label: "Bilgi", value: "Bilgi" },
-                { label: "Evrak Gönderimi", value: "Evrak Gönderimi" },
-                { label: "Öneri & Teşekkür", value: "Öneri & Teşekkür" },
-                { label: "Şikayet", value: "Şikayet" },
-                { label: "Talep", value: "Talep" },
-              ]}
-              placeholder={{
-                label: "Bir seçenek belirleyin...",
-                value: null,
-                color: "#333",
-              }}
-              style={pickerSelectStyles}
-              useNativeAndroidPickerStyle={false}
-              Icon={() => (
-                <Icon
-                  style={{ marginRight: 20, marginTop: 10 }}
-                  name={getIconName()}
-                  size={20}
-                  color="gray"
-                />
-              )}
-            />
-          </View>
-          <View style={{ marginTop: 10 }}>
-            {selectedValue === "Evrak Gönderimi" && (
-              <View
-                style={{ paddingRight: 20, paddingLeft: 20, marginTop: 10 }}
-              >
+        <ScrollView>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Keyboard.dismiss();
+            }}
+          >
+            <View style={{ marginTop: 20 }}>
+              <View style={{ paddingRight: 20, paddingLeft: 20 }}>
+                <Text style={styles.label}>Kategori Seç</Text>
                 <RNPickerSelect
-                  onValueChange={(value) => setAdditionalOption(value)}
-                  onOpen={handlePicker2Open}
-                  onClose={handlePicker2Close}
+                  value={selectedValue}
+                  onValueChange={(value) => {
+                    setSelectedValue(value);
+                    handlePickerClose(); // Seçim yapıldığında picker'ı kapat
+                  }}
+                  onOpen={handlePickerOpen}
+                  onClose={handlePickerClose}
                   items={[
-                    {
-                      label: "Turizm Amaçlı Kiralama",
-                      value: "Turizm Amaçlı Kiralama",
-                    },
-                    {
-                      label: "İlan İlgili Belge Talebi",
-                      value: "İlan İlgili Belge Talebi",
-                    },
-                    { label: "Mağaza Açma", value: "Mağaza Açma" },
-                    { label: "Marka Tescili", value: "Marka Tescili" },
-                    {
-                      label: "Yetkili Bayii Belgesi",
-                      value: "Yetkili Bayii Belgesi",
-                    },
+                    { label: "Bilgi", value: "Bilgi" },
+                    { label: "Evrak Gönderimi", value: "Evrak Gönderimi" },
+                    { label: "Öneri & Teşekkür", value: "Öneri & Teşekkür" },
+                    { label: "Şikayet", value: "Şikayet" },
+                    { label: "Talep", value: "Talep" },
                   ]}
                   placeholder={{
-                    label: "Gönderim nedenini seçiniz...",
+                    label: "Bir seçenek belirleyin...",
                     value: null,
                     color: "#333",
                   }}
                   style={pickerSelectStyles}
                   useNativeAndroidPickerStyle={false}
-                  Icon={() => {
-                    return (
-                      <Icon
-                        style={{ marginRight: 20, marginTop: 10 }}
-                        name={iconName2}
-                        size={20}
-                        color="gray"
+                  Icon={() => (
+                    <Icon
+                      style={{ marginRight: 20, marginTop: 10 }}
+                      name={getIconName()}
+                      size={20}
+                      color="gray"
+                    />
+                  )}
+                />
+                <Text></Text>
+                <View>
+                  {selectedValue === "Evrak Gönderimi" && (
+                    <View style={{}}>
+                      <RNPickerSelect
+                        onValueChange={(value) => setAdditionalOption(value)}
+                        onOpen={handlePicker2Open}
+                        onClose={handlePicker2Close}
+                        items={[
+                          {
+                            label: "Turizm Amaçlı Kiralama",
+                            value: "Turizm Amaçlı Kiralama",
+                          },
+                          {
+                            label: "İlan İlgili Belge Talebi",
+                            value: "İlan İlgili Belge Talebi",
+                          },
+                          { label: "Mağaza Açma", value: "Mağaza Açma" },
+                          { label: "Marka Tescili", value: "Marka Tescili" },
+                          {
+                            label: "Yetkili Bayii Belgesi",
+                            value: "Yetkili Bayii Belgesi",
+                          },
+                        ]}
+                        placeholder={{
+                          label: "Gönderim nedenini seçiniz...",
+                          value: null,
+                          color: "#333",
+                        }}
+                        style={pickerSelectStyles}
+                        useNativeAndroidPickerStyle={false}
+                        Icon={() => {
+                          return (
+                            <Icon
+                              style={{ marginRight: 20, marginTop: 10 }}
+                              name={iconName2}
+                              size={20}
+                              color="gray"
+                            />
+                          );
+                        }}
                       />
-                    );
-                  }}
+                    </View>
+                  )}
+                </View>
+                <Text style={styles.label}>Adınız</Text>
+                <TextInput
+                  style={styles.input}
+                  value={name}
+                  onChangeText={(text) => setName(text)}
+                  placeholder="Adınızı giriniz"
+                />
+                <Text style={styles.label}>E-Posta</Text>
+                <TextInput
+                  style={styles.input}
+                  value={email}
+                  onChangeText={(text) => setEmail(text)}
+                  placeholder="E-posta adresinizi giriniz"
+                  autoCapitalize="none"
+                />
+                <Text style={styles.label}>Telefon</Text>
+                <TextInput
+                  style={styles.input}
+                  value={phone}
+                  onChangeText={(text) => setPhone(text)}
+                  placeholder="Telefon numaranızı giriniz"
+                  keyboardType="number-pad"
                 />
               </View>
-            )}
-          </View>
-          <View
-            style={{
-              paddingRight: 20,
-              paddingLeft: 20,
-              marginTop: 10,
-              borderRadius: 50,
-              borderColor: "#e6e6e6",
-            }}
-          >
-            <TextInput
-              style={styles.textArea}
-              multiline
-              numberOfLines={4}
-              onChangeText={(text) => setTextAreaValue(text)}
-              value={textAreaValue}
-              placeholder="Metin girin..."
-            />
-          </View>
-          <View style={{ marginTop: 10, paddingRight: 20, paddingLeft: 20 }}>
-            {image.length > 0 && (
-              <View style={{ paddingTop: 2, paddingBottom: 14 }}>
-                <Text style={{ color: "#333", fontSize: 13 }}>
-                  Dosyayı Açmak İçin Üstüne Tıklayın
-                </Text>
-              </View>
-            )}
 
-            <View
-              style={{
-                flexDirection: "row",
-                gap: 13,
-                flexWrap: "wrap",
-                paddingBottom: 10,
-              }}
-            >
-              {image &&
-                image.map((image, _i) => (
-                  <TouchableOpacity
+              <View
+                style={{
+                  paddingRight: 20,
+                  paddingLeft: 20,
+                  marginTop: 10,
+                  borderRadius: 50,
+                  borderColor: "#e6e6e6",
+                }}
+              >
+                <Text style={styles.label}>Açıklama</Text>
+                <TextInput
+                  style={styles.textArea}
+                  multiline
+                  numberOfLines={4}
+                  onChangeText={(text) => setTextAreaValue(text)}
+                  value={textAreaValue}
+                  placeholder="Metin girin..."
+                />
+              </View>
+              <View
+                style={{ marginTop: 10, paddingRight: 20, paddingLeft: 20 }}
+              >
+                {image.length > 0 && (
+                  <View style={{ paddingTop: 2, paddingBottom: 14 }}>
+                    <Text style={{ color: "#333", fontSize: 13 }}>
+                      Dosyayı Açmak İçin Üstüne Tıklayın
+                    </Text>
+                  </View>
+                )}
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 13,
+                    flexWrap: "wrap",
+                    paddingBottom: 10,
+                  }}
+                >
+                  {image &&
+                    image.map((image, _i) => (
+                      <TouchableOpacity
+                        style={{
+                          width: 90,
+                          height: 90,
+                          backgroundColor: "red",
+                          borderRadius: 80,
+                        }}
+                        onPress={() => {
+                          if (image?.name?.slice(-3) !== "pdf") {
+                            OpenImage(image.uri);
+                          } else {
+                            if (Platform.OS === "android") {
+                              openPdf();
+                            } else if (Platform.OS === "ios") {
+                              navigation.navigate("DecontPdf", {
+                                name: image.name,
+                                pdfUri: image?.uri,
+                              });
+                            }
+                          }
+                        }}
+                      >
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: "#cccccc",
+                            position: "absolute",
+                            zIndex: 1,
+                            padding: 5,
+                            borderRadius: 50,
+                            right: -9,
+                            top: -8,
+                          }}
+                          onPress={() => {
+                            openModalAndDeleteFile(_i);
+                          }}
+                        >
+                          <Icon3 name="close" size={18} color={"white"} />
+                        </TouchableOpacity>
+
+                        {image?.name?.slice(-3) == "pdf" ? (
+                          <View
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              backgroundColor: "#EA2C2E",
+                              borderRadius: 8,
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: "white",
+                                fontSize: 18,
+                                fontWeight: "700",
+                              }}
+                            >
+                              PDF
+                            </Text>
+                          </View>
+                        ) : (
+                          <Image
+                            style={{ width: "100%", height: "100%" }}
+                            source={{ uri: image?.uri }}
+                            borderRadius={8}
+                          />
+                        )}
+                      </TouchableOpacity>
+                    ))}
+                </View>
+                <ImageViewing
+                  images={[{ uri: selectedUri }]}
+                  imageIndex={0}
+                  visible={isVisible}
+                  onRequestClose={() => setIsVisible(false)}
+                />
+                <AwesomeAlert
+                  show={ModalForDeleteFile}
+                  showProgress={false}
+                  titleStyle={{
+                    color: "#333",
+                    fontSize: 13,
+                    fontWeight: "700",
+                    textAlign: "center",
+                    margin: 5,
+                  }}
+                  title={"Dosyayı Sil"}
+                  messageStyle={{ textAlign: "center" }}
+                  message={`Seçili dosyayı silmek istediğinizden emin misiniz?`}
+                  closeOnTouchOutside={true}
+                  closeOnHardwareBackPress={false}
+                  showCancelButton={true}
+                  showConfirmButton={true}
+                  cancelText="Hayır"
+                  confirmText="Evet"
+                  cancelButtonColor="#ce4d63"
+                  confirmButtonColor="#1d8027"
+                  onCancelPressed={() => {
+                    setModalForDeleteFile(false);
+                  }}
+                  onConfirmPressed={() => {
+                    deleteFile();
+                  }}
+                  confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+                  cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+                />
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#FFCE86",
+                    justifyContent: "center",
+                    borderRadius: 5,
+                    padding: 10,
+                    marginBottom: 10,
+                  }}
+                  onPress={() => {
+                    if (image.length == 0) {
+                      setchoose(true);
+                    } else {
+                      Alert.alert("Sadece 1 adet Dosya yükleyebilirsiniz");
+                    }
+                  }}
+                  // PDF seçmek için tıklanabilir
+                >
+                  <Text style={{ textAlign: "center", color: "black" }}>
+                    Dosya Ekle
+                  </Text>
+                </TouchableOpacity>
+
+                <View>
+                  {/* Accept KVKK Checkbox */}
+                  <View
                     style={{
-                      width: 90,
-                      height: 90,
-                      backgroundColor: "red",
-                      borderRadius: 80,
-                    }}
-                    onPress={() => {
-                      if (image?.name?.slice(-3) !== "pdf") {
-                        OpenImage(image.uri);
-                      } else {
-                        if (Platform.OS === "android") {
-                          openPdf();
-                        } else if (Platform.OS === "ios") {
-                          navigation.navigate("DecontPdf", {
-                            name: image.name,
-                            pdfUri: image?.uri,
-                          });
-                        }
-                      }
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginTop: 10,
                     }}
                   >
                     <TouchableOpacity
-                      style={{
-                        backgroundColor: "#cccccc",
-                        position: "absolute",
-                        zIndex: 1,
-                        padding: 5,
-                        borderRadius: 50,
-                        right: -9,
-                        top: -8,
-                      }}
-                      onPress={() => {
-                        openModalAndDeleteFile(_i);
-                      }}
+                      onPress={() =>
+                        handleCheckboxChange(
+                          checked,
+                          setChecked,
+                          modalVisible,
+                          setModalVisible,
+                          "kvkk-politikasi"
+                        )
+                      }
+                      style={styles.checkboxContainer}
                     >
-                      <Icon3 name="close" size={18} color={"white"} />
+                      {checked ? (
+                        <FontAwesome5Icon
+                          name="check-square"
+                          size={18}
+                          color="black"
+                        />
+                      ) : (
+                        <FontAwesome5Icon
+                          name="square"
+                          size={18}
+                          color="black"
+                        />
+                      )}
+                      <Text
+                        style={[
+                          styles.checkboxLabel,
+                          { color: errorStatu === 5 ? "red" : "black" },
+                        ]}
+                      >
+                        <Text
+                          style={{
+                            color: errorStatu === 5 ? "red" : "#027BFF",
+                            fontSize: 13,
+                          }}
+                        >
+                          KVKK politakasını
+                        </Text>{" "}
+                        okudum onaylıyorum.
+                      </Text>
                     </TouchableOpacity>
+                  </View>
 
-                    {image?.name?.slice(-3) == "pdf" ? (
-                      <View
+                  {/* Accept Cerez Checkbox */}
+                  <TouchableOpacity
+                    onPress={() =>
+                      handleCheckboxChange(
+                        checked1,
+                        setChecked1,
+                        modalVisible2,
+                        setModalVisible2,
+                        "cerez-politikasi"
+                      )
+                    }
+                    style={styles.checkboxContainer}
+                  >
+                    {checked1 ? (
+                      <FontAwesome5Icon
+                        name="check-square"
+                        size={18}
+                        color="black"
+                      />
+                    ) : (
+                      <FontAwesome5Icon name="square" size={18} color="black" />
+                    )}
+                    <Text
+                      style={[
+                        styles.checkboxLabel,
+                        { color: errorStatu === 5 ? "red" : "black" },
+                      ]}
+                    >
+                      <Text
                         style={{
-                          width: "100%",
-                          height: "100%",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          backgroundColor: "#EA2C2E",
-                          borderRadius: 8,
+                          color: errorStatu === 5 ? "red" : "#027BFF",
+                          fontSize: 13,
+                        }}
+                      >
+                        Çerez politakasını
+                      </Text>{" "}
+                      okudum onaylıyorum.
+                    </Text>
+                  </TouchableOpacity>
+
+                  {/* Accept gizlilik Checkbox */}
+                  <TouchableOpacity
+                    onPress={() =>
+                      handleCheckboxChange(
+                        checked2,
+                        setChecked2,
+                        modalVisible3,
+                        setModalVisible3,
+                        "gizlilik-sozlesmesi-ve-aydinlatma-metni"
+                      )
+                    }
+                    style={styles.checkboxContainer}
+                  >
+                    {checked2 ? (
+                      <FontAwesome5Icon
+                        name="check-square"
+                        size={18}
+                        color="black"
+                      />
+                    ) : (
+                      <FontAwesome5Icon name="square" size={18} color="black" />
+                    )}
+                    <Text
+                      style={[
+                        styles.checkboxLabel,
+                        { color: errorStatu === 5 ? "red" : "black" },
+                      ]}
+                    >
+                      <Text
+                        style={{
+                          color: errorStatu === 5 ? "red" : "#027BFF",
+                          fontSize: 13,
+                        }}
+                      >
+                        Gizlilik sözleşmesi ve aydınlatma metnini
+                      </Text>{" "}
+                      okudum onaylıyorum.
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#ea2b2e",
+                    justifyContent: "center",
+                    borderRadius: 5,
+                    padding: 10,
+                  }}
+                  onPress={submitData}
+                  disabled={loading}
+                >
+                  <Text style={{ textAlign: "center", color: "white" }}>
+                    {loading ? "Gönderiliyor..." : "Gönder"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <Modal
+                isVisible={modalVisible}
+                onBackdropPress={() => setModalVisible(false)}
+                backdropColor="transparent"
+                style={styles.modal2}
+                animationIn={"fadeInRightBig"}
+                animationOut={"fadeOutRightBig"}
+              >
+                <SafeAreaView style={styles.modalContent2}>
+                  <ScrollView
+                    style={{ padding: 20 }}
+                    contentContainerStyle={{ gap: 20 }}
+                  >
+                    <HTML source={{ html: Deals }} contentWidth={100} />
+
+                    <View style={{ alignItems: "center", paddingBottom: 25 }}>
+                      <TouchableOpacity
+                        style={styles.Acceptbtn}
+                        onPress={() => {
+                          setChecked(!checked);
+                          setModalVisible(false);
                         }}
                       >
                         <Text
                           style={{
                             color: "white",
-                            fontSize: 18,
-                            fontWeight: "700",
+                            fontWeight: "bold",
+                            width: "100%",
+                            textAlign: "center",
                           }}
                         >
-                          PDF
+                          Okudum kabul ediyorum
                         </Text>
-                      </View>
-                    ) : (
-                      <Image
-                        style={{ width: "100%", height: "100%" }}
-                        source={{ uri: image?.uri }}
-                        borderRadius={8}
-                      />
-                    )}
-                  </TouchableOpacity>
-                ))}
-            </View>
-            <ImageViewing
-              images={[{ uri: selectedUri }]}
-              imageIndex={0}
-              visible={isVisible}
-              onRequestClose={() => setIsVisible(false)}
-            />
-            <AwesomeAlert
-              show={ModalForDeleteFile}
-              showProgress={false}
-              titleStyle={{
-                color: "#333",
-                fontSize: 13,
-                fontWeight: "700",
-                textAlign: "center",
-                margin: 5,
-              }}
-              title={"Dosyayı Sil"}
-              messageStyle={{ textAlign: "center" }}
-              message={`Seçili dosyayı silmek istediğinizden emin misiniz?`}
-              closeOnTouchOutside={true}
-              closeOnHardwareBackPress={false}
-              showCancelButton={true}
-              showConfirmButton={true}
-              cancelText="Hayır"
-              confirmText="Evet"
-              cancelButtonColor="#ce4d63"
-              confirmButtonColor="#1d8027"
-              onCancelPressed={() => {
-                setModalForDeleteFile(false);
-              }}
-              onConfirmPressed={() => {
-                deleteFile();
-              }}
-              confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-              cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-            />
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#FFCE86",
-                justifyContent: "center",
-                borderRadius: 5,
-                padding: 10,
-                marginBottom: 10,
-              }}
-              onPress={() => {
-                if (image.length == 0) {
-                  setchoose(true);
-                } else {
-                  Alert.alert("Sadece 1 adet Dosya yükleyebilirsiniz");
-                }
-              }}
-              // PDF seçmek için tıklanabilir
-            >
-              <Text style={{ textAlign: "center", color: "black" }}>
-                Dosya Yükle
-              </Text>
-            </TouchableOpacity>
+                      </TouchableOpacity>
+                    </View>
+                  </ScrollView>
+                </SafeAreaView>
+              </Modal>
 
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#ea2b2e",
-                justifyContent: "center",
-                borderRadius: 5,
-                padding: 10,
-              }}
-              onPress={submitData}
-              disabled={loading} // Gönderim sırasında butona tıklanmasını engelle
-            >
-              <Text style={{ textAlign: "center", color: "white" }}>
-                {loading ? "Gönderiliyor..." : "Gönder"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <Modal
-            isVisible={choose}
-            style={styles.modal2}
-            animationIn={"slideInUp"}
-            animationOut={"slideOutDown"}
-            onBackdropPress={() => setchoose(false)}
-            swipeDirection={["down"]}
-            onSwipeComplete={() => setchoose(false)}
-          >
-            <View style={[styles.modalContent2, { paddingBottom: 10 }]}>
-              <View style={{ paddingTop: 10, alignItems: "center" }}>
-                <TouchableOpacity
-                  style={{
-                    width: "15%",
-                    backgroundColor: "#c2c4c6",
-                    padding: 4,
-                    borderRadius: 50,
-                  }}
-                ></TouchableOpacity>
-              </View>
-              <View style={{ padding: 20, gap: 35, marginBottom: 10 }}>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                  onPress={() => pickImage()}
-                >
-                  <Icon3 name="photo" size={23} color={"#333"} />
-                  <Text
-                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+              <Modal
+                isVisible={modalVisible2}
+                onBackdropPress={() => setModalVisible2(false)}
+                backdropColor="transparent"
+                animationIn={"fadeInRightBig"}
+                animationOut={"fadeOutRightBig"}
+                style={styles.modal2}
+              >
+                <SafeAreaView style={styles.modalContent2}>
+                  <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{ padding: 10 }}
                   >
-                    Kütüphaneden Seç
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                  onPress={() => takePhoto()}
-                >
-                  <Icon3 name="add-a-photo" size={21} color={"#333"} />
-                  <Text
-                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                    <HTML source={{ html: Deals }} contentWidth={100} />
+
+                    <View style={{ alignItems: "center", paddingBottom: 20 }}>
+                      <TouchableOpacity
+                        style={styles.Acceptbtn}
+                        onPress={() => {
+                          setChecked1(true);
+                          setModalVisible2(false);
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "white",
+                            fontWeight: "bold",
+                            width: "100%",
+                            textAlign: "center",
+                          }}
+                        >
+                          Okudum kabul ediyorum
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </ScrollView>
+                </SafeAreaView>
+              </Modal>
+
+              <Modal
+                isVisible={modalVisible3}
+                onBackdropPress={() => setModalVisible(false)}
+                backdropColor="transparent"
+                animationIn={"fadeInRightBig"}
+                animationOut={"fadeOutRightBig"}
+                style={styles.modal2}
+              >
+                <SafeAreaView style={styles.modalContent2}>
+                  <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{ padding: 20 }}
                   >
-                    Fotoğraf Çek
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                  onPress={() => {
-                    pickPDF();
-                  }}
-                >
-                  <Icon3 name="file-open" size={21} color={"#333"} />
-                  <Text
-                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
-                  >
-                    Pdf Yükle
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                    <HTML source={{ html: Deals }} contentWidth={100} />
+
+                    <View style={{ alignItems: "center", paddingBottom: 20 }}>
+                      <TouchableOpacity
+                        style={styles.Acceptbtn}
+                        onPress={() => {
+                          setChecked2(true);
+                          setModalVisible3(false);
+                        }}
+                      >
+                        <Text
+                          style={{
+                            color: "white",
+                            fontWeight: "bold",
+                            width: "100%",
+                            textAlign: "center",
+                          }}
+                        >
+                          Okudum kabul ediyorum
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </ScrollView>
+                </SafeAreaView>
+              </Modal>
+
+              <Modal
+                isVisible={choose}
+                style={styles.modal2}
+                animationIn={"slideInUp"}
+                animationOut={"slideOutDown"}
+                onBackdropPress={() => setchoose(false)}
+                swipeDirection={["down"]}
+                onSwipeComplete={() => setchoose(false)}
+              >
+                <View style={[styles.modalContent2, { paddingBottom: 10 }]}>
+                  <View style={{ paddingTop: 10, alignItems: "center" }}>
+                    <TouchableOpacity
+                      style={{
+                        width: "15%",
+                        backgroundColor: "#c2c4c6",
+                        padding: 4,
+                        borderRadius: 50,
+                      }}
+                    ></TouchableOpacity>
+                  </View>
+                  <View style={{ padding: 20, gap: 35, marginBottom: 10 }}>
+                    <TouchableOpacity
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 10,
+                      }}
+                      onPress={() => pickImage()}
+                    >
+                      <Icon3 name="photo" size={23} color={"#333"} />
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: "#333",
+                          fontWeight: "700",
+                        }}
+                      >
+                        Kütüphaneden Seç
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 10,
+                      }}
+                      onPress={() => takePhoto()}
+                    >
+                      <Icon3 name="add-a-photo" size={21} color={"#333"} />
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: "#333",
+                          fontWeight: "700",
+                        }}
+                      >
+                        Fotoğraf Çek
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 10,
+                      }}
+                      onPress={() => {
+                        pickPDF();
+                      }}
+                    >
+                      <Icon3 name="file-open" size={21} color={"#333"} />
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: "#333",
+                          fontWeight: "700",
+                        }}
+                      >
+                        Pdf Yükle
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
             </View>
-          </Modal>
-        </View>
-      </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </AlertNotificationRoot>
   );
 }
@@ -660,7 +1046,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    marginBottom: 10,
+    padding: 10,
   },
   textArea: {
     height: 100,
@@ -671,7 +1057,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     fontSize: 16,
-    marginTop: 20,
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
@@ -722,6 +1107,34 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  input: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 4,
+    color: "black",
+    paddingRight: 30,
+    borderWidth: 1,
+    borderColor: "#e6e6e6",
+  },
+  checkboxLabel: {
+    fontSize: 13,
+    marginLeft: 10,
+    marginBottom: 10,
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    marginHorizontal: 10,
+    marginBottom: 3,
+  },
+  Acceptbtn: {
+    backgroundColor: "#2aaa46",
+    padding: 10,
+    width: "100%",
+    textAlign: "center",
+    borderRadius: 5,
+    alignItems: "center",
   },
 });
 
