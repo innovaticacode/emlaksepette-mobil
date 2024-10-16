@@ -65,6 +65,9 @@ export default function SupportAdd() {
   const [selectedUri, setselectedUri] = useState(null);
   const [selectedIndex, setselectedIndex] = useState(null);
   const [ModalForDeleteFile, setModalForDeleteFile] = useState(false);
+  const [image, setImage] = useState([]);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const phoneRegex = /^[0-9]{10}$/;
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -150,7 +153,6 @@ export default function SupportAdd() {
     setIconName2("angle-down");
   };
 
-  const [image, setImage] = useState([]);
   const pickImage = async () => {
     // Kamera veya galeriden izin isteği
     let permissionResult =
@@ -206,15 +208,35 @@ export default function SupportAdd() {
   };
 
   const submitData = async () => {
+    if (!emailRegex.test(email)) {
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Hata!",
+        textBody: "Lütfen geçerli bir e-posta adresi giriniz.",
+        button: "Tamam",
+      });
+      return;
+    }
+
+    if (!phoneRegex.test(phone)) {
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Hata!",
+        textBody: "Lütfen geçerli bir telefon numarası giriniz (10 haneli).",
+        button: "Tamam",
+      });
+      return;
+    }
+
     if (
       !selectedValue ||
       !textAreaValue ||
       !name ||
       !email ||
       !phone ||
-      !checked ||
-      !checked1 ||
-      !checked2
+      !checked || // KVKK checkbox'ının seçili olup olmadığını kontrol et
+      !checked1 || // Çerez politikasının checkbox'ını kontrol et
+      !checked2 // Gizlilik sözleşmesi checkbox'ını kontrol et
     ) {
       Dialog.show({
         type: ALERT_TYPE.DANGER,
@@ -232,34 +254,33 @@ export default function SupportAdd() {
 
       formData.append("category", selectedValue);
       formData.append("description", textAreaValue);
-      formData.append("name", name);
-      formData.append("email", email);
-      formData.append("phone", phone);
+      formData.append("name", name); // Ad alanı
+      formData.append("email", email); // Eposta alanı
+      formData.append("phone", phone); // Telefon alanı
 
       if (selectedValue === "Evrak Gönderimi" && additionalOption) {
         formData.append("sendReason", additionalOption);
       }
 
-      if (image) {
+      if (image && image.length > 0) {
         formData.append(
           "file",
-          image
-            ? {
-                uri:
-                  Platform.OS === "android"
-                    ? image[0]
-                    : image[0]?.uri?.replace("file://", ""),
-                type: image[0]?.mimeType,
-                name:
-                  image[0]?.name == null
-                    ? "İmage.jpg"
-                    : image[0]?.name?.slice(-3) == "pdf"
-                    ? image[0]?.name
-                    : image?.fileName,
-              }
-            : null
+          {
+            uri:
+              Platform.OS === "android"
+                ? image[0]
+                : image[0]?.uri?.replace("file://", ""),
+            type: image[0]?.mimeType,
+            name:
+              image[0]?.name == null
+                ? "Image.jpg"
+                : image[0]?.name?.slice(-3) == "pdf"
+                ? image[0]?.name
+                : image?.fileName,
+          }
         );
       }
+      
 
       const response = await axios.post(
         "https://private.emlaksepette.com/api/support",
@@ -283,14 +304,14 @@ export default function SupportAdd() {
         setSelectedValue(null);
         setTextAreaValue("");
         setAdditionalOption("");
-        setImage([]);
+        setImage([]); // PDF dosyasını sıfırla
         setPickerKey(Math.random());
-        setName("");
-        setEmail("");
-        setPhone("");
-        setChecked(false);
-        setChecked1(false);
-        setChecked2(false);
+        setName(""); // Ad alanını sıfırla
+        setEmail(""); // Eposta alanını sıfırla
+        setPhone(""); // Telefon alanını sıfırla
+        setChecked(false); // KVKK checkbox'ını sıfırla
+        setChecked1(false); // Çerez checkbox'ını sıfırla
+        setChecked2(false); // Gizlilik checkbox'ını sıfırla
       } else {
         Dialog.show({
           type: ALERT_TYPE.DANGER,
@@ -422,6 +443,51 @@ export default function SupportAdd() {
                     />
                   )}
                 />
+                <Text></Text>
+                <View>
+                  {selectedValue === "Evrak Gönderimi" && (
+                    <View style={{}}>
+                      <RNPickerSelect
+                        onValueChange={(value) => setAdditionalOption(value)}
+                        onOpen={handlePicker2Open}
+                        onClose={handlePicker2Close}
+                        items={[
+                          {
+                            label: "Turizm Amaçlı Kiralama",
+                            value: "Turizm Amaçlı Kiralama",
+                          },
+                          {
+                            label: "İlan İlgili Belge Talebi",
+                            value: "İlan İlgili Belge Talebi",
+                          },
+                          { label: "Mağaza Açma", value: "Mağaza Açma" },
+                          { label: "Marka Tescili", value: "Marka Tescili" },
+                          {
+                            label: "Yetkili Bayii Belgesi",
+                            value: "Yetkili Bayii Belgesi",
+                          },
+                        ]}
+                        placeholder={{
+                          label: "Gönderim nedenini seçiniz...",
+                          value: null,
+                          color: "#333",
+                        }}
+                        style={pickerSelectStyles}
+                        useNativeAndroidPickerStyle={false}
+                        Icon={() => {
+                          return (
+                            <Icon
+                              style={{ marginRight: 20, marginTop: 10 }}
+                              name={iconName2}
+                              size={20}
+                              color="gray"
+                            />
+                          );
+                        }}
+                      />
+                    </View>
+                  )}
+                </View>
                 <Text style={styles.label}>Adınız</Text>
                 <TextInput
                   style={styles.input}
@@ -443,52 +509,8 @@ export default function SupportAdd() {
                   value={phone}
                   onChangeText={(text) => setPhone(text)}
                   placeholder="Telefon numaranızı giriniz"
+                  keyboardType="number-pad"
                 />
-              </View>
-
-              <View>
-                {selectedValue === "Evrak Gönderimi" && (
-                  <View style={{ paddingRight: 20, paddingLeft: 20 }}>
-                    <RNPickerSelect
-                      onValueChange={(value) => setAdditionalOption(value)}
-                      onOpen={handlePicker2Open}
-                      onClose={handlePicker2Close}
-                      items={[
-                        {
-                          label: "Turizm Amaçlı Kiralama",
-                          value: "Turizm Amaçlı Kiralama",
-                        },
-                        {
-                          label: "İlan İlgili Belge Talebi",
-                          value: "İlan İlgili Belge Talebi",
-                        },
-                        { label: "Mağaza Açma", value: "Mağaza Açma" },
-                        { label: "Marka Tescili", value: "Marka Tescili" },
-                        {
-                          label: "Yetkili Bayii Belgesi",
-                          value: "Yetkili Bayii Belgesi",
-                        },
-                      ]}
-                      placeholder={{
-                        label: "Gönderim nedenini seçiniz...",
-                        value: null,
-                        color: "#333",
-                      }}
-                      style={pickerSelectStyles}
-                      useNativeAndroidPickerStyle={false}
-                      Icon={() => {
-                        return (
-                          <Icon
-                            style={{ marginRight: 20, marginTop: 10 }}
-                            name={iconName2}
-                            size={20}
-                            color="gray"
-                          />
-                        );
-                      }}
-                    />
-                  </View>
-                )}
               </View>
 
               <View
