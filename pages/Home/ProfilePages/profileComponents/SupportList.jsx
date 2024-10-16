@@ -63,10 +63,12 @@ export default function SupportList() {
         })
         .then((response) => {
           let data = response.data.data;
-  
+
           // Verileri oluşturulma tarihine göre sıralama (en yeni en üstte olacak şekilde)
-          data = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  
+          data = data.sort(
+            (a, b) => new Date(b.created_at) - new Date(a.created_at)
+          );
+
           setSupportData(data);
           const paths = data.map((item) => item.file_path);
           setPdfFile(paths);
@@ -79,7 +81,6 @@ export default function SupportList() {
         });
     }
   }, [user]);
-  
 
   async function saveFile(uri, filename, mimetype) {
     if (Platform.OS === "android") {
@@ -120,7 +121,7 @@ export default function SupportList() {
   }
 
   const OpenImage = (uri) => {
-    console.log('Opening image with URI:', uri); // URI'nın doğru olup olmadığını kontrol edin
+    console.log("Opening image with URI:", uri); // URI'nın doğru olup olmadığını kontrol edin
     setIsVisible(true);
     setselectedUri(uri);
   };
@@ -294,8 +295,6 @@ export default function SupportList() {
                       </Text>
                     </View>
 
-                    
-
                     <View
                       style={{
                         marginTop: 10,
@@ -330,9 +329,18 @@ export default function SupportList() {
                             >
                               <AntDesign
                                 style={{ marginRight: 0 }}
-                                name="pdffile1"
-                                color={"red"}
+                                name={
+                                  support.file_path.endsWith(".pdf")
+                                    ? "pdffile1"
+                                    : "picture"
+                                }
+                                color={
+                                  support.file_path.endsWith(".pdf")
+                                    ? "red"
+                                    : "red"
+                                }
                               />
+
                               <Text
                                 style={{
                                   textAlign: "center",
@@ -448,7 +456,9 @@ export default function SupportList() {
       </Modal>
       <ImageViewing
         images={[
-          { uri: `https://private.emlaksepette.com/storage/support_images/${selectedUri}` },
+          {
+            uri: `https://private.emlaksepette.com/storage/support_images/${selectedUri}`,
+          },
         ]}
         imageIndex={0}
         visible={isVisible}
