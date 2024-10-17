@@ -18,7 +18,7 @@ import { apiUrl } from "../../../components/methods/apiRequest";
 export default function CommentsOfBrands(props) {
   const { id } = props;
   const [activeIndex, setActiveIndex] = useState(0);
-  const [starIndex, setStarIndex] = useState(5);
+  const [starIndex, setStarIndex] = useState(0);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filteredComments, setFilteredComments] = useState([]);
@@ -26,7 +26,18 @@ export default function CommentsOfBrands(props) {
   const [imagesComments, setImagesComments] = useState({});
 
   const handleStar = (index) => {
-    setStarIndex(index);
+    setLoading(true);
+
+    if (index === starIndex) {
+      setTimeout(() => {
+        setStarIndex(0);
+        return setLoading(false);
+      }, 600);
+    }
+    setTimeout(() => {
+      setStarIndex(index);
+      setLoading(false);
+    }, 500);
   };
 
   const handleActive = (index) => {
@@ -99,24 +110,29 @@ export default function CommentsOfBrands(props) {
 
     let filtered = [];
 
-    switch (starIndex) {
-      case 1:
-        filtered = oneStarComments;
-        break;
-      case 2:
-        filtered = twoStarComments;
-        break;
-      case 3:
-        filtered = threeStarComments;
-        break;
-      case 4:
-        filtered = fourStarComments;
-        break;
-      case 5:
-        filtered = fiveStarComments;
-        break;
-      default:
-        filtered = fiveStarComments;
+    // Eğer starIndex 0 ise, tüm yorumları göster
+    if (starIndex === 0) {
+      filtered = targetComments; // Tüm yorumları göster
+    } else {
+      switch (starIndex) {
+        case 1:
+          filtered = oneStarComments;
+          break;
+        case 2:
+          filtered = twoStarComments;
+          break;
+        case 3:
+          filtered = threeStarComments;
+          break;
+        case 4:
+          filtered = fourStarComments;
+          break;
+        case 5:
+          filtered = fiveStarComments;
+          break;
+        default:
+          filtered = fiveStarComments;
+      }
     }
 
     return setFilteredComments(filtered);
@@ -217,14 +233,14 @@ export default function CommentsOfBrands(props) {
                     ? item?.project?.project_title
                     : item?.housing?.title
                 }
-                star={starIndex}
+                star={starIndex === 0 ? item?.rate : starIndex}
                 desc={item?.comment}
                 info={`${formattedDate} | ${item?.user?.name}`}
                 images={item?.images}
               />
             );
           }}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
           showsVerticalScrollIndicator={false}
         />
       ) : (
