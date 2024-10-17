@@ -69,7 +69,7 @@ const DrawerMenu = () => {
         <View style={styles.mainContainer}>
           <View style={styles.closeIconContainer}>
             <TouchableOpacity
-              onPress={() => navigation.dispatch(DrawerActions.closeDrawer())} // Drawer'ı kapatıyoruz
+              onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
             >
               <IconAntDesign name="close" size={22} color={"#333"} />
             </TouchableOpacity>
@@ -97,10 +97,10 @@ const DrawerMenu = () => {
                 <TouchableOpacity
                   disabled={user.access_token ? true : false}
                   onPress={() => {
-                    setIsDrawerOpen(false);
+                    navigation.dispatch(DrawerActions.closeDrawer());
                     setTimeout(() => {
                       navigation.navigate("Login");
-                    }, 1000);
+                    }, 200);
                   }}
                 >
                   <Text style={styles.userName}>
@@ -147,10 +147,10 @@ const DrawerMenu = () => {
           <View style={styles.grayArea}>
             <View style={styles.categoryWrapper}>
               <TouchableOpacity
-                onPress={() => navigateToScreen("RealtorClubExplore")}
+                onPress={() => navigateToScreen("SellAndRent")}
               >
                 <Categories
-                  category={"Emlak Kulüp Nedir ?"}
+                  category={"Sat Kirala Nedir ?"}
                   materialIcon={"groups-2"}
                 />
               </TouchableOpacity>
@@ -168,7 +168,7 @@ const DrawerMenu = () => {
                 onPress={() => navigateToScreen("SalePageMain")}
               >
                 <Categories
-                  category={"Satış Noktası Ol"}
+                  category={"Satış Noktası Ol Nedir?"}
                   iconName={"handshake"}
                 />
               </TouchableOpacity>
