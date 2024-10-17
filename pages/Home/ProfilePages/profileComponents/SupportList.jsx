@@ -9,6 +9,7 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   Dimensions,
+  TextInput,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native-paper";
@@ -38,6 +39,8 @@ export default function SupportList() {
   const nav = useNavigation();
   const [isVisible, setIsVisible] = useState(false);
   const [selectedUri, setselectedUri] = useState(null);
+  const [trackingCode, setTrackingCode] = useState("");
+  const [trackingData, setTrackingData] = useState(null);
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -54,33 +57,45 @@ export default function SupportList() {
   };
 
   useEffect(() => {
-    if (user.access_token) {
-      axios
-        .get("https://private.emlaksepette.com/api/support", {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        })
-        .then((response) => {
-          let data = response.data.data;
+    const fetchSupportData = async () => {
+      setLoading(true); // İlk olarak loading durumunu başlat
 
-          // Verileri oluşturulma tarihine göre sıralama (en yeni en üstte olacak şekilde)
-          data = data.sort(
-            (a, b) => new Date(b.created_at) - new Date(a.created_at)
-          );
+      if (!user.access_token) {
+        setLoading(false); // Token yoksa loading'i durdur
+        return; // Token yoksa daha fazla işlem yapma
+      }
 
-          setSupportData(data);
-          const paths = data.map((item) => item.file_path);
-          setPdfFile(paths);
-        })
-        .catch((error) => {
-          console.error("API Hatası:", error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  }, [user]);
+      try {
+        const response = await axios.get(
+          "https://private.emlaksepette.com/api/support",
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+
+        let data = response.data.data;
+
+        // Verileri oluşturulma tarihine göre sıralama (en yeni en üstte olacak şekilde)
+        data = data.sort(
+          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+        );
+
+        setSupportData(data);
+        const paths = data.map((item) => item.file_path);
+        setPdfFile(paths);
+      } catch (error) {
+        console.error("API Hatası:", error);
+        // Hata mesajı kullanıcıya gösterilebilir
+        Alert.alert("Hata", "Destek verileri yüklenirken bir hata oluştu.");
+      } finally {
+        setLoading(false); // Her durumda loading'i durdur
+      }
+    };
+
+    fetchSupportData(); // Fonksiyonu çağır
+  }, [user]); // user değiştiğinde bu effect'i çalıştır
 
   async function saveFile(uri, filename, mimetype) {
     if (Platform.OS === "android") {
@@ -143,6 +158,32 @@ export default function SupportList() {
     }
   };
 
+  const submitData = async () => {
+    if (!trackingCode) {
+      Alert.alert("Hata", "Lütfen bir talep numarası giriniz.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `https://private.emlaksepette.com/api/support?code=${trackingCode}`
+      );
+
+      if (response.status === 200) {
+        setSupportData(response.data.data);
+        setModalVisible(true);
+      } else {
+        Alert.alert("Hata", "Talep numarası bulunamadı.");
+      }
+    } catch (error) {
+      console.error("Sorgulama Hatası:", error);
+      Alert.alert("Hata", "Bir hata oluştu, lütfen tekrar deneyin.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View
       style={{
@@ -154,7 +195,7 @@ export default function SupportList() {
     >
       {loading ? (
         <ActivityIndicator size="large" color="#333" />
-      ) : (
+      ) : user?.access_token ? ( // Kullanıcının token'ı var mı kontrolü
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
@@ -340,7 +381,6 @@ export default function SupportList() {
                                     : "red"
                                 }
                               />
-
                               <Text
                                 style={{
                                   textAlign: "center",
@@ -423,8 +463,36 @@ export default function SupportList() {
             )}
           </View>
         </ScrollView>
+      ) : (
+        // Token yoksa başka bir sayfa göstermek için
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text style={styles.label}>Talep Sorgulama</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={setTrackingCode}
+            placeholder="Talep numaranızı giriniz."
+            keyboardType="number-pad"
+            maxLength={15}
+          />
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#ea2b2e",
+              justifyContent: "center",
+              borderRadius: 5,
+              padding: 10,
+            }}
+            onPress={submitData}
+            disabled={loading}
+          >
+            <Text style={{ textAlign: "center", color: "white" }}>
+              {loading ? "Gönderiliyor..." : "Gönder"}
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
-      <Modal
+      {/* <Modal
         animationType="fade"
         transparent={true}
         visible={modalVisible}
@@ -453,7 +521,7 @@ export default function SupportList() {
             </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
-      </Modal>
+      </Modal> */}
       <ImageViewing
         images={[
           {
@@ -464,6 +532,64 @@ export default function SupportList() {
         visible={isVisible}
         onRequestClose={() => setIsVisible(false)}
       />
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Talep Detayları</Text>
+            {supportData ? (
+              <View>
+                <Text style={styles.modalContent}>
+                  Talep Kodu: {supportData.code}
+                </Text>
+                <Text style={styles.modalContent}>
+                  Oluşturulma Tarihi:{" "}
+                  {moment(supportData.created_at).format("DD/MM/YYYY")}
+                </Text>
+                <Text style={styles.modalContent}>Adı: {supportData.name}</Text>
+                <Text style={styles.modalContent}>
+                  Telefon: {supportData.phone}
+                </Text>
+                <Text style={styles.modalContent}>
+                  E-Mail: {supportData.email}
+                </Text>
+                <Text style={styles.modalContent}>
+                  Kategori: {supportData.category}
+                </Text>
+                <Text style={styles.modalContent}>
+                  Açıklama: {supportData.description}
+                </Text>
+                {supportData.file_path && (
+                  <Text style={styles.modalContent}>
+                    Dosya Yolu: {supportData.file_path}
+                  </Text>
+                )}
+                <Text style={styles.modalContent}>
+                  Güncellenme Tarihi:{" "}
+                  {moment(supportData.updated_at).format("DD/MM/YYYY")}
+                </Text>
+                <Text style={styles.modalContent}>
+                  Yanıt Durumu:{" "}
+                  {supportData.return_support ? "Yanıt Var" : "Yanıt Yok"}
+                </Text>
+              </View>
+            ) : (
+              <Text style={styles.modalContent}>Veri bulunamadı.</Text>
+            )}
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.closeButtonText}>Kapat</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -542,5 +668,14 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: "white",
     fontSize: 16,
+  },
+  input: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: "200",
+    borderRadius: 4,
+    color: "black",
+    borderWidth: 1,
+    borderColor: "#e6e6e6",
   },
 });
