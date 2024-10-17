@@ -156,95 +156,97 @@ export default function CommentsOfBrands(props) {
         </View>
       )}
 
-      {!loading && comments.length >= 1 ? (
-        <FlatList
-          ListHeaderComponent={
-            <>
-              <View style={styles.subjectArea}>
-                <Text style={styles.title}>Filtrele</Text>
-                <View style={{ flexDirection: "row" }}>
-                  <SubjectFilter
-                    text="Tümü"
-                    active={activeIndex === 0}
-                    onPress={() => handleActive(0)}
-                    count={comments.length}
-                  />
-                  <SubjectFilter
-                    text="Fotoğraflı Yorum"
-                    active={activeIndex === 1}
-                    onPress={() => handleActive(1)}
-                    count={imagesComments.length}
-                  />
-                </View>
-                <View style={styles.starArea}>
-                  <Text style={styles.title}>Puana Göre Filtrele</Text>
-                  <FlatList
-                    data={[5, 4, 3, 2, 1]}
-                    renderItem={({ item }) => {
-                      return (
-                        <StarFilter
-                          star={item}
-                          active={starIndex === item}
-                          onPress={() => handleStar(item)}
-                          count={
-                            item === 5
-                              ? commentsLength.fiveStar
-                              : item === 4
-                              ? commentsLength.fourStar
-                              : item === 3
-                              ? commentsLength.threeStar
-                              : item === 2
-                              ? commentsLength.twoStar
-                              : commentsLength.oneStar
-                          }
-                        />
-                      );
-                    }}
-                    keyExtractor={(item) => item.toString()}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                  />
-                </View>
-              </View>
-            </>
-          }
-          data={filteredComments}
-          renderItem={({ item }) => {
-            const housingData = item?.housing?.housing_type_data
-              ? JSON.parse(item.housing.housing_type_data)
-              : null;
-
-            const formattedDate = new Date(item?.created_at).toLocaleDateString(
-              "tr-TR",
-              {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              }
-            );
-
-            return (
-              <EvaluationsCommentCard
-                mainImage={
-                  item.project?.image ? item.project.image : housingData?.image
-                }
-                title={
-                  item.project?.project_title
-                    ? item?.project?.project_title
-                    : item?.housing?.title
-                }
-                star={starIndex === 0 ? item?.rate : starIndex}
-                desc={item?.comment}
-                info={`${formattedDate} | ${item?.user?.name}`}
-                images={item?.images}
+      {!loading && (
+        <>
+          <View style={styles.subjectArea}>
+            <Text style={styles.title}>Filtrele</Text>
+            <View style={{ flexDirection: "row" }}>
+              <SubjectFilter
+                text="Tümü"
+                active={activeIndex === 0}
+                onPress={() => handleActive(0)}
+                count={comments.length}
               />
-            );
-          }}
-          keyExtractor={(item, index) => `${item.id}-${index}`}
-          showsVerticalScrollIndicator={false}
-        />
-      ) : (
-        !loading && <Text>Yorum bulunamadı.</Text>
+              <SubjectFilter
+                text="Fotoğraflı Yorum"
+                active={activeIndex === 1}
+                onPress={() => handleActive(1)}
+                count={imagesComments.length}
+              />
+            </View>
+            <View style={styles.starArea}>
+              <Text style={styles.title}>Puana Göre Filtrele</Text>
+              <FlatList
+                data={[5, 4, 3, 2, 1]}
+                renderItem={({ item }) => {
+                  return (
+                    <StarFilter
+                      star={item}
+                      active={starIndex === item}
+                      onPress={() => handleStar(item)}
+                      count={
+                        item === 5
+                          ? commentsLength.fiveStar
+                          : item === 4
+                          ? commentsLength.fourStar
+                          : item === 3
+                          ? commentsLength.threeStar
+                          : item === 2
+                          ? commentsLength.twoStar
+                          : commentsLength.oneStar
+                      }
+                    />
+                  );
+                }}
+                keyExtractor={(item) => item.toString()}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          </View>
+
+          {filteredComments.length >= 1 ? (
+            <FlatList
+              data={filteredComments}
+              renderItem={({ item }) => {
+                const housingData = item?.housing?.housing_type_data
+                  ? JSON.parse(item.housing.housing_type_data)
+                  : null;
+
+                const formattedDate = new Date(
+                  item?.created_at
+                ).toLocaleDateString("tr-TR", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                });
+
+                return (
+                  <EvaluationsCommentCard
+                    mainImage={
+                      item.project?.image
+                        ? item.project.image
+                        : housingData?.image
+                    }
+                    title={
+                      item.project?.project_title
+                        ? item?.project?.project_title
+                        : item?.housing?.title
+                    }
+                    star={starIndex === 0 ? item?.rate : starIndex}
+                    desc={item?.comment}
+                    info={`${formattedDate} | ${item?.user?.name}`}
+                    images={item?.images}
+                  />
+                );
+              }}
+              keyExtractor={(item, index) => `${item.id}-${index}`}
+              showsVerticalScrollIndicator={false}
+            />
+          ) : (
+            !loading && <Text>Yorum bulunamadı.</Text>
+          )}
+        </>
       )}
     </View>
   );
