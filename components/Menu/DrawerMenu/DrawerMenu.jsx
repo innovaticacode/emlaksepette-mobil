@@ -118,7 +118,7 @@ const DrawerMenu = () => {
                     {user.access_token
                       ? user.type == 1
                         ? "Hesabım"
-                        : "Mağazam"
+                        : "Panelim"
                       : "Hesabım"}
                   </Text>
                 </TouchableOpacity>
