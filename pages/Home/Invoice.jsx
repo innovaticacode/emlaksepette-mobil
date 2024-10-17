@@ -146,8 +146,8 @@ export default function Invoice() {
           <ActivityIndicator color="#333" />
         </View>
       ) : (
-        <ScrollView style={{}} contentContainerStyle={{ flexGrow: 1 }}>
-          <View style={{}}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View>
             <View style={{ backgroundColor: "#F4F4F4", padding: 20 }}>
               <View style={{ width: "100%" }}>
                 <View style={{ width: "50%", height: 50 }}>
@@ -267,6 +267,9 @@ export default function Invoice() {
               {/* <Text>Vergi No: {data?.invoice?.order?.store?.taxNumber}</Text> */}
               <Text style={{ marginTop: 5 }}>
                 İletişim No: {data?.invoice?.order?.store?.phone}
+              </Text>
+              <Text style={{ marginTop: 5 }}>
+                Vergi No: {data?.invoice?.order?.store?.taxNumber}
               </Text>
             </View>
             <View style={{ backgroundColor: "#fff", padding: 20 }}></View>
