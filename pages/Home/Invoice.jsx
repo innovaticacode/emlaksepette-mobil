@@ -1,13 +1,15 @@
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, ScrollView, ImageBackground } from "react-native";
-import React, { useEffect, useState, useRef } from "react";
 import { StyleSheet } from "react-native";
 import axios from "axios";
 import { getValueFor } from "../../components/methods/user";
 import { useRoute } from "@react-navigation/native";
 import { Platform } from "react-native";
-
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { ActivityIndicator } from "react-native-paper";
+import { TouchableOpacity } from "react-native";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { apiUrl } from "../../components/methods/apiRequest";
 
 export default function Invoice() {
   const [user, setUser] = useState({});
@@ -25,8 +27,7 @@ export default function Invoice() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/institutional/invoice/${OrderId}`,
-
+          `${apiUrl}institutional/invoice/${OrderId}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -146,133 +147,185 @@ export default function Invoice() {
           <ActivityIndicator color="#333" />
         </View>
       ) : (
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-          <View>
-            <View style={{ backgroundColor: "#F4F4F4", padding: 20 }}>
-              <View style={{ width: "100%" }}>
-                <View style={{ width: "50%", height: 50 }}>
-                  <ImageBackground
-                    source={require("../../components/emlaksepettelogo.png")}
-                    resizeMode="contain"
-                    style={{
-                      width: "100%",
-                      flex: 1,
-                      justifyContent: "center",
-                    }}
-                  />
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.body}>
+            <View style={styles.cardContainer}>
+              <View style={{ paddingHorizontal: 20 }}>
+                <View style={{ width: "100%" }}>
+                  <View style={{ width: "50%", height: 50 }}>
+                    <ImageBackground
+                      source={require("../../components/emlaksepettelogo.png")}
+                      resizeMode="contain"
+                      style={{
+                        width: "100%",
+                        flex: 1,
+                        justifyContent: "center",
+                      }}
+                    />
+                  </View>
                 </View>
+                <>
+                  <View style={{ gap: 1 }}>
+                    <Text style={styles.textTitle}>
+                      Cevizli, Çanakkale Cad.
+                    </Text>
+                    <Text style={styles.textTitle}>
+                      No:103A, 34865 Kartal/İstanbul
+                    </Text>
+                  </View>
+                  <View style={{ gap: 6, marginTop: 6 }}>
+                    <Text style={styles.textTitle}>
+                      Müşteri Hizmetleri: 444 3 284
+                    </Text>
+                    <Text style={styles.textTitle}>
+                      E-posta: info@test.emlaksepette.com
+                    </Text>
+                  </View>
+                </>
               </View>
-              <View>
-                <Text style={{ marginTop: 5 }}>Cevizli, Çanakkale Cad.</Text>
-                <Text>No:103A, 34865 Kartal/İstanbul</Text>
-                <Text style={{ marginTop: 5 }}>
-                  Müşteri Hizmetleri: 444 3 284
+
+              <View style={styles.seperator} />
+
+              <View
+                style={{
+                  backgroundColor: "#fff",
+                  paddingHorizontal: 20,
+                  gap: 8,
+                }}
+              >
+                <Text style={styles.textBold}>Fatura Bilgileri</Text>
+                <Text style={styles.textTitle}>
+                  Fatura No: {""}
+                  <Text style={[styles.textSemiBold, { fontSize: 12 }]}>
+                    {data?.invoice?.invoice_number}{" "}
+                  </Text>{" "}
                 </Text>
-                <Text style={{ marginTop: 5 }}>
-                  E-posta: info@test.emlaksepette.com
+                <Text style={styles.textTitle}>
+                  Fatura Tarihi:{" "}
+                  <Text style={[styles.textSemiBold, { fontSize: 12 }]}>
+                    {formattedDate}{" "}
+                  </Text>{" "}
                 </Text>
-              </View>
-            </View>
-            <View style={{ backgroundColor: "#fff", padding: 20 }}>
-              <Text style={{ fontWeight: "700" }}>Fatura Bilgileri</Text>
-              <Text style={{ marginTop: 5 }}>
-                Fatura No:{" "}
-                <Text style={{ fontWeight: "700" }}>
-                  {data?.invoice?.invoice_number}{" "}
-                </Text>{" "}
-              </Text>
-              <Text style={{ marginTop: 5 }}>
-                Fatura Tarihi:{" "}
-                <Text style={{ fontWeight: "700" }}> {formattedDate} </Text>{" "}
-              </Text>
-              <Text style={{ marginTop: 5 }}>
-                İlan No:{" "}
-                <Text style={{ fontWeight: "700" }}>
-                  {data?.project
-                    ? `1000${data.project.id}`
-                    : data?.housing
-                    ? `2000${data.housing.id}`
-                    : "Değer bulunamadı"}
+                <Text style={styles.textTitle}>
+                  İlan No:{" "}
+                  <Text style={[styles.textSemiBold, { fontSize: 12 }]}>
+                    {data?.project
+                      ? `1000${data.project.id}`
+                      : data?.housing
+                      ? `2000${data.housing.id}`
+                      : "Değer bulunamadı"}
+                  </Text>
                 </Text>
-              </Text>
-              <View style={{ flexDirection: "row", marginTop: 10 }}>
-                <View style={{ marginRight: 15 }}>
-                  <View style={{ width: 100, height: 100 }}>
-                    {parsedData.item && parsedData.item.image ? (
-                      <Image
-                        style={{ width: "100%", height: "100%" }}
-                        source={{ uri: parsedData.item.image }}
-                      />
+                <View style={{ flexDirection: "row", marginTop: 10 }}>
+                  <View style={{ marginRight: 15 }}>
+                    <View style={{ width: 100, height: 100 }}>
+                      {parsedData.item && parsedData.item.image ? (
+                        <Image
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: 4,
+                          }}
+                          source={{ uri: parsedData.item.image }}
+                        />
+                      ) : (
+                        <Text>Resim yüklenemedi</Text>
+                      )}
+                    </View>
+                  </View>
+                  <View>
+                    {parsedData && parsedData.item ? (
+                      <>
+                        <View style={{ width: "100%", gap: 2 }}>
+                          <Text style={styles.textTitle}>
+                            {parsedData.item.title}
+                          </Text>
+                          <Text style={styles.textTitle}>Kocaeli/Bahçecik</Text>
+                          <Text style={styles.textTitle}>4+1 Villa</Text>
+                          <Text style={styles.textTitle}>2 Hisse</Text>
+                        </View>
+                      </>
                     ) : (
-                      <Text>Resim yüklenemedi</Text>
+                      <Text>Veri yüklenemedi</Text>
                     )}
                   </View>
                 </View>
-                <View>
-                  {parsedData && parsedData.item ? (
-                    <>
-                      <View style={{ width: "90%" }}>
-                        <Text style={{ fontWeight: "700" }}>
-                          {parsedData.item.title}
-                        </Text>
-                      </View>
-                    </>
-                  ) : (
-                    <Text>Veri yüklenemedi</Text>
-                  )}
-                </View>
+              </View>
+              <View style={styles.seperator} />
+
+              <View style={{ backgroundColor: "#fff", paddingHorizontal: 20 }}>
+                <Text style={{ fontWeight: "700", fontSize: 14 }}>
+                  Ödeme Bilgileri
+                </Text>
+                <Text style={{ marginTop: 5 }}>
+                  {`${data?.invoice?.order?.bank?.receipent_full_name} - ${data?.invoice?.order?.bank?.iban}`}
+                </Text>
+                <Text style={{ marginTop: 5 }}>
+                  <Text style={styles.textSemiBold}>
+                    {`Kapora: ${addDotEveryThreeDigits(
+                      data?.invoice?.order?.amount
+                    )} ₺`}
+                  </Text>
+                </Text>
+                <Text style={styles.textSemiBold}>
+                  {`Toplam Fiyat: ${addDotEveryThreeDigits(
+                    parsedData?.item?.price
+                  )} ₺`}
+                </Text>
+              </View>
+
+              <View style={styles.seperator} />
+              <View style={{ paddingHorizontal: 20, gap: 8 }}>
+                <Text style={styles.textBold}>Alıcı Bilgileri</Text>
+                <Text style={styles.textTitle}>
+                  {data?.invoice?.order?.user?.name}
+                </Text>
+                <Text style={styles.textTitle}>
+                  {data?.invoice?.order?.user?.email}
+                </Text>
+                <Text style={styles.textTitle}>
+                  {data?.invoice?.order?.user?.phone}
+                </Text>
+              </View>
+
+              <View style={styles.seperator} />
+
+              <View style={{ paddingHorizontal: 20, gap: 8 }}>
+                <Text style={styles.textSemiBold}>Satıcı Bilgileri</Text>
+                <Text style={{ marginTop: 5 }}>
+                  <Text style={styles.textTitle}>
+                    {data?.invoice?.order?.store?.name}
+                  </Text>
+                </Text>
+                <Text style={styles.textTitle}>
+                  {data?.invoice?.order?.store?.email}
+                </Text>
+                <Text style={styles.textTitle}>
+                  İletişim No: {data?.invoice?.order?.store?.phone}
+                </Text>
+                <>
+                  <Text style={styles.textTitle}>
+                    {`Vergi No: ${data?.invoice?.order?.store?.taxNumber}`}
+                  </Text>
+                </>
               </View>
             </View>
-            <View style={{ backgroundColor: "#F4F4F4", padding: 20 }}>
-              <Text style={{ fontWeight: "700" }}>Alıcı Bilgileri</Text>
-              <Text style={{ marginTop: 5, fontWeight: "700" }}>
-                {data?.invoice?.order?.user?.name}{" "}
-              </Text>
-              <Text style={{ marginTop: 5, fontWeight: "700" }}>
-                {data?.invoice?.order?.user?.email}
-              </Text>
-              <Text style={{ marginTop: 5, fontWeight: "700" }}>
-                {data?.invoice?.order?.user?.phone}{" "}
-              </Text>
-            </View>
-            <View style={{ backgroundColor: "#fff", padding: 20 }}>
-              <Text style={{ fontWeight: "700" }}>Ödeme Bilgileri</Text>
-              <Text style={{ marginTop: 5 }}>
-                {data?.invoice?.order?.bank?.receipent_full_name} -{" "}
-                {data?.invoice?.order?.bank?.iban}
-              </Text>
-              <Text style={{ marginTop: 5 }}>
-                <Text style={{}}>
-                  Kapora:{" "}
-                  <Text style={{ fontWeight: "700" }}>
-                    {addDotEveryThreeDigits(data?.invoice?.order?.amount)} ₺
-                  </Text>{" "}
+            <View style={{ marginTop: 10 }}>
+              <TouchableOpacity style={styles.downloadBtn} onPress={() => null}>
+                <AntDesign
+                  name="download"
+                  size={18}
+                  color="#EA2B2E"
+                  style={{ paddingRight: 8 }}
+                />
+                <Text style={{ color: "#EA2B2E", fontSize: 16 }}>
+                  PDF Olarak İndir
                 </Text>
-              </Text>
-              <Text style={{ marginTop: 5 }}>
-                Toplam Fiyat:{" "}
-                <Text style={{ fontWeight: "700" }}>
-                  {addDotEveryThreeDigits(parsedData?.item?.price)} ₺
-                </Text>{" "}
-              </Text>
+              </TouchableOpacity>
             </View>
-            <View style={{ backgroundColor: "#F4F4F4", padding: 20 }}>
-              <Text style={{ fontWeight: "700" }}>Satıcı Bilgileri</Text>
-              <Text style={{ marginTop: 5 }}>
-                <Text style={{}}>{data?.invoice?.order?.store?.name}</Text>
-              </Text>
-              <Text style={{ marginTop: 5 }}>
-                {data?.invoice?.order?.store?.email}
-              </Text>
-              {/* <Text>Vergi No: {data?.invoice?.order?.store?.taxNumber}</Text> */}
-              <Text style={{ marginTop: 5 }}>
-                İletişim No: {data?.invoice?.order?.store?.phone}
-              </Text>
-              <Text style={{ marginTop: 5 }}>
-                Vergi No: {data?.invoice?.order?.store?.taxNumber}
-              </Text>
-            </View>
-            <View style={{ backgroundColor: "#fff", padding: 20 }}></View>
           </View>
         </ScrollView>
       )}
@@ -302,5 +355,63 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  seperator: {
+    width: "94%",
+    height: 1,
+    backgroundColor: "#77777738",
+    marginVertical: 10,
+    justifyContent: "center",
+    alignSelf: "center",
+  },
+  cardContainer: {
+    borderWidth: 1,
+    borderColor: "#e6e6e6",
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    paddingVertical: 14,
+  },
+  textTitle: {
+    fontWeight: "500",
+    fontSize: 12,
+    lineHeight: 14,
+  },
+  textSemiBold: {
+    fontWeight: "600",
+    fontSize: 15,
+    lineHeight: 14,
+    lineHeight: 18,
+  },
+  textBold: {
+    fontWeight: "700",
+    fontSize: 14,
+    lineHeight: 14,
+    lineHeight: 17,
+  },
+  body: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: "#FFF",
+    flex: 1,
+  },
+  downloadBtn: {
+    backgroundColor: "#FFF",
+    padding: 10,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderRadius: 6,
+    borderColor: "#EA2B2E",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
