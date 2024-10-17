@@ -57,7 +57,7 @@ const DrawerMenu = () => {
   };
 
   const openLink = (url) => {
-    Linking.openURL(url); // Belirtilen URL'yi açmak için
+    Linking.openURL(url);
   };
 
   return (
@@ -104,7 +104,7 @@ const DrawerMenu = () => {
                   }}
                 >
                   <Text style={styles.userName}>
-                    {user.access_token ? namFromGetUser.name : "Giriş Yap"}
+                    {user.access_token ? namFromGetUser?.name : "Giriş Yap"}
                   </Text>
                 </TouchableOpacity>
 
