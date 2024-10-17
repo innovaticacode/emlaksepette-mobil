@@ -72,8 +72,12 @@ export default function Order({ item }) {
         <View style={{ width: "40%", padding: 2 }}>
           <View style={{ gap: 4 }}>
             <Text
-              style={{ fontSize: 12, fontWeight: "600", color: "#333" }}
-              numberOfLines={1}
+              style={{
+                fontSize: 12,
+                fontWeight: "600",
+                color: "#333",
+                flexWrap: "wrap",
+              }}
             >
               {Title}
             </Text>
