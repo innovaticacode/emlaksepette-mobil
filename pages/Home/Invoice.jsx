@@ -245,7 +245,7 @@ export default function Invoice() {
                 <Text style={{}}>
                   Kapora:{" "}
                   <Text style={{ fontWeight: "700" }}>
-                    {data?.invoice?.order?.amount}
+                    {addDotEveryThreeDigits(data?.invoice?.order?.amount)} ₺
                   </Text>{" "}
                 </Text>
               </Text>
