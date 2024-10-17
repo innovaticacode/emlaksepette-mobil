@@ -125,11 +125,15 @@ export const styles = StyleSheet.create({
   socialIcons: {
     justifyContent: "flex-start",
     flexDirection: "row",
-    marginHorizontal: 88,
-    marginVertical: 80,
+    marginHorizontal: 70,
+    marginTop: 70,
   },
   Icons: {
     margin: 5,
-    
   },
+  Version:{
+    textAlign: "center",
+    marginTop: 10,
+    color: "grey",
+  }
 });

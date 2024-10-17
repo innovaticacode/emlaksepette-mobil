@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Text,
   Image,
+  Linking,
 } from "react-native";
 import Search from "../../../pages/Home/Search";
 import Categories from "../../Categories";
@@ -14,7 +15,7 @@ import { getValueFor } from "../../methods/user";
 import IconAntDesign from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/EvilIcons";
-import SocialIcons from "react-native-vector-icons/Foundation";
+import SocialIcons from "react-native-vector-icons/Entypo";
 import axios from "axios";
 import { styles } from "./DrawerMenu.style";
 
@@ -53,6 +54,10 @@ const DrawerMenu = () => {
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
     navigation.dispatch(DrawerActions.closeDrawer()); // Drawer'ı kapatıyoruz
+  };
+
+  const openLink = (url) => {
+    Linking.openURL(url); // Belirtilen URL'yi açmak için
   };
 
   return (
@@ -203,9 +208,47 @@ const DrawerMenu = () => {
           {/* MÜŞTERİ HİZMETLERİ ALANI END */}
 
           <View style={styles.socialIcons}>
-            <SocialIcons style={styles.Icons} name="social-facebook" size={40} color={"#333"} />
-            <SocialIcons style={styles.Icons} name="social-instagram" size={40} color={"#333"} />
-            <SocialIcons style={styles.Icons} name="social-linkedin" size={40} color={"#333"} />
+            <TouchableOpacity
+              onPress={() =>
+                openLink(
+                  "https://www.facebook.com/p/Emlak-Sepette-61555351466172"
+                )
+              }
+            >
+              <SocialIcons
+                style={styles.Icons}
+                name="facebook-with-circle"
+                size={40}
+                color={"#333"}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => openLink("https://www.instagram.com/emlaksepette")}
+            >
+              <SocialIcons
+                style={styles.Icons}
+                name="instagram-with-circle"
+                size={40}
+                color={"#333"}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                openLink(
+                  "https://www.linkedin.com/company/emlak-sepette/mycompany/"
+                )
+              }
+            >
+              <SocialIcons
+                style={styles.Icons}
+                name="linkedin-with-circle"
+                size={40}
+                color={"#333"}
+              />
+            </TouchableOpacity>
+          </View>
+          <View>
+            <Text style={styles.Version}>v1.0.0</Text>
           </View>
         </View>
       </ScrollView>
