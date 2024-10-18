@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   TextInput,
+  Keyboard,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native-paper";
@@ -19,13 +20,10 @@ import moment from "moment";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import ImageViewing from "react-native-image-viewing";
-import RenderHtml from "react-native-render-html";
 import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
 import * as Sharing from "expo-sharing";
-
 import { useNavigation } from "@react-navigation/native";
-import { UrlTile } from "react-native-maps";
 import NoDataScreen from "../../../../components/NoDataScreen";
 
 export default function SupportList() {
@@ -41,6 +39,7 @@ export default function SupportList() {
   const [selectedUri, setselectedUri] = useState(null);
   const [trackingCode, setTrackingCode] = useState("");
   const [trackingData, setTrackingData] = useState(null);
+  const [QueryModalVisible, setQueryModalVisible] = useState(false);
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -172,7 +171,7 @@ export default function SupportList() {
 
       if (response.status === 200) {
         setSupportData(response.data.data);
-        setModalVisible(true);
+        setQueryModalVisible(true);
       } else {
         Alert.alert("Hata", "Talep numarası bulunamadı.");
       }
@@ -465,34 +464,34 @@ export default function SupportList() {
         </ScrollView>
       ) : (
         // Token yoksa başka bir sayfa göstermek için
-        <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          <Text style={styles.label}>Talep Sorgulama</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setTrackingCode}
-            placeholder="Talep numaranızı giriniz."
-            keyboardType="number-pad"
-            maxLength={15}
-          />
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#ea2b2e",
-              justifyContent: "center",
-              borderRadius: 5,
-              padding: 10,
-            }}
-            onPress={submitData}
-            disabled={loading}
-          >
-            <Text style={{ textAlign: "center", color: "white" }}>
-              {loading ? "Gönderiliyor..." : "Gönder"}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={styles.QueryContainer}>
+            <View>
+              <Text style={styles.QueryLabel}>Talep Sorgulama</Text>
+
+              <TextInput
+                style={styles.QueryInput}
+                onChangeText={setTrackingCode}
+                placeholder="Talep numaranızı giriniz."
+                keyboardType="number-pad"
+                maxLength={15}
+              />
+            </View>
+            <View>
+              <TouchableOpacity
+                style={styles.QueryButton}
+                onPress={submitData}
+                disabled={loading}
+              >
+                <Text style={{ textAlign: "center", color: "white" }}>
+                  {loading ? "Sorgulanıyor..." : "Sorgula"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
       )}
-      {/* <Modal
+      <Modal
         animationType="fade"
         transparent={true}
         visible={modalVisible}
@@ -521,7 +520,8 @@ export default function SupportList() {
             </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
-      </Modal> */}
+      </Modal>
+
       <ImageViewing
         images={[
           {
@@ -536,54 +536,61 @@ export default function SupportList() {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
+        visible={QueryModalVisible}
+        onRequestClose={() => setQueryModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>Talep Detayları</Text>
-            {supportData ? (
-              <View>
-                <Text style={styles.modalContent}>
-                  Talep Kodu: {supportData.code}
-                </Text>
-                <Text style={styles.modalContent}>
-                  Oluşturulma Tarihi:{" "}
-                  {moment(supportData.created_at).format("DD/MM/YYYY")}
-                </Text>
-                <Text style={styles.modalContent}>Adı: {supportData.name}</Text>
-                <Text style={styles.modalContent}>
-                  Telefon: {supportData.phone}
-                </Text>
-                <Text style={styles.modalContent}>
-                  E-Mail: {supportData.email}
-                </Text>
-                <Text style={styles.modalContent}>
-                  Kategori: {supportData.category}
-                </Text>
-                <Text style={styles.modalContent}>
-                  Açıklama: {supportData.description}
-                </Text>
-                {supportData.file_path && (
-                  <Text style={styles.modalContent}>
-                    Dosya Yolu: {supportData.file_path}
-                  </Text>
-                )}
-                <Text style={styles.modalContent}>
-                  Güncellenme Tarihi:{" "}
-                  {moment(supportData.updated_at).format("DD/MM/YYYY")}
-                </Text>
-                <Text style={styles.modalContent}>
-                  Yanıt Durumu:{" "}
-                  {supportData.return_support ? "Yanıt Var" : "Yanıt Yok"}
-                </Text>
-              </View>
+            {supportData.length > 0 ? ( // supportData dizisinin uzunluğunu kontrol et
+              supportData.map((support, index) => (
+                <View key={index} style={{ marginTop: 20 }}>
+                  <View style={styles.supportItem}>
+                    <Text style={styles.modalContent}>
+                      Talep Kodu: {support.code}
+                    </Text>
+                    <Text style={styles.modalContent}>
+                      Oluşturulma Tarihi:{" "}
+                      {moment(support.created_at).format("DD/MM/YYYY")}
+                    </Text>
+                    <Text style={styles.modalContent}>Adı: {support.name}</Text>
+                    <Text style={styles.modalContent}>
+                      Telefon: {support.phone}
+                    </Text>
+                    <Text style={styles.modalContent}>
+                      E-Mail: {support.email}
+                    </Text>
+                    <Text style={styles.modalContent}>
+                      Kategori: {support.category}
+                    </Text>
+                    <Text style={styles.modalContent}>
+                      Açıklama: {support.description}
+                    </Text>
+                    {support.file_path && ( // Varsa dosya yolu
+                      <Text style={styles.modalContent}>
+                        Dosya Yolu: {support.file_path}
+                      </Text>
+                    )}
+                    <Text style={styles.modalContent}>
+                      Yanıt Durumu:{" "}
+                      {support.return_support
+                        ? "Yanıtlandı"
+                        : "Yanıt Bekleniyor..."}
+                    </Text>
+                    {support.return_support && ( // Yanıt durumu kontrolü
+                      <Text style={styles.modalContent}>
+                        Yanıt: {support.return_support}
+                      </Text>
+                    )}
+                  </View>
+                </View>
+              ))
             ) : (
               <Text style={styles.modalContent}>Veri bulunamadı.</Text>
             )}
             <TouchableOpacity
               style={styles.closeButton}
-              onPress={() => setModalVisible(false)}
+              onPress={() => setQueryModalVisible(false)}
             >
               <Text style={styles.closeButtonText}>Kapat</Text>
             </TouchableOpacity>
@@ -593,7 +600,7 @@ export default function SupportList() {
     </View>
   );
 }
-
+const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   supportItem: {
     backgroundColor: "white",
@@ -661,21 +668,42 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   closeButton: {
-    backgroundColor: "#0FA958",
+    backgroundColor: "#EA2B2E",
     padding: 10,
     borderRadius: 5,
+    marginTop: 20,
   },
   closeButtonText: {
     color: "white",
     fontSize: 16,
   },
-  input: {
+  QueryInput: {
     fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: "200",
+    padding: 10,
     borderRadius: 4,
     color: "black",
     borderWidth: 1,
     borderColor: "#e6e6e6",
+    width: width * 0.9,
+    height: 45,
+  },
+  QueryContainer: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    marginTop: 20,
+  },
+  QueryLabel: {
+    fontWeight: "700",
+    marginBottom: 10,
+    fontSize: 18,
+  },
+  QueryButton: {
+    backgroundColor: "#ea2b2e",
+    justifyContent: "center",
+    borderRadius: 5,
+    padding: 10,
+    paddingHorizontal: 40,
+    marginTop: 20,
   },
 });
