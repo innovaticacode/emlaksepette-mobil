@@ -14,9 +14,7 @@ import Icon from "react-native-vector-icons/SimpleLineIcons";
 import Icon2 from "react-native-vector-icons/Fontisto";
 
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
-import FeatherIcon from "react-native-vector-icons/Feather";
 import Icon4 from "react-native-vector-icons/FontAwesome5";
-import StarIcon from "react-native-vector-icons/FontAwesome";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
@@ -35,15 +33,16 @@ export default function OrderDetails() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  // console.log(user);
-  console.log(OrderId);
   const [Detail, setDetail] = useState({});
   const [refund, setRefund] = useState({});
   const [projectDetail, setprojectDetail] = useState({});
   const [housingDetail, sethousingDetail] = useState({});
   const [housing, setHousing] = useState({});
   const [loading, setLoading] = useState(true);
-  console.log(OrderId + "asda wawa2");
+  const [parsedData, setparsedData] = useState("");
+  const [Deals, setDeals] = useState("");
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,12 +67,10 @@ export default function OrderDetails() {
         console.error("Error fetching data:", error);
       }
     };
-    console.log(OrderId);
 
     fetchData();
   }, [user, OrderId]);
-  console.log(OrderId + "dsfsdf");
-  const [parsedData, setparsedData] = useState("");
+
   useEffect(() => {
     if (Detail?.cart && typeof Detail.cart === "string" && user.access_token) {
       try {
@@ -148,8 +145,6 @@ export default function OrderDetails() {
     maximumFractionDigits: 2,
   }).format(indirim_yuzdesi / 100);
 
-  const [Deals, setDeals] = useState("");
-
   const fetchDataDeal = async () => {
     const url = `https://private.emlaksepette.com/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
     try {
@@ -164,14 +159,12 @@ export default function OrderDetails() {
       // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     }
   };
-  const [modalVisible2, setModalVisible2] = useState(false);
   useEffect(() => {
     fetchDataDeal();
   }, []);
 
   console.log(refund?.name + "asdasd");
 
-  const [modalVisible, setModalVisible] = useState(false);
   const handlePress = () => {
     setModalVisible(true);
   };
@@ -204,34 +197,6 @@ export default function OrderDetails() {
                 {formattedDate}
               </Text>
             </View>
-            {/* <View style={{ flexDirection: "row" }}>
-            <Text style={{ fontWeight: "400", fontSize: 13 }}>
-              Sipariş Özeti:{" "}
-            </Text>
-            <Text style={{ fontSize: 13, color: "grey" }}>
-              {Detail.status == 0 && (
-                <Text style={{ fontSize: 13, color: "#BC3913" }}>
-                  1 Onay Bekliyor
-                </Text>
-              )}
-              {Detail?.status == 1 && (
-                <Text style={{ fontSize: 13, color: "#4B8F3C" }}>
-                  1 Onaylandı
-                </Text>
-              )}
-              {Detail?.status == 2 && !refund && (
-                <Text style={{ fontSize: 13, color: "#B81911" }}>
-                  Reddedildi
-                </Text>
-              )}
-              {Detail?.status == 2 && refund?.status == 1 && (
-                <Text style={{ fontSize: 13, color: "green" }}>
-                  İade Edildi
-                </Text>
-              )}
-            </Text>
-            <Text style={{ fontSize: 13, color: "#333" }}> 1 Ürün</Text>
-          </View> */}
             <View style={{ flexDirection: "row" }}>
               <Text style={{ fontWeight: "400", fontSize: 13 }}>
                 Sipariş Durumu:{" "}
@@ -747,35 +712,6 @@ export default function OrderDetails() {
               </View>
             </View>
           </Modal>
-          {/* 
-        {user?.id === Detail?.user?.id &&
-          Detail?.status == 2 &&
-          refund?.status == 2 && (
-            <View>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "red",
-                  padding: 13,
-                  borderRadius: 5,
-                }}
-                onPress={() =>
-                  navigation.navigate("ExtraditionRequest", {
-                    OrderId: OrderId,
-                  })
-                }
-              >
-                <Text
-                  style={{
-                    color: "#ffffff",
-                    textAlign: "center",
-                    fontWeight: "500",
-                  }}
-                >
-                  İade Talebiniz Reddedildi
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )} */}
 
           {user?.id === Detail?.user?.id && refund && refund.status == 0 && (
             <View>
