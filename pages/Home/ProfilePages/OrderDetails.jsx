@@ -626,7 +626,7 @@ export default function OrderDetails() {
               </View>
             </View>
           </Modal>
-          {user?.id === Detail?.user?.id && refund && refund.status == 0 && (
+          {/* {user?.id === Detail?.user?.id && refund && refund.status == 0 && (
             <View>
               <TouchableOpacity
                 style={{
@@ -669,7 +669,7 @@ export default function OrderDetails() {
                 </Text>
               </TouchableOpacity>
             </View>
-          )}
+          )} */}
 
           <Modal
             isVisible={modalVisible2}

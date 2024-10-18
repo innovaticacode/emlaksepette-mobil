@@ -51,55 +51,6 @@ export const style = StyleSheet.create({
     top: 10,
     right: 10,
   },
-  orderInfo: {
-    padding: 10,
-    width: "100%",
-    backgroundColor: "#FFFF",
-    borderWidth: 1,
-    borderColor: "#ebebeb",
-    gap: 10,
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  //   orderDetail: {
-  //     padding: 10,
-  //     width: "100%",
-  //     backgroundColor: "#FFFF",
-  //     borderWidth: 1,
-  //     borderColor: "#ebebeb",
-  //     gap: 10,
-  //     ...Platform.select({
-  //       ios: {
-  //         shadowColor: " #e6e6e6",
-  //         shadowOffset: { width: 1, height: 1 },
-  //         shadowOpacity: 0.1,
-  //         shadowRadius: 5,
-  //       },
-  //       android: {
-  //         elevation: 5,
-  //       },
-  //     }),
-  //   },
-  OrderPost: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    borderTopWidth: 1,
-    borderTopColor: "#ebebeb",
-    paddingTop: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ebebeb",
-    paddingBottom: 5,
-  },
   Image: {
     flex: 0.5 / 2,
     padding: 2,
@@ -109,25 +60,6 @@ export const style = StyleSheet.create({
     flex: 1.4 / 2,
     padding: 2,
     gap: 4,
-  },
-  paymentArea: {
-    padding: 10,
-    width: "100%",
-    backgroundColor: "#FFFF",
-    borderWidth: 1,
-    borderColor: "#ebebeb",
-    gap: 10,
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
   },
   button: {
     backgroundColor: "green",
