@@ -41,11 +41,11 @@ export default function Favorites() {
   const [selectedRoomID, setselectedRoomID] = useState(0);
   const [type, settype] = useState(0);
   const [modalForDeleteFavorites, setmodalForDeleteFavorites] = useState(false);
-  const [isChoosed, setIsChoosed] = useState(false); // Toplu seçim modu
-  const [FavoriteRemoveIDS, setFavoriteRemoveIDS] = useState([]); // Silinecek ilanların ID'leri
-  const [loading, setLoading] = useState(false); // Yüklenme durumu
+  const [isChoosed, setIsChoosed] = useState(false);
+  const [FavoriteRemoveIDS, setFavoriteRemoveIDS] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
-    useState(false); // Modal durumu
+    useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [filteredFavorites, setFilteredFavorites] = useState([]);
@@ -309,30 +309,29 @@ export default function Favorites() {
   };
 
   const handleToggleSelect = () => {
-    setIsChoosed(!isChoosed); // Toplu seçim modunu değiştir
+    setIsChoosed(!isChoosed);
     if (!isChoosed) {
-      setFavoriteRemoveIDS([]); // Toplu seçim modundan çıkıldığında seçili ID'leri temizle
+      setFavoriteRemoveIDS([]);
     }
   };
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("blur", () => {
       if (isChoosed) {
-        setIsChoosed(false); // Seçimleri sıfırla
+        setIsChoosed(false);
       }
     });
 
-    return unsubscribe; // Dinleyiciyi temizlemek için
+    return unsubscribe;
   }, [navigation, isChoosed]);
 
   const deleteSelectedFavorite = async () => {
-    setLoading(true); // İşlem başladığında yüklenme durumu aktif edilir
+    setLoading(true);
     const data = {
       housing_ids: FavoriteRemoveIDS,
     };
 
     try {
-      // Axios DELETE isteği
       const response = await axios({
         method: "delete",
         url: "https://private.emlaksepette.com/api/institutional/favorites/delete",
@@ -348,22 +347,20 @@ export default function Favorites() {
             textBody: `${FavoriteRemoveIDS.length} İlan favorilerden kaldırıldı.`,
             button: "Tamam",
             onHide: () => {
-              fetchFavorites(); // Fetch favorites after dialog is dismissed
-              setFavoriteRemoveIDS([]); // Clear the selected favorites
+              fetchFavorites();
+              setFavoriteRemoveIDS([]);
             },
           });
-          setLoading(false); // End loading after showing the dialog
+          setLoading(false);
         }, 300);
 
-        // Favori ilanları yeniden yükle
-        setFavoriteRemoveIDS([]); // Seçili ilanları temizle
-        setRemoveSelectedCollectionsModal(false); // Modal'ı kapat
-        setIsChoosed(false); // Toplu seçim modunu kapat
+        setFavoriteRemoveIDS([]);
+        setRemoveSelectedCollectionsModal(false);
+        setIsChoosed(false);
       }
     } catch (error) {
-      setRemoveSelectedCollectionsModal(false); // Modal'ı kapat
-      setIsChoosed(false); // Toplu seçim modunu kapat
-      // Hata durumunda kullanıcıya geri bildirim sağla
+      setRemoveSelectedCollectionsModal(false);
+      setIsChoosed(false);
       setTimeout(() => {
         Dialog.show({
           type: ALERT_TYPE.WARNING,
@@ -371,18 +368,17 @@ export default function Favorites() {
           textBody: "Silme işlemi başarısız oldu.",
           button: "Tamam",
         });
-        setLoading(false); // End loading after showing the dialog
+        setLoading(false);
       }, 300);
     } finally {
-      setLoading(false); // İşlem tamamlandıktan sonra yüklenme durumunu kapat
+      setLoading(false);
 
-      setRemoveSelectedCollectionsModal(false); // Modal'ı kapat
-      setIsChoosed(false); // Toplu seçim modunu kapat
+      setRemoveSelectedCollectionsModal(false);
+      setIsChoosed(false);
     }
   };
   // BATCH SELECTION - DELETE FUNCTION END
 
-  //filter text function
   useEffect(() => {
     const filterFavorites = () => {
       const searchLower = searchText.toLowerCase();
@@ -479,17 +475,7 @@ export default function Favorites() {
       favorite?.housing_id +
       " No'lu konut";
 
-    //data kontrol edilerek yazdırlacak
     const price = favorite?.project.room_info[1]?.value;
-    // const price = favorite?.project_housing?.find((projectHousing) => {
-    //   if (
-    //     projectHousing.room_order === favorite?.housing_id &&
-    //     projectHousing.name === "price[]"
-    //   ) {
-    //     return projectHousing;
-    //   }
-    // })?.value;
-
     return { image, column1, column2, column3, no, location, title, price };
   };
 
@@ -533,35 +519,31 @@ export default function Favorites() {
 
   const [selectedSortOption, setSelectedSortOption] = useState(null);
 
-  const shortToLong = () => {
-    const shortFilter = favorites.sort((a, b) => {
-      return a.created_at < b.created_at ? 1 : -1;
-    });
-    setFavorites(shortFilter);
-    console.debug("shortFilter", shortFilter);
-  };
+  // Sıralama fonksiyonu
+  const sortFavorites = (value) => {
+    let sortedFavorites = [...favorites]; // Favorileri kopyala
 
-  const longToShort = () => {
-    const longFilter = favorites.sort((a, b) => {
-      return a.created_at > b.created_at ? 1 : -1;
-    });
-    setFavorites(longFilter);
-    console.debug("longFilter", longFilter);
-  };
-
-  const priceLongToShort = () => {
-    if (favorites.project) {
-      const priceFilter = favorites.sort((a, b) => {});
+    // Sıralama işlemleri
+    if (value === "price-asc") {
+      sortedFavorites.sort((a, b) => {
+        const priceA = a.project?.price || a.housing?.price || 0;
+        const priceB = b.project?.price || b.housing?.price || 0;
+        return priceA - priceB;
+      });
+    } else if (value === "price-desc") {
+      sortedFavorites.sort((a, b) => {
+        const priceA = a.project?.price || a.housing?.price || 0;
+        const priceB = b.project?.price || b.housing?.price || 0;
+        return priceB - priceA;
+      });
+    } else if (value === "date") {
+      sortedFavorites.sort((a, b) => {
+        return new Date(b.created_at) - new Date(a.created_at);
+      });
     }
-  };
 
-  useEffect(() => {
-    if (selectedSortOption === "date-asc") {
-      longToShort();
-    } else if (selectedSortOption === "date-desc") {
-      shortToLong();
-    }
-  }, [favorites]);
+    setFavorites(sortedFavorites); // Sıralanan favorileri güncelle
+  };
 
   return (
     <AlertNotificationRoot>
@@ -576,17 +558,18 @@ export default function Favorites() {
           >
             <ActivityIndicator size="large" color={"#333"} />
           </View>
-        ) : (
-          <View style={styles.container}>
-            {favorites.length === 0 ? (
-              <NoDataScreen
-                message="Favorilerinizde ilan bulunmamaktadır."
-                iconName="heart-plus"
-                buttonText="Anasayfaya Dön"
-                navigateTo="HomePage"
-              />
-            ) : (
+        ) : user?.access_token ? ( // Kullanıcı giriş yapmış mı kontrolü
+          favorites.length === 0 ? ( // Favorilerde ilan var mı kontrolü
+            <NoDataScreen
+              message="Favorilerinizde ilan bulunmamaktadır."
+              iconName="heart-plus"
+              buttonText="Anasayfaya Dön"
+              navigateTo="HomePage"
+            />
+          ) : (
+            <View style={styles.container}>
               <>
+                {/* Arama Barı ve Favori Listesi */}
                 <View style={styles.searchBody}>
                   <SearchBar
                     placeholder="Ara..."
@@ -613,17 +596,14 @@ export default function Favorites() {
                     onClose={() => setModalVisible(false)}
                     onSortChange={(value) => {
                       setSelectedSortOption(value); // Seçilen sıralama seçeneğini güncelle
-                      if (value === "date-asc") {
-                        longToShort();
-                      } else if (value === "date-desc") {
-                        shortToLong();
-                      }
+                      sortFavorites(value); // Sıralama işlemini çağır
                     }}
                     selectedSortOption={selectedSortOption} // Seçilen sıralama seçeneği
                     type="favorites"
                   />
                 </View>
 
+                {/* Tümünü Sil ve Toplu Seçim Alanı */}
                 <View style={styles.btnArea}>
                   <View style={styles.allDel}>
                     <TouchableOpacity
@@ -685,57 +665,7 @@ export default function Favorites() {
                   )}
                 </View>
 
-                <AwesomeAlert
-                  show={RemoveSelectedCollectionsModal}
-                  showProgress={false}
-                  titleStyle={{
-                    color: "#333",
-                    fontSize: 13,
-                    fontWeight: "700",
-                    textAlign: "center",
-                    margin: 5,
-                  }}
-                  title={`${FavoriteRemoveIDS.length} Seçili Koleksiyonu silmek istediğinize emin misin`}
-                  messageStyle={{ textAlign: "center" }}
-                  closeOnTouchOutside={true}
-                  closeOnHardwareBackPress={false}
-                  showCancelButton={true}
-                  showConfirmButton={true}
-                  cancelText="Hayır"
-                  confirmText="Evet"
-                  cancelButtonColor="#ce4d63"
-                  confirmButtonColor="#1d8027"
-                  onCancelPressed={() => {
-                    setRemoveSelectedCollectionsModal(false);
-                  }}
-                  onConfirmPressed={() => {
-                    deleteSelectedFavorite(true);
-                  }}
-                  confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-                  cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-                />
-
-                <AwesomeAlert
-                  show={modalForDeleteFavorites}
-                  showProgress={false}
-                  title={"Tümünü Sil"}
-                  message={"Tüm Favorileri Silmek İstediğinize Emin misiniz?"}
-                  closeOnTouchOutside={true}
-                  closeOnHardwareBackPress={false}
-                  showCancelButton={true}
-                  showConfirmButton={true}
-                  cancelText="Hayır"
-                  confirmText="Evet"
-                  cancelButtonColor="#ce4d63"
-                  confirmButtonColor="#1d8027"
-                  onCancelPressed={() => {
-                    setmodalForDeleteFavorites(false);
-                  }}
-                  onConfirmPressed={() => {
-                    deleteAll();
-                  }}
-                />
-
+                {/* Favoriler Listesi */}
                 <ScrollView
                   refreshControl={
                     <RefreshControl
@@ -771,331 +701,18 @@ export default function Favorites() {
                       return renderFavorite(favorite, i);
                     })
                   )}
-
-                  {/* {(filteredFavorites.length > 0
-                    ? filteredFavorites
-                    : favorites
-                  ).map((favorite, i) => {
-                    if (favorite?.project) {
-                      var image = favorite?.project_housing?.find(
-                        (projectHousing) => {
-                          if (
-                            projectHousing.room_order ===
-                              favorite?.housing_id &&
-                            projectHousing.name === "image[]" &&
-                            projectHousing.project_id === favorite?.project?.id
-                          ) {
-                            return projectHousing;
-                          }
-                        }
-                      )?.value;
-
-                      var column1 = favorite?.project_housing?.find(
-                        (projectHousing) => {
-                          if (
-                            projectHousing.room_order ===
-                              favorite?.housing_id &&
-                            projectHousing.name ===
-                              favorite?.project?.list_item_values
-                                ?.column1_name +
-                                "[]" &&
-                            projectHousing.project_id === favorite?.project?.id
-                          ) {
-                            return projectHousing;
-                          }
-                        }
-                      )?.value;
-
-                      var column2 = favorite?.project_housing?.find(
-                        (projectHousing) => {
-                          if (
-                            projectHousing.room_order ===
-                              favorite?.housing_id &&
-                            projectHousing.name ===
-                              favorite?.project?.list_item_values
-                                ?.column2_name +
-                                "[]" &&
-                            projectHousing.project_id === favorite?.project?.id
-                          ) {
-                            return projectHousing;
-                          }
-                        }
-                      )?.value;
-
-                      var column3 = favorite?.project_housing?.find(
-                        (projectHousing) => {
-                          if (
-                            projectHousing.room_order ===
-                              favorite?.housing_id &&
-                            projectHousing.name ===
-                              favorite?.project?.list_item_values
-                                ?.column3_name +
-                                "[]" &&
-                            projectHousing.project_id === favorite?.project?.id
-                          ) {
-                            return projectHousing;
-                          }
-                        }
-                      )?.value;
-
-                      if (column1) {
-                        column1 =
-                          column1 +
-                          " " +
-                          (favorite?.project?.list_item_values
-                            ?.column1_additional || "");
-                      }
-                      if (column2) {
-                        column2 =
-                          column2 +
-                          " " +
-                          (favorite?.project?.list_item_values
-                            ?.column2_additional || "");
-                      }
-                      if (column3) {
-                        column3 =
-                          column3 +
-                          " " +
-                          (favorite?.project?.list_item_values
-                            ?.column3_additional || "");
-                      }
-
-                      var no = 1000000 + favorite?.project.id;
-                      return (
-                        <RealtorPostFavorited
-                          key={i}
-                          changeFavorites={changeFavorites}
-                          type={1}
-                          projectId={favorite?.project?.id}
-                          housingId={favorite?.housing_id}
-                          no={no}
-                          column1={column1}
-                          column2={column2}
-                          column3={column3}
-                          location={
-                            favorite?.project?.city?.title +
-                            " / " +
-                            favorite?.project?.county?.ilce_title
-                          }
-                          image={
-                            "https://private.emlaksepette.com/project_housing_images/" +
-                            image
-                          }
-                          title={
-                            favorite?.project?.project_title +
-                            " adlı projede " +
-                            favorite?.housing_id +
-                            " No'lu konut"
-                          }
-                          price={
-                            favorite?.project_housing?.find(
-                              (projectHousing) => {
-                                if (
-                                  projectHousing.room_order ===
-                                    favorite?.housing_id &&
-                                  projectHousing.name === "price[]"
-                                ) {
-                                  return projectHousing;
-                                }
-                              }
-                            )?.value
-                          }
-                          m2="20"
-                          GetId={GetIdForCart}
-                          fetchData={fetchFavorites}
-                          selectFavorite={SelectFavorite}
-                          isChoosed={isChoosed}
-                        />
-                      );
-                    } else {
-                      if (favorite?.housing) {
-                        var housingData = JSON.parse(
-                          favorite?.housing?.housing_type_data
-                        );
-                      } else {
-                        housingData = {};
-                      }
-                      return (
-                        <RealtorPostFavorited
-                          key={i}
-                          changeFavorites={changeFavorites}
-                          type={2}
-                          HouseId={favorite?.housing?.id}
-                          no={favorite?.housing?.id + 2000000}
-                          image={
-                            "https://private.emlaksepette.com/housing_images/" +
-                            housingData?.image
-                          }
-                          title={favorite?.housing?.title}
-                          price={
-                            housingData && housingData.price
-                              ? housingData.price
-                              : "0"
-                          }
-                          column1={
-                            housingData[
-                              favorite?.housing?.list_items?.column1_name
-                            ]
-                              ? housingData[
-                                  favorite?.housing?.list_items?.column1_name
-                                ] +
-                                " " +
-                                (favorite?.housing?.list_items
-                                  ?.column1_additional || "")
-                              : ""
-                          }
-                          column2={
-                            housingData[
-                              favorite?.housing?.list_items?.column2_name
-                            ]
-                              ? housingData[
-                                  favorite?.housing?.list_items?.column2_name
-                                ] +
-                                " " +
-                                (favorite?.housing?.list_items
-                                  ?.column2_additional || "")
-                              : ""
-                          }
-                          column3={
-                            housingData[
-                              favorite?.housing?.list_items?.column3_name
-                            ]
-                              ? housingData[
-                                  favorite?.housing?.list_items?.column3_name
-                                ] +
-                                " " +
-                                (favorite?.housing?.list_items
-                                  ?.column3_additional || "")
-                              : ""
-                          }
-                          location={
-                            favorite?.housing?.city?.title +
-                            " / " +
-                            favorite?.housing?.county?.title
-                          }
-                          GetId={GetIdForCart}
-                          fetchData={fetchFavorites}
-                          selectFavorite={SelectFavorite}
-                          isChoosed={isChoosed}
-                        />
-                      );
-                    }
-                  })} */}
                 </ScrollView>
               </>
-            )}
-            <Modal
-              isVisible={ModalForAddToCart}
-              onBackdropPress={() => setModalForAddToCart(false)}
-              animationIn={"zoomIn"}
-              animationOut={"zoomOut"}
-              transparent={true}
-              useNativeDriver={true}
-              style={styles.modal4}
-            >
-              <View style={styles.modalContent4}>
-                {user.access_token ? (
-                  <>
-                    <View style={{ padding: 10, gap: 10 }}>
-                      {type == 1 && (
-                        <Text style={{ textAlign: "center" }}>
-                          #1000{selectedCartItem} No'lu Projenin{" "}
-                          {selectedRoomID} Numaralı Konutunu Sepete Eklemek
-                          İsteiğinize Eminmisiniz?
-                        </Text>
-                      )}
-                      {type == 2 && (
-                        <Text style={{ textAlign: "center" }}>
-                          #2000{selectedCartItem} No'lu Konutu Sepete Eklemek
-                          İsteiğinize Eminmisiniz?
-                        </Text>
-                      )}
-
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "center",
-                          gap: 20,
-                        }}
-                      >
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "green",
-                            padding: 10,
-                            paddingLeft: 20,
-                            paddingRight: 20,
-                            borderRadius: 5,
-                          }}
-                          onPress={() => {
-                            type == 2
-                              ? addToCardForHousing()
-                              : addToCardForProject();
-                          }}
-                        >
-                          <Text style={{ color: "white" }}>Sepete Ekle</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "#e44242",
-                            padding: 10,
-                            paddingLeft: 20,
-                            paddingRight: 20,
-                            borderRadius: 5,
-                          }}
-                          onPress={() => {
-                            setModalForAddToCart(false);
-                          }}
-                        >
-                          <Text style={{ color: "white" }}>Vazgeç</Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  </>
-                ) : (
-                  <>
-                    <View style={{ gap: 10 }}>
-                      <View>
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            color: "#4C6272",
-                            fontWeight: "bold",
-                            fontSize: 16,
-                          }}
-                        >
-                          Üyeliğiniz Bulunmamaktadır!
-                        </Text>
-                      </View>
-                      <View style={{ width: "100%" }}>
-                        <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                          Sepetinize konut ekleyebilmeniz için giriş yapmanız
-                          gerekmektedir
-                        </Text>
-                      </View>
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: "#F65656",
-                          width: "100%",
-                          padding: 10,
-                        }}
-                        onPress={() => {
-                          setModalForAddToCart(false);
-                          setTimeout(() => {
-                            navigation.navigate("Login");
-                          }, 400);
-                        }}
-                      >
-                        <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
-                          Giriş Yap
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                )}
-              </View>
-            </Modal>
-          </View>
+            </View>
+          )
+        ) : (
+          // Eğer kullanıcı giriş yapmamışsa
+          <NoDataScreen
+            message="Favorilerinize erişmek için giriş yapmanız gerekmektedir."
+            iconName="lock-outline"
+            buttonText="Giriş Yap"
+            navigateTo="Login"
+          />
         )}
       </View>
     </AlertNotificationRoot>

@@ -88,7 +88,7 @@ export default function Login({ navigation }) {
           );
           setUser(res.data); // Kullanıcı durumunu günceller
           navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
-          navigation.replace('Home')
+          navigation.replace('Drawer',"Home")
         } else {
           // setshowMailSendAlert(true);
           setStatus(false);
