@@ -44,8 +44,7 @@ export default function Favorites() {
   const [isChoosed, setIsChoosed] = useState(false);
   const [FavoriteRemoveIDS, setFavoriteRemoveIDS] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
-    useState(false);
+  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [filteredFavorites, setFilteredFavorites] = useState([]);
@@ -377,7 +376,6 @@ export default function Favorites() {
       setIsChoosed(false);
     }
   };
-  // BATCH SELECTION - DELETE FUNCTION END
 
   useEffect(() => {
     const filterFavorites = () => {
@@ -507,8 +505,8 @@ export default function Favorites() {
         (housing) =>
           housing.room_order === favorite?.housing_id &&
           housing.name ===
-            favorite?.project?.list_item_values[`column${columnIndex}_name`] +
-              "[]" &&
+          favorite?.project?.list_item_values[`column${columnIndex}_name`] +
+          "[]" &&
           housing.project_id === favorite?.project?.id
       )?.value +
       " " +
@@ -547,168 +545,199 @@ export default function Favorites() {
 
   return (
     <AlertNotificationRoot>
-      <View style={{ flex: 1, paddingHorizontal: 6 }}>
-        {loading ? (
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              height: "100%",
-            }}
-          >
-            <ActivityIndicator size="large" color={"#333"} />
-          </View>
-        ) : user?.access_token ? ( // Kullanıcı giriş yapmış mı kontrolü
-          favorites.length === 0 ? ( // Favorilerde ilan var mı kontrolü
-            <NoDataScreen
-              message="Favorilerinizde ilan bulunmamaktadır."
-              iconName="heart-plus"
-              buttonText="Anasayfaya Dön"
-              navigateTo="HomePage"
-            />
+      <View style={styles.mainView}>
+        {user.access_token ? ( // İlk olarak token kontrol ediliyor
+          loading ? (
+            <View style={styles.loadingView}>
+              <ActivityIndicator size="large" color={styles.activityIndicatorColor.color} />
+            </View>
           ) : (
             <View style={styles.container}>
-              <>
-                {/* Arama Barı ve Favori Listesi */}
-                <View style={styles.searchBody}>
-                  <SearchBar
-                    placeholder="Ara..."
-                    onChangeText={(text) => setSearchText(text)}
-                    value={searchText}
-                    containerStyle={styles.searchContainer}
-                    searchIcon={{ size: 20 }}
-                    inputContainerStyle={styles.inputCont}
-                    inputStyle={{ fontSize: 15 }}
-                    showCancel="false"
-                    placeholderTextColor={"grey"}
-                  />
+              {favorites.length === 0 ? (
+                <NoDataScreen
+                  message="Favorilerinizde ilan bulunmamaktadır."
+                  iconName="heart-plus"
+                  buttonText="Anasayfaya Dön"
+                  navigateTo="HomePage"
+                />
+              ) : (
+                <>
+                  {/* Arama ve sıralama işlemleri */}
+                  <View style={styles.searchBody}>
+                    <SearchBar
+                      placeholder="Ara..."
+                      onChangeText={(text) => setSearchText(text)}
+                      value={searchText}
+                      containerStyle={styles.searchContainer}
+                      searchIcon={{ size: 20 }}
+                      inputContainerStyle={styles.inputCont}
+                      inputStyle={styles.searchInput}
+                      showCancel="false"
+                      placeholderTextColor={"grey"}
+                    />
 
-                  <TouchableOpacity style={styles.modalBtn}>
-                    <View>
-                      <TouchableOpacity onPress={() => setModalVisible(true)}>
-                        <Icon3 name="swap-vertical" size={23} color={"#333"} />
-                      </TouchableOpacity>
-                    </View>
-                  </TouchableOpacity>
-
-                  <SortModal
-                    isVisible={modalVisible}
-                    onClose={() => setModalVisible(false)}
-                    onSortChange={(value) => {
-                      setSelectedSortOption(value); // Seçilen sıralama seçeneğini güncelle
-                      sortFavorites(value); // Sıralama işlemini çağır
-                    }}
-                    selectedSortOption={selectedSortOption} // Seçilen sıralama seçeneği
-                    type="favorites"
-                  />
-                </View>
-
-                {/* Tümünü Sil ve Toplu Seçim Alanı */}
-                <View style={styles.btnArea}>
-                  <View style={styles.allDel}>
-                    <TouchableOpacity
-                      style={styles.allDelBtn}
-                      onPress={() => {
-                        setmodalForDeleteFavorites(true);
-                      }}
-                    >
-                      <Text style={styles.allDelText}>Tümünü Sil</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                      style={styles.allSelectBtn}
-                      onPress={() => {
-                        handleToggleSelect(); // Toplu seçim modunu aç/kapat
-                      }}
-                    >
-                      <Text style={styles.allSelectBtnText}>
-                        {isChoosed ? "Seçimi İptal Et" : "Toplu Seç"}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-
-                  {isChoosed && (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 10,
-                      }}
-                    >
-                      <Text>
-                        Seçili(
-                        {FavoriteRemoveIDS.length})
-                      </Text>
+                    <TouchableOpacity style={styles.modalBtn}>
                       <View>
-                        <TouchableOpacity
-                          style={[
-                            styles.btnRemove,
-                            { paddingLeft: 10, paddingRight: 10 },
-                          ]}
-                          onPress={() => {
-                            if (FavoriteRemoveIDS.length === 0) {
-                              Dialog.show({
-                                type: ALERT_TYPE.WARNING,
-                                title: "Hata!",
-                                textBody: "Silmek için seçim yapmadınız.",
-                                button: "Tamam",
-                              });
-                            } else {
-                              setRemoveSelectedCollectionsModal(true);
-                            }
-                          }}
-                        >
-                          <Icon2 name="trash" size={18} color={"white"} />
+                        <TouchableOpacity onPress={() => setModalVisible(true)}>
+                          <Icon3 name="swap-vertical" size={23} color={styles.iconColor.color} />
                         </TouchableOpacity>
                       </View>
-                    </View>
-                  )}
-                </View>
+                    </TouchableOpacity>
 
-                {/* Favoriler Listesi */}
-                <ScrollView
-                  refreshControl={
-                    <RefreshControl
-                      refreshing={refreshing}
-                      onRefresh={onRefresh}
+                    <SortModal
+                      isVisible={modalVisible}
+                      onClose={() => setModalVisible(false)}
+                      onSortChange={(value) => {
+                        setSelectedSortOption(value); // Seçilen sıralama seçeneğini güncelle
+                        sortFavorites(value); // Sıralama işlemini çağır
+                      }}
+                      selectedSortOption={selectedSortOption} // Seçilen sıralama seçeneği
+                      type="favorites"
                     />
-                  }
-                  contentContainerStyle={{}}
-                  showsVerticalScrollIndicator={false}
-                >
-                  {searchText.length > 0 ? (
-                    filteredFavorites.length === 0 ? (
-                      <View style={styles.noResultsContainer}>
-                        <IconFilter
-                          name="emoticon-sad-outline"
-                          size={50}
-                          color="#EA2B2E"
-                        />
-                        <Text style={styles.noResultsText}>
-                          Arama sonucu bulunamadı.
+                  </View>
+
+                  {/* Toplu seçim ve silme işlemleri */}
+                  <View style={styles.btnArea}>
+                    <View style={styles.allDel}>
+                      <TouchableOpacity
+                        style={styles.allDelBtn}
+                        onPress={() => {
+                          setmodalForDeleteFavorites(true);
+                        }}
+                      >
+                        <Text style={styles.allDelText}>Tümünü Sil</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        style={styles.allSelectBtn}
+                        onPress={() => {
+                          handleToggleSelect(); // Toplu seçim modunu aç/kapat
+                        }}
+                      >
+                        <Text style={styles.allSelectBtnText}>
+                          {isChoosed ? "Seçimi İptal Et" : "Toplu Seç"}
                         </Text>
-                        <Text style={styles.noResultsSubText}>
-                          Lütfen başka bir terim deneyin.
-                        </Text>
+                      </TouchableOpacity>
+                    </View>
+
+                    {isChoosed && (
+                      <View style={styles.selectedItems}>
+                        <Text>Seçili({FavoriteRemoveIDS.length})</Text>
+                        <View>
+                          <TouchableOpacity
+                            style={styles.btnRemove}
+                            onPress={() => {
+                              if (FavoriteRemoveIDS.length === 0) {
+                                Dialog.show({
+                                  type: ALERT_TYPE.WARNING,
+                                  title: "Hata!",
+                                  textBody: "Silmek için seçim yapmadınız.",
+                                  button: "Tamam",
+                                });
+                              } else {
+                                setRemoveSelectedCollectionsModal(true);
+                              }
+                            }}
+                          >
+                            <Icon2 name="trash" size={18} color={"white"} />
+                          </TouchableOpacity>
+                        </View>
                       </View>
+                    )}
+                  </View>
+
+                  {/* İlanların listelenmesi */}
+                  <ScrollView
+                    refreshControl={
+                      <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                      />
+                    }
+                    contentContainerStyle={styles.scrollViewContent}
+                    showsVerticalScrollIndicator={false}
+                  >
+                    {searchText.length > 0 ? (
+                      filteredFavorites.length === 0 ? (
+                        <View style={styles.noResultsContainer}>
+                          <IconFilter
+                            name="emoticon-sad-outline"
+                            size={50}
+                            color="#EA2B2E"
+                          />
+                          <Text style={styles.noResultsText}>
+                            Arama sonucu bulunamadı.
+                          </Text>
+                          <Text style={styles.noResultsSubText}>
+                            Lütfen başka bir terim deneyin.
+                          </Text>
+                        </View>
+                      ) : (
+                        filteredFavorites.map((favorite, i) => {
+                          return renderFavorite(favorite, i);
+                        })
+                      )
                     ) : (
-                      filteredFavorites.map((favorite, i) => {
+                      favorites.map((favorite, i) => {
                         return renderFavorite(favorite, i);
                       })
-                    )
-                  ) : (
-                    favorites.map((favorite, i) => {
-                      return renderFavorite(favorite, i);
-                    })
-                  )}
-                </ScrollView>
-              </>
+                    )}
+                  </ScrollView>
+
+                  {/* AwesomeAlerts ve Modal'lar */}
+                  <AwesomeAlert
+                    show={modalForDeleteFavorites}
+                    showProgress={false}
+                    title={"Tümünü Sil"}
+                    message={"Tüm Favorileri Silmek İstediğinize Emin misiniz?"}
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    showCancelButton={true}
+                    showConfirmButton={true}
+                    cancelText="Hayır"
+                    confirmText="Evet"
+                    cancelButtonColor="#ce4d63"
+                    confirmButtonColor="#1d8027"
+                    onCancelPressed={() => {
+                      setmodalForDeleteFavorites(false);
+                    }}
+                    onConfirmPressed={() => {
+                      deleteAll();
+                    }}
+                  />
+
+                  <AwesomeAlert
+                    show={ModalForAddToCart}
+                    showProgress={false}
+                    title={type === 1 ? `#1000${selectedCartItem} No'lu Projenin` : `#2000${selectedCartItem} No'lu`}
+                    message={
+                      type === 1
+                        ? `${selectedRoomID} Numaralı Konutunu Sepete Eklemek İsteğinize Emin misiniz?`
+                        : `konutu sepete eklemek istediğinize emin misiniz?`
+                    }
+                    closeOnTouchOutside={false}
+                    closeOnHardwareBackPress={false}
+                    showCancelButton={true}
+                    showConfirmButton={true}
+                    cancelText="Vazgeç"
+                    confirmText="Sepete Ekle"
+                    cancelButtonColor="#ce4d63"
+                    confirmButtonColor="#1d8027"
+                    onCancelPressed={() => {
+                      setModalForAddToCart(false);
+                    }}
+                    onConfirmPressed={() => {
+                      type === 2 ? addToCardForHousing() : addToCardForProject();
+                      setModalForAddToCart(false); // Modalı kapat
+                    }}
+                  />
+                </>
+              )}
             </View>
           )
         ) : (
-          // Eğer kullanıcı giriş yapmamışsa
           <NoDataScreen
-            message="Favorilerinize erişmek için giriş yapmanız gerekmektedir."
+            message="Favorilerinizi görmek için giriş yapmanız gerekmektedir."
             iconName="lock-outline"
             buttonText="Giriş Yap"
             navigateTo="Login"
@@ -716,55 +745,25 @@ export default function Favorites() {
         )}
       </View>
     </AlertNotificationRoot>
+
   );
 }
+
 const styles = StyleSheet.create({
-  noResultsContainer: {
+  mainView: {
     flex: 1,
+    paddingHorizontal: 6,
+  },
+  loadingView: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
-    backgroundColor: "#f8f8f8",
+    height: "100%",
   },
-  noResultsText: {
-    fontSize: 18,
+  activityIndicatorColor: {
     color: "#333",
-    textAlign: "center",
-    marginTop: 10,
-    fontWeight: "bold",
-  },
-  noResultsSubText: {
-    fontSize: 16,
-    color: "#666",
-    textAlign: "center",
-    marginTop: 5,
   },
   container: {
     height: "100%",
-  },
-  leftAction: {
-    backgroundColor: "red",
-    justifyContent: "center",
-    paddingHorizontal: 10,
-    color: "#fff",
-    width: 40,
-  },
-  modal4: {
-    justifyContent: "center",
-    margin: 0,
-    padding: 20,
-    backgroundColor: "#1414148c",
-  },
-  modalContent4: {
-    backgroundColor: "#fefefe",
-    padding: 20,
-    borderRadius: 5,
-  },
-
-  btnRemove: {
-    backgroundColor: "#EA2A28",
-    padding: 7,
-    borderRadius: 5,
   },
   searchBody: {
     flexDirection: "row",
@@ -781,7 +780,7 @@ const styles = StyleSheet.create({
     height: 34,
     paddingTop: 0,
     paddingBottom: 0,
-    marginLeft: 0, // Soldan margin'i sıfırla
+    marginLeft: 0,
     paddingHorizontal: 0,
   },
   inputCont: {
@@ -789,12 +788,18 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     height: "100%",
     marginTop: 0,
-    paddingLeft: 0, // İçeride soldan padding'i sıfırla
+    paddingLeft: 0,
+  },
+  searchInput: {
+    fontSize: 15,
   },
   modalBtn: {
     backgroundColor: "#e5e5e5",
     padding: 5,
     borderRadius: 6,
+  },
+  iconColor: {
+    color: "#333",
   },
   btnArea: {
     width: "100%",
@@ -833,5 +838,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     color: "#333",
+  },
+  selectedItems: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
+  btnRemove: {
+    backgroundColor: "#ce4d63",
+    padding: 8,
+    borderRadius: 6,
+    marginLeft: 10,
+  },
+  scrollViewContent: {
+    paddingBottom: 130,
   },
 });
