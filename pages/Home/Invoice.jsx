@@ -243,9 +243,12 @@ export default function Invoice() {
                           <Text style={styles.textTitle}>
                             {parsedData.item.title}
                           </Text>
-                          <Text style={styles.textTitle}>Kocaeli/Bahçecik</Text>
-                          <Text style={styles.textTitle}>4+1 Villa</Text>
-                          <Text style={styles.textTitle}>2 Hisse</Text>
+                          <Text style={styles.textTitle}>
+                            {data?.project?.city?.title}
+                          </Text>
+                          <Text style={styles.textTitle}>
+                            {data?.project?.housing_type.title}
+                          </Text>
                         </View>
                       </>
                     ) : (
