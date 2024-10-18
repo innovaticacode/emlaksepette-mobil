@@ -143,9 +143,12 @@ export default function RealtorPostFavorited({
       selectFavorite(housingId);
       setIsHighlighted(!isHighlighted);
     } else {
-      navigation.navigate("PostDetails", {
-        HomeId: housingId,
-        projectId: projectId,
+      navigation.navigate("Drawer", {
+        screen: "PostDetails",
+        params: {
+          HomeId: housingId,
+          projectId: projectId,
+        },
       });
     }
   };

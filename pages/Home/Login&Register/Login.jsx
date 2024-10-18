@@ -122,15 +122,7 @@ export default function Login({ navigation }) {
       Login();
     }
   };
-
-  const handlePasswordChange = (text) => {
-    setPassword(text);
-    if (text.length < 5) {
-      setShowLengthAlert(true);
-    } else {
-      setShowLengthAlert(false);
-    }
-  };
+    
 
   Login.navigationOptions = {
     headerShown: false,
@@ -298,41 +290,11 @@ export default function Login({ navigation }) {
                             placeholder="Şifre"
                             secureTextEntry={Show ? false : true}
                             value={password}
-                            onChangeText={handlePasswordChange}
+                            onChangeText={(value)=>setPassword(value)}
                           />
-
-                          {passControl && (
-                            <Text
-                              style={{
-                                color: "red",
-                                fontWeight: "500",
-                                fontSize: 12,
-                              }}
-                            >
-                              Lütfen Şifrenizi girin!
-                            </Text>
-                          )}
-                          {showLengthAlert && (
-                            <Text style={{ color: "red" }}>
-                              Şifreniz en az 6 karakter olmalıdır!
-                            </Text>
-                          )}
-                          {showNumberAlert && (
-                            <Text style={{ color: "red" }}>
-                              Şifrenizde en az bir rakam olmalıdır.
-                            </Text>
-                          )}
-                          {showUpperAlert && (
-                            <Text style={{ color: "red" }}>
-                              Şifrenizde en az bir büyük harf olmalıdır!
-                            </Text>
-                          )}
-                          {showSymbolAlert && (
-                            <Text style={{ color: "red" }}>
-                              Şifrenizde en az bir sembol olmalıdır!
-                            </Text>
-                          )}
-                        </View>
+                             </View>
+                         
+                     
 
                         <View
                           style={{
@@ -387,28 +349,14 @@ export default function Login({ navigation }) {
                       </View>
                       <TouchableOpacity
                         style={{
-                          opacity:
-                            showLengthAlert == true ||
-                            showNumberAlert == true ||
-                            showSymbolAlert == true ||
-                            showUpperAlert == true ||
-                            textfull == true ||
-                            submitDisabled == true
-                              ? 0.3
-                              : 1,
+                         
                           backgroundColor: "#EA2C2E",
                           padding: 8,
                           borderRadius: 5,
                         }}
                         onPress={Submit}
-                        disabled={
-                          showLengthAlert == true ||
-                          showNumberAlert == true ||
-                          showSymbolAlert == true ||
-                          showUpperAlert == true
-                            ? true
-                            : false
-                        }
+                        
+                       
                       >
                         {loadingForLogin ? (
                           <ActivityIndicator color="white" size={"small"} />

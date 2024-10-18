@@ -15,7 +15,7 @@ const SubjectFilter = (props) => {
         {count ? (
           <Text
             style={active ? styles.activeCount : styles.count}
-          >{`(${count})`}</Text>
+          >{` (${count})`}</Text>
         ) : null}
       </TouchableOpacity>
     </>

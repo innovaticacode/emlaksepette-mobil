@@ -638,8 +638,8 @@ export default function PostDetail() {
   };
 
   // Handle page change in PagerView
-  const [SeeAlertModal, setSeeAlertModal] = useState(false)
-  const [show, setShow] = useState(false)
+  const [SeeAlertModal, setSeeAlertModal] = useState(false);
+  const [show, setShow] = useState(false);
   return (
     <>
       <AlertNotificationRoot>
@@ -651,24 +651,10 @@ export default function PostDetail() {
           </View>
         ) : (
           <SafeAreaView style={{ flex: 1, paddingTop: 20 }}>
-            <Header onPress={toggleDrawer} index={setindex} tab={settab} />
-            <Modal
-              isVisible={isDrawerOpen}
-              onBackdropPress={() => setIsDrawerOpen(false)}
-              animationIn="bounceInLeft"
-              animationOut="bounceOutLeft"
-              style={styles.modal}
-              swipeDirection={["left"]}
-              onSwipeComplete={() => setIsDrawerOpen(false)}
-            >
-              <View>
-                <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-              </View>
-            </Modal>
             <View
               style={{
                 width: "100%",
-                backgroundColor:'#F2F2F2',
+                backgroundColor: "#F2F2F2",
                 position: "absolute",
                 bottom: 13,
                 padding: 10,
@@ -682,7 +668,7 @@ export default function PostDetail() {
                   paddingBottom: width > 400 ? 15 : 7,
                 }}
               >
-                {data?.housing?.user?.id == user?.id ? (
+                {data?.housing?.user?.id == user?.id || data?.housing?.sold ? (
                   <></>
                 ) : (
                   <TouchableOpacity
@@ -706,74 +692,116 @@ export default function PostDetail() {
                     </Text>
                   </TouchableOpacity>
                 )}
-                {data?.housing?.user?.id == user?.id ? (
-                  <TouchableOpacity
+                {!data?.housing?.sold ? (
+                  data?.housing?.user?.id == user?.id ? (
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#008001",
+                        width: "90%",
+                        padding: 12,
+                        borderRadius: 5,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "#ffffff",
+                          fontWeight: "700",
+                        }}
+                      >
+                        İlanı Düzenle
+                      </Text>
+                    </TouchableOpacity>
+                  ) : data?.housing?.step1_slug == "mustakil-tatil" &&
+                    data?.housing?.step2_slug == "gunluk-kiralik" ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate("CreateReservation", {
+                          data: data,
+                        });
+                      }}
+                      style={{
+                        backgroundColor: "#EB2B2E",
+                        width: "45%",
+                        padding: 12,
+                        borderRadius: 5,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "#ffffff",
+                          fontWeight: "700",
+                        }}
+                      >
+                        Rezervasyon Yap
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (user.access_token) {
+                          setModalForAddToCart(true);
+                        } else {
+                          setAlertForAddToCard(true);
+                        }
+                      }}
+                      style={{
+                        backgroundColor: "#EB2B2E",
+                        width: "45%",
+                        padding: 12,
+                        borderRadius: 5,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "#ffffff",
+                          fontWeight: "700",
+                        }}
+                      >
+                        Sepete Ekle
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                ) : data?.housing?.sold == "1" ? (
+                  <View
                     style={{
-                      backgroundColor: "#008001",
-                      width: "90%",
+                      backgroundColor: "#EA2C2E",
+                      width: "100%",
                       padding: 12,
                       borderRadius: 5,
                     }}
                   >
                     <Text
                       style={{
+                        color: "white",
+                        fontWeight: "600",
                         textAlign: "center",
-                        color: "#ffffff",
-                        fontWeight: "700",
                       }}
                     >
-                      İlanı Düzenle
+                      Satıldı
                     </Text>
-                  </TouchableOpacity>
-                ) : data?.housing?.step1_slug == "mustakil-tatil" &&
-                  data?.housing?.step2_slug == "gunluk-kiralik" ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("CreateReservation", { data: data });
-                    }}
-                    style={{
-                      backgroundColor: "#EB2B2E",
-                      width: "45%",
-                      padding: 12,
-                      borderRadius: 5,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        color: "#ffffff",
-                        fontWeight: "700",
-                      }}
-                    >
-                      Rezervasyon Yap
-                    </Text>
-                  </TouchableOpacity>
+                  </View>
                 ) : (
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (user.access_token) {
-                        setModalForAddToCart(true);
-                      } else {
-                        setAlertForAddToCard(true);
-                      }
-                    }}
+                  <View
                     style={{
-                      backgroundColor: "#EB2B2E",
-                      width: "45%",
+                      backgroundColor: "#FFA500",
                       padding: 12,
                       borderRadius: 5,
+                      width: "100%",
                     }}
                   >
                     <Text
                       style={{
+                        color: "white",
+                        fontWeight: "600",
                         textAlign: "center",
-                        color: "#ffffff",
-                        fontWeight: "700",
                       }}
                     >
-                      Sepete Ekle
+                      Rezerve Edildi
                     </Text>
-                  </TouchableOpacity>
+                  </View>
                 )}
               </View>
             </View>
@@ -897,43 +925,43 @@ export default function PostDetail() {
                     </Text>
                   </View>
                 </View>
+                {!data?.housing?.sold && (
+                  <View style={styles.ıconContainer}>
+                    <TouchableOpacity onPress={onShare}>
+                      <View style={styles.ıcon}>
+                        <Icon2 name="sharealt" size={18} />
+                      </View>
+                    </TouchableOpacity>
 
-                <View style={styles.ıconContainer}>
-                  <TouchableOpacity onPress={onShare}>
-                    <View style={styles.ıcon}>
-                      <Icon2 name="sharealt" size={18} />
-                    </View>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      console.log("Favorite button pressed"); // Butona tıklanıp tıklanmadığını kontrol et
-                      addFavorites();
-                    }}
-                  >
-                    <View style={styles.ıcon}>
-                      <Heart
-                        name={heart}
-                        size={18}
-                        color={heart === "hearto" ? "black" : "red"}
-                      />
-                    </View>
-                  </TouchableOpacity>
-
-                  {((OpenSharing == "Evet" &&
-                    user.corporate_type == "Emlak Ofisi") ||
-                    user.type == 1) && (
                     <TouchableOpacity
                       onPress={() => {
-                        openCollection();
+                        addFavorites();
                       }}
                     >
                       <View style={styles.ıcon}>
-                        <Bookmark name={bookmark} size={18} />
+                        <Heart
+                          name={heart}
+                          size={18}
+                          color={heart === "hearto" ? "black" : "red"}
+                        />
                       </View>
                     </TouchableOpacity>
-                  )}
-                </View>
+
+                    {/* {((OpenSharing == "Evet" &&
+                      user.corporate_type == "Emlak Ofisi") ||
+                      user.type == 1) && (
+                      <TouchableOpacity
+                        onPress={() => {
+                          openCollection();
+                        }}
+                      >
+                        <View style={styles.ıcon}>
+                          <Bookmark name={bookmark} size={18} />
+                        </View>
+                      </TouchableOpacity>
+                    )} */}
+                  </View>
+                )}
 
                 <PagerView
                   style={{ height: 250 }}
@@ -1078,13 +1106,12 @@ export default function PostDetail() {
                           if (user.access_token) {
                             navigation.navigate("SwapForm", {
                               houseid: data?.housing?.id,
-                              type:2,
-                              projectId:null
+                              type: 2,
+                              projectId: null,
                             });
-                          }else{
-                            setShow(true)
+                          } else {
+                            setShow(true);
                           }
-                        
                         }}
                       >
                         <View
@@ -1160,7 +1187,7 @@ export default function PostDetail() {
                   </TouchableOpacity>
                 </View>
               </View>
-             
+
               <View style={{ marginTop: 7 }}>
                 {tabs == 0 && <RealtorCaption data={data} />}
                 {tabs == 1 && <Settings data={data} />}
@@ -1622,21 +1649,21 @@ export default function PostDetail() {
                 </View>
               </Modal>
               <AwesomeAlertComp
-          message={'Takas başvurusu yapmak için giriş yapmanız gerekmektedir'}
-          canselFunc={()=>{
-            setShow(false)
-          }}
-          confirmFunc={()=>{
-            setShow(false)
-            setTimeout(() => {
-              navigation.navigate('Login')
-              
-            }, 200);
-              
-          }}
-          show={show}
-          setShow={setShow}
-         />
+                message={
+                  "Takas başvurusu yapmak için giriş yapmanız gerekmektedir"
+                }
+                canselFunc={() => {
+                  setShow(false);
+                }}
+                confirmFunc={() => {
+                  setShow(false);
+                  setTimeout(() => {
+                    navigation.navigate("Login");
+                  }, 200);
+                }}
+                show={show}
+                setShow={setShow}
+              />
               <Modal
                 isVisible={addCollection}
                 onBackdropPress={() => setaddCollection(false)}

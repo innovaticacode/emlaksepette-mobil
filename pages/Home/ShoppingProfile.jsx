@@ -181,7 +181,7 @@ export default function ShoppingProfile() {
     );
     setTimeout(() => {
       SecureStore.setItemAsync("user", "");
-      navigation.push("Home", { status: "logout" });
+      navigation.push("Drawer", { screen: "Home" }, { status: "logout" });
     }, 500);
   };
 
@@ -229,9 +229,7 @@ export default function ShoppingProfile() {
     }
   };
 
- 
 
-  console.log(user?.id + " asdsd sd ");
   useEffect(() => {
     GetUserInfo();
   }, [user]);
@@ -738,27 +736,27 @@ export default function ShoppingProfile() {
                     </Text>
                   </View>
                 </View>
-                
+
               </View>
-                      <View style={{paddingTop:20, alignItems:'center'}}>
-               <View style={[style.card,{flexDirection:'row',padding:0,paddingVertical:0,justifyContent:'space-around',alignItems:'center',marginVertical:0,paddingHorizontal:0,width:'91%'}]}>
-               
-                        <TouchableOpacity style={{width:'50%',padding:10,flexDirection:'row',gap:5,alignItems:'center',justifyContent:'center'}}
-                            onPress={()=>{
-                              navigation.navigate('Profile',{name:'' , id:namFromGetUser.id})
-                            }}
-                        >
-                          <ShoppingIcon name="shop" size={19} color={'#EA2C2E'}/>
-                          <Text style={{fontSize:13,color:'#333',textAlign:'center',fontWeight:'600'}}>Mağazama Git</Text>
-                        </TouchableOpacity>
-                        <View style={{padding:1,height:'70%',backgroundColor:'#CCCCCC'}}/>
-                        <TouchableOpacity style={{padding:10,width:'50%',flexDirection:'row',gap:5,alignItems:'center',justifyContent:'center'}} onPress={()=>{
-                          onShare()
-                        }}>
-                          <ShoppingIcon name="upload" size={19} color={'#EA2C2E'}/>
-                          <Text style={{fontSize:13,color:'#333',textAlign:'center',fontWeight:'600'}}>Mağazamı Paylaş</Text>
-                        </TouchableOpacity>
-              </View> 
+              <View style={{ paddingTop: 20, alignItems: 'center' }}>
+                <View style={[style.card, { flexDirection: 'row', padding: 0, paddingVertical: 0, justifyContent: 'space-around', alignItems: 'center', marginVertical: 0, paddingHorizontal: 0, width: '91%' }]}>
+
+                  <TouchableOpacity style={{ width: '50%', padding: 10, flexDirection: 'row', gap: 5, alignItems: 'center', justifyContent: 'center' }}
+                    onPress={() => {
+                      navigation.navigate('Profile', { name: '', id: namFromGetUser.id })
+                    }}
+                  >
+                    <ShoppingIcon name="shop" size={19} color={'#EA2C2E'} />
+                    <Text style={{ fontSize: 13, color: '#333', textAlign: 'center', fontWeight: '600' }}>Mağazama Git</Text>
+                  </TouchableOpacity>
+                  <View style={{ padding: 1, height: '70%', backgroundColor: '#CCCCCC' }} />
+                  <TouchableOpacity style={{ padding: 10, width: '50%', flexDirection: 'row', gap: 5, alignItems: 'center', justifyContent: 'center' }} onPress={() => {
+                    onShare()
+                  }}>
+                    <ShoppingIcon name="upload" size={19} color={'#EA2C2E'} />
+                    <Text style={{ fontSize: 13, color: '#333', textAlign: 'center', fontWeight: '600' }}>Mağazamı Paylaş</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </View>
@@ -773,10 +771,10 @@ export default function ShoppingProfile() {
                       (user.type == 2 &&
                         user.corporate_type == "Emlak Ofisi" &&
                         group.label == "Satış Noktalarımız") ||
-                      (user.corporate_type !== "Emlak Ofisi" &&
-                        user.type == 2 &&
-                        group.label == "Emlak Kulüp") ||
-                      (user.type == 1 && group.label == "Satış Noktalarımız")
+                        (user.corporate_type !== "Emlak Ofisi" &&
+                          user.type == 2 &&
+                          group.label == "Emlak Kulüp") ||
+                        (user.type == 1 && group.label == "Satış Noktalarımız")
                         ? "none"
                         : "flex",
                   }}
@@ -915,7 +913,7 @@ const style = StyleSheet.create({
   },
   header: {
     width: "100%",
-    height:width<400 ? "30%":'25%',
+    height: width < 400 ? "30%" : '25%',
     justifyContent: "center",
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,

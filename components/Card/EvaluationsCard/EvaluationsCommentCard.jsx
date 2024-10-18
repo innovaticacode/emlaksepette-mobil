@@ -63,15 +63,17 @@ const EvaluationsCommentCard = (props) => {
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>{title}</Text>
           <View style={styles.star}>
-            {[...Array(star)].map((_, index) => (
-              <Ionicons
-                key={index}
-                name={index < 5 ? "star" : "star-outline"}
-                size={12}
-                color="gold"
-                style={{ marginRight: 1 }}
-              />
-            ))}
+            {[...Array(star > 5 ? 5 : star < 0 ? 0 : Math.floor(star))].map(
+              (_, index) => (
+                <Ionicons
+                  key={index}
+                  name="star" // Yalnızca dolu yıldızları göster
+                  size={12}
+                  color="gold"
+                  style={{ marginRight: 1 }}
+                />
+              )
+            )}
           </View>
         </View>
       </View>

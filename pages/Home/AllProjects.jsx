@@ -439,8 +439,9 @@ export default function AllProjects() {
   const [index, setindex] = useState(0);
   const [tab, settab] = useState(0);
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF", paddingTop: 30 }}>
-      <Header onPress={toggleDrawer} index={setindex} tab={settab} />
+
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
+      {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
 
       <Modal
         swipeDirection="left"
@@ -458,9 +459,9 @@ export default function AllProjects() {
         animationOut="bounceOutLeft"
         style={styles.modal}
       >
-        <View style={styles.modalContent}>
+        {/* <View style={styles.modalContent}>
           <DrawerMenu setIsDrawerOpen={setState} />
-        </View>
+        </View> */}
       </Modal>
 
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>

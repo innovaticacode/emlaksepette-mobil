@@ -1,9 +1,17 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { View, Image, Text, FlatList, StyleSheet } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 
 const apiUrl = "https://private.emlaksepette.com";
-const AllFranchiseBrands = () => {
+const AllFranchiseBrands = (props) => {
+  const { navigation } = props;
   const [brands, setBrands] = useState([]);
 
   const fetchBrands = async () => {
@@ -28,7 +36,14 @@ const AllFranchiseBrands = () => {
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <View style={styles.area}>
-            <View style={styles.imageArea}>
+            <TouchableOpacity
+              style={styles.imageArea}
+              onPress={() => {
+                navigation.navigate("Profile", {
+                  id: item.id,
+                });
+              }}
+            >
               <Image
                 source={{
                   uri: `${apiUrl}/logos/${item.logo}`,
@@ -40,7 +55,7 @@ const AllFranchiseBrands = () => {
               <Text style={styles.info}>Toplam Danışman Sayısı:</Text>
               <View style={styles.seperator} />
               <Text style={styles.title}>{item.title}</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         )}
       />

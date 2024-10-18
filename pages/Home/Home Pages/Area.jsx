@@ -109,41 +109,8 @@ const Area = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <ScrollView style={styles.container}>
-          <View style={{ paddingHorizontal: 0 }}>
-            <Image
-              source={Land}
-              style={{ width: "auto", height: 120, resizeMode: "cover" }}
-            />
-          </View>
-          <View style={styles.header}>
-            <Text style={{ fontSize: 14, fontWeight: 700 }}>
-              ÖNE ÇIKAN ARSALAR
-            </Text>
-
-            <TouchableOpacity style={styles.allBtn}>
-              <Text
-                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
-                onPress={() =>
-                  navigation.navigate("AllRealtorAdverts", {
-                    name: "Emlak İlanları",
-                    slug: "emlak-ilanlari",
-                    data: filteredHomes,
-                    count: filteredHomes.length,
-                    type: "arsa",
-                    optional: null,
-                    title: null,
-                    check: null,
-                    city: null,
-                    county: null,
-                    hood: null,
-                  })
-                }
-              >
-                Tüm İlanları Gör
-              </Text>
-            </TouchableOpacity>
-          </View>
+        <>
+      
           {refreshing && (
             <View
               style={{
@@ -225,10 +192,52 @@ const Area = ({ index }) => {
                   />
                 }
                 ListFooterComponent={renderFooter}
+                ListHeaderComponent={
+                    <>
+                    
+                    <View style={{ paddingHorizontal: 0 }}>
+            <Image
+              source={Land}
+              style={{ width: "auto", height: 120, resizeMode: "cover" }}
+            />
+          </View>
+          <View style={styles.header}>
+            <Text style={{ fontSize: 14, fontWeight: 700 }}>
+              ÖNE ÇIKAN ARSALAR
+            </Text>
+
+            <TouchableOpacity style={styles.allBtn}>
+              <Text
+                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
+                onPress={() =>
+                  navigation.navigate("Drawer", {
+                    screen: "AllRealtorAdverts",
+                    params: {
+                      name: "Emlak İlanları",
+                      slug: "emlak-ilanlari",
+                      data: filteredHomes,
+                      count: filteredHomes.length,
+                      type: "arsa",
+                      optional: null,
+                      title: null,
+                      check: null,
+                      city: null,
+                      county: null,
+                      hood: null,
+                    },
+                  })
+                }
+              >
+                Tüm İlanları Gör
+              </Text>
+            </TouchableOpacity>
+          </View>
+          </>
+                }
               />
             )}
           </AlertNotificationRoot>
-        </ScrollView>
+        </>
       )}
     </>
   );

@@ -944,21 +944,9 @@ export default function PostDetail() {
           <SafeAreaView
             style={{ backgroundColor: "white", flex: 1, paddingTop: 30 }}
           >
-            <Header onPress={toggleDrawer} tab={settab} index={setindex} />
-            <Modal
-              isVisible={isDrawerOpen}
-              onBackdropPress={() => setIsDrawerOpen(false)}
-              animationIn="bounceInLeft"
-              animationOut="bounceOutLeft"
-              style={styles.modal}
-              swipeDirection={["left"]}
-              onSwipeComplete={() => setIsDrawerOpen(false)}
-            >
-              <View style={styles.modalContent}>
-                <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} on />
-              </View>
-            </Modal>
-            <View style={{ position: 'absolute', width: '100%', bottom: 0, paddingBottom:35, padding: 4,paddingTop:9, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around' ,backgroundColor:'#F2F2F2'}}>
+           
+           
+            <View style={{ position: 'absolute', width: '100%', bottom: 35, padding: 4, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
               <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }} onPress={handleOpenPhone}>
                 <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }}>Ara</Text>
               </TouchableOpacity>
@@ -1755,8 +1743,18 @@ export default function PostDetail() {
                     />
                   )}
               </View>
-{/*            
-              {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
+
+              <View>
+                {roomData && roomData["swap[]"] !== '[]' && (
+                  <SettingsItem
+                    info="Takas Başvurusu Yap"
+                    color={"orange"}
+                    fontWeight={"700"}
+                    icon={<LinkIcon3 name="plus" size={15} color={"orange"} />}
+                  />
+                )}
+              </View>
+              {/* {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
                 <TouchableOpacity
                   onPress={() => {
 
@@ -1781,6 +1779,7 @@ export default function PostDetail() {
                   )}
                 </TouchableOpacity>
               )} */}
+
             {roomData &&
                   roomData['swap[]'] &&
                   roomData['swap[]'] !== '[]' ?

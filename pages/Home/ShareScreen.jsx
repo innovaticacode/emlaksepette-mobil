@@ -45,7 +45,7 @@ export default function ShareScreen() {
           }),
         }}
       >
-        <Header onPress={toggleDrawer} index={setindex} tab={settab} />
+        {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
       </View>
       <Image
         source={require("../../src/assets/images/ilan_ekle_gorsel.png")}
@@ -71,7 +71,7 @@ export default function ShareScreen() {
         swipeDirection={["left"]}
         onSwipeComplete={() => setIsDrawerOpen(false)}
       >
-        <View>
+        {/* <View>
           <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
         </View>
       </Modal> */}
