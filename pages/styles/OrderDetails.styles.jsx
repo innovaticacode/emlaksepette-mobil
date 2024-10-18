@@ -1,0 +1,282 @@
+import { Platform, StyleSheet } from "react-native";
+
+export const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#FFF",
+    paddingTop: 10,
+    paddingLeft: 7,
+    paddingRight: 7,
+    gap: 11,
+    paddingBottom: 20,
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+    backgroundColor: "white",
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  modal2: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContent: {
+    alignSelf: "flex-start",
+  },
+
+  modalContent2: {
+    backgroundColor: "#f4f4f4",
+    padding: 20,
+    height: "100%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+  },
+  orderInfo: {
+    padding: 10,
+    width: "100%",
+    backgroundColor: "#FFFF",
+    borderWidth: 1,
+    borderColor: "#ebebeb",
+    gap: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  //   orderDetail: {
+  //     padding: 10,
+  //     width: "100%",
+  //     backgroundColor: "#FFFF",
+  //     borderWidth: 1,
+  //     borderColor: "#ebebeb",
+  //     gap: 10,
+  //     ...Platform.select({
+  //       ios: {
+  //         shadowColor: " #e6e6e6",
+  //         shadowOffset: { width: 1, height: 1 },
+  //         shadowOpacity: 0.1,
+  //         shadowRadius: 5,
+  //       },
+  //       android: {
+  //         elevation: 5,
+  //       },
+  //     }),
+  //   },
+  OrderPost: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderTopWidth: 1,
+    borderTopColor: "#ebebeb",
+    paddingTop: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ebebeb",
+    paddingBottom: 5,
+  },
+  Image: {
+    flex: 0.5 / 2,
+    padding: 2,
+    height: 90,
+  },
+  caption: {
+    flex: 1.4 / 2,
+    padding: 2,
+    gap: 4,
+  },
+  paymentArea: {
+    padding: 10,
+    width: "100%",
+    backgroundColor: "#FFFF",
+    borderWidth: 1,
+    borderColor: "#ebebeb",
+    gap: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  button: {
+    backgroundColor: "green",
+    padding: 13,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "#ffffff",
+    textAlign: "center",
+    fontWeight: "500",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    width: "100%",
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    height: "50%",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+  },
+  modalText: {
+    marginBottom: 15,
+  },
+  PersonalInfoArea: {
+    padding: 10,
+    width: "100%",
+    backgroundColor: "#FFFF",
+    borderWidth: 1,
+    borderColor: "#ebebeb",
+    gap: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+
+  //new design coding styles code----------------------------
+  orderStateBody: {
+    backgroundColor: "#F8F8F8",
+    borderRadius: 6,
+    padding: 10,
+  },
+  orderStateInfo: {
+    backgroundColor: "#FFF",
+    height: "auto",
+    padding: 10,
+    borderRadius: 6,
+    marginVertical: 6,
+    gap: 8,
+  },
+  boldText: {
+    fontWeight: "600",
+    fontSize: 14,
+    lineHeight: 16,
+    color: "#000",
+  },
+  paymentStatus: {
+    fontWeight: "600",
+    fontSize: 14,
+    lineHeight: 16,
+  },
+  orderDetail: {
+    backgroundColor: "#FFF",
+    borderWidth: 1,
+    borderRadius: 6,
+    borderColor: "#9D9D9D5F",
+    padding: 10,
+  },
+  btnArea: {
+    marginTop: 10,
+    flexDirection: "row",
+    width: "100%",
+    flex: 1,
+    justifyContent: "space-between",
+    gap: 10,
+  },
+  seperator: {
+    height: 1,
+    backgroundColor: "#ebebeb",
+    marginVertical: 10,
+    width: "100%",
+  },
+  normalText: {
+    fontSize: 16,
+    lineHeight: 16,
+    color: "#000",
+    fontWeight: "500",
+  },
+  info: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+    paddingHorizontal: 6,
+  },
+  invoiceBody: {
+    flexDirection: "row",
+    gap: 12,
+    alignItems: "center",
+  },
+  customerBody: {
+    backgroundColor: "#FFF",
+    borderWidth: 1,
+    borderRadius: 6,
+    borderColor: "#9D9D9D5F",
+    padding: 10,
+  },
+  largeBoldtext: {
+    fontWeight: "600",
+    fontSize: 16,
+    lineHeight: 18,
+    color: "#000",
+  },
+  orderSummaryBody: {
+    backgroundColor: "#FFF",
+    borderWidth: 1,
+    borderRadius: 6,
+    borderColor: "#9D9D9D5F",
+    padding: 10,
+  },
+  amount: {
+    borderWidth: 1,
+    borderRadius: 6,
+    borderColor: "#9D9D9D5F",
+    padding: 10,
+    marginTop: 10,
+    flex: 1,
+    gap: 8,
+  },
+});

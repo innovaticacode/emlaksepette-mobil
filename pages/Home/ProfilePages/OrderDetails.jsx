@@ -1,11 +1,10 @@
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
-  ImageBackground,
   ScrollView,
   Dimensions,
+  Image,
 } from "react-native";
 import Modal from "react-native-modal";
 import React, { useState, useEffect } from "react";
@@ -22,6 +21,9 @@ import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import { Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator } from "react-native-paper";
+import { style } from "../../styles/OrderDetails.styles";
+import { WhiteOrRedButtons } from "../../../components";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
 export default function OrderDetails() {
   const navigation = useNavigation();
@@ -163,13 +165,28 @@ export default function OrderDetails() {
     fetchDataDeal();
   }, []);
 
-  console.log(refund?.name + "asdasd");
-
   const handlePress = () => {
     setModalVisible(true);
   };
   const closeModal = () => {
     setModalVisible(false);
+  };
+
+  const calculatePaymentStatusColor = () => {
+    const success = "#00B84B";
+    const pending = "#FC9B00";
+    const failed = "#FF0000";
+
+    if (Detail.status == 0) {
+      return pending;
+    }
+    if (Detail.status == 1) {
+      return success;
+    }
+    if (Detail.status == 2) {
+      return failed;
+    }
+    return "#000000";
   };
 
   return (
@@ -182,447 +199,228 @@ export default function OrderDetails() {
         </View>
       ) : (
         <View style={style.container}>
-          <View style={style.orderInfo}>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontWeight: "400", fontSize: 13 }}>
-                Sipariş No:{" "}
-              </Text>
-              <Text style={{ fontSize: 13, color: "grey" }}>#{OrderId}</Text>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontWeight: "400", fontSize: 13 }}>
-                Sipariş Tarihi:{" "}
-              </Text>
-              <Text style={{ fontSize: 13, color: "grey" }}>
-                {formattedDate}
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontWeight: "400", fontSize: 13 }}>
-                Sipariş Durumu:{" "}
-              </Text>
-
-              {!refund ? (
-                <>
-                  {Detail.status == 0 && (
-                    <Text style={{ fontSize: 13, color: "#BC3913" }}>
-                      Ödeme Onayı Bekliyor
-                    </Text>
-                  )}
-                  {Detail.status == 1 && (
-                    <Text style={{ fontSize: 13, color: "#BC3913" }}>
-                      Siparişiniz Onaylandı
-                    </Text>
-                  )}
-                  {Detail.status == 2 && (
-                    <Text style={{ fontSize: 13, color: "#BC3913" }}>
-                      Siparişiniz İptal Edildi
-                    </Text>
-                  )}
-                </>
-              ) : (
-                <>
-                  {refund && refund.status == 0 && (
-                    <Text style={{ fontSize: 13, color: "#BC3913" }}>
-                      İade Talebiniz İnceleniyor
-                    </Text>
-                  )}
-                  {refund && refund.status == 1 && (
-                    <Text style={{ fontSize: 13, color: "#BC3913" }}>
-                      Sipariş İptal Edildi
-                    </Text>
-                  )}
-                  {refund && refund.status == 2 && (
-                    <Text style={{ fontSize: 13, color: "#BC3913" }}>
-                      İade Talebiniz Reddedildi
-                    </Text>
-                  )}
-                </>
-              )}
-            </View>
-
-            {Detail.status == 1 && refund && refund.status == 0 && (
-              <View
-                style={{
-                  backgroundColor: "#FFBF00",
-                  borderWidth: 1,
-                  borderColor: "#BEE8B4",
-                  padding: 5,
-                  borderRadius: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 10,
-                }}
-              >
+          <View style={style.orderStateBody}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <>
+                <Text style={style.boldText}>Sipariş Durumu</Text>
                 <Text
-                  style={{
-                    color: "#333",
-                    textAlign: "center",
-                    fontSize: 12,
-                  }}
+                  style={[
+                    style.paymentStatus,
+                    { color: calculatePaymentStatusColor() },
+                  ]}
                 >
-                  İade Talebiniz İnceleniyor
+                  {!refund
+                    ? Detail?.status == 0
+                      ? "Ödeme Onayı Bekliyor"
+                      : Detail?.status == 1
+                      ? "Ödeme Onaylandı"
+                      : Detail?.status == 2
+                      ? "Ödeme İptal Edildi"
+                      : "Bilinmeyen Durum"
+                    : refund?.status == 0
+                    ? "İade Talebiniz İnceleniyor"
+                    : refund?.status == 1
+                    ? "İade Talebiniz Onaylandı"
+                    : refund?.status == 2
+                    ? "İade Talebiniz Reddedildi"
+                    : "Bilinmeyen Durum"}
                 </Text>
-              </View>
-            )}
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontWeight: "400", fontSize: 13 }}>
-                Kapora Tutarı:{" "}
-              </Text>
-              <Text style={{ fontSize: 13, color: "green" }}>
-                {Detail?.amount} ₺
-              </Text>
+              </>
             </View>
+            <>
+              <View style={style.orderStateInfo}>
+                <>
+                  <Text style={[style.boldText, { color: "#606060" }]}>
+                    Sipariş No
+                  </Text>
+                  <Text style={style.boldText}>{OrderId}</Text>
+                </>
+              </View>
+
+              <View style={style.orderStateInfo}>
+                <>
+                  <Text style={[style.boldText, { color: "#606060" }]}>
+                    Sipariş Tarihi
+                  </Text>
+                  <Text style={style.boldText}>{formattedDate}</Text>
+                </>
+              </View>
+              <View style={style.orderStateInfo}>
+                <>
+                  <Text style={[style.boldText, { color: "#606060" }]}>
+                    Kapora Tutarı
+                  </Text>
+                  <Text style={style.boldText}>{Detail?.amount} ₺</Text>
+                </>
+              </View>
+            </>
           </View>
-          <View style={style.orderDetail}>
-            <View style={{ gap: 10 }}>
-              <View style={{ flexDirection: "row" }}>
-                <Text style={{ fontWeight: "400", fontSize: 13 }}>
-                  İlan No:{" "}
+          <>
+            <View style={style.orderDetail}>
+              <View style={{ gap: 10 }}>
+                <Text style={style.boldText}>{`İlan No: #${
+                  1000000 + id + "-" + parsedData?.item?.housing
+                }`}</Text>
+                <Text
+                  style={style.boldText}
+                >{`Satıcı: ${Detail?.store?.name}`}</Text>
+              </View>
+              <View style={style.btnArea}>
+                <WhiteOrRedButtons
+                  text={"Mağazayı Gör"}
+                  icon={true}
+                  onPress={() =>
+                    navigation.navigate("Profile", { id: Detail?.store?.id })
+                  }
+                />
+
+                {parsedData?.type == "housing" && (
+                  <WhiteOrRedButtons
+                    text={"İlanı Değerlendir"}
+                    bgColor={"#EA2C2E"}
+                    onPress={() =>
+                      navigation.navigate("AddComment", { HouseID: id })
+                    }
+                  />
+                )}
+              </View>
+              <View style={{ paddingVertical: 8, flexDirection: "row" }}>
+                <Image
+                  source={{ uri: parsedData?.item?.image }}
+                  width={100}
+                  height={100}
+                  borderRadius={4}
+                />
+                <View style={style.info}>
+                  <View>
+                    <Text style={style.boldText}>
+                      {parsedData?.item?.title}
+                    </Text>
+                    {parsedData.type == "project" && (
+                      <Text style={style.boldText}>
+                        {parsedData?.item?.housing} No'lu Konut
+                      </Text>
+                    )}
+                  </View>
+                  <Text style={style.boldText}>{Detail?.amount} ₺</Text>
+                </View>
+              </View>
+              <View style={style.seperator} />
+              <>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={style.invoiceBody}
+                  onPress={() =>
+                    navigation.navigate("Invoice", { OrderId: Detail.id })
+                  }
+                >
+                  <FontAwesome5 name="file-invoice" size={18} color="#EA2B2E" />
+                  <Text style={[style.normalText, { color: "#EA2B2E" }]}>
+                    Faturayı Görüntüle
+                  </Text>
+                </TouchableOpacity>
+              </>
+            </View>
+          </>
+          <>
+            <View style={style.customerBody}>
+              <Text style={style.largeBoldtext}>Alıcı Bilgileri</Text>
+              <View style={{ gap: 20, paddingTop: 10 }}>
+                <Text style={style.boldText}>
+                  İsim Soyisim:
+                  <Text style={[style.boldText, { color: "#606060" }]}>
+                    {Detail?.user?.name}
+                  </Text>
                 </Text>
-                <Text style={{ fontSize: 13, color: "green" }}>
-                  #{1000000 + id + "-" + parsedData?.item?.housing}
+
+                <Text style={style.boldText}>
+                  E-Posta:
+                  <Text style={[style.boldText, { color: "#606060" }]}>
+                    {Detail?.user?.email}
+                  </Text>
+                </Text>
+                <Text style={style.boldText}>
+                  Telefon No:
+                  <Text style={[style.boldText, { color: "#606060" }]}>
+                    {Detail?.user?.mobile_phone}
+                  </Text>
                 </Text>
               </View>
-              <View
-                style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
-              >
-                <Text style={{ fontWeight: "400", fontSize: 13 }}>Satıcı:</Text>
-                <TouchableOpacity
-                  style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
-                  onPress={() => {
-                    navigation.navigate("Profile", { id: Detail.store.id });
-                  }}
-                >
-                  <Text style={{ fontSize: 13, color: "green" }}>
+            </View>
+          </>
+          <>
+            <View style={style.customerBody}>
+              <Text style={style.largeBoldtext}>Satıcı Bilgileri</Text>
+              <View style={{ gap: 20, paddingTop: 10 }}>
+                <Text style={style.boldText}>
+                  İsim Soyisim:
+                  <Text style={[style.boldText, { color: "#606060" }]}>
                     {Detail?.store?.name}
                   </Text>
-                  <Icon
-                    name="arrow-right"
-                    size={10}
-                    color={"green"}
-                    style={{ top: 1 }}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                gap: 20,
-                borderBottomWidth: 1,
-                borderBottomColor: "#ebebeb",
-                paddingBottom: 7,
-              }}
-            >
-              {parsedData?.type == "housing" && (
-                <TouchableOpacity
-                  onPress={() => {
-                    navigation.navigate("AddComment", { HouseID: id });
-                  }}
-                  style={{
-                    backgroundColor: "#EA2C2E",
-                    padding: 5,
-                    borderRadius: 2,
-                    flexDirection: "row",
-                    gap: 6,
-                    alignItems: "center",
-                  }}
-                >
-                  <Icon3 name="store-edit-outline" size={20} color={"white"} />
-                  <Text style={{ color: "white", fontSize: 12 }}>
-                    İlanı Değerlendir
-                  </Text>
-                </TouchableOpacity>
-              )}
-
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "transparent",
-                  borderWidth: 1,
-                  borderColor: "#EA2C2E",
-                  padding: 5,
-                  borderRadius: 2,
-                  flexDirection: "row",
-                  gap: 10,
-                  alignItems: "center",
-                }}
-                onPress={() => {
-                  navigation.navigate("Profile", { id: Detail?.store?.id });
-                }}
-              >
-                <Icon2 name="shopping-store" color={"#EA2C2E"} />
-                <Text style={{ color: "#EA2C2E", fontSize: 12 }}>
-                  Mağazayı Gör
                 </Text>
-              </TouchableOpacity>
-            </View>
 
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-
-                paddingRight: 10,
-                alignItems: "center",
-              }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <Text style={{ fontSize: 13 }}>{housing?.city?.title}</Text>
-                <Text style={{ fontSize: 13, marginLeft: 5 }}>
-                  {housing?.county?.title}
+                <Text style={style.boldText}>
+                  E-Posta:
+                  <Text style={[style.boldText, { color: "#606060" }]}>
+                    {Detail?.store?.email}
+                  </Text>
+                </Text>
+                <Text style={style.boldText}>
+                  Telefon No:
+                  <Text style={[style.boldText, { color: "#606060" }]}>
+                    {Detail?.store?.mobile_phone}
+                  </Text>
                 </Text>
               </View>
             </View>
-            <View style={style.OrderPost}>
-              <View style={style.Image}>
-                <ImageBackground
-                  source={{ uri: parsedData?.item?.image }}
-                  style={{ width: "100%", height: "100%" }}
-                  resizeMode="cover"
-                />
-              </View>
-              <View style={style.caption}>
-                <Text style={{ fontWeight: "500" }}>
-                  {parsedData?.item?.title}
+          </>
+
+          <>
+            <View style={style.orderSummaryBody}>
+              <Text style={style.largeBoldtext}>Ödeme Bilgileri</Text>
+              <View style={{ gap: 20, paddingTop: 10 }}>
+                <Text style={style.boldText}>
+                  Ödeme Yöntemi:
+                  <Text style={[style.boldText, { color: "#606060" }]}>
+                    {(Detail.payment_result === null && "EFT/Havale") ||
+                      (Detail.payment_result === !null && "Kredi Kartı")}
+                  </Text>
                 </Text>
-                {parsedData.type == "project" && (
-                  <Text style={{ fontWeight: "500" }}>
-                    {parsedData?.item?.housing} No'lu Konut
+
+                <Text style={style.boldText}>
+                  İlan Fiyatı:
+                  <Text style={[style.boldText, { color: "#606060" }]}>
+                    {`${tam_tutar_formatli}₺`}
                   </Text>
-                )}
-
-                <View
-                  style={{
-                    paddingTop: 5,
-                    backgroundColor: "#DAFBD0",
-                    width: "50%",
-                    padding: 5,
-                    borderRadius: 5,
-                  }}
-                >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "#3E8330",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {Detail?.amount} ₺
+                </Text>
+                <Text style={style.boldText}>
+                  İndirimli Fiyatı:
+                  <Text style={[style.boldText, { color: "#606060" }]}>
+                    {`${tam_tutar_formatli}₺`}
                   </Text>
+                </Text>
+              </View>
+              <>
+                <View style={{ flexDirection: "row", gap: 10 }}>
+                  <View style={style.amount}>
+                    <Text style={style.boldText}>Kapora Oranı</Text>
+                    <Text style={[style.boldText, { color: "#606060" }]}>
+                      Kapora Oranı
+                    </Text>
+                  </View>
+                  <View style={style.amount}>
+                    <Text style={style.boldText}>Kapora Tutarı</Text>
+                    <Text style={[style.boldText, { color: "#606060" }]}>
+                      Kapora Oranı
+                    </Text>
+                  </View>
                 </View>
-              </View>
+              </>
             </View>
-            <View style={{ gap: 14 }}>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Invoice", { OrderId: Detail.id })
-                }
-                style={{
-                  paddingTop: 10,
-                  flexDirection: "row",
-                  gap: 12,
-                  alignItems: "center",
-                }}
-              >
-                <Icon4 name="file-invoice" size={20} color={"red"} />
-                <Text>Faturayı Görüntüle</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={[style.PersonalInfoArea]}>
-            <Text
-              style={{
-                textAlign: "center",
-                fontSize: 15,
-                color: "#333",
-                fontWeight: "500",
-              }}
-            >
-              Alıcı Bilgileri
-            </Text>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <View>
-                <Text>İsim Soyisim</Text>
-              </View>
-              <View>
-                <Text>{Detail?.user?.name}</Text>
-              </View>
-            </View>
+          </>
 
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingTop: 5,
-              }}
-            >
-              <View>
-                <Text>E-Mail:</Text>
-              </View>
-              <View>
-                <Text>{Detail?.user?.email}</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingTop: 5,
-              }}
-            >
-              <View>
-                <Text>Telefon No:</Text>
-              </View>
-              <View>
-                <Text>{Detail?.user?.mobile_phone}</Text>
-              </View>
-            </View>
-          </View>
-          <View style={[style.PersonalInfoArea]}>
-            <Text
-              style={{
-                textAlign: "center",
-                fontSize: 15,
-                color: "#333",
-                fontWeight: "500",
-              }}
-            >
-              Satıcı Bilgileri
-            </Text>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <View>
-                <Text>İsim Soyisim</Text>
-              </View>
-              <View>
-                <Text>{Detail?.store?.name}</Text>
-              </View>
-            </View>
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingTop: 5,
-              }}
-            >
-              <View>
-                <Text>E-Mail:</Text>
-              </View>
-              <View>
-                <Text>{Detail?.store?.email}</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingTop: 5,
-              }}
-            >
-              <View>
-                <Text>Telefon No:</Text>
-              </View>
-              <View>
-                <Text>{Detail?.store?.mobile_phone}</Text>
-              </View>
-            </View>
-          </View>
-          <View style={style.paymentArea}>
-            <Text
-              style={{
-                textAlign: "center",
-                fontSize: 15,
-                color: "#333",
-                fontWeight: "500",
-              }}
-            >
-              Sipariş Özeti
-            </Text>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <View>
-                <Text>Ödeme Yöntemi</Text>
-              </View>
-              <View>
-                {Detail.payment_result === null && <Text>EFT/Havale</Text>}
-                {Detail.payment_result === !null && <Text>Kredi Kartı</Text>}
-              </View>
-            </View>
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingTop: 15,
-              }}
-            >
-              <View>
-                <Text>İlan Fiyatı</Text>
-              </View>
-              <View>
-                <Text>{tam_tutar_formatli} ₺</Text>
-              </View>
-            </View>
-            {tam_tutar !== urun_fiyati && (
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  paddingTop: 15,
-                }}
-              >
-                <View>
-                  <Text>İndirimli Fiyatı</Text>
-                </View>
-                <View>
-                  <Text>{tam_tutar_formatli} ₺</Text>
-                </View>
-              </View>
-            )}
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingTop: 5,
-                borderBottomWidth: 1,
-                paddingBottom: 7,
-                borderBottomColor: "#ebebeb",
-              }}
-            >
-              <View>
-                <Text>Kapora Oranı:</Text>
-              </View>
-              <View>
-                <Text> %{kapora_orani}</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingTop: 5,
-                borderBottomWidth: 1,
-                paddingBottom: 7,
-                borderBottomColor: "#ebebeb",
-              }}
-            >
-              <View>
-                <Text>Kapora Tutarı:</Text>
-              </View>
-              <View>
-                <Text> {addDotEveryThreeDigits(kapora_tutari)} ₺</Text>
-              </View>
-            </View>
-          </View>
           {(user?.id === Detail?.user?.id && Detail.status == 1 && !refund) ||
             (user?.id === Detail?.user?.id && refund?.status == "2" && (
               <View>
@@ -650,7 +448,6 @@ export default function OrderDetails() {
                 </TouchableOpacity>
               </View>
             ))}
-
           {user?.id === Detail?.user?.id &&
             Detail.status == 2 &&
             refund &&
@@ -677,7 +474,6 @@ export default function OrderDetails() {
                 </TouchableOpacity>
               </View>
             )}
-
           <Modal
             animationType="slide"
             transparent={true}
@@ -712,7 +508,6 @@ export default function OrderDetails() {
               </View>
             </View>
           </Modal>
-
           {user?.id === Detail?.user?.id && refund && refund.status == 0 && (
             <View>
               <TouchableOpacity
@@ -735,7 +530,6 @@ export default function OrderDetails() {
               </TouchableOpacity>
             </View>
           )}
-
           {user?.id !== Detail?.user?.id && (
             <View style={[style.PersonalInfoArea, { gap: 25 }]}>
               <Text style={{ fontSize: 16 }}>Sözleşme Ekle</Text>
@@ -758,7 +552,6 @@ export default function OrderDetails() {
               </TouchableOpacity>
             </View>
           )}
-
           <TouchableOpacity
             style={style.orderInfo}
             onPress={() => setModalVisible2(true)}
@@ -825,191 +618,3 @@ export default function OrderDetails() {
     </ScrollView>
   );
 }
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    paddingTop: 10,
-    paddingLeft: 7,
-    paddingRight: 7,
-    gap: 11,
-    paddingBottom: 20,
-  },
-  modalView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-    backgroundColor: "white",
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  modal2: {
-    justifyContent: "flex-end",
-    margin: 0,
-  },
-  modalContent: {
-    alignSelf: "flex-start",
-  },
-
-  modalContent2: {
-    backgroundColor: "#f4f4f4",
-    padding: 20,
-    height: "100%",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  closeButton: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-  },
-  orderInfo: {
-    padding: 10,
-    width: "100%",
-    backgroundColor: "#FFFF",
-    borderWidth: 1,
-    borderColor: "#ebebeb",
-    gap: 10,
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  orderDetail: {
-    padding: 10,
-    width: "100%",
-    backgroundColor: "#FFFF",
-    borderWidth: 1,
-    borderColor: "#ebebeb",
-    gap: 10,
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  OrderPost: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    borderTopWidth: 1,
-    borderTopColor: "#ebebeb",
-    paddingTop: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ebebeb",
-    paddingBottom: 5,
-  },
-  Image: {
-    flex: 0.5 / 2,
-    padding: 2,
-    height: 90,
-  },
-  caption: {
-    flex: 1.4 / 2,
-    padding: 2,
-    gap: 4,
-  },
-  paymentArea: {
-    padding: 10,
-    width: "100%",
-    backgroundColor: "#FFFF",
-    borderWidth: 1,
-    borderColor: "#ebebeb",
-    gap: 10,
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  button: {
-    backgroundColor: "green",
-    padding: 13,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "#ffffff",
-    textAlign: "center",
-    fontWeight: "500",
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalView: {
-    width: "100%",
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    height: "50%",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  closeButton: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-  },
-  modalText: {
-    marginBottom: 15,
-  },
-  PersonalInfoArea: {
-    padding: 10,
-    width: "100%",
-    backgroundColor: "#FFFF",
-    borderWidth: 1,
-    borderColor: "#ebebeb",
-    gap: 10,
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-});
