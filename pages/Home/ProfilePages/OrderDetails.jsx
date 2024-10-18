@@ -21,7 +21,7 @@ import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import { Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator } from "react-native-paper";
-import { style } from "../../styles/OrderDetails.styles";
+import { style } from "../../../styles/OrderDetails.styles";
 import { WhiteOrRedButtons } from "../../../components";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import SecurityBlue from "../../../assets/securityBlue.png";
