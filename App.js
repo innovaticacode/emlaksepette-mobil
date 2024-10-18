@@ -154,6 +154,7 @@ const DrawerNavigator = () => {
         name="Home"
         component={Home}
         options={{
+          
           header: () => <Header />,
           headerShown: isShoppingProfile ? false : true,
         }}
