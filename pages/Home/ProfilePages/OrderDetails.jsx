@@ -437,6 +437,20 @@ export default function OrderDetails() {
             </TouchableOpacity>
           </>
 
+          {user?.id == Detail?.user?.id && Detail.status == 1 && !refund && (
+            <View>
+              <WhiteOrRedButtons
+                bgColor={"#EA2B2E"}
+                text={"İade Talebi Oluştur"}
+                onPress={() =>
+                  navigation.navigate("ExtraditionRequest", {
+                    OrderId: OrderId,
+                  })
+                }
+              />
+            </View>
+          )}
+
           {(user?.id === Detail?.user?.id && Detail.status == 1 && !refund) ||
             (user?.id === Detail?.user?.id && refund?.status == "2" && (
               <View>
