@@ -420,6 +420,22 @@ export default function OrderDetails() {
               </>
             </View>
           </>
+          <>
+            <TouchableOpacity onPress={() => setModalVisible2(true)}>
+              <Text
+                style={[
+                  style.boldText,
+                  {
+                    color: "#EA2B2E",
+                    textDecorationLine: "underline",
+                    textAlign: "center",
+                  },
+                ]}
+              >
+                Mesafeli Güvenli Kapora Sözleşmesi
+              </Text>
+            </TouchableOpacity>
+          </>
 
           {(user?.id === Detail?.user?.id && Detail.status == 1 && !refund) ||
             (user?.id === Detail?.user?.id && refund?.status == "2" && (
@@ -552,21 +568,7 @@ export default function OrderDetails() {
               </TouchableOpacity>
             </View>
           )}
-          <TouchableOpacity
-            style={style.orderInfo}
-            onPress={() => setModalVisible2(true)}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                textDecorationLine: "underline",
-                fontWeight: "bold",
-                color: "red",
-              }}
-            >
-              Mesafeli Güvenli Kapora Sözleşmesi
-            </Text>
-          </TouchableOpacity>
+
           <Modal
             isVisible={modalVisible2}
             onBackdropPress={() => setModalVisible2(false)}
