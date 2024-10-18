@@ -218,15 +218,15 @@ export default function SupportAdd() {
       return;
     }
 
-    if (!phoneRegex.test(phone)) {
-      Dialog.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Hata!",
-        textBody: "Lütfen geçerli bir telefon numarası giriniz (10 haneli).",
-        button: "Tamam",
-      });
-      return;
-    }
+    // if (!phoneRegex.test(phone)) {
+    //   Dialog.show({
+    //     type: ALERT_TYPE.DANGER,
+    //     title: "Hata!",
+    //     textBody: "Lütfen geçerli bir telefon numarası giriniz (10 haneli).",
+    //     button: "Tamam",
+    //   });
+    //   return;
+    // }
 
     if (
       !selectedValue ||
@@ -234,9 +234,9 @@ export default function SupportAdd() {
       !name ||
       !email ||
       !phone ||
-      !checked || // KVKK checkbox'ının seçili olup olmadığını kontrol et
-      !checked1 || // Çerez politikasının checkbox'ını kontrol et
-      !checked2 // Gizlilik sözleşmesi checkbox'ını kontrol et
+      !checked || 
+      !checked1 || 
+      !checked2 
     ) {
       Dialog.show({
         type: ALERT_TYPE.DANGER,
@@ -254,33 +254,29 @@ export default function SupportAdd() {
 
       formData.append("category", selectedValue);
       formData.append("description", textAreaValue);
-      formData.append("name", name); // Ad alanı
-      formData.append("email", email); // Eposta alanı
-      formData.append("phone", phone); // Telefon alanı
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("phone", phone);
 
       if (selectedValue === "Evrak Gönderimi" && additionalOption) {
         formData.append("sendReason", additionalOption);
       }
 
       if (image && image.length > 0) {
-        formData.append(
-          "file",
-          {
-            uri:
-              Platform.OS === "android"
-                ? image[0]
-                : image[0]?.uri?.replace("file://", ""),
-            type: image[0]?.mimeType,
-            name:
-              image[0]?.name == null
-                ? "Image.jpg"
-                : image[0]?.name?.slice(-3) == "pdf"
-                ? image[0]?.name
-                : image?.fileName,
-          }
-        );
+        formData.append("file", {
+          uri:
+            Platform.OS === "android"
+              ? image[0]
+              : image[0]?.uri?.replace("file://", ""),
+          type: image[0]?.mimeType,
+          name:
+            image[0]?.name == null
+              ? "Image.jpg"
+              : image[0]?.name?.slice(-3) == "pdf"
+              ? image[0]?.name
+              : image?.fileName,
+        });
       }
-      
 
       const response = await axios.post(
         "https://private.emlaksepette.com/api/support",
@@ -293,26 +289,49 @@ export default function SupportAdd() {
         }
       );
 
-      console.log("API Yanıtı:", response);
-      if (response.status) {
-        Dialog.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "Başarılı",
-          textBody: "Talebiniz oluşturuldu.",
-          button: "Tamam",
-        });
-        setSelectedValue(null);
-        setTextAreaValue("");
-        setAdditionalOption("");
-        setImage([]); // PDF dosyasını sıfırla
-        setPickerKey(Math.random());
-        setName(""); // Ad alanını sıfırla
-        setEmail(""); // Eposta alanını sıfırla
-        setPhone(""); // Telefon alanını sıfırla
-        setChecked(false); // KVKK checkbox'ını sıfırla
-        setChecked1(false); // Çerez checkbox'ını sıfırla
-        setChecked2(false); // Gizlilik checkbox'ını sıfırla
-      } else {
+      if (response.status == 200 || 201) {
+        if (user.access_token){
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: "Talebiniz oluşturuldu.",
+            button: "Tamam",
+          });
+          setSelectedValue(null);
+          setTextAreaValue("");
+          setAdditionalOption("");
+          setImage([]);
+          setPickerKey(Math.random());
+          setName("");
+          setEmail(""); 
+          setPhone(""); 
+          setChecked(false); 
+          setChecked1(false); 
+          setChecked2(false);
+        }
+        else {
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: `Talebiniz oluşturuldu. Süreci ${response.data.data.code} 'nolu takip numaranız ile takip edebilirsiniz. `,
+            button: "Tamam",
+          });
+          setSelectedValue(null);
+          setTextAreaValue("");
+          setAdditionalOption("");
+          setImage([]);
+          setPickerKey(Math.random());
+          setName("");
+          setEmail(""); 
+          setPhone(""); 
+          setChecked(false); 
+          setChecked1(false); 
+          setChecked2(false);
+        }
+
+         
+      } 
+      else {
         Dialog.show({
           type: ALERT_TYPE.DANGER,
           title: "Hata!",
@@ -395,6 +414,40 @@ export default function SupportAdd() {
       throw error;
     }
   };
+
+  const formatPhoneNumberLive = (text) => {
+    // Sadece rakamları al, baştaki sıfırı sil
+    let cleaned = ('' + text).replace(/\D/g, '').replace(/^0/, '');
+  
+    // 10 rakamdan fazlasına izin verme
+    if (cleaned.length > 10) {
+      cleaned = cleaned.slice(0, 10);
+    }
+  
+    // Formatı oluşturmak için rakamları yerleştir
+    if (cleaned.length > 6) {
+      return '(' + cleaned.slice(0, 3) + ') ' + cleaned.slice(3, 6) + ' ' + cleaned.slice(6, 8) + ' ' + cleaned.slice(8, 10);
+    } else if (cleaned.length > 3) {
+      return '(' + cleaned.slice(0, 3) + ') ' + cleaned.slice(3, 6);
+    } else if (cleaned.length > 0) {
+      return '(' + cleaned;
+    }
+  
+    return '';
+  };
+
+  const handlePhoneInputChange = (text) => {
+    // Silme işlemi yapıldığında formatı bozma
+    if (text.length < phone.length) {
+      setPhone(text);
+      return;
+    }
+
+    // Formatlı girişi işlemek için yukarıdaki fonksiyon
+    const formattedPhone = formatPhoneNumberLive(text);
+    setPhone(formattedPhone);
+  };  
+  
 
   return (
     <AlertNotificationRoot>
@@ -507,9 +560,10 @@ export default function SupportAdd() {
                 <TextInput
                   style={styles.input}
                   value={phone}
-                  onChangeText={(text) => setPhone(text)}
+                  onChangeText={handlePhoneInputChange}
                   placeholder="Telefon numaranızı giriniz"
                   keyboardType="number-pad"
+                  maxLength={15}
                 />
               </View>
 

@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   Text,
   Image,
+  Linking,
 } from "react-native";
 import Search from "../../../pages/Home/Search";
 import Categories from "../../Categories";
@@ -14,6 +15,7 @@ import { getValueFor } from "../../methods/user";
 import IconAntDesign from "react-native-vector-icons/AntDesign";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/EvilIcons";
+import SocialIcons from "react-native-vector-icons/Entypo";
 import axios from "axios";
 import { styles } from "./DrawerMenu.style";
 
@@ -54,13 +56,20 @@ const DrawerMenu = () => {
     navigation.dispatch(DrawerActions.closeDrawer()); // Drawer'ı kapatıyoruz
   };
 
+  const openLink = (url) => {
+    Linking.openURL(url);
+  };
+
   return (
     <SafeAreaView>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={styles.scrollContainer}
+      >
         <View style={styles.mainContainer}>
           <View style={styles.closeIconContainer}>
             <TouchableOpacity
-              onPress={() => navigation.dispatch(DrawerActions.closeDrawer())} // Drawer'ı kapatıyoruz
+              onPress={() => navigation.dispatch(DrawerActions.closeDrawer())}
             >
               <IconAntDesign name="close" size={22} color={"#333"} />
             </TouchableOpacity>
@@ -88,14 +97,14 @@ const DrawerMenu = () => {
                 <TouchableOpacity
                   disabled={user.access_token ? true : false}
                   onPress={() => {
-                    setIsDrawerOpen(false);
+                    navigation.dispatch(DrawerActions.closeDrawer());
                     setTimeout(() => {
                       navigation.navigate("Login");
-                    }, 1000);
+                    }, 200);
                   }}
                 >
                   <Text style={styles.userName}>
-                    {user.access_token ? namFromGetUser.name : "Giriş Yap"}
+                    {user.access_token ? namFromGetUser?.name : "Giriş Yap"}
                   </Text>
                 </TouchableOpacity>
 
@@ -109,7 +118,7 @@ const DrawerMenu = () => {
                     {user.access_token
                       ? user.type == 1
                         ? "Hesabım"
-                        : "Mağazam"
+                        : "Panelim"
                       : "Hesabım"}
                   </Text>
                 </TouchableOpacity>
@@ -138,10 +147,10 @@ const DrawerMenu = () => {
           <View style={styles.grayArea}>
             <View style={styles.categoryWrapper}>
               <TouchableOpacity
-                onPress={() => navigateToScreen("RealtorClubExplore")}
+                onPress={() => navigateToScreen("SellAndRent")}
               >
                 <Categories
-                  category={"Emlak Kulüp Nedir ?"}
+                  category={"Sat Kirala Nedir ?"}
                   materialIcon={"groups-2"}
                 />
               </TouchableOpacity>
@@ -159,26 +168,28 @@ const DrawerMenu = () => {
                 onPress={() => navigateToScreen("SalePageMain")}
               >
                 <Categories
-                  category={"Satış Noktası Ol"}
+                  category={"Satış Noktası Ol Nedir?"}
                   iconName={"handshake"}
                 />
               </TouchableOpacity>
             </View>
 
-            {/* İLAN VER BUTONU START */}
+            {/* BUTON START */}
             <View style={styles.advertButtonContainer}>
               <TouchableOpacity
                 style={styles.advertButton}
                 onPress={() => {
-                  navigateToScreen("ShareAdvert");
+                  navigateToScreen("Support");
                 }}
               >
                 <IconAntDesign name="plus" color={"white"} size={18} />
-                <Text style={styles.advertButtonText}>İlan Ver</Text>
+                <Text style={styles.advertButtonText}>
+                  Destek Talebi Oluştur
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
-          {/* İLAN VER BUTONU END */}
+          {/* BUTON END */}
 
           {/* MÜŞTERİ HİZMETLERİ ALANI START */}
           <View style={styles.customerServiceContainer}>
@@ -190,11 +201,55 @@ const DrawerMenu = () => {
                 <Text style={styles.customerServiceText}>
                   Müşteri Hizmetleri
                 </Text>
-                <Text style={styles.customerServiceNumber}>444 3 284</Text>
+                <Text style={styles.customerServiceNumber}>0850 309 55 39</Text>
               </View>
             </TouchableOpacity>
           </View>
           {/* MÜŞTERİ HİZMETLERİ ALANI END */}
+
+          <View style={styles.socialIcons}>
+            <TouchableOpacity
+              onPress={() =>
+                openLink(
+                  "https://www.facebook.com/p/Emlak-Sepette-61555351466172"
+                )
+              }
+            >
+              <SocialIcons
+                style={styles.Icons}
+                name="facebook-with-circle"
+                size={40}
+                color={"#333"}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => openLink("https://www.instagram.com/emlaksepette")}
+            >
+              <SocialIcons
+                style={styles.Icons}
+                name="instagram-with-circle"
+                size={40}
+                color={"#333"}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() =>
+                openLink(
+                  "https://www.linkedin.com/company/emlak-sepette/mycompany/"
+                )
+              }
+            >
+              <SocialIcons
+                style={styles.Icons}
+                name="linkedin-with-circle"
+                size={40}
+                color={"#333"}
+              />
+            </TouchableOpacity>
+          </View>
+          <View>
+            <Text style={styles.Version}>v1.0.0</Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

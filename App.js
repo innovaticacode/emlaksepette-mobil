@@ -154,6 +154,7 @@ const DrawerNavigator = () => {
         name="Home"
         component={Home}
         options={{
+          
           header: () => <Header />,
           headerShown: isShoppingProfile ? false : true,
         }}
@@ -1179,7 +1180,6 @@ const StackScreenNavigator = () => {
                   component={Support}
                   options={({ route }) => ({
                     title: "Destek",
-
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#f7f7f7",

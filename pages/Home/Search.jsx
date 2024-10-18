@@ -29,9 +29,9 @@ export default function Search({ onpres, setIsDrawerOpen }) {
         "https://private.emlaksepette.com/api/menu-list"
       );
 
-      const filteredMenuItems = response.data; // Menünün sondaki ögesini çıkarıyor.
+      const filteredMenuItems = response.data;
 
-      setMenuItems(filteredMenuItems); // Filtrelenmiş menü öğelerini set ediyoruz
+      setMenuItems(filteredMenuItems);
     } catch (error) {
       console.log(error);
     }
@@ -43,7 +43,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
 
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
-    navigation.dispatch(DrawerActions.closeDrawer()); // Drawer'ı kapatıyoruz
+    navigation.dispatch(DrawerActions.closeDrawer());
   };
 
   return (
@@ -80,8 +80,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
             return (
               <TouchableOpacity
                 onPress={() => {
-                  navigation.dispatch(DrawerActions.closeDrawer()); // Drawer'ı kapatıyoruz
-
+                  navigation.dispatch(DrawerActions.closeDrawer());
                   if (item.submenus && item.submenus?.length > 0) {
                     navigation.navigate("Public", {
                       title: item.text,
