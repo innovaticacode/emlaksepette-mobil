@@ -24,6 +24,8 @@ import { ActivityIndicator } from "react-native-paper";
 import { style } from "../../styles/OrderDetails.styles";
 import { WhiteOrRedButtons } from "../../../components";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import SecurityBlue from "../../../assets/securityBlue.png";
+import SecurityGreen from "../../../assets/securityGreen.png";
 
 export default function OrderDetails() {
   const navigation = useNavigation();
@@ -200,9 +202,7 @@ export default function OrderDetails() {
       ) : (
         <View style={style.container}>
           <View style={style.orderStateBody}>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
+            <View style={style.statusBody}>
               <>
                 <Text style={style.boldText}>Sipariş Durumu</Text>
                 <Text
@@ -435,6 +435,94 @@ export default function OrderDetails() {
                 Mesafeli Güvenli Kapora Sözleşmesi
               </Text>
             </TouchableOpacity>
+          </>
+
+          <>
+            <View style={style.blueCardBody}>
+              <Image
+                source={SecurityBlue}
+                style={style.blueCardImg}
+                resizeMode="cover"
+              />
+              <View style={style.textArea}>
+                <Text
+                  style={[
+                    style.largeBoldtext,
+                    { textAlign: "center", color: "#2F7DF7" },
+                  ]}
+                >
+                  Ödemenizi Aldık. Teşekkür Ederiz!
+                </Text>
+                <Text style={[style.boldText, { textAlign: "center" }]}>
+                  Ödeme şu an da havuz hesabında. Satıcı ücretini sipariş
+                  tamamlandığında alacak.
+                </Text>
+                <Text
+                  style={[
+                    style.boldText,
+                    { textAlign: "center", color: "#606060", fontSize: 12 },
+                  ]}
+                >
+                  11 Eylül 2024, 11:07
+                </Text>
+              </View>
+            </View>
+          </>
+
+          <>
+            <View style={style.greenCardBody}>
+              <Image
+                source={SecurityGreen}
+                style={style.blueCardImg}
+                resizeMode="cover"
+              />
+              <View style={style.textArea}>
+                <Text
+                  style={[
+                    style.largeBoldtext,
+                    { textAlign: "center", color: "#0E713D" },
+                  ]}
+                >
+                  Kaporanız Emlak Sepette İle Güvende!{" "}
+                </Text>
+                <Text style={[style.boldText, { textAlign: "center" }]}>
+                  Sipariş onayınız bekleniyor.
+                </Text>
+                <View
+                  style={{ flexDirection: "row", justifyContent: "center" }}
+                >
+                  <TouchableOpacity style={style.okeyBtn}>
+                    <Text
+                      style={[
+                        style.boldText,
+                        { textAlign: "center", color: "#FFF" },
+                      ]}
+                    >
+                      Onayla
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity style={style.rejectBtn}>
+                    <Text
+                      style={[
+                        style.boldText,
+                        { textAlign: "center", color: "#FFF" },
+                      ]}
+                    >
+                      İptal Et
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <Text
+                  style={[
+                    style.boldText,
+                    { textAlign: "center", color: "#606060", fontSize: 12 },
+                  ]}
+                >
+                  11 Eylül 2024, 11:07
+                </Text>
+              </View>
+            </View>
           </>
 
           {user?.id == Detail?.user?.id && Detail.status == 1 && !refund && (

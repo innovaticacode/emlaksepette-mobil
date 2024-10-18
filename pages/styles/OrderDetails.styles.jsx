@@ -279,4 +279,57 @@ export const style = StyleSheet.create({
     flex: 1,
     gap: 8,
   },
+  // cards
+  blueCardBody: {
+    width: "100%",
+    backgroundColor: "#E9F5FF",
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center", // Yatayda ortalamak için
+    position: "relative", // Resim için mutlak konum
+    marginTop: 20,
+  },
+  blueCardImg: {
+    width: 60,
+    height: 60,
+    position: "absolute",
+    top: -22,
+    alignSelf: "center", // Resmi tam ortalamak için
+  },
+  textArea: {
+    gap: 16,
+    marginTop: 52,
+  },
+  greenCardBody: {
+    width: "100%",
+    backgroundColor: "#DCF1E6",
+    padding: 10,
+    borderRadius: 10,
+    alignItems: "center", // Yatayda ortalamak için
+    position: "relative", // Resim için mutlak konum
+    marginTop: 20,
+  },
+  okeyBtn: {
+    backgroundColor: "#0E713D",
+    height: 30,
+    width: 70,
+    paddingVertical: 5,
+    borderRadius: 5,
+    marginHorizontal: 10,
+    justifyContent: "center",
+  },
+  rejectBtn: {
+    backgroundColor: "#EA2A28",
+    height: 30,
+    width: 70,
+    paddingVertical: 5,
+    borderRadius: 5,
+    marginHorizontal: 10,
+    justifyContent: "center",
+  },
+  statusBody: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 8,
+  },
 });
