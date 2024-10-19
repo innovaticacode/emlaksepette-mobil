@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ImageBackground,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Entypo";
 import { Platform } from "react-native";
@@ -39,7 +45,6 @@ export default function SubUser({
           <View style={{ flexDirection: "row", gap: 10 }}>
             <View
               style={{
-                backgroundColor: "#E54242",
                 width: 60,
                 height: 60,
                 borderRadius: 30,
@@ -47,11 +52,13 @@ export default function SubUser({
                 alignItems: "center",
               }}
             >
-        
-                <ImageBackground source={{uri:`https://private.emlaksepette.com/storage/profile_images/${item.profile_image}`}} style={{width:'100%',height:'100%'}} borderRadius={30}/>
-              
-              
-              
+              <ImageBackground
+                source={{
+                  uri: `https://private.emlaksepette.com/storage/profile_images/${item.profile_image}`,
+                }}
+                style={{ width: "100%", height: "100%" }}
+                borderRadius={30}
+              />
             </View>
             <View style={{ paddingTop: 2, gap: 4 }}>
               <Text style={{ fontSize: 13, color: "#333", fontWeight: "500" }}>
