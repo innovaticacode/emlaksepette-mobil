@@ -392,7 +392,7 @@ export default function OrderDetails() {
                     <View style={style.amount}>
                       <Text style={style.boldText}>Kapora Oranı</Text>
                       <Text style={[style.boldText, { color: "#606060" }]}>
-                        {`${projectDetail?.deposit_rate ?? 2} %`}
+                        {`${projectDetail?.deposit_rate ?? 2}%`}
                       </Text>
                     </View>
                     <View style={style.amount}>
@@ -510,7 +510,7 @@ export default function OrderDetails() {
               </View>
             </>
 
-            {user?.id == Detail?.user?.id && Detail.status == 1 && !refund && (
+            {Detail?.can_refund === 1 && (
               <View>
                 <WhiteOrRedButtons
                   bgColor={"#EA2B2E"}
