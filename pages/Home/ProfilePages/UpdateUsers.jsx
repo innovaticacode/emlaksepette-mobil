@@ -103,7 +103,7 @@ export default function UpdateUsers() {
     value: role.id.toString(), // ID'yi string olarak belirtmek önemlidir.
   }));
 
-  const createUser = async () => {
+  const updateUser = async () => {
     setloadingUpdate(true);
     let formdata = new FormData();
     formdata.append("_method", "PUT");
@@ -442,14 +442,16 @@ export default function UpdateUsers() {
                   </View>
                   <View>
                     <TouchableOpacity
+                      activeOpacity={0.8}
                       onPress={() => {
                         setshowPassword(!showPassword);
                       }}
                       style={{
                         position: "absolute",
-                        zIndex: 1,
                         right: 10,
-                        top: 6,
+                        top: 10,
+                        zIndex: 999,
+                        justifyContent: "center",
                       }}
                     >
                       <DotIcon
@@ -505,7 +507,7 @@ export default function UpdateUsers() {
                     alignItems: "center",
                     justifyContent: "center",
                   }}
-                  onPress={createUser}
+                  onPress={updateUser}
                 >
                   {loadingUpdate ? (
                     <ActivityIndicator color="white" size={"small"} />

@@ -24,13 +24,30 @@ import { Platform } from "react-native";
 import NoDataScreen from "../../../components/NoDataScreen";
 export default function UsersList() {
   const navigation = useNavigation();
+  const isfocused = useIsFocused();
+
   const [modalVisible, setModalVisible] = useState(false);
   const [subUsers, setsubUsers] = useState([]);
+  const [loading, setloading] = useState(false);
   const [user, setuser] = useState({});
+  const [SuccessDelete, setSuccessDelete] = useState(false);
+  const [selectedUser, setselectedUser] = useState(0);
+  const [selectedUserName, setselectedUserName] = useState("");
+  const [SelecteduserID, setSelecteduserID] = useState(0);
+  const [SelectedUserIDS, setSelectedUserIDS] = useState([]);
+  const [openDeleteModal, setopenDeleteModal] = useState(false);
+  const [isChoosed, setisChoosed] = useState(false);
+  const [isShowDeleteButon, setisShowDeleteButon] = useState(false);
+  const [userList, setuserList] = useState([]);
+  const [deleteAllUserType, setdeleteAllUserType] = useState(false);
+  const [deleteUserModal, setdeleteUserModal] = useState(false);
+  const [selectedUserDeleteModa, setselectedUserDeleteModa] = useState(false);
+  const [showText, setshowText] = useState(false);
+
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-  const [loading, setloading] = useState(false);
+
   const fetchData = async () => {
     setloading(true);
     try {
@@ -51,11 +68,11 @@ export default function UsersList() {
       setloading(false);
     }
   };
-  const isfocused = useIsFocused();
+
   useEffect(() => {
     fetchData();
   }, [user, isfocused]);
-  const [SuccessDelete, setSuccessDelete] = useState(false);
+
   const DeleteUser = async () => {
     setloading(true);
 
@@ -69,10 +86,9 @@ export default function UsersList() {
             },
           }
         );
-       
+
         if (response.status === 200) {
           setTimeout(() => {
-            
             Dialog.show({
               type: ALERT_TYPE.SUCCESS,
               title: "Başarılı",
@@ -82,22 +98,16 @@ export default function UsersList() {
                 fetchData();
               },
             });
-           
           }, 300);
         }
-        setopenDeleteModal(false);
-      
+        setloading(false);
+        return setopenDeleteModal(false);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      
     }
   };
-  const [selectedUser, setselectedUser] = useState(0);
-  const [selectedUserName, setselectedUserName] = useState("");
-  const [SelecteduserID, setSelecteduserID] = useState(0);
-  const [SelectedUserIDS, setSelectedUserIDS] = useState([]);
 
   const GetId = (UserID, name) => {
     setselectedUser(UserID);
@@ -114,20 +124,12 @@ export default function UsersList() {
       }
     });
   };
-  console.log(SelectedUserIDS);
-  const [openDeleteModal, setopenDeleteModal] = useState(false);
   useEffect(() => {
     navigation.setOptions({
       title: `Ekip Üyeleri (${subUsers?.length})`,
     });
   }, [navigation, subUsers]);
-  const [isChoosed, setisChoosed] = useState(false);
-  const [isShowDeleteButon, setisShowDeleteButon] = useState(false);
 
-  const [userList, setuserList] = useState([]);
-  const [deleteAllUserType, setdeleteAllUserType] = useState(false);
-  const [deleteUserModal, setdeleteUserModal] = useState(false);
-  const [selectedUserDeleteModa, setselectedUserDeleteModa] = useState(false);
   const deleteAllUsers = async () => {
     const data = {
       user_ids: userList,
@@ -159,7 +161,6 @@ export default function UsersList() {
           });
           setloading(false);
         }, 300);
-       
 
         setdeleteAllUserType(false);
       }
@@ -207,7 +208,6 @@ export default function UsersList() {
     }
   };
 
-  const [showText, setshowText] = useState(false);
   return (
     <AlertNotificationRoot>
       {loading ? (
@@ -217,7 +217,12 @@ export default function UsersList() {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : subUsers?.length == 0 ? (
-       <NoDataScreen iconName={'account-multiple-plus'} buttonText={'Oluştur'} navigateTo={'CreateUser'} message={'Ekip Üyeniz Bulunmamaktadır'}/>
+        <NoDataScreen
+          iconName={"account-multiple-plus"}
+          buttonText={"Oluştur"}
+          navigateTo={"CreateUser"}
+          message={"Ekip Üyeniz Bulunmamaktadır"}
+        />
       ) : (
         <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
           <AwesomeAlert
