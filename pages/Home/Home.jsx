@@ -6,7 +6,11 @@ import Feather from "react-native-vector-icons/Feather";
 import ShareScreen from "./ShareScreen";
 import Test from "./Test";
 import Basket from "./Basket";
-import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
 import IconStore from "react-native-vector-icons/MaterialCommunityIcons";
 import ShoppingProfile from "./ShoppingProfile";
 import { getValueFor } from "../../components/methods/user";
@@ -26,7 +30,7 @@ const Home = ({ route }) => {
 
   const [user, setUser] = useState({});
   const [verifyStatus, setverifyStatus] = useState(null);
-  
+
   useEffect(() => {
     if (route?.params?.status == "login") {
       getValueFor("user", setUser);
@@ -43,7 +47,7 @@ const Home = ({ route }) => {
   }, [isFocused]);
 
   const [userdata, setuserdata] = useState({});
-  
+
   const GetUserInfo = async () => {
     try {
       if (user.access_token) {
@@ -218,7 +222,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingVertical: 10,
     width: "auto",
-    height: 90, 
+    height: 90,
     justifyContent: "center",
   },
   tabBarLabel: {
@@ -243,7 +247,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   tabBarBadgeStyle: {
-    display: 'flex',
+    display: "flex",
     fontSize: 10,
     height: 17,
     width: 20,

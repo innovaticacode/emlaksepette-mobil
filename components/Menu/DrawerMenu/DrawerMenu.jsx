@@ -18,9 +18,12 @@ import Icon2 from "react-native-vector-icons/EvilIcons";
 import SocialIcons from "react-native-vector-icons/Entypo";
 import axios from "axios";
 import { styles } from "./DrawerMenu.style";
+import { useDispatch } from "react-redux";
+import { setShoppingProfile } from "../../../store/slices/Menu/MenuSlice";
 
 const DrawerMenu = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [user, setUser] = useState({});
   const [namFromGetUser, setnamFromGetUser] = useState([]);
   const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
@@ -111,7 +114,8 @@ const DrawerMenu = () => {
                 <TouchableOpacity
                   disabled={user.access_token ? false : true}
                   onPress={() => {
-                    navigateToScreen("ShopProfile");
+                    navigateToScreen("Hesabım");
+                    dispatch(setShoppingProfile({ isShoppingProfile: true }));
                   }}
                 >
                   <Text style={styles.userAccountText}>
@@ -146,9 +150,7 @@ const DrawerMenu = () => {
           {/* GRİ ALAN START */}
           <View style={styles.grayArea}>
             <View style={styles.categoryWrapper}>
-              <TouchableOpacity
-                onPress={() => navigateToScreen("SellAndRent")}
-              >
+              <TouchableOpacity onPress={() => navigateToScreen("SellAndRent")}>
                 <Categories
                   category={"Sat Kirala Nedir ?"}
                   materialIcon={"groups-2"}
