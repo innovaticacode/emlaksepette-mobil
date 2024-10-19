@@ -147,7 +147,7 @@ export default function CreateUser() {
         name: image.fileName == null ? "Image.jpeg" : image.fileName,
       });
     } else {
-      formdata.append("profile_image", null);
+      // formdata.append("profile_image", "indir.jpg");
     }
 
     if (user?.access_token) {
