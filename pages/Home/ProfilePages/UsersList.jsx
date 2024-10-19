@@ -28,7 +28,7 @@ export default function UsersList() {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [subUsers, setsubUsers] = useState([]);
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(true);
   const [user, setuser] = useState({});
   const [SuccessDelete, setSuccessDelete] = useState(false);
   const [selectedUser, setselectedUser] = useState(0);
@@ -61,6 +61,7 @@ export default function UsersList() {
           }
         );
         setsubUsers(response.data.users);
+        return setloading(false);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -216,14 +217,7 @@ export default function UsersList() {
         >
           <ActivityIndicator size={"large"} color="#333" />
         </View>
-      ) : subUsers?.length == 0 ? (
-        <NoDataScreen
-          iconName={"account-multiple-plus"}
-          buttonText={"Oluştur"}
-          navigateTo={"CreateUser"}
-          message={"Ekip Üyeniz Bulunmamaktadır"}
-        />
-      ) : (
+      ) : subUsers?.length > 0 ? (
         <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
           <AwesomeAlert
             show={openDeleteModal}
@@ -522,6 +516,13 @@ export default function UsersList() {
             </View>
           </ModalEdit>
         </ScrollView>
+      ) : (
+        <NoDataScreen
+          iconName={"account-multiple-plus"}
+          buttonText={"Oluştur"}
+          navigateTo={"CreateUser"}
+          message={"Ekip Üyeniz Bulunmamaktadır"}
+        />
       )}
     </AlertNotificationRoot>
   );
