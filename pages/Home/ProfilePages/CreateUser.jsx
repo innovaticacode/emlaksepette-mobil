@@ -108,9 +108,13 @@ export default function CreateUser() {
     if (!title) errors.title = "Bu alan zorunludur";
     if (!email) {
       errors.email = "Bu alan zorunludur";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors.email = "Geçerli bir email adresi giriniz";
+    } else if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+      /[öüçğışÖÜÇĞİŞ]/.test(email)
+    ) {
+      errors.email = "Geçerli bir email adresi giriniz ";
     }
+
     if (!phoneNumber) errors.phoneNumber = "Bu alan zorunludur";
     if (!password) {
       errors.password = "Bu alan zorunludur";
