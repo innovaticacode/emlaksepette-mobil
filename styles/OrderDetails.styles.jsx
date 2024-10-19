@@ -174,8 +174,10 @@ export const style = StyleSheet.create({
   },
   info: {
     flexDirection: "column",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     paddingHorizontal: 6,
+    gap: 10,
+    flexWrap: "wrap",
   },
   invoiceBody: {
     flexDirection: "row",

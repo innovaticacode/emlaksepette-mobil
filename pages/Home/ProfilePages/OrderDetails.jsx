@@ -32,7 +32,6 @@ export default function OrderDetails() {
   const navigation = useNavigation();
   const route = useRoute();
   const { OrderId, id } = route.params;
-
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -42,7 +41,6 @@ export default function OrderDetails() {
   const [refund, setRefund] = useState({});
   const [projectDetail, setprojectDetail] = useState({});
   const [housingDetail, sethousingDetail] = useState({});
-  const [housing, setHousing] = useState({});
   const [loading, setLoading] = useState(true);
   const [parsedData, setparsedData] = useState("");
   const [Deals, setDeals] = useState("");
@@ -62,11 +60,10 @@ export default function OrderDetails() {
             }
           );
           setDetail(response?.data?.order);
-          setHousing(response?.data?.housing);
           setRefund(response?.data?.order?.refund);
-          setprojectDetail(response.data.project);
-          sethousingDetail(response.data.housing);
-          setLoading(false);
+          setprojectDetail(response?.data.project);
+          sethousingDetail(response?.data.housing);
+          return setLoading(false);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -89,6 +86,7 @@ export default function OrderDetails() {
         console.error("JSON parse edilemedi:", error);
       }
     }
+    console.debug("Detail", Detail);
   }, [Detail]);
 
   const date = new Date(Detail.created_at);
@@ -113,50 +111,12 @@ export default function OrderDetails() {
   const year = date.getFullYear();
   const formattedDate = `${day} ${month} ${year}`;
 
-  // let deposit_rate = 0.04;
-  // let discount_percent = 4;
-  // let saleType = "";
-  // let kapora_tutari = parseFloat(Detail?.amount) / 100;
-
-  // let urun_fiyati = parseFloat(parsedData?.item?.price);
-  // let tam_tutar;
-  // let tam_tutar_formatli;
-  // let urun_fiyati_formatli;
-  // let indirim_miktari;
-  // let indirim_yuzdesi;
-  // let indirim_yuzdesi_formatli;
-  // if (parsedData?.type === "housing") {
-  //   const housing = parsedData?.item;
-  //   saleType = housing?.step2_slug;
-  // } else {
-  //   saleType = projectDetail?.step2_slug;
-  //   deposit_rate = projectDetail?.deposit_rate / 100;
-  //   discount_percent = projectDetail?.deposit_rate;
-  // }
-  // const kapora_orani = discount_percent / 100;
-  // tam_tutar = kapora_tutari / kapora_orani;
-  // tam_tutar_formatli = new Intl.NumberFormat("tr-TR", {
-  //   style: "currency",
-  //   currency: "TRY",
-  // }).format(tam_tutar);
-  // urun_fiyati_formatli = new Intl.NumberFormat("tr-TR", {
-  //   style: "currency",
-  //   currency: "TRY",
-  // }).format(urun_fiyati);
-  // indirim_miktari = tam_tutar - urun_fiyati;
-  // indirim_yuzdesi = (indirim_miktari / tam_tutar) * 100;
-  // indirim_yuzdesi_formatli = new Intl.NumberFormat("tr-TR", {
-  //   style: "percent",
-  //   maximumFractionDigits: 2,
-  // }).format(indirim_yuzdesi / 100);
-
   const fetchDataDeal = async () => {
     const url = `https://private.emlaksepette.com/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);
       const data = await response.json();
-      console.log(data);
       setDeals(data.content);
       // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     } catch (error) {
@@ -415,7 +375,7 @@ export default function OrderDetails() {
                   </Text>
 
                   <Text style={style.boldText}>
-                    İndirimli Fiyatı:
+                    İndirim Miktarı:
                     <Text style={[style.boldText, { color: "#606060" }]}>
                       {`${parsedData?.item?.discount_amount}₺`}
                     </Text>
@@ -426,7 +386,7 @@ export default function OrderDetails() {
                     <View style={style.amount}>
                       <Text style={style.boldText}>Kapora Oranı</Text>
                       <Text style={[style.boldText, { color: "#606060" }]}>
-                        Kapora Oranı
+                        {`${projectDetail?.deposit_rate ?? 2} %`}
                       </Text>
                     </View>
                     <View style={style.amount}>
