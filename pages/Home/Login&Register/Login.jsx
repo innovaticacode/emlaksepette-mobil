@@ -64,7 +64,7 @@ export default function Login({ navigation }) {
   const show = () => {
     setShow(!Show);
   };
-  
+
   const handleTextInputChange = (text) => {
     setEmail(text);
   };
@@ -88,7 +88,7 @@ export default function Login({ navigation }) {
           );
           setUser(res.data); // Kullanıcı durumunu günceller
           navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
-          navigation.replace('Home')
+          navigation.replace("Drawer", { screen: "Home" });
         } else {
           // setshowMailSendAlert(true);
           setStatus(false);
@@ -122,7 +122,6 @@ export default function Login({ navigation }) {
       Login();
     }
   };
-    
 
   Login.navigationOptions = {
     headerShown: false,
@@ -165,8 +164,6 @@ export default function Login({ navigation }) {
   const closeModal = () => {
     navigation.goBack();
   };
-  
-  
 
   return (
     <AlertNotificationRoot>
@@ -290,11 +287,9 @@ export default function Login({ navigation }) {
                             placeholder="Şifre"
                             secureTextEntry={Show ? false : true}
                             value={password}
-                            onChangeText={(value)=>setPassword(value)}
+                            onChangeText={(value) => setPassword(value)}
                           />
-                             </View>
-                         
-                     
+                        </View>
 
                         <View
                           style={{
@@ -349,14 +344,11 @@ export default function Login({ navigation }) {
                       </View>
                       <TouchableOpacity
                         style={{
-                         
                           backgroundColor: "#EA2C2E",
                           padding: 8,
                           borderRadius: 5,
                         }}
                         onPress={Submit}
-                        
-                       
                       >
                         {loadingForLogin ? (
                           <ActivityIndicator color="white" size={"small"} />
