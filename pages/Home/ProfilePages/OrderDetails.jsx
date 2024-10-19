@@ -26,6 +26,7 @@ import { WhiteOrRedButtons } from "../../../components";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import SecurityBlue from "../../../assets/securityBlue.png";
 import SecurityGreen from "../../../assets/securityGreen.png";
+import { formatCurrency } from "../../../utils/FormatedPrice";
 
 export default function OrderDetails() {
   const navigation = useNavigation();
@@ -112,42 +113,42 @@ export default function OrderDetails() {
   const year = date.getFullYear();
   const formattedDate = `${day} ${month} ${year}`;
 
-  let deposit_rate = 0.04;
-  let discount_percent = 4;
-  let saleType = "";
-  let kapora_tutari = parseFloat(Detail?.amount) / 100;
+  // let deposit_rate = 0.04;
+  // let discount_percent = 4;
+  // let saleType = "";
+  // let kapora_tutari = parseFloat(Detail?.amount) / 100;
 
-  let urun_fiyati = parseFloat(parsedData?.item?.price);
-  let tam_tutar;
-  let tam_tutar_formatli;
-  let urun_fiyati_formatli;
-  let indirim_miktari;
-  let indirim_yuzdesi;
-  let indirim_yuzdesi_formatli;
-  if (parsedData?.type === "housing") {
-    const housing = parsedData?.item;
-    saleType = housing?.step2_slug;
-  } else {
-    saleType = projectDetail?.step2_slug;
-    deposit_rate = projectDetail?.deposit_rate / 100;
-    discount_percent = projectDetail?.deposit_rate;
-  }
-  const kapora_orani = discount_percent / 100;
-  tam_tutar = kapora_tutari / kapora_orani;
-  tam_tutar_formatli = new Intl.NumberFormat("tr-TR", {
-    style: "currency",
-    currency: "TRY",
-  }).format(tam_tutar);
-  urun_fiyati_formatli = new Intl.NumberFormat("tr-TR", {
-    style: "currency",
-    currency: "TRY",
-  }).format(urun_fiyati);
-  indirim_miktari = tam_tutar - urun_fiyati;
-  indirim_yuzdesi = (indirim_miktari / tam_tutar) * 100;
-  indirim_yuzdesi_formatli = new Intl.NumberFormat("tr-TR", {
-    style: "percent",
-    maximumFractionDigits: 2,
-  }).format(indirim_yuzdesi / 100);
+  // let urun_fiyati = parseFloat(parsedData?.item?.price);
+  // let tam_tutar;
+  // let tam_tutar_formatli;
+  // let urun_fiyati_formatli;
+  // let indirim_miktari;
+  // let indirim_yuzdesi;
+  // let indirim_yuzdesi_formatli;
+  // if (parsedData?.type === "housing") {
+  //   const housing = parsedData?.item;
+  //   saleType = housing?.step2_slug;
+  // } else {
+  //   saleType = projectDetail?.step2_slug;
+  //   deposit_rate = projectDetail?.deposit_rate / 100;
+  //   discount_percent = projectDetail?.deposit_rate;
+  // }
+  // const kapora_orani = discount_percent / 100;
+  // tam_tutar = kapora_tutari / kapora_orani;
+  // tam_tutar_formatli = new Intl.NumberFormat("tr-TR", {
+  //   style: "currency",
+  //   currency: "TRY",
+  // }).format(tam_tutar);
+  // urun_fiyati_formatli = new Intl.NumberFormat("tr-TR", {
+  //   style: "currency",
+  //   currency: "TRY",
+  // }).format(urun_fiyati);
+  // indirim_miktari = tam_tutar - urun_fiyati;
+  // indirim_yuzdesi = (indirim_miktari / tam_tutar) * 100;
+  // indirim_yuzdesi_formatli = new Intl.NumberFormat("tr-TR", {
+  //   style: "percent",
+  //   maximumFractionDigits: 2,
+  // }).format(indirim_yuzdesi / 100);
 
   const fetchDataDeal = async () => {
     const url = `https://private.emlaksepette.com/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
@@ -190,6 +191,17 @@ export default function OrderDetails() {
     }
     return "#000000";
   };
+
+  useEffect(() => {
+    if (Detail.cart) {
+      const cartObject = JSON.parse(Detail.cart);
+      if (cartObject && cartObject.item && cartObject.item.image) {
+        setparsedData(cartObject);
+      } else {
+        console.error("Cart nesnesi veya item.image bulunamadı");
+      }
+    }
+  }, [Detail]);
 
   return (
     <View style={{ backgroundColor: "#FFF", flex: 1 }}>
@@ -251,7 +263,9 @@ export default function OrderDetails() {
                     <Text style={[style.boldText, { color: "#606060" }]}>
                       Kapora Tutarı
                     </Text>
-                    <Text style={style.boldText}>{Detail?.amount} ₺</Text>
+                    <Text style={style.boldText}>
+                      {formatCurrency(Detail?.amount)}
+                    </Text>
                   </>
                 </View>
               </>
@@ -303,7 +317,9 @@ export default function OrderDetails() {
                         </Text>
                       )}
                     </View>
-                    <Text style={style.boldText}>{Detail?.amount} ₺</Text>
+                    <Text style={style.boldText}>
+                      {formatCurrency(Detail?.amount)}
+                    </Text>
                   </View>
                 </View>
                 <View style={style.seperator} />
@@ -387,21 +403,21 @@ export default function OrderDetails() {
                   <Text style={style.boldText}>
                     Ödeme Yöntemi:
                     <Text style={[style.boldText, { color: "#606060" }]}>
-                      {(Detail.payment_result === null && "EFT/Havale") ||
-                        (Detail.payment_result === !null && "Kredi Kartı")}
+                      {` ${Detail?.payment_method}`}
                     </Text>
                   </Text>
 
                   <Text style={style.boldText}>
                     İlan Fiyatı:
                     <Text style={[style.boldText, { color: "#606060" }]}>
-                      {`${tam_tutar_formatli}₺`}
+                      {formatCurrency(parsedData?.item?.amount)}
                     </Text>
                   </Text>
+
                   <Text style={style.boldText}>
                     İndirimli Fiyatı:
                     <Text style={[style.boldText, { color: "#606060" }]}>
-                      {`${tam_tutar_formatli}₺`}
+                      {`${parsedData?.item?.discount_amount}₺`}
                     </Text>
                   </Text>
                 </View>
@@ -416,7 +432,7 @@ export default function OrderDetails() {
                     <View style={style.amount}>
                       <Text style={style.boldText}>Kapora Tutarı</Text>
                       <Text style={[style.boldText, { color: "#606060" }]}>
-                        Kapora Oranı
+                        {formatCurrency(Detail?.amount)}
                       </Text>
                     </View>
                   </View>
