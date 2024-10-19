@@ -37,6 +37,7 @@ import { useDispatch } from "react-redux";
 import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
 import { Skeleton } from "@rneui/themed";
 import { id } from "date-fns/locale";
+import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
 
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
@@ -181,6 +182,7 @@ export default function ShoppingProfile() {
     );
     await SecureStore.setItemAsync("user", "");
     navigation.replace("Drawer", { screen: "Home" }, { status: "logout" });
+    dispatch(setShoppingProfile({ isShoppingProfile: false }));
   };
 
   const toggleAccor = (index) => {

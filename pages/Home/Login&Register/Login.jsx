@@ -32,9 +32,12 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import { useDispatch } from "react-redux";
+import { setShoppingProfile } from "../../../store/slices/Menu/MenuSlice";
 
 export default function Login({ navigation }) {
   const route = useRoute();
+  const dispatch = useDispatch();
   const [status, setStatus] = useState(false);
   const [statusMessage, setStatusMessage] = useState(false);
   const [showLengthAlert, setShowLengthAlert] = useState(false);
@@ -88,6 +91,7 @@ export default function Login({ navigation }) {
           );
           setUser(res.data); // Kullanıcı durumunu günceller
           navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
+          dispatch(setShoppingProfile({ isShoppingProfile: false }));
           navigation.replace("Drawer", { screen: "Home" });
         } else {
           // setshowMailSendAlert(true);
@@ -98,7 +102,6 @@ export default function Login({ navigation }) {
             textBody: `${res.data.message}`,
             button: "Tamam",
           });
-          console.log(res.data.message + "OKAN");
           // setStatusMessage(res.data.message);
         }
       })
