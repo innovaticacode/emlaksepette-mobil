@@ -124,8 +124,7 @@ import AddBioText from "./pages/Home/ProfilePages/AddBioText";
 import SliderTourismRent from "./pages/Home/SliderTourismRent";
 import AllTourismRent from "./pages/Home/AllTourismRent";
 import ViewAll from "./pages/Home/ViewAll/ViewAll";
-import RealEstateWallet from './src/pages/RealEstateWallet';
-
+import RealEstateWallet from "./src/pages/RealEstateWallet";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
@@ -148,18 +147,20 @@ const DrawerNavigator = () => {
   const isShoppingProfile = useSelector(
     (state) => state.menu.isShoppingProfile
   );
+
+  useEffect(() => {
+    console.debug("DrawerNavigator.js: isShoppingProfile", isShoppingProfile);
+  }, [isShoppingProfile]);
   return (
     <Drawer.Navigator drawerContent={(props) => <DrawerMenu {...props} />}>
       <Drawer.Screen
         name="Home"
         component={Home}
         options={{
-          
           header: () => <Header />,
           headerShown: isShoppingProfile ? false : true,
         }}
       />
-
 
       <Drawer.Screen
         name="ShareAdvert"
@@ -173,7 +174,6 @@ const DrawerNavigator = () => {
       >
         {(props) => <ShareScreenProject {...props} />}
       </Drawer.Screen>
-
     </Drawer.Navigator>
   );
 };
@@ -338,7 +338,7 @@ const StackScreenNavigator = () => {
                     title: route.params.name,
                   })}
                 />
-             
+
                 <Stack.Screen
                   name="Profile"
                   component={Profile}
@@ -355,8 +355,6 @@ const StackScreenNavigator = () => {
                     <ShoppingProfile {...props} İsLoggedIn={İsLoggedIn} />
                   )}
                 </Stack.Screen>
-
-             
 
                 <Stack.Group>
                   <Stack.Screen
@@ -383,22 +381,21 @@ const StackScreenNavigator = () => {
                     name="Details"
                     component={Details}
                     options={{
-                      header: () => <Header showBack={1} />
+                      header: () => <Header showBack={1} />,
                     }}
                   />
                   <Stack.Screen
                     name="PostDetails"
                     component={PostDetail}
                     options={{
-
-                      header: () => <Header showBack={1} />
+                      header: () => <Header showBack={1} />,
                     }}
                   />
                   <Stack.Screen
                     name="Realtor details"
                     component={RealtorDetails}
                     options={{
-                      header: () => <Header showBack={1} />
+                      header: () => <Header showBack={1} />,
                     }}
                   />
                   <Stack.Screen
@@ -411,7 +408,10 @@ const StackScreenNavigator = () => {
                         backgroundColor: "#EA2B2E",
                       },
                       title:
-                        route.params.name + " - " + route.params.count + " Proje",
+                        route.params.name +
+                        " - " +
+                        route.params.count +
+                        " Proje",
                       headerBackTitle: "",
                       headerBackTitleVisible: false,
                       headerTintColor: "white",
@@ -530,7 +530,10 @@ const StackScreenNavigator = () => {
                     }}
                   >
                     {(props) => (
-                      <RegisterRealtorClub {...props} setİsLoggedIn={setİsLoggedIn} />
+                      <RegisterRealtorClub
+                        {...props}
+                        setİsLoggedIn={setİsLoggedIn}
+                      />
                     )}
                   </Stack.Screen>
                   <Stack.Screen
@@ -955,7 +958,7 @@ const StackScreenNavigator = () => {
                 <Stack.Screen
                   name="UserTypes"
                   component={UserTypeList}
-                  options={({ }) => ({
+                  options={({}) => ({
                     title: "Kullanıcı Tipleri",
                     headerBackTitleVisible: false,
 
@@ -1389,22 +1392,22 @@ const StackScreenNavigator = () => {
                   name="RealEstateWallet"
                   component={RealEstateWallet}
                   options={{
-                    title: 'Emlak Cüzdan',
+                    title: "Emlak Cüzdan",
                     headerStyle: {
-                      backgroundColor: '#f2f2f2',
+                      backgroundColor: "#f2f2f2",
                     },
-                    headerTintColor: '#000',
+                    headerTintColor: "#000",
                     headerTitleStyle: {
-                      fontWeight: 'bold',
+                      fontWeight: "bold",
                     },
                     headerBackTitleVisible: false,
                   }}
                 />
               </Stack.Navigator>
             </NavigationContainer>
-          </SheetProvider >
-        </GestureHandlerRootView >
-      </AlertNotificationRoot >
-    </Provider >
+          </SheetProvider>
+        </GestureHandlerRootView>
+      </AlertNotificationRoot>
+    </Provider>
   );
 };

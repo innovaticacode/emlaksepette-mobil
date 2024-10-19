@@ -88,7 +88,7 @@ export const styles = StyleSheet.create({
     gap: 8,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: "5",
+    borderRadius: 5,
   },
   advertButtonText: {
     color: "white",
@@ -106,7 +106,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 10,
     padding: 8,
-    borderRadius: "5",
+    borderRadius: 5,
   },
   customerServiceTextContainer: {
     gap: 5,
@@ -131,9 +131,9 @@ export const styles = StyleSheet.create({
   Icons: {
     margin: 5,
   },
-  Version:{
+  Version: {
     textAlign: "center",
     marginTop: 10,
     color: "grey",
-  }
+  },
 });
