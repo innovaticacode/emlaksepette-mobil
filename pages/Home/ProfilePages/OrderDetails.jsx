@@ -86,7 +86,6 @@ export default function OrderDetails() {
         console.error("JSON parse edilemedi:", error);
       }
     }
-    console.debug("Detail", Detail);
   }, [Detail]);
 
   const date = new Date(Detail.created_at);
@@ -248,14 +247,19 @@ export default function OrderDetails() {
                       navigation.navigate("Profile", { id: Detail?.store?.id })
                     }
                   />
-
-                  {parsedData?.type == "housing" && (
+                  {(parsedData?.type === "housing" || projectDetail) && (
                     <WhiteOrRedButtons
                       text={"İlanı Değerlendir"}
                       bgColor={"#EA2C2E"}
-                      onPress={() =>
-                        navigation.navigate("AddComment", { HouseID: id })
-                      }
+                      onPress={() => {
+                        if (parsedData?.type === "housing") {
+                          navigation.navigate("AddComment", { HouseID: id });
+                        } else if (projectDetail) {
+                          navigation.navigate("AddCommentForProject", {
+                            projectId: id,
+                          });
+                        }
+                      }}
                     />
                   )}
                 </View>
@@ -283,24 +287,26 @@ export default function OrderDetails() {
                   </View>
                 </View>
                 <View style={style.seperator} />
-                <>
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    style={style.invoiceBody}
-                    onPress={() =>
-                      navigation.navigate("Invoice", { OrderId: Detail.id })
-                    }
-                  >
-                    <FontAwesome5
-                      name="file-invoice"
-                      size={18}
-                      color="#EA2B2E"
-                    />
-                    <Text style={[style.normalText, { color: "#EA2B2E" }]}>
-                      Faturayı Görüntüle
-                    </Text>
-                  </TouchableOpacity>
-                </>
+                {Detail.status == 1 && (
+                  <>
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      style={style.invoiceBody}
+                      onPress={() =>
+                        navigation.navigate("Invoice", { OrderId: Detail.id })
+                      }
+                    >
+                      <FontAwesome5
+                        name="file-invoice"
+                        size={18}
+                        color="#EA2B2E"
+                      />
+                      <Text style={[style.normalText, { color: "#EA2B2E" }]}>
+                        Faturayı Görüntüle
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
               </View>
             </>
             <>
@@ -609,51 +615,6 @@ export default function OrderDetails() {
                 </View>
               </View>
             </Modal>
-            {/* {user?.id === Detail?.user?.id && refund && refund.status == 0 && (
-            <View>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#FFBF00",
-                  padding: 13,
-                  borderRadius: 5,
-                }}
-                onPress={handlePress}
-              >
-                <Text
-                  style={{
-                    color: "#333",
-                    textAlign: "center",
-                    fontWeight: "500",
-                  }}
-                >
-                  İade Talebiniz İnceleniyor
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          {user?.id !== Detail?.user?.id && (
-            <View style={[style.PersonalInfoArea, { gap: 25 }]}>
-              <Text style={{ fontSize: 16 }}>Sözleşme Ekle</Text>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#E54242",
-                  padding: 13,
-                  borderRadius: 5,
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#ffffff",
-                    textAlign: "center",
-                    fontWeight: "500",
-                  }}
-                >
-                  Yükle
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )} */}
-
             <Modal
               isVisible={modalVisible2}
               onBackdropPress={() => setModalVisible2(false)}
