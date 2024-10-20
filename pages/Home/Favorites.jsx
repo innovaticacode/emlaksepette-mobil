@@ -64,18 +64,21 @@ export default function Favorites() {
         "https://private.emlaksepette.com/api/favorites",
         config
       );
-      const reversedFavorites = Object.values(
-        response.data.mergedFavorites
-      ).reverse();
-
-      return setFavorites(reversedFavorites);
+  
+      // Favorileri 'created_at' tarihine göre sıralıyoruz
+      const sortedFavorites = Object.values(response.data.mergedFavorites).sort(
+        (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      );
+  
+      return setFavorites(sortedFavorites);
     } catch (error) {
       console.error("Error fetching favorites:", error);
     } finally {
       setLoading(false);
     }
   };
-
+  
+ 
   useEffect(() => {
     if (user?.access_token) {
       fetchFavorites();
@@ -122,6 +125,7 @@ export default function Favorites() {
     setselectedRoomID(roomId);
     settype(type);
   };
+
   const addToCardForHousing = async () => {
     const formData = new FormData();
     formData.append("id", selectedCartItem);
@@ -336,7 +340,7 @@ export default function Favorites() {
         "https://private.emlaksepette.com/api/institutional/favorites/delete",
         {
           data: data,
-          headers: { Authorization: `Bearer ${user.access_token}` }
+          headers: { Authorization: `Bearer ${user.access_token}` },
         }
       );
 
@@ -694,34 +698,34 @@ export default function Favorites() {
 
                   {/* AwesomeAlerts ve Modal'lar */}
                   <AwesomeAlert
-                  show={RemoveSelectedCollectionsModal}
-                  showProgress={false}
-                  titleStyle={{
-                    color: "#333",
-                    fontSize: 13,
-                    fontWeight: "700",
-                    textAlign: "center",
-                    margin: 5,
-                  }}
-                  title={`${FavoriteRemoveIDS.length} Seçili favorileri silmek istediğinize emin misin`}
-                  messageStyle={{ textAlign: "center" }}
-                  closeOnTouchOutside={true}
-                  closeOnHardwareBackPress={false}
-                  showCancelButton={true}
-                  showConfirmButton={true}
-                  cancelText="Hayır"
-                  confirmText="Evet"
-                  cancelButtonColor="#ce4d63"
-                  confirmButtonColor="#1d8027"
-                  onCancelPressed={() => {
-                    setRemoveSelectedCollectionsModal(false);
-                  }}
-                  onConfirmPressed={() => {
-                    deleteSelectedFavorite();
-                  }}
-                  confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-                  cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-                />
+                    show={RemoveSelectedCollectionsModal}
+                    showProgress={false}
+                    titleStyle={{
+                      color: "#333",
+                      fontSize: 13,
+                      fontWeight: "700",
+                      textAlign: "center",
+                      margin: 5,
+                    }}
+                    title={`${FavoriteRemoveIDS.length} Seçili favorileri silmek istediğinize emin misin`}
+                    messageStyle={{ textAlign: "center" }}
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    showCancelButton={true}
+                    showConfirmButton={true}
+                    cancelText="Hayır"
+                    confirmText="Evet"
+                    cancelButtonColor="#ce4d63"
+                    confirmButtonColor="#1d8027"
+                    onCancelPressed={() => {
+                      setRemoveSelectedCollectionsModal(false);
+                    }}
+                    onConfirmPressed={() => {
+                      deleteSelectedFavorite();
+                    }}
+                    confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+                    cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+                  />
 
                   <AwesomeAlert
                     show={modalForDeleteFavorites}
