@@ -530,8 +530,8 @@ export default function UpdateUsers() {
                 <View style={{ flexDirection: "row", gap: 20 }}>
                   <Switch
                     style={{ left: 7 }}
-                    trackColor={{ false: "red", true: "#E54242" }}
-                    thumbColor={isEnabled ? "white" : "#f4f3f4"}
+                    trackColor={{ false: "#f4f3f4", true: "#E54242" }}
+                    thumbColor={isEnabled ? "#FFF" : "#f4f3f4"}
                     ios_backgroundColor="#9FA6BC"
                     onValueChange={toggleSwitch}
                     value={isEnabled}
