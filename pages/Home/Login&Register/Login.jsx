@@ -168,6 +168,10 @@ export default function Login({ navigation }) {
     navigation.goBack();
   };
 
+  useEffect(() => {
+    dispatch(setShoppingProfile({ isShoppingProfile: false }));
+  }, [navigation]);
+
   return (
     <AlertNotificationRoot>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
