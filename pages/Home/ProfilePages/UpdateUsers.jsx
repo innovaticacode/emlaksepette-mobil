@@ -10,6 +10,8 @@ import {
   Modal,
   Touchable,
   ImageBackground,
+  Alert,
+  BackHandler,
 } from "react-native";
 import { useState, useRef, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -60,6 +62,46 @@ export default function UpdateUsers() {
   const [image, setImage] = useState(null);
   const [fileSize, setfileSize] = useState(null);
   const [selectedImage, setselectedImage] = useState(false);
+
+  const isAnyFieldFilled = () => {
+    return (
+      title !== userDetail?.title ||
+      email !== userDetail.email ||
+      phoneNumber !== userDetail.mobile_phone ||
+      password !== "" ||
+      nameAndSurname !== userDetail.name
+    );
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+      // En az bir alanın dolu olup olmadığını kontrol et
+      if (isAnyFieldFilled()) {
+        // Eğer en az bir alan doluysa, kullanıcıya uyarı göster
+        e.preventDefault(); // Geri gitmeyi engelle
+
+        Alert.alert("Uyarı", "Sayfadan çıkmak istediğinizden emin misiniz?", [
+          {
+            text: "Hayır",
+            onPress: () => null,
+            style: "cancel",
+          },
+          {
+            text: "Evet",
+            onPress: () => {
+              navigation.dispatch(e.data.action);
+            },
+          },
+        ]);
+      } else {
+        navigation.dispatch(e.data.action);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [navigation, route, title, email, phoneNumber, password, nameAndSurname]);
 
   const toggleSwitch = () => {
     setIsEnabled((previousState) => {
@@ -328,9 +370,6 @@ export default function UpdateUsers() {
     setImage(null); // Fotoğrafı null yaparak yerelde kaldırıyoruz
     setchoose(false); // Modal'ı kapatıyoruz
   };
-  useEffect(() => {
-    console.debug("Image", image);
-  }, [image]);
   return (
     <AlertNotificationRoot>
       {loading ? (
