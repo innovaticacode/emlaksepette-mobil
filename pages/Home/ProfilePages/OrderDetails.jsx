@@ -429,6 +429,7 @@ export default function OrderDetails({ item }) {
                 </Text>
               </TouchableOpacity>
             </>
+
             {Detail?.status == 0 && (
               <>
                 <View style={style.blueCardBody}>
@@ -466,11 +467,11 @@ export default function OrderDetails({ item }) {
             {Detail?.status == 1 && (
               <>
                 <View style={style.blueCardBody}>
-                  <Image
-                    source={SecurityBlue}
-                    style={style.blueCardImg}
-                    resizeMode="cover"
-                  />
+                  <View style={style.iconContainer}>
+                    <View style={style.iconWrapper}>
+                      <Icon2 name="wallet" color={"white"} size={20} />
+                    </View>
+                  </View>
                   <View style={style.textArea}>
                     <Text
                       style={[

@@ -244,7 +244,8 @@ export const style = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center", // Yatayda ortalamak için
     position: "relative", // Resim için mutlak konum
-    marginTop: 20,
+    marginTop: 40,
+    marginBottom: 10,
   },
   okeyBtn: {
     backgroundColor: "#0E713D",
@@ -276,8 +277,8 @@ export const style = StyleSheet.create({
     transform: [{ translateX: -25 }],
   },
   iconWrapper: {
-    width: 60,
-    height: 60,
+    width: 55,
+    height: 55,
     borderRadius: 30,
     backgroundColor: "#2F7DF7",
     justifyContent: "center",
