@@ -44,7 +44,8 @@ export default function Favorites() {
   const [isChoosed, setIsChoosed] = useState(false);
   const [FavoriteRemoveIDS, setFavoriteRemoveIDS] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] = useState(false);
+  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
+    useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [filteredFavorites, setFilteredFavorites] = useState([]);
@@ -331,14 +332,15 @@ export default function Favorites() {
     };
 
     try {
-      const response = await axios({
-        method: "delete",
-        url: "https://private.emlaksepette.com/api/institutional/favorites/delete",
-        data: data,
-        headers: {},
-      });
+      const response = await axios.delete(
+        "https://private.emlaksepette.com/api/institutional/favorites/delete",
+        {
+          data: data,
+          headers: { Authorization: `Bearer ${user.access_token}` }
+        }
+      );
 
-      if (response.status === 200) {
+      if (response.status === 200 || 201) {
         setTimeout(() => {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
@@ -371,7 +373,6 @@ export default function Favorites() {
       }, 300);
     } finally {
       setLoading(false);
-
       setRemoveSelectedCollectionsModal(false);
       setIsChoosed(false);
     }
@@ -505,8 +506,8 @@ export default function Favorites() {
         (housing) =>
           housing.room_order === favorite?.housing_id &&
           housing.name ===
-          favorite?.project?.list_item_values[`column${columnIndex}_name`] +
-          "[]" &&
+            favorite?.project?.list_item_values[`column${columnIndex}_name`] +
+              "[]" &&
           housing.project_id === favorite?.project?.id
       )?.value +
       " " +
@@ -549,7 +550,10 @@ export default function Favorites() {
         {user.access_token ? ( // İlk olarak token kontrol ediliyor
           loading ? (
             <View style={styles.loadingView}>
-              <ActivityIndicator size="large" color={styles.activityIndicatorColor.color} />
+              <ActivityIndicator
+                size="large"
+                color={styles.activityIndicatorColor.color}
+              />
             </View>
           ) : (
             <View style={styles.container}>
@@ -579,7 +583,11 @@ export default function Favorites() {
                     <TouchableOpacity style={styles.modalBtn}>
                       <View>
                         <TouchableOpacity onPress={() => setModalVisible(true)}>
-                          <Icon3 name="swap-vertical" size={23} color={styles.iconColor.color} />
+                          <Icon3
+                            name="swap-vertical"
+                            size={23}
+                            color={styles.iconColor.color}
+                          />
                         </TouchableOpacity>
                       </View>
                     </TouchableOpacity>
@@ -686,6 +694,36 @@ export default function Favorites() {
 
                   {/* AwesomeAlerts ve Modal'lar */}
                   <AwesomeAlert
+                  show={RemoveSelectedCollectionsModal}
+                  showProgress={false}
+                  titleStyle={{
+                    color: "#333",
+                    fontSize: 13,
+                    fontWeight: "700",
+                    textAlign: "center",
+                    margin: 5,
+                  }}
+                  title={`${FavoriteRemoveIDS.length} Seçili favorileri silmek istediğinize emin misin`}
+                  messageStyle={{ textAlign: "center" }}
+                  closeOnTouchOutside={true}
+                  closeOnHardwareBackPress={false}
+                  showCancelButton={true}
+                  showConfirmButton={true}
+                  cancelText="Hayır"
+                  confirmText="Evet"
+                  cancelButtonColor="#ce4d63"
+                  confirmButtonColor="#1d8027"
+                  onCancelPressed={() => {
+                    setRemoveSelectedCollectionsModal(false);
+                  }}
+                  onConfirmPressed={() => {
+                    deleteSelectedFavorite();
+                  }}
+                  confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+                  cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+                />
+
+                  <AwesomeAlert
                     show={modalForDeleteFavorites}
                     showProgress={false}
                     title={"Tümünü Sil"}
@@ -709,11 +747,10 @@ export default function Favorites() {
                   <AwesomeAlert
                     show={ModalForAddToCart}
                     showProgress={false}
-                    title={type === 1 ? `#1000${selectedCartItem} No'lu Projenin` : `#2000${selectedCartItem} No'lu`}
-                    message={
+                    title={
                       type === 1
-                        ? `${selectedRoomID} Numaralı Konutunu Sepete Eklemek İsteğinize Emin misiniz?`
-                        : `konutu sepete eklemek istediğinize emin misiniz?`
+                        ? `#1000${selectedCartItem} No'lu Projenin ${selectedRoomID} Numaralı Konutunu Sepete Eklemek İsteğinize Emin misiniz?`
+                        : `#2000${selectedCartItem} No'lu konutu sepete eklemek istediğinize emin misiniz?`
                     }
                     closeOnTouchOutside={false}
                     closeOnHardwareBackPress={false}
@@ -727,7 +764,9 @@ export default function Favorites() {
                       setModalForAddToCart(false);
                     }}
                     onConfirmPressed={() => {
-                      type === 2 ? addToCardForHousing() : addToCardForProject();
+                      type === 2
+                        ? addToCardForHousing()
+                        : addToCardForProject();
                       setModalForAddToCart(false); // Modalı kapat
                     }}
                   />
@@ -745,7 +784,6 @@ export default function Favorites() {
         )}
       </View>
     </AlertNotificationRoot>
-
   );
 }
 
@@ -845,7 +883,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   btnRemove: {
-    backgroundColor: "#ce4d63",
+    backgroundColor: "#EA2B2E",
     padding: 8,
     borderRadius: 6,
     marginLeft: 10,
