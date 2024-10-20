@@ -328,6 +328,9 @@ export default function UpdateUsers() {
     setImage(null); // Fotoğrafı null yaparak yerelde kaldırıyoruz
     setchoose(false); // Modal'ı kapatıyoruz
   };
+  useEffect(() => {
+    console.debug("Image", image);
+  }, [image]);
   return (
     <AlertNotificationRoot>
       {loading ? (
@@ -373,11 +376,11 @@ export default function UpdateUsers() {
                   >
                     {selectedImage ? (
                       <ImageBackground
-                        source={{ uri: image?.uri }}
+                        source={{ uri: selectedImage?.uri }}
                         style={{ width: "100%", height: "100%" }}
                         borderRadius={50}
                       />
-                    ) : (
+                    ) : image ? (
                       <ImageBackground
                         source={{
                           uri: `https://private.emlaksepette.com/storage/profile_images/${userImage}`,
@@ -385,6 +388,8 @@ export default function UpdateUsers() {
                         style={{ width: "100%", height: "100%" }}
                         borderRadius={50}
                       />
+                    ) : (
+                      <Icon name="add-a-photo" size={30} color={"#333"} />
                     )}
                   </TouchableOpacity>
                 </View>
@@ -635,7 +640,7 @@ export default function UpdateUsers() {
                       alignItems: "center",
                       gap: 10,
                     }}
-                    onPress={removeProfileImage} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
+                    onPress={() => removeProfileImage()} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
                     // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
                   >
                     <Icon
