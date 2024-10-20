@@ -118,8 +118,14 @@ export default function CreateUser() {
     if (!phoneNumber) errors.phoneNumber = "Bu alan zorunludur";
     if (!password) {
       errors.password = "Bu alan zorunludur";
-    } else if (password.length < 6)
+    } else if (password.length < 6) {
       errors.password = "Şifre en az 6 karakter olmalıdır";
+    } else if (
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/.test(password)
+    ) {
+      errors.password =
+        "Şifre en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir";
+    }
     if (!UserType) errors.UserType = "Bu alan zorunludur";
 
     setValidationErrors(errors);
