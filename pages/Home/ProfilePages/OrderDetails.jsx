@@ -28,7 +28,7 @@ import SecurityBlue from "../../../assets/securityBlue.png";
 import SecurityGreen from "../../../assets/securityGreen.png";
 import { formatCurrency } from "../../../utils/FormatedPrice";
 
-export default function OrderDetails() {
+export default function OrderDetails({ item }) {
   const navigation = useNavigation();
   const route = useRoute();
   const { OrderId, id } = route.params;
@@ -232,9 +232,14 @@ export default function OrderDetails() {
             <>
               <View style={style.orderDetail}>
                 <View style={{ gap: 10 }}>
-                  <Text style={style.boldText}>{`İlan No: #${
-                    1000000 + id + "-" + parsedData?.item?.housing
-                  }`}</Text>
+                  {parsedData.type == "project" ? (
+                    <Text style={style.boldText}>{`İlan No: #${
+                      1000000 + id + "-" + parsedData?.item?.housing
+                    }`}</Text>
+                  ) : (
+                    <Text style={style.boldText}>{`İlan No: #${
+                      2000000 + id}`}</Text>
+                  )}
                   <Text
                     style={style.boldText}
                   >{`Satıcı: ${Detail?.store?.name}`}</Text>
