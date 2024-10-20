@@ -164,13 +164,15 @@ export default function OrderDetails({ item }) {
 
   return (
     <View style={{ backgroundColor: "#FFF", flex: 1 }}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {loading ? (
-          <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <ActivityIndicator />
-          </View>
-        ) : (
-          <View style={style.container}>
+      {loading ? (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <View style={style.container}>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={style.orderStateBody}>
               <View style={style.statusBody}>
                 <>
@@ -238,7 +240,8 @@ export default function OrderDetails({ item }) {
                     }`}</Text>
                   ) : (
                     <Text style={style.boldText}>{`İlan No: #${
-                      2000000 + id}`}</Text>
+                      2000000 + id
+                    }`}</Text>
                   )}
                   <Text
                     style={style.boldText}
@@ -366,7 +369,6 @@ export default function OrderDetails({ item }) {
                 </View>
               </View>
             </>
-
             <>
               <View style={style.orderSummaryBody}>
                 <Text style={style.largeBoldtext}>Ödeme Bilgileri</Text>
@@ -426,94 +428,131 @@ export default function OrderDetails({ item }) {
                 </Text>
               </TouchableOpacity>
             </>
-
-            <>
-              <View style={style.blueCardBody}>
-                <Image
-                  source={SecurityBlue}
-                  style={style.blueCardImg}
-                  resizeMode="cover"
-                />
-                <View style={style.textArea}>
-                  <Text
-                    style={[
-                      style.largeBoldtext,
-                      { textAlign: "center", color: "#2F7DF7" },
-                    ]}
-                  >
-                    Ödemenizi Aldık. Teşekkür Ederiz!
-                  </Text>
-                  <Text style={[style.boldText, { textAlign: "center" }]}>
-                    Ödeme şu an da havuz hesabında. Satıcı ücretini sipariş
-                    tamamlandığında alacak.
-                  </Text>
-                  <Text
-                    style={[
-                      style.boldText,
-                      { textAlign: "center", color: "#606060", fontSize: 12 },
-                    ]}
-                  >
-                    11 Eylül 2024, 11:07
-                  </Text>
-                </View>
-              </View>
-            </>
-
-            <>
-              <View style={style.greenCardBody}>
-                <Image
-                  source={SecurityGreen}
-                  style={style.blueCardImg}
-                  resizeMode="cover"
-                />
-                <View style={style.textArea}>
-                  <Text
-                    style={[
-                      style.largeBoldtext,
-                      { textAlign: "center", color: "#0E713D" },
-                    ]}
-                  >
-                    Kaporanız Emlak Sepette İle Güvende!{" "}
-                  </Text>
-                  <Text style={[style.boldText, { textAlign: "center" }]}>
-                    Sipariş onayınız bekleniyor.
-                  </Text>
-                  <View
-                    style={{ flexDirection: "row", justifyContent: "center" }}
-                  >
-                    <TouchableOpacity style={style.okeyBtn}>
-                      <Text
-                        style={[
-                          style.boldText,
-                          { textAlign: "center", color: "#FFF" },
-                        ]}
-                      >
-                        Onayla
-                      </Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={style.rejectBtn}>
-                      <Text
-                        style={[
-                          style.boldText,
-                          { textAlign: "center", color: "#FFF" },
-                        ]}
-                      >
-                        İptal Et
-                      </Text>
-                    </TouchableOpacity>
+            {Detail?.status == 0 && (
+              <>
+                <View style={style.blueCardBody}>
+                  <View style={style.iconContainer}>
+                    <View style={style.iconWrapper}>
+                      <Icon2 name="wallet" color={"white"} size={20} />
+                    </View>
                   </View>
-                  <Text
-                    style={[
-                      style.boldText,
-                      { textAlign: "center", color: "#606060", fontSize: 12 },
-                    ]}
-                  >
-                    11 Eylül 2024, 11:07
-                  </Text>
+                  <View style={style.textArea}>
+                    <Text
+                      style={[
+                        style.largeBoldtext,
+                        { textAlign: "center", color: "#FC9B00" },
+                      ]}
+                    >
+                      Ödeme Onay Aşamasındadır
+                    </Text>
+                    <Text style={[style.boldText, { textAlign: "center" }]}>
+                      Ödeme şu anda onay aşamasındadır. Sürecin güncel durumunu
+                      ve gelişmeleri buradan takip edebilirsiniz.
+                    </Text>
+                    <Text
+                      style={[
+                        style.boldText,
+                        { textAlign: "center", color: "#606060", fontSize: 12 },
+                      ]}
+                    >
+                      11 Eylül 2024, 11:07
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            </>
+              </>
+            )}
+
+            {Detail?.status == 1 && (
+              <>
+                <View style={style.blueCardBody}>
+                  <Image
+                    source={SecurityBlue}
+                    style={style.blueCardImg}
+                    resizeMode="cover"
+                  />
+                  <View style={style.textArea}>
+                    <Text
+                      style={[
+                        style.largeBoldtext,
+                        { textAlign: "center", color: "#2F7DF7" },
+                      ]}
+                    >
+                      Ödemenizi Aldık. Teşekkür Ederiz!
+                    </Text>
+                    <Text style={[style.boldText, { textAlign: "center" }]}>
+                      Ödeme şu an da havuz hesabında. Satıcı ücretini sipariş
+                      tamamlandığında alacak.
+                    </Text>
+                    <Text
+                      style={[
+                        style.boldText,
+                        { textAlign: "center", color: "#606060", fontSize: 12 },
+                      ]}
+                    >
+                      11 Eylül 2024, 11:07
+                    </Text>
+                  </View>
+                </View>
+              </>
+            )}
+
+            {Detail?.status == 1 && (
+              <>
+                <View style={style.greenCardBody}>
+                  <Image
+                    source={SecurityGreen}
+                    style={style.blueCardImg}
+                    resizeMode="cover"
+                  />
+                  <View style={style.textArea}>
+                    <Text
+                      style={[
+                        style.largeBoldtext,
+                        { textAlign: "center", color: "#0E713D" },
+                      ]}
+                    >
+                      Kaporanız Emlak Sepette İle Güvende!{" "}
+                    </Text>
+                    <Text style={[style.boldText, { textAlign: "center" }]}>
+                      Sipariş onayınız bekleniyor.
+                    </Text>
+                    <View
+                      style={{ flexDirection: "row", justifyContent: "center" }}
+                    >
+                      <TouchableOpacity style={style.okeyBtn}>
+                        <Text
+                          style={[
+                            style.boldText,
+                            { textAlign: "center", color: "#FFF" },
+                          ]}
+                        >
+                          Onayla
+                        </Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity style={style.rejectBtn}>
+                        <Text
+                          style={[
+                            style.boldText,
+                            { textAlign: "center", color: "#FFF" },
+                          ]}
+                        >
+                          İptal Et
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    <Text
+                      style={[
+                        style.boldText,
+                        { textAlign: "center", color: "#606060", fontSize: 12 },
+                      ]}
+                    >
+                      11 Eylül 2024, 11:07
+                    </Text>
+                  </View>
+                </View>
+              </>
+            )}
 
             {Detail?.can_refund === 1 && (
               <View>
@@ -671,9 +710,9 @@ export default function OrderDetails({ item }) {
                 </ScrollView>
               </SafeAreaView>
             </Modal>
-          </View>
-        )}
-      </ScrollView>
+          </ScrollView>
+        </View>
+      )}
     </View>
   );
 }

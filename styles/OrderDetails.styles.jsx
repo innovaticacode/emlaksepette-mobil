@@ -266,4 +266,27 @@ export const style = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 8,
   },
+  iconContainer: {
+    position: "absolute",
+    top: -25,
+    left: "50%",
+    transform: [{ translateX: -25 }],
+  },
+  iconWrapper: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#2F7DF7",
+    justifyContent: "center",
+    alignItems: "center",
+    // Gölge için eklemeler:
+    shadowColor: "#000", // Gölge rengi
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.62, // Gölgenin opaklığı
+    shadowRadius: 3.84, // Gölge bulanıklık yarıçapı
+    elevation: 5, // Android için gölge efekti
+  },
 });
