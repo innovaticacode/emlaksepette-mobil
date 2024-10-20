@@ -421,6 +421,7 @@ export default function OrderDetails({ item }) {
                       color: "#EA2B2E",
                       textDecorationLine: "underline",
                       textAlign: "center",
+                     padding: 15,
                     },
                   ]}
                 >

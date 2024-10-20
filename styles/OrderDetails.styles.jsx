@@ -190,6 +190,8 @@ export const style = StyleSheet.create({
     borderRadius: 6,
     borderColor: "#9D9D9D5F",
     padding: 10,
+    marginTop: 5,
+    marginBottom: 5,
   },
   largeBoldtext: {
     fontWeight: "600",
@@ -203,6 +205,7 @@ export const style = StyleSheet.create({
     borderRadius: 6,
     borderColor: "#9D9D9D5F",
     padding: 10,
+    marginTop: 5,
   },
   amount: {
     borderWidth: 1,
