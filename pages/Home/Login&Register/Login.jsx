@@ -32,9 +32,12 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import { useDispatch } from "react-redux";
+import { setShoppingProfile } from "../../../store/slices/Menu/MenuSlice";
 
 export default function Login({ navigation }) {
   const route = useRoute();
+  const dispatch = useDispatch();
   const [status, setStatus] = useState(false);
   const [statusMessage, setStatusMessage] = useState(false);
   const [showLengthAlert, setShowLengthAlert] = useState(false);
@@ -64,7 +67,7 @@ export default function Login({ navigation }) {
   const show = () => {
     setShow(!Show);
   };
-  
+
   const handleTextInputChange = (text) => {
     setEmail(text);
   };
@@ -88,7 +91,8 @@ export default function Login({ navigation }) {
           );
           setUser(res.data); // Kullanıcı durumunu günceller
           navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
-          navigation.replace('Drawer',"Home")
+          dispatch(setShoppingProfile({ isShoppingProfile: false }));
+          navigation.replace("Drawer", { screen: "Home" });
         } else {
           // setshowMailSendAlert(true);
           setStatus(false);
@@ -98,7 +102,6 @@ export default function Login({ navigation }) {
             textBody: `${res.data.message}`,
             button: "Tamam",
           });
-          console.log(res.data.message + "OKAN");
           // setStatusMessage(res.data.message);
         }
       })
@@ -122,7 +125,6 @@ export default function Login({ navigation }) {
       Login();
     }
   };
-    
 
   Login.navigationOptions = {
     headerShown: false,
@@ -165,8 +167,10 @@ export default function Login({ navigation }) {
   const closeModal = () => {
     navigation.goBack();
   };
-  
-  
+
+  useEffect(() => {
+    dispatch(setShoppingProfile({ isShoppingProfile: false }));
+  }, [navigation]);
 
   return (
     <AlertNotificationRoot>
@@ -290,11 +294,9 @@ export default function Login({ navigation }) {
                             placeholder="Şifre"
                             secureTextEntry={Show ? false : true}
                             value={password}
-                            onChangeText={(value)=>setPassword(value)}
+                            onChangeText={(value) => setPassword(value)}
                           />
-                             </View>
-                         
-                     
+                        </View>
 
                         <View
                           style={{
@@ -349,14 +351,11 @@ export default function Login({ navigation }) {
                       </View>
                       <TouchableOpacity
                         style={{
-                         
                           backgroundColor: "#EA2C2E",
                           padding: 8,
                           borderRadius: 5,
                         }}
                         onPress={Submit}
-                        
-                       
                       >
                         {loadingForLogin ? (
                           <ActivityIndicator color="white" size={"small"} />

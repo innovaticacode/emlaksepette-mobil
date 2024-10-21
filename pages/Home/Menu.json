@@ -62,7 +62,7 @@
       },
       {
         "text": "Sattıklarım",
-        "key": "ShowCartOrders",
+        "key": "disabled_ShowCartOrders",
         "url": "Sell",
         "activePath": "/hesabim/sattiklarim"
       }
@@ -281,7 +281,6 @@
         "url": "AddBioText",
         "activePath": "/hesabim/reklam-gorselleri"
       }
-
     ]
   },
   {
