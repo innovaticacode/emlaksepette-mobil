@@ -31,6 +31,7 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function UpdateUsers() {
   const route = useRoute();
   const navigation = useNavigation();
@@ -158,31 +159,27 @@ export default function UpdateUsers() {
     formdata.append("is_active", isActive);
 
     if (image) {
-      formdata.append(
-        "profile_image",
-        image
-          ? {
-              uri:
-                Platform.OS === "android"
-                  ? image?.uri
-                  : image?.uri.replace("file://", ""),
-              type: image?.mimeType,
-              name: image?.fileName == null ? "Image.jpeg" : image?.fileName,
-            }
-          : null
-      );
+      formdata.append("profile_image", {
+        uri:
+          Platform.OS === "android"
+            ? image?.uri
+            : image?.uri.replace("file://", ""),
+        type: image?.mimeType,
+        name: image?.fileName || "Image.jpeg",
+      });
     }
 
     if (user?.access_token) {
+      console.debug("formdata", formdata);
       try {
-        const response = await axios.post(
-          `https://private.emlaksepette.com/api/institutional/users/${UserID}`,
-          formdata,
+        const response = await axios.put(
+          `${apiUrl}institutional/users/${UserID}`, // URL
+          formdata, // Güncellenen form verisi
           {
             headers: {
-              Authorization: `Bearer ${user.access_token}`,
-              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${user?.access_token}`, // Yetkilendirme
             },
+            timeout: 10000, // Zaman aşımı süresi
           }
         );
 
@@ -194,7 +191,7 @@ export default function UpdateUsers() {
           button: "Tamam",
         });
 
-        // Durumları sıfırlayın
+        // Durumları sıfırla
         setnameAndSurname("");
         setemail("");
         setpassword("");
@@ -205,11 +202,18 @@ export default function UpdateUsers() {
         // Navigate to UsersList
         navigation.navigate("UsersList");
       } catch (error) {
-        console.error("Veri getirme hatası:", error);
+        // Hata ayrıntılarını yazdır
+        console.error(
+          "Error ---> :",
+          error.response ? error.response.data : error.message
+        );
+
         Dialog.show({
           type: ALERT_TYPE.WARNING,
           title: "Hata!",
-          textBody: "Veri gönderimi sırasında bir hata oluştu.",
+          textBody:
+            error.response?.data?.message ||
+            "Veri gönderimi sırasında bir hata oluştu.",
           button: "Tamam",
         });
       } finally {
