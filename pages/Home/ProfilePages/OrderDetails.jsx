@@ -110,6 +110,13 @@ export default function OrderDetails({ item }) {
   const year = date.getFullYear();
   const formattedDate = `${day} ${month} ${year}`;
 
+  const createdAt = new Date(Detail?.created_at).toLocaleDateString("tr-TR", {
+    year: "numeric",
+    month: "long", 
+    day: "numeric",
+  });
+  
+
   const fetchDataDeal = async () => {
     const url = `https://private.emlaksepette.com/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
     try {
@@ -205,7 +212,7 @@ export default function OrderDetails({ item }) {
                 <View style={style.orderStateInfo}>
                   <>
                     <Text style={[style.boldText, { color: "#606060" }]}>
-                      Sipariş No
+                      Sipariş No:
                     </Text>
                     <Text style={style.boldText}>{OrderId}</Text>
                   </>
@@ -214,7 +221,7 @@ export default function OrderDetails({ item }) {
                 <View style={style.orderStateInfo}>
                   <>
                     <Text style={[style.boldText, { color: "#606060" }]}>
-                      Sipariş Tarihi
+                      Sipariş Tarihi:
                     </Text>
                     <Text style={style.boldText}>{formattedDate}</Text>
                   </>
@@ -222,7 +229,7 @@ export default function OrderDetails({ item }) {
                 <View style={style.orderStateInfo}>
                   <>
                     <Text style={[style.boldText, { color: "#606060" }]}>
-                      Kapora Tutarı
+                      Kapora Tutarı:
                     </Text>
                     <Text style={style.boldText}>
                       {formatCurrency(Detail?.amount)}
@@ -272,25 +279,28 @@ export default function OrderDetails({ item }) {
                   )}
                 </View>
                 <View style={{ paddingVertical: 8, flexDirection: "row" }}>
-                  <Image
-                    source={{ uri: parsedData?.item?.image }}
-                    width={100}
-                    height={100}
-                    borderRadius={4}
-                  />
+                  <View style={{ width: "28%" }}>
+                    <Image
+                      source={{ uri: parsedData?.item?.image }}
+                      style={{
+                        width: 100,
+                        height: 100,
+                        borderRadius: 4,
+                      }}
+                      resizeMode="cover"
+                    />
+                  </View>
+
                   <View style={style.info}>
-                    <View>
+                    <View style={{}}>
                       <Text style={style.boldText}>
-                        {parsedData?.item?.title}
+                        {parsedData.type !== "project"
+                          ? parsedData?.item?.title
+                          : `${parsedData?.item?.title} ${parsedData?.item?.housing}  No'lu Konut`}
                       </Text>
-                      {parsedData.type == "project" && (
-                        <Text style={style.boldText}>
-                          {parsedData?.item?.housing} No'lu Konut
-                        </Text>
-                      )}
                     </View>
                     <Text style={style.boldText}>
-                      {formatCurrency(Detail?.amount)}
+                      {formatCurrency(parsedData.item.price)}
                     </Text>
                   </View>
                 </View>
@@ -348,7 +358,7 @@ export default function OrderDetails({ item }) {
                 <Text style={style.largeBoldtext}>Satıcı Bilgileri</Text>
                 <View style={{ gap: 20, paddingTop: 10 }}>
                   <Text style={style.boldText}>
-                    İsim Soyisim:
+                    Ünvan:
                     <Text style={[style.boldText, { color: "#606060" }]}>
                       {Detail?.store?.name}
                     </Text>
@@ -410,24 +420,23 @@ export default function OrderDetails({ item }) {
                     </View>
                   </View>
                 </>
+                <TouchableOpacity onPress={() => setModalVisible2(true)}>
+                  <Text
+                    style={[
+                      style.boldText,
+                      {
+                        color: "#EA2B2E",
+                        textDecorationLine: "underline",
+                        textAlign: "center",
+                        padding: 10,
+                        marginTop: 5,
+                      },
+                    ]}
+                  >
+                    Mesafeli Güvenli Kapora Sözleşmesi
+                  </Text>
+                </TouchableOpacity>
               </View>
-            </>
-            <>
-              <TouchableOpacity onPress={() => setModalVisible2(true)}>
-                <Text
-                  style={[
-                    style.boldText,
-                    {
-                      color: "#EA2B2E",
-                      textDecorationLine: "underline",
-                      textAlign: "center",
-                     padding: 15,
-                    },
-                  ]}
-                >
-                  Mesafeli Güvenli Kapora Sözleşmesi
-                </Text>
-              </TouchableOpacity>
             </>
 
             {Detail?.status == 0 && (
@@ -457,7 +466,7 @@ export default function OrderDetails({ item }) {
                         { textAlign: "center", color: "#606060", fontSize: 12 },
                       ]}
                     >
-                      11 Eylül 2024, 11:07
+                      {formattedDate}
                     </Text>
                   </View>
                 </View>
@@ -491,21 +500,21 @@ export default function OrderDetails({ item }) {
                         { textAlign: "center", color: "#606060", fontSize: 12 },
                       ]}
                     >
-                      11 Eylül 2024, 11:07
+                      {formattedDate}
                     </Text>
                   </View>
                 </View>
-              </>
-            )}
 
-            {Detail?.status == 1 && (
-              <>
                 <View style={style.greenCardBody}>
-                  <Image
-                    source={SecurityGreen}
-                    style={style.blueCardImg}
-                    resizeMode="cover"
-                  />
+                  <View style={style.iconContainer}>
+                    <View style={style.iconWrapperGreen}>
+                      <Icon3
+                        name="shield-check-outline"
+                        color={"white"}
+                        size={30}
+                      />
+                    </View>
+                  </View>
                   <View style={style.textArea}>
                     <Text
                       style={[
@@ -549,7 +558,40 @@ export default function OrderDetails({ item }) {
                         { textAlign: "center", color: "#606060", fontSize: 12 },
                       ]}
                     >
-                      11 Eylül 2024, 11:07
+                     {formattedDate}
+                    </Text>
+                  </View>
+                </View>
+              </>
+            )}
+
+            {Detail?.status == 2 && (
+              <>
+                <View style={style.blueCardBody}>
+                  <View style={style.iconContainer}>
+                    <View style={style.iconWrapper}>
+                      <Icon2 name="wallet" color={"white"} size={20} />
+                    </View>
+                  </View>
+                  <View style={style.textArea}>
+                    <Text
+                      style={[
+                        style.largeBoldtext,
+                        { textAlign: "center", color: "#EA2A28" },
+                      ]}
+                    >
+                      Sipariş İptal Edildi
+                    </Text>
+                    <Text style={[style.boldText, { textAlign: "center" }]}>
+                    Üzgünüz, siparişiniz iptal edilmiştir.
+                    </Text>
+                    <Text
+                      style={[
+                        style.boldText,
+                        { textAlign: "center", color: "#606060", fontSize: 12 },
+                      ]}
+                    >
+                      {formattedDate}
                     </Text>
                   </View>
                 </View>

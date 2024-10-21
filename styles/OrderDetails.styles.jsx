@@ -174,6 +174,7 @@ export const style = StyleSheet.create({
   },
   info: {
     flexDirection: "column",
+    width:'70%',
     justifyContent: "flex-start",
     paddingHorizontal: 6,
     gap: 10,
@@ -206,6 +207,7 @@ export const style = StyleSheet.create({
     borderColor: "#9D9D9D5F",
     padding: 10,
     marginTop: 5,
+    marginBottom: 20,
   },
   amount: {
     borderWidth: 1,
@@ -281,6 +283,23 @@ export const style = StyleSheet.create({
     height: 55,
     borderRadius: 30,
     backgroundColor: "#2F7DF7",
+    justifyContent: "center",
+    alignItems: "center",
+    // Gölge için eklemeler:
+    shadowColor: "#000", // Gölge rengi
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.62, // Gölgenin opaklığı
+    shadowRadius: 3.84, // Gölge bulanıklık yarıçapı
+    elevation: 5, // Android için gölge efekti
+  },
+  iconWrapperGreen: {
+    width: 55,
+    height: 55,
+    borderRadius: 30,
+    backgroundColor: "#0FA958",
     justifyContent: "center",
     alignItems: "center",
     // Gölge için eklemeler:
