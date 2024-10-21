@@ -31,6 +31,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { Platform } from "react-native";
 import { apiRequestGet } from "../../../components/methods/apiRequest";
 import mime from "mime";
+import { CheckBox } from "react-native-elements";
 
 const HomeInfo = ({ ımage, user, No, price, title, type }) => {
   return (
@@ -168,6 +169,7 @@ export default function SwapForm({ openModal, color }) {
   const [loadingProject, setloadingProject] = useState(false);
   const [roomData, setroomData] = useState({});
   const [loadingPost, setloadingPost] = useState(false);
+  const [approve, setApprove] = useState(false);
 
   const GetProjectHousingDetails = () => {
     setloadingProject(true);
@@ -549,7 +551,6 @@ export default function SwapForm({ openModal, color }) {
     switch (true) {
       case !name:
         AlertFunc("İsim Alanı Boş Bırakılmaz");
-
         break;
       case !surname:
         AlertFunc("Soyadı Boş Bırakılamaz");
@@ -569,11 +570,16 @@ export default function SwapForm({ openModal, color }) {
       case !SwapChoose:
         AlertFunc("Takas Tercihi Boş Bırakılamaz");
         break;
+      // Eğer SwapChoose "emlak" veya "araç" ise ve approve false ise, uyarı ver
+      case (SwapChoose === "emlak" || SwapChoose === "araç") && !approve:
+        AlertFunc("Lütfen Belge Paylaşım Şartları Kabul Ediniz.");
+        break;
 
       default:
         postData();
     }
   };
+
   const [choose, setchoose] = useState(false);
   const [image, setImage] = useState(null);
   const pickImage = async () => {
@@ -1410,6 +1416,33 @@ export default function SwapForm({ openModal, color }) {
               </>
             )}
 
+          <>
+            {(SwapChoose === "emlak" || SwapChoose === "araç") && (
+              <View style={styles.approveArea}>
+                <CheckBox
+                  checked={approve}
+                  onPress={() => setApprove(!approve)}
+                  containerStyle={{
+                    padding: 0,
+                    margin: 0,
+                    justifyContent: "center",
+                  }}
+                  checkedIcon="check-square"
+                  checkedColor="#EC302E"
+                />
+
+                <Text style={{ flexWrap: "wrap", flex: 1, marginLeft: 10 }}>
+                  Yükleyeceğiniz belgeler hassas bilgiler içerebilir, bu
+                  bilgiler ilanın sahibi tarafından erişilebilir ve
+                  görüntülenebilir.
+                  <Text style={{ fontWeight: "bold" }}>
+                    Bu şartları kabul ediyorum ve bilgilerin paylaşılmasına onay
+                    veriyorum.
+                  </Text>
+                </Text>
+              </View>
+            )}
+          </>
           <View>
             <TouchableOpacity
               onPress={handleButtonPress}
@@ -1578,5 +1611,10 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  approveArea: {
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
   },
 });
