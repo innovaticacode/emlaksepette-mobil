@@ -4,6 +4,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -15,68 +16,65 @@ import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import { Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import NoDataScreen from "../../../components/NoDataScreen";
+import { apiUrl } from "../../../components/methods/apiRequest";
+
 export default function SwapScreen() {
   const [DetailModal, setDetailModal] = useState(false);
+  const [swapSuggestdetails, setswapSuggestdetails] = useState([]);
+  const [selectedModalIndex, setselectedModalIndex] = useState(0);
+  const [SwapSuggest, setSwapSuggest] = useState([]);
+  const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(true);
+
   const openModal = () => {
     setDetailModal(true);
   };
-  const [user, setUser] = useState({});
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
 
-  const [SwapSuggest, setSwapSuggest] = useState([]);
   const fetchData = async () => {
+    setLoading(true); // Loading'i başlatıyoruz
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/institutional/swap_applications",
+          `${apiUrl}institutional/swap_applications`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
             },
           }
         );
-
         setSwapSuggest(response.data);
+        return setLoading(false);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      if (error.response) {
-        // Sunucu bir hata döndü
-        console.error("Server responded with status:", error.response.status);
-        console.error("Response data:", error.response.data);
-      } else if (error.request) {
-        // İstek yapıldı, ama yanıt alınamadı
-        console.error("No response received:", error.request);
-      } else {
-        // İstek ayarlanırken bir hata oluştu
-        console.error("Error message:", error.message);
-      }
+      return setLoading(false);
+    } finally {
+      setLoading(false); // Veri çekimi bitince loading'i kapatıyoruz
     }
   };
 
   useEffect(() => {
     fetchData();
   }, [user]);
-  const [swapSuggestdetails, setswapSuggestdetails] = useState([]);
-  const [selectedModalIndex, setselectedModalIndex] = useState(0);
-  const getDetails = async (id, index) => {
-    console.log(id + " asd w 22  2");
 
+  const getDetails = async (id, index) => {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/institutional/swap_applications/${id}`,
+          `${apiUrl}institutional/swap_applications/${id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
             },
           }
         );
-        openModal();
-        setswapSuggestdetails(response?.data?.form);
-        setselectedModalIndex(index);
+        openModal(); // Modal'ı açıyoruz
+        setswapSuggestdetails(response?.data?.form); // Detayları state'e set ediyoruz
+        setselectedModalIndex(index); // Modal'ı hangi index ile açacağımızı belirliyoruz
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -84,14 +82,17 @@ export default function SwapScreen() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      {SwapSuggest.length == 0 ? (
-        // Eğer item boşsa NoDataScreen'i göster
-        <NoDataScreen
-          message="Takas bilgisi bulunamadı."
-          iconName="swap-horizontal-bold"
-          buttonText="Anasayfaya Dön"
-          navigateTo="HomePage"
+    <View style={styles.container}>
+      {loading ? (
+        <ActivityIndicator
+          size="large"
+          color="#000"
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1,
+          }}
+          animating={loading}
         />
       ) : (
         <ScrollView
@@ -589,16 +590,24 @@ export default function SwapScreen() {
                         </View>
                       </>
                     )}
-
-                  {/* <View style={{borderBottomWidth:1,borderBottomColor:'#ebebeb',paddingBottom:5}}>
-                    <Text style={{color:'#333'}}> <Text style={{fontWeight:'bold'}}>Oda Sayısı: </Text>Araç</Text>
-                    </View> */}
                 </View>
               </View>
             </View>
           </Modal>
         </ScrollView>
       )}
+      {SwapSuggest.length === 0 && !loading ? (
+        <>
+          <View>
+            <NoDataScreen
+              message="Takas bilgisi bulunamadı."
+              iconName="swap-horizontal-bold"
+              buttonText="Anasayfaya Dön"
+              navigateTo="HomePage"
+            />
+          </View>
+        </>
+      ) : null}
     </View>
   );
 }
@@ -607,6 +616,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#F5F5F7",
     gap: 10,
+    flex: 1,
   },
   card: {
     backgroundColor: "#FFF",
