@@ -30,6 +30,7 @@ import { getValueFor } from "../../../components/methods/user";
 import { ActivityIndicator } from "react-native-paper";
 import { Platform } from "react-native";
 import { apiRequestGet } from "../../../components/methods/apiRequest";
+import mime from "mime";
 
 const HomeInfo = ({ ımage, user, No, price, title, type }) => {
   return (
@@ -166,6 +167,8 @@ export default function SwapForm({ openModal, color }) {
   const [projectInfo, setprojectInfo] = useState({});
   const [loadingProject, setloadingProject] = useState(false);
   const [roomData, setroomData] = useState({});
+  const [loadingPost, setloadingPost] = useState(false);
+
   const GetProjectHousingDetails = () => {
     setloadingProject(true);
     apiRequestGet(`project/${projectId}`)
@@ -204,18 +207,18 @@ export default function SwapForm({ openModal, color }) {
       fetchDetails();
     }
   }, []);
-  const [loadingPost, setloadingPost] = useState(false);
+
   const postData = async () => {
     setloadingPost(true);
     try {
       var formData = new FormData();
+      // Adding the standard form data
       formData.append("item_type", type);
       formData.append("item_id", type == 1 ? projectId : houseid);
       if (type == 1) {
         formData.append("room_order", type == 1 ? houseid : null);
       }
       formData.append("ad", name);
-
       formData.append("soyad", surname);
       formData.append("telefon", phoneNmber);
       formData.append("email", email);
@@ -246,37 +249,22 @@ export default function SwapForm({ openModal, color }) {
       formData.append("vites_tipi", shiftType);
       formData.append("arac_satis_rakami", Price);
       formData.append("barter_detay", Barter);
-      if (SwapChoose == "emlak") {
-        formData.append(
-          "tapu_belgesi",
-          image
-            ? {
-                name: image.fileName,
-                type: image.type,
-                uri:
-                  Platform.OS === "android"
-                    ? image.uri
-                    : image.uri.replace("file://", ""),
-              }
-            : null
-        );
-      }
-      if (SwapChoose == "araç") {
-        formData.append(
-          "ruhsat_belgesi",
-          image
-            ? {
-                name: image.fileName,
-                type: image.type,
-                uri:
-                  Platform.OS === "android"
-                    ? image.uri
-                    : image.uri.replace("file://", ""),
-              }
-            : null
-        );
+
+      // Handling the image part with correct mime type and uri
+      if (SwapChoose === "araç" && image) {
+        console.debug("Araç resmi yüklendi--> ", image.uri);
+
+        const newImageUri = "file://" + image.uri.split("file:/").join(""); // Normalize the URI for Android
+        const mimeType = mime.getType(newImageUri); // Get the correct mime type using mime package
+
+        formData.append("ruhsat_belgesi", {
+          name: image.fileName,
+          type: mimeType, // Proper mime type
+          uri: newImageUri,
+        });
       }
 
+      // Axios POST request
       const response = await axios.post(
         "https://private.emlaksepette.com/api/swap",
         formData,
@@ -285,11 +273,11 @@ export default function SwapForm({ openModal, color }) {
             Authorization: `Bearer ${user.access_token}`,
             "Content-Type": "multipart/form-data",
           },
+          timeout: 60000,
         }
       );
 
-      // İsteğin başarılı bir şekilde tamamlandığı durum
-
+      // Success handler
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
@@ -297,9 +285,7 @@ export default function SwapForm({ openModal, color }) {
         button: "Tamam",
       });
 
-      console.debug("Başarılı:", response.data);
-      // openModal(JSON.stringify(response.data.message));
-
+      // Reset fields after successful upload
       setname("");
       setsurname("");
       setphoneNmber("");
@@ -327,9 +313,7 @@ export default function SwapForm({ openModal, color }) {
       setselectedPdfUrl(null);
       setSelectedDocumentName(null);
     } catch (error) {
-      // Hata durumunda
-
-      console.error("Hata:", error + " post isteği başarısız ");
+      console.error("Axios Hatası:", error);
     } finally {
       setloadingPost(false);
     }
