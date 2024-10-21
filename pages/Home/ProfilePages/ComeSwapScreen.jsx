@@ -13,7 +13,6 @@ import React, { useEffect, useState } from "react";
 import { getValueFor } from "../../../components/methods/user";
 import NoDataScreen from "../../../components/NoDataScreen";
 import axios from "axios";
-import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import Modal from "react-native-modal";
 
 import RequestItem from "./RequestItem";
@@ -190,7 +189,9 @@ export default function ComeSwapScreen() {
                     }}
                   >
                     <Text style={{ color: "#333" }}>
-                      <Text style={{ fontWeight: "bold" }}>Telefon:</Text>
+                      <Text style={{ fontWeight: "bold" }}>
+                        Telefon Numarası:
+                      </Text>
                       {swapSuggestdetails.telefon}
                     </Text>
                   </View>
@@ -322,9 +323,7 @@ export default function ComeSwapScreen() {
                           <Text style={{ fontWeight: "bold" }}>
                             Araç Satış Rakamı:{" "}
                           </Text>
-                          {addDotEveryThreeDigits(
-                            swapSuggestdetails.arac_satis_rakami
-                          )}
+                          {swapSuggestdetails.arac_satis_rakami}
                         </Text>
                       </View>
                     </>
@@ -529,10 +528,7 @@ export default function ComeSwapScreen() {
                             <Text style={{ fontWeight: "bold" }}>
                               Satış Rakamı:{" "}
                             </Text>
-                            {addDotEveryThreeDigits(
-                              swapSuggestdetails.konut_satis_rakami
-                            )}
-                            ₺
+                            {swapSuggestdetails.konut_satis_rakami}₺
                           </Text>
                         </View>
                       </>
@@ -583,10 +579,7 @@ export default function ComeSwapScreen() {
                             <Text style={{ fontWeight: "bold" }}>
                               İşyeri Satış Rakamı:{" "}
                             </Text>
-                            {addDotEveryThreeDigits(
-                              swapSuggestdetails.isyeri_satis_rakami
-                            )}
-                            ₺
+                            {swapSuggestdetails.isyeri_satis_rakami}₺
                           </Text>
                         </View>
                       </>

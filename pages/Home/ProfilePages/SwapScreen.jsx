@@ -12,7 +12,6 @@ import SwapItem from "./profileComponents/SwapItem";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
-import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import { Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import NoDataScreen from "../../../components/NoDataScreen";
@@ -321,9 +320,7 @@ export default function SwapScreen() {
                           <Text style={{ fontWeight: "bold" }}>
                             Araç Satış Rakamı:{" "}
                           </Text>
-                          {addDotEveryThreeDigits(
-                            swapSuggestdetails.arac_satis_rakami
-                          )}
+                          {swapSuggestdetails.arac_satis_rakami}
                         </Text>
                       </View>
                     </>
@@ -528,10 +525,7 @@ export default function SwapScreen() {
                             <Text style={{ fontWeight: "bold" }}>
                               Satış Rakamı:{" "}
                             </Text>
-                            {addDotEveryThreeDigits(
-                              swapSuggestdetails.konut_satis_rakami
-                            )}
-                            ₺
+                            {swapSuggestdetails.konut_satis_rakami}₺
                           </Text>
                         </View>
                       </>
@@ -582,10 +576,7 @@ export default function SwapScreen() {
                             <Text style={{ fontWeight: "bold" }}>
                               İşyeri Satış Rakamı:{" "}
                             </Text>
-                            {addDotEveryThreeDigits(
-                              swapSuggestdetails.isyeri_satis_rakami
-                            )}
-                            ₺
+                            {swapSuggestdetails.isyeri_satis_rakami}₺
                           </Text>
                         </View>
                       </>
