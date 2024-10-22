@@ -6,18 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 const MySwapInfoBottom = ({
   isVisible,
   setIsVisible,
-  name,
-  surname,
-  phone,
-  eposta,
-  city,
-  country,
   swapStatus,
-  vehicleModelYear,
-  vehicleBrand,
-  fuelType,
-  shiftType,
-  vehicleSwapPrice,
   estatesType,
   data,
 }) => {
@@ -67,42 +56,42 @@ const MySwapInfoBottom = ({
             <>
               <View style={styles.area}>
                 <Text style={styles.tokerize}>Adı: </Text>
-                <Text style={styles.text}>{name}</Text>
+                <Text style={styles.text}>{data?.ad}</Text>
               </View>
             </>
             <View style={styles.seperator} />
             <>
               <View style={styles.area}>
                 <Text style={styles.tokerize}>Soyadı: </Text>
-                <Text style={styles.text}>{surname}</Text>
+                <Text style={styles.text}>{data?.soyad}</Text>
               </View>
             </>
             <View style={styles.seperator} />
             <>
               <View style={styles.area}>
                 <Text style={styles.tokerize}>Telefon Numarası: </Text>
-                <Text style={styles.text}>{phone}</Text>
+                <Text style={styles.text}>{data?.telefon}</Text>
               </View>
             </>
             <View style={styles.seperator} />
             <>
               <View style={styles.area}>
                 <Text style={styles.tokerize}>E-Posta: </Text>
-                <Text style={styles.text}>{eposta}</Text>
+                <Text style={styles.text}>{data?.email}</Text>
               </View>
             </>
             <View style={styles.seperator} />
             <>
               <View style={styles.area}>
                 <Text style={styles.tokerize}>Şehir: </Text>
-                <Text style={styles.text}>{country}</Text>
+                <Text style={styles.text}>{data?.city?.title}</Text>
               </View>
             </>
             <View style={styles.seperator} />
             <>
               <View style={styles.area}>
                 <Text style={styles.tokerize}>İlçe: </Text>
-                <Text style={styles.text}>{city}</Text>
+                <Text style={styles.text}>{data?.county?.title}</Text>
               </View>
             </>
             <View style={styles.seperator} />
@@ -118,35 +107,35 @@ const MySwapInfoBottom = ({
                 <>
                   <View style={styles.area}>
                     <Text style={styles.tokerize}>Araç Model Yılı: </Text>
-                    <Text style={styles.text}>{vehicleModelYear}</Text>
+                    <Text style={styles.text}>{data?.arac_model_yili}</Text>
                   </View>
                   <View style={styles.seperator} />
                 </>
                 <>
                   <View style={styles.area}>
                     <Text style={styles.tokerize}>Araç Markası: </Text>
-                    <Text style={styles.text}>{vehicleBrand}</Text>
+                    <Text style={styles.text}>{data?.arac_markasi}</Text>
                   </View>
                   <View style={styles.seperator} />
                 </>
                 <>
                   <View style={styles.area}>
                     <Text style={styles.tokerize}>Yakıt Tipi: </Text>
-                    <Text style={styles.text}>{fuelType}</Text>
+                    <Text style={styles.text}>{data?.yakit_tipi}</Text>
                   </View>
                   <View style={styles.seperator} />
                 </>
                 <>
                   <View style={styles.area}>
                     <Text style={styles.tokerize}>Vites Tipi: </Text>
-                    <Text style={styles.text}>{shiftType}</Text>
+                    <Text style={styles.text}>{data?.vites_tipi}</Text>
                   </View>
                   <View style={styles.seperator} />
                 </>
                 <>
                   <View style={styles.area}>
                     <Text style={styles.tokerize}>Takas Fiyatı: </Text>
-                    <Text style={styles.text}>{vehicleSwapPrice}</Text>
+                    <Text style={styles.text}>{data?.arac_satis_rakami}</Text>
                   </View>
                   <View style={styles.seperator} />
                 </>

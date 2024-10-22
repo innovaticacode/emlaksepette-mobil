@@ -128,18 +128,7 @@ export default function ComeSwapScreen() {
             isVisible={DetailModal}
             setIsVisible={setDetailModal}
             swapStatus={swapSuggestdetails?.takas_tercihi}
-            name={swapSuggestdetails?.ad}
-            surname={swapSuggestdetails?.soyad}
-            phone={swapSuggestdetails?.telefon}
-            eposta={swapSuggestdetails?.email}
-            city={swapSuggestdetails?.city?.title}
-            country={swapSuggestdetails?.county?.title}
             swapSuggest={swapSuggestdetails?.takas_tercihi}
-            vehicleModelYear={swapSuggestdetails?.arac_model_yili}
-            vehicleBrand={swapSuggestdetails?.arac_markasi}
-            fuelType={swapSuggestdetails?.yakit_tipi}
-            shiftType={swapSuggestdetails?.vites_tipi}
-            vehicleSwapPrice={swapSuggestdetails?.arac_satis_rakami}
             estatesType={swapSuggestdetails?.emlak_tipi}
             data={swapSuggestdetails}
           />
