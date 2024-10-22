@@ -8,16 +8,17 @@ import {
   TouchableOpacity,
   ImageBackground,
   ActivityIndicator,
+  FlatList,
+  Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { getValueFor } from "../../../components/methods/user";
 import NoDataScreen from "../../../components/NoDataScreen";
 import axios from "axios";
 import Modal from "react-native-modal";
-
-import RequestItem from "./RequestItem";
 import Icon from "react-native-vector-icons/AntDesign";
-import { Image } from "react-native-elements";
+import { InfoCard } from "../../../components";
+import { formatDate } from "../../../utils";
 
 export default function ComeSwapScreen() {
   const [user, setUser] = useState({});
@@ -106,10 +107,23 @@ export default function ComeSwapScreen() {
           style={styles.container}
           contentContainerStyle={{ gap: 15, paddingBottom: 50 }}
         >
-          {mySwapRequest.map((item, i) => (
-            <RequestItem item={item} index={i} getDetails={getDetails} />
-          ))}
-
+          <>
+            <FlatList
+              data={mySwapRequest}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item, index }) => (
+                <InfoCard
+                  colorKey={index}
+                  name={item.ad}
+                  surname={item.soyad}
+                  eposta={item.email}
+                  phone={item.telefon}
+                  date={formatDate(item.created_at)}
+                  onPress={() => getDetails(item.id, index)}
+                />
+              )}
+            />
+          </>
           <Modal
             animationType="fade"
             backdropColor="#0000"
@@ -655,7 +669,8 @@ export default function ComeSwapScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    // padding: 10,
+    paddingHorizontal: 2,
     backgroundColor: "#F5F5F7",
     gap: 10,
     flex: 1,
