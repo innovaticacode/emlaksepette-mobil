@@ -105,7 +105,8 @@ export default function ComeSwapScreen() {
       ) : (
         <ScrollView
           style={styles.container}
-          contentContainerStyle={{ gap: 15, paddingBottom: 50 }}
+          contentContainerStyle={{ gap: 15 }}
+          showsVerticalScrollIndicator={false}
         >
           <>
             <FlatList
