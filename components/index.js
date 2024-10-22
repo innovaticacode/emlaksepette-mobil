@@ -7,6 +7,7 @@ import EvaluationsCommentCard from "./Card/EvaluationsCard/EvaluationsCommentCar
 import RadioFilter from "./Filter/RadioFilter/RadioFilter";
 import ViewAllCard from "./Card/ViewAllCard/ViewAllCard";
 import InfoCard from "./Card/InfoCard/InfoCard";
+import MySwapInfoBottom from "./BottomModals/MySwapInfoBottom/MySwapInfoBottom";
 
 export {
   CommentCard,
@@ -18,4 +19,5 @@ export {
   EvaluationsCommentCard,
   ViewAllCard,
   InfoCard,
+  MySwapInfoBottom,
 };
