@@ -154,25 +154,4 @@ const styles = StyleSheet.create({
     gap: 10,
     flex: 1,
   },
-  card: {
-    backgroundColor: "#FFF",
-    borderRadius: 500,
-    paddingVertical: 30,
-    paddingHorizontal: 10,
-    width: "100%",
-
-    borderWidth: 0.7,
-    borderColor: "#e6e6e6",
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
 });
