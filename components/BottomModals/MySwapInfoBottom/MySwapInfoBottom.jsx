@@ -1,12 +1,27 @@
-import { View, Dimensions, Text, Image, ScrollView } from "react-native";
+import {
+  View,
+  Dimensions,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  Platform,
+  Linking,
+  Permissions,
+} from "react-native";
 import React, { useEffect, useRef } from "react";
 import ActionSheet from "react-native-actions-sheet";
 import { styles } from "./MySwapInfoBottom.styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { frontEndUriBase } from "../../methods/apiRequest";
 
-const { height } = Dimensions.get("screen");
+import * as FileSystem from "expo-file-system";
+import * as IntentLauncher from "expo-intent-launcher";
+import { StorageAccessFramework } from "expo-file-system";
+import { shareAsync } from "expo-sharing";
+import * as MediaLibrary from "expo-media-library";
 
+const { height } = Dimensions.get("screen");
 const MySwapInfoBottom = ({
   isVisible,
   setIsVisible,
@@ -24,14 +39,6 @@ const MySwapInfoBottom = ({
     }
   }, [isVisible]);
 
-  useEffect(() => {
-    console.debug("data--->", data);
-    console.debug(
-      "frontEndUriBase + data?.ruhsat_belgesi--->",
-      frontEndUriBase + data?.ruhsat_belgesi
-    );
-  }, [isVisible]);
-
   const fetchStyle = () => {
     return {
       ...styles.container,
@@ -43,6 +50,52 @@ const MySwapInfoBottom = ({
           : height * 0.42,
     };
   };
+
+  async function download() {
+    const filename = data?.ruhsat_belgesi?.split("/").pop();
+    if (!filename) {
+      console.log("Geçerli bir dosya adı yok.");
+      return;
+    }
+
+    const fileUri = FileSystem.documentDirectory + "/" + filename;
+    const result = await FileSystem.downloadAsync(
+      frontEndUriBase + "ruhsatFiles/" + data?.ruhsat_belgesi,
+      fileUri
+    );
+
+    // Save the downloaded file
+    const mimeType =
+      result.headers["content-type"] || "application/octet-stream";
+    await saveFile(result.uri, filename, mimeType);
+  }
+
+  async function saveFile(uri, filename, mimetype) {
+    const permissions =
+      await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+
+    if (permissions.granted) {
+      const base64 = await FileSystem.readAsStringAsync(uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      const directoryUri = permissions.directoryUri;
+      try {
+        const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
+          directoryUri,
+          filename,
+          mimetype
+        );
+        await FileSystem.writeAsStringAsync(fileUri, base64, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        console.log("Dosya başarıyla kaydedildi:", fileUri);
+      } catch (e) {
+        console.log("Dosya kaydetme hatası:", e);
+      }
+    } else {
+      console.log("İzin verilmedi.");
+    }
+  }
 
   return (
     <View>
@@ -327,7 +380,7 @@ const MySwapInfoBottom = ({
               )}
             </>
             <>
-              {data?.ruhsat_belgesi && (
+              {/* {data?.ruhsat_belgesi && (
                 <>
                   <Image
                     source={{
@@ -343,7 +396,10 @@ const MySwapInfoBottom = ({
                     resizeMode="cover"
                   />
                 </>
-              )}
+              )} */}
+              <TouchableOpacity onPress={() => download()}>
+                <Text>Belgeleri Görüntüle</Text>
+              </TouchableOpacity>
             </>
           </ScrollView>
         </>
