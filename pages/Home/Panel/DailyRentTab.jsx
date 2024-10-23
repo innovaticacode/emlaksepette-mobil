@@ -52,33 +52,33 @@ const CustomTabBar = ({
 }) => {
   const menuItems=[
     {
-        'text':'Genel İstatistikler',
-        'color':'#EEEDEB',
-        'textColor':'#000000',
-         'Inactive':'#FFFFFF',
-         'InactiveTex':'#000000'
+      text: "Tüm İşlemler",
+      color: "#EEEDEB",
+      textColor: "#000000",
+      Inactive: "#FFFFFF",
+      InactiveTex: "#000000",
     },
     {
-        'text':'Kazancım',
-        'color':'#BFFFC5',
-        'textColor':'#00D21A',
-          'Inactive':'#FFFFFF',
-         'InactiveTex':'#000000'
+      text: "Ciro",
+      color: "#BFFFC5",
+      textColor: "#00D21A",
+      Inactive: "#FFFFFF",
+      InactiveTex: "#000000",
     },
     {
-        'text':'Onay Bekleyen Kazancım',
-        'color':'#FFECB2',
-        'textColor':'#FF9908',
-          'Inactive':'#FFFFFF',
-         'InactiveTex':'#000000'
+      text: "Bekleyen İşlemler",
+      color: "#FFECB2",
+      textColor: "#FF9908",
+      Inactive: "#FFFFFF",
+      InactiveTex: "#000000",
     },
     {
-        'text':'Reddedilen Kazancım',
-        'color':'#FBD5D5',
-        'textColor':'#EA2C2E',
-          'Inactive':'#FFFFFF',
-         'InactiveTex':'#000000'
-    }
+      text: "Reddedilen İşlemler",
+      color: "#FBD5D5",
+      textColor: "#EA2C2E",
+      Inactive: "#FFFFFF",
+      InactiveTex: "#000000",
+    },
   ]
 
  
@@ -148,11 +148,7 @@ export default function DailyRentTab() {
      
       
      
-      <View style={{paddingLeft:8,paddingRight:8,paddingTop:10}}>
-        <TextInput style={{padding:6,backgroundColor:'#FFFFFF',borderRadius:5,}} placeholder="Kelime veya İlan no ile ara.." 
-          
-        />
-      </View>
+    
       <TabView
         navigationState={{ index, routes }}
         renderScene={({ route, jumpTo }) =>

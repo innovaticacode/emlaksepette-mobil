@@ -30,6 +30,20 @@ import enler from "../../../components/images/enler.png";
 import cerceve from "../../../components/images/cerceve.png";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 
+  const ItemContainer=({text,style,dataText,TextHeader})=>{
+    return (
+      <View style={style}>
+         <View style={{  alignItems: "center" }}>
+                      <Text style={styles.title}>{TextHeader}</Text>
+                    </View>
+            <View >
+              <Text style={{textAlign:'center',fontSize:14,color:'#333',fontWeight:'600'}}>{dataText}</Text>
+            </View>
+ 
+        </View>
+    )
+  }
+
 export default function Panel({ options, onSelect }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [buttonPosition, setButtonPosition] = useState({ x: 0, y: 0 });
@@ -146,7 +160,43 @@ export default function Panel({ options, onSelect }) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(panelInfo.totalSales);
-console.log(user.access_token)
+  
+    const Items=[
+      {
+        header:'Aktif İlanlar',
+        data:panelInfo.activeAdvertProjects + panelInfo.activeAdvertHousings
+      },
+      {
+        header:'Onay Bekleyen İlanlar',
+        data:panelInfo.pendingAdvertProjects +panelInfo.pendingAdvertHousings
+      },
+      {
+        header:'Askıya Alınan İlanlar',
+        data:panelInfo.passiveAdvertHousings + panelInfo.passiveAdvertProjects
+      },
+      {
+        header:'Reddedilen İlanlar',
+        data:panelInfo.rejectAdvertProjects + panelInfo.rejectAdvertHousings
+      },
+      {
+        header:'Alt Çalışan Sayısı',
+        data:1
+      },
+      {
+        header:'Satılan İlanlar',
+        data:2
+      },
+      {
+        header:'Toplam İlan Sayısı',
+        data:2
+      },
+      {
+        header:'Koleksiyon Sayısı',
+        data:2
+      },
+    
+    ]
+
   return (
     <>
       <View style={style.container}>
@@ -160,192 +210,41 @@ console.log(user.access_token)
             contentContainerStyle={{ paddingBottom: 20 }}
           >
             <View style={style.container}>
-              <View style={{ marginBottom: 20 }}>
-                <View style={{ position: "relative", marginTop: 30 }}>
-                  <LinearGradient
-                    colors={["rgba(234, 43, 46, 1)", "rgba(132, 24, 26, 0.62)"]} // RGBA formatında renkler
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 0, y: 1 }}
-                    style={[styles.gradient, {}]}
-                  >
-                    {/* Gradyan içeriği */}
-                  </LinearGradient>
-                </View>
-                <View
-                  style={{
-                    marginTop: 10,
-                    position: "absolute",
-                    top: 14,
-                    left: 20,
-                    flexDirection: "row",
-                    borderWidth: 4,
-                    borderRadius: 50,
-                    borderColor: "#F7F7F9",
-                  }}
-                >
+            <View style={{backgroundColor:'#EA2C2E',padding:8}}>
+              <View style={{flexDirection:'row',alignItems:'center',gap:10}}>
+                  <View style={{width:65,height:65,borderRadius:50,backgroundColor:'yellow',borderWidth:2,borderColor:'white'}}>
                   <ImageBackground
                     source={{
-                      uri: `https://private.emlaksepette.com/storage/profile_images/${panelInfo.user.profile_image}`,
+                      uri: `https://private.emlaksepette.com/storage/profile_images/${panelInfo?.user?.profile_image}`,
                     }}
-                    style={styles.imageBackground}
+                    style={{width:'100%',height:'100%'}}
+                    borderRadius={50}
                     resizeMode="cover"
-                    imageStyle={{}}
+                    
                   />
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      flexDirection: "column",
-                      position: "absolute",
-                      top: 24,
-                      left: 90,
-                    }}
-                  >
-                    <Text style={{ color: "white", fontWeight: "700" }}>
+                  </View>
+                  <View>
+                  <Text style={{ color: "white", fontWeight: "700" }}>
                       {panelInfo.user.name}
                     </Text>
                     <Text style={{ color: "white", fontWeight: "400" }}>
                       {panelInfo.user.email}
                     </Text>
                   </View>
-                </View>
               </View>
-              <View style={{ paddingLeft: 20, paddingRight: 20 }}>
+            </View>
+              <View style={{ }}>
                 <View style={styles.rowContainer}>
-                  <View style={styles.itemContainer}>
-                    <View style={{ padding: 10, alignItems: "center" }}>
-                      <Text style={styles.title}>Aktif İlanlar</Text>
-                    </View>
-                    <View
-                      style={{
-                        width: "100%",
-                      }}
-                    >
-                      <LinearGradient
-                        colors={[
-                          "rgba(234, 43, 46, 1)",
-                          "rgba(132, 24, 26, 0.62)",
-                        ]} // RGBA formatında renkler
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 0, y: 1 }}
-                        style={[
-                          styles.gradient2,
-                          {
-                            width: "100%",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          },
-                        ]}
-                      >
-                        {/* Gradyan içeriği */}
-                        <Text style={styles.info}>
-                          {panelInfo.activeAdvertProjects +
-                            panelInfo.activeAdvertHousings}
-                        </Text>
-                      </LinearGradient>
-                    </View>
-                  </View>
-                  <View style={styles.itemContainer}>
-                    <View style={{ padding: 10, alignItems: "center" }}>
-                      <Text style={styles.title}>Onay Bekleyen İlanlar</Text>
-                    </View>
-                    <View
-                      style={{
-                        width: "100%",
-                      }}
-                    >
-                      <LinearGradient
-                        colors={[
-                          "rgba(234, 43, 46, 1)",
-                          "rgba(132, 24, 26, 0.62)",
-                        ]} // RGBA formatında renkler
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 0, y: 1 }}
-                        style={[
-                          styles.gradient2,
-                          {
-                            width: "100%",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          },
-                        ]}
-                      >
-                        {/* Gradyan içeriği */}
-                        <Text style={styles.info}>
-                          {panelInfo.pendingAdvertProjects +
-                            panelInfo.pendingAdvertHousings}
-                        </Text>
-                      </LinearGradient>
-                    </View>
-                  </View>
-                  <View style={styles.itemContainer}>
-                    <View style={{ padding: 10, alignItems: "center" }}>
-                      <Text style={styles.title}>Pasif İlanlar</Text>
-                    </View>
-                    <View
-                      style={{
-                        width: "100%",
-                      }}
-                    >
-                      <LinearGradient
-                        colors={[
-                          "rgba(234, 43, 46, 1)",
-                          "rgba(132, 24, 26, 0.62)",
-                        ]} // RGBA formatında renkler
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 0, y: 1 }}
-                        style={[
-                          styles.gradient2,
-                          {
-                            width: "100%",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          },
-                        ]}
-                      >
-                        {/* Gradyan içeriği */}
-                        <Text style={styles.info}>
-                          {panelInfo.passiveAdvertHousings +
-                            panelInfo.passiveAdvertProjects}
-                        </Text>
-                      </LinearGradient>
-                    </View>
-                  </View>
-                  <View style={styles.itemContainer}>
-                    <View style={{ padding: 10, alignItems: "center" }}>
-                      <Text style={styles.title}>Reddedilen İlanlar</Text>
-                    </View>
-                    <View
-                      style={{
-                        width: "100%",
-                      }}
-                    >
-                      <LinearGradient
-                        colors={[
-                          "rgba(234, 43, 46, 1)",
-                          "rgba(132, 24, 26, 0.62)",
-                        ]} // RGBA formatında renkler
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 0, y: 1 }}
-                        style={[
-                          styles.gradient2,
-                          {
-                            width: "100%",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          },
-                        ]}
-                      >
-                        {/* Gradyan içeriği */}
-                        <Text style={styles.info}>
-                          {panelInfo.rejectAdvertProjects +
-                            panelInfo.rejectAdvertHousings}
-                        </Text>
-                      </LinearGradient>
-                    </View>
-                  </View>
+
+                  {
+                    Items.map((item,index)=>(
+                      <ItemContainer style={[styles.card,{   width: (Dimensions.get("window").width - 30) / 2, flexDirection: "column",padding:15,paddingTop:10,paddingBottom:10,gap:8,borderWidth:1 }]} dataText={item.data} TextHeader={item.header} />
+                    ))
+                  }
+                                       
                 </View>
               </View>
-              <View style={{ paddingLeft: 20, paddingRight: 20 }}>
+              <View style={{ paddingLeft: 12, paddingRight: 12 }}>
                 <View
                   style={[
                     styles.card,
@@ -442,7 +341,7 @@ console.log(user.access_token)
                   </View>
                 </View>
               </View>
-              <View
+              {/* <View
                 style={[
                   styles.card,
                   {
@@ -541,9 +440,9 @@ console.log(user.access_token)
                     </View>
                   </ImageBackground>
                 </View>
-              </View>
+              </View> */}
 
-              <View style={{ marginTop: 10, marginBottom: 100 }}>
+              <View style={{ paddingRight:12,paddingLeft:12}}>
                 <TouchableOpacity
                   onPress={() => navigation.navigate("AdvertPanel")}
                   style={[
@@ -553,7 +452,7 @@ console.log(user.access_token)
                       flexDirection: "row",
                       alignItems: "center",
                       gap: 15,
-                      marginTop: 10,
+                     
                     },
                   ]}
                 >
@@ -570,8 +469,7 @@ console.log(user.access_token)
                     </Text>
                   </View>
                 </TouchableOpacity>
-
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("ClubPanel");
                   }}
@@ -596,8 +494,8 @@ console.log(user.access_token)
                   >
                     <Text>Emlak Kulüp</Text>
                   </View>
-                </TouchableOpacity>
-                <TouchableOpacity
+                </TouchableOpacity> */}
+                {/* <TouchableOpacity
                   onPress={() => {
                     navigation.navigate("Collections");
                   }}
@@ -622,7 +520,7 @@ console.log(user.access_token)
                   >
                     <Text>Koleksiyonlarım</Text>
                   </View>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
           </ScrollView>
@@ -709,8 +607,11 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: "row", // Öğeleri yatayda hizalar
     flexWrap: "wrap", // Taşma durumunda yeni satıra geçmelerini sağlar
-    justifyContent: "space-between", // Öğeler arasında eşit boşluk bırakır
+    // Öğeler arasında eşit boşluk bırakır
     alignItems: "center", //
+    justifyContent:'center',
+    gap:10,
+   
   },
   itemContainer: {
     width: (Dimensions.get("window").width - 60) / 2, // Genişliği ekran genişliğine göre ayarlar ve iki öğe yan yana gelir
@@ -766,6 +667,7 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F7F7F9",
+    gap:15,
   },
   cardContainer: {
     backgroundColor: "white",
