@@ -103,11 +103,7 @@ export default function ComeSwapScreen() {
           animating={loading}
         />
       ) : (
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={{ gap: 15 }}
-          showsVerticalScrollIndicator={false}
-        >
+        <View>
           <>
             <FlatList
               data={mySwapRequest}
@@ -133,7 +129,7 @@ export default function ComeSwapScreen() {
             estatesType={swapSuggestdetails?.emlak_tipi}
             data={swapSuggestdetails}
           />
-        </ScrollView>
+        </View>
       )}
       {mySwapRequest.length === 0 && !loading ? (
         <>

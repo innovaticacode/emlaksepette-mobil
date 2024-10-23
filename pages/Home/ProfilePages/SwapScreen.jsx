@@ -97,11 +97,7 @@ export default function SwapScreen() {
           animating={loading}
         />
       ) : (
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={{ gap: 15 }}
-          showsVerticalScrollIndicator={false}
-        >
+        <View>
           <>
             <FlatList
               data={SwapSuggest}
@@ -127,7 +123,7 @@ export default function SwapScreen() {
             estatesType={swapSuggestdetails?.emlak_tipi}
             data={swapSuggestdetails}
           />
-        </ScrollView>
+        </View>
       )}
       {SwapSuggest.length === 0 && !loading ? (
         <>
