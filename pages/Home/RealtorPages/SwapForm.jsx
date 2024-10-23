@@ -210,11 +210,11 @@ export default function SwapForm({ openModal, color }) {
     }
   }, []);
 
+  //post data start
   const postData = async () => {
     setloadingPost(true);
     try {
       var formData = new FormData();
-      // Adding the standard form data
       formData.append("item_type", type);
       formData.append("item_id", type == 1 ? projectId : houseid);
       if (type == 1) {
@@ -252,21 +252,32 @@ export default function SwapForm({ openModal, color }) {
       formData.append("arac_satis_rakami", Price);
       formData.append("barter_detay", Barter);
 
-      // Handling the image part with correct mime type and uri
+      // Görseli (image) ekleme
       if (SwapChoose === "araç" && image) {
         console.debug("Araç resmi yüklendi--> ", image.uri);
 
         const newImageUri = "file://" + image.uri.split("file:/").join(""); // Normalize the URI for Android
-        const mimeType = mime.getType(newImageUri); // Get the correct mime type using mime package
+        const mimeType = mime.getType(newImageUri); // Correct MIME type
 
         formData.append("ruhsat_belgesi", {
           name: image.fileName,
-          type: mimeType, // Proper mime type
+          type: mimeType,
           uri: newImageUri,
         });
       }
 
-      // Axios POST request
+      // Append PDF if selected
+      if (pdfFile && pdfFile.assets && pdfFile.assets.length > 0) {
+        const selectedPdf = pdfFile.assets[0];
+
+        formData.append("ruhsat_belgesi", {
+          name: selectedPdf.name,
+          type: selectedPdf.mimeType,
+          uri: selectedPdf.uri,
+        });
+      }
+
+      // Axios POST isteği
       const response = await axios.post(
         "https://private.emlaksepette.com/api/swap",
         formData,
@@ -279,7 +290,7 @@ export default function SwapForm({ openModal, color }) {
         }
       );
 
-      // Success handler
+      // Başarılı olma durumunda
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
@@ -287,7 +298,7 @@ export default function SwapForm({ openModal, color }) {
         button: "Tamam",
       });
 
-      // Reset fields after successful upload
+      // Başarılı işlem sonrası alanları sıfırla
       setname("");
       setsurname("");
       setphoneNmber("");
@@ -319,11 +330,6 @@ export default function SwapForm({ openModal, color }) {
     } finally {
       setloadingPost(false);
     }
-  };
-
-  // Buton tetikleyicisi için bir fonksiyon
-  const handleButtonPress = () => {
-    GiveOffer();
   };
 
   const fetchData = async () => {
@@ -540,12 +546,14 @@ export default function SwapForm({ openModal, color }) {
   const [errorMessage, seterrorMessage] = useState("");
 
   const AlertFunc = (message) => {
-    Dialog.show({
-      type: ALERT_TYPE.DANGER,
-      title: "Tüm Alanları Doldurunuz",
-      textBody: `${message}`,
-      button: "Tamam",
-    });
+    setTimeout(() => {
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Tüm Alanları Doldurunuz",
+        textBody: `${message}`,
+        button: "Tamam",
+      });
+    }, 450);
   };
   const GiveOffer = () => {
     switch (true) {
@@ -571,7 +579,7 @@ export default function SwapForm({ openModal, color }) {
         AlertFunc("Takas Tercihi Boş Bırakılamaz");
         break;
       // Eğer SwapChoose "emlak" veya "araç" ise ve approve false ise, uyarı ver
-      case (SwapChoose === "emlak" || SwapChoose === "araç") && !approve:
+      case !approve:
         AlertFunc("Lütfen Belge Paylaşım Şartları Kabul Ediniz.");
         break;
 
@@ -579,6 +587,8 @@ export default function SwapForm({ openModal, color }) {
         postData();
     }
   };
+
+  console.debug("Belge paylaşım şartları kabul edildi:", approve);
 
   const [choose, setchoose] = useState(false);
   const [image, setImage] = useState(null);
@@ -642,45 +652,48 @@ export default function SwapForm({ openModal, color }) {
 
   const [pdfFile, setPdfFile] = useState(null);
   const [selectedPdfUrl, setselectedPdfUrl] = useState(null);
-  const pickDocument = async () => {
-    DocumentPicker.getDocumentAsync({ type: "application/pdf" })
-      .then((result) => {
-        console.log(
-          "Seçilen PDF Dosyasının İçeriği:",
-          JSON.stringify(result, null, 2)
-        );
 
-        if (!result.canceled && result.assets && result.assets.length > 0) {
-          const pdfAsset = result.assets[0];
-          setPdfFile(pdfAsset);
-          setSelectedDocumentName(pdfAsset.name);
-          console.log(pdfAsset.uri);
-          setselectedPdfUrl(pdfAsset.uri);
-          setImage(null);
-          setchoose(false);
-          console.log(selectedDocumentName);
-        }
-      })
-      .catch((error) => {
-        alert("hata");
+  // pick pdf code
+  const pickDocument = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "application/pdf",
       });
+
+      if (!result.canceled) {
+        setPdfFile(result);
+        setSelectedDocumentName(result.name);
+        console.log("Seçilen PDF Dosyasının URI'si:", result.uri);
+        setselectedPdfUrl(result.uri);
+        setImage(null);
+        setchoose(null);
+      } else {
+        console.log("PDF seçimi iptal edildi");
+      }
+    } catch (error) {
+      console.error("Dosya seçimi sırasında hata oluştu:", error);
+      alert("Bir hata oluştu, lütfen tekrar deneyin.");
+    }
   };
+
   const openPdf = async () => {
     if (selectedPdfUrl) {
       try {
         const contentUri = await FileSystem.getContentUriAsync(selectedPdfUrl);
-        IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+        await IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
           data: contentUri,
           flags: 1,
           type: "application/pdf",
         });
       } catch (error) {
         console.error("PDF açılırken hata oluştu:", error);
+        Alert.alert("PDF dosyası açılırken hata oluştu.");
       }
     } else {
-      Alert.alert("PDF dosyası bulunamadı");
+      Alert.alert("PDF dosyası bulunamadı.");
     }
   };
+
   const navigation = useNavigation();
   return (
     <AlertNotificationRoot>
@@ -1445,7 +1458,7 @@ export default function SwapForm({ openModal, color }) {
           </>
           <View>
             <TouchableOpacity
-              onPress={handleButtonPress}
+              onPress={() => GiveOffer()}
               style={styles.button}
               disabled={loadingPost}
             >
@@ -1514,7 +1527,7 @@ export default function SwapForm({ openModal, color }) {
                     alignItems: "center",
                     gap: 10,
                   }}
-                  onPress={pickDocument}
+                  onPress={() => pickDocument()}
                 >
                   <Icon3 name="file-open" size={21} color={"#333"} />
                   <Text

@@ -25,8 +25,6 @@ const MySwapInfoBottom = ({
   }, [isVisible]);
 
   useEffect(() => {
-    console.debug("swap--->", swapStatus);
-    console.debug("estates--->", estatesType);
     console.debug("data--->", data);
     console.debug(
       "frontEndUriBase + data?.ruhsat_belgesi--->",
@@ -39,9 +37,9 @@ const MySwapInfoBottom = ({
       ...styles.container,
       height:
         swapStatus === "araç"
-          ? height * 0.8 - 22
+          ? height * 0.8
           : swapStatus === "emlak"
-          ? height * 0.6 - 22
+          ? height * 0.6
           : height * 0.42,
     };
   };
@@ -332,7 +330,10 @@ const MySwapInfoBottom = ({
               {data?.ruhsat_belgesi && (
                 <>
                   <Image
-                    source={{ uri: frontEndUriBase + data?.ruhsat_belgesi }}
+                    source={{
+                      uri:
+                        frontEndUriBase + "ruhsatFiles/" + data?.ruhsat_belgesi,
+                    }}
                     style={{
                       width: "100%",
                       height: 200,
