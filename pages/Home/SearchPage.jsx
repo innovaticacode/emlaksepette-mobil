@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
@@ -113,7 +112,7 @@ export default function SearchPage({ navigation }) {
     const photoBaseUrl = {
       "Emlak İlanları": "https://private.emlaksepette.com/housing_images/",
       "Proje İlanları": "https://private.emlaksepette.com",
-      "Üyeler": "https://private.emlaksepette.com/storage/profile_images",
+      Üyeler: "https://private.emlaksepette.com/storage/profile_images",
     }[type];
 
     const modifyPhotoUrl = (photo) => {
@@ -121,14 +120,12 @@ export default function SearchPage({ navigation }) {
       return type === "Proje İlanları" || type === "Üyeler"
         ? `${photoBaseUrl}/${photo.replace("public/", "storage/")}`
         : `${photoBaseUrl}${photo}`;
-
     };
 
     const displayedItems = showMore[type] ? items : items.slice(0, 5);
     const showMoreText = showMore[type]
       ? "Daha Az Göster"
       : "Daha Fazla Göster";
-
 
     return (
       <View style={styles.resultSection}>
@@ -142,18 +139,27 @@ export default function SearchPage({ navigation }) {
             name={item.name}
             onPress={() => {
               const routes = {
-                "Emlak İlanları": "Realtor details",
-                "Proje İlanları": "Details",
-                "Üyeler": "Profile",
+                "Emlak İlanları": "AllRealtorAdverts", // Emlak İlanları için yönlendirme
+                "Proje İlanları": "Details", // Proje İlanları için yönlendirme
+                Üyeler: "Profile", // Üyeler için yönlendirme
               };
-  
+
               const params = {
-                "Emlak İlanları": { houseId: item.id },
-                "Proje İlanları": { ProjectId: item.id },
-                "Üyeler": { id: item.id },
+                "Emlak İlanları": { houseId: item.id }, // Emlak İlanları için parametre
+                "Proje İlanları": { ProjectId: item.id }, // Proje İlanları için parametre
+                Üyeler: { id: item.id }, // Üyeler için parametre
               };
-  
-              navigation.navigate(routes[type], params[type]);
+
+              // Eğer 'Proje İlanları' seçilmişse ve detaylar Drawer içinde
+              if (type === "Proje İlanları") {
+                navigation.navigate("Drawer", {
+                  screen: "Details", // Details ekranı
+                  params: params[type], // Detayları geçir
+                });
+              } else {
+                // Diğer yönlendirmeler için
+                navigation.navigate(routes[type], params[type]);
+              }
             }}
           />
         ))}
@@ -189,7 +195,10 @@ export default function SearchPage({ navigation }) {
               </TouchableOpacity>
             </View>
             {searchHistory.map((term, index) => (
-              <TouchableOpacity key={index} onPress={() => handleSearchTerm(term)}>
+              <TouchableOpacity
+                key={index}
+                onPress={() => handleSearchTerm(term)}
+              >
                 <View style={styles.historyItem}>
                   <Text style={styles.historyText}>{term}</Text>
                   <Icon name="right" size={16} color="#E70A12" />

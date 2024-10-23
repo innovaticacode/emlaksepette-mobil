@@ -34,10 +34,6 @@ export default function RealtorAdverts({ housingdata, filteredResults }) {
   };
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const GetIdForCart = (id) => {
-    setselectedCartItem(id);
-    setModalForAddToCart(true);
-  };
   const [loadingEstates, setloadingEstates] = useState(false);
   return (
     <>
@@ -46,7 +42,6 @@ export default function RealtorAdverts({ housingdata, filteredResults }) {
         data={housingdata}
         renderItem={({ item }) => (
           <RealtorPost
-            GetId={GetIdForCart}
             HouseId={item.id}
             openSharing={JSON.parse(item.housing_type_data)["open_sharing1"]}
             price={
@@ -114,10 +109,6 @@ export default function RealtorAdverts({ housingdata, filteredResults }) {
           ) : null
         }
       />
-      {/* <View style={{alignItems:'center',width:'100%',bottom: width>400?100:170}}>
-     <Image source={require('./House.jpg')} resizeMode='contain' style={{width:'85%'}}/>
-      <Text style={{bottom: width>400?250:270,fontSize:20,fontWeight:'500'}}>Henüz Proje Yayınlanmadı</Text>
-    </View> */}
     </>
   );
 }

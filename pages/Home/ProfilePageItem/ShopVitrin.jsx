@@ -115,11 +115,14 @@ export default function ShopVitrin({ data, housingdata, settab }) {
       style={{ flex: 1, paddingLeft: 15, paddingRight: 15 }}
       contentContainerStyle={{ flexGrow: 1 }}
     >
-      {banners.length > 0 && (
+      {/* {banners.length > 0 && (
         <View style={{ height: 245 }}>
           <Swiper autoplay>
             {banners.map((banner, index) => (
-              <View key={index} style={{ width: "100%", height: 200 }}>
+              <View
+                key={index}
+                style={{ width: "100%", height: 200, paddingHorizontal: 4 }}
+              >
                 <Image
                   source={{
                     uri: `${ApiUrl}${banner.image}`,
@@ -134,31 +137,10 @@ export default function ShopVitrin({ data, housingdata, settab }) {
             ))}
           </Swiper>
         </View>
-      )}
-
-      {/* {owners.length > 0 && (
-        <View style={[{ top: 5 }, styles.shadow]}>
-          <ScrollView
-            horizontal
-            contentContainerStyle={{ padding: 10, gap: 10 }}
-            showsHorizontalScrollIndicator={false}
-          >
-            {owners.map((itemComment, index) => (
-              <CommentItem
-                username=""
-                key={index}
-                comment={itemComment.comment}
-                date={itemComment.created_at}
-                rate={itemComment.rate}
-                image={itemComment?.images}
-              />
-            ))}
-          </ScrollView>
-        </View>
       )} */}
-
+      {/*
       <View style={{ marginTop: 10 }}>
-        {objectKeys.length > 0 &&
+         {objectKeys.length > 0 &&
           objectKeys.slice(0, 1).map((key, index) => (
             <View key={index}>
               <View
@@ -172,7 +154,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
                 <Text style={{ fontSize: 18 }}>Emlak İlanları</Text>
                 <TouchableOpacity
                   style={styles.allBtn}
-                  onPress={() => settab(2)}
+                  onPress={() => settab(3)}
                 >
                   <Text style={{ color: "white", fontSize: 11 }}>
                     Tüm İlanları Gör
@@ -235,10 +217,11 @@ export default function ShopVitrin({ data, housingdata, settab }) {
                 }
               />
             </View>
-          ))}
+          ))} 
       </View>
+      */}
 
-      {data?.data?.corporate_type !== "Emlak Ofisi" &&
+      {/* {data?.data?.corporate_type !== "Emlak Ofisi" &&
         featuredProjects.length > 0 && (
           <View>
             <View
@@ -252,7 +235,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
               }}
             >
               <Text style={{ fontSize: 18 }}>Proje İlanları</Text>
-              <TouchableOpacity style={styles.allBtn} onPress={() => settab(1)}>
+              <TouchableOpacity style={styles.allBtn} onPress={() => settab(2)}>
                 <Text style={{ color: "white", fontSize: 11 }}>
                   Tüm Projeleri Gör
                 </Text>
@@ -276,9 +259,9 @@ export default function ShopVitrin({ data, housingdata, settab }) {
               />
             ))}
           </View>
-        )}
+        )} */}
 
-      <Modal
+      {/* <Modal
         isVisible={ModalForAddToCart}
         onBackdropPress={() => setModalForAddToCart(false)}
         animationType="fade" // veya "fade", "none" gibi
@@ -330,7 +313,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
             </View>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </ScrollView>
   );
 }

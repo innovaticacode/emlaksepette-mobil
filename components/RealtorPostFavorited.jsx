@@ -61,55 +61,59 @@ export default function RealtorPostFavorited({
     getValueFor("user", setUser);
   }, []);
 
-  const removeItem = () => {
-    if (type == 1) {
-      fetchData();
+  // favorite silme işleminde burası çalışıyor
+  const removeItem = async () => {
+    try {
       const config = {
         headers: { Authorization: `Bearer ${user.access_token}` },
       };
-      axios
-        .post(
-          "https://private.emlaksepette.com/api/add_project_to_favorites/" +
-            housingId,
+
+      let response;
+
+      if (type === 1) {
+        response = await axios.post(
+          `https://private.emlaksepette.com/api/add_project_to_favorites/${housingId}`,
           {
             project_id: projectId,
             housing_id: housingId,
           },
           config
-        )
-        .then((res) => {
-          Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "Başarılı",
-            textBody: `${res.data.message}`,
-            button: "Tamam",
-          });
-          changeFavorites(1, housingId, projectId);
-        });
-      setShowAlert(false);
-    } else {
-      fetchData();
-      const config = {
-        headers: { Authorization: `Bearer ${user.access_token}` },
-      };
-      axios
-        .post(
-          "https://private.emlaksepette.com/api/add_housing_to_favorites/" +
-            HouseId,
+        );
+        changeFavorites(1, housingId, projectId);
+        fetchData();
+      } else {
+        response = await axios.post(
+          `https://private.emlaksepette.com/api/add_housing_to_favorites/${HouseId}`,
           {
             housing_id: HouseId,
           },
           config
-        )
-        .then((res) => {
-          Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "Başarılı",
-            textBody: `${res.data.message}`,
-            button: "Tamam",
-          });
-          changeFavorites(1, housingId);
+        );
+        changeFavorites(1, housingId);
+        fetchData();
+      }
+
+      setTimeout(() => {
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Başarılı",
+          textBody: `${response.data.message}`,
+          button: "Tamam",
         });
+      }, 400);
+
+      setShowAlert(false);
+    } catch (error) {
+      console.error("Hata:", error);
+      setTimeout(() => {
+        Dialog.show({
+          type: ALERT_TYPE.WARNING,
+          title: "Hata",
+          textBody: "Favori ekleme işlemi sırasında bir hata oluştu.",
+          button: "Tamam",
+        });
+      }, 300);
+
       setShowAlert(false);
     }
   };
@@ -139,13 +143,15 @@ export default function RealtorPostFavorited({
       selectFavorite(housingId);
       setIsHighlighted(!isHighlighted);
     } else {
-      navigation.navigate("PostDetails", {
-        HomeId: housingId,
-        projectId: projectId,
+      navigation.navigate("Drawer", {
+        screen: "PostDetails",
+        params: {
+          HomeId: housingId,
+          projectId: projectId,
+        },
       });
     }
   };
-  console.log(HouseId);
   const goToRealtorDetails = () => {
     if (isChoosed == true) {
       selectFavorite(HouseId);
@@ -158,129 +164,132 @@ export default function RealtorPostFavorited({
   useEffect(() => {
     setIsHighlighted(false);
   }, [isChoosed]);
-  return (
-    <Swipeable renderRightActions={LeftAction}>
-      <TouchableOpacity
-        style={{ borderWidth: isHighlighted ? 1 : 0, borderColor: "red" }}
-        onPress={() => {
-          if (type == 1) {
-            goToPostDetail();
-          } else {
-            goToRealtorDetails();
-          }
-        }}
-      >
-        <View style={styles.container}>
-          <AwesomeAlert
-            show={showAlert}
-            showProgress={false}
-            title={"Favorilerden Çıkar"}
-            message={
-              "Bu konutu favorilerden çıkarmak istediğinize emin misiniz?"
-            }
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={true}
-            showConfirmButton={true}
-            cancelText="Hayır"
-            confirmText="Evet"
-            cancelButtonColor="#1d8027"
-            confirmButtonColor="#ce4d63"
-            onCancelPressed={() => {
-              setShowAlert(false);
-            }}
-            onConfirmPressed={() => {
-              removeItem();
-            }}
-          />
-          <View style={styles.İlan}>
-            <View style={{ width: "30%", height: 80 }}>
-              <Image
-                source={{ uri: image }}
-                style={{ width: "100%", height: "100%" }}
-              />
-            </View>
 
-            <View style={styles.container2}>
-              <View style={[styles.captionAndIcons, { flex: 1 }]}>
-                <View style={styles.caption}>
-                  <Text style={{ fontSize: 9, color: "black" }}>
-                    İlan No: {2000000 + (projectId ? projectId : HouseId)}-
-                    {housingId}
-                  </Text>
-                  <Text
-                    style={{ fontSize: 10, fontWeight: 700 }}
-                    numberOfLines={3}
-                  >
-                    {title}
-                  </Text>
-                </View>
+  return (
+    <AlertNotificationRoot>
+      <Swipeable renderRightActions={LeftAction}>
+        <TouchableOpacity
+          style={{ borderWidth: isHighlighted ? 1 : 0, borderColor: "red" }}
+          onPress={() => {
+            if (type == 1) {
+              goToPostDetail();
+            } else {
+              goToRealtorDetails();
+            }
+          }}
+        >
+          <View style={styles.container}>
+            <AwesomeAlert
+              show={showAlert}
+              showProgress={false}
+              title={"Favorilerden Çıkar"}
+              message={
+                "Bu konutu favorilerden çıkarmak istediğinize emin misiniz?"
+              }
+              closeOnTouchOutside={true}
+              closeOnHardwareBackPress={false}
+              showCancelButton={true}
+              showConfirmButton={true}
+              cancelText="Hayır"
+              confirmText="Evet"
+              cancelButtonColor="#ce4d63"
+              confirmButtonColor="#1d8027"
+              onCancelPressed={() => {
+                setShowAlert(false);
+              }}
+              onConfirmPressed={() => {
+                removeItem();
+              }}
+            />
+            <View style={styles.İlan}>
+              <View style={{ width: "30%", height: 80 }}>
+                <Image
+                  source={{ uri: image }}
+                  style={{ width: "100%", height: "100%" }}
+                />
               </View>
 
-              <View style={[styles.PriceAndButtons, {}]}>
-                <View
-                  style={{
-                    flex: 1 / 2,
-                    alignItems: "center",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#264ABB",
-                      fontWeight: "600",
-                      fontSize: 12,
-                      left: 20,
-                    }}
-                  >
-                    {formattedPrice}₺
-                  </Text>
+              <View style={styles.container2}>
+                <View style={[styles.captionAndIcons, { flex: 1 }]}>
+                  <View style={styles.caption}>
+                    <Text style={{ fontSize: 9, color: "black" }}>
+                      İlan No: {2000000 + (projectId ? projectId : HouseId)}
+                      {housingId}
+                    </Text>
+                    <Text
+                      style={{ fontSize: 10, fontWeight: 700 }}
+                      numberOfLines={3}
+                    >
+                      {title}
+                    </Text>
+                  </View>
                 </View>
-                <View style={styles.btns}>
-                  <TouchableOpacity
-                    style={styles.addBasket}
-                    onPress={() => {
-                      GetId(
-                        type == 1 ? projectId : HouseId,
-                        type == 1 ? housingId : null,
-                        type
-                      );
+
+                <View style={[styles.PriceAndButtons, {}]}>
+                  <View
+                    style={{
+                      flex: 1 / 2,
+                      alignItems: "center",
                     }}
                   >
                     <Text
                       style={{
-                        color: "white",
-                        fontWeight: "500",
+                        color: "#264ABB",
+                        fontWeight: "600",
                         fontSize: 12,
+                        left: 20,
                       }}
                     >
-                      Sepete Ekle
+                      {formattedPrice}₺
                     </Text>
-                  </TouchableOpacity>
+                  </View>
+                  <View style={styles.btns}>
+                    <TouchableOpacity
+                      style={styles.addBasket}
+                      onPress={() => {
+                        GetId(
+                          type == 1 ? projectId : HouseId,
+                          type == 1 ? housingId : null,
+                          type
+                        );
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "white",
+                          fontWeight: "500",
+                          fontSize: 12,
+                        }}
+                      >
+                        Sepete Ekle
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
-          <View
-            style={{
-              backgroundColor: "#E8E8E8",
-              height: 30,
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              {column1 ? <Info text={column1} /> : ""}
-              {column2 ? <Info text={column2} /> : ""}
-              {column3 ? <Info text={column3} /> : ""}
+            <View
+              style={{
+                backgroundColor: "#E8E8E8",
+                height: 30,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <View style={{ display: "flex", flexDirection: "row" }}>
+                {column1 ? <Info text={column1} /> : ""}
+                {column2 ? <Info text={column2} /> : ""}
+                {column3 ? <Info text={column3} /> : ""}
+              </View>
+              <View style={{ justifyContent: "center" }}>
+                <Text style={styles.InformationText}>{location}</Text>
+              </View>
             </View>
-            <View style={{ justifyContent: "center" }}>
-              <Text style={styles.InformationText}>{location}</Text>
-            </View>
           </View>
-        </View>
-      </TouchableOpacity>
-    </Swipeable>
+        </TouchableOpacity>
+      </Swipeable>
+    </AlertNotificationRoot>
   );
 }
 const { width, height } = Dimensions.get("window");

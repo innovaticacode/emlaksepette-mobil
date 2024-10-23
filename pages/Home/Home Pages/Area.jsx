@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   ScrollView,
+  Image,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
@@ -16,6 +17,8 @@ import Modal from "react-native-modal";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import Land from "../../../src/assets/images/Arsa.png";
+
 const PAGE_SIZE = 10;
 
 const Area = ({ index }) => {
@@ -27,9 +30,11 @@ const Area = ({ index }) => {
   const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [user, setuser] = useState({});
+
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
+
   const fetchFeaturedEstates = async (reset = false) => {
     if (loading || (!hasMore && !reset)) return;
     const config = {
@@ -72,7 +77,7 @@ const Area = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 3) {
+    if (index == 4) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);
@@ -104,45 +109,8 @@ const Area = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <View style={styles.container}>
-          <View
-            style={{
-              paddingBottom: 3,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingLeft: 10,
-              paddingRight: 10,
-              alignItems: "center",
-              backgroundColor: "white",
-            }}
-          >
-            <Text style={{ fontSize: 12, fontWeight: 700 }}>
-              ÖNE ÇIKAN ARSALAR
-            </Text>
-
-            <TouchableOpacity style={styles.allBtn}>
-              <Text
-                style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
-                onPress={() =>
-                  navigation.navigate("AllRealtorAdverts", {
-                    name: "Emlak İlanları",
-                    slug: "emlak-ilanlari",
-                    data: filteredHomes,
-                    count: filteredHomes.length,
-                    type: "arsa",
-                    optional: null,
-                    title: null,
-                    check: null,
-                    city: null,
-                    county: null,
-                    hood: null,
-                  })
-                }
-              >
-                Tüm İlanları Gör
-              </Text>
-            </TouchableOpacity>
-          </View>
+        <>
+      
           {refreshing && (
             <View
               style={{
@@ -210,6 +178,7 @@ const Area = ({ index }) => {
                     column4_additional={item.column4_additional}
                     bookmarkStatus={true}
                     dailyRent={false}
+                    isFavorite={item.is_favorite}
                   />
                 )}
                 keyExtractor={(item, index) =>
@@ -223,10 +192,52 @@ const Area = ({ index }) => {
                   />
                 }
                 ListFooterComponent={renderFooter}
+                ListHeaderComponent={
+                    <>
+                    
+                    <View style={{ paddingHorizontal: 0 }}>
+            <Image
+              source={Land}
+              style={{ width: "auto", height: 120, resizeMode: "cover" }}
+            />
+          </View>
+          <View style={styles.header}>
+            <Text style={{ fontSize: 14, fontWeight: 700 }}>
+              ÖNE ÇIKAN ARSALAR
+            </Text>
+
+            <TouchableOpacity style={styles.allBtn}>
+              <Text
+                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
+                onPress={() =>
+                  navigation.navigate("Drawer", {
+                    screen: "AllRealtorAdverts",
+                    params: {
+                      name: "Emlak İlanları",
+                      slug: "emlak-ilanlari",
+                      data: filteredHomes,
+                      count: filteredHomes.length,
+                      type: "arsa",
+                      optional: null,
+                      title: null,
+                      check: null,
+                      city: null,
+                      county: null,
+                      hood: null,
+                    },
+                  })
+                }
+              >
+                Tüm İlanları Gör
+              </Text>
+            </TouchableOpacity>
+          </View>
+          </>
+                }
               />
             )}
           </AlertNotificationRoot>
-        </View>
+        </>
       )}
     </>
   );
@@ -258,6 +269,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fefefe",
     padding: 5,
     borderRadius: 5,
+  },
+  header: {
+    paddingBottom: 3,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingLeft: 10,
+    paddingRight: 10,
+    alignItems: "center",
+    backgroundColor: "white",
+    marginTop: 20,
   },
 });
 

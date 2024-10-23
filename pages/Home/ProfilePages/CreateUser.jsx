@@ -10,6 +10,7 @@ import {
   Modal,
   Touchable,
   ScrollView,
+  ImageBackground,
 } from "react-native";
 import { Platform } from "react-native";
 import { useState, useRef, useEffect } from "react";
@@ -17,6 +18,7 @@ import { useRoute, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native";
 import UserTypes from "./profileComponents/UserTypes";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import ModalEdit from "react-native-modal";
 import DotIcon from "react-native-vector-icons/Entypo";
 import RNPickerSelect from "react-native-picker-select";
@@ -28,7 +30,10 @@ import {
 } from "react-native-alert-notification";
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import * as ImagePicker from "expo-image-picker";
 import { ActivityIndicator } from "react-native-paper";
+import CreateUserType from "./CreateUserType";
+import { parse } from "date-fns";
 export default function CreateUser() {
   const route = useRoute();
   const navigation = useNavigation();
@@ -106,24 +111,41 @@ export default function CreateUser() {
     if (!phoneNumber) errors.phoneNumber = "Bu alan zorunludur";
     if (!password) {
       errors.password = "Bu alan zorunludur";
-    } else if (password.length < 5)
-      errors.password = "Şifre en az 5 karakter olmalıdır";
+    } else if (password.length < 6)
+      errors.password = "Şifre en az 6 karakter olmalıdır";
     if (!UserType) errors.UserType = "Bu alan zorunludur";
 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
+  console.log(user?.access_token);
   const [loadingUpdate, setloadingUpdate] = useState(false);
   const createUser = () => {
     if (!validateForm()) return;
+
     setloadingUpdate(true);
+
     let formdata = new FormData();
+
     formdata.append("name", nameAndSurname);
     formdata.append("title", title);
     formdata.append("email", email);
     formdata.append("mobile_phone", phoneNumber);
     formdata.append("password", password);
     formdata.append("type", UserType);
+    {
+      image ? 
+      formdata.append("profile_image",{
+        uri:
+          Platform.OS === "android"
+            ? image.uri
+            :image?.uri.replace("file://", ""),
+  
+        type: image.mimeType,
+        name: image.fileName==null ? 'Image.jpeg': image.fileName,
+      }):null
+    }
+   
 
     if (user?.access_token) {
       axios
@@ -133,9 +155,11 @@ export default function CreateUser() {
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
+              "Content-Type": "multipart/form-data",
             },
           }
         )
+
         .then((response) => {
           setmessage(response.data.message);
 
@@ -160,7 +184,7 @@ export default function CreateUser() {
           Dialog.show({
             type: ALERT_TYPE.DANGER,
             title: "Hata",
-            textBody: `${ error.response?.data?.errors.email[0] }`,
+            textBody: `${error.response?.data?.errors.email[0]}`,
             button: "Tamam",
             onPressButton: () => {
               Dialog.hide();
@@ -212,6 +236,85 @@ export default function CreateUser() {
     setphoneNumber(formattedValue);
   };
   const [showPassword, setshowPassword] = useState(true);
+  const [choose, setchoose] = useState(false);
+  const [image, setImage] = useState(null);
+  const [fileSize, setfileSize] = useState(null)
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0]); // Seçilen fotoğrafı state'e kaydediyoruz
+      setchoose(false); // Modal'ı kapatıyoruz
+      const ImageSize =result.assets[0].fileSize
+      const fileSizeInMB = ImageSize/ (1024 * 1024); // Byte'dan MB'ye çevir
+      
+      // Dosya boyutunu yukarı yuvarlayarak tam sayı olarak al
+      const roundedSizeInMB = Math.ceil(fileSizeInMB);
+      setfileSize(roundedSizeInMB)
+
+      if (fileSize >2) {
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Başarılı",
+            textBody: `Yüklemeye çalıştığınız dosya 2 MB'yi aşıyor. Lütfen boyutu 2 MB'den küçük bir dosya seçin.`,
+            button: "Tamam",
+            onHide:()=>{
+              setImage(null)
+            }
+          });
+        }, 300);
+        
+      }
+    }
+  };
+
+  const takePhoto = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0]); // Çekilen fotoğrafı state'e kaydediyoruz
+      setchoose(false); // Modal'ı kapatıyoruz
+      
+      
+      const ImageSize =result.assets[0].fileSize
+      const fileSizeInMB = ImageSize/ (1024 * 1024); // Byte'dan MB'ye çevir
+      
+      // Dosya boyutunu yukarı yuvarlayarak tam sayı olarak al
+      const roundedSizeInMB = Math.ceil(fileSizeInMB);
+      setfileSize(roundedSizeInMB)
+      if (fileSize >2) {
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: `2 mb den yukarı yüklenemez`,
+            button: "Tamam",
+            onHide:()=>{
+              setImage(null)
+            }
+          });
+        }, 1000);
+        
+      }
+    }
+  };
+
+  const removeProfileImage = () => {
+    setImage(null); // Fotoğrafı null yaparak yerelde kaldırıyoruz
+    setchoose(false); // Modal'ı kapatıyoruz
+  };
+      
+      
   return (
     <AlertNotificationRoot>
       <ScrollView
@@ -219,7 +322,27 @@ export default function CreateUser() {
         style={{ backgroundColor: "white" }}
       >
         <View style={style.container}>
+         
           <View style={[style.Form]}>
+          <View style={{alignItems:'center',justifyContent:'center',paddingTop:10}}>
+            <View>
+          
+            
+              <TouchableOpacity style={{width:96,height:96, backgroundColor: "#fafafafa",borderRadius:50,borderWidth:2,borderColor: "#DDDDDD",alignItems:'center',justifyContent:'center'}}
+                  onPress={()=>{
+                    setchoose(true)
+                  }}
+              >
+                {
+                  image ?
+                  <ImageBackground source={{uri:image?.uri}} style={{width:'100%',height:'100%'}} borderRadius={50}/>:
+                  <Icon name="add-a-photo" size={30} color={'#333'}/>
+                }
+                 
+                </TouchableOpacity>
+            </View>
+         
+          </View>
             <View style={style.Inputs}>
               <View>
                 <Text style={style.Label}>İsim Soyisim</Text>
@@ -254,6 +377,7 @@ export default function CreateUser() {
                   style={style.Input}
                   value={email}
                   onChangeText={(value) => setemail(value)}
+                  autoCapitalize="none" // İlk harfin büyük olmasını engeller
                 />
                 {validationErrors.email && (
                   <Text style={style.errorText}>
@@ -315,17 +439,29 @@ export default function CreateUser() {
               </View>
               <View>
                 <Text style={style.Label}>Kullanıcı Tipi</Text>
-                <RNPickerSelect
-                  doneText="Tamam"
-                  value={UserType}
-                  placeholder={{
-                    label: "Seçiniz...",
-                    value: null,
-                  }}
-                  style={pickerSelectStyles}
-                  onValueChange={(value) => setUserType(value)}
-                  items={roleItems}
-                />
+                {roleItems.length == 0 ? (
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("CreateUserType")}
+                  >
+                    <Text
+                      style={{ color: "red", marginBottom: 10, marginTop: 10 }}
+                    >
+                      Kullanıcı tipi yok, oluşturmak için tıklayınız.
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <RNPickerSelect
+                    doneText="Tamam"
+                    value={UserType}
+                    placeholder={{
+                      label: "Seçiniz...",
+                      value: null,
+                    }}
+                    style={pickerSelectStyles}
+                    onValueChange={(value) => setUserType(value)}
+                    items={roleItems}
+                  />
+                )}
                 {validationErrors.UserType && (
                   <Text style={style.errorText}>
                     {validationErrors.UserType}
@@ -444,6 +580,84 @@ export default function CreateUser() {
               </View>
             </View>
           </ModalEdit>
+          <ModalEdit
+              isVisible={choose}
+              style={style.modal2}
+              animationIn={"fadeInDown"}
+              animationOut={"fadeOutDown"}
+              onBackdropPress={() => setchoose(false)}
+              swipeDirection={["down"]}
+              onSwipeComplete={() => setchoose(false)}
+            >
+              <View style={[style.modalContent2, { paddingBottom: 10 }]}>
+                <View style={{ paddingTop: 10, alignItems: "center" }}>
+                  <TouchableOpacity
+                    style={{
+                      width: "15%",
+                      backgroundColor: "#c2c4c6",
+                      padding: 4,
+                      borderRadius: 50,
+                    }}
+                  ></TouchableOpacity>
+                </View>
+                <View style={{ padding: 20, gap: 35, marginBottom: 10 }}>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                    onPress={pickImage}
+                  >
+                    <Icon name="photo" size={23} color={"#333"} />
+                    <Text
+                      style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                    >
+                      Kütüphaneden Seç
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                    onPress={takePhoto}
+                  >
+                    <Icon name="add-a-photo" size={21} color={"#333"} />
+                    <Text
+                      style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                    >
+                      Fotoğraf Çek
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                    onPress={removeProfileImage} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
+                    // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
+                  >
+                    <Icon
+                      name="restore-from-trash"
+                      size={22}
+                      color={"#d83131"}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: "#d83131",
+                        fontWeight: "700",
+                      }}
+                    >
+                      Mevcut Fotoğrafı Kaldır
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </ModalEdit>
         </View>
       </ScrollView>
     </AlertNotificationRoot>
@@ -471,7 +685,6 @@ const pickerSelectStyles = StyleSheet.create({
     fontWeight: "600", // to ensure the text is never behind the icon
   },
 });
-
 
 const style = StyleSheet.create({
   container: {
@@ -641,5 +854,29 @@ const style = StyleSheet.create({
     fontSize: 12,
     marginTop: 5,
     marginLeft: 10,
+  },
+  modal2: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContent2: {
+    gap: 10,
+    paddingBottom: 20,
+    backgroundColor: "#F8F7F4",
+    padding: 10,
+
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    ...Platform.select({
+      ios: {
+        shadowColor: "white",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
 });

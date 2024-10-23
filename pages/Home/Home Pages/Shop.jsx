@@ -7,15 +7,16 @@ import {
   TouchableOpacity,
   RefreshControl,
   ScrollView,
+  Image,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import Modal from "react-native-modal";
-import Icon from "react-native-vector-icons/AntDesign";
 import { getValueFor } from "../../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import bannerSRC from "../../../src/assets/images/is_yeri.png";
+
 const PAGE_SIZE = 10;
 
 const Shop = ({ index }) => {
@@ -73,7 +74,7 @@ const Shop = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 2) {
+    if (index == 3) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);
@@ -105,50 +106,13 @@ const Shop = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <View style={styles.container}>
-          <View
-            style={{
-              paddingBottom: 3,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingLeft: 10,
-              paddingRight: 10,
-              alignItems: "center",
-              backgroundColor: "white",
-            }}
-          >
-            <Text style={{ fontSize: 12, fontWeight: 700 }}>
-              ÖNE ÇIKAN İŞ YERLERİ
-            </Text>
-
-            <TouchableOpacity style={styles.allBtn}>
-              <Text
-                style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
-                onPress={() =>
-                  navigation.navigate("AllRealtorAdverts", {
-                    name: "Emlak İlanları",
-                    slug: "emlak-ilanlari",
-                    data: filteredHomes,
-                    count: filteredHomes.length,
-                    type: "is-yeri",
-                    optional: null,
-                    title: null,
-                    check: null,
-                    city: null,
-                    county: null,
-                    hood: null,
-                  })
-                }
-              >
-                Tüm İlanları Gör
-              </Text>
-            </TouchableOpacity>
-          </View>
+        <>
           {refreshing && (
             <View
               style={{
-                padding: 10,
+                padding: 12,
                 backgroundColor: "white",
+                fontWeight: "bold",
                 alignItems: "center",
               }}
             >
@@ -215,6 +179,7 @@ const Shop = ({ index }) => {
                     column4_additional={item.column4_additional}
                     bookmarkStatus={true}
                     dailyRent={false}
+                    isFavorite={item.is_favorite}
                   />
                 )}
                 keyExtractor={(item, index) =>
@@ -227,11 +192,62 @@ const Shop = ({ index }) => {
                     onRefresh={onRefresh}
                   />
                 }
+                ListHeaderComponent={
+                  <>
+                  <View style={{ marginBottom:20 }}>
+            <Image
+              source={bannerSRC}
+              style={{ width: "auto", height: 120, resizeMode: "cover" }}
+            />
+          </View>
+          <View
+            style={{
+              paddingBottom: 3,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingLeft: 10,
+              paddingRight: 10,
+              alignItems: "center",
+              backgroundColor: "white",
+            }}
+          >
+            <Text style={{ fontSize: 14, fontWeight: 700 }}>
+              ÖNE ÇIKAN İŞ YERLERİ
+            </Text>
+
+            <TouchableOpacity style={styles.allBtn}>
+              <Text
+                style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
+                onPress={() =>
+                  navigation.navigate("Drawer", {
+                    screen: "AllRealtorAdverts",
+                    params: {
+                      name: "Emlak İlanları",
+                      slug: "emlak-ilanlari",
+                      data: filteredHomes,
+                      count: filteredHomes.length,
+                      type: "is-yeri",
+                      optional: null,
+                      title: null,
+                      check: null,
+                      city: null,
+                      county: null,
+                      hood: null,
+                    },
+                  })
+                }
+              >
+                Tüm İlanları Gör
+              </Text>
+            </TouchableOpacity>
+          </View>
+                  </>
+                }
                 ListFooterComponent={renderFooter}
               />
             )}
           </AlertNotificationRoot>
-        </View>
+        </>
       )}
     </>
   );

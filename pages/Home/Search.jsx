@@ -1,26 +1,18 @@
 import {
   View,
-  Text,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   SafeAreaView,
   StyleSheet,
   Keyboard,
-  Image,
-  Dimensions,
 } from "react-native";
 import { React, useState, useEffect } from "react";
-import Icon from "react-native-vector-icons/EvilIcons";
 import Categories from "../../components/Categories";
-import Header from "../../components/Header";
-import { SearchBar } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import slugify from "react-slugify";
 import { Platform } from "react-native";
-
-const { width, height } = Dimensions.get("window");
+import { DrawerActions } from "@react-navigation/native";
 
 export default function Search({ onpres, setIsDrawerOpen }) {
   const navigation = useNavigation();
@@ -31,15 +23,15 @@ export default function Search({ onpres, setIsDrawerOpen }) {
     setSearch(search);
   };
 
-
   const fetchmenuItems = async () => {
     try {
       const response = await axios.get(
         "https://private.emlaksepette.com/api/menu-list"
       );
-      
-      setMenuItems(response.data);
-      const submenus = response.data[0].submenus;
+
+      const filteredMenuItems = response.data;
+
+      setMenuItems(filteredMenuItems);
     } catch (error) {
       console.log(error);
     }
@@ -49,91 +41,83 @@ export default function Search({ onpres, setIsDrawerOpen }) {
     fetchmenuItems();
   }, []);
 
-  // const iconMapping = {
-  //   'Projeler': 'folder-home',
-  //   'Konut': 'home-group',
-  //   'İş Yeri': 'storefront',
-  //   'Arsa': 'terrain',
-  //   'Tiny House': 'hoop-house',
-  //   'Bungalov': 'tent',
-  //   'Prefabrik Yapılar': 'greenhouse',
-  //   'Tatil Sepette': 'island',
-  //   'Gayrimenkul Ligi': 'trophy-variant',
-  // };
+  const navigateToScreen = (screenName) => {
+    navigation.navigate(screenName);
+    navigation.dispatch(DrawerActions.closeDrawer());
+  };
 
   return (
-    <SafeAreaView
-      onTouchStart={() => Keyboard.dismiss()}
-      style={{}}
-    >
+    <SafeAreaView onTouchStart={() => Keyboard.dismiss()} style={{}}>
       <ScrollView>
         <View style={{ flex: 1 }}></View>
 
         <View style={{ gap: 3 }}>
-          <TouchableOpacity onPress={() => {
-
-          }}>
-            <Categories category={'Ana Sayfa'} iconName={'home'} />
+          <TouchableOpacity onPress={() => navigateToScreen("Home")}>
+            <Categories category={"Ana Sayfa"} iconName={"home"} />
           </TouchableOpacity>
 
-          {menuItems.map((item, index) => (
-            <TouchableOpacity
-              onPress={() => {
-                setIsDrawerOpen(false)
+          {menuItems.map((item, index) => {
+            const text = item.text || "";
 
-                if (item.submenus && item.submenus.length > 0) {
-                  navigation.navigate("Public", {
-                    title: item.text,
-                    data: item.submenus,
-                  });
-                } else {
-                  navigation.navigate(
-                    item.text == "Projeler"
-                      ? "AllProject"
-                      : "AllRealtorAdverts",
-                    {
-                      name:
-                        item.text == "Al Sat Acil" ||
-                        item.text == "Paylaşımlı İlanlar"
-                          ? item.text
-                          : "Emlak İlanları",
-                      slug: slugify(
-                        item.text == "Al Sat Acil" ||
-                          item.text == "Paylaşımlı İlanlar"
-                          ? item.text
-                          : "emlak-ilanlari"
-                      ),
-                      data: null,
-                      count: 0,
-                      type: null,
-                      optional: null,
-                      title:
-                        item.text == "Al Sat Acil" ||
-                        item.text == "Paylaşımlı İlanlar"
-                          ? item.text
-                          : null,
-                      check: null,
-                      city: null,
-                      county: null,
-                      hood: null,
-                      href: item.href,
-                    }
+            const slug =
+              text == "Prefabrik Yapılar"
+                ? text
+                : slugify(
+                    text == "Al Sat Acil" || text == "Paylaşımlı İlanlar"
+                      ? text
+                      : "emlak-ilanlari"
                   );
-                }
-              }}
-              key={index}
-            >
-              <Categories category={item.text} />
-            </TouchableOpacity>
-          ))}
 
-          {/* {Object.keys(iconMapping).map((category,index) => (
-            <Categories
-              key={category}
-              category={category}
-              iconName={iconMapping[category]}
-            />
-          ))} */}
+            const name =
+              text == "Prefabrik Yapılar"
+                ? null
+                : slugify(
+                    text == "Al Sat Acil" || text == "Paylaşımlı İlanlar"
+                      ? text
+                      : "Emlak İlanları"
+                  );
+
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.dispatch(DrawerActions.closeDrawer());
+                  if (item.submenus && item.submenus?.length > 0) {
+                    navigation.navigate("Public", {
+                      title: item.text,
+                      data: item.submenus,
+                    });
+                  } else {
+                    navigation.navigate( item.text === "Projeler"
+                      ? "AllProjects"
+                      : "AllRealtorAdverts" ,{
+                    
+                    
+                        name: name,
+                        slug: slug,
+                        data: null,
+                        count: 0,
+                        type: null,
+                        optional: null,
+                        title:
+                          item.text === "Al Sat Acil" ||
+                          item.text === "Paylaşımlı İlanlar"
+                            ? item.text
+                            : null,
+                        check: null,
+                        city: null,
+                        county: null,
+                        hood: null,
+                        href: item.href,
+                    
+                    });
+                  }
+                }}
+                key={index}
+              >
+                <Categories category={item.text} />
+              </TouchableOpacity>
+            );
+          })}
         </View>
       </ScrollView>
     </SafeAreaView>

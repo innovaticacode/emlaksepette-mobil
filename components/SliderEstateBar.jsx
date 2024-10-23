@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import SliderItem from "./SliderItem";
 import axios from "axios";
 import SliderItemSkeleton from "./SkeletonComponents/SliderItemSkeleton";
@@ -44,7 +44,12 @@ export default function SliderEstateBar() {
       >
         {featuredStores.map((item, index) => (
           <View
-            style={{ width: 80, marginLeft: 3, alignItems: "center" }}
+            style={{
+              width: 80,
+              marginLeft: 3,
+              alignItems: "center",
+              marginBottom: 10,
+            }}
             key={index}
           >
             {loading == false ? (
@@ -54,6 +59,7 @@ export default function SliderEstateBar() {
             ) : (
               <>
                 <SliderItem
+                  borderColor={"#e6e6e6"}
                   StoreID={item.id}
                   key={index}
                   image={`${apiUrl}/storage/profile_images/${item.profile_image}`}

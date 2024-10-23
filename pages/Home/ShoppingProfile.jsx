@@ -9,8 +9,10 @@ import {
   Dimensions,
   TouchableOpacity,
   ScrollView,
+  Share,
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
+import ShoppingIcon from "react-native-vector-icons/Entypo";
 import {
   Collapse,
   CollapseHeader,
@@ -18,7 +20,12 @@ import {
 } from "accordion-collapse-react-native";
 import Modal from "react-native-modal";
 import ProfileSettingsItem from "../../components/ProfileSettingsItem";
-import { useRoute, useNavigation, useFocusEffect, useIsFocused } from "@react-navigation/native";
+import {
+  useRoute,
+  useNavigation,
+  useFocusEffect,
+  useIsFocused,
+} from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
@@ -26,13 +33,18 @@ import Menu from "./Menu.json";
 import { Platform } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
-
+import { useDispatch } from "react-redux";
+import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
+import { Skeleton } from "@rneui/themed";
+import { id } from "date-fns/locale";
+import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
 
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
   const [notificationCount, setNotificationCount] = useState(0);
 
@@ -43,7 +55,7 @@ export default function ShoppingProfile() {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [openAccor, setOpenAccor] = useState({});
   const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
-
+  const [profileImage, setProfileImage] = useState(null);
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -89,6 +101,7 @@ export default function ShoppingProfile() {
   }, [user?.access_token]);
 
   const fetchPermissionUser = async () => {
+    setLoading(true);
     try {
       if (user.access_token && user) {
         const response = await axios.get(
@@ -100,10 +113,11 @@ export default function ShoppingProfile() {
           }
         );
         setPermissionsUser(response.data.user.permissions);
-        setLoading(true);
       }
     } catch (error) {
       console.error("error", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -111,17 +125,17 @@ export default function ShoppingProfile() {
     fetchPermissionUser();
   }, [user]);
 
-  const isfocused=useIsFocused()
+  const isfocused = useIsFocused();
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true); // Yükleme başladı
-      
+
       try {
         const response = require("./Menu.json");
-  
+
         // permissionsUser'ı bir diziye dönüştürme
         const permissionsArray = Object.values(permissionsUser);
-        
+
         const filteredMenu = response.filter((item) => {
           if (item.subMenu) {
             const filteredSubMenu = item.subMenu.filter((subItem) =>
@@ -135,7 +149,7 @@ export default function ShoppingProfile() {
           }
           return permissionsArray.includes(item.key);
         });
-  
+
         setData(filteredMenu);
       } catch (error) {
         console.error(error);
@@ -143,10 +157,9 @@ export default function ShoppingProfile() {
         setLoading(false); // Yükleme bitti
       }
     };
-  
+
     fetchData();
-  }, [permissionsUser,isfocused]);
-  
+  }, [permissionsUser, isfocused]);
 
   const groupedData = data.reduce((acc, item) => {
     const existingGroupIndex = acc.findIndex(
@@ -160,15 +173,16 @@ export default function ShoppingProfile() {
     return acc;
   }, []);
 
-
-  const logout = () => {
-    setDialogVisible(false);  
-    setTimeout(() => {
-      SecureStore.setItemAsync("user", "");
-      navigation.push("Home",{status : "logout"});
-    }, 500);
-   
-   
+  const logout = async () => {
+    setDialogVisible(false);
+    dispatch(
+      setNotificationsRedux({
+        notificationsCount: 0,
+      })
+    );
+    await SecureStore.setItemAsync("user", "");
+    navigation.replace("Drawer", { screen: "Home" }, { status: "logout" });
+    dispatch(setShoppingProfile({ isShoppingProfile: false }));
   };
 
   const toggleAccor = (index) => {
@@ -188,133 +202,642 @@ export default function ShoppingProfile() {
   //     return () => clearTimeout(timer);
   //   }, [])
   // );
-  const [namFromGetUser, setnamFromGetUser] = useState([])
-  const [loadingCollection, setloadingCollection] = useState(false)
-  const GetUserInfo =async ()=>{
-     setloadingCollection(true)
-     try {
-       if (user?.access_token && user) {
-         const userInfo = await axios.get(
-           "https://private.emlaksepette.com/api/users/" + user?.id,
-           {
-             headers: {
-               Authorization: `Bearer ${user.access_token}`,
-             },
-           }
-         );
-         const userData = userInfo?.data?.user
-         setnamFromGetUser(userData)
-       
-       }
-     
-  
-     } catch (error) {
-       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
-     }finally{
-      setloadingCollection(false)
-     }
-   }
-   useEffect(() => {
-  GetUserInfo()
-   }, [user])
-   
+  const [namFromGetUser, setnamFromGetUser] = useState([]);
+  const [loadingCollection, setloadingCollection] = useState(false);
+  const GetUserInfo = async () => {
+    setloadingCollection(true);
+    setLoading(true);
+    try {
+      if (user?.access_token && user) {
+        const userInfo = await axios.get(
+          "https://private.emlaksepette.com/api/users/" + user?.id,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+        const userData = userInfo?.data?.user;
+        setnamFromGetUser(userData);
+        setProfileImage(PhotoUrl + userData.profile_image);
+      }
+    } catch (error) {
+      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+    } finally {
+      setLoading(false);
+      setloadingCollection(false);
+    }
+  };
+
+  useEffect(() => {
+    GetUserInfo();
+  }, [user]);
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `https://private.emlaksepette.com/`,
+      });
+
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log("Link belirli bir aktivitede paylaşıldı");
+        } else {
+          console.log("Link paylaşıldı");
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Paylaşım iptal edildi");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
   return (
-<>
-      {
-        loading ==true
-        ?
-        <ActivityIndicator color="#333"/>
-        :
-        <View style={style.container}>
-          
-        <View style={style.header}>
-          <View
-            style={[
-              style.opacity,
-              { backgroundColor: namFromGetUser.banner_hex_code + 97 },
-            ]}
-          ></View>
-  
-          <ImageBackground
-            source={require("./profilePhoto.jpg")}
-            style={{ width: "100%", height: "100%" }}
-            imageStyle={{
-              borderBottomLeftRadius: 30,
-              borderBottomRightRadius: 30,
-            }}
-          />
-          <View style={style.UserInfo}>
+    <>
+      {loading ? (
+        <View style={{ flex: 1, paddingTop: 60, marginLeft: 10 }}>
+          {/* Profil alanı için Skeleton */}
+          <View style={{ marginLeft: 20 }}>
             <View
               style={{
-                flexDirection: "row",
-                width: "90%",
                 alignItems: "center",
-                paddingLeft: 20,
-                gap: 20,
+                marginBottom: 20,
+                flexDirection: "row",
               }}
             >
+              {/* Profil fotoğrafı için Skeleton */}
+              <Skeleton
+                circle
+                width={60}
+                height={60}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+              />
+              {/* İsim için Skeleton */}
+              <View style={{ flexDirection: "column", marginLeft: 10 }}>
+                <Skeleton
+                  width={150}
+                  height={20}
+                  skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                  style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+                />
+                {/* Kurumsal tip için Skeleton */}
+                <Skeleton
+                  width={100}
+                  height={15}
+                  skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                  style={{ backgroundColor: "#ced4da" }}
+                />
+              </View>
+            </View>
+          </View>
+
+          <View
+            style={{
+              alignItems: "center",
+              marginBottom: 20,
+              marginTop: 30,
+              flexDirection: "row",
+            }}
+          >
+            {/* Profil fotoğrafı için Skeleton */}
+            <Skeleton
+              circle
+              width={40}
+              height={40}
+              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+            />
+            {/* İsim için Skeleton */}
+            <View style={{ flexDirection: "column", marginLeft: 10 }}>
+              <Skeleton
+                width={100}
+                height={15}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+              />
+              {/* Kurumsal tip için Skeleton */}
+              <Skeleton
+                width={150}
+                height={10}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da" }}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+              marginBottom: 20,
+              flexDirection: "row",
+            }}
+          >
+            {/* Profil fotoğrafı için Skeleton */}
+            <Skeleton
+              circle
+              width={40}
+              height={40}
+              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+            />
+            {/* İsim için Skeleton */}
+            <View style={{ flexDirection: "column", marginLeft: 10 }}>
+              <Skeleton
+                width={100}
+                height={15}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+              />
+              {/* Kurumsal tip için Skeleton */}
+              <Skeleton
+                width={150}
+                height={10}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da" }}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+              marginBottom: 20,
+              flexDirection: "row",
+            }}
+          >
+            {/* Profil fotoğrafı için Skeleton */}
+            <Skeleton
+              circle
+              width={40}
+              height={40}
+              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+            />
+            {/* İsim için Skeleton */}
+            <View style={{ flexDirection: "column", marginLeft: 10 }}>
+              <Skeleton
+                width={100}
+                height={15}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+              />
+              {/* Kurumsal tip için Skeleton */}
+              <Skeleton
+                width={150}
+                height={10}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da" }}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+              marginBottom: 20,
+              flexDirection: "row",
+            }}
+          >
+            {/* Profil fotoğrafı için Skeleton */}
+            <Skeleton
+              circle
+              width={40}
+              height={40}
+              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+            />
+            {/* İsim için Skeleton */}
+            <View style={{ flexDirection: "column", marginLeft: 10 }}>
+              <Skeleton
+                width={160}
+                height={15}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+              />
+              {/* Kurumsal tip için Skeleton */}
+              <Skeleton
+                width={100}
+                height={10}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da" }}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+              marginBottom: 20,
+              flexDirection: "row",
+            }}
+          >
+            {/* Profil fotoğrafı için Skeleton */}
+            <Skeleton
+              circle
+              width={40}
+              height={40}
+              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+            />
+            {/* İsim için Skeleton */}
+            <View style={{ flexDirection: "column", marginLeft: 10 }}>
+              <Skeleton
+                width={160}
+                height={15}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+              />
+              {/* Kurumsal tip için Skeleton */}
+              <Skeleton
+                width={100}
+                height={10}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da" }}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+              marginBottom: 20,
+              flexDirection: "row",
+            }}
+          >
+            {/* Profil fotoğrafı için Skeleton */}
+            <Skeleton
+              circle
+              width={40}
+              height={40}
+              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+            />
+            {/* İsim için Skeleton */}
+            <View style={{ flexDirection: "column", marginLeft: 10 }}>
+              <Skeleton
+                width={160}
+                height={15}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+              />
+              {/* Kurumsal tip için Skeleton */}
+              <Skeleton
+                width={100}
+                height={10}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da" }}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+              marginBottom: 20,
+              flexDirection: "row",
+            }}
+          >
+            {/* Profil fotoğrafı için Skeleton */}
+            <Skeleton
+              circle
+              width={40}
+              height={40}
+              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+            />
+            {/* İsim için Skeleton */}
+            <View style={{ flexDirection: "column", marginLeft: 10 }}>
+              <Skeleton
+                width={160}
+                height={15}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+              />
+              {/* Kurumsal tip için Skeleton */}
+              <Skeleton
+                width={100}
+                height={10}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da" }}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+              marginBottom: 20,
+              flexDirection: "row",
+            }}
+          >
+            {/* Profil fotoğrafı için Skeleton */}
+            <Skeleton
+              circle
+              width={40}
+              height={40}
+              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+            />
+            {/* İsim için Skeleton */}
+            <View style={{ flexDirection: "column", marginLeft: 10 }}>
+              <Skeleton
+                width={160}
+                height={15}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+              />
+              {/* Kurumsal tip için Skeleton */}
+              <Skeleton
+                width={100}
+                height={10}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da" }}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+              marginBottom: 20,
+              flexDirection: "row",
+            }}
+          >
+            {/* Profil fotoğrafı için Skeleton */}
+            <Skeleton
+              circle
+              width={40}
+              height={40}
+              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+            />
+            {/* İsim için Skeleton */}
+            <View style={{ flexDirection: "column", marginLeft: 10 }}>
+              <Skeleton
+                width={160}
+                height={15}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+              />
+              {/* Kurumsal tip için Skeleton */}
+              <Skeleton
+                width={100}
+                height={10}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da" }}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+              marginBottom: 20,
+              flexDirection: "row",
+            }}
+          >
+            {/* Profil fotoğrafı için Skeleton */}
+            <Skeleton
+              circle
+              width={40}
+              height={40}
+              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+            />
+            {/* İsim için Skeleton */}
+            <View style={{ flexDirection: "column", marginLeft: 10 }}>
+              <Skeleton
+                width={160}
+                height={15}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+              />
+              {/* Kurumsal tip için Skeleton */}
+              <Skeleton
+                width={100}
+                height={10}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da" }}
+              />
+            </View>
+          </View>
+          <View
+            style={{
+              alignItems: "center",
+              marginBottom: 20,
+              flexDirection: "row",
+            }}
+          >
+            {/* Profil fotoğrafı için Skeleton */}
+            <Skeleton
+              circle
+              width={40}
+              height={40}
+              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+            />
+            {/* İsim için Skeleton */}
+            <View style={{ flexDirection: "column", marginLeft: 10 }}>
+              <Skeleton
+                width={160}
+                height={15}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+              />
+              {/* Kurumsal tip için Skeleton */}
+              <Skeleton
+                width={100}
+                height={10}
+                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+                style={{ backgroundColor: "#ced4da" }}
+              />
+            </View>
+          </View>
+        </View>
+      ) : (
+        <View style={style.container}>
+          <View style={style.header}>
+            <View
+              style={[
+                style.opacity,
+                { backgroundColor: namFromGetUser.banner_hex_code + 97 },
+              ]}
+            ></View>
+
+            <ImageBackground
+              source={require("../../src/assets/images/profilePhoto.jpg")}
+              style={{ width: "100%", height: "100%" }}
+              imageStyle={{
+                borderBottomLeftRadius: 30,
+                borderBottomRightRadius: 30,
+              }}
+              onLoadEnd={() => setLoading(false)}
+            />
+            <View style={style.UserInfo}>
               <View
                 style={{
-                  width: 65,
-                  height: 65,
+                  flexDirection: "row",
+                  width: "90%",
+                  alignItems: "center",
+                  paddingLeft: 20,
+                  gap: 20,
                 }}
               >
-                <View style={style.profileImage}>
-                  <Image
-                    source={{ uri: PhotoUrl +  namFromGetUser.profile_image }}
-                    style={{ width: "100%", height: "100%" }}
-                    borderRadius={50}
-                  />
+                <View
+                  style={{
+                    width: 65,
+                    height: 65,
+                  }}
+                >
+                  <View style={style.profileImage}>
+                    <Image
+                      source={{ uri: profileImage }}
+                      style={{ width: "100%", height: "100%" }}
+                      borderRadius={50}
+                    />
+                  </View>
+                </View>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <View style={{ gap: 8 }}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: 15,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {namFromGetUser.name}
+                      </Text>
+                      <View style={{ width: 20, height: 20, left: 10 }}>
+                        <ImageBackground
+                          source={require("../../src/assets/images/BadgeYellow.png")}
+                          style={{ flex: 1 }}
+                          onLoadEnd={() => setLoading(false)}
+                        />
+
+                        <Icon
+                          name="check"
+                          style={{ position: "absolute", left: 3.5, top: 3.5 }}
+                          size={13}
+                        />
+                      </View>
+                    </View>
+
+                    <Text
+                      style={{
+                        color: "white",
+                        fontSize: 11,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {user.corporate_type || namFromGetUser?.role}
+                    </Text>
+                  </View>
                 </View>
               </View>
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
-              >
-                <View style={{ gap: 8 }}>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Text
-                      style={{ color: "white", fontSize: 15, fontWeight: "bold" }}
-                    >
-                      {namFromGetUser.name}
-                    </Text>
-                    <View style={{ width: 20, height: 20, left: 10 }}>
-                      <ImageBackground
-                        source={require("./BadgeYellow.png")}
-                        style={{ flex: 1 }}
-                      />
-  
-                      <Icon
-                        name="check"
-                        style={{ position: "absolute", left: 3.5, top: 3.5 }}
-                        size={13}
-                      />
-                    </View>
-                  </View>
-  
-                  <Text
-                    style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
+              <View style={{ paddingTop: 20, alignItems: "center" }}>
+                <View
+                  style={[
+                    style.card,
+                    {
+                      flexDirection: "row",
+                      padding: 0,
+                      paddingVertical: 0,
+                      justifyContent: "space-around",
+                      alignItems: "center",
+                      marginVertical: 0,
+                      paddingHorizontal: 0,
+                      width: "91%",
+                    },
+                  ]}
+                >
+                  <TouchableOpacity
+                    style={{
+                      width: "50%",
+                      padding: 10,
+                      flexDirection: "row",
+                      gap: 5,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    onPress={() => {
+                      navigation.navigate("Profile", {
+                        name: "",
+                        id: namFromGetUser.id,
+                      });
+                    }}
                   >
-                    {user.corporate_type}
-                  </Text>
+                    <ShoppingIcon name="shop" size={19} color={"#EA2C2E"} />
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: "#333",
+                        textAlign: "center",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Mağazama Git
+                    </Text>
+                  </TouchableOpacity>
+                  <View
+                    style={{
+                      padding: 1,
+                      height: "70%",
+                      backgroundColor: "#CCCCCC",
+                    }}
+                  />
+                  <TouchableOpacity
+                    style={{
+                      padding: 10,
+                      width: "50%",
+                      flexDirection: "row",
+                      gap: 5,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    onPress={() => {
+                      onShare();
+                    }}
+                  >
+                    <ShoppingIcon name="upload" size={19} color={"#EA2C2E"} />
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: "#333",
+                        textAlign: "center",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Mağazamı Paylaş
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
           </View>
-        </View>
-        {loading ? (
-          <ActivityIndicator size="large" color="#333" />
-        ) : (
+
           <ScrollView contentContainerStyle={{ flexGrow: 1, paddingTop: 20 }}>
             <View style={{ gap: 20, padding: 10 }}>
               {groupedData.map((group, index) => (
-                <View key={index}>
+                <View
+                  key={index}
+                  style={{
+                    display:
+                      (user.type == 2 &&
+                        user.corporate_type == "Emlak Ofisi" &&
+                        group.label == "Satış Noktalarımız") ||
+                      (user.corporate_type !== "Emlak Ofisi" &&
+                        user.type == 2 &&
+                        group.label == "Emlak Kulüp") ||
+                      (user.type == 1 && group.label == "Satış Noktalarımız")
+                        ? "none"
+                        : "flex",
+                  }}
+                >
                   {/* Başlık */}
-                  <Text style={style.headerText}>{group.label}</Text>
-  
+                  <Text style={[style.headerText]}>{group.label}</Text>
+
                   {/* Alt menü */}
                   {group.subMenu.length > 0 &&
                     group.subMenu.map((item, subIndex) =>
@@ -347,7 +870,9 @@ export default function ShoppingProfile() {
                               item.subMenu.map((subItem, subItemIndex) => (
                                 <TouchableOpacity
                                   key={subItemIndex}
-                                  onPress={() => navigation.navigate(subItem.url)}
+                                  onPress={() =>
+                                    navigation.navigate(subItem.url)
+                                  }
                                 >
                                   <ProfileSettingsItem
                                     text={subItem.text}
@@ -364,13 +889,11 @@ export default function ShoppingProfile() {
                           >
                             <ProfileSettingsItem
                               text={item.text}
-  
                               ıconName={item.icon}
-                              arrowControl={ 
+                              arrowControl={
                                 item.subMenu && item.subMenu.length > 0
                               }
                               isCollapsed={!openAccor[subIndex]}
-  
                             />
                           </TouchableOpacity>
                         </View>
@@ -380,35 +903,35 @@ export default function ShoppingProfile() {
               ))}
             </View>
             <AwesomeAlert
-        show={dialogVisible}
-        showProgress={false}
-        titleStyle={{
-          color: "#333",
-          fontSize: 13,
-          fontWeight: "700",
-          textAlign: "center",
-          margin: 5,
-        }}
-        title={'Çıkış Yap'}
-        messageStyle={{ textAlign: "center" }}
-        message={`Çıkış Yapmak istediğinize emin misiniz?`}
-        closeOnTouchOutside={false}
-        closeOnHardwareBackPress={false}
-        showCancelButton={true}
-        showConfirmButton={true}
-        cancelText="Hayır"
-        confirmText="Evet"
-        cancelButtonColor="#1d8027"
-        confirmButtonColor="#ce4d63"
-        onCancelPressed={() => {
-        setDialogVisible(false)
-        }}
-        onConfirmPressed={() => {
-          logout()
-        }}
-        confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-        cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-      />
+              show={dialogVisible}
+              showProgress={false}
+              titleStyle={{
+                color: "#333",
+                fontSize: 13,
+                fontWeight: "700",
+                textAlign: "center",
+                margin: 5,
+              }}
+              title={"Çıkış Yap"}
+              messageStyle={{ textAlign: "center" }}
+              message={`Çıkış yapmak istediğinize emin misiniz?`}
+              closeOnTouchOutside={false}
+              closeOnHardwareBackPress={false}
+              showCancelButton={true}
+              showConfirmButton={true}
+              cancelText="Hayır"
+              confirmText="Evet"
+              cancelButtonColor="#ce4d63"
+              confirmButtonColor="#1d8027"
+              onCancelPressed={() => {
+                setDialogVisible(false);
+              }}
+              onConfirmPressed={() => {
+                logout();
+              }}
+              confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+              cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+            />
             <View
               style={{ flex: 1 / 2, paddingBottom: 50, alignItems: "center" }}
             >
@@ -432,88 +955,10 @@ export default function ShoppingProfile() {
                 </Text>
               </TouchableOpacity>
             </View>
-            {/* <Modal
-              animationType="fade"
-              onBackdropPress={() => setDialogVisible(!dialogVisible)}
-              visible={dialogVisible}
-              onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-                setDialogVisible(!dialogVisible);
-              }}
-            >
-              <View style={{}}>
-                <View
-                  style={[
-                    style.modalView,
-                    style.card,
-                    {
-                      padding: 0,
-                      borderRadius: 5,
-                      backgroundColor: "#F8F7F4",
-                      alignItems: "center",
-                      gap: 20,
-                    },
-                  ]}
-                >
-                  <Text style={{ color: "#333" }}>
-                    Çıkış Yapmak İstedğinize Emin misiniz?
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 10,
-                    }}
-                  >
-                    <View style={{ flex: 1 / 2 }}>
-                      <TouchableOpacity
-                        onPress={logout}
-                        style={{
-                          backgroundColor: "#F8D7DA",
-                          padding: 10,
-                          borderRadius: 5,
-                        }}
-                      >
-                        <Text style={{ textAlign: "center", color: "#721C24" }}>
-                          Çıkış Yap
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View style={{ flex: 1 / 2 }}>
-                      <TouchableOpacity
-                        style={[
-                          {
-                            backgroundColor: "#D4EDDA",
-                            padding: 10,
-                            borderRadius: 5,
-                          },
-                        ]}
-                        onPress={() => setDialogVisible(!dialogVisible)}
-                      >
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            color: "#165724",
-                            fontWeight: "600",
-                          }}
-                        >
-                          İptal Et
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            </Modal> */}
           </ScrollView>
-        )}
-   
-      </View>
-
-      }
-
-       
-      </>
+        </View>
+      )}
+    </>
   );
 }
 const { width, height, fontScale } = Dimensions.get("window");
@@ -524,7 +969,7 @@ const style = StyleSheet.create({
   },
   header: {
     width: "100%",
-    height: "19%",
+    height: width < 400 ? "30%" : "25%",
     justifyContent: "center",
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
@@ -627,7 +1072,7 @@ const style = StyleSheet.create({
   },
   card: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 5,
+    borderRadius: 20,
     paddingVertical: 22,
     paddingHorizontal: 20,
     width: "100%",

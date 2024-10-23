@@ -20,6 +20,8 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
+import { Platform } from "react-native";
+import NoDataScreen from "../../../components/NoDataScreen";
 export default function UsersList() {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
@@ -55,6 +57,8 @@ export default function UsersList() {
   }, [user, isfocused]);
   const [SuccessDelete, setSuccessDelete] = useState(false);
   const DeleteUser = async () => {
+    setloading(true);
+
     try {
       if (user.access_token) {
         const response = await axios.delete(
@@ -65,29 +69,41 @@ export default function UsersList() {
             },
           }
         );
-        Dialog.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "Başarılı",
-          textBody: `${selectedUserName} Adlı kullanıcı silindi.`,
-          button: "Tamam",
-        });
+       
+        if (response.status === 200) {
+          setTimeout(() => {
+            
+            Dialog.show({
+              type: ALERT_TYPE.SUCCESS,
+              title: "Başarılı",
+              textBody: `${selectedUserName} Adlı kullanıcı silindi.`,
+              button: "Tamam",
+              onHide: () => {
+                fetchData();
+              },
+            });
+           
+          }, 300);
+        }
         setopenDeleteModal(false);
-        fetchData();
-
-        setsubUsers(response.data.users);
+      
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      
     }
   };
   const [selectedUser, setselectedUser] = useState(0);
   const [selectedUserName, setselectedUserName] = useState("");
   const [SelecteduserID, setSelecteduserID] = useState(0);
   const [SelectedUserIDS, setSelectedUserIDS] = useState([]);
+
   const GetId = (UserID, name) => {
     setselectedUser(UserID);
     setselectedUserName(name);
   };
+
   const getUserID = (UserID) => {
     setSelecteduserID(UserID);
     setSelectedUserIDS((prevIds) => {
@@ -102,7 +118,7 @@ export default function UsersList() {
   const [openDeleteModal, setopenDeleteModal] = useState(false);
   useEffect(() => {
     navigation.setOptions({
-      title: `Alt Kullanıcılar (${subUsers?.length})`,
+      title: `Ekip Üyeleri (${subUsers?.length})`,
     });
   }, [navigation, subUsers]);
   const [isChoosed, setisChoosed] = useState(false);
@@ -126,15 +142,27 @@ export default function UsersList() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: `Başarılı`,
-        textBody: `${userList.length} Kullanıcı Silindi.`,
-        button: "Tamam",
-      });
-      fetchData();
-      setuserList([]);
-      setdeleteAllUserType(false);
+      console.log("DELETE Response:", response);
+
+      if (response.status === 200) {
+        setTimeout(() => {
+          console.log("dialog");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: `Başarılı`,
+            textBody: `${userList.length} Kullanıcı Silindi.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchData();
+              setuserList([]);
+            },
+          });
+          setloading(false);
+        }, 300);
+       
+
+        setdeleteAllUserType(false);
+      }
     } catch (error) {
       console.error("Error making DELETE request:", error);
     }
@@ -153,21 +181,32 @@ export default function UsersList() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: `Başarılı.`,
-        textBody: `${SelectedUserIDS.length} Kullanıcı Silindi.`,
-        button: "Tamam",
-      });
-      fetchData();
-      setSelectedUserIDS([]);
-      setselectedUserDeleteModa(false);
-      setisChoosed(false);
-      setisShowDeleteButon(!isShowDeleteButon);
+      if (response.status === 200) {
+        setTimeout(() => {
+          console.log("dialog");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: `Başarılı.`,
+            textBody: `${SelectedUserIDS.length} Kullanıcı Silindi.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchData();
+              setSelectedUserIDS([]);
+            },
+          });
+          console.log("load");
+          setloading(false);
+        }, 300);
+
+        setselectedUserDeleteModa(false);
+        setisChoosed(false);
+        setisShowDeleteButon(!isShowDeleteButon);
+      }
     } catch (error) {
       console.error("Error making DELETE request:", error);
     }
   };
+
   const [showText, setshowText] = useState(false);
   return (
     <AlertNotificationRoot>
@@ -177,57 +216,8 @@ export default function UsersList() {
         >
           <ActivityIndicator size={"large"} color="#333" />
         </View>
-      ) : subUsers.length == 0 ? (
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
-            gap: 10,
-            backgroundColor: "white",
-          }}
-        >
-          <View
-            style={[
-              styles.card,
-              { alignItems: "center", justifyContent: "center" },
-            ]}
-          >
-            <Icon2 name="user-tie" size={50} color={"#EA2A28"} />
-          </View>
-          <View>
-            <Text style={{ color: "grey", fontSize: 16, fontWeight: "600" }}>
-              Alt Kullanıcı Bulunamadı
-            </Text>
-          </View>
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#EA2A28",
-                width: "90%",
-                padding: 8,
-                borderRadius: 5,
-              }}
-              onPress={() => {
-                setloading(true);
-                setTimeout(() => {
-                  navigation.navigate("CreateUser");
-                  setloading(false);
-                }, 700);
-              }}
-            >
-              <Text
-                style={{
-                  color: "#ffffff",
-                  fontWeight: "600",
-                  textAlign: "center",
-                }}
-              >
-                Oluştur
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+      ) : subUsers?.length == 0 ? (
+       <NoDataScreen iconName={'account-multiple-plus'} buttonText={'Oluştur'} navigateTo={'CreateUser'} message={'Ekip Üyeniz Bulunmamaktadır'}/>
       ) : (
         <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
           <AwesomeAlert
@@ -468,24 +458,6 @@ export default function UsersList() {
                 <TouchableOpacity
                   onPress={() => {
                     setModalVisible(false);
-                    setTimeout(() => {
-                      setopenDeleteModal(true);
-                    }, 600);
-                  }}
-                  style={{
-                    padding: 10,
-                    backgroundColor: "#EA2A28",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 5,
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Kullanıcıyı Sil</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    setModalVisible(false);
                     navigation.navigate("UpdateUsers", {
                       UserID: selectedUser,
                       fetcData: fetchData,
@@ -501,6 +473,24 @@ export default function UsersList() {
                   }}
                 >
                   <Text style={{ color: "white" }}>Kullanıcıyı Düzenle</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(false);
+                    setTimeout(() => {
+                      setopenDeleteModal(true);
+                    }, 600);
+                  }}
+                  style={{
+                    padding: 10,
+                    backgroundColor: "#EA2A28",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 5,
+                  }}
+                >
+                  <Text style={{ color: "white" }}>Kullanıcıyı Sil</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -536,6 +526,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     flex: 1,
   },
+  noCommentsText: {
+    fontSize: 18,
+    color: "#333",
+    textAlign: "center",
+    marginTop: 8,
+  },
+  returnButton: {
+    backgroundColor: "#EA2B2E",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  returnButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
   modal3: {
     justifyContent: "flex-end",
     margin: 0,
@@ -566,5 +573,25 @@ const styles = StyleSheet.create({
     borderColor: "#ebebeb",
     padding: 7,
     borderRadius: 5,
+  },
+  card: {
+    backgroundColor: "#FFFFFF",
+    padding: 15,
+
+    borderRadius: 50,
+
+    borderWidth: 0.6,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
 });

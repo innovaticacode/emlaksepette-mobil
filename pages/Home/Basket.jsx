@@ -39,8 +39,9 @@ import { Image } from "react-native-svg";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import DrawerMenu from "../../components/DrawerMenu";
+import { DrawerMenu } from "../../components";
 import { ActivityIndicator } from "react-native-paper";
+import NoDataScreen from "../../components/NoDataScreen";
 
 export default function Basket() {
   const route = useRoute();
@@ -88,8 +89,8 @@ export default function Basket() {
     fetchDatass();
   }, []);
 
-  console.log(imageUrl, "aa");
-
+  /*   console.log(imageUrl, "aa");
+   */
   const [Basket, SetBasket] = useState([
     {
       name: "MASTER ORMAN KÖY EVLERİ",
@@ -341,8 +342,8 @@ export default function Basket() {
   const nav = useNavigation();
   const [index, setindex] = useState(0);
   const [tab, settab] = useState(0);
-  console.log(CartLength);
-
+  /*   console.log(CartLength);
+   */
   const [paymentMethod, setPaymentMethod] = useState("");
 
   const renderRightActions = () => (
@@ -353,7 +354,7 @@ export default function Basket() {
   );
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={{ flex: 1 }}>
       {loading ? (
         <ActivityIndicator color="#333" size="large" />
       ) : (
@@ -368,10 +369,9 @@ export default function Basket() {
               }),
             }}
           >
-            <Header onPress={toggleDrawer} index={setindex} tab={settab} />
+            {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
           </View>
 
-        
           <Modal
             isVisible={isDrawerOpen}
             onBackdropPress={() => setIsDrawerOpen(false)}
@@ -381,12 +381,9 @@ export default function Basket() {
             onSwipeComplete={() => setIsDrawerOpen(false)}
             style={styles.modal}
           >
-            <View style={styles.modalContent}>
-           
-                <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-             
-             
-            </View>
+            {/* <View>
+              <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
+            </View> */}
           </Modal>
 
           {CartLength !== false ? (
@@ -936,57 +933,12 @@ export default function Basket() {
               </ScrollView>
             </TouchableWithoutFeedback>
           ) : (
-            <View
-              style={{
-                height: "90%",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 10,
-              }}
-            >
-              <View
-                style={[
-                  styles.card,
-                  { alignItems: "center", justifyContent: "center" },
-                ]}
-              >
-                <Icon2 name="basket-plus" size={50} color={"#EA2A28"} />
-              </View>
-              <View>
-                <Text
-                  style={{ color: "grey", fontSize: 16, fontWeight: "600" }}
-                >
-                  Sepetinizde ilan bulunmamaktadır
-                </Text>
-              </View>
-              <View style={{ width: "100%", alignItems: "center" }}>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#EA2A28",
-                    width: "90%",
-                    padding: 8,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    setLoading(true);
-                    setTimeout(() => {
-                      nav.navigate("HomePage");
-                      setLoading(false);
-                    }, 700);
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#ffffff",
-                      fontWeight: "600",
-                      textAlign: "center",
-                    }}
-                  >
-                    Ana Sayfa'ya dön
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+            <NoDataScreen
+              message="Sepetinizde ilan bulunmamaktadır."
+              iconName="basket-plus"
+              buttonText="Anasayfaya Dön"
+              navigateTo="HomePage"
+            />
           )}
         </SafeAreaView>
       )}
@@ -1054,14 +1006,6 @@ const styles = StyleSheet.create({
 
   modal: {
     margin: 0,
-  },
-  modalContent: {
-    backgroundColor: "white",
-
-    flex: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: 320,
   },
   HouseInfo: {
     backgroundColor: "#FFFFFF",

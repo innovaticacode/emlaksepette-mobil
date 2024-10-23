@@ -1,19 +1,29 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from "react-native";
 import React, { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Entypo";
 import { Platform } from "react-native";
-export default function SubUser({ setModalVisible, item, GetId, isChoosed, getUserID }) {
-  const [isHighLighted, setisHighLighted] = useState(false)
+export default function SubUser({
+  setModalVisible,
+  item,
+  GetId,
+  isChoosed,
+  getUserID,
+}) {
+  const [isHighLighted, setisHighLighted] = useState(false);
   useEffect(() => {
-    setisHighLighted(false)
-  }, [isChoosed])
+    setisHighLighted(false);
+  }, [isChoosed]);
 
   return (
-    <TouchableOpacity style={[styles.card, { borderWidth: isHighLighted ? 1 : 0, borderColor: 'red' }]}
+    <TouchableOpacity
+      style={[
+        styles.card,
+        { borderWidth: isHighLighted ? 1 : 0, borderColor: "red" },
+      ]}
       disabled={!isChoosed}
       onPress={() => {
-        getUserID(item.id)
-        setisHighLighted(!isHighLighted)
+        getUserID(item.id);
+        setisHighLighted(!isHighLighted);
       }}
     >
       <View style={{ flexDirection: "column" }}>
@@ -37,16 +47,11 @@ export default function SubUser({ setModalVisible, item, GetId, isChoosed, getUs
                 alignItems: "center",
               }}
             >
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  color: "#ffffff",
-                  textAlign: "center",
-                }}
-              >
-                {item.name[0].toUpperCase()}
-              </Text>
+        
+                <ImageBackground source={{uri:`https://private.emlaksepette.com/storage/profile_images/${item.profile_image}`}} style={{width:'100%',height:'100%'}} borderRadius={30}/>
+              
+              
+              
             </View>
             <View style={{ paddingTop: 2, gap: 4 }}>
               <Text style={{ fontSize: 13, color: "#333", fontWeight: "500" }}>

@@ -7,6 +7,7 @@ import {
   Keyboard,
   Alert,
   TouchableWithoutFeedback,
+  SafeAreaView,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
@@ -16,8 +17,11 @@ import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
 import { Icon } from "react-native-elements";
 import { Platform } from "react-native";
+import HTML from "react-native-render-html";
 import * as SecureStore from "expo-secure-store";
 import { ActivityIndicator } from "react-native-paper";
+import { CheckBox } from "@rneui/themed";
+import { ScrollView } from "react-native";
 export default function RegisterRealtorClub({ setİsLoggedIn }) {
   const route = useRoute();
   const navigation = useNavigation();
@@ -38,43 +42,51 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     setTcNo(text);
   };
 
-  const [iban, setIban] = useState("TR");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [iban, setIban] = useState("TR");
 
-  const onChangeText = (text2) => {
-    // Girilen metindeki sadece rakamları al
-    const cleanedText = text2.replace(/[^0-9]/g, "");
-    // Temizlenmiş metni 3-3-2-2 formatında düzenle
-    let formattedPhoneNumber = "";
-    for (let i = 0; i < cleanedText.length; i++) {
-      if (i === 4 || i === 7 || i === 9) {
-        formattedPhoneNumber += " ";
-      }
-      formattedPhoneNumber += cleanedText[i];
-    }
-    setPhoneNumber(formattedPhoneNumber);
-  };
-
-  const onChangeText2 = (text) => {
-    // Girilen metindeki harf ve rakamları temizle
+  const formatIban = (text) => {
+    // Sadece harfleri ve rakamları içeren bir metin oluştur
     const cleanedText = text.replace(/[^a-zA-Z0-9]/g, "");
-    // Temizlenmiş metni dört karakterden bir boşluk ekleyerek formatla
-    let formattedIban = "";
-    for (let i = 0; i < cleanedText.length; i++) {
-      if (i > 0 && i % 4 === 0) {
-        formattedIban += " ";
-      }
-      formattedIban += cleanedText[i];
+
+    // Eğer metin TR ile başlamıyorsa başa ekle
+    let formattedText = cleanedText.startsWith("TR")
+      ? cleanedText
+      : "TR" + cleanedText;
+
+    // TR sonrası sadece rakamlar olmalı
+    formattedText = formattedText.replace(/[^0-9]/g, "");
+
+    // İlk iki rakam TR'den sonra gelecek
+    const firstTwo = formattedText.slice(0, 2);
+    // Sonraki rakamlar dörderli gruplara ayrılacak
+    const rest = formattedText.slice(2);
+
+    // IBAN'ı 4 haneli bloklar halinde gruplandır
+    let groups = [];
+    for (let i = 0; i < rest.length; i += 4) {
+      groups.push(rest.substring(i, i + 4));
     }
-    setIban(formattedIban);
+
+    // Gruplandırılmış metni birleştir ve başına 'TR' ve ilk iki rakamı ekle
+    let finalIban = `TR${firstTwo} ${groups.join(" ")}`.trim();
+
+    // IBAN maksimum 32 karakter uzunluğunda olmalı (TR dahil)
+    return finalIban.substring(0, 32);
   };
 
-  const onFocus = () => {
-    // IBAN alanı boşsa, varsayılan değeri göster
-    if (iban.length < 2) {
-      setIban("TR");
-    }
+  const handleIbanChange = (text) => {
+    console.log("Raw input:", text);
+
+    // IBAN'ı formatla
+    const formattedText = formatIban(text);
+
+    console.log("Formatted IBAN:", formattedText);
+
+    // Eğer metin tamamen boşsa, IBAN'ı temizle
+    setIban(formattedText);
   };
+
   const [fullName, setFullName] = useState("");
 
   const onChangeFullName = (text) => {
@@ -186,12 +198,6 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
 
   const RegisterClub = () => {
     switch (true) {
-      case !tcNo:
-        seterrorStatu(1);
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 2000);
-        break;
       case !fullName:
         seterrorStatu(2);
         setTimeout(() => {
@@ -251,8 +257,38 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
   useEffect(() => {
     GetUserInfo();
   }, [user]);
+  const [Deals, setDeals] = useState("");
+  const fetchFromURL = async (url) => {
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+  const fetchDataDeal = async () => {
+    const url = `https://private.emlaksepette.com/api/sayfa/emlaksepette-paylasimci-davranis-kurallari`;
+    try {
+      const data = await fetchFromURL(url);
+      setDeals(data.content);
+      // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
+    } catch (error) {
+      console.error("İstek hatası:", error);
+      // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
+    }
+  };
+  useEffect(() => {
+    fetchDataDeal();
+  }, [user]);
 
-  console.log(namFromGetUser.status);
+  const [checked, setChecked] = useState(false);
+  const toggleCheckbox = () => {
+    setChecked(!checked);
+    setshowAlertForDeal(false);
+  };
+  const [DealModal, setDealModal] = useState(false);
+  const [showAlertForDeal, setshowAlertForDeal] = useState(false);
+  console.log(errorStatu);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
@@ -339,13 +375,13 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
                     user.role_id == "2") ||
                     (user.role_id == "1" && (
                       <View>
-                        <Text style={styles.Label}>Tc Kimlik No</Text>
+                        <Text style={styles.Label}>TC Kimlik No</Text>
                         <TextInput
                           style={styles.Input}
                           keyboardType="number-pad"
                           value={tcNo}
                           onChangeText={onChangeTC}
-                          maxLength={15}
+                          maxLength={11}
                         />
                         {errorStatu == 1 && (
                           <Text style={{ fontSize: 12, color: "red" }}>
@@ -371,10 +407,9 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
                     <Text style={styles.Label}>Iban Numarası</Text>
                     <TextInput
                       style={styles.Input}
-                      keyboardType="number-pad"
                       value={iban}
-                      onChangeText={onChangeText2}
-                      onFocus={onFocus}
+                      onChangeText={handleIbanChange}
+                      keyboardType="number-pad"
                       maxLength={32}
                     />
                     {errorStatu == 3 && (
@@ -385,6 +420,67 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
                     )}
                   </View>
                 </View>
+
+                <View style={{ padding: 5 }}>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      paddingLeft: 10,
+                      alignItems: "center",
+                    }}
+                    onPress={() => {
+                      toggleCheckbox();
+                    }}
+                  >
+                    <CheckBox
+                      checked={checked}
+                      onPress={toggleCheckbox}
+                      // Use ThemeProvider to make change for all checkbox
+                      iconType="material-community"
+                      checkedIcon="checkbox-marked"
+                      uncheckedIcon="checkbox-blank-outline"
+                      checkedColor="red"
+                      containerStyle={{
+                        paddingRight: 0,
+                        padding: 0,
+                        marginTop: 0,
+                        marginBottom: 10,
+                        marginLeft: -2,
+                        borderColor: "#f27b7d",
+                        borderWidth: showAlertForDeal ? 2 : 0,
+                        borderRadius: 5,
+                        marginRight: 2,
+                      }}
+                    />
+                    <Text>
+                      <Text
+                        style={{
+                          color: "#2F5F9E",
+                          textDecorationLine: "underline",
+                          fontWeight: "600",
+                        }}
+                        onPress={() => {
+                          setDealModal(true);
+                        }}
+                      >
+                        Emlaksepette Paylaşımcı Davranış Kuralları'nı
+                      </Text>{" "}
+                      okudum onaylıyorum.
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {showAlertForDeal && (
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontSize: 14,
+                      color: "#f27b7d",
+                      fontWeight: "700",
+                    }}
+                  >
+                    Lütfen Sözleşmeyi Onaylayın
+                  </Text>
+                )}
                 <View style={{ alignItems: "center", padding: 10 }}>
                   <TouchableOpacity
                     style={{
@@ -393,11 +489,16 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
                       padding: 10,
                       borderRadius: 6,
                     }}
-                    onPress={
-                      user.account_type == "Limited veya Anonim Şirketi"
-                        ? RegisterAgainClub
-                        : RegisterClub
-                    }
+                    onPress={() => {
+                      if (checked) {
+                        user.account_type == "Limited veya Anonim Şirketi"
+                          ? RegisterAgainClub()
+                          : RegisterClub();
+                        setshowAlertForDeal(false);
+                      } else {
+                        setshowAlertForDeal(true);
+                      }
+                    }}
                   >
                     <Text
                       style={{
@@ -449,6 +550,32 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
               </View>
             </View>
           </View>
+        </Modal>
+        <Modal
+          isVisible={DealModal}
+          onBackdropPress={() => setDealModal(false)}
+          backdropColor="transparent"
+          style={styles.modal2}
+        >
+          <SafeAreaView style={styles.modalContent2}>
+            <ScrollView style={{ padding: 10 }}>
+              <HTML source={{ html: Deals }} contentWidth={100} />
+
+              <View style={{ alignItems: "center", paddingBottom: 20 }}>
+                <TouchableOpacity
+                  style={styles.Acceptbtn}
+                  onPress={() => {
+                    setChecked(true);
+                    setDealModal(false);
+                  }}
+                >
+                  <Text style={{ color: "white", fontWeight: "bold" }}>
+                    Okudum kabul ediyorum
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </SafeAreaView>
         </Modal>
       </View>
     </TouchableWithoutFeedback>
@@ -515,6 +642,22 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     padding: 20,
     height: "20%",
+    borderRadius: 5,
+  },
+  modal2: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContent2: {
+    backgroundColor: "#f4f4f4",
+    padding: 20,
+    height: "100%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  Acceptbtn: {
+    backgroundColor: "#2aaa46",
+    padding: 10,
     borderRadius: 5,
   },
 });

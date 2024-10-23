@@ -66,6 +66,8 @@ export default function UserTypeList() {
   const [DeletedData, setDeletedData] = useState({});
   const [deletedSuccessMessage, setdeletedSuccessMessage] = useState(false);
   const DeleteUser = async (UserId) => {
+    setloading(true);
+
     try {
       const response = await axios.delete(
         `https://private.emlaksepette.com/api/institutional/roles/${UserId}`,
@@ -75,15 +77,27 @@ export default function UserTypeList() {
           },
         }
       );
-      fetchData();
-      setDeletedData(response.data);
+      console.log("deletedd");
+      if (response.status === 200) {
+        setTimeout(() => {
+          console.log("dialog");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: `${selectedUserName} adlı kullanıcı silindi.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchData();
+              setDeletedData(response.data);
+            },
+          });
+          console.log("loadd");
+          setloading(false); // End loading after showing the dialog
+        }, 2000);
+      }
+      console.log("donee");
+
       setdeletedSuccessMessage(false);
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Başarılı",
-        textBody: `${selectedUserName} adlı kullanıcı silindi.`,
-        button: "Tamam",
-      });
     } catch (error) {
       console.error("Delete request error:", error);
     }
@@ -118,7 +132,13 @@ export default function UserTypeList() {
     });
   };
 
+  const handleDeleteAllUsersPress = () => {
+    setdeleteAllUserType(true); // Show dialog
+  };
+
   const deleteSelectedUserType = async () => {
+    setloading(true);
+
     const data = {
       role_ids: SelectedUserIDS,
     };
@@ -132,17 +152,27 @@ export default function UserTypeList() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.WARNING,
-        title: `Başarılı`,
-        textBody: `${SelectedUserIDS.length} Kullanıcı Tipi Silindi.`,
-        button: "Tamam",
-      });
-      fetchData();
-      setSelectedUserIDS([]);
-      setisChoosed(false);
-      setisShowDeleteButon(!isShowDeleteButon);
-      setdeleteUserModal(false);
+
+      console.log("deleted");
+      if (response.status === 200) {
+        setTimeout(() => {
+          console.log("dialog");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: `Başarılı`,
+            textBody: `${SelectedUserIDS.length} Kullanıcı Tipi Silindi.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchData();
+              setSelectedUserIDS([]);
+            },
+          });
+          console.log("load");
+          setloading(false);
+        }, 2000);
+
+        setdeleteAllUserType(false); // Hide alert after confirmation
+      }
     } catch (error) {
       console.error("Error making DELETE request:", error);
     }
@@ -167,15 +197,26 @@ export default function UserTypeList() {
           },
         }
       );
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: `Başarılı`,
-        textBody: `${userList.length} İlan silindi.`,
-        button: "Tamam",
-      });
-      fetchData();
-      setUsersId([]);
-      setdeleteAllUserType(false);
+      console.log("deleted");
+      if (response.status === 200) {
+        setTimeout(() => {
+          console.log("dialog");
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: `Başarılı`,
+            textBody: `${userList.length} İlan silindi.`,
+            button: "Tamam",
+            onHide: () => {
+              fetchData();
+              setUsersId([]);
+            },
+          });
+          console.log("load");
+          setloading(false);
+        }, 2000);
+
+        setdeleteAllUserType(false); // Hide alert after confirmation
+      }
     } catch (error) {
       console.error("Error making DELETE request:", error);
     }
@@ -197,6 +238,7 @@ export default function UserTypeList() {
             height: "100%",
             gap: 10,
             backgroundColor: "white",
+            marginTop: -62,
           }}
         >
           <View
@@ -205,21 +247,17 @@ export default function UserTypeList() {
               { alignItems: "center", justifyContent: "center" },
             ]}
           >
-            <Icon2 name="user-tie" size={50} color={"#EA2A28"} />
+            <Icon2 name="user-tie" size={35} color={"#EA2A28"} />
           </View>
           <View>
-            <Text style={{ color: "grey", fontSize: 16, fontWeight: "600" }}>
-              Kullanıcı Tipi Bulunanmadı
+            <Text style={styles.noCommentsText}>
+              Daha önce kullanıcı tipi oluşturmadınız.
             </Text>
+            <Text></Text>
           </View>
           <View style={{ width: "100%", alignItems: "center" }}>
             <TouchableOpacity
-              style={{
-                backgroundColor: "#EA2A28",
-                width: "90%",
-                padding: 8,
-                borderRadius: 5,
-              }}
+              style={styles.returnButton}
               onPress={() => {
                 setloading(true);
                 setTimeout(() => {
@@ -228,15 +266,7 @@ export default function UserTypeList() {
                 }, 700);
               }}
             >
-              <Text
-                style={{
-                  color: "#ffffff",
-                  fontWeight: "600",
-                  textAlign: "center",
-                }}
-              >
-                Oluştur
-              </Text>
+              <Text style={styles.returnButtonText}>Oluştur</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -337,7 +367,7 @@ export default function UserTypeList() {
             {transformedRoles.map((item, index) => (
               <Users
                 name={item.name}
-                id="1"
+                id={item.id}
                 key={index}
                 index={index}
                 item={item}
@@ -357,7 +387,7 @@ export default function UserTypeList() {
               textAlign: "center",
               margin: 5,
             }}
-            title={`${UsersId.length} Kullanıcı tipini silmek istediğinize eminm misiniz?`}
+            title={`${UsersId.length} Kullanıcı tipini silmek istediğinize emin misiniz?`}
             messageStyle={{ textAlign: "center" }}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
@@ -443,6 +473,23 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#f5f5f7",
   },
+  noCommentsText: {
+    fontSize: 18,
+    color: "#333",
+    textAlign: "center",
+    marginTop: 8,
+  },
+  returnButton: {
+    backgroundColor: "#EA2B2E",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  returnButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
   modal4: {
     justifyContent: "center",
     margin: 0,
@@ -461,7 +508,7 @@ const styles = StyleSheet.create({
 
     borderRadius: 50,
 
-    borderWidth: 0.7,
+    borderWidth: 0.6,
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {

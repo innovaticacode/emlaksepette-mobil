@@ -11,7 +11,6 @@ import {
 import { React, useCallback, useEffect, useState } from "react";
 import Ablok from "./Bloks/Ablok";
 import Bblok from "./Bloks/Bblok";
-import ShoppinInfo from "./ShoppinInfo";
 import Posts from "./Posts";
 import { apiRequestGet } from "./methods/apiRequest";
 import { Platform } from "react-native";
@@ -103,7 +102,7 @@ export default function OtherHomeInProject({
       <View>
        
         <View style={styles.container}>
-          {data.project.blocks &&
+          {data.project.have_blocks !==0 &&data?.project?.blocks&&
            <ScrollView
            horizontal={true}
            showsHorizontalScrollIndicator={false}
@@ -116,7 +115,7 @@ export default function OtherHomeInProject({
            }}
            bounces={false}
          >
-           { data.project.blocks.map((block, blockIndex) => (
+           { data?.project?.blocks?.map((block, blockIndex) => (
              <TouchableOpacity
                key={blockIndex}
                onPress={() => {
@@ -169,7 +168,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 5,
     top: 0,
-
+    
     backgroundColor: "#FFFFFF",
 
     marginTop: 0,

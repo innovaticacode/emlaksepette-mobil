@@ -146,7 +146,7 @@ export default function Panel({ options, onSelect }) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(panelInfo.totalSales);
-
+console.log(user.access_token)
   return (
     <>
       <View style={style.container}>

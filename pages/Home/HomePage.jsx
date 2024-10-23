@@ -1,45 +1,48 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
-  TouchableOpacity,
   SafeAreaView,
   FlatList,
-  Dimensions,
-  ImageBackground,
   Image,
+  Text,
+  TouchableOpacity,
 } from "react-native";
 import axios from "axios";
-import PagerView from "react-native-pager-view";
 import ProjectPost from "../../components/ProjectPost";
-import SliderBar from "../../components/SliderBar";
-import Header from "../../components/Header";
-import userData, { getValueFor } from "../../components/methods/user";
-import { useNavigation } from "@react-navigation/native";
+import { getValueFor } from "../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
+import bannerSRC from "../../src/assets/images/project-banner.png";
+import { useNavigation } from "@react-navigation/native";
 
 const apiUrl = "https://private.emlaksepette.com";
 
-const HomePage = ({ index }) => {
-  const navigation = useNavigation();
-  const { width: screenWidth } = Dimensions.get("window");
+const HomePage = (props) => {
+  const { index } = props;
 
+  const navigation = useNavigation();
   // Fetch featured sliders
   const fetchFeaturedSliders = async () => {
+    if (loadingSliders) return; // Eğer yükleniyorsa, yeni istek atma
+
+    setLoadingSliders(true); // Yükleniyor durumunu başlat
     try {
       const response = await axios.get(`${apiUrl}/api/featured-sliders`);
       setFeaturedSliders(response.data);
-      setLoadingSliders(false);
     } catch (error) {
       console.log("Error fetching featured sliders:", error);
-      setLoadingSliders(false);
+    } finally {
+      setLoadingSliders(false); // Yükleniyor durumunu kapat
     }
   };
+  useEffect(() => {
+    fetchFeaturedSliders()
+  }, [user])
+  
 
   // State for featured projects
   const [loadingProjects, setLoadingProjects] = useState(false);
@@ -69,7 +72,7 @@ const HomePage = ({ index }) => {
   const pagerViewRef = useRef(null);
 
   useEffect(() => {
-    fetchFeaturedSliders();
+    
     const interval = setInterval(() => {
       pagerViewRef.current?.setPage(
         currentPage === featuredSliders.length - 1 ? 0 : currentPage + 1
@@ -78,8 +81,9 @@ const HomePage = ({ index }) => {
         currentPage === featuredSliders.length - 1 ? 0 : currentPage + 1
       );
     }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+
+    return () => clearInterval(interval); // Temizlik
+  }, [currentPage, featuredSliders.length]); // Burada featuredSliders.length kullanımı uygun
 
   // State for user
   const [user, setUser] = useState({});
@@ -88,139 +92,87 @@ const HomePage = ({ index }) => {
     getValueFor("user", setUser);
   }, []);
 
-  // Navigate to all projects screen
-  const navigateToAllProjects = () => {
-    navigation.navigate("AllProject", {
-      name: "Tüm Projeler",
-      slug: "tum-projeler",
-      data: featuredProjects,
-      count: featuredProjects.length,
-      type: null,
-      optional: "satilik",
-      title: "konut",
-      check: "villa",
-      city: null,
-      county: null,
-      hood: null,
-    });
-  };
-
   return (
     <AlertNotificationRoot>
       {loadingProjects && loadingSliders ? (
-        <View
-          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
-        >
+        <View style={styles.loadingContainer}>
           <ActivityIndicator />
         </View>
       ) : (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <SafeAreaView style={styles.container}>
-            <ScrollView
-              contentContainerStyle={styles.scrollViewContent}
-              scrollEventThrottle={16}
-            >
-              {/* Featured Sliders */}
-              <View style={styles.sliderContainer}>
-                {loadingSliders ? (
-                  <ActivityIndicator
-                    style={styles.loadingIndicator}
-                    size={"small"}
-                    color="#333"
-                  />
-                ) : (
-                  <PagerView
-                    style={styles.pagerView}
-                    ref={pagerViewRef}
-                    initialPage={0}
-                    onPageSelected={(event) =>
-                      setCurrentPage(event.nativeEvent.position)
-                    }
-                  >
-                    {featuredSliders.map((item, index) => (
-                      <View style={styles.sliderItem} key={index}>
-                        <ImageBackground
-                          source={{
-                            uri: `${apiUrl}/storage/sliders/${item.mobile_image}`,
-                          }}
-                          style={styles.imageBackground}
-                          resizeMode="cover"
-                        />
-                      </View>
-                    ))}
-                  </PagerView>
-                )}
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+              <View>
+                <Image
+                  source={bannerSRC}
+                  alt="project"
+                  style={styles.bannerImage}
+                  resizeMode="cover"
+                />
               </View>
-
-              {/* Popular Construction Brands */}
-              <View style={styles.sliderBarContainer}>
-                <Text style={styles.sliderBarTitle}>
-                  ÖNE ÇIKAN İNŞAAT MARKALARI
+              <View style={styles.header}>
+                <Text style={{ fontSize: 14, fontWeight: 700 }}>
+                  ÖNE ÇIKAN PROJELER
                 </Text>
-                <SliderBar loading={loadingProjects} />
+                <TouchableOpacity
+                  style={styles.allBtn}
+                  onPress={() =>
+                    navigation.navigate("AllProject", {
+                      name: "Tüm Projeler",
+                      slug: "tum-projeler",
+                      data: featuredProjects,
+                      count: featuredProjects.length,
+                      type: null,
+                      optional: null,
+                      title: null,
+                      check: null,
+                      city: null,
+                      county: null,
+                      hood: null,
+                    })
+                  }
+                >
+                  <Text
+                    style={{
+                      color: "white",
+                      fontSize: 12,
+                      fontWeight: "bold",
+                      padding: 3,
+                    }}
+                  >
+                    Tüm İlanları Gör
+                  </Text>
+                </TouchableOpacity>
               </View>
-
               {/* Featured Projects */}
               <View style={styles.featuredProjectsContainer}>
-                <View style={styles.slide1}>
-                  <View style={{ gap: 0, paddingTop: 0 }}>
-                    {loadingProjects == true ? (
-                      <View>
-                        <ActivityIndicator size="small" color="#333" />
-                      </View>
-                    ) : (
-                      <>
-                        <FlatList
-                          data={featuredProjects}
-                          renderItem={({ item, index }) => (
-                            <View
-                              style={{
-                                marginTop: 7,
-                                width: "100%",
-                              }}
-                            >
-                              <ProjectPost
-                                key={index}
-                                project={item}
-                                caption={item.project_title}
-                                ımage={`${apiUrl}/${item.image.replace(
-                                  "public/",
-                                  "storage/"
-                                )}`}
-                                user={item.user}
-                                location={item.city.title}
-                                city={item.county.ilce_title}
-                                ProjectNo={item.id}
-                                // acıklama={item.description
-                                //   .replace(/<\/?[^>]+(>|$)/g, "")
-                                //   .replace(/&nbsp;/g, " ")}
-
-                                ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
-                                loading={loadingProjects}
-                              />
-                            </View>
-                          )}
-                          ListHeaderComponent={
-                            <View style={styles.featuredProjectsHeader}>
-                              <Text style={styles.featuredProjectsTitle}>
-                                ÖNE ÇIKAN PROJELER
-                              </Text>
-                              <TouchableOpacity
-                                style={styles.allProjectsButton}
-                                onPress={navigateToAllProjects}
-                              >
-                                <Text style={styles.allProjectsButtonText}>
-                                  Tüm Projeleri Gör
-                                </Text>
-                              </TouchableOpacity>
-                            </View>
-                          }
-                          scrollEnabled={false}
+                {loadingProjects ? (
+                  <ActivityIndicator size="small" color="#333" />
+                ) : (
+                  <FlatList
+                    data={featuredProjects}
+                    renderItem={({ item, index }) => (
+                      <View style={styles.projectPostContainer}>
+                        <ProjectPost
+                          key={index}
+                          project={item}
+                          caption={item.project_title}
+                          ımage={`${apiUrl}/${item.image.replace(
+                            "public/",
+                            "storage/"
+                          )}`}
+                          user={item.user}
+                          location={item.city.title}
+                          city={item.county.ilce_title}
+                          ProjectNo={item.id}
+                          ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
+                          loading={loadingProjects}
                         />
-                      </>
+                      </View>
                     )}
-                  </View>
-                </View>
+                    scrollEnabled={false}
+                  />
+                )}
               </View>
             </ScrollView>
           </SafeAreaView>
@@ -230,78 +182,48 @@ const HomePage = ({ index }) => {
   );
 };
 
-const { width, screenWidth } = Dimensions.get("window");
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    paddingTop: 25,
   },
-  scrollViewContent: {
-    paddingHorizontal: 10,
-    paddingBottom: 10,
-  },
-  sliderContainer: {
-    height: 200,
-    borderRadius: 10,
+  scrollViewContent: {},
+  bannerImage: {
+    width: "100%",
+    height: 120,
     marginBottom: 10,
-    overflow: "hidden",
-    marginBottom: 5
-  },
-  pagerView: {
-    flex: 1,
-  },
-  sliderItem: {
-    width: "100%",
-    height: "100%",
-  },
-  imageBackground: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-  },
-  loadingIndicator: {
-    position: "absolute",
-    alignSelf: "center",
-    marginTop: "50%",
-  },
-  sliderBarContainer: {
-    paddingBottom: 3,
-    paddingTop:5,
-    backgroundColor: "white",
-  },
-  sliderBarTitle: {
-    fontSize: 12,
-    fontWeight: "700",
-    marginBottom: 7,
+    paddingHorizontal: 0,
   },
   featuredProjectsContainer: {
     paddingBottom: 3,
     backgroundColor: "white",
-    marginTop: 7,
-  },
-  featuredProjectsHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
-    },
-  featuredProjectsTitle: {
-    fontSize: 12,
-    fontWeight: "700",
-  },
-  allProjectsButton: {
-    backgroundColor: "#EA2C2E",
-    paddingVertical: 5,
-    borderRadius: 4,
-  },
-  allProjectsButtonText: {
-    color: "white",
-    fontSize: 11,
     paddingHorizontal: 10,
+    paddingBottom: 10,
   },
   projectPostContainer: {
-    marginTop: 7,
     width: "100%",
+  },
+  loadingContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
+  allBtn: {
+    backgroundColor: "#EA2C2E",
+    paddingLeft: 15,
+    paddingRight: 15,
+    padding: 3,
+    borderRadius: 4,
+  },
+  header: {
+    paddingBottom: 3,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingLeft: 10,
+    paddingRight: 10,
+    alignItems: "center",
+    backgroundColor: "white",
+    marginTop: 8,
   },
 });
 

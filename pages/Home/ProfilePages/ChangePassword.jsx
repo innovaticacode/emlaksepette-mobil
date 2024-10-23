@@ -25,11 +25,13 @@ export default function ChangePassword() {
 
   const [SecureTextForPass1, setSecureTextForPass1] = useState(true);
   const [SecuretextForNewPass, setSecuretextForNewPass] = useState(true);
-  const [SecureTextForNewPassAgain, setSecureTextForNewPassAgain] = useState(true);
+  const [SecureTextForNewPassAgain, setSecureTextForNewPassAgain] =
+    useState(true);
 
   const ToggleForPass1 = () => setSecureTextForPass1(!SecureTextForPass1);
   const ToggleForPass2 = () => setSecuretextForNewPass(!SecuretextForNewPass);
-  const ToggleForPass3 = () => setSecureTextForNewPassAgain(!SecureTextForNewPassAgain);
+  const ToggleForPass3 = () =>
+    setSecureTextForNewPassAgain(!SecureTextForNewPassAgain);
 
   const [currentPasword, setcurrentPasword] = useState("");
   const [newPassword, setnewPassword] = useState("");
@@ -43,7 +45,7 @@ export default function ChangePassword() {
 
   const postData = async () => {
     setchangeLoading(true);
-    
+
     // İşlem başladığında kullanıcıya bilgi verme
     Dialog.show({
       type: ALERT_TYPE.INFO,
@@ -51,13 +53,13 @@ export default function ChangePassword() {
       textBody: "Şifreniz güncelleniyor, lütfen bekleyin...",
       button: "Tamam",
     });
-  
+
     try {
       var formData = new FormData();
       formData.append("current_password", currentPasword);
       formData.append("new_password", newPassword);
       formData.append("new_password_confirmation", newPasswordconfirmation);
-  
+
       const response = await axios.post(
         "https://private.emlaksepette.com/api/client/password/update",
         formData,
@@ -67,47 +69,46 @@ export default function ChangePassword() {
           },
         }
       );
-
-      // Başarılı işlem durumunda dialog gösterimi
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
         textBody: "Şifreniz başarıyla güncellendi.",
         button: "Tamam",
       });
-  
+
       // Success durumunda Dialog'u belli bir süre sonra otomatik kapatma
       setTimeout(() => {
         Dialog.hide();
       }, 5000); // 5 saniye sonra otomatik kapanma
-  
+      setcurrentPasword("");
+      setnewPassword("");
+      setnewPasswordconfirmation("");
     } catch (error) {
-      console.log("Error Response:", error.response); // Hata objesini konsola yazdır
-  
+      console.log("Error Response:", error.message); // Hata objesini konsola yazdır
       let errorMessage = "Bilinmeyen bir hata oluştu.";
-      
+
       // Error mesajını daha kapsamlı kontrol et
       if (error.response?.data?.errors) {
         errorMessage = Object.values(error.response.data.errors)
           .flat()
-          .join(', ');
+          .join(", ");
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
-  
-      // Hata durumunda özel mesaj gösterimi
       Dialog.show({
         type: ALERT_TYPE.DANGER,
         title: "Hata",
-        textBody: `${errorMessage}`,
+        textBody: errorMessage || "Şifrenizin karakterleri uygun değil.",
         button: "Tamam",
       });
-      console.log("Dialog gösterildi"); // Ekrana çıktı alır
+      console.log(errorMessage);
+
+      // Hata durumunda özel mesaj gösterimi
     } finally {
       setchangeLoading(false);
     }
   };
-  
+
   const HandleSubmit = () => {
     if (!currentPasword || !newPassword || !newPasswordconfirmation) {
       Dialog.show({
@@ -131,7 +132,55 @@ export default function ChangePassword() {
 
     postData();
   };
+  const [showLengthAlert, setShowLengthAlert] = useState(false);
+  const [showUpperAlert, setShowUpperAlert] = useState(false);
+  const [showSymbolAlert, setShowSymbolAlert] = useState(false);
+  const [showNumberAlert, setShowNumberAlert] = useState(false);
+  const [passControl, setpassControl] = useState(false);
+  const [colorForLength, setcolorForLength] = useState(false)
+  const [colorForNumberAlert, setcolorForNumberAlert] = useState(false)
+  const [colorForUpper, setcolorForUpper] = useState(false)
+  const [colorForSymbol, setcolorForSymbol] = useState(false)
+const handlePasswordChange = (text) => {
+  setnewPassword(text)
+  // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
 
+  if (text.length+1 <= 8) {
+    setShowLengthAlert(true)
+    setcolorForLength(false)
+  } else {
+
+    setcolorForLength(true)
+  }
+
+  //rakam kontrölü
+  const numberRegex = /[0-9]/;
+  if (!numberRegex.test(text)) {
+    setShowNumberAlert(true);
+    setcolorForNumberAlert(false)
+  } else {
+    
+    setcolorForNumberAlert(true)
+  }
+  //Büyük harf kontrolü
+  const upperCaseRegex = /[A-Z]/;
+  if (!upperCaseRegex.test(text)) {
+    setShowUpperAlert(true)
+    setcolorForUpper(false)
+  } else {
+    
+    setcolorForUpper(true)
+  }
+  // Sembole kontrolü
+  const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+  if (!symbolRegex.test(text)) {
+    setShowSymbolAlert(true)
+    setcolorForSymbol(false)
+  } else {
+   
+    setcolorForSymbol(true)
+  }
+};
   return (
     <AlertNotificationRoot>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -156,12 +205,14 @@ export default function ChangePassword() {
               </TouchableOpacity>
             </View>
             <View>
+            <View>
               <Text style={styles.label}>Yeni Şifre</Text>
               <TextInput
                 style={styles.Input}
                 value={newPassword}
-                onChangeText={(value) => setnewPassword(value)}
+                onChangeText={(value) => handlePasswordChange(value) }
                 secureTextEntry={SecuretextForNewPass}
+                autoCapitalize="none" 
               />
               <TouchableOpacity
                 style={{ position: "absolute", right: 15, top: 25 }}
@@ -175,6 +226,46 @@ export default function ChangePassword() {
                 />
               </TouchableOpacity>
             </View>
+            {
+              newPassword.length!==0 &&
+              <View style={{gap:5,paddingTop:5}}>
+              {passControl && (
+                <Text
+                  style={{
+                    color: "red",
+                    fontWeight: "500",
+                    fontSize: 12,
+                  }}
+                >
+                  Lütfen Şifrenizi girin!
+                </Text>
+              )}
+              {showLengthAlert  && (
+                <Text style={{ color: colorForLength? 'green': "red" }}>
+                  Şifreniz en az 8 karakter olmalıdır!
+                </Text>
+              )}
+              {showNumberAlert && (
+                <Text style={{ color: colorForNumberAlert? 'green': "red" }}>
+                  Şifrenizde en az bir rakam olmalıdır.
+                </Text>
+              )}
+              {showUpperAlert && (
+                <Text style={{ color: colorForUpper? 'green': "red" }}>
+                  Şifrenizde en az bir büyük harf olmalıdır!
+                </Text>
+              )}
+              {showSymbolAlert  && (
+                <Text style={{ color: colorForSymbol?'green': "red" }}>
+                  Şifrenizde en az bir özel karakter olmalıdır!
+                </Text>
+              )}
+              </View>
+            }
+          
+            </View>
+         
+       
             <View>
               <Text style={styles.label}>Yeni Şifre (Tekrar)</Text>
               <TextInput
@@ -197,6 +288,7 @@ export default function ChangePassword() {
                 />
               </TouchableOpacity>
             </View>
+           
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity style={styles.updatebtn} onPress={HandleSubmit}>
                 <Text style={styles.btnText}>Şifre Yenile</Text>

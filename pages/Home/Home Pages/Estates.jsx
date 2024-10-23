@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   RefreshControl,
+  Image,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
@@ -16,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import SliderEstateBar from "../../../components/SliderEstateBar";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import Housing from "../../../src/assets/images/Konut.png";
 const PAGE_SIZE = 10;
 
 const Estates = ({ index }) => {
@@ -32,18 +34,17 @@ const Estates = ({ index }) => {
     if (loading || (!hasMore && !reset)) return;
     setLoading(true);
     const config = {
-      headers: { Authorization: `Bearer ${user?.access_token}` },
+      headers: {
+        Authorization: `Bearer ${user?.access_token}`,
+      },
     };
 
-    console.log(config);
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${
-          reset ? 1 : page
-        }&limit=${PAGE_SIZE}`,
+        `${apiUrl}api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,
         config
       );
-      const newEstates = response.data;
+      const newEstates = Object.values(response.data);
 
       if (reset) {
         setFeaturedEstates(newEstates);
@@ -72,7 +73,7 @@ const Estates = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 1) {
+    if (index == 2) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);
@@ -95,7 +96,7 @@ const Estates = ({ index }) => {
   const renderFooter = () => {
     if (!loading) return null;
     return (
-      <ActivityIndicator style={{ margin: 20 }} size="small" color="#333" />
+      <ActivityIndicator style={{ margin: 0 }} size="small" color="#333" />
     );
   };
 
@@ -182,6 +183,7 @@ const Estates = ({ index }) => {
                     column4_additional={item.column4_additional}
                     bookmarkStatus={true}
                     dailyRent={false}
+                    isFavorite={item.is_favorite}
                   />
                 )}
                 keyExtractor={(item, index) =>
@@ -196,65 +198,43 @@ const Estates = ({ index }) => {
                 }
                 ListHeaderComponent={
                   <>
-                    <View
-                      style={{
-                        paddingBottom: 3,
-                        paddingLeft: 10,
-                        paddingRight: 10,
-                        marginTop: 10,
-                        backgroundColor: "white",
-                        height: 130,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          fontWeight: 700,
-                          marginBottom: 7,
-                        }}
-                      >
-                        FRANCHAISE VEREN GAYRIMENKUL MARKALARI
-                      </Text>
-
-                      <SliderEstateBar />
+                    <View style={{ paddingHorizontal: 0 }}>
+                      <Image
+                        source={Housing}
+                        style={{ width: "100%", height: 120 }}
+                      />
                     </View>
-                    <View
-                      style={{
-                        paddingBottom: 3,
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        paddingLeft: 10,
-                        paddingRight: 10,
-                        alignItems: "center",
-                        backgroundColor: "white",
-                      }}
-                    >
-                      <Text style={{ fontSize: 12, fontWeight: 700 }}>
+
+                    <View style={styles.header}>
+                      <Text style={{ fontSize: 14, fontWeight: 700 }}>
                         ÖNE ÇIKAN EMLAK İLANLARI
                       </Text>
 
                       <TouchableOpacity
                         style={styles.allBtn}
                         onPress={() =>
-                          navigation.navigate("AllRealtorAdverts", {
-                            name: "Emlak İlanları",
-                            slug: "emlak-ilanlari",
-                            data: filteredHomes,
-                            count: filteredHomes.length,
-                            type: "konut",
-                            optional: null,
-                            title: null,
-                            check: null,
-                            city: null,
-                            county: null,
-                            hood: null,
+                          navigation.navigate("Drawer", {
+                            screen: "AllRealtorAdverts",
+                            params: {
+                              name: "Emlak İlanları",
+                              slug: "emlak-ilanlari",
+                              data: filteredHomes,
+                              count: filteredHomes.length,
+                              type: "konut",
+                              optional: null,
+                              title: null,
+                              check: null,
+                              city: null,
+                              county: null,
+                              hood: null,
+                            },
                           })
                         }
                       >
                         <Text
                           style={{
                             color: "white",
-                            fontSize: 11,
+                            fontSize: 12,
                             fontWeight: "bold",
                           }}
                         >
@@ -300,6 +280,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fefefe",
     padding: 20,
     borderRadius: 5,
+  },
+  header: {
+    paddingBottom: 3,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingLeft: 10,
+    paddingRight: 10,
+    alignItems: "center",
+    backgroundColor: "white",
+    marginTop: 20,
   },
 });
 

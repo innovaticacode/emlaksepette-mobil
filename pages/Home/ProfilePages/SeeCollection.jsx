@@ -721,7 +721,7 @@ export default function SeeCollection() {
           </View>
 
           <ImageBackground
-            source={require("../profilePhoto.jpg")}
+            source={require("../../../src/assets/images/profilePhoto.jpg")}
             style={{ width: "100%", height: "100%" }}
             imageStyle={{
               borderBottomLeftRadius: 30,

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   View,
   Text,
@@ -6,51 +7,52 @@ import {
   ImageBackground,
   Dimensions,
 } from "react-native";
-import React from "react";
-import Icon from "react-native-vector-icons/SimpleLineIcons";
 import FeatherIcon from "react-native-vector-icons/Feather";
 import StarIcon from "react-native-vector-icons/FontAwesome";
-import Warning from "react-native-vector-icons/Entypo";
 import Icon4 from "react-native-vector-icons/FontAwesome5";
 import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
+
+const { width } = Dimensions.get("window");
+
 export default function Order({ item }) {
-  const date = new Date(item.created_at);
-  // Ay isimleri dizisi
-  const monthNames = [
-    "Ocak",
-    "Şubat",
-    "Mart",
-    "Nisan",
-    "Mayıs",
-    "Haziran",
-    "Temmuz",
-    "Ağustos",
-    "Eylül",
-    "Ekim",
-    "Kasım",
-    "Aralık",
-  ];
-  // Günü, ay ismini ve yılı al
-  const day = date.getDate();
-  const month = monthNames[date.getMonth()];
-  const year = date.getFullYear();
-  const formattedDate = `${day} ${month} ${year}`;
-
-  const cartString = `${item.cart}`;
-  // JSON stringini nesneye dönüştür
-  const cartObject = JSON.parse(cartString);
-  // Image URL'sine eriş
-  const imageUrl = cartObject.item.image;
-
   const navigation = useNavigation();
-  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
-  console.log(JSON.parse(item.cart)["item"]["id"]);
-  const HouseId = item && item.cart && JSON.parse(item.cart)["item"]["id"];
-  const Type = item && item.cart && JSON.parse(item.cart)["type"];
-  const Title = item && item.cart && JSON.parse(item.cart)["item"]["title"];
-  console.log(Type);
-  const { width, height } = Dimensions.get("window");
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const monthNames = [
+      "Ocak",
+      "Şubat",
+      "Mart",
+      "Nisan",
+      "Mayıs",
+      "Haziran",
+      "Temmuz",
+      "Ağustos",
+      "Eylül",
+      "Ekim",
+      "Kasım",
+      "Aralık",
+    ];
+    return `${date.getDate()} ${
+      monthNames[date.getMonth()]
+    } ${date.getFullYear()}`;
+  };
+
+  const parseCart = (cart) => {
+    try {
+      return JSON.parse(cart);
+    } catch (error) {
+      console.error("Invalid JSON in cart", error);
+      return {};
+    }
+  };
+
+  const cartData = item?.cart ? parseCart(item.cart) : {};
+  const { id: HouseId, title: Title, image: imageUrl } = cartData?.item || {};
+  const Type = cartData?.type;
+  const formattedDate = formatDate(item.created_at);
+
   return (
     <TouchableOpacity
       style={style.container}
@@ -72,8 +74,12 @@ export default function Order({ item }) {
         <View style={{ width: "40%", padding: 2 }}>
           <View style={{ gap: 4 }}>
             <Text
-              style={{ fontSize: 12, fontWeight: "600", color: "#333" }}
-              numberOfLines={1}
+              style={{
+                fontSize: 12,
+                fontWeight: "600",
+                color: "#333",
+                flexWrap: "wrap",
+              }}
             >
               {Title}
             </Text>

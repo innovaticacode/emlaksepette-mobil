@@ -5,8 +5,10 @@ import {
   ScrollView,
   TouchableOpacity,
   ImageBackground,
+  ActivityIndicator,
+  RefreshControl,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Icon from "react-native-vector-icons/Entypo";
 import { Platform } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -15,13 +17,12 @@ import axios from "axios";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
-import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
-import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
+import NoDataScreen from "../../components/NoDataScreen";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 export default function MyComments() {
   const [user, setuser] = useState({});
   const [comments, setcomments] = useState([]);
-  const [choose, setchoose] = useState(false);
   const [selectedCommentID, setselectedCommentID] = useState(0);
   const [selectedProjectID, setselectedProjectID] = useState(0);
   const [selectcommentInfo, setselectcommentInfo] = useState({});
@@ -29,13 +30,28 @@ export default function MyComments() {
   const nav = useNavigation();
   const [selectedInfo, setSelectedInfo] = useState(null);
   const [selectedComment, setSelectedComment] = useState(null);
+  const [selectedType, setSelectedType] = useState(null);
+  const [selectedSource, setSelectedSource] = useState(null);
+  const [selectedStore, setSelectedStore] = useState([]);
+  const [loading, setLoading] = useState(true); // Yüklenme animasyonu için
+  const [choose, setchoose] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false); // Modal görünürlüğü için
+  const [successAlertVisible, setSuccessAlertVisible] = useState(false);
+  const [errorAlertVisible, setErrorAlertVisible] = useState(false);
+  const [initialComment, setInitialComment] = useState(""); // Başlangıçtaki yorum
+  const [editedComment, setEditedComment] = useState(""); // Düzenlenmiş yorum
+
+  
 
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
+  const navigation = useNavigation();
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchData = async () => {
     try {
+      setLoading(true);
       if (user?.access_token) {
         const response = await axios.get(
           `https://private.emlaksepette.com/api/user/${user?.id}/comments`
@@ -49,6 +65,8 @@ export default function MyComments() {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,7 +74,12 @@ export default function MyComments() {
     fetchData();
   }, [user]);
 
-  const MycommentItem = ({ item, EditComment, goToEditComment }) => {
+  const onRefresh = useCallback(() => {
+    setRefreshing(true); // Yenileme işlemi başlıyor
+    fetchData().then(() => setRefreshing(false)); // Yenileme işlemi bittikten sonra refreshing'i false yap
+  }, [user]);
+
+  const MycommentItem = ({ item, EditComment, goToEditComment, store }) => {
     const API_URL = "https://private.emlaksepette.com/";
     const { type, comment } = item;
     const info = type === "project" ? item.project : item.housing;
@@ -71,8 +94,9 @@ export default function MyComments() {
 
     const handleNavigate = () => {
       if (type === "project") {
-        nav.navigate("Details", {
-          ProjectId: info.id,
+        navigation.navigate("Drawer", {
+          screen: "Details",
+          params: { ProjectId: info.id },
         });
       } else if (type === "housing") {
         nav.navigate("Realtor details", {
@@ -81,6 +105,8 @@ export default function MyComments() {
       }
     };
 
+    
+    
     return (
       <View style={styles.card}>
         <View style={styles.cardContent}>
@@ -100,7 +126,6 @@ export default function MyComments() {
                 <View style={styles.textContainer}>
                   <Text style={styles.title} numberOfLines={2}>
                     {info?.project_title || info?.title}
-                    <Text>{comment.id}</Text>
                   </Text>
                   <Text style={styles.listingIdText}>
                     {type === "project"
@@ -111,6 +136,7 @@ export default function MyComments() {
               </TouchableOpacity>
               <View>
                 <TouchableOpacity
+                  hitSlop={{ top: 20, bottom: 20, left: 40, right: 20 }}
                   style={styles.editButton}
                   onPress={() => {
                     EditComment(
@@ -118,7 +144,9 @@ export default function MyComments() {
                       info,
                       comment,
                       comment.status,
-                      imageSource
+                      imageSource,
+                      type,
+                      store
                     );
                   }}
                 >
@@ -153,13 +181,16 @@ export default function MyComments() {
       </View>
     );
   };
-  const EditComment = (id, info, comment, status, imageSource) => {
+  const EditComment = (id, info, comment, status, imageSource, type, store) => {
     setchoose(true);
     setselectedCommentID(id);
     setselectedProjectID(info.id);
     setselectcommentInfo(comment);
     setselectedCommentStatus(status);
     setSelectedInfo(info); // info'yu da state'e ekliyoruz
+    setSelectedType(type);
+    setSelectedSource(imageSource); //
+    setSelectedStore(store); // store'yu da state'e ekliyoruz
   };
 
   const goToEditComment = (item) => {
@@ -170,89 +201,253 @@ export default function MyComments() {
       projectId: selectedProjectID,
       commentInfo: selectcommentInfo,
       commentID: selectedCommentID,
-      type: type, // info'yu da gönderiyoruz
-      comments: comment, // info'yu da gönderiyoruz
+      type: selectedType,
+      commentss: comment, // info'yu da gönderiyoruz
       info: selectedInfo,
+      imageSource: selectedSource,
+      store: selectedStore,
     });
     setchoose(false);
+  };
+
+  const confirmDeleteComment = () => {
+    setchoose(false); // İlk modalı kapat
+    setTimeout(() => {
+      setModalVisible(true); // İkinci modalı 400ms sonra aç
+    }, 400);
   };
 
   const DeleteComment = async () => {
     try {
       if (user?.access_token) {
-        const response = await axios.post(
-          `https://private.emlaksepette.com/api/delete/comment/${selectedCommentID}`,
-
+        const response = await axios.delete(
+          `https://private.emlaksepette.com/api/delete/comment/${selectedCommentID}/${selectedType}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
             },
           }
         );
-        fetchData();
-        setchoose(false);
+
+        if (response.status == 200) {
+          setSuccessAlertVisible(true); // Success Alert'i aç
+          fetchData(); // Veri güncellemek için çağır
+        } else {
+          throw new Error("Yorum silme işlemi başarısız.");
+        }
       } else {
-        alert("Yorum boş");
+        setDeleteSuccess(false);
+        setModalMessage("Yorum bulunamadı.");
+
       }
     } catch (error) {
-      console.error("Post isteği olmadı", error);
+      setDeleteSuccess(false);
+      setModalMessage("Yorum silme işlemi başarısız oldu.");
+      console.error("Silme işlemi başarısız oldu:", error);
+      setErrorAlertVisible(true); // Error Alert'i aç
     }
   };
-  console.log(selectedCommentID);
 
   return (
-    <ScrollView
-      contentContainerStyle={{ gap: 10, padding: 10 }}
-      style={styles.scrollView}
-    >
-      {comments?.map((item, index) => (
-        <MycommentItem
-          key={index}
-          item={item}
-          EditComment={EditComment}
-          goToEditComment={() => goToEditComment(item)} // info'yu prop olarak gönderiyoruz
-        />
-      ))}
-      <Modal
-        isVisible={choose}
-        style={styles.modal}
-        animationIn={"fadeInDown"}
-        animationOut={"fadeOutDown"}
-        onBackdropPress={() => setchoose(false)}
-        swipeDirection={["down"]}
-        onSwipeComplete={() => setchoose(false)}
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
-        <View style={styles.modalContent}>
-          <View style={styles.modalOptions}>
-            {(selectedCommentStatus === 1 || selectedCommentStatus === 2) && (
-              <TouchableOpacity
-                style={styles.modalOption}
-                onPress={goToEditComment}
-              >
-                <Icon3 name="edit-note" size={29} color={"#333"} />
-                <Text style={styles.modalOptionText}>Yorumu Düzenle</Text>
-              </TouchableOpacity>
-            )}
-
-            <TouchableOpacity
-              style={styles.modalOption}
-              onPress={DeleteComment}
+        <View style={{ gap: 10, padding: 10, flex: 1 }}>
+          {loading ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
-              <Icon3 name="delete" size={21} color={"#EA2A28"} />
-              <Text style={styles.modalOptionText}>Yorumu Sil</Text>
-            </TouchableOpacity>
-          </View>
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          ) : comments?.length > 0 ? (
+            comments.map((item, index) => (
+              <MycommentItem
+                key={index}
+                store={item.store}
+                item={item}
+                EditComment={EditComment}
+                goToEditComment={() => goToEditComment(item)} // info'yu prop olarak gönderiyoruz
+              />
+            ))
+          ) : (
+            <NoDataScreen
+              message="Yorumunuz bulunmamaktadır."
+              iconName="comment-off"
+              buttonText="Anasayfaya Dön"
+              navigateTo="HomePage"
+            />
+          )}
+
+          <Modal
+            isVisible={choose}
+            style={styles.modal}
+            animationIn={"fadeInDown"}
+            animationOut={"fadeOutDown"}
+            onBackdropPress={() => setchoose(false)}
+            swipeDirection={["down"]}
+            onSwipeComplete={() => setchoose(false)}
+          >
+            <View style={styles.modalContent}>
+              <View style={styles.modalOptions}>
+                {(selectedCommentStatus === 1 ||
+                  selectedCommentStatus === 2) && (
+                  <TouchableOpacity
+                    style={styles.modalOption}
+                    onPress={goToEditComment}
+                  >
+                    <Icon3 name="edit-note" size={29} color={"#333"} />
+                    <Text style={styles.modalOptionText}>Yorumu Düzenle</Text>
+                  </TouchableOpacity>
+                )}
+
+                <TouchableOpacity
+                  style={styles.modalOption}
+                  onPress={confirmDeleteComment}
+                >
+                  <Icon3 name="delete" size={21} color={"#EA2A28"} />
+                  <Text style={styles.modalOptionText}>Yorumu Sil</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+          {/* <Modal
+            isVisible={modalDelete}
+            style={styles.confirmationModal2}
+            animationIn={"fadeInDown"}
+            animationOut={"fadeOutDown"}
+            onBackdropPress={() => setModalDelete(false)}
+            swipeDirection={["down"]}
+            onSwipeComplete={() => setModalDelete(false)}
+          >
+            <View style={{ backgroundColor: "white", padding: 20 }}>
+              <Text style={styles.modalHeader2}>
+                Yorumu silmek istediğinizden emin misiniz?
+              </Text>
+              <View style={styles.modalButtonContainer2}>
+                <TouchableOpacity
+                  style={styles.confirmButtonStyle2}
+                  onPress={DeleteComment}
+                >
+                  <Text style={styles.confirmButtonTextStyle2}>Evet</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.cancelButtonStyle2}
+                  onPress={() => setModalDelete(false)}
+                >
+                  <Text style={styles.cancelButtonTextStyle2}>Hayır</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal> */}
+          <AwesomeAlert
+            show={modalVisible}
+            showProgress={false}
+            titleStyle={{
+              color: "#333",
+              fontSize: 13,
+              fontWeight: "700",
+              textAlign: "center",
+              margin: 5,
+            }}
+            messageStyle={{ textAlign: "center" }}
+            message={`Yorumu silmek istediğinizden emin misiniz?`}
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+            cancelText="Hayır"
+            confirmText="Evet"
+            cancelButtonColor="#ce4d63"
+            confirmButtonColor="#1d8027"
+            onCancelPressed={() => {
+              setModalVisible(!modalVisible);
+            }}
+            onConfirmPressed={() => {
+              setModalVisible(false)
+              setTimeout(() => {
+                DeleteComment();
+              }, 400);
+
+            }}
+            confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+            cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          />
+
+          <AwesomeAlert
+            show={successAlertVisible} // Başarılı işlem alert'i görünür
+            showProgress={false}
+            titleStyle={{
+              color: "#333",
+              fontSize: 22,
+              fontWeight: "700",
+              textAlign: "center",
+              margin: 5,
+            }}
+            messageStyle={{
+              fontSize: 18,
+              margin: 5,
+              paddingHorizontal: 40,
+            }}
+            confirmButtonTextStyle={{
+              fontSize: 18,
+              margin: 5,
+            }}
+            title="Başarılı"
+            message="Yorum başarıyla silindi."
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Tamam"
+            confirmButtonColor="#1d8027"
+            onConfirmPressed={() => {
+              setSuccessAlertVisible(false); // Success Alert'i kapat
+            }}
+          />
+
+          <AwesomeAlert
+            show={errorAlertVisible} // Hata alert'i görünür
+            showProgress={false}
+            titleStyle={{
+              color: "#333",
+              fontSize: 22,
+              fontWeight: "700",
+              textAlign: "center",
+              margin: 5,
+            }}
+            messageStyle={{
+              fontSize: 18,
+              margin: 5,
+              paddingHorizontal: 40,
+            }}
+            confirmButtonTextStyle={{
+              fontSize: 18,
+              margin: 5,
+            }}
+            title="Hata"
+            message="Yorum silme işlemi başarısız oldu."
+            closeOnTouchOutside={true}
+            closeOnHardwareBackPress={false}
+            showConfirmButton={true}
+            confirmText="Tamam"
+            confirmButtonColor="#EA2A28"
+            onConfirmPressed={() => {
+              setErrorAlertVisible(false); // Error Alert'i kapat
+            }}
+          />
         </View>
-      </Modal>
-    </ScrollView>
+      </ScrollView>
+    
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-    backgroundColor: "#F5F5F5",
-  },
   card: {
     backgroundColor: "#FFFFFF",
     borderWidth: 0.7,
@@ -270,6 +465,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
+
   cardContent: {
     padding: 12,
     paddingBottom: 0,
@@ -280,7 +476,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 10,
-    justifyContent: "space-between",
   },
   imageContainer: {
     width: 50,
@@ -357,5 +552,53 @@ const styles = StyleSheet.create({
   modalOptionText: {
     marginLeft: 10,
     fontSize: 16,
+  },
+  confirmationModal2: {
+    // Modal stil ayarları
+  },
+  modalContainer2: {
+    // Modal içeriği stil ayarları
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    width: "100%",
+    maxWidth: 400,
+    alignItems: "center",
+  },
+  modalHeader2: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#333",
+    textAlign: "center",
+  },
+  modalButtonContainer2: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  confirmButtonStyle2: {
+    backgroundColor: "#ea2a28",
+    color: "#fff",
+    padding: 10,
+    borderRadius: 5,
+    width: "45%",
+    alignItems: "center",
+  },
+  confirmButtonTextStyle2: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  cancelButtonStyle2: {
+    backgroundColor: "#ccc",
+    color: "#333",
+    padding: 10,
+    borderRadius: 5,
+    width: "45%",
+    alignItems: "center",
+  },
+  cancelButtonTextStyle2: {
+    color: "#333",
+    fontWeight: "bold",
   },
 });

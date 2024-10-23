@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet, Platform, Dimensions } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
-import HomePage from "../Home/HomePage";
-import Search from "./Search";
 import ShareScreen from "./ShareScreen";
 import Test from "./Test";
 import Basket from "./Basket";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
 import IconStore from "react-native-vector-icons/MaterialCommunityIcons";
 import ShoppingProfile from "./ShoppingProfile";
-import Login from "./Login&Register/Login";
-import userData, { getValueFor } from "../../components/methods/user";
-import * as SecureStore from "expo-secure-store";
-import { Platform } from "react-native";
+import { getValueFor } from "../../components/methods/user";
 import HomePage2 from "./HomePage2";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
-import VerifyScreen from "./VerifyScreen";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
-
+import { useDispatch, useSelector } from "react-redux";
+import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
 const Tab = createBottomTabNavigator();
 
 const Home = ({ route }) => {
   const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+  const shoppingPage = useSelector((state) => state.menu.isShoppingProfile);
+  const nav = useNavigation();
+
   const [user, setUser] = useState({});
   const [verifyStatus, setverifyStatus] = useState(null);
+
   useEffect(() => {
     if (route?.params?.status == "login") {
       getValueFor("user", setUser);
@@ -34,6 +38,7 @@ const Home = ({ route }) => {
       setUser({});
     }
   }, [route?.params?.status]);
+
   useEffect(() => {
     if (isFocused) {
       getValueFor("user", setUser);
@@ -42,6 +47,7 @@ const Home = ({ route }) => {
   }, [isFocused]);
 
   const [userdata, setuserdata] = useState({});
+
   const GetUserInfo = async () => {
     try {
       if (user.access_token) {
@@ -60,50 +66,35 @@ const Home = ({ route }) => {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     }
   };
+
   useEffect(() => {
     GetUserInfo();
   }, [user]);
 
-  const { width, height } = Dimensions.get("window");
-const nav =useNavigation()
- if (userdata && user.access_token ) {
-    if (user.type==1) {
-      if (verifyStatus==0) {
-        setTimeout(() => {
-          nav.navigate('VerifyScreen')
-        }, 100);
-         
-      }
-    
-    }else{
-      if (  verifyStatus==0|| userdata.corporate_account_status==0 ) {
-        setTimeout(() => {
-          nav.navigate('VerifyScreen')
-        }, 100);
-    
-      
-      }}
+  if (userdata && user.access_token) {
+    if (user.type === 1 && verifyStatus === 0) {
+      setTimeout(() => nav.replace("VerifyScreen"), 100);
+    } else if (verifyStatus === 0 || userdata.corporate_account_status === 0) {
+      setTimeout(() => nav.replace("VerifyScreen"), 100);
     }
+  }
 
-  console.log(userdata.corporate_account_status + "dosya");
-  console.log(verifyStatus + "telfon");
-  console.log(userdata);
+  const handleTabPress = (e, navigation) => {
+    if (!user.access_token) {
+      e.preventDefault();
+      setTimeout(() => {
+        navigation.navigate("Login");
+      }, 400);
+    }
+  };
 
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarHideOnKeyboard:Platform.OS === "ios" ? false:true,
-        tabBarLabelStyle: {
-          fontWeight: "500", // Kalın font
-          color: "black",
-          marginBottom: 5, // Varsayılan rengi
-        },
-        tabBarActiveTintColor: "red", // Üstüne gelindiğinde rengi
-        tabBarStyle: {
-          backgroundColor: "white",
-          padding: 5,
-          height: Platform.OS === "android" ? "7%" : "9%",
-        },
+        tabBarHideOnKeyboard: Platform.OS === "ios" ? false : true,
+        tabBarLabelStyle: styles.tabBarLabel,
+        tabBarActiveTintColor: "black",
+        tabBarStyle: styles.tabBar,
       }}
     >
       <Tab.Screen
@@ -111,41 +102,47 @@ const nav =useNavigation()
         component={HomePage2}
         options={{
           title: "Ana Sayfa",
-
           headerShown: false,
-
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "home" : "home-outline"}
-              color={focused ? "black" : "grey"}
-              size={20}
+              color={color}
+              size={25}
             />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            dispatch(setShoppingProfile({ isShoppingProfile: false }));
+          },
+        })}
       />
       <Tab.Screen
         name="Favoriler"
-        component={user.access_token ? Test : Login}
+        component={Test}
         options={{
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "heart" : "heart-outline"}
-              color={focused ? "black" : "grey"}
+              color={color}
               size={25}
             />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            dispatch(setShoppingProfile({ isShoppingProfile: false }));
+          },
+        })}
       />
-
       <Tab.Screen
         name="ShareAdvert"
-        component={user.access_token ? ShareScreen : Login}
+        component={ShareScreen}
         options={{
           headerShown: false,
           tabBarLabel: "İlan Ver",
-
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: () => (
             <View style={styles.ilanVerIconContainer}>
               <Ionicons
                 name="add"
@@ -156,66 +153,84 @@ const nav =useNavigation()
             </View>
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            dispatch(setShoppingProfile({ isShoppingProfile: false }));
+          },
+        })}
       />
-
       <Tab.Screen
-        component={user.access_token ? Basket : Login}
         name="Sepetim"
-        options={({ route }) => ({
+        component={Basket}
+        options={{
           headerShown: false,
-
           tabBarIcon: ({ color, focused }) =>
             focused ? (
               <FontAwesome5Icon name="shopping-cart" color="black" size={20} />
             ) : (
-              <Feather name="shopping-cart" color="black" size={20} />
+              <Feather name="shopping-cart" color="grey" size={20} />
             ),
           tabBarBadge: 1,
-
-          tabBarBadgeStyle: {
-            display: userdata.cartItem == null ? "none" : "flex",
-
-            fontSize: 10,
-            height: 17,
-            width: 20,
-            position: "absolute",
-            top: 0,
-            right: 0,
-            borderRadius: 6,
+          tabBarBadgeStyle: styles.tabBarBadgeStyle,
+        }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            dispatch(setShoppingProfile({ isShoppingProfile: false }));
           },
         })}
       />
-      {}
       <Tab.Screen
-        name={"Hesabım"}
-        component={user.access_token ? ShoppingProfile : Login}
+        name="Hesabım"
+        component={ShoppingProfile}
         options={{
           tabBarLabel: user.access_token
             ? user.role === "Kurumsal Hesap"
-              ? "Mağazam"
+              ? "Panelim"
               : "Hesabım"
             : "Giriş Yap",
           headerShown: false,
-
           tabBarIcon: ({ color, focused }) =>
-            user.role == "Kurumsal Hesap" ? (
+            user.role === "Kurumsal Hesap" ? (
               <IconStore
                 name={focused ? "storefront" : "storefront-outline"}
                 size={28}
-                color={focused ? "#333" : "grey"}
+                color={color}
               />
             ) : (
-              
-              <FontAwesomeIcon name= {focused ? 'user':'user-o'} size={focused?28: 23}/>
-            
+              <FontAwesomeIcon
+                name={focused ? "user" : "user-o"}
+                size={focused ? 28 : 23}
+              />
             ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            dispatch(setShoppingProfile({ isShoppingProfile: true }));
+            if (!user.access_token) {
+              e.preventDefault();
+              navigation.navigate("Login");
+            }
+          },
+        })}
       />
     </Tab.Navigator>
   );
 };
-
+const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
+  tabBar: {
+    backgroundColor: "white",
+    paddingVertical: 10,
+    width: "auto",
+    height: 90,
+    justifyContent: "center",
+  },
+  tabBarLabel: {
+    fontWeight: "500",
+    color: "black",
+    marginBottom: 5,
+    fontSize: 12,
+  },
   ilanVerIconContainer: {
     width: 40,
     height: 40,
@@ -229,7 +244,17 @@ const styles = StyleSheet.create({
   ilanVerIcon: {
     borderRadius: 20,
     left: 1.3,
-    fontWeight: 700,
+    fontWeight: "700",
+  },
+  tabBarBadgeStyle: {
+    display: "flex",
+    fontSize: 10,
+    height: 17,
+    width: 20,
+    position: "absolute",
+    top: 0,
+    right: 0,
+    borderRadius: 6,
   },
 });
 

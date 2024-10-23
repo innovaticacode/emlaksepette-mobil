@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -5,46 +6,42 @@ import {
   TouchableOpacity,
   Keyboard,
   ScrollView,
+  Platform,
 } from "react-native";
-import { useEffect, useState } from "react";
-import { useRoute, useNavigation } from "@react-navigation/native";
 import { SearchBar } from "@rneui/base";
 import Icon from "react-native-vector-icons/Ionicons";
-import Order from "./profileComponents/Order";
-import { getValueFor } from "../../../components/methods/user";
-import { Platform } from "react-native";
-import axios from "axios";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import { ActivityIndicator } from "react-native-paper";
+import Order from "./profileComponents/Order";
+import axios from "axios";
+import { getValueFor } from "../../../components/methods/user";
+import { Stack } from "@react-native-material/core";
+import { CheckBox } from "react-native-elements";
+import Modal from "react-native-modal";
+import NoDataScreen from "../../../components/NoDataScreen";
+import { RadioFilter } from "../../../components";
+
 export default function Takeds() {
   const [search, setSearch] = useState("");
-  const [Tabs, setTabs] = useState(0);
-  const updateSearch = (search) => {
-    setSearch(search);
-  };
-  const route = useRoute();
-
-  const [products, setProducts] = useState([
-    { id: 1, date: "2023-01-15" },
-    { id: 2, date: "2023-03-10" },
-    { id: 3, date: "2022-12-05" },
-  ]);
-
   const [user, setUser] = useState({});
+  const [takeds, setTakeds] = useState([]);
+  const [filteredTakeds, setFilteredTakeds] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedIndex, setIndex] = useState(0);
+  const [sortListModal, setSortListModal] = useState(false);
+  const searchLower = search.toLowerCase();
 
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  console.log(user);
-  const [takeds, setTakeds] = useState([]);
-  const [loading, setloading] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
-      setloading(true);
+      setLoading(true);
       try {
         if (user.access_token) {
           const response = await axios.get(
-            `https://private.emlaksepette.com/api/institutional/get_boughts`,
+            "https://private.emlaksepette.com/api/institutional/get_boughts",
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -54,14 +51,137 @@ export default function Takeds() {
           setTakeds(response.data.boughts);
         }
       } catch (error) {
-        console.error("eror", error);
+        console.error("Error:", error);
       } finally {
-        setloading(false);
+        setLoading(false);
       }
     };
     fetchData();
   }, [user]);
-  const nav = useNavigation();
+
+  useEffect(() => {
+    const filterTakeds = () => {
+      if (!search.trim()) {
+        // Arama terimi boşsa, tüm takeds listesini göster
+        return takeds;
+      }
+
+      return takeds.filter((item) => {
+        try {
+          const parsedCart = JSON.parse(item.cart);
+          const Title = parsedCart["item"]["title"]?.toLowerCase() || "";
+          const HouseId =
+            parsedCart["item"]["id"]?.toString().toLowerCase() || "";
+
+          // Arama terimini Title, HouseId üzerinde ara
+          return Title.includes(searchLower) || HouseId.includes(searchLower);
+        } catch (error) {
+          console.error("Error parsing cart:", error);
+          return false; // Bu durumda filtreleme yapma
+        }
+      });
+    };
+
+    const filtered = filterTakeds();
+    setFilteredTakeds(filtered);
+  }, [search, takeds]);
+
+  const handleSearchChange = (text) => {
+    setSearch(text);
+  };
+
+  const handleGoToHomePage = () => {
+    setLoading(true);
+    setTimeout(() => {
+      nav.navigate("HomePage");
+      setLoading(false);
+    }, 700);
+  };
+
+  // Fiyata göre (önce en düşük)
+  const sortByPriceLowToHigh = () => {
+    const sorted = [...takeds].sort((a, b) => {
+      const amountA = parseFloat(a.amount); // amount değerini sayıya çevir
+      const amountB = parseFloat(b.amount); // amount değerini sayıya çevir
+      return amountA - amountB;
+    });
+    setFilteredTakeds(sorted);
+  };
+
+  // Fiyata göre (önce en yüksek)
+  const sortByPriceHighToLow = () => {
+    const sorted = [...takeds].sort((a, b) => {
+      const amountA = parseFloat(a.amount); // amount değerini sayıya çevir
+      const amountB = parseFloat(b.amount); // amount değerini sayıya çevir
+      return amountB - amountA;
+    });
+    setFilteredTakeds(sorted);
+  };
+
+  // Tarihe göre (önce en eski)
+  const sortByDateOldest = () => {
+    const sorted = [...takeds].sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
+    setFilteredTakeds(sorted);
+  };
+
+  // Tarihe göre (önce en yeni)
+  const sortByDateNewest = () => {
+    const sorted = [...takeds].sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
+    setFilteredTakeds(sorted);
+  };
+
+  // A'dan Z'ye sıralama
+  const sortByNameAZ = () => {
+    const sorted = [...takeds].sort((a, b) => {
+      const nameA = JSON.parse(a.cart).item.title.toLowerCase();
+      const nameB = JSON.parse(b.cart).item.title.toLowerCase();
+      return nameA.localeCompare(nameB);
+    });
+    setFilteredTakeds(sorted);
+  };
+
+  // Z'den A'ya sıralama
+  const sortByNameZA = () => {
+    const sorted = [...takeds].sort((a, b) => {
+      const nameA = JSON.parse(a.cart).item.title.toLowerCase();
+      const nameB = JSON.parse(b.cart).item.title.toLowerCase();
+      return nameB.localeCompare(nameA);
+    });
+    setFilteredTakeds(sorted);
+  };
+
+  // Radio seçildiğinde tetiklenen fonksiyon
+  const handleRadio = (index) => {
+    setIndex(index);
+
+    switch (index) {
+      case 0:
+        sortByPriceLowToHigh();
+        break;
+      case 1:
+        sortByPriceHighToLow();
+        break;
+      case 2:
+        sortByDateOldest();
+        break;
+      case 3:
+        sortByDateNewest();
+        break;
+      case 4: // A'dan Z'ye sıralama
+        sortByNameAZ();
+        break;
+      case 5: // Z'den A'ya sıralama
+        sortByNameZA();
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -70,66 +190,20 @@ export default function Takeds() {
         >
           <ActivityIndicator color="#333" />
         </View>
-      ) : takeds.length == 0 ? (
-        <>
-          <View
-            style={{
-              height: "90%",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-            }}
-          >
-            <View
-              style={[
-                style.card,
-                { alignItems: "center", justifyContent: "center" },
-              ]}
-            >
-              <Icon2 name="basket-plus" size={50} color={"#EA2A28"} />
-            </View>
-            <View>
-              <Text style={{ color: "grey", fontSize: 16, fontWeight: "600" }}>
-                Siparişiniz bulunmamaktadır
-              </Text>
-              <Text></Text>
-            </View>
-            <View style={{ width: "100%", alignItems: "center" }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#EA2A28",
-                  width: "90%",
-                  padding: 8,
-                  borderRadius: 5,
-                }}
-                onPress={() => {
-                  setloading(true);
-                  setTimeout(() => {
-                    nav.navigate("HomePage");
-                    setloading(false);
-                  }, 700);
-                }}
-              >
-                <Text
-                  style={{
-                    color: "#ffffff",
-                    fontWeight: "600",
-                    textAlign: "center",
-                  }}
-                >
-                  İlanlara Göz At
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </>
+      ) : takeds.length === 0 ? (
+        <NoDataScreen
+          message="Siparişiniz bulunmamaktadır."
+          iconName="basket-plus"
+          buttonText="İlanlara Göz At"
+          navigateTo="HomePage"
+        />
       ) : (
-        <View style={style.container} onTouchStart={() => Keyboard.dismiss()}>
-          <View style={style.Navbar}>
-            <View style={style.SearchInput}>
+        <View style={styles.container} onTouchStart={() => Keyboard.dismiss()}>
+          <View style={styles.Navbar}>
+            <View style={styles.SearchInput}>
               <SearchBar
                 placeholder="Ara..."
-                onChangeText={updateSearch}
+                onChangeText={handleSearchChange}
                 value={search}
                 containerStyle={{
                   backgroundColor: "transparent",
@@ -152,7 +226,7 @@ export default function Takeds() {
                 placeholderTextColor={"grey"}
               />
             </View>
-            <View style={style.ListIcon}>
+            <View style={styles.ListIcon}>
               <TouchableOpacity
                 style={{
                   backgroundColor: "#e5e5e5",
@@ -160,34 +234,99 @@ export default function Takeds() {
                   borderRadius: 6,
                 }}
               >
-                <View style={{}}>
-                  <Icon name="swap-vertical" size={18} color={"#333"} />
+                <View>
+                  <TouchableOpacity
+                    onPress={() => setSortListModal(!sortListModal)}
+                  >
+                    <Icon2 name="swap-vertical" size={23} color={"#333"} />
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             </View>
           </View>
-          <ScrollView>
-            <View style={style.orders}>
-              {takeds?.map((taked, i) => (
-                <Order key={i} item={taked} />
-              ))}
+          <ScrollView
+            contentContainerStyle={{ flexGrow: 1 }}
+            style={styles.container}
+          >
+            <View style={styles.orders}>
+              {filteredTakeds.length == 0 ? (
+                <View style={styles.noResultsContainer}>
+                  <Icon2
+                    name="emoticon-sad-outline"
+                    size={50}
+                    color="#EA2B2E"
+                  />
+                  <Text style={styles.noResultsText}>
+                    Arama sonucu bulunamadı.
+                  </Text>
+                  <Text style={styles.noResultsSubText}>
+                    Lütfen başka bir terim deneyin.
+                  </Text>
+                </View>
+              ) : (
+                filteredTakeds.map((taked, i) => <Order key={i} item={taked} />)
+              )}
             </View>
           </ScrollView>
+
+          <RadioFilter
+            selectedIndex={selectedIndex}
+            sortListModal={sortListModal}
+            setSortListModal={setSortListModal}
+            handleRadio={handleRadio}
+          />
         </View>
       )}
     </>
   );
 }
-const style = StyleSheet.create({
+
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+  },
+  noResultsContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+    backgroundColor: "#f8f8f8",
+  },
+  noResultsText: {
+    fontSize: 18,
+    color: "#333",
+    textAlign: "center",
+    marginTop: 10,
+    fontWeight: "bold",
+  },
+  noResultsSubText: {
+    fontSize: 16,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 5,
+  },
+  noCommentsText: {
+    fontSize: 18,
+    color: "#333",
+    textAlign: "center",
+    marginTop: 8,
+  },
+  returnButton: {
+    backgroundColor: "#EA2B2E",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  returnButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   Navbar: {
     width: "100%",
     borderBottomWidth: 1,
     borderBottomColor: "#ebebeb",
-
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -195,7 +334,7 @@ const style = StyleSheet.create({
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
-        shadowColor: " #e6e6e6",
+        shadowColor: "#e6e6e6",
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 5,
@@ -211,37 +350,32 @@ const style = StyleSheet.create({
   },
   ListIcon: {
     flex: 0.3 / 2,
-
     borderBottomColor: "#e5e5e5",
-
     alignItems: "center",
     justifyContent: "center",
-  },
-  TabBar: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  TabBarBtn: {
-    backgroundColor: "red",
-
-    borderRadius: 4,
   },
   orders: {
     width: "100%",
     padding: 5,
     gap: 15,
   },
-  card: {
-    backgroundColor: "#FFFFFF",
-    padding: 15,
+  modal: {
+    justifyContent: "center",
+    margin: 0,
+    backgroundColor: "#0c03033d",
+    padding: 20,
+  },
+  modalContent: {
+    gap: 5,
+    paddingBottom: 25,
+    backgroundColor: "#f8f8ff",
+    padding: 10,
 
-    borderRadius: 50,
-
-    borderWidth: 0.7,
-    borderColor: "#e6e6e6",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     ...Platform.select({
       ios: {
-        shadowColor: " #e6e6e6",
+        shadowColor: "white",
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 5,
@@ -250,5 +384,11 @@ const style = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  Input: {
+    backgroundColor: "#ebebeb",
+    padding: 10,
+    borderRadius: 5,
+    width: "90%",
   },
 });

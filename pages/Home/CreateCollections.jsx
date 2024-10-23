@@ -19,6 +19,7 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import NoDataScreen from "../../components/NoDataScreen";
 export default function CreateCollections() {
   const route = useRoute();
   const { HouseID } = route.params;
@@ -92,7 +93,10 @@ export default function CreateCollections() {
       Dialog.show({
         type: ALERT_TYPE.WARNING,
         title: "Hata",
-        textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? 'Lütfen Portföy Adı Girin': "Lütfen Koleksiyon Adı Girin.",
+        textBody:
+          user.type == 2 && user.corporate_type == "Emlak Ofisi"
+            ? "Lütfen Portföy Adı Girin"
+            : "Lütfen Koleksiyon Adı Girin.",
         button: "Tamam",
       });
       return;
@@ -123,8 +127,14 @@ export default function CreateCollections() {
       .then((response) => {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
-          title: (user.type==2 && user.corporate_type=='Emlak Ofisi') ? 'Portföy Oluşturuldu': "Koleksiyon Oluşturuldu.",
-          textBody: (user.type==2 && user.corporate_type=='Emlak Ofisi')?`${CollectionName} Adlı Portföy Oluşturuldu.` : `${CollectionName} Adlı Koleksiyon Oluşturuldu.`,
+          title:
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? "Portföy Oluşturuldu"
+              : "Koleksiyon Oluşturuldu.",
+          textBody:
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? `${CollectionName} Adlı Portföy Oluşturuldu.`
+              : `${CollectionName} Adlı Koleksiyon Oluşturuldu.`,
           button: "Tamam",
         });
         fetchData();
@@ -161,8 +171,14 @@ export default function CreateCollections() {
       .then((response) => {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
-          title: (user.type==2 && user.corporate_type=='Emlak Ofisi')?'Portföye Eklendi': "Koleksiyona Eklendi",
-          textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${name} Adlı Portföye eklendi` : `${name} Adlı koleksiyona eklendi`,
+          title:
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? "Portföye Eklendi"
+              : "Koleksiyona Eklendi",
+          textBody:
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? `${name} Adlı Portföye eklendi`
+              : `${name} Adlı koleksiyona eklendi`,
           button: "Tamam",
         });
 
@@ -232,8 +248,11 @@ export default function CreateCollections() {
       .then((response) => {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
-          title:"1 Konut silindi",
-          textBody:(user.type==2 && user.corporate_type=='Emlak Ofisi')? `${name} Adlı portföyden 1 konut silindi`: `${name} Adlı koleksiyondan 1 konut silindi`,
+          title: "1 Konut silindi",
+          textBody:
+            user.type == 2 && user.corporate_type == "Emlak Ofisi"
+              ? `${name} Adlı portföyden 1 konut silindi`
+              : `${name} Adlı koleksiyondan 1 konut silindi`,
         });
 
         var newCollections = collections.map((collection) => {
@@ -294,6 +313,7 @@ export default function CreateCollections() {
       });
     }
   }, [loading, namFromGetUser, navigation]);
+  console.log(user.access_token, namFromGetUser.has_club);
   return (
     <AlertNotificationRoot>
       <>
@@ -319,12 +339,9 @@ export default function CreateCollections() {
                         fontWeight: "bold",
                       }}
                     >
-                      {
-                        (user.type==2 && user.corporate_type == 'Emlak Ofisi')?
-                        'Portföy İsmi':
-                        'Koleksiyon İsmi'
-                      }
-                    
+                      {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                        ? "Portföy İsmi"
+                        : "Koleksiyon İsmi"}
                     </Text>
 
                     <TextInput
@@ -352,29 +369,24 @@ export default function CreateCollections() {
                             textAlign: "center",
                           }}
                         >
-                           {
-                        (user.type==2 && user.corporate_type == 'Emlak Ofisi')?
-                        'Portföy Ekle':
-                        'Koleksiyon Ekle'
-                      }
-                         
+                          {user.type == 2 &&
+                          user.corporate_type == "Emlak Ofisi"
+                            ? "Portföy Ekle"
+                            : "Koleksiyon Ekle"}
                         </Text>
                       </TouchableOpacity>
                     </View>
                   </View>
 
-                  <View style={{ paddingTop: 45 }}>
+                  {/* <View style={{ paddingTop: 45 }}>
                     <Text
                       style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
                     >
-                           {
-                        (user.type==2 && user.corporate_type == 'Emlak Ofisi')?
-                        'Portföylerim':
-                        'Koleksiyonlarım'
-                      }
-                      
+                      {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                        ? "Portföylerim"
+                        : "Koleksiyonlarım"}
                     </Text>
-                  </View>
+                  </View> */}
                   <View style={{ gap: 5, padding: 10 }}>
                     {loading ? (
                       <>
@@ -384,7 +396,7 @@ export default function CreateCollections() {
                       </>
                     ) : collections.length == 0 ? (
                       <>
-                        <View
+                        {/* <View
                           style={{
                             alignItems: "center",
                             justifyContent: "center",
@@ -415,18 +427,16 @@ export default function CreateCollections() {
                                 fontWeight: "600",
                               }}
                             >
-                              {
-                                (user.type==2 && user.corporate_type=='Emlak Ofisi') ?
-                                'Portföyünüze İlan bulunmamaktadır':
-                                'Koleksiyonunuzda ilan bulunmamaktadır'
-                              }
-                             
+                              {user.type == 2 &&
+                                user.corporate_type == "Emlak Ofisi"
+                                ? "Portföyünüze İlan bulunmamaktadır."
+                                : "Koleksiyonunuzda ilan bulunmamaktadır."}
                             </Text>
                           </View>
                           <View
                             style={{ width: "100%", alignItems: "center" }}
                           ></View>
-                        </View>
+                        </View> */}
                       </>
                     ) : (
                       collections.map((item, index) => (
@@ -446,7 +456,7 @@ export default function CreateCollections() {
               </>
             ) : (
               <>
-                <View style={{ padding: 5 }}>
+                <View style={{}}>
                   {!user.access_token && (
                     <View style={styles.card}>
                       <View style={{ paddingTop: 10 }}>
@@ -463,12 +473,10 @@ export default function CreateCollections() {
                       </View>
                       <View style={{ width: "80%" }}>
                         <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                          {
-                             (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                             'Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir'
-                             :'Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir'
-                          }
-                        
+                          {user.type == 2 &&
+                          user.corporate_type == "Emlak Ofisi"
+                            ? "Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir"
+                            : "Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir"}
                         </Text>
                       </View>
                       <TouchableOpacity
@@ -478,7 +486,9 @@ export default function CreateCollections() {
                           padding: 10,
                         }}
                         onPress={() => {
-                          navigation.navigate("Login");
+                          setTimeout(() => {
+                            navigation.navigate("Login");
+                          }, 400);
                         }}
                       >
                         <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
@@ -504,12 +514,10 @@ export default function CreateCollections() {
                       </View>
                       <View style={{ width: "80%" }}>
                         <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                        {
-                             (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                             'Portföyünüze konut ekleyebilmeniz için emlak kulüp üyesi olmanız gerekmektedir'
-                             :'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir'
-                          }
-                         
+                          {user.type == 2 &&
+                          user.corporate_type == "Emlak Ofisi"
+                            ? "Portföyünüze konut ekleyebilmeniz için emlak kulüp üyesi olmanız gerekmektedir"
+                            : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"}
                         </Text>
                       </View>
                       <TouchableOpacity
@@ -531,95 +539,35 @@ export default function CreateCollections() {
                   {user.access_token && namFromGetUser.has_club == 2 && (
                     <View style={styles.card}>
                       <View style={{ paddingTop: 10 }}>
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            color: "#4C6272",
-                            fontWeight: "bold",
-                            fontSize: 16,
-                          }}
-                        >
-                          {" "}
-                          Emlak Kulüp Üyeliğiniz Başvuru Sürecindedir!
-                        </Text>
-                      </View>
-                      <View style={{ width: "80%", paddingBottom: 10 }}>
-                        <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                        {
-                             (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                             'Portföyünüze konut ekleyebilmeniz için emlak kulüp üyesi olmanız gerekmektedir'
-                             :'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir'
-                          }
-                        </Text>
+                        <NoDataScreen
+                          message="Emlak kulüp üyeliğiniz başvuru sürecindedir. Adminlerimiz en kısa sürede bilgilerinizi inceleyip dönüş sağlayacaktır."
+                          iconName="chat-processing"
+                          buttonText="Anasayfaya Dön"
+                          navigateTo="HomePage"
+                        />
                       </View>
                     </View>
                   )}
                   {user.access_token && namFromGetUser.has_club == 3 && (
                     <View style={styles.card}>
-                      <View style={{ paddingTop: 10 }}>
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            color: "#4C6272",
-                            fontWeight: "bold",
-                            fontSize: 16,
-                          }}
-                        >
-                          {" "}
-                          Emlak Kulüp Üyeliğiniz Reddedildi
-                        </Text>
-                      </View>
-                      <View style={{ width: "80%", paddingBottom: 10 }}>
-                        <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                        {
-                             (user.type==2 && user.corporate_type=='Emlak Ofisi')?
-                             'Portföyünüze konut ekleyebilmeniz için emlak kulüp üyesi olmanız gerekmektedir'
-                             :'Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir'
+                      <View style={{}}>
+                        <NoDataScreen
+                          message={
+                            user.type == 2 &&
+                            user.corporate_type == "Emlak Ofisi"
+                              ? "Emlak Kulüp Üyeliğiniz Reddedildi! Portföy oluşturabilmek için tekrar başvuru yapabilirsiniz."
+                              : "Emlak Kulüp Üyeliğiniz Reddedildi! Koleksiyon oluşturabilmek için tekrar başvuru yapabilirsiniz."
                           }
-                        </Text>
+                          iconName="emoticon-sad-outline"
+                          buttonText="Tekrar Başvur"
+                          navigateTo="Collections"
+                        />
                       </View>
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: "#F65656",
-                          width: "100%",
-                          padding: 10,
-                        }}
-                        onPress={() => {
-                          navigation.navigate("Collections");
-                        }}
-                      >
-                        <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
-                          Tekrar Başvur
-                        </Text>
-                      </TouchableOpacity>
                     </View>
                   )}
                 </View>
-
-                <View style={{ alignItems: "center" }}>
-                  {/* {
-                    user.has_club == 0 ?
-                    <TouchableOpacity style={{backgroundColor:'#EA2B2E',padding:9,borderRadius:5,width:'90%',opacity:disabledTrue == true ? 0.3:1}} 
-                    onPress={()=>{
-                        navigation.navigate('Collections')
-                    }}
-              >
-                <Text style={{color:'#ffffff',fontSize:13,fontWeight:'bold',textAlign:'center'}}>Emlak Kulüp Üyesi OL</Text>
-              </TouchableOpacity>
-                    : 
-                    <TouchableOpacity style={{backgroundColor:'#EA2B2E',padding:9,borderRadius:5,width:'auto'}} 
-                 
-              >
-                <Text style={{color:'#ffffff',fontSize:13,fontWeight:'bold',textAlign:'center'}}>Giriş Yap</Text>
-              </TouchableOpacity>
-                   
-                  } */}
-                </View>
               </>
             )}
-
-           
-        
           </>
         )}
       </>

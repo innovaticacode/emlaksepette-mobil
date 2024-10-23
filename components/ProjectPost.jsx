@@ -30,7 +30,11 @@ export default function ProjectPost({
     return color;
   };
 
-  const RandomColor = generateRandomColorCode();
+  const [randomColor, setRandomColor] = useState(null);
+  useEffect(() => {
+    const RandomColor = generateRandomColorCode();
+    setRandomColor(RandomColor);
+  }, [user]);
   const navigation = useNavigation();
   const [userLogin, setuserLogin] = useState({});
   useEffect(() => {
@@ -40,12 +44,21 @@ export default function ProjectPost({
   return (
     <TouchableOpacity
       onPress={() =>
-        navigation.navigate("Details", {
-          ProjectId: ProjectNo,
-        })
+        navigation.navigate('Details',{ProjectId: ProjectNo})
+       
       }
     >
+      
       <View style={styles.container}>
+        {
+          userLogin.corporate_type ==='Emlak Ofisi' &&
+          <View style={{position:'absolute',right:0,height:'50%',zIndex:1,justifyContent:'flex-end'}}>
+          <View style={{backgroundColor:'white',padding:8,borderTopLeftRadius:40,borderBottomLeftRadius:40}}>
+            <Text style={{color:'#EA2C2E',fontSize:14,fontWeight:'700'}}>%{project.club_rate} KOMİSYON!</Text>
+          </View>
+  </View>
+        }
+   
         <Image
           source={{ uri: ımage }}
           style={styles.image}
@@ -55,12 +68,14 @@ export default function ProjectPost({
 
         {/* Logo ve Başlığı içeren alan */}
         <View style={styles.logoTitleContainer}>
+      
           <View
             style={[
               styles.titleContainer,
-              { backgroundColor: RandomColor + "CC" },
+              { backgroundColor: randomColor + "CC" },
             ]}
           >
+          
             <View
               style={{
                 height: "40%",

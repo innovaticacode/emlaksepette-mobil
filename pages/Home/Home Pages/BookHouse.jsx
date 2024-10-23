@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   ScrollView,
+  Image,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
@@ -16,6 +17,7 @@ import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import bannerSRC from "../../../src/assets/images/tatilim-sepette-banner.png";
 const PAGE_SIZE = 10;
 
 const BookHouse = ({ index }) => {
@@ -72,7 +74,7 @@ const BookHouse = ({ index }) => {
   };
 
   useEffect(() => {
-    if (index == 5) {
+    if (index == 6) {
       fetchFeaturedEstates();
     } else {
       setFeaturedEstates([]);
@@ -104,45 +106,8 @@ const BookHouse = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <View style={styles.container}>
-          <View
-            style={{
-              paddingBottom: 3,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingLeft: 10,
-              paddingRight: 10,
-              alignItems: "center",
-              backgroundColor: "white",
-            }}
-          >
-            <Text style={{ fontSize: 12, fontWeight: 700 }}>
-              ÖNE ÇIKAN TATİL EVLERİ
-            </Text>
-
-            <TouchableOpacity style={styles.allBtn}>
-              <Text
-                style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
-                onPress={() =>
-                  navigation.navigate("AllRealtorAdverts", {
-                    name: "Emlak İlanları",
-                    slug: "emlak-ilanlari",
-                    data: filteredHomes,
-                    count: filteredHomes.length,
-                    type: "mustakil-tatil",
-                    optional: null,
-                    title: null,
-                    check: null,
-                    city: null,
-                    county: null,
-                    hood: null,
-                  })
-                }
-              >
-                Tüm İlanları Gör
-              </Text>
-            </TouchableOpacity>
-          </View>
+        <>
+         
           {refreshing && (
             <View
               style={{
@@ -170,9 +135,11 @@ const BookHouse = ({ index }) => {
               </View>
             ) : (
               <FlatList
+              keyExtractor={(item, index) => `${item.id}-${index}`} 
                 data={filteredHomes}
-                renderItem={({ item }) => (
+                renderItem={({ item ,index}) => (
                   <RealtorPost
+                  
                     openSharing={
                       JSON.parse(item.housing_type_data)["open_sharing1"]
                     }
@@ -215,11 +182,53 @@ const BookHouse = ({ index }) => {
                     column4_additional={item.column4_additional}
                     bookmarkStatus={true}
                     dailyRent={false}
+                    isFavorite={item.is_favorite}
                   />
                 )}
-                keyExtractor={(item, index) =>
-                  item.id ? item.id.toString() : index.toString()
+             ListHeaderComponent={
+              <>
+               <View style={{ paddingHorizontal: 0 }}>
+            <Image
+              source={bannerSRC}
+              style={{
+                width: "100%",
+                height: 120,
+              }}
+            />
+          </View>
+          <View style={styles.header}>
+            <Text style={{ fontSize: 14, fontWeight: 700 }}>
+              ÖNE ÇIKAN TATİL EVLERİ
+            </Text>
+
+            <TouchableOpacity style={styles.allBtn}>
+              <Text
+                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
+                onPress={() =>
+                  navigation.navigate("Drawer", {
+                    screen: "AllRealtorAdverts",
+                    params: {
+                      name: "Emlak İlanları",
+                      slug: "emlak-ilanlari",
+                      data: filteredHomes,
+                      count: filteredHomes.length,
+                      type: "mustakil-tatil",
+                      optional: null,
+                      title: null,
+                      check: null,
+                      city: null,
+                      county: null,
+                      hood: null,
+                    },
+                  })
                 }
+              >
+                Tüm İlanları Gör
+              </Text>
+            </TouchableOpacity>
+          </View>
+              </>
+             }
                 onEndReachedThreshold={0.1}
                 refreshControl={
                   <RefreshControl
@@ -231,7 +240,7 @@ const BookHouse = ({ index }) => {
               />
             )}
           </AlertNotificationRoot>
-        </View>
+        </>
       )}
     </>
   );
@@ -263,6 +272,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#fefefe",
     padding: 20,
     borderRadius: 5,
+  },
+  header: {
+    paddingBottom: 3,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingLeft: 10,
+    paddingRight: 10,
+    alignItems: "center",
+    backgroundColor: "white",
+    marginTop: 20,
   },
 });
 

@@ -19,7 +19,8 @@ import CollectionsPage from "./CollectionsPage";
 import { getValueFor } from "../../components/methods/user";
 import { ActivityIndicator } from "react-native";
 import { Platform } from "react-native";
-import DrawerMenu from "../../components/DrawerMenu";
+import { DrawerMenu } from "../../components";
+
 import {
   ALERT_TYPE,
   Dialog,
@@ -54,7 +55,7 @@ export default function Test() {
             }),
           }}
         >
-          <Header onPress={toggleDrawer} index={setindex} tab={settab} />
+          {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
         </View>
 
         <Modal
@@ -66,14 +67,14 @@ export default function Test() {
           swipeDirection={["left"]}
           onSwipeComplete={() => setIsDrawerOpen(false)}
         >
-          <View style={styles.modalContent}>
-         
-              <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-          
-         
-          </View>
+          {/* <View>
+            <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
+          </View> */}
         </Modal>
-        {user.access_token ? (
+
+        {/* SİLİNMESİN İLERİDE KULLANILABİLİR BİR ÖZELLİK OLABİLİR */}
+        {/* {user.type == 1 ||
+        (user.type == 2 && user.corporate_type == "Emlak Ofisi") ? (
           <>
             <View style={styles.TabBar}>
               <View
@@ -127,23 +128,38 @@ export default function Test() {
                           : "white",
                     }}
                   >
-                    {
-                      user.corporate_type=='Emlak Ofisi'?
-                      'Pörtföylerim':
-                      'Koleksiyonlarım'
-                    }
-                
+                    {user.corporate_type == "Emlak Ofisi"
+                      ? "Pörtföylerim"
+                      : "Koleksiyonlarım"}
                   </Text>
                 </TouchableOpacity>
               </View>
             </View>
-
-            {tabs == 1 && <Favorites />}
-            {tabs == 2 && <CollectionsPage />}
           </>
         ) : (
-          <></>
-        )}
+          <View
+            style={{
+              width: "100%",
+              backgroundColor: "white",
+              borderWidth: 1,
+              padding: 8,
+              borderColor: "#E1E1E1",
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 14,
+                color: "#333",
+                fontWeight: "600",
+              }}
+            >
+              Favoriler
+            </Text>
+          </View>
+        )} */}
+        {tabs == 1 && <Favorites />}
+        {tabs == 2 && <CollectionsPage />}
       </SafeAreaView>
     </AlertNotificationRoot>
   );
@@ -164,14 +180,6 @@ const styles = StyleSheet.create({
 
   modal: {
     margin: 0,
-  },
-  modalContent: {
-    backgroundColor: "white",
-
-    flex: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: 320,
   },
   TabBar: {
     flexDirection: "row",

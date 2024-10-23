@@ -18,7 +18,7 @@ import Navbar from "../../components/Navbar";
 import SliderMenu from "../../components/SliderMenu";
 import axios from "axios";
 import { useState } from "react";
-import DrawerMenu from "../../components/DrawerMenu";
+import { DrawerMenu } from "../../components";
 import Search from "./Search";
 import Header from "../../components/Header";
 import Estates from "./Home Pages/Estates";
@@ -32,6 +32,7 @@ import Modal from "react-native-modal";
 import Categories from "../../components/Categories";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
+import FirstHome from "./FirstHome";
 
 const { width, height } = Dimensions.get("window");
 
@@ -45,6 +46,8 @@ const SecondRoute = () => (
 
 const renderScene = ({ route, index }) => {
   switch (route.key) {
+    case "home":
+      return <FirstHome index={index} />;
     case "first":
       return <HomePage index={index} />;
     case "second":
@@ -84,6 +87,7 @@ const CustomTabBar = ({
           "https://private.emlaksepette.com/api/menu-list"
         );
         setMenuItems(response.data);
+        setMenuItems([{ text: "Anasayfa" }, ...response.data.slice(0, -1)]);
       } catch (error) {
         console.error("Error fetching menu items:", error);
       }
@@ -147,7 +151,7 @@ const CustomTabBar = ({
               onPress={() => {
                 indexChange(index);
               }}
-              onLayout={onTabLayout} // Measure each tab's layout
+              onLayout={onTabLayout}
             >
               <Text
                 style={{
@@ -169,12 +173,13 @@ export default function HomePage2() {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
+    // setIsDrawerOpen(!isDrawerOpen);
   };
   const layout = useWindowDimensions();
   const [tab, settab] = React.useState(0);
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
+    { key: "home", title: "Home" },
     { key: "first", title: "First" },
     { key: "second", title: "Second" },
     { key: "shop", title: "Shop" },
@@ -191,30 +196,27 @@ export default function HomePage2() {
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}
+      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 10 }}
     >
-      <Header onPress={toggleDrawer} index={setIndex} tab={settab} />
+      {/* <Header onPress={toggleDrawer} index={setIndex} tab={settab} /> */}
 
       <Modal
         isVisible={isDrawerOpen}
-        onBackdropPress={() => setIsDrawerOpen(false)}
+        // onBackdropPress={() => setIsDrawerOpen(false)}
         animationIn="bounceInLeft"
         animationOut="bounceOutLeft"
         style={styles.modal}
         swipeDirection={["left"]}
-        onSwipeComplete={() => setIsDrawerOpen(false)}
+        // onSwipeComplete={() => setIsDrawerOpen(false)}
       >
-        <View style={styles.modalContent}>
-        
-            <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-         
-        
-        </View>
+        {/* <View style={styles.modalContent}>
+          <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
+        </View> */}
       </Modal>
-      <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+      <View style={{ paddingLeft: 10, paddingRight: 10 ,paddingTop:10}}>
         <TextInput
           style={{ padding: 8, backgroundColor: "#ebebeb", borderRadius: 5 }}
-          placeholder="Kelime veya İlan no ile ara.."
+          placeholder="Kelime veya İlan no ile ara..."
           onPress={() => {
             navigation.navigate("SearchPage");
           }}
@@ -276,9 +278,8 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "white",
-
     flex: 1,
-    borderTopLeftRadius: 10,
+    // borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     width: 320,
   },

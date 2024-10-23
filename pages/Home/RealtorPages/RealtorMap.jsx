@@ -49,12 +49,14 @@ export default function RealtorMap({mapData}) {
         style={{
           position: "absolute",
           zIndex: 2,
-          backgroundColor: "white",
-          padding: 10,
-          top: 5,
+          backgroundColor: '#EA2C2E',
+          left:10,
+          padding:8,
+          borderRadius:5,
+          top: 10,
         }}
       >
-        <Text style={{ color: "black" }}>Yol Tarifi Al</Text>
+        <Text style={{ color: "white",textAlign:'center' }}>Yol Tarifi Al</Text>
       </TouchableOpacity>
     
     <MapView

@@ -4,45 +4,40 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
-  ImageBackground,
   ScrollView,
   TouchableOpacity,
   Dimensions,
   TextInput,
-  TouchableWithoutFeedback,
   Keyboard,
   Animated,
-  ActivityIndicator,
   Linking,
   Share,
 } from "react-native";
 import { React, useState, useRef, useEffect } from "react";
-import Icon from "react-native-vector-icons/AntDesign";
-import Entypo from "react-native-vector-icons/Entypo";
 import ShopInfo from "./ProfilePageItem/ShopInfo";
 import ProjectAdverts from "./ProfilePageItem/ProjectAdverts";
 import RealtorAdverts from "./ProfilePageItem/RealtorAdverts";
 import LinkIcon3 from "react-native-vector-icons/Feather";
-import LinkIcon4 from "react-native-vector-icons/Fontisto";
-import LinkIcon2 from "react-native-vector-icons/FontAwesome";
 import LinkIcon from "react-native-vector-icons/SimpleLineIcons";
 import Star from "react-native-vector-icons/MaterialIcons";
-import Arrow from "react-native-vector-icons/MaterialIcons";
-import { Skeleton } from "@rneui/themed";
 import Team from "./ProfilePageItem/Team";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { apiRequestGet } from "../../components/methods/apiRequest";
-import SliderItemSkeleton from "../../components/SkeletonComponents/SliderItemSkeleton";
-import ShopVitrin from "./ProfilePageItem/ShopVitrin";
-import { Button } from "react-native-elements";
 import Modal from "react-native-modal";
 import { CheckBox } from "@rneui/themed";
 import { Platform } from "react-native";
 import axios from "axios";
 import { getValueFor } from "../../components/methods/user";
-import CollectionsOfBrand from "./ProfilePageItem/CollectionsOfBrand";
+// import CollectionsOfBrand from "./ProfilePageItem/CollectionsOfBrand";
 import CommentsOfBrands from "./ProfilePageItem/CommentsOfBrands";
+import SellPlacesForBrands from "./ProfilePageItem/SellPlaceForBrand";
+import { ActivityIndicator } from "react-native-paper";
+import Introduction from "./ProfilePageItem/Introduction/Introduction";
+import Filter from "../../assets/filter.png";
+import ProjectBottomSheetFilter from "../../components/ProjectBottomSheetFilter";
+import EstateBottomSheetFilter from "../../components/EstateBottomSheetFilter";
 
+const ApiUrl = "https://private.emlaksepette.com/";
 export default function Profile() {
   const route = useRoute();
   const [Housings, setHousings] = useState([]);
@@ -51,13 +46,6 @@ export default function Profile() {
   const { width, height, fontScale } = Dimensions.get("window");
   const translateY = useRef(new Animated.Value(400)).current;
   const navigation = useNavigation();
-  const openSheet = () => {
-    Animated.timing(translateY, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
   const [nameId, setNameId] = useState("");
   const [phoneId, setPhoneId] = useState("");
   const [emailId, setEmailId] = useState("");
@@ -67,8 +55,63 @@ export default function Profile() {
   const [teamm, setTeamm] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [housingRecords, sethousingRecords] = useState([]);
-
+  const [openProjectFilter, setOpenProjectFilter] = useState(false);
+  const [openEstateFilter, setOpenEstateFilter] = useState(false);
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
+  const [loading, setloading] = useState(false);
+  const [storeData, setstoreData] = useState([]);
+  const [loadingShopping, setloadingShopping] = useState(false);
+  const [formVisible, setFormVisible] = useState("false");
+  const [featuredProjects, setFeaturedProjects] = useState([]);
+  const [checked, setChecked] = useState(false);
+  const toggleCheckbox = () => setChecked(!checked);
+  const scrollViewRef = useRef(null); // ScrollView için ref
+  const [tabWidth, setTabWidth] = useState(0);
+  const [projectData, setProjectData] = useState([]);
+  const [items, setItems] = useState(() => {
+    const initialItems = [
+      {
+        text: "Tanıtım",
+        isShow: "All",
+      },
+      {
+        text: "Emlak İlanları",
+        isShow: "All",
+      },
+      {
+        text: "Proje İlanları",
+        isShow: "All",
+      },
+      {
+        text: "Mağaza Profili",
+        isShow: "All",
+      },
+      {
+        text: "Satış Noktalarımız", // Koleksiyonlar yerine bu eklendi
+        isShow: "All",
+      },
+      {
+        text: "Değerlendirmeler",
+        isShow: "All",
+      },
+      {
+        text: "Ekip",
+      },
+    ];
+
+    // Değerleri kontrol et ve 'Satış Noktalarımız' öğesini kaldır
+    if (
+      storeData?.data?.corporate_type === "Emlak Ofisi" ||
+      storeData?.data?.type === 1
+    ) {
+      return initialItems.filter((item) => item.text !== "Satış Noktalarımız");
+    }
+
+    return initialItems;
+  });
+
+  const [color, setColor] = useState("#000000");
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -151,21 +194,11 @@ export default function Profile() {
     }
   };
 
-  const closeSheet = () => {
-    Animated.timing(translateY, {
-      toValue: 400,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
-  const [loading, setloading] = useState(false);
-  const [storeData, setstoreData] = useState([]);
-
   useEffect(() => {
     // Örnek API isteği
+    setloadingShopping(true);
     apiRequestGet("brand/" + id)
       .then((res) => {
-        setloading(true);
         const housingsWithPrefixedID = res.data.data.housings.map(
           (housing) => ({
             ...housing,
@@ -173,15 +206,18 @@ export default function Profile() {
           })
         );
         setstoreData(res.data);
+        setProjectData(res.data.data.projects);
         setHousings(housingsWithPrefixedID);
         setTeamm(res.data.data.child);
         sethousingRecords(housingsWithPrefixedID); // Housings dizisini başlangıçta kopyala
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+      })
+      .finally(() => {
+        setloadingShopping(false);
       });
-  }, []);
-  console.log(id);
+  }, [id]);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -197,19 +233,13 @@ export default function Profile() {
 
     sethousingRecords(filteredData);
   };
-  const ApiUrl = "https://private.emlaksepette.com/";
   const handleOpenPhone = () => {
-    // Telefon uygulamasını açmak için
-    Linking.openURL(`tel:+${storeData.data.phone}`);
+    Linking.openURL(`tel:${storeData.data.phone}`);
   };
-  const [formVisible, setFormVisible] = useState("false");
-
-  const [featuredProjects, setFeaturedProjects] = useState([]);
 
   const fetchFeaturedProjects = async () => {
     try {
       setFeaturedProjects(data.data.projects);
-      setloadingPrjoects(true);
     } catch (error) {
       console.log(error);
     }
@@ -219,21 +249,6 @@ export default function Profile() {
     fetchFeaturedProjects();
   }, []);
 
-  const [checked, setChecked] = useState(false);
-  const toggleCheckbox = () => setChecked(!checked);
-
-  const SkeletonBox = () => (
-    <Animated.View
-      style={{
-        width: "40%",
-        height: 40,
-        backgroundColor: "#e0e0e0",
-        borderRadius: 5,
-        margin: 5,
-        opacity: 0.5, // Skeleton efektini verecek opaklık değeri
-      }}
-    />
-  );
   const onShare = async () => {
     try {
       const result = await Share.share({
@@ -254,569 +269,450 @@ export default function Profile() {
     }
   };
 
+  const controlColor = () => {
+    const dataColor = storeData?.data?.banner_hex_code;
+    if (!dataColor) return;
+    const isBlackOrShadesOfBlack = (color) => {
+      if (color === "#000000") return true;
+      const hexColor = parseInt(color.replace("#", ""), 16);
+      return hexColor >= 0x000000 && hexColor <= 0x111111; // Bu aralıkta ise beyaz yap
+    };
+
+    if (isBlackOrShadesOfBlack(dataColor)) {
+      setColor("#fff");
+    }
+  };
+
+  useEffect(() => {
+    controlColor();
+  }, [storeData]);
+
+  useEffect(() => {
+    console.debug("====>>", storeData?.data?.corporate_type);
+  }, [storeData]);
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <View
-        style={styles.container}
-        onTouchStart={() => {
-          Keyboard.dismiss();
-          closeSheet();
-        }}
-      >
-        {/* <View
-              style={{
-                width: "100%",
-                height:
-                  storeData?.data?.name?.length > 30
-                    ? width < 400
-                      ? 220
-                      : 240
-                    : width < 400
-                    ? 180
-                    : 180,
-              }}
+    <>
+      {loadingShopping ? (
+        <View style={styles.loadCont}>
+          <ActivityIndicator color={"#333"} size={"large"} />
+        </View>
+      ) : (
+        <View style={{ flex: 1 }}>
+          <View style={styles.container}>
+            <>
+              <EstateBottomSheetFilter
+                isVisible={openEstateFilter}
+                setIsVisible={setOpenEstateFilter}
+              />
+            </>
+            <View
+              style={[
+                {
+                  backgroundColor: storeData?.data?.banner_hex_code,
+                  ...(Platform.OS == "ios" && { paddingTop: 50 }),
+                },
+                styles.headerBg,
+              ]}
             >
-              <View
-                style={{
-                  position: "absolute",
-                  zIndex: 1,
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: storeData?.data?.banner_hex_code + 94,
-                  borderBottomLeftRadius: 30,
-                  borderBottomRightRadius: 30,
-                }}
-              >
-                <View style={styles.InfoContainer}>
-                  <TouchableOpacity
+              <View style={styles.headBtn}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.goBack();
+                  }}
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    padding: 5,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 50,
+                  }}
+                >
+                  <LinkIcon name="arrow-left" size={20} color={"#000000"} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={onShare}
+                  style={{
+                    backgroundColor: "#FFFFFF",
+                    padding: 5,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 50,
+                  }}
+                >
+                  <LinkIcon3 name="share-2" size={20} color={"#000000"} />
+                </TouchableOpacity>
+              </View>
+              <View style={{ alignItems: "center", paddingTop: 15 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                    width: "80%",
+                  }}
+                >
+                  <View
                     style={{
-                      backgroundColor: "#ebebeb94",
-                      paddingLeft: 10,
-                      paddingRight: 10,
-                      borderRadius: 5,
-                      justifyContent: "center",
-                      width: 45,
-                      height: 30,
-                      alignItems: "center",
+                      backgroundColor: "#fff",
+                      borderRadius: 50,
                     }}
-                    onPress={() => navigation.goBack()}
                   >
-                    <Arrow
-                      name="arrow-back-ios"
-                      size={20}
-                      style={{ left: 3 }}
-                      color={"white"}
-                    />
-                  </TouchableOpacity>
-
-                  <TouchableOpacity style={styles.shareIcons} onPress={onShare}>
-                    <Icon name="sharealt" size={18} />
-                  </TouchableOpacity>
-                </View>
-                <View style={{ paddingLeft: 15, paddingRight: 15 }}>
-                  <View style={{ paddingTop: 10 }}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-
-                        gap: 10,
+                    <Image
+                      source={{
+                        uri: `https://private.emlaksepette.com/storage/profile_images/${storeData?.data?.profile_image}`,
                       }}
-                    >
-                      <View style={{ width: 40, height: 40, borderRadius: 20 }}>
-                        <Image
-                          source={{
-                            uri: `${ApiUrl}storage/profile_images/${storeData?.data?.profile_image}`,
-                          }}
+                      style={{
+                        width: 50,
+                        height: 50,
+                        borderRadius: 50,
+                      }}
+                    />
+                  </View>
+                  <View>
+                    <View>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 5,
+                        }}
+                      >
+                        <Text
                           style={{
-                            width: "100%",
-                            height: "100%",
-                            borderRadius: 20,
+                            fontSize: 14,
+                            color: color ? color : "#000000",
+                            fontWeight: "700",
                           }}
-                        />
-                      </View>
-                      <View style={{ width: "90%" }}>
-                        <Text style={{ fontSize: 17, color: "white" }}>
+                        >
                           {storeData?.data?.name}
                         </Text>
-                        <Text style={{ color: "white", fontSize: 11 }}>
-                          {storeData?.data?.activity} Şirketi
-                        </Text>
+                        <Star name="verified" size={19} color={"#0275FF"} />
                       </View>
+
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: color ? color : "#000000",
+                        }}
+                      >
+                        {storeData?.data?.corporate_type}
+                      </Text>
                     </View>
                   </View>
-
-                  <View style={{ width: "100%", paddingTop: 10 }}>
-                    <TextInput
-                      style={{
-                        padding: 9,
-                        backgroundColor: "#f5f5f53d",
-                        borderWidth: 0,
-                        borderColor: "#ebebeb",
-                        borderRadius: 5,
-                      }}
-                      value={searchText}
-                      onChangeText={handleSearch}
-                      placeholder="Kelime veya İlan no ile ara.."
-                      placeholderTextColor={"#333"}
-                    />
-                  </View>
-
                 </View>
               </View>
+            </View>
 
-              <ImageBackground
-                source={require("./profilePhoto.jpg")}
-                style={{ width: "100%", height: "100%" }}
-                imageStyle={{
-                  borderBottomLeftRadius: 30,
-                  borderBottomRightRadius: 30,
+            <View>
+              <ScrollView
+                ref={scrollViewRef} // Ref ekleniyor
+                onLayout={() => {
+                  // Calculate the width of each tab dynamically
+                  if (items.length > 0) {
+                    const tabWidth = width / items.length;
+                    setTabWidth(tabWidth);
+                  }
                 }}
-              />
-            </View>
-      */}
-        <View
-          style={{
-            height: height * 0.2,
-            backgroundColor: storeData?.data?.banner_hex_code,
-            borderBottomLeftRadius: 30,
-            borderBottomRightRadius: 30,
-          }}
-        >
-          <SafeAreaView>
-            <View
-              style={{
-                width: "100%",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingLeft: 20,
-                paddingRight: 20,
-                alignItems: "center",
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.goBack();
-                }}
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  padding: 5,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 50,
-                }}
-              >
-                <LinkIcon name="arrow-left" size={20} color={"#000000"} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={onShare}
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  padding: 5,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 50,
-                }}
-              >
-                <LinkIcon3 name="share-2" size={20} color={"#000000"} />
-              </TouchableOpacity>
-            </View>
-            <View style={{ alignItems: "center", paddingTop: 15 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: 10,
-                  width: "80%",
-                }}
+                horizontal
+                style={{ paddingTop: 10, marginBottom: 10 }}
+                showsHorizontalScrollIndicator={false}
+                nestedScrollEnabled={true}
               >
                 <View
                   style={{
-                    backgroundColor: "#fff",
-                    borderRadius: 50,
-                    width: 50,
-                    height: 50,
+                    flexDirection: "row",
+                    gap: 10,
+                    borderBottomWidth: 1,
+                    borderBottomColor: "#D7D7D7",
+                    paddingLeft: 15,
+                    paddingRight: 15,
                   }}
                 >
-                  <Image
-                    source={{
-                      uri: `https://private.emlaksepette.com/storage/profile_images/${storeData?.data?.profile_image}`,
-                    }}
-                  />
-                </View>
-                <View>
-                  <View>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 5,
-                      }}
+                  {items.map((item, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={[
+                        styles.TabBarBtn,
+                        {
+                          borderBottomWidth: tab === index ? 3 : 0,
+                          borderBottomColor:
+                            tab === index ? "#EA2C2E" : "transparent",
+                          top: 2,
+                        },
+                      ]}
+                      onPress={() => settab(index)}
                     >
                       <Text
                         style={{
-                          fontSize: 14,
-                          color: "#000000",
-                          fontWeight: "700",
+                          color: tab === index ? "#EA2C2E" : "grey",
+                          fontWeight: tab === index ? "500" : "normal",
                         }}
                       >
-                        {storeData?.data?.name}
+                        {item.text === "Satış Noktalarımız" &&
+                        (storeData?.data?.corporate_type === "Emlak Ofisi" ||
+                          storeData?.data?.type === 1)
+                          ? null
+                          : item.text}
                       </Text>
-                      <Star name="verified" size={19} color={"#0275FF"} />
-                    </View>
-
-                    <Text style={{ fontSize: 12, color: "#000000" }}>
-                      {storeData?.data?.corporate_type}
-                    </Text>
-                  </View>
+                    </TouchableOpacity>
+                  ))}
                 </View>
-              </View>
+              </ScrollView>
             </View>
-          </SafeAreaView>
-        </View>
+            <View style={{ flex: 1, paddingBottom: 60 }}>
+              {tab === 0 && <Introduction id={id} setTab={settab} />}
+              {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
+              {tab === 2 && (
+                <ProjectAdverts
+                  data={projectData}
+                  isVisible={openProjectFilter}
+                  setIsVisible={setOpenProjectFilter}
+                  id={id}
+                />
+              )}
+              {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
+              {tab === 4 &&
+                (storeData?.data?.type !== 1 &&
+                storeData?.data?.corporate_type !== "Emlak Ofisi" ? (
+                  <SellPlacesForBrands data={storeData} />
+                ) : null)}
 
-        <View>
-          <ScrollView
-            horizontal
-            style={{ paddingTop: 10, marginBottom: 10 }}
-            showsHorizontalScrollIndicator={false}
-            nestedScrollEnabled={true}
-          >
+              {tab === 5 && <CommentsOfBrands id={id} />}
+              {tab === 6 && <Team teamm={teamm} />}
+            </View>
+          </View>
+
+          <View>
             <View
               style={{
                 flexDirection: "row",
-                gap: 10,
-                borderBottomWidth: 1,
-                borderBottomColor: "#D7D7D7",
-                paddingLeft: 15,
-                paddingRight: 15,
+                justifyContent: "space-around",
+                padding: 10,
+                position: "absolute",
+                bottom: 0,
+                paddingBottom: Platform.OS === "ios" ? 40 : 12,
+                width: "100%",
+                backgroundColor: "#F2F2F2",
+                height: "auto",
               }}
             >
-              <TouchableOpacity
-                style={[
-                  styles.TabBarBtn,
-                  {
-                    borderBottomWidth: tab === 0 ? 3 : 0,
-                    borderBottomColor: tab === 0 ? "#EA2C2E" : "transparent",
-                    top: 2,
-                  },
-                ]}
-                onPress={() => settab(0)}
-              >
-                <Text
-                  style={{
-                    color: tab === 0 ? "#EA2C2E" : "grey",
-                    fontWeight: tab === 0 ? "500" : "normal",
-                  }}
-                >
-                  Ana Sayfa
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.TabBarBtn,
-                  {
-                    borderBottomWidth: tab === 4 ? 3 : 0,
-                    borderBottomColor: tab === 4 ? "#EA2C2E" : "transparent",
-                    top: 2,
-                  },
-                ]}
-                onPress={() => settab(4)}
-              >
-                <Text
-                  style={{
-                    color: tab === 4 ? "#EA2C2E" : "grey",
-                    fontWeight: tab === 4 ? "500" : "normal",
-                  }}
-                >
-                  Mağaza Profili
-                </Text>
-              </TouchableOpacity>
-
-              {storeData?.data?.corporate_type == "İnşaat Ofisi" &&
-                storeData?.data?.type !== 1 && (
-                  <TouchableOpacity
-                    style={[
-                      styles.TabBarBtn,
-                      {
-                        borderBottomWidth: tab === 1 ? 3 : 0,
-                        borderBottomColor:
-                          tab === 1 ? "#EA2C2E" : "transparent",
-                        top: 2,
-                      },
-                    ]}
-                    onPress={() => settab(1)}
-                  >
-                    <Text
-                      style={{
-                        color: tab === 1 ? "#EA2C2E" : "grey",
-                        fontWeight: tab === 1 ? "500" : "normal",
-                        bottom: width > 400 ? 0 : 1,
-                      }}
-                    >
-                      Proje İlanları({storeData?.data?.projects?.length})
-                    </Text>
-                  </TouchableOpacity>
-                )}
-
-              <TouchableOpacity
-                style={[
-                  styles.TabBarBtn,
-                  {
-                    borderBottomWidth: tab === 2 ? 3 : 0,
-                    borderBottomColor: tab === 2 ? "#EA2C2E" : "transparent",
-                    top: 2,
-                  },
-                ]}
-                onPress={() => settab(2)}
-              >
-                <Text
-                  style={{
-                    color: tab === 2 ? "#EA2C2E" : "grey",
-                    fontWeight: tab === 2 ? "500" : "normal",
-                  }}
-                >
-                  Emlak İlanları({storeData?.data?.housings?.length})
-                </Text>
-              </TouchableOpacity>
-
-              {storeData?.data?.type != 1 && (
+              {(tab == 1 || tab == 2) && (
                 <TouchableOpacity
-                  style={[
-                    styles.TabBarBtn,
-                    {
-                      borderBottomWidth: tab === 3 ? 3 : 0,
-                      borderBottomColor: tab === 3 ? "#EA2C2E" : "transparent",
-                      top: 2,
-                    },
-                  ]}
-                  onPress={() => settab(3)}
+                  onPress={() =>
+                    tab == 2
+                      ? setOpenProjectFilter(true)
+                      : setOpenEstateFilter(true)
+                  }
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderWidth: 1,
+                    borderColor: "#EA2B2E",
+                    backgroundColor: "#ffffff",
+                    padding: 10,
+                    borderRadius: 4,
+                  }}
                 >
-                  <Text
-                    style={{
-                      color: tab === 3 ? "#EA2C2E" : "grey",
-                      fontWeight: tab === 3 ? "500" : "normal",
-                    }}
-                  >
-                    Ekip
-                  </Text>
+                  <Image source={Filter} style={{ width: 16, height: 16 }} />
                 </TouchableOpacity>
               )}
 
               <TouchableOpacity
-                style={[
-                  styles.TabBarBtn,
-                  {
-                    borderBottomWidth: tab === 5 ? 3 : 0,
-                    borderBottomColor: tab === 5 ? "#EA2C2E" : "transparent",
-
-                    top: 2,
-                  },
-                ]}
-                onPress={() => settab(5)}
-              >
-                <Text
-                  style={{
-                    color: tab === 5 ? "#EA2C2E" : "grey",
-                    fontWeight: tab === 5 ? "500" : "normal",
-                  }}
-                >
-                  Koleksiyonlar
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.TabBarBtn,
-                  {
-                    borderBottomWidth: tab === 6 ? 3 : 0,
-                    borderBottomColor: tab === 6 ? "#EA2C2E" : "transparent",
-                    top: 2,
-                  },
-                ]}
-                onPress={() => settab(6)}
-              >
-                <Text
-                  style={{
-                    color: tab === 6 ? "#EA2C2E" : "grey",
-                    fontWeight: tab === 6 ? "500" : "normal",
-                  }}
-                >
-                  Değerlendirmeler
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </View>
-        {tab === 0 && (
-          <ShopVitrin
-            housingdata={Housings}
-            data={storeData}
-            loading={loading}
-            settab={settab}
-          />
-        )}
-        {tab === 1 && <ProjectAdverts data={storeData} />}
-        {tab === 2 && <RealtorAdverts housingdata={housingRecords} />}
-        {tab === 3 && <Team teamm={teamm} />}
-        {tab === 4 && <ShopInfo data={storeData} loading={loading} />}
-        {tab === 5 && <CollectionsOfBrand />}
-        {tab === 6 && <CommentsOfBrands data={storeData} />}
-      </View>
-
-      <View>
-        <View
-          style={{
-            paddingBottom: 20,
-            paddingTop: 5,
-            paddingRight: 15,
-            alignItems: "flex-end",
-
-            zIndex: 1,
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              width: "40%",
-              backgroundColor: "#EA2C2E",
-              borderRadius: 5,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            onPress={() => {
-              setloading(true);
-              setFormVisible(true); // veya hangi işlevi çağırmak istiyorsanız
-            }} // Burada yükleme durumunu göstermek için geçici bir işlem
-          >
-            <Text
-              style={{
-                padding: 10,
-                color: "white",
-                fontWeight: "500",
-                fontSize: 13,
-                textAlign: "center",
-              }}
-            >
-              Form Doldur
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <Modal
-        animationType="fade"
-        onBackdropPress={() => setFormVisible(false)}
-        visible={formVisible}
-        onRequestClose={() => {
-          setFormVisible(false);
-        }}
-      >
-        <View style={[styless.centeredView, { padding: 0 }]}>
-          <View style={[styless.modalView, { height: "90%" }]}>
-            <Text style={{ textAlign: "center" }}>
-              Bilgilerinizi doldurun, sizi arayalım!
-            </Text>
-            <View style={{ gap: 7 }}>
-              <Text style={styless.label}>Ad Soyad</Text>
-              <TextInput
-                style={styless.Input}
-                value={nameId}
-                onChangeText={(value) => setNameId(value)}
-              />
-              {errorStatu == 1 && (
-                <Text style={{ color: "red", fontSize: 12 }}>
-                  {errorMessage}
-                </Text>
-              )}
-            </View>
-            <View style={{ gap: 7 }}>
-              <Text style={styless.label}>Telefon Numarası</Text>
-              <TextInput
-                style={styless.Input}
-                value={phoneId}
-                onChangeText={(value) => setPhoneId(value)}
-              />
-              {errorStatu == 2 && (
-                <Text style={{ color: "red", fontSize: 12 }}>
-                  {errorMessage}
-                </Text>
-              )}
-            </View>
-            <View style={{ gap: 7 }}>
-              <Text style={styless.label}>E-Posta</Text>
-              <TextInput
-                style={styless.Input}
-                value={emailId}
-                onChangeText={(value) => setEmailId(value)}
-              />
-              {errorStatu == 6 && (
-                <Text style={{ color: "red", fontSize: 12 }}>
-                  {errorMessage}
-                </Text>
-              )}
-            </View>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-around" }}
-            >
-              <TouchableOpacity
+                onPress={() => handleOpenPhone()}
                 style={{
-                  backgroundColor: "#28A745",
-                  width: "40%",
-                  padding: 15,
+                  backgroundColor: "#ffffff",
+                  width: "45%",
+                  padding: 10,
                   borderRadius: 5,
-                  backgroundColor: checked ? "#28A745" : "#D3D3D3",
+                  borderWidth: 1,
+                  borderColor: "#EB2B2E",
+                  backgroundColor: "#EA2B2E",
                 }}
-                disabled={!checked}
-                onPress={GiveOffer}
               >
-                <Text style={{ color: "white", textAlign: "center" }}>
-                  Gönder
+                <Text
+                  style={{
+                    textAlign: "center",
+                    color: "#FFF",
+                    fontWeight: "700",
+                  }}
+                >
+                  Ara
                 </Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={{
-                  backgroundColor: "#DC3545",
                   width: "40%",
-                  padding: 15,
+                  backgroundColor: "#EA2C2E",
                   borderRadius: 5,
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
                 onPress={() => {
-                  setFormVisible(false);
-                }}
+                  setloading(true);
+                  setFormVisible(true); // veya hangi işlevi çağırmak istiyorsanız
+                }} // Burada yükleme durumunu göstermek için geçici bir işlem
               >
-                <Text style={{ color: "white", textAlign: "center" }}>
-                  Kapat
+                <Text
+                  style={{
+                    padding: 10,
+                    color: "white",
+                    fontWeight: "500",
+                    fontSize: 13,
+                    textAlign: "center",
+                  }}
+                >
+                  Hemen Başvur
                 </Text>
               </TouchableOpacity>
             </View>
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <CheckBox
-                checked={checked}
-                onPress={toggleCheckbox}
-                // Use ThemeProvider to make change for all checkbox
-                iconType="material-community"
-                checkedIcon="checkbox-marked"
-                uncheckedIcon="checkbox-blank-outline"
-                checkedColor="red"
-                containerStyle={{
-                  alignItems: "flex-start",
-                  justifyContent: "flex-start",
-                }}
-                title={
-                  <Text>
-                    “Gönder” butonuna tıkladığınızda ad, soyad, e-posta ve mobil
-                    telefon numarası bilgileriniz onayınızın ardından
-                    tarafınızla iletişim kurulması amacıyla müteahhit firmaya
-                    iletilecektir. Veri sorumlusu sıfatıyla tüm yükümlülük ve
-                    sorumluluk müteahhit firmaya ait olacaktır. Kişisel
-                    verilerinizin korunması hakkında detaylı bilgi için buraya
-                    Tıklayabilirsiniz.
-                  </Text>
-                }
-              />
-            </View>
           </View>
+          <Modal
+            animationType="fade"
+            onBackdropPress={() => setFormVisible(false)}
+            visible={formVisible}
+            onRequestClose={() => {
+              setFormVisible(false);
+            }}
+          >
+            <View style={[styless.centeredView, { width: "100%" }]}>
+              <View
+                style={[
+                  styless.modalView,
+                  {
+                    height: width > 400 ? "60%" : "80%",
+                  },
+                ]}
+              >
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  style={{
+                    flex: 1,
+                    width: "100%",
+                    height: "100%",
+                  }}
+                >
+                  <Text style={{ textAlign: "center" }}>
+                    Bilgilerinizi doldurun, sizi arayalım!
+                  </Text>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styless.label}>Ad Soyad</Text>
+                    <TextInput
+                      style={styless.Input}
+                      value={nameId}
+                      onChangeText={(value) => setNameId(value)}
+                    />
+                    {errorStatu == 1 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styless.label}>Telefon Numarası</Text>
+                    <TextInput
+                      style={styless.Input}
+                      value={phoneId}
+                      onChangeText={(value) => setPhoneId(value)}
+                    />
+                    {errorStatu == 2 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={{ gap: 7 }}>
+                    <Text style={styless.label}>E-Posta</Text>
+                    <TextInput
+                      style={styless.Input}
+                      value={emailId}
+                      onChangeText={(value) => setEmailId(value)}
+                    />
+                    {errorStatu == 6 && (
+                      <Text style={{ color: "red", fontSize: 12 }}>
+                        {errorMessage}
+                      </Text>
+                    )}
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      marginTop: 12,
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#28A745",
+                        width: "40%",
+                        padding: 15,
+                        borderRadius: 5,
+                        backgroundColor: checked ? "#28A745" : "#D3D3D3",
+                      }}
+                      disabled={!checked}
+                      onPress={GiveOffer}
+                    >
+                      <Text style={{ color: "white", textAlign: "center" }}>
+                        Gönder
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#DC3545",
+                        width: "40%",
+                        padding: 15,
+                        borderRadius: 5,
+                      }}
+                      onPress={() => {
+                        setFormVisible(false);
+                      }}
+                    >
+                      <Text style={{ color: "white", textAlign: "center" }}>
+                        Kapat
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ display: "flex", flexDirection: "row" }}>
+                    <CheckBox
+                      checked={checked}
+                      onPress={toggleCheckbox}
+                      // Use ThemeProvider to make change for all checkbox
+                      iconType="material-community"
+                      checkedIcon="checkbox-marked"
+                      uncheckedIcon="checkbox-blank-outline"
+                      checkedColor="red"
+                      containerStyle={{
+                        alignItems: "flex-start",
+                        justifyContent: "flex-start",
+                      }}
+                      title={
+                        <View
+                          style={{
+                            width: "90%",
+                            height: "100%",
+                          }}
+                        >
+                          <Text>
+                            “Gönder” butonuna tıkladığınızda ad, soyad, e-posta
+                            ve mobil telefon numarası bilgileriniz onayınızın
+                            ardından tarafınızla iletişim kurulması amacıyla
+                            müteahhit firmaya iletilecektir. Veri sorumlusu
+                            sıfatıyla tüm yükümlülük ve sorumluluk müteahhit
+                            firmaya ait olacaktır. Kişisel verilerinizin
+                            korunması hakkında detaylı bilgi için buraya
+                            Tıklayabilirsiniz.
+                          </Text>
+                        </View>
+                      }
+                    />
+                  </View>
+                </ScrollView>
+              </View>
+            </View>
+          </Modal>
         </View>
-      </Modal>
-    </View>
+      )}
+    </>
   );
 }
 const { width, height } = Dimensions.get("window");
@@ -825,12 +721,31 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
+  loadCont: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
+  headerBg: {
+    width: "100%",
+    height: width > 400 ? 220 : 170,
+    borderBottomLeftRadius: 50,
+    borderBottomRightRadius: 50,
+  },
   headerProfile: {
     width: "100%",
     height: width > 400 ? 220 : 170,
 
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
+  },
+  headBtn: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    alignItems: "center",
+    paddingTop: Platform.OS === "android" ? 36 : 0,
   },
 
   TabBarBtn: {
@@ -874,6 +789,11 @@ const styless = StyleSheet.create({
       },
     }),
   },
+  loadConta: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
   modal: {
     margin: 0,
   },
@@ -883,7 +803,7 @@ const styless = StyleSheet.create({
     flex: 1,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    width: 320,
+    width: "100%",
   },
   pagination: {
     position: "absolute",

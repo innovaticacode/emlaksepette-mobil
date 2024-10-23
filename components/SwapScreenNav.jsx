@@ -6,11 +6,13 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
+  KeyboardAvoidingView,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Platform, findNodeHandle, UIManager } from "react-native";
 
 import RNPickerSelect from "react-native-picker-select";
 import { getValueFor } from "./methods/user";
@@ -19,6 +21,7 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import { ScrollView } from "react-native-gesture-handler";
 const { width, height } = Dimensions.get("window");
 
 const SwapScreenNav = () => {
@@ -44,6 +47,7 @@ const SwapScreenNav = () => {
   const [formVisible, setFormVisible] = useState(false);
   console.log(projectId);
   const [user, setUser] = useState({});
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -162,7 +166,7 @@ const SwapScreenNav = () => {
       )
       .then((response) => {
         setFormVisible(false);
-        
+
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Başvurunuz Gönderildi.",
@@ -200,12 +204,14 @@ const SwapScreenNav = () => {
       const response = await axios.get(
         "https://private.emlaksepette.com/api/cities"
       );
+      
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
       throw error;
     }
   };
+
   useEffect(() => {
     fetchCity()
       .then((citites) => setCities(citites.data))
@@ -239,6 +245,17 @@ const SwapScreenNav = () => {
     setPhoneId(formattedPhoneNumber);
   };
 
+  const fetchDataCounty = async (value) => {
+    try {
+      const response = await axios.get(
+        `https://private.emlaksepette.com/api/counties/${value}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Hata:", error);
+      throw error;
+    }
+  };
   const onChangeCity = (value) => {
     setcity(value);
     if (value) {
@@ -251,17 +268,7 @@ const SwapScreenNav = () => {
       setcounties([]);
     }
   };
-  const fetchDataCounty = async (value) => {
-    try {
-      const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Hata:", error);
-      throw error;
-    }
-  };
+
 
   const [errorMessage, seterrorMessage] = useState("");
 
@@ -275,63 +282,70 @@ const SwapScreenNav = () => {
 
   return (
     <AlertNotificationRoot>
-      <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+      <KeyboardAwareScrollView
+        style={styles.keyboardContainer}
+        showsVerticalScrollIndicator={false}
+        extraScrollHeight={300} // Adds extra height to avoid keyboard overlapping
+        enableOnAndroid={true} // Ensures it works well on Android
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.container}>
-          <View style={[styles.centeredView, {}]}>
-            <View style={[styles.modalView, { height: "90%" }]}>
+          <ScrollView style={[styles.centeredView, {}]}>
+            <View style={[styles.modalView, { height: "100%" }]}>
               <Text
                 style={{
                   fontWeight: "bold",
-                  fontSize: 12,
+                  fontSize: 20,
                   textAlign: "center",
+                  color: "#EA2B2E",
+                  fontWeight: "600",
+                  paddingTop: 10,
                 }}
               >
                 {projectData.project.project_title} projesinde {roomOrder} No'lu
                 Konut Başvuru Formu
               </Text>
               <View showsVerticalScrollIndicator={false}>
-                <View style={{ gap: 15, marginTop: 20 }}>
-                  <View style={{ gap: 7 }}>
+                <View style={{ gap: 10, marginTop: 20 }}>
+                  <View>
                     <Text style={styles.label}>Ad Soyad</Text>
                     <TextInput
                       style={styles.input}
                       value={nameid}
                       onChangeText={(value) => setNameId(value)}
+                      placeholder="Adınız Soyadınız"
                     />
                     {errorStatu == 1 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
-                  <View style={{ gap: 7 }}>
+                  <View>
                     <Text style={styles.label}>Telefon Numarası</Text>
                     <TextInput
                       style={styles.input}
                       value={phoneid}
                       keyboardType="number-pad"
                       onChangeText={handlePhoneNumberChange}
+                      placeholder="Telefon Numaranız"
                     />
                     {errorStatu == 2 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
-                  <View style={{ gap: 7 }}>
+                  <View>
                     <Text style={styles.label}>E-Posta</Text>
                     <TextInput
                       style={styles.input}
                       value={emailid}
                       onChangeText={(value) => setEmailId(value)}
+                      keyboardType="email-address"
+                      placeholder="Email Adresiniz"
                     />
                     {errorStatu == 6 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
-                  <View style={{ gap: 7 }}>
+                  <View>
                     <Text style={styles.label} value={titleid}>
                       Meslek
                     </Text>
@@ -339,39 +353,32 @@ const SwapScreenNav = () => {
                       style={styles.input}
                       value={titleid}
                       onChangeText={(value) => setTitleId(value)}
+                      placeholder="Mesleğiniz"
                     />
                     {errorStatu == 3 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
-                  <View style={{ gap: 7 }}>
+                  <View>
                     <Text style={styles.label}>Açıklama</Text>
                     <TextInput
                       style={styles.input}
                       value={offerid}
                       onChangeText={(value) => setOfferId(value)}
+                      placeholder="Açıklamanız"
+                      multiline
+                      numberOfLines={4}
+                      maxLength={254}
                     />
                     {errorStatu == 7 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
 
-                  <View style={{ gap: 6 }}>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: "grey",
-                        fontWeight: 600,
-                      }}
-                    >
-                      Şehir
-                    </Text>
+                  <View>
+                    <Text style={styles.label}>Şehir</Text>
                     <RNPickerSelect
-                      doneText="Tamam"
+                      eText="Tamam"
                       placeholder={{
                         label: "Şehir Seçiniz...",
                         value: null,
@@ -384,21 +391,11 @@ const SwapScreenNav = () => {
                       items={citites}
                     />
                     {errorStatu == 4 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
-                  <View style={{ gap: 6 }}>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: "grey",
-                        fontWeight: 600,
-                      }}
-                    >
-                      İlçe
-                    </Text>
+                  <View>
+                    <Text style={styles.label}>İlçe</Text>
                     <RNPickerSelect
                       doneText="Tamam"
                       placeholder={{
@@ -411,25 +408,19 @@ const SwapScreenNav = () => {
                       items={counties}
                     />
                     {errorStatu == 5 && (
-                      <Text style={{ color: "red", fontSize: 12 }}>
-                        {errorMessage}
-                      </Text>
+                      <Text style={styles.errorStyle}>{errorMessage}</Text>
                     )}
                   </View>
                 </View>
               </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-around",
-                }}
-              >
+              <View style={{ alignItems: "center" }}>
                 <TouchableOpacity
                   style={{
-                    backgroundColor: "#28A745",
-                    width: "40%",
-                    padding: 15,
-                    borderRadius: 5,
+                    backgroundColor: "#EA2B2E",
+                    width: "100%",
+                    padding: 10,
+                    borderRadius: 10,
+                    marginVertical: 10,
                   }}
                   onPress={GiveOffer}
                 >
@@ -437,24 +428,9 @@ const SwapScreenNav = () => {
                     Gönder
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "#DC3545",
-                    width: "40%",
-                    padding: 15,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => {
-                    setFormVisible(false);
-                  }}
-                >
-                  <Text style={{ color: "white", textAlign: "center" }}>
-                    Kapat
-                  </Text>
-                </TouchableOpacity>
               </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
       </KeyboardAwareScrollView>
     </AlertNotificationRoot>
@@ -463,10 +439,19 @@ const SwapScreenNav = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 100,
+  },
+  keyboardContainer: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: "#FFFFFF",
+  },
+  errorStyle: {
+    color: "#EA2B2E",
+    fontSize: 13,
+    fontWeight: "600",
+    padding: 2,
   },
   text: {
     fontSize: 18,
@@ -477,41 +462,44 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  label: {
+    color: "#777777",
+    fontSize: 13,
+    fontWeight: "600",
+    padding: 5,
+    gap: 10,
+  },
   input: {
-    height: 40,
-    width: "100%",
+    padding: 10,
     borderColor: "#ccc",
-    borderWidth: 1,
     borderRadius: 10,
     marginBottom: 10,
     paddingHorizontal: 10,
     color: "black",
-    backgroundColor: "white",
+    backgroundColor: "#F3F3F3",
   },
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
-    height: 40,
+    padding: 10,
     width: "100%",
     borderColor: "#ccc",
-    borderWidth: 1,
     borderRadius: 10,
     marginBottom: 10,
     paddingHorizontal: 10,
     color: "black",
-    backgroundColor: "white",
+    backgroundColor: "#F3F3F3",
     fontSize: 16,
   },
   inputAndroid: {
-    height: 40,
+    padding: 10,
     width: "100%",
     borderColor: "#ccc",
-    borderWidth: 1,
     borderRadius: 10,
     marginBottom: 10,
     paddingHorizontal: 10,
     color: "black",
-    backgroundColor: "white",
+    backgroundColor: "#F3F3F3",
     fontSize: 16,
   },
 });
