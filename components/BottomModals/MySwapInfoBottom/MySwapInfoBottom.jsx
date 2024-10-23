@@ -46,7 +46,7 @@ const MySwapInfoBottom = ({
         swapStatus === "araç"
           ? height * 0.8
           : swapStatus === "emlak"
-          ? height * 0.6
+          ? height * 0.7
           : height * 0.42,
     };
   };
