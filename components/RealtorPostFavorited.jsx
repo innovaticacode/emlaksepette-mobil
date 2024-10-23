@@ -100,7 +100,7 @@ export default function RealtorPostFavorited({
           textBody: `${response.data.message}`,
           button: "Tamam",
         });
-      }, 300);
+      }, 400);
 
       setShowAlert(false);
     } catch (error) {
