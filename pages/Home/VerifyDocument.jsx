@@ -274,7 +274,7 @@ export default function VerifyDocument({ nextStep, prevStep }) {
  
 
 
-  const [namFromGetUser, setnamFromGetUser] = useState([]);
+  const [namFromGetUser, setnamFromGetUser] = useState({});
   const [loadingForUserInfo, setloadingForUserInfo] = useState(false);
   const GetUserInfo = async () => {
     setloadingForUserInfo(true);
@@ -323,8 +323,8 @@ const openPdf = async () => {
     Alert.alert("PDF dosyası bulunamadı");
   }
 };
-console.log(FormDatas[selectedPick]?.uri , 'seçilen Dosya')
-console.log(selectedUrl , '/' , selectedDocument)
+console.log(namFromGetUser)
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -343,7 +343,7 @@ console.log(selectedUrl , '/' , selectedDocument)
             display:
               item.isShow == "All"
                 ? "flex"
-                : "none" && item.isShow == user.corporate_type
+                : "none" && item.isShow == namFromGetUser.corporate_type
                 ? "flex"
                 : "none",
           }}

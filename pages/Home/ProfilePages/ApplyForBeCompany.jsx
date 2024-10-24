@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
+  KeyboardAvoidingView,
 } from "react-native";
 import { React, useState, useEffect, useRef } from "react";
 import Modal from "react-native-modal";
@@ -23,9 +24,10 @@ import { SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
+import { ALERT_TYPE, AlertNotificationRoot, Dialog } from "react-native-alert-notification";
 import { getValueFor } from "../../../components/methods/user";
 
-export default function ApplyForBeCompany() {
+export default function Company() {
   const Navigation = useNavigation();
   const [selectedIndexRadio, setIndexRadio] = useState(0);
   {
@@ -53,7 +55,7 @@ export default function ApplyForBeCompany() {
   const [cityCode, setcityCode] = useState("");
   const [IsGiveFrancheise, setIsGiveFrancheise] = useState(null);
   const [IsConnectFranchaise, setIsConnectFranchaise] = useState(null);
-  const [MarcaName, setMarcaName] = useState("");
+  const [MarcaName, setMarcaName] = useState(null);
   const [FrancheiseMarc, setFrancheiseMarc] = useState(null);
   {
     /* cheked documents */
@@ -133,8 +135,9 @@ export default function ApplyForBeCompany() {
   const scrollViewRef = useRef();
 
   // Bu fonksiyon sayfanın en üstüne scroll etmek için kullanılabilir
+
   const scrollToTop = () => {
-    scrollViewRef.current.scrollTo({ y: 0, animated: true });
+    scrollViewRef.current.scrollTo({ y:0, animated: true });
   };
 
   const onChangeCity = (value) => {
@@ -175,50 +178,55 @@ export default function ApplyForBeCompany() {
     }
   };
   const [message, setmessage] = useState("");
-  const [IsSucces, setIsSucces] = useState(null);
+  const [IsSucces, setIsSucces] = useState(null)
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
-  }, []);
-
+  }, [])
+  useEffect(() => {
+    seteposta(user.email)
+    setphoneNumber(user.mobile_phone)
+  }, [user])
+  
+const [loadingBtn, setloadingBtn] = useState(false)
   const postData = async () => {
-    setsuccesRegister(true);
+   setloadingBtn(true)
     let fullNumber = `${cityCode}${companyPhone}`;
     try {
-      var formData = new FormData();
-      formData.append("type", 2);
-      formData.append("username", bossName);
-      formData.append("email", eposta);
-      formData.append("mobile_phone", phoneNumber);
-      formData.append("password", password);
-      formData.append("store_name", companyName);
-      formData.append("name", ShoppingName);
-      formData.append("phone", fullNumber);
-      formData.append("corporate-account-type", focusArea);
-      formData.append("city_id", city);
-      formData.append("county_id", county);
-      formData.append("neighborhood_id", neigbourhod);
-      formData.append("taxOfficeCity", TaxPlaceCity);
-      formData.append("taxOffice", TaxPlace);
-      formData.append("taxNumber", taxNumber);
-      formData.append("idNumber", IdCardNo);
-      formData.append("check-d", checked);
-      formData.append("check-b", checked1);
-      formData.append("check-c", checked2);
-      formData.append("account_type");
-      formData.append("authority_licence", licence);
-      formData.append("activity", null);
-      formData.append("iban", null);
-      formData.append("is_brand", IsGiveFrancheise);
-      formData.append("other_brand_name", MarcaName);
-      formData.append("Franchise-question", IsConnectFranchaise);
-      formData.append("brand_id", FrancheiseMarc);
-      const response = await axios.post(
-        "https://private.emlaksepette.com/corporate/account/application",
-        formData,
+      const data = {
+        type: 2,
+        username: bossName,
+        mobile_phone: phoneNumber,
+        password: password,
+        store_name: companyName,
+        name: ShoppingName,
+        phone: fullNumber,
+        corporate_account_type: focusArea,
+        city_id: city,
+        county_id: county,
+        neighborhood_id: neigbourhod,
+        taxOfficeCity: TaxPlaceCity,
+        taxOffice: TaxPlace,
+        taxNumber: taxNumber,
+        idNumber: IdCardNo,
+        check_d: checked,
+        check_b: checked1,
+        check_c: checked2,
+        account_type: null,
+        authority_licence: licence,
+        activity: null,
+        iban: null,
+        other_brand_name: MarcaName,
+        Franchise_question: IsConnectFranchaise,
+        brand_id: FrancheiseMarc,
+      };
+      const response = await axios.put(
+        "https://private.emlaksepette.com/api/corporate/account/application",
+        data,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
+            'Content-Type': 'application/json',
           },
         }
       );
@@ -226,8 +234,36 @@ export default function ApplyForBeCompany() {
       // İsteğin başarılı bir şekilde tamamlandığı durum
 
       setmessage(response.data.message);
-      setIsSucces(response.data.status);
+ 
+      
+      setTimeout(() => {
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Tebrikler",
+          textBody: 'Emlaksepette Mağazanızı Başarıyla oluşturdunuz şimdi belge doğrulama zamanı',
+          button: 'Doğrula',
+         
+        
+          onHide:()=>{
+            Navigation.navigate("Drawer", {
+              screen: "Home",
+            
+            });
+          }
+        });
+      }, 700);
+    
+     
+    
+    } catch (error) {
+      alert(error)
 
+      
+    } finally {
+      setloadingBtn(false)
+      seteposta("");
+      setphoneNumber("");
+      setpassword("");
       setbossName("");
       setcompanyName("");
       setcompanyPhone("");
@@ -246,44 +282,65 @@ export default function ApplyForBeCompany() {
       setChecked2(false);
       setChecked3(false);
       setcityCode("");
-      Navigation.navigate("Login", { showAlert: true });
-    } catch (error) {
-      // Hata durumunda
-      scrollToTop();
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.errors &&
-        error.response.data.errors.email
-      ) {
-        const errorMessage = error.response.data.errors.email[0];
-        seterrorMessage(errorMessage);
-        seterrorStatu(2);
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 3000);
-      } else {
-        console.error("Beklenmeyen bir hata oluştu:", error);
-      }
-    } finally {
-      setsuccesRegister(false);
     }
   };
 
+
   const [errorStatu, seterrorStatu] = useState(0);
   const [errorMessage, seterrorMessage] = useState("");
-
+  
   const register = () => {
     switch (true) {
-      case !bossName:
-        seterrorStatu(1);
-        seterrorMessage("İsim Alanı Boş Bırakılmaz");
+      case !phoneNumber:
+        seterrorStatu(4);
+        seterrorMessage("Telefon Numarası Boş Bırakılamaz");
         scrollToTop();
         setTimeout(() => {
           seterrorStatu(0);
         }, 10000);
         break;
-
+      case !focusArea:
+        seterrorStatu(7);
+        seterrorMessage("Faaliyet Alanı Boş Bırakılamaz");
+        scrollToTop();
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
+        case focusArea == "Emlak Ofisi" && !licence:
+          seterrorStatu(14);
+          seterrorMessage("Yetki Belgesi zorunludur");
+            scrollToTop()
+          setTimeout(() => {
+            seterrorStatu(0);
+          }, 10000);
+          break;
+          case (focusArea == "Emlak Ofisi" && IsConnectFranchaise==null):
+            seterrorStatu(16);
+            seterrorMessage("Bu Alan Zorunludur");
+            scrollToTop()
+            setTimeout(() => {
+              seterrorStatu(0);
+            }, 10000);
+            break;
+            case( focusArea == "Emlak Ofisi" && IsConnectFranchaise == 0 && !MarcaName):
+            seterrorStatu(17);
+            seterrorMessage("Marka Alanı Zorundludur");
+            scrollToTop()
+            setTimeout(() => {
+              seterrorStatu(0);
+            }, 10000);
+            break;
+          case focusArea == "Emlak Ofisi" &&
+            IsConnectFranchaise == 1 &&
+            !FrancheiseMarc:
+            seterrorStatu(18);
+            seterrorMessage("Bu Alan Zorunludur");
+            scrollToTop()
+            setTimeout(() => {
+              seterrorStatu(0);
+            }, 10000);
+            break;
       case !companyName:
         seterrorStatu(5);
         seterrorMessage("Ticaret Ünvanı Boş Bırakılamaz");
@@ -295,14 +352,6 @@ export default function ApplyForBeCompany() {
       case !ShoppingName:
         seterrorStatu(6);
         seterrorMessage("Mağaza Adı Boş Bırakılamaz");
-        scrollToTop();
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 10000);
-        break;
-      case !focusArea:
-        seterrorStatu(7);
-        seterrorMessage("Faaliyet Alanı Boş Bırakılamaz");
         scrollToTop();
         setTimeout(() => {
           seterrorStatu(0);
@@ -334,7 +383,7 @@ export default function ApplyForBeCompany() {
         break;
       case !TaxPlaceCity:
         seterrorStatu(11);
-        seterrorMessage('Vergi dairesi ili zorunludur."');
+        seterrorMessage('Vergi dairesi ili zorunludur');
         scrollToTop();
         setTimeout(() => {
           seterrorStatu(0);
@@ -356,63 +405,19 @@ export default function ApplyForBeCompany() {
           seterrorStatu(0);
         }, 10000);
         break;
-      case focusArea == "Emlak Ofisi" && !licence:
-        seterrorStatu(14);
-        seterrorMessage("Yetki Belgesi zorunludur");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 10000);
-        break;
-      case focusArea == "Emlak Ofisi" && !IsGiveFrancheise:
-        seterrorStatu(16);
-        seterrorMessage("Bu Alan Zorunludur");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 10000);
-        break;
-      case focusArea == "Emlak Ofisi" &&
-        IsGiveFrancheise == 0 &&
-        !IsConnectFranchaise:
-        seterrorStatu(15);
-        seterrorMessage("Bu Alan Zorunludur");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 10000);
-        break;
-
-      case focusArea == "Emlak Ofisi" && IsConnectFranchaise == 0 && !MarcaName:
-        seterrorStatu(17);
-        seterrorMessage("Bu Alan Zorunludur");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 10000);
-        break;
-      case focusArea == "Emlak Ofisi" &&
-        IsConnectFranchaise == 1 &&
-        !FrancheiseMarc:
-        seterrorStatu(18);
-        seterrorMessage("Bu Alan Zorunludur");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 10000);
-        break;
       case !checked || !checked1 || !checked2:
         seterrorStatu(15);
         seterrorMessage("Sözleşmeleri Onaylamayı Unutmayın");
         setTimeout(() => {
           seterrorStatu(0);
-        }, 10000);
+        }, 5000);
         break;
-
+  
       default:
         postData();
     }
   };
+
   const fetchTaxOfficeCity = async () => {
     try {
       const response = await axios.get(
@@ -496,7 +501,7 @@ export default function ApplyForBeCompany() {
   const handlePhoneNumberChange = (value) => {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setphoneNumber(formattedPhoneNumber);
-    setcompanyPhone(value);
+   
   };
 
   const GetDeal = (deal) => {
@@ -657,221 +662,121 @@ export default function ApplyForBeCompany() {
     label: item.title,
     value: item?.id,
   }));
-  console.log(errorMessage, "hata");
-  return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        ref={scrollViewRef}
-        style={{ backgroundColor: "white" }}
-      >
-        <View style={styles.container}>
-          <View style={{ padding: 15, gap: 20 }}>
-            <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Yetkili İsim Soyisim
-                </Text>
-              </View>
-              <TextInput
-                style={[
-                  styles.Input,
-                  {
-                    borderColor: errorStatu == 1 ? "red" : "#ebebeb",
-                  },
-                ]}
-                value={bossName}
-                onChangeText={(value) => setbossName(value)}
-                placeholder="Yetkili İsim Soyisim"
-              />
-              {errorStatu == 1 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
-            </View>
-            <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Mağaza Adı
-                </Text>
-              </View>
-              <TextInput
-                style={[
-                  styles.Input,
-                  {
-                    borderColor: errorStatu == 6 ? "red" : "#ebebeb",
-                  },
-                ]}
-                value={ShoppingName}
-                onChangeText={(value) => setShoppingName(value)}
-                placeholder="Mağaza Adı"
-              />
-              {errorStatu == 6 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
-            </View>
-            <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Ticaret Ünvanı
-                </Text>
-              </View>
-              <TextInput
-                style={[
-                  styles.Input,
-                  {
-                    borderColor: errorStatu == 5 ? "red" : "#ebebeb",
-                  },
-                ]}
-                value={companyName}
-                onChangeText={(value) => setcompanyName(value)}
-                placeholder="Ticaret Ünvanı"
-              />
-              {errorStatu == 5 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
-            </View>
-            <View style={{ gap: 5 }}>
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Sabit Telefon (Opsiyonel)
-                </Text>
-              </View>
+  const [passControl, setpassControl] = useState(false);
+  const [showLengthAlert, setShowLengthAlert] = useState(false);
+  const [showUpperAlert, setShowUpperAlert] = useState(false);
+  const [showSymbolAlert, setShowSymbolAlert] = useState(false);
+  const [showNumberAlert, setShowNumberAlert] = useState(false);
+  const [colorForLength, setcolorForLength] = useState(false)
+  const [colorForNumberAlert, setcolorForNumberAlert] = useState(false)
+  const [colorForUpper, setcolorForUpper] = useState(false)
+  const [colorForSymbol, setcolorForSymbol] = useState(false)
+const handlePasswordChange = (text) => {
+  setpassword(text);
+  // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
 
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ width: "32%" }}>
-                  <RNPickerSelect
-                    doneText="Tamam"
-                    value={cityCode}
-                    placeholder={{
-                      label: "Alan Kodu",
-                      value: null,
-                    }}
-                    style={pickerSelectStyles}
-                    onValueChange={(value) => {
-                      setcityCode(value);
-                    }}
-                    items={cityData}
-                  />
-                </View>
-                <View style={{ width: "70%" }}>
-                  <TextInput
-                    value={companyPhone}
-                    onChangeText={(value) => formatNumber(value)}
-                    style={styles.Input}
-                    placeholder="Sabit Telefon"
-                    keyboardType="number-pad"
-                    maxLength={9}
-                  />
-                </View>
+  if (text.length+1 <= 8) {
+    setShowLengthAlert(true)
+    setcolorForLength(false)
+  } else {
+
+    setcolorForLength(true)
+  }
+
+  //rakam kontrölü
+  const numberRegex = /[0-9]/;
+  if (!numberRegex.test(text)) {
+    setShowNumberAlert(true);
+    setcolorForNumberAlert(false)
+  } else {
+    
+    setcolorForNumberAlert(true)
+  }
+  //Büyük harf kontrolü
+  const upperCaseRegex = /[A-Z]/;
+  if (!upperCaseRegex.test(text)) {
+    setShowUpperAlert(true)
+    setcolorForUpper(false)
+  } else {
+    
+    setcolorForUpper(true)
+  }
+  // Sembole kontrolü
+  const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+  if (!symbolRegex.test(text)) {
+    setShowSymbolAlert(true)
+    setcolorForSymbol(false)
+  } else {
+   
+    setcolorForSymbol(true)
+  }
+};
+console.log(errorStatu)
+  return (
+      <AlertNotificationRoot>
+      <ScrollView behavior="padding" style={{flex:1}} ref={scrollViewRef}>
+        <View style={styles.container}>
+          <View style={{ padding: 15, gap: 20,paddingBottom:50 }}>
+         
+
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  E-Posta <Text style={{fontSize:10,color:'grey'}}>(Değiştirelemez)</Text>
+                </Text>
               </View>
+              <TextInput
+               editable={false}
+                style={[
+                  styles.Input,
+                  {
+                    borderColor: errorStatu === 2 ? "red" : "#ebebeb",
+                     color:'#333'
+                  },
+                ]}
+                value={eposta}
+                onChangeText={(value) => seteposta(value)}
+                placeholder="E-Posta Adresi"
+                autoCapitalize="none" // İlk harfin büyük olmasını engeller
+              />
+              {errorStatu == 2 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
             </View>
-            {/* <View style={{ gap: 5 }}>
-                <View style={{ paddingLeft: 5 }}>
-                  <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                    E-Posta
-                  </Text>
-                </View>
-                <TextInput
-                  style={[
-                    styles.Input,
-                    {
-                      borderColor: errorStatu === 2 ? "red" : "#ebebeb",
-                    },
-                  ]}
-                  value={eposta}
-                  onChangeText={(value) => seteposta(value)}
-                  placeholder="E-Posta Adresi"
-                  autoCapitalize="none" // İlk harfin büyük olmasını engeller
-                />
-                {errorStatu == 2 ? (
-                  <Text style={{ fontSize: 12, color: "red" }}>
-                    {errorMessage}
-                  </Text>
-                ) : (
-                  ""
-                )}
-              </View> */}
-            {/* <View style={{ gap: 5 }}>
-                <View style={{ paddingLeft: 5 }}>
-                  <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                    Cep Telefonu
-                  </Text>
-                </View>
-                <TextInput
-                  value={phoneNumber}
-                  style={[
-                    styles.Input,
-                    {
-                      borderColor: errorStatu == 4 ? "red" : "#ebebeb",
-                    },
-                  ]}
-                  onChangeText={handlePhoneNumberChange}
-                  placeholder="Cep Telefonu"
-                  keyboardType="number-pad"
-                  maxLength={15}
-                />
-                {errorStatu == 4 ? (
-                  <Text style={{ fontSize: 12, color: "red" }}>
-                    {errorMessage}
-                  </Text>
-                ) : (
-                  ""
-                )}
-              </View> */}
-            {/* <View style={{ gap: 5 }}>
-                <View style={{ paddingLeft: 5 }}>
-                  <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                    Şifre
-                  </Text>
-                </View>
-                <View>
-                  <TextInput
-                    value={password}
-                    onChangeText={(value) => setpassword(value)}
-                    style={[
-                      styles.Input,
-                      {
-                        borderColor: errorStatu === 3 ? "red" : "#ebebeb",
-                      },
-                    ]}
-                    placeholder="Şifre"
-                    secureTextEntry={Show ? false : true}
-                  />
-                  <TouchableOpacity
-                    style={{
-                      position: "absolute",
-                      top: "21%",
-                      right: 9,
-                    }}
-                    onPress={show}
-                  >
-                    <EyeIcon
-                      name={Show ? "eye" : "eye-off-sharp"}
-                      size={23}
-                      color={"#333"}
-                    />
-                  </TouchableOpacity>
-                </View>
-                {errorStatu == 3 ? (
-                  <Text style={{ fontSize: 12, color: "red" }}>
-                    {errorMessage}
-                  </Text>
-                ) : (
-                  ""
-                )}
-              </View> */}
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Cep Telefonu <Text style={{fontSize:10,color:'grey'}}>(Profil güncelleme ksımında güncelleyebilirsiniz)</Text>
+                </Text>
+              </View>
+              <TextInput
+                editable={false}
+                value={phoneNumber}
+                style={[
+                  styles.Input,
+                  {
+                    borderColor: errorStatu == 4 ? "red" : "#ebebeb",
+                    color:'#333'
+                  },
+                ]}
+                onChangeText={(value)=>{ handlePhoneNumberChange(value)}}
+                placeholder="Cep Telefonu"
+                keyboardType="number-pad"
+                maxLength={15}
+              />
+              {errorStatu == 4 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
+            </View>
+           
 
             <View style={{ gap: 5 }}>
               <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
@@ -890,8 +795,9 @@ export default function ApplyForBeCompany() {
                   { label: "Emlak Ofisi", value: "Emlak Ofisi" },
                   { label: "İnşaat Ofisi", value: "İnşaat Ofisi" },
                   { label: "Banka", value: "Banka" },
-                  { label: "Turizm", value: "Turizm" },
+                  { label: "Turizm", value: "Turizm Amaçlı Kiralama" },
                   { label: "Üretici", value: "Üretici" },
+                  { label: "Gayrimenkul Franchise", value: "Gayrimenkul Franchise" }
                 ]}
               />
               {errorStatu == 7 ? (
@@ -910,7 +816,7 @@ export default function ApplyForBeCompany() {
                     <Text
                       style={{ fontSize: 14, color: "black", fontWeight: 600 }}
                     >
-                      Yetki Belgesi No
+                      Taşınmaz Ticareti Yetki Belgesi No
                     </Text>
                   </View>
                   <TextInput
@@ -930,11 +836,11 @@ export default function ApplyForBeCompany() {
                   )}
                 </View>
 
-                <View style={{ gap: 5 }}>
+                {/* <View style={{ gap: 5 }}>
                   <Text
                     style={{ fontSize: 14, color: "black", fontWeight: 600 }}
                   >
-                    Franchise Veriyor Musun?
+                   Franchise Ofisine Bağlı Mısın?
                   </Text>
                   <RNPickerSelect
                     doneText="Tamam"
@@ -957,9 +863,9 @@ export default function ApplyForBeCompany() {
                   ) : (
                     ""
                   )}
-                </View>
+                </View> */}
 
-                {IsGiveFrancheise == 0 && (
+                { focusArea=='Emlak Ofisi' && (
                   <View style={{ gap: 5 }}>
                     <Text
                       style={{ fontSize: 14, color: "black", fontWeight: 600 }}
@@ -990,7 +896,7 @@ export default function ApplyForBeCompany() {
                   </View>
                 )}
 
-                {IsConnectFranchaise == 1 && (
+                {IsConnectFranchaise == 1  && (
                   <View style={{ gap: 5 }}>
                     <Text
                       style={{ fontSize: 14, color: "black", fontWeight: 600 }}
@@ -1034,7 +940,7 @@ export default function ApplyForBeCompany() {
                       style={[
                         styles.Input,
                         {
-                          borderColor: errorStatu == 5 ? "red" : "#ebebeb",
+                          borderColor: errorStatu == 17 ? "red" : "#ebebeb",
                         },
                       ]}
                       value={MarcaName}
@@ -1053,20 +959,105 @@ export default function ApplyForBeCompany() {
               </>
             )}
 
-            {/* <View style={{ gap: 5 }}>
-                <View style={{ paddingLeft: 5 }}>
-                  <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                    Sabit Telefon (Opsiyonel)
-                  </Text>
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Ticari Ünvan <Text style={{color:'#888888',fontSize:12}}>(Vergi Levhasında Yazan Firma Adı)</Text>
+                </Text>
+              </View>
+              <TextInput
+                style={[
+                  styles.Input,
+                  {
+                    borderColor: errorStatu == 5 ? "red" : "#ebebeb",
+                  },
+                ]}
+                value={companyName}
+                onChangeText={(value) => setcompanyName(value)}
+                placeholder="Ticari Ünvan"
+              />
+              {errorStatu == 5 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
+            </View>
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Mağaza Adı <Text style={{fontSize:12,color:'#888888'}}>(Ofisinizin tabela adı ile aynı olmalıdır)</Text>
+                </Text>
+              </View>
+              <TextInput
+                style={[
+                  styles.Input,
+                  {
+                    borderColor: errorStatu == 6 ? "red" : "#ebebeb",
+                  },
+                ]}
+                value={ShoppingName}
+                onChangeText={(value) => setShoppingName(value)}
+                placeholder="Mağaza Adı"
+              />
+              {errorStatu == 6 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
+            </View>
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Sabit Telefon (Opsiyonel)
+                </Text>
+              </View>
+
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ width: "32%" }}>
+                  <RNPickerSelect
+                    doneText="Tamam"
+                    value={cityCode}
+                    placeholder={{
+                      label: "Alan Kodu",
+                      value: null,
+                    }}
+                    style={pickerSelectStyles}
+                    onValueChange={(value) => {
+                      setcityCode(value);
+                    }}
+                    items={cityData}
+                  />
                 </View>
-                <TextInput
-                  value={companyPhone}
-                  onChangeText={(value) => setcompanyPhone(value)}
-                  style={styles.Input}
-                  placeholder="Sabit Telefon"
-                  keyboardType="number-pad"
-                />
-              </View> */}
+                <View style={{ width: "70%" }}>
+                  <TextInput
+                    value={companyPhone}
+                    onChangeText={(value) => formatNumber(value)}
+                    style={styles.Input}
+                    placeholder="Sabit Telefon"
+                    keyboardType="number-pad"
+                    maxLength={9}
+                  />
+                </View>
+              </View>
+            </View>
+            {/* <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Sabit Telefon (Opsiyonel)
+                </Text>
+              </View>
+              <TextInput
+                value={companyPhone}
+                onChangeText={(value) => setcompanyPhone(value)}
+                style={styles.Input}
+                placeholder="Sabit Telefon"
+                keyboardType="number-pad"
+              />
+            </View> */}
 
             <View style={{ gap: 6 }}>
               <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
@@ -1160,6 +1151,7 @@ export default function ApplyForBeCompany() {
                   checkedColor="#E54242"
                   title={<Text style={{ fontSize: 12 }}>Şahıs Şirketi</Text>}
                   containerStyle={{
+                    
                     padding: 0,
                     backgroundColor: "transparent",
                     borderWidth: 0,
@@ -1178,7 +1170,30 @@ export default function ApplyForBeCompany() {
                   title={
                     <View style={{}}>
                       <Text style={{ fontSize: 12 }}>
-                        Limited veya Anonim Şirketi{" "}
+                        LTD.ŞTİ veya A.Ş{" "}
+                      </Text>
+                    </View>
+                  }
+                  containerStyle={{
+                    padding: 0,
+                    backgroundColor: "transparent",
+                    borderWidth: 0,
+                    borderTopWidth: 1,
+                  }}
+                />
+                   <CheckBox
+                  checked={selectedIndexRadio === 3}
+                  onPress={() => {
+                    setIndexRadio(3);
+                    chooseType("Limited veya Anonim Şirketi");
+                  }}
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checkedColor="#E54242"
+                  title={
+                    <View style={{}}>
+                      <Text style={{ fontSize: 12 }}>
+                        Diğer{" "}
                       </Text>
                     </View>
                   }
@@ -1265,12 +1280,12 @@ export default function ApplyForBeCompany() {
             <View
               style={{
                 gap: 5,
-                display: selectedIndexRadio == 1 ? "flex" : "none",
+                
               }}
             >
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Tc Kimlik No
+                  TC Kimlik No
                 </Text>
               </View>
               <TextInput
@@ -1308,12 +1323,12 @@ export default function ApplyForBeCompany() {
                 <Text
                   style={[
                     styles.checkboxLabel,
-                    { color: errorStatu === 5 ? "red" : "black" },
+                    { color: errorStatu === 15 ? "red" : "black" },
                   ]}
                 >
                   <Text
                     style={{
-                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      color: errorStatu === 15 ? "red" : "#027BFF",
                       fontSize: 13,
                     }}
                   >
@@ -1332,7 +1347,7 @@ export default function ApplyForBeCompany() {
                     "kvkk-politikasi"
                   )
                 }
-                style={styles.checkboxContainer}
+                style={[styles.checkboxContainer]}
               >
                 {checked1 ? (
                   <FontAwesome5Icon
@@ -1346,12 +1361,12 @@ export default function ApplyForBeCompany() {
                 <Text
                   style={[
                     styles.checkboxLabel,
-                    { color: errorStatu === 5 ? "red" : "black" },
+                    { color: errorStatu === 15 ? "red" : "black" },
                   ]}
                 >
                   <Text
                     style={{
-                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      color: errorStatu === 15 ? "red" : "#027BFF",
                       fontSize: 13,
                     }}
                   >
@@ -1385,12 +1400,12 @@ export default function ApplyForBeCompany() {
                 <Text
                   style={[
                     styles.checkboxLabel,
-                    { color: errorStatu === 5 ? "red" : "black" },
+                    { color: errorStatu === 15 ? "red" : "black" },
                   ]}
                 >
                   <Text
                     style={{
-                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      color: errorStatu === 15 ? "red" : "#027BFF",
                       fontSize: 13,
                     }}
                   >
@@ -1423,12 +1438,20 @@ export default function ApplyForBeCompany() {
                 </Text>
               </TouchableOpacity>
             </View>
+                
             {/* Contract Finish */}
 
             {/* Register Button */}
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity style={styles.btnRegister} onPress={register}>
-                <Text style={styles.btnRegisterText}>Üye Ol</Text>
+                {
+                  loadingBtn? 
+                  <View style={{alignItems:'center',justifyContent:'center'}}>
+                    <ActivityIndicator color="white" size={'small'}/>
+                  </View>:
+                   <Text style={styles.btnRegisterText}>Üye Ol</Text>
+                }
+               
               </TouchableOpacity>
             </View>
             {/* Register Button */}
@@ -1582,7 +1605,9 @@ export default function ApplyForBeCompany() {
           </SafeAreaView>
         </Modal>
       </ScrollView>
-    </TouchableWithoutFeedback>
+      </AlertNotificationRoot>
+    
+   
   );
 }
 const pickerSelectStyles = StyleSheet.create({
@@ -1599,7 +1624,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#eaeff5",
     borderRadius: 5,
-    padding: 10,
+    padding: 6,
     fontSize: 14, // to ensure the text is never behind the icon
   },
 });

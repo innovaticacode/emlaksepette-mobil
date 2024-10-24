@@ -181,7 +181,7 @@ export default function ShoppingProfile() {
       })
     );
     await SecureStore.setItemAsync("user", "");
-    navigation.replace("Drawer", { screen: "Home" }, { status: "logout" });
+    navigation.replace("Drawer", { screen: "Home" }, { params:{ status: "logout"} });
     dispatch(setShoppingProfile({ isShoppingProfile: false }));
   };
 
