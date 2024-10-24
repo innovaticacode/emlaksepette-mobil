@@ -5,6 +5,8 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Platform,
+  Alert,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 import ActionSheet from "react-native-actions-sheet";
@@ -12,6 +14,7 @@ import { styles } from "./MySwapInfoBottom.styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { frontEndUriBase } from "../../methods/apiRequest";
 import * as FileSystem from "expo-file-system";
+import { shareAsync } from "expo-sharing";
 
 const { height } = Dimensions.get("screen");
 const MySwapInfoBottom = ({
@@ -44,48 +47,64 @@ const MySwapInfoBottom = ({
   };
 
   async function download() {
-    const filename = data?.ruhsat_belgesi?.split("/").pop();
-    if (!filename) {
-      console.log("Geçerli bir dosya adı yok.");
-      return;
+    try {
+      const filename = data?.ruhsat_belgesi?.split("/").pop();
+      if (!filename) {
+        console.log("Geçerli bir dosya adı yok.");
+        return;
+      }
+
+      const fileUri = FileSystem.documentDirectory + "/" + filename;
+      const result = await FileSystem.downloadAsync(
+        frontEndUriBase + "ruhsatFiles/" + data?.ruhsat_belgesi,
+        fileUri
+      );
+      const mimeType =
+        result.headers["content-type"] || "application/octet-stream";
+      await saveFile(result.uri, filename, mimeType);
+    } catch (error) {
+      Alert.alert("Dosya indirilirken bir hata oluştu.");
     }
-
-    const fileUri = FileSystem.documentDirectory + "/" + filename;
-    const result = await FileSystem.downloadAsync(
-      frontEndUriBase + "ruhsatFiles/" + data?.ruhsat_belgesi,
-      fileUri
-    );
-
-    // Save the downloaded file
-    const mimeType =
-      result.headers["content-type"] || "application/octet-stream";
-    await saveFile(result.uri, filename, mimeType);
   }
 
   async function saveFile(uri, filename, mimetype) {
-    const permissions =
-      await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+    try {
+      // For Android, request directory permissions.
+      if (Platform.OS === "android") {
+        const permissions =
+          await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
-    if (permissions.granted) {
-      const base64 = await FileSystem.readAsStringAsync(uri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-      const directoryUri = permissions.directoryUri;
-      try {
-        const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
-          directoryUri,
-          filename,
-          mimetype
-        );
-        await FileSystem.writeAsStringAsync(fileUri, base64, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
-        console.log("Dosya başarıyla kaydedildi:", fileUri);
-      } catch (e) {
-        console.log("Dosya kaydetme hatası:", e);
+        // If permission is granted
+        if (permissions.granted) {
+          // Read the file as Base64 to prepare for saving
+          const base64 = await FileSystem.readAsStringAsync(uri, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+          const directoryUri = permissions.directoryUri;
+
+          // Try to create and write the file in the chosen directory
+          try {
+            const fileUri =
+              await FileSystem.StorageAccessFramework.createFileAsync(
+                directoryUri,
+                filename,
+                mimetype
+              );
+            await FileSystem.writeAsStringAsync(fileUri, base64, {
+              encoding: FileSystem.EncodingType.Base64,
+            });
+            Alert.alert("Dosya başarıyla indirildi.");
+          } catch (error) {
+            Alert.alert("Dosya kaydedilirken bir hata oluştu.");
+          }
+        } else {
+          Alert.alert("Dosya kaydedilirken bir hata oluştu.");
+        }
+      } else {
+        await shareAsync(uri);
       }
-    } else {
-      console.log("İzin verilmedi.");
+    } catch (error) {
+      Alert.alert("Dosya kaydedilirken bir hata oluştu.");
     }
   }
 
