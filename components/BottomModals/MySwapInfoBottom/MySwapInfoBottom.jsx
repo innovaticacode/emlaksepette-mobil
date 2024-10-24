@@ -15,6 +15,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { frontEndUriBase } from "../../methods/apiRequest";
 import * as FileSystem from "expo-file-system";
 import { shareAsync } from "expo-sharing";
+import * as IntentLauncher from "expo-intent-launcher";
+import * as Linking from "expo-linking";
 
 const { height } = Dimensions.get("screen");
 const MySwapInfoBottom = ({
@@ -47,6 +49,7 @@ const MySwapInfoBottom = ({
   };
 
   async function download() {
+    setIsVisible(false);
     try {
       const filename = data?.ruhsat_belgesi?.split("/").pop();
       if (!filename) {
@@ -54,13 +57,14 @@ const MySwapInfoBottom = ({
         return;
       }
 
-      const fileUri = FileSystem.documentDirectory + "/" + filename;
+      const fileUri = FileSystem.documentDirectory + filename;
       const result = await FileSystem.downloadAsync(
         frontEndUriBase + "ruhsatFiles/" + data?.ruhsat_belgesi,
         fileUri
       );
       const mimeType =
         result.headers["content-type"] || "application/octet-stream";
+
       await saveFile(result.uri, filename, mimeType);
     } catch (error) {
       Alert.alert("Dosya indirilirken bir hata oluştu.");
@@ -69,20 +73,16 @@ const MySwapInfoBottom = ({
 
   async function saveFile(uri, filename, mimetype) {
     try {
-      // For Android, request directory permissions.
       if (Platform.OS === "android") {
         const permissions =
           await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
-        // If permission is granted
         if (permissions.granted) {
-          // Read the file as Base64 to prepare for saving
           const base64 = await FileSystem.readAsStringAsync(uri, {
             encoding: FileSystem.EncodingType.Base64,
           });
           const directoryUri = permissions.directoryUri;
 
-          // Try to create and write the file in the chosen directory
           try {
             const fileUri =
               await FileSystem.StorageAccessFramework.createFileAsync(
@@ -93,7 +93,8 @@ const MySwapInfoBottom = ({
             await FileSystem.writeAsStringAsync(fileUri, base64, {
               encoding: FileSystem.EncodingType.Base64,
             });
-            Alert.alert("Dosya başarıyla indirildi.");
+            // Open the file after saving
+            await openFile(fileUri, mimetype);
           } catch (error) {
             Alert.alert("Dosya kaydedilirken bir hata oluştu.");
           }
@@ -107,6 +108,25 @@ const MySwapInfoBottom = ({
       Alert.alert("Dosya kaydedilirken bir hata oluştu.");
     }
   }
+
+  // Function to open the file
+  const openFile = async (fileUri, type) => {
+    try {
+      if (Platform.OS === "android") {
+        // Use IntentLauncher to open the file on Android
+        await IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+          data: fileUri,
+          flags: 1,
+          type,
+        });
+      } else {
+        // Use Linking to open the file on iOS
+        await Linking.openURL(fileUri);
+      }
+    } catch (error) {
+      console.error("Error opening file:", error);
+    }
+  };
 
   return (
     <View>
@@ -411,7 +431,6 @@ const MySwapInfoBottom = ({
               <TouchableOpacity
                 onPress={() => {
                   download();
-                  setIsVisible(false);
                 }}
               >
                 <Text>Belgeleri Görüntüle</Text>
