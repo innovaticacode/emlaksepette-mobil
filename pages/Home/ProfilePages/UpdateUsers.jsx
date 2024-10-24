@@ -32,6 +32,8 @@ import {
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import { apiUrl } from "../../../components/methods/apiRequest";
+import mime from "mime";
+
 export default function UpdateUsers() {
   const route = useRoute();
   const navigation = useNavigation();
@@ -159,27 +161,35 @@ export default function UpdateUsers() {
     formdata.append("is_active", isActive);
 
     if (image) {
+      // Normalize the URI for Android and get the proper mime type
+      const newImageUri =
+        Platform.OS === "android"
+          ? image.uri.replace("file:/", "file://") // Add "file://" for Android
+          : image.uri.replace("file://", ""); // Clean for iOS
+
+      // Get the correct mime type using mime package
+      const mimeType = mime.getType(newImageUri) || "image/jpeg"; // Default to "image/jpeg" if not found
       formdata.append("profile_image", {
-        uri:
-          Platform.OS === "android"
-            ? image?.uri
-            : image?.uri.replace("file://", ""),
-        type: image?.mimeType,
-        name: image?.fileName || "Image.jpeg",
+        uri: newImageUri,
+        type: mimeType, // Use the provided mime type
+        name: image.fileName || "Image.jpeg",
       });
     }
 
+    console.debug("formdata", formdata);
+
     if (user?.access_token) {
-      console.debug("formdata", formdata);
+      console.debug("formdata", formdata.profile_image);
       try {
         const response = await axios.put(
           `${apiUrl}institutional/users/${UserID}`, // URL
           formdata, // Güncellenen form verisi
           {
             headers: {
-              Authorization: `Bearer ${user?.access_token}`, // Yetkilendirme
+              Authorization: `Bearer ${user?.access_token}`,
+              "Content-Type": "multipart/form-data",
             },
-            timeout: 10000, // Zaman aşımı süresi
+            timeout: 10000,
           }
         );
 
@@ -204,7 +214,7 @@ export default function UpdateUsers() {
       } catch (error) {
         // Hata ayrıntılarını yazdır
         console.error(
-          "Error ---> :",
+          "Error catch ---> :",
           error.response ? error.response.data : error.message
         );
 
