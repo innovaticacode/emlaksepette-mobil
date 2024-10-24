@@ -5,21 +5,13 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  Platform,
-  Linking,
-  Permissions,
 } from "react-native";
 import React, { useEffect, useRef } from "react";
 import ActionSheet from "react-native-actions-sheet";
 import { styles } from "./MySwapInfoBottom.styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { frontEndUriBase } from "../../methods/apiRequest";
-
 import * as FileSystem from "expo-file-system";
-import * as IntentLauncher from "expo-intent-launcher";
-import { StorageAccessFramework } from "expo-file-system";
-import { shareAsync } from "expo-sharing";
-import * as MediaLibrary from "expo-media-library";
 
 const { height } = Dimensions.get("screen");
 const MySwapInfoBottom = ({
@@ -397,7 +389,12 @@ const MySwapInfoBottom = ({
                   />
                 </>
               )} */}
-              <TouchableOpacity onPress={() => download()}>
+              <TouchableOpacity
+                onPress={() => {
+                  download();
+                  setIsVisible(false);
+                }}
+              >
                 <Text>Belgeleri Görüntüle</Text>
               </TouchableOpacity>
             </>
