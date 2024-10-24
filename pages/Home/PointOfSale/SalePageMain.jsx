@@ -10,6 +10,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import AwesomeAlert from "react-native-awesome-alerts";
+import Header from "../../../assets/salePageHeader.png";
+import { WhiteOrRedButtons } from "../../../components";
 
 export default function SalePageMain() {
   const [isUserHaveToken, setIsUserHaveToken] = useState(false);
@@ -29,14 +31,10 @@ export default function SalePageMain() {
       navigation.navigate("SalePage");
     }
   };
-
   const navigateToLogin = () => {
+    navigation.navigate("Login");
     closeModal();
-    setTimeout(() => {
-      navigation.navigate("Login");
-    }, 400);
   };
-
   const closeModal = () => {
     setIsCorporateTypeRight(false);
     setIsUserHaveToken(false);
@@ -47,6 +45,7 @@ export default function SalePageMain() {
       contentContainerStyle={styles.scrollViewContent}
       scrollEventThrottle={16}
       style={styles.container}
+      showsVerticalScrollIndicator={false}
     >
       <AwesomeAlert
         show={isUserHaveToken}
@@ -94,7 +93,40 @@ export default function SalePageMain() {
         onCancelPressed={closeModal}
         cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
       />
-      <View style={{ justifyContent: "center" }}>
+
+      <View style={{ backgroundColor: "#FFF" }}>
+        <View style={{ paddingHorizontal: 30, paddingTop: 20 }}>
+          <Image
+            source={Header}
+            style={{
+              width: "100%",
+              height: 200,
+            }}
+            resizeMode="contain"
+          />
+          <View style={{ paddingTop: 14 }}>
+            <View style={{ gap: 14 }}>
+              <Text style={{ fontSize: 24, fontWeight: "600" }}>
+                TEK TIKLA BİNLERCE PORTFÖYDE SATIŞ YETKİSİNE SAHİP OL!
+              </Text>
+              <Text style={{ fontSize: 12, fontWeight: "500", lineHeight: 17 }}>
+                Emlak ofisleri, platformda bulunan "Satış Noktası Ol" butonuna
+                tıklayarak Emlaksepette yetkili satış noktası olma başvurusunda
+                bulunabilirler. Bu başvuru, emlak ofisinin bulunduğu bölgede
+                emlaksepette ile iş birliği yaparak çeşitli avantajlardan
+                faydalanma ve sınırsız kazanç elde etme imkanı sağlar.
+              </Text>
+              <WhiteOrRedButtons
+                bgColor={"#EA2B2E"}
+                text={"Hemen Başvur"}
+                onPress={null}
+              />
+            </View>
+          </View>
+        </View>
+      </View>
+
+      {/* <View style={{ justifyContent: "center" }}>
         <View style={styles.salePageImageContainer}>
           <Image
             style={styles.salePageImage}
@@ -204,7 +236,7 @@ export default function SalePageMain() {
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </View> */}
     </ScrollView>
   );
 }
