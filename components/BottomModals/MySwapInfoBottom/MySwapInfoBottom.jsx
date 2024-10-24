@@ -124,7 +124,7 @@ const MySwapInfoBottom = ({
         await Linking.openURL(fileUri);
       }
     } catch (error) {
-      console.error("Error opening file:", error);
+      Alert.alert("Dosya açılırken bir hata oluştu.");
     }
   };
 
