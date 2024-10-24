@@ -34,7 +34,7 @@ const Area = ({ index }) => {
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-  
+
   const fetchFeaturedEstates = async (reset = false) => {
     if (loading || (!hasMore && !reset)) return;
     const config = {
@@ -43,7 +43,8 @@ const Area = ({ index }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${reset ? 1 : page
+        `https://private.emlaksepette.com/api/real-estates?page=${
+          reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
       );
@@ -108,41 +109,8 @@ const Area = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <View style={styles.container}>
-          <View style={{ paddingHorizontal: 0 }}>
-            <Image
-              source={Land}
-              style={{ width: "auto", height: 120, resizeMode: "cover" }}
-            />
-          </View>
-          <View style={styles.header}>
-            <Text style={{ fontSize: 14, fontWeight: 700 }}>
-              ÖNE ÇIKAN ARSALAR
-            </Text>
-
-            <TouchableOpacity style={styles.allBtn}>
-              <Text
-                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
-                onPress={() =>
-                  navigation.navigate("AllRealtorAdverts", {
-                    name: "Emlak İlanları",
-                    slug: "emlak-ilanlari",
-                    data: filteredHomes,
-                    count: filteredHomes.length,
-                    type: "arsa",
-                    optional: null,
-                    title: null,
-                    check: null,
-                    city: null,
-                    county: null,
-                    hood: null,
-                  })
-                }
-              >
-                Tüm İlanları Gör
-              </Text>
-            </TouchableOpacity>
-          </View>
+        <>
+      
           {refreshing && (
             <View
               style={{
@@ -181,8 +149,9 @@ const Area = ({ index }) => {
                     openSharing={
                       JSON.parse(item.housing_type_data)["open_sharing1"]
                     }
-                    image={`${apiUrl}/housing_images/${JSON.parse(item.housing_type_data).image
-                      }`}
+                    image={`${apiUrl}/housing_images/${
+                      JSON.parse(item.housing_type_data).image
+                    }`}
                     column1_additional={item.column1_additional}
                     column1_name={
                       JSON.parse(item.housing_type_data)[item.column1_name]
@@ -209,6 +178,7 @@ const Area = ({ index }) => {
                     column4_additional={item.column4_additional}
                     bookmarkStatus={true}
                     dailyRent={false}
+                    isFavorite={item.is_favorite}
                   />
                 )}
                 keyExtractor={(item, index) =>
@@ -222,10 +192,52 @@ const Area = ({ index }) => {
                   />
                 }
                 ListFooterComponent={renderFooter}
+                ListHeaderComponent={
+                    <>
+                    
+                    <View style={{ paddingHorizontal: 0 }}>
+            <Image
+              source={Land}
+              style={{ width: "auto", height: 120, resizeMode: "cover" }}
+            />
+          </View>
+          <View style={styles.header}>
+            <Text style={{ fontSize: 14, fontWeight: 700 }}>
+              ÖNE ÇIKAN ARSALAR
+            </Text>
+
+            <TouchableOpacity style={styles.allBtn}>
+              <Text
+                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
+                onPress={() =>
+                  navigation.navigate("Drawer", {
+                    screen: "AllRealtorAdverts",
+                    params: {
+                      name: "Emlak İlanları",
+                      slug: "emlak-ilanlari",
+                      data: filteredHomes,
+                      count: filteredHomes.length,
+                      type: "arsa",
+                      optional: null,
+                      title: null,
+                      check: null,
+                      city: null,
+                      county: null,
+                      hood: null,
+                    },
+                  })
+                }
+              >
+                Tüm İlanları Gör
+              </Text>
+            </TouchableOpacity>
+          </View>
+          </>
+                }
               />
             )}
           </AlertNotificationRoot>
-        </View>
+        </>
       )}
     </>
   );

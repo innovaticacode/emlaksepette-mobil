@@ -52,31 +52,19 @@ export default function RealtorPost({
   step1_slug,
   sold,
   openSharing,
+  isFavorite,
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
   const [bookmark, setbookmark] = useState("bookmark-o");
   const [user, setUser] = useState({});
   const [inFavorite, setInFavorite] = useState(false);
+  const [AddCartShow, setAddCartShow] = useState(false);
+  const [getPostId, setgetPostId] = useState(0);
+  const [showAlert, setShowAlert] = useState(false);
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-
-  const changeHeart = () => {
-    setHeart(heart === "hearto" ? "heart" : "hearto");
-  };
-
-  useEffect(() => {
-    if (housing.is_housing_favorite == null) {
-      setHeart("hearto");
-      setInFavorite(false);
-    } else {
-      setHeart("heart");
-      setInFavorite(true);
-    }
-  }, []);
-
-  const [getPostId, setgetPostId] = useState(0);
 
   const CreateCollection = (id) => {
     setgetPostId(id);
@@ -117,40 +105,45 @@ export default function RealtorPost({
   };
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
-  const [showAlert, setShowAlert] = useState(false);
 
-  const addFavorites = () => {
+  useEffect(() => {
+    if (isFavorite === 1) {
+      setHeart("heart");
+    } else {
+      setHeart("hearto");
+    }
+  }, []);
+
+  const addFavorites = async () => {
     if (user.access_token) {
+      // UI'da hemen favori olarak göster
+      setHeart("heart"); // Geçici olarak kalp dolu yap
+      setInFavorite(true);
       const config = {
         headers: { Authorization: `Bearer ${user.access_token}` },
       };
-      axios
-        .post(
-          "https://private.emlaksepette.com/api/add_housing_to_favorites/" +
-            HouseId,
+      try {
+        const res = await axios.post(
+          `https://private.emlaksepette.com/api/add_housing_to_favorites/${HouseId}`,
           {},
           config
-        )
-        .then((res) => {
-          changeHeart();
-
-          if (res.data.status == "removed") {
-            setInFavorite(false);
-          } else {
-            setInFavorite(true);
-          }
-        });
-      setShowAlert(false);
+        );
+        // İstek başarılıysa durumu güncelle
+        if (res.data.status === "removed") {
+          setHeart("hearto"); // Eğer favorilerden çıkarıldıysa kalbi boş yap
+          setInFavorite(false);
+        }
+        setShowAlert(false); // İşlem başarılıysa alert kapat
+      } catch (error) {
+        console.error("Favorilere ekleme hatası:", error);
+        // Hata durumunda geçici durumu geri al
+        setHeart("hearto");
+        setInFavorite(false);
+      }
     } else {
       setalertForFavorite(true);
     }
   };
-
-  const [AddCartShow, setAddCartShow] = useState(false);
-
-  useEffect(() => {
-    getValueFor("user", setUser);
-  }, []);
 
   const updateUserData = async () => {
     try {
@@ -196,7 +189,7 @@ export default function RealtorPost({
           formData,
           {
             headers: {
-              Authorization: `Bearer ${user?.access_token}`,
+              Authorization: `Bearer ${user.access_token}`,
             },
           }
         );
@@ -214,7 +207,11 @@ export default function RealtorPost({
   const [cartIsNull, setcartIsNull] = useState(false);
   return (
     <AlertNotificationRoot>
-      <View>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("Realtor details", { houseId: HouseId })
+        }
+      >
         <AwesomeAlert
           // contentContainerStyle={{
           //   transform: [{ scale: 1 }], // Uyarıyı animasyonsuz hale getirmek için
@@ -275,8 +272,10 @@ export default function RealtorPost({
             setalertForFavorite(false);
           }}
           onConfirmPressed={() => {
-            navigation.navigate("Login");
             setalertForFavorite(false);
+            setTimeout(() => {
+              navigation.navigate("Login");
+            }, 400);
           }}
           confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
           cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -306,8 +305,10 @@ export default function RealtorPost({
             setalertForSign(false);
           }}
           onConfirmPressed={() => {
-            navigation.navigate("Login");
             setalertForSign(false);
+            setTimeout(() => {
+              navigation.navigate("Login");
+            }, 400);
           }}
           confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
           cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -346,7 +347,7 @@ export default function RealtorPost({
 
         <View style={styles.container}>
           <View style={styles.İlan}>
-            <TouchableOpacity
+            <View
               style={{ width: "30%", height: 80 }}
               onPress={() =>
                 navigation.navigate("Realtor details", { houseId: HouseId })
@@ -375,7 +376,7 @@ export default function RealtorPost({
                 style={{ width: "100%", height: "100%" }}
                 resizeMode="cover"
               />
-            </TouchableOpacity>
+            </View>
 
             <View style={styles.container2}>
               <View style={styles.captionAndIcons}>
@@ -390,6 +391,7 @@ export default function RealtorPost({
                     {title}
                   </Text>
                 </View>
+                {/* 
                 <View
                   style={{
                     ...styles.ıcons, // Diğer stil özelliklerini ekleyin
@@ -421,6 +423,7 @@ export default function RealtorPost({
                     )}
 
                   <TouchableOpacity
+                    activeOpacity={0.8}
                     onPress={() => {
                       addFavorites();
                     }}
@@ -432,8 +435,33 @@ export default function RealtorPost({
                         color={heart == "hearto" ? "black" : "red"}
                       />
                     </View>
-                  </TouchableOpacity>
+                  </TouchableOpacity> 
                 </View>
+                */}
+                {
+                  !sold &&
+                  <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    addFavorites();
+                  }}
+                >
+                  <View style={styles.ıconContainer}>
+                    <Heart
+                      name={heart}
+                      size={13}
+                      color={
+                        heart == "hearto"
+                          ? "black"
+                          : "red" || isFavorite === 1
+                          ? "red"
+                          : "black"
+                      }
+                    />
+                  </View>
+                </TouchableOpacity>
+                }
+              
               </View>
 
               <View style={styles.PriceAndButtons}>
@@ -460,51 +488,11 @@ export default function RealtorPost({
                     <Text style={styles.priceText}>{formattedPrice} </Text>
                   )}
                 </View>
-                {housing?.user?.id == user.id && user.access_token ? (
-                  <TouchableOpacity
-                    style={[styles.addBasket, { backgroundColor: "#008001" }]}
-                  >
-                    <Text
-                      style={{
-                        color: "white",
-                        fontWeight: "600",
-                        fontSize: 10,
-                      }}
+                {!sold ? (
+                  housing?.user?.id == user.id && user.access_token ? (
+                    <TouchableOpacity
+                      style={[styles.addBasket, { backgroundColor: "#008001" }]}
                     >
-                      İlanı Düzenle
-                    </Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    style={styles.addBasket}
-                    onPress={() => {
-                      // Metin kontrolü yapılıyor
-                      if (
-                        (housing?.step2_slug &&
-                          housing?.step2_slug === "gunluk-kiralik") ||
-                        housing?.step1_slug === "mustakil-tatil"
-                      ) {
-                        navigation.navigate("Realtor details", {
-                          houseId: HouseId,
-                        });
-                      } else {
-                        handlePress();
-                      }
-                    }}
-                  >
-                    {(housing?.step2_slug &&
-                      housing?.step2_slug == "gunluk-kiralik") ||
-                    housing?.step1_slug == "mustakil-tatil" ? (
-                      <Text
-                        style={{
-                          color: "white",
-                          fontWeight: "600",
-                          fontSize: 9,
-                        }}
-                      >
-                        Rezervasyon Yap
-                      </Text>
-                    ) : (
                       <Text
                         style={{
                           color: "white",
@@ -512,11 +500,62 @@ export default function RealtorPost({
                           fontSize: 10,
                         }}
                       >
-                        Sepete Ekle
+                        İlanı Düzenle
                       </Text>
-                    )}
-                  </TouchableOpacity>
-                )}
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.addBasket}
+                      onPress={() => {
+                        // Metin kontrolü yapılıyor
+                        if (
+                          (housing?.step2_slug &&
+                            housing?.step2_slug === "gunluk-kiralik") ||
+                          housing?.step1_slug === "mustakil-tatil"
+                        ) {
+                          navigation.navigate("Realtor details", {
+                            houseId: HouseId,
+                          });
+                        } else {
+                          handlePress();
+                        }
+                      }}
+                    >
+                      {(housing?.step2_slug &&
+                        housing?.step2_slug == "gunluk-kiralik") ||
+                      housing?.step1_slug == "mustakil-tatil" ? (
+                        <Text
+                          style={{
+                            color: "white",
+                            fontWeight: "600",
+                            fontSize: 9,
+                          }}
+                        >
+                          Rezervasyon Yap
+                        </Text>
+                      ) : (
+                        <Text
+                          style={{
+                            color: "white",
+                            fontWeight: "600",
+                            fontSize: 10,
+                          }}
+                        >
+                          Sepete Ekle
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  )
+                ):sold==1 ?
+                <View style={[styles.addBasket, {backgroundColor:'#EA2C2E'}]}>
+                    <Text style={{color:'white',fontWeight:'600',fontSize:10}}>Satıldı</Text>
+                </View> :
+              <View style={[styles.addBasket, {backgroundColor:'#FFA500'}]}>
+              <Text style={{color:'white',fontWeight:'600',fontSize:10}}>Rezerve Edildi</Text>
+          </View>
+              
+              }
+            
 
                 {/*                
                 <TouchableOpacity
@@ -587,7 +626,7 @@ export default function RealtorPost({
               {column3_name && (
                 <Info
                   text={`${column3_name} ${
-                    column3_additional ? column3_additional : ".Kat"
+                    column3_additional ? column3_additional :""
                   }`}
                 />
               )}
@@ -612,7 +651,7 @@ export default function RealtorPost({
             </View>
           ) : null} */}
         </View>
-      </View>
+      </TouchableOpacity>
     </AlertNotificationRoot>
   );
 }
@@ -677,6 +716,7 @@ const styles = StyleSheet.create({
     width: "50%",
     alignItems: "center",
     backgroundColor: "#264ABB",
+    borderRadius: 5,
   },
 
   ıconContainer: {

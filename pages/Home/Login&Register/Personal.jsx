@@ -82,8 +82,6 @@ export default function Personal({ type }) {
       // İsteğin başarılı bir şekilde tamamlandığı durum
 
       setmessage(response.data.message);
-      navigation.navigate("Login", { showAlert: true });
-
       setname("");
       setePosta("");
       setpassword("");
@@ -94,6 +92,9 @@ export default function Personal({ type }) {
       setChecked3(false);
       seterrorStatu(0);
       seterrorMessage("");
+      setTimeout(() => {
+        navigation.replace('Login',{showAlert: true})
+      }, 700);
     } catch (error) {
       // Hata durumunda
 
@@ -159,13 +160,7 @@ export default function Personal({ type }) {
           seterrorStatu(0);
         }, 1000);
         break;
-      case password.length < 6:
-        seterrorStatu(6);
-        seterrorMessage("Şifreniz En Az 5 Karakter Olmalıdır");
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 1000);
-        break;
+    
       default:
         postData();
     }
@@ -246,11 +241,59 @@ export default function Personal({ type }) {
       }
     }
   };
+  const [passControl, setpassControl] = useState(false);
+  const [showLengthAlert, setShowLengthAlert] = useState(false);
+  const [showUpperAlert, setShowUpperAlert] = useState(false);
+  const [showSymbolAlert, setShowSymbolAlert] = useState(false);
+  const [showNumberAlert, setShowNumberAlert] = useState(false);
+  const [colorForLength, setcolorForLength] = useState(false)
+  const [colorForNumberAlert, setcolorForNumberAlert] = useState(false)
+  const [colorForUpper, setcolorForUpper] = useState(false)
+  const [colorForSymbol, setcolorForSymbol] = useState(false)
+const handlePasswordChange = (text) => {
+  setpassword(text);
+  // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
 
+  if (text.length+1 <= 8) {
+    setShowLengthAlert(true)
+    setcolorForLength(false)
+  } else {
+
+    setcolorForLength(true)
+  }
+
+  //rakam kontrölü
+  const numberRegex = /[0-9]/;
+  if (!numberRegex.test(text)) {
+    setShowNumberAlert(true);
+    setcolorForNumberAlert(false)
+  } else {
+    
+    setcolorForNumberAlert(true)
+  }
+  //Büyük harf kontrolü
+  const upperCaseRegex = /[A-Z]/;
+  if (!upperCaseRegex.test(text)) {
+    setShowUpperAlert(true)
+    setcolorForUpper(false)
+  } else {
+    
+    setcolorForUpper(true)
+  }
+  // Sembole kontrolü
+  const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+  if (!symbolRegex.test(text)) {
+    setShowSymbolAlert(true)
+    setcolorForSymbol(false)
+  } else {
+   
+    setcolorForSymbol(true)
+  }
+};
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
         <ScrollView
+        style={styles.container}
           showsVerticalScrollIndicator={false}
           onScroll={() => Keyboard.dismiss()}
           scrollEventThrottle={16}
@@ -331,7 +374,7 @@ export default function Personal({ type }) {
                     },
                   ]}
                   value={password}
-                  onChangeText={(value) => setpassword(value)}
+                  onChangeText={(value) => handlePasswordChange(value)}
                   placeholder="Şifre"
                   secureTextEntry={Show ? false : true}
                   autoCapitalize="none" // İlk harfin büyük olmasını engeller
@@ -351,6 +394,39 @@ export default function Personal({ type }) {
                   />
                 </TouchableOpacity>
               </View>
+              <View style={{paddingTop:5,gap:5}}>
+                          {passControl && (
+                            <Text
+                              style={{
+                                color: "red",
+                                fontWeight: "500",
+                                fontSize: 12,
+                              }}
+                            >
+                              Lütfen Şifrenizi girin!
+                            </Text>
+                          )}
+                          {showLengthAlert  && (
+                            <Text style={{ color: colorForLength? 'green': "red" }}>
+                              Şifreniz en az 8 karakter olmalıdır!
+                            </Text>
+                          )}
+                          {showNumberAlert  && (
+                            <Text style={{ color: colorForNumberAlert? 'green': "red" }}>
+                              Şifrenizde en az bir rakam olmalıdır.
+                            </Text>
+                          )}
+                          {(showUpperAlert ) && (
+                            <Text style={{ color: colorForUpper? 'green': "red" }}>
+                              Şifrenizde en az bir büyük harf olmalıdır!
+                            </Text>
+                          )}
+                          {showSymbolAlert  && (
+                            <Text style={{ color: colorForSymbol?'green': "red" }}>
+                              Şifrenizde en az bir özel karakter olmalıdır!
+                            </Text>
+                          )}
+                          </View>
             </View>
             <View style={styles.container}>
               <TouchableOpacity
@@ -772,7 +848,6 @@ export default function Personal({ type }) {
             </View>
           </Modal>
         </ScrollView>
-      </View>
     </TouchableWithoutFeedback>
   );
 }

@@ -172,14 +172,11 @@ export default function Posts({
   const formatPrice = (price) => addDotEveryThreeDigits(Math.round(price));
 
   function navigateToPostDetails() {
-    const params = {
-      HomeId: roomOrder,
-      projectId: data?.project?.id,
-    };
-
-    navigation.navigate("PostDetails", params);
+   
+navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id})
+  
   }
-
+  
   const changeFavorite = () => {
     setShowAlert(true);
   };
@@ -430,7 +427,10 @@ export default function Posts({
           setalertForFavorite(false);
         }}
         onConfirmPressed={() => {
-          navigation.navigate("Login");
+          setalertForFavorite(false);
+          setTimeout(() => {
+            navigation.navigate("Login");
+          }, 400);
         }}
         confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
         cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -460,7 +460,10 @@ export default function Posts({
           setalertForSign(false);
         }}
         onConfirmPressed={() => {
-          navigation.navigate("Login");
+          setalertForSign(false);
+          setTimeout(() => {
+            navigation.navigate("Login");
+          }, 400);
         }}
         confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
         cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -540,7 +543,7 @@ export default function Posts({
                 justifyContent: bookmarkStatus ? "space-between" : "flex-end",
               }}
             >
-              {BookmarkStatus.map((item) => (
+              {/* {BookmarkStatus.map((item) => (
                 <TouchableOpacity
                   onPress={() => {
                     changeBookmark();
@@ -581,7 +584,7 @@ export default function Posts({
                     </View>
                   )}
                 </TouchableOpacity>
-              ))}
+              ))} */}
 
               <TouchableOpacity onPress={addFavorites}>
                 {sold || offSaleStatus == 1 ? (
@@ -860,8 +863,10 @@ export default function Posts({
                           : "50%",
                     }}
                   >
-                    {!sold && project.user.id == user.id ||
-                      !sold && project.user.id == user.parent_id ? (
+
+                    {(!sold && project.user.id == user.id) ||
+                    (!sold && project.user.id == user.parent_id) ? (
+
                       <View style={styles.priceContainer}>
                         <TouchableOpacity style={styles.addBasket}>
                           <Text style={styles.addBasketText}>
@@ -1051,27 +1056,39 @@ export default function Posts({
       {data?.project?.list_item_values && (
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>
-            <Info
-              text={
-                roomData[`${data?.project?.list_item_values?.column1_name}[]`] +
-                " " +
-                (data.project.list_item_values.column1_additional || "")
-              }
-            />
-            <Info
+            {
+               roomData[`${data?.project?.list_item_values?.column1_name}[]`] &&
+               <Info
+               text={
+                 roomData[`${data?.project?.list_item_values?.column1_name}[]`] +
+                 " " +
+                 (data.project.list_item_values.column1_additional || "")
+               }
+             />
+            }
+           
+            {
+              roomData[`${data?.project?.list_item_values?.column2_name}[]`] &&
+              <Info
               text={
                 roomData[`${data?.project?.list_item_values?.column2_name}[]`] +
                 " " +
                 (data.project.list_item_values.column2_additional || "")
               }
             />
-            <Info
+            }
+           
+            {
+              roomData[`${data?.project?.list_item_values?.column3_name}[]`] &&
+              <Info
               text={
-                roomData[`${data?.project?.list_item_values?.column3_name}[]`] +
+                roomData[`${data?.project?.list_item_values?.column3_name}[]`] ? roomData[`${data?.project?.list_item_values?.column3_name}[]`]:null +
                 " " +
                 (data.project.list_item_values.column3_additional || "")
               }
             />
+            }
+           
             <Info text={moment(project.created_at).locale("tr").format("LL")} />
           </View>
           <View style={styles.infoLocation}>
@@ -1229,7 +1246,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
       },
       android: {
-        elevation: 5,
+        elevation: 0,
       },
     }),
   },

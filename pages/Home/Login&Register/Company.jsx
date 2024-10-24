@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   FlatList,
+  KeyboardAvoidingView,
 } from "react-native";
 import { React, useState, useEffect, useRef } from "react";
 import Modal from "react-native-modal";
@@ -23,6 +24,7 @@ import { SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
+import { ALERT_TYPE, AlertNotificationRoot, Dialog } from "react-native-alert-notification";
 
 export default function Company() {
   const Navigation = useNavigation();
@@ -132,8 +134,9 @@ export default function Company() {
   const scrollViewRef = useRef();
 
   // Bu fonksiyon sayfanın en üstüne scroll etmek için kullanılabilir
+
   const scrollToTop = () => {
-    scrollViewRef.current.scrollTo({ y: 0, animated: true });
+    scrollViewRef.current.scrollTo({ y:0, animated: true });
   };
 
   const onChangeCity = (value) => {
@@ -174,7 +177,8 @@ export default function Company() {
     }
   };
   const [message, setmessage] = useState("");
-  const [IsSucces, setIsSucces] = useState(null);
+  const [IsSucces, setIsSucces] = useState(null)
+
   const postData = async () => {
     setsuccesRegister(true);
     let fullNumber = `${cityCode}${companyPhone}`;
@@ -238,25 +242,28 @@ export default function Company() {
       setChecked2(false);
       setChecked3(false);
       setcityCode("");
-      Navigation.navigate("Login", { showAlert: true });
+      setTimeout(() => {
+        Navigation.replace("Login", { showAlert: true });
+      }, 700);
+    
     } catch (error) {
       // Hata durumunda
-      scrollToTop();
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.errors &&
-        error.response.data.errors.email
-      ) {
-        const errorMessage = error.response.data.errors.email[0];
-        seterrorMessage(errorMessage);
-        seterrorStatu(2);
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 3000);
-      } else {
-        console.error("Beklenmeyen bir hata oluştu:", error);
+       scrollToTop();
+      if (error.response.data.errors.email) {
+        seterrorStatu(2)
+          seterrorMessage(error.response.data.errors.email)
+          setTimeout(() => {
+            seterrorStatu(0);
+          }, 10000);
       }
+        // Dialog.show({
+        //   type: ALERT_TYPE.WARNING,
+        //   title: "Başarılı",
+        //   textBody: `${error.response.data.errors.email}`,
+        //   button: "Tamam",
+        // });
+      
+      
     } finally {
       setsuccesRegister(false);
     }
@@ -264,12 +271,13 @@ export default function Company() {
 
   const [errorStatu, seterrorStatu] = useState(0);
   const [errorMessage, seterrorMessage] = useState("");
-
+  console.log(focusArea,!focusArea);
   const register = () => {
     switch (true) {
       case !bossName:
         seterrorStatu(1);
         seterrorMessage("İsim Alanı Boş Bırakılmaz");
+        
         scrollToTop();
         setTimeout(() => {
           seterrorStatu(0);
@@ -300,7 +308,48 @@ export default function Company() {
           seterrorStatu(0);
         }, 10000);
         break;
-
+      case !focusArea:
+        seterrorStatu(7);
+        seterrorMessage("Faaliyet Alanı Boş Bırakılamaz");
+        scrollToTop();
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
+        case focusArea == "Emlak Ofisi" && !licence:
+          seterrorStatu(14);
+          seterrorMessage("Yetki Belgesi zorunludur");
+            scrollToTop()
+          setTimeout(() => {
+            seterrorStatu(0);
+          }, 10000);
+          break;
+          case (focusArea == "Emlak Ofisi" && IsConnectFranchaise==null):
+            seterrorStatu(16);
+            seterrorMessage("Bu Alan Zorunludur");
+            scrollToTop()
+            setTimeout(() => {
+              seterrorStatu(0);
+            }, 10000);
+            break;
+            case( focusArea == "Emlak Ofisi" && IsConnectFranchaise == 0 && !MarcaName):
+            seterrorStatu(17);
+            seterrorMessage("Marka Alanı Zorundludur");
+            scrollToTop()
+            setTimeout(() => {
+              seterrorStatu(0);
+            }, 10000);
+            break;
+          case focusArea == "Emlak Ofisi" &&
+            IsConnectFranchaise == 1 &&
+            !FrancheiseMarc:
+            seterrorStatu(18);
+            seterrorMessage("Bu Alan Zorunludur");
+            scrollToTop()
+            setTimeout(() => {
+              seterrorStatu(0);
+            }, 10000);
+            break;
       case !companyName:
         seterrorStatu(5);
         seterrorMessage("Ticaret Ünvanı Boş Bırakılamaz");
@@ -312,14 +361,6 @@ export default function Company() {
       case !ShoppingName:
         seterrorStatu(6);
         seterrorMessage("Mağaza Adı Boş Bırakılamaz");
-        scrollToTop();
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 10000);
-        break;
-      case !focusArea:
-        seterrorStatu(7);
-        seterrorMessage("Faaliyet Alanı Boş Bırakılamaz");
         scrollToTop();
         setTimeout(() => {
           seterrorStatu(0);
@@ -351,7 +392,7 @@ export default function Company() {
         break;
       case !TaxPlaceCity:
         seterrorStatu(11);
-        seterrorMessage('Vergi dairesi ili zorunludur."');
+        seterrorMessage('Vergi dairesi ili zorunludur');
         scrollToTop();
         setTimeout(() => {
           seterrorStatu(0);
@@ -373,70 +414,19 @@ export default function Company() {
           seterrorStatu(0);
         }, 10000);
         break;
-      case focusArea == "Emlak Ofisi" && !licence:
-        seterrorStatu(14);
-        seterrorMessage("Yetki Belgesi zorunludur");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 10000);
-        break;
-      case focusArea == "Emlak Ofisi" && !IsGiveFrancheise:
-        seterrorStatu(16);
-        seterrorMessage("Bu Alan Zorunludur");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 10000);
-        break;
-      case focusArea == "Emlak Ofisi" &&
-        IsGiveFrancheise == 0 &&
-        !IsConnectFranchaise:
-        seterrorStatu(15);
-        seterrorMessage("Bu Alan Zorunludur");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 10000);
-        break;
-
-      case focusArea == "Emlak Ofisi" && IsConnectFranchaise == 0 && !MarcaName:
-        seterrorStatu(17);
-        seterrorMessage("Bu Alan Zorunludur");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 10000);
-        break;
-      case focusArea == "Emlak Ofisi" &&
-        IsConnectFranchaise == 1 &&
-        !FrancheiseMarc:
-        seterrorStatu(18);
-        seterrorMessage("Bu Alan Zorunludur");
-
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 10000);
-        break;
       case !checked || !checked1 || !checked2:
         seterrorStatu(15);
         seterrorMessage("Sözleşmeleri Onaylamayı Unutmayın");
         setTimeout(() => {
           seterrorStatu(0);
-        }, 10000);
+        }, 5000);
         break;
-      case password.length < 6:
-        seterrorStatu(16);
-        seterrorMessage("Şifreniz En Az 6 Karakter Olmalıdır");
-        scrollToTop();
-        setTimeout(() => {
-          seterrorStatu(0);
-        }, 10000);
-        break;
+  
       default:
         postData();
     }
   };
+
   const fetchTaxOfficeCity = async () => {
     try {
       const response = await axios.get(
@@ -520,7 +510,7 @@ export default function Company() {
   const handlePhoneNumberChange = (value) => {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setphoneNumber(formattedPhoneNumber);
-    setcompanyPhone(value);
+   
   };
 
   const GetDeal = (deal) => {
@@ -681,9 +671,59 @@ export default function Company() {
     label: item.title,
     value: item?.id,
   }));
+  const [passControl, setpassControl] = useState(false);
+  const [showLengthAlert, setShowLengthAlert] = useState(false);
+  const [showUpperAlert, setShowUpperAlert] = useState(false);
+  const [showSymbolAlert, setShowSymbolAlert] = useState(false);
+  const [showNumberAlert, setShowNumberAlert] = useState(false);
+  const [colorForLength, setcolorForLength] = useState(false)
+  const [colorForNumberAlert, setcolorForNumberAlert] = useState(false)
+  const [colorForUpper, setcolorForUpper] = useState(false)
+  const [colorForSymbol, setcolorForSymbol] = useState(false)
+const handlePasswordChange = (text) => {
+  setpassword(text);
+  // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
+
+  if (text.length+1 <= 8) {
+    setShowLengthAlert(true)
+    setcolorForLength(false)
+  } else {
+
+    setcolorForLength(true)
+  }
+
+  //rakam kontrölü
+  const numberRegex = /[0-9]/;
+  if (!numberRegex.test(text)) {
+    setShowNumberAlert(true);
+    setcolorForNumberAlert(false)
+  } else {
+    
+    setcolorForNumberAlert(true)
+  }
+  //Büyük harf kontrolü
+  const upperCaseRegex = /[A-Z]/;
+  if (!upperCaseRegex.test(text)) {
+    setShowUpperAlert(true)
+    setcolorForUpper(false)
+  } else {
+    
+    setcolorForUpper(true)
+  }
+  // Sembole kontrolü
+  const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+  if (!symbolRegex.test(text)) {
+    setShowSymbolAlert(true)
+    setcolorForSymbol(false)
+  } else {
+   
+    setcolorForSymbol(true)
+  }
+};
+console.log(errorStatu)
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
+     
+      <ScrollView behavior="padding" style={{flex:1}} ref={scrollViewRef}>
         <View style={styles.container}>
           <View style={{ padding: 15, gap: 20 }}>
             <View style={{ gap: 5 }}>
@@ -752,7 +792,7 @@ export default function Company() {
                     borderColor: errorStatu == 4 ? "red" : "#ebebeb",
                   },
                 ]}
-                onChangeText={handlePhoneNumberChange}
+                onChangeText={(value)=>{ handlePhoneNumberChange(value)}}
                 placeholder="Cep Telefonu"
                 keyboardType="number-pad"
                 maxLength={15}
@@ -774,7 +814,7 @@ export default function Company() {
               <View>
                 <TextInput
                   value={password}
-                  onChangeText={(value) => setpassword(value)}
+                  onChangeText={(value) => handlePasswordChange(value)}
                   style={[
                     styles.Input,
                     {
@@ -799,13 +839,26 @@ export default function Company() {
                   />
                 </TouchableOpacity>
               </View>
-              {errorStatu == 3 ? (
-                <Text style={{ fontSize: 12, color: "red" }}>
-                  {errorMessage}
-                </Text>
-              ) : (
-                ""
-              )}
+              {showLengthAlert  && (
+                            <Text style={{ color: colorForLength? 'green': "red" }}>
+                              Şifreniz en az 8 karakter olmalıdır!
+                            </Text>
+                          )}
+                          {showNumberAlert && (
+                            <Text style={{ color: colorForNumberAlert? 'green': "red" }}>
+                              Şifrenizde en az bir rakam olmalıdır.
+                            </Text>
+                          )}
+                          {showUpperAlert && (
+                            <Text style={{ color: colorForUpper? 'green': "red" }}>
+                              Şifrenizde en az bir büyük harf olmalıdır!
+                            </Text>
+                          )}
+                          {showSymbolAlert  && (
+                            <Text style={{ color: colorForSymbol?'green': "red" }}>
+                              Şifrenizde en az bir özel karakter olmalıdır!
+                            </Text>
+                          )}
             </View>
 
             <View style={{ gap: 5 }}>
@@ -825,8 +878,9 @@ export default function Company() {
                   { label: "Emlak Ofisi", value: "Emlak Ofisi" },
                   { label: "İnşaat Ofisi", value: "İnşaat Ofisi" },
                   { label: "Banka", value: "Banka" },
-                  { label: "Turizm", value: "Turizm" },
+                  { label: "Turizm", value: "Turizm Amaçlı Kiralama" },
                   { label: "Üretici", value: "Üretici" },
+                  { label: "Gayrimenkul Franchise", value: "Gayrimenkul Franchise" }
                 ]}
               />
               {errorStatu == 7 ? (
@@ -845,7 +899,7 @@ export default function Company() {
                     <Text
                       style={{ fontSize: 14, color: "black", fontWeight: 600 }}
                     >
-                      Yetki Belgesi No
+                      Taşınmaz Ticareti Yetki Belgesi No
                     </Text>
                   </View>
                   <TextInput
@@ -865,11 +919,11 @@ export default function Company() {
                   )}
                 </View>
 
-                <View style={{ gap: 5 }}>
+                {/* <View style={{ gap: 5 }}>
                   <Text
                     style={{ fontSize: 14, color: "black", fontWeight: 600 }}
                   >
-                    Franchise Veriyor Musun?
+                   Franchise Ofisine Bağlı Mısın?
                   </Text>
                   <RNPickerSelect
                     doneText="Tamam"
@@ -892,9 +946,9 @@ export default function Company() {
                   ) : (
                     ""
                   )}
-                </View>
+                </View> */}
 
-                {IsGiveFrancheise == 0 && (
+                { focusArea=='Emlak Ofisi' && (
                   <View style={{ gap: 5 }}>
                     <Text
                       style={{ fontSize: 14, color: "black", fontWeight: 600 }}
@@ -925,7 +979,7 @@ export default function Company() {
                   </View>
                 )}
 
-                {IsConnectFranchaise == 1 && (
+                {IsConnectFranchaise == 1  && (
                   <View style={{ gap: 5 }}>
                     <Text
                       style={{ fontSize: 14, color: "black", fontWeight: 600 }}
@@ -969,7 +1023,7 @@ export default function Company() {
                       style={[
                         styles.Input,
                         {
-                          borderColor: errorStatu == 5 ? "red" : "#ebebeb",
+                          borderColor: errorStatu == 17 ? "red" : "#ebebeb",
                         },
                       ]}
                       value={MarcaName}
@@ -991,7 +1045,7 @@ export default function Company() {
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Ticaret Ünvanı
+                  Ticari Ünvan <Text style={{color:'#888888',fontSize:12}}>(Vergi Levhasında Yazan Firma Adı)</Text>
                 </Text>
               </View>
               <TextInput
@@ -1003,7 +1057,7 @@ export default function Company() {
                 ]}
                 value={companyName}
                 onChangeText={(value) => setcompanyName(value)}
-                placeholder="Ticaret Ünvanı"
+                placeholder="Ticari Ünvan"
               />
               {errorStatu == 5 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
@@ -1016,7 +1070,7 @@ export default function Company() {
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Mağaza Adı
+                  Mağaza Adı <Text style={{fontSize:12,color:'#888888'}}>(Ofisinizin tabela adı ile aynı olmalıdır)</Text>
                 </Text>
               </View>
               <TextInput
@@ -1180,6 +1234,7 @@ export default function Company() {
                   checkedColor="#E54242"
                   title={<Text style={{ fontSize: 12 }}>Şahıs Şirketi</Text>}
                   containerStyle={{
+                    
                     padding: 0,
                     backgroundColor: "transparent",
                     borderWidth: 0,
@@ -1198,7 +1253,30 @@ export default function Company() {
                   title={
                     <View style={{}}>
                       <Text style={{ fontSize: 12 }}>
-                        Limited veya Anonim Şirketi{" "}
+                        LTD.ŞTİ veya A.Ş{" "}
+                      </Text>
+                    </View>
+                  }
+                  containerStyle={{
+                    padding: 0,
+                    backgroundColor: "transparent",
+                    borderWidth: 0,
+                    borderTopWidth: 1,
+                  }}
+                />
+                   <CheckBox
+                  checked={selectedIndexRadio === 3}
+                  onPress={() => {
+                    setIndexRadio(3);
+                    chooseType("Limited veya Anonim Şirketi");
+                  }}
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checkedColor="#E54242"
+                  title={
+                    <View style={{}}>
+                      <Text style={{ fontSize: 12 }}>
+                        Diğer{" "}
                       </Text>
                     </View>
                   }
@@ -1285,12 +1363,12 @@ export default function Company() {
             <View
               style={{
                 gap: 5,
-                display: selectedIndexRadio == 1 ? "flex" : "none",
+                
               }}
             >
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Tc Kimlik No
+                  TC Kimlik No
                 </Text>
               </View>
               <TextInput
@@ -1328,12 +1406,12 @@ export default function Company() {
                 <Text
                   style={[
                     styles.checkboxLabel,
-                    { color: errorStatu === 5 ? "red" : "black" },
+                    { color: errorStatu === 15 ? "red" : "black" },
                   ]}
                 >
                   <Text
                     style={{
-                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      color: errorStatu === 15 ? "red" : "#027BFF",
                       fontSize: 13,
                     }}
                   >
@@ -1352,7 +1430,7 @@ export default function Company() {
                     "kvkk-politikasi"
                   )
                 }
-                style={styles.checkboxContainer}
+                style={[styles.checkboxContainer]}
               >
                 {checked1 ? (
                   <FontAwesome5Icon
@@ -1366,12 +1444,12 @@ export default function Company() {
                 <Text
                   style={[
                     styles.checkboxLabel,
-                    { color: errorStatu === 5 ? "red" : "black" },
+                    { color: errorStatu === 15 ? "red" : "black" },
                   ]}
                 >
                   <Text
                     style={{
-                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      color: errorStatu === 15 ? "red" : "#027BFF",
                       fontSize: 13,
                     }}
                   >
@@ -1405,12 +1483,12 @@ export default function Company() {
                 <Text
                   style={[
                     styles.checkboxLabel,
-                    { color: errorStatu === 5 ? "red" : "black" },
+                    { color: errorStatu === 15 ? "red" : "black" },
                   ]}
                 >
                   <Text
                     style={{
-                      color: errorStatu === 5 ? "red" : "#027BFF",
+                      color: errorStatu === 15 ? "red" : "#027BFF",
                       fontSize: 13,
                     }}
                   >
@@ -1443,6 +1521,7 @@ export default function Company() {
                 </Text>
               </TouchableOpacity>
             </View>
+                
             {/* Contract Finish */}
 
             {/* Register Button */}
@@ -1602,7 +1681,8 @@ export default function Company() {
           </SafeAreaView>
         </Modal>
       </ScrollView>
-    </TouchableWithoutFeedback>
+    
+   
   );
 }
 const pickerSelectStyles = StyleSheet.create({
@@ -1619,7 +1699,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#eaeff5",
     borderRadius: 5,
-    padding: 10,
+    padding: 6,
     fontSize: 14, // to ensure the text is never behind the icon
   },
 });

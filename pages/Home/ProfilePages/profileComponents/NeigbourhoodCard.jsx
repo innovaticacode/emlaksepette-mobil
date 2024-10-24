@@ -6,16 +6,17 @@ import {
   Linking,
   ImageBackground,
 } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import Icon from "react-native-vector-icons/Feather";
 import { Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { frontEndUriBase } from "../../../../components/methods/apiRequest";
 export default function NeigbourhoodCard({
   NeigBourHoodInfo,
   project,
   projectInfo,
+  status,
 }) {
-  const apiUrl = "https://private.emlaksepette.com";
   const navigation = useNavigation();
 
   const handleOpenPhone = () => {
@@ -43,30 +44,15 @@ export default function NeigbourhoodCard({
     return formattedNumber;
   };
 
-  useEffect(() => {
-    console.debug(">>>>>>>>>>>>>>>>>", projectInfo);
-  }, []);
-
+  console.debug("NeigBourHoodInfo", NeigBourHoodInfo);
   return (
     <View style={styles.contain}>
-      <View style={{ padding: 17, gap: 20 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            gap: 13,
-            alignItems: "center",
-          }}
-        >
-          <View
-            style={{
-              width: 90,
-              height: 90,
-              borderRadius: 5,
-            }}
-          >
+      <View style={{ padding: 16, gap: 20 }}>
+        <View style={styles.body}>
+          <View style={styles.imageArea}>
             <ImageBackground
               source={{
-                uri: `${apiUrl}/${projectInfo.image.replace(
+                uri: `${frontEndUriBase}${projectInfo.image.replace(
                   "public/",
                   "storage/"
                 )}`,
@@ -78,16 +64,24 @@ export default function NeigbourhoodCard({
               borderRadius={5}
             />
           </View>
-          <View style={{ gap: 4 }}>
+          <View style={styles.textArea}>
             <View style={{ gap: 1 }}>
               <Text style={styles.header}>Mülk Sahibi Adı</Text>
-              <Text style={styles.Text}>{NeigBourHoodInfo.name}</Text>
+              <Text style={styles.Text}>
+                {status === 1
+                  ? NeigBourHoodInfo.name
+                  : `${NeigBourHoodInfo.name.slice(0, 2)}********`}
+              </Text>
             </View>
             <View style={{ gap: 1 }}>
               <Text style={styles.header}>Mülk Sahibi Telefonu</Text>
               <Text style={styles.Text}>
-                {" "}
-                {formatPhoneNumber(NeigBourHoodInfo.mobile_phone)}
+                {status === 1
+                  ? formatPhoneNumber(NeigBourHoodInfo.mobile_phone)
+                  : `${formatPhoneNumber(NeigBourHoodInfo.mobile_phone).slice(
+                      0,
+                      5
+                    )}******`}
               </Text>
             </View>
             <View style={{ gap: 1 }}>
@@ -106,41 +100,30 @@ export default function NeigbourhoodCard({
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <TouchableOpacity
             onPress={() => {
-              handleOpenPhone();
+              status === 1 ? handleOpenPhone() : null;
             }}
-            style={{
-              backgroundColor: "#10A958",
-              width: "45%",
-              padding: 6,
-              borderRadius: 6,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-            }}
+            style={[
+              styles.callButton,
+              { backgroundColor: status === 1 ? "#10A958" : "#FFCE86" },
+            ]}
+            activeOpacity={status === 1 ? 0.2 : 1}
           >
             <Icon name="phone" color={"#fff"} />
-            <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
-              Komşumu Ara
+            <Text style={{ textAlign: "center", color: "#FFF" }}>
+              {status === 1 ? "Ara" : "Onay Bekleniyor"}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("PostDetails", {
-                HomeId: JSON.parse(project)["item"]["housing"],
-                projectId: projectInfo.id,
+              navigation.navigate("Drawer", {
+                screen: "PostDetails",
+                params: {
+                  HomeId: JSON.parse(project)?.item?.housing,
+                  projectId: projectInfo?.id,
+                },
               });
             }}
-            style={{
-              backgroundColor: "#000000",
-              width: "45%",
-              padding: 6,
-              borderRadius: 6,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-            }}
+            style={styles.seeAdvertButton}
           >
             <Icon name="eye" color={"#fff"} />
             <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
@@ -156,9 +139,7 @@ const styles = StyleSheet.create({
   contain: {
     backgroundColor: "#FFFFFF",
     borderRadius: 12,
-
     width: "100%",
-
     borderWidth: 0.7,
     borderColor: "#e6e6e6",
     ...Platform.select({
@@ -172,6 +153,7 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+    marginVertical: 4,
   },
   Text: {
     color: "#333",
@@ -181,5 +163,39 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 12,
     fontWeight: "300",
+  },
+  body: {
+    flexDirection: "row",
+    gap: 13,
+    alignItems: "center",
+  },
+  imageArea: {
+    width: 90,
+    height: 90,
+    borderRadius: 5,
+  },
+  callButton: {
+    width: "45%",
+    padding: 6,
+    borderRadius: 6,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  seeAdvertButton: {
+    backgroundColor: "#000000",
+    width: "45%",
+    padding: 6,
+    borderRadius: 6,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  textArea: {
+    flex: 1,
+    justifyContent: "space-between",
+    paddingVertical: 5,
   },
 });

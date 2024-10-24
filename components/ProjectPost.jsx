@@ -30,12 +30,11 @@ export default function ProjectPost({
     return color;
   };
 
- 
-  const [randomColor,setRandomColor]=useState(null)
-  useEffect(()=>{
+  const [randomColor, setRandomColor] = useState(null);
+  useEffect(() => {
     const RandomColor = generateRandomColorCode();
-      setRandomColor(RandomColor)
-  },[user])
+    setRandomColor(RandomColor);
+  }, [user]);
   const navigation = useNavigation();
   const [userLogin, setuserLogin] = useState({});
   useEffect(() => {
@@ -45,9 +44,8 @@ export default function ProjectPost({
   return (
     <TouchableOpacity
       onPress={() =>
-        navigation.navigate("Details", {
-          ProjectId: ProjectNo,
-        })
+        navigation.navigate('Details',{ProjectId: ProjectNo})
+       
       }
     >
       

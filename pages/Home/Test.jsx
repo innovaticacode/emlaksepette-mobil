@@ -55,7 +55,7 @@ export default function Test() {
             }),
           }}
         >
-          <Header onPress={toggleDrawer} index={setindex} tab={settab} />
+          {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
         </View>
 
         <Modal
@@ -67,11 +67,13 @@ export default function Test() {
           swipeDirection={["left"]}
           onSwipeComplete={() => setIsDrawerOpen(false)}
         >
-          <View>
+          {/* <View>
             <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-          </View>
+          </View> */}
         </Modal>
-        {user.type == 1 ||
+
+        {/* SİLİNMESİN İLERİDE KULLANILABİLİR BİR ÖZELLİK OLABİLİR */}
+        {/* {user.type == 1 ||
         (user.type == 2 && user.corporate_type == "Emlak Ofisi") ? (
           <>
             <View style={styles.TabBar}>
@@ -155,7 +157,7 @@ export default function Test() {
               Favoriler
             </Text>
           </View>
-        )}
+        )} */}
         {tabs == 1 && <Favorites />}
         {tabs == 2 && <CollectionsPage />}
       </SafeAreaView>

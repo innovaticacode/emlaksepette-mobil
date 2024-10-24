@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     width: 320,
     paddingVertical: 12,
+    width: "100%",
   },
   closeIconContainer: {
     alignItems: "flex-end",
@@ -53,6 +54,8 @@ export const styles = StyleSheet.create({
     backgroundColor: "#C4C4C4",
     padding: 0.5,
     alignSelf: "center",
+    margin: 5,
+    marginTop: 15,
   },
   searchContainer: {
     width: "100%",
@@ -85,6 +88,7 @@ export const styles = StyleSheet.create({
     gap: 8,
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: 5,
   },
   advertButtonText: {
     color: "white",
@@ -102,6 +106,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 10,
     padding: 8,
+    borderRadius: 5,
   },
   customerServiceTextContainer: {
     gap: 5,
@@ -115,5 +120,20 @@ export const styles = StyleSheet.create({
     color: "#EA2C2E",
     fontWeight: "400",
     letterSpacing: 1,
+    textAlign: "center",
+  },
+  socialIcons: {
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    marginHorizontal: 70,
+    marginTop: 70,
+  },
+  Icons: {
+    margin: 5,
+  },
+  Version: {
+    textAlign: "center",
+    marginTop: 10,
+    color: "grey",
   },
 });

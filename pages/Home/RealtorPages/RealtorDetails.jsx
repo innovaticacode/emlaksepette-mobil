@@ -54,6 +54,7 @@ import {
 } from "react-native-alert-notification";
 import TextAlertModal from "../../../components/TextAlertModal";
 import { DrawerMenu } from "../../../components";
+import AwesomeAlertComp from "../../../components/AwesomeAlertComp";
 export default function PostDetail() {
   const apiUrl = "https://private.emlaksepette.com/";
   const [modalVisible, setModalVisible] = useState(false);
@@ -197,7 +198,7 @@ export default function PostDetail() {
       // Kapak resmini al ve kontrol et
       const coverImage = response.data.labels["Kapak Resmi"];
       if (coverImage) {
-        const coverImageUri = `${apiUrl}/housing_images/${coverImage}`;
+        const coverImageUri = `${apiUrl}housing_images/${coverImage}`;
         console.log("Kapak Resmi URI:", coverImageUri); // URI'yi kontrol et
 
         setImages([coverImageUri, ...fetchedImages]);
@@ -636,10 +637,9 @@ export default function PostDetail() {
     }
   };
 
-  
-
   // Handle page change in PagerView
-  const [SeeAlertModal, setSeeAlertModal] = useState(false)
+  const [SeeAlertModal, setSeeAlertModal] = useState(false);
+  const [show, setShow] = useState(false);
   return (
     <>
       <AlertNotificationRoot>
@@ -650,27 +650,11 @@ export default function PostDetail() {
             <ActivityIndicator color="#333" size={"large"} />
           </View>
         ) : (
-          <SafeAreaView
-            style={{  flex: 1, paddingTop: 20 }}
-          >
-            <Header onPress={toggleDrawer} index={setindex} tab={settab} />
-            <Modal
-              isVisible={isDrawerOpen}
-              onBackdropPress={() => setIsDrawerOpen(false)}
-              animationIn="bounceInLeft"
-              animationOut="bounceOutLeft"
-              style={styles.modal}
-              swipeDirection={["left"]}
-              onSwipeComplete={() => setIsDrawerOpen(false)}
-            >
-              <View>
-                <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-              </View>
-            </Modal>
+          <SafeAreaView style={{ flex: 1, paddingTop: 20 }}>
             <View
               style={{
                 width: "100%",
-           
+                backgroundColor: "#F2F2F2",
                 position: "absolute",
                 bottom: 13,
                 padding: 10,
@@ -684,81 +668,140 @@ export default function PostDetail() {
                   paddingBottom: width > 400 ? 15 : 7,
                 }}
               >
-                {data?.housing?.user?.id == user?.id ? (
+                {data?.housing?.user?.id == user?.id || data?.housing?.sold ? (
                   <></>
                 ) : (
-                  <TouchableOpacity style={{width:'45%',backgroundColor:'#EA2B2E',padding:12,borderRadius:8}}  onPress={handleOpenPhone}>
-                  <Text style={{fontSize:14,color:'white',fontWeight:'600',textAlign:'center'}}>Ara</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      width: "45%",
+                      backgroundColor: "#EA2B2E",
+                      padding: 12,
+                      borderRadius: 8,
+                    }}
+                    onPress={handleOpenPhone}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: "white",
+                        fontWeight: "600",
+                        textAlign: "center",
+                      }}
+                    >
+                      Ara
+                    </Text>
+                  </TouchableOpacity>
                 )}
-                {data?.housing?.user?.id == user?.id ? (
-                  <TouchableOpacity
+                {!data?.housing?.sold ? (
+                  data?.housing?.user?.id == user?.id ? (
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#008001",
+                        width: "90%",
+                        padding: 12,
+                        borderRadius: 5,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "#ffffff",
+                          fontWeight: "700",
+                        }}
+                      >
+                        İlanı Düzenle
+                      </Text>
+                    </TouchableOpacity>
+                  ) : data?.housing?.step1_slug == "mustakil-tatil" &&
+                    data?.housing?.step2_slug == "gunluk-kiralik" ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate("CreateReservation", {
+                          data: data,
+                        });
+                      }}
+                      style={{
+                        backgroundColor: "#EB2B2E",
+                        width: "45%",
+                        padding: 12,
+                        borderRadius: 5,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "#ffffff",
+                          fontWeight: "700",
+                        }}
+                      >
+                        Rezervasyon Yap
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (user.access_token) {
+                          setModalForAddToCart(true);
+                        } else {
+                          setAlertForAddToCard(true);
+                        }
+                      }}
+                      style={{
+                        backgroundColor: "#EB2B2E",
+                        width: "45%",
+                        padding: 12,
+                        borderRadius: 5,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: "#ffffff",
+                          fontWeight: "700",
+                        }}
+                      >
+                        Sepete Ekle
+                      </Text>
+                    </TouchableOpacity>
+                  )
+                ) : data?.housing?.sold == "1" ? (
+                  <View
                     style={{
-                      backgroundColor: "#008001",
-                      width: "90%",
+                      backgroundColor: "#EA2C2E",
+                      width: "100%",
                       padding: 12,
                       borderRadius: 5,
                     }}
                   >
                     <Text
                       style={{
+                        color: "white",
+                        fontWeight: "600",
                         textAlign: "center",
-                        color: "#ffffff",
-                        fontWeight: "700",
                       }}
                     >
-                      İlanı Düzenle
+                      Satıldı
                     </Text>
-                  </TouchableOpacity>
-                ) : data?.housing?.step1_slug == "mustakil-tatil" &&
-                  data?.housing?.step2_slug == "gunluk-kiralik" ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate("CreateReservation", { data: data });
-                    }}
-                    style={{
-                      backgroundColor: "#EB2B2E",
-                      width: "45%",
-                      padding: 12,
-                      borderRadius: 5,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        color: "#ffffff",
-                        fontWeight: "700",
-                      }}
-                    >
-                      Rezervasyon Yap
-                    </Text>
-                  </TouchableOpacity>
+                  </View>
                 ) : (
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (user.access_token) {
-                        setModalForAddToCart(true);
-                      } else {
-                        setAlertForAddToCard(true);
-                      }
-                    }}
+                  <View
                     style={{
-                      backgroundColor: "#EB2B2E",
-                      width: "45%",
+                      backgroundColor: "#FFA500",
                       padding: 12,
                       borderRadius: 5,
+                      width: "100%",
                     }}
                   >
                     <Text
                       style={{
+                        color: "white",
+                        fontWeight: "600",
                         textAlign: "center",
-                        color: "#ffffff",
-                        fontWeight: "700",
                       }}
                     >
-                      Sepete Ekle
+                      Rezerve Edildi
                     </Text>
-                  </TouchableOpacity>
+                  </View>
                 )}
               </View>
             </View>
@@ -882,43 +925,43 @@ export default function PostDetail() {
                     </Text>
                   </View>
                 </View>
+                {!data?.housing?.sold && (
+                  <View style={styles.ıconContainer}>
+                    <TouchableOpacity onPress={onShare}>
+                      <View style={styles.ıcon}>
+                        <Icon2 name="sharealt" size={18} />
+                      </View>
+                    </TouchableOpacity>
 
-                <View style={styles.ıconContainer}>
-                  <TouchableOpacity onPress={onShare}>
-                    <View style={styles.ıcon}>
-                      <Icon2 name="sharealt" size={18} />
-                    </View>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      console.log("Favorite button pressed"); // Butona tıklanıp tıklanmadığını kontrol et
-                      addFavorites();
-                    }}
-                  >
-                    <View style={styles.ıcon}>
-                      <Heart
-                        name={heart}
-                        size={18}
-                        color={heart === "hearto" ? "black" : "red"}
-                      />
-                    </View>
-                  </TouchableOpacity>
-
-                  {((OpenSharing == "Evet" &&
-                    user.corporate_type == "Emlak Ofisi") ||
-                    user.type == 1) && (
                     <TouchableOpacity
                       onPress={() => {
-                        openCollection();
+                        addFavorites();
                       }}
                     >
                       <View style={styles.ıcon}>
-                        <Bookmark name={bookmark} size={18} />
+                        <Heart
+                          name={heart}
+                          size={18}
+                          color={heart === "hearto" ? "black" : "red"}
+                        />
                       </View>
                     </TouchableOpacity>
-                  )}
-                </View>
+
+                    {/* {((OpenSharing == "Evet" &&
+                      user.corporate_type == "Emlak Ofisi") ||
+                      user.type == 1) && (
+                      <TouchableOpacity
+                        onPress={() => {
+                          openCollection();
+                        }}
+                      >
+                        <View style={styles.ıcon}>
+                          <Bookmark name={bookmark} size={18} />
+                        </View>
+                      </TouchableOpacity>
+                    )} */}
+                  </View>
+                )}
 
                 <PagerView
                   style={{ height: 250 }}
@@ -954,19 +997,17 @@ export default function PostDetail() {
                   onRequestClose={() => setIsVisible(false)}
                 />
               </View>
-             
+
               <View style={styles.CaptionPriceAndSlider}>
-                <View style={{gap:25}}>
+                <View style={{ gap: 25 }}>
                   <View>
-                  <Text
+                    <Text
                       style={{
-                       
                         fontSize: 11,
                         color: "grey",
                         fontWeight: "700",
                       }}
                     >
-                      
                       {"Emlak" +
                         " > " +
                         data?.housing?.step1_slug.charAt(0).toUpperCase() +
@@ -976,66 +1017,141 @@ export default function PostDetail() {
                         data?.housing?.step2_slug.slice(1)}
                     </Text>
                   </View>
-                  <View style={{width:'100%',flexDirection:'row'}}>
-                  
-
-                    <View style={{width:'100%',flexDirection:'row',alignItems:'center'}}>
-                    <View style={{width:'70%',gap:5}}>
-                        <View>
-                        <Text
-                    style={{
-                    
-                      fontSize: 11,
-                      color: "#333",
-                      fontWeight: "600",
-                    }}
-                  >
-                    {data?.housing?.city?.title} /{" "}
-                    {data?.housing?.county?.title}
-                  </Text>
-                        </View>
-                        <View>
-                        <Text
-                        numberOfLines={2}
-                    style={{
-                      fontWeight:'600',
-                      fontSize: 16,
-                      color: "#333",
-                      
-                    }}
-                  >
-                    {data?.pageInfo?.meta_title}
-                  </Text>
-                        </View>
-                    </View>
-                    <View style={{width:'30%'}}>
-                    {data && data.housing && data.housing.housing_type_data && (
-                    <Text
+                  <View style={{ width: "100%", flexDirection: "row" }}>
+                    <View
                       style={{
-                        textAlign:'right',
-                        color: "#0DAC2E",
-                        fontWeight: "bold",
-                        fontSize: 13,
+                        width: "100%",
+                        flexDirection: "row",
+                        alignItems: "center",
                       }}
                     >
-                      {addDotEveryThreeDigits(
-                        JSON.parse(data.housing.housing_type_data)["price"]
-                          ? JSON.parse(data.housing.housing_type_data)["price"]
-                          : JSON.parse(data.housing.housing_type_data)[
-                              "daily_rent"
-                            ]
-                      )}{" "}
-                      ₺{" "}
-                      {JSON.parse(data.housing.housing_type_data)[
-                        "daily_rent"
-                      ] && <Text style={{ color: "#EA2A28" }}>/ Gecelik</Text>}
-                    </Text>
-                  )}
-                    </View>
-                  
+                      <View style={{ width: "70%", gap: 5 }}>
+                        <View>
+                          <Text
+                            style={{
+                              fontSize: 11,
+                              color: "#333",
+                              fontWeight: "600",
+                            }}
+                          >
+                            {data?.housing?.city?.title} /{" "}
+                            {data?.housing?.county?.title}
+                          </Text>
+                        </View>
+                        <View>
+                          <Text
+                            numberOfLines={2}
+                            style={{
+                              fontWeight: "600",
+                              fontSize: 16,
+                              color: "#333",
+                            }}
+                          >
+                            {data?.pageInfo?.meta_title}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={{ width: "30%" }}>
+                        {data &&
+                          data.housing &&
+                          data.housing.housing_type_data && (
+                            <Text
+                              style={{
+                                textAlign: "right",
+                                color: "#0DAC2E",
+                                fontWeight: "bold",
+                                fontSize: 13,
+                              }}
+                            >
+                              {addDotEveryThreeDigits(
+                                JSON.parse(data.housing.housing_type_data)[
+                                  "price"
+                                ]
+                                  ? JSON.parse(data.housing.housing_type_data)[
+                                      "price"
+                                    ]
+                                  : JSON.parse(data.housing.housing_type_data)[
+                                      "daily_rent"
+                                    ]
+                              )}{" "}
+                              ₺{" "}
+                              {JSON.parse(data.housing.housing_type_data)[
+                                "daily_rent"
+                              ] && (
+                                <Text style={{ color: "#EA2A28" }}>
+                                  / Gecelik
+                                </Text>
+                              )}
+                            </Text>
+                          )}
+                      </View>
                     </View>
                   </View>
                 </View>
+                {data.housing &&
+                  data.housing.housing_type_data &&
+                  JSON.parse(data.housing.housing_type_data)["swap"] ==
+                    "Evet" && (
+                    <View>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: "#FEF4EB",
+                          flexDirection: "row",
+                          padding: 6,
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          borderRadius: 5,
+                        }}
+                        onPress={() => {
+                          if (user.access_token) {
+                            navigation.navigate("SwapForm", {
+                              houseid: data?.housing?.id,
+                              type: 2,
+                              projectId: null,
+                            });
+                          } else {
+                            setShow(true);
+                          }
+                        }}
+                      >
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 10,
+                          }}
+                        >
+                          <View
+                            style={{
+                              backgroundColor: "#F37919",
+                              padding: 6,
+                              borderRadius: 5,
+                            }}
+                          >
+                            <Icon2 name="plus" size={16} color={"#fff"} />
+                          </View>
+                          <View style={{}}>
+                            <Text
+                              style={{
+                                fontSize: 12,
+                                color: "#333",
+                                fontWeight: "600",
+                              }}
+                            >
+                              Takas Başvurusu Yap
+                            </Text>
+                          </View>
+                        </View>
+                        <View>
+                          <Arrow
+                            name="arrow-forward-ios"
+                            size={16}
+                            color={"#333"}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  )}
                 <View
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
@@ -1046,13 +1162,32 @@ export default function PostDetail() {
                   />
                 </View>
                 <View>
-                <TouchableOpacity style={{borderWidth:1,borderColor:'#EA2B2E',padding:5,borderRadius:6,backgroundColor:'white'}} onPress={()=>{
-                    setSeeAlertModal(true)
-                  }}>
-                    <Text style={{textAlign:'center',fontSize:13,color:'#EA2B2E',fontWeight:'600'}}>Bilgilendirme!</Text>
+                  <TouchableOpacity
+                    style={{
+                      borderWidth: 1,
+                      borderColor: "#EA2B2E",
+                      padding: 5,
+                      borderRadius: 6,
+                      backgroundColor: "white",
+                    }}
+                    onPress={() => {
+                      setSeeAlertModal(true);
+                    }}
+                  >
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        fontSize: 13,
+                        color: "#EA2B2E",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Bilgilendirme!
+                    </Text>
                   </TouchableOpacity>
-                  </View>
+                </View>
               </View>
+
               <View style={{ marginTop: 7 }}>
                 {tabs == 0 && <RealtorCaption data={data} />}
                 {tabs == 1 && <Settings data={data} />}
@@ -1060,7 +1195,10 @@ export default function PostDetail() {
                 {tabs == 3 && <Comment data={data} handleModal={handleModal} />}
               </View>
 
-              <TextAlertModal visible={SeeAlertModal} onClose={setSeeAlertModal} />
+              <TextAlertModal
+                visible={SeeAlertModal}
+                onClose={setSeeAlertModal}
+              />
               <Modal
                 isVisible={ColectionSheet}
                 onBackdropPress={ToggleColSheet}
@@ -1226,7 +1364,9 @@ export default function PostDetail() {
                                   }}
                                   onPress={() => {
                                     setColectionSheet(false);
-                                    navigation.navigate("Login");
+                                    setTimeout(() => {
+                                      navigation.navigate("Login");
+                                    }, 400);
                                   }}
                                 >
                                   <Text
@@ -1508,7 +1648,22 @@ export default function PostDetail() {
                   </>
                 </View>
               </Modal>
-
+              <AwesomeAlertComp
+                message={
+                  "Takas başvurusu yapmak için giriş yapmanız gerekmektedir"
+                }
+                canselFunc={() => {
+                  setShow(false);
+                }}
+                confirmFunc={() => {
+                  setShow(false);
+                  setTimeout(() => {
+                    navigation.navigate("Login");
+                  }, 200);
+                }}
+                show={show}
+                setShow={setShow}
+              />
               <Modal
                 isVisible={addCollection}
                 onBackdropPress={() => setaddCollection(false)}
@@ -1632,7 +1787,6 @@ export default function PostDetail() {
                 </View>
               </Modal>
 
-            
               <Modal
                 animationType="slide"
                 transparent={true}
@@ -1762,8 +1916,10 @@ export default function PostDetail() {
                 setAlertForFavorite(false);
               }}
               onConfirmPressed={() => {
-                navigation.navigate("Login");
                 setAlertForFavorite(false);
+                setTimeout(() => {
+                  navigation.navigate("Login");
+                }, 400);
               }}
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
               cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -1780,7 +1936,7 @@ export default function PostDetail() {
               }}
               title={`Giriş Yap`}
               messageStyle={{ textAlign: "center" }}
-              message="Sepetinize konut ekleyebilmek için Giriş Yapmanız gerekmektedir"
+              message="Sepetinize konut ekleyebilmek için giriş yapmanız gerekmektedir."
               closeOnTouchOutside={true}
               closeOnHardwareBackPress={false}
               showCancelButton={true}
@@ -1793,8 +1949,10 @@ export default function PostDetail() {
                 setAlertForAddToCard(false);
               }}
               onConfirmPressed={() => {
-                navigation.navigate("Login");
                 setAlertForAddToCard(false);
+                setTimeout(() => {
+                  navigation.navigate("Login");
+                }, 400);
               }}
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
               cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -2089,30 +2247,29 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
-  CaptionPriceAndSlider:{
-    gap:8,
-    paddingBottom:10,
-      width: "100%",
-      paddingTop:10,
-      paddingLeft:12,
-      paddingRight:12,
-      backgroundColor: "#FFFFFF",
+  CaptionPriceAndSlider: {
+    gap: 8,
+    paddingBottom: 10,
+    width: "100%",
+    paddingTop: 10,
+    paddingLeft: 12,
+    paddingRight: 12,
+    backgroundColor: "#FFFFFF",
 
-      width: "100%",
+    width: "100%",
 
-      borderWidth: 0.7,
-      borderColor: "#e6e6e6",
-      ...Platform.select({
-        ios: {
-          shadowColor: " #e6e6e6",
-          shadowOffset: { width: 1, height: 1 },
-          shadowOpacity: 0.1,
-          shadowRadius: 5,
-        },
-        android: {
-          elevation: 5,
-        },
-      }),
-   
-  }
+    borderWidth: 0.7,
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
 });

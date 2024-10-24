@@ -44,7 +44,8 @@ export default function DecontPdf() {
 
   return (
     <View style={styles.container}>
-     <Text>{pdfUri}</Text>
+   
+  
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (

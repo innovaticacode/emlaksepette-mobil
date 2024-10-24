@@ -88,13 +88,15 @@ export default function MyComments() {
     const imageSource =
       type === "project"
         ? `${API_URL}${info?.image.replace("public/", "storage/")}`
-        : `${API_URL}housing_images/${JSON.parse(info.housing_type_data)?.image ?? ""
-        }`;
+        : `${API_URL}housing_images/${
+            JSON.parse(info.housing_type_data)?.image ?? ""
+          }`;
 
     const handleNavigate = () => {
       if (type === "project") {
-        nav.navigate("Details", {
-          ProjectId: info.id,
+        navigation.navigate("Drawer", {
+          screen: "Details",
+          params: { ProjectId: info.id },
         });
       } else if (type === "housing") {
         nav.navigate("Realtor details", {
@@ -171,8 +173,8 @@ export default function MyComments() {
               {comment?.status === 0
                 ? "Onay Bekliyor"
                 : comment?.status === 1
-                  ? "Onaylandı"
-                  : "Reddedildi"}
+                ? "Onaylandı"
+                : "Reddedildi"}
             </Text>
           </View>
         </View>
@@ -256,7 +258,11 @@ export default function MyComments() {
         <View style={{ gap: 10, padding: 10, flex: 1 }}>
           {loading ? (
             <View
-              style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
               <ActivityIndicator size="large" color="#0000ff" />
             </View>
@@ -290,7 +296,8 @@ export default function MyComments() {
           >
             <View style={styles.modalContent}>
               <View style={styles.modalOptions}>
-                {(selectedCommentStatus === 1 || selectedCommentStatus === 2) && (
+                {(selectedCommentStatus === 1 ||
+                  selectedCommentStatus === 2) && (
                   <TouchableOpacity
                     style={styles.modalOption}
                     onPress={goToEditComment}
@@ -441,7 +448,6 @@ export default function MyComments() {
 }
 
 const styles = StyleSheet.create({
-
   card: {
     backgroundColor: "#FFFFFF",
     borderWidth: 0.7,
@@ -595,5 +601,4 @@ const styles = StyleSheet.create({
     color: "#333",
     fontWeight: "bold",
   },
-
 });

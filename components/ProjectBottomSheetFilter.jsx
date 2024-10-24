@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import ActionSheet from "react-native-actions-sheet";
-import { Dimensions, Text, View } from "react-native";
+import { Dimensions, Text, View, TouchableOpacity } from "react-native";
 import { CheckBox } from "@rneui/themed";
 
 const { width, height } = Dimensions.get("screen");
@@ -110,7 +110,10 @@ const ProjectBottomSheetFilter = (props) => {
               checked={checkbox.checked}
               onPress={() => handleCheckboxChange(index)}
             />
-            <Text>{`${checkbox.label}`}</Text>
+
+            <TouchableOpacity onPress={() => handleCheckboxChange(index)}>
+              <Text>{`${checkbox.label}`}</Text>
+            </TouchableOpacity>
           </View>
         ))}
       </View>

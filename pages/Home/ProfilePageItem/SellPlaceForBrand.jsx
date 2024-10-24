@@ -17,12 +17,12 @@ export default function SellPlacesForBrands({ data }) {
   const GetSellPlace = async () => {
     setloading(true);
     try {
-      if (user?.access_token && user) {
-        const placeInfo = await axios.get(
-          `https://private.emlaksepette.com/api/magaza/${data?.data?.id}/satis-noktalari`
-        );
-        setPlaces(placeInfo?.data?.usersFromCollections);
-      }
+      // if (user?.access_token && user) {
+      const placeInfo = await axios.get(
+        `https://private.emlaksepette.com/api/magaza/${data?.data?.id}/satis-noktalari`
+      );
+      setPlaces(placeInfo?.data?.usersFromCollections);
+      // }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     } finally {

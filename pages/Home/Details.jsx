@@ -12,6 +12,7 @@ import {
   TextInput,
   Pressable,
   Share,
+  Dimensions,
 } from "react-native";
 import {
   ALERT_TYPE,
@@ -620,7 +621,7 @@ export default function Details({ navigation }) {
       console.error("Telefon numarası bulunamadı.");
     }
   };
-
+const {width,height}=Dimensions.get("window")
   return (
     <>
       <AlertNotificationRoot>
@@ -629,20 +630,8 @@ export default function Details({ navigation }) {
             <ActivityIndicator size={"large"} color="#333" />
           ) : (
             <>
-              <Header onPress={toggleDrawer} index={setindex} tab={settab} />
-              <Modal
-                isVisible={isDrawerOpen}
-                onBackdropPress={() => setIsDrawerOpen(false)}
-                animationIn="fadeInLeftBig"
-                swipeDirection={["left"]}
-                onSwipeComplete={() => setIsDrawerOpen(false)}
-                animationOut="fadeOutLeftBig"
-                style={styles.modal}
-              >
-                <View style={styles.modalContent}>
-                  <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-                </View>
-              </Modal>
+             
+              
               <View style={{ position: 'absolute', width: '100%', bottom: 35, padding: 4, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
                 <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }} onPress={handleOpenPhone}>
                   <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }} >Ara</Text>
@@ -1291,7 +1280,9 @@ export default function Details({ navigation }) {
                                 }}
                                 onPress={() => {
                                   setColectionSheet(false);
-                                  navigation.navigate("Login");
+                                  setTimeout(() => {
+                                    navigation.navigate("Login");
+                                  }, 400);
                                 }}
                               >
                                 <Text
@@ -1462,9 +1453,11 @@ export default function Details({ navigation }) {
               setModalVisible(false);
             }}
             onConfirmPressed={() => {
-              navigation.navigate("Login");
               setAlertForSign(false);
               setModalVisible(false);
+              setTimeout(() => {
+                navigation.navigate("Login");
+              }, 400);
             }}
             confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
             cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
