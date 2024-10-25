@@ -213,21 +213,18 @@ const Estates = ({ index }) => {
                       <TouchableOpacity
                         style={styles.allBtn}
                         onPress={() =>
-                          navigation.navigate("Drawer", {
-                            screen: "AllRealtorAdverts",
-                            params: {
-                              name: "Emlak İlanları",
-                              slug: "emlak-ilanlari",
-                              data: filteredHomes,
-                              count: filteredHomes.length,
-                              type: "konut",
-                              optional: null,
-                              title: null,
-                              check: null,
-                              city: null,
-                              county: null,
-                              hood: null,
-                            },
+                          navigation.navigate("AllRealtorAdverts", {
+                            name: "Emlak İlanları",
+                            slug: "emlak-ilanlari",
+                            data: filteredHomes,
+                            count: filteredHomes.length,
+                            type: "konut",
+                            optional: null,
+                            title: null,
+                            check: null,
+                            city: null,
+                            county: null,
+                            hood: null,
                           })
                         }
                       >

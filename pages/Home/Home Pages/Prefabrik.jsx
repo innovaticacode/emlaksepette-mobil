@@ -107,7 +107,6 @@ const Prefabrik = ({ index }) => {
         </View>
       ) : (
         <>
-          
           {refreshing && (
             <View
               style={{
@@ -185,44 +184,44 @@ const Prefabrik = ({ index }) => {
                 ListHeaderComponent={
                   <View>
                     <View style={{ paddingHorizontal: 0 }}>
-            <Image
-              source={PrefabrikBanner}
-              style={{ width: "100%", height: 120 }}
-              resizeMode="cover"
-            />
-          </View>
-          <View style={styles.header}>
-            <Text style={{ fontSize: 14, fontWeight: 700 }}>
-              ÖNE ÇIKAN PREFABRİK İLANLARI
-            </Text>
+                      <Image
+                        source={PrefabrikBanner}
+                        style={{ width: "100%", height: 120 }}
+                        resizeMode="cover"
+                      />
+                    </View>
+                    <View style={styles.header}>
+                      <Text style={{ fontSize: 14, fontWeight: 700 }}>
+                        ÖNE ÇIKAN PREFABRİK İLANLARI
+                      </Text>
 
-            <TouchableOpacity style={styles.allBtn}>
-              <Text
-                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
-                onPress={() =>
-                  navigation.navigate("Drawer", {
-                    screen: "AllRealtorAdverts",
-                    params: {
-                      name: "Emlak İlanları",
-                      slug: "emlak-ilanlari",
-                      data: filteredHomes,
-                      count: filteredHomes.length,
-                      type: null,
-                      optional: "satilik",
-                      title: "konut",
-                      check: "prefabrik-ev",
-                      city: null,
-                      county: null,
-                      hood: null,
-                    },
-                  })
-                }
-              >
-                Tüm İlanları Gör
-              </Text>
-            </TouchableOpacity>
-          </View>
-
+                      <TouchableOpacity style={styles.allBtn}>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: 12,
+                            fontWeight: "bold",
+                          }}
+                          onPress={() =>
+                            navigation.navigate("AllRealtorAdverts", {
+                              name: "Emlak İlanları",
+                              slug: "emlak-ilanlari",
+                              data: filteredHomes,
+                              count: filteredHomes.length,
+                              type: null,
+                              optional: "satilik",
+                              title: "konut",
+                              check: "prefabrik-ev",
+                              city: null,
+                              county: null,
+                              hood: null,
+                            })
+                          }
+                        >
+                          Tüm İlanları Gör
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 }
                 onEndReachedThreshold={0.1}
