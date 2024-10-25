@@ -23,11 +23,16 @@ import Clock from "../../../assets/clock.svg";
 import Okey from "../../../assets/okey.svg";
 import Faq from "../../../json/FaqSalePage.json";
 import Icon5 from "react-native-vector-icons/MaterialIcons";
+import { Dropdown } from "react-native-element-dropdown";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 export default function SalePageMain() {
   const [isUserHaveToken, setIsUserHaveToken] = useState(false);
   const [isCorporateTypeRight, setIsCorporateTypeRight] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const [category, setCategory] = useState("use");
   const [user, setUser] = useState({});
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -50,11 +55,16 @@ export default function SalePageMain() {
     setIsCorporateTypeRight(false);
     setIsUserHaveToken(false);
   };
-  const [selectedId, setSelectedId] = useState(null);
 
   const toggleExpand = (id) => {
     setSelectedId(selectedId === id ? null : id);
   };
+
+  const dropdownData = [
+    { label: "Kullanım", value: "use" },
+    { label: "Avantajlar", value: "advantages" },
+    { label: "Ödeme", value: "payment" },
+  ];
 
   return (
     <ScrollView
@@ -250,24 +260,7 @@ export default function SalePageMain() {
         <View style={{ backgroundColor: "#FFF" }}>
           <Text style={styles.faqTitle}>Sıkça Sorulan Sorular</Text>
 
-          <View
-            style={{
-              paddingHorizontal: 20,
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 4,
-              marginHorizontal: 16,
-              paddingVertical: 22,
-              borderRadius: 14,
-              backgroundColor: "#fff",
-              gap: 20,
-            }}
-          >
+          <View style={styles.faqContainer}>
             <Text
               style={{
                 fontWeight: "700",
@@ -277,6 +270,16 @@ export default function SalePageMain() {
             >
               Kategori Seçimi
             </Text>
+            <Dropdown
+              style={styles.dropDown}
+              data={dropdownData}
+              placeholder={dropdownData[0].label}
+              containerStyle={styles.dropDownContainer}
+              labelField="label"
+              valueField="value"
+              value={category}
+              onChange={(value) => setCategory(value)}
+            />
             <FlatList
               data={Faq}
               renderItem={({ item }) => {
@@ -444,5 +447,35 @@ const styles = StyleSheet.create({
   answerText: {
     fontSize: 14,
     color: "#666",
+  },
+  faqContainer: {
+    paddingHorizontal: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 4,
+    marginHorizontal: 16,
+    paddingVertical: 22,
+    borderRadius: 14,
+    backgroundColor: "#fff",
+    gap: 20,
+  },
+  dropDownContainer: {
+    marginTop: 10,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#DCDCDC",
+    borderRadius: 8,
+  },
+  dropDown: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#DCDCDC",
+    borderRadius: 8,
+    padding: 10,
   },
 });
