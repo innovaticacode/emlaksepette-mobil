@@ -100,8 +100,10 @@ const Home = ({ route }) => {
       <Tab.Screen
         name="HomePage"
         component={HomePage2}
+      
         options={{
           title: "Ana Sayfa",
+          
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons

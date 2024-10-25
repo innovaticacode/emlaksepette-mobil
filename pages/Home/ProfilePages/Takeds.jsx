@@ -192,7 +192,7 @@ export default function Takeds() {
         </View>
       ) : takeds.length === 0 ? (
         <NoDataScreen
-          message="Alınan ilan bulunmamaktadır."
+          message="Siparişiniz bulunmamaktadır."
           iconName="basket-plus"
           buttonText="İlanlara Göz At"
           navigateTo="HomePage"

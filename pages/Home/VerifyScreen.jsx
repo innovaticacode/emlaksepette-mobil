@@ -15,8 +15,8 @@ import axios from "axios";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
 import * as SecureStore from "expo-secure-store";
-const labels = ["Adım 1", "Adım 2"];
-const labels2 = ["Adım 1"];
+const labels = ["Telefon Doğrulama", "Belge Doğrulama"];
+const labels2 = ["Telefon Doğrulama"];
 const customStyles = {
   stepIndicatorSize: 30,
   currentStepIndicatorSize: 40,
@@ -91,9 +91,9 @@ const VerifyScreen = () => {
   //   }
 
   // }, [currentPosition])
-  console.log(namFromGetUser.phone_verification_status + "telefon");
+  console.log(namFromGetUser.phone_verification_status + "telefodfdfn");
   const renderStepContent = () => {
-    if (user.type == 1) {
+    if (namFromGetUser.type == 1 ) {
       switch (currentPosition) {
         case 0:
           return <Verification nextStep={nextStep} prevStep={prevStep} />;
@@ -126,8 +126,8 @@ const VerifyScreen = () => {
     }
   };
   const navigation = useNavigation();
-  console.log(verifyStatu);
-
+  
+  
   return (
     <>
       {loading ? (
@@ -141,8 +141,8 @@ const VerifyScreen = () => {
           <StepIndicator
             customStyles={customStyles}
             currentPosition={currentPosition}
-            labels={user.type == 1 ? labels2 : labels}
-            stepCount={user.type == 1 ? labels2.length : labels.length}
+            labels={namFromGetUser.type == 1 ? labels2 : labels}
+            stepCount={namFromGetUser.type == 1 ? labels2.length : labels.length}
           />
           {/* <Text>{namFromGetUser.phone_verification_status} </Text> */}
           <View style={styles.content}>{renderStepContent()}</View>
@@ -165,7 +165,13 @@ const VerifyScreen = () => {
               }}
               onPress={() => {
                 SecureStore.setItemAsync("user", "");
-                navigation.push("Home", { status: "logout" });
+                navigation.navigate("Drawer", {
+                  screen: "Home",
+                  params: {
+                    status: "logout" 
+                  },
+                });
+                
               }}
             >
               <Text

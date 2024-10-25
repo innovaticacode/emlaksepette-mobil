@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Share,
+  BackHandler,
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import ShoppingIcon from "react-native-vector-icons/Entypo";
@@ -181,8 +182,10 @@ export default function ShoppingProfile() {
       })
     );
     await SecureStore.setItemAsync("user", "");
-    navigation.replace("Drawer", { screen: "Home" }, { status: "logout" });
-    dispatch(setShoppingProfile({ isShoppingProfile: false }));
+    setTimeout(() => {
+      dispatch(setShoppingProfile({ isShoppingProfile: false }));
+      navigation.push("Drawer", { screen: "Home" }, { status: "logout" });
+    }, 150);
   };
 
   const toggleAccor = (index) => {
@@ -252,6 +255,19 @@ export default function ShoppingProfile() {
       alert(error.message);
     }
   };
+
+  useEffect(() => {
+    const backAction = () => {
+      dispatch(setShoppingProfile({ isShoppingProfile: false }));
+      return false;
+    };
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+    return () => backHandler.remove();
+  }, [dispatch]);
+
   return (
     <>
       {loading ? (

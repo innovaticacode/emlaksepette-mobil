@@ -8,7 +8,7 @@ import RadioFilter from "./Filter/RadioFilter/RadioFilter";
 import ViewAllCard from "./Card/ViewAllCard/ViewAllCard";
 import InfoCard from "./Card/InfoCard/InfoCard";
 import MySwapInfoBottom from "./BottomModals/MySwapInfoBottom/MySwapInfoBottom";
-
+import WhiteOrRedButtons from "./Buttons/WhiteOrRedButtons/WhiteOrRedButtons";
 export {
   CommentCard,
   TotalStarCard,
@@ -20,4 +20,5 @@ export {
   ViewAllCard,
   InfoCard,
   MySwapInfoBottom,
+  WhiteOrRedButtons,
 };

@@ -61,6 +61,20 @@ export default function Personal({ type }) {
   const [sendSuccesMessageToLogin, setsendSuccesMessageToLogin] =
     useState(false);
   const [SuccessModal, setSuccessModal] = useState(false);
+
+  const [Errors, setErrors] = useState({
+    emailErr:null,
+    passwordErr:null,
+    mobilePhoneErr:null,
+    userNameErr:null
+
+  })
+  const setData = (key, value) => {
+    setErrors((prevState) => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
   const postData = async () => {
     setIsloading(true);
     try {
@@ -81,7 +95,7 @@ export default function Personal({ type }) {
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
 
-      setmessage(response.data.message);
+   
       setname("");
       setePosta("");
       setpassword("");
@@ -96,21 +110,40 @@ export default function Personal({ type }) {
         navigation.replace('Login',{showAlert: true})
       }, 700);
     } catch (error) {
-      // Hata durumunda
-
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.errors &&
-        error.response.data.errors.email
-      ) {
-        const errorMessage = error.response.data.errors.email[0];
-        console.log("API Hatası:", errorMessage);
-        seterrorStatu(2);
-        seterrorMessage(errorMessage);
-      } else {
-        console.error("Beklenmeyen bir hata oluştu:", error);
-      }
+        if (error.response.data.errors.email) {
+          seterrorStatu(2);
+            setData('emailErr',error.response.data.errors.email[0])
+            setTimeout(() => {
+              setData('emailErr',null)
+            }, 10000);
+        }
+        if (error.response.data.errors.mobile_phone) {
+          seterrorStatu(3);
+          setData('passwordErr',error.response.data.errors.mobile_phone[0])
+          setTimeout(() => {
+            setData('passwordErr',null)
+          }, 5000);
+        }if (error.response.data.errors.password) {
+          seterrorStatu(4);
+          setData('mobilePhoneErr',error.response.data.errors.password[0])
+          setTimeout(() => {
+            setData('mobilePhoneErr',null)
+          }, 5000);
+        }
+          // alert(Errors.emailErr)
+      // if (
+      //   error.response &&
+      //   error.response.data &&
+      //   error.response.data.errors &&
+      //   error.response.data.errors.email
+      // ) {
+      //   const errorMessage = error.response.data.errors.email[0];
+      //   console.log("API Hatası:", errorMessage);
+      //   seterrorStatu(2);
+      //   seterrorMessage(errorMessage);
+      // } else {
+      //   console.error("Beklenmeyen bir hata oluştu:", error);
+      // }
 
       console.error("Beklenmeyen bir hata oluştu:", error);
     } finally {
@@ -126,30 +159,34 @@ export default function Personal({ type }) {
     switch (true) {
       case !name:
         seterrorStatu(1);
-        seterrorMessage("İsim Alanı Boş Bırakılmaz");
+        setData('userNameErr','İsim Alanı Boş Bırakılmaz')
+       
         setTimeout(() => {
-          // seterrorStatu(0)
+          setData('userNameErr',null)
         }, 1000);
         break;
       case !ePosta:
         seterrorStatu(2);
-        seterrorMessage("Email alanı Boş Bırakılmaz");
+        setData('emailErr','Email alanı Boş Bırakılmaz')
+      
         setTimeout(() => {
-          seterrorStatu(0);
+          setData('emailErr',null)
         }, 1000);
         break;
       case !phoneNumber:
         seterrorStatu(3);
-        seterrorMessage("Telefon Alanı Boş Bırakılmaz");
+        setData('mobilePhoneErr','Telefon Alanı Boş Bırakılmaz')
+       
         setTimeout(() => {
-          seterrorStatu(0);
+             setData('mobilePhoneErr',null)
         }, 1000);
         break;
       case !password:
         seterrorStatu(4);
-        seterrorMessage("Şifre Alanı Boş Bırakılamaz");
+        setData('passwordErr','Şifre Alanı Boş Bırakılamaz')
+        
         setTimeout(() => {
-          seterrorStatu(0);
+          setData('passwordErr',null)
         }, 1000);
         break;
 
@@ -290,6 +327,7 @@ const handlePasswordChange = (text) => {
     setcolorForSymbol(true)
   }
 };
+console.log(Errors.emailErr)
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <ScrollView
@@ -317,6 +355,11 @@ const handlePasswordChange = (text) => {
                 onChangeText={(value) => setname(value)}
                 placeholder="İsim Soyisim"
               />
+              {
+                Errors.userNameErr?
+                <Text style={{color:'#EA2B2E',fontSize:12}}>{Errors.userNameErr}</Text>:
+                null
+              }
             </View>
 
             <View style={{ gap: 5 }}>
@@ -337,6 +380,11 @@ const handlePasswordChange = (text) => {
                 placeholder="E-Posta Adresi"
                 autoCapitalize="none" // İlk harfin büyük olmasını engeller
               />
+              {
+                  Errors.emailErr ?
+                  <Text style={{color:'#EA2B2E',fontSize:12}}>{Errors.emailErr}</Text>:
+                  null
+              }
             </View>
 
             <View style={{ gap: 5 }}>
@@ -358,6 +406,11 @@ const handlePasswordChange = (text) => {
                 keyboardType="number-pad"
                 maxLength={15}
               />
+                {
+                  Errors.mobilePhoneErr ?
+                  <Text style={{color:'#EA2B2E',fontSize:12}}>{Errors.mobilePhoneErr}</Text>:
+                  null
+              }
             </View>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
@@ -427,6 +480,11 @@ const handlePasswordChange = (text) => {
                             </Text>
                           )}
                           </View>
+                          {
+                  Errors.passwordErr ?
+                  <Text style={{color:'#EA2B2E',fontSize:12}}>{Errors.passwordErr}</Text>:
+                  null
+              }
             </View>
             <View style={styles.container}>
               <TouchableOpacity
