@@ -16,6 +16,11 @@ import Header from "../../../assets/salePageHeader.png";
 import { SalePointCard, WhiteOrRedButtons } from "../../../components";
 import Bg from "../../../assets/salePageBg.png";
 import CardDatajson from "../../../json/SalePage.json";
+import SaleMap from "../../../assets/saleMap.svg";
+import Docs from "../../../assets/docs.svg";
+import Line from "../../../assets/lineArrow.svg";
+import Clock from "../../../assets/clock.svg";
+import Okey from "../../../assets/okey.svg";
 
 export default function SalePageMain() {
   const [isUserHaveToken, setIsUserHaveToken] = useState(false);
@@ -97,281 +102,214 @@ export default function SalePageMain() {
         onCancelPressed={closeModal}
         cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
       />
-
-      <View style={{ backgroundColor: "#FFF", flex: 1, paddingBottom: 20 }}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={{ paddingHorizontal: 30, paddingTop: 20, gap: 20 }}>
-            <Image
-              source={Header}
-              width={"100%"}
-              height={200}
-              resizeMode="cover"
-            />
-            <View style={{ paddingTop: 14 }}>
-              <View style={{ gap: 14 }}>
-                <Text style={{ fontSize: 24, fontWeight: "600" }}>
-                  TEK TIKLA BİNLERCE PORTFÖYDE SATIŞ YETKİSİNE SAHİP OL!
-                </Text>
-                <Text
-                  style={{ fontSize: 12, fontWeight: "500", lineHeight: 17 }}
-                >
-                  Emlak ofisleri, platformda bulunan "Satış Noktası Ol" butonuna
-                  tıklayarak Emlaksepette yetkili satış noktası olma
-                  başvurusunda bulunabilirler. Bu başvuru, emlak ofisinin
-                  bulunduğu bölgede emlaksepette ile iş birliği yaparak çeşitli
-                  avantajlardan faydalanma ve sınırsız kazanç elde etme imkanı
-                  sağlar.
-                </Text>
-                <WhiteOrRedButtons
-                  bgColor={"#EA2B2E"}
-                  text={"Hemen Başvur"}
-                  onPress={null}
-                />
-              </View>
+      <View style={{ backgroundColor: "#FFF", flex: 1 }}>
+        <View style={{ paddingHorizontal: 30, paddingTop: 20, gap: 20 }}>
+          <Image
+            source={Header}
+            width={"100%"}
+            height={200}
+            resizeMode="cover"
+          />
+          <View style={{ paddingTop: 14 }}>
+            <View style={{ gap: 14 }}>
+              <Text style={{ fontSize: 24, fontWeight: "600" }}>
+                TEK TIKLA BİNLERCE PORTFÖYDE SATIŞ YETKİSİNE SAHİP OL!
+              </Text>
+              <Text style={{ fontSize: 12, fontWeight: "500", lineHeight: 17 }}>
+                Emlak ofisleri, platformda bulunan "Satış Noktası Ol" butonuna
+                tıklayarak Emlaksepette yetkili satış noktası olma başvurusunda
+                bulunabilirler. Bu başvuru, emlak ofisinin bulunduğu bölgede
+                emlaksepette ile iş birliği yaparak çeşitli avantajlardan
+                faydalanma ve sınırsız kazanç elde etme imkanı sağlar.
+              </Text>
+              <WhiteOrRedButtons
+                bgColor={"#EA2B2E"}
+                text={"Hemen Başvur"}
+                onPress={() => handleSubmit()}
+              />
             </View>
           </View>
-          <View style={{ marginTop: 20 }}>
-            <ImageBackground
-              source={Bg}
-              style={{
-                width: "100%",
-                height: "auto",
-              }}
-            >
-              <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
-                <Text style={styles.bodyTitle}>
-                  Emlaksepette Satış Noktası Olmanın Avantajları Nelerdir?
-                </Text>
-                <FlatList
-                  data={CardDatajson}
-                  keyExtractor={(item) => item.id}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  renderItem={({ item }) => (
-                    <SalePointCard
-                      title={item.title}
-                      description={item.description}
-                      icon={item.image}
-                    />
-                  )}
-                />
-              </View>
-            </ImageBackground>
-          </View>
-        </ScrollView>
-      </View>
-
-      {/* <View style={{ justifyContent: "center" }}>
-        <View style={styles.salePageImageContainer}>
-          <Image
-            style={styles.salePageImage}
-            source={require("../../../src/assets/images/satisOfisi.png")}
-          ></Image>
         </View>
-        <View style={styles.firstParStyle}>
-          <Text style={styles.bigTitle}>
-            İnşaat Projelerinin Satış Noktası Ol!
-          </Text>
-          <Text style={styles.paragraph}>
-            EmlaksepetteSatış Noktası, EmlakSepette.com platformunda inşaat
-            firmalarının projelerini tanıtarak satan ve bu sayede firmalar için
-            önemli bir iş ortağı olmanızı sağlayan bir sistemdir.
-            EmlaksepetteSatış Noktası olarak faaliyet gösteren firmalar,
-            platform üzerinden birçok inşaat projesine kolayca erişebilir ve bu
-            projeleri potansiyel müşterilere sunabilir. Böylece, portföy arama
-            veya stok yönetimi gibi zorluklarla uğraşmak zorunda kalmazlar. Aynı
-            zamanda, platformun sunduğu stok kontrol sistemi ile projelerin
-            güncel durumu hakkında doğru bilgi sağlayabilir, müşterilere en
-            uygun seçenekleri hızla sunarak satış süreçlerini daha verimli hale
-            getirebilirler. EmlaksepetteSatış Noktası iş ortakları, kendi
-            referans kodları ile yaptıkları satışlardan komisyon kazanabilir,
-            EmlakSepette.com'un sağladığı özel indirimler ve fırsatlar sayesinde
-            de müşterilerine cazip teklifler sunarak gelirlerini artırabilirler.
-            Platform ayrıca, potansiyel müşterileri doğrudan satış noktalarına
-            yönlendirerek aktif bir müşteri havuzu oluşturur ve satış
-            süreçlerini hızlandırır.
-          </Text>
-        </View>
-        <View style={styles.paragraphContainer}>
-          <Text style={styles.bigTitle2}>
-            EmlakSepette.com Satış Noktası Olmanın Avantajları
-          </Text>
-          <Text style={styles.title}>
-            Tek Tıkla Proje Satış Noktası Olursunuz:
-            <Text style={styles.text}>
-              EmlakSepette.com ile birçok inşaat firmasının satış noktası
-              olarak, geniş bir proje portföyüne sahip olursunuz. Bu sayede
-              farklı müşteri taleplerine uygun projeleri kolayca sunabilir, stok
-              arama derdi yaşamazsınız.
-            </Text>
-          </Text>
-          <Text style={styles.title}>
-            Stok Kontrolü Kolaylığı:
-            <Text style={styles.text}>
-              Stok kontrol yöntemi sayesinde projelerin güncel durumunu takip
-              etme ve doğru bilgilendirme yapma avantajına sahip olursunuz.
-              Satışlarınızı yönetmek ve potansiyel müşterilere en uygun
-              seçenekleri sunmak daha kolay hale gelir.
-            </Text>
-          </Text>
-          <Text style={styles.title}>
-            Referans Kodu:
-            <Text style={styles.text}>
-              Kendi referans kodunuzla yaptığınız satışlardan gelir elde
-              edersiniz. Bu sistem, size satış performansınızı artırma ve daha
-              fazla kazanma imkanı sunar.
-            </Text>
-          </Text>
-          <Text style={styles.title}>
-            Özel İndirimler ve Fırsatlar:
-            <Text style={styles.text}>
-              Satış noktası olarak EmlakSepette.com'un sizlere sunduğu özel
-              indirimler sayesinde müşterilerinize cazip fiyat avantajları
-              sağlayabilir ve bu sayede daha fazla müşteri çekebilirsiniz.
-            </Text>
-          </Text>
-          <Text style={styles.title}>
-            Müşteri Yönlendirme Avantajı:
-            <Text style={styles.text}>
-              Platform üzerinden müşteriler doğrudan size yönlendirilir, böylece
-              aktif bir müşteri havuzuna sahip olur ve potansiyel alıcılarla
-              hızlıca iletişim kurabilirsiniz.
-            </Text>
-          </Text>
-          <Text style={styles.title}>
-            Hızlı Satış İmkanı:
-            <Text style={styles.text}>
-              Portföy aramak zorunda kalmadan hızlı satışlar yapmanın keyfini
-              çıkarırsınız. EmlakSepette.com'un sağladığı altyapı, satış
-              sürecinizi hızlandırır ve verimliliğinizi artırır.
-            </Text>
-          </Text>
-        </View>
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity
+        <View style={{ marginTop: 20 }}>
+          <ImageBackground
+            source={Bg}
             style={{
-              width: "90%",
-              backgroundColor: "#EA2B2E",
-              padding: 10,
-              margin: 5,
-              borderRadius: 10,
-              alignItems: "center",
-              marginBottom: 50,
+              width: "100%",
+              height: "auto",
             }}
-            onPress={handleSubmit}
           >
-            <Text
-              style={{
-                textAlign: "center",
-                color: "#fff",
-                fontWeight: "600",
-              }}
-            >
-              Başvuru Yap
-            </Text>
-          </TouchableOpacity>
+            <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
+              <Text style={styles.bodyTitle}>
+                Emlaksepette Satış Noktası Olmanın Avantajları Nelerdir?
+              </Text>
+              <FlatList
+                data={CardDatajson}
+                keyExtractor={(item) => item.id}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <SalePointCard
+                    title={item.title}
+                    description={item.description}
+                    icon={item.image}
+                  />
+                )}
+              />
+            </View>
+          </ImageBackground>
         </View>
-      </View> */}
+        <View
+          style={{
+            paddingHorizontal: 30,
+            paddingTop: 20,
+          }}
+        >
+          <View style={styles.mapCard}>
+            <Text style={{ fontWeight: "700", fontSize: 12 }}>
+              Emlaksepette Satış Noktaları
+            </Text>
+            <View style={styles.mapArea}>
+              <SaleMap style={styles.map} />
+            </View>
+
+            <View>
+              <Text style={{ fontSize: 12, fontWeight: "500", lineHeight: 17 }}>
+                ÇOK YAKINDA 81 İLDEYİZ !
+              </Text>
+              <Text
+                style={{
+                  fontWeight: "400",
+                  fontSize: 10,
+                  lineHeight: 12,
+                }}
+              >
+                Emlaksepette satış noktası olmak istiyorsanız, hemen başvurunuzu
+                yaparak bu büyüyen ağın bir parçası olabilirsiniz.
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            backgroundColor: "#F9F9F9",
+          }}
+        >
+          <View style={{ paddingHorizontal: 40 }}>
+            {/* Section 1: Nasıl Satış Noktası Olurum? */}
+            <View style={styles.section}>
+              <Text style={styles.bigTitle}>Nasıl Satış Noktası Olurum?</Text>
+              <View style={[styles.svgArea]}>
+                <Docs width={50} height={50} />
+              </View>
+              <Text style={styles.title}>Başvuru Formu</Text>
+              <Text style={styles.desc}>
+                Emlak ofisleri, satış noktası başvuru formunu eksiksiz ve doğru
+                bir şekilde doldurmalıdır. Formda istenen bilgilerin eksiksiz
+                olması, başvurunun hızlı bir şekilde değerlendirilmesini sağlar.
+              </Text>
+              <Line style={{ marginTop: 20 }} />
+            </View>
+            {/* section 2: */}
+            <View style={styles.section}>
+              <View style={[styles.svgArea]}>
+                <Clock width={50} height={50} />
+              </View>
+              <Text style={styles.title}>Değerlendirme Süreci</Text>
+              <Text style={styles.desc}>
+                Başvuru tamamlandıktan sonra, emlaksepette tarafından başvuru
+                değerlendirilir. Bu süreçte, emlak ofisinin gerekli kriterlere
+                uygunluğu kontrol edilir. Bu kriterler, ofisin geçmiş
+                performansı, yerel pazar bilgisi ve profesyonel deneyim gibi
+                unsurları içerebilir.
+              </Text>
+              <Line style={{ marginTop: 20 }} />
+            </View>
+            {/* section 3: */}
+            <View style={styles.section}>
+              <View style={[styles.svgArea]}>
+                <Okey width={50} height={50} />
+              </View>
+              <Text style={styles.title}>Onay Süreci</Text>
+              <Text style={styles.desc}>
+                Başvurusu onaylanan emlak ofisleri, emlaksepette ile iş birliği
+                yaparak sektördeki rekabet avantajlarını artırabilir. Bu, onlara
+                bölgesel pazarda daha güçlü bir konum kazandırır.
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
     </ScrollView>
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    showsVerticalScrollIndicator: false,
-  },
-  bigTitle: {
-    fontSize: 20,
-    padding: 14,
-    paddingTop: 30,
-    color: "#EA2B2E",
-    fontWeight: "600",
-    paddingHorizontal: 20,
-  },
-  bigTitle2: {
-    fontSize: 20,
-    padding: 14,
-    color: "#EA2B2E",
-    fontWeight: "600",
-    paddingHorizontal: 20,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalText: {
-    marginBottom: 5,
-    textAlign: "center",
-  },
-
-  centeredView: {
-    margin: 0,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)", // modal dışı koyu arkaplan
-  },
-  salePageImage: {
-    width: "100%",
-    height: 120,
-  },
-  salePageImageContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  paragraph: {
-    fontWeight: "400",
-    fontSize: 12,
-    marginBottom: 12,
-    lineHeight: 15,
-    paddingHorizontal: 20,
-  },
-  paragraphContainer: {
-    marginBottom: 30,
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 12,
-    marginVertical: 6,
-    lineHeight: 15,
-    paddingHorizontal: 20,
-  },
-  text: {
-    fontSize: 12,
-    color: "#333333",
-    marginBottom: 12,
-    fontWeight: "400",
-    lineHeight: 15,
-    paddingHorizontal: 20,
-  },
-  button: {
-    width: "50%",
-    backgroundColor: "#EA2B2E",
-    padding: 10,
-    marginTop: 20,
-    marginHorizontal: 5,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  buttons: { flexDirection: "row", padding: 5 },
-
   bodyTitle: {
     fontSize: 20,
     fontWeight: "700",
     textAlign: "center",
     justifyContent: "center",
     color: "#FFF",
+  },
+  mapCard: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    width: "100%",
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 4,
+    gap: 16,
+  },
+  map: {
+    width: "100%",
+    height: "auto",
+    resizeMode: "contain",
+  },
+  mapArea: {
+    width: "100%",
+    height: "auto",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bigTitle: {
+    fontWeight: "700",
+    fontSize: 26,
+    lineHeight: 36,
+    color: "#000",
+    textAlign: "center",
+  },
+  svgArea: {
+    backgroundColor: "#FFE3E3",
+    borderRadius: 8,
+    width: 70,
+    height: 70,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 30,
+    alignItems: "center",
+  },
+  section: {
+    marginTop: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  desc: {
+    textAlign: "center",
+    fontWeight: "400",
+    fontSize: 16,
+    lineHeight: 22,
+  },
+  title: {
+    fontWeight: "700",
+    fontSize: 26,
+    lineHeight: 36,
+    color: "#000",
+    textAlign: "center",
+    marginTop: 18,
   },
 });
