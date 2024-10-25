@@ -21,6 +21,8 @@ import Docs from "../../../assets/docs.svg";
 import Line from "../../../assets/lineArrow.svg";
 import Clock from "../../../assets/clock.svg";
 import Okey from "../../../assets/okey.svg";
+import Faq from "../../../json/FaqSalePage.json";
+import Icon5 from "react-native-vector-icons/MaterialIcons";
 
 export default function SalePageMain() {
   const [isUserHaveToken, setIsUserHaveToken] = useState(false);
@@ -48,6 +50,12 @@ export default function SalePageMain() {
     setIsCorporateTypeRight(false);
     setIsUserHaveToken(false);
   };
+  const [selectedId, setSelectedId] = useState(null);
+
+  const toggleExpand = (id) => {
+    setSelectedId(selectedId === id ? null : id);
+  };
+
   return (
     <ScrollView
       keyboardShouldPersistTaps="handled"
@@ -192,6 +200,7 @@ export default function SalePageMain() {
         <View
           style={{
             backgroundColor: "#F9F9F9",
+            paddingVertical: 20,
           }}
         >
           <View style={{ paddingHorizontal: 40 }}>
@@ -236,6 +245,82 @@ export default function SalePageMain() {
                 bölgesel pazarda daha güçlü bir konum kazandırır.
               </Text>
             </View>
+          </View>
+        </View>
+        <View style={{ backgroundColor: "#FFF" }}>
+          <Text style={styles.faqTitle}>Sıkça Sorulan Sorular</Text>
+
+          <View
+            style={{
+              paddingHorizontal: 20,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 4,
+              marginHorizontal: 16,
+              paddingVertical: 22,
+              borderRadius: 14,
+              backgroundColor: "#fff",
+              gap: 20,
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "700",
+                fontSize: 12,
+                lineHeight: 14,
+              }}
+            >
+              Kategori Seçimi
+            </Text>
+            <FlatList
+              data={Faq}
+              renderItem={({ item }) => {
+                const isExpanded = selectedId === item.id;
+                return (
+                  <View style={styles.itemContainer}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={[
+                        isExpanded
+                          ? styles.activeQuestion
+                          : styles.questionContainer,
+                      ]}
+                      onPress={() => toggleExpand(item.id)}
+                    >
+                      <Text
+                        style={[
+                          styles.questionText,
+                          isExpanded ? styles.activeQuestionText : null,
+                        ]}
+                      >
+                        {item.question}
+                      </Text>
+                      <Icon5
+                        name={
+                          isExpanded
+                            ? "keyboard-arrow-up"
+                            : "keyboard-arrow-down"
+                        }
+                        size={24}
+                        color={isExpanded ? "#fff" : "#999"}
+                      />
+                    </TouchableOpacity>
+                    {isExpanded && (
+                      <View style={styles.answerContainer}>
+                        <Text style={styles.answerText}>{item.answer}</Text>
+                      </View>
+                    )}
+                  </View>
+                );
+              }}
+              keyExtractor={(item) => item.id.toString()}
+              showsVerticalScrollIndicator={false}
+            />
           </View>
         </View>
       </View>
@@ -295,7 +380,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   section: {
-    marginTop: 20,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -312,5 +396,53 @@ const styles = StyleSheet.create({
     color: "#000",
     textAlign: "center",
     marginTop: 18,
+  },
+  itemContainer: {
+    marginBottom: 10,
+  },
+  faqTitle: {
+    fontWeight: "700",
+    fontSize: 26,
+    lineHeight: 31,
+    textAlign: "center",
+    paddingVertical: 20,
+  },
+  questionContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    backgroundColor: "#F7F7F7",
+    borderRadius: 10,
+  },
+  activeQuestion: {
+    backgroundColor: "#EC302E",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+  },
+  questionText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+    flex: 1,
+  },
+  activeQuestionText: {
+    color: "#fff",
+  },
+  answerContainer: {
+    padding: 16,
+    backgroundColor: "#f9f9f9",
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+  },
+  answerText: {
+    fontSize: 14,
+    color: "#666",
   },
 });
