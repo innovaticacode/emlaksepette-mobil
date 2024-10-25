@@ -104,18 +104,23 @@ export default function Verification({ nextStep, prevStep }) {
       updateUserData();
       setCodes("");
       setsucces(true);
-      nextStep();
+    
       SecureStore.setItemAsync("PhoneVerify", "1");
       setIsucces(true);
       setTimeout(() => {
         setIsucces(false);
       }, 2000);
+      
     } catch (error) {
       console.error("Doğrulama isteği başarısız:", error);
       setfalseCodeAlert(true);
       setsucces(false);
     } finally {
       setloading(false);
+      setTimeout(() => {
+        navigation.navigate("Drawer", { screen: "Home" });
+      }, 1000);
+  
     }
   };
 
