@@ -5,13 +5,17 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  ImageBackground,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import AwesomeAlert from "react-native-awesome-alerts";
 import Header from "../../../assets/salePageHeader.png";
-import { WhiteOrRedButtons } from "../../../components";
+import { SalePointCard, WhiteOrRedButtons } from "../../../components";
+import Bg from "../../../assets/salePageBg.png";
+import CardDatajson from "../../../json/SalePage.json";
 
 export default function SalePageMain() {
   const [isUserHaveToken, setIsUserHaveToken] = useState(false);
@@ -94,36 +98,67 @@ export default function SalePageMain() {
         cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
       />
 
-      <View style={{ backgroundColor: "#FFF" }}>
-        <View style={{ paddingHorizontal: 30, paddingTop: 20 }}>
-          <Image
-            source={Header}
-            style={{
-              width: "100%",
-              height: 200,
-            }}
-            resizeMode="contain"
-          />
-          <View style={{ paddingTop: 14 }}>
-            <View style={{ gap: 14 }}>
-              <Text style={{ fontSize: 24, fontWeight: "600" }}>
-                TEK TIKLA BİNLERCE PORTFÖYDE SATIŞ YETKİSİNE SAHİP OL!
-              </Text>
-              <Text style={{ fontSize: 12, fontWeight: "500", lineHeight: 17 }}>
-                Emlak ofisleri, platformda bulunan "Satış Noktası Ol" butonuna
-                tıklayarak Emlaksepette yetkili satış noktası olma başvurusunda
-                bulunabilirler. Bu başvuru, emlak ofisinin bulunduğu bölgede
-                emlaksepette ile iş birliği yaparak çeşitli avantajlardan
-                faydalanma ve sınırsız kazanç elde etme imkanı sağlar.
-              </Text>
-              <WhiteOrRedButtons
-                bgColor={"#EA2B2E"}
-                text={"Hemen Başvur"}
-                onPress={null}
-              />
+      <View style={{ backgroundColor: "#FFF", flex: 1, paddingBottom: 20 }}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={{ paddingHorizontal: 30, paddingTop: 20, gap: 20 }}>
+            <Image
+              source={Header}
+              width={"100%"}
+              height={200}
+              resizeMode="cover"
+            />
+            <View style={{ paddingTop: 14 }}>
+              <View style={{ gap: 14 }}>
+                <Text style={{ fontSize: 24, fontWeight: "600" }}>
+                  TEK TIKLA BİNLERCE PORTFÖYDE SATIŞ YETKİSİNE SAHİP OL!
+                </Text>
+                <Text
+                  style={{ fontSize: 12, fontWeight: "500", lineHeight: 17 }}
+                >
+                  Emlak ofisleri, platformda bulunan "Satış Noktası Ol" butonuna
+                  tıklayarak Emlaksepette yetkili satış noktası olma
+                  başvurusunda bulunabilirler. Bu başvuru, emlak ofisinin
+                  bulunduğu bölgede emlaksepette ile iş birliği yaparak çeşitli
+                  avantajlardan faydalanma ve sınırsız kazanç elde etme imkanı
+                  sağlar.
+                </Text>
+                <WhiteOrRedButtons
+                  bgColor={"#EA2B2E"}
+                  text={"Hemen Başvur"}
+                  onPress={null}
+                />
+              </View>
             </View>
           </View>
-        </View>
+          <View style={{ marginTop: 20 }}>
+            <ImageBackground
+              source={Bg}
+              style={{
+                width: "100%",
+                height: "auto",
+              }}
+            >
+              <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
+                <Text style={styles.bodyTitle}>
+                  Emlaksepette Satış Noktası Olmanın Avantajları Nelerdir?
+                </Text>
+                <FlatList
+                  data={CardDatajson}
+                  keyExtractor={(item) => item.id}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({ item }) => (
+                    <SalePointCard
+                      title={item.title}
+                      description={item.description}
+                      icon={item.image}
+                    />
+                  )}
+                />
+              </View>
+            </ImageBackground>
+          </View>
+        </ScrollView>
       </View>
 
       {/* <View style={{ justifyContent: "center" }}>
@@ -331,4 +366,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttons: { flexDirection: "row", padding: 5 },
+
+  bodyTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    textAlign: "center",
+    justifyContent: "center",
+    color: "#FFF",
+  },
 });

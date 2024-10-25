@@ -7,6 +7,8 @@ import EvaluationsCommentCard from "./Card/EvaluationsCard/EvaluationsCommentCar
 import RadioFilter from "./Filter/RadioFilter/RadioFilter";
 import ViewAllCard from "./Card/ViewAllCard/ViewAllCard";
 import WhiteOrRedButtons from "./Buttons/WhiteOrRedButtons/WhiteOrRedButtons";
+import SalePointCard from "./Card/SalePointCard/SalePointCard";
+
 export {
   CommentCard,
   TotalStarCard,
@@ -17,4 +19,5 @@ export {
   EvaluationsCommentCard,
   ViewAllCard,
   WhiteOrRedButtons,
+  SalePointCard,
 };
