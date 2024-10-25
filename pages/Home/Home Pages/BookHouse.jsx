@@ -107,7 +107,6 @@ const BookHouse = ({ index }) => {
         </View>
       ) : (
         <>
-         
           {refreshing && (
             <View
               style={{
@@ -135,11 +134,10 @@ const BookHouse = ({ index }) => {
               </View>
             ) : (
               <FlatList
-              keyExtractor={(item, index) => `${item.id}-${index}`} 
+                keyExtractor={(item, index) => `${item.id}-${index}`}
                 data={filteredHomes}
-                renderItem={({ item ,index}) => (
+                renderItem={({ item, index }) => (
                   <RealtorPost
-                  
                     openSharing={
                       JSON.parse(item.housing_type_data)["open_sharing1"]
                     }
@@ -185,50 +183,51 @@ const BookHouse = ({ index }) => {
                     isFavorite={item.is_favorite}
                   />
                 )}
-             ListHeaderComponent={
-              <>
-               <View style={{ paddingHorizontal: 0 }}>
-            <Image
-              source={bannerSRC}
-              style={{
-                width: "100%",
-                height: 120,
-              }}
-            />
-          </View>
-          <View style={styles.header}>
-            <Text style={{ fontSize: 14, fontWeight: 700 }}>
-              ÖNE ÇIKAN TATİL EVLERİ
-            </Text>
+                ListHeaderComponent={
+                  <>
+                    <View style={{ paddingHorizontal: 0 }}>
+                      <Image
+                        source={bannerSRC}
+                        style={{
+                          width: "100%",
+                          height: 120,
+                        }}
+                      />
+                    </View>
+                    <View style={styles.header}>
+                      <Text style={{ fontSize: 14, fontWeight: 700 }}>
+                        ÖNE ÇIKAN TATİL EVLERİ
+                      </Text>
 
-            <TouchableOpacity style={styles.allBtn}>
-              <Text
-                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
-                onPress={() =>
-                  navigation.navigate("Drawer", {
-                    screen: "AllRealtorAdverts",
-                    params: {
-                      name: "Emlak İlanları",
-                      slug: "emlak-ilanlari",
-                      data: filteredHomes,
-                      count: filteredHomes.length,
-                      type: "mustakil-tatil",
-                      optional: null,
-                      title: null,
-                      check: null,
-                      city: null,
-                      county: null,
-                      hood: null,
-                    },
-                  })
+                      <TouchableOpacity style={styles.allBtn}>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: 12,
+                            fontWeight: "bold",
+                          }}
+                          onPress={() =>
+                            navigation.navigate("AllRealtorAdverts", {
+                              name: "Emlak İlanları",
+                              slug: "emlak-ilanlari",
+                              data: filteredHomes,
+                              count: filteredHomes.length,
+                              type: "mustakil-tatil",
+                              optional: null,
+                              title: null,
+                              check: null,
+                              city: null,
+                              county: null,
+                              hood: null,
+                            })
+                          }
+                        >
+                          Tüm İlanları Gör
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </>
                 }
-              >
-                Tüm İlanları Gör
-              </Text>
-            </TouchableOpacity>
-          </View>
-              </>
-             }
                 onEndReachedThreshold={0.1}
                 refreshControl={
                   <RefreshControl
