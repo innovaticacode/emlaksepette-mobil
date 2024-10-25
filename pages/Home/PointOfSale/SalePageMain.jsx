@@ -279,7 +279,6 @@ export default function SalePageMain() {
             <FlatList
               data={filteredFaq}
               renderItem={({ item }) => {
-                console.debug("item", item);
                 const isExpanded = selectedId === item.id;
                 return (
                   <View style={styles.itemContainer}>
