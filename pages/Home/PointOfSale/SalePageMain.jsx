@@ -264,6 +264,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 4,
     gap: 16,
+    marginBottom: 20,
   },
   map: {
     width: "100%",
