@@ -1449,7 +1449,7 @@ console.log(errorStatu)
                   <View style={{alignItems:'center',justifyContent:'center'}}>
                     <ActivityIndicator color="white" size={'small'}/>
                   </View>:
-                   <Text style={styles.btnRegisterText}>Üye Ol</Text>
+                   <Text style={styles.btnRegisterText}>Başvur</Text>
                 }
                
               </TouchableOpacity>
