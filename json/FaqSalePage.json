@@ -2,36 +2,67 @@
   {
     "id": "1",
     "question": "Nasıl Tek Tıkla Proje Saış Noktası Olabilirim?",
-    "answer": "EmlakSepette.com'a üye olduktan sonra inşaat firmalarının satış ofisi olmak için başvuru yaparsınız. Bavurunuz emlaksepette.com yönetimi tarafından onay sürecinden geçer ve projenin satış noktası olabilirsiniz."
+    "answer": "EmlakSepette.com'a üye olduktan sonra inşaat firmalarının satış ofisi olmak için başvuru yaparsınız. Bavurunuz emlaksepette.com yönetimi tarafından onay sürecinden geçer ve projenin satış noktası olabilirsiniz.",
+    "category": "use"
   },
   {
     "id": "2",
     "question": "Satışlarımı Nasıl Yöneteceğim?",
-    "answer": "EmlakSepette.com'un stok kontrol yöntemi sayesinde projelerin güncel durumunu kolayca takip edebilir, doğru bilgilendirme yaparak potansiyel müşterilere uygun projeleri sunabilirsiniz."
+    "answer": "EmlakSepette.com'un stok kontrol yöntemi sayesinde projelerin güncel durumunu kolayca takip edebilir, doğru bilgilendirme yaparak potansiyel müşterilere uygun projeleri sunabilirsiniz.",
+    "category": "use"
   },
   {
     "id": "3",
     "question": "Referans Kodu Nasıl Çalışıyor?",
-    "answer": "EmlakSepette.com'un size özel verdiği referans kodu ile yaptığınız her satıştan komisyon kazanırsınız. Bu kodu kullanarak satış performansınızı izleyebilir ve gelirlerinizi artırabilirsiniz."
+    "answer": "EmlakSepette.com'un size özel verdiği referans kodu ile yaptığınız her satıştan komisyon kazanırsınız. Bu kodu kullanarak satış performansınızı izleyebilir ve gelirlerinizi artırabilirsiniz.",
+    "category": "use"
   },
   {
     "id": "4",
     "question": "Müşteri Yönlendirmesi Nasıl Gerçekleşiyor?",
-    "answer": "EmlakSepette.com'da projenin satış noktası olarak görünürsünüz bu sayede müşteriler sizlere ulaşır ve hızlıca satışlarınızı yaparsınız. Proje satış noktası olan kurumsal üyelerimize özel indirimler sayesinde müşteriler ilk sizi tercih eder."
+    "answer": "EmlakSepette.com'da projenin satış noktası olarak görünürsünüz bu sayede müşteriler sizlere ulaşır ve hızlıca satışlarınızı yaparsınız. Proje satış noktası olan kurumsal üyelerimize özel indirimler sayesinde müşteriler ilk sizi tercih eder.",
+    "category": "use"
   },
   {
     "id": "5",
     "question": "Hangi Projeleri Sunabilirim?",
-    "answer": "EmlakSepette.com üzerinde yer alan birçok inşaat firmasının projelerini portföyünüze ekleyebilir, böylece farklı müşteri taleplerine uygun alternatifleri kolayca sunabilirsiniz."
+    "answer": "EmlakSepette.com üzerinde yer alan birçok inşaat firmasının projelerini portföyünüze ekleyebilir, böylece farklı müşteri taleplerine uygun alternatifleri kolayca sunabilirsiniz.",
+    "category": "use"
   },
   {
     "id": "6",
     "question": "Nasıl Daha Fazla Müşteri Çekebilirim?",
-    "answer": "EmlakSepette.com'un sağladığı müşteri yönlendirme sistemi, size sürekli yeni müşteri kazandırır. Ayrıca, özel indirim ve fırsatlarla daha cazip teklifler sunarak müşteri sayınızı artırabilirsiniz."
+    "answer": "EmlakSepette.com'un sağladığı müşteri yönlendirme sistemi, size sürekli yeni müşteri kazandırır. Ayrıca, özel indirim ve fırsatlarla daha cazip teklifler sunarak müşteri sayınızı artırabilirsiniz.",
+    "category": "use"
   },
   {
     "id": "7",
     "question": "Stok Güncellemeleri Nasıl Yapılır?",
-    "answer": "Stok güncellemeleri EmlakSepette.com'un sağladığı stok kontrol sistemiyle sürekli olarak yenilenir. Bu sayede projelerin güncel durumu hakkında her zaman doğru bilgiye ulaşabilirsiniz."
+    "answer": "Stok güncellemeleri EmlakSepette.com'un sağladığı stok kontrol sistemiyle sürekli olarak yenilenir. Bu sayede projelerin güncel durumu hakkında her zaman doğru bilgiye ulaşabilirsiniz.",
+    "category": "use"
+  },
+  {
+    "id": "8",
+    "question": "Tek Tıkla Proje Satış Noktası olmanın avantajları nelerdir?",
+    "answer": "Proje satış noktası olarak geniş bir portföye sahip olursunuz. Stok takibi, güncel projeleri kolayca sunma imkanı ve satış performansınızı artıracak referans kodu gibi özelliklerle iş süreçlerinizi hızlandırabilirsiniz.Pazarlama Desteği: Emlaksepette, satış noktalarına gelişmiş pazarlama araçları ve kampanyaları sunar. Bu, ofislerin tanıtım faaliyetlerini etkili bir şekilde yürütmelerine olanak tanır ve müşteri çekimlerini artırır.Geniş Müşteri Portföyüne Erişim: Emlaksepette satış noktaları, platformun geniş müşteri kitlesine erişim sağlar. Bu, potansiyel alıcılara ulaşma konusunda büyük bir avantaj sunar.Sınırsız Kazanç İmkanı: Emlaksepette satış noktaları, platform üzerinden yönlendirilen satışlar aracılığıyla komisyon kazanma fırsatı elde eder. İşlem sayısına bağlı olarak bu kazançlar önemli ölçüde artış gösterebilir.",
+    "category": "advantages"
+  },
+  {
+    "id": "9",
+    "question": "Özel İndirim Ve Fırsatlar Hakkında Nasıl Bilgi Alabilirim?",
+    "answer": "EmlakSepette.com'un sunduğu özel indirimler ve fırsatlar platform üzerindeki hesabınızdan duyurulur. Ayrıca, satış noktasına özel kampanyalardan müşterilerinizi haberdar ederek daha cazip teklifler sunabilirsiniz.",
+    "category": "advantages"
+  },
+  {
+    "id": "10",
+    "question": "Hangi Ödeme Yöntemleri Geçerlidir?",
+    "answer": "EmlakSepette.com üzerinden gerçekleştirilen satışlar güvenli ödeme altyapısı ile yapılır. Platformda sunulan çeşitli ödeme yöntemleri sayesinde müşterilerinize kolaylık sağlayabilirsiniz.Müşterilerinizden kredi kartı ve EFT gibi online ödeme kanalları ile ödeme alma imkanı sunulur.",
+    "category": "payment"
+  },
+  {
+    "id": "11",
+    "question": "Komisyon Ödememi Nasıl Alabilirim?",
+    "answer": "Komisyon ödemeleriniz fatura karşılığında sitede belirlenen ödeme koşulları çerçevesinde tarafınıza yatırılır.",
+    "category": "payment"
   }
 ]

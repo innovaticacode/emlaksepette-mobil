@@ -24,13 +24,14 @@ import Okey from "../../../assets/okey.svg";
 import Faq from "../../../json/FaqSalePage.json";
 import Icon5 from "react-native-vector-icons/MaterialIcons";
 import { Dropdown } from "react-native-element-dropdown";
-import AntDesign from "@expo/vector-icons/AntDesign";
 
 export default function SalePageMain() {
   const [isUserHaveToken, setIsUserHaveToken] = useState(false);
   const [isCorporateTypeRight, setIsCorporateTypeRight] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
-  const [category, setCategory] = useState("use");
+  const [category, setCategory] = useState(
+    dropdownData ? dropdownData[0].value : null
+  );
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -65,6 +66,10 @@ export default function SalePageMain() {
     { label: "Avantajlar", value: "advantages" },
     { label: "Ödeme", value: "payment" },
   ];
+
+  const filteredFaq = category
+    ? Faq.filter((item) => item.category === category.value)
+    : Faq;
 
   return (
     <ScrollView
@@ -257,19 +262,10 @@ export default function SalePageMain() {
             </View>
           </View>
         </View>
-        <View style={{ backgroundColor: "#FFF" }}>
+        <View style={{ backgroundColor: "#FFF", paddingBottom: 20 }}>
           <Text style={styles.faqTitle}>Sıkça Sorulan Sorular</Text>
-
           <View style={styles.faqContainer}>
-            <Text
-              style={{
-                fontWeight: "700",
-                fontSize: 12,
-                lineHeight: 14,
-              }}
-            >
-              Kategori Seçimi
-            </Text>
+            <Text style={styles.categoryTitle}>Kategori Seçimi</Text>
             <Dropdown
               style={styles.dropDown}
               data={dropdownData}
@@ -281,8 +277,9 @@ export default function SalePageMain() {
               onChange={(value) => setCategory(value)}
             />
             <FlatList
-              data={Faq}
+              data={filteredFaq}
               renderItem={({ item }) => {
+                console.debug("item", item);
                 const isExpanded = selectedId === item.id;
                 return (
                   <View style={styles.itemContainer}>
@@ -477,5 +474,10 @@ const styles = StyleSheet.create({
     borderColor: "#DCDCDC",
     borderRadius: 8,
     padding: 10,
+  },
+  categoryTitle: {
+    fontWeight: "700",
+    fontSize: 12,
+    lineHeight: 14,
   },
 });
