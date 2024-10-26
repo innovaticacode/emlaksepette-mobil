@@ -126,72 +126,7 @@ export default function Favorites() {
     settype(type);
   };
 
-  const addToCardForHousing = async () => {
-    const formData = new FormData();
-    formData.append("id", selectedCartItem);
-    formData.append("isShare", null);
-    formData.append("numbershare", null);
-    formData.append("qt", 1);
-    formData.append("type", "housing");
-    formData.append("project", null);
-    formData.append("clear_cart", "no");
-
-    try {
-      if (user?.access_token) {
-        const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
-
-        setModalForAddToCart(false);
-        navigation.navigate("Sepetim");
-      }
-    } catch (error) {
-      console.error("post isteği olmadı", error);
-    }
-  };
-
-  const addToCardForProject = async () => {
-    const formData = new FormData();
-    formData.append("id", selectedRoomID);
-    formData.append(
-      "isShare",
-      favorites?.project?.listHousing[selectedRoomID]["share_sale[]"]
-        ? favorites?.project?.listHousing[selectedRoomID]["share_sale[]"]
-        : "[]"
-    );
-    formData.append(
-      "numbershare",
-      favorites?.project?.listHousing[selectedRoomID]
-        ? ["number_of_shares[]"]
-        : "[]"
-    );
-    formData.append("qt", 1);
-    formData.append("type", "project");
-    formData.append("clear_cart", "no");
-    formData.append("project", selectedCartItem);
-    try {
-      if (user?.access_token) {
-        const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
-        navigation.navigate("Sepetim");
-      }
-    } catch (error) {
-      console.error("post isteği olmadı", error);
-    }
-  };
+ 
 
   // DELETE ALL FUNCTION START
   const deleteAll = async () => {
@@ -407,7 +342,7 @@ export default function Favorites() {
 
   const renderFavorite = (favorite, i) => {
     if (favorite?.project) {
-      const { image, column1, column2, column3, no, location, title, price } =
+      const { image, column1, column2, column3 , no, location, title, price } =
         extractProjectData(favorite);
       return (
         <RealtorPostFavorited
@@ -423,6 +358,7 @@ export default function Favorites() {
           location={location}
           image={image}
           title={title}
+          favorites={favorites}
           price={price}
           m2="20"
           GetId={GetIdForCart}
@@ -446,6 +382,7 @@ export default function Favorites() {
           price={price}
           column1={column1}
           column2={column2}
+          favorites={favorites}
           column3={column3}
           location={location}
           GetId={GetIdForCart}
@@ -505,23 +442,25 @@ export default function Favorites() {
   };
 
   const getColumnData = (favorite, columnIndex) => {
-    return (
-      favorite?.project_housing?.find(
-        (housing) =>
-          housing.room_order === favorite?.housing_id &&
-          housing.name ===
-            favorite?.project?.list_item_values[`column${columnIndex}_name`] +
-              "[]" &&
-          housing.project_id === favorite?.project?.id
-      )?.value +
-      " " +
-      (favorite?.project?.list_item_values[`column${columnIndex}_additional`] ||
-        "")
+    const housing = favorite?.project_housing?.find(
+      (housing) =>
+        housing.room_order === favorite?.housing_id &&
+        housing.name === 
+          favorite?.project?.list_item_values[`column${columnIndex}_name`] + "[]" &&
+        housing.project_id === favorite?.project?.id
     );
+  
+    if (!housing) return ""; // Eğer housing bulunamazsa boş bir string döner
+    
+    // column değerini housing.value ile al, eğer varsa additional bilgiyi ekle
+    const columnValue = housing?.value || "";
+    const additional = favorite?.project?.list_item_values[`column${columnIndex}_additional`] || "";
+    return columnValue + " " + additional;
   };
+  
 
   const [selectedSortOption, setSelectedSortOption] = useState(null);
-
+// console.log(user.access_token)
   // Sıralama fonksiyonu
   const sortFavorites = (value) => {
     let sortedFavorites = [...favorites]; // Favorileri kopyala
@@ -584,28 +523,7 @@ export default function Favorites() {
                       placeholderTextColor={"grey"}
                     />
 
-                    <TouchableOpacity style={styles.modalBtn}>
-                      <View>
-                        <TouchableOpacity onPress={() => setModalVisible(true)}>
-                          <Icon3
-                            name="swap-vertical"
-                            size={23}
-                            color={styles.iconColor.color}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </TouchableOpacity>
-
-                    <SortModal
-                      isVisible={modalVisible}
-                      onClose={() => setModalVisible(false)}
-                      onSortChange={(value) => {
-                        setSelectedSortOption(value); // Seçilen sıralama seçeneğini güncelle
-                        sortFavorites(value); // Sıralama işlemini çağır
-                      }}
-                      selectedSortOption={selectedSortOption} // Seçilen sıralama seçeneği
-                      type="favorites"
-                    />
+                  
                   </View>
 
                   {/* Toplu seçim ve silme işlemleri */}
@@ -816,7 +734,7 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     backgroundColor: "transparent",
-    width: "88%",
+    width: "100%",
     borderTopColor: "white",
     borderBottomColor: "white",
     height: 34,
