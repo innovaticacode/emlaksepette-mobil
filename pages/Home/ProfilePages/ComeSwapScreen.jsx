@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 2,
     backgroundColor: "#FFF",
-    gap: 10,
+    gap: 11,
     flex: 1,
   },
 });
