@@ -121,9 +121,6 @@ export default function Personal({ type }) {
         }, 5000);
       }
     } catch (error) {
-      if (error) {
-        console.log("error", error);
-      }
       if (error.response.data.errors.email) {
         seterrorStatu(2);
         setData("emailErr", error.response.data.errors.email[0]);
@@ -145,22 +142,6 @@ export default function Personal({ type }) {
           setData("mobilePhoneErr", null);
         }, 5000);
       }
-      // alert(Errors.emailErr)
-      // if (
-      //   error.response &&
-      //   error.response.data &&
-      //   error.response.data.errors &&
-      //   error.response.data.errors.email
-      // ) {
-      //   const errorMessage = error.response.data.errors.email[0];
-      //   console.log("API Hatası:", errorMessage);
-      //   seterrorStatu(2);
-      //   seterrorMessage(errorMessage);
-      // } else {
-      //   console.error("Beklenmeyen bir hata oluştu:", error);
-      // }
-
-      console.error("Beklenmeyen bir hata oluştu:", error);
     } finally {
       setIsloading(false);
     }
