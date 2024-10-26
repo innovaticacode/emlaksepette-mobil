@@ -76,19 +76,12 @@ export default function SalePageMain() {
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={styles.scrollViewContent}
       scrollEventThrottle={16}
-      style={styles.container}
       showsVerticalScrollIndicator={false}
     >
       <AwesomeAlert
         show={isUserHaveToken}
         showProgress={false}
-        titleStyle={{
-          color: "#333",
-          fontSize: 13,
-          fontWeight: "700",
-          textAlign: "center",
-          margin: 5,
-        }}
+        titleStyle={styles.alertTitle}
         messageStyle={{ textAlign: "center" }}
         message={`Başvuru yapabilmek için önce giriş yapmalısınız!`}
         closeOnTouchOutside={true}
@@ -107,13 +100,7 @@ export default function SalePageMain() {
       <AwesomeAlert
         show={isCorporateTypeRight}
         showProgress={false}
-        titleStyle={{
-          color: "#333",
-          fontSize: 13,
-          fontWeight: "700",
-          textAlign: "center",
-          margin: 5,
-        }}
+        titleStyle={styles.alertTitle}
         messageStyle={{ textAlign: "center" }}
         message={`Başvuru yapabilmek için emlak ofisi olmalısınız!`}
         closeOnTouchOutside={true}
@@ -181,12 +168,7 @@ export default function SalePageMain() {
             </View>
           </ImageBackground>
         </View>
-        <View
-          style={{
-            paddingHorizontal: 30,
-            paddingTop: 20,
-          }}
-        >
+        <View style={{ paddingHorizontal: 30, paddingTop: 20 }}>
           <View style={styles.mapCard}>
             <Text style={{ fontWeight: "700", fontSize: 12 }}>
               Emlaksepette Satış Noktaları
@@ -478,5 +460,12 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 12,
     lineHeight: 14,
+  },
+  alertTitle: {
+    color: "#333",
+    fontSize: 13,
+    fontWeight: "700",
+    textAlign: "center",
+    margin: 5,
   },
 });
