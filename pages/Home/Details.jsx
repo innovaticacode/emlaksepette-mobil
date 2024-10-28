@@ -974,11 +974,11 @@ const {width,height}=Dimensions.get("window")
                     />
                   )}
                   <View>{tabs == 1 && <Caption data={data} />}</View>
-                  {tabs == 2 && <Information settings={data} />}
-                  <View style={{}}>{tabs === 3 && <Map mapData={data} />}</View>
+                  {/* {tabs == 2 && <Information settings={data} />} */}
+                  <View style={{}}>{tabs === 2 && <Map mapData={data} />}</View>
 
-                  {tabs == 4 && <FloorPlan data={data} />}
-                  {tabs == 5 && (
+                  {tabs == 3 && <FloorPlan data={data} />}
+                  {tabs == 4 && (
                     <CommentForProject projectId={data?.project?.id} />
                   )}
 
