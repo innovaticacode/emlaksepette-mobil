@@ -29,10 +29,13 @@ import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import IconFilter from "react-native-vector-icons/MaterialCommunityIcons";
 import RadioFilter from "../../components/Filter/RadioFilter/RadioFilter";
 import { frontEndUriBase } from "../../components/methods/apiRequest";
+import { useDispatch } from "react-redux";
+import { getFavorites } from "../../store/slices/Favorites/FavoritesSlice";
 
 export default function Favorites() {
   const navigation = useNavigation();
   const focused = useIsFocused();
+  const dispatch = useDispatch();
   const [user, setUser] = useState({});
   const [favorites, setFavorites] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -57,19 +60,10 @@ export default function Favorites() {
   const fetchFavorites = async () => {
     try {
       setLoading(true);
-      const config = {
-        headers: { Authorization: `Bearer ${user?.access_token}` },
-      };
-      const response = await axios.get(
-        "https://private.emlaksepette.com/api/favorites",
-        config
-      );
-  
-      // Favorileri 'created_at' tarihine göre sıralıyoruz
-      const sortedFavorites = Object.values(response.data.mergedFavorites).sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
-      );
-  
+      const result = await dispatch(getFavorites());
+      const sortedFavorites = Object.values(
+        result.payload.mergedFavorites
+      ).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       return setFavorites(sortedFavorites);
     } catch (error) {
       console.error("Error fetching favorites:", error);
@@ -77,8 +71,7 @@ export default function Favorites() {
       setLoading(false);
     }
   };
-  
- 
+
   useEffect(() => {
     if (user?.access_token) {
       fetchFavorites();
@@ -125,8 +118,6 @@ export default function Favorites() {
     setselectedRoomID(roomId);
     settype(type);
   };
-
- 
 
   // DELETE ALL FUNCTION START
   const deleteAll = async () => {
@@ -342,7 +333,7 @@ export default function Favorites() {
 
   const renderFavorite = (favorite, i) => {
     if (favorite?.project) {
-      const { image, column1, column2, column3 , no, location, title, price } =
+      const { image, column1, column2, column3, no, location, title, price } =
         extractProjectData(favorite);
       return (
         <RealtorPostFavorited
@@ -445,22 +436,24 @@ export default function Favorites() {
     const housing = favorite?.project_housing?.find(
       (housing) =>
         housing.room_order === favorite?.housing_id &&
-        housing.name === 
-          favorite?.project?.list_item_values[`column${columnIndex}_name`] + "[]" &&
+        housing.name ===
+          favorite?.project?.list_item_values[`column${columnIndex}_name`] +
+            "[]" &&
         housing.project_id === favorite?.project?.id
     );
-  
+
     if (!housing) return ""; // Eğer housing bulunamazsa boş bir string döner
-    
+
     // column değerini housing.value ile al, eğer varsa additional bilgiyi ekle
     const columnValue = housing?.value || "";
-    const additional = favorite?.project?.list_item_values[`column${columnIndex}_additional`] || "";
+    const additional =
+      favorite?.project?.list_item_values[`column${columnIndex}_additional`] ||
+      "";
     return columnValue + " " + additional;
   };
-  
 
   const [selectedSortOption, setSelectedSortOption] = useState(null);
-// console.log(user.access_token)
+  // console.log(user.access_token)
   // Sıralama fonksiyonu
   const sortFavorites = (value) => {
     let sortedFavorites = [...favorites]; // Favorileri kopyala
@@ -522,8 +515,6 @@ export default function Favorites() {
                       showCancel="false"
                       placeholderTextColor={"grey"}
                     />
-
-                  
                   </View>
 
                   {/* Toplu seçim ve silme işlemleri */}
