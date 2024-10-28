@@ -26,6 +26,9 @@ const DrawerMenu = () => {
   const dispatch = useDispatch();
   const [user, setUser] = useState({});
   const [namFromGetUser, setnamFromGetUser] = useState([]);
+  const image = namFromGetUser.profile_image;
+  let checkImage = null;
+
   const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
 
   useEffect(() => {
@@ -56,12 +59,21 @@ const DrawerMenu = () => {
 
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
-    navigation.dispatch(DrawerActions.closeDrawer()); // Drawer'ı kapatıyoruz
+    navigation.dispatch(DrawerActions.closeDrawer());
   };
 
   const openLink = (url) => {
     Linking.openURL(url);
   };
+
+  if (image == "indir.jpeg") {
+    if (namFromGetUser.name) {
+      const fullName = namFromGetUser.name.split(" ");
+      const name = fullName[0].charAt(0).toUpperCase();
+      const surname = fullName[1].charAt(0).toUpperCase();
+      checkImage = name + surname;
+    }
+  }
 
   return (
     <SafeAreaView>
@@ -83,16 +95,32 @@ const DrawerMenu = () => {
               <View style={styles.profileImageContainer}>
                 <View style={styles.profileImageWrapper}>
                   {user.access_token ? (
-                    <Image
-                      source={{ uri: PhotoUrl + namFromGetUser.profile_image }}
-                      style={styles.profileImage}
-                      resizeMode="contain"
-                    />
+                    checkImage ? (
+                      <Text
+                        style={{
+                          fontSize: 24,
+                          color: "#000",
+                          textAlign: "center",
+                          textAlignVertical: "center",
+                        }}
+                      >
+                        {checkImage}
+                      </Text>
+                    ) : (
+                      <Image
+                        source={{
+                          uri: PhotoUrl + namFromGetUser.profile_image,
+                        }}
+                        style={styles.profileImage}
+                        resizeMode="contain"
+                      />
+                    )
                   ) : (
-                    <Icon2 name="user" size={65} color="#333" padding={10} />
+                    <Icon2 name="user" size={64} color="#000" />
                   )}
                 </View>
               </View>
+
               {/* PROFİL FOTO END */}
 
               {/* GİRİŞ YAP-HESABIM BÖLÜMÜ START */}
