@@ -293,7 +293,10 @@ export default function WaitRealtorAdverts({ index }) {
                     alignItems: "center",
                     gap: 10,
                   }}
-                  onPress={{}}
+                  onPress={() => {
+                    navigation.navigate("EditPending");
+                    setEditModalVisible(false);
+                  }}
                 >
                   <Icon3 name="mode-edit-outline" size={23} color={"#333"} />
                   <Text
@@ -308,7 +311,10 @@ export default function WaitRealtorAdverts({ index }) {
                     alignItems: "center",
                     gap: 10,
                   }}
-                  onPress={{}}
+                  onPress={() => {
+                    navigation.navigate("EditPending");
+                    setEditModalVisible(false);
+                  }}
                 >
                   <Icon3 name="photo-library" size={21} color={"#333"} />
                   <Text
