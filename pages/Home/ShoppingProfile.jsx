@@ -41,7 +41,7 @@ import { id } from "date-fns/locale";
 import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
 
 export default function ShoppingProfile() {
-  const { width, height, fontScale } = Dimensions.get("window");
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
@@ -267,6 +267,12 @@ export default function ShoppingProfile() {
     );
     return () => backHandler.remove();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(setShoppingProfile({ isShoppingProfile: true }));
+    }
+  }, [isFocused]);
 
   return (
     <>

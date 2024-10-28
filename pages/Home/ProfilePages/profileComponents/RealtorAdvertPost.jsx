@@ -17,7 +17,6 @@ export default function RealtorAdvertPost({ Onpress, housing }) {
   const apiUrl = "https://private.emlaksepette.com/";
   const { width, height } = Dimensions.get("window");
 
-  console.debug("housing", housing);
   return (
     <View style={[style.card, { gap: 5 }]}>
       <View style={{ flexDirection: "row", width: "100%", gap: 10 }}>
@@ -43,12 +42,7 @@ export default function RealtorAdvertPost({ Onpress, housing }) {
                 </Text>
               </View>
               <View style={{ alignItems: "center", justifyContent: "center" }}>
-                <TouchableOpacity
-                  style={{}}
-                  onPress={() => {
-                    Onpress(housing.id);
-                  }}
-                >
+                <TouchableOpacity onPress={() => Onpress(housing.id)}>
                   <Icon2 name="dots-three-vertical" size={20} color={"#333"} />
                 </TouchableOpacity>
               </View>
