@@ -29,7 +29,6 @@ import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import IconFilter from "react-native-vector-icons/MaterialCommunityIcons";
 import RadioFilter from "../../components/Filter/RadioFilter/RadioFilter";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
-import { frontEndUriBase } from "../../components/methods/apiRequest";
 import { useDispatch } from "react-redux";
 import { getFavorites } from "../../store/slices/Favorites/FavoritesSlice";
 
