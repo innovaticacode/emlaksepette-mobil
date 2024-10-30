@@ -142,7 +142,7 @@ export default function RealtorAdvertTab() {
  
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#F6F6F6" }}>
-   
+
       <TabView
         navigationState={{ index, routes, }}
         renderScene={({ route, jumpTo }) =>

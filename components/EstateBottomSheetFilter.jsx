@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import ActionSheet from "react-native-actions-sheet";
 import { Dimensions, Text, View } from "react-native";
 import { CheckBox } from "@rneui/themed";
+import { TouchableOpacity } from "react-native";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -95,9 +96,11 @@ const EstateBottomSheetFilter = (props) => {
               uncheckedIcon="checkbox-blank-outline"
               checkedColor="red"
               checked={checkbox.checked} // Checkbox durumu
-              onPress={() => toggleCheckbox(index)} // Sadece bir checkbox seçili olur
+              onPress={() => toggleCheckbox(index)}
             />
-            <Text>{`${checkbox.label} (${checkbox?.count})`}</Text>
+            <TouchableOpacity onPress={() => toggleCheckbox(index)}>
+              <Text>{`${checkbox.label} (${checkbox?.count})`}</Text>
+            </TouchableOpacity>
           </View>
         ))}
       </View>

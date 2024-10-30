@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   title: {
     fontWeight: "400",
     marginBottom: 5,
-    fontSize: 9,
+    fontSize: 11,
     flexWrap: "wrap",
     // color: "#606060",
     color: "#000000",
@@ -37,13 +37,13 @@ export const styles = StyleSheet.create({
     flexShrink: 1,
     flexWrap: "wrap",
     marginTop: 5,
-    fontSize: 12,
+    fontSize: 14,
     color: "#000000",
   },
   info: {
     marginTop: 5,
     color: "#777",
-    fontSize: 8,
+    fontSize: 10,
   },
   multiImage: {
     width: 60,

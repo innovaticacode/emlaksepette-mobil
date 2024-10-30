@@ -148,7 +148,7 @@ export default function DailyRentTab() {
      
       
      
-    
+
       <TabView
         navigationState={{ index, routes }}
         renderScene={({ route, jumpTo }) =>

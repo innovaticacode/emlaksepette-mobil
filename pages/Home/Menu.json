@@ -62,7 +62,7 @@
       },
       {
         "text": "Sattıklarım",
-        "key": "ShowCartOrders",
+        "key": "disabled_ShowCartOrders",
         "url": "Sell",
         "activePath": "/hesabim/sattiklarim"
       }
@@ -193,7 +193,7 @@
     "id": "role",
     "label": "Hesabım & Yardım",
     "icon": "account-settings",
-    "text": "Kullanıcı Tipi Oluştur",
+    "text": "Yetki Grupları",
     "key": "Roles",
     "url": "",
     "activePath": "/hesabim/roles*",
@@ -217,19 +217,19 @@
     "id": "user",
     "label": "Hesabım & Yardım",
     "icon": "account-group",
-    "text": "Alt Kullanıcı Oluştur",
+    "text": "Ekibini Oluştur",
     "key": "Users",
     "url": "#nv-users",
     "activePath": "/hesabim/users*",
     "subMenu": [
       {
-        "text": "Yeni Ekle",
+        "text": "Ekip Üyesi Ekle",
         "key": "CreateUser",
         "url": "CreateUser",
         "activePath": "/hesabim/kullanici/olustur"
       },
       {
-        "text": "Listele",
+        "text": "Ekip Üyelerini Listele",
         "key": "GetUsers",
         "url": "UsersList",
         "activePath": "/hesabim/kullanicilar"
@@ -281,7 +281,6 @@
         "url": "AddBioText",
         "activePath": "/hesabim/reklam-gorselleri"
       }
-
     ]
   },
   {
