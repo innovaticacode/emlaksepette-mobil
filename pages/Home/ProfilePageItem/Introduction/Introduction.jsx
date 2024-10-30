@@ -89,8 +89,10 @@ const Introduction = (props) => {
 
                 {storeInfo?.about && (
                   <Text style={styles.description}>
-                
-                    <HTML source={{ html:storeInfo?.about}} contentWidth={10} />
+                    <HTML
+                      source={{ html: storeInfo?.about }}
+                      contentWidth={10}
+                    />
                   </Text>
                 )}
               </View>

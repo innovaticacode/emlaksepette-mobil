@@ -41,7 +41,7 @@ import { id } from "date-fns/locale";
 import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
 
 export default function ShoppingProfile() {
-  const { width, height, fontScale } = Dimensions.get("window");
+  const [checkImage, setCheckImage] = useState(null);
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
@@ -231,6 +231,21 @@ export default function ShoppingProfile() {
       setloadingCollection(false);
     }
   };
+
+  useEffect(() => {
+    if (profileImage) {
+      if (profileImage.endsWith("indir.jpeg")) {
+        if (namFromGetUser?.name) {
+          const fullName = namFromGetUser.name.split(" ");
+          const name = fullName[0]?.charAt(0).toUpperCase();
+          const surname = fullName[1]?.charAt(0).toUpperCase();
+          setCheckImage(name + surname);
+        }
+      } else {
+        setCheckImage(null);
+      }
+    }
+  }, [profileImage, namFromGetUser]);
 
   useEffect(() => {
     GetUserInfo();
@@ -673,7 +688,7 @@ export default function ShoppingProfile() {
             ></View>
 
             <ImageBackground
-              source={require("../../src/assets/images/profilePhoto.jpg")}
+              source={require("../../src/assets/images/profilePhoto.png")}
               style={{ width: "100%", height: "100%" }}
               imageStyle={{
                 borderBottomLeftRadius: 30,
@@ -691,19 +706,20 @@ export default function ShoppingProfile() {
                   gap: 20,
                 }}
               >
-                <View
-                  style={{
-                    width: 65,
-                    height: 65,
-                  }}
-                >
-                  <View style={style.profileImage}>
-                    <Image
-                      source={{ uri: profileImage }}
-                      style={{ width: "100%", height: "100%" }}
-                      borderRadius={50}
-                    />
-                  </View>
+                <View style={style.profileImgArea}>
+                  {checkImage ? (
+                    <View style={style.checkTextArea}>
+                      <Text style={style.checkText}>{checkImage}</Text>
+                    </View>
+                  ) : (
+                    <View style={style.profileImage}>
+                      <Image
+                        source={{ uri: profileImage }}
+                        style={{ width: "100%", height: "100%" }}
+                        borderRadius={50}
+                      />
+                    </View>
+                  )}
                 </View>
                 <View
                   style={{
@@ -726,9 +742,14 @@ export default function ShoppingProfile() {
                         {namFromGetUser.name}
                       </Text>
                       <View style={{ width: 20, height: 20, left: 10 }}>
-                        <ImageBackground
+                        <Image
                           source={require("../../src/assets/images/BadgeYellow.png")}
-                          style={{ flex: 1 }}
+                          style={{
+                            flex: 1,
+                            width: 20,
+                            height: 20,
+                            resizeMode: "contain",
+                          }}
                           onLoadEnd={() => setLoading(false)}
                         />
 
@@ -1107,5 +1128,26 @@ const style = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  checkTextArea: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+    borderRadius: 50,
+    backgroundColor: "#C9C9C9",
+    opacity: 0.7,
+  },
+  checkText: {
+    fontSize: 24,
+    color: "#FFF",
+    fontWeight: "900",
+    textAlign: "center",
+    textAlignVertical: "center",
+    justifyContent: "center",
+  },
+  profileImgArea: {
+    width: 64,
+    height: 64,
   },
 });
