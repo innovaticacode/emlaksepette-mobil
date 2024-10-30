@@ -22,21 +22,39 @@ import {
 import { ActivityIndicator } from "react-native-paper";
 import { Platform } from "react-native";
 import NoDataScreen from "../../../components/NoDataScreen";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function UsersList() {
   const navigation = useNavigation();
+  const isfocused = useIsFocused();
+
   const [modalVisible, setModalVisible] = useState(false);
   const [subUsers, setsubUsers] = useState([]);
+  const [loading, setloading] = useState(true);
   const [user, setuser] = useState({});
+  const [SuccessDelete, setSuccessDelete] = useState(false);
+  const [selectedUser, setselectedUser] = useState(0);
+  const [selectedUserName, setselectedUserName] = useState("");
+  const [SelecteduserID, setSelecteduserID] = useState(0);
+  const [SelectedUserIDS, setSelectedUserIDS] = useState([]);
+  const [openDeleteModal, setopenDeleteModal] = useState(false);
+  const [isChoosed, setisChoosed] = useState(false);
+  const [isShowDeleteButon, setisShowDeleteButon] = useState(false);
+  const [userList, setuserList] = useState([]);
+  const [deleteAllUserType, setdeleteAllUserType] = useState(false);
+  const [deleteUserModal, setdeleteUserModal] = useState(false);
+  const [selectedUserDeleteModa, setselectedUserDeleteModa] = useState(false);
+  const [showText, setshowText] = useState(false);
+
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-  const [loading, setloading] = useState(false);
+
   const fetchData = async () => {
     setloading(true);
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/institutional/users",
+          apiUrl+"institutional/users",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -44,6 +62,7 @@ export default function UsersList() {
           }
         );
         setsubUsers(response.data.users);
+        return setloading(false);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -51,28 +70,27 @@ export default function UsersList() {
       setloading(false);
     }
   };
-  const isfocused = useIsFocused();
+
   useEffect(() => {
     fetchData();
   }, [user, isfocused]);
-  const [SuccessDelete, setSuccessDelete] = useState(false);
+
   const DeleteUser = async () => {
     setloading(true);
 
     try {
       if (user.access_token) {
         const response = await axios.delete(
-          `https://private.emlaksepette.com/api/institutional/users/${selectedUser}`,
+          `${apiUrl}institutional/users/${selectedUser}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
             },
           }
         );
-       
+
         if (response.status === 200) {
           setTimeout(() => {
-            
             Dialog.show({
               type: ALERT_TYPE.SUCCESS,
               title: "Başarılı",
@@ -82,22 +100,16 @@ export default function UsersList() {
                 fetchData();
               },
             });
-           
           }, 300);
         }
-        setopenDeleteModal(false);
-      
+        setloading(false);
+        return setopenDeleteModal(false);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
-      
     }
   };
-  const [selectedUser, setselectedUser] = useState(0);
-  const [selectedUserName, setselectedUserName] = useState("");
-  const [SelecteduserID, setSelecteduserID] = useState(0);
-  const [SelectedUserIDS, setSelectedUserIDS] = useState([]);
 
   const GetId = (UserID, name) => {
     setselectedUser(UserID);
@@ -114,27 +126,19 @@ export default function UsersList() {
       }
     });
   };
-  console.log(SelectedUserIDS);
-  const [openDeleteModal, setopenDeleteModal] = useState(false);
   useEffect(() => {
     navigation.setOptions({
       title: `Ekip Üyeleri (${subUsers?.length})`,
     });
   }, [navigation, subUsers]);
-  const [isChoosed, setisChoosed] = useState(false);
-  const [isShowDeleteButon, setisShowDeleteButon] = useState(false);
 
-  const [userList, setuserList] = useState([]);
-  const [deleteAllUserType, setdeleteAllUserType] = useState(false);
-  const [deleteUserModal, setdeleteUserModal] = useState(false);
-  const [selectedUserDeleteModa, setselectedUserDeleteModa] = useState(false);
   const deleteAllUsers = async () => {
     const data = {
       user_ids: userList,
     };
     try {
       const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/sub-users",
+        apiUrl+"institutional/sub-users",
         {
           data: data,
           headers: {
@@ -159,7 +163,6 @@ export default function UsersList() {
           });
           setloading(false);
         }, 300);
-       
 
         setdeleteAllUserType(false);
       }
@@ -173,7 +176,7 @@ export default function UsersList() {
     };
     try {
       const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/sub-users",
+        apiUrl+"institutional/sub-users",
         {
           data: data,
           headers: {
@@ -207,7 +210,6 @@ export default function UsersList() {
     }
   };
 
-  const [showText, setshowText] = useState(false);
   return (
     <AlertNotificationRoot>
       {loading ? (
@@ -216,9 +218,7 @@ export default function UsersList() {
         >
           <ActivityIndicator size={"large"} color="#333" />
         </View>
-      ) : subUsers?.length == 0 ? (
-       <NoDataScreen iconName={'account-multiple-plus'} buttonText={'Oluştur'} navigateTo={'CreateUser'} message={'Ekip Üyeniz Bulunmamaktadır'}/>
-      ) : (
+      ) : subUsers?.length > 0 ? (
         <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
           <AwesomeAlert
             show={openDeleteModal}
@@ -517,6 +517,13 @@ export default function UsersList() {
             </View>
           </ModalEdit>
         </ScrollView>
+      ) : (
+        <NoDataScreen
+          iconName={"account-multiple-plus"}
+          buttonText={"Oluştur"}
+          navigateTo={"CreateUser"}
+          message={"Ekip Üyeniz Bulunmamaktadır"}
+        />
       )}
     </AlertNotificationRoot>
   );

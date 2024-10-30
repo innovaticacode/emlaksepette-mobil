@@ -29,68 +29,64 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import { ActivityIndicator } from "react-native-paper";
 import { Platform } from "react-native";
-import { apiRequestGet } from "../../../components/methods/apiRequest";
+import { apiRequestGet, apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import mime from "mime";
+import { CheckBox } from "react-native-elements";
 
 const HomeInfo = ({ ımage, user, No, price, title, type }) => {
-  return(
-  <View style={{ flexDirection: "row", gap: 4 }}>
-    <View style={{ flex: 0.5 / 2 }}>
-      <View
-        style={{
-          width: 80,
-          height: 80,
-          backgroundColor: "red",
-          borderRadius: 5,
-        }}
-      >
-        <ImageBackground
-          source={{
-            uri: ımage,
-            // uri: `${apiUrl}housing_images/${
-            //   JSON.parse(data?.housing?.housing_type_data)["image"]
-            // }`,
+  return (
+    <View style={{ flexDirection: "row", gap: 4 }}>
+      <View style={{ flex: 0.5 / 2 }}>
+        <View
+          style={{
+            width: 80,
+            height: 80,
+            backgroundColor: "red",
+            borderRadius: 5,
           }}
-          style={{ width: "100%", height: "100%" }}
-          borderRadius={5}
-        />
+        >
+          <ImageBackground
+            source={{
+              uri: ımage,
+              // uri: `${apiUrl}housing_images/${
+              //   JSON.parse(data?.housing?.housing_type_data)["image"]
+              // }`,
+            }}
+            style={{ width: "100%", height: "100%" }}
+            borderRadius={5}
+          />
+        </View>
       </View>
-    </View>
-    <View style={{ flex: 1.5 / 2, gap: 4 }}>
-      <View style={{ flex: 1 / 2, paddingTop: 2 }}>
-        <Text numberOfLines={2} style={{ color: "#333", fontSize: 13 }}>
-          {title}
-          {/* {data?.pageInfo?.meta_title} */}
-        </Text>
-      </View>
-      <View style={{ flex: 1 / 2, gap: 4, paddingTop: 2, bottom: 0 }}>
-        <Text style={{ fontSize: 12, fontWeight: "600", color: "#333" }}>
-          Satıcı:{" "}
-          <Text style={{ fontWeight: "400" }}>
-            {user}
-            {/* {data?.housing?.user?.name} */}
+      <View style={{ flex: 1.5 / 2, gap: 4 }}>
+        <View style={{ flex: 1 / 2, paddingTop: 2 }}>
+          <Text numberOfLines={2} style={{ color: "#333", fontSize: 13 }}>
+            {title}
+            {/* {data?.pageInfo?.meta_title} */}
           </Text>
-        </Text>
-        <Text style={{ fontSize: 12, fontWeight: "600", color: "#333" }}>
-          İlan No:{" "}
-          <Text style={{ fontWeight: "400" }}>
-           {No}
+        </View>
+        <View style={{ flex: 1 / 2, gap: 4, paddingTop: 2, bottom: 0 }}>
+          <Text style={{ fontSize: 12, fontWeight: "600", color: "#333" }}>
+            Satıcı:{" "}
+            <Text style={{ fontWeight: "400" }}>
+              {user}
+              {/* {data?.housing?.user?.name} */}
+            </Text>
           </Text>
-        </Text>
-        <Text style={{ fontSize: 12, color: "#264ABB", fontWeight: "700" }}>
-          {
-            addDotEveryThreeDigits(price)
-          }
-          ₺
-          {/* {data &&
+          <Text style={{ fontSize: 12, fontWeight: "600", color: "#333" }}>
+            İlan No: <Text style={{ fontWeight: "400" }}>{No}</Text>
+          </Text>
+          <Text style={{ fontSize: 12, color: "#264ABB", fontWeight: "700" }}>
+            {addDotEveryThreeDigits(price)}₺
+            {/* {data &&
           data.housing &&
           addDotEveryThreeDigits(
             JSON.parse(data.housing.housing_type_data)["price"]
           )}{" "} */}
-        </Text>
+          </Text>
+        </View>
       </View>
     </View>
-  </View>
-  )
+  );
 };
 
 export default function SwapForm({ openModal, color }) {
@@ -172,6 +168,9 @@ export default function SwapForm({ openModal, color }) {
   const [projectInfo, setprojectInfo] = useState({});
   const [loadingProject, setloadingProject] = useState(false);
   const [roomData, setroomData] = useState({});
+  const [loadingPost, setloadingPost] = useState(false);
+  const [approve, setApprove] = useState(false);
+
   const GetProjectHousingDetails = () => {
     setloadingProject(true);
     apiRequestGet(`project/${projectId}`)
@@ -192,7 +191,7 @@ export default function SwapForm({ openModal, color }) {
     try {
       setloading(true);
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/housing/${houseid}`
+        `${apiUrl}housing/${houseid}`
       );
       setloading(false);
       // GetUserInfo()
@@ -210,25 +209,28 @@ export default function SwapForm({ openModal, color }) {
       fetchDetails();
     }
   }, []);
-  const [loadingPost, setloadingPost] = useState(false);
+
+  //post data start
   const postData = async () => {
     setloadingPost(true);
     try {
       var formData = new FormData();
-      formData.append('item_type',type)
-      formData.append('item_id',type==1? projectId:houseid)
-      if (type==1) {
-        formData.append('room_order',type==1?houseid:null)
+      formData.append("item_type", type);
+      formData.append("item_id", type == 1 ? projectId : houseid);
+      if (type == 1) {
+        formData.append("room_order", type == 1 ? houseid : null);
       }
       formData.append("ad", name);
-      
       formData.append("soyad", surname);
       formData.append("telefon", phoneNmber);
       formData.append("email", email);
       formData.append("sehir", city);
       formData.append("ilce", county);
       formData.append("takas_tercihi", SwapChoose);
-      formData.append("store_id", type==1 ? projectInfo?.project?.user?.id : data?.housing?.user?.id);
+      formData.append(
+        "store_id",
+        type == 1 ? projectInfo?.project?.user?.id : data?.housing?.user?.id
+      );
       formData.append("emlak_tipi", estateChoose);
       formData.append("konut_tipi", houseType);
       formData.append("oda_sayisi", roomCount);
@@ -249,44 +251,46 @@ export default function SwapForm({ openModal, color }) {
       formData.append("vites_tipi", shiftType);
       formData.append("arac_satis_rakami", Price);
       formData.append("barter_detay", Barter);
-      if (SwapChoose == "emlak") {
-        formData.append(
-          "tapu_belgesi",
-          image
-            ? {
-                name: image.fileName,
-                type: image.type,
-                uri:
-                  Platform.OS === "android"
-                    ? image.uri
-                    : image.uri.replace("file://", ""),
-              }
-            : null
-        );
-      }
-      if (SwapChoose == "araç") {
-        formData.append(
-          "ruhsat_belgesi",
-          image
-            ? {
-                name: image.fileName,
-                type: image.type,
-                uri:
-                  Platform.OS === "android"
-                    ? image.uri
-                    : image.uri.replace("file://", ""),
-              }
-            : null
-        );
+
+      // Görseli (image) ekleme
+      if (SwapChoose === "araç" && image) {
+        console.debug("Araç resmi yüklendi--> ", image.uri);
+
+        const newImageUri = "file://" + image.uri.split("file:/").join(""); // Normalize the URI for Android
+        const mimeType = mime.getType(newImageUri); // Correct MIME type
+
+        formData.append("ruhsat_belgesi", {
+          name: image.fileName,
+          type: mimeType,
+          uri: newImageUri,
+        });
       }
 
+      // Append PDF if selected
+      if (pdfFile && pdfFile.assets && pdfFile.assets.length > 0) {
+        const selectedPdf = pdfFile.assets[0];
+
+        formData.append("ruhsat_belgesi", {
+          name: selectedPdf.name,
+          type: selectedPdf.mimeType,
+          uri: selectedPdf.uri,
+        });
+      }
+
+      // Axios POST isteği
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/swap",
-        formData
+        apiUrl+"swap",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+          timeout: 60000,
+        }
       );
 
-      // İsteğin başarılı bir şekilde tamamlandığı durum
-
+      // Başarılı olma durumunda
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
@@ -294,8 +298,7 @@ export default function SwapForm({ openModal, color }) {
         button: "Tamam",
       });
 
-      // openModal(JSON.stringify(response.data.message));
-
+      // Başarılı işlem sonrası alanları sıfırla
       setname("");
       setsurname("");
       setphoneNmber("");
@@ -323,23 +326,16 @@ export default function SwapForm({ openModal, color }) {
       setselectedPdfUrl(null);
       setSelectedDocumentName(null);
     } catch (error) {
-      // Hata durumunda
-
-      console.error("Hata:", error + " post isteği başarısız ");
+      console.error("Axios Hatası:", error);
     } finally {
       setloadingPost(false);
     }
   };
 
-  // Buton tetikleyicisi için bir fonksiyon
-  const handleButtonPress = () => {
-    GiveOffer();
-  };
-
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/cities"
+        apiUrl+"cities"
       );
       return response.data;
     } catch (error) {
@@ -361,7 +357,7 @@ export default function SwapForm({ openModal, color }) {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
+        `${apiUrl}counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -399,7 +395,7 @@ export default function SwapForm({ openModal, color }) {
   const fetchDataNeigbour = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/neighborhoods/${value}`
+        `${apiUrl}neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {
@@ -546,22 +542,23 @@ export default function SwapForm({ openModal, color }) {
     { label: "Voyah", value: "Voyah" },
     { label: "Yudo", value: "Yudo" },
   ];
-  const apiUrl = "https://private.emlaksepette.com/";
+
   const [errorMessage, seterrorMessage] = useState("");
 
   const AlertFunc = (message) => {
-    Dialog.show({
-      type: ALERT_TYPE.DANGER,
-      title: "Tüm Alanları Doldurunuz",
-      textBody: `${message}`,
-      button: "Tamam",
-    });
+    setTimeout(() => {
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Tüm Alanları Doldurunuz",
+        textBody: `${message}`,
+        button: "Tamam",
+      });
+    }, 450);
   };
   const GiveOffer = () => {
     switch (true) {
       case !name:
         AlertFunc("İsim Alanı Boş Bırakılmaz");
-
         break;
       case !surname:
         AlertFunc("Soyadı Boş Bırakılamaz");
@@ -581,11 +578,18 @@ export default function SwapForm({ openModal, color }) {
       case !SwapChoose:
         AlertFunc("Takas Tercihi Boş Bırakılamaz");
         break;
+      // Eğer SwapChoose "emlak" veya "araç" ise ve approve false ise, uyarı ver
+      case !approve:
+        AlertFunc("Lütfen Belge Paylaşım Şartları Kabul Ediniz.");
+        break;
 
       default:
         postData();
     }
   };
+
+  console.debug("Belge paylaşım şartları kabul edildi:", approve);
+
   const [choose, setchoose] = useState(false);
   const [image, setImage] = useState(null);
   const pickImage = async () => {
@@ -648,49 +652,52 @@ export default function SwapForm({ openModal, color }) {
 
   const [pdfFile, setPdfFile] = useState(null);
   const [selectedPdfUrl, setselectedPdfUrl] = useState(null);
-  const pickDocument = async () => {
-    DocumentPicker.getDocumentAsync({ type: "application/pdf" })
-      .then((result) => {
-        console.log(
-          "Seçilen PDF Dosyasının İçeriği:",
-          JSON.stringify(result, null, 2)
-        );
 
-        if (!result.canceled && result.assets && result.assets.length > 0) {
-          const pdfAsset = result.assets[0];
-          setPdfFile(pdfAsset);
-          setSelectedDocumentName(pdfAsset.name);
-          console.log(pdfAsset.uri);
-          setselectedPdfUrl(pdfAsset.uri);
-          setImage(null);
-          setchoose(false);
-          console.log(selectedDocumentName);
-        }
-      })
-      .catch((error) => {
-        alert("hata");
+  // pick pdf code
+  const pickDocument = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "application/pdf",
       });
+
+      if (!result.canceled) {
+        setPdfFile(result);
+        setSelectedDocumentName(result.name);
+        console.log("Seçilen PDF Dosyasının URI'si:", result.uri);
+        setselectedPdfUrl(result.uri);
+        setImage(null);
+        setchoose(null);
+      } else {
+        console.log("PDF seçimi iptal edildi");
+      }
+    } catch (error) {
+      console.error("Dosya seçimi sırasında hata oluştu:", error);
+      alert("Bir hata oluştu, lütfen tekrar deneyin.");
+    }
   };
+
   const openPdf = async () => {
     if (selectedPdfUrl) {
       try {
         const contentUri = await FileSystem.getContentUriAsync(selectedPdfUrl);
-        IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+        await IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
           data: contentUri,
           flags: 1,
           type: "application/pdf",
         });
       } catch (error) {
         console.error("PDF açılırken hata oluştu:", error);
+        Alert.alert("PDF dosyası açılırken hata oluştu.");
       }
     } else {
-      Alert.alert("PDF dosyası bulunamadı");
+      Alert.alert("PDF dosyası bulunamadı.");
     }
   };
+
   const navigation = useNavigation();
   return (
     <AlertNotificationRoot>
-      {loading || loadingProject ?  (
+      {loading || loadingProject ? (
         <View
           style={{
             alignItems: "center",
@@ -706,52 +713,55 @@ export default function SwapForm({ openModal, color }) {
           style={{ padding: 10, gap: 10, backgroundColor: "#ffffff" }}
           contentContainerStyle={{ gap: 10, paddingBottom: 50 }}
         >
-        
-          {
-            (type == 1 ? (
-              
-              <HomeInfo
-              ımage={`${apiUrl}project_housing_images/${roomData['image[]']}`}
+          {type == 1 ? (
+            <HomeInfo
+              ımage={`${frontEndUriBase}project_housing_images/${roomData["image[]"]}`}
               type={1}
-                title={
-                  roomData["advertise_title[]"]
-                    ? roomData["advertise_title[]"]
-                    : "Başlık Yok"
-                }
-                No={`1000${projectId}-${houseid}`}
-                user={projectInfo?.project?.user?.name}
-                price={
-                  projectInfo && projectId && projectInfo?.projectHousingsList && roomData && projectInfo?.project&&
-                  JSON.parse(roomData["payment-plan[]"]) &&
-                  roomData["share_sale[]"] &&
-                  JSON.parse(roomData["payment-plan[]"]).includes("taksitli")
-                    ? roomData["share_sale[]"] !== "[]"
-                      ? roomData["installments-price[]"] /
-                        roomData["number_of_shares[]"]
-                      : roomData["installments-price[]"]
-                    : roomData["share_sale[]"] !== "[]"
-                    ? roomData["price[]"] / roomData["number_of_shares[]"]
-                    : roomData["price[]"]
-                }
-              />
-            ) : (
-          <HomeInfo ımage={
-            data && data.housing && data.housing.housing_type_data && `${apiUrl}housing_images/${
-              JSON.parse(data?.housing?.housing_type_data)["image"]
-            }`} 
+              title={
+                roomData["advertise_title[]"]
+                  ? roomData["advertise_title[]"]
+                  : "Başlık Yok"
+              }
+              No={`1000${projectId}-${houseid}`}
+              user={projectInfo?.project?.user?.name}
+              price={
+                projectInfo &&
+                projectId &&
+                projectInfo?.projectHousingsList &&
+                roomData &&
+                projectInfo?.project &&
+                JSON.parse(roomData["payment-plan[]"]) &&
+                roomData["share_sale[]"] &&
+                JSON.parse(roomData["payment-plan[]"]).includes("taksitli")
+                  ? roomData["share_sale[]"] !== "[]"
+                    ? roomData["installments-price[]"] /
+                      roomData["number_of_shares[]"]
+                    : roomData["installments-price[]"]
+                  : roomData["share_sale[]"] !== "[]"
+                  ? roomData["price[]"] / roomData["number_of_shares[]"]
+                  : roomData["price[]"]
+              }
+            />
+          ) : (
+            <HomeInfo
+              ımage={
+                data &&
+                data.housing &&
+                data.housing.housing_type_data &&
+                `${frontEndUriBase}housing_images/${
+                  JSON.parse(data?.housing?.housing_type_data)["image"]
+                }`
+              }
               title={data?.pageInfo?.meta_title}
               price={
                 data &&
-          data.housing &&
-          
-            JSON.parse(data?.housing?.housing_type_data)["price"]
-          
+                data.housing &&
+                JSON.parse(data?.housing?.housing_type_data)["price"]
               }
               user={data?.housing?.user?.name}
               No={`2000${data?.housing?.id}`}
             />
-            ))
-          } 
+          )}
 
           <View style={{ gap: 6 }}>
             <Text style={{ fontSize: 14, color: "#333", fontWeight: 600 }}>
@@ -1419,9 +1429,36 @@ export default function SwapForm({ openModal, color }) {
               </>
             )}
 
+          <>
+            {(SwapChoose === "emlak" || SwapChoose === "araç") && (
+              <View style={styles.approveArea}>
+                <CheckBox
+                  checked={approve}
+                  onPress={() => setApprove(!approve)}
+                  containerStyle={{
+                    padding: 0,
+                    margin: 0,
+                    justifyContent: "center",
+                  }}
+                  checkedIcon="check-square"
+                  checkedColor="#EC302E"
+                />
+
+                <Text style={{ flexWrap: "wrap", flex: 1, marginLeft: 10 }}>
+                  Yükleyeceğiniz belgeler hassas bilgiler içerebilir, bu
+                  bilgiler ilanın sahibi tarafından erişilebilir ve
+                  görüntülenebilir.
+                  <Text style={{ fontWeight: "bold" }}>
+                    Bu şartları kabul ediyorum ve bilgilerin paylaşılmasına onay
+                    veriyorum.
+                  </Text>
+                </Text>
+              </View>
+            )}
+          </>
           <View>
             <TouchableOpacity
-              onPress={handleButtonPress}
+              onPress={() => GiveOffer()}
               style={styles.button}
               disabled={loadingPost}
             >
@@ -1490,7 +1527,7 @@ export default function SwapForm({ openModal, color }) {
                     alignItems: "center",
                     gap: 10,
                   }}
-                  onPress={pickDocument}
+                  onPress={() => pickDocument()}
                 >
                   <Icon3 name="file-open" size={21} color={"#333"} />
                   <Text
@@ -1587,5 +1624,10 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  approveArea: {
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
   },
 });

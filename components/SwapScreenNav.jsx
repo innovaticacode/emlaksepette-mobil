@@ -22,6 +22,7 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 import { ScrollView } from "react-native-gesture-handler";
+import { apiUrl } from "./methods/apiRequest";
 const { width, height } = Dimensions.get("window");
 
 const SwapScreenNav = () => {
@@ -127,7 +128,7 @@ const SwapScreenNav = () => {
     const fetchProjectTitle = async () => {
       try {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/project/${projectId}`
+          `${apiUrl}project/${projectId}`
         );
         setProjectData(response.data); // Başlığı state'e aktarma
       } catch (error) {
@@ -155,7 +156,7 @@ const SwapScreenNav = () => {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/institutional/give_offer",
+        `${apiUrl}institutional/give_offer`,
         formData,
         {
           headers: {
@@ -202,7 +203,7 @@ const SwapScreenNav = () => {
   const fetchCity = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/cities"
+        `${apiUrl}cities`
       );
       
       return response.data;
@@ -248,7 +249,7 @@ const SwapScreenNav = () => {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
+        `${apiUrl}counties/${value}`
       );
       return response.data;
     } catch (error) {

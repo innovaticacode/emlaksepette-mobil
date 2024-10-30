@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { apiUrl } from "./methods/apiRequest";
 
 export default function SliderMenu({ goToSlide, tab, settab }) {
   const [menuItems, setMenuItems] = useState([]);
@@ -15,7 +16,7 @@ export default function SliderMenu({ goToSlide, tab, settab }) {
     const fetchMenuItems = async () => {
       try {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/menu-list"
+          `${apiUrl}menu-list`
         );
         setMenuItems(response.data);
       } catch (error) {

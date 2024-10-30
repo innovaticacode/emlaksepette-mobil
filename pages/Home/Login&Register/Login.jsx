@@ -19,7 +19,7 @@ import EyeIcon from "react-native-vector-icons/Ionicons";
 import IconSocialMedia from "react-native-vector-icons/AntDesign";
 import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
 import Modal from "react-native-modal";
-import { apiRequestPost } from "../../../components/methods/apiRequest";
+import { apiRequestPost, apiUrl } from "../../../components/methods/apiRequest";
 import * as SecureStore from "expo-secure-store";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import HTML from "react-native-render-html";
@@ -89,9 +89,13 @@ export default function Login({ navigation }) {
             "PhoneVerify",
             JSON.stringify(res.data.phone_verification_status)
           );
+          // if (res.data.phone_verification_status==0) {
+          //   navigation.navigate('VerifyScreen')
+          // }
           setUser(res.data); // Kullanıcı durumunu günceller
-          // navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
-          navigation.navigate('Home',{status:'login'})
+          navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
+          dispatch(setShoppingProfile({ isShoppingProfile: false }));
+          navigation.replace("Drawer", { screen: "Home" });
         } else {
           // setshowMailSendAlert(true);
           setStatus(false);
@@ -152,7 +156,7 @@ export default function Login({ navigation }) {
 
   const fetchData = async () => {
     setloadingDeal(true);
-    const url = `https://private.emlaksepette.com/api/sayfa/bireysel-uyelik-sozlesmesi`;
+    const url = `${apiUrl}sayfa/bireysel-uyelik-sozlesmesi`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);

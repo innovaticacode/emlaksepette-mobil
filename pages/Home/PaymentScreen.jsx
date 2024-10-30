@@ -22,7 +22,7 @@ import * as SecureStore from "expo-secure-store";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
 import { Platform } from "react-native";
-import { apiRequestGet, apiUrl } from "../../components/methods/apiRequest";
+import { apiRequestGet, apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 import WebView from "react-native-webview";
@@ -161,7 +161,7 @@ export default function PaymentScreen() {
   const [Deals, setDeals] = useState("");
 
   const fetchDataDeal = async () => {
-    const url = `https://private.emlaksepette.com/api/sayfa/mesafeli-kiralama-sozlesmesi`;
+    const url = `${apiUrl}sayfa/mesafeli-kiralama-sozlesmesi`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);
@@ -199,7 +199,7 @@ export default function PaymentScreen() {
           <View style={styles.image}>
             <ImageBackground
               source={{
-                uri: `https://private.emlaksepette.com/project_housing_images/${project["image[]"]}`,
+                uri: `${frontEndUriBase}project_housing_images/${project["image[]"]}`,
               }}
               style={{ width: "100%", height: "100%" }}
             />

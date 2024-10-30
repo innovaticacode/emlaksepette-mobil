@@ -20,6 +20,7 @@ import axios from "axios";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
 import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
+import { apiUrl } from "../../components/methods/apiRequest";
 const Tab = createBottomTabNavigator();
 
 const Home = ({ route }) => {
@@ -53,7 +54,7 @@ const Home = ({ route }) => {
     try {
       if (user.access_token) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          apiUrl+"users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -103,6 +104,7 @@ const Home = ({ route }) => {
         component={HomePage2}
         options={{
           title: "Ana Sayfa",
+
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
@@ -144,12 +146,12 @@ const Home = ({ route }) => {
           headerShown: false,
           tabBarLabel: "İlan Ver",
           tabBarIcon: () => (
-            <View style={styles.ilanVerIconContainer}>
+            <View style={styles.advertiseIconContainer}>
               <Ionicons
                 name="add"
                 color={"white"}
                 size={30}
-                style={styles.ilanVerIcon}
+                style={styles.advertiseIcon}
               />
             </View>
           ),
@@ -195,12 +197,13 @@ const Home = ({ route }) => {
               <IconStore
                 name={focused ? "storefront" : "storefront-outline"}
                 size={28}
-                color={color}
+                color={focused ? 'black': "grey"}
               />
             ) : (
               <FontAwesomeIcon
                 name={focused ? "user" : "user-o"}
                 size={focused ? 28 : 23}
+                color={focused ? 'black': "grey"}
               />
             ),
         }}
@@ -217,13 +220,12 @@ const Home = ({ route }) => {
     </Tab.Navigator>
   );
 };
-const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: "white",
     paddingVertical: 10,
     width: "auto",
-    height: 90,
+    height: Platform.OS === "ios" ? 90 : 60,
     justifyContent: "center",
   },
   tabBarLabel: {
@@ -232,17 +234,17 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 12,
   },
-  ilanVerIconContainer: {
+  advertiseIconContainer: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    bottom: 15,
+    bottom: 20,
     backgroundColor: "#EA2B2E",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
-  ilanVerIcon: {
+  advertiseIcon: {
     borderRadius: 20,
     left: 1.3,
     fontWeight: "700",

@@ -11,6 +11,7 @@ import Dot from "react-native-vector-icons/Entypo";
 import Icon4 from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../../components/methods/user";
+import { frontEndUriBase } from "../../../../components/methods/apiRequest";
 
 export default function CollectionsItem({
   openBottom,
@@ -138,10 +139,10 @@ export default function CollectionsItem({
                       uri:
                         image?.item_type == 2 &&
                         image?.housing?.housing_type_data
-                          ? `https://private.emlaksepette.com/housing_images/${
+                          ? `${frontEndUriBase}housing_images/${
                               JSON.parse(image.housing.housing_type_data).image
                             }`
-                          : `https://private.emlaksepette.com/${image.project.image.replace(
+                          : `${frontEndUriBase}${image.project.image.replace(
                               "public",
                               "storage"
                             )}`,

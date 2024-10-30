@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -12,16 +12,17 @@ import {
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import bannerSRC from "../../../src/assets/images/is_yeri.png";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 const PAGE_SIZE = 10;
 
 const Shop = ({ index }) => {
   const navigation = useNavigation();
-  const apiUrl = "https://private.emlaksepette.com/";
+
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ const Shop = ({ index }) => {
     };
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${
+        `${apiUrl}real-estates?page=${
           reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
@@ -73,13 +74,15 @@ const Shop = ({ index }) => {
     }
   };
 
-  useEffect(() => {
-    if (index == 3) {
-      fetchFeaturedEstates();
-    } else {
-      setFeaturedEstates([]);
-    }
-  }, [index, user]);
+  useFocusEffect(
+    useCallback(() => {
+      if (index == 3) {
+        fetchFeaturedEstates(true);
+      } else {
+        setFeaturedEstates([]);
+      }
+    }, [index, user])
+  );
 
   const filteredHomes = featuredEstates.filter(
     (estate) => estate.step1_slug === "is-yeri"
@@ -150,7 +153,7 @@ const Shop = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${apiUrl}/housing_images/${
+                    image={`${apiUrl}housing_images/${
                       JSON.parse(item.housing_type_data).image
                     }`}
                     column1_additional={item.column1_additional}
@@ -194,53 +197,58 @@ const Shop = ({ index }) => {
                 }
                 ListHeaderComponent={
                   <>
-                  <View style={{ marginBottom:20 }}>
-            <Image
-              source={bannerSRC}
-              style={{ width: "auto", height: 120, resizeMode: "cover" }}
-            />
-          </View>
-          <View
-            style={{
-              paddingBottom: 3,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingLeft: 10,
-              paddingRight: 10,
-              alignItems: "center",
-              backgroundColor: "white",
-            }}
-          >
-            <Text style={{ fontSize: 14, fontWeight: 700 }}>
-              ÖNE ÇIKAN İŞ YERLERİ
-            </Text>
+                    <View style={{ marginBottom: 20 }}>
+                      <Image
+                        source={bannerSRC}
+                        style={{
+                          width: "auto",
+                          height: 120,
+                          resizeMode: "cover",
+                        }}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        paddingBottom: 3,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        alignItems: "center",
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Text style={{ fontSize: 14, fontWeight: 700 }}>
+                        ÖNE ÇIKAN İŞ YERLERİ
+                      </Text>
 
-            <TouchableOpacity style={styles.allBtn}>
-              <Text
-                style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
-                onPress={() =>
-                  navigation.navigate("Drawer", {
-                    screen: "AllRealtorAdverts",
-                    params: {
-                      name: "Emlak İlanları",
-                      slug: "emlak-ilanlari",
-                      data: filteredHomes,
-                      count: filteredHomes.length,
-                      type: "is-yeri",
-                      optional: null,
-                      title: null,
-                      check: null,
-                      city: null,
-                      county: null,
-                      hood: null,
-                    },
-                  })
-                }
-              >
-                Tüm İlanları Gör
-              </Text>
-            </TouchableOpacity>
-          </View>
+                      <TouchableOpacity style={styles.allBtn}>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: 11,
+                            fontWeight: "bold",
+                          }}
+                          onPress={() =>
+                            navigation.navigate("AllRealtorAdverts", {
+                              name: "Emlak İlanları",
+                              slug: "emlak-ilanlari",
+                              data: filteredHomes,
+                              count: filteredHomes.length,
+                              type: "is-yeri",
+                              optional: null,
+                              title: null,
+                              check: null,
+                              city: null,
+                              county: null,
+                              hood: null,
+                            })
+                          }
+                        >
+                          Tüm İlanları Gör
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </>
                 }
                 ListFooterComponent={renderFooter}

@@ -1,6 +1,7 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
+import { frontEndUriBase } from "./methods/apiRequest";
 
 export default function SellPlaceItem({ item }) {
   const navigation = useNavigation();
@@ -29,7 +30,7 @@ export default function SellPlaceItem({ item }) {
         <View style={{ width: 90, height: 90 }}>
           <Image
             source={{
-              uri: `https://private.emlaksepette.com/storage/profile_images/${item.profile_image}`,
+              uri: `${frontEndUriBase}storage/profile_images/${item.profile_image}`,
             }}
             style={{ width: "100%", height: "100%", borderRadius: 8 }}
           />

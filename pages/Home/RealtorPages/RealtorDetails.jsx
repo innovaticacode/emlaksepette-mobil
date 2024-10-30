@@ -29,7 +29,7 @@ import LinkIcon from "react-native-vector-icons/Entypo";
 import Arrow from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SliderMenuPostDetails from "../../../components/PostDetailsSettings/SliderMenuPostDetails";
-import { apiRequestGet } from "../../../components/methods/apiRequest";
+import { apiRequestGet, apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
 import Header from "../../../components/Header";
 import Search from "../Search";
 import SliderMenuRealtorDetails from "../../../components/SliderMenuRealtorDetail";
@@ -56,7 +56,7 @@ import TextAlertModal from "../../../components/TextAlertModal";
 import { DrawerMenu } from "../../../components";
 import AwesomeAlertComp from "../../../components/AwesomeAlertComp";
 export default function PostDetail() {
-  const apiUrl = "https://private.emlaksepette.com/";
+
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [images, setImages] = useState([]);
@@ -75,21 +75,13 @@ export default function PostDetail() {
 
   const [copiedText, setCopiedText] = useState("");
 
-  const copyToClipboard = async () => {
-    await Clipboard.setStringAsync(
-      `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`
-    );
-    alert("Metin kopyalandı!");
-  };
-  const shareLinkOnWhatsApp = () => {
-    const url = `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`;
-
-    const whatsappShareURL = `whatsapp://send?text=${encodeURIComponent(url)}`;
-
-    Linking.openURL(whatsappShareURL)
-      .then(() => console.log("WhatsApp açıldı ve link paylaşıldı"))
-      .catch((error) => console.error("WhatsApp açılamadı:", error));
-  };
+  // const copyToClipboard = async () => {
+  //   await Clipboard.setStringAsync(
+  //     `${frontEndUriBase}ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`
+  //   );
+  //   alert("Metin kopyalandı!");
+  // };
+  
   const changeBookmark = () => {
     setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
   };
@@ -159,7 +151,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          apiUrl+"users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -184,7 +176,7 @@ export default function PostDetail() {
     try {
       setloading(true);
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/housing/${houseId}`,
+        `${apiUrl}housing/${houseId}`,
         config
       );
       setloading(false);
@@ -198,7 +190,7 @@ export default function PostDetail() {
       // Kapak resmini al ve kontrol et
       const coverImage = response.data.labels["Kapak Resmi"];
       if (coverImage) {
-        const coverImageUri = `${apiUrl}housing_images/${coverImage}`;
+        const coverImageUri = `${frontEndUriBase}housing_images/${coverImage}`;
         console.log("Kapak Resmi URI:", coverImageUri); // URI'yi kontrol et
 
         setImages([coverImageUri, ...fetchedImages]);
@@ -268,7 +260,7 @@ export default function PostDetail() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/client/collections",
+          apiUrl+"client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -310,7 +302,7 @@ export default function PostDetail() {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/add/collection",
+        apiUrl+"add/collection",
         collectionData,
         {
           headers: {
@@ -360,7 +352,7 @@ export default function PostDetail() {
     };
 
     axios
-      .post("https://private.emlaksepette.com/api/addLink", collectionData, {
+      .post(apiUrl+"addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -425,7 +417,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          apiUrl+"institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -467,7 +459,7 @@ export default function PostDetail() {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/remove_item_on_collection",
+        apiUrl+"remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -523,7 +515,7 @@ export default function PostDetail() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
+        message: `${frontEndUriBase}ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
       });
 
       if (result.action === Share.sharedAction) {
@@ -552,7 +544,7 @@ export default function PostDetail() {
       };
       axios
         .post(
-          `https://private.emlaksepette.com/api/add_housing_to_favorites/${data?.housing?.id}`,
+          `${apiUrl}add_housing_to_favorites/${data?.housing?.id}`,
           {},
           config
         )
@@ -607,7 +599,7 @@ export default function PostDetail() {
       };
     } else {
       return {
-        uri: `${apiUrl}/housing_images/${item}`,
+        uri: `${frontEndUriBase}housing_images/${item}`,
       };
     }
   });
@@ -834,7 +826,7 @@ export default function PostDetail() {
                     {data?.housing?.user?.profile_image ? (
                       <ImageBackground
                         source={{
-                          uri: `${apiUrl}/storage/profile_images/${data?.housing?.user?.profile_image}`,
+                          uri: `${frontEndUriBase}storage/profile_images/${data?.housing?.user?.profile_image}`,
                         }}
                         style={{ width: "100%", height: "100%" }}
                         borderRadius={20}
@@ -842,7 +834,7 @@ export default function PostDetail() {
                     ) : (
                       <ImageBackground
                         source={{
-                          uri: `${apiUrl}/storage/profile_images/indir.png`,
+                          uri: `${frontEndUriBase}storage/profile_images/indir.png`,
                         }}
                         style={{ width: "100%", height: "100%" }}
                         borderRadius={20}
@@ -979,7 +971,7 @@ export default function PostDetail() {
                     >
                       <ImageBackground
                         source={{
-                          uri: `${apiUrl}/housing_images/${
+                          uri: `${frontEndUriBase}housing_images/${
                             item.split("/")[item.split("/").length - 1]
                           }`,
                         }}
@@ -1866,7 +1858,7 @@ export default function PostDetail() {
                     {images.map((item, _index) => [
                       <View key={_index} style={{}}>
                         <ImageBackground
-                          source={{ uri: `${apiUrl}/housing_images/${item}` }}
+                          source={{ uri: `${frontEndUriBase}housing_images/${item}` }}
                           style={{ width: "100%", height: "100%" }}
                         />
                       </View>,

@@ -19,6 +19,7 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function Verification({ nextStep, prevStep }) {
   const [codes, setCodes] = useState("");
   const inputs = useRef([]);
@@ -61,7 +62,7 @@ export default function Verification({ nextStep, prevStep }) {
   const updateUserData = async () => {
     try {
       const updateResponse = await axios.get(
-        "https://private.emlaksepette.com/api/users/" + user?.id,
+        apiUrl+"users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -92,7 +93,7 @@ export default function Verification({ nextStep, prevStep }) {
     try {
       // POST isteği yap
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/phone-verification/verify",
+        apiUrl+"phone-verification/verify",
         { code: codes },
         {
           headers: {
@@ -104,18 +105,23 @@ export default function Verification({ nextStep, prevStep }) {
       updateUserData();
       setCodes("");
       setsucces(true);
-      nextStep();
+    
       SecureStore.setItemAsync("PhoneVerify", "1");
       setIsucces(true);
       setTimeout(() => {
         setIsucces(false);
       }, 2000);
+      
     } catch (error) {
       console.error("Doğrulama isteği başarısız:", error);
       setfalseCodeAlert(true);
       setsucces(false);
     } finally {
       setloading(false);
+      setTimeout(() => {
+        navigation.navigate("Drawer", { screen: "Home" });
+      }, 1000);
+  
     }
   };
 
@@ -183,7 +189,7 @@ export default function Verification({ nextStep, prevStep }) {
       };
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/phone-verification/generate",
+          apiUrl+"phone-verification/generate",
           {},
           config
         );

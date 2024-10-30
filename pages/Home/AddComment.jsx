@@ -13,6 +13,7 @@ import {
 import React, { useState, useEffect } from "react";
 import {
   apiRequestGet,
+  apiUrl,
   frontEndUri,
 } from "../../components/methods/apiRequest";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -53,7 +54,7 @@ export default function AddComment() {
   const [rating, setRating] = useState(0);
   const [rate, setrate] = useState(0);
   const [checkedForm, setCheckedForm] = React.useState(false);
-  const apiUrl = "https://private.emlaksepette.com/";
+  
   const [user, setUser] = useState({});
   const [comment, setcomment] = useState("");
   const [loadingShare, setloadingShare] = useState(false);
@@ -165,7 +166,7 @@ export default function AddComment() {
         comment.length > 0
       ) {
         const response = await axios.post(
-          `https://private.emlaksepette.com/api/housing/${HouseID}/send-comment`,
+          `${apiUrl}housing/${HouseID}/send-comment`,
           formData,
           {
             headers: {
@@ -204,7 +205,7 @@ export default function AddComment() {
     fetchDataDeal();
   }, []);
   const fetchDataDeal = async () => {
-    const url = `https://private.emlaksepette.com/api/sayfa/emlaksepette-yorum-yazma-kurallari`;
+    const url = `${apiUrl}sayfa/emlaksepette-yorum-yazma-kurallari`;
     try {
       const response = await fetch(url);
       const data = await response.json();

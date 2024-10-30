@@ -50,7 +50,7 @@ import LinkIcon from "react-native-vector-icons/Entypo";
 import Arrow from "react-native-vector-icons/MaterialIcons";
 import CloseIcon from "react-native-vector-icons/AntDesign";
 import SliderMenuPostDetails from "../components/PostDetailsSettings/SliderMenuPostDetails";
-import { apiRequestGet } from "../components/methods/apiRequest";
+import { apiRequestGet, apiUrl, frontEndUriBase } from "../components/methods/apiRequest";
 import Posts from "../components/Posts";
 import PostOtherProject from "../components/PostDetailsSettings/PostOtherProject";
 import SettingsItem from "../components/SettingsItem";
@@ -76,7 +76,7 @@ import TextAlertModal from "../components/TextAlertModal";
 import ShareProgressBar from "../components/ShareProgessBar";
 import AwesomeAlertComp from "../components/AwesomeAlertComp";
 export default function PostDetail() {
-  const apiUrl = "https://private.emlaksepette.com/";
+
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState("hearto");
@@ -151,7 +151,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          apiUrl+"users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -196,7 +196,7 @@ export default function PostDetail() {
   }, [ProjectHomeData, roomData]);
 
   const images = galleries.map((image) => ({
-    uri: `${apiUrl}${image.image.replace("public", "storage")}`,
+    uri: `${frontEndUriBase}${image.image.replace("public", "storage")}`,
   }));
 
 
@@ -249,7 +249,7 @@ export default function PostDetail() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/client/collections",
+          `${apiUrl}client/collections`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -302,7 +302,7 @@ export default function PostDetail() {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/add/collection",
+        `${apiUrl}add/collection`,
         collectionData,
         {
           headers: {
@@ -352,7 +352,7 @@ export default function PostDetail() {
     };
 
     axios
-      .post("https://private.emlaksepette.com/api/addLink", collectionData, {
+      .post(`${apiUrl}addLink`, collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -572,7 +572,7 @@ export default function PostDetail() {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/remove_item_on_collection",
+        `${apiUrl}remove_item_on_collection`,
         collectionData,
         {
           headers: {
@@ -642,7 +642,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          `${apiUrl}institutional/add_to_cart`,
           formData,
           {
             headers: {
@@ -677,7 +677,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          `${apiUrl}institutional/add_to_cart`,
           formData,
           {
             headers: {
@@ -703,7 +703,7 @@ export default function PostDetail() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://private.emlaksepette.com/`,
+        message: frontEndUriBase,
       });
 
       if (result.action === Share.sharedAction) {
@@ -729,7 +729,7 @@ export default function PostDetail() {
       };
       axios
         .post(
-          "https://private.emlaksepette.com/api/add_project_to_favorites/" +
+          `${apiUrl}add_project_to_favorites/` +
           HomeId,
           {
             project_id: projectId,
@@ -779,7 +779,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/project/${projectId}/comments`
+          `${apiUrl}project/${projectId}/comments`
         );
         setcomments(response.data);
       }
@@ -887,7 +887,7 @@ export default function PostDetail() {
       : "Başlık bulunamadı";
     const amount = 250; // Fiyatı burada belirliyoruz
     const imageUrl = roomData
-      ? "https://private.emlaksepette.com/project_housing_images/" +
+      ? `${frontEndUriBase}project_housing_images` +
       roomData["image[]"]
       : ""; // Resim URL'sini burada belirleyin
     const neightboord = false;
@@ -990,7 +990,7 @@ export default function PostDetail() {
                   <View style={{ height: 35, width: 35 }}>
                     <ImageBackground
                       source={{
-                        uri: `${apiUrl}/storage/profile_images/${ProjectHomeData?.project?.user?.profile_image}`,
+                        uri: `${frontEndUriBase}/storage/profile_images/${ProjectHomeData?.project?.user?.profile_image}`,
                       }}
                       style={{ width: "100%", height: "100%" }}
                       borderRadius={20}
@@ -1204,7 +1204,7 @@ export default function PostDetail() {
                     >
                       <ImageBackground
                         source={{
-                          uri: `${apiUrl}${image.image.replace(
+                          uri: `${frontEndUriBase}${image.image.replace(
                             "public",
                             "storage"
                           )}`,

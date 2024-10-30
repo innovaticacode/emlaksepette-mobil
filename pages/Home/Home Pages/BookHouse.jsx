@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -14,15 +14,16 @@ import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import bannerSRC from "../../../src/assets/images/tatilim-sepette-banner.png";
+import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
 const PAGE_SIZE = 10;
 
 const BookHouse = ({ index }) => {
   const navigation = useNavigation();
-  const apiUrl = "https://private.emlaksepette.com/";
+
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ const BookHouse = ({ index }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${
+        `${apiUrl}real-estates?page=${
           reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
@@ -73,13 +74,15 @@ const BookHouse = ({ index }) => {
     }
   };
 
-  useEffect(() => {
-    if (index == 6) {
-      fetchFeaturedEstates();
-    } else {
-      setFeaturedEstates([]);
-    }
-  }, [index, user]);
+  useFocusEffect(
+    useCallback(() => {
+      if (index == 6) {
+        fetchFeaturedEstates(true);
+      } else {
+        setFeaturedEstates([]);
+      }
+    }, [index, user])
+  );
 
   const filteredHomes = featuredEstates.filter(
     (estate) => estate.step2_slug === "gunluk-kiralik"
@@ -107,7 +110,6 @@ const BookHouse = ({ index }) => {
         </View>
       ) : (
         <>
-         
           {refreshing && (
             <View
               style={{
@@ -135,11 +137,10 @@ const BookHouse = ({ index }) => {
               </View>
             ) : (
               <FlatList
-              keyExtractor={(item, index) => `${item.id}-${index}`} 
+                keyExtractor={(item, index) => `${item.id}-${index}`}
                 data={filteredHomes}
-                renderItem={({ item ,index}) => (
+                renderItem={({ item, index }) => (
                   <RealtorPost
-                  
                     openSharing={
                       JSON.parse(item.housing_type_data)["open_sharing1"]
                     }
@@ -153,7 +154,7 @@ const BookHouse = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${apiUrl}/housing_images/${
+                    image={`${frontEndUriBase}/housing_images/${
                       JSON.parse(item.housing_type_data).image
                     }`}
                     column1_additional={item.column1_additional}
@@ -185,50 +186,51 @@ const BookHouse = ({ index }) => {
                     isFavorite={item.is_favorite}
                   />
                 )}
-             ListHeaderComponent={
-              <>
-               <View style={{ paddingHorizontal: 0 }}>
-            <Image
-              source={bannerSRC}
-              style={{
-                width: "100%",
-                height: 120,
-              }}
-            />
-          </View>
-          <View style={styles.header}>
-            <Text style={{ fontSize: 14, fontWeight: 700 }}>
-              ÖNE ÇIKAN TATİL EVLERİ
-            </Text>
+                ListHeaderComponent={
+                  <>
+                    <View style={{ paddingHorizontal: 0 }}>
+                      <Image
+                        source={bannerSRC}
+                        style={{
+                          width: "100%",
+                          height: 120,
+                        }}
+                      />
+                    </View>
+                    <View style={styles.header}>
+                      <Text style={{ fontSize: 14, fontWeight: 700 }}>
+                        ÖNE ÇIKAN TATİL EVLERİ
+                      </Text>
 
-            <TouchableOpacity style={styles.allBtn}>
-              <Text
-                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
-                onPress={() =>
-                  navigation.navigate("Drawer", {
-                    screen: "AllRealtorAdverts",
-                    params: {
-                      name: "Emlak İlanları",
-                      slug: "emlak-ilanlari",
-                      data: filteredHomes,
-                      count: filteredHomes.length,
-                      type: "mustakil-tatil",
-                      optional: null,
-                      title: null,
-                      check: null,
-                      city: null,
-                      county: null,
-                      hood: null,
-                    },
-                  })
+                      <TouchableOpacity style={styles.allBtn}>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: 12,
+                            fontWeight: "bold",
+                          }}
+                          onPress={() =>
+                            navigation.navigate("AllRealtorAdverts", {
+                              name: "Emlak İlanları",
+                              slug: "emlak-ilanlari",
+                              data: filteredHomes,
+                              count: filteredHomes.length,
+                              type: "mustakil-tatil",
+                              optional: null,
+                              title: null,
+                              check: null,
+                              city: null,
+                              county: null,
+                              hood: null,
+                            })
+                          }
+                        >
+                          Tüm İlanları Gör
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </>
                 }
-              >
-                Tüm İlanları Gör
-              </Text>
-            </TouchableOpacity>
-          </View>
-              </>
-             }
                 onEndReachedThreshold={0.1}
                 refreshControl={
                   <RefreshControl

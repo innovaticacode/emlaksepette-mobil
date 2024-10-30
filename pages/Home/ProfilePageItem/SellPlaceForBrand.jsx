@@ -6,6 +6,7 @@ import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import { getValueFor } from "../../../components/methods/user";
 import SellPlaceItem from "../../../components/SellPlaceItem";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 export default function SellPlacesForBrands({ data }) {
   const [Places, setPlaces] = useState([]);
@@ -19,7 +20,7 @@ export default function SellPlacesForBrands({ data }) {
     try {
       // if (user?.access_token && user) {
       const placeInfo = await axios.get(
-        `https://private.emlaksepette.com/api/magaza/${data?.data?.id}/satis-noktalari`
+        `${apiUrl}magaza/${data?.data?.id}/satis-noktalari`
       );
       setPlaces(placeInfo?.data?.usersFromCollections);
       // }

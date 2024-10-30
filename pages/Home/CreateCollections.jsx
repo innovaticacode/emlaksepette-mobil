@@ -20,6 +20,7 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 import NoDataScreen from "../../components/NoDataScreen";
+import { apiUrl } from "../../components/methods/apiRequest";
 export default function CreateCollections() {
   const route = useRoute();
   const { HouseID } = route.params;
@@ -36,7 +37,7 @@ export default function CreateCollections() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/client/collections",
+          `${apiUrl}client/collections`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -61,7 +62,7 @@ export default function CreateCollections() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          `${apiUrl}users/` + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -115,7 +116,7 @@ export default function CreateCollections() {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/add/collection",
+        `${apiUrl}add/collection`,
         collectionData,
         {
           headers: {
@@ -162,7 +163,7 @@ export default function CreateCollections() {
     };
 
     axios
-      .post("https://private.emlaksepette.com/api/addLink", collectionData, {
+      .post(`${apiUrl}addLink`, collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -236,7 +237,7 @@ export default function CreateCollections() {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/remove_item_on_collection",
+        `${apiUrl}remove_item_on_collection`,
         collectionData,
         {
           headers: {

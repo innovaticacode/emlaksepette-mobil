@@ -18,8 +18,9 @@ import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import bannerSRC from "../../src/assets/images/project-banner.png";
 import { useNavigation } from "@react-navigation/native";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
-const apiUrl = "https://private.emlaksepette.com";
+
 
 const HomePage = (props) => {
   const { index } = props;
@@ -31,7 +32,7 @@ const HomePage = (props) => {
 
     setLoadingSliders(true); // Yükleniyor durumunu başlat
     try {
-      const response = await axios.get(`${apiUrl}/api/featured-sliders`);
+      const response = await axios.get(`${apiUrl}featured-sliders`);
       setFeaturedSliders(response.data);
     } catch (error) {
       console.log("Error fetching featured sliders:", error);
@@ -52,7 +53,7 @@ const HomePage = (props) => {
   const fetchFeaturedProjects = async () => {
     try {
       setLoadingProjects(true);
-      const response = await axios.get(`${apiUrl}/api/featured-projects`);
+      const response = await axios.get(`${apiUrl}featured-projects`);
       setFeaturedProjects(response.data.data);
     } catch (error) {
       console.log("Error fetching featured projects:", error);
@@ -157,7 +158,7 @@ const HomePage = (props) => {
                           key={index}
                           project={item}
                           caption={item.project_title}
-                          ımage={`${apiUrl}/${item.image.replace(
+                          ımage={`${frontEndUriBase}${item.image.replace(
                             "public/",
                             "storage/"
                           )}`}
@@ -165,7 +166,7 @@ const HomePage = (props) => {
                           location={item.city.title}
                           city={item.county.ilce_title}
                           ProjectNo={item.id}
-                          ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
+                          ProfilImage={`${frontEndUriBase}storage/profile_images/${item.user.profile_image}`}
                           loading={loadingProjects}
                         />
                       </View>

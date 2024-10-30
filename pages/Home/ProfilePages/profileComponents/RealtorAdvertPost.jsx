@@ -9,12 +9,12 @@ import {
 import { useState } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/Entypo";
-import { frontEndUri } from "../../../../components/methods/apiRequest";
+import { frontEndUri, frontEndUriBase } from "../../../../components/methods/apiRequest";
 import { Platform } from "react-native";
 import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
 export default function RealtorAdvertPost({ Onpress, housing }) {
   const [status, setStatus] = useState(housing.status);
-  const apiUrl = "https://private.emlaksepette.com/";
+  
   const { width, height } = Dimensions.get("window");
 
   console.debug("housing", housing);
@@ -23,7 +23,7 @@ export default function RealtorAdvertPost({ Onpress, housing }) {
       <View style={{ flexDirection: "row", width: "100%", gap: 10 }}>
         <View style={{ backgroundColor: "red", width: 90, height: 80 }}>
           <ImageBackground
-            source={{ uri: `${apiUrl}housing_images/${housing.image}` }}
+            source={{ uri: `${frontEndUriBase}housing_images/${housing.image}` }}
             style={{ width: "100%", height: "100%" }}
             resizeMode="cover"
           />

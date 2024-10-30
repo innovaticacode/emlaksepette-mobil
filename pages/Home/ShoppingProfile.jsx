@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Share,
+  BackHandler,
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import ShoppingIcon from "react-native-vector-icons/Entypo";
@@ -38,6 +39,7 @@ import { setNotificationsRedux } from "../../store/slices/Notifications/Notifica
 import { Skeleton } from "@rneui/themed";
 import { id } from "date-fns/locale";
 import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
@@ -54,7 +56,7 @@ export default function ShoppingProfile() {
   const [permissionsUser, setPermissionsUser] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [openAccor, setOpenAccor] = useState({});
-  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
+  
   const [profileImage, setProfileImage] = useState(null);
   useEffect(() => {
     getValueFor("user", setUser);
@@ -70,7 +72,7 @@ export default function ShoppingProfile() {
         }
 
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/user/notification",
+          apiUrl+"user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -105,7 +107,7 @@ export default function ShoppingProfile() {
     try {
       if (user.access_token && user) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/users/${user?.id}`,
+          `${apiUrl}users/${user?.id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -181,8 +183,10 @@ export default function ShoppingProfile() {
       })
     );
     await SecureStore.setItemAsync("user", "");
-    navigation.replace("Drawer", { screen: "Home" }, { status: "logout" });
-    dispatch(setShoppingProfile({ isShoppingProfile: false }));
+    setTimeout(() => {
+      dispatch(setShoppingProfile({ isShoppingProfile: false }));
+      navigation.push("Drawer", { screen: "Home" }, { status: "logout" });
+    }, 150);
   };
 
   const toggleAccor = (index) => {
@@ -210,7 +214,7 @@ export default function ShoppingProfile() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          apiUrl+"users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -219,7 +223,8 @@ export default function ShoppingProfile() {
         );
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
-        setProfileImage(PhotoUrl + userData.profile_image);
+       
+        setProfileImage(`${frontEndUriBase}storage/profile_images/${userData.profile_image}`);
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -236,7 +241,7 @@ export default function ShoppingProfile() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://private.emlaksepette.com/`,
+        message:frontEndUriBase,
       });
 
       if (result.action === Share.sharedAction) {
@@ -252,6 +257,19 @@ export default function ShoppingProfile() {
       alert(error.message);
     }
   };
+
+  useEffect(() => {
+    const backAction = () => {
+      dispatch(setShoppingProfile({ isShoppingProfile: false }));
+      return false;
+    };
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+    return () => backHandler.remove();
+  }, [dispatch]);
+
   return (
     <>
       {loading ? (
@@ -731,7 +749,10 @@ export default function ShoppingProfile() {
                         fontWeight: "bold",
                       }}
                     >
-                      {user.corporate_type || namFromGetUser?.role}
+                     ({user.corporate_type || namFromGetUser?.role})  {
+                        (namFromGetUser?.is_brand==1 && namFromGetUser?.brand_id)&&
+                        <Text>- Franchise Markası</Text>
+                      }
                     </Text>
                   </View>
                 </View>

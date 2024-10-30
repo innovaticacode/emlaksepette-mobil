@@ -41,6 +41,7 @@ import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { ActivityIndicator } from "react-native-paper";
+import { apiUrl } from "../../components/methods/apiRequest";
 
 export default function Basket2() {
   const route = useRoute();
@@ -116,7 +117,7 @@ export default function Basket2() {
       if (user?.access_token && isFocused) {
         setLoading(true);
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/institutional/my-cart",
+          apiUrl+"institutional/my-cart",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -200,7 +201,7 @@ export default function Basket2() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/update-cart-qt",
+          apiUrl+"update-cart-qt",
           formData,
           {
             headers: {
@@ -225,7 +226,7 @@ export default function Basket2() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/update-cart-qt",
+          apiUrl+"update-cart-qt",
           formData,
           {
             headers: {
@@ -245,7 +246,7 @@ export default function Basket2() {
   const updateUserData = async () => {
     try {
       const updateResponse = await axios.get(
-        "https://private.emlaksepette.com/api/users/" + user?.id,
+        apiUrl+"users/" + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -274,7 +275,7 @@ export default function Basket2() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/remove-from-cart",
+          apiUrl+"remove-from-cart",
           {},
           {
             headers: {
@@ -314,7 +315,7 @@ export default function Basket2() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/update-cart",
+          apiUrl+"update-cart",
           formData,
           {
             headers: {

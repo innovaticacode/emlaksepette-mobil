@@ -61,7 +61,7 @@ export default function Notifications() {
       }
       setloading(true);
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/user/notification",
+        apiUrl+"user/notification",
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -109,7 +109,7 @@ export default function Notifications() {
     setloading(true);
     try {
       const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/notifications",
+        apiUrl+"institutional/notifications",
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,

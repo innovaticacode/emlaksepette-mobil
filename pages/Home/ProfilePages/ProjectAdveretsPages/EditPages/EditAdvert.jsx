@@ -13,6 +13,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import { useRoute } from "@react-navigation/native";
 import { getValueFor } from "../../../../../components/methods/user";
 import axios from "axios";
+import { apiUrl } from "../../../../../components/methods/apiRequest";
 
 export default function EditAdvert() {
   const route = useRoute();
@@ -32,7 +33,7 @@ export default function EditAdvert() {
   useEffect(() => {
     axios
       .get(
-        `https://private.emlaksepette.com/api/project_housings/${Project_Id}?start=${start}&end=${end}` +
+        `${apiUrl}project_housings/${Project_Id}?start=${start}&end=${end}` +
           start +
           "&take=" +
           take,

@@ -37,17 +37,18 @@ import {
 } from "react-native-alert-notification";
 import { Forms } from "../../../components/ProfileUpgradeComponents/formshelper";
 import ImageView from "react-native-image-viewing";
+import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
 
 export default function UpgradeProfile() {
   const route = useRoute();
   const { name, tab } = route.params;
   const [choose, setchoose] = useState(false);
-  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
+
   const [image, setImage] = useState(null);
   const [isImageVisible, setIsImageVisible] = useState(false);
   const images = [
     {
-      uri: "https://private.emlaksepette.com/images/phone-update-image/phonefile.jpg",
+      uri: `${frontEndUriBase}images/phone-update-image/phonefile.jpg`,
     },
   ];
   const [cities, setCities] = useState([]);
@@ -200,7 +201,7 @@ export default function UpgradeProfile() {
   const fetchTaxOffice = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/get-tax-office/${value}`
+        `${apiUrl}get-tax-office/${value}`
       );
       setTaxOffice(response.data);
     } catch (error) {
@@ -216,7 +217,7 @@ export default function UpgradeProfile() {
   const fetchCounties = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
+        `${apiUrl}counties/${value}`
       );
       setCounties(response.data.data);
       setSelectedCounty(null); // Seçili ilçe sıfırla
@@ -229,7 +230,7 @@ export default function UpgradeProfile() {
   const fetchNeighborhoods = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/neighborhoods/${value}`
+        `${apiUrl}neighborhoods/${value}`
       );
       setNeighborhoods(response.data.data); // Gelen mahalle verisini set et
 
@@ -538,7 +539,7 @@ export default function UpgradeProfile() {
       }
 
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/client/profile/update",
+        apiUrl+"client/profile/update",
         formData,
         {
           headers: {
@@ -631,9 +632,10 @@ export default function UpgradeProfile() {
                     {user.access_token ? (
                       <Image
                         source={
+                        
                           image
                             ? { uri: image.uri }
-                            : { uri: PhotoUrl + namFromGetUser.profile_image }
+                            : { uri: `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}` }
                         }
                         style={{ width: "100%", height: "100%" }}
                         borderRadius={50}
@@ -1055,7 +1057,7 @@ export default function UpgradeProfile() {
                             <View style={{ width: 250, height: 200 }}>
                               <Image
                                 source={{
-                                  uri: "https://private.emlaksepette.com/images/phone-update-image/phonefile.jpg",
+                                  uri: `${frontEndUriBase}images/phone-update-image/phonefile.jpg`,
                                 }}
                                 style={{ width: "100%", height: "100%" }}
                               />

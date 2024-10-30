@@ -7,6 +7,7 @@ import RegisterRealtorClub from "./RegisterRealtorClub";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 export default function Collections() {
   const [tab, settab] = useState(0);
@@ -22,7 +23,7 @@ export default function Collections() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          apiUrl+"users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
