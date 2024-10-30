@@ -52,11 +52,10 @@ export default function ActiveRealtorAdverts({ index }) {
           },
         }
       );
-      console.log(res.data);
       sethousings(res?.data?.activeHousingTypes);
+      console.debug("res---->>>>", res?.data?.activeHousingTypes);
       sethousingRecords(res?.data?.activeHousingTypes);
     } catch (e) {
-      console.log(e + " hataasdasd");
     } finally {
       setloading(false);
     }
