@@ -53,11 +53,10 @@ export default function ActiveRealtorAdverts({ index }) {
           },
         }
       );
-      console.log(res.data);
       sethousings(res?.data?.activeHousingTypes);
+      console.debug("res---->>>>", res?.data?.activeHousingTypes);
       sethousingRecords(res?.data?.activeHousingTypes);
     } catch (e) {
-      console.log(e + " hataasdasd");
     } finally {
       setloading(false);
     }
@@ -312,7 +311,11 @@ export default function ActiveRealtorAdverts({ index }) {
                     alignItems: "center",
                     gap: 10,
                   }}
-                  onPress={{}}
+                  onPress={() => {
+                    // navigation.navigate("EditProject", { id: selectedProject });
+                    navigation.navigate("EditPending");
+                    setEditModalVisible(false);
+                  }}
                 >
                   <Icon3 name="mode-edit-outline" size={23} color={"#333"} />
                   <Text
@@ -327,7 +330,11 @@ export default function ActiveRealtorAdverts({ index }) {
                     alignItems: "center",
                     gap: 10,
                   }}
-                  onPress={{}}
+                  onPress={() => {
+                    // navigation.navigate("EditProject", { id: selectedProject });
+                    navigation.navigate("EditPending");
+                    setEditModalVisible(false);
+                  }}
                 >
                   <Icon3 name="photo-library" size={21} color={"#333"} />
                   <Text

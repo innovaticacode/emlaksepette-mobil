@@ -125,6 +125,7 @@ import SliderTourismRent from "./pages/Home/SliderTourismRent";
 import AllTourismRent from "./pages/Home/AllTourismRent";
 import ViewAll from "./pages/Home/ViewAll/ViewAll";
 import RealEstateWallet from "./src/pages/RealEstateWallet";
+import EditPending from "./pages/Home/EditProject/EditPending";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
@@ -156,12 +157,10 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="Home"
         component={Home}
-        
         options={{
-          
           header: () => <Header />,
           headerShown: isShoppingProfile ? false : true,
-          gestureEnabled: false, 
+          gestureEnabled: false,
         }}
       />
 
@@ -1405,6 +1404,17 @@ const StackScreenNavigator = () => {
                     },
                     headerBackTitleVisible: false,
                   }}
+                />
+                <Stack.Screen
+                  name="EditPending"
+                  component={EditPending}
+                  options={({ route }) => ({
+                    title: "İlanı Düzenle",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#f2f2f2",
+                    },
+                  })}
                 />
               </Stack.Navigator>
             </NavigationContainer>
