@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import {
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import bannerSRC from "../../../src/assets/images/is_yeri.png";
@@ -73,13 +73,15 @@ const Shop = ({ index }) => {
     }
   };
 
-  useEffect(() => {
-    if (index == 3) {
-      fetchFeaturedEstates();
-    } else {
-      setFeaturedEstates([]);
-    }
-  }, [index, user]);
+  useFocusEffect(
+    useCallback(() => {
+      if (index == 3) {
+        fetchFeaturedEstates(true);
+      } else {
+        setFeaturedEstates([]);
+      }
+    }, [index, user])
+  );
 
   const filteredHomes = featuredEstates.filter(
     (estate) => estate.step1_slug === "is-yeri"
@@ -194,53 +196,61 @@ const Shop = ({ index }) => {
                 }
                 ListHeaderComponent={
                   <>
-                  <View style={{ marginBottom:20 }}>
-            <Image
-              source={bannerSRC}
-              style={{ width: "auto", height: 120, resizeMode: "cover" }}
-            />
-          </View>
-          <View
-            style={{
-              paddingBottom: 3,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingLeft: 10,
-              paddingRight: 10,
-              alignItems: "center",
-              backgroundColor: "white",
-            }}
-          >
-            <Text style={{ fontSize: 14, fontWeight: 700 }}>
-              ÖNE ÇIKAN İŞ YERLERİ
-            </Text>
+                    <View style={{ marginBottom: 20 }}>
+                      <Image
+                        source={bannerSRC}
+                        style={{
+                          width: "auto",
+                          height: 120,
+                          resizeMode: "cover",
+                        }}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        paddingBottom: 3,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        alignItems: "center",
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Text style={{ fontSize: 14, fontWeight: 700 }}>
+                        ÖNE ÇIKAN İŞ YERLERİ
+                      </Text>
 
-            <TouchableOpacity style={styles.allBtn}>
-              <Text
-                style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
-                onPress={() =>
-                  navigation.navigate("Drawer", {
-                    screen: "AllRealtorAdverts",
-                    params: {
-                      name: "Emlak İlanları",
-                      slug: "emlak-ilanlari",
-                      data: filteredHomes,
-                      count: filteredHomes.length,
-                      type: "is-yeri",
-                      optional: null,
-                      title: null,
-                      check: null,
-                      city: null,
-                      county: null,
-                      hood: null,
-                    },
-                  })
-                }
-              >
-                Tüm İlanları Gör
-              </Text>
-            </TouchableOpacity>
-          </View>
+                      <TouchableOpacity style={styles.allBtn}>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: 11,
+                            fontWeight: "bold",
+                          }}
+                          onPress={() =>
+                            navigation.navigate("Drawer", {
+                              screen: "AllRealtorAdverts",
+                              params: {
+                                name: "Emlak İlanları",
+                                slug: "emlak-ilanlari",
+                                data: filteredHomes,
+                                count: filteredHomes.length,
+                                type: "is-yeri",
+                                optional: null,
+                                title: null,
+                                check: null,
+                                city: null,
+                                county: null,
+                                hood: null,
+                              },
+                            })
+                          }
+                        >
+                          Tüm İlanları Gör
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </>
                 }
                 ListFooterComponent={renderFooter}
