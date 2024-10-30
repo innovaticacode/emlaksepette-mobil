@@ -195,12 +195,13 @@ const Home = ({ route }) => {
               <IconStore
                 name={focused ? "storefront" : "storefront-outline"}
                 size={28}
-                color={color}
+                color={focused ? 'black': "grey"}
               />
             ) : (
               <FontAwesomeIcon
                 name={focused ? "user" : "user-o"}
                 size={focused ? 28 : 23}
+                color={'grey'}
               />
             ),
         }}
