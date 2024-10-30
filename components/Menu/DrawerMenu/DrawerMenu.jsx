@@ -70,8 +70,8 @@ const DrawerMenu = () => {
   if (image == "indir.jpeg") {
     if (namFromGetUser.name) {
       const fullName = namFromGetUser.name.split(" ");
-      const name = fullName[0].charAt(0).toUpperCase();
-      const surname = fullName[1].charAt(0).toUpperCase();
+      const name = fullName[0]?.charAt(0).toUpperCase();
+      const surname = fullName[1]?.charAt(0).toUpperCase();
       checkImage = name + surname;
     }
   }
