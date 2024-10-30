@@ -29,7 +29,6 @@ import Icon3 from "react-native-vector-icons/AntDesign";
 import enler from "../../../components/images/enler.png";
 import cerceve from "../../../components/images/cerceve.png";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
-import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
 
   const ItemContainer=({text,style,dataText,TextHeader})=>{
     return (
@@ -80,7 +79,7 @@ export default function Panel({ options, onSelect }) {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            `${apiUrl}profile/info/mobile/dashboard`,
+            `https://private.emlaksepette.com/api/profile/info/mobile/dashboard`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -97,7 +96,7 @@ export default function Panel({ options, onSelect }) {
     fetchData();
   }, [user]);
 
- 
+  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -120,7 +119,7 @@ export default function Panel({ options, onSelect }) {
         }
 
         const response = await axios.get(
-          apiUrl+"user/notification",
+          "https://private.emlaksepette.com/api/user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -288,7 +287,7 @@ const [tab, settab] = useState(0)
                   <View style={{width:65,height:65,borderRadius:50,backgroundColor:'yellow',borderWidth:2,borderColor:'white'}}>
                   <ImageBackground
                     source={{
-                      uri: `${frontEndUriBase}storage/profile_images/${panelInfo.user.profile_image}`,
+                      uri: `https://private.emlaksepette.com/storage/profile_images/${panelInfo?.user?.profile_image}`,
                     }}
                     style={{width:'100%',height:'100%'}}
                     borderRadius={50}
@@ -451,91 +450,6 @@ const [tab, settab] = useState(0)
               
 
               <View style={{ paddingRight:12,paddingLeft:12}}>
-                    overflow: "hidden",
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      marginBottom: 10,
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        width: "100%",
-                        justifyContent: "space-between",
-                        marginTop: 10,
-                      }}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Icon3
-                          name="star"
-                          size={20}
-                          color={"orange"}
-                          style={{ marginRight: 10 }}
-                        />
-                        <Text>Emlak Kulubün Enleri</Text>
-                      </View>
-                      <View style={{ flexDirection: "row" }}>
-                        <View
-                          style={{
-                            backgroundColor: "red",
-                            padding: 10,
-                            borderRadius: 10,
-                          }}
-                        >
-                          <Text style={{ fontSize: 10, color: "white" }}>
-                            Tümünü Gör
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                  <ImageBackground
-                    source={enler}
-                    style={styles.backgroundImage}
-                    resizeMode="cover" // Resmi kapsayacak şekilde ayarlar
-                  >
-                    <View style={styles.overlay}>
-                      <Text style={styles.text}>
-                        Bu ayın eni sen olabilirsin!
-                      </Text>
-                      <Text style={styles.text}>Enler arasında yerini al!</Text>
-                    </View>
-                    <View style={{}}>
-                      <ImageBackground
-                        source={cerceve}
-                        style={styles.imageBackground2}
-                        resizeMode="cover"
-                      >
-                        <Text style={{ top: 69, left: 27, color: "white" }}>
-                          {panelInfo.user.name}
-                        </Text>
-                      </ImageBackground>
-                      <ImageBackground
-                      
-                        source={{ uri: frontEndUriBase + 'storage/profile_images/' }}
-                        style={styles.imageBackground3}
-                        resizeMode="cover"
-                        imageStyle={{
-                          borderBottomLeftRadius: 20,
-                          borderBottomRightRadius: 20,
-                        }}
-                      />
-                    </View>
-                  </ImageBackground>
-                </View>
-              </View>
-
-              <View style={{ marginTop: 10, marginBottom: 100 }}>
                 <TouchableOpacity
                   onPress={() => navigation.navigate("AdvertPanel")}
                   style={[
