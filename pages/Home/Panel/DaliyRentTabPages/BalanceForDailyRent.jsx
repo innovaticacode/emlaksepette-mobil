@@ -53,12 +53,16 @@ export default function BalanceForDailyRent() {
               <Text style={{fontSize:15,color:'#333',fontWeight:'600'}}>Kazanç Getiren Konutlar ({filterData.length})</Text>
               </View>
             }
-       {
-        filterData.map((item,index)=>(
+              { 
+      (searchTerm && filterData?.length==0)?
+      <View >
+        <Text style={{textAlign:'center',color:'#333',fontSize:14}}>Sonuç Bulunmadı</Text>
+      </View>
+      :
+        filterData?.map((item,index)=>(
           <AdvertComponent
           item={item}
           key={index}
-      
           title={item?.housing.title}
           ID={item?.housing.id}
           ımage={

@@ -163,40 +163,111 @@ export default function Panel({ options, onSelect }) {
   
     const Items=[
       {
-        header:'Aktif İlanlar',
-        data:panelInfo.activeAdvertProjects + panelInfo.activeAdvertHousings
+        header:'Alt Çalışan Sayısı',
+        data:panelInfo?.sub_users?.length,
+        navigate:'UsersList',
+        tabSee:1
       },
       {
-        header:'Onay Bekleyen İlanlar',
-        data:panelInfo.pendingAdvertProjects +panelInfo.pendingAdvertHousings
+        header:'Aktif Projeler',
+        data:panelInfo?.activeAdvertProjects,
+        tabSee:1,
+        navigate:'MyProject',
+        param:0
       },
       {
-        header:'Askıya Alınan İlanlar',
-        data:panelInfo.passiveAdvertHousings + panelInfo.passiveAdvertProjects
+        header:'Onay Bekleyen Projeler',
+        data:panelInfo?.pendingAdvertProjects ,
+        tabSee:1,
+        navigate:'MyProject',
+        param:1
       },
       {
-        header:'Reddedilen İlanlar',
-        data:panelInfo.rejectAdvertProjects + panelInfo.rejectAdvertHousings
+        header:'Askıya Alınan Projeler',
+        data:panelInfo?.passiveAdvertProjects ,
+        tabSee:1,
+        navigate:'MyProject',
+        param:3
+      },
+      {
+        header:'Reddedilen Projeler',
+        data:panelInfo?.rejectAdvertProjects ,
+        tabSee:1,
+        navigate:'MyProject',
+        param:2
+      },
+      {
+        header:'Satılan Proje İlanları',
+        data:panelInfo?.total_sales_count_projects,
+        tabSee:1,
+        navigate:'MyProject',
+        param:4
+      },
+      {
+        header:'Toplam Proje Sayısı ',
+        data:panelInfo?.total_adverts_count_project,
+        tabSee:1
+      },
+      {
+        header:'Görüntülenme Sayısı',
+        data:panelInfo?.viewCountProjects,
+        tabSee:1
       },
       {
         header:'Alt Çalışan Sayısı',
-        data:1
+        data:panelInfo?.sub_users?.length,
+        navigate:'UsersList',
+        tabSee:0
       },
       {
-        header:'Satılan İlanlar',
-        data:2
+        header:'Aktif İlanlar',
+        data:panelInfo?.activeAdvertHousings,
+        tabSee:0,
+        navigate:'MyRealtor',
+        param:0
       },
       {
-        header:'Toplam İlan Sayısı',
-        data:2
+        header:'Onay Bekleyen İlanlar',
+        data:panelInfo?.pendingAdvertHousings ,
+        tabSee:0,
+        navigate:'MyRealtor',
+        param:1
       },
       {
-        header:'Koleksiyon Sayısı',
-        data:2
+        header:'Askıya Alınan İlanlar',
+        data:panelInfo?.passiveAdvertHousings,
+        tabSee:0,
+        navigate:'MyRealtor',
+        param:3
+      },
+      {
+        header:'Reddedilen İlanlar',
+        data:panelInfo?.rejectAdvertHousings ,
+        tabSee:0,
+        navigate:'MyRealtor',
+        param:2
       },
     
+      {
+        header:'Satılan İlanlar',
+        data:panelInfo?.total_sales_count_housing,
+        tabSee:0,
+        navigate:'MyRealtor',
+        param:4
+      },
+      {
+        header:'Toplam İlan Sayısı ',
+        data:panelInfo?.total_adverts_count_housing,
+        tabSee:0
+      },
+      {
+        header:'Görüntülenme Sayısı',
+        data:panelInfo?.viewCountHousings,
+        tabSee:0
+      },
+   
     ]
-
+const [tab, settab] = useState(0)
   return (
     <>
       <View style={style.container}>
@@ -210,6 +281,7 @@ export default function Panel({ options, onSelect }) {
             contentContainerStyle={{ paddingBottom: 20 }}
           >
             <View style={style.container}>
+              <View style={{backgroundColor:'#FFFFFF'}}>
             <View style={{backgroundColor:'#EA2C2E',padding:8}}>
               <View style={{flexDirection:'row',alignItems:'center',gap:10}}>
                   <View style={{width:65,height:65,borderRadius:50,backgroundColor:'yellow',borderWidth:2,borderColor:'white'}}>
@@ -233,12 +305,46 @@ export default function Panel({ options, onSelect }) {
                   </View>
               </View>
             </View>
+                    <View style={{
+                      flexDirection:'row',
+                      alignItems:'center',
+                      justifyContent:'space-between'
+                    }}>
+                      <TouchableOpacity
+                      onPress={()=>{settab(0)}}
+                       style={{
+                        width:'45%',
+                        padding:10,
+                        borderBottomWidth:tab==0 ? 1 : 0,
+                        borderBottomColor:'#EA2C2E'
+                      }}>
+                        <Text style={{color:tab==0?'#EA2C2E':'#333',fontWeight:'500',fontSize:13,textAlign:'center'}}>Emlak İlanları İstatistiği</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity
+                        onPress={()=>{settab(1)}}
+                       style={{
+                        width:'45%',
+                        padding:10,
+                           borderBottomWidth:tab==1 ? 1 : 0,
+                        borderBottomColor:'#EA2C2E'
+                      }}>
+                      <Text style={{color:tab==1?'#EA2C2E':'#333',fontWeight:'500',fontSize:13,textAlign:'center'}}>Proje İlanları İstatistiği</Text>
+                      </TouchableOpacity>
+                    </View>
+            </View>
               <View style={{ }}>
                 <View style={styles.rowContainer}>
 
                   {
                     Items.map((item,index)=>(
+                      <TouchableOpacity disabled={item.navigate ? false:true} style={{
+                        display:item.tabSee==tab?'flex':'none'
+                      }} key={index} onPress={()=>{
+                        navigation.navigate(item.navigate?? item.navigate ,{tab:item.param ? item.param:0})
+                      }}>
                       <ItemContainer style={[styles.card,{   width: (Dimensions.get("window").width - 30) / 2, flexDirection: "column",padding:15,paddingTop:10,paddingBottom:10,gap:8,borderWidth:1 }]} dataText={item.data} TextHeader={item.header} />
+                      </TouchableOpacity>
                     ))
                   }
                                        
@@ -341,106 +447,7 @@ export default function Panel({ options, onSelect }) {
                   </View>
                 </View>
               </View>
-              {/* <View
-                style={[
-                  styles.card,
-                  {
-                    paddingRight: 10,
-                    paddingLeft: 20,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 15,
-                    marginTop: 10,
-                    height: "25%",
-                  },
-                ]}
-              >
-                <View
-                  style={{
-                    width: "100%",
-
-                    overflow: "hidden",
-                  }}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      marginBottom: 10,
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        width: "100%",
-                        justifyContent: "space-between",
-                        marginTop: 10,
-                      }}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Icon3
-                          name="star"
-                          size={20}
-                          color={"orange"}
-                          style={{ marginRight: 10 }}
-                        />
-                        <Text>Emlak Kulubün Enleri</Text>
-                      </View>
-                      <View style={{ flexDirection: "row" }}>
-                        <View
-                          style={{
-                            backgroundColor: "red",
-                            padding: 10,
-                            borderRadius: 10,
-                          }}
-                        >
-                          <Text style={{ fontSize: 10, color: "white" }}>
-                            Tümünü Gör
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                  <ImageBackground
-                    source={enler}
-                    style={styles.backgroundImage}
-                    resizeMode="cover" // Resmi kapsayacak şekilde ayarlar
-                  >
-                    <View style={styles.overlay}>
-                      <Text style={styles.text}>
-                        Bu ayın eni sen olabilirsin!
-                      </Text>
-                      <Text style={styles.text}>Enler arasında yerini al!</Text>
-                    </View>
-                    <View style={{}}>
-                      <ImageBackground
-                        source={cerceve}
-                        style={styles.imageBackground2}
-                        resizeMode="cover"
-                      >
-                        <Text style={{ top: 69, left: 27, color: "white" }}>
-                          {panelInfo.user.name}
-                        </Text>
-                      </ImageBackground>
-                      <ImageBackground
-                        source={{ uri: PhotoUrl }}
-                        style={styles.imageBackground3}
-                        resizeMode="cover"
-                        imageStyle={{
-                          borderBottomLeftRadius: 20,
-                          borderBottomRightRadius: 20,
-                        }}
-                      />
-                    </View>
-                  </ImageBackground>
-                </View>
-              </View> */}
+              
 
               <View style={{ paddingRight:12,paddingLeft:12}}>
                 <TouchableOpacity

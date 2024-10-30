@@ -49,7 +49,7 @@ export default function PendingBalance() {
         <TextInputAndFilterBtn openSortModal={setSortLıstModal} searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
         <PanelTabsHeaderComponent header={'Onay Bekleyen Kazanç Tutarı'} IconStatus={2} IconName={'clock'} Price={PendingTotal} IconContainerColor={'#FC8F00'}/>
         <View style={{}}>
-            <Text style={{fontSize:15,color:'#333',fontWeight:'600'}}>Kazanç Onayı Bekleyen Konutlar({filterData.length})</Text>
+            <Text style={{fontSize:15,color:'#333',fontWeight:'600'}}>Kazanç Onayı Bekleyen Konutlar({filterData?.length})</Text>
           </View>
       { 
       (searchTerm && filterData.length==0)?
@@ -57,7 +57,7 @@ export default function PendingBalance() {
         <Text style={{textAlign:'center',color:'#333',fontSize:14}}>Sonuç Bulunmadı</Text>
       </View>
       :
-        filterData.map((item,index)=>(
+        filterData?.map((item,index)=>(
           <AdvertComponent
           item={item}
           key={index}

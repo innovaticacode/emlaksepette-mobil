@@ -50,7 +50,7 @@ export default function RejectBalance() {
             {
               filterData?.length!==0 &&
               <View style={{}}>
-              <Text style={{fontSize:15,color:'#333',fontWeight:'600'}}>Kazancı Reddedilen Konutlar({filterData.length})</Text>
+              <Text style={{fontSize:15,color:'#333',fontWeight:'600'}}>Kazancı Reddedilen Konutlar({filterData?.length})</Text>
             </View>
             }
 
@@ -60,7 +60,7 @@ export default function RejectBalance() {
         <Text style={{textAlign:'center',color:'#333',fontSize:14}}>Sonuç Bulunmadı</Text>
       </View>
       :
-        filterData.map((item,index)=>(
+        filterData?.map((item,index)=>(
           <AdvertComponent
           item={item}
           key={index}

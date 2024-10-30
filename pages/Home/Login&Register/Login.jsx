@@ -87,8 +87,8 @@ export default function Login({ navigation }) {
             JSON.stringify(res.data.phone_verification_status)
           );
           setUser(res.data); // Kullanıcı durumunu günceller
-          navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
-          navigation.replace('Home')
+          // navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
+          navigation.navigate('Home',{status:'login'})
         } else {
           // setshowMailSendAlert(true);
           setStatus(false);

@@ -62,7 +62,7 @@ export default function BalanceForProject() {
               <Text style={{textAlign:'center',color:'#333',fontSize:14}}>Sonuç Bulunmadı</Text>
             </View>
             :
-        filterData.map((item,index)=>(
+        filterData?.map((item,index)=>(
           <AdvertComponent
           item={item}
           key={index}

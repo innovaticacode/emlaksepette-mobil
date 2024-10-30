@@ -32,23 +32,49 @@ export default function RejectBalanceForDaily() {
     
     }, 600);
   };
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Eğer arama terimi boşsa tüm veriyi göster, değilse filtrele
+  const filterData = searchTerm
+    ? SummaryRedux?.rental_summary?.sale_prices_sum?.rejected.filter(item => {
+        const title = item.housing.title.toLowerCase();
+        const description = `2000${item.housing.id}`;
+        const term = searchTerm.toLowerCase();
+        return title.includes(term) || description.includes(term);
+      })
+    : SummaryRedux?.rental_summary?.sale_prices_sum?.rejected;
   return (
     <ScrollView contentContainerStyle={{gap:10,paddingLeft:10,paddingRight:10}}>
-         <TextInputAndFilterBtn openSortModal={setSortLıstModal}/>
+         <TextInputAndFilterBtn openSortModal={setSortLıstModal} searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
          <PanelTabsHeaderComponent header={'Reddedilen Kazanç Tutarı'} IconStatus={1} IconName={'close'} Price={RejectTotal} IconContainerColor={'#EA2B2E'}/>
-       {
-        SummaryRedux?.rental_summary?.sale_prices_sum?.rejected.map((item,index)=>(
+         {
+              SummaryRedux?.rental_summary?.sale_prices_sum?.pending.length!==0 &&
+              <View style={{}}>
+              <Text style={{fontSize:15,color:'#333',fontWeight:'600'}}>Kazancı Reddedilen Konutlar ({filterData?.length})</Text>
+              </View>
+            } 
+                { 
+      (searchTerm && filterData?.length==0)?
+      <View >
+        <Text style={{textAlign:'center',color:'#333',fontSize:14}}>Sonuç Bulunmadı</Text>
+      </View>
+      :
+        filterData?.map((item,index)=>(
           <AdvertComponent
           item={item}
           key={index}
-         
-          title={item?.project.project_title}
-          ID={item?.project.id}
-          ımage={frontEndUriBase+item?.project?.image?.replace("public/", "storage/")}
+          title={item?.housing.title}
+          ID={item?.housing.id}
+          ımage={
+            item &&
+            item?.housing &&
+            item?.housing.housing_type_data &&
+            frontEndUriBase + 'housing_images/'+JSON.parse(item?.housing.housing_type_data)["image"]
+          }
           price={item?.price}
         />
         ))
-      } 
+      }
        <RadioFilter selectedIndex={selectedIndex} sortListModal={SortLıstModal} setSortListModal={setSortLıstModal} handleRadio={handleRadio} />
     </ScrollView>
   )
