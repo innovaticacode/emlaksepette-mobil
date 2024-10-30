@@ -1,2 +1,3 @@
 import { removeHtmlTags } from "./HtmlToRegex";
-export { removeHtmlTags };
+import { formatDate } from "./FormatDate";
+export { removeHtmlTags, formatDate };
