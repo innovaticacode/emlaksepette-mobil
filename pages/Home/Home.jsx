@@ -201,7 +201,7 @@ const Home = ({ route }) => {
               <FontAwesomeIcon
                 name={focused ? "user" : "user-o"}
                 size={focused ? 28 : 23}
-                color={'grey'}
+                color={focused ? 'black': "grey"}
               />
             ),
         }}
