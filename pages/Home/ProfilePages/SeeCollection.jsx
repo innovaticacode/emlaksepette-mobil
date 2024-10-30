@@ -35,7 +35,7 @@ import RNPickerSelect from "react-native-picker-select";
 import CloseIcon from "react-native-vector-icons/AntDesign";
 import PagerView from "react-native-pager-view";
 import SliderMenuDetails from "../../../components/SliderMenuDetails";
-import { apiRequestGet } from "../../../components/methods/apiRequest";
+import { apiRequestGet, apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import Categories from "../../../components/Categories";
 import { getValueFor } from "../../../components/methods/user";
@@ -63,7 +63,7 @@ export default function SeeCollection() {
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const [FormVisible, setFormVisible] = useState(false);
-  const apiUrl = "https://private.emlaksepette.com/";
+
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -93,7 +93,7 @@ export default function SeeCollection() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/emlak-kulup/${collectionUser?.id}/koleksiyonlar/${item?.id}`
+          `${apiUrl}emlak-kulup/${collectionUser?.id}/koleksiyonlar/${item?.id}`
         );
         setCollectionData(response?.data);
         setMergedItems(response?.data?.mergedItems);
@@ -146,7 +146,7 @@ export default function SeeCollection() {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/remove_item_on_collection",
+        apiUrl+"remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -214,7 +214,7 @@ export default function SeeCollection() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/client/collections",
+          apiUrl+"client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -267,7 +267,7 @@ export default function SeeCollection() {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/add/collection",
+        apiUrl+"add/collection",
         collectionData,
         {
           headers: {
@@ -314,7 +314,7 @@ export default function SeeCollection() {
     };
 
     axios
-      .post("https://private.emlaksepette.com/api/addLink", collectionData, {
+      .post(apiUrl+"addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -383,7 +383,7 @@ export default function SeeCollection() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          apiUrl+"institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -433,7 +433,7 @@ export default function SeeCollection() {
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/institutional/give_offer",
+        apiUrl+"institutional/give_offer",
         formData,
         {
           headers: {
@@ -475,7 +475,7 @@ export default function SeeCollection() {
   const fetchCity = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/cities"
+        apiUrl+"cities"
       );
       return response.data;
     } catch (error) {
@@ -497,7 +497,7 @@ export default function SeeCollection() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
+        `${apiUrl}counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -594,7 +594,7 @@ export default function SeeCollection() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://private.emlaksepette.com/`,
+        message: frontEndUriBase,
       });
 
       if (result.action === Share.sharedAction) {
@@ -611,7 +611,7 @@ export default function SeeCollection() {
     }
   };
 
-  const ApiUrl = "https://private.emlaksepette.com/";
+  
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -685,7 +685,7 @@ export default function SeeCollection() {
                   <View style={{ width: 40, height: 40, borderRadius: 20 }}>
                     <ImageBackground
                       source={{
-                        uri: `${ApiUrl}storage/profile_images/${collectionUser?.profile_image}`,
+                        uri: `${frontEndUriBase}storage/profile_images/${collectionUser?.profile_image}`,
                       }}
                       style={{
                         width: "100%",
@@ -850,7 +850,7 @@ export default function SeeCollection() {
                       housing={item.housing}
                       title={item.housing.title}
                       location={" "}
-                      image={`${apiUrl}/housing_images/${
+                      image={`${frontEndUriBase}housing_images/${
                         JSON.parse(item.housing.housing_type_data).image
                       }`}
                     />

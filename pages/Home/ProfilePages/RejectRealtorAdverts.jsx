@@ -19,6 +19,7 @@ import Icon4 from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
 import { CheckBox } from "react-native-elements";
 import { Stack } from "@react-native-material/core";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function RejectRealtorAdverts() {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
@@ -41,7 +42,7 @@ export default function RejectRealtorAdverts() {
     setloading(true);
     try {
       const res = await axios.get(
-        "https://private.emlaksepette.com/api/get_my_housings?orderByHousings=" +
+        apiUrl+"get_my_housings?orderByHousings=" +
           sort,
         {
           headers: { Authorization: "Bearer " + user.access_token },

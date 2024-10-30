@@ -22,6 +22,7 @@ import {
 import { ActivityIndicator } from "react-native-paper";
 import { Platform } from "react-native";
 import NoDataScreen from "../../../components/NoDataScreen";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function UsersList() {
   const navigation = useNavigation();
   const isfocused = useIsFocused();
@@ -53,7 +54,7 @@ export default function UsersList() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/institutional/users",
+          apiUrl+"institutional/users",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -80,7 +81,7 @@ export default function UsersList() {
     try {
       if (user.access_token) {
         const response = await axios.delete(
-          `https://private.emlaksepette.com/api/institutional/users/${selectedUser}`,
+          `${apiUrl}institutional/users/${selectedUser}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -137,7 +138,7 @@ export default function UsersList() {
     };
     try {
       const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/sub-users",
+        apiUrl+"institutional/sub-users",
         {
           data: data,
           headers: {
@@ -175,7 +176,7 @@ export default function UsersList() {
     };
     try {
       const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/sub-users",
+        apiUrl+"institutional/sub-users",
         {
           data: data,
           headers: {

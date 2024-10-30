@@ -12,6 +12,7 @@ import { TextInput } from "react-native-gesture-handler";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { apiUrl } from "./methods/apiRequest";
 
 const ExtradionRequest = () => {
   const route = useRoute();
@@ -116,7 +117,7 @@ const ExtradionRequest = () => {
     formData.append("terms", terms ? "1" : "0");
 
     axios
-      .post("https://private.emlaksepette.com/api/return", formData, {
+      .post(`${apiUrl}return`, formData, {
         headers: {
           Authorization: `Bearer ${user?.access_token}`,
           "Content-Type": "multipart/form-data",

@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { apiUrl } from "../../components/methods/apiRequest";
 
 const MapWiew = () => {
   const [selectedMarker, setSelectedMarker] = useState(null);
@@ -18,7 +19,7 @@ const MapWiew = () => {
 
   useEffect(() => {
     axios
-      .get("https://private.emlaksepette.com/api/real-estates")
+      .get(apiUrl+"real-estates")
       .then((res) => {
         setMarkers(res.data);
       })

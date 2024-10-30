@@ -22,6 +22,7 @@ import {
   ALERT_TYPE,
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function CreateUserType() {
   const route = useRoute();
 
@@ -42,7 +43,7 @@ export default function CreateUserType() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/institutional/roles/${UserID}/edit`,
+          `${apiUrl}institutional/roles/${UserID}/edit`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -87,7 +88,7 @@ export default function CreateUserType() {
       });
 
       const response = await axios.post(
-        `https://private.emlaksepette.com/api/institutional/roles/${UserID}`,
+        `${apiUrl}institutional/roles/${UserID}`,
         {
           permissions: checkedItems,
           _method: "PUT",

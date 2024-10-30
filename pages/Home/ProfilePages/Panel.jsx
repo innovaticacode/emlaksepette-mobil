@@ -29,6 +29,7 @@ import Icon3 from "react-native-vector-icons/AntDesign";
 import enler from "../../../components/images/enler.png";
 import cerceve from "../../../components/images/cerceve.png";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
+import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
 
 export default function Panel({ options, onSelect }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -65,7 +66,7 @@ export default function Panel({ options, onSelect }) {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            `https://private.emlaksepette.com/api/profile/info/mobile/dashboard`,
+            `${apiUrl}profile/info/mobile/dashboard`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -82,7 +83,7 @@ export default function Panel({ options, onSelect }) {
     fetchData();
   }, [user]);
 
-  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
+ 
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -105,7 +106,7 @@ export default function Panel({ options, onSelect }) {
         }
 
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/user/notification",
+          apiUrl+"user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -185,7 +186,7 @@ console.log(user.access_token)
                 >
                   <ImageBackground
                     source={{
-                      uri: `https://private.emlaksepette.com/storage/profile_images/${panelInfo.user.profile_image}`,
+                      uri: `${frontEndUriBase}storage/profile_images/${panelInfo.user.profile_image}`,
                     }}
                     style={styles.imageBackground}
                     resizeMode="cover"
@@ -530,7 +531,8 @@ console.log(user.access_token)
                         </Text>
                       </ImageBackground>
                       <ImageBackground
-                        source={{ uri: PhotoUrl }}
+                      
+                        source={{ uri: frontEndUriBase + 'storage/profile_images/' }}
                         style={styles.imageBackground3}
                         resizeMode="cover"
                         imageStyle={{

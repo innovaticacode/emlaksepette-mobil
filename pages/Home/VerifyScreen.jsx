@@ -15,6 +15,7 @@ import axios from "axios";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
 import * as SecureStore from "expo-secure-store";
+import { apiUrl } from "../../components/methods/apiRequest";
 const labels = ["Telefon Doğrulama", "Belge Doğrulama"];
 const labels2 = ["Telefon Doğrulama"];
 const customStyles = {
@@ -56,7 +57,7 @@ const VerifyScreen = () => {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          apiUrl+"users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

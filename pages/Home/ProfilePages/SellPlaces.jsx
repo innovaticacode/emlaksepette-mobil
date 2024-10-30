@@ -7,6 +7,7 @@ import { ActivityIndicator } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import NoDataScreen from "../../../components/NoDataScreen";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 export default function SellPlaces({ data }) {
   const [Places, setPlaces] = useState([]);
@@ -23,7 +24,7 @@ export default function SellPlaces({ data }) {
     try {
       if (user?.access_token && user) {
         const placeInfo = await axios.get(
-          `https://private.emlaksepette.com/api/magaza/${user.id}/satis-noktalari`
+          `${apiUrl}magaza/${user.id}/satis-noktalari`
         );
         setPlaces(placeInfo?.data?.usersFromCollections);
       }

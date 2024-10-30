@@ -20,6 +20,7 @@ import axios from "axios";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
 import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
+import { apiUrl } from "../../components/methods/apiRequest";
 const Tab = createBottomTabNavigator();
 
 const Home = ({ route }) => {
@@ -52,7 +53,7 @@ const Home = ({ route }) => {
     try {
       if (user.access_token) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          apiUrl+"users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

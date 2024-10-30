@@ -39,6 +39,7 @@ import {
 } from "../pages/helper";
 import PaymentPlanModal from "./PaymentPlanModal";
 import ShareProgressBar from "./ShareProgessBar";
+import { apiUrl, frontEndUriBase } from "./methods/apiRequest";
 
 export default function Posts({
   project,
@@ -123,7 +124,7 @@ export default function Posts({
       : "Başlık bulunamadı";
     const amount = 250; // Fiyatı burada belirliyoruz
     const imageUrl = selectedRoom
-      ? "https://private.emlaksepette.com/project_housing_images/" +
+      ? frontEndUriBase+"project_housing_images/" +
       selectedRoom["image[]"]
       : ""; // Resim URL'sini burada belirleyin
     const neightboord = false;
@@ -188,7 +189,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
       };
       axios
         .post(
-          "https://private.emlaksepette.com/api/add_project_to_favorites/" +
+          `${apiUrl}add_project_to_favorites/` +
           roomOrder,
           {
             project_id: project?.id,
@@ -241,7 +242,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          `${apiUrl}institutional/add_to_cart`,
           formData,
           {
             headers: {
@@ -521,7 +522,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
             <Image
               source={{
                 uri:
-                  "https://private.emlaksepette.com/project_housing_images/" +
+                  frontEndUriBase+"project_housing_images/" +
                   roomData["image[]"],
               }}
               style={styles.image}

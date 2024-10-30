@@ -25,6 +25,7 @@ import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
 import SortModal from "../../components/SortModal";
 import { DrawerMenu } from "../../components";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
 export default function AllProjects() {
   const [cityItems, setCityItems] = useState();
@@ -106,7 +107,7 @@ export default function AllProjects() {
     return intValue.toLocaleString("tr-TR");
   };
 
-  const apiUrl = "https://private.emlaksepette.com/";
+  
   const route = useRoute();
   const navigation = useNavigation();
   const { params } = route;
@@ -114,8 +115,8 @@ export default function AllProjects() {
 
   useEffect(() => {
     if (params.href) {
-      const baseUrl = "https://private.emlaksepette.com";
-      const relativeUrl = params.href.replace(`${baseUrl}/kategori`, ""); // 'kategori' kısmını çıkar
+      
+      const relativeUrl = params.href.replace(`${frontEndUriBase}kategori`, ""); // 'kategori' kısmını çıkar
       const urlSegments = relativeUrl.split("/").filter((segment) => segment);
 
       const slug = urlSegments[0] || "";
@@ -173,7 +174,7 @@ export default function AllProjects() {
     county,
     hood,
   }) => {
-    let url = `${apiUrl}api/kategori/${slug}`;
+    let url = `${apiUrl}kategori/${slug}`;
     if (title) url += `/${title}`;
     if (optional) url += `/${optional}`;
     if (type) url += `/${type}`;
@@ -201,7 +202,7 @@ export default function AllProjects() {
 
   const fetchDataCounty = async (value) => {
     try {
-      const response = await axios.get(`${apiUrl}api/counties/${value}`);
+      const response = await axios.get(`${apiUrl}counties/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -211,7 +212,7 @@ export default function AllProjects() {
 
   const fetchDataNeighborhood = async (value) => {
     try {
-      const response = await axios.get(`${apiUrl}api/neighborhoods/${value}`);
+      const response = await axios.get(`${apiUrl}neighborhoods/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -528,7 +529,7 @@ export default function AllProjects() {
                       project={item}
                       key={item.id}
                       caption={item.project_title}
-                      ımage={`${apiUrl}/${item.image.replace(
+                      ımage={`${frontEndUriBase}/${item.image.replace(
                         "public/",
                         "storage/"
                       )}`}
@@ -543,7 +544,7 @@ export default function AllProjects() {
                       ShoppingName={item.user?.name}
                       ShoppingMail={item.user?.email}
                       Phone={item.user?.phone}
-                      ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
+                      ProfilImage={`${frontEndUriBase}/storage/profile_images/${item.user.profile_image}`}
                       ShopingInfo={item.user?.corporate_type}
                     />
                   </View>

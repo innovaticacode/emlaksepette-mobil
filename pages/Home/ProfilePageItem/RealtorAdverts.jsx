@@ -10,6 +10,7 @@ import React, { useState, useEffect } from "react";
 import RealtorPost from "../../../components/RealtorPost";
 import { FlatList } from "react-native-gesture-handler";
 import { ActivityIndicator } from "react-native-paper";
+import { frontEndUriBase } from "../../../components/methods/apiRequest";
 
 export default function RealtorAdverts({ housingdata, filteredResults }) {
   const [featuredEstates, setFeaturedEstates] = useState({});
@@ -26,7 +27,7 @@ export default function RealtorAdverts({ housingdata, filteredResults }) {
   //   fetchFeaturedEstates();
   // }, []);
   const { width, height } = Dimensions.get("window");
-  const ApiUrl = "https://private.emlaksepette.com";
+ 
   const objectKeys = Object.keys(housingdata);
   const onRefresh = () => {
     setRefreshing(true);
@@ -54,7 +55,7 @@ export default function RealtorAdverts({ housingdata, filteredResults }) {
             title={item.title}
             loading={loadingEstates}
             location={item.city["title"] + " / " + item.county["title"]}
-            image={`${ApiUrl}/housing_images/${
+            image={`${frontEndUriBase}housing_images/${
               JSON.parse(item.housing_type_data).image
             }`}
             column1_name={

@@ -15,7 +15,7 @@ import BackIcon from 'react-native-vector-icons/AntDesign'
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
-import { apiUrl } from "./methods/apiRequest";
+import { apiUrl, frontEndUriBase } from "./methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotificationsRedux } from "../store/slices/Notifications/NotificationsSlice";
 
@@ -105,7 +105,7 @@ export default function Header({showBack}) {
       <View style={styles.logoContainer} onTouchStart={() => { navigation.navigate("HomePage"); }}>
         <ImageBackground
           source={{
-            uri: "https://private.emlaksepette.com/images/emlaksepettelogo.png",
+            uri: frontEndUriBase+"images/emlaksepettelogo.png",
           }}
           resizeMode="contain"
           style={styles.logoImage}

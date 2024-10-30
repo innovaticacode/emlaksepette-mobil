@@ -20,13 +20,14 @@ import axios from "axios";
 import { styles } from "./DrawerMenu.style";
 import { useDispatch } from "react-redux";
 import { setShoppingProfile } from "../../../store/slices/Menu/MenuSlice";
+import { apiUrl, frontEndUriBase } from "../../methods/apiRequest";
 
 const DrawerMenu = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [user, setUser] = useState({});
   const [namFromGetUser, setnamFromGetUser] = useState([]);
-  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
+  const PhotoUrl = `${frontEndUriBase}storage/profile_images/`;
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -36,7 +37,7 @@ const DrawerMenu = () => {
     try {
       if (user?.access_token && user?.id) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/users/${user.id}`,
+          `${apiUrl}users/${user.id}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

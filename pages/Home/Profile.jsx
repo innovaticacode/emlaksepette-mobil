@@ -22,7 +22,7 @@ import LinkIcon from "react-native-vector-icons/SimpleLineIcons";
 import Star from "react-native-vector-icons/MaterialIcons";
 import Team from "./ProfilePageItem/Team";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { apiRequestGet } from "../../components/methods/apiRequest";
+import { apiRequestGet, apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import Modal from "react-native-modal";
 import { CheckBox } from "@rneui/themed";
 import { Platform } from "react-native";
@@ -37,7 +37,7 @@ import Filter from "../../assets/filter.png";
 import ProjectBottomSheetFilter from "../../components/ProjectBottomSheetFilter";
 import EstateBottomSheetFilter from "../../components/EstateBottomSheetFilter";
 
-const ApiUrl = "https://private.emlaksepette.com/";
+
 export default function Profile() {
   const route = useRoute();
   const [Housings, setHousings] = useState([]);
@@ -125,7 +125,7 @@ export default function Profile() {
       formData.append("email", emailId);
 
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/institutional/give_offer",
+        apiUrl+"institutional/give_offer",
         formData,
         {
           headers: {
@@ -252,7 +252,7 @@ export default function Profile() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://private.emlaksepette.com/`,
+        message:frontEndUriBase,
       });
 
       if (result.action === Share.sharedAction) {
@@ -359,7 +359,7 @@ export default function Profile() {
                   >
                     <Image
                       source={{
-                        uri: `https://private.emlaksepette.com/storage/profile_images/${storeData?.data?.profile_image}`,
+                        uri: `${frontEndUriBase}storage/profile_images/${storeData?.data?.profile_image}`,
                       }}
                       style={{
                         width: 50,

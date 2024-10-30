@@ -12,6 +12,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import SearchItem from "../../components/SearchItem";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
 // Utility functions for AsyncStorage
 const saveSearchHistory = async (history) => {
@@ -67,7 +68,7 @@ export default function SearchPage({ navigation }) {
 
       try {
         const { data } = await axios.get(
-          "https://private.emlaksepette.com/api/get-search-list",
+          apiUrl+"get-search-list",
           {
             params: { searchTerm: term },
             headers: { "Content-Type": "application/json" },
@@ -110,15 +111,15 @@ export default function SearchPage({ navigation }) {
     if (!items.length) return null;
 
     const photoBaseUrl = {
-      "Emlak İlanları": "https://private.emlaksepette.com/housing_images/",
-      "Proje İlanları": "https://private.emlaksepette.com",
-      Üyeler: "https://private.emlaksepette.com/storage/profile_images",
+      "Emlak İlanları": frontEndUriBase+"housing_images/",
+      "Proje İlanları": frontEndUriBase,
+      Üyeler: `${frontEndUriBase}storage/profile_images`,
     }[type];
 
     const modifyPhotoUrl = (photo) => {
-      if (!photo) return photoBaseUrl + "/indir.png";
+      if (!photo) return photoBaseUrl + "indir.png";
       return type === "Proje İlanları" || type === "Üyeler"
-        ? `${photoBaseUrl}/${photo.replace("public/", "storage/")}`
+        ? `${photoBaseUrl}${photo.replace("public/", "storage/")}`
         : `${photoBaseUrl}${photo}`;
     };
 

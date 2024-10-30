@@ -28,6 +28,7 @@ import SortModal from "../../components/SortModal";
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import IconFilter from "react-native-vector-icons/MaterialCommunityIcons";
 import RadioFilter from "../../components/Filter/RadioFilter/RadioFilter";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import { frontEndUriBase } from "../../components/methods/apiRequest";
 import { useDispatch } from "react-redux";
 import { getFavorites } from "../../store/slices/Favorites/FavoritesSlice";
@@ -125,7 +126,7 @@ export default function Favorites() {
     setLoading(true);
 
     const deleteHousingRequest = axios.delete(
-      "https://private.emlaksepette.com/api/institutional/housing-favorite",
+      apiUrl+"institutional/housing-favorite",
       {
         headers: {
           Authorization: `Bearer ${user.access_token}`,
@@ -134,7 +135,7 @@ export default function Favorites() {
     );
 
     const deleteProjectRequest = axios.delete(
-      "https://private.emlaksepette.com/api/institutional/project-favorite",
+      apiUrl+"institutional/project-favorite",
       {
         headers: {
           Authorization: `Bearer ${user.access_token}`,
@@ -263,7 +264,7 @@ export default function Favorites() {
 
     try {
       const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/favorites/delete",
+        apiUrl+"institutional/favorites/delete",
         {
           data: data,
           headers: { Authorization: `Bearer ${user.access_token}` },
@@ -415,7 +416,7 @@ export default function Favorites() {
       favorite?.housing?.housing_type_data || "{}"
     );
     const image = housingData?.image
-      ? "https://private.emlaksepette.com/housing_images/" + housingData?.image
+      ? frontEndUriBase+"housing_images/" + housingData?.image
       : "";
     const column1 =
       housingData[favorite?.housing?.list_items?.column1_name] || "";

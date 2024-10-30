@@ -29,7 +29,7 @@ const [isVisible, setIsVisible] = useState(false)
       <ImageViewing
               images={[
                 {
-                  uri: `https://private.emlaksepette.com/storage/store_banners/${image}`,
+                  uri: `${frontEndUriBase}storage/store_banners/${image}`,
                 },
               ]}
               imageIndex={0}

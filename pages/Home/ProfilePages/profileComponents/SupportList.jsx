@@ -26,6 +26,7 @@ import * as Sharing from "expo-sharing";
 import { useNavigation } from "@react-navigation/native";
 import NoDataScreen from "../../../../components/NoDataScreen";
 import RenderHtml from "react-native-render-html";
+import { apiUrl, frontEndUriBase } from "../../../../components/methods/apiRequest";
 
 export default function SupportList() {
   const [supportData, setSupportData] = useState([]);
@@ -63,7 +64,7 @@ export default function SupportList() {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            "https://private.emlaksepette.com/api/support",
+            apiUrl+"support",
             {
               headers: {
                 Authorization: `Bearer ${user.access_token}`,
@@ -124,7 +125,7 @@ export default function SupportList() {
   async function download(URL) {
     const filename = URL;
     const result = await FileSystem.downloadAsync(
-      `https://private.emlaksepette.com/support/${URL}`,
+      `${frontEndUriBase}support/${URL}`,
       FileSystem.documentDirectory + filename
     );
     saveFile(result.uri, filename, result.headers["Content-Type"]);
@@ -160,7 +161,7 @@ export default function SupportList() {
 
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/support?code=${trackingCode}`
+        `${apiUrl}support?code=${trackingCode}`
       );
 
       if (response.status === 200) {
@@ -520,7 +521,7 @@ export default function SupportList() {
       <ImageViewing
         images={[
           {
-            uri: `https://private.emlaksepette.com/storage/support_images/${selectedUri}`,
+            uri: `${frontEndUriBase}storage/support_images/${selectedUri}`,
           },
         ]}
         imageIndex={0}

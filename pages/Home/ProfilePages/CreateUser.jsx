@@ -34,6 +34,7 @@ import * as ImagePicker from "expo-image-picker";
 import { ActivityIndicator } from "react-native-paper";
 import CreateUserType from "./CreateUserType";
 import { parse } from "date-fns";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function CreateUser() {
   const route = useRoute();
   const navigation = useNavigation();
@@ -77,7 +78,7 @@ export default function CreateUser() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/institutional/roles`,
+          `${apiUrl}institutional/roles`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -163,7 +164,7 @@ export default function CreateUser() {
     if (user?.access_token) {
       try {
         const response = await axios.post(
-          `https://private.emlaksepette.com/api/institutional/users`,
+          `${apiUrl}institutional/users`,
           formdata,
           {
             headers: {

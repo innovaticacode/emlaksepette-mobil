@@ -33,6 +33,7 @@ import Categories from "../../components/Categories";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import FirstHome from "./FirstHome";
+import { apiUrl } from "../../components/methods/apiRequest";
 
 const { width, height } = Dimensions.get("window");
 
@@ -84,7 +85,7 @@ const CustomTabBar = ({
     const fetchMenuItems = async () => {
       try {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/menu-list"
+          apiUrl+"menu-list"
         );
         setMenuItems(response.data);
         setMenuItems([{ text: "Anasayfa" }, ...response.data.slice(0, -1)]);

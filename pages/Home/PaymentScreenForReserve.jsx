@@ -18,7 +18,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import * as DocumentPicker from "expo-document-picker";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
-import { apiRequestGet } from "../../components/methods/apiRequest";
+import { apiRequestGet, frontEndUriBase } from "../../components/methods/apiRequest";
 import { useIsFocused, useRoute } from "@react-navigation/native";
 import {
   format,
@@ -272,7 +272,7 @@ export default function PaymentScreenForReserve() {
                 {data && data.housing && data.housing.housing_type_data && (
                   <ImageBackground
                     source={{
-                      uri: `https://private.emlaksepette.com/housing_images/${
+                      uri: `${frontEndUriBase}housing_images/${
                         JSON.parse(data?.housing?.housing_type_data).image
                       }`,
                     }}

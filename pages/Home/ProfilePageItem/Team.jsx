@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import React from "react";
 import { Platform } from "react-native";
+import { frontEndUriBase } from "../../../components/methods/apiRequest";
 
 export default function Team({ teamm }) {
   const getInitials = (name) => {
@@ -38,7 +39,7 @@ export default function Team({ teamm }) {
                   <View style={[styles.profileImage, { borderRadius: 50 }]}>
                     <ImageBackground
                       source={{
-                        uri: `https://private.emlaksepette.com/storage/profile_images/${team.profile_image}`,
+                        uri: `${frontEndUriBase}storage/profile_images/${team.profile_image}`,
                       }}
                       style={{ width: "100%", height: "100%" }}
                       borderRadius={50}

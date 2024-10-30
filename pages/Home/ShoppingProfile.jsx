@@ -39,6 +39,7 @@ import { setNotificationsRedux } from "../../store/slices/Notifications/Notifica
 import { Skeleton } from "@rneui/themed";
 import { id } from "date-fns/locale";
 import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
 export default function ShoppingProfile() {
   const { width, height, fontScale } = Dimensions.get("window");
@@ -55,7 +56,7 @@ export default function ShoppingProfile() {
   const [permissionsUser, setPermissionsUser] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [openAccor, setOpenAccor] = useState({});
-  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
+  
   const [profileImage, setProfileImage] = useState(null);
   useEffect(() => {
     getValueFor("user", setUser);
@@ -71,7 +72,7 @@ export default function ShoppingProfile() {
         }
 
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/user/notification",
+          apiUrl+"user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -106,7 +107,7 @@ export default function ShoppingProfile() {
     try {
       if (user.access_token && user) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/users/${user?.id}`,
+          `${apiUrl}users/${user?.id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -213,7 +214,7 @@ export default function ShoppingProfile() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          apiUrl+"users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -222,7 +223,8 @@ export default function ShoppingProfile() {
         );
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
-        setProfileImage(PhotoUrl + userData.profile_image);
+       
+        setProfileImage(`${frontEndUriBase}storage/profile_images/${userData.profile_image}`);
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -239,7 +241,7 @@ export default function ShoppingProfile() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://private.emlaksepette.com/`,
+        message:frontEndUriBase,
       });
 
       if (result.action === Share.sharedAction) {

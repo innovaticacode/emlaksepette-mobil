@@ -28,6 +28,7 @@ import MapView, { Marker } from "react-native-maps";
 import {
   apiRequestGet,
   apiRequestPost,
+  apiUrl,
   frontEndUri,
 } from "../../../../../components/methods/apiRequest";
 import { addDotEveryThreeDigits } from "../../../../../components/methods/merhod";
@@ -100,7 +101,7 @@ export default function EditProject() {
     const fetchCities = async () => {
       try {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/cities"
+          apiUrl+"cities"
         );
         setCities(response.data.data);
       } catch (error) {
@@ -115,7 +116,7 @@ export default function EditProject() {
   const fetchCounties = async (cityId) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${cityId}`
+        `${apiUrl}counties/${cityId}`
       );
       setCounties(response.data.data);
     } catch (error) {
@@ -127,7 +128,7 @@ export default function EditProject() {
   const fetchNeighborhoods = async (countyId) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/neighborhoods/${countyId}`
+        `${apiUrl}neighborhoods/${countyId}`
       );
       setNeighborhoods(response.data.data);
     } catch (error) {
