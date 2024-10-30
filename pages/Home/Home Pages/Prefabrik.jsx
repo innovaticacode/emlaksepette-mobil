@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import PrefabrikBanner from "../../../src/assets/images/prefabrik.png";
@@ -73,13 +73,15 @@ const Prefabrik = ({ index }) => {
     }
   };
 
-  useEffect(() => {
-    if (index == 5) {
-      fetchFeaturedEstates();
-    } else {
-      setFeaturedEstates([]);
-    }
-  }, [index, user]);
+  useFocusEffect(
+    useCallback(() => {
+      if (index == 5) {
+        fetchFeaturedEstates(true);
+      } else {
+        setFeaturedEstates([]);
+      }
+    }, [index, user])
+  );
 
   const filteredHomes = featuredEstates.filter(
     (estate) => estate.step1_slug === "konut"
@@ -203,18 +205,21 @@ const Prefabrik = ({ index }) => {
                             fontWeight: "bold",
                           }}
                           onPress={() =>
-                            navigation.navigate("AllRealtorAdverts", {
-                              name: "Emlak İlanları",
-                              slug: "emlak-ilanlari",
-                              data: filteredHomes,
-                              count: filteredHomes.length,
-                              type: null,
-                              optional: "satilik",
-                              title: "konut",
-                              check: "prefabrik-ev",
-                              city: null,
-                              county: null,
-                              hood: null,
+                            navigation.navigate("Drawer", {
+                              screen: "AllRealtorAdverts",
+                              params: {
+                                name: "Emlak İlanları",
+                                slug: "emlak-ilanlari",
+                                data: filteredHomes,
+                                count: filteredHomes.length,
+                                type: null,
+                                optional: "satilik",
+                                title: "konut",
+                                check: "prefabrik-ev",
+                                city: null,
+                                county: null,
+                                hood: null,
+                              },
                             })
                           }
                         >

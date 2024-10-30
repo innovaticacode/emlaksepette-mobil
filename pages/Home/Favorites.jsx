@@ -29,10 +29,13 @@ import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import IconFilter from "react-native-vector-icons/MaterialCommunityIcons";
 import RadioFilter from "../../components/Filter/RadioFilter/RadioFilter";
 import { frontEndUriBase } from "../../components/methods/apiRequest";
+import { useDispatch } from "react-redux";
+import { getFavorites } from "../../store/slices/Favorites/FavoritesSlice";
 
 export default function Favorites() {
   const navigation = useNavigation();
   const focused = useIsFocused();
+  const dispatch = useDispatch();
   const [user, setUser] = useState({});
   const [favorites, setFavorites] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -57,19 +60,10 @@ export default function Favorites() {
   const fetchFavorites = async () => {
     try {
       setLoading(true);
-      const config = {
-        headers: { Authorization: `Bearer ${user?.access_token}` },
-      };
-      const response = await axios.get(
-        "https://private.emlaksepette.com/api/favorites",
-        config
-      );
-  
-      // Favorileri 'created_at' tarihine göre sıralıyoruz
-      const sortedFavorites = Object.values(response.data.mergedFavorites).sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
-      );
-  
+      const result = await dispatch(getFavorites());
+      const sortedFavorites = Object.values(
+        result.payload.mergedFavorites
+      ).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
       return setFavorites(sortedFavorites);
     } catch (error) {
       console.error("Error fetching favorites:", error);
@@ -77,8 +71,7 @@ export default function Favorites() {
       setLoading(false);
     }
   };
-  
- 
+
   useEffect(() => {
     if (user?.access_token) {
       fetchFavorites();
@@ -124,73 +117,6 @@ export default function Favorites() {
     setModalForAddToCart(true);
     setselectedRoomID(roomId);
     settype(type);
-  };
-
-  const addToCardForHousing = async () => {
-    const formData = new FormData();
-    formData.append("id", selectedCartItem);
-    formData.append("isShare", null);
-    formData.append("numbershare", null);
-    formData.append("qt", 1);
-    formData.append("type", "housing");
-    formData.append("project", null);
-    formData.append("clear_cart", "no");
-
-    try {
-      if (user?.access_token) {
-        const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
-
-        setModalForAddToCart(false);
-        navigation.navigate("Sepetim");
-      }
-    } catch (error) {
-      console.error("post isteği olmadı", error);
-    }
-  };
-
-  const addToCardForProject = async () => {
-    const formData = new FormData();
-    formData.append("id", selectedRoomID);
-    formData.append(
-      "isShare",
-      favorites?.project?.listHousing[selectedRoomID]["share_sale[]"]
-        ? favorites?.project?.listHousing[selectedRoomID]["share_sale[]"]
-        : "[]"
-    );
-    formData.append(
-      "numbershare",
-      favorites?.project?.listHousing[selectedRoomID]
-        ? ["number_of_shares[]"]
-        : "[]"
-    );
-    formData.append("qt", 1);
-    formData.append("type", "project");
-    formData.append("clear_cart", "no");
-    formData.append("project", selectedCartItem);
-    try {
-      if (user?.access_token) {
-        const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
-        navigation.navigate("Sepetim");
-      }
-    } catch (error) {
-      console.error("post isteği olmadı", error);
-    }
   };
 
   // DELETE ALL FUNCTION START
@@ -423,6 +349,7 @@ export default function Favorites() {
           location={location}
           image={image}
           title={title}
+          favorites={favorites}
           price={price}
           m2="20"
           GetId={GetIdForCart}
@@ -446,6 +373,7 @@ export default function Favorites() {
           price={price}
           column1={column1}
           column2={column2}
+          favorites={favorites}
           column3={column3}
           location={location}
           GetId={GetIdForCart}
@@ -505,23 +433,27 @@ export default function Favorites() {
   };
 
   const getColumnData = (favorite, columnIndex) => {
-    return (
-      favorite?.project_housing?.find(
-        (housing) =>
-          housing.room_order === favorite?.housing_id &&
-          housing.name ===
-            favorite?.project?.list_item_values[`column${columnIndex}_name`] +
-              "[]" &&
-          housing.project_id === favorite?.project?.id
-      )?.value +
-      " " +
-      (favorite?.project?.list_item_values[`column${columnIndex}_additional`] ||
-        "")
+    const housing = favorite?.project_housing?.find(
+      (housing) =>
+        housing.room_order === favorite?.housing_id &&
+        housing.name ===
+          favorite?.project?.list_item_values[`column${columnIndex}_name`] +
+            "[]" &&
+        housing.project_id === favorite?.project?.id
     );
+
+    if (!housing) return ""; // Eğer housing bulunamazsa boş bir string döner
+
+    // column değerini housing.value ile al, eğer varsa additional bilgiyi ekle
+    const columnValue = housing?.value || "";
+    const additional =
+      favorite?.project?.list_item_values[`column${columnIndex}_additional`] ||
+      "";
+    return columnValue + " " + additional;
   };
 
   const [selectedSortOption, setSelectedSortOption] = useState(null);
-
+  // console.log(user.access_token)
   // Sıralama fonksiyonu
   const sortFavorites = (value) => {
     let sortedFavorites = [...favorites]; // Favorileri kopyala
@@ -582,29 +514,6 @@ export default function Favorites() {
                       inputStyle={styles.searchInput}
                       showCancel="false"
                       placeholderTextColor={"grey"}
-                    />
-
-                    <TouchableOpacity style={styles.modalBtn}>
-                      <View>
-                        <TouchableOpacity onPress={() => setModalVisible(true)}>
-                          <Icon3
-                            name="swap-vertical"
-                            size={23}
-                            color={styles.iconColor.color}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    </TouchableOpacity>
-
-                    <SortModal
-                      isVisible={modalVisible}
-                      onClose={() => setModalVisible(false)}
-                      onSortChange={(value) => {
-                        setSelectedSortOption(value); // Seçilen sıralama seçeneğini güncelle
-                        sortFavorites(value); // Sıralama işlemini çağır
-                      }}
-                      selectedSortOption={selectedSortOption} // Seçilen sıralama seçeneği
-                      type="favorites"
                     />
                   </View>
 
@@ -816,7 +725,7 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     backgroundColor: "transparent",
-    width: "88%",
+    width: "100%",
     borderTopColor: "white",
     borderBottomColor: "white",
     height: 34,
