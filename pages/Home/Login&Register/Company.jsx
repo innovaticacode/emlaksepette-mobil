@@ -213,7 +213,12 @@ export default function Company() {
       formData.append("brand_id", FrancheiseMarc);
       const response = await axios.post(
         "https://private.emlaksepette.com/api/register",
-        formData
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
