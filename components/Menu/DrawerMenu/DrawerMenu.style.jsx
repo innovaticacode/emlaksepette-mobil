@@ -29,6 +29,7 @@ export const styles = StyleSheet.create({
   profileImageContainer: {
     width: 65,
     height: 65,
+    justifyContent: "center",
   },
   profileImageWrapper: {
     borderRadius: 50,

@@ -68,6 +68,7 @@ export default function Profile() {
   const scrollViewRef = useRef(null); // ScrollView için ref
   const [tabWidth, setTabWidth] = useState(0);
   const [projectData, setProjectData] = useState([]);
+  const [checkImage, setCheckImage] = useState(null);
   const [items, setItems] = useState(() => {
     const initialItems = [
       {
@@ -288,8 +289,18 @@ export default function Profile() {
   }, [storeData]);
 
   useEffect(() => {
-    console.debug("====>>", storeData?.data?.corporate_type);
+    if (storeData) {
+      if (storeData?.data?.profile_image == "indir.jpeg") {
+        const fullName = storeData?.data?.name.split(" ");
+        const name = fullName[0]?.charAt(0).toUpperCase();
+        const surname = fullName[1]?.charAt(0).toUpperCase();
+        setCheckImage(name + surname);
+      } else {
+        setCheckImage(null);
+      }
+    }
   }, [storeData]);
+
   return (
     <>
       {loadingShopping ? (
@@ -353,21 +364,56 @@ export default function Profile() {
                 >
                   <View
                     style={{
-                      backgroundColor: "#fff",
-                      borderRadius: 50,
+                      width: 64,
+                      height: 64,
                     }}
                   >
-                    <Image
-                      source={{
-                        uri: `${frontEndUriBase}storage/profile_images/${storeData?.data?.profile_image}`,
-                      }}
-                      style={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: 50,
-                      }}
-                    />
+                    {checkImage ? (
+                      <View
+                        style={{
+                          justifyContent: "center",
+                          alignItems: "center",
+                          width: "100%",
+                          height: "100%",
+                          borderRadius: 50,
+                          backgroundColor: "#C9C9C9",
+                          opacity: 0.7,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 24,
+                            color: "#FFF",
+                            fontWeight: "900",
+                            textAlign: "center",
+                            textAlignVertical: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          {checkImage}
+                        </Text>
+                      </View>
+                    ) : (
+                      <View
+                        style={{
+                          backgroundColor: "#fff",
+                          borderRadius: 50,
+                        }}
+                      >
+                        <Image
+                          source={{
+                            uri: `${frontEndUriBase}storage/profile_images/${storeData?.data?.profile_image}`,
+                          }}
+                          style={{
+                            width: 50,
+                            height: 50,
+                            borderRadius: 50,
+                          }}
+                        />
+                      </View>
+                    )}
                   </View>
+
                   <View>
                     <View>
                       <View
