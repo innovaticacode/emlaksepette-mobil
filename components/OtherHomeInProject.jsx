@@ -119,7 +119,7 @@ export default function OtherHomeInProject({
              <TouchableOpacity
                key={blockIndex}
                onPress={() => {
-                 setPaymentModalShowOrder(null);
+                //  setPaymentModalShowOrder(null);
                  setSelectedBlock(blockIndex);
                  var lastBlockItemCountTemp = 0;
                  for(var i = 0; i < blockIndex; i++){

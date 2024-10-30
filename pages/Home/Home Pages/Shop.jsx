@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import {
 import RealtorPost from "../../../components/RealtorPost";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import bannerSRC from "../../../src/assets/images/is_yeri.png";
@@ -74,13 +74,15 @@ const Shop = ({ index }) => {
     }
   };
 
-  useEffect(() => {
-    if (index == 3) {
-      fetchFeaturedEstates();
-    } else {
-      setFeaturedEstates([]);
-    }
-  }, [index, user]);
+  useFocusEffect(
+    useCallback(() => {
+      if (index == 3) {
+        fetchFeaturedEstates(true);
+      } else {
+        setFeaturedEstates([]);
+      }
+    }, [index, user])
+  );
 
   const filteredHomes = featuredEstates.filter(
     (estate) => estate.step1_slug === "is-yeri"

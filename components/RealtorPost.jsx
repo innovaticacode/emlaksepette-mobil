@@ -191,6 +191,7 @@ export default function RealtorPost({
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
+              "Content-Type": "multipart/form-data",
             },
           }
         );

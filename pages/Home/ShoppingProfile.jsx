@@ -749,7 +749,10 @@ export default function ShoppingProfile() {
                         fontWeight: "bold",
                       }}
                     >
-                      {user.corporate_type || namFromGetUser?.role}
+                     ({user.corporate_type || namFromGetUser?.role})  {
+                        (namFromGetUser?.is_brand==1 && namFromGetUser?.brand_id)&&
+                        <Text>- Franchise Markası</Text>
+                      }
                     </Text>
                   </View>
                 </View>

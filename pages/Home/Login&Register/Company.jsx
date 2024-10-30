@@ -213,8 +213,14 @@ export default function Company() {
       formData.append("Franchise-question", IsConnectFranchaise);
       formData.append("brand_id", FrancheiseMarc);
       const response = await axios.post(
+
         apiUrl+"register",
-        formData
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
 
       // İsteğin başarılı bir şekilde tamamlandığı durum

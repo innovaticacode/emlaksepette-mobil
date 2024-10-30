@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { getValueFor } from "../../../components/methods/user";
 import Modal from "react-native-modal";
 import Icon from "react-native-vector-icons/AntDesign";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import Land from "../../../src/assets/images/Arsa.png";
 import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
@@ -77,13 +77,15 @@ const Area = ({ index }) => {
     }
   };
 
-  useEffect(() => {
-    if (index == 4) {
-      fetchFeaturedEstates();
-    } else {
-      setFeaturedEstates([]);
-    }
-  }, [index, user]);
+  useFocusEffect(
+    useCallback(() => {
+      if (index == 4) {
+        fetchFeaturedEstates(true);
+      } else {
+        setFeaturedEstates([]);
+      }
+    }, [index, user])
+  );
 
   const filteredHomes = featuredEstates.filter(
     (estate) => estate.step1_slug === "arsa"

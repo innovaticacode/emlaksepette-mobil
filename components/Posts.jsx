@@ -247,6 +247,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
+              "Content-Type": "multipart/form-data",
             },
           }
         );

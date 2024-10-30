@@ -395,7 +395,10 @@ export default function Profile() {
                           color: color ? color : "#000000",
                         }}
                       >
-                        {storeData?.data?.corporate_type}
+                        {storeData?.data?.corporate_type} {
+                          (storeData?.data?.is_brand==1 && storeData?.data?.brand_id)&&
+                          <Text>- Franchise Markası</Text>
+                        }
                       </Text>
                     </View>
                   </View>

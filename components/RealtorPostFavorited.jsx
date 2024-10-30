@@ -45,6 +45,8 @@ export default function RealtorPostFavorited({
   selectFavorite,
   isChoosed,
   SelectFavoriteProject,
+  favorites
+  
 }) {
   const [user, setUser] = useState({});
   const navigation = useNavigation();
@@ -144,12 +146,12 @@ export default function RealtorPostFavorited({
       selectFavorite(housingId);
       setIsHighlighted(!isHighlighted);
     } else {
-      navigation.navigate("Drawer", {
-        screen: "PostDetails",
-        params: {
+      navigation.navigate('PostDetails', {
+      
+      
           HomeId: housingId,
           projectId: projectId,
-        },
+        
       });
     }
   };
@@ -165,9 +167,78 @@ export default function RealtorPostFavorited({
   useEffect(() => {
     setIsHighlighted(false);
   }, [isChoosed]);
+  const [ModalForAddToCart, setModalForAddToCart] = useState(false);
+  const addToCardForHousing = async () => {
+    const formData = new FormData();
+    formData.append("id", HouseId);
+    formData.append("isShare", null);
+    formData.append("numbershare", null);
+    formData.append("qt", 1);
+    formData.append("type", "housing");
+    formData.append("project", null);
+    formData.append("clear_cart", "no");
 
+    try {
+      if (user?.access_token) {
+        const response = await axios.post(
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        setModalForAddToCart(false);
+        navigation.navigate("Sepetim");
+      }
+    } catch (error) {
+      console.error("post isteği olmadı", error);
+    }
+  };
+
+  const addToCardForProject = async () => {
+    const formData = new FormData();
+    formData.append("id", housingId);
+    formData.append(
+      "isShare",
+      favorites?.project?.listHousing[housingId]["share_sale[]"]
+        ? favorites?.project?.listHousing[housingId]["share_sale[]"]
+        : "[]"
+    );
+    formData.append(
+      "numbershare",
+      favorites?.project?.listHousing[housingId]
+        ? ["number_of_shares[]"]
+        : "[]"
+    );
+    formData.append("qt", 1);
+    formData.append("type", "project");
+    formData.append("clear_cart", "no");
+    formData.append("project", projectId);
+    try {
+      if (user?.access_token) {
+        const response = await axios.post(
+          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        navigation.navigate("Sepetim");
+      }
+    } catch (error) {
+      console.error("post isteği olmadı", error);
+    }
+  };
   return (
     <AlertNotificationRoot>
+        
       <Swipeable renderRightActions={LeftAction}>
         <TouchableOpacity
           style={{ borderWidth: isHighlighted ? 1 : 0, borderColor: "red" }}
@@ -180,6 +251,43 @@ export default function RealtorPostFavorited({
           }}
         >
           <View style={styles.container}>
+          <AwesomeAlert
+                    show={ModalForAddToCart}
+                    showProgress={false}
+                    title={title}
+                    titleStyle={{
+                      color: "#333",
+                      fontSize: 13,
+                      fontWeight: "700",
+                      textAlign: "center",
+                      margin: 5,
+                    }}
+                    messageStyle={{ textAlign: "center" }}
+                    message={
+                      type==1 ? `1000${projectId} No' lu Projenin ${housingId}. konutunu sepete eklemek istediğinize emin misiniz?`: `2000${HouseId} No' lu konutu sepete eklemek istediğinize emin misiniz?`}
+                    // title={
+                    //   type === 1
+                    //     ? `#1000${selectedCartItem} No'lu Projenin ${selectedRoomID} Numaralı Konutunu Sepete Eklemek İsteğinize Emin misiniz?`
+                    //     : `#2000${selectedCartItem} No'lu konutu sepete eklemek istediğinize emin misiniz?`
+                    // }
+                    closeOnTouchOutside={false}
+                    closeOnHardwareBackPress={false}
+                    showCancelButton={true}
+                    showConfirmButton={true}
+                    cancelText="Vazgeç"
+                    confirmText="Sepete Ekle"
+                    cancelButtonColor="#ce4d63"
+                    confirmButtonColor="#1d8027"
+                    onCancelPressed={() => {
+                      setModalForAddToCart(false);
+                    }}
+                    onConfirmPressed={() => {
+                      type === 2
+                        ? addToCardForHousing()
+                        : addToCardForProject();
+                      setModalForAddToCart(false); // Modalı kapat
+                    }}
+                  />
             <AwesomeAlert
               show={showAlert}
               showProgress={false}
@@ -214,8 +322,9 @@ export default function RealtorPostFavorited({
                 <View style={[styles.captionAndIcons, { flex: 1 }]}>
                   <View style={styles.caption}>
                     <Text style={{ fontSize: 9, color: "black" }}>
-                      İlan No: {2000000 + (projectId ? projectId : HouseId)}
-                      {housingId}
+                      {/* İlan No: {2000 + (projectId ? projectId : HouseId)} */}
+                    İlan No:{ type==1 ? `1000${projectId}-${housingId}`: `2000${HouseId}`}
+                     
                     </Text>
                     <Text
                       style={{ fontSize: 10, fontWeight: 700 }}
@@ -248,11 +357,7 @@ export default function RealtorPostFavorited({
                     <TouchableOpacity
                       style={styles.addBasket}
                       onPress={() => {
-                        GetId(
-                          type == 1 ? projectId : HouseId,
-                          type == 1 ? housingId : null,
-                          type
-                        );
+                       setModalForAddToCart(true)
                       }}
                     >
                       <Text
