@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ImageBackground,
+  Dimensions,
 } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
 
@@ -20,20 +21,17 @@ import axios from "axios";
 import { useState } from "react";
 
 import { StatusBar } from "expo-status-bar";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
  import ActiveRealtorAdverts from './ActiveRealtorAdverts'
  import WaitRealtorAdverts from './WaitRealtorAdverts'
  import RejectRealtorAdverts from './RejectRealtorAdverts'
  import PasiveRealtorAdverts from './PasiveRealtorAdverts'
 import SelledRealtorAdverts from "./SelledRealtorAdverts";
-const FirstRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
-);
+import { useEffect } from 'react';
+import SelledAdverts from './ProjectAdveretsPages/SelledAdverts';
 
-const SecondRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-);
+const { width, height } = Dimensions.get("window");
 
 const renderScene = ({ route, index }) => {
   switch (route.key) {
@@ -46,6 +44,9 @@ const renderScene = ({ route, index }) => {
     case "area":
       return <PasiveAdverts index={index} />;
    ;
+   case "area2":
+    return <SelledAdverts index={index} />;
+ ;
  
     default:
       return null;
@@ -76,15 +77,55 @@ const menuItems=[
 {
   text : "Pasif İlanlar"
 },
+{
+  text : "Satılan İlanlar"
+},
 
    
 ]
+const scrollViewRef = React.useRef(null); // ScrollView için ref
+const [tabWidth, setTabWidth] = React.useState(0);
+React.useEffect(() => {
+  if (scrollViewRef.current && tabWidth > 0) {
+    const tabCount = menuItems.length;
+    const viewWidth = width;
+    const tabOffset = tab * tabWidth;
+    const contentWidth = tabWidth * tabCount;
+    const centeredOffset = Math.max(
+      0,
+      Math.min(
+        tabOffset - (viewWidth / 2 - tabWidth / 2),
+        contentWidth - viewWidth
+      )
+    );
+
+    scrollViewRef.current.scrollTo({
+      x: centeredOffset,
+      animated: true,
+    });
+  }
+}, [tab, menuItems, tabWidth]);
+
+// Calculate the width of each tab after layout
+const onTabLayout = (event) => {
+  const { width: measuredWidth } = event.nativeEvent.layout;
+  setTabWidth(measuredWidth);
+};
   return (
     <View>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} ref={scrollViewRef} 
+           onLayout={() => {
+            // Calculate the width of each tab dynamically
+            if (menuItems.length > 0) {
+              const tabWidth = width / menuItems.length;
+              setTabWidth(tabWidth);
+            }
+          }}
+      >
         <View style={{ padding: 10, flexDirection: "row", gap: 10 }}>
           {menuItems.map((item, index) => (
             <TouchableOpacity
+            onLayout={onTabLayout}
               key={index}
               style={[
                 styles.tabBtn,
@@ -116,6 +157,7 @@ const menuItems=[
 };
 export default function HomePage2() {
   const navigation = useNavigation();
+  const route=useRoute()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -128,9 +170,14 @@ export default function HomePage2() {
     { key: "second", title: "Second" },
     { key: "shop", title: "Shop" },
     { key: "area", title: "Area" },
+    { key: "area2", title: "Area2" },
   
   
   ]);
+  useEffect(() => {
+    settab(route?.params?.tab ?route?.params?.tab :tab)
+    setIndex(route?.params?.tab ?route?.params?.tab :tab)
+}, [])
   const indexChange = (index) => {
     setIndex(index);
     settab(index);
