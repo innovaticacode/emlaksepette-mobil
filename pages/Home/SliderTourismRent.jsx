@@ -8,9 +8,10 @@ import {
 } from "react-native-gesture-handler";
 import SliderItemSkeleton from "../../components/SkeletonComponents/SliderItemSkeleton";
 import SliderTourismItem from "./SliderTourismItem";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
 export default function SliderTourismRent() {
-  const apiUrl = "https://private.emlaksepette.com";
+
   const [loading, setloading] = useState(true);
   const [tourismRent, setTourismRent] = useState([]);
 
@@ -18,7 +19,7 @@ export default function SliderTourismRent() {
     try {
       setloading(true);
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/get_featured_acente_brands"
+        apiUrl+"get_featured_acente_brands"
       );
       if (response?.data?.length > 0) {
         setTourismRent(response.data);
@@ -60,7 +61,7 @@ export default function SliderTourismRent() {
                 <SliderTourismItem
                   id={item.id}
                   borderColor={"#e6e6e6"}
-                  image={`${apiUrl}/storage/profile_images/${item.profile_image}`}
+                  image={`${frontEndUriBase}/storage/profile_images/${item.profile_image}`}
                 />
                 <Text numberOfLines={2}>
                   {capitalizeFirstLetter(item.name)}

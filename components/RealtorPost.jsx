@@ -24,6 +24,7 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 import { color } from "@rneui/base";
+import { apiUrl } from "./methods/apiRequest";
 
 export default function RealtorPost({
   title,
@@ -124,7 +125,7 @@ export default function RealtorPost({
       };
       try {
         const res = await axios.post(
-          `https://private.emlaksepette.com/api/add_housing_to_favorites/${HouseId}`,
+          `${apiUrl}add_housing_to_favorites/${HouseId}`,
           {},
           config
         );
@@ -148,7 +149,7 @@ export default function RealtorPost({
   const updateUserData = async () => {
     try {
       const updateResponse = await axios.get(
-        "https://private.emlaksepette.com/api/users/" + user?.id,
+        `${apiUrl}users/` + user?.id,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -185,7 +186,7 @@ export default function RealtorPost({
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          `${apiUrl}add_to_cart`,
           formData,
           {
             headers: {

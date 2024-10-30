@@ -123,7 +123,7 @@ export default function UpdateUsers() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/institutional/roles`,
+          `${apiUrl}institutional/roles`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -237,7 +237,7 @@ export default function UpdateUsers() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/users/${UserID}`,
+          `${apiUrl}users/${UserID}`,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -436,7 +436,7 @@ export default function UpdateUsers() {
                     ) : image ? (
                       <ImageBackground
                         source={{
-                          uri: `https://private.emlaksepette.com/storage/profile_images/${userImage}`,
+                          uri: `${apiUrl}storage/profile_images/${userImage}`,
                         }}
                         style={{ width: "100%", height: "100%" }}
                         borderRadius={50}

@@ -22,6 +22,7 @@ import * as SecureStore from "expo-secure-store";
 import { ActivityIndicator } from "react-native-paper";
 import { CheckBox } from "@rneui/themed";
 import { ScrollView } from "react-native";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function RegisterRealtorClub({ setİsLoggedIn }) {
   const route = useRoute();
   const navigation = useNavigation();
@@ -127,33 +128,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     setTcNo(user.id_);
   }, [user]);
 
-  const updateUserData = async () => {
-    try {
-      const updateResponse = await axios.get(
-        "https://private.emlaksepette.com/api/users/" + user?.id,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
 
-      // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
-      const updatedUser = {
-        ...user,
-        ...updateResponse.data.user,
-        access_token: user.access_token, // access token'ı koruma
-      };
-
-      // Kullanıcı durumunu güncelleme
-      setUser(updatedUser);
-
-      // SecureStore ile güncellenmiş kullanıcı verilerini kaydetme
-      await SecureStore.setItemAsync("user", JSON.stringify(updatedUser));
-    } catch (error) {
-      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
-    }
-  };
 
   const [StatusMessage, setStatusMessage] = useState(false);
   const [succesRegister, setsuccesRegister] = useState(false);
@@ -170,7 +145,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
 
     try {
       const response = await axios.put(
-        "https://private.emlaksepette.com/api/institutional/club/update",
+        apiUrl+"institutional/club/update",
         data,
         {
           headers: {
@@ -238,7 +213,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          apiUrl+"users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -267,7 +242,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     }
   };
   const fetchDataDeal = async () => {
-    const url = `https://private.emlaksepette.com/api/sayfa/emlaksepette-paylasimci-davranis-kurallari`;
+    const url = `${apiUrl}sayfa/emlaksepette-paylasimci-davranis-kurallari`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);

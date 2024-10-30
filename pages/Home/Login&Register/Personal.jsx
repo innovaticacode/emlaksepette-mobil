@@ -24,6 +24,7 @@ import {
   Dialog,
   ALERT_TYPE,
 } from "react-native-alert-notification";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function Personal({ type }) {
   const navigation = useNavigation();
   const [eye, seteye] = useState("eye-off-sharp");
@@ -89,7 +90,7 @@ export default function Personal({ type }) {
       formData.append("check-c", checked2);
       formData.append("check-e", checked3);
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/register",
+        apiUrl+"register",
         formData
       );
 
@@ -225,7 +226,7 @@ export default function Personal({ type }) {
   // Örnek kullanım
 
   const fetchData = async (deal) => {
-    const url = `https://private.emlaksepette.com/api/sayfa/${deal}`;
+    const url = `${apiUrl}sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);

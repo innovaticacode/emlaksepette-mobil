@@ -8,16 +8,17 @@ import {
   ScrollView,
 } from "react-native-gesture-handler";
 import { getValueFor } from "./methods/user";
+import { apiUrl, frontEndUriBase } from "./methods/apiRequest";
 
 export default function SliderBar() {
-  const apiUrl = "https://private.emlaksepette.com";
+  
   const [loading, setloading] = useState(false);
   const [featuredStores, setFeaturedStores] = useState([]);
 
   const fetchFeaturedStores = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/popular-construction-brands"
+        `${apiUrl}popular-construction-brands`
       );
       if (response.data.length > 0) {
         setFeaturedStores(response.data);
@@ -38,21 +39,21 @@ export default function SliderBar() {
   const firstBrands = [
     {
       text: "Al Sat Acil",
-      image: "https://private.emlaksepette.com/images/al-sat-acil-image.png",
+      image: `${frontEndUriBase}images/al-sat-acil-image.png`,
       color: "#FF0000",
       url: "",
       isShow: "All",
     },
     {
       text: "Emlak Kulüp",
-      image: "https://private.emlaksepette.com/images/emlak-kulup.png",
+      image: `${frontEndUriBase}images/emlak-kulup.png`,
       color: "#F4A226",
       url: "RealtorClubExplore",
       isShow: "Emlak Ofisi",
     },
     {
       text: "Sat Kirala",
-      image: "https://private.emlaksepette.com/images/sat-kirala.png",
+      image:`${frontEndUriBase}images/sat-kirala.png`,
       color: "#0000FF",
       url: "SellAndRent",
       isShow: "All",
@@ -120,7 +121,7 @@ export default function SliderBar() {
                   borderColor={"#ebebeb"}
                   StoreID={item.id}
                   key={index}
-                  image={`${apiUrl}/storage/profile_images/${item.profile_image}`}
+                  image={`${frontEndUriBase}/storage/profile_images/${item.profile_image}`}
                 />
                 <Text
                   numberOfLines={2}

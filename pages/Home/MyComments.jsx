@@ -19,6 +19,7 @@ import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import NoDataScreen from "../../components/NoDataScreen";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
 export default function MyComments() {
   const [user, setuser] = useState({});
@@ -54,7 +55,7 @@ export default function MyComments() {
       setLoading(true);
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/user/${user?.id}/comments`
+          `${apiUrl}user/${user?.id}/comments`
         );
         const sortedComments = response.data.allComments.sort((a, b) => {
           const dateA = new Date(a.comment.created_at);
@@ -80,15 +81,15 @@ export default function MyComments() {
   }, [user]);
 
   const MycommentItem = ({ item, EditComment, goToEditComment, store }) => {
-    const API_URL = "https://private.emlaksepette.com/";
+    
     const { type, comment } = item;
     const info = type === "project" ? item.project : item.housing;
     const numStars = Math.round(comment?.rate);
 
     const imageSource =
       type === "project"
-        ? `${API_URL}${info?.image.replace("public/", "storage/")}`
-        : `${API_URL}housing_images/${
+        ? `${frontEndUriBase}${info?.image.replace("public/", "storage/")}`
+        : `${frontEndUriBase}housing_images/${
             JSON.parse(info.housing_type_data)?.image ?? ""
           }`;
 
@@ -221,7 +222,7 @@ export default function MyComments() {
     try {
       if (user?.access_token) {
         const response = await axios.delete(
-          `https://private.emlaksepette.com/api/delete/comment/${selectedCommentID}/${selectedType}`,
+          `${apiUrl}delete/comment/${selectedCommentID}/${selectedType}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,

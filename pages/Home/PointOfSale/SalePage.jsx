@@ -19,6 +19,7 @@ import { Platform } from "react-native";
 import axios from "axios";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 const SalePage = () => {
   const [modalVisible, setModalVisible] = useState(false); // State for Modal visibility
@@ -79,7 +80,7 @@ const SalePage = () => {
     fetchData(deal);
   };
   const fetchData = async (deal) => {
-    const url = `https://private.emlaksepette.com/api/sayfa/${deal}`;
+    const url = `${apiUrl}sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
@@ -160,7 +161,7 @@ const SalePage = () => {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/sales-points",
+          apiUrl+"sales-points",
           formDataToSend,
           {
             headers: {
@@ -222,7 +223,7 @@ const SalePage = () => {
     const fetchTaxOfficeCity = async () => {
       try {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/get-tax-offices"
+          apiUrl+"get-tax-offices"
         );
         setTaxOfficesCities(response.data);
       } catch (error) {
@@ -236,7 +237,7 @@ const SalePage = () => {
   const fetchTaxOffice = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/get-tax-office/${value}`
+        `${apiUrl}get-tax-office/${value}`
       );
       setTaxOffice(response.data);
     } catch (error) {
@@ -248,7 +249,7 @@ const SalePage = () => {
     const fetchCities = async () => {
       try {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/cities"
+          apiUrl+"cities"
         );
         setCities(response.data.data);
       } catch (error) {
@@ -270,7 +271,7 @@ const SalePage = () => {
   const fetchStores = async (selectedCorporateType) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/fetch-stores`,
+        `${apiUrl}fetch-stores`,
         {
           params: { corporate_type: selectedCorporateType }, // Send the corporate type as a query parameter
         }
@@ -309,7 +310,7 @@ const SalePage = () => {
   const fetchCounties = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
+        `${apiUrl}counties/${value}`
       );
       setCounties(response.data.data);
       setSelectedCounty(null); // Seçili ilçe sıfırla

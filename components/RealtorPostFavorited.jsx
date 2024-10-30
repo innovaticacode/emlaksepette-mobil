@@ -24,6 +24,7 @@ import { getValueFor } from "./methods/user";
 import axios from "axios";
 import { Swipeable } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/AntDesign";
+import { apiUrl } from "./methods/apiRequest";
 export default function RealtorPostFavorited({
   title,
   loading,
@@ -72,7 +73,7 @@ export default function RealtorPostFavorited({
 
       if (type === 1) {
         response = await axios.post(
-          `https://private.emlaksepette.com/api/add_project_to_favorites/${housingId}`,
+          `${apiUrl}add_project_to_favorites/${housingId}`,
           {
             project_id: projectId,
             housing_id: housingId,
@@ -83,7 +84,7 @@ export default function RealtorPostFavorited({
         fetchData();
       } else {
         response = await axios.post(
-          `https://private.emlaksepette.com/api/add_housing_to_favorites/${HouseId}`,
+          `${apiUrl}add_housing_to_favorites/${HouseId}`,
           {
             housing_id: HouseId,
           },

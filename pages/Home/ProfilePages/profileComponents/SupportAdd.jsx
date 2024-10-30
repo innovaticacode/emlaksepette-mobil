@@ -34,6 +34,7 @@ import * as FileSystem from "expo-file-system";
 import { useNavigation } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import { apiUrl } from "../../../../components/methods/apiRequest";
 
 export default function SupportAdd() {
   const [name, setName] = useState("");
@@ -279,7 +280,7 @@ export default function SupportAdd() {
       }
 
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/support",
+        apiUrl+"support",
         formData,
         {
           headers: {
@@ -397,7 +398,7 @@ export default function SupportAdd() {
   };
 
   const fetchData = async (deal) => {
-    const url = `https://private.emlaksepette.com/api/sayfa/${deal}`;
+    const url = `${apiUrl}sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);

@@ -17,6 +17,7 @@ import ImageViewing from "react-native-image-viewing";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
+import { apiUrl } from "../../components/methods/apiRequest";
 export default function VerifyDocument({ nextStep, prevStep }) {
   const [FormDatas, setFormDatas] = useState({
     sicil_belgesi: null,
@@ -234,7 +235,7 @@ export default function VerifyDocument({ nextStep, prevStep }) {
         : null
     );
     axios
-      .post("https://private.emlaksepette.com/api/verify-account", formData, {
+      .post(apiUrl+"verify-account", formData, {
         headers: {
           Authorization: `Bearer ${user?.access_token}`,
           "Content-Type": "multipart/form-data",
@@ -281,7 +282,7 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          apiUrl+"users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

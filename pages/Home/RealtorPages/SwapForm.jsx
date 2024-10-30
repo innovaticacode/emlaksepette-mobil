@@ -29,7 +29,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import { ActivityIndicator } from "react-native-paper";
 import { Platform } from "react-native";
-import { apiRequestGet } from "../../../components/methods/apiRequest";
+import { apiRequestGet, apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
 import mime from "mime";
 import { CheckBox } from "react-native-elements";
 
@@ -191,7 +191,7 @@ export default function SwapForm({ openModal, color }) {
     try {
       setloading(true);
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/housing/${houseid}`
+        `${apiUrl}housing/${houseid}`
       );
       setloading(false);
       // GetUserInfo()
@@ -279,7 +279,7 @@ export default function SwapForm({ openModal, color }) {
 
       // Axios POST isteği
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/swap",
+        apiUrl+"swap",
         formData,
         {
           headers: {
@@ -335,7 +335,7 @@ export default function SwapForm({ openModal, color }) {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/cities"
+        apiUrl+"cities"
       );
       return response.data;
     } catch (error) {
@@ -357,7 +357,7 @@ export default function SwapForm({ openModal, color }) {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
+        `${apiUrl}counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -395,7 +395,7 @@ export default function SwapForm({ openModal, color }) {
   const fetchDataNeigbour = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/neighborhoods/${value}`
+        `${apiUrl}neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {
@@ -542,7 +542,7 @@ export default function SwapForm({ openModal, color }) {
     { label: "Voyah", value: "Voyah" },
     { label: "Yudo", value: "Yudo" },
   ];
-  const apiUrl = "https://private.emlaksepette.com/";
+
   const [errorMessage, seterrorMessage] = useState("");
 
   const AlertFunc = (message) => {
@@ -715,7 +715,7 @@ export default function SwapForm({ openModal, color }) {
         >
           {type == 1 ? (
             <HomeInfo
-              ımage={`${apiUrl}project_housing_images/${roomData["image[]"]}`}
+              ımage={`${frontEndUriBase}project_housing_images/${roomData["image[]"]}`}
               type={1}
               title={
                 roomData["advertise_title[]"]
@@ -748,7 +748,7 @@ export default function SwapForm({ openModal, color }) {
                 data &&
                 data.housing &&
                 data.housing.housing_type_data &&
-                `${apiUrl}housing_images/${
+                `${frontEndUriBase}housing_images/${
                   JSON.parse(data?.housing?.housing_type_data)["image"]
                 }`
               }

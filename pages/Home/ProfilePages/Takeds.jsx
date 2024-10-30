@@ -20,6 +20,7 @@ import { CheckBox } from "react-native-elements";
 import Modal from "react-native-modal";
 import NoDataScreen from "../../../components/NoDataScreen";
 import { RadioFilter } from "../../../components";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 export default function Takeds() {
   const [search, setSearch] = useState("");
@@ -41,7 +42,7 @@ export default function Takeds() {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            "https://private.emlaksepette.com/api/institutional/get_boughts",
+            apiUrl+"institutional/get_boughts",
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,

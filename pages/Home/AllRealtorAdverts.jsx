@@ -27,6 +27,7 @@ import { getValueFor } from "../../components/methods/user";
 import SortModal from "../../components/SortModal";
 import { Image } from "react-native-svg";
 import { DrawerMenu } from "../../components";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
 export default function AllRealtorAdverts() {
   const [cityItems, setCityItems] = useState();
@@ -103,15 +104,15 @@ export default function AllRealtorAdverts() {
     return intValue.toLocaleString("tr-TR");
   };
 
-  const apiUrl = "https://private.emlaksepette.com/";
+  
   const route = useRoute();
   const navigation = useNavigation();
   const { params } = route;
 
   useEffect(() => {
     if (params.href) {
-      const baseUrl = "https://private.emlaksepette.com";
-      const relativeUrl = params.href.replace(`${baseUrl}/kategori`, "");
+      
+      const relativeUrl = params.href.replace(`${frontEndUriBase}kategori`, "");
       let urlSegments = relativeUrl.split("/").filter((segment) => segment);
 
       const isSpecialCase =
@@ -187,7 +188,7 @@ export default function AllRealtorAdverts() {
     county,
     hood,
   }) => {
-    let url = `${apiUrl}api/kategori`;
+    let url = `${apiUrl}kategori`;
     if (slug) url += `/${slug}`;
     if (title) url += `/${title}`;
     if (optional) url += `/${optional}`;
@@ -216,7 +217,7 @@ export default function AllRealtorAdverts() {
 
   const fetchDataCounty = async (value) => {
     try {
-      const response = await axios.get(`${apiUrl}api/counties/${value}`);
+      const response = await axios.get(`${apiUrl}counties/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -226,7 +227,7 @@ export default function AllRealtorAdverts() {
 
   const fetchDataNeighborhood = async (value) => {
     try {
-      const response = await axios.get(`${apiUrl}api/neighborhoods/${value}`);
+      const response = await axios.get(`${apiUrl}neighborhoods/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -247,7 +248,7 @@ export default function AllRealtorAdverts() {
         .catch((error) =>
           console.error("Veri alınırken bir hata oluştu:", error)
         );
-      s;
+      
     } else {
       setState((prevState) => ({ ...prevState, neighborhoods: [] }));
     }
@@ -548,7 +549,7 @@ export default function AllRealtorAdverts() {
                   title={item.housing_title}
                   loading={state.loading}
                   location={`${item.city_title} / ${item.county_title}`} // Combine location
-                  image={`${apiUrl}/housing_images/${
+                  image={`${frontEndUriBase}/housing_images/${
                     JSON.parse(item.housing_type_data)?.image ?? ""
                   }`} // Safely access image
                   column1_name={`${

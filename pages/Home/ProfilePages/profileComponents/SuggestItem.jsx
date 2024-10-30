@@ -12,10 +12,11 @@ import { Platform } from "react-native";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import Icon2 from "react-native-vector-icons/Feather";
 import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
+import { frontEndUriBase } from "../../../../components/methods/apiRequest";
 
 export default function SuggestItem({ item }) {
   const [modalVisible, setModalVisible] = useState(false);
-  const apiUrl = "https://private.emlaksepette.com";
+ 
   const stripHtmlTags = (str) => {
     if (str) {
       return str.replace(/<\/?[^>]+(>|$)/g, "");
@@ -36,7 +37,7 @@ export default function SuggestItem({ item }) {
           >
             <ImageBackground
               source={{
-                uri: `${apiUrl}/${item?.project?.image.replace(
+                uri: `${frontEndUriBase}${item?.project?.image.replace(
                   "public/",
                   "storage/"
                 )}`,

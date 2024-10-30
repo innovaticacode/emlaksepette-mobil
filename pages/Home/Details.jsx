@@ -33,7 +33,7 @@ import { useRoute } from "@react-navigation/native";
 import Header from "../../components/Header";
 import Modal from "react-native-modal";
 import SliderMenuDetails from "../../components/SliderMenuDetails";
-import { apiRequestGet } from "../../components/methods/apiRequest";
+import { apiRequestGet, apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import AddCollection from "../../components/AddCollection";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
@@ -45,7 +45,7 @@ import ImageViewing from "react-native-image-viewing";
 import TextAlertModal from "../../components/TextAlertModal";
 
 export default function Details({ navigation }) {
-  const apiUrl = "https://private.emlaksepette.com/";
+  
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
   const [page, setPage] = useState(0);
@@ -140,7 +140,7 @@ export default function Details({ navigation }) {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          `${apiUrl}users/` + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -161,7 +161,7 @@ export default function Details({ navigation }) {
       headers: { Authorization: `Bearer ${user?.access_token}` },
     };
     axios
-      .get("https://private.emlaksepette.com/api/project/" + ProjectId, config)
+      .get(`${apiUrl}project/` + ProjectId, config)
       .then((res) => {
         setData(res?.data);
         setloadingDetails(true);
@@ -275,7 +275,7 @@ export default function Details({ navigation }) {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/remove_item_on_collection",
+        `${apiUrl}remove_item_on_collection`,
         collectionData,
         {
           headers: {
@@ -358,7 +358,7 @@ export default function Details({ navigation }) {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/client/collections",
+          apiUrl+"client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -422,7 +422,7 @@ export default function Details({ navigation }) {
 
     axios
       .post(
-        "https://private.emlaksepette.com/api/add/collection",
+        apiUrl+"add/collection",
         collectionData,
         {
           headers: {
@@ -474,7 +474,7 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post("https://private.emlaksepette.com/api/addLink", collectionData, {
+      .post(apiUrl+"addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -553,13 +553,13 @@ export default function Details({ navigation }) {
   }, [data]);
 
   const images = galleries.map((image) => ({
-    uri: `${apiUrl}${image?.image.replace("public", "storage")}`,
+    uri: `${frontEndUriBase}${image?.image.replace("public", "storage")}`,
   }));
 
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://private.emlaksepette.com/ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
+        message: `${frontEndUriBase}ilan/${data?.housing?.step1_slug}-${data?.housing?.step2_slug}-${data?.housing?.slug}/2000${data?.housing?.id}/detay`,
       });
 
       if (result.action === Share.sharedAction) {
@@ -580,7 +580,7 @@ export default function Details({ navigation }) {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/project/${ProjectId}/comments`
+          `${apiUrl}project/${ProjectId}/comments`
         );
         setcomments(response.data);
       }
@@ -677,7 +677,7 @@ const {width,height}=Dimensions.get("window")
                     <View style={{ height: 35, width: 35 }}>
                       <ImageBackground
                         source={{
-                          uri: `${apiUrl}/storage/profile_images/${data?.project?.user?.profile_image}`,
+                          uri: `${frontEndUriBase}/storage/profile_images/${data?.project?.user?.profile_image}`,
                         }}
                         style={{
                           width: "100%",
@@ -829,7 +829,7 @@ const {width,height}=Dimensions.get("window")
                       >
                         <ImageBackground
                           source={{
-                            uri: `${apiUrl}${image?.image.replace(
+                            uri: `${frontEndUriBase}${image?.image.replace(
                               "public",
                               "storage"
                             )}`,

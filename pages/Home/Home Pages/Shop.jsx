@@ -16,12 +16,13 @@ import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import bannerSRC from "../../../src/assets/images/is_yeri.png";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 const PAGE_SIZE = 10;
 
 const Shop = ({ index }) => {
   const navigation = useNavigation();
-  const apiUrl = "https://private.emlaksepette.com/";
+
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ const Shop = ({ index }) => {
     };
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${
+        `${apiUrl}real-estates?page=${
           reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
@@ -150,7 +151,7 @@ const Shop = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${apiUrl}/housing_images/${
+                    image={`${apiUrl}housing_images/${
                       JSON.parse(item.housing_type_data).image
                     }`}
                     column1_additional={item.column1_additional}

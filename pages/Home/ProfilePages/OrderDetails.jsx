@@ -27,6 +27,7 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import SecurityBlue from "../../../assets/securityBlue.png";
 import SecurityGreen from "../../../assets/securityGreen.png";
 import { formatCurrency } from "../../../utils/FormatedPrice";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 export default function OrderDetails({ item }) {
   const navigation = useNavigation();
@@ -52,7 +53,7 @@ export default function OrderDetails({ item }) {
       try {
         if (user?.access_token) {
           const response = await axios.get(
-            `https://private.emlaksepette.com/api/institutional/order_detail/${OrderId}`,
+            `${apiUrl}institutional/order_detail/${OrderId}`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -118,7 +119,7 @@ export default function OrderDetails({ item }) {
   
 
   const fetchDataDeal = async () => {
-    const url = `https://private.emlaksepette.com/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
+    const url = `${apiUrl}sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);

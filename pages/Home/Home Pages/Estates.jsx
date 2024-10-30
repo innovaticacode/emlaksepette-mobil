@@ -18,11 +18,12 @@ import Icon from "react-native-vector-icons/AntDesign";
 import SliderEstateBar from "../../../components/SliderEstateBar";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import Housing from "../../../src/assets/images/Konut.png";
+import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
 const PAGE_SIZE = 10;
 
 const Estates = ({ index }) => {
   const navigation = useNavigation();
-  const apiUrl = "https://private.emlaksepette.com/";
+  
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,7 @@ const Estates = ({ index }) => {
 
     try {
       const response = await axios.get(
-        `${apiUrl}api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,
+        `${apiUrl}real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,
         config
       );
       const newEstates = Object.values(response.data);
@@ -151,7 +152,7 @@ const Estates = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${apiUrl}/housing_images/${
+                    image={`${frontEndUriBase}housing_images/${
                       JSON.parse(item.housing_type_data).image
                     }`}
                     openSharing={

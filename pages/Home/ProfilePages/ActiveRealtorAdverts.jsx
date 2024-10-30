@@ -20,6 +20,7 @@ import Icon4 from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
 import { Stack } from "@react-native-material/core";
 import { CheckBox } from "react-native-elements";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function ActiveRealtorAdverts({ index }) {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
@@ -43,7 +44,7 @@ export default function ActiveRealtorAdverts({ index }) {
     };
     try {
       const res = await axios.get(
-        "https://private.emlaksepette.com/api/get_my_housings?orderByHousings=" +
+        apiUrl+"get_my_housings?orderByHousings=" +
           sort,
         {
           headers: {

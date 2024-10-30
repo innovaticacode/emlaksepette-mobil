@@ -23,8 +23,9 @@ import WhatIsEmlakSepette from "../../components/WhatIsEmlakSepette";
 import SliderEstateBar from "../../components/SliderEstateBar";
 import SliderTourismRent from "./SliderTourismRent";
 import RealtorPost from "../../components/RealtorPost";
+import { apiUrl, frontEndUri, frontEndUriBase } from "../../components/methods/apiRequest";
 
-const apiUrl = "https://private.emlaksepette.com";
+
 
 const FirstHome = (props) => {
   const { index } = props;
@@ -46,7 +47,7 @@ const FirstHome = (props) => {
   // Fetch featured sliders
   const fetchFeaturedSliders = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/api/featured-sliders`);
+      const response = await axios.get(`${apiUrl}featured-sliders`);
       setFeaturedSliders(response.data);
       return setLoadingSliders(false);
     } catch (error) {
@@ -58,7 +59,7 @@ const FirstHome = (props) => {
   const fetchFeaturedProjects = async () => {
     try {
       setLoadingProjects(true);
-      const response = await axios.get(`${apiUrl}/api/featured-projects`);
+      const response = await axios.get(`${apiUrl}featured-projects`);
       const projects = response.data.data.slice(0, 6); // Get first 5 projects
       return setFeaturedProjects(projects);
     } catch (error) {
@@ -70,7 +71,7 @@ const FirstHome = (props) => {
 
   const fetchFranchiseBrands = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/api/franchise-markalari`);
+      const response = await axios.get(`${apiUrl}franchise-markalari`);
       setFranchise(response.data.data);
     } catch (error) {
       console.log("Error fetching franchise brands:", error);
@@ -80,7 +81,7 @@ const FirstHome = (props) => {
   const fetchPopularConstructionBrands = async () => {
     try {
       const response = await axios.get(
-        `${apiUrl}/api/popular-construction-brands`
+        `${apiUrl}popular-construction-brands`
       );
       // console.log("Popular Construction Brands: ", response.data);
       if (response.data.length > 0) {
@@ -142,7 +143,7 @@ const FirstHome = (props) => {
   const advertsForSale = async () => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates`
+        `${apiUrl}real-estates`
       );
 
       const advertSellFilter = response.data.filter(
@@ -202,7 +203,7 @@ const FirstHome = (props) => {
                     >
                       <ImageBackground
                         source={{
-                          uri: `${apiUrl}/storage/sliders/${item.mobile_image}`,
+                          uri: `${frontEndUriBase}/storage/sliders/${item.mobile_image}`,
                         }}
                         style={styles.imageBackground}
                         resizeMode="cover"
@@ -290,7 +291,7 @@ const FirstHome = (props) => {
                               key={index}
                               project={item}
                               caption={item.project_title}
-                              ımage={`${apiUrl}/${item.image.replace(
+                              ımage={`${frontEndUriBase}/${item.image.replace(
                                 "public/",
                                 "storage/"
                               )}`}
@@ -301,7 +302,7 @@ const FirstHome = (props) => {
                               // acıklama={item.description
                               //   .replace(/<\/?[^>]+(>|$)/g, "")
                               //   .replace(/&nbsp;/g, " ")}
-                              ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
+                              ProfilImage={`${frontEndUriBase}/storage/profile_images/${item.user.profile_image}`}
                               loading={loadingProjects}
                             />
                           </View>
@@ -355,7 +356,7 @@ const FirstHome = (props) => {
                   renderItem={({ item, index }) => (
                     <FranchiseBanner
                       key={index}
-                      image={`${apiUrl}/logos/${item.logo}`}
+                      image={`${frontEndUriBase}/logos/${item.logo}`}
                       text={item.title}
                     />
                   )}
@@ -416,7 +417,7 @@ const FirstHome = (props) => {
                           : JSON.parse(item.housing_type_data)["price"]
                       }
                       location={`${item.city_title} / ${item.county_title}`} // Combine location
-                      image={`${apiUrl}/housing_images/${
+                      image={`${frontEndUriBase}/housing_images/${
                         JSON.parse(item.housing_type_data)?.image ?? ""
                       }`} // Safely access image
                       column1_name={`${
@@ -567,7 +568,7 @@ const FirstHome = (props) => {
                       housing={item}
                       title={item.housing_title}
                       location={item.city_title + " / " + item.county_title}
-                      image={`${apiUrl}/housing_images/${
+                      image={`${frontEndUriBase}/housing_images/${
                         JSON.parse(item.housing_type_data).image
                       }`}
                       column1_additional={item.column1_additional}

@@ -19,6 +19,7 @@ import Modal from "react-native-modal";
 import Icon from "react-native-vector-icons/AntDesign";
 import { InfoCard, MySwapInfoBottom } from "../../../components";
 import { formatDate } from "../../../utils";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 export default function ComeSwapScreen() {
   const [user, setUser] = useState({});
@@ -44,7 +45,7 @@ export default function ComeSwapScreen() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/institutional/my-swap-applications",
+          apiUrl+"institutional/my-swap-applications",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -69,7 +70,7 @@ export default function ComeSwapScreen() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/institutional/my-swap-applications/${id}`,
+          `${apiUrl}institutional/my-swap-applications/${id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,

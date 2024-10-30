@@ -3,6 +3,7 @@ import { View, StyleSheet, Image, TouchableOpacity, Text } from "react-native";
 import ImageView from "react-native-image-viewing";
 import { Platform } from "react-native";
 import { getValueFor } from "./methods/user";
+import { frontEndUriBase } from "./methods/apiRequest";
 
 export default function FloorPlan({ data }) {
   const [user, setUser] = useState({});
@@ -13,10 +14,10 @@ export default function FloorPlan({ data }) {
     getValueFor("user", setUser);
   }, []);
 
-  const apiUrl = "https://private.emlaksepette.com/situation_images/";
+  
 
   const getFullImageURL = (partialURL) => {
-    return `https://private.emlaksepette.com/${partialURL}`;
+    return `${frontEndUriBase}${partialURL}`;
   };
 
   // Resimleri, react-native-image-viewing için uygun formata getirme

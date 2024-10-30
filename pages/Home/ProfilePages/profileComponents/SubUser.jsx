@@ -8,6 +8,7 @@ import {
 import React, { useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/Entypo";
 import { Platform } from "react-native";
+import { frontEndUriBase } from "../../../../components/methods/apiRequest";
 export default function SubUser({
   setModalVisible,
   item,
@@ -54,7 +55,7 @@ export default function SubUser({
             >
               <ImageBackground
                 source={{
-                  uri: `https://private.emlaksepette.com/storage/profile_images/${item.profile_image}`,
+                  uri: `${frontEndUriBase}storage/profile_images/${item.profile_image}`,
                 }}
                 style={{ width: "100%", height: "100%" }}
                 borderRadius={30}

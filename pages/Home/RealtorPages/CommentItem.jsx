@@ -11,14 +11,15 @@ import React, { useEffect, useRef, useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ImageViewing from "react-native-image-viewing";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
 
 export default function CommentItem({ username, comment, date, rate, image }) {
   const [stars, setStars] = useState([false, false, false, false, false]);
   const [commentImages, setCommentImages] = useState([]);
   const [visible, setVisible] = useState(false);
 
-  // API URL'nizi burada tanımlayın
-  const apiUrl = "https://private.emlaksepette.com/";
+ 
+ 
 
   useEffect(() => {
     // Eğer image varsa ve bir string ise, JSON.parse ile diziyi oluştur
@@ -28,8 +29,8 @@ export default function CommentItem({ username, comment, date, rate, image }) {
         // URL'leri oluştur ve logla
         const updatedImages = parsedImages.map((img) => {
           const fixedUrl = img.replace("public/", "storage/");
-          console.log("Image URL:", `${apiUrl}${fixedUrl}`);
-          return `${apiUrl}${fixedUrl}`;
+          console.log("Image URL:", `${frontEndUriBase}${fixedUrl}`);
+          return `${frontEndUriBase}${fixedUrl}`;
         });
         setCommentImages(updatedImages);
       } catch (error) {

@@ -21,6 +21,7 @@ import {
 } from "react-native-alert-notification";
 import { getValueFor } from "../../../components/methods/user";
 import { ActivityIndicator } from "react-native-paper";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function CreateUserType() {
   const route = useRoute();
 
@@ -41,7 +42,7 @@ export default function CreateUserType() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/institutional/roles/create",
+          apiUrl+"institutional/roles/create",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -110,7 +111,7 @@ export default function CreateUserType() {
       });
 
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/institutional/roles",
+        apiUrl+"institutional/roles",
         formData, // formData kullanın
         {
           headers: {

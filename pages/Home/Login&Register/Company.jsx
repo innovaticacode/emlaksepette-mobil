@@ -25,6 +25,7 @@ import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
 import { ALERT_TYPE, AlertNotificationRoot, Dialog } from "react-native-alert-notification";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 export default function Company() {
   const Navigation = useNavigation();
@@ -96,7 +97,7 @@ export default function Company() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/cities"
+        apiUrl+"cities"
       );
       return response.data;
     } catch (error) {
@@ -118,7 +119,7 @@ export default function Company() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
+        `${apiUrl}counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -155,7 +156,7 @@ export default function Company() {
   const fetchDataNeigbour = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/neighborhoods/${value}`
+        `${apiUrl}neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {
@@ -212,7 +213,7 @@ export default function Company() {
       formData.append("Franchise-question", IsConnectFranchaise);
       formData.append("brand_id", FrancheiseMarc);
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/register",
+        apiUrl+"register",
         formData
       );
 
@@ -430,7 +431,7 @@ export default function Company() {
   const fetchTaxOfficeCity = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/get-tax-offices"
+        apiUrl+"get-tax-offices"
       );
       return response.data;
     } catch (error) {
@@ -462,7 +463,7 @@ export default function Company() {
   const fetchTaxOffice = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/get-tax-office/${value}`
+        `${apiUrl}get-tax-office/${value}`
       );
       return response.data;
     } catch (error) {
@@ -528,7 +529,7 @@ export default function Company() {
   // Örnek kullanım
 
   const fetchDataDeal = async (deal) => {
-    const url = `https://private.emlaksepette.com/api/sayfa/${deal}`;
+    const url = `${apiUrl}sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
@@ -653,7 +654,7 @@ export default function Company() {
   const fetchFranchiseMarkalari = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/franchise-markalari"
+        apiUrl+"franchise-markalari"
       );
       setData(response.data.data); // 'data' alanına erişiyoruz
     } catch (error) {

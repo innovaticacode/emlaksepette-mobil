@@ -19,6 +19,7 @@ import { Platform } from "react-native";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function Suggests() {
   const [modalVisible, setModalVisible] = useState(false);
   const route = useRoute();
@@ -54,7 +55,7 @@ export default function Suggests() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/institutional/user/offers",
+          apiUrl+"institutional/user/offers",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

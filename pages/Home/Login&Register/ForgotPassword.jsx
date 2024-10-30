@@ -20,6 +20,7 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 export default function ForgotPassword() {
   const nav = useNavigation();
@@ -72,7 +73,7 @@ export default function ForgotPassword() {
 
       console.log("API çağrısı yapılıyor...");
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/password/email",
+        apiUrl+"password/email",
         formData
       );
       console.log("API çağrısı başarılı. Yanıt:", response.data);

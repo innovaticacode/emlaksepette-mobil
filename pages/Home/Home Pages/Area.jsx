@@ -18,12 +18,13 @@ import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import Land from "../../../src/assets/images/Arsa.png";
+import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
 
 const PAGE_SIZE = 10;
 
 const Area = ({ index }) => {
   const navigation = useNavigation();
-  const apiUrl = "https://private.emlaksepette.com/";
+ 
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -43,7 +44,7 @@ const Area = ({ index }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${
+        `${apiUrl}real-estates?page=${
           reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
@@ -148,7 +149,7 @@ const Area = ({ index }) => {
                     openSharing={
                       JSON.parse(item.housing_type_data)["open_sharing1"]
                     }
-                    image={`${apiUrl}/housing_images/${
+                    image={`${frontEndUriBase}housing_images/${
                       JSON.parse(item.housing_type_data).image
                     }`}
                     column1_additional={item.column1_additional}
