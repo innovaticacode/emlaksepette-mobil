@@ -15,25 +15,18 @@ export default function SliderItem({
 
   useEffect(() => {
     if (image && userName) {
-      console.debug("image", image);
-      console.debug("userName", userName);
-      // Görselin 'indir.jpg' veya 'indir.jpeg' ile bitip bitmediğini kontrol et
       if (image.endsWith("indir.jpeg") || image.endsWith("indir.jpg")) {
         const fullName = userName.split(" ");
         let checkImage = "";
-
         if (fullName.length > 1) {
-          // İsim ve soyad varsa, her iki kelimenin ilk harfini al
           const name = fullName[0].charAt(0).toUpperCase();
           const surname = fullName[1].charAt(0).toUpperCase();
           checkImage = `${name}${surname}`;
         } else {
-          // Sadece bir isim varsa, ilk harfi al
           checkImage = fullName[0].charAt(0).toUpperCase();
         }
         setCheckImage(checkImage);
       } else {
-        // Eğer görsel 'indir.jpg' veya 'indir.jpeg' ile bitmiyorsa, checkImage'i null yap
         setCheckImage(null);
       }
     } else {
