@@ -191,45 +191,45 @@ export default function Company() {
     setsuccesRegister(true);
     let fullNumber = `${cityCode}${companyPhone}`;
     try {
-      var formData = new FormData();
-      formData.append("type", 2);
-      formData.append("username", bossName);
-      formData.append("email", eposta);
-      formData.append("mobile_phone", phoneNumber);
-      formData.append("password", password);
-      formData.append("store_name", companyName);
-      formData.append("name", ShoppingName);
-      formData.append("phone", fullNumber);
-      formData.append("corporate-account-type", focusArea);
-      formData.append("city_id", city);
-      formData.append("county_id", county);
-      formData.append("neighborhood_id", neigbourhod);
-      formData.append("taxOfficeCity", TaxPlaceCity);
-      formData.append("taxOffice", TaxPlace);
-      formData.append("taxNumber", taxNumber);
-      formData.append("idNumber", IdCardNo);
-      formData.append("check-d", checked);
-      formData.append("check-b", checked1);
-      formData.append("check-c", checked2);
-      formData.append("account_type");
-      formData.append("authority_licence", licence);
-      formData.append("activity", null);
-      formData.append("iban", null);
-      formData.append("is_brand", IsGiveFrancheise);
-      formData.append("other_brand_name", MarcaName);
-      formData.append("Franchise-question", IsConnectFranchaise);
-      formData.append("brand_id", FrancheiseMarc);
-      const response = await axios.post(apiUrl + "register", formData, {
+      const data = {
+        type: 2,
+        username: bossName,
+        email: eposta,
+        mobile_phone: phoneNumber,
+        password: password,
+        store_name: companyName,
+        name: ShoppingName,
+        phone: fullNumber,
+        "corporate-account-type": focusArea,
+        city_id: city,
+        county_id: county,
+        neighborhood_id: neigbourhod,
+        taxOfficeCity: TaxPlaceCity,
+        taxOffice: TaxPlace,
+        taxNumber: taxNumber,
+        idNumber: IdCardNo,
+        "check-d": checked,
+        "check-b": checked1,
+        "check-c": checked2,
+        account_type: null,
+        authority_licence: licence,
+        is_brand: IsGiveFrancheise,
+        other_brand_name: MarcaName,
+        "Franchise-question": IsConnectFranchaise,
+        brand_id: FrancheiseMarc,
+      };
+
+      const response = await axios.post(apiUrl + "register", data, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       });
 
-      // İsteğin başarılı bir şekilde tamamlandığı durum
-
+      // Handle success
       setmessage(response.data.message);
       setIsSucces(response.data.status);
 
+      // Clear form fields
       seteposta("");
       setphoneNumber("");
       setpassword("");
@@ -251,11 +251,13 @@ export default function Company() {
       setChecked2(false);
       setChecked3(false);
       setcityCode("");
+
       setTimeout(() => {
         Navigation.replace("Login", { showAlert: true });
       }, 700);
     } catch (error) {
-      // Hata durumunda
+      // Handle error
+      console.error("Hata:", error.response.data.errors);
       scrollToTop();
       if (error.response.data.errors.email) {
         seterrorStatu(2);
@@ -264,12 +266,6 @@ export default function Company() {
           seterrorStatu(0);
         }, 10000);
       }
-      // Dialog.show({
-      //   type: ALERT_TYPE.WARNING,
-      //   title: "Başarılı",
-      //   textBody: `${error.response.data.errors.email}`,
-      //   button: "Tamam",
-      // });
     } finally {
       setsuccesRegister(false);
     }
