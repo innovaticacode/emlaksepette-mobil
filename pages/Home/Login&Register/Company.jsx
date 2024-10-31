@@ -5,6 +5,8 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { React, useState, useEffect, useRef } from "react";
 import Modal from "react-native-modal";
@@ -32,8 +34,6 @@ export default function Company() {
   const [bossName, setbossName] = useState("");
   const [companyName, setcompanyName] = useState("");
   const [companyPhone, setcompanyPhone] = useState("");
-  const [Iban, setIban] = useState("");
-  const [accounttype, setaccounttype] = useState(null);
   const [focusArea, setfocusArea] = useState(null);
   const [city, setcity] = useState(null);
   const [county, setcounty] = useState(null);
@@ -691,201 +691,222 @@ export default function Company() {
       setcolorForSymbol(true);
     }
   };
-  return (
-    <ScrollView behavior="padding" style={{ flex: 1 }} ref={scrollViewRef}>
-      <View style={styles.container}>
-        <View style={{ padding: 15, gap: 20 }}>
-          <View style={{ gap: 5 }}>
-            <View style={{ paddingLeft: 5 }}>
-              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                Yetkili İsim Soyisim
-              </Text>
-            </View>
-            <TextInput
-              style={[
-                styles.Input,
-                {
-                  borderColor: errorStatu == 1 ? "red" : "#ebebeb",
-                },
-              ]}
-              value={bossName}
-              onChangeText={(value) => setbossName(value)}
-              placeholder="Yetkili İsim Soyisim"
-            />
-            {errorStatu == 1 ? (
-              <Text style={{ fontSize: 12, color: "red" }}>{errorMessage}</Text>
-            ) : (
-              ""
-            )}
-          </View>
 
-          <View style={{ gap: 5 }}>
-            <View style={{ paddingLeft: 5 }}>
-              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                E-Posta
-              </Text>
-            </View>
-            <TextInput
-              style={[
-                styles.Input,
-                {
-                  borderColor: errorStatu === 2 ? "red" : "#ebebeb",
-                },
-              ]}
-              value={eposta}
-              onChangeText={(value) => seteposta(value)}
-              placeholder="E-Posta Adresi"
-              autoCapitalize="none" // İlk harfin büyük olmasını engeller
-            />
-            {errorStatu == 2 ? (
-              <Text style={{ fontSize: 12, color: "red" }}>{errorMessage}</Text>
-            ) : (
-              ""
-            )}
-          </View>
-          <View style={{ gap: 5 }}>
-            <View style={{ paddingLeft: 5 }}>
-              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                Cep Telefonu
-              </Text>
-            </View>
-            <TextInput
-              value={phoneNumber}
-              style={[
-                styles.Input,
-                {
-                  borderColor: errorStatu == 4 ? "red" : "#ebebeb",
-                },
-              ]}
-              onChangeText={(value) => {
-                handlePhoneNumberChange(value);
-              }}
-              placeholder="Cep Telefonu"
-              keyboardType="number-pad"
-              maxLength={15}
-            />
-            {errorStatu == 4 ? (
-              <Text style={{ fontSize: 12, color: "red" }}>{errorMessage}</Text>
-            ) : (
-              ""
-            )}
-          </View>
-          <View style={{ gap: 5 }}>
-            <View style={{ paddingLeft: 5 }}>
-              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                Şifre
-              </Text>
-            </View>
-            <View>
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: "transparent" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"} // iOS ve Android için farklı davranışlar
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0} // iOS için klavyenin üstünde kalacak şekilde offset ayarı
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        behavior="padding"
+        style={{ flex: 1 }}
+        ref={scrollViewRef}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.container}>
+          <View style={{ padding: 15, gap: 20 }}>
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Yetkili İsim Soyisim
+                </Text>
+              </View>
               <TextInput
-                value={password}
-                onChangeText={(value) => handlePasswordChange(value)}
                 style={[
                   styles.Input,
                   {
-                    borderColor: errorStatu === 3 ? "red" : "#ebebeb",
+                    borderColor: errorStatu == 1 ? "red" : "#ebebeb",
                   },
                 ]}
-                placeholder="Şifre"
-                secureTextEntry={Show ? false : true}
+                value={bossName}
+                onChangeText={(value) => setbossName(value)}
+                placeholder="Yetkili İsim Soyisim"
               />
-              <TouchableOpacity
-                style={{
-                  position: "absolute",
-                  top: "21%",
-                  right: 9,
-                }}
-                onPress={show}
-              >
-                <EyeIcon
-                  name={Show ? "eye" : "eye-off-sharp"}
-                  size={23}
-                  color={"#333"}
-                />
-              </TouchableOpacity>
+              {errorStatu == 1 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
             </View>
-            {showLengthAlert && (
-              <Text style={{ color: colorForLength ? "green" : "red" }}>
-                Şifreniz en az 8 karakter olmalıdır!
-              </Text>
-            )}
-            {showNumberAlert && (
-              <Text style={{ color: colorForNumberAlert ? "green" : "red" }}>
-                Şifrenizde en az bir rakam olmalıdır.
-              </Text>
-            )}
-            {showUpperAlert && (
-              <Text style={{ color: colorForUpper ? "green" : "red" }}>
-                Şifrenizde en az bir büyük harf olmalıdır!
-              </Text>
-            )}
-            {showSymbolAlert && (
-              <Text style={{ color: colorForSymbol ? "green" : "red" }}>
-                Şifrenizde en az bir özel karakter olmalıdır!
-              </Text>
-            )}
-          </View>
 
-          <View style={{ gap: 5 }}>
-            <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-              Faaliyet Alanınız
-            </Text>
-            <RNPickerSelect
-              doneText="Tamam"
-              value={focusArea}
-              placeholder={{
-                label: "Seçiniz...",
-                value: null,
-              }}
-              style={pickerSelectStyles}
-              onValueChange={(value) => setfocusArea(value)}
-              items={[
-                { label: "Emlak Ofisi", value: "Emlak Ofisi" },
-                { label: "İnşaat Ofisi", value: "İnşaat Ofisi" },
-                { label: "Banka", value: "Banka" },
-                { label: "Turizm", value: "Turizm Amaçlı Kiralama" },
-                { label: "Üretici", value: "Üretici" },
-                {
-                  label: "Gayrimenkul Franchise",
-                  value: "Gayrimenkul Franchise",
-                },
-              ]}
-            />
-            {errorStatu == 7 ? (
-              <Text style={{ fontSize: 12, color: "red" }}>{errorMessage}</Text>
-            ) : (
-              ""
-            )}
-          </View>
-
-          {focusArea == "Emlak Ofisi" && (
-            <>
-              <View style={{ gap: 5 }}>
-                <View style={{ paddingLeft: 5 }}>
-                  <Text
-                    style={{ fontSize: 14, color: "black", fontWeight: 600 }}
-                  >
-                    Taşınmaz Ticareti Yetki Belgesi No
-                  </Text>
-                </View>
-                <TextInput
-                  value={licence}
-                  onChangeText={(value) => setlicence(value)}
-                  style={styles.Input}
-                  placeholder="Yetki Belgesi No"
-                  keyboardType="number-pad"
-                  maxLength={7}
-                />
-                {errorStatu == 14 ? (
-                  <Text style={{ fontSize: 12, color: "red" }}>
-                    {errorMessage}
-                  </Text>
-                ) : (
-                  ""
-                )}
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  E-Posta
+                </Text>
               </View>
+              <TextInput
+                style={[
+                  styles.Input,
+                  {
+                    borderColor: errorStatu === 2 ? "red" : "#ebebeb",
+                  },
+                ]}
+                value={eposta}
+                onChangeText={(value) => seteposta(value)}
+                placeholder="E-Posta Adresi"
+                autoCapitalize="none" // İlk harfin büyük olmasını engeller
+              />
+              {errorStatu == 2 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
+            </View>
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Cep Telefonu
+                </Text>
+              </View>
+              <TextInput
+                value={phoneNumber}
+                style={[
+                  styles.Input,
+                  {
+                    borderColor: errorStatu == 4 ? "red" : "#ebebeb",
+                  },
+                ]}
+                onChangeText={(value) => {
+                  handlePhoneNumberChange(value);
+                }}
+                placeholder="Cep Telefonu"
+                keyboardType="number-pad"
+                maxLength={15}
+              />
+              {errorStatu == 4 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
+            </View>
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Şifre
+                </Text>
+              </View>
+              <View>
+                <TextInput
+                  value={password}
+                  onChangeText={(value) => handlePasswordChange(value)}
+                  style={[
+                    styles.Input,
+                    {
+                      borderColor: errorStatu === 3 ? "red" : "#ebebeb",
+                    },
+                  ]}
+                  placeholder="Şifre"
+                  secureTextEntry={Show ? false : true}
+                />
+                <TouchableOpacity
+                  style={{
+                    position: "absolute",
+                    top: "21%",
+                    right: 9,
+                  }}
+                  onPress={show}
+                >
+                  <EyeIcon
+                    name={Show ? "eye" : "eye-off-sharp"}
+                    size={23}
+                    color={"#333"}
+                  />
+                </TouchableOpacity>
+              </View>
+              {showLengthAlert && (
+                <Text style={{ color: colorForLength ? "green" : "red" }}>
+                  Şifreniz en az 8 karakter olmalıdır!
+                </Text>
+              )}
+              {showNumberAlert && (
+                <Text style={{ color: colorForNumberAlert ? "green" : "red" }}>
+                  Şifrenizde en az bir rakam olmalıdır.
+                </Text>
+              )}
+              {showUpperAlert && (
+                <Text style={{ color: colorForUpper ? "green" : "red" }}>
+                  Şifrenizde en az bir büyük harf olmalıdır!
+                </Text>
+              )}
+              {showSymbolAlert && (
+                <Text style={{ color: colorForSymbol ? "green" : "red" }}>
+                  Şifrenizde en az bir özel karakter olmalıdır!
+                </Text>
+              )}
+            </View>
 
-              {/* <View style={{ gap: 5 }}>
+            <View style={{ gap: 5 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                Faaliyet Alanınız
+              </Text>
+              <RNPickerSelect
+                doneText="Tamam"
+                value={focusArea}
+                placeholder={{
+                  label: "Seçiniz...",
+                  value: null,
+                }}
+                style={pickerSelectStyles}
+                onValueChange={(value) => setfocusArea(value)}
+                items={[
+                  { label: "Emlak Ofisi", value: "Emlak Ofisi" },
+                  { label: "İnşaat Ofisi", value: "İnşaat Ofisi" },
+                  { label: "Banka", value: "Banka" },
+                  { label: "Turizm", value: "Turizm Amaçlı Kiralama" },
+                  { label: "Üretici", value: "Üretici" },
+                  {
+                    label: "Gayrimenkul Franchise",
+                    value: "Gayrimenkul Franchise",
+                  },
+                ]}
+              />
+              {errorStatu == 7 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
+            </View>
+
+            {focusArea == "Emlak Ofisi" && (
+              <>
+                <View style={{ gap: 5 }}>
+                  <View style={{ paddingLeft: 5 }}>
+                    <Text
+                      style={{ fontSize: 14, color: "black", fontWeight: 600 }}
+                    >
+                      Taşınmaz Ticareti Yetki Belgesi No
+                    </Text>
+                  </View>
+                  <TextInput
+                    value={licence}
+                    onChangeText={(value) => setlicence(value)}
+                    style={styles.Input}
+                    placeholder="Yetki Belgesi No"
+                    keyboardType="number-pad"
+                    maxLength={7}
+                  />
+                  {errorStatu == 14 ? (
+                    <Text style={{ fontSize: 12, color: "red" }}>
+                      {errorMessage}
+                    </Text>
+                  ) : (
+                    ""
+                  )}
+                </View>
+
+                {/* <View style={{ gap: 5 }}>
                   <Text
                     style={{ fontSize: 14, color: "black", fontWeight: 600 }}
                   >
@@ -914,188 +935,192 @@ export default function Company() {
                   )}
                 </View> */}
 
-              {focusArea == "Emlak Ofisi" && (
-                <View style={{ gap: 5 }}>
-                  <Text
-                    style={{ fontSize: 14, color: "black", fontWeight: 600 }}
-                  >
-                    Franchise Ofisine Bağlı Mısın?
-                  </Text>
-                  <RNPickerSelect
-                    doneText="Tamam"
-                    value={IsConnectFranchaise}
-                    placeholder={{
-                      label: "Seçiniz...",
-                      value: null,
-                    }}
-                    style={pickerSelectStyles}
-                    onValueChange={(value) => setIsConnectFranchaise(value)}
-                    items={[
-                      { label: "Evet", value: 1 },
-                      { label: "Hayır", value: 0 },
-                    ]}
-                  />
-                  {errorStatu == 16 ? (
-                    <Text style={{ fontSize: 12, color: "red" }}>
-                      {errorMessage}
-                    </Text>
-                  ) : (
-                    ""
-                  )}
-                </View>
-              )}
-
-              {IsConnectFranchaise == 1 && (
-                <View style={{ gap: 5 }}>
-                  <Text
-                    style={{ fontSize: 14, color: "black", fontWeight: 600 }}
-                  >
-                    Bağlı Olduğun Franchise Markasını Seç
-                  </Text>
-                  <RNPickerSelect
-                    doneText="Tamam"
-                    value={FrancheiseMarc}
-                    placeholder={{
-                      label: "Seçiniz...",
-                      value: null,
-                    }}
-                    style={pickerSelectStyles}
-                    onValueChange={(value) => setFrancheiseMarc(value)}
-                    items={pickerItems}
-                  />
-                  {errorStatu == 18 ? (
-                    <Text style={{ fontSize: 12, color: "red" }}>
-                      {errorMessage}
-                    </Text>
-                  ) : (
-                    ""
-                  )}
-                </View>
-              )}
-              {IsConnectFranchaise == 0 && (
-                <View style={{ gap: 5 }}>
-                  <View style={{ paddingLeft: 5 }}>
+                {focusArea == "Emlak Ofisi" && (
+                  <View style={{ gap: 5 }}>
                     <Text
-                      style={{
-                        fontSize: 14,
-                        color: "black",
-                        fontWeight: "600",
-                      }}
+                      style={{ fontSize: 14, color: "black", fontWeight: 600 }}
                     >
-                      Marka Adı
+                      Franchise Ofisine Bağlı Mısın?
                     </Text>
+                    <RNPickerSelect
+                      doneText="Tamam"
+                      value={IsConnectFranchaise}
+                      placeholder={{
+                        label: "Seçiniz...",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      onValueChange={(value) => setIsConnectFranchaise(value)}
+                      items={[
+                        { label: "Evet", value: 1 },
+                        { label: "Hayır", value: 0 },
+                      ]}
+                    />
+                    {errorStatu == 16 ? (
+                      <Text style={{ fontSize: 12, color: "red" }}>
+                        {errorMessage}
+                      </Text>
+                    ) : (
+                      ""
+                    )}
                   </View>
-                  <TextInput
-                    style={[
-                      styles.Input,
-                      {
-                        borderColor: errorStatu == 17 ? "red" : "#ebebeb",
-                      },
-                    ]}
-                    value={MarcaName}
-                    onChangeText={(value) => setMarcaName(value)}
-                    placeholder="Marka Adı"
-                  />
-                  {errorStatu == 17 ? (
-                    <Text style={{ fontSize: 12, color: "red" }}>
-                      {errorMessage}
+                )}
+
+                {IsConnectFranchaise == 1 && (
+                  <View style={{ gap: 5 }}>
+                    <Text
+                      style={{ fontSize: 14, color: "black", fontWeight: 600 }}
+                    >
+                      Bağlı Olduğun Franchise Markasını Seç
                     </Text>
-                  ) : (
-                    ""
-                  )}
-                </View>
+                    <RNPickerSelect
+                      doneText="Tamam"
+                      value={FrancheiseMarc}
+                      placeholder={{
+                        label: "Seçiniz...",
+                        value: null,
+                      }}
+                      style={pickerSelectStyles}
+                      onValueChange={(value) => setFrancheiseMarc(value)}
+                      items={pickerItems}
+                    />
+                    {errorStatu == 18 ? (
+                      <Text style={{ fontSize: 12, color: "red" }}>
+                        {errorMessage}
+                      </Text>
+                    ) : (
+                      ""
+                    )}
+                  </View>
+                )}
+                {IsConnectFranchaise == 0 && (
+                  <View style={{ gap: 5 }}>
+                    <View style={{ paddingLeft: 5 }}>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: "black",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Marka Adı
+                      </Text>
+                    </View>
+                    <TextInput
+                      style={[
+                        styles.Input,
+                        {
+                          borderColor: errorStatu == 17 ? "red" : "#ebebeb",
+                        },
+                      ]}
+                      value={MarcaName}
+                      onChangeText={(value) => setMarcaName(value)}
+                      placeholder="Marka Adı"
+                    />
+                    {errorStatu == 17 ? (
+                      <Text style={{ fontSize: 12, color: "red" }}>
+                        {errorMessage}
+                      </Text>
+                    ) : (
+                      ""
+                    )}
+                  </View>
+                )}
+              </>
+            )}
+
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Ticari Ünvan{" "}
+                  <Text style={{ color: "#888888", fontSize: 12 }}>
+                    (Vergi Levhasında Yazan Firma Adı)
+                  </Text>
+                </Text>
+              </View>
+              <TextInput
+                style={[
+                  styles.Input,
+                  {
+                    borderColor: errorStatu == 5 ? "red" : "#ebebeb",
+                  },
+                ]}
+                value={companyName}
+                onChangeText={(value) => setcompanyName(value)}
+                placeholder="Ticari Ünvan"
+              />
+              {errorStatu == 5 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
               )}
-            </>
-          )}
-
-          <View style={{ gap: 5 }}>
-            <View style={{ paddingLeft: 5 }}>
-              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                Ticari Ünvan{" "}
-                <Text style={{ color: "#888888", fontSize: 12 }}>
-                  (Vergi Levhasında Yazan Firma Adı)
+            </View>
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Mağaza Adı{" "}
+                  <Text style={{ fontSize: 12, color: "#888888" }}>
+                    (Ofisinizin tabela adı ile aynı olmalıdır)
+                  </Text>
                 </Text>
-              </Text>
-            </View>
-            <TextInput
-              style={[
-                styles.Input,
-                {
-                  borderColor: errorStatu == 5 ? "red" : "#ebebeb",
-                },
-              ]}
-              value={companyName}
-              onChangeText={(value) => setcompanyName(value)}
-              placeholder="Ticari Ünvan"
-            />
-            {errorStatu == 5 ? (
-              <Text style={{ fontSize: 12, color: "red" }}>{errorMessage}</Text>
-            ) : (
-              ""
-            )}
-          </View>
-          <View style={{ gap: 5 }}>
-            <View style={{ paddingLeft: 5 }}>
-              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                Mağaza Adı{" "}
-                <Text style={{ fontSize: 12, color: "#888888" }}>
-                  (Ofisinizin tabela adı ile aynı olmalıdır)
-                </Text>
-              </Text>
-            </View>
-            <TextInput
-              style={[
-                styles.Input,
-                {
-                  borderColor: errorStatu == 6 ? "red" : "#ebebeb",
-                },
-              ]}
-              value={ShoppingName}
-              onChangeText={(value) => setShoppingName(value)}
-              placeholder="Mağaza Adı"
-            />
-            {errorStatu == 6 ? (
-              <Text style={{ fontSize: 12, color: "red" }}>{errorMessage}</Text>
-            ) : (
-              ""
-            )}
-          </View>
-          <View style={{ gap: 5 }}>
-            <View style={{ paddingLeft: 5 }}>
-              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                Sabit Telefon (Opsiyonel)
-              </Text>
-            </View>
-
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ width: "32%" }}>
-                <RNPickerSelect
-                  doneText="Tamam"
-                  value={cityCode}
-                  placeholder={{
-                    label: "Alan Kodu",
-                    value: null,
-                  }}
-                  style={pickerSelectStyles}
-                  onValueChange={(value) => {
-                    setcityCode(value);
-                  }}
-                  items={cityData}
-                />
               </View>
-              <View style={{ width: "70%" }}>
-                <TextInput
-                  value={companyPhone}
-                  onChangeText={(value) => formatNumber(value)}
-                  style={styles.Input}
-                  placeholder="Sabit Telefon"
-                  keyboardType="number-pad"
-                  maxLength={9}
-                />
+              <TextInput
+                style={[
+                  styles.Input,
+                  {
+                    borderColor: errorStatu == 6 ? "red" : "#ebebeb",
+                  },
+                ]}
+                value={ShoppingName}
+                onChangeText={(value) => setShoppingName(value)}
+                placeholder="Mağaza Adı"
+              />
+              {errorStatu == 6 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
+            </View>
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Sabit Telefon (Opsiyonel)
+                </Text>
+              </View>
+
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ width: "32%" }}>
+                  <RNPickerSelect
+                    doneText="Tamam"
+                    value={cityCode}
+                    placeholder={{
+                      label: "Alan Kodu",
+                      value: null,
+                    }}
+                    style={pickerSelectStyles}
+                    onValueChange={(value) => {
+                      setcityCode(value);
+                    }}
+                    items={cityData}
+                  />
+                </View>
+                <View style={{ width: "70%" }}>
+                  <TextInput
+                    value={companyPhone}
+                    onChangeText={(value) => formatNumber(value)}
+                    style={styles.Input}
+                    placeholder="Sabit Telefon"
+                    keyboardType="number-pad"
+                    maxLength={9}
+                  />
+                </View>
               </View>
             </View>
-          </View>
-          {/* <View style={{ gap: 5 }}>
+            {/* <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
                   Sabit Telefon (Opsiyonel)
@@ -1110,510 +1135,540 @@ export default function Company() {
               />
             </View> */}
 
-          <View style={{ gap: 6 }}>
-            <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-              İl
-            </Text>
-            <RNPickerSelect
-              doneText="Tamam"
-              value={city}
-              placeholder={{
-                label: "Seçiniz...",
-                value: null,
-              }}
-              style={pickerSelectStyles}
-              onValueChange={(value) => {
-                onChangeCity(value);
-              }}
-              items={citites}
-            />
-            {errorStatu == 8 ? (
-              <Text style={{ fontSize: 12, color: "red" }}>{errorMessage}</Text>
-            ) : (
-              ""
-            )}
-          </View>
-          <View style={{ gap: 6 }}>
-            <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-              İlçe
-            </Text>
-            <RNPickerSelect
-              doneText="Tamam"
-              value={county}
-              placeholder={{
-                label: "Seçiniz...",
-                value: null,
-              }}
-              style={pickerSelectStyles}
-              onValueChange={(value) => {
-                onChangeCounty(value);
-              }}
-              items={counties}
-            />
-            {errorStatu == 9 ? (
-              <Text style={{ fontSize: 12, color: "red" }}>{errorMessage}</Text>
-            ) : (
-              ""
-            )}
-          </View>
-          <View style={{ gap: 6 }}>
-            <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-              Mahalle
-            </Text>
-            <RNPickerSelect
-              doneText="Tamam"
-              value={neigbourhod}
-              placeholder={{
-                label: "Seçiniz...",
-                value: null,
-              }}
-              style={pickerSelectStyles}
-              onValueChange={(value) => setneigbourhod(value)}
-              items={Neigbour}
-            />
-            {errorStatu == 10 ? (
-              <Text style={{ fontSize: 12, color: "red" }}>{errorMessage}</Text>
-            ) : (
-              ""
-            )}
-          </View>
-          <View>
-            <Text>İşletme Türü</Text>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <CheckBox
-                checked={selectedIndexRadio === 1}
-                onPress={() => {
-                  chooseType("Şahıs Şirketi");
-                  setIndexRadio(1);
-                }}
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checkedColor="#E54242"
-                title={<Text style={{ fontSize: 12 }}>Şahıs Şirketi</Text>}
-                containerStyle={{
-                  padding: 0,
-                  backgroundColor: "transparent",
-                  borderWidth: 0,
-                  borderTopWidth: 1,
-                }}
-              />
-              <CheckBox
-                checked={selectedIndexRadio === 2}
-                onPress={() => {
-                  setIndexRadio(2);
-                  chooseType("Limited veya Anonim Şirketi");
-                }}
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checkedColor="#E54242"
-                title={
-                  <View style={{}}>
-                    <Text style={{ fontSize: 12 }}>LTD.ŞTİ veya A.Ş </Text>
-                  </View>
-                }
-                containerStyle={{
-                  padding: 0,
-                  backgroundColor: "transparent",
-                  borderWidth: 0,
-                  borderTopWidth: 1,
-                }}
-              />
-              <CheckBox
-                checked={selectedIndexRadio === 3}
-                onPress={() => {
-                  setIndexRadio(3);
-                  chooseType("Limited veya Anonim Şirketi");
-                }}
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checkedColor="#E54242"
-                title={
-                  <View style={{}}>
-                    <Text style={{ fontSize: 12 }}>Diğer </Text>
-                  </View>
-                }
-                containerStyle={{
-                  padding: 0,
-                  backgroundColor: "transparent",
-                  borderWidth: 0,
-                  borderTopWidth: 1,
-                }}
-              />
-            </View>
-          </View>
-          <View style={{ gap: 6 }}>
-            <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-              Vergi Dairesi İli
-            </Text>
-            <RNPickerSelect
-              doneText="Tamam"
-              value={TaxPlaceCity}
-              placeholder={{
-                label: "Seçiniz...",
-                value: null,
-              }}
-              style={pickerSelectStyles}
-              onValueChange={(value) => {
-                onChangeTaxOfficesSity(value);
-              }}
-              items={Cityies.map((il) => ({ label: il, value: il }))}
-            />
-            {errorStatu == 11 ? (
-              <Text style={{ fontSize: 12, color: "red" }}>{errorMessage}</Text>
-            ) : (
-              ""
-            )}
-          </View>
-          <View style={{ gap: 6 }}>
-            <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-              Vergi Dairesi
-            </Text>
-            <RNPickerSelect
-              doneText="Tamam"
-              value={TaxPlace}
-              placeholder={{
-                label: "Seçiniz...",
-                value: null,
-              }}
-              style={pickerSelectStyles}
-              onValueChange={(value) => setTaxPlace(value)}
-              items={formattedTaxOfficePlace}
-            />
-            {errorStatu == 12 ? (
-              <Text style={{ fontSize: 12, color: "red" }}>{errorMessage}</Text>
-            ) : (
-              ""
-            )}
-          </View>
-          <View style={{ gap: 5 }}>
-            <View style={{ paddingLeft: 5 }}>
+            <View style={{ gap: 6 }}>
               <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                Vergi No
+                İl
               </Text>
-            </View>
-            <TextInput
-              value={taxNumber}
-              onChangeText={(value) => settaxNumber(value)}
-              style={styles.Input}
-              placeholder="Vergi No"
-              keyboardType="number-pad"
-              maxLength={10}
-            />
-            {errorStatu == 13 ? (
-              <Text style={{ fontSize: 12, color: "red" }}>{errorMessage}</Text>
-            ) : (
-              ""
-            )}
-          </View>
-
-          <View
-            style={{
-              gap: 5,
-            }}
-          >
-            <View style={{ paddingLeft: 5 }}>
-              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                TC Kimlik No
-              </Text>
-            </View>
-            <TextInput
-              value={IdCardNo}
-              onChangeText={(value) => setIdCardNo(value)}
-              style={styles.Input}
-              placeholder="Tc Kimlik No"
-              keyboardType="number-pad"
-              maxLength={11}
-            />
-          </View>
-          {/* Contracts */}
-          <View style={styles.container}>
-            <TouchableOpacity
-              onPress={() =>
-                handleCheckboxChange(
-                  checked,
-                  setChecked,
-                  modalVisible,
-                  setModalVisible,
-                  "kurumsal-uyelik-sozlesmesi"
-                )
-              }
-              style={styles.checkboxContainer}
-            >
-              {checked ? (
-                <FontAwesome5Icon name="check-square" size={18} color="black" />
-              ) : (
-                <FontAwesome5Icon name="square" size={18} color="black" />
-              )}
-              <Text
-                style={[
-                  styles.checkboxLabel,
-                  { color: errorStatu === 15 ? "red" : "black" },
-                ]}
-              >
-                <Text
-                  style={{
-                    color: errorStatu === 15 ? "red" : "#027BFF",
-                    fontSize: 13,
-                  }}
-                >
-                  Kurumsal üyelik sözleşmesini
-                </Text>{" "}
-                okudum onaylıyorum
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() =>
-                handleCheckboxChange(
-                  checked1,
-                  setChecked1,
-                  modalVisible2,
-                  setModalVisible2,
-                  "kvkk-politikasi"
-                )
-              }
-              style={[styles.checkboxContainer]}
-            >
-              {checked1 ? (
-                <FontAwesome5Icon name="check-square" size={18} color="black" />
-              ) : (
-                <FontAwesome5Icon name="square" size={18} color="black" />
-              )}
-              <Text
-                style={[
-                  styles.checkboxLabel,
-                  { color: errorStatu === 15 ? "red" : "black" },
-                ]}
-              >
-                <Text
-                  style={{
-                    color: errorStatu === 15 ? "red" : "#027BFF",
-                    fontSize: 13,
-                  }}
-                >
-                  KVKK metnini
-                </Text>{" "}
-                okudum onaylıyorum
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() =>
-                handleCheckboxChange(
-                  checked2,
-                  setChecked2,
-                  modalVisible3,
-                  setModalVisible3,
-                  "gizlilik-sozlesmesi-ve-aydinlatma-metni"
-                )
-              }
-              style={styles.checkboxContainer}
-            >
-              {checked2 ? (
-                <FontAwesome5Icon name="check-square" size={18} color="black" />
-              ) : (
-                <FontAwesome5Icon name="square" size={18} color="black" />
-              )}
-              <Text
-                style={[
-                  styles.checkboxLabel,
-                  { color: errorStatu === 15 ? "red" : "black" },
-                ]}
-              >
-                <Text
-                  style={{
-                    color: errorStatu === 15 ? "red" : "#027BFF",
-                    fontSize: 13,
-                  }}
-                >
-                  Gizlilik sözleşmesi ve aydınlatma metnini
-                </Text>{" "}
-                okudum onaylıyorum
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={toggleCheked3}
-              style={styles.checkboxContainer}
-            >
-              {checked3 ? (
-                <FontAwesome5Icon name="check-square" size={18} color="black" />
-              ) : (
-                <FontAwesome5Icon name="square" size={18} color="black" />
-              )}
-              <Text style={styles.checkboxLabel}>
-                İletişim bilgilerime kampanya, tanıtım ve reklam içerikli ticari
-                elektronik ileti gönderilmesine, bu amaçla kişisel verilerimin
-                “Emlaksepette” tarafından işlenmesine ve tedarikçileri ve
-                işbirlikçileri ile paylaşılmasına, bu amaçlarla verilerimin yurt
-                dışına aktarılmasına izin veriyorum.
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Contract Finish */}
-
-          {/* Register Button */}
-          <View style={{ alignItems: "center" }}>
-            <TouchableOpacity style={styles.btnRegister} onPress={register}>
-              <Text style={styles.btnRegisterText}>Üye Ol</Text>
-            </TouchableOpacity>
-          </View>
-          {/* Register Button */}
-        </View>
-      </View>
-      <Modal
-        isVisible={showMailSendAlert}
-        animationIn={"fadeInRightBig"}
-        animationOut={"fadeOutLeftBig"}
-        style={styles.modal}
-      >
-        <View style={styles.modalContent}>
-          <View style={{ gap: 10 }}>
-            <View style={{ alignItems: "center" }}>
-              <View
-                style={{
-                  backgroundColor: "#E54242",
-                  borderRadius: 40,
-                  padding: 6,
+              <RNPickerSelect
+                doneText="Tamam"
+                value={city}
+                placeholder={{
+                  label: "Seçiniz...",
+                  value: null,
                 }}
-              >
-                <MailCheck name="close" size={40} color={"#fff"} />
-              </View>
+                style={pickerSelectStyles}
+                onValueChange={(value) => {
+                  onChangeCity(value);
+                }}
+                items={citites}
+              />
+              {errorStatu == 8 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
+            </View>
+            <View style={{ gap: 6 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                İlçe
+              </Text>
+              <RNPickerSelect
+                doneText="Tamam"
+                value={county}
+                placeholder={{
+                  label: "Seçiniz...",
+                  value: null,
+                }}
+                style={pickerSelectStyles}
+                onValueChange={(value) => {
+                  onChangeCounty(value);
+                }}
+                items={counties}
+              />
+              {errorStatu == 9 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
+            </View>
+            <View style={{ gap: 6 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                Mahalle
+              </Text>
+              <RNPickerSelect
+                doneText="Tamam"
+                value={neigbourhod}
+                placeholder={{
+                  label: "Seçiniz...",
+                  value: null,
+                }}
+                style={pickerSelectStyles}
+                onValueChange={(value) => setneigbourhod(value)}
+                items={Neigbour}
+              />
+              {errorStatu == 10 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
             </View>
             <View>
-              <Text
+              <Text>İşletme Türü</Text>
+              <View
                 style={{
-                  textAlign: "center",
-                  fontSize: 15,
-                  color: "#333",
-                  letterSpacing: 0.5,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
                 }}
               >
-                Lütfen Tüm Alanları Doldurunuz!
-              </Text>
+                <CheckBox
+                  checked={selectedIndexRadio === 1}
+                  onPress={() => {
+                    chooseType("Şahıs Şirketi");
+                    setIndexRadio(1);
+                  }}
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checkedColor="#E54242"
+                  title={<Text style={{ fontSize: 12 }}>Şahıs Şirketi</Text>}
+                  containerStyle={{
+                    padding: 0,
+                    backgroundColor: "transparent",
+                    borderWidth: 0,
+                    borderTopWidth: 1,
+                  }}
+                />
+                <CheckBox
+                  checked={selectedIndexRadio === 2}
+                  onPress={() => {
+                    setIndexRadio(2);
+                    chooseType("Limited veya Anonim Şirketi");
+                  }}
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checkedColor="#E54242"
+                  title={
+                    <View style={{}}>
+                      <Text style={{ fontSize: 12 }}>LTD.ŞTİ veya A.Ş </Text>
+                    </View>
+                  }
+                  containerStyle={{
+                    padding: 0,
+                    backgroundColor: "transparent",
+                    borderWidth: 0,
+                    borderTopWidth: 1,
+                  }}
+                />
+                <CheckBox
+                  checked={selectedIndexRadio === 3}
+                  onPress={() => {
+                    setIndexRadio(3);
+                    chooseType("Limited veya Anonim Şirketi");
+                  }}
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checkedColor="#E54242"
+                  title={
+                    <View style={{}}>
+                      <Text style={{ fontSize: 12 }}>Diğer </Text>
+                    </View>
+                  }
+                  containerStyle={{
+                    padding: 0,
+                    backgroundColor: "transparent",
+                    borderWidth: 0,
+                    borderTopWidth: 1,
+                  }}
+                />
+              </View>
             </View>
-            <View style={{ flexDirection: "row", justifyContent: "center" }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: "#E54242",
-                  padding: 10,
-                  width: "100%",
-                  borderRadius: 5,
+            <View style={{ gap: 6 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                Vergi Dairesi İli
+              </Text>
+              <RNPickerSelect
+                doneText="Tamam"
+                value={TaxPlaceCity}
+                placeholder={{
+                  label: "Seçiniz...",
+                  value: null,
                 }}
-                onPress={() => setshowMailSendAlert(false)}
+                style={pickerSelectStyles}
+                onValueChange={(value) => {
+                  onChangeTaxOfficesSity(value);
+                }}
+                items={Cityies.map((il) => ({ label: il, value: il }))}
+              />
+              {errorStatu == 11 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
+            </View>
+            <View style={{ gap: 6 }}>
+              <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                Vergi Dairesi
+              </Text>
+              <RNPickerSelect
+                doneText="Tamam"
+                value={TaxPlace}
+                placeholder={{
+                  label: "Seçiniz...",
+                  value: null,
+                }}
+                style={pickerSelectStyles}
+                onValueChange={(value) => setTaxPlace(value)}
+                items={formattedTaxOfficePlace}
+              />
+              {errorStatu == 12 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
+            </View>
+            <View style={{ gap: 5 }}>
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  Vergi No
+                </Text>
+              </View>
+              <TextInput
+                value={taxNumber}
+                onChangeText={(value) => settaxNumber(value)}
+                style={styles.Input}
+                placeholder="Vergi No"
+                keyboardType="number-pad"
+                maxLength={10}
+              />
+              {errorStatu == 13 ? (
+                <Text style={{ fontSize: 12, color: "red" }}>
+                  {errorMessage}
+                </Text>
+              ) : (
+                ""
+              )}
+            </View>
+
+            <View
+              style={{
+                gap: 5,
+              }}
+            >
+              <View style={{ paddingLeft: 5 }}>
+                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
+                  TC Kimlik No
+                </Text>
+              </View>
+              <TextInput
+                value={IdCardNo}
+                onChangeText={(value) => setIdCardNo(value)}
+                style={styles.Input}
+                placeholder="Tc Kimlik No"
+                keyboardType="number-pad"
+                maxLength={11}
+              />
+            </View>
+            {/* Contracts */}
+            <View style={styles.container}>
+              <TouchableOpacity
+                onPress={() =>
+                  handleCheckboxChange(
+                    checked,
+                    setChecked,
+                    modalVisible,
+                    setModalVisible,
+                    "kurumsal-uyelik-sozlesmesi"
+                  )
+                }
+                style={styles.checkboxContainer}
               >
+                {checked ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
+                <Text
+                  style={[
+                    styles.checkboxLabel,
+                    { color: errorStatu === 15 ? "red" : "black" },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: errorStatu === 15 ? "red" : "#027BFF",
+                      fontSize: 13,
+                    }}
+                  >
+                    Kurumsal üyelik sözleşmesini
+                  </Text>{" "}
+                  okudum onaylıyorum
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  handleCheckboxChange(
+                    checked1,
+                    setChecked1,
+                    modalVisible2,
+                    setModalVisible2,
+                    "kvkk-politikasi"
+                  )
+                }
+                style={[styles.checkboxContainer]}
+              >
+                {checked1 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
+                <Text
+                  style={[
+                    styles.checkboxLabel,
+                    { color: errorStatu === 15 ? "red" : "black" },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: errorStatu === 15 ? "red" : "#027BFF",
+                      fontSize: 13,
+                    }}
+                  >
+                    KVKK metnini
+                  </Text>{" "}
+                  okudum onaylıyorum
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() =>
+                  handleCheckboxChange(
+                    checked2,
+                    setChecked2,
+                    modalVisible3,
+                    setModalVisible3,
+                    "gizlilik-sozlesmesi-ve-aydinlatma-metni"
+                  )
+                }
+                style={styles.checkboxContainer}
+              >
+                {checked2 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
+                <Text
+                  style={[
+                    styles.checkboxLabel,
+                    { color: errorStatu === 15 ? "red" : "black" },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: errorStatu === 15 ? "red" : "#027BFF",
+                      fontSize: 13,
+                    }}
+                  >
+                    Gizlilik sözleşmesi ve aydınlatma metnini
+                  </Text>{" "}
+                  okudum onaylıyorum
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={toggleCheked3}
+                style={styles.checkboxContainer}
+              >
+                {checked3 ? (
+                  <FontAwesome5Icon
+                    name="check-square"
+                    size={18}
+                    color="black"
+                  />
+                ) : (
+                  <FontAwesome5Icon name="square" size={18} color="black" />
+                )}
+                <Text style={styles.checkboxLabel}>
+                  İletişim bilgilerime kampanya, tanıtım ve reklam içerikli
+                  ticari elektronik ileti gönderilmesine, bu amaçla kişisel
+                  verilerimin “Emlaksepette” tarafından işlenmesine ve
+                  tedarikçileri ve işbirlikçileri ile paylaşılmasına, bu
+                  amaçlarla verilerimin yurt dışına aktarılmasına izin
+                  veriyorum.
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Contract Finish */}
+
+            {/* Register Button */}
+            <View style={{ alignItems: "center" }}>
+              <TouchableOpacity style={styles.btnRegister} onPress={register}>
+                <Text style={styles.btnRegisterText}>Üye Ol</Text>
+              </TouchableOpacity>
+            </View>
+            {/* Register Button */}
+          </View>
+        </View>
+        <Modal
+          isVisible={showMailSendAlert}
+          animationIn={"fadeInRightBig"}
+          animationOut={"fadeOutLeftBig"}
+          style={styles.modal}
+        >
+          <View style={styles.modalContent}>
+            <View style={{ gap: 10 }}>
+              <View style={{ alignItems: "center" }}>
+                <View
+                  style={{
+                    backgroundColor: "#E54242",
+                    borderRadius: 40,
+                    padding: 6,
+                  }}
+                >
+                  <MailCheck name="close" size={40} color={"#fff"} />
+                </View>
+              </View>
+              <View>
                 <Text
                   style={{
                     textAlign: "center",
-                    color: "#ffff",
-                    fontWeight: 500,
+                    fontSize: 15,
+                    color: "#333",
+                    letterSpacing: 0.5,
                   }}
                 >
-                  Tamam
+                  Lütfen Tüm Alanları Doldurunuz!
                 </Text>
-              </TouchableOpacity>
+              </View>
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#E54242",
+                    padding: 10,
+                    width: "100%",
+                    borderRadius: 5,
+                  }}
+                  onPress={() => setshowMailSendAlert(false)}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "#ffff",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Tamam
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </Modal>
-      <Modal
-        isVisible={succesRegister}
-        animationIn={"fadeInRightBig"}
-        animationOut={"fadeOutLeftBig"}
-        style={styles.modal}
-      >
-        <View style={styles.modalContent}>
-          <ActivityIndicator size="large" color="#333" />
-          <Text style={{ textAlign: "center", fontWeight: "bold" }}>
-            Giriş Sayfasına Yönlendiriliyorsunuz
-          </Text>
-        </View>
-      </Modal>
+        </Modal>
+        <Modal
+          isVisible={succesRegister}
+          animationIn={"fadeInRightBig"}
+          animationOut={"fadeOutLeftBig"}
+          style={styles.modal}
+        >
+          <View style={styles.modalContent}>
+            <ActivityIndicator size="large" color="#333" />
+            <Text style={{ textAlign: "center", fontWeight: "bold" }}>
+              Giriş Sayfasına Yönlendiriliyorsunuz
+            </Text>
+          </View>
+        </Modal>
 
-      <Modal
-        isVisible={modalVisible}
-        onBackdropPress={() => setModalVisible(false)}
-        backdropColor="transparent"
-        style={styles.modal2}
-      >
-        <SafeAreaView style={styles.modalContent2}>
-          <ScrollView style={{ padding: 10 }}>
-            <HTML source={{ html: Deals }} contentWidth={100} />
+        <Modal
+          isVisible={modalVisible}
+          onBackdropPress={() => setModalVisible(false)}
+          backdropColor="transparent"
+          style={styles.modal2}
+        >
+          <SafeAreaView style={styles.modalContent2}>
+            <ScrollView style={{ padding: 10 }}>
+              <HTML source={{ html: Deals }} contentWidth={100} />
 
-            <View style={{ alignItems: "center", paddingBottom: 20 }}>
-              <TouchableOpacity
-                style={styles.Acceptbtn}
-                onPress={() => {
-                  setChecked(!checked);
-                  setModalVisible(false);
-                }}
-              >
-                <Text style={{ color: "white", fontWeight: "bold" }}>
-                  Okudum kabul ediyorum
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      </Modal>
-      <Modal
-        isVisible={modalVisible2}
-        onBackdropPress={() => setModalVisible2(false)}
-        backdropColor="transparent"
-        style={styles.modal2}
-      >
-        <SafeAreaView style={styles.modalContent2}>
-          <ScrollView style={{ padding: 10 }}>
-            <HTML source={{ html: Deals }} contentWidth={100} />
+              <View style={{ alignItems: "center", paddingBottom: 20 }}>
+                <TouchableOpacity
+                  style={styles.Acceptbtn}
+                  onPress={() => {
+                    setChecked(!checked);
+                    setModalVisible(false);
+                  }}
+                >
+                  <Text style={{ color: "white", fontWeight: "bold" }}>
+                    Okudum kabul ediyorum
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </SafeAreaView>
+        </Modal>
+        <Modal
+          isVisible={modalVisible2}
+          onBackdropPress={() => setModalVisible2(false)}
+          backdropColor="transparent"
+          style={styles.modal2}
+        >
+          <SafeAreaView style={styles.modalContent2}>
+            <ScrollView style={{ padding: 10 }}>
+              <HTML source={{ html: Deals }} contentWidth={100} />
 
-            <View style={{ alignItems: "center", paddingBottom: 20 }}>
-              <TouchableOpacity
-                style={styles.Acceptbtn}
-                onPress={() => {
-                  setChecked1(true);
-                  setModalVisible2(false);
-                }}
-              >
-                <Text style={{ color: "white", fontWeight: "bold" }}>
-                  Okudum kabul ediyorum
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      </Modal>
-      <Modal
-        isVisible={modalVisible3}
-        onBackdropPress={() => setModalVisible3(false)}
-        backdropColor="transparent"
-        style={styles.modal2}
-      >
-        <SafeAreaView style={styles.modalContent2}>
-          <ScrollView style={{ padding: 10 }}>
-            <HTML source={{ html: Deals }} contentWidth={100} />
+              <View style={{ alignItems: "center", paddingBottom: 20 }}>
+                <TouchableOpacity
+                  style={styles.Acceptbtn}
+                  onPress={() => {
+                    setChecked1(true);
+                    setModalVisible2(false);
+                  }}
+                >
+                  <Text style={{ color: "white", fontWeight: "bold" }}>
+                    Okudum kabul ediyorum
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </SafeAreaView>
+        </Modal>
+        <Modal
+          isVisible={modalVisible3}
+          onBackdropPress={() => setModalVisible3(false)}
+          backdropColor="transparent"
+          style={styles.modal2}
+        >
+          <SafeAreaView style={styles.modalContent2}>
+            <ScrollView style={{ padding: 10 }}>
+              <HTML source={{ html: Deals }} contentWidth={100} />
 
-            <View style={{ alignItems: "center", paddingBottom: 20 }}>
-              <TouchableOpacity
-                style={styles.Acceptbtn}
-                onPress={() => {
-                  setChecked2(true);
-                  setModalVisible3(false);
-                }}
-              >
-                <Text style={{ color: "white", fontWeight: "bold" }}>
-                  Okudum kabul ediyorum
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      </Modal>
-    </ScrollView>
+              <View style={{ alignItems: "center", paddingBottom: 20 }}>
+                <TouchableOpacity
+                  style={styles.Acceptbtn}
+                  onPress={() => {
+                    setChecked2(true);
+                    setModalVisible3(false);
+                  }}
+                >
+                  <Text style={{ color: "white", fontWeight: "bold" }}>
+                    Okudum kabul ediyorum
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+          </SafeAreaView>
+        </Modal>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 const pickerSelectStyles = StyleSheet.create({
