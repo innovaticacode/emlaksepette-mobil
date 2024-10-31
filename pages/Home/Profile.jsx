@@ -22,7 +22,11 @@ import LinkIcon from "react-native-vector-icons/SimpleLineIcons";
 import Star from "react-native-vector-icons/MaterialIcons";
 import Team from "./ProfilePageItem/Team";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { apiRequestGet, apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
+import {
+  apiRequestGet,
+  apiUrl,
+  frontEndUriBase,
+} from "../../components/methods/apiRequest";
 import Modal from "react-native-modal";
 import { CheckBox } from "@rneui/themed";
 import { Platform } from "react-native";
@@ -36,7 +40,6 @@ import Introduction from "./ProfilePageItem/Introduction/Introduction";
 import Filter from "../../assets/filter.png";
 import ProjectBottomSheetFilter from "../../components/ProjectBottomSheetFilter";
 import EstateBottomSheetFilter from "../../components/EstateBottomSheetFilter";
-
 
 export default function Profile() {
   const route = useRoute();
@@ -126,7 +129,7 @@ export default function Profile() {
       formData.append("email", emailId);
 
       const response = await axios.post(
-        apiUrl+"institutional/give_offer",
+        apiUrl + "institutional/give_offer",
         formData,
         {
           headers: {
@@ -253,7 +256,7 @@ export default function Profile() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message:frontEndUriBase,
+        message: frontEndUriBase,
       });
 
       if (result.action === Share.sharedAction) {
@@ -290,11 +293,24 @@ export default function Profile() {
 
   useEffect(() => {
     if (storeData) {
-      if (storeData?.data?.profile_image == "indir.jpeg") {
+      if (
+        storeData?.data?.profile_image === "indir.jpeg" ||
+        storeData?.data?.profile_image === "indir.jpg"
+      ) {
         const fullName = storeData?.data?.name.split(" ");
-        const name = fullName[0]?.charAt(0).toUpperCase();
-        const surname = fullName[1]?.charAt(0).toUpperCase();
-        setCheckImage(name + surname);
+        let checkImage = "";
+
+        if (fullName.length > 1) {
+          // İsim ve soyisim varsa, her iki kelimenin ilk harfini al
+          const name = fullName[0].charAt(0).toUpperCase();
+          const surname = fullName[1].charAt(0).toUpperCase();
+          checkImage = name + surname;
+        } else {
+          // Sadece tek isim varsa ilk iki harfi al
+          checkImage = fullName[0].slice(0, 2).toUpperCase();
+        }
+
+        setCheckImage(checkImage);
       } else {
         setCheckImage(null);
       }
@@ -441,10 +457,11 @@ export default function Profile() {
                           color: color ? color : "#000000",
                         }}
                       >
-                        {storeData?.data?.corporate_type} {
-                          (storeData?.data?.is_brand==1 && storeData?.data?.brand_id)&&
-                          <Text>- Franchise Markası</Text>
-                        }
+                        {storeData?.data?.corporate_type}{" "}
+                        {storeData?.data?.is_brand == 1 &&
+                          storeData?.data?.brand_id && (
+                            <Text>- Franchise Markası</Text>
+                          )}
                       </Text>
                     </View>
                   </View>

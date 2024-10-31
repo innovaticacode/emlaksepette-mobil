@@ -27,8 +27,8 @@ const DrawerMenu = () => {
   const dispatch = useDispatch();
   const [user, setUser] = useState({});
   const [namFromGetUser, setnamFromGetUser] = useState([]);
+  const [checkImage, setCheckImage] = useState(null);
   const image = namFromGetUser.profile_image;
-  let checkImage = null;
 
   const PhotoUrl = `${frontEndUriBase}storage/profile_images/`;
 
@@ -39,14 +39,11 @@ const DrawerMenu = () => {
   const fetchMenuItems = async () => {
     try {
       if (user?.access_token && user?.id) {
-        const response = await axios.get(
-          `${apiUrl}users/${user.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}users/${user.id}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         setnamFromGetUser(response.data.user);
       }
     } catch (error) {
@@ -67,14 +64,22 @@ const DrawerMenu = () => {
     Linking.openURL(url);
   };
 
-  if (image == "indir.jpeg") {
-    if (namFromGetUser.name) {
-      const fullName = namFromGetUser.name.split(" ");
-      const name = fullName[0]?.charAt(0).toUpperCase();
-      const surname = fullName[1]?.charAt(0).toUpperCase();
-      checkImage = name + surname;
+  useEffect(() => {
+    if (image == "indir.jpeg" || image == "indir.jpg") {
+      if (namFromGetUser.name) {
+        const fullName = namFromGetUser.name.split(" ");
+        if (fullName.length > 1) {
+          // İsim ve soyisim varsa ilk harflerden oluşan kombinasyon
+          const name = fullName[0].charAt(0).toUpperCase();
+          const surname = fullName[1].charAt(0).toUpperCase();
+          setCheckImage(name + surname);
+        } else {
+          // Sadece tek isim varsa ilk iki harfi al
+          setCheckImage(fullName[0].slice(0, 2).toUpperCase());
+        }
+      }
     }
-  }
+  }, [namFromGetUser, fetchMenuItems]);
 
   return (
     <SafeAreaView>
