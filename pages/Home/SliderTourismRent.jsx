@@ -9,18 +9,16 @@ import {
 import SliderItemSkeleton from "../../components/SkeletonComponents/SliderItemSkeleton";
 import SliderTourismItem from "./SliderTourismItem";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
+import SliderItem from "../../components/SliderItem";
 
 export default function SliderTourismRent() {
-
   const [loading, setloading] = useState(true);
   const [tourismRent, setTourismRent] = useState([]);
 
   const fetchFeaturedStores = async () => {
     try {
       setloading(true);
-      const response = await axios.get(
-        apiUrl+"get_featured_acente_brands"
-      );
+      const response = await axios.get(apiUrl + "get_featured_acente_brands");
       if (response?.data?.length > 0) {
         setTourismRent(response.data);
       }
@@ -58,11 +56,15 @@ export default function SliderTourismRent() {
               <SliderItemSkeleton />
             ) : (
               <>
-                <SliderTourismItem
-                  id={item.id}
-                  borderColor={"#e6e6e6"}
+                <SliderItem
                   image={`${frontEndUriBase}/storage/profile_images/${item.profile_image}`}
+                  StoreID={item.id}
+                  borderColor={"#e6e6e6"}
+                  navigationStatus={false}
+                  url={"Profile"}
+                  userName={item.name}
                 />
+
                 <Text numberOfLines={2}>
                   {capitalizeFirstLetter(item.name)}
                 </Text>

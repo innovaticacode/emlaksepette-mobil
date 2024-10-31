@@ -412,8 +412,9 @@ export default function Profile() {
                     ) : (
                       <View
                         style={{
-                          backgroundColor: "#fff",
                           borderRadius: 50,
+                          justifyContent: "center",
+                          alignItems: "center",
                         }}
                       >
                         <Image
@@ -421,8 +422,8 @@ export default function Profile() {
                             uri: `${frontEndUriBase}storage/profile_images/${storeData?.data?.profile_image}`,
                           }}
                           style={{
-                            width: 50,
-                            height: 50,
+                            width: 64,
+                            height: 64,
                             borderRadius: 50,
                           }}
                         />

@@ -39,8 +39,6 @@ export default function SliderItem({
     } else {
       setCheckImage(null);
     }
-
-    console.debug("--->>>", checkImage);
   }, [image, userName]);
 
   return (
