@@ -54,7 +54,14 @@ export default function SliderItem({
         }
       }}
     >
-      <View style={styles.container}>
+      <View
+        style={[
+          styles.container,
+          {
+            borderColor: borderColor,
+          },
+        ]}
+      >
         {checkImage ? (
           <View style={styles.textArea}>
             <Text style={styles.text}>{checkImage}</Text>
@@ -82,7 +89,6 @@ const styles = StyleSheet.create({
     margin: 6,
     padding: 1,
     borderWidth: 2,
-    borderColor: borderColor,
     justifyContent: "center",
     alignItems: "center",
   },
