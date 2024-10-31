@@ -18,12 +18,17 @@ import Icon from "react-native-vector-icons/AntDesign";
 import SliderEstateBar from "../../../components/SliderEstateBar";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import Housing from "../../../src/assets/images/Konut.png";
-import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import {
+  apiUrl,
+  frontEndUriBase,
+} from "../../../components/methods/apiRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { getEstates } from "../../../store/slices/Estates/EstatesSlice";
 const PAGE_SIZE = 10;
 
 const Estates = ({ index }) => {
   const navigation = useNavigation();
-  
+  const dispatch = useDispatch();
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -34,31 +39,26 @@ const Estates = ({ index }) => {
   const fetchFeaturedEstates = async (reset = false) => {
     if (loading || (!hasMore && !reset)) return;
     setLoading(true);
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user?.access_token}`,
-      },
-    };
-
     try {
-      const response = await axios.get(
-        `${apiUrl}real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,
-        config
-      );
-      const newEstates = Object.values(response.data);
-
+      const { payload } = await dispatch(getEstates({ reset, page }));
+      const newEstates = payload?.estates;
       if (reset) {
         setFeaturedEstates(newEstates);
         setPage(2);
         setHasMore(true);
       } else {
-        if (newEstates.length > 0) {
+        if (newEstates?.length > 0) {
           setFeaturedEstates((prevEstates) => {
-            const newUniqueEstates = newEstates.filter(
-              (estate) =>
-                !prevEstates.some((prevEstate) => prevEstate.id === estate.id)
+            const newUniqueEstates = newEstates.filter((estate) =>
+              prevEstates
+                ? !prevEstates.some(
+                    (prevEstate) => prevEstate?.id === estate.id
+                  )
+                : true
             );
-            return [...prevEstates, ...newUniqueEstates];
+            return prevEstates
+              ? [...prevEstates, ...newUniqueEstates]
+              : newUniqueEstates;
           });
           setPage((prevPage) => prevPage + 1);
         } else {

@@ -18,12 +18,17 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import PrefabrikBanner from "../../../src/assets/images/prefabrik.png";
-import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import {
+  apiUrl,
+  frontEndUriBase,
+} from "../../../components/methods/apiRequest";
+import { useDispatch } from "react-redux";
+import { getEstates } from "../../../store/slices/Estates/EstatesSlice";
 const PAGE_SIZE = 10;
 
 const Prefabrik = ({ index }) => {
   const navigation = useNavigation();
- 
+  const dispatch = useDispatch();
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -40,13 +45,8 @@ const Prefabrik = ({ index }) => {
       headers: { Authorization: `Bearer ${user?.access_token}` },
     };
     try {
-      const response = await axios.get(
-        `${apiUrl}real-estates?page=${
-          reset ? 1 : page
-        }&limit=${PAGE_SIZE}`,
-        config
-      );
-      const newEstates = response.data;
+      const { payload } = await dispatch(getEstates({ reset, page }));
+      const newEstates = payload?.estates;
 
       if (reset) {
         setFeaturedEstates(newEstates);
