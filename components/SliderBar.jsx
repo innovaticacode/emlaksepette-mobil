@@ -11,15 +11,12 @@ import { getValueFor } from "./methods/user";
 import { apiUrl, frontEndUriBase } from "./methods/apiRequest";
 
 export default function SliderBar() {
-  
   const [loading, setloading] = useState(false);
   const [featuredStores, setFeaturedStores] = useState([]);
 
   const fetchFeaturedStores = async () => {
     try {
-      const response = await axios.get(
-        `${apiUrl}popular-construction-brands`
-      );
+      const response = await axios.get(`${apiUrl}popular-construction-brands`);
       if (response.data.length > 0) {
         setFeaturedStores(response.data);
         setloading(true);
@@ -53,7 +50,7 @@ export default function SliderBar() {
     },
     {
       text: "Sat Kirala",
-      image:`${frontEndUriBase}images/sat-kirala.png`,
+      image: `${frontEndUriBase}images/sat-kirala.png`,
       color: "#0000FF",
       url: "SellAndRent",
       isShow: "All",
@@ -122,6 +119,7 @@ export default function SliderBar() {
                   StoreID={item.id}
                   key={index}
                   image={`${frontEndUriBase}/storage/profile_images/${item.profile_image}`}
+                  userName={item.name}
                 />
                 <Text
                   numberOfLines={2}
