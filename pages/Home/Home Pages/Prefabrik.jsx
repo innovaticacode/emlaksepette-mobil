@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   View,
   Text,
@@ -6,87 +6,48 @@ import {
   StyleSheet,
   TouchableOpacity,
   RefreshControl,
-  ScrollView,
   Image,
 } from "react-native";
 import RealtorPost from "../../../components/RealtorPost";
-import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
-import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import PrefabrikBanner from "../../../src/assets/images/prefabrik.png";
-import {
-  apiUrl,
-  frontEndUriBase,
-} from "../../../components/methods/apiRequest";
-import { useDispatch } from "react-redux";
-import { getEstates } from "../../../store/slices/Estates/EstatesSlice";
-const PAGE_SIZE = 10;
+import { frontEndUriBase } from "../../../components/methods/apiRequest";
+import { useFeaturedEstates } from "../../../hooks/useFeaturedEstates";
 
 const Prefabrik = ({ index }) => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
-  const [featuredEstates, setFeaturedEstates] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-  const fetchFeaturedEstates = async (reset = false) => {
-    if (loading || (!hasMore && !reset)) return;
-    setLoading(true);
-    const config = {
-      headers: { Authorization: `Bearer ${user?.access_token}` },
-    };
-    try {
-      const { payload } = await dispatch(getEstates({ reset, page }));
-      const newEstates = payload?.estates;
 
-      if (reset) {
-        setFeaturedEstates(newEstates);
-        setPage(2);
-        setHasMore(true);
-      } else {
-        if (newEstates.length > 0) {
-          setFeaturedEstates((prevEstates) => {
-            const newUniqueEstates = newEstates.filter(
-              (estate) =>
-                !prevEstates.some((prevEstate) => prevEstate.id === estate.id)
-            );
-            return [...prevEstates, ...newUniqueEstates];
-          });
-          setPage((prevPage) => prevPage + 1);
-        } else {
-          setHasMore(false);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
+  const {
+    fetchFeaturedEstates,
+    setRefreshing,
+    featuredEstates,
+    loading,
+    hasMore,
+    refreshing,
+  } = useFeaturedEstates();
 
   useFocusEffect(
     useCallback(() => {
       if (index == 5) {
+        if (loading || (!hasMore && !reset)) return;
+
         fetchFeaturedEstates(true);
       } else {
-        setFeaturedEstates([]);
+        fetchFeaturedEstates(false);
       }
     }, [index, user])
   );
 
-  const filteredHomes = featuredEstates.filter(
-    (estate) => estate.step1_slug === "konut"
-  );
+  const filteredHomes = useMemo(() => {
+    return featuredEstates.filter((estate) => estate.step1_slug === "konut");
+  }, [featuredEstates]);
 
   const onRefresh = () => {
     setRefreshing(true);

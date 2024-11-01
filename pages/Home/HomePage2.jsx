@@ -61,10 +61,10 @@ const renderScene = ({ route, index }) => {
       return <Prefabrik index={index} />;
     case "bookhouse":
       return <BookHouse index={index} />;
-    case "sellacil":
-      return <SellAcil index={index} />;
-    case "shared":
-      return <Shared index={index} />;
+    // case "sellacil":
+    //   return <SellAcil index={index} />;
+    // case "shared":
+    //   return <Shared index={index} />;
     default:
       return null;
   }
@@ -84,9 +84,7 @@ const CustomTabBar = ({
   React.useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await axios.get(
-          apiUrl+"menu-list"
-        );
+        const response = await axios.get(apiUrl + "menu-list");
         setMenuItems(response.data);
         setMenuItems([{ text: "Anasayfa" }, ...response.data.slice(0, -1)]);
       } catch (error) {
@@ -214,7 +212,7 @@ export default function HomePage2() {
           <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
         </View> */}
       </Modal>
-      <View style={{ paddingLeft: 10, paddingRight: 10 ,paddingTop:10}}>
+      <View style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 10 }}>
         <TextInput
           style={{ padding: 8, backgroundColor: "#ebebeb", borderRadius: 5 }}
           placeholder="Kelime veya İlan no ile ara..."
