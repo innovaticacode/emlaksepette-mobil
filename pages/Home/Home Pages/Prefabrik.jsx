@@ -46,7 +46,7 @@ const Prefabrik = ({ index }) => {
   );
 
   const filteredHomes = useMemo(() => {
-    return featuredEstates.filter((estate) => estate.step1_slug === "konut");
+    return featuredEstates.filter((estate) => estate?.step1_slug === "konut");
   }, [featuredEstates]);
 
   const onRefresh = () => {

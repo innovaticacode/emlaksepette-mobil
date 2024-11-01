@@ -67,7 +67,7 @@ const Area = ({ index }) => {
         <View
           style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
         >
-          <ActivityIndicator size={"large"} color="#333" />
+          <ActivityIndicator size={"small"} color="#333" />
         </View>
       ) : (
         <>
