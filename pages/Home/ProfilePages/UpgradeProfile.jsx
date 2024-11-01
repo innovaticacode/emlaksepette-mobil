@@ -37,7 +37,9 @@ import {
 } from "react-native-alert-notification";
 import { Forms } from "../../../components/ProfileUpgradeComponents/formshelper";
 import ImageView from "react-native-image-viewing";
-import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import { apiRequestPostWithBearer, apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import { formatPhoneNumber, formatPhoneNumberNew } from "../../../utils/FormatPhoneNumber";
+import { areaData } from "../../helper";
 
 export default function UpgradeProfile() {
   const route = useRoute();
@@ -160,34 +162,7 @@ export default function UpgradeProfile() {
     }
   };
 
-  const formatPhoneNumber = (value) => {
-    // Sadece rakamları al
-    const cleaned = ("" + value).replace(/\D/g, "");
 
-    // Numaranın uzunluğunu kontrol et
-    if (cleaned.length > 10) {
-      // Burada uygun bir hata mesajı gösterebilirsiniz
-      return "Geçersiz numara";
-    }
-
-    // 0 ile başlıyorsa, ilk karakteri çıkar
-    const cleanedWithoutLeadingZero = cleaned.startsWith("0")
-      ? cleaned.substring(1)
-      : cleaned;
-
-    // Formatlı numarayı oluştur
-    let formattedNumber = "";
-
-    // Numaranın uzunluğuna göre formatı uygula
-    for (let i = 0; i < cleanedWithoutLeadingZero.length; i++) {
-      if (i === 3) formattedNumber += " ";
-      if (i === 5) formattedNumber += " ";
-      formattedNumber += cleanedWithoutLeadingZero[i];
-    }
-
-    // Formatlı numarayı döndür
-    return formattedNumber;
-  };
 
   const uniqueCities = TaxOfficesCities.map((city) => ({
     label: city.il,
@@ -264,96 +239,17 @@ export default function UpgradeProfile() {
     }, 800);
   };
 
-  const areaData = [
-    { label: "İstanbul Avrupa (212)", value: 212 },
-    { label: "İstanbul Anadolu (216)", value: 216 },
-    { label: "Adana (322)", value: 322 },
-    { label: "Adıyaman (416)", value: 416 },
-    { label: "Afyon (272)", value: 272 },
-    { label: "Ağrı (472)", value: 472 },
-    { label: "Aksaray (382)", value: 382 },
-    { label: "Amasya (358)", value: 358 },
-    { label: "Ankara (312)", value: 312 },
-    { label: "Antalya (242)", value: 242 },
-    { label: "Ardahan (478)", value: 478 },
-    { label: "Artvin (466)", value: 466 },
-    { label: "Aydın (256)", value: 256 },
-    { label: "Balıkesir (266)", value: 266 },
-    { label: "Bartın (378)", value: 378 },
-    { label: "Batman (488)", value: 488 },
-    { label: "Bayburt (458)", value: 458 },
-    { label: "Bilecik (228)", value: 228 },
-    { label: "Bingöl (426)", value: 426 },
-    { label: "Bitlis (434)", value: 434 },
-    { label: "Bolu (374)", value: 374 },
-    { label: "Burdur (248)", value: 248 },
-    { label: "Bursa (224)", value: 224 },
-    { label: "Çanakkale (286)", value: 286 },
-    { label: "Çankırı (376)", value: 376 },
-    { label: "Çorum (364)", value: 364 },
-    { label: "Denizli (258)", value: 258 },
-    { label: "Diyarbakır (412)", value: 412 },
-    { label: "Düzce (380)", value: 380 },
-    { label: "Edirne (284)", value: 284 },
-    { label: "Elazığ (424)", value: 424 },
-    { label: "Erzincan (446)", value: 446 },
-    { label: "Erzurum (442)", value: 442 },
-    { label: "Eskişehir (222)", value: 222 },
-    { label: "Gaziantep (342)", value: 342 },
-    { label: "Giresun (454)", value: 454 },
-    { label: "Gümüşhane (456)", value: 456 },
-    { label: "Hakkari (438)", value: 438 },
-    { label: "Hatay (326)", value: 326 },
-    { label: "Iğdır (476)", value: 476 },
-    { label: "Isparta (246)", value: 246 },
-    { label: "İçel (Mersin) (324)", value: 324 },
-
-    { label: "İzmir (232)", value: 232 },
-    { label: "Kahramanmaraş (344)", value: 344 },
-    { label: "Karabük (370)", value: 370 },
-    { label: "Karaman (338)", value: 338 },
-    { label: "Kars (474)", value: 474 },
-    { label: "Kastamonu (366)", value: 366 },
-    { label: "Kayseri (352)", value: 352 },
-    { label: "Kırıkkale (318)", value: 318 },
-    { label: "Kırklareli (288)", value: 288 },
-    { label: "Kırşehir (386)", value: 386 },
-    { label: "Kilis (348)", value: 348 },
-    { label: "Kocaeli (262)", value: 262 },
-    { label: "Konya (332)", value: 332 },
-    { label: "Kütahya (274)", value: 274 },
-    { label: "Malatya (422)", value: 422 },
-    { label: "Manisa (236)", value: 236 },
-    { label: "Mardin (482)", value: 482 },
-    { label: "Muğla (252)", value: 252 },
-    { label: "Muş (436)", value: 436 },
-    { label: "Nevşehir (384)", value: 384 },
-    { label: "Niğde (388)", value: 388 },
-    { label: "Ordu (452)", value: 452 },
-    { label: "Osmaniye (328)", value: 328 },
-    { label: "Rize (464)", value: 464 },
-    { label: "Sakarya (264)", value: 264 },
-    { label: "Samsun (362)", value: 362 },
-    { label: "Siirt (484)", value: 484 },
-    { label: "Sinop (368)", value: 368 },
-    { label: "Sivas (346)", value: 346 },
-    { label: "Şanlıurfa (414)", value: 414 },
-    { label: "Şırnak (486)", value: 486 },
-    { label: "Tekirdağ (282)", value: 282 },
-    { label: "Tokat (356)", value: 356 },
-    { label: "Trabzon (462)", value: 462 },
-    { label: "Tunceli (428)", value: 428 },
-    { label: "Uşak (276)", value: 276 },
-    { label: "Van (432)", value: 432 },
-    { label: "Yalova (226)", value: 226 },
-    { label: "Yozgat (354)", value: 354 },
-    { label: "Zonguldak (372)", value: 372 },
-  ];
+ 
 
   const onColorChangeComplete = (color) => {
     // Renk değişimi tamamlandığında burada istediğiniz işlemleri yapabilirsiniz
   };
-
+  const initialRegion = {
+    latitude: parseFloat(39.9334),
+    longitude: parseFloat(32.8597),
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05,
+  };
   const initialFormData = {
     name: "",
     mobile_phone: "",
@@ -371,10 +267,79 @@ export default function UpgradeProfile() {
     taxOfficeCity: "",
     taxOffice: "",
     taxNumber: "",
+    email:"",
+    idNumber:""
+
   };
-
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
   const [formData, setFormData] = useState(initialFormData);
+ 
+    const GetUserInfo = async () => {
+      setLoading(true);
+      try {
+        if (user.access_token) {
+          const userInfo = await axios.get(
+            `https://private.emlaksepette.com/api/users/${user.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${user.access_token}`,
+              },
+            }
+          );
+   
+          setnamFromGetUser(userInfo?.data?.user);
+        }
+      } catch (error) {
+        console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+  
+ 
+useEffect(() => {
+
+    // Eğer user bilgileri geldiyse, GetUserInfo fonksiyonunu çalıştır
+    GetUserInfo();
+
+}, [user])
+
+  useEffect(() => {
+    if (Object.keys(namFromGetUser).length > 0) {
+      setFormData({
+        name: namFromGetUser.name || "",
+        mobile_phone: namFromGetUser.mobile_phone || "",
+        new_phone_number: namFromGetUser.new_phone_number || "",
+        store_name: namFromGetUser.store_name || "",
+        username: namFromGetUser.username || "",
+        authority_licence: namFromGetUser.authority_licence || "",
+        iban: namFromGetUser.iban || "",
+        website: namFromGetUser.website || "",
+        phone: formatPhoneNumber(namFromGetUser.phone) || "",
+        year: namFromGetUser.year || "",
+        city_id: namFromGetUser.city_id || "",
+        county_id: namFromGetUser.county_id || "",
+        neighborhood_id: namFromGetUser.neighborhood_id || "",
+        taxOfficeCity: namFromGetUser.taxOfficeCity || "",
+        taxOffice: namFromGetUser.taxOffice || "",
+        taxNumber: namFromGetUser.taxNumber || "",
+        email:namFromGetUser?.email || "",
+        idNumber:namFromGetUser.idNumber || ""
+      });
+      setCurrentColor(namFromGetUser.banner_hex_code);
+      setareaCode(namFromGetUser.area_code);
+      setTimeout(() => {
+        onChangeCity(namFromGetUser.city_id);
+        onChangeCounty(namFromGetUser.county_id);
+        onChangeNeighborhood(namFromGetUser.neighborhood_id);
+        onchangeTaxOffice(namFromGetUser.taxOfficeCity);
+        setRegion(initialRegion)
+      }, 500);
+    }
+  }, [namFromGetUser]);
   const formatIban = (text) => {
     // Sadece harfleri ve rakamları içeren bir metin oluştur
     const cleanedText = text.replace(/[^a-zA-Z0-9]/g, "");
@@ -405,26 +370,7 @@ export default function UpgradeProfile() {
     return finalIban.substring(0, 32);
   };
 
-  const formatPhoneNumberNew = (value) => {
-    // Sadece rakamları al
-    const cleaned = ("" + value).replace(/\D/g, "");
-
-    // 0 ile başlıyorsa, ilk karakteri çıkar
-    const cleanedWithoutLeadingZero = cleaned.startsWith("0")
-      ? cleaned.substring(1)
-      : cleaned;
-
-    let formattedNumber = "";
-
-    for (let i = 0; i < cleanedWithoutLeadingZero.length; i++) {
-      if (i === 0) formattedNumber += "(";
-      if (i === 3) formattedNumber += ") ";
-      if (i === 6 || i === 8) formattedNumber += " ";
-      formattedNumber += cleanedWithoutLeadingZero[i];
-    }
-
-    return formattedNumber;
-  };
+ 
 
   const handleInputChange = (key, value) => {
     setFormData({ ...formData, [key]: value });
@@ -441,6 +387,7 @@ export default function UpgradeProfile() {
     label: item.daire,
     value: item.id.toString(), // id değerini string olarak çevirme
   }));
+ 
 
   const getItemsForKey = (key) => {
     switch (key) {
@@ -458,12 +405,7 @@ export default function UpgradeProfile() {
         return [];
     }
   };
-  const initialRegion = {
-    latitude: parseFloat(39.9334),
-    longitude: parseFloat(32.8597),
-    latitudeDelta: 0.05,
-    longitudeDelta: 0.05,
-  };
+ 
 
   const handleMapPress = (event) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
@@ -473,74 +415,31 @@ export default function UpgradeProfile() {
     });
   };
 
-  if (!region) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="red" />
-      </View>
-    );
-  }
-  console.log(user.role);
-  const postData = async () => {
-    try {
-      let fullNumber = `${areaCode}${formData.phone}`;
-      let FormData = new FormData();
-      if (user.role === "Bireysel Hesap") {
-        formData.append("name", formData.name);
-        formData.append("iban", formData.iban);
-        formData.append(
-          "profile_image",
-          image
-            ? {
-                uri: image.uri,
-                name: image.fileName,
-                type: image.type,
-              }
-            : null
-        );
-        formData.append(
-          "mobile_phone",
-          formData.new_phone_number
-            ? formData.new_phone_number
-            : formData.mobile_phone
-        );
-        formData.append("banner_hex_code", currentColor);
-        formData.append("_method", "PUT");
-      } else {
-        formData.append(
-          "profile_image",
-          image
-            ? {
-                uri: image.uri,
-                name: image.fileName,
-                type: image.type,
-              }
-            : null
-        );
-        formData.append("city_id", formData.city_id);
-        formData.append("county_id", formData.county_id);
-        formData.append("neighborhood_id", formData.neighborhood_id);
-        formData.append("name", formData.name);
-        formData.append("username", formData.username);
-        formData.append("banner_hex_code", currentColor);
-        formData.append("iban", formData.iban);
-        formData.append("website", formData.website);
-        formData.append("phone", fullNumber);
-        formData.append("year", formData.year);
-        formData.append(
-          "mobile_phone",
-          formData.new_phone_number
-            ? formData.new_phone_number
-            : formData.mobile_phone
-        );
-        formData.append("latitude", selectedLocation.latitude);
-        formData.append("longitude", selectedLocation.longitude);
-        formData.append("_method", "PUT");
-      }
+  // if (!region) {
+  //   return (
+  //     <View style={styles.loadingContainer}>
+  //       <ActivityIndicator size="large" color="red" />
+  //     </View>
+  //   );
+  // }
 
-      const response = await axios.post(
-        apiUrl+"client/profile/update",
-        formData,
+  const postData = async () => {
+   
+  
+    var data = new FormData()
+    // Forms'u döngü ile dolaşıyoruz
+    Forms.forEach((item) => {
+       if (Array.isArray(item.tab) && item.tab.includes(tab)) {
+        data.append(item.key,formData[item.key])
+       }
+    });
+    
+    const jsonData = JSON.stringify(data);
+    
+    try {
+      const response = await axios.put(
+        `${apiUrl}client/profile/update`, // API URL'nizi belirtin
+        jsonData, // JSON formatında veri gönderiyoruz
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -548,29 +447,123 @@ export default function UpgradeProfile() {
           },
         }
       );
-
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Başarılı",
-        textBody: "Profiliniz başarıyla güncellendi.",
-        button: "Tamam",
-      });
-
-      GetUserInfo();
-    } catch (error) {
-      console.error(
-        "Error:",
-        error?.response ? error?.response?.data : error?.message
-      );
-      Dialog.show({
-        type: ALERT_TYPE.DANGER,
-        title: "Hata",
-        textBody: "Profil güncelleme sırasında bir hata oluştu.",
-        button: "Tamam",
-      });
+      console.log('Response:', response.data);
+      
+        GetUserInfo()
+    
+  
+    }catch{
+      alert('hata')
+    }finally{
+     
     }
+  
+
+    // data.append("name", formData.name);
+    
+
+  
+        // Dialog.show({
+        //   type: ALERT_TYPE.SUCCESS,
+        //   title: "Başarılı",
+        //   textBody: "Profiliniz başarıyla güncellendi.",
+        //   button: "Tamam",
+        // });
+  
+        // GetUserInfo();
+    // try {
+    //   let fullNumber = `${areaCode}${formData.phone}`;
+    //   let FormData = new FormData();
+    //   if (user.role === "Bireysel Hesap") {
+    //     formData.append("name", formData.name);
+    //     formData.append("iban", formData.iban);
+    //     formData.append(
+    //       "profile_image",
+    //       image
+    //         ? {
+    //             uri: image.uri,
+    //             name: image.fileName,
+    //             type: image.type,
+    //           }
+    //         : null
+    //     );
+    //     formData.append(
+    //       "mobile_phone",
+    //       formData.new_phone_number
+    //         ? formData.new_phone_number
+    //         : formData.mobile_phone
+    //     );
+    //     formData.append("banner_hex_code", currentColor);
+    //     formData.append("_method", "PUT");
+    //   } else {
+    //     formData.append(
+    //       "profile_image",
+    //       image
+    //         ? {
+    //             uri: image.uri,
+    //             name: image.fileName,
+    //             type: image.type,
+    //           }
+    //         : null
+    //     );
+    //     formData.append("city_id", formData.city_id);
+    //     formData.append("county_id", formData.county_id);
+    //     formData.append("neighborhood_id", formData.neighborhood_id);
+    //     formData.append("name", formData.name);
+    //     formData.append("username", formData.username);
+    //     formData.append("banner_hex_code", currentColor);
+    //     formData.append("iban", formData.iban);
+    //     formData.append("website", formData.website);
+    //     formData.append("phone", fullNumber);
+    //     formData.append("year", formData.year);
+    //     formData.append(
+    //       "mobile_phone",
+    //       formData.new_phone_number
+    //         ? formData.new_phone_number
+    //         : formData.mobile_phone
+    //     );
+    //     formData.append("latitude", selectedLocation.latitude);
+    //     formData.append("longitude", selectedLocation.longitude);
+    //     formData.append("_method", "PUT");
+    //   }
+
+    //   const response = await axios.post(
+    //     apiUrl+"client/profile/update",
+    //     formData,
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${user?.access_token}`,
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //     }
+    //   );
+
+    //   Dialog.show({
+    //     type: ALERT_TYPE.SUCCESS,
+    //     title: "Başarılı",
+    //     textBody: "Profiliniz başarıyla güncellendi.",
+    //     button: "Tamam",
+    //   });
+
+    //   GetUserInfo();
+    // } catch (error) {
+    //   console.error(
+    //     "Error:",
+    //     error?.response ? error?.response?.data : error?.message
+    //   );
+    //   Dialog.show({
+    //     type: ALERT_TYPE.DANGER,
+    //     title: "Hata",
+    //     textBody: "Profil güncelleme sırasında bir hata oluştu.",
+    //     button: "Tamam",
+    //   });
+    // }
   };
+const checkInput=()=>{
+
+}
   return (
+    
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"} // iOS ve Android için farklı davranışlar
@@ -597,7 +590,7 @@ export default function UpgradeProfile() {
                 alignItems: "center",
               }}
             >
-              {(tab == 0 || tab == 2) && (
+              {(tab == 0 || tab == 4) && (
                 <View style={{ width: "100%", alignItems: "flex-start" }}>
                   <View
                     style={{
@@ -646,7 +639,7 @@ export default function UpgradeProfile() {
                   </View>
                 </View>
 
-                {(tab == 0 || tab == 2) && (
+                {(tab == 0 || tab==4) && (
                   <TouchableOpacity
                     onPress={() => {
                       setchoose(true);
@@ -780,6 +773,7 @@ export default function UpgradeProfile() {
                               style={{ width: item.showArea ? "55%" : "100%" }}
                             >
                               <TextInput
+                             
                                 editable={item.disabled ? false : true}
                                 maxLength={item.maxlength ? item.maxlength : 90}
                                 placeholder={
@@ -793,7 +787,8 @@ export default function UpgradeProfile() {
                                 keyboardType={
                                   item.key === "iban" ||
                                   item.key === "phone" ||
-                                  item.key === "taxNumber"
+                                  item.key === "taxNumber" ||
+                                  item.key ==="idNumber"
                                     ? "number-pad"
                                     : "default"
                                 }
@@ -821,6 +816,12 @@ export default function UpgradeProfile() {
                                     handleInputChange(
                                       item.key,
                                       formatPhoneNumber(value)
+                                    );
+                                  }
+                                  if (item.key === "idNumber") {
+                                    handleInputChange(
+                                      item.key,
+                                      parseInt(value)
                                     );
                                   }
                                 }}
@@ -866,40 +867,40 @@ export default function UpgradeProfile() {
                 })}
                 {
                   //Harita
-                  tab == 3 && (
-                    <View
-                      style={{
-                        alignItems: "center",
-                        height: 300,
-                        width: "100%",
-                      }}
-                    >
-                      {region && (
-                        <MapView
-                          style={{ width: "100%", height: "100%" }}
-                          initialRegion={region}
-                          onPress={handleMapPress}
-                        >
-                          {selectedLocation ? (
-                            <Marker
-                              coordinate={selectedLocation}
-                              title={namFromGetUser.name}
-                            />
-                          ) : (
-                            <Marker
-                              coordinate={{
-                                latitude: region.latitude,
-                                longitude: region.longitude,
-                              }}
-                              title={namFromGetUser.name}
-                            />
-                          )}
-                        </MapView>
-                      )}
-                    </View>
-                  )
+                  // tab == 3 && (
+                  //   <View
+                  //     style={{
+                  //       alignItems: "center",
+                  //       height: 300,
+                  //       width: "100%",
+                  //     }}
+                  //   >
+                  //     {region && (
+                  //       <MapView
+                  //         style={{ width: "100%", height: "100%" }}
+                  //         initialRegion={region}
+                  //         onPress={handleMapPress}
+                  //       >
+                  //         {selectedLocation ? (
+                  //           <Marker
+                  //             coordinate={selectedLocation}
+                  //             title={namFromGetUser.name}
+                  //           />
+                  //         ) : (
+                  //           <Marker
+                  //             coordinate={{
+                  //               latitude: region.latitude,
+                  //               longitude: region.longitude,
+                  //             }}
+                  //             title={namFromGetUser.name}
+                  //           />
+                  //         )}
+                  //       </MapView>
+                  //     )}
+                  //   </View>
+                  // )
                 }
-                {tab == 1 && (
+                {tab == 2 && (
                   <>
                     <View style={[styles.card, { gap: 10 }]}>
                       <TouchableOpacity

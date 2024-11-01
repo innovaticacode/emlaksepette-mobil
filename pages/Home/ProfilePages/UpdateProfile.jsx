@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { useState, useEffect } from "react";
 import userData, { getValueFor } from "../../../components/methods/user";
@@ -19,11 +20,16 @@ export default function UpdateProfile() {
     getValueFor('user', setUser)
   }, []);
 
-  const SettingItem = ({ text, tab }) => {
+  const SettingItem = ({ text, tab,navigate}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("Upgrade", { name: text, tab: tab });
+          if (navigate) {
+              navigation.navigate(navigate)
+          }else{
+            navigation.navigate("Upgrade", { name: text, tab: tab });
+          }
+        
         }}
         style={{
           borderColor: "#ebebeb",
@@ -49,8 +55,8 @@ export default function UpdateProfile() {
   };
 
   return (
-    <View style={styles.container}>
-      {user.type == 1 && (
+    <ScrollView style={styles.container} contentContainerStyle={{gap:10}}>
+     
         <View style={styles.card}>
           <View
             style={{
@@ -62,16 +68,18 @@ export default function UpdateProfile() {
             }}
           >
             <Text style={{ color: "#333", fontSize: 16, fontWeight: "700" }}>
-              Hesabım
+              Hesap Bigilerim
             </Text>
           </View>
           <View style={{ gap: 10, paddingBottom: 5 }}>
             <SettingItem text={"Kişisel Bilgilerim"} tab={0} />
-            <SettingItem text={"Cep Telefonu"} tab={1} />
+            <SettingItem text={'E-Posta Bilgileri'} tab={1}/>
+            <SettingItem text={"Cep Telefonu"} tab={2} />
+            <SettingItem text={"Şifre Değişikliği"} tab={3} />
           </View>
         </View>
-      )}
-      {user.type == 2 && (
+ 
+    
         <View style={styles.card}>
           <View
             style={{
@@ -87,14 +95,21 @@ export default function UpdateProfile() {
             </Text>
           </View>
           <View style={{ gap: 10, paddingBottom: 5 }}>
-            <SettingItem text={"Kişisel Bilgilerim"} tab={2} />
-            <SettingItem text={"Cep Telefonu Güncelle"} tab={1} />
-            <SettingItem text={"Firma Konumu Güncelle"} tab={3} />
+            <SettingItem text={"Mağaza İçeriği"} tab={4} />
+            <SettingItem text={"Mağaza Bilgileri"} tab={5} />
+            <SettingItem text={"Ekip"} navigate={'UsersList'} />
+            {/* <SettingItem text={"Paketler"} tab={7} /> */}
+            {/* <SettingItem text={"Kayıtlı Kartlarım"} tab={8} /> */}
+            {/* <SettingItem text={"Faturalarım"} tab={9} /> */}
+            <SettingItem text={"Yetki Grubu"} navigate={'UserTypes'} />
+            <SettingItem text={"Reklam Görselleri"} tab={11} navigate={'UploadAdsPicture'}/>
+            <SettingItem text={"Proje Sözleşmelerim"} tab={12} />
+            <SettingItem text={'Tanıtım Yazısı Ekle'} navigate={'AddBioText'}/>
             
           </View>
         </View>
-      )}
-    </View>
+   
+    </ScrollView>
   );
 }
 
