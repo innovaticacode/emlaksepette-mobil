@@ -22,8 +22,9 @@ import FranchiseBanner from "../../components/FranchiseBanner";
 import WhatIsEmlakSepette from "../../components/WhatIsEmlakSepette";
 import SliderEstateBar from "../../components/SliderEstateBar";
 import SliderTourismRent from "./SliderTourismRent";
-import RealtorPost from "../../components/RealtorPost";
+
 import { apiUrl, frontEndUri, frontEndUriBase } from "../../components/methods/apiRequest";
+import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
 
 
 

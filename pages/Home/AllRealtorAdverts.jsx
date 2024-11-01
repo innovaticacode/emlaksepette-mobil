@@ -20,7 +20,7 @@ import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
 import { RefreshControl } from "react-native-gesture-handler";
-import RealtorPost from "../../components/RealtorPost";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import { getValueFor } from "../../components/methods/user";
 
@@ -28,7 +28,9 @@ import SortModal from "../../components/SortModal";
 import { Image } from "react-native-svg";
 import { DrawerMenu } from "../../components";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
-
+import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
+import ViewFilter from "../../components/Filter/ViewFilter/ViewFilter";
+import FilterRealtor from '../../assets/filterRealtor.svg'
 export default function AllRealtorAdverts() {
   const [cityItems, setCityItems] = useState();
   const [state, setState] = useState({
@@ -457,6 +459,21 @@ export default function AllRealtorAdverts() {
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
+ const [showViewModal, setshowViewModal] = useState(false)
+ const [selectedView, setselectedView] = useState(0)
+ const [chekView, setchekView] = useState(false)
+ const handleRadio = (index, sort) => {
+  setselectedView(index);
+if (index==1) {
+  setchekView(true)
+}else{
+  setchekView(false)
+}
+  setTimeout(() => {
+    setshowViewModal(false);
+  
+  }, 400);
+};
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -483,14 +500,15 @@ export default function AllRealtorAdverts() {
         </View> */}
       </Modal>
 
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+      <View style={{ flexDirection: "row",justifyContent:'space-around',borderBottomWidth:1,borderColor:'#7C7C7C'}}>
         <TouchableOpacity
           style={styles.btn}
           onPress={() =>
             setState((prevState) => ({ ...prevState, modalVisible: true }))
           }
-        >
-          <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
+        > 
+          <FilterRealtor/>
+          <Text style={styles.btnText}>
             Filtrele
           </Text>
         </TouchableOpacity>
@@ -504,11 +522,29 @@ export default function AllRealtorAdverts() {
             borderLeftWidth: 1,
           }}
         >
-          <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
+            <Icon name="swap-vertical" size={18} color={'#7C7C7C'}/>
+          <Text style={styles.btnText}>
             Sırala
           </Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            // setState((prevState) => ({ ...prevState, sortModalVisible: true }))
+            setshowViewModal(true)
+          }
+          style={{
+            ...styles.btn,
+           borderRightWidth:0
+           
+          }}
+        >
+          <Icon name="format-list-bulleted" size={18} color={'#7C7C7C'}/>
+          <Text style={styles.btnText}>
+           Görünüm
+          </Text>
+        </TouchableOpacity>
       </View>
+      <ViewFilter selectedView={selectedView} showViewModal={showViewModal} setshowViewModal={setshowViewModal} handleRadio={handleRadio}/>
       <SortModal
         isVisible={state.sortModalVisible}
         onClose={() =>
@@ -577,6 +613,8 @@ export default function AllRealtorAdverts() {
                   column4_additional={item.column4_additional}
                   bookmarkStatus={true}
                   dailyRent={false}
+                  isFavorite={item.is_favorite}
+                  chekView={chekView}
                 />
               )}
               keyExtractor={(item) => item.id.toString()}
@@ -1208,11 +1246,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   btn: {
-    width: "50%",
-    backgroundColor: "#EA2B2E",
+    width:'33%',
+    borderRightWidth:1,
+    borderColor:'#7C7C7C',
+    flexDirection:'row',
+    gap:5,
     padding: 12,
     justifyContent: "center",
     alignItems: "center",
+  },
+  btnText:{
+    color:'#7C7C7C',
+    fontSize:14,
+    fontWeight:'600'
   },
   switchInner: {
     width: 16,

@@ -9,7 +9,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import RealtorPost from "../../../components/RealtorPost";
+
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import { getValueFor } from "../../../components/methods/user";
@@ -19,6 +19,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import Land from "../../../src/assets/images/Arsa.png";
 import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 
 const PAGE_SIZE = 10;
 
